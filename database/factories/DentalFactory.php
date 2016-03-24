@@ -1354,3 +1354,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Location::class, function 
         'email'            => $faker->email
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Login::class, function ($faker) {
+    return [
+        'docid'       => $faker->randomDigit,
+        'userid'      => $faker->randomDigit,
+        'login_date'  => $faker->dateTime(),
+        'logout_date' => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

@@ -96,6 +96,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\CustomLetterTemplate::class => [Repositories\CustomLetterTemplates::class, Resources\CustomLetterTemplate::class],
             Eloquent\Dental\Letter::class => [Repositories\Letters::class, Resources\Letter::class],
             Eloquent\Dental\Location::class => [Repositories\Locations::class, Resources\Location::class],
+            Eloquent\Dental\Login::class => [Repositories\Logins::class, Resources\Login::class],
         ];
 
 

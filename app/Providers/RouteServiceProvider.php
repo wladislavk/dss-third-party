@@ -59,6 +59,7 @@ class RouteServiceProvider extends ServiceProvider
         'custom-letter-templates' => \DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate::class,
         'letters' => \DentalSleepSolutions\Eloquent\Dental\Letter::class,
         'locations' => \DentalSleepSolutions\Eloquent\Dental\Location::class,
+        'logins' => \DentalSleepSolutions\Eloquent\Dental\Login::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

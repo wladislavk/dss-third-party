@@ -1267,3 +1267,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerRecord::class, funct
         'transaction_code' => $faker->regexify('[A-Z][0-9]{4}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerStatement::class, function ($faker) {
+    return [
+        'producerid'   => $faker->randomDigit,
+        'filename'     => $faker->regexify('\/manage\/letterpdfs\/statement_[0-9]+_[0-9]+\.pdf'),
+        'service_date' => $faker->dateTime(),
+        'entry_date'   => $faker->dateTime(),
+        'patientid'    => $faker->randomDigit,
+        'adddate'      => $faker->dateTime(),
+        'ip_address'   => $faker->ipv4
+    ];
+});

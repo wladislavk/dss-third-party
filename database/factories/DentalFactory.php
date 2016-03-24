@@ -1160,3 +1160,47 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Ledger::class, function ($
         'secondary_claim_id'     => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerHistory::class, function ($faker) {
+    return [
+            'ledgerid'                 => $faker->randomDigit,
+            'formid'                   => $faker->randomDigit,
+            'patientid'                => $faker->randomDigit,
+            'service_date'             => $faker->dateTime(),
+            'entry_date'               => $faker->dateTime(),
+            'description'              => $faker->sentence($nbWords = 6),
+            'producer'                 => $faker->name,
+            'amount'                   => $faker->regexify('[0-9]+\.[0-9]{2}'),
+            'transaction_type'         => $faker->randomElement(['Charge', 'Credit', 'None']),
+            'paid_amount'              => $faker->regexify('[0-9]+\.[0-9]{2}'),
+            'userid'                   => $faker->randomDigit,
+            'docid'                    => $faker->randomDigit,
+            'status'                   => $faker->randomDigit,
+            'adddate'                  => Carbon::now()->format('m/d/Y'),
+            'ip_address'               => $faker->ipv4,
+            'transaction_code'         => $faker->regexify('[A-Z][0-9]{4}'),
+            'placeofservice'           => $faker->numerify('##'),
+            'emg'                      => $faker->numerify('##'),
+            'diagnosispointer'         => $faker->numerify('##'),
+            'daysorunits'              => $faker->numerify('##'),
+            'epsdt'                    => $faker->numerify('##'),
+            'idqual'                   => $faker->numerify('##'),
+            'modcode'                  => $faker->numerify('##'),
+            'producerid'               => $faker->randomDigit,
+            'primary_claim_id'         => $faker->randomDigit,
+            'primary_paper_claim_id'   => $faker->numerify('##'),
+            'modcode2'                 => $faker->word,
+            'modcode3'                 => $faker->word,
+            'modcode4'                 => $faker->word,
+            'percase_date'             => $faker->dateTime(),
+            'percase_name'             => $faker->name,
+            'percase_amount'           => $faker->regexify('[0-9]+\.[0-9]{2}'),
+            'percase_status'           => $faker->randomDigit,
+            'percase_invoice'          => $faker->randomDigit,
+            'percase_free'             => $faker->randomDigit,
+            'updated_by_user'          => $faker->randomDigit,
+            'updated_by_admin'         => $faker->randomDigit,
+            'primary_claim_history_id' => $faker->randomDigit,
+            'secondary_claim_id'       => $faker->randomDigit
+        ];
+});

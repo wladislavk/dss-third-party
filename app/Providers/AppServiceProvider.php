@@ -87,6 +87,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Intolerance::class => [Repositories\Intolerances::class, Resources\Intolerance::class],
             Eloquent\Dental\Joint::class => [Repositories\Joints::class, Resources\Joint::class],
             Eloquent\Dental\JointExam::class => [Repositories\JointExams::class, Resources\JointExam::class],
+            Eloquent\Dental\LedgerNote::class => [Repositories\LedgerNotes::class, Resources\LedgerNote::class],
         ];
 
 

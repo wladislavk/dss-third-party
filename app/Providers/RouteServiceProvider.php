@@ -50,6 +50,7 @@ class RouteServiceProvider extends ServiceProvider
         'intolerances' => \DentalSleepSolutions\Eloquent\Dental\Intolerance::class,
         'joints' => \DentalSleepSolutions\Eloquent\Dental\Joint::class,
         'joint-exams' => \DentalSleepSolutions\Eloquent\Dental\JointExam::class,
+        'ledger-notes' => \DentalSleepSolutions\Eloquent\Dental\LedgerNote::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

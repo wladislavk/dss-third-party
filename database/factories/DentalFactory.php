@@ -711,6 +711,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\MedicalHistory::class, fun
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Intolerance::class, function ($faker) {
+    return [
+        'intolerance' => $faker->sentence($nbWords = 4),
+        'description' => $faker->word,
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\ImageType::class, function ($faker) {
     return [
         'imagetype'   => $faker->word,

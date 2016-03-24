@@ -99,6 +99,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Login::class => [Repositories\Logins::class, Resources\Login::class],
             Eloquent\Dental\LoginDetail::class => [Repositories\LoginDetails::class, Resources\LoginDetail::class],
             Eloquent\Dental\Mandible::class => [Repositories\Mandibles::class, Resources\Mandible::class],
+            Eloquent\Dental\Maxilla::class => [Repositories\Maxillas::class, Resources\Maxilla::class],
         ];
 
 

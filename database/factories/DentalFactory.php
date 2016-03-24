@@ -744,6 +744,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ImageType::class, function
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\JointExam::class, function ($faker) {
+    return [
+        'joint_exam'  => $faker->sentence($nbWords = 3),
+        'description' => $faker->sentence($nbWords = 5),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\Insurance::class, function ($faker) {
     return [
         'formid'                            => $faker->randomDigit,

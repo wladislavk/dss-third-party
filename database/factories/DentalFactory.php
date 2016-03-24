@@ -1279,3 +1279,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerStatement::class, fu
         'ip_address'   => $faker->ipv4
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\LetterTemplate::class, function ($faker) {
+    return [
+        'name'           => $faker->sentence($nbWords = 4),
+        'template'       => $faker->regexify('\/manage\/([a-z]+_)+[a-z]+\.php'),
+        'body'           => $faker->sentence($nbWords = 6),
+        'default_letter' => $faker->randomDigit,
+        'companyid'      => $faker->randomDigit,
+        'triggerid'      => $faker->randomDigit
+    ];
+});

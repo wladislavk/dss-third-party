@@ -1290,3 +1290,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LetterTemplate::class, fun
         'triggerid'      => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate::class, function ($faker) {
+    return [
+        'name'       => $faker->sentence($nbWords = 3),
+        'body'       => $faker->sentence($nbWords = 6),
+        'docid'      => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4,
+        'status'     => $faker->randomDigit
+    ];
+});

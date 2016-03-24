@@ -721,6 +721,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Mandible::class, function 
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Medicament::class, function ($faker) {
+    return [
+        'medications' => $faker->word,
+        'description' => $faker->sentence($nbWords = 5),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\MedicalHistory::class, function ($faker) {
     return [
         'history'     => $faker->word,

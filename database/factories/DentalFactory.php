@@ -1204,3 +1204,23 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerHistory::class, func
             'secondary_claim_id'       => $faker->randomDigit
         ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerPayment::class, function ($faker) {
+    return [
+        'payer'          => $faker->randomDigit,
+        'amount'         => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 3000),
+        'payment_type'   => $faker->randomDigit,
+        'payment_date'   => $faker->dateTime(),
+        'entry_date'     => $faker->dateTime(),
+        'ledgerid'       => $faker->randomDigit,
+        'allowed'        => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'ins_paid'       => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 800),
+        'deductible'     => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'copay'          => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 800),
+        'coins'          => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
+        'overpaid'       => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 800),
+        'followup'       => $faker->dateTime(),
+        'note'           => $faker->sentence($nbWords = 5),
+        'amount_allowed' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500)
+    ];
+});

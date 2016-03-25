@@ -513,6 +513,13 @@ function logSMSActivity ($from, $to, $text, $status, $sid, $message='') {
     $db->query("INSERT INTO dental_sms_log SET $smsData, created_at = NOW()");
 }
 
+/**
+ * Send Twilio SMS
+ *
+ * @param string $to
+ * @param string $text
+ * @return bool
+ */
 function sendSMS ($to, $text) {
     $sid = config('app.twilio.sid');
     $token = config('app.twilio.token');
@@ -558,6 +565,137 @@ function sendSMS ($to, $text) {
     logSMSActivity($from, $to, $text, $status, $smsId, $message);
 
     return $sent;
+}
+
+/**
+ * Send activation code to patient or FO user, via SMS
+ *
+ * @param string $type
+ * @param int    $id
+ * @param string $hash
+ * @return array
+ */
+function sendAccessCodeSMS ($type, $id, $hash) {
+    $db = new Db();
+    $id = intval($id);
+
+    if ($type === 'user') {
+        $table = 'dental_users';
+        $column = 'userid';
+
+        $data = $db->getRow("SELECT access_code, text_num, text_date, phone
+            FROM dental_users
+            WHERE userid = '$id'
+                AND recover_hash = '" . $db->escape($hash) . "'");
+    } else {
+        $table = 'dental_patients';
+        $column = 'patientid';
+
+        $data = $db->getRow("SELECT access_code, text_num, text_date, cell_phone AS phone
+            FROM dental_patients
+            WHERE patientid = '$id'
+                AND recover_hash = '" . $db->escape($hash) . "'");
+    }
+
+    if (!$data) {
+        return ['error' => 'found'];
+    }
+
+    if ($data['text_num'] >= 5 && strtotime($data['text_date']) > (time() - 3600)) {
+        return ['error' => 'limit'];
+    }
+
+    if ($data['access_code'] == '' || strtotime($data['access_code_date']) < time() - 86400){
+        $recover_hash = rand(100000, 999999);
+
+        $updateData = ['access_code' => $recover_hash];
+
+        if ($type === 'patient') {
+            $updateData['registration_status'] = 1;
+        }
+
+        $updateData = $db->escapeAssignmentList($updateData);
+
+        $db->query("UPDATE $table SET $updateData, access_code_date = NOW()
+            WHERE $column = '$id'");
+    } else {
+        $recover_hash = $data['access_code'];
+    }
+
+    $sent = sendSMS($data['phone'], "Your Dental Sleep Solutions access code is $recover_hash");
+
+    if ($sent) {
+        if (strtotime($data['text_date']) < (time() - 3600) || $data['text_num'] == 0) {
+            $db->query("UPDATE $table
+            SET text_num = 1, text_date = NOW()
+            WHERE $column = '$id'");
+        } else {
+            $db->query("UPDATE $table
+            SET text_num = text_num + 1
+            WHERE $column = '$id'");
+        }
+
+        $response = ['success' => true];
+    } else {
+        $response = ['error' => 'unsent'];
+    }
+
+    return $response;
+}
+
+/**
+ * Send activation code, lookup by email
+ *
+ * @param string $type
+ * @param string $email
+ * @return array
+ */
+function sendRecoveryCodeSMS ($type, $email) {
+    $db = new Db();
+
+    if ($type == 'user') {
+        $table = 'dental_users';
+        $column = 'userid';
+
+        $data = $db->getRow("SELECT userid AS id, phone, password
+            FROM dental_users
+            WHERE email = '" . $db->escape($email) . "'");
+    } else {
+        $table = 'dental_patients';
+        $column = 'patientid';
+
+        $data = $db->getRow("SELECT patientid AS id, cell_phone AS phone, password
+            FROM dental_patients
+            WHERE email = '" . $db->escape($email) . "'");
+    }
+
+    if (!$data) {
+        return ['error' => 'email'];
+    }
+
+    if ($data['password'] != '') {
+        return ['error' => 'existing'];
+    }
+
+    $id = intval($data[$column]);
+
+    $recover_hash = substr(hash('sha256', $id . $email . rand()), 0, 7);
+    $db->query("UPDATE $table
+        SET recover_hash = '$recover_hash', recover_time = NOW()
+        WHERE $column = '$id'");
+
+    $sent = sendSMS($data['phone'], "Your access code is $recover_hash");
+
+    if ($sent) {
+        $response = [
+            'success' => true,
+            'phone' => substr($data['cell_phone'], -2)
+        ];
+    } else {
+        $response = ['error' => 'number'];
+    }
+
+    return $response;
 }
 
 function showPatientValue($table, $pid, $f, $pv, $fv, $showValues = true, $show=true, $type="text"){

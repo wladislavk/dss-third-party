@@ -80,6 +80,7 @@ class RouteServiceProvider extends ServiceProvider
         'social-histories' => \DentalSleepSolutions\Eloquent\Dental\SocialHistory::class,
         'recipients' => \DentalSleepSolutions\Eloquent\Dental\Recipient::class,
         'sleep-tests' => \DentalSleepSolutions\Eloquent\Dental\SleepTest::class,
+        'qualifiers' => \DentalSleepSolutions\Eloquent\Dental\Qualifier::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

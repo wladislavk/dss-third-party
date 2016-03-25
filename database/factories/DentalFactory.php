@@ -465,6 +465,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale::cl
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Qualifier::class, function ($faker) {
+    return [
+        'qualifier'   => $faker->sentence($nbWords = 5),
+        'description' => $faker->sentence($nbWords = 7),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceType::class, function ($faker) {
     return [
         'ins_type'    => $faker->sentence($nbWords = 5),
@@ -1973,4 +1984,3 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Recipient::class, function
         'q_file10'            => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)')
     ];
 });
-

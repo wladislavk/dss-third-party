@@ -553,6 +553,28 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam::class,
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\SocialHistory::class, function ($faker) {
+    return [
+        'formid'               => $faker->randomDigit,
+        'patientid'            => $faker->randomDigit,
+        'family_had'           => $faker->sentence($nbWords = 4),
+        'family_diagnosed'     => $faker->randomElement(['Yes', 'No']),
+        'additional_paragraph' => $faker->sentence($nbWords = 7),
+        'alcohol'              => $faker->word,
+        'sedative'             => $faker->word,
+        'caffeine'             => $faker->word,
+        'smoke'                => $faker->randomElement(['Yes', 'No']),
+        'smoke_packs'          => $faker->numerify('#'),
+        'tobacco'              => $faker->randomElement(['Yes', 'No']),
+        'userid'               => $faker->randomDigit,
+        'docid'                => $faker->randomDigit,
+        'status'               => $faker->randomDigit,
+        'adddate'              => $faker->dateTime(),
+        'ip_address'           => $faker->ipv4,
+        'parent_patientid'     => $faker->randomDigit
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation::class, function ($faker) {
     return [
         'formid'               => $faker->randomDigit,

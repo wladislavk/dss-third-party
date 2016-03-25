@@ -71,6 +71,7 @@ class RouteServiceProvider extends ServiceProvider
         'patient-summaries' => \DentalSleepSolutions\Eloquent\Dental\PatientSummary::class,
         'patients' => \DentalSleepSolutions\Eloquent\Dental\Patient::class,
         'payment-reports' => \DentalSleepSolutions\Eloquent\Dental\PaymentReport::class,
+        'place-services' => \DentalSleepSolutions\Eloquent\Dental\PlaceService::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,
@@ -84,7 +85,6 @@ class RouteServiceProvider extends ServiceProvider
         'calendars'     => \DentalSleepSolutions\Eloquent\Dental\Calendar::class,
         'admins'        => \DentalSleepSolutions\Eloquent\Admin::class,
         'allergens' => \DentalSleepSolutions\Eloquent\Dental\Allergen::class,
-        'charges' => \DentalSleepSolutions\Eloquent\Dental\Charge::class,
         'change-lists' => \DentalSleepSolutions\Eloquent\Dental\ChangeList::class,
     ];
 

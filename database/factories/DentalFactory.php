@@ -1661,3 +1661,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PaymentReport::class, func
         'viewed'       => $faker->boolean
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\PlaceService::class, function ($faker) {
+    return [
+        'place_service' => $faker->numerify('##'),
+        'description'   => $faker->sentence($nbWords = 5),
+        'sortby'        => $faker->randomDigit,
+        'status'        => $faker->randomDigit,
+        'adddate'       => $faker->dateTime(),
+        'ip_address'    => $faker->ipv4
+    ];
+});

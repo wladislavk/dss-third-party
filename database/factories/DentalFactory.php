@@ -1469,3 +1469,18 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PatientInsurance::class, f
         'email'         => $faker->email
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\PatientSummary::class, function ($faker) {
+    return [
+        'pid'              => $faker->randomDigit,
+        'fspage1_complete' => $faker->boolean,
+        'next_visit'       => $faker->dateTime(),
+        'last_visit'       => $faker->dateTime(),
+        'last_treatment'   => $faker->sentence($nbWords = 3),
+        'appliance'        => $faker->randomDigit,
+        'delivery_date'    => $faker->dateTime(),
+        'vob'              => $faker->numerify('#'),
+        'ledger'           => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 1000),
+        'patient_info'     => $faker->boolean
+    ];
+});

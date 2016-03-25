@@ -109,13 +109,13 @@ function show_referredby(t, rs){
 function updateNumber(f){
   var selectBox = $("#p_m_ins_co");
   var selectedValue = selectBox.val();
-  $('#' + f).html((typeof insurance_nums === 'object' ? insurance_nums : [])[selectedValue]);
+  $('#' + f).html(typeof insurance_nums === 'object' ? insurance_nums[selectedValue] : '');
 }
 
 function updateNumber2(f){
   var selectBox = $("#s_m_ins_co");
   var selectedValue = selectBox.val();
-  $('#' + f).html((typeof insurance_nums === 'object' ? insurance_nums : [])[selectedValue]);
+  $('#' + f).html(typeof insurance_nums === 'object' ? insurance_nums[selectedValue] : '');
 }
 
 function clearInfo(){

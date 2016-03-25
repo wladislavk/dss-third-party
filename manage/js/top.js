@@ -153,9 +153,9 @@ function LinkUp()
 function toggleTB(what)
 {
   if ($(what).is(':checked')) {
-    $('[name=patientfrm] [name=premeddet]').prop('disabled', true);
+    $('form[name=patientfrm] [name=premeddet]').prop('disabled', true);
   } else {
-    $('[name=patientfrm] [name=premeddet]').prop('disabled', false);
+    $('form[name=patientfrm] [name=premeddet]').prop('disabled', false);
   }
 }
 
@@ -167,24 +167,24 @@ function jsConfirm(str)
 
 function disableenable()
 {    
-  if($('[name=q_page1frm] [name=bed_time_partner]').val() == 'No') { 
-    $('[name=q_page1frm] [name=quit_breathing]').prop('disabled', true);
-    $('[name=q_page1frm] [name=sleep_same_room]').prop('disabled', true);
+  if($('form[name=q_page1frm] [name=bed_time_partner]').val() == 'No') { 
+    $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', true);
+    $('form[name=q_page1frm] [name=sleep_same_room]').prop('disabled', true);
   }
 
-  if($('[name=q_page1frm] [name=bed_time_partner]').val() == 'Yes') { 
-    $('[name=q_page1frm] [name=quit_breathing]').prop('disabled', false)
-    $('[name=q_page1frm] [name=sleep_same_room]').prop('disabled', false)
+  if($('form[name=q_page1frm] [name=bed_time_partner]').val() == 'Yes') { 
+    $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', false)
+    $('form[name=q_page1frm] [name=sleep_same_room]').prop('disabled', false)
   }
 
-  if($('[name=q_page1frm] [name=bed_time_partner]').val() == 'Sometimes') { 
-    $('[name=q_page1frm] [name=quit_breathing]').prop('disabled', false)
-    $('[name=q_page1frm] [name=sleep_same_room]').prop('disabled', false)
+  if($('form[name=q_page1frm] [name=bed_time_partner]').val() == 'Sometimes') { 
+    $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', false)
+    $('form[name=q_page1frm] [name=sleep_same_room]').prop('disabled', false)
   }
 
-  if($('[name=q_page1frm] [name=bed_time_partner]').val() == '') { 
-    $('[name=q_page1frm] [name=quit_breathing]').prop('disabled', false)
-    $('[name=q_page1frm] [name=sleep_same_room]').prop('disabled', false)
+  if($('form[name=q_page1frm] [name=bed_time_partner]').val() == '') { 
+    $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', false)
+    $('form[name=q_page1frm] [name=sleep_same_room]').prop('disabled', false)
   }
 }
 

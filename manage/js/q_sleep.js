@@ -44,7 +44,7 @@ function cal_analaysis(fa)
 		an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which indicates excessive sleepiness and medical attention should be sought.';
 	}
 
-	$('[name=q_sleepfrm] [name=analysis]').val(an_text);
+	$('form[name=q_sleepfrm] [name=analysis]').val(an_text);
 }
 
 function cal_snore()

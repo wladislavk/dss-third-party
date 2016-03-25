@@ -798,6 +798,23 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Maxilla::class, function (
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\PatientContact::class, function ($faker) {
+    return [
+        'contacttype' => $faker->randomDigit,
+        'patientid'   => $faker->randomDigit,
+        'firstname'   => $faker->firstNameMale,
+        'lastname'    => $faker->lastName,
+        'address1'    => $faker->address,
+        'address2'    => $faker->address,
+        'city'        => $faker->city,
+        'state'       => $faker->stateAbbr,
+        'zip'         => $faker->numerify('#####'),
+        'phone'       => $faker->numerify('##########'),
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\Insurance::class, function ($faker) {
     return [
         'formid'                            => $faker->randomDigit,

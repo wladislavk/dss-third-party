@@ -1702,3 +1702,33 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Plan::class, function ($fa
         'e0486_fee'        => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500)
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Procedure::class, function ($faker) {
+    return [
+        'patientid'          => $faker->randomDigit,
+        'insuranceid'        => $faker->randomDigit,
+        'service_date_from'  => $faker->date($format = 'm/d/Y', $max = 'now'),
+        'service_date_to'    => $faker->date($format = 'm/d/Y', $max = 'now'),
+        'place_service'      => $faker->numerify('#'),
+        'type_service'       => $faker->numerify('#'),
+        'cpt_code'           => $faker->numerify('#'),
+        'units'              => $faker->numerify('#.#'),
+        'charge'             => $faker->numerify('###.##'),
+        'total_charge'       => $faker->numerify('###.##'),
+        'applies_icd'        => $faker->numerify('#,#'),
+        'npi'                => $faker->word,
+        'other_id'           => $faker->numerify('###'),
+        'other_id_qualifier' => $faker->numerify('#'),
+        'modifier_code_1'    => $faker->numerify('#'),
+        'modifier_code_2'    => $faker->numerify('#'),
+        'modifier_code_3'    => $faker->numerify('#'),
+        'modifier_code_4'    => $faker->numerify('#'),
+        'epsdt'              => $faker->numerify('#'),
+        'emg'                => $faker->word,
+        'supplemental_info'  => $faker->word,
+        'docid'              => $faker->randomDigit,
+        'status'             => $faker->randomDigit,
+        'adddate'            => $faker->dateTime(),
+        'ip_address'         => $faker->ipv4
+    ];
+});

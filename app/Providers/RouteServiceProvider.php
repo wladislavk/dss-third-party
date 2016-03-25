@@ -75,6 +75,7 @@ class RouteServiceProvider extends ServiceProvider
         'plans' => \DentalSleepSolutions\Eloquent\Dental\Plan::class,
         'profile-images' => \DentalSleepSolutions\Eloquent\Dental\ProfileImage::class,
         'symptoms' => \DentalSleepSolutions\Eloquent\Dental\Symptom::class,
+        'previous-treatments' => \DentalSleepSolutions\Eloquent\Dental\PreviousTreatment::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

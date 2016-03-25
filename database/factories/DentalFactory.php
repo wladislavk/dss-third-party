@@ -531,6 +531,27 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam::class
         'status'           => $faker->randomDigit,
         'adddate'          => $faker->dateTime(),
         'ip_address'       => $faker->ipv4,
+        'parent_patientid' => $faker->randomDigit
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\SleepTest::class, function ($faker) {
+    $epworthIds = [
+        '1|1~2|2~5|3~7|3~8|2~',
+        '1|3~2|2~3|2~4|3~5|3~6|3~7|3~8|2~',
+        '1|1~2|3~3|2~4|2~5|3~6|3~7|2~8|1~'
+    ];
+
+    return [
+        'formid'           => $faker->randomDigit,
+        'patientid'        => $faker->randomDigit,
+        'epworthid'        => $faker->randomElement($epworthIds),
+        'analysis'         => $faker->sentence($nbWords = 5),
+        'userid'           => $faker->randomDigit,
+        'docid'            => $faker->randomDigit,
+        'status'           => $faker->randomDigit,
+        'adddate'          => $faker->dateTime(),
+        'ip_address'       => $faker->ipv4,
         'additional_notes' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true)
     ];
 });
@@ -1952,3 +1973,4 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Recipient::class, function
         'q_file10'            => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)')
     ];
 });
+

@@ -30,7 +30,6 @@
     </table>
 </center>
 <span style="font-size:12px;">
-    This email was sent by Dental Sleep Solutions&reg; on behalf of {{mailing_practice}}.
     <i>Dental Sleep Solutions will never ask you for passwords or payment information via email.</i>
     The contents of this message, together with any attachments, are intended only for the use of the individual or entity
     to which they are addressed and may contain information that is legally privileged, confidential and exempt from disclosure.

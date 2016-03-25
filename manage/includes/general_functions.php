@@ -546,10 +546,6 @@ function sendSMS ($to, $text) {
         $client = new \Services_Twilio($sid, $token);
         $sms = $client->account->sms_messages->create($from, $to, $text);
 
-        echo '<pre>';
-        var_dump($sms);
-        echo '</pre>';
-
         if ($sms) {
             $status = $sms->status ?: 'unprocessed';
             $smsId = $sms->sid ?: '';

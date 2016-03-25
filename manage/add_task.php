@@ -54,17 +54,18 @@ $t_sql = "SELECT dt.*, p.firstname, p.lastname from dental_task dt
             WHERE dt.id='".mysqli_real_escape_string($con,$_GET['id'])."'";
 $task = $db->getRow($t_sql);
 }?>
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-
-<link rel="stylesheet" href="css/form.css" type="text/css" />
-
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link href="css/admin.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/form.css" type="text/css" />
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
+    <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="script/validation.js"></script>
+</head>
+<body>
 <form name="notesfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>" method="post" >
     <input type="hidden" name="patientid" value="<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" />
     <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -140,3 +141,5 @@ if(isset($_GET['id'])){ ?>
         </td>
     </table>
 </form>
+</body>
+</html>

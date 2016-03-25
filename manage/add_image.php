@@ -411,9 +411,10 @@ if (!$errorMessage && !empty($_POST["imagesub"]) && $_POST["imagesub"] == 1) {
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link rel="stylesheet" type="text/css" href="css/admin.css" />
     <link rel="stylesheet" type="text/css" href="css/form.css" />
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="script/validation.js"></script>
-    <script type="text/javascript" src="script/wufoo.js"></script>
     <script type="text/javascript" src="/manage/js/file-upload-check.js"></script>
     <script type="text/javascript" src="js/add_image.js?v=<?= time() ?>"></script>
 </head>

@@ -34,6 +34,7 @@
 		<script language="JavaScript" src="calendar2.js"></script>
 
 		<script type="text/javascript" src="js/q_page1.js"></script>
+		<script type="text/javascript" src="/manage/js/form_top.js"></script>
 <?php
 	$todaysdate=date("m/d/Y");
 	if (!empty($_POST['q_page1sub']) && $_POST['q_page1sub'] == 1) {
@@ -257,7 +258,6 @@
 	<link rel="stylesheet" href="css/questionnaire.css" type="text/css" />
 	<link rel="stylesheet" href="css/form.css" type="text/css" />
 	<script type="text/javascript" src="script/questionnaire.js" />
-	<script type="text/javascript" src="script/wufoo.js"></script>
 
 	<a name="top"></a>
 	&nbsp;&nbsp;

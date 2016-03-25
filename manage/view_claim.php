@@ -510,7 +510,7 @@ Claim <?= $claimId ?>
 <?php 
   if(isset($_GET['inspay']) && $_GET['inspay']==1){ ?>
     <script type="text/javascript">
-    	window.location('add_ledger_payments.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>');
+    	window.location = 'add_ledger_payments.php?cid=<?= $claimId ?>&pid=<?= $patientId ?>';
     </script>
 <?php } ?>
 

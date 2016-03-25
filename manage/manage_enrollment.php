@@ -7,9 +7,7 @@ require_once('includes/constants.inc');
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen"/>
 <link href="css/add_enrollment.css" rel="stylesheet" type="text/css"/>
 <script src="admin/popup/popup.js" type="text/javascript"></script>
-
-<script language="javascript" type="text/javascript" src="../script/validation.js"></script>
-<!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
+<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript" src="/manage/js/masks.js"></script>
 <script type="text/javascript" src="/manage/script/autocomplete.js"></script>

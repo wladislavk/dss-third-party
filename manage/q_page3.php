@@ -31,6 +31,7 @@
 		}
 ?>
 		<script type="text/javascript" src="js/q_page3.js"></script>
+		<script type="text/javascript" src="/manage/js/form_top.js"></script>
 <?php
 		if($_POST['q_page3sub'] == 1) {
 			$allergens = $_POST['allergens'];
@@ -445,7 +446,6 @@
 			<link rel="stylesheet" href="css/questionnaire.css" type="text/css" />
 			<link rel="stylesheet" href="css/form.css" type="text/css" />
 			<script type="text/javascript" src="script/questionnaire.js" />
-			<script type="text/javascript" src="script/wufoo.js"></script>
 
 			<a name="top"></a>
 			&nbsp;&nbsp;
@@ -633,7 +633,7 @@
                                                 foreach ($history_my as $history_myarray) {
                                             ?>
 			                                        <span style="width:32%; float:left; display:block;height:20px;">
-			                                            <a class="addButton" onclick="$(this).addClass('grayButton');$('#other_history').append(<?= htmlspecialchars(json_encode($history_myarray['history']), ENT_QUOTES) ?> + ', '); return false;">
+			                                            <a class="addButton" onclick="$(this).addClass('grayButton');$('#other_history').val(function(index, currentText){ return currentText + <?= htmlspecialchars(json_encode($history_myarray['history']), ENT_QUOTES) ?> + ', '; }); return false;">
 			                                            	<?php echo st($history_myarray['history']);?>
 														</a>
 			                                        </span>
@@ -1073,7 +1073,7 @@
 					</table>
 
 					<div style="float:left; margin-left:10px;">
-        				<input type="reset" value="Undo Changes" />
+        				<input type="reset" value="Undo Changes" onclick="$('#other_history_list a.grayButton').removeClass('grayButton'); return true;" />
 					</div>
 					<div style="float:right;">
 				        <input type="submit" name="q_pagebtn" value="Save" />

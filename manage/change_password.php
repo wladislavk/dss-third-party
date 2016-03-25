@@ -36,10 +36,16 @@
 		}
 	}
 ?>
-
-<script language="javascript" type="text/javascript" src="script/validation.js"></script>
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
-
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="css/admin.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+	<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
+	<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+	<script type="text/javascript" src="script/validation.js"></script>
+</head>
+<body>
 <form name="passfrm" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post" onSubmit="return passabc(this)">
 	<table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 		<tr>
@@ -95,3 +101,5 @@
 		</tr>
 	</table>
 </form>
+</body>
+</html>

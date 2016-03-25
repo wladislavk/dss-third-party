@@ -486,17 +486,22 @@ function sendUpdatedEmail ($patientId, $newEmail, $oldEmail, $sentBy) {
 /**
  * Save SMS activity, for debugging purposes
  *
+ * @param string $from
  * @param string $to
  * @param string $text
  * @param string $status
+ * @param string $sid
+ * @param string $message
  */
-function logSMSActivity ($from, $to, $text, $status) {
+function logSMSActivity ($from, $to, $text, $status, $sid, $message='') {
     $db = new Db();
     $smsData = [
         'from' => $from,
         'to' => $to,
         'text' => $text,
         'status' => $status,
+        'sid' => $sid,
+        'message' => $message
     ];
 
     if (config('app.debug') && config('app.debugEmail')) {
@@ -515,28 +520,42 @@ function sendSMS ($to, $text) {
     $sendSMS = config('app.twilio.enabled');
 
     if (empty($to)) {
-        logSMSActivity($from, $to, $text, 'No phone number provided');
+        logSMSActivity($from, $to, $text, 'unsent', '', 'No phone number provided');
         return false;
     }
 
     if (!$sendSMS) {
-        logSMSActivity($from, $to, $text, 'SMS send disabled');
+        logSMSActivity($from, $to, $text, 'unsent', '', 'SMS send disabled');
         return false;
     }
 
+    $smsId = '';
+    $message = '';
     $sent = false;
 
     try {
         $client = new \Services_Twilio($sid, $token);
         $sms = $client->account->sms_messages->create($from, $to, $text);
 
-        logSMSActivity($from, $to, $text, 'SMS in queue');
-        $sent = true;
+        echo '<pre>';
+        var_dump($sms);
+        echo '</pre>';
 
-        dd($sms);
+        if ($sms) {
+            $status = $sms->status ?: 'unprocessed';
+            $smsId = $sms->sid ?: '';
+
+            $sent = !in_array($status, ['failed', 'undelivered', 'unprocessed', '']);
+        } else {
+            $status = 'unset';
+            $message = 'Twilio failed to retrieve a valid response';
+        }
     } catch (\Services_Twilio_RestException $e) {
-        logSMSActivity($from, $to, $text, 'Twilio exception: ' . $e->getMessage());
+        $status = 'exception';
+        $message = 'Twilio exception: ' . $e->getMessage();
     }
+
+    logSMSActivity($from, $to, $text, $status, $smsId, $message);
 
     return $sent;
 }

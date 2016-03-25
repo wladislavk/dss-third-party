@@ -1732,6 +1732,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Procedure::class, function
         'ip_address'         => $faker->ipv4
     ];
 });
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\ProfileImage::class, function ($faker) {
     return [
         'formid'      => $faker->randomDigit,
@@ -1745,5 +1746,52 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ProfileImage::class, funct
         'adddate'     => $faker->dateTime(),
         'ip_address'  => $faker->ipv4,
         'adminid'     => $faker->randomDigit
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Symptom::class, function ($faker) {
+    $complaintIds = [
+        '1|5~10|6~11|2~12|19~13|4~14|18~15|17~16|1~0|1~',
+        '1|1~11|4~17|2~20|5~22|6~26|3~0|1~',
+        '1|1~11|1~12|1~13|1~15|1~19|1~22|1~0|1~'
+    ];
+
+    return [
+        'formid'                 => $faker->randomDigit,
+        'patientid'              => $faker->randomDigit,
+        'member_no'              => $faker->word,
+        'group_no'               => $faker->word,
+        'plan_no'                => $faker->word,
+        'primary_care_physician' => $faker->word,
+        'feet'                   => $faker->numerify('##'),
+        'inches'                 => $faker->numerify('##'),
+        'weight'                 => $faker->numerify('##'),
+        'bmi'                    => $faker->numerify('###.##'),
+        'sleep_qual'             => $faker->numerify('##'),
+        'complaintid'            => $faker->randomElement($complaintIds),
+        'other_complaint'        => $faker->sentence($nbWords = 5),
+        'additional_paragraph'   => $faker->sentence($nbWords = 5),
+        'energy_level'           => $faker->numerify('##'),
+        'snoring_sound'          => $faker->numerify('##'),
+        'wake_night'             => $faker->numerify('##'),
+        'breathing_night'        => $faker->sentence($nbWords = 5),
+        'morning_headaches'      => $faker->sentence($nbWords = 5),
+        'hours_sleep'            => $faker->numerify('##'),
+        'userid'                 => $faker->randomDigit,
+        'docid'                  => $faker->randomDigit,
+        'status'                 => $faker->randomDigit,
+        'adddate'                => $faker->dateTime(),
+        'ip_address'             => $faker->ipv4,
+        'quit_breathing'         => $faker->sentence($nbWords = 5),
+        'bed_time_partner'       => $faker->randomElement(['Yes', 'Sometimes', 'No']),
+        'sleep_same_room'        => $faker->randomElement(['Yes', 'Sometimes', 'No']),
+        'told_you_snore'         => $faker->randomElement(['Yes', 'Sometimes', 'No']),
+        'main_reason'            => $faker->sentence($nbWords = 5),
+        'main_reason_other'      => $faker->sentence($nbWords = 5),
+        'exam_date'              => $faker->dateTime(),
+        'chief_complaint_text'   => $faker->sentence($nbWords = 5),
+        'tss'                    => $faker->numerify('##'),
+        'ess'                    => $faker->numerify('##'),
+        'parent_patientid'       => $faker->randomDigit
     ];
 });

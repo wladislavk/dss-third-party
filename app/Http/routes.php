@@ -94,6 +94,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('sleep-tests', 'SleepTestsController', ['except' => ['create', 'edit']]);
     Route::resource('qualifiers', 'QualifiersController', ['except' => ['create', 'edit']]);
     Route::resource('refunds', 'RefundsController', ['except' => ['create', 'edit']]);
+    Route::resource('chairs', 'ChairsController', ['except' => ['create', 'edit']]);
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
     Route::resource('complaints', 'ComplaintsController', ['except' => ['create', 'edit']]);
     Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);

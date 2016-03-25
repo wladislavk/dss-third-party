@@ -1996,3 +1996,11 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Recipient::class, function
         'q_file10'            => $faker->regexify('[a-z0-9]{12}\.(gif|png|jpg)')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Chair::class, function ($faker) {
+    return [
+        'name'  => $faker->word,
+        'rank'  => $faker->randomDigit,
+        'docid' => $faker->randomDigit
+    ];
+});

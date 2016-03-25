@@ -119,6 +119,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\SleepTest::class => [Repositories\SleepTests::class, Resources\SleepTest::class],
             Eloquent\Dental\Qualifier::class => [Repositories\Qualifiers::class, Resources\Qualifier::class],
             Eloquent\Dental\Refund::class => [Repositories\Refunds::class, Resources\Refund::class],
+            Eloquent\Dental\Chair::class => [Repositories\Chairs::class, Resources\Chair::class],
         ];
 
 

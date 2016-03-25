@@ -110,6 +110,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\PaymentReport::class => [Repositories\PaymentReports::class, Resources\PaymentReport::class],
             Eloquent\Dental\PlaceService::class => [Repositories\PlaceServices::class, Resources\PlaceService::class],
             Eloquent\Dental\Plan::class => [Repositories\Plans::class, Resources\Plan::class],
+            Eloquent\Dental\ProfileImage::class => [Repositories\ProfileImages::class, Resources\ProfileImage::class],
         ];
 
 

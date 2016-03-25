@@ -102,6 +102,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Maxilla::class => [Repositories\Maxillas::class, Resources\Maxilla::class],
             Eloquent\Dental\Medicament::class => [Repositories\Medications::class, Resources\Medicament::class],
             Eloquent\Dental\Note::class => [Repositories\Notes::class, Resources\Note::class],
+            Eloquent\Dental\Palpation::class => [Repositories\Palpation::class, Resources\Palpation::class],
         ];
 
 

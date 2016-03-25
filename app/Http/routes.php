@@ -77,6 +77,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('maxillas', 'MaxillasController', ['except' => ['create', 'edit']]);
     Route::resource('medications', 'MedicationsController', ['except' => ['create', 'edit']]);
     Route::resource('notes', 'NotesController', ['except' => ['create', 'edit']]);
+    Route::resource('palpation', 'PalpationController', ['except' => ['create', 'edit']]);
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
     Route::resource('complaints', 'ComplaintsController', ['except' => ['create', 'edit']]);
     Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);

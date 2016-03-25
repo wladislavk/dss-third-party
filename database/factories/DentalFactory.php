@@ -1425,3 +1425,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Note::class, function ($fa
         'parentid'        => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Palpation::class, function ($faker) {
+    return [
+        'palpation'   => $faker->sentence($nbWords = 4),
+        'description' => $faker->sentence($nbWords = 6),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

@@ -65,6 +65,7 @@ class RouteServiceProvider extends ServiceProvider
         'maxillas' => \DentalSleepSolutions\Eloquent\Dental\Maxilla::class,
         'medications' => \DentalSleepSolutions\Eloquent\Dental\Medicament::class,
         'notes' => \DentalSleepSolutions\Eloquent\Dental\Note::class,
+        'palpation' => \DentalSleepSolutions\Eloquent\Dental\Palpation::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

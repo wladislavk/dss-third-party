@@ -123,6 +123,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Screener::class => [Repositories\Screeners::class, Resources\Screener::class],
             Eloquent\Dental\ScreenerEpworth::class => [Repositories\ScreenerEpworth::class, Resources\ScreenerEpworth::class],
             Eloquent\Dental\Sleeplab::class => [Repositories\Sleeplabs::class, Resources\Sleeplab::class],
+            Eloquent\Dental\SleepStudy::class => [Repositories\SleepStudies::class, Resources\SleepStudy::class],
         ];
 
 

@@ -2097,3 +2097,22 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Screener::class, function 
         'rx_afib'               => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, function ($faker) {
+    return [
+        'testnumber'         => $faker->numerify('#########'),
+        'docid'              => $faker->numerify('##'),
+        'patientid'          => $faker->numerify('##'),
+        'needed'             => $faker->randomElement(['Yes', 'No']),
+        'scheddate'          => $faker->dateTime(),
+        'sleeplabwheresched' => $faker->numerify('##'),
+        'completed'          => $faker->randomElement(['Yes', 'No']),
+        'interpolation'      => $faker->randomElement(['Yes', 'No']),
+        'labtype'            => $faker->randomElement(['PSG', 'HST']),
+        'copyreqdate'        => $faker->dateTime(),
+        'sleeplab'           => $faker->numerify('##'),
+        'scanext'            => $faker->randomElement(['jpg', 'docx', 'rtf', 'pdf']),
+        'date'               => $faker->numerify('########'),
+        'filename'           => $faker->regexify('[a-z0-9_]{15}')
+    ];
+});

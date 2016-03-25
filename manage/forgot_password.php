@@ -19,7 +19,9 @@ include_once('includes/constants.inc');
 <?php
 
 if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1){
-	$check_sql = "SELECT userid, username, email FROM dental_users WHERE email='".mysqli_real_escape_string($con,$_POST['email'])."'";
+	$check_sql = "SELECT userid, username, email, first_name, last_name
+		FROM dental_users
+		WHERE email = '" . $db->escape($_POST['email']) . "'";
 	$check_myarray = $db->getRow($check_sql);
 	
 	if($check_myarray) {
@@ -41,11 +43,17 @@ http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray
 		$message .= "<br /><br />";
 		$message .= DSS_EMAIL_FOOTER;
 		//$ins_id = mysqli_insert_id($con);
-		$msg = mail($check_myarray['email'], $subject, $message, $headers);
+
+		$from = 'Dental Sleep Solutions <patient@dentalsleepsolutions.com>';
+		$to = "{$check_myarray['first_name']} {$check_myarray['last_name']} <{$check_myarray['email']}>";
+		$subject = 'Dental Sleep Solutions Password Reset';
+		$template = getTemplate('recover-password');
+
+		$check_myarray['recover_hash'] = $recover_hash;
+		sendEmail($from, $to, $subject, $template, $check_myarray);
 		
 		?>
 		<script type="text/javascript">
-			//alert("<?php echo  $msg; ?>");
 			window.location.replace('login.php?msg=Email sent');
 		</script>
 		<?php

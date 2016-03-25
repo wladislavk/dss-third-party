@@ -373,11 +373,13 @@ function retrieveMailerData ($patientId) {
  * @param string $patientEmail
  * @param bool   $isPasswordReset
  * @param string $oldEmail
+ * @param int    $accessType
  * @return bool
  */
-function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordReset=false, $oldEmail='') {
+function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordReset=false, $oldEmail='', $accessType=1) {
     $db = new Db();
     $patientId = intval($patientId);
+    $accessType = intval($accessType);
 
     $contactData = retrieveMailerData($patientId);
     $patientData = $contactData['patientData'];
@@ -400,7 +402,7 @@ function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordRes
                 WHERE patientid = '$patientId'");
         } else {
             $db->query("UPDATE dental_patients SET
-                    access_type = 1,
+                    access_type = $accessType,
                     registration_status = 1,
                     registration_senton = NOW()
                 WHERE patientid = '$patientId'");
@@ -434,8 +436,8 @@ function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordRes
  * @param string $oldEmail
  * @return bool
  */
-function sendRegEmail ($patientId, $patientEmail, $unusedLogin, $oldEmail) {
-    return sendRegistrationRelatedEmail($patientId, $patientEmail, true, $oldEmail);
+function sendRegEmail ($patientId, $patientEmail, $unusedLogin, $oldEmail, $accessType=1) {
+    return sendRegistrationRelatedEmail($patientId, $patientEmail, true, $oldEmail, $accessType);
 }
 
 /**

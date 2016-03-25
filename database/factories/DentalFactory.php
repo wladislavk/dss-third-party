@@ -1520,6 +1520,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Refund::class, function ($
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth::class, function ($faker) {
+    return [
+        'screener_id' => $faker->randomDigit,
+        'epworth_id'  => $faker->randomDigit,
+        'response'    => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\PatientInsurance::class, function ($faker) {
     return [
         'patientid'     => $faker->randomDigit,

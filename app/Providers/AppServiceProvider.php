@@ -121,6 +121,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Refund::class => [Repositories\Refunds::class, Resources\Refund::class],
             Eloquent\Dental\Chair::class => [Repositories\Chairs::class, Resources\Chair::class],
             Eloquent\Dental\Screener::class => [Repositories\Screeners::class, Resources\Screener::class],
+            Eloquent\Dental\ScreenerEpworth::class => [Repositories\ScreenerEpworth::class, Resources\ScreenerEpworth::class],
         ];
 
 

@@ -1,5 +1,4 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php include "admin/includes/main_include.php"; ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -7,7 +6,10 @@
 		<meta name="keywords" content="<?php echo st(!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : '');?>" />
 		<title><?php echo $sitename;?></title>
 		<link href="css/admin.css" rel="stylesheet" type="text/css" />
-		<script language="javascript" type="text/javascript" src="script/validation.js"></script>
+		<script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+		<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
+		<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="script/validation.js"></script>
 	</head>
 
 	<body>

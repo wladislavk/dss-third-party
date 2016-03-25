@@ -21,14 +21,15 @@ function cal_analaysis(fa)
 {
 	var an_tot = 0;
 
-	an_tot += parseInt($('#epworth_1').val());
-	an_tot += parseInt($('#epworth_2').val());
-	an_tot += parseInt($('#epworth_3').val());
-	an_tot += parseInt($('#epworth_4').val());
-	an_tot += parseInt($('#epworth_5').val());
-	an_tot += parseInt($('#epworth_6').val());
-	an_tot += parseInt($('#epworth_7').val());
-	an_tot += parseInt($('#epworth_8').val());
+	$('[id^=epworth_]').each(function(){
+		var $this = $(this);
+
+		if (!this.id.match(/epworth_\d+/)) {
+			return;
+		}
+
+		an_tot += parseInt($this.val());
+	});
 
 	if(an_tot < 8) {
 		an_text = 'The Epworth Sleepiness Scale score was '+an_tot+',  which indicates a normal amount of sleepiness.';
@@ -43,12 +44,14 @@ function cal_analaysis(fa)
 		an_text = 'The Epworth Sleepiness Scale score was '+an_tot+', which indicates excessive sleepiness and medical attention should be sought.';
 	}
 
-	document.q_sleepfrm.analysis.value = an_text;
+	$('form[name=q_sleepfrm] [name=analysis]').val(an_text);
 }
 
 function cal_snore()
 {
-	var fa = document.q_sleepfrm;
-	var tot = parseInt(fa.snore_1.value) + parseInt(fa.snore_2.value) + parseInt(fa.snore_3.value) + parseInt(fa.snore_4.value) + parseInt(fa.snore_5.value); 
-	fa.tot_score.value = tot;
+	var fa = $('[name=q_sleepfrm]');
+	var tot = parseInt(fa.find('[name=snore_1]').val()) + parseInt(fa.find('[name=snore_2]').val()) +
+		parseInt(fa.find('[name=snore_3]').val()) + parseInt(fa.find('[name=snore_4]').val()) +
+		parseInt(fa.find('[name=snore_5]').val());
+	fa.find('[name=tot_score]').val(tot);
 }

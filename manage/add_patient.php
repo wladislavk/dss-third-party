@@ -45,7 +45,6 @@ if(!isset($_GET['noheaders'])){
 <script type="text/javascript" src="js/jquery.cookie.js"></script>
 <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
 <link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script src="script/autocomplete.js" type="text/javascript"></script>
 <script src="script/autocomplete_local.js" type="text/javascript"></script>

@@ -81,7 +81,6 @@ if($epworthid <> '')
 <script src="admin/popup/popup2.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
-<script type="text/javascript" src="script/wufoo.js"></script>
 
 <form id="q_sleepfrm" name="q_sleepfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&id=<?php echo (!empty($_GET['id']) ? $_GET['id'] : ''); ?>" method="post">
 	<input type="hidden" name="q_sleepsub" value="1" />

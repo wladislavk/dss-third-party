@@ -1407,3 +1407,21 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Login::class, function ($f
         'ip_address'  => $faker->ipv4
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Note::class, function ($faker) {
+    return [
+        'patientid'       => $faker->randomDigit,
+        'notes'           => $faker->sentence($nbWords = 5),
+        'edited'          => $faker->boolean,
+        'editor_initials' => $faker->word,
+        'userid'          => $faker->randomDigit,
+        'docid'           => $faker->randomDigit,
+        'status'          => $faker->randomDigit,
+        'adddate'         => $faker->dateTime(),
+        'procedure_date'  => Carbon::now()->format('Y-m-d'),
+        'ip_address'      => $faker->ipv4,
+        'signed_id'       => $faker->randomDigit,
+        'signed_on'       => $faker->dateTime(),
+        'parentid'        => $faker->randomDigit
+    ];
+});

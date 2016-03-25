@@ -113,6 +113,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\ProfileImage::class => [Repositories\ProfileImages::class, Resources\ProfileImage::class],
             Eloquent\Dental\Symptom::class => [Repositories\Symptoms::class, Resources\Symptom::class],
             Eloquent\Dental\PreviousTreatment::class => [Repositories\PreviousTreatments::class, Resources\PreviousTreatment::class],
+            Eloquent\Dental\HealthHistory::class => [Repositories\HealthHistories::class, Resources\HealthHistory::class],
         ];
 
 

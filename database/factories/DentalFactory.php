@@ -513,6 +513,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceType::class, func
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\SoftPalate::class, function ($faker) {
+    return [
+        'soft_palate' => $faker->sentence($nbWords = 4),
+        'description' => $faker->sentence($nbWords = 7),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceDocument::class, function ($faker) {
     return [
         'title'       => $faker->word,

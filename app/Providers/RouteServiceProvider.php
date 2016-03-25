@@ -87,6 +87,7 @@ class RouteServiceProvider extends ServiceProvider
         'screener-epworth' => \DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth::class,
         'sleeplabs' => \DentalSleepSolutions\Eloquent\Dental\Sleeplab::class,
         'sleep-studies' => \DentalSleepSolutions\Eloquent\Dental\SleepStudy::class,
+        'soft-palates' => \DentalSleepSolutions\Eloquent\Dental\SoftPalate::class,
         'appt-types' => \DentalSleepSolutions\Eloquent\Dental\AppointmentType::class,
         'payers'       => \DentalSleepSolutions\Eloquent\Payer::class,
         'access-codes' => \DentalSleepSolutions\Eloquent\Dental\AccessCode::class,

@@ -1453,3 +1453,19 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Palpation::class, function
         'ip_address'  => $faker->ipv4
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\PatientInsurance::class, function ($faker) {
+    return [
+        'patientid'     => $faker->randomDigit,
+        'insurancetype' => $faker->randomDigit,
+        'company'       => $faker->sentence($nbWords = 4),
+        'address1'      => $faker->address,
+        'address2'      => $faker->address,
+        'city'          => $faker->city,
+        'state'         => $faker->stateAbbr,
+        'zip'           => $faker->numerify('#####'),
+        'phone'         => $faker->numerify('##########'),
+        'fax'           => $faker->numerify('(###) ###-####'),
+        'email'         => $faker->email
+    ];
+});

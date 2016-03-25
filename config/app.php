@@ -2,6 +2,7 @@
 
 return [
     'debug' => env('APP_ENV') === 'production' ? false : env('APP_DEBUG', false),
+    'debugEmail' => env('APP_DEBUG_EMAIL', false),
     'legacy_path' => env('LEGACY_PATH', '/var/www/html/legacy'),
     'url' => env('APP_URL', 'https://www.dentalsleepsolutions.com/'),
     'apiUrl' => env('API_URL', 'https://api.dentalsleepsolutions.com/'),
@@ -13,6 +14,15 @@ return [
     'key' => env('APP_KEY'),
     'cipher' => MCRYPT_RIJNDAEL_128,
     'log' => 'daily', // single, daily, syslog
+
+    'twilio' => [
+        'version' => env('TWILIO_API_VERSION'),
+        'debug' => env('TWILIO_DEBUG', false),
+        'sid' => env('TWILIO_SID'),
+        'token' => env('TWILIO_TOKEN'),
+        'number' => env('TWILIO_NUMBER'),
+        'enabled' => env('TWILIO_ENABLED'),
+    ],
 
     'providers' => [
         /*

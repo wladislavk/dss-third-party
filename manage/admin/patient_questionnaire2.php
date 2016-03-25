@@ -365,7 +365,6 @@ if($cpap == '')
 <link rel="stylesheet" href="css/questionnaire.css" type="text/css" />
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="script/questionnaire.js" />
-<script type="text/javascript" src="script/wufoo.js"></script>
 
 <a name="top"></a>
 &nbsp;&nbsp;

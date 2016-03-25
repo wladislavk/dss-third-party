@@ -127,88 +127,75 @@ function consoleLog () {
 
 function display()
 {
-  document.getElementById("future_dental_det").style.display = "block"; 
+  $("#future_dental_det").show(); 
 }
       
-function hide(id)
+function hide()
 {
-  document.getElementById("future_dental_det").style.display = "none";
+  $("#future_dental_det").hide();
 }
 
 function displaysmoke()
 {
-  document.getElementById("smoke").style.display = "block"; 
+  $("#smoke").show(); 
 }
 
-function hidesmoke(id){
-  document.getElementById("smoke").style.display = "none";
+function hidesmoke(){
+  $("#smoke").hide();
 }
 
 function LinkUp() 
 {
-  var number = document.DropDown.DDlinks.selectedIndex;
-  window.location.href = document.DropDown.DDlinks.options[number].value;
+  var link = $('[name=DDlinks]').val();
+  window.location.href = link;
 }
 
 function toggleTB(what)
 {
-  if (what.checked) {
-    document.patientfrm.premeddet.disabled=1
+  if ($(what).is(':checked')) {
+    $('form[name=patientfrm] [name=premeddet]').prop('disabled', true);
   } else {
-    document.patientfrm.premeddet.disabled=0
+    $('form[name=patientfrm] [name=premeddet]').prop('disabled', false);
   }
 }
 
 function jsConfirm(str)
 {
   var results = (hasVB) ? vbConfirm(str) : confirm(str);
-
-  document.getElementById('results').innerHTML = results;
+  $('#results').html(results);
 }
 
 function disableenable()
 {    
-  if(document.q_page1frm.bed_time_partner.options[document.q_page1frm.bed_time_partner.selectedIndex].value == 'No') { 
-    document.q_page1frm.quit_breathing.disabled = true;
-    document.q_page1frm.sleep_same_room.disabled = true;
+  if($('form[name=q_page1frm] [name=bed_time_partner]').val() == 'No') { 
+    $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', true);
+    $('form[name=q_page1frm] [name=sleep_same_room]').prop('disabled', true);
   }
 
-  if(document.q_page1frm.bed_time_partner.options[document.q_page1frm.bed_time_partner.selectedIndex].value == 'Yes') { 
-    document.q_page1frm.quit_breathing.disabled = false;
-    document.q_page1frm.sleep_same_room.disabled = false;
+  if($('form[name=q_page1frm] [name=bed_time_partner]').val() == 'Yes') { 
+    $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', false)
+    $('form[name=q_page1frm] [name=sleep_same_room]').prop('disabled', false)
   }
 
-  if(document.q_page1frm.bed_time_partner.options[document.q_page1frm.bed_time_partner.selectedIndex].value == 'Sometimes') { 
-    document.q_page1frm.quit_breathing.disabled = false;
-    document.q_page1frm.sleep_same_room.disabled = false;
+  if($('form[name=q_page1frm] [name=bed_time_partner]').val() == 'Sometimes') { 
+    $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', false)
+    $('form[name=q_page1frm] [name=sleep_same_room]').prop('disabled', false)
   }
 
-  if(document.q_page1frm.bed_time_partner.options[document.q_page1frm.bed_time_partner.selectedIndex].value == '') { 
-    document.q_page1frm.quit_breathing.disabled = false;
-    document.q_page1frm.sleep_same_room.disabled = false;
+  if($('form[name=q_page1frm] [name=bed_time_partner]').val() == '') { 
+    $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', false)
+    $('form[name=q_page1frm] [name=sleep_same_room]').prop('disabled', false)
   }
 }
 
 function showMe(id)
 {
-  var obj = document.getElementById(id);
-
-  if (obj.style.display=="none") { 
-    obj.style.display = "block";
-  } else {
-    obj.style.display = "none";
-  }
+  $('#' + id).toggle();
 }
 
 function showMe2(id)
 {
-  var obj = document.getElementById(id);
-
-  if (obj.style.display=="block") { 
-    obj.style.display = "none";
-  } else {
-    obj.style.display = "block";
-  }
+  $('#' + id).toggle();
 }
 
 function createCookie(name,value,days)
@@ -247,6 +234,10 @@ function eraseCookie(name) {
 
 function check()
 {
+  if (!(document.forms || []).length || !(document.forms[0].elements || []).length) {
+    return;
+  }
+
   for (var i = 0; i < document.forms[0].elements.length; i++) {
     var element = document.forms[0].elements[i];
 
@@ -279,16 +270,16 @@ function check()
 
 function focusIt(dtControl)
 {
-  var mytext = document.getElementById(dtControl);
-
-  setTimeout("mytext.focus();",0);
+  var mytext = $('#' + dtControl);
+  setTimeout(function(){ mytext.focus(); }, 0);
 }
 
 function validateDate(dtControl)
 {
-  input = document.getElementById(dtControl)
-  var dateFormat = input.getAttribute('data-date-format') || 'm/d/Y',
-    readableFormat = dateFormat.replace(/([mdy])/g, '$1$1').replace(/(Y)/g, '$1$1$1$1').toUpperCase();
+  var input = $('#' + dtControl),
+    value = input.val() || '',
+    dateFormat = input.attr('data-date-format') || 'm/d/Y',
+    readableFormat = dateFormat.replace(/([mdy])/g, '$1$1').replace(/(Y)/g, '$1$1$1$1').toUpperCase(),
     regexValidator = new RegExp('^' +
       dateFormat.replace(/[md]/g, '\\d{1,2}').replace(/y/g, '\\d{2}').replace(/Y/g, '\\d{4}') +
     '$');
@@ -296,9 +287,9 @@ function validateDate(dtControl)
   if (!regexValidator.test(input.value)) {
     alert('Invalid Day, Month, or Year range detected. Please correct. Must be ' + readableFormat);
   } else if (dateFormat === 'm/d/Y') {
-    var monthfield=input.value.explode("/")[0],
-      dayfield=input.value.explode("/")[1],
-      yearfield=input.value.explode("/")[2],
+    var monthfield=value.explode("/")[0],
+      dayfield=value.explode("/")[1],
+      yearfield=value.explode("/")[2],
       dayobj = new Date(yearfield, monthfield-1, dayfield)
 
     if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield)) {
@@ -319,6 +310,10 @@ function validate()
 
 function getKey(keyStroke)
 {
+  if (!window.event || !window.event.srcElement) {
+    return;
+  }
+
   var t = window.event.srcElement.type;
   var keyCode = (document.layers) ? keyStroke.which : event.keyCode;
   var keyString = String.fromCharCode(keyCode).toLowerCase();
@@ -527,62 +522,55 @@ function areyousure(tturl)
 
 function hideallblocksForFlowsheet(step)
 {   
-  if (step.indexOf("2") != -1 && document.getElementById('consultrow')) {
-    document.getElementById('consultrow').style.display = 'none';
+  if (step.indexOf("2") != -1) {
+    $('#consultrow').hide();
   }
 
-  if (step.indexOf("3") != -1 && document.getElementById('sleepstudyrow')) {
-    document.getElementById('sleepstudyrow').style.display = 'none';
+  if (step.indexOf("3") != -1) {
+    $('#sleepstudyrow').hide();
   }
 
-  if (step.indexOf("4") != -1 && document.getElementById('impressionrow')) {
-    document.getElementById('impressionrow').style.display = 'none';
+  if (step.indexOf("4") != -1) {
+    $('#impressionrow').hide();
   }
 
-  if (step.indexOf("5") != -1 && document.getElementById('delayingtreatmentrow')) {
-    document.getElementById('delayingtreatmentrow').style.display = 'none';
+  if (step.indexOf("5") != -1) {
+    $('#delayingtreatmentrow').hide();
   }
 
-  if (step.indexOf("6") != -1 && document.getElementById('refusedtreatmentrow')) {
-    document.getElementById('refusedtreatmentrow').style.display = 'none';
+  if (step.indexOf("6") != -1) {
+    $('#refusedtreatmentrow').hide();
   }
 
-  if (step.indexOf("7") != -1 && document.getElementById('devicedeliveryrow')) {
-    document.getElementById('devicedeliveryrow').style.display = 'none';
+  if (step.indexOf("7") != -1) {
+    $('#devicedeliveryrow').hide();
   }
 
-  if (step.indexOf("8") != -1 && document.getElementById('checkuprow')) {
-    document.getElementById('checkuprow').style.display = 'none';
+  if (step.indexOf("8") != -1) {
+    $('#checkuprow').hide();
   }
 
-  if (step.indexOf("9") != -1 && document.getElementById('patientnoncomprow')) {
-    document.getElementById('patientnoncomprow').style.display = 'none';
+  if (step.indexOf("9") != -1) {
+    $('#patientnoncomprow').hide();
   }
 
-  if (step.indexOf("10") != -1 && document.getElementById('homesleeptestrow')) {
-    document.getElementById('homesleeptestrow').style.display = 'none';
+  if (step.indexOf("10") != -1) {
+    $('#homesleeptestrow').hide();
   }
 
-  if (step.indexOf("11") != -1 && document.getElementById('starttreatmentrow')) {
-    document.getElementById('starttreatmentrow').style.display = 'none';
+  if (step.indexOf("11") != -1) {
+    $('#starttreatmentrow').hide();
   }
 
-  if (step.indexOf("12") != -1 && document.getElementById('annualrecallrow')) {
-    document.getElementById('annualrecallrow').style.display = 'none';
+  if (step.indexOf("12") != -1) {
+    $('#annualrecallrow').hide();
   }
 } 
 
 function hideallblocks()
 {
-  document.getElementById('sleepstudyrow').style.display = 'none';
-  document.getElementById('impressionrow').style.display = 'none';
-  document.getElementById('delayingtreatmentrow').style.display = 'none';
-  document.getElementById('refusedtreatmentrow').style.display = 'none';
-  document.getElementById('devicedeliveryrow').style.display = 'none';
-  document.getElementById('checkuprow').style.display = 'none';
-  document.getElementById('patientnoncomprow').style.display = 'none';
-  document.getElementById('starttreatmentrow').style.display = 'none';
-  document.getElementById('annualrecallrow').style.display = 'none';
-  document.getElementById('homesleeptestrow').style.display = 'none'; 
-  document.getElementById('consultrow').style.display = 'none';
- }
+  $('#sleepstudyrow, #impressionrow, #delayingtreatmentrow').hide();
+  $('#refusedtreatmentrow, #devicedeliveryrow, #checkuprow').hide();
+  $('#patientnoncomprow, #starttreatmentrow, #annualrecallrow').hide();
+  $('#homesleeptestrow, #consultrow').hide();
+}

@@ -43,49 +43,48 @@
     $producer_options .= '<option value="'.$p['userid'].'" '.(($p['userid']==$_SESSION['userid'])?'selected="selected"':'').'>'.$p['first_name'].' '.$p['last_name'].'</option>';
   }
   $producer_options .= "";
-?>
 
+$pla_sql = "SELECT post_ledger_adjustments FROM dental_users where userid='".$_SESSION['userid']."'";
+
+$pla = $db->getRow($pla_sql);
+$getTransCodesValue = 0;
+
+if ($pla['post_ledger_adjustments'] != '1' && $_SESSION['docid']!=$_SESSION['userid']) {
+    $getTransCodesValue = 1;
+}
+
+$errors = claim_errors($_GET['pid']);
+$appendElementValue = 0;
+
+if (count($errors) > 0) {
+    $e_text = 'Unable to file claim: ';
+    $e_text .= implode($errors, ', ');
+    $appendElementValue = 1;
+}
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <link href="css/admin.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/admin.css" />
+    <link rel="stylesheet" type="text/css" href="css/form.css" />
+    <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
+    <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-
     <script type="text/javascript" src="js/add_ledger_entry.js"></script>
-
-    <?php
-        $pla_sql = "SELECT post_ledger_adjustments FROM dental_users where userid='".$_SESSION['userid']."'";
-        
-        $pla = $db->getRow($pla_sql);
-        $getTransCodesValue = 0;
-        if($pla['post_ledger_adjustments'] != '1' && $_SESSION['docid']!=$_SESSION['userid']){
-          $getTransCodesValue = 1;
-        }
-
-        $errors = claim_errors($_GET['pid']);
-        $appendElementValue = 0;
-        if(count($errors)>0){
-          $e_text = 'Unable to file claim: ';
-          $e_text .= implode($errors, ', ');
-          $appendElementValue = 1;
-        }
-    ?>
-
+    <script type="text/javascript" src="calendar1.js"></script>
+    <script type="text/javascript" src="calendar2.js"></script>
+    <?php include("includes/calendarinc.php"); ?>
     <script type="text/javascript">
-      var getTransCodesValue = <?php echo $getTransCodesValue; ?>;
-      var appendElementValue = <?php echo $appendElementValue; ?>;
-      var appendElementEText = "<?php echo $e_text; ?>";
-      var appendElementProducerOptions = '<?php echo $producer_options; ?>';
+      var getTransCodesValue = <?= json_encode($getTransCodesValue) ?>;
+      var appendElementValue = <?= json_encode($appendElementValue) ?>;
+      var appendElementEText = <?= json_encode($e_text) ?>;
+      var appendElementProducerOptions = <?= json_encode($producer_options) ?>;
       var DSS_TRXN_PENDING = <?php echo DSS_TRXN_PENDING; ?>
     </script>
   </head>
-
   <body onload="hideRemove();appendElement();">
-    <link rel="stylesheet" href="css/form.css" type="text/css" />
-    <script language="JavaScript" src="calendar1.js"></script>
-    <script language="JavaScript" src="calendar2.js"></script>
-
     <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_entries.php" method="POST" onsubmit="return validate()">
       <div style="width:200px; margin:0 auto; text-align:center;">
         <input type="hidden" value="0" id="currval" />
@@ -113,8 +112,5 @@
         </div>
       </div>
     </form>
-
-    <?php include("includes/calendarinc.php"); ?>
-
   </body>
 </html> 

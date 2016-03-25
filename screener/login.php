@@ -13,6 +13,7 @@ include_once('../manage/admin/includes/password.php');
     <link href="css/login.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
     <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
+    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="/manage/admin/script/validation.js"></script>
 </head>
 <body>

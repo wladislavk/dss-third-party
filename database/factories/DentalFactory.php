@@ -13,26 +13,37 @@ use Carbon\Carbon;
 |
 */
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\SummSleeplab::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Dental\SummarySleeplab::class, function ($faker) {
     return [
-        'date' => $faker->word,
-        'sleeptesttype' => $faker->word,
-        'place' => $faker->word,
-        'apnea' => $faker->word,
-        'hypopnea' => $faker->word,
-        'ahi' => $faker->word,
-        'ahisupine' => $faker->word,
-        'rdi' => $faker->word,
-        'rdisupine' => $faker->word,
-        'o2nadir' => $faker->word,
-        't9002' => $faker->word,
-        'sleepefficiency' => $faker->word,
-        'cpaplevel' => $faker->word,
-        'dentaldevice' => $faker->word,
-        'devicesetting' => $faker->word,
-        'diagnosis' => $faker->word,
-        'notes' => $faker->word,
-        'patiendid' => $faker->word,
+        'date'             => $faker->dateTime->format('m/d/Y'),
+        'sleeptesttype'    => $faker->word,
+        'place'            => $faker->word,
+        'apnea'            => $faker->word,
+        'hypopnea'         => $faker->word,
+        'ahi'              => $faker->word,
+        'ahisupine'        => $faker->word,
+        'rdi'              => $faker->word,
+        'rdisupine'        => $faker->word,
+        'o2nadir'          => $faker->word,
+        't9002'            => $faker->word,
+        'sleepefficiency'  => $faker->word,
+        'cpaplevel'        => $faker->word,
+        'dentaldevice'     => $faker->numerify('#'),
+        'devicesetting'    => $faker->word,
+        'diagnosis'        => $faker->word,
+        'notes'            => $faker->word,
+        'patiendid'        => $faker->numerify('##'),
+        'filename'         => $faker->regexify('[a-z0-9_]+\.(jpg|gif|png|bmp)'),
+        'testnumber'       => $faker->numerify('#########'),
+        'needed'           => $faker->randomElement(['No', 'Yes']),
+        'scheddate'        => $faker->dateTime->format('m/d/Y'),
+        'completed'        => $faker->randomElement(['No', 'Yes']),
+        'interpolation'    => $faker->randomElement(['No', 'Yes']),
+        'copyreqdate'      => $faker->dateTime->format('m/d/Y'),
+        'sleeplab'         => $faker->numerify('##'),
+        'diagnosising_doc' => $faker->sentence($nbWords = 3),
+        'diagnosising_npi' => $faker->numerify('##########'),
+        'image_id'         => $faker->numerify('##')
     ];
 });
 

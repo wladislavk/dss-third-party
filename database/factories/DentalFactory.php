@@ -2127,3 +2127,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\SupportAttachment::class, function ($faker) {
+    return [
+        'ticket_id'   => $faker->randomDigit,
+        'response_id' => $faker->randomDigit,
+        'filename'    => $faker->regexify('support_attachment_[0-9]{1,2}_[0-9]_[0-9]{4}\.(gif|jpeg|png|bmp|jpg)'),
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

@@ -16,8 +16,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<script type="text/javascript" src="admin/popup/popup.js"></script>
 		<script src="/manage/js/add_new_sleeplab.js" type="text/javascript"></script>
-		<script language="JavaScript" src="calendar1.js"></script>
-		<script language="JavaScript" src="calendar2.js"></script>
+		<script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
+		<script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
 		<script type="text/javascript" src="/manage/js/manage_sleep_studies.js"></script>
 	</head>
 

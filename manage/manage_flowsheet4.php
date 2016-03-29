@@ -87,8 +87,8 @@
 
 	<link type="text/css" rel="stylesheet" href="/manage/css/manage_flowsheet4.css">
 
-	<script language="JavaScript" src="calendar1.js"></script>
-	<script language="JavaScript" src="calendar2.js"></script>
+	<script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
+	<script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
 
 	<form action="#" method="post">
 		<div style="margin:0 auto; width:500px; margin-bottom:10px;margin-top:10px;font-weight:bold;font-size:15px;color:#00457c;"><?php echo $message; ?></div>

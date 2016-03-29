@@ -49,7 +49,7 @@ function cal_analaysis(fa)
 
 function cal_snore()
 {
-	var fa = $('[name=q_sleepfrm]');
+	var fa = $('form[name=q_sleepfrm]');
 	var tot = parseInt(fa.find('[name=snore_1]').val()) + parseInt(fa.find('[name=snore_2]').val()) +
 		parseInt(fa.find('[name=snore_3]').val()) + parseInt(fa.find('[name=snore_4]').val()) +
 		parseInt(fa.find('[name=snore_5]').val());

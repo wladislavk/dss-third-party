@@ -73,8 +73,8 @@ if (count($errors) > 0) {
     <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
     <script type="text/javascript" src="js/add_ledger_entry.js"></script>
-    <script type="text/javascript" src="calendar1.js"></script>
-    <script type="text/javascript" src="calendar2.js"></script>
+    <script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
+    <script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
     <?php include("includes/calendarinc.php"); ?>
     <script type="text/javascript">
       var getTransCodesValue = <?= json_encode($getTransCodesValue) ?>;

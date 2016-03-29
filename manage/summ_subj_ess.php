@@ -19,14 +19,14 @@ if(!empty($_POST['q_sleepsub']) && $_POST['q_sleepsub'] == 1)
 	}
 	
 	$ess_score = 0;
-	$ess_score += $_POST['epworth_1'];
-	$ess_score += $_POST['epworth_2'];
-	$ess_score += $_POST['epworth_3'];
-	$ess_score += $_POST['epworth_4'];
-	$ess_score += $_POST['epworth_5'];
-	$ess_score += $_POST['epworth_6'];
-	$ess_score += $_POST['epworth_7'];
-	$ess_score += $_POST['epworth_8'];?>
+
+	foreach ($_POST as $index=>$value) {
+		if (preg_match('/^epworth_\d+$/', $index)) {
+			$ess_score += intval($value);
+		}
+	}
+
+	?>
 
 <script type="text/javascript">
 	parent.update_ess_total('<?php echo $_REQUEST['id']; ?>', '<?php echo $ess_score; ?>');
@@ -78,7 +78,8 @@ if($epworthid <> '')
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
-<script src="admin/popup/popup2.js" type="text/javascript"></script>
+<script type="text/javascript" src="/manage/js/q_sleep.js"></script>
+<script type="text/javascript" src="admin/popup/popup2.js"></script>
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 

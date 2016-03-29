@@ -12,8 +12,8 @@ include("includes/sescheck.php");
     <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
     <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <?php include("includes/calendarinc.php"); ?>
-    <script language="JavaScript" src="/manage/calendar1.js"></script>
-    <script language="JavaScript" src="/manage/calendar2.js"></script>
+    <script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
+    <script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
 </head>
 <body>
 <form id="ledgernoteform" name="ledgernoteform" action="insert_ledger_notes.php" method="POST" >

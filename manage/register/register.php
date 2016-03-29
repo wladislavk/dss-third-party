@@ -6,7 +6,7 @@
     <!--[if IE]>
             <link rel="stylesheet" type="text/css" href="css/register_ie.css" />
     <![endif]-->
-    <script type="text/javascript" src="js/register.js"></script>
+    <script type="text/javascript" src="js/register.js?v=20160328"></script>
     <script type="text/javascript" src="js/patient_dob.js"></script>
     <script type="text/javascript" src="js/autocomplete.js"></script>
     <script type="text/javascript" src="js/register_masks.js"></script>

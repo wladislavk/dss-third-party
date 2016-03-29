@@ -9,7 +9,7 @@ $(document).ready(function() {
 		window.onbeforeunload = null;
 	});
 
-	$('input,select').keypress(function() { return event.keyCode != 13; });
+	$('input,select').keypress(function(event) { return event.keyCode != 13; });
 
 	$('#patientfrm :submit').click(function() { 
 		clickedBut = $(this).attr("name");  

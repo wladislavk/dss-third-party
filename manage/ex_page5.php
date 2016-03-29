@@ -5,6 +5,7 @@
 ?>
 
 <script type="text/javascript" src="js/ex_page5.js"></script>
+<script type="text/javascript" src="/manage/js/summ_summ_check.js"></script>
 
 <?php
 		if(!empty($_POST['ex_page5sub']) && $_POST['ex_page5sub'] == 1)

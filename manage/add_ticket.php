@@ -244,7 +244,7 @@ foreach ($c_q as $c_r) {?>
 <div id="backgroundPopup"></div>
 -->
 <script type="text/javascript" src="script/contact.js"></script>
-<script type="text/javascript" src="js/add_ticket.js"></script>
+<script type="text/javascript" src="/manage/js/add_ticket.js?v=20160328"></script>
 
 </body>
 </html>

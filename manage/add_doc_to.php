@@ -55,7 +55,7 @@ echo "Successfully added contact!";
     }
     ?>
 </select>
-<input type="hidden" value="<?php echo $patid; ?>" name="patid" onclick="Javascript: parent.window.reload;" />
+<input type="hidden" value="<?php echo $patid; ?>" name="patid" onclick="Javascript: parent.window.location.reload();" />
 <input type="submit" value="Add" />
 </form> 
 </td>

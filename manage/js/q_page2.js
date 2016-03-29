@@ -98,7 +98,7 @@ function q_page2abc(fa)
 		}
 	}
 	
-	if ($('#polysomnographic_yes'),is(':checked') && fa.find('[name=confirmed_diagnosis]').val() < 1) {
+	if ($('#polysomnographic_yes').is(':checked') && fa.find('[name=confirmed_diagnosis]').val() < 1) {
 	    errorMsg += "- Missing Confirmed Diagnosis\n";
 	}
 

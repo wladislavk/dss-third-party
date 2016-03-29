@@ -209,8 +209,8 @@ if (!empty($_GET['forced'])) {
         </script>
 	</head>
 	<body>
-		<script language="JavaScript" src="calendar1.js"></script>
-		<script language="JavaScript" src="calendar2.js"></script>
+		<script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
+		<script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
     	<?php
 		
 		include("includes/calendarinc.php");

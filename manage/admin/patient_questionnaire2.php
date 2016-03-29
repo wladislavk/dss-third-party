@@ -381,9 +381,9 @@ if($cpap == '')
 <script>
 	function chk_poly()
 	{ 	
-		fa = document.q_page2frm;
+		fa = $('form[name=q_page2frm]');
 		
-		if(fa.polysomnographic[0].checked)
+		if(fa.find('[name=polysomnographic]:eq(0)').is(':checked'))
 		{
 			$('.poly_options').show();
 		}
@@ -395,15 +395,15 @@ if($cpap == '')
 	
 	function other_chk1()
 	{ 	
-		fa = document.q_page2frm;
+		fa = $('form[name=q_page2frm]');
 		
-		if(fa.other_chk.checked)
+		if(fa.find('[name=other_chk]').is(':checked'))
 		{
-			fa.other_therapy.disabled = false;
+			fa.find('[name=other_therapy]').prop('disabled', false);
 		}
 		else
 		{
-			fa.other_therapy.disabled = true;
+			fa.find('[name=other_therapy]').prop('disabled', true);
 		}
 	}
  	function chk_cpap_other(){
@@ -416,10 +416,9 @@ if($cpap == '')
 	}	
         function chk_dd()
         {       
-                fa = document.q_page2frm;
-                
-                
-                if(fa.dd_wearing[0].checked || fa.dd_prev[0].checked)
+                fa = $('form[name=q_page2frm]');
+
+                if(fa.find('[name=dd_wearing]:eq(0)').is(':checked ')|| fa.find('[name=dd_prev]:eq(0)').is(':checked'))
                 {
                         $('.dd_options').show();
                 }
@@ -430,10 +429,10 @@ if($cpap == '')
 	}
 	function chk_s()
         {       
-                fa = document.q_page2frm;
+                fa = $('form[name=q_page2frm]');
                 
                 
-                if(fa.surgery[0].checked)
+                if(fa.find('[name=surgery]:eq(0)').is(':checked'))
                 {
                         $('.s_options').show();
                 }
@@ -444,11 +443,11 @@ if($cpap == '')
         }
 	function chk_cpap()
 	{ 	
-		fa = document.q_page2frm;
+		fa = $('form[name=q_page2frm]');
 		
-		chk_l = document.getElementsByName('intolerance[]').length;
+		chk_l = $('[name="intolerance[]"]').length;
 		
-		if(fa.cpap[1].checked)
+		if(fa.find('[name=cpap]:eq(1)').is(':checked'))
 		{
 			$('.cpap_options').hide();
 			$('.cpap_options2').hide();
@@ -456,7 +455,7 @@ if($cpap == '')
 		else
 		{
 			$('.cpap_options').show();
-                  if(fa.cur_cpap[0].checked)
+                  if(fa.find('[name=cur_cpap]:eq(0)').is(':checked'))
                   {
                         $('.cpap_options2').show();
                   }
@@ -469,15 +468,19 @@ if($cpap == '')
 	
 	function q_page2abc(fa) {
 	    var errorMsg = '';
-	    
-		if (trim(fa.sleep_study_on.value) != '') { 
-			if (is_date(trim(fa.sleep_study_on.value)) == -1 ||  is_date(trim(fa.sleep_study_on.value)) == false) {
+	    fa = $(fa);
+		
+		if (trim(fa.find('[name=sleep_study_on]').val()) != '') {
+			if (
+				is_date(trim(fa.find('[name=sleep_study_on]').val())) == -1 ||
+				is_date(trim(fa.find('[name=sleep_study_on]').val())) == false
+			) {
 				errorMsg += "- Invalid Date Format, Valid Format : (mm/dd/YYYY);\n";
-				fa.sleep_study_on.focus();
+				fa.find('[name=sleep_study_on]').focus();
 			}
 		}
 		
-		if (document.getElementById('polysomnographic_yes').checked && trim(fa.confirmed_diagnosis.selectedIndex) < 1) {
+		if ($('#polysomnographic_yes').is(':checked') && trim(fa.find('[name=confirmed_diagnosis]').val()) < 1) {
 		    errorMsg += "- Missing Confirmed Diagnosis\n";
 		}
 		if (errorMsg != '') {

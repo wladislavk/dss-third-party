@@ -161,6 +161,9 @@ function cal_prs_time2 (str_time, dt_date) {
 }
 
 function cal_error (str_message) {
-	alert (str_message);
+	if (typeof console === 'object' && typeof console.warn === 'function') {
+		console.warn('[calendar2.js]', str_message);
+	}
+
 	return null;
 }

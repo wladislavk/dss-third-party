@@ -546,7 +546,7 @@ if ($isSecondary) {
     <script type="text/javascript" src="<?php echo $manage_path?>3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="<?php echo $manage_path?>script/masks.js?v=<?= time() ?>"></script>
     <script type="text/javascript" src="<?php echo $admin_path?>popup/popup.js"></script>
-    <script type="text/javascript" src="/manage/js/top.js?v=<?= time() ?>"></script>
+    <script type="text/javascript" src="/manage/js/top.js?v=20160328"></script>
     <?php require_once __DIR__ . '/calendarinc.php' ?>
     <?php if (!$isHistoricView && $isDebug) { ?>
         <link rel="stylesheet" href="/manage/css/claim-form-mock.css?v=<?= time() ?>" />

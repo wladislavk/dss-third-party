@@ -1757,7 +1757,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         		<button id="edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: edit_letter('letter<?php echo $cur_letter_num?>', '<?php echo $font_size;?>','<?php echo $font_family;?>');return false;" >
         			Edit Letter
         		</button>
-            <button style="display:none;" id="cancel_edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: window.reload();return false;" >
+            <button style="display:none;" id="cancel_edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: window.location.reload();return false;" >
               Cancel Edits
             </button>
         		&nbsp;&nbsp;&nbsp;&nbsp;

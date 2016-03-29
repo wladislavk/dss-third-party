@@ -247,6 +247,5 @@ $but_text = "Add ";
 </div>
 <div id="backgroundPopup"></div>
 -->
-<script src="js/view_patient_insurance.js" type="text/javascript"></script>
 </body>
 </html>

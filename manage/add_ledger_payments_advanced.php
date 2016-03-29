@@ -193,8 +193,8 @@ document.getElementById('auth_div').style.display = 'block';
 
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 
-<script language="JavaScript" src="calendar1.js"></script>
-<script language="JavaScript" src="calendar2.js"></script>
+<script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
+<script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
 <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
 
  

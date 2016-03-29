@@ -284,15 +284,19 @@ function validateDate(dtControl)
       dateFormat.replace(/[md]/g, '\\d{1,2}').replace(/y/g, '\\d{2}').replace(/Y/g, '\\d{4}') +
     '$');
 
-  if (!regexValidator.test(input.value)) {
+  if (!regexValidator.test(value)) {
     alert('Invalid Day, Month, or Year range detected. Please correct. Must be ' + readableFormat);
   } else if (dateFormat === 'm/d/Y') {
-    var monthfield=value.explode("/")[0],
-      dayfield=value.explode("/")[1],
-      yearfield=value.explode("/")[2],
-      dayobj = new Date(yearfield, monthfield-1, dayfield)
+    var monthField = value.split("/")[0],
+      dayField = value.split("/")[1],
+      yearField = value.split("/")[2],
+      theDay = new Date(yearField, monthField - 1, dayField);
 
-    if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield)) {
+    if (
+        (theDay.getMonth() + 1 != monthField) ||
+        (theDay.getDate() != dayField) ||
+        (theDay.getFullYear() != yearField)
+    ) {
       alert('Invalid Day, Month, or Year range detected. Please correct. Must be ' + readableFormat);
       return false;
     }

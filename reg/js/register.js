@@ -370,3 +370,75 @@ function updateDescription () {
         );
     }
 }
+
+function createPassword () {
+    var e = $('#email').val(),
+        c = $('#code').val(),
+        p1 = $('#password1').val(),
+        p2 = $('#password2').val(),
+        agreement = $('#agreement').is(':checked');
+
+    if (p1.length < 8) {
+        $('#first2_error').html("Password must be at least 8 characters in length.").show('slow');
+    } else if (!agreement) {
+        $('#first2_error').html("User Agreement must be accepted.").show('slow');
+    } else if (p1 == p2) {
+        $.ajax({
+            url: 'includes/setup_user.php',
+            type: 'post',
+            data: { email: e, code: c, p: p1 },
+            success: function(data){
+                var r = $.parseJSON(data);
+
+                if (r.success) {
+                    window.location = "register.php";
+                } else {
+                    if (r.error == "code") {
+                        $('#sent_text').html("Incorrect text message code!").show('slow');
+                    } else {
+                        $('#sent_text').html("Error.").show('slow');
+                    }
+                }
+            },
+            error: function(){
+                $('#sent_text').html("There was an error retrieving the response from the server. Please notify the system admin and try again later.").show('slow');
+            }
+        });
+    } else {
+        $('#sent_text').html("Passwords don't match!").show('slow');
+    }
+
+}
+
+function setValidClass (selector, valid) {
+    if (valid === 'reset') {
+        $(selector)
+            .removeClass('pass_valid')
+            .removeClass('pass_invalid');
+        return;
+    }
+
+    if (valid) {
+        $(selector)
+            .addClass('pass_valid')
+            .removeClass('pass_invalid');
+        return;
+    }
+
+    $(selector)
+        .addClass('pass_invalid')
+        .removeClass('pass_valid');
+}
+
+function checkPass () {
+    var p1 = $('#password1').val() || '',
+        p2 = $('#password2').val() || '';
+
+    setValidClass('#password1', p1.length < 8);
+
+    if (p1 != '' || p2 != '') {
+        setValidClass('#password2', p1 == p2);
+    } else {
+        setValidClass('#password2', 'reset');
+    }
+}

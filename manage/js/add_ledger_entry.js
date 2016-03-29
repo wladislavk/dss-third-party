@@ -258,7 +258,7 @@ function validate()
 
 function is_dollar_input(evt)
 {
-  var charCode = (evt.which) ? evt.which : event.keyCode;
+  var charCode = (evt.which) ? evt.which : evt.keyCode;
   if (charCode!=8 && charCode != 44 && charCode != 45 && charCode !=46 && (charCode < 48 || charCode > 57) )
     return false;
 

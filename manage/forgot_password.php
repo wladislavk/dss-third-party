@@ -25,29 +25,15 @@ if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1){
 	$check_myarray = $db->getRow($check_sql);
 	
 	if($check_myarray) {
-		/*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
-		mysqli_query($con, $ins_sql);*/
 		$recover_hash = hash('sha256', $check_myarray['userid'].$_POST['email'].rand());
-		$ins_sql = "UPDATE dental_users set recover_hash='".$recover_hash."', recover_time=NOW() WHERE userid='".$check_myarray['userid']."'";
-		$db->query($ins_sql);
-	
-		$headers = 'From: Dental Sleep Solutions <patient@dentalsleepsolutions.com>' . "\r\n" .
-					'Content-type: text/html' ."\r\n" .
-					'Reply-To: patient@dentalsleepsolutions.com' . "\r\n" .
-					'X-Mailer: PHP/' . phpversion();
-	
-		$subject = "Dental Sleep Solutions Password Reset";
-		$message = "Please use this link to reset your password.
-<br /><br />
-http://".$_SERVER['HTTP_HOST']."/manage/recover_password.php?un=".$check_myarray['username']."&rh=".$recover_hash;
-		$message .= "<br /><br />";
-		$message .= DSS_EMAIL_FOOTER;
-		//$ins_id = mysqli_insert_id($con);
+		$db->query("UPDATE dental_users
+			SET recover_hash = '$recover_hash', recover_time = NOW()
+			WHERE userid = '" . intval($check_myarray['userid']) . "'");
 
 		$from = 'Dental Sleep Solutions <patient@dentalsleepsolutions.com>';
 		$to = "{$check_myarray['first_name']} {$check_myarray['last_name']} <{$check_myarray['email']}>";
 		$subject = 'Dental Sleep Solutions Password Reset';
-		$template = getTemplate('recover-password');
+		$template = getTemplate('patient/recover-password');
 
 		$check_myarray['recover_hash'] = $recover_hash;
 		sendEmail($from, $to, $subject, $template, $check_myarray);

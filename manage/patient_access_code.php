@@ -24,7 +24,7 @@
         // Set active_status = 2
         sendRegEmail($pat['patientid'], $pat['email'], '', $pat['email'], 2);
 
-        $template = getTemplate('pin-instructions');
+        $template = getTemplate('patient/pin-instructions');
         $html = parseTemplate($template, $mailerData);
 
         create_pdf('User Temporary PIN', $filename, $html, null, '', '', '', $_SESSION['docid']);

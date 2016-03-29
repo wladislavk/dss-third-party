@@ -90,7 +90,7 @@ $db->query($sql);
 $from = 'Dental Sleep Solutions Support <support@dentalsleepsolutions.com>';
 $to = "$name <$email>";
 $subject = 'Dental Sleep Solutions Account Activation';
-$template = getTemplate('user-registration');
+$template = getTemplate('user/registration');
 
 $sent = sendEmail($from, $to, $subject, $template, ['id' => $id, 'hash' => $recover_hash]);
 

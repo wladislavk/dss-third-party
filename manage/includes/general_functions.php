@@ -169,7 +169,12 @@ function uploadImage($image, $file_path, $type = 'general'){
  */
 function getTemplate ($filename) {
     $templatePath = __DIR__ . '/../admin/includes/templates';
-    $filename = preg_replace('/[^a-z0-9_-]+/', '', $filename);
+
+    $sections = explode('/', $filename);
+    $sections = array_filter($sections);
+    $sections = preg_replace('/[^a-z0-9_-]+/', '', $sections);
+
+    $filename = join('/', $sections);
 
     if (!file_exists("$templatePath/$filename.tpl")) {
         return '';
@@ -392,7 +397,7 @@ function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordRes
 
             $db->query("UPDATE dental_patients SET
                     text_num = 0,
-                    access_type = 1,
+                    access_type = $accessType,
                     registration_status = 1,
                     access_code = '$accessCode',
                     recover_hash = '$recoverHash',
@@ -422,7 +427,7 @@ function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordRes
     $from = 'Dental Sleep Solutions <patient@dentalsleepsolutions.com>';
     $to = "{$patientData['firstname']} {$patientData['lastname']} <{$patientEmail}>";
     $subject = 'Online Patient Registration';
-    $message = getTemplate('patient-registration');
+    $message = getTemplate('patient/registration');
 
     return sendEmail($from, $to, $subject, $message, $mailingData);
 }
@@ -434,6 +439,7 @@ function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordRes
  * @param string $patientEmail
  * @param mixed  $unusedLogin
  * @param string $oldEmail
+ * @param int    $accessType
  * @return bool
  */
 function sendRegEmail ($patientId, $patientEmail, $unusedLogin, $oldEmail, $accessType=1) {
@@ -477,7 +483,7 @@ function sendUpdatedEmail ($patientId, $newEmail, $oldEmail, $sentBy) {
     $from = 'Dental Sleep Solutions <patient@dentalsleepsolutions.com>';
     $to = "{$patientData['firstname']} {$patientData['lastname']}";
     $subject = 'Online Patient Portal Email Update';
-    $message = getTemplate('patient-update');
+    $message = getTemplate('patient/update');
 
     $return = sendEmail($from, "$to <$oldEmail>", $subject, $message, $mailingData);
     $return = sendEmail($from, "$to <$newEmail>", $subject, $message, $mailingData) && $return;

@@ -9,7 +9,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
         <meta name="keywords" content="<?php echo isset($page_myarray['keywords']) ? st($page_myarray['keywords']) : '';?>" />
         <title><?php echo $sitename;?></title>
-        <link href="css/admin.css" rel="stylesheet" type="text/css" />
+        <link href="css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
     </head>
 
     <body onload="document.getElementById('future_dental_det').style.display = 'none';parent.frames[0].document.getElementById('hideshow1').style.display='block';parent.frames[0].document.getElementById('hideshow2').style.display='none';parent.frames[0].document.getElementById('hideshow3').style.display='none';parent.frames[0].document.getElementById('hideshow4').style.display='none';parent.frames[0].document.getElementById('hideshow5').style.display='none';">

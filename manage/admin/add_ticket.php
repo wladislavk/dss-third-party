@@ -14,6 +14,8 @@ require_once dirname(__FILE__) . '/includes/popup_top.htm';
 <?php
 if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1)
 {
+    linkRequestData('dental_support_tickets', 0);
+    
     $c_sql = "SELECT companyid FROM admin_company where adminid='".$_SESSION['adminuserid']."'";
     $c_q = mysqli_query($con,$c_sql);
     $c = mysqli_fetch_assoc($c_q);

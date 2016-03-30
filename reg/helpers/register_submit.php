@@ -3,6 +3,9 @@
 <?php require_once '../../manage/includes/general_functions.php'; ?>
 <?php require_once '../../manage/includes/notifications.php'; ?>
 <?php
+
+linkRequestData('dental_patients', $_SESSION['pid']);
+
         $chksql = "SELECT patientid FROM dental_patients WHERE parent_patientid='".mysqli_escape_string($con, $_SESSION['pid'])."'";
         $chkq = mysqli_query($con, $chksql);
 	$chkc = mysqli_num_rows($chkq);

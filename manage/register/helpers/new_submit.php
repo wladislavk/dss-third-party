@@ -5,6 +5,8 @@
         include_once '../../includes/notifications.php';
         include_once '../../admin/includes/password.php';
 
+linkRequestData('dental_users', $_POST['userid']);
+
         $c_sql = "SELECT id, plan_id FROM dental_access_codes WHERE status='1' AND access_code='".$_POST['code']."'";
         
         $c_r = $db->getRow($c_sql);

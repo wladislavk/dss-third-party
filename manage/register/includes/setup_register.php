@@ -10,12 +10,15 @@
     $q = $db->getResults($s);
     if(count($q)>0){
     	$r = $q[0];
+        linkRequestData('dental_users', $r['userid']);
+
         $psql = "UPDATE dental_users set access_code='' WHERE userid='".mysqli_real_escape_string($con, $r['userid'])."'";
         
         $db->query($psql);
         $_SESSION['regid'] = $r['userid'];
 	    echo '{"success":true}';
     }else{
+        linkRequestData('dental_users', 0);
 	    echo '{"error":"code"}';
     }
 ?> 

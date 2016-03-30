@@ -4,6 +4,9 @@
   include_once '../../includes/constants.inc';
 
   $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
+
+linkRequestData('dental_users', $id);
+
   $token = (!empty($_REQUEST['token']) ? $_REQUEST['token'] : '');
   $email = (!empty($_REQUEST['email']) ? $_REQUEST['email'] : '');
   $name = (!empty($_REQUEST['name']) ? $_REQUEST['name'] : '');

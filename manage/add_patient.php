@@ -180,6 +180,7 @@ function trigger_letter3($pid) {
     FORM SUBMISSION
 ==========================================*/
 if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
+  linkRequestData('dental_patients', $_POST['ed']);
 
   if($_POST['p_m_eligible_payer']!=''){
     $p_m_eligible_payer_id = substr($_POST['p_m_eligible_payer'],0,strpos($_POST['p_m_eligible_payer'], '-'));

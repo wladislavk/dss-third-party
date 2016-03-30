@@ -10,6 +10,7 @@ require_once '../../manage/admin/includes/password.php';
     $q = mysqli_query($con, $s);
     if(mysqli_num_rows($q)>0){
     	$r = mysqli_fetch_assoc($q);
+        linkRequestData('dental_patients', $r['patientid']);
 			$p = $_POST['p'];
                         $salt = create_salt();
                         $password = gen_password($p , $salt);
@@ -18,6 +19,7 @@ require_once '../../manage/admin/includes/password.php';
                 $_SESSION['pid']=$r['patientid'];
 	echo '{"success":true}';
     }else{
+        linkRequestData('dental_patients', 0);
 	echo '{"error":"code"}';
     }
 ?> 

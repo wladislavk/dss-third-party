@@ -23,6 +23,8 @@ include_once 'includes/constants.inc';
 <body>
 <?php
 if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1){
+    linkRequestData('dental_support_tickets', 0);
+
 	$ins_sql = "insert into dental_support_tickets set 
                     title = '".mysqli_real_escape_string($con, $_POST['title'])."',
                     category_id = '".mysqli_real_escape_string($con, $_POST['category_id'])."',

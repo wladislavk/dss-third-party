@@ -29,7 +29,7 @@ else
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
 <title><?=$sitename;?></title>
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<link href="css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="js/dropdowntabs.js">
 
@@ -68,7 +68,7 @@ else
       <tr>
         <td valign="top" class="bg_box1"><table width="800%" border="0" cellspacing="1" cellpadding="5">
           <tr>
-            <td width="50%" class="doc_top_head">Dental Sleep Solutions ®
+            <td width="50%" class="doc_top_head">Dental Sleep Solutions ï¿½
                 <br>
               Practice Management</td>
             <td width="50%">&nbsp;</td>

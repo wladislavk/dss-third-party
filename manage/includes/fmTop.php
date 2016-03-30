@@ -40,7 +40,7 @@ else
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="keywords" content="<?=st($page_myarray['keywords']);?>" />
 <title><?=$sitename;?></title>
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<link href="css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" src="js/p7tbmenu.js"></script>
 <script type="text/javascript" src="js/ddlevelsmenu.js">

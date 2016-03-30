@@ -3,7 +3,7 @@
 function update_financial_agreement_medicare_form($id, $backoffice){
 	$db = new Db();
 	$con = $GLOBALS['con'];
-	
+
 $logo = get_logo($id, $backoffice);
 
 $s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='".mysqli_real_escape_string($con,$id)."'";
@@ -1648,7 +1648,7 @@ text-align:right\'><span style=\'font-size:8.0pt;line-height:115%;font-family:
 
 
 
-</html>';        
+</html>';
 
         $title = "Device Titration (Arms/Bands)";
         $filename = "device_titration_ema_".$id.".pdf";
@@ -2240,7 +2240,7 @@ text-align:right\'><span style=\'font-size:8.0pt;line-height:115%;font-family:
 
 
 </html>
-';        
+';
 
         $title = "Device Titration Form (with Key)";
         $filename = "device_titration_".$id.".pdf";
@@ -2255,7 +2255,7 @@ function update_ess_tss_form($id, $backoffice){
 
 $logo = get_logo($id, $backoffice);
 
-        
+
 $html = '
 <html>
 
@@ -2728,7 +2728,7 @@ function update_financial_agreement_form($id, $backoffice){
 
 $logo = get_logo($id, $backoffice);
 
-        
+
 $html = '
 <html>
 
@@ -3071,7 +3071,7 @@ if($l_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
 }else{
   $practice = "DENTAL SLEEP SOLUTIONS <sup>&reg;</sup>";
 }
-        
+
 $html = '
 
 <html>
@@ -3483,7 +3483,7 @@ function update_lomn_rx_form($id, $backoffice){
 
 $logo = get_logo($id, $backoffice);
 
-        
+
 $html = '
 <html>
 
@@ -3636,7 +3636,7 @@ font-family:"Arial","sans-serif"\'>                      �
 function update_medical_hx_update_form($id, $backoffice){
 
 $logo = get_logo($id, $backoffice);
-        
+
 $html = '
 <html>
 
@@ -3775,7 +3775,7 @@ Solutions</small></span></p></div>
 function update_the_dss_experience_form($id, $backoffice){
 
 $logo = get_logo($id, $backoffice);
-        
+
 $html = '
 <html>
 
@@ -5932,16 +5932,6 @@ line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 <p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
 line-height:150%;font-family:"Arial","sans-serif"\'>____ Other Item: __________________</span></p>
 
-<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
-line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-<p class=MsoNormal style=\'line-height:150%\'><span style=\'font-size:11.0pt;
-line-height:150%;font-family:"Arial","sans-serif"\'>&nbsp;&nbsp;</span></p>
-
-<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
 <p class=MsoNormal>&nbsp;</p>
 
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
@@ -5956,26 +5946,12 @@ Print)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n
 
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
-<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>_______________________________________________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ___________________________</span></p>
 
 <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>Patient
 Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 Date&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-
-<p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
 <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
 
@@ -5988,185 +5964,6 @@ Date&nbsp;&nbsp;&nbsp; </span></p>
 
 </html>';
 
-
-
-
-
-$htmls = '
-<html>
-
-<head>
-<meta http-equiv=Content-Type content="text/html; charset=utf-8">
-<meta name=Generator content="Microsoft Word 14 (filtered)">
-<style>
-<!--
- /* Font Definitions */
- @font-face
-        {font-family:Wingdings;
-        panose-1:5 0 0 0 0 0 0 0 0 0;}
-@font-face
-        {font-family:Wingdings;
-        panose-1:5 0 0 0 0 0 0 0 0 0;}
-@font-face
-        {font-family:Calibri;
-        panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-        {font-family:Tahoma;
-        panose-1:2 11 6 4 3 5 4 4 2 4;}
-@font-face
-        {font-family:"Adobe Garamond Pro";
-        panose-1:2 2 5 2 6 5 6 2 4 3;}
-@font-face
-        {font-family:Webdings;
-        panose-1:5 3 1 2 1 5 9 6 7 3;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-        {margin-top:0in;
-        margin-right:0in;
-        margin-bottom:0in;
-        margin-left:0in;
-        line-height:115%;
-        text-autospace:ideograph-other;
-        font-size:11.0pt;
-        font-family:"Calibri","sans-serif";}
-p.MsoHeader, li.MsoHeader, div.MsoHeader
-        {margin:0in;
-        margin-bottom:.0001pt;
-        text-autospace:ideograph-other;
-        font-size:11.0pt;
-        font-family:"Calibri","sans-serif";}
-p.MsoFooter, li.MsoFooter, div.MsoFooter
-        {margin:0in;
-        margin-bottom:.0001pt;
-        text-autospace:ideograph-other;
-        font-size:11.0pt;
-        font-family:"Calibri","sans-serif";}
-p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-        {margin:0in;
-        margin-bottom:.0001pt;
-        text-autospace:ideograph-other;
-        font-size:8.0pt;
-        font-family:"Tahoma","sans-serif";}
-p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
-        {margin-top:0in;
-        margin-right:0in;
-        margin-bottom:10.0pt;
-        margin-left:.5in;
-        line-height:115%;
-        text-autospace:ideograph-other;
-        font-size:11.0pt;
-        font-family:"Calibri","sans-serif";}
-span.HeaderChar
-        {mso-style-name:"Header Char";}
-span.FooterChar
-        {mso-style-name:"Footer Char";}
-span.BalloonTextChar
-        {mso-style-name:"Balloon Text Char";
-        font-family:"Tahoma","sans-serif";}
-.MsoChpDefault
-        {font-family:"Calibri","sans-serif";}
-.MsoPapDefault
-        {margin-bottom:10.0pt;
-        line-height:115%;
-        text-autospace:ideograph-other;}
- /* Page Definitions */
- @page WordSection1
-        {size:8.5in 11.0in;
-        border:solid black 1.0pt;
-}
-div.WordSection1
-        {page:WordSection1;}
-@page WordSection2
-        {size:8.5in 11.0in;
-        border:solid black 1.0pt;
-}
-div.WordSection2
-        {page:WordSection2;}
-@page WordSection3
-        {size:8.5in 11.0in;
-        margin:.4in .5in .4in .5in;
-        border:solid black 1.0pt;
-        padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-div.WordSection3
-        {page:WordSection3;}
-@page WordSection4
-        {size:8.5in 11.0in;
-        margin:.4in .5in .4in .5in;
-        border:solid black 1.0pt;
-        padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-div.WordSection4
-        {page:WordSection4;}
-@page WordSection5
-        {size:8.5in 11.0in;
-        margin:.4in .5in .4in .5in;
-        border:solid black 1.0pt;
-        padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-div.WordSection5
-        {page:WordSection5;}
- /* List Definitions */
- ol
-        {margin-bottom:0in;}
-ul
-        {margin-bottom:0in;}
--->
-</style>
-
-</head>
-
-<body lang=EN-US>
-
-<div class=WordSection1>
-<table><tr><td width="30%">'.$logo.'</td>
-<td width="70%">
-<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
- Patient Questionnaire</span></b></h2>
-</td></tr></table>
-
-
-<img width=780 height=950
-src="/manage/images/patient_questionnaire_files/questionnaire_pg1.gif" align=left
-hspace=12>
-</div>
-
-
-<br pagebreak="true" />
-<br />
-<table><tr><td width="30%">'.$logo.'</td>
-<td width="70%">
-<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
- Patient Questionnaire</span></b></h2>
-</td></tr></table>
-
-
-<img width=780 height=950
-src="/manage/images/patient_questionnaire_files/questionnaire_pg2.gif" align=left
-hspace=12>
-
-
-
-
-<br pagebreak="true" />
-<br />
-
-<table><tr><td width="30%">'.$logo.'</td>
-<td width="70%">
-<h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>'.$practice.'
- Patient Questionnaire</span></b></h2>
-</td></tr></table>
-
-
-<img width=780 height=950
-src="/manage/images/patient_questionnaire_files/questionnaire_pg3.gif" align=left
-hspace=12>
-
-
-</body>
-</html>
-';
-
         $title = "Proof of Delivery";
         if($locid){
           $filename = "proof_of_delivery_".$locid.'_'.$id.".pdf";
@@ -6176,7 +5973,7 @@ hspace=12>
 
         create_form_pdf($html, $filename, $title, $backoffice);
 
-}        
+}
 
 
 
@@ -6230,6 +6027,6 @@ function get_logo($id, $backoffice){
     }
   }else{
     $logo = '<img src="/manage/images/logo.gif" />';
-  } 
+  }
   return $logo;
 }

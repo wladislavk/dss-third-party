@@ -1,17 +1,18 @@
-function edit_letter(divid, size, family) {
-  var html = $("#" + divid).html();
-	if (html != '') {
-		var textarea = $("<textarea />");
-		textarea.val(html);
-		textarea.attr('name', divid);
-		textarea.attr('style','width:940px;height:335px;');
-		$("#" + divid).replaceWith(textarea);
-	setup_tinymce(size, family);
-		textarea.focus();
-		$('.edit_'+divid).show();
-		$('#edit_but_'+divid).hide();
-                $('#cancel_edit_but_'+divid).show();
-	}
+function edit_letter (divid, size, family) {
+    var html = $("#" + divid).html();
+
+    if (html != '') {
+        var textarea = $("<textarea />");
+        textarea.val(html);
+        textarea.attr('name', divid);
+        textarea.attr('style','width:940px;height:335px;');
+        $("#" + divid).replaceWith(textarea);
+        setup_tinymce(size, family);
+        textarea.focus();
+        $('.edit_'+divid).show();
+        $('#edit_but_'+divid).hide();
+        $('#cancel_edit_but_'+divid).show();
+    }
 }
 
 
@@ -44,27 +45,31 @@ function strip_tags (str, allowed_tags) {
     var allowed_tag = '';
     var i = 0;
     var k = '';
-    var html = ''; 
+    var html = '';
     var replacer = function (search, replace, str) {
         return str.split(search).join(replace);
     };
-     // Build allowes tags associative array
+    // Build allowes tags associative array
+
     if (allowed_tags) {
         allowed_array = allowed_tags.match(/([a-zA-Z0-9]+)/gi);
     }
-     str += '';
+
+    str += '';
 
     // Match tags
     matches = str.match(/(<\/?[\S][^>]*>)/gi);
-     // Go through all HTML tags
+
+    // Go through all HTML tags
     for (key in matches) {
         if (isNaN(key)) {
             // IE7 Hack
-            continue;        }
+            continue;
+        }
 
         // Save HTML tag
         html = matches[key].toString();
-         // Is tag not in allowed list? Remove from str!
+        // Is tag not in allowed list? Remove from str!
         allowed = false;
 
         // Go through all allowed tags
@@ -72,50 +77,60 @@ function strip_tags (str, allowed_tags) {
             allowed_tag = allowed_array[k];
             i = -1;
 
-            if (i != 0) { i = html.toLowerCase().indexOf('<'+allowed_tag+'>');}            if (i != 0) { i = html.toLowerCase().indexOf('<'+allowed_tag+' ');}
-            if (i != 0) { i = html.toLowerCase().indexOf('</'+allowed_tag)   ;}
+            if (i != 0) { i = html.toLowerCase().indexOf('<' + allowed_tag + '>'); }
+            if (i != 0) { i = html.toLowerCase().indexOf('<' + allowed_tag + ' '); }
+            if (i != 0) { i = html.toLowerCase().indexOf('</' + allowed_tag); }
 
             // Determine
-            if (i == 0) {                allowed = true;
+            if (i == 0) {
+                allowed = true;
                 break;
             }
         }
-         if (!allowed) {
+
+        if (!allowed) {
             str = replacer(html, "", str); // Custom replace. No regexing
         }
     }
-     return str;
+
+    return str;
 }
 
-function setup_tinymce(size, family){
-tinyMCE.init({
-                        mode : "textareas",
-                        theme : "modern",
-                        menubar: false,
-                        toolbar1: "undo redo | italic | bullist numlist outdent indent | table",
-                        gecko_spellcheck : true,
-                        plugins: "paste, save, table",
-                        valid_elements: "table,tbody,thead,tr,td[width|colspan|style],img[src|width|height|align],th,b,strong,i,em,p,br,ul,li,ol",
-                        valid_styles: {
-                                "*": "",
-                        },
-                        entities: "194,Acirc,34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade",
-                        setup : function(ed) {
-                                ed.on('keyDown', function(e) {
-                                        if(e.shiftKey && e.keyCode==188){
-                                                e.preventDefault();
-                                                ed.execCommand('mceInsertContent', false, "≤");
-                                        }
-                                        if(e.shiftKey && e.keyCode==190){
-                                                e.preventDefault();
-                                                ed.execCommand('mceInsertContent', false, "≥");
-                                        }
-                                });
-                        },
-        paste_preprocess : function(pl, o) {
+function setup_tinymce (size, family) {
+    var now = (new Date()).getTime();
+
+    tinyMCE.init({
+        mode: "textareas",
+        theme: "modern",
+        menubar: false,
+        toolbar1: "undo redo | italic | bullist numlist outdent indent | table",
+        gecko_spellcheck : true,
+        plugins: "paste, save, table",
+        valid_elements: "table,tbody,thead,tr,td[width|colspan|style],img[src|width|height|align],th,b,strong,i,em,p,br,ul,li,ol",
+        valid_styles: {
+            "*": "",
+        },
+        entities: "194,Acirc,34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade",
+        setup : function(ed) {
+            ed.on('keyDown', function(e) {
+                if(e.shiftKey && e.keyCode==188){
+                    e.preventDefault();
+                    ed.execCommand('mceInsertContent', false, "≤");
+                }
+                if(e.shiftKey && e.keyCode==190){
+                    e.preventDefault();
+                    ed.execCommand('mceInsertContent', false, "≥");
+                }
+            });
+        },
+        paste_preprocess: function(pl, o) {
             o.content = o.content.replace(/&lt;/g, "≤");
             o.content = o.content.replace(/&gt;/g, "≥");
         },
-                        content_css : "css/font"+size+".css?" + new Date().getTime()+",css/font"+family+".css?" + new Date().getTime(),
-                });
+        content_css: [
+            "css/font" + size + ".css?" + now,
+            "css/font" + family + ".css?" + now,
+            "css/tinymce.no-margin-collapse.css"
+        ].join(',')
+    });
 }

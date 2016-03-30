@@ -28,7 +28,7 @@ if(!isset($_GET['noheaders'])){
   include_once('includes/notifications.php');
   include_once('includes/patient_changes.php');
 ?>
-<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<link href="css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
 <link href="css/task.css" rel="stylesheet" type="text/css" />
 <link href="css/notifications.css" rel="stylesheet" type="text/css" />
 <link href="css/search-hints.css" rel="stylesheet" type="text/css">

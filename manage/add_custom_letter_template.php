@@ -50,7 +50,7 @@
     <link rel="stylesheet" href="3rdParty/spry/SpryTabbedPanels.css" />
     <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
     <script language="javascript" type="text/javascript" src="script/validation.js"></script>
-    <script type="text/javascript" src="js/edit_letter.js"></script>
+    <script type="text/javascript" src="js/edit_letter.js?v=20160329"></script>
 
     <span class="admin_head">
     	Manage Custom Letter Templates 

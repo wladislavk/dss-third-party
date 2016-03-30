@@ -5,6 +5,8 @@ include("includes/sescheck.php");
 $docid = $_REQUEST['docid'];
 if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 {
+    linkRequestData('dental_patients', $_POST['ed']);
+
 	if($_POST["ed"] != "")
 	{
 		$ed_sql = "update dental_patients 

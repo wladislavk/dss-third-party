@@ -10,7 +10,11 @@ $db->query($v_sql);
 $v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 0 && ticket_id = '".mysqli_real_escape_string($con,(!empty($_REQUEST['ed']) ? $_REQUEST['ed'] : '')) . "'";
 $db->query($v_sql);
 if(isset($_POST['respond'])){
+  linkRequestData('dental_support_tickets', $_GET['ed']);
+  
   if($_POST['body']!='' || $_FILES['attachment']['name'][0]!=''){
+    linkRequestData('dental_support_responses', 0);
+    
     $s = "INSERT INTO dental_support_responses SET
           	ticket_id = '".mysqli_real_escape_string($con,$_GET['ed'])."',
           	responder_id='".mysqli_real_escape_string($con,$_SESSION['userid'])."',

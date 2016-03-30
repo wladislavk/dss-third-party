@@ -79,6 +79,8 @@ $doc_fields = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother');
 ** SUBMITTING
 ***************************************/
 if(isset($_POST['submit'])){
+    linkRequestData('dental_patients', $_POST['patientid']);
+
     $docchange = $patchange = false;
     $completed = true;
     $docsql = $patsql = "UPDATE dental_patients SET ";

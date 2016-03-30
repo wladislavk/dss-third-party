@@ -11,6 +11,8 @@ include_once '../../includes/help_functions.php';
 
 $userId = intval($_POST['userid']);
 
+linkRequestData('dental_patients', $userId);
+
 $sql = "UPDATE dental_users set
         first_name = '".mysqli_real_escape_string($con, $_POST['first_name'])."',
         last_name = '".mysqli_real_escape_string($con, $_POST['last_name'])."',

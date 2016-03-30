@@ -8,8 +8,11 @@ $v_sql = "UPDATE dental_support_responses SET viewed=1 WHERE response_type = 1 A
 mysqli_query($con,$v_sql);
 
 if(isset($_POST['respond'])){
+    linkRequestData('dental_support_tickets', $_GET['ed']);
 
   if($_POST['body']!='' || $_FILES['attachment']['tmp_name'][0]!=''){
+      linkRequestData('dental_support_responses', $_GET['ed']);
+
     $s = "INSERT INTO dental_support_responses SET
 	ticket_id = '".mysqli_real_escape_string($con,$_GET['ed'])."',
 	responder_id='".mysqli_real_escape_string($con,$_SESSION['adminuserid'])."',

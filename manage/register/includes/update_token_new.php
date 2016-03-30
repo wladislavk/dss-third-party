@@ -2,7 +2,11 @@
   include_once '../../admin/includes/main_include.php';
   include_once '../../3rdParty/stripe/lib/Stripe.php';
   include_once '../../includes/constants.inc';
+
   $id = $_REQUEST['id'];
+
+linkRequestData('dental_users', $id);
+
   //$token = $_REQUEST['token'];
   $email = $_REQUEST['email'];
   $name = $_REQUEST['name'];

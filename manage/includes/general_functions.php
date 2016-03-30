@@ -730,3 +730,103 @@ function isOptionSelected ($value) {
 
     return $value === 1 || $value === true;
 }
+
+/**
+ * Remove sensitive fields from the POST data to be saved to the DB:
+ *   - passwords
+ *   - cc numbers
+ *   - cc verification numbers
+ *
+ * @param array $data
+ * @return array
+ */
+function cleanupPostData (Array $data) {
+    foreach ($data as $key=>$dummy) {
+        if (preg_match(
+            '/
+                ^p$|^pw$|pword|
+                password|passwd|confirm|
+                credit_card|creditcard|
+                ccard|creditc|
+                ccnum|cc_num|
+                _cc_|^cc_|_cc$|
+                cvn|ccvn
+            /x',
+            $key
+        )) {
+            $data[$key] = '';
+        }
+    }
+
+    return $data;
+}
+
+/**
+ * Auxiliary function to retrieve the only value that might be unique and can identify the request
+ *
+ * @return string
+ */
+function requestId () {
+    return (string)$_SERVER['REQUEST_TIME_FLOAT'];
+}
+
+/**
+ * Log POST (or any) data into the DB, to diagnose problems with missing data
+ */
+function logRequestData () {
+    $db = new Db();
+
+    if (strtolower($_SERVER['REQUEST_METHOD']) !== 'post') {
+        return;
+    }
+
+    if (session_id() == '') {
+        session_start();
+    }
+
+    $postData = cleanupPostData($_POST);
+
+    $logData = $db->escapeAssignmentList([
+        'patientid' => intval($_SESSION['patientid']),
+        'userid' => intval($_SESSION['userid']),
+        'adminid' => intval($_SESSION['adminid']),
+        'script' => $_SERVER['SCRIPT_NAME'],
+        'referer' => $_SERVER['HTTP_REFERER'],
+        'request_time' => $_SERVER['REQUEST_TIME_FLOAT'],
+        'get_data' => json_encode($_GET),
+        'post_data' => json_encode($postData),
+        'files_data' => json_encode($_FILES)
+    ]);
+
+    $logId = $db->getInsertId("INSERT INTO dental_request_data_log SET $logData, created_at = NOW()");
+
+    $_SESSION['REQUEST_LOG_ID'] = $logId;
+    $_SESSION['REQUEST_ID'] = requestId();
+}
+
+/**
+ * Set relationship to request data
+ *
+ * @param string $itemTable
+ * @param int    $itemId
+ */
+function linkRequestData ($itemTable, $itemId) {
+    if (
+        !isset($_SESSION['REQUEST_ID']) ||
+        !isset($_SESSION['REQUEST_LOG_ID']) ||
+        requestId() !== $_SESSION['REQUEST_ID'] ||
+        !$_SESSION['REQUEST_LOG_ID']
+    ) {
+        return;
+    }
+
+    $db = new Db();
+
+    $typeData = $db->escapeAssignmentList([
+        'item_table' => $itemTable,
+        'item_id' => $itemId,
+        'log_id' => intval($_SESSION['REQUEST_LOG_ID'])
+    ]);
+
+    $db->query("INSERT INTO dental_request_data_type SET $typeData, created_at = NOW()");
+}

@@ -5,6 +5,8 @@
   $id = $_REQUEST['id'];
   $hash = $_REQUEST['hash'];
 
+linkRequestData('dental_users', $id);
+
   $s = "SELECT * FROM dental_users WHERE
       	userid='".mysqli_real_escape_string($con, $id)."' AND
       	recover_hash='".mysqli_real_escape_string($con, $hash)."'";

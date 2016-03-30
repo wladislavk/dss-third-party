@@ -358,7 +358,7 @@ $pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='$patientId
 $pat_r = $db->getRow($pat_sql);
 
 ?>
-<link rel="stylesheet" type="text/css" href="css/admin.css" />
+<link rel="stylesheet" type="text/css" href="css/admin.css?v=20160329" />
 <link rel="stylesheet" type="text/css" href="css/form.css" />
 <link rel="stylesheet" type="text/css" href="css/add_sleep_study.css" media="screen" />
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->

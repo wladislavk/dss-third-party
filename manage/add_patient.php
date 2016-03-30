@@ -453,7 +453,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
     }
     if(isset($_POST['sendReg']) && $doc_patient_portal && $_POST['use_patient_portal']){
       if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
-        sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email'], $con); 
+        sendRegEmail($_POST['ed'], $_POST['email'], $login, $s_r['email']);
       }else{?>
         <script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script><?php
       }
@@ -2018,7 +2018,7 @@ if(!$image){ ?>
                 </button>
 <?php 
 }else{?>
-                <button id="p_m_ins_card" onclick="window.open('display_file.php?f=<?php echo $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                <button id="p_m_ins_card" onclick="window.open('display_file.php?f=<?= rawurlencode($image['image_file']) ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
                   View Insurance Card Image
                 </button>
 <?php 
@@ -2221,7 +2221,7 @@ if(!$image){ ?>
                 </button>
 <?php 
 }else{ ?>
-                <button id="s_m_ins_card" onclick="window.open('imageholder.php?image=<?php echo $image['image_file']; ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
+                <button id="s_m_ins_card" onclick="window.open('display_file.php?f=<?= rawurlencode($image['image_file']) ?>','welcome','width=800,height=400,scrollbars=yes'); return false;" class="addButton">
                   View Insurance Card Image
                 </button>
 <?php 

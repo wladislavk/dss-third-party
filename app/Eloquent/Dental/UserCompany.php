@@ -3,27 +3,41 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\UserCompany as Resource;
+use DentalSleepSolutions\Contracts\Repositories\UserCompanies as Repository;
 
-class UserCompany extends Model
+class UserCompany extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
     /**
-     * Mass assignable attributes
+     * Guarded attributes
      *
      * @var array
      */
-    protected $fillable = ['userid', 'companyid', 'adddate', 'ip_address'];
+    protected $guarded = ['id'];
 
     /**
-     * The table associated with the model.
+     * The database table used by the model.
      *
      * @var string
      */
     protected $table = 'dental_user_company';
 
     /**
-     * @var bool
+     * The primary key for the model.
+     *
+     * @var string
      */
-    public $timestamps = false;
+    protected $primaryKey = 'id';
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 
     public function company()
     {

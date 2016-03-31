@@ -37,14 +37,15 @@ if ($patientData) {
         }
         
         if ($action == 'activate') {
+            $subject = 'Dental Sleep Solutions Account Activation';
             $template = getTemplate('patient/activate-account');
         } else {
+            $subject = 'Dental Sleep Solutions Password Reset';
             $template = getTemplate('patient/reset-password');
         }
         
         $from = 'Dental Sleep Solutions <support@dentalsleepsolutions.com>';
         $to = "{$patientData['firstname']} {$patientData['lastname']} <{$patientData['email']}>";
-        $subject = 'Dental Sleep Solutions Account Activation';
         $emailData = $mailerData['patientData'] + $mailerData['mailingData'];
         
         sendEmail($from, $to, $subject, $template, $emailData);

@@ -15,8 +15,8 @@
                 <h2>Your New Account - A new patient account has been created for you</h2>
                 <p>Please click the following link to activate your account.</p>
                 <p>
-                    <a href="{{baseUrl}}/reg/activate.php?id={%id%}&amp;hash={%recover_hash%}">
-                        {{baseUrl}}/reg/activate.php?id={{id}}&hash={{recover_hash}}
+                    <a href="{{baseUrl}}/reg/activate.php?id={%patientid%}&amp;hash={%recover_hash%}">
+                        {{baseUrl}}/reg/activate.php?id={{patientid}}&hash={{recover_hash}}
                     </a>
                 </p>
             </td>

@@ -15,8 +15,8 @@
                 <h2>Reset your password</h2>
                 <p>Please click the following link to reset your password.</p>
                 <p>
-                    <a href="{{baseUrl}}/reg/reset.php?id={%patient_id%}&amp;hash={%recover_hash%}">
-                        {{baseUrl}}/reg/reset.php?id={{patient_id}}&hash={{recover_hash}}
+                    <a href="{{baseUrl}}/reg/reset.php?id={%patientid%}&amp;hash={%recover_hash%}">
+                        {{baseUrl}}/reg/reset.php?id={{patientid}}&hash={{recover_hash}}
                     </a>
                 </p>
             </td>

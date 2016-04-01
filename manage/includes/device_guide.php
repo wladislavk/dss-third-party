@@ -1,17 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  include_once('../admin/includes/main_include.php');
-  include_once('../includes/constants.inc');
-  include("../includes/sescheck.php");
-  include_once('../includes/general_functions.php');
-?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
-  <script type="text/javascript" src="/manage/js/device/jquery-1.9.1.js"></script>
-  <script type="text/javascript" src="/manage/js/device/jquery-ui.js"></script>
-  <script type="text/javascript" src="../js/device_guide.js"></script>
-  <link rel="stylesheet" href="/manage/js/device/jquery-ui.css" />
+include_once('../admin/includes/main_include.php');
+include_once('../includes/constants.inc');
+include("../includes/sescheck.php");
+include_once('../includes/general_functions.php');
 
-  <?php
-    if(isset($_REQUEST['submit'])) {
+if (isset($_REQUEST['submit'])) {
       $sql = "SELECT * FROM dental_ex_page5 where patientid='".$_GET['pid']."'";
       
       if($db->getNumberRows($sql) == 0) {
@@ -38,19 +33,20 @@
         parent.disablePopup1();
       </script>
 <?php } ?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <link href="../css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
+    <link type="text/css" rel="stylesheet" href="/manage/js/device/jquery-ui.css" />
+    <link type="text/css" rel="stylesheet" href="../css/admin.css?v=20160329" />
+    <link type="text/css" rel="stylesheet" href="../css/form.css" />
+    <link type="text/css" rel="stylesheet" href="../css/device_guide.css" />
     <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
     <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="/manage/js/device/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="/manage/js/device/jquery-ui.js"></script>
+    <script type="text/javascript" src="../js/device_guide.js"></script>
     <script type="text/javascript" src="../script/validation.js"></script>
-    <link rel="stylesheet" href="../css/admin.css?v=20160329" type="text/css" />
-    <link rel="stylesheet" href="../css/form.css" type="text/css" />
-    <link rel="stylesheet" href="../css/device_guide.css" type="text/css" />
   </head>
 
   <body style="background:none;">

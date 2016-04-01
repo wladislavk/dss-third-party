@@ -593,7 +593,6 @@ foreach ($device_my as $device_myarray) {?>
     </tr>
   </table>
 </form>
-<script type="text/javascript" src="js/dss_followups.js?v=20160328"></script>
-<script type="text/javascript" src="js/dss_followups.js?v=20160328"></script>
+<script type="text/javascript" src="js/dss_followups.js?v=20160401"></script>
 
 </div> 

@@ -1,31 +1,5 @@
 function show_new_followup () {
-    var $baseLine = $('#sleepstudybaseline'),
-        $new = $('#sleepstudyadd'),
-        map = {
-            ep_hadd: 'morning_headaches',
-            ep_dateadd: 'exam_date',
-            ep_tsadd: 'tot_score',
-            sleep_qualadd: 'sleep_qual',
-            ep_eladd: 'energy_level',
-            ep_wadd: 'wake_night'
-        };
-
-    $new.find(':text[name], select[name]').each(function(){
-        var name = this.name.replace(/_new_/, '_').replace(/^new_|_new$/, ''),
-            $field = $baseLine.find('[name="' + name + '"]');
-
-        if (!$field.length && map.hasOwnProperty(name)) {
-            $field = $baseLine.find('[name="' + map[name] + '"]');
-        }
-
-        if (!$field.length) {
-            this.style.backgroundColor = 'red';
-        }
-
-        $(this).val($field.val());
-    });
-
-    $new.show();
+    $('#sleepstudyadd').show();
 }
 
 function gotoQuestionnaire(){

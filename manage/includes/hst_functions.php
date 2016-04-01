@@ -191,7 +191,7 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
         $from = 'Dental Sleep Solutions <noreply@dentalsleepsolutions.com>';
         $to = $companyEmail;
         $subject = 'New HST Order Created';
-        $template = getTemplate('hst-authorization.tpl');
+        $template = getTemplate('hst-authorization');
 
         $mailingData = $db->getRow("SELECT first_name, last_name, mailing_practice
             FROM dental_users

@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS dental_sms_log (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    `from` VARCHAR(255) NOT NULL DEFAULT '',
+    `to` VARCHAR(255) NOT NULL DEFAULT '',
+    text TEXT NOT NULL,
+    status VARCHAR(25) NOT NULL DEFAULT '',
+    sid VARCHAR(50) NOT NULL DEFAULT '',
+    message TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    updated_at TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY(id),
+    INDEX `to` (`to`),
+    INDEX sid (sid(20))
+);

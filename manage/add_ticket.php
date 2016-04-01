@@ -62,23 +62,22 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1){
         }
     }
 
-	$info_sql = "SELECT u.* FROM dental_users u WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
-	$info_r = $db->getRow($info_sql);
+    $data = $db->getRow("SELECT first_name, last_name
+        FROM dental_users
+        WHERE userid = '" . intval($_SESSION['userid']) . "'");
+    $data['ticket_id'] = $t_id;
 
-	$html = "Support ticket has been opened by ".$info_r['name'].".";
+    $from = 'Dental Sleep Solutions <support@dentalsleepsolutions.com>';
+    $to = join(', ', $admins);
+    $subject = 'Support Ticket Opened';
+    $template = getTemplate('ticket-opened');
 
-	$headers = 'From: Dental Sleep Solutions <support@dentalsleepsolutions.com>' . "\r\n" .
-                'Content-type: text/html' ."\r\n" .
-                'Reply-To: support@dentalsleepsolutions.com' . "\r\n" .
-                 'X-Mailer: PHP/' . phpversion();
-
-    $subject = "Support Ticket Opened";
-    $e = implode(',', $admins);
-    mail($e, $subject, $m, $headers);?>
+    sendEmail($from, $to, $subject, $template, $data);
+    
+    ?>
 <script type="text/javascript">
-	//alert("<?php echo $msg;?>");
 	alert('Thank you for your submission! We will respond promptly to you inquiry.');
-	parent.window.location='support.php?msg=<?php echo $msg;?>';
+	parent.window.location='support.php?msg=<?= rawurlencode("Ticket ID $t_id created successfully") ?>';
 </script>
 <?php
 	trigger_error("Die called", E_USER_ERROR);

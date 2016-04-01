@@ -24,6 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var array
      */
     protected $resourceBindings = [
+        'user-hst-companies' => \DentalSleepSolutions\Eloquent\Dental\UserHstCompany::class,
         'guide-settings' => \DentalSleepSolutions\Eloquent\Dental\GuideSetting::class,
         'guide-devices' => \DentalSleepSolutions\Eloquent\Dental\GuideDevice::class,
         'diagnostics' => \DentalSleepSolutions\Eloquent\Dental\Diagnostic::class,

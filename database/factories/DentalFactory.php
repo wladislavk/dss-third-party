@@ -2127,3 +2127,12 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\UserSignature::class, function ($faker) {
+    return [
+        'user_id'        => $faker->randomDigit,
+        'signature_json' => '{"lx":18,"ly":18,"mx":18,"my":17}',
+        'adddate'        => $faker->dateTime(),
+        'ip_address'     => $faker->ipv4
+    ];
+});

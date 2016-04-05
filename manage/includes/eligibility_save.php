@@ -1,28 +1,29 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-    include_once '../admin/includes/main_include.php';
-    include_once '../includes/constants.inc';
-    include_once '../admin/includes/invoice_functions.php';
+<?php
+namespace Ds3\Libraries\Legacy;
 
-    $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
-    $d = json_decode((!empty($_REQUEST['response']) ? $_REQUEST['response'] : ''), true);
-    //print_r($d);
+require_once __DIR__ . '/../admin/includes/main_include.php';
+require_once __DIR__ . '/../includes/constants.inc';
+require_once __DIR__ . '/../admin/includes/invoice_functions.php';
 
-    $pi = $d['primary_insurance'];
-    $s = "INSERT INTO dental_eligibility SET
-    	patientid='".mysqli_real_escape_string($con,$pid)."',
-    	userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."',
-    	eligible_id='".mysqli_real_escape_string($con,$d['eligible_id'])."',
-    	adddate=now(),
-            ip_address='".$_SERVER['REMOTE_ADDR']."',
-    	response='".(!empty($_REQUEST['response']) ? mysqli_real_escape_string($con, $_REQUEST['response']) : '')."'";
+$patientId = intval($_POST['pid']);
+$response = $_POST['response'];
+$jsonResponse = @json_decode($response, true);
+$type = isset($jsonResponse['type']) ? $jsonResponse['type'] : '1';
 
-    $eid = $db->getInsertId($s);
-    $type = (isset($_REQUEST['type']))?$_REQUEST['type']:'1';
-    invoice_add_eligibility($type, (!empty($_SESSION['admincompanyid']) ? $_SESSION['admincompanyid'] : ''), $eid);
-    if($q){
-      echo '{"success":true,"id":"'.$eid.'"}';
-    }else{
-      //echo mysqli_error($con);
-      echo '{"error":true,"id":"'.$eid.'"}';
-    }
-?>
+$insertData = $db->escapeAssignmentList([
+    'patientid' => $patientId,
+    'userid' => $_SESSION['userid'],
+    'eligible_id' => $jsonResponse['eligible_id'],
+    'ip_address' => $_SERVER['REMOTE_ADDR'],
+    'response' => $response
+]);
+
+$eligibleId = $db->getInsertId("INSERT INTO dental_eligibility SET $insertData, adddate = NOW()");
+invoice_add_eligibility($type, $_SESSION['admincompanyid'], $eligibleId);
+
+$response = [
+    ($eligibleId ? 'success' : 'error') => true,
+    'id' => $eligibleId
+];
+
+echo json_encode($response);

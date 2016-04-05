@@ -40,63 +40,60 @@ showTestForm = function () {
 
 var fetchCoverage = function () {
   // Put all the form fields into an object
-  if ($("input[name=test]:checked").val() == "true") {
-    var params = {
-      api_key: $("#api_key").val(),
-      member_id: $("#test_member_id").val(),
-      provider_npi: "1234567890",
-      test: "true"
-    }
-  } else {
-    var params = {
-      api_key: $("#api_key").val(),
-      payer_id: $("#payer_id").val(),
-      internal_id: $("#internal_id").val(),
-      cascade: $("#cascade").val(),
-      date: $("#date").val(),
-      from_date: $("#from_date").val(),
-      to_date: $("#to_date").val(),
-      service_type: $("#service_type").val(),
-      procedure_code: $("#procedure_code").val(),
+  var params = {
+    api_key: $("#api_key").val(),
+    payer_id: $("#payer_id").val(),
+    internal_id: $("#internal_id").val(),
+    cascade: $("#cascade").val(),
+    date: $("#date").val(),
+    from_date: $("#from_date").val(),
+    to_date: $("#to_date").val(),
+    service_type: $("#service_type").val(),
+    procedure_code: $("#procedure_code").val(),
 
-      provider_npi: $("#provider_npi").val(),
-      provider_last_name: $("#provider_last_name").val(),
-      provider_first_name: $("#provider_first_name").val(),
-      provider_organization_name: $("#provider_organization_name").val(),
-      provider_tax_id: $("#provider_tax_id").val(),
-      provider_taxonomy_code: $("#provider_taxonomy_code").val(),
-      provider_submitter_id: $("#provider_submitter_id").val(),
-      provider_street_line_1: $("#provider_street_line_1").val(),
-      provider_street_line_2: $("#provider_street_line_2").val(),
-      provider_city: $("#provider_city").val(),
-      provider_state: $("#provider_state").val(),
-      provider_zip: $("#provider_zip").val(),
+    provider_npi: $("#provider_npi").val(),
+    provider_last_name: $("#provider_last_name").val(),
+    provider_first_name: $("#provider_first_name").val(),
+    provider_organization_name: $("#provider_organization_name").val(),
+    provider_tax_id: $("#provider_tax_id").val(),
+    provider_taxonomy_code: $("#provider_taxonomy_code").val(),
+    provider_submitter_id: $("#provider_submitter_id").val(),
+    provider_street_line_1: $("#provider_street_line_1").val(),
+    provider_street_line_2: $("#provider_street_line_2").val(),
+    provider_city: $("#provider_city").val(),
+    provider_state: $("#provider_state").val(),
+    provider_zip: $("#provider_zip").val(),
 
-      member_id: $("#member_id").val(),
-      member_first_name: $("#member_first_name").val(),
-      member_last_name: $("#member_last_name").val(),
-      member_dob: $("#member_dob").val(),
-      member_ssn: $("#member_ssn").val(),
-      member_employee_id: $("#member_employee_id").val(),      
-      member_gender: $("#member_gender").val(),
-      member_group_id: $("#member_group_id").val(),
-      member_state: $("#member_state").val(),
-      member_city: $("#member_city").val(),
-      member_zip: $("#member_zip").val(),
+    member_id: $("#member_id").val(),
+    member_first_name: $("#member_first_name").val(),
+    member_last_name: $("#member_last_name").val(),
+    member_dob: $("#member_dob").val(),
+    member_ssn: $("#member_ssn").val(),
+    member_employee_id: $("#member_employee_id").val(),
+    member_gender: $("#member_gender").val(),
+    member_group_id: $("#member_group_id").val(),
+    member_state: $("#member_state").val(),
+    member_city: $("#member_city").val(),
+    member_zip: $("#member_zip").val(),
 
-      dependent_id: $("#dependent_id").val(),
-      dependent_first_name: $("#dependent_first_name").val(),
-      dependent_last_name: $("#dependent_last_name").val(),
-      dependent_dob: $("#dependent_dob").val(),
-      dependent_ssn: $("#dependent_ssn").val(),
-      dependent_employee_id: $("#dependent_employee_id").val(),
-      dependent_gender: $("#dependent_gender").val(),
-      dependent_group_id: $("#dependent_group_id").val(),
-      dependent_state: $("#dependent_state").val(),
-      dependent_city: $("#dependent_city").val(),
-      dependent_zip: $("#dependent_zip").val()
-    }
+    dependent_id: $("#dependent_id").val(),
+    dependent_first_name: $("#dependent_first_name").val(),
+    dependent_last_name: $("#dependent_last_name").val(),
+    dependent_dob: $("#dependent_dob").val(),
+    dependent_ssn: $("#dependent_ssn").val(),
+    dependent_employee_id: $("#dependent_employee_id").val(),
+    dependent_gender: $("#dependent_gender").val(),
+    dependent_group_id: $("#dependent_group_id").val(),
+    dependent_state: $("#dependent_state").val(),
+    dependent_city: $("#dependent_city").val(),
+    dependent_zip: $("#dependent_zip").val()
   };
+
+  if ($("input[name=test]:checked").val() == "true") {
+    params.member_id = $("#test_member_id").val();
+    params.provider_npi = "1234567890";
+    params.test = "true";
+  }
 
   for (var key in params) {
     if ((params[key] === undefined) || (params[key] == null) || (params[key] == "")) {

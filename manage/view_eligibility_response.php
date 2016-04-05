@@ -18,7 +18,7 @@
     <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
     <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
     <script src="eligible_check/js/eligible.js"></script>
-    <script src="eligible_check/js/sample_1.js"></script>
+    <script src="eligible_check/js/sample_1.js?v=20160404"></script>
     <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
     <script type="text/javascript" src="/manage/includes/modal.js"></script>
     <script type="text/javascript" src="/manage/3rdParty/jscolor/jscolor.js"></script>

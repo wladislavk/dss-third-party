@@ -4,6 +4,7 @@
  * Needs to be refactored...
  *
  */
+Vue.http.headers.common['Authorization'] = 'Bearer ' + document.getElementById('dom-api-token').value;
 
 var apiPath = apiRoot + 'api/v1/memo/';
 

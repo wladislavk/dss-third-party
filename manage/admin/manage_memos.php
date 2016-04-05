@@ -7,6 +7,8 @@ include_once "../includes/constants.inc";
 	Manage Memos 
 </div>
 
+<input type="hidden" id="dom-api-token" value="<?= adminApiToken() ?>">
+
 <div id="memoManager">
 
     <button type="button" class="btn btn-success pull-right" v-on="click: newMemo();">

@@ -24,7 +24,7 @@ include_once '../includes/calendarinc.php';
   <script src="js/lib/jquery-ui-1.10.3.custom.min.js"></script>
   <script src="../script/autocomplete_local.js?v=<?= time() ?>"></script>
   <script src="js/eligible.js"></script>
-  <script src="js/sample_1.js"></script>
+  <script src="js/sample_1.js?v=20160404"></script>
 
 <div class="container eligible_check">
   <form role="form" class="form-horizontal form-coverage">

@@ -11,7 +11,7 @@
   <script src="../js/lib/jquery-ui-1.10.3.custom.min.js"></script>
   <script src="../script/autocomplete_local.js?v=<?= time() ?>"></script>
   <script src="eligible_check/js/eligible.js"></script>
-  <script src="eligible_check/js/sample_1.js"></script>
+  <script src="eligible_check/js/sample_1.js?v=20160404"></script>
   <script type="text/javascript" src="/manage/admin/js/eligible_check.js"></script>
 
 <div  style="width:100%;" class="container eligible_check">
@@ -171,7 +171,7 @@
     eligibleApiKey = <?php echo "'".$api_key."'" ?>;
 </script>
 
-<input type="hidden" name="payer_id" id="payer_id" />
+<input type="hidden" name="payer_id" id="payer_id" value="<?= e($r['p_m_eligible_payer_id']) ?>" />
       </div>
     </div>
 

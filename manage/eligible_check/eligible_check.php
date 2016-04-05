@@ -179,7 +179,7 @@ include_once '../includes/calendarinc.php';
                 <li class="template" style="display:none"></li>
         </ul>
 </div>
-<input type="hidden" name="payer_id" id="payer_id" />
+<input type="hidden" name="payer_id" id="payer_id" value="<?= e($r['p_m_eligible_payer_id']) ?>" />
       </div>
     </div>
 

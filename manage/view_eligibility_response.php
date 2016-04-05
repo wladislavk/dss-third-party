@@ -12,7 +12,7 @@
     <link href="eligible_check/css/cupertino/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" media="screen">
     <link href="eligible_check/css/sample_1.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="css/modal.css" />
-    <link href="css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
+    <link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
     <script src="eligible_check/js/lib/jquery-1.10.2.min.js"></script>
     <script src="eligible_check/js/lib/jquery-ui-1.10.3.custom.min.js"></script>
     <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>

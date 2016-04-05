@@ -276,7 +276,7 @@ $main_disp .= $m_val."
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<meta name="keywords" content="<?php echo st($page_myarray['keywords']);?>" />
 		<title><?php echo $sitename;?> | <?php echo $name;?> - Ledger Card</title>
-		<link href="css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
+		<link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
 		<script language="javascript" type="text/javascript" src="script/validation.js"></script>
 	</head>
 

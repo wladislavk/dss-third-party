@@ -21,7 +21,7 @@
 ?>
 
   <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script> 
-  <script type="text/javascript" src="/manage/js/edit_letter.js?v=20160329"></script>
+  <script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
 
 <?php
   $status_sql = "SELECT status, docid FROM dental_letters

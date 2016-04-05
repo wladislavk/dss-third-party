@@ -38,7 +38,7 @@ if (isset($_REQUEST['submit'])) {
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <link type="text/css" rel="stylesheet" href="/manage/js/device/jquery-ui.css" />
-    <link type="text/css" rel="stylesheet" href="../css/admin.css?v=20160329" />
+    <link type="text/css" rel="stylesheet" href="../css/admin.css?v=20160404" />
     <link type="text/css" rel="stylesheet" href="../css/form.css" />
     <link type="text/css" rel="stylesheet" href="../css/device_guide.css" />
     <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>

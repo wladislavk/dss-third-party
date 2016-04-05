@@ -11,7 +11,7 @@ $payments = $db->getResults($sql);
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <link  rel="stylesheet" type="text/css" href="css/admin.css?v=20160329" />
+    <link  rel="stylesheet" type="text/css" href="css/admin.css?v=20160404" />
     <link  rel="stylesheet" type="text/css" href="css/form.css" />
     <script type="text/javascript">
         var DSS_TRXN_PAYER_PRIMARY = <?php echo DSS_TRXN_PAYER_PRIMARY; ?>;

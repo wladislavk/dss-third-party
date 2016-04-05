@@ -18,7 +18,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<meta name="keywords" content="<?php echo isset($page_myarray['keywords']) ? st($page_myarray['keywords']) : '';?>" />
 		<title><?php echo $sitename;?> | <?php echo $st_disp;?> Patient</title>
-		<link href="css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
+		<link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
 		<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
 		<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>

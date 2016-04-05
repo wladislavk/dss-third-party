@@ -2127,3 +2127,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Filemanager::class, function ($faker) {
+    return [
+        'docid'   => $faker->randomDigit,
+        'name'    => $faker->regexify('[a-zA-Z_]+.jpg'),
+        'type'    => 'image/jpeg',
+        'size'    => $faker->numerify('#####'),
+        'ext'     => 'jpg',
+        'content' => $faker->sentence($nbWords = 3),
+        'date'    => $faker->dateTime()
+    ];
+});

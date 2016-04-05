@@ -170,28 +170,4 @@ $(function(){
      * Tablesorter
      */
     $('.sort_table').tablesorter();
-    
-    /**
-     * Append dropdown to change skin
-     */
-    $('.container').append('<select id="test-new-theme" class="btn btn-success pull-right"><option>Default</option><option disabled role="separator"></option></select>');
-    
-    $.each(
-        ['amelia','cerulean','cosmo','cyborg','flatly','journal','readable','simplex','slate','spacelab','united','yeti'],
-        function(c,name){
-            $('#test-new-theme').append('<option>' + name[0].toUpperCase() + name.substr(1) + '</option>');
-        }
-    );
-    
-    $('#test-new-theme').on('change keydown keyup',function(){
-        var $this = $(this),
-        theme = $this.val().toLowerCase(),
-        stylesheet = $('#applied-stylesheet'),
-        path = stylesheet.attr('href');
-        
-        path = path.replace(/bootstrap-[^\-]+-/,'bootstrap-' + theme + '-');
-        stylesheet.attr('href',path);
-    });
-    
-    $('body').removeClass('loading-new-theme');
 });

@@ -45,7 +45,8 @@ $c = mysqli_fetch_assoc($c_q);
 </div>
 <div align="right">
 	<button onclick="loadPopup('add_claim_note.php?claim_id=<?php echo  $_GET['id']; ?>&pid=<?php echo  $_GET['pid'];?>');return false;" class="btn btn-success"> Add Note <span class="glyphicon glyphicon-plus"></span> </button>	
-	<button onclick="window.location='insurance_claim_v2.php?insid=<?php echo  $_GET['id']; ?>&pid=<?php echo  $_GET['pid'];?>';return false;" class="btn btn-success"> View Claim <span class="glyphicon glyphicon-view"></span> </button>	
+	<button onclick="window.location='insurance_claim_v2.php?insid=<?php echo  $_GET['id']; ?>&pid=<?php echo  $_GET['pid'];?>';return false;" class="btn btn-success"> View Claim <span class="glyphicon glyphicon-view"></span> </button>
+    <a class="btn btn-primary" href="/manage/admin/patient_claims.php?pid=<?= intval($_GET['pid']) ?>">View Chart</a>
 </div>
 <?php
  while($r = mysqli_fetch_assoc($n_q)){

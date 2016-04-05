@@ -2127,3 +2127,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\EdxCertificat::class, function ($faker) {
+    return [
+        'url'               => $faker->url,
+        'edx_id'            => $faker->randomDigit,
+        'course_name'       => $faker->sentence($nbWords = 3),
+        'course_section'    => $faker->sentence($nbWords = 3),
+        'course_subsection' => $faker->sentence($nbWords = 3),
+        'number_ce'         => $faker->numerify('####'),
+        'adddate'           => $faker->dateTime(),
+        'ip_address'        => $faker->ipv4
+    ];
+});

@@ -13,11 +13,10 @@ class FilemanagerUpdate extends Request
     {
         return [
             'docid'   => 'sometimes|required|integer',
-            'name'    => 'string',
+            'name'    => ['regex:/^[A-Za-z0-9_]+\.(gif|jpg|jpeg|bmp|png)$/'],
             'type'    => 'string',
             'size'    => 'integer',
-            'ext'     => 'string',
-            'content' => 'string'
+            'ext'     => ['regex:/^(gif|jpg|jpeg|bmp|png)$/']
         ];
     }
 }

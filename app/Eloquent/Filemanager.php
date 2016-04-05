@@ -19,6 +19,13 @@ class Filemanager extends Model implements Resource, Repository
     protected $guarded = ['id'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['content'];
+
+    /**
      * The database table used by the model.
      *
      * @var string

@@ -101,3 +101,11 @@ $factory->define(DentalSleepSolutions\Eloquent\AdminCompany::class, function ($f
         'ip_address' => $faker->ipv4
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\FlowsheetSegment::class, function ($faker) {
+    return [
+        'section' => $faker->word,
+        'content' => $faker->sentence($nbWords = 6),
+        'sortby'  => $faker->randomDigit
+    ];
+});

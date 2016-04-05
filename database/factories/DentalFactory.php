@@ -2127,11 +2127,3 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
-
-$factory->define(DentalSleepSolutions\Eloquent\FlowsheetSegment::class, function ($faker) {
-    return [
-        'section' => $faker->word,
-        'content' => $faker->sentence($nbWords = 6),
-        'sortby'  => $faker->randomDigit
-    ];
-});

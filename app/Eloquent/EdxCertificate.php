@@ -4,10 +4,10 @@ namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\EdxCertificat as Resource;
+use DentalSleepSolutions\Contracts\Resources\EdxCertificate as Resource;
 use DentalSleepSolutions\Contracts\Repositories\EdxCertificates as Repository;
 
-class EdxCertificat extends Model implements Resource, Repository
+class EdxCertificate extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

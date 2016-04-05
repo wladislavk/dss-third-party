@@ -12,7 +12,7 @@ class EdxCertificateStore extends Request
     public function rules()
     {
         return [
-            'url'               => 'required|string',
+            'url'               => 'required|url',
             'edx_id'            => 'required|integer',
             'course_name'       => 'string',
             'course_section'    => 'string',

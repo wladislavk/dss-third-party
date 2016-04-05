@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-use DentalSleepSolutions\Eloquent\EdxCertificat;
+use DentalSleepSolutions\Eloquent\EdxCertificate;
 
 class EdxCertificatesApiTest extends TestCase
 {
@@ -14,9 +14,9 @@ class EdxCertificatesApiTest extends TestCase
      * Post to /api/v1/edx-certificates -> EdxCertificatesController@store method
      * 
      */
-    public function testAddEdxCertificat()
+    public function testAddEdxCertificate()
     {
-        $data = factory(EdxCertificat::class)->make()->toArray();
+        $data = factory(EdxCertificate::class)->make()->toArray();
 
         $data['number_ce'] = 8;
 
@@ -30,16 +30,16 @@ class EdxCertificatesApiTest extends TestCase
      * Put to /api/v1/edx-certificates/{id} -> EdxCertificatesController@update method
      * 
      */
-    public function testUpdateEdxCertificat()
+    public function testUpdateEdxCertificate()
     {
-        $edxCertificatTestRecord = factory(EdxCertificat::class)->create();
+        $edxCertificateTestRecord = factory(EdxCertificate::class)->create();
 
         $data = [
             'course_name' => 'updated course name',
             'number_ce'   => 9
         ];
 
-        $this->put('/api/v1/edx-certificates/' . $edxCertificatTestRecord->id, $data)
+        $this->put('/api/v1/edx-certificates/' . $edxCertificateTestRecord->id, $data)
             ->seeInDatabase('edx_certificates', [
                 'course_name' => 'updated course name'
             ])
@@ -51,13 +51,13 @@ class EdxCertificatesApiTest extends TestCase
      * Delete to /api/v1/edx-certificates/{id} -> EdxCertificatesController@destroy method
      * 
      */
-    public function testDeleteEdxCertificat()
+    public function testDeleteEdxCertificate()
     {
-        $edxCertificatTestRecord = factory(EdxCertificat::class)->create();
+        $edxCertificateTestRecord = factory(EdxCertificate::class)->create();
 
-        $this->delete('/api/v1/edx-certificates/' . $edxCertificatTestRecord->id)
+        $this->delete('/api/v1/edx-certificates/' . $edxCertificateTestRecord->id)
             ->notSeeInDatabase('edx_certificates', [
-                'id' => $edxCertificatTestRecord->id
+                'id' => $edxCertificateTestRecord->id
             ])
             ->assertResponseOk();
     }

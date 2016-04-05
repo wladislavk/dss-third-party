@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class EdxCertificatUpdate extends Request
+class EdxCertificateUpdate extends Request
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,7 +12,7 @@ class EdxCertificatUpdate extends Request
     public function rules()
     {
         return [
-            'url'               => 'sometimes|required|string',
+            'url'               => 'sometimes|required|url',
             'edx_id'            => 'sometimes|required|integer',
             'course_name'       => 'string',
             'course_section'    => 'string',

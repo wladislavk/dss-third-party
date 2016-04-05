@@ -4,10 +4,10 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Helpers\ApiResponse;
 use DentalSleepSolutions\Http\Requests\EdxCertificateStore;
-use DentalSleepSolutions\Http\Requests\EdxCertificatUpdate;
-use DentalSleepSolutions\Http\Requests\EdxCertificatDestroy;
+use DentalSleepSolutions\Http\Requests\EdxCertificateUpdate;
+use DentalSleepSolutions\Http\Requests\EdxCertificateDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\EdxCertificat;
+use DentalSleepSolutions\Contracts\Resources\EdxCertificate;
 use DentalSleepSolutions\Contracts\Repositories\EdxCertificates;
 
 /**
@@ -36,10 +36,10 @@ class EdxCertificatesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\EdxCertificat $resource
+     * @param  \DentalSleepSolutions\Contracts\Resources\EdxCertificate $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(EdxCertificat $resource)
+    public function show(EdxCertificate $resource)
     {
         return ApiResponse::responseOk('', $resource);
     }
@@ -65,11 +65,11 @@ class EdxCertificatesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\EdxCertificat $resource
-     * @param  \DentalSleepSolutions\Http\Requests\EdxCertificatUpdate $request
+     * @param  \DentalSleepSolutions\Contracts\Resources\EdxCertificate $resource
+     * @param  \DentalSleepSolutions\Http\Requests\EdxCertificateUpdate $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(EdxCertificat $resource, EdxCertificatUpdate $request)
+    public function update(EdxCertificate $resource, EdxCertificateUpdate $request)
     {
         $resource->update($request->all());
 
@@ -79,11 +79,11 @@ class EdxCertificatesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\EdxCertificat $resource
-     * @param  \DentalSleepSolutions\Http\Requests\EdxCertificatDestroy $request
+     * @param  \DentalSleepSolutions\Contracts\Resources\EdxCertificate $resource
+     * @param  \DentalSleepSolutions\Http\Requests\EdxCertificateDestroy $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(EdxCertificat $resource, EdxCertificatDestroy $request)
+    public function destroy(EdxCertificate $resource, EdxCertificateDestroy $request)
     {
         $resource->delete();
 

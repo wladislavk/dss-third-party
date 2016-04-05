@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Contracts\Resources;
 
-interface EdxCertificat extends Resource
+interface EdxCertificate extends Resource
 {
 
 }

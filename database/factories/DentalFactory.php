@@ -2128,14 +2128,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\EdxCertificat::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\EdxCertificate::class, function ($faker) {
     return [
         'url'               => $faker->url,
         'edx_id'            => $faker->randomDigit,
         'course_name'       => $faker->sentence($nbWords = 3),
         'course_section'    => $faker->sentence($nbWords = 3),
         'course_subsection' => $faker->sentence($nbWords = 3),
-        'number_ce'         => $faker->numerify('####'),
+        'number_ce'         => $faker->randomDigit,
         'adddate'           => $faker->dateTime(),
         'ip_address'        => $faker->ipv4
     ];

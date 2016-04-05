@@ -129,8 +129,7 @@ function setup_tinymce (size, family) {
         },
         content_css: [
             "css/font" + size + ".css?" + now,
-            "css/font" + family + ".css?" + now,
-            "css/tinymce.no-margin-collapse.css"
+            "css/font" + family + ".css?" + now
         ].join(',')
     });
 }

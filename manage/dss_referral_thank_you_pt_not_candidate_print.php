@@ -107,7 +107,7 @@ if(st($pat_myarray['gender']) == 'Female'){
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="keywords" content="d<?php echo st(!empty($page_myarray['keywords']) ? $page_myarray['keywords'] : '');?>" />
 <title>d<?php echo $sitename;?> | d<?php echo $name;?> - DSS referral thank you pt not candidate</title>
-<link href="css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
+<link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
 <script language="javascript" type="text/javascript" src="script/validation.js"></script>
 </head>
 <body onLoad="window.print(); window.close();">

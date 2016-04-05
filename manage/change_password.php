@@ -39,7 +39,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link href="css/admin.css?v=20160329" rel="stylesheet" type="text/css" />
+	<link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
 	<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
 	<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>

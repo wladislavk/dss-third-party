@@ -133,11 +133,3 @@ td.header, th.header {
 .radio input[type=radio], .radio-inline input[type=radio], .checkbox input[type=checkbox], .checkbox-inline input[type=checkbox]{
   margin-left:0;
 }
-
-/**
- * Avoid margin collapsing in letter preview, as tcpdf doesn't tolerate it
- */
-form.letter p {
-    display: inline-block;
-    width: 100%;
-}

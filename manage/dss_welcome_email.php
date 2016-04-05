@@ -6,7 +6,7 @@
 	}
 ?>
 	<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-	<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160329"></script>
+	<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
 <?php
 	$letterid = mysqli_real_escape_string($con, $_GET['lid']);
 	// Select Letter

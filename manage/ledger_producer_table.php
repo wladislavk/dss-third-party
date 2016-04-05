@@ -23,6 +23,9 @@
 		<td valign="top" class="col_head <?php echo  (isset($_REQUEST['sort']) && $_REQUEST['sort'] == 'paid_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
 			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo (isset($start_date) ? $start_date : '');?>&end_date=<?php echo (isset($end_date) ? $end_date : '');?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo  (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=paid_amount&sortdir=<?php echo (isset($_REQUEST['sort']) && $_REQUEST['sort']=='paid_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Credits</a>
 		</td>
+		<td valign="top" class="col_head <?php echo  (isset($_REQUEST['sort']) && $_REQUEST['sort'] == 'adj_amount')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
+			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo (isset($start_date) ? $start_date : '');?>&end_date=<?php echo (isset($end_date) ? $end_date : '');?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo  (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=paid_amount&sortdir=<?php echo (isset($_REQUEST['sort']) && $_REQUEST['sort']=='adj_amount'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Adjustments</a>
+		</td>
 		<td valign="top" class="col_head <?php echo  (isset($_REQUEST['sort']) && $_REQUEST['sort'] == 'status')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="5%">
 			<a href="ledger_report.php?dailysub=<?php echo (!empty($_REQUEST['dailysub']) ? $_REQUEST['dailysub'] : '');?>&monthlysub=<?php echo (!empty($_REQUEST['monthlysub']) ? $_REQUEST['monthlysub'] : '');?>&start_date=<?php echo (isset($start_date) ? $start_date : '');?>&end_date=<?php echo (isset($end_date) ? $end_date : '');?>&rangesub=<?php echo (!empty($_REQUEST['rangesub']) ? $_REQUEST['rangesub'] : '');?>&weeklysub=<?php echo (!empty($_REQUEST['weeklysub']) ? $_REQUEST['weeklysub'] : '');?><?php echo  (isset($_GET['pid']))?'&pid='.$_GET['pid']:'';?>&sort=status&sortdir=<?php echo (isset($_REQUEST['sort']) && $_REQUEST['sort']=='status'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ins</a>
 		</td>
@@ -37,6 +40,7 @@
 	<?php } else {
 		$tot_charge = 0;
 		$tot_credit = 0;
+		$tot_adj = 0;
 
         if(isset($_GET['pid'])){
             $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
@@ -51,7 +55,6 @@
            $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
            $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
    		   $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
-           $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
         } else {
            $p_date = $i_date = $n_date = $l_date = '';
         }
@@ -78,7 +81,34 @@
             LEFT JOIN dental_users as p ON dl.producerid=p.userid 
 	        where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
 			AND dl.producerid='".mysqli_real_escape_string($con, (!empty($producer['userid']) ? $producer['userid'] : ''))."'
+			and (dl.paid_amount IS NULL || dl.paid_amount = 0)
 			".$l_date."
+			UNION
+                select 
+                    'ledger_paid',
+                    dl.ledgerid,
+                    dl.service_date,
+                    dl.entry_date,
+                    dl.amount,
+                    dl.paid_amount,
+                    dl.status,
+                    dl.description,
+                    CONCAT(p.first_name,' ',p.last_name),
+                    pat.patientid,
+                    pat.firstname,
+                    pat.lastname,
+                    tc.type,
+                    '',
+                    dl.primary_claim_id
+                from dental_ledger dl 
+                        JOIN dental_patients as pat ON dl.patientid = pat.patientid
+                        LEFT JOIN dental_users p ON dl.producerid=p.userid 
+                        LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
+                        LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
+                where dl.docid='".$_SESSION['docid']."' ".$lpsql."
+                    AND dl.producerid='".mysqli_real_escape_string($con, (!empty($producer['userid']) ? $producer['userid'] : ''))."'
+                    AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+        			".$l_date."
  			UNION
         	select 
             'ledger_payment',
@@ -156,19 +186,27 @@
 				</td>
 				<td valign="top" align="right" width="10%">
 		          	<?php
-		          	echo number_format($myarray["amount"],2);
+		          	echo number_format($myarray["amount"] ?: 0,2);
 		          	$tot_charge += $myarray["amount"];
 		          	?>
 					&nbsp;
 				</td>
+			<?php
+			if($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
+				<td></td>
+				<?php
+				$tot_adj += st($myarray["paid_amount"]);
+			} ?>
 				<td valign="top" align="right" width="10%">
-					<?php if(st($myarray["paid_amount"]) <> 0) {?>
-	                	<?php echo number_format(st($myarray["paid_amount"]),2);?>
-					<?php 
-						$tot_credit += st($myarray["paid_amount"]);
-					}?>
+	                	<?php echo number_format($myarray["paid_amount"] ?: 0,2);?>
 					&nbsp;
 				</td>
+			<?php
+			if(!($myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){ ?>
+				<td></td>
+				<?php
+				$tot_credit += st($myarray["paid_amount"]);
+			} ?>
 				<td valign="top" width="5%">&nbsp;
 			 		<?php if($myarray['ledger'] == 'ledger'){
                   		echo (!empty($dss_trxn_status_labels) ? $dss_trxn_status_labels[$myarray["status"]] : '');
@@ -228,6 +266,10 @@
 	            if (!isset($tot_credit)) {
 	            	$tot_credit = 0;
 	            }
+
+	            if (!isset($tot_adj)) {
+	            	$tot_adj = 0;
+	            }
 	    	?>      
 	                    
 			<b>
@@ -241,6 +283,12 @@
 				&nbsp;
 			</b>
 		</td>
+		<td valign="top" align="right">
+			<b>
+				<?php echo "$".number_format($tot_adj,2);?>
+				&nbsp;
+			</b>
+		</td>
 		<td valign="top">&nbsp;
 			
 		</td>
@@ -251,7 +299,7 @@
         </td>
         <td valign="top" align="right">
             <b>
-	            <?php echo "$".number_format($tot_charge-$tot_credit,2); ?>
+	            <?php echo "$".number_format($tot_charge - $tot_credit - $tot_adj,2); ?>
 	            &nbsp;
             </b>
         </td>

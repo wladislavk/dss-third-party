@@ -145,19 +145,10 @@ if(!empty($_GET['pid'])){
 	</tr>
 	<?php 
 	}else{
-		$tot_charges = 0;
+		$tot_charge = 0;
 		$tot_credit = 0;
 		$tot_adj = 0;
-		if(isset($_GET['pid'])){
-    		$newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname, p.name FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid LEFT JOIN dental_users p ON p.userid=dl.producerid WHERE  dl.docid='".$_SESSION['docid']."' AND dl.patientid = '".$_GET['pid']."'";
-		}else{
-            $newquery = "SELECT dl.*, dp.firstname, dp.middlename, dp.lastname, p.name FROM dental_ledger as dl INNER JOIN dental_patients as dp ON dl.patientid = dp.patientid LEFT JOIN dental_users p ON p.userid=dl.producerid WHERE  dl.docid='".$_SESSION['docid']."'";
-        }
-        if(isset($_GET['pid'])){
-            $newquery = "SELECT * FROM dental_ledger WHERE  docid='".$_SESSION['docid']."' AND `patientid` = '".$_GET['pid']."'";
-        }else{
-            $newquery = "SELECT * FROM dental_ledger WHERE `docid` = '".$_SESSION['docid']."'";
-        }
+
         if(isset($_GET['pid'])){
             $lpsql = " AND dl.patientid = '".$_GET['pid']."'";
             $npsql = " AND n.patientid = '".$_GET['pid']."'";
@@ -165,69 +156,15 @@ if(!empty($_GET['pid'])){
         }else{
             $ipsql = $lpsql = $npsql= "";
         }
+        
         if($start_date){
             $l_date = " AND dl.service_date BETWEEN '".$start_date."' AND '".$end_date."'";
             $n_date = " AND n.entry_date BETWEEN '".$start_date."' AND '".$end_date."'";
             $i_date = " AND i.adddate  BETWEEN '".$start_date."' AND '".$end_date."'";
             $p_date = " AND dlp.payment_date BETWEEN '".$start_date."' AND '".$end_date."'";
-            $newquery .= " AND service_date BETWEEN '".$start_date."' AND '".$end_date."'";
         }else{
             $p_date = $i_date = $n_date = $l_date = '';
         }
-        $newquery = "select 
-                        'ledger',
-                        dl.ledgerid,
-                        dl.service_date,
-                        dl.entry_date,
-                        CONCAT(p.first_name,' ',p.last_name) as name,
-                        dl.description,
-                        dl.amount,
-                        sum(pay.amount) as paid_amount,
-                        dl.status,
-                        dl.patientid,
-                        dl.primary_claim_id
-                    from dental_ledger dl 
-                        LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                        LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
-                               where dl.docid='".$_SESSION['docid']."' ".$lpsql." ".$l_date." 
-                        GROUP BY dl.ledgerid
-          UNION
-                select 
-                        'note',
-                        n.id,
-                        n.service_date,
-                        n.entry_date,
-                        concat('Note - ', p.first_name, ' ', p.last_name),
-                        n.note,
-                        '',
-                        '',
-                        n.private,
-                        n.patientid,
-                        ''      
-                from dental_ledger_note n
-                        LEFT JOIN dental_users p on n.producerid=p.userid
-                               where n.docid='".$_SESSION['docid']."' AND (n.private IS NULL or n.private=0) ".$npsql." ".$n_date." 
-          UNION
-                select
-                        'claim',
-                        i.insuranceid,
-                        i.adddate,
-                        i.adddate,
-                        'Claim',
-                        'Insurance Claim',
-                        (select sum(dl2.amount) FROM dental_ledger dl2
-                                        INNER JOIN dental_insurance i2 on dl2.primary_claim_id=i2.insuranceid
-                                        where i2.insuranceid=i.insuranceid),
-                        sum(pay.amount),
-                        i.status,
-                        i.patientid,
-                        ''
-                from dental_insurance i
-                        LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
-                        LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
-                              where i.docid='".$_SESSION['docid']."' ".$ipsql." ".$i_date." 
-                GROUP BY i.insuranceid
-        ";
 
         $newquery = "
         select 
@@ -265,7 +202,7 @@ if(!empty($_GET['pid'])){
                         dl.description,
                         CONCAT(p.first_name,' ',p.last_name),
                         pat.patientid,
-                        pat.firstname, 
+                        pat.firstname,
                         pat.lastname,
                         CONCAT(pat.lastname,' ',pat.firstname) as pname,
                         tc.type,

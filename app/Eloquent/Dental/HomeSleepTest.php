@@ -3,14 +3,11 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\HomeSleepTest as Resource;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests as Repository;
 
 class HomeSleepTest extends Model implements Resource, Repository
 {
-    use WithoutUpdatedTimestamp;
-
     /**
      * Guarded attributes
      *
@@ -37,7 +34,10 @@ class HomeSleepTest extends Model implements Resource, Repository
      *
      * @var array
      */
-    protected $dates = ['patient_dob', 'provider_date'];
+    protected $dates = [
+        'patient_dob', 'provider_date', 'authorizeddate',
+        'rejecteddate', 'canceled_date'
+    ];
 
     /**
      * The name of the "created at" column.
@@ -45,4 +45,11 @@ class HomeSleepTest extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string
+     */
+    const UPDATED_AT = 'updatedate';
 }

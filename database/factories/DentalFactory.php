@@ -2127,3 +2127,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\NasalPassage::class, function ($faker) {
+    return [
+        'nasal_passages' => $faker->sentence($nbWords = 2),
+        'description'    => $faker->sentence($nbWords = 6),
+        'sortby'         => $faker->randomDigit,
+        'status'         => $faker->randomDigit,
+        'adddate'        => $faker->dateTime(),
+        'ip_address'     => $faker->ipv4
+    ];
+});

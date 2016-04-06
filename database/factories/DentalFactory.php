@@ -2127,3 +2127,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\EpworthHomeSleepTest::class, function ($faker) {
+    return [
+        'hst_id'     => $faker->randomDigit,
+        'epworth_id' => $faker->randomDigit,
+        'response'   => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});

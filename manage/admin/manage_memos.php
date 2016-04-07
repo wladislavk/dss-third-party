@@ -7,6 +7,8 @@ include_once "../includes/constants.inc";
 	Manage Memos 
 </div>
 
+<input type="hidden" id="dom-api-token" value="<?= adminApiToken() ?>">
+
 <div id="memoManager">
 
     <button type="button" class="btn btn-success pull-right" v-on="click: newMemo();">
@@ -113,6 +115,6 @@ include_once "../includes/constants.inc";
 <script src="/assets/vendor/moment.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
-<script src="/assets/app/memos.js" type="text/javascript"></script>
+<script src="/assets/app/memos.js?v=20160405" type="text/javascript"></script>
 
 <?php include "includes/bottom.htm";?>

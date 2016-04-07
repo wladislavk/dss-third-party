@@ -994,7 +994,7 @@ class ClaimFormData
      * @param int $insuranceType
      * @return array
      */
-    public static function ledgerItems ($claimId, $docId, $patientId, $insuranceType) {
+    public static function dynamicLedgerItems ($claimId, $docId, $patientId, $insuranceType) {
         $db = new Db();
 
         $claimId = intval($claimId);
@@ -1057,6 +1057,71 @@ class ClaimFormData
         ORDER BY ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
 
         $transactions = $db->getResults($transactionsQuery);
+        return $transactions;
+    }
+
+    /**
+     * Retrieve ledger items stored in claim table
+     *
+     * @param int $claimId
+     * @return array
+     */
+    public static function storedLedgerItems ($claimId) {
+        $db = new Db();
+
+        $claimId = intval($claimId);
+        $claimData = $db->getRow("SELECT * FROM dental_insurance WHERE insuranceid = '$claimId'");
+
+        /**
+         * Relationship between dental_insurance and dental_ledger
+         */
+        $fieldMap = [
+            'service_date%n%_from' => 'service_date',
+            'service_date%n%_to' => 'service_date',
+            'place_of_service%n%' => 'placeofservice',
+            'emg%n%' => 'emg',
+            'cpt_hcpcs%n%' => 'transaction_code',
+            'modifier%n%_1' => 'modcode',
+            'modifier%n%_2' => 'modcode2',
+            'modifier%n%_3' => 'modcode3',
+            'modifier%n%_4' => 'modcode4',
+            'diagnosis_pointer%n%' => 'diagnosis_code_pointers',
+            's_charges%n%_1' => 'amount',
+            'days_or_units%n%' => 'daysorunits',
+            'id_qua%n%' => 'idqual',
+            'rendering_provider_entity_%n%' => 'entity',
+            'rendering_provider_first_name_%n%' => 'provider_first_name',
+            'rendering_provider_last_name_%n%' => 'provider_last_name',
+            'rendering_provider_npi_%n%' => 'provider_id',
+        ];
+
+        $transactions = [];
+
+        for ($line=1; $line<=6; $line++) {
+            $keys = array_keys($fieldMap);
+
+            array_walk($keys, function (&$key) use ($line) {
+                $key = str_replace('%n%', $line, $key);
+            });
+
+            $currentLine = [];
+            $currentMap = array_combine($keys, $fieldMap);
+
+            foreach ($currentMap as $source=>$destination) {
+                $currentLine[$destination] = $claimData[$source];
+            }
+
+            $isEmpty = !count(array_filter($currentLine, function ($each) {
+                return strlen((string)$each);
+            }));
+
+            if ($isEmpty) {
+                break;
+            }
+
+            $transactions []= $currentLine;
+        }
+
         return $transactions;
     }
 

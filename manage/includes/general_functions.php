@@ -23,6 +23,10 @@ function apiToken() {
   return isset($_SESSION['api_token']) ? $_SESSION['api_token'] : '';
 }
 
+function adminApiToken () {
+    return isset($_SESSION['admin_api_token']) ? $_SESSION['admin_api_token'] : '';
+}
+
 function secureSessionStart() {
     $domain = 'example.com'; // note $domain
     $session_name = 'sec_session_id'; // Set a custom session name

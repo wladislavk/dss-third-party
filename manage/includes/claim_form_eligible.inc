@@ -719,8 +719,11 @@ function stateDropdown (fieldName) {
         $mod_array[] = $mod_row;
       }
 
-  // Load pending medical trxns if new claim form. Otherwise, load associated trxns.
-$transactions = ClaimFormData::ledgerItems($claimId, $docId, $patientId, $insurancetype);
+      if ($isPending) {
+          $transactions = ClaimFormData::dynamicLedgerItems($claimId, $docId, $patientId, $insurancetype);
+      } else {
+          $transactions = ClaimFormData::storedLedgerItems($claimId);
+      }
 
       /**
        * @see CS-29
@@ -782,71 +785,7 @@ $transactions = ClaimFormData::ledgerItems($claimId, $docId, $patientId, $insura
       // ICD Indicator: <?= $icd_indicator ?> .
       $('input[name="claim[icd_indicator]"]').val("<?= $icd_indicator ?>").addClass('numbermask');
 
-  <?php if ($rendering_provider_first_name_1 != "") { ?>
-      <?php if ($rendering_provider_entity_1){ ?>
-      $('input[name="claim[service_lines][0][rendering_provider][entity]"][value="true"]').prop('checked', true);
-      <?php } else { ?>
-      $('input[name="claim[service_lines][0][rendering_provider][entity]"][value=""]').prop('checked', true);
-      <?php } ?>
-      $('input[name="claim[service_lines][0][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_1; ?>");
-      $('input[name="claim[service_lines][0][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_1;  ?>");
-      $('input[name="claim[service_lines][0][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_1;  ?>");
-      $('input[name="claim[service_lines][0][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_1;  ?>");
-      $('input[name="claim[service_lines][0][units]"]').val("<?php echo $days_or_units1;  ?>");
-      <?php if ($rendering_provider_entity_2){ ?>
-      $('input[name="claim[service_lines][1][rendering_provider][entity]"][value="true"]').prop('checked', true);
-      <?php } else { ?>
-      $('input[name="claim[service_lines][1][rendering_provider][entity]"][value=""]').prop('checked', true);
-      <?php } ?>
-      $('input[name="claim[service_lines][1][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_2; ?>");
-      $('input[name="claim[service_lines][1][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_2;  ?>");
-      $('input[name="claim[service_lines][1][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_2;  ?>");
-      $('input[name="claim[service_lines][1][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_2;  ?>");
-      $('input[name="claim[service_lines][1][units]"]').val("<?php echo $days_or_units2;  ?>");
-      <?php if ($rendering_provider_entity_3){ ?>
-      $('input[name="claim[service_lines][2][rendering_provider][entity]"][value="true"]').prop('checked', true);
-      <?php } else { ?>
-      $('input[name="claim[service_lines][2][rendering_provider][entity]"][value=""]').prop('checked', true);
-      <?php } ?>
-      $('input[name="claim[service_lines][2][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_3; ?>");
-      $('input[name="claim[service_lines][2][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_3;  ?>");
-      $('input[name="claim[service_lines][2][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_3;  ?>");
-      $('input[name="claim[service_lines][2][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_3;  ?>");
-      $('input[name="claim[service_lines][2][units]"]').val("<?php echo $days_or_units3;  ?>");
-      <?php if ($rendering_provider_entity_4){ ?>
-      $('input[name="claim[service_lines][3][rendering_provider][entity]"][value="true"]').prop('checked', true);
-      <?php } else { ?>
-      $('input[name="claim[service_lines][3][rendering_provider][entity]"][value=""]').prop('checked', true);
-      <?php } ?>
-      $('input[name="claim[service_lines][3][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_4; ?>");
-      $('input[name="claim[service_lines][3][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_4;  ?>");
-      $('input[name="claim[service_lines][3][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_4;  ?>");
-      $('input[name="claim[service_lines][3][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_4;  ?>");
-      $('input[name="claim[service_lines][3][units]"]').val("<?php echo $days_or_units4;  ?>");
-      <?php if ($rendering_provider_entity_5){ ?>
-      $('input[name="claim[service_lines][4][rendering_provider][entity]"][value="true"]').prop('checked', true);
-      <?php } else { ?>
-      $('input[name="claim[service_lines][4][rendering_provider][entity]"][value=""]').prop('checked', true);
-      <?php } ?>
-      $('input[name="claim[service_lines][4][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_5; ?>");
-      $('input[name="claim[service_lines][4][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_5;  ?>");
-      $('input[name="claim[service_lines][4][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_5;  ?>");
-      $('input[name="claim[service_lines][4][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_5;  ?>");
-      $('input[name="claim[service_lines][4][units]"]').val("<?php echo $days_or_units5;  ?>");
-      <?php if ($rendering_provider_entity_6){ ?>
-      $('input[name="claim[service_lines][5][rendering_provider][entity]"][value="true"]').prop('checked', true);
-      <?php } else { ?>
-      $('input[name="claim[service_lines][5][rendering_provider][entity]"][value=""]').prop('checked', true);
-      <?php } ?>
-      $('input[name="claim[service_lines][5][rendering_provider][first_name]"]').val("<?php echo $rendering_provider_first_name_6; ?>");
-      $('input[name="claim[service_lines][5][rendering_provider][last_name]"]').val("<?php echo $rendering_provider_last_name_6;  ?>");
-      $('input[name="claim[service_lines][5][rendering_provider][organization_name]"]').val("<?php echo $rendering_provider_org_6;  ?>");
-      $('input[name="claim[service_lines][5][rendering_provider][npi]"]').val("<?php echo $rendering_provider_npi_6;  ?>");
-      $('input[name="claim[service_lines][5][units]"]').val("<?php echo $days_or_units6; ?>");
-      <?php
-}
-
-  if($acceptAssignment){ ?>
+  <?php if($acceptAssignment){ ?>
         $('input[name="claim[accept_assignment_code]"][value="A"]').prop('checked', true);
       <?php }else{ ?>
         $('input[name="claim[accept_assignment_code]"][value="C"]').prop('checked', true);

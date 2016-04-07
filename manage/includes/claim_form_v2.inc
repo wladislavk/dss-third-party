@@ -233,7 +233,7 @@ $s_charges1_2 = st($claimData['s_charges1_2']);
 $days_or_units1 = st($claimData['days_or_units1']);
 $epsdt_family_plan1 = st($claimData['epsdt_family_plan1']);
 $id_qua1 = st($claimData['id_qua1']);
-$rendering_provider_id1 = st($claimData['rendering_provider_id1']);
+$rendering_provider_npi_1 = st($claimData['rendering_provider_npi_1']);
 $service_date2_from = st($claimData['service_date2_from']);
 $service_date2_to = st($claimData['service_date2_to']);
 $place_of_service2 = st($claimData['place_of_service2']);
@@ -249,7 +249,7 @@ $s_charges2_2 = st($claimData['s_charges2_2']);
 $days_or_units2 = st($claimData['days_or_units2']);
 $epsdt_family_plan2 = st($claimData['epsdt_family_plan2']);
 $id_qua2 = st($claimData['id_qua2']);
-$rendering_provider_id2 = st($claimData['rendering_provider_id2']);
+$rendering_provider_npi_2 = st($claimData['rendering_provider_npi_2']);
 $service_date3_from = st($claimData['service_date3_from']);
 $service_date3_to = st($claimData['service_date3_to']);
 $place_of_service3 = st($claimData['place_of_service3']);
@@ -265,7 +265,7 @@ $s_charges3_2 = st($claimData['s_charges3_2']);
 $days_or_units3 = st($claimData['days_or_units3']);
 $epsdt_family_plan3 = st($claimData['epsdt_family_plan3']);
 $id_qua3 = st($claimData['id_qua3']);
-$rendering_provider_id3 = st($claimData['rendering_provider_id3']);
+$rendering_provider_npi_3 = st($claimData['rendering_provider_npi_3']);
 $service_date4_from = st($claimData['service_date4_from']);
 $service_date4_to = st($claimData['service_date4_to']);
 $place_of_service4 = st($claimData['place_of_service4']);
@@ -281,7 +281,7 @@ $s_charges4_2 = st($claimData['s_charges4_2']);
 $days_or_units4 = st($claimData['days_or_units4']);
 $epsdt_family_plan4 = st($claimData['epsdt_family_plan4']);
 $id_qua4 = st($claimData['id_qua4']);
-$rendering_provider_id4 = st($claimData['rendering_provider_id4']);
+$rendering_provider_npi_4 = st($claimData['rendering_provider_npi_4']);
 $service_date5_from = st($claimData['service_date5_from']);
 $service_date5_to = st($claimData['service_date5_to']);
 $place_of_service5 = st($claimData['place_of_service5']);
@@ -297,7 +297,7 @@ $s_charges5_2 = st($claimData['s_charges5_2']);
 $days_or_units5 = st($claimData['days_or_units5']);
 $epsdt_family_plan5 = st($claimData['epsdt_family_plan5']);
 $id_qua5 = st($claimData['id_qua5']);
-$rendering_provider_id5 = st($claimData['rendering_provider_id5']);
+$rendering_provider_npi_5 = st($claimData['rendering_provider_npi_5']);
 $service_date6_from = st($claimData['service_date6_from']);
 $service_date6_to = st($claimData['service_date6_to']);
 $place_of_service6 = st($claimData['place_of_service6']);
@@ -313,7 +313,7 @@ $s_charges6_2 = st($claimData['s_charges6_2']);
 $days_or_units6 = st($claimData['days_or_units6']);
 $epsdt_family_plan6 = st($claimData['epsdt_family_plan6']);
 $id_qua6 = st($claimData['id_qua6']);
-$rendering_provider_id6 = st($claimData['rendering_provider_id6']);
+$rendering_provider_npi_6 = st($claimData['rendering_provider_npi_6']);
 $federal_tax_id_number = st($claimData['federal_tax_id_number']);
 $ssn = st($claimData['ssn']);
 $ein = st($claimData['ein']);
@@ -382,7 +382,11 @@ $acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment =
 $placeServices = $db->getResults('SELECT * FROM dental_place_service ps WHERE status = 1');
 $modifierCodes = $db->getResults('SELECT * FROM dental_modifier_code');
 
-$transactions = ClaimFormData::ledgerItems($claimId, $docId, $patientId, $insurancetype);
+if ($isPending) {
+    $transactions = ClaimFormData::dynamicLedgerItems($claimId, $docId, $patientId, $insurancetype);
+} else {
+    $transactions = ClaimFormData::storedLedgerItems($claimId);
+}
 
 $realTotalAmount = 0;
 $oldestServiceDate = null;
@@ -1707,9 +1711,6 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 						<span class="num">24.</span>
 						<table width="100%" cellpadding="3" cellspacing="1" border="0" bgcolor="#000000" >
 							<tr bgcolor="#FFFFFF">
-								<td valign="top" rowspan="2" align="center">&nbsp;
-
-								</td>
 								<td valign="top" colspan="2" align="center">
 									<span class="num_a">A.</span>
 									Date(s) of service
@@ -1720,7 +1721,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 								<td valign="top" align="center">
 									<span class="num_a">C.</span>
 								</td>
-								<td valign="top" colspan="5" align="center">
+								<td valign="top" colspan="2" width="240" align="center">
 									<span class="num_a">D.</span>
 									Procedures, Services or Supplies
 									<br />
@@ -1781,12 +1782,12 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 										EMG
 									</span>
 								</td>
-								<td valign="bottom" align="center">
+								<td valign="bottom" align="center" width="80">
 									<span class="small_cap">
 										CPT/HCPCS
 									</span>
 								</td>
-								<td valign="bottom" align="center" colspan="4">
+								<td valign="bottom" align="center">
 									<span class="small_cap">
 										MODIFIER
 									</span>
@@ -1801,22 +1802,22 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 										$ CHARGES
 									</span>
 								</td>
-								<td valign="bottom" align="center">
+								<td valign="bottom" align="center" width="48">
 									<span class="small_cap">
 										DAYS <br />OR <br />UNITS
 									</span>
 								</td>
-								<td valign="bottom" align="center">
+								<td valign="bottom" align="center" width="48">
 									<span class="small_cap">
 										EPSDT <br />Family <br />Plan
 									</span>
 								</td>
-								<td valign="bottom" align="center">
+								<td valign="bottom" align="center" width="48">
 									<span class="small_cap">
 										ID. <br />QUAL.
 									</span>
 								</td>
-								<td valign="bottom" align="center">
+								<td valign="bottom" align="center" width="100">
 									<span class="small_cap">
 										RENDERING <br />PROVIDER ID. #
 									</span>
@@ -1828,54 +1829,61 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 <?php  if (!count($transactions)) { ?>
     <p style="text-align: center;"><strong>There are currently no ledger entries to be submitted.</strong></p>
 <?php } else { ?>
-  <?php $li = 0; ?>
   <input type="hidden" name="ledgercount" value="<?php echo count($transactions); ?>">
-  <?php foreach ($transactions as $array) { ?>
-    <table style="margin-left:39px;">
+  <table>
+    <?php foreach ($transactions as $li=>$array) { ?>
       <tr>
-        <td width="106"><?= dateFormat($array['service_date']); ?></td>
-        <td width="106"><?= dateFormat($array['service_date']); ?></td>
-        <td width="91">
-		<select style="width:76px" name="placeofservice<?php echo $li;?>">
+        <td width="102">
+            <input type="text" name="service_lines[<?= $li ?>][service_date_from]" value="<?= dateFormat($array['service_date']) ?>" />
+        </td>
+        <td width="102">
+            <input type="text" name="service_lines[<?= $li ?>][service_date_to]" value="<?= dateFormat($array['service_date']) ?>" />
+        </td>
+        <td width="60">
+		<select style="width:76px" name="service_lines[<?= $li ?>][place_of_service]">
 			<option value=''>Select One</option>
 			<?php
 				$pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
   				$dp = ($array['diagnosispointer']!='')?$array['diagnosispointer']:1;
 
 				if (!empty($placeServices)) foreach ($placeServices as $psr){
-				?><option value="<?php echo  $psr['place_service']; ?>" <?php echo  ($pos==$psr['place_service'])?'selected="selected"':''; ?>><?php echo  $psr['place_service']." ".$psr['description']; ?></option>
+				?><option value="<?php echo  $psr['place_service']; ?>" <?php echo  ($pos==$psr['place_service'])?'selected="selected"':''; ?>><?php echo  $psr['place_service']."-".$psr['description']; ?></option>
 			<?php
 				}
 			?>
+        </select>
 	</td>
-        <td width="41">
-            <input style="width:26px;" type="checkbox" name="emg<?php echo $li;?>" value="true"
+        <td width="30">
+            <input style="width:26px;" type="checkbox" name="service_lines[<?= $li ?>][emergency]" value="true"
                 <?= isOptionSelected($array['emg']) ? 'checked' : '' ?> />
         </td>
-        <td width="222"><?php echo $array['transaction_code'] . " - " .$array['description'] ; ?></td>
-        <td width="191">
-          <select name="modifier<?= $li + 1 ?>_1" style="width:171px;">
+        <td width="80">
+            <input type="text" name="service_lines[<?= $li ?>][procedure_code]"
+                value="<?= $array['transaction_code'] . ($array['description'] ? " - " . $array['description'] : '') ?>" />
+        </td>
+        <td width="200" class="text-center">
+          <select name="service_lines[<?= $li ?>][procedure_modifiers][0]" style="width:171px;">
             <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
               <?php $selected = ($array['modcode'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
               <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
             <?php } ?>
           </select>
-          <select name="modifier<?= $li + 1 ?>_2" style="width:171px;">
+          <select name="service_lines[<?= $li ?>][procedure_modifiers][1]" style="width:171px;">
             <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
               <?php $selected = ($array['modcode2'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
               <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
             <?php } ?>
           </select>
-          <select name="modifier<?= $li + 1 ?>_3" style="width:171px;">
+          <select name="service_lines[<?= $li ?>][procedure_modifiers][2]" style="width:171px;">
             <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
               <?php $selected = ($array['modcode3'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
               <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
             <?php } ?>
           </select>
-          <select name="modifier<?= $li + 1 ?>_4" style="width:171px;">
+          <select name="service_lines[<?= $li ?>][procedure_modifiers][3]" style="width:171px;">
             <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
               <?php $selected = ($array['modcode4'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
@@ -1885,37 +1893,122 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 
 
         </td>
-        <td width="92">
-		<!--diagnosispointer<?php echo $li;?>-->
+        <td width="160">
+		<!--diagnosispointer<?= $li ?>-->
 <table class="eligibleapi claim"><tbody><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="1" <?php echo  ($dp=="1")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][0]" type="checkbox"></td><td class="input-side-hint">A</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="2" <?php echo  ($dp=="2")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][1]" type="checkbox"></td><td class="input-side-hint">B</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="3" <?php echo  ($dp=="3")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][2]" type="checkbox"></td><td class="input-side-hint">C</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="4" <?php echo  ($dp=="4")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][3]" type="checkbox"></td><td class="input-side-hint">D</td></tr><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="5" <?php echo  ($dp=="5")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][4]" type="checkbox"></td><td class="input-side-hint">E</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="6" <?php echo  ($dp=="6")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][5]" type="checkbox"></td><td class="input-side-hint">F</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="7" <?php echo  ($dp=="7")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][6]" type="checkbox"></td><td class="input-side-hint">G</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="8" <?php echo  ($dp=="8")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][7]" type="checkbox"></td><td class="input-side-hint">H</td></tr><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="9" <?php echo  ($dp=="9")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][8]" type="checkbox"></td><td class="input-side-hint">I</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="10" <?php echo  ($dp=="10")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][9]" type="checkbox"></td><td class="input-side-hint">J</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="11" <?php echo  ($dp=="11")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][10]" type="checkbox"></td><td class="input-side-hint">K</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="12" <?php echo  ($dp=="12")?'checked="checked"':''; ?> name="service_lines[<?php echo  $li; ?>][diagnosis_code_pointers][11]" type="checkbox"></td><td class="input-side-hint">L</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="1" <?php echo  ($dp=="1")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][0]" type="checkbox"></td><td class="input-side-hint">A</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="2" <?php echo  ($dp=="2")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][1]" type="checkbox"></td><td class="input-side-hint">B</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="3" <?php echo  ($dp=="3")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][2]" type="checkbox"></td><td class="input-side-hint">C</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="4" <?php echo  ($dp=="4")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][3]" type="checkbox"></td><td class="input-side-hint">D</td></tr><tr class="eligibleapi claim">
+<td class="input-center-hint checkbox-container"><input class="input" value="5" <?php echo  ($dp=="5")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][4]" type="checkbox"></td><td class="input-side-hint">E</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="6" <?php echo  ($dp=="6")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][5]" type="checkbox"></td><td class="input-side-hint">F</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="7" <?php echo  ($dp=="7")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][6]" type="checkbox"></td><td class="input-side-hint">G</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="8" <?php echo  ($dp=="8")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][7]" type="checkbox"></td><td class="input-side-hint">H</td></tr><tr class="eligibleapi claim">
+<td class="input-center-hint checkbox-container"><input class="input" value="9" <?php echo  ($dp=="9")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][8]" type="checkbox"></td><td class="input-side-hint">I</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="10" <?php echo  ($dp=="10")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][9]" type="checkbox"></td><td class="input-side-hint">J</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="11" <?php echo  ($dp=="11")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][10]" type="checkbox"></td><td class="input-side-hint">K</td>
+<td class="input-center-hint checkbox-container"><input class="input" value="12" <?php echo  ($dp=="12")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][11]" type="checkbox"></td><td class="input-side-hint">L</td>
 </tr></tbody></table>
 	</td>
-        <td width="100" align="right" style="padding-right:15px;">$<?php echo  number_format($array['amount'], 2); ?></td>
-        <td width="54"><input style="width:39px;" type="text" name="daysorunits<?php echo $li;?>" value="<?php echo $array['daysorunits']; ?>"></td>
-        <td width="60" class="grayout"><input style="width:45px;" type="text" name="epsdt<?php echo $li;?>" value="<?php echo $array['epsdt']; ?>"></td>
-        <td width="52"><input style="width:37px;" type="text" name="idqual<?php echo $li;?>" value="<?php echo $array['idqual']; ?>"></td>
-        <input type="hidden" name="ledgerid<?php echo $li;?>" value="<?php echo $array['ledgerid']; ?>">
-	<input type="hidden" name="service_date<?php echo $li;?>" value="<?php echo $array['service_date']; ?>">
-	<input type="hidden" name="entry_date<?php echo $li;?>" value="<?php echo $array['entry_date']; ?>">
-	<input type="hidden" name="transaction_code<?php echo $li;?>" value="<?php echo $array['transaction_code']; ?>">
-	<input type="hidden" name="amount<?php echo $li;?>" value="<?php echo $array['amount']; ?>">
-        <td width="122"><?php echo $array['provider_id']?></td>
+        <td width="76" align="right" style="padding-right:15px;">
+            <input type="text" name="service_lines[<?= $li ?>][charge_amount]" value="<?= number_format($array['amount'], 2) ?>" />
+        </td>
+        <td width="48">
+            <input style="width:39px;" type="text" name="service_lines[<?= $li ?>][units]" value="<?php echo $array['daysorunits']; ?>">
+        </td>
+        <td width="48" class="grayout">
+            <input style="width:45px;" type="text" name="service_lines[<?= $li ?>][epsdt]" value="<?php echo $array['epsdt']; ?>">
+        </td>
+        <td width="48">
+            <input style="width:37px;" type="text" name="service_lines[<?= $li ?>][qualifier]" value="<?php echo $array['idqual']; ?>">
+        </td>
+        <td width="100">
+            <input type="text" name="service_lines[<?= $li ?>][rendering_provider][npi]" value="<?= $array['provider_id'] ?>" />
+            <input type="hidden" name="ledgerid<?= $li ?>" value="<?php echo $array['ledgerid']; ?>">
+            <input type="hidden" name="service_date<?= $li ?>" value="<?php echo $array['service_date']; ?>">
+            <input type="hidden" name="entry_date<?= $li ?>" value="<?php echo $array['entry_date']; ?>">
+            <input type="hidden" name="transaction_code<?= $li ?>" value="<?php echo $array['transaction_code']; ?>">
+            <input type="hidden" name="amount<?= $li ?>" value="<?php echo $array['amount']; ?>">
+        </td>
       </tr>
-    </table>
-    <?php $li++; ?>
-  <?php } ?>
+    <?php } ?>
+    <?php for ($li=count($transactions); $li<6; $li++) { ?>
+      <tr class="grayout">
+        <td>
+            <input type="text" disabled />
+        </td>
+        <td>
+            <input type="text" disabled />
+        </td>
+        <td>
+            <select style="width:76px" disabled></select>
+        </td>
+        <td>
+            <input style="width:26px;" type="checkbox" disabled />
+        </td>
+        <td>
+            <input type="text" disabled />
+        </td>
+        <td class="text-center">
+          <select style="width:171px;" disabled></select>
+          <select style="width:171px;" disabled></select>
+          <select style="width:171px;" disabled></select>
+          <select style="width:171px;" disabled></select>
+        </td>
+        <td>
+            <table class="eligibleapi claim">
+                <tbody>
+                    <tr class="eligibleapi claim">
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">A</td>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">B</td>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">C</td>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">D</td>
+                    </tr>
+                    <tr>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">E</td>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">F</td>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">G</td>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">H</td>
+                    </tr>
+                    <tr>
+                        <td class="input-center-hintIcheckbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">I</td>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">J</td>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">K</td>
+                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                        <td class="input-side-hint">L</td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td style="padding-right:15px;">
+            <input type="text" disabled />
+        </td>
+        <td>
+            <input style="width:39px;" type="text" disabled />
+        </td>
+        <td>
+            <input style="width:45px;" type="text" disabled />
+        </td>
+        <td>
+            <input style="width:37px;" type="text" disabled />
+        </td>
+        <td>
+            <input type="text" disabled />
+        </td>
+      </tr>
+    <?php } ?>
+  </table>
 <?php } ?>
 <!-- /END LEDGER TRXNS -->
 
@@ -2635,102 +2728,45 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $resubmission_code_fill = $claimData['resubmission_code_fill'];
     $original_ref_no = $claimData['original_ref_no'];
     $prior_authorization_number = $claimData['prior_authorization_number'];
-    $service_date1_from = !empty($claimData['service_date1_from']) ? $claimData['service_date1_from'] : '';
-    $service_date1_to = !empty($claimData['service_date1_to']) ? $claimData['service_date1_to'] : '';
-    $place_of_service1 = !empty($claimData['place_of_service1']) ? $claimData['place_of_service1'] : '';
-    $emg1 = !empty($claimData['emg1']) ? $claimData['emg1'] : '';
-    $cpt_hcpcs1 = !empty($claimData['cpt_hcpcs1']) ? $claimData['cpt_hcpcs1'] : '';
-    $modifier1_1 = !empty($claimData['modifier1_1']) ? $claimData['modifier1_1'] : '';
-    $modifier1_2 = !empty($claimData['modifier1_2']) ? $claimData['modifier1_2'] : '';
-    $modifier1_3 = !empty($claimData['modifier1_3']) ? $claimData['modifier1_3'] : '';
-    $modifier1_4 = !empty($claimData['modifier1_4']) ? $claimData['modifier1_4'] : '';
-    $diagnosis_pointer1 = !empty($claimData['diagnosis_pointer1']) ? $claimData['diagnosis_pointer1'] : '';
-    $s_charges1_1 = !empty($claimData['s_charges1_1']) ? $claimData['s_charges1_1'] : '';
-    $s_charges1_2 = !empty($claimData['s_charges1_2']) ? $claimData['s_charges1_2'] : '';
-    $days_or_units1 = !empty($claimData['days_or_units1']) ? $claimData['days_or_units1'] : '';
-    $epsdt_family_plan1 = !empty($claimData['epsdt_family_plan1']) ? $claimData['epsdt_family_plan1'] : '';
-    $id_qua1 = !empty($claimData['id_qua1']) ? $claimData['id_qua1'] : '';
-    $rendering_provider_id1 = !empty($claimData['rendering_provider_id1']) ? $claimData['rendering_provider_id1'] : '';
-    $service_date2_from = !empty($claimData['service_date2_from']) ? $claimData['service_date2_from'] : '';
-    $service_date2_to = !empty($claimData['service_date2_to']) ? $claimData['service_date2_to'] : '';
-    $place_of_service2 = !empty($claimData['place_of_service2']) ? $claimData['place_of_service2'] : '';
-    $emg2 = !empty($claimData['emg2']) ? $claimData['emg2'] : '';
-    $cpt_hcpcs2 = !empty($claimData['cpt_hcpcs2']) ? $claimData['cpt_hcpcs2'] : '';
-    $modifier2_1 = !empty($claimData['modifier2_1']) ? $claimData['modifier2_1'] : '';
-    $modifier2_2 = !empty($claimData['modifier2_2']) ? $claimData['modifier2_2'] : '';
-    $modifier2_3 = !empty($claimData['modifier2_3']) ? $claimData['modifier2_3'] : '';
-    $modifier2_4 = !empty($claimData['modifier2_4']) ? $claimData['modifier2_4'] : '';
-    $diagnosis_pointer2 = !empty($claimData['diagnosis_pointer2']) ? $claimData['diagnosis_pointer2'] : '';
-    $s_charges2_1 = !empty($claimData['s_charges2_1']) ? $claimData['s_charges2_1'] : '';
-    $s_charges2_2 = !empty($claimData['s_charges2_2']) ? $claimData['s_charges2_2'] : '';
-    $days_or_units2 = !empty($claimData['days_or_units2']) ? $claimData['days_or_units2'] : '';
-    $epsdt_family_plan2 = !empty($claimData['epsdt_family_plan2']) ? $claimData['epsdt_family_plan2'] : '';
-    $id_qua2 = !empty($claimData['id_qua2']) ? $claimData['id_qua2'] : '';
-    $rendering_provider_id2 = !empty($claimData['rendering_provider_id2']) ? $claimData['rendering_provider_id2'] : '';
-    $service_date3_from = !empty($claimData['service_date3_from']) ? $claimData['service_date3_from'] : '';
-    $service_date3_to = !empty($claimData['service_date3_to']) ? $claimData['service_date3_to'] : '';
-    $place_of_service3 = !empty($claimData['place_of_service3']) ? $claimData['place_of_service3'] : '';
-    $emg3 = !empty($claimData['emg3']) ? $claimData['emg3'] : '';
-    $cpt_hcpcs3 = !empty($claimData['cpt_hcpcs3']) ? $claimData['cpt_hcpcs3'] : '';
-    $modifier3_1 = !empty($claimData['modifier3_1']) ? $claimData['modifier3_1'] : '';
-    $modifier3_2 = !empty($claimData['modifier3_2']) ? $claimData['modifier3_2'] : '';
-    $modifier3_3 = !empty($claimData['modifier3_3']) ? $claimData['modifier3_3'] : '';
-    $modifier3_4 = !empty($claimData['modifier3_4']) ? $claimData['modifier3_4'] : '';
-    $diagnosis_pointer3 = !empty($claimData['diagnosis_pointer3']) ? $claimData['diagnosis_pointer3'] : '';
-    $s_charges3_1 = !empty($claimData['s_charges3_1']) ? $claimData['s_charges3_1'] : '';
-    $s_charges3_2 = !empty($claimData['s_charges3_2']) ? $claimData['s_charges3_2'] : '';
-    $days_or_units3 = !empty($claimData['days_or_units3']) ? $claimData['days_or_units3'] : '';
-    $epsdt_family_plan3 = !empty($claimData['epsdt_family_plan3']) ? $claimData['epsdt_family_plan3'] : '';
-    $id_qua3 = !empty($claimData['id_qua3']) ? $claimData['id_qua3'] : '';
-    $rendering_provider_id3 = !empty($claimData['rendering_provider_id3']) ? $claimData['rendering_provider_id3'] : '';
-    $service_date4_from = !empty($claimData['service_date4_from']) ? $claimData['service_date4_from'] : '';
-    $service_date4_to = !empty($claimData['service_date4_to']) ? $claimData['service_date4_to'] : '';
-    $place_of_service4 = !empty($claimData['place_of_service4']) ? $claimData['place_of_service4'] : '';
-    $emg4 = !empty($claimData['emg4']) ? $claimData['emg4'] : '';
-    $cpt_hcpcs4 = !empty($claimData['cpt_hcpcs4']) ? $claimData['cpt_hcpcs4'] : '';
-    $modifier4_1 = !empty($claimData['modifier4_1']) ? $claimData['modifier4_1'] : '';
-    $modifier4_2 = !empty($claimData['modifier4_2']) ? $claimData['modifier4_2'] : '';
-    $modifier4_3 = !empty($claimData['modifier4_3']) ? $claimData['modifier4_3'] : '';
-    $modifier4_4 = !empty($claimData['modifier4_4']) ? $claimData['modifier4_4'] : '';
-    $diagnosis_pointer4 = !empty($claimData['diagnosis_pointer4']) ? $claimData['diagnosis_pointer4'] : '';
-    $s_charges4_1 = !empty($claimData['s_charges4_1']) ? $claimData['s_charges4_1'] : '';
-    $s_charges4_2 = !empty($claimData['s_charges4_2']) ? $claimData['s_charges4_2'] : '';
-    $days_or_units4 = !empty($claimData['days_or_units4']) ? $claimData['days_or_units4'] : '';
-    $epsdt_family_plan4 = !empty($claimData['epsdt_family_plan4']) ? $claimData['epsdt_family_plan4'] : '';
-    $id_qua4 = !empty($claimData['id_qua4']) ? $claimData['id_qua4'] : '';
-    $rendering_provider_id4 = !empty($claimData['rendering_provider_id4']) ? $claimData['rendering_provider_id4'] : '';
-    $service_date5_from = !empty($claimData['service_date5_from']) ? $claimData['service_date5_from'] : '';
-    $service_date5_to = !empty($claimData['service_date5_to']) ? $claimData['service_date5_to'] : '';
-    $place_of_service5 = !empty($claimData['place_of_service5']) ? $claimData['place_of_service5'] : '';
-    $emg5 = !empty($claimData['emg5']) ? $claimData['emg5'] : '';
-    $cpt_hcpcs5 = !empty($claimData['cpt_hcpcs5']) ? $claimData['cpt_hcpcs5'] : '';
-    $modifier5_1 = !empty($claimData['modifier5_1']) ? $claimData['modifier5_1'] : '';
-    $modifier5_2 = !empty($claimData['modifier5_2']) ? $claimData['modifier5_2'] : '';
-    $modifier5_3 = !empty($claimData['modifier5_3']) ? $claimData['modifier5_3'] : '';
-    $modifier5_4 = !empty($claimData['modifier5_4']) ? $claimData['modifier5_4'] : '';
-    $diagnosis_pointer5 = !empty($claimData['diagnosis_pointer5']) ? $claimData['diagnosis_pointer5'] : '';
-    $s_charges5_1 = !empty($claimData['s_charges5_1']) ? $claimData['s_charges5_1'] : '';
-    $s_charges5_2 = !empty($claimData['s_charges5_2']) ? $claimData['s_charges5_2'] : '';
-    $days_or_units5 = !empty($claimData['days_or_units5']) ? $claimData['days_or_units5'] : '';
-    $epsdt_family_plan5 = !empty($claimData['epsdt_family_plan5']) ? $claimData['epsdt_family_plan5'] : '';
-    $id_qua5 = !empty($claimData['id_qua5']) ? $claimData['id_qua5'] : '';
-    $rendering_provider_id5 = !empty($claimData['rendering_provider_id5']) ? $claimData['rendering_provider_id5'] : '';
-    $service_date6_from = !empty($claimData['service_date6_from']) ? $claimData['service_date6_from'] : '';
-    $service_date6_to = !empty($claimData['service_date6_to']) ? $claimData['service_date6_to'] : '';
-    $place_of_service6 = !empty($claimData['place_of_service6']) ? $claimData['place_of_service6'] : '';
-    $emg6 = !empty($claimData['emg6']) ? $claimData['emg6'] : '';
-    $cpt_hcpcs6 = !empty($claimData['cpt_hcpcs6']) ? $claimData['cpt_hcpcs6'] : '';
-    $modifier6_1 = !empty($claimData['modifier6_1']) ? $claimData['modifier6_1'] : '';
-    $modifier6_2 = !empty($claimData['modifier6_2']) ? $claimData['modifier6_2'] : '';
-    $modifier6_3 = !empty($claimData['modifier6_3']) ? $claimData['modifier6_3'] : '';
-    $modifier6_4 = !empty($claimData['modifier6_4']) ? $claimData['modifier6_4'] : '';
-    $diagnosis_pointer6 = !empty($claimData['diagnosis_pointer6']) ? $claimData['diagnosis_pointer6'] : '';
-    $s_charges6_1 = !empty($claimData['s_charges6_1']) ? $claimData['s_charges6_1'] : '';
-    $s_charges6_2 = !empty($claimData['s_charges6_2']) ? $claimData['s_charges6_2'] : '';
-    $days_or_units6 = !empty($claimData['days_or_units6']) ? $claimData['days_or_units6'] : '';
-    $epsdt_family_plan6 = !empty($claimData['epsdt_family_plan6']) ? $claimData['epsdt_family_plan6'] : '';
-    $id_qua6 = !empty($claimData['id_qua6']) ? $claimData['id_qua6'] : '';
-    $rendering_provider_id6 = !empty($claimData['rendering_provider_id6']) ? $claimData['rendering_provider_id6'] : '';
+
+    $fieldMap = [
+        'service_date%n%_from' => 'service_lines.%n%.service_date_from',
+        'service_date%n%_to' => 'service_lines.%n%.service_date_to',
+        'place_of_service%n%' => 'service_lines.%n%.place_of_service',
+        'emg%n%' => 'service_lines.%n%.emergency',
+        'cpt_hcpcs%n%' => 'service_lines.%n%.procedure_code',
+        'modifier%n%_1' => 'service_lines.%n%.procedure_modifiers.0',
+        'modifier%n%_2' => 'service_lines.%n%.procedure_modifiers.1',
+        'modifier%n%_3' => 'service_lines.%n%.procedure_modifiers.2',
+        'modifier%n%_4' => 'service_lines.%n%.procedure_modifiers.3',
+        'diagnosis_pointer%n%' => 'service_lines.%n%.diagnosis_code_pointers.0',
+        's_charges%n%_1' => 'service_lines.%n%.charge_amount',
+        's_charges%n%_2' => '',
+        'days_or_units%n%' => 'service_lines.%n%.units',
+        'epsdt_family_plan%n%' => 'service_lines.%n%.epsdt',
+        'id_qua%n%' => 'service_lines.%n%.qualifier',
+        'rendering_provider_npi_%n%' => 'service_lines.%n%.rendering_provider.npi',
+    ];
+
+    for ($line=0; $line<6; $line++) {
+        $keys = array_keys($fieldMap);
+        $fields = array_values($fieldMap);
+
+        array_walk($keys, function (&$each) use ($line) {
+            $each = str_replace('%n%', $line + 1, $each);
+        });
+
+        array_walk($fields, function (&$each) use ($line) {
+            $each = str_replace('%n%', $line, $each);
+        });
+
+        $currentMap = array_combine($keys, $fields);
+
+        foreach ($currentMap as $localVariable => $remoteVariable) {
+            ${$localVariable} = array_get($claimData, $remoteVariable);
+        }
+    }
+
     $federal_tax_id_number = !empty($claimData['federal_tax_id_number']) ? $claimData['federal_tax_id_number'] : '';
     $ssn = !empty($claimData['ssnein']) && $claimData['ssnein'] == 'ssn' ? 1 : '';
     $ein = !empty($claimData['ssnein']) && $claimData['ssnein'] == 'ein' ? 1 : '';
@@ -2887,7 +2923,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             days_or_units1 = '".$db->escape($days_or_units1)."',
             epsdt_family_plan1 = '".$db->escape($epsdt_family_plan1)."',
             id_qua1 = '".$db->escape($id_qua1)."',
-            rendering_provider_id1 = '".$db->escape($rendering_provider_id1)."',
+            rendering_provider_npi_1 = '".$db->escape($rendering_provider_npi_1)."',
             service_date2_from = '".$db->escape($service_date2_from)."',
             service_date2_to = '".$db->escape($service_date2_to)."',
             place_of_service2 = '".$db->escape($place_of_service2)."',
@@ -2903,7 +2939,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             days_or_units2 = '".$db->escape($days_or_units2)."',
             epsdt_family_plan2 = '".$db->escape($epsdt_family_plan2)."',
             id_qua2 = '".$db->escape($id_qua2)."',
-            rendering_provider_id2 = '".$db->escape($rendering_provider_id2)."',
+            rendering_provider_npi_2 = '".$db->escape($rendering_provider_npi_2)."',
             service_date3_from = '".$db->escape($service_date3_from)."',
             service_date3_to = '".$db->escape($service_date3_to)."',
             place_of_service3 = '".$db->escape($place_of_service3)."',
@@ -2919,7 +2955,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             days_or_units3 = '".$db->escape($days_or_units3)."',
             epsdt_family_plan3 = '".$db->escape($epsdt_family_plan3)."',
             id_qua3 = '".$db->escape($id_qua3)."',
-            rendering_provider_id3 = '".$db->escape($rendering_provider_id3)."',
+            rendering_provider_npi_3 = '".$db->escape($rendering_provider_npi_3)."',
             service_date4_from = '".$db->escape($service_date4_from)."',
             service_date4_to = '".$db->escape($service_date4_to)."',
             place_of_service4 = '".$db->escape($place_of_service4)."',
@@ -2937,7 +2973,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $ins_sql .= "
             epsdt_family_plan4 = '".$db->escape($epsdt_family_plan4)."',
             id_qua4 = '".$db->escape($id_qua4)."',
-            rendering_provider_id4 = '".$db->escape($rendering_provider_id4)."',
+            rendering_provider_npi_4 = '".$db->escape($rendering_provider_npi_4)."',
             service_date5_from = '".$db->escape($service_date5_from)."',
             service_date5_to = '".$db->escape($service_date5_to)."',
             place_of_service5 = '".$db->escape($place_of_service5)."',
@@ -2953,7 +2989,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             days_or_units5 = '".$db->escape($days_or_units5)."',
             epsdt_family_plan5 = '".$db->escape($epsdt_family_plan5)."',
             id_qua5 = '".$db->escape($id_qua5)."',
-            rendering_provider_id5 = '".$db->escape($rendering_provider_id5)."',
+            rendering_provider_npi_5 = '".$db->escape($rendering_provider_npi_5)."',
             service_date6_from = '".$db->escape($service_date6_from)."',
             service_date6_to = '".$db->escape($service_date6_to)."',
             place_of_service6 = '".$db->escape($place_of_service6)."',
@@ -2969,7 +3005,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             days_or_units6 = '".$db->escape($days_or_units6)."',
             epsdt_family_plan6 = '".$db->escape($epsdt_family_plan6)."',
             id_qua6 = '".$db->escape($id_qua6)."',
-            rendering_provider_id6 = '".$db->escape($rendering_provider_id6)."',
+            rendering_provider_npi_6 = '".$db->escape($rendering_provider_npi_6)."',
             federal_tax_id_number = '".$db->escape($federal_tax_id_number)."',
             ssn = '".$db->escape($ssn)."',
             ein = '".$db->escape($ein)."',
@@ -3128,7 +3164,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         days_or_units1 = '".$db->escape($days_or_units1)."',
         epsdt_family_plan1 = '".$db->escape($epsdt_family_plan1)."',
         id_qua1 = '".$db->escape($id_qua1)."',
-        rendering_provider_id1 = '".$db->escape($rendering_provider_id1)."',
+        rendering_provider_npi_1 = '".$db->escape($rendering_provider_npi_1)."',
         service_date2_from = '".$db->escape($service_date2_from)."',
         service_date2_to = '".$db->escape($service_date2_to)."',
         place_of_service2 = '".$db->escape($place_of_service2)."',
@@ -3144,7 +3180,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         days_or_units2 = '".$db->escape($days_or_units2)."',
         epsdt_family_plan2 = '".$db->escape($epsdt_family_plan2)."',
         id_qua2 = '".$db->escape($id_qua2)."',
-        rendering_provider_id2 = '".$db->escape($rendering_provider_id2)."',
+        rendering_provider_npi_2 = '".$db->escape($rendering_provider_npi_2)."',
         service_date3_from = '".$db->escape($service_date3_from)."',
         service_date3_to = '".$db->escape($service_date3_to)."',
         place_of_service3 = '".$db->escape($place_of_service3)."',
@@ -3160,7 +3196,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         days_or_units3 = '".$db->escape($days_or_units3)."',
         epsdt_family_plan3 = '".$db->escape($epsdt_family_plan3)."',
         id_qua3 = '".$db->escape($id_qua3)."',
-        rendering_provider_id3 = '".$db->escape($rendering_provider_id3)."',
+        rendering_provider_npi_3 = '".$db->escape($rendering_provider_npi_3)."',
         service_date4_from = '".$db->escape($service_date4_from)."',
         service_date4_to = '".$db->escape($service_date4_to)."',
         place_of_service4 = '".$db->escape($place_of_service4)."',
@@ -3178,7 +3214,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         id_qua4 = '".$db->escape($id_qua4)."',
         ";
     $ed_sql .= "
-        rendering_provider_id4 = '".$db->escape($rendering_provider_id4)."',
+        rendering_provider_npi_4 = '".$db->escape($rendering_provider_npi_4)."',
         service_date5_from = '".$db->escape($service_date5_from)."',
         service_date5_to = '".$db->escape($service_date5_to)."',
         place_of_service5 = '".$db->escape($place_of_service5)."',
@@ -3194,7 +3230,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         days_or_units5 = '".$db->escape($days_or_units5)."',
         epsdt_family_plan5 = '".$db->escape($epsdt_family_plan5)."',
         id_qua5 = '".$db->escape($id_qua5)."',
-        rendering_provider_id5 = '".$db->escape($rendering_provider_id5)."',
+        rendering_provider_npi_5 = '".$db->escape($rendering_provider_npi_5)."',
         service_date6_from = '".$db->escape($service_date6_from)."',
         service_date6_to = '".$db->escape($service_date6_to)."',
         place_of_service6 = '".$db->escape($place_of_service6)."',
@@ -3210,7 +3246,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         days_or_units6 = '".$db->escape($days_or_units6)."',
         epsdt_family_plan6 = '".$db->escape($epsdt_family_plan6)."',
         id_qua6 = '".$db->escape($id_qua6)."',
-        rendering_provider_id6 = '".$db->escape($rendering_provider_id6)."',
+        rendering_provider_npi_6 = '".$db->escape($rendering_provider_npi_6)."',
         federal_tax_id_number = '".$db->escape($federal_tax_id_number)."',
         ssn = '".$db->escape($ssn)."',
         ein = '".$db->escape($ein)."',

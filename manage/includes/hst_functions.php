@@ -196,7 +196,7 @@ function authorizeHSTRequest ($hstId, $hstCompanyId, $userId, $docId) {
         $mailingData = $db->getRow("SELECT first_name, last_name, mailing_practice
             FROM dental_users
             WHERE userid = '$docId'");
-        $mailingData['today'] = date('m/d/Y h:i p');
+        $mailingData['today'] = date('m/d/Y h:i a');
 
         sendEmail($from, $to, $subject, $template, $mailingData);
     }

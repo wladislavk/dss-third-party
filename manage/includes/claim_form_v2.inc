@@ -51,7 +51,7 @@ if (!$isHistoricView && !empty($_POST['ex_statusbtn'])) { ?>
     trigger_error("Die called", E_USER_ERROR);
 } elseif (!$isHistoricView && !empty($_POST['insurancesub']) && ($_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn']))) {
     // If the status is pending, then confirm changes to ledger transactions
-    if ($isPending && !confirm_ledger_trxns()) { ?>
+    if ($isPending && !hasLedgerTransactionsChanged($_POST['verification_lines'])) { ?>
         <script type="text/javascript">
             window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
         </script>
@@ -382,11 +382,7 @@ $acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment =
 $placeServices = $db->getResults('SELECT * FROM dental_place_service ps WHERE status = 1');
 $modifierCodes = $db->getResults('SELECT * FROM dental_modifier_code');
 
-if ($isPending) {
-    $transactions = ClaimFormData::dynamicLedgerItems($claimId, $docId, $patientId, $insurancetype);
-} else {
-    $transactions = ClaimFormData::storedLedgerItems($claimId);
-}
+$transactions = ClaimFormData::associatedLedgerItems($claimId, $insurancetype);
 
 $realTotalAmount = 0;
 $oldestServiceDate = null;
@@ -1828,18 +1824,31 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
                         <!-- START LEDGER TRXNS -->
 <?php  if (!count($transactions)) { ?>
     <p style="text-align: center;"><strong>There are currently no ledger entries to be submitted.</strong></p>
-<?php } else { ?>
-  <input type="hidden" name="ledgercount" value="<?php echo count($transactions); ?>">
-  <table>
+<?php } ?>
+  <table width="100%">
+      <colgroup>
+          <col width="102" />
+          <col width="102" />
+          <col width="60" />
+          <col width="30" />
+          <col width="80" />
+          <col width="200" />
+          <col width="160" />
+          <col width="76" />
+          <col width="48" />
+          <col width="48" />
+          <col width="48" />
+          <col width="100" />
+      </colgroup>
     <?php foreach ($transactions as $li=>$array) { ?>
       <tr>
-        <td width="102">
+        <td>
             <input type="text" name="service_lines[<?= $li ?>][service_date_from]" value="<?= dateFormat($array['service_date']) ?>" />
         </td>
-        <td width="102">
+        <td>
             <input type="text" name="service_lines[<?= $li ?>][service_date_to]" value="<?= dateFormat($array['service_date']) ?>" />
         </td>
-        <td width="60">
+        <td>
 		<select style="width:76px" name="service_lines[<?= $li ?>][place_of_service]">
 			<option value=''>Select One</option>
 			<?php
@@ -1853,15 +1862,15 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 			?>
         </select>
 	</td>
-        <td width="30">
+        <td>
             <input style="width:26px;" type="checkbox" name="service_lines[<?= $li ?>][emergency]" value="true"
                 <?= isOptionSelected($array['emg']) ? 'checked' : '' ?> />
         </td>
-        <td width="80">
+        <td>
             <input type="text" name="service_lines[<?= $li ?>][procedure_code]"
                 value="<?= $array['transaction_code'] . ($array['description'] ? " - " . $array['description'] : '') ?>" />
         </td>
-        <td width="200" class="text-center">
+        <td class="text-center">
           <select name="service_lines[<?= $li ?>][procedure_modifiers][0]" style="width:171px;">
             <option value=''>Select One</option>
             <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
@@ -1893,7 +1902,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 
 
         </td>
-        <td width="160">
+        <td>
 		<!--diagnosispointer<?= $li ?>-->
 <table class="eligibleapi claim"><tbody><tr class="eligibleapi claim">
 <td class="input-center-hint checkbox-container"><input class="input" value="1" <?php echo  ($dp=="1")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][0]" type="checkbox"></td><td class="input-side-hint">A</td>
@@ -1910,25 +1919,22 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 <td class="input-center-hint checkbox-container"><input class="input" value="12" <?php echo  ($dp=="12")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][11]" type="checkbox"></td><td class="input-side-hint">L</td>
 </tr></tbody></table>
 	</td>
-        <td width="76" align="right" style="padding-right:15px;">
+        <td align="right" style="padding-right:15px;">
             <input type="text" name="service_lines[<?= $li ?>][charge_amount]" value="<?= number_format($array['amount'], 2) ?>" />
         </td>
-        <td width="48">
+        <td>
             <input style="width:39px;" type="text" name="service_lines[<?= $li ?>][units]" value="<?php echo $array['daysorunits']; ?>">
         </td>
-        <td width="48" class="grayout">
+        <td>
             <input style="width:45px;" type="text" name="service_lines[<?= $li ?>][epsdt]" value="<?php echo $array['epsdt']; ?>">
         </td>
-        <td width="48">
+        <td>
             <input style="width:37px;" type="text" name="service_lines[<?= $li ?>][qualifier]" value="<?php echo $array['idqual']; ?>">
         </td>
-        <td width="100">
+        <td>
             <input type="text" name="service_lines[<?= $li ?>][rendering_provider][npi]" value="<?= $array['provider_id'] ?>" />
-            <input type="hidden" name="ledgerid<?= $li ?>" value="<?php echo $array['ledgerid']; ?>">
-            <input type="hidden" name="service_date<?= $li ?>" value="<?php echo $array['service_date']; ?>">
-            <input type="hidden" name="entry_date<?= $li ?>" value="<?php echo $array['entry_date']; ?>">
-            <input type="hidden" name="transaction_code<?= $li ?>" value="<?php echo $array['transaction_code']; ?>">
-            <input type="hidden" name="amount<?= $li ?>" value="<?php echo $array['amount']; ?>">
+            <input type="hidden" name="service_lines[<?= $i ?>][ledger_id]" value="<?= $array['ledger_id'] ?>" />
+            <input type="hidden" name="verification_lines[<?= $i ?>]" value="<?= rawurlencode(json_encode($array)) ?>" />
         </td>
       </tr>
     <?php } ?>
@@ -2009,7 +2015,6 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
       </tr>
     <?php } ?>
   </table>
-<?php } ?>
 <!-- /END LEDGER TRXNS -->
 
 					</td>
@@ -2440,133 +2445,6 @@ $('input, select').bind('change', function(){
 </body>
 </html>
 <?php
-
-//confirm ledger transactions and make sure they haven't changed.
-function confirm_ledger_trxns(){
-    $db = new Db();
-
-    $num = 0;
-    $return_val = true;
-
-    while ($num <= ($_POST['ledgercount']-1)) {
-        $ledgerid = $_POST['ledgerid'.$num];
-        $sql = "SELECT * "
-            . "  FROM dental_ledger "
-            . "WHERE "
-            . " ledgerid = '".$db->escape($ledgerid) . "'";
-        $query = $db->getRow($sql);
-
-        if (!empty($query)) {
-            $row = $query;
-
-            if (
-                $row['entry_date'] != $_POST['entry_date'.$num] ||
-                $row['service_date'] != $_POST['service_date'.$num] ||
-                $row['transaction_code'] != $_POST['transaction_code'.$num] ||
-                $row['amount'] != $_POST['amount'.$num] ||
-                $row['status'] == DSS_TRXN_NA
-            ) {
-                $return_val = false;
-            }
-        } else {
-            $return_val = false;
-        }
-
-        $num++;
-    }
-
-    return $return_val;
-}
-
-// update and changes to ledger trxns
-// (updating associated claim id and status later w/ claim form insert and update)
-function update_ledger_trxns($claim_id, $trxn_status) {
-    $db = new Db();
-
-    $claim_id = intval($claim_id);
-    $primary_claim_id = $db->getColumn("SELECT IF(primary_claim_id, primary_claim_id, insuranceid) AS claim_id
-        FROM dental_insurance
-        WHERE insuranceid = '$claim_id'", 'claim_id');
-
-    $num = 0;
-    $added_ledger_ids = array();
-
-    while ($num <= ($_POST['ledgercount']-1)) {
-        $numPlusOne = $num + 1;
-        $placeofservicenum =  'placeofservice'.$num;
-        $emgnum = 'emg'.$num;
-        $diagnosispointernum = '[service_lines]['.$num.'][diagnosis_code_pointers][0]';
-        //$diagnosispointernum = 'diagnosispointer'.$num;
-        $daysorunitsnum = 'daysorunits'.$num;
-        $epsdtnum = 'epsdt'.$num;
-        $idqualnum = 'idqual'.$num;
-        $ledgeridnum = 'ledgerid'.$num;
-        $modifiercodenum = "modifier{$numPlusOne}_1";
-        $modifiercode2_num = "modifier{$numPlusOne}_2";
-        $modifiercode3_num = "modifier{$numPlusOne}_3";
-        $modifiercode4_num = "modifier{$numPlusOne}_4";
-
-        $placeofservice = $db->escape($_POST[$placeofservicenum]);
-        $emg = $db->escape($_POST[$emgnum]);
-        $diagnosispointer = $db->escape($_POST['service_lines'][$num]['diagnosis_code_pointers'][0]);
-        $daysorunits = $db->escape($_POST[$daysorunitsnum]);
-        $epsdt = $db->escape($_POST[$epsdtnum]);
-        $idqual = $db->escape($_POST[$idqualnum]);
-        $modifiercode = $db->escape($_POST[$modifiercodenum]);
-        $modifiercode2 = $db->escape($_POST[$modifiercode2_num]);
-        $modifiercode3 = $db->escape($_POST[$modifiercode3_num]);
-        $modifiercode4 = $db->escape($_POST[$modifiercode4_num]);
-        $ledgerid = $db->escape($_POST[$ledgeridnum]);
-
-        array_push($added_ledger_ids, $ledgerid);
-
-        $sql = "UPDATE "
-            . "  dental_ledger "
-            . "SET "
-            . "  `placeofservice` = '$placeofservice', "
-            . "  `emg` = '$emg', "
-            . "  `diagnosispointer` = '$diagnosispointer', "
-            . "  `daysorunits` = '$daysorunits', "
-            . "  `epsdt` = '$epsdt', "
-            . "  `idqual` = '$idqual', "
-            . "  `modcode` = '$modifiercode', "
-            . "  `modcode2` = '$modifiercode2', "
-            . "  `modcode3` = '$modifiercode3', "
-            . "  `modcode4` = '$modifiercode4', "
-            . "  `status` = '$trxn_status', "
-            . "  `primary_claim_id` = '$primary_claim_id' "
-            . "WHERE "
-            . "  `ledgerid` = '$ledgerid'";
-        $query = $db->query($sql);
-
-        $num++;
-    }
-
-    // Ids are already escaped
-    $ledger_ids = "'" . join("', '", $added_ledger_ids) . "'";
-    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$db->escape($primary_claim_id)."' AND ledgerid NOT IN (".$ledger_ids.")";
-
-    $upr = $db->getRow($upsql);
-
-    if ($upr['num_ledger'] > 0) {
-        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$db->escape($primary_claim_id)."'";
-
-        $prod_r = $db->getRow($prod_s);
-        $claim_producer = $prod_r['producer'];
-        $s = "SELECT insuranceid from dental_insurance where producer = '".$db->escape($claim_producer)."' AND patientid='".$db->escape($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
-        $q = $db->getRow($s);
-
-        if (!empty($q)) {
-            $r = $q;
-            $claim_id = $r['insuranceid'];
-        } else {
-            $claim_id = ClaimFormData::createPrimaryClaim($_GET['pid'], $claim_producer);
-        }
-
-        $update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
-        $db->query($update_sql);
-    }
-}
 
 /**
  * Auxiliary function to encapsulate the save logic
@@ -3053,7 +2931,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimId = $db->getInsertId($ins_sql);
 
         // update the ledger trxns passed in with the form
-        update_ledger_trxns($claimId, DSS_TRXN_PROCESSING);
+        updateLedgerTransactions ($claimId, DSS_TRXN_PROCESSING, $claimData['service_lines']);
         claim_status_history_update($claimId, $status, $formerStatus, $userId, $_SESSION['adminuserid']);
         claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
 
@@ -3295,8 +3173,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // update the ledger trxns passed in with the form
     $transactionStatus = ClaimFormData::isStatus('sent', $status) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
 
-    // @ToDo: reimplement this functionality
-    update_ledger_trxns($claimId, $transactionStatus);
+    updateLedgerTransactions($claimId, $transactionStatus, $claimData['service_lines']);
     claim_status_history_update($claimId, $status, $formerStatus, $userId, $_SESSION['adminuserid']);
     claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
 

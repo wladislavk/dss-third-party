@@ -1076,6 +1076,7 @@ class ClaimFormData
          * Relationship between dental_insurance and dental_ledger
          */
         $fieldMap = [
+            'rendering_provider_id%n%' => 'ledgerid',
             'service_date%n%_from' => 'service_date',
             'service_date%n%_to' => 'service_date',
             'place_of_service%n%' => 'placeofservice',
@@ -1123,6 +1124,84 @@ class ClaimFormData
         }
 
         return $transactions;
+    }
+
+    /**
+     * Retrieve associated ledger items, merging modified information with dynamic items
+     *
+     * @param int $claimId
+     * @param int $insuranceType
+     * @return array
+     */
+    public static function associatedLedgerItems ($claimId, $insuranceType) {
+        $db = new Db();
+        $claimId = intval($claimId);
+
+        $claimData = $db->getRow("SELECT status, docid, patientid
+            FROM dental_insurance
+            WHERE insuranceid = '$claimId'");
+
+        if (!$claimData) {
+            return [];
+        }
+
+        $dynamicItems = self::dynamicLedgerItems($claimId, $claimData['docid'], $claimData['patientid'], $insuranceType);
+        $storedItems = self::storedLedgerItems($claimId);
+
+        if (!$dynamicItems || !$storedItems) {
+            return $dynamicItems;
+        }
+
+        /**
+         * The processing will destroy the previous items arrays, thus we create a new array, and save a copy of the
+         * length of the reference array.
+         */
+        $mergedItems = [];
+        $itemLength = count($dynamicItems);
+
+        /**
+         * Determine if there are stored ledger items that need to be matched with dynamic ledger items.
+         * Attempt to match by ledgerid if present, or a simple match, one to one, otherwise
+         */
+        $dynamicIds = array_unique(array_pluck($dynamicItems, 'ledgerid'));
+        $storedIds = array_unique(array_pluck($storedItems, 'ledgerid'));
+        $intersectedIds = array_unique(array_intersect($dynamicIds, $storedIds));
+
+        if ($intersectedIds) {
+            /**
+             * Some or all stored items have ledger ids set, give these preference in the order, and then match
+             * one on one the rest of the stored items with no id.
+             *
+             * Remove the matched items, to avoid processing a line twice.
+             */
+            foreach ($intersectedIds as $targetId) {
+                $dynamicIndex = array_search($dynamicIds, $targetId);
+                $storedIndex = array_search($storedIds, $targetId);
+
+                $mergedItems []= $storedItems[$storedIndex];
+
+                unset($dynamicItems[$dynamicIndex]);
+                unset($storedItems[$storedIndex]);
+                unset($dynamicIds[$dynamicIndex]);
+            }
+
+            /**
+             * Reset the array keys of the items arrays
+             */
+            $dynamicItems = array_values($dynamicItems);
+            $storedItems = array_values($storedItems);
+            $dynamicIds = array_values($dynamicIds);
+        }
+
+        foreach ($dynamicIds as $index=>$id) {
+            $mergedItem = isset($storedItems[$index]) ? $storedItems[$index] : $dynamicItems[$index];
+            $mergedItem['ledgerid'] = $dynamicItems[$index]['ledgerid'];
+
+            $mergedItems []= $mergedItem;
+        }
+
+        $mergedItems = array_slice($mergedItems, 0, $itemLength);
+        return $mergedItems;
     }
 
     /**

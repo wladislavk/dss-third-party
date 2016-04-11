@@ -2,14 +2,51 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\PercaseInvoice as Resource;
+use DentalSleepSolutions\Contracts\Repositories\PercaseInvoices as Repository;
 
-class PercaseInvoice extends Model
+use Carbon\Carbon;
+
+class PercaseInvoice extends Model implements Resource, Repository
 {
+    use WithoutUpdatedTimestamp;
+
+    /**
+     * Guarded attributes
+     *
+     * @var array
+     */
+    protected $guarded = ['id'];
+
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
     protected $table = 'dental_percase_invoice';
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
-    public $timestamps = false;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['monthly_fee_date', 'due_date', 'user_fee_date', 'producer_fee_date'];
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string
+     */
+    const CREATED_AT = 'adddate';
 
     /**
      * get enrolment_invoice id

@@ -1175,8 +1175,8 @@ class ClaimFormData
              * Remove the matched items, to avoid processing a line twice.
              */
             foreach ($intersectedIds as $targetId) {
-                $dynamicIndex = array_search($dynamicIds, $targetId);
-                $storedIndex = array_search($storedIds, $targetId);
+                $dynamicIndex = array_search($targetId, $dynamicIds);
+                $storedIndex = array_search($targetId, $storedIds);
 
                 $mergedItems []= $storedItems[$storedIndex];
 

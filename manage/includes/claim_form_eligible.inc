@@ -462,7 +462,9 @@ if ($isSecondary) {
 <script>
 <?php if ($isHistoricView) { ?>
 jQuery(function($){
-    $('form#claim-form').find('input, select, button').prop('disabled', true);
+    $('form#claim-form').find('input, select, button')
+        .removeAttr('placeholder')
+        .prop('disabled', true);
 });
 <?php } ?>
 function stateDropdown (fieldName) {

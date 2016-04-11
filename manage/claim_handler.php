@@ -348,8 +348,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan1 = $claimData['epsdt_family_plan1'];
     $id_qua1 = !empty($claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id1 = !empty($claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id1 = !empty($claimData['claim']['service_lines'][0]['ledger_id']) ?
+        $claimData['claim']['service_lines'][0]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_1 = !empty($claimData['claim']['service_lines'][0]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][0]['rendering_provider']['entity'] : '';
@@ -393,8 +393,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan2 = $claimData['epsdt_family_plan1'];
     $id_qua2 = !empty($claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id2 = !empty($claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id2 = !empty($claimData['claim']['service_lines'][1]['ledger_id']) ?
+        $claimData['claim']['service_lines'][1]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_2 = !empty($claimData['claim']['service_lines'][1]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][1]['rendering_provider']['entity'] : '';
@@ -437,8 +437,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan3 = $claimData['epsdt_family_plan1'];
     $id_qua3 = !empty($claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id3 = !empty($claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id3 = !empty($claimData['claim']['service_lines'][2]['ledger_id']) ?
+        $claimData['claim']['service_lines'][2]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_3 = !empty($claimData['claim']['service_lines'][2]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][2]['rendering_provider']['entity'] : '';
@@ -481,8 +481,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan4 = $claimData['epsdt_family_plan1'];
     $id_qua4 = !empty($claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id4 = !empty($claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id4 = !empty($claimData['claim']['service_lines'][3]['ledger_id']) ?
+        $claimData['claim']['service_lines'][3]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_4 = !empty($claimData['claim']['service_lines'][3]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][3]['rendering_provider']['entity'] : '';
@@ -525,8 +525,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan5 = $claimData['epsdt_family_plan1'];
     $id_qua5 = !empty($claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id5 = !empty($claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id5 = !empty($claimData['claim']['service_lines'][4]['ledger_id']) ?
+        $claimData['claim']['service_lines'][4]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_5 = !empty($claimData['claim']['service_lines'][4]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][4]['rendering_provider']['entity'] : '';
@@ -569,8 +569,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan6 = $claimData['epsdt_family_plan1'];
     $id_qua6 = !empty($claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id6 = !empty($claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id6 = !empty($claimData['claim']['service_lines'][5]['ledger_id']) ?
+        $claimData['claim']['service_lines'][5]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_6 = !empty($claimData['claim']['service_lines'][5]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][5]['rendering_provider']['entity'] : '';
@@ -1021,7 +1021,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             WHERE insuranceid = '$claimId'");
 
         claim_status_history_update($claimId, $rejectedStatus, $newSentStatus, $userId, $_SESSION['adminuserid']);
-        claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
     }
 
     return $jsonResponse;

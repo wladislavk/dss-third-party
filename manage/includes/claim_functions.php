@@ -140,10 +140,10 @@ function updateLedgerTransactions ($claimId, $trxnStatus, $serviceLines) {
             'emg' => $serviceLine['emergency'],
             'transaction_code' => $serviceLine['procedure_code'],
 
-            'modifiercode' => $serviceLine['procedure_modifiers'][0],
-            'modifiercode2' => $serviceLine['procedure_modifiers'][1],
-            'modifiercode3' => $serviceLine['procedure_modifiers'][2],
-            'modifiercode4' => $serviceLine['procedure_modifiers'][3],
+            'modcode' => $serviceLine['procedure_modifiers'][0],
+            'modcode2' => $serviceLine['procedure_modifiers'][1],
+            'modcode3' => $serviceLine['procedure_modifiers'][2],
+            'modcode4' => $serviceLine['procedure_modifiers'][3],
             'diagnosispointer' => $serviceLine['diagnosis_code_pointers'][0],
 
             'amount' => $serviceLine['charge_amount'],

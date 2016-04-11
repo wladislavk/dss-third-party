@@ -1052,7 +1052,7 @@ class ClaimFormData
         WHERE $pendingOrLinkedConditional
             AND ledger.patientid = '$patientId'
             AND ledger.docid = '$docId'
-            AND trxn_code.docid = '$docId'
+            -- AND trxn_code.docid = '$docId'
             AND trxn_code.type = '$trxnTypeMed'
         ORDER BY ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
 

@@ -1842,100 +1842,107 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
       </colgroup>
     <?php foreach ($transactions as $li=>$array) { ?>
       <tr>
-        <td>
-            <input type="text" name="service_lines[<?= $li ?>][service_date_from]" value="<?= dateFormat($array['service_date']) ?>" />
-        </td>
-        <td>
-            <input type="text" name="service_lines[<?= $li ?>][service_date_to]" value="<?= dateFormat($array['service_date']) ?>" />
-        </td>
-        <td>
-		<select style="width:76px" name="service_lines[<?= $li ?>][place_of_service]">
-			<option value=''>Select One</option>
-			<?php
-				$pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
-  				$dp = ($array['diagnosispointer']!='')?$array['diagnosispointer']:1;
+          <td>
+              <input type="text" name="service_lines[<?= $li ?>][service_date_from]"
+                  value="<?= dateFormat($array['service_date']) ?>" />
+          </td>
+          <td>
+              <input type="text" name="service_lines[<?= $li ?>][service_date_to]"
+                  value="<?= dateFormat($array['service_date']) ?>" />
+          </td>
+          <td>
+              <select style="width:76px" name="service_lines[<?= $li ?>][place_of_service]">
+                  <option value=''>Select One</option>
+                  <?php
 
-				if (!empty($placeServices)) foreach ($placeServices as $psr){
-				?><option value="<?php echo  $psr['place_service']; ?>" <?php echo  ($pos==$psr['place_service'])?'selected="selected"':''; ?>><?php echo  $psr['place_service']."-".$psr['description']; ?></option>
-			<?php
-				}
-			?>
-        </select>
-	</td>
-        <td>
-            <input style="width:26px;" type="checkbox" name="service_lines[<?= $li ?>][emergency]" value="true"
-                <?= isOptionSelected($array['emg']) ? 'checked' : '' ?> />
-        </td>
-        <td>
-            <input type="text" name="service_lines[<?= $li ?>][procedure_code]"
-                value="<?= $array['transaction_code'] . ($array['description'] ? " - " . $array['description'] : '') ?>" />
-        </td>
-        <td class="text-center">
-          <select name="service_lines[<?= $li ?>][procedure_modifiers][0]" style="width:171px;">
-            <option value=''>Select One</option>
-            <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
-              <?php $selected = ($array['modcode'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
-              <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
-            <?php } ?>
-          </select>
-          <select name="service_lines[<?= $li ?>][procedure_modifiers][1]" style="width:171px;">
-            <option value=''>Select One</option>
-            <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
-              <?php $selected = ($array['modcode2'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
-              <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
-            <?php } ?>
-          </select>
-          <select name="service_lines[<?= $li ?>][procedure_modifiers][2]" style="width:171px;">
-            <option value=''>Select One</option>
-            <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
-              <?php $selected = ($array['modcode3'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
-              <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
-            <?php } ?>
-          </select>
-          <select name="service_lines[<?= $li ?>][procedure_modifiers][3]" style="width:171px;">
-            <option value=''>Select One</option>
-            <?php for ($i = 0; $i < count($modifierCodes); $i++) { ?>
-              <?php $selected = ($array['modcode4'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
-              <option value="<?php echo $modifierCodes[$i]['modifier_code']?>" <?php echo $selected;?>><?php echo $modifierCodes[$i]['modifier_code']." ".$modifierCodes[$i]['description']?></option>
-            <?php } ?>
-          </select>
+                  $pos = ($array['placeofservice'] != '') ? $array['placeofservice'] : $array['place'];
+                  $dp = ($array['diagnosispointer'] != '') ? $array['diagnosispointer'] : 1;
 
-
-        </td>
-        <td>
-		<!--diagnosispointer<?= $li ?>-->
-<table class="eligibleapi claim"><tbody><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="1" <?php echo  ($dp=="1")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][0]" type="checkbox"></td><td class="input-side-hint">A</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="2" <?php echo  ($dp=="2")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][1]" type="checkbox"></td><td class="input-side-hint">B</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="3" <?php echo  ($dp=="3")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][2]" type="checkbox"></td><td class="input-side-hint">C</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="4" <?php echo  ($dp=="4")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][3]" type="checkbox"></td><td class="input-side-hint">D</td></tr><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="5" <?php echo  ($dp=="5")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][4]" type="checkbox"></td><td class="input-side-hint">E</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="6" <?php echo  ($dp=="6")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][5]" type="checkbox"></td><td class="input-side-hint">F</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="7" <?php echo  ($dp=="7")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][6]" type="checkbox"></td><td class="input-side-hint">G</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="8" <?php echo  ($dp=="8")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][7]" type="checkbox"></td><td class="input-side-hint">H</td></tr><tr class="eligibleapi claim">
-<td class="input-center-hint checkbox-container"><input class="input" value="9" <?php echo  ($dp=="9")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][8]" type="checkbox"></td><td class="input-side-hint">I</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="10" <?php echo  ($dp=="10")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][9]" type="checkbox"></td><td class="input-side-hint">J</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="11" <?php echo  ($dp=="11")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][10]" type="checkbox"></td><td class="input-side-hint">K</td>
-<td class="input-center-hint checkbox-container"><input class="input" value="12" <?php echo  ($dp=="12")?'checked="checked"':''; ?> name="service_lines[<?= $li ?>][diagnosis_code_pointers][11]" type="checkbox"></td><td class="input-side-hint">L</td>
-</tr></tbody></table>
-	</td>
-        <td align="right" style="padding-right:15px;">
-            <input type="text" name="service_lines[<?= $li ?>][charge_amount]" value="<?= number_format($array['amount'], 2) ?>" />
-        </td>
-        <td>
-            <input style="width:39px;" type="text" name="service_lines[<?= $li ?>][units]" value="<?php echo $array['daysorunits']; ?>">
-        </td>
-        <td>
-            <input style="width:45px;" type="text" name="service_lines[<?= $li ?>][epsdt]" value="<?php echo $array['epsdt']; ?>">
-        </td>
-        <td>
-            <input style="width:37px;" type="text" name="service_lines[<?= $li ?>][qualifier]" value="<?php echo $array['idqual']; ?>">
-        </td>
-        <td>
-            <input type="text" name="service_lines[<?= $li ?>][rendering_provider][npi]" value="<?= $array['provider_id'] ?>" />
-            <input type="hidden" name="service_lines[<?= $i ?>][ledger_id]" value="<?= $array['ledger_id'] ?>" />
-            <input type="hidden" name="verification_lines[<?= $i ?>]" value="<?= rawurlencode(json_encode($array)) ?>" />
-        </td>
+                  if (!empty($placeServices)) foreach ($placeServices as $psr) { ?>
+                      <option value="<?= $psr['place_service'] ?>" <?= $pos == $psr['place_service'] ? 'selected' : '' ?>>
+                          <?= e($psr['place_service'] . '-' . $psr['description']) ?>
+                      </option>
+                  <?php } ?>
+              </select>
+          </td>
+          <td>
+              <input style="width:26px;" type="checkbox" name="service_lines[<?= $li ?>][emergency]" value="true"
+                  <?= isOptionSelected($array['emg']) ? 'checked' : '' ?> />
+          </td>
+          <td>
+              <input type="text" name="service_lines[<?= $li ?>][procedure_code]"
+                  value="<?= $array['transaction_code'] . ($array['description'] ? " - " . $array['description'] : '') ?>" />
+          </td>
+          <td class="text-center">
+              <select name="service_lines[<?= $li ?>][procedure_modifiers][0]" style="width:171px;">
+                  <option value=''>Select One</option>
+                  <?php for ($i = 0; $i < count($modifierCodes); $i++) {
+                      $selected = ($array['modcode'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
+                      <option value="<?= $modifierCodes[$i]['modifier_code'] ?>" <?= $selected ?>>
+                          <?= e($modifierCodes[$i]['modifier_code'] . ' ' . $modifierCodes[$i]['description']) ?>
+                      </option>
+                  <?php } ?>
+              </select>
+              <select name="service_lines[<?= $li ?>][procedure_modifiers][1]" style="width:171px;">
+                  <option value=''>Select One</option>
+                  <?php for ($i = 0; $i < count($modifierCodes); $i++) {
+                      $selected = ($array['modcode2'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
+                      <option value="<?= $modifierCodes[$i]['modifier_code'] ?>" <?= $selected ?>>
+                          <?= e($modifierCodes[$i]['modifier_code'] . ' ' . $modifierCodes[$i]['description']) ?>
+                      </option>
+                  <?php } ?>
+              </select>
+              <select name="service_lines[<?= $li ?>][procedure_modifiers][2]" style="width:171px;">
+                  <option value=''>Select One</option>
+                  <?php for ($i = 0; $i < count($modifierCodes); $i++) {
+                      $selected = ($array['modcode3'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
+                      <option value="<?= $modifierCodes[$i]['modifier_code'] ?>" <?= $selected ?>>
+                          <?= e($modifierCodes[$i]['modifier_code'] . ' ' . $modifierCodes[$i]['description']) ?>
+                      </option>
+                  <?php } ?>
+              </select>
+              <select name="service_lines[<?= $li ?>][procedure_modifiers][3]" style="width:171px;">
+                  <option value=''>Select One</option>
+                  <?php for ($i = 0; $i < count($modifierCodes); $i++) {
+                      $selected = ($array['modcode4'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
+                      <option value="<?= $modifierCodes[$i]['modifier_code'] ?>" <?= $selected ?>>
+                          <?= e($modifierCodes[$i]['modifier_code'] . ' ' . $modifierCodes[$i]['description']) ?>
+                      </option>
+                  <?php } ?>
+              </select>
+          </td>
+          <td>
+              <table class="eligibleapi claim">
+                  <tbody>
+                      <tr class="eligibleapi claim">
+                          <?php for ($n=0; $n<12; $n++) { ?>
+                              <?php if ($n && !($n%4)) { ?></tr><tr class="eligibleapi claim"><?php } ?>
+                              <td class="input-center-hint checkbox-container"><input class="input" value="<?= $n + 1 ?>"
+                                  <?= $dp == ($n + 1) ? 'checked' : '' ?>
+                                  name="service_lines[<?= $li ?>][diagnosis_code_pointers][<?= $n ?>]" type="checkbox"></td>
+                              <td class="input-side-hint"><?= chr(65 + $n) ?></td>
+                          <?php } ?>
+                      </tr>
+                  </tbody>
+              </table>
+          </td>
+          <td align="right" style="padding-right:15px;">
+              <input type="text" name="service_lines[<?= $li ?>][charge_amount]" value="<?= number_format($array['amount'], 2) ?>" />
+          </td>
+          <td>
+              <input style="width:39px;" type="text" name="service_lines[<?= $li ?>][units]" value="<?php echo $array['daysorunits']; ?>">
+          </td>
+          <td>
+              <input style="width:45px;" type="text" name="service_lines[<?= $li ?>][epsdt]" value="<?php echo $array['epsdt']; ?>">
+          </td>
+          <td>
+             <input style="width:37px;" type="text" name="service_lines[<?= $li ?>][qualifier]" value="<?php echo $array['idqual']; ?>">
+          </td>
+          <td>
+              <input type="text" name="service_lines[<?= $li ?>][rendering_provider][npi]" value="<?= $array['provider_id'] ?>" />
+              <input type="hidden" name="service_lines[<?= $li ?>][ledger_id]" value="<?= $array['ledgerid'] ?>" />
+              <input type="hidden" name="verification_lines[<?= $li ?>]" value="<?= rawurlencode(json_encode($array)) ?>" />
+          </td>
       </tr>
     <?php } ?>
     <?php for ($li=count($transactions); $li<6; $li++) { ?>
@@ -2608,6 +2615,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $prior_authorization_number = $claimData['prior_authorization_number'];
 
     $fieldMap = [
+        'rendering_provider_id%n%' => 'service_lines.%n%.ledger_id',
         'service_date%n%_from' => 'service_lines.%n%.service_date_from',
         'service_date%n%_to' => 'service_lines.%n%.service_date_to',
         'place_of_service%n%' => 'service_lines.%n%.place_of_service',
@@ -2786,6 +2794,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             resubmission_code_fill = '".$db->escape($resubmission_code_fill)."',
             original_ref_no = '".$db->escape($original_ref_no)."',
             prior_authorization_number = '".$db->escape($prior_authorization_number)."',
+            rendering_provider_id1 = '" . $db->escape($rendering_provider_id1) . "',
             service_date1_from = '".$db->escape($service_date1_from)."',
             service_date1_to = '".$db->escape($service_date1_to)."',
             place_of_service1 = '".$db->escape($place_of_service1)."',
@@ -2802,6 +2811,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             epsdt_family_plan1 = '".$db->escape($epsdt_family_plan1)."',
             id_qua1 = '".$db->escape($id_qua1)."',
             rendering_provider_npi_1 = '".$db->escape($rendering_provider_npi_1)."',
+            rendering_provider_id2 = '" . $db->escape($rendering_provider_id2) . "',
             service_date2_from = '".$db->escape($service_date2_from)."',
             service_date2_to = '".$db->escape($service_date2_to)."',
             place_of_service2 = '".$db->escape($place_of_service2)."',
@@ -2818,6 +2828,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             epsdt_family_plan2 = '".$db->escape($epsdt_family_plan2)."',
             id_qua2 = '".$db->escape($id_qua2)."',
             rendering_provider_npi_2 = '".$db->escape($rendering_provider_npi_2)."',
+            rendering_provider_id3 = '" . $db->escape($rendering_provider_id3) . "',
             service_date3_from = '".$db->escape($service_date3_from)."',
             service_date3_to = '".$db->escape($service_date3_to)."',
             place_of_service3 = '".$db->escape($place_of_service3)."',
@@ -2834,6 +2845,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             epsdt_family_plan3 = '".$db->escape($epsdt_family_plan3)."',
             id_qua3 = '".$db->escape($id_qua3)."',
             rendering_provider_npi_3 = '".$db->escape($rendering_provider_npi_3)."',
+            rendering_provider_id4 = '" . $db->escape($rendering_provider_id4) . "',
             service_date4_from = '".$db->escape($service_date4_from)."',
             service_date4_to = '".$db->escape($service_date4_to)."',
             place_of_service4 = '".$db->escape($place_of_service4)."',
@@ -2852,6 +2864,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             epsdt_family_plan4 = '".$db->escape($epsdt_family_plan4)."',
             id_qua4 = '".$db->escape($id_qua4)."',
             rendering_provider_npi_4 = '".$db->escape($rendering_provider_npi_4)."',
+            rendering_provider_id5 = '" . $db->escape($rendering_provider_id5) . "',
             service_date5_from = '".$db->escape($service_date5_from)."',
             service_date5_to = '".$db->escape($service_date5_to)."',
             place_of_service5 = '".$db->escape($place_of_service5)."',
@@ -2868,6 +2881,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             epsdt_family_plan5 = '".$db->escape($epsdt_family_plan5)."',
             id_qua5 = '".$db->escape($id_qua5)."',
             rendering_provider_npi_5 = '".$db->escape($rendering_provider_npi_5)."',
+            rendering_provider_id6 = '" . $db->escape($rendering_provider_id6) . "',
             service_date6_from = '".$db->escape($service_date6_from)."',
             service_date6_to = '".$db->escape($service_date6_to)."',
             place_of_service6 = '".$db->escape($place_of_service6)."',
@@ -3027,6 +3041,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         resubmission_code_fill = '".$db->escape($resubmission_code_fill)."',
         original_ref_no = '".$db->escape($original_ref_no)."',
         prior_authorization_number = '".$db->escape($prior_authorization_number)."',
+        rendering_provider_id1 = '" . $db->escape($rendering_provider_id1) . "',
         service_date1_from = '".$db->escape($service_date1_from)."',
         service_date1_to = '".$db->escape($service_date1_to)."',
         place_of_service1 = '".$db->escape($place_of_service1)."',
@@ -3043,6 +3058,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         epsdt_family_plan1 = '".$db->escape($epsdt_family_plan1)."',
         id_qua1 = '".$db->escape($id_qua1)."',
         rendering_provider_npi_1 = '".$db->escape($rendering_provider_npi_1)."',
+        rendering_provider_id2 = '" . $db->escape($rendering_provider_id2) . "',
         service_date2_from = '".$db->escape($service_date2_from)."',
         service_date2_to = '".$db->escape($service_date2_to)."',
         place_of_service2 = '".$db->escape($place_of_service2)."',
@@ -3059,6 +3075,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         epsdt_family_plan2 = '".$db->escape($epsdt_family_plan2)."',
         id_qua2 = '".$db->escape($id_qua2)."',
         rendering_provider_npi_2 = '".$db->escape($rendering_provider_npi_2)."',
+        rendering_provider_id3 = '" . $db->escape($rendering_provider_id3) . "',
         service_date3_from = '".$db->escape($service_date3_from)."',
         service_date3_to = '".$db->escape($service_date3_to)."',
         place_of_service3 = '".$db->escape($place_of_service3)."',
@@ -3075,6 +3092,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         epsdt_family_plan3 = '".$db->escape($epsdt_family_plan3)."',
         id_qua3 = '".$db->escape($id_qua3)."',
         rendering_provider_npi_3 = '".$db->escape($rendering_provider_npi_3)."',
+        rendering_provider_id4 = '" . $db->escape($rendering_provider_id4) . "',
         service_date4_from = '".$db->escape($service_date4_from)."',
         service_date4_to = '".$db->escape($service_date4_to)."',
         place_of_service4 = '".$db->escape($place_of_service4)."',
@@ -3093,6 +3111,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         ";
     $ed_sql .= "
         rendering_provider_npi_4 = '".$db->escape($rendering_provider_npi_4)."',
+        rendering_provider_id5 = '" . $db->escape($rendering_provider_id5) . "',
         service_date5_from = '".$db->escape($service_date5_from)."',
         service_date5_to = '".$db->escape($service_date5_to)."',
         place_of_service5 = '".$db->escape($place_of_service5)."',
@@ -3109,6 +3128,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         epsdt_family_plan5 = '".$db->escape($epsdt_family_plan5)."',
         id_qua5 = '".$db->escape($id_qua5)."',
         rendering_provider_npi_5 = '".$db->escape($rendering_provider_npi_5)."',
+        rendering_provider_id6 = '" . $db->escape($rendering_provider_id6) . "',
         service_date6_from = '".$db->escape($service_date6_from)."',
         service_date6_to = '".$db->escape($service_date6_to)."',
         place_of_service6 = '".$db->escape($place_of_service6)."',

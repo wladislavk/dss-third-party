@@ -53,7 +53,11 @@ class MissingTeethController extends Controller
      */
     public function store(MissingTeeth $resources, MissingToothStore $request)
     {
-        $resource = $resources->create($request->all());
+        $data = array_merge($request->all(), [
+            'ip_address' => $request->ip()
+        ]);
+
+        $resource = $resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }

@@ -14,7 +14,7 @@ class ExtraPercaseInvoiceStore extends Request
         return [
             'percase_date'    => 'required|date',
             'percase_name'    => 'required|string',
-            'percase_amount'  => 'required|regex:/^[0-9]+\.[0-9]{2}$/',
+            'percase_amount'  => 'required|regex:/^[0-9]+\.[0-9]{1,2}$/',
             'percase_status'  => 'integer',
             'percase_invoice' => 'integer'
         ];

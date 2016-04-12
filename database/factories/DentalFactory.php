@@ -2127,3 +2127,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\ExtraPercaseInvoice::class, function ($faker) {
+    return [
+        'percase_date'    => $faker->dateTime(),
+        'percase_name'    => $faker->name(),
+        'percase_amount'  => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 1000),
+        'percase_status'  => $faker->randomDigit,
+        'percase_invoice' => $faker->randomDigit,
+        'adddate'         => $faker->dateTime(),
+        'ip_address'      => $faker->ipv4
+    ];
+});

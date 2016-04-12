@@ -911,7 +911,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
     // update the ledger trxns passed in with the form
     $transactionStatus = ClaimFormData::isStatus('sent', $status) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
-    updateLedgerTransactions($claimId, $transactionStatus, $claimData['service_lines']);
+    updateLedgerTransactions($claimId, $transactionStatus, $claimData['claim']['service_lines']);
 
     // Determine if this payer id is valid
     $db->query("UPDATE dental_patients SET

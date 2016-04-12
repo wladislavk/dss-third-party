@@ -28,7 +28,7 @@ $status = $db->getColumn("SELECT status
 
 $isPending = ClaimFormData::isStatus('pending', $status);
 
-if ($isPending && hasLedgerTransactionsChanged($_POST['verification_lines'])) { ?>
+if ($isPending && hasLedgerTransactionsChanged($claimId, $_POST['claim']['service_lines'])) { ?>
     <script type="text/javascript">
         window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
     </script>

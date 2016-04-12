@@ -81,31 +81,40 @@ function payment_history_update ($paymentId, $userId, $adminId) {
 /**
  * Verify the ledger transactions have not changed prior to save them
  *
- * @param array $verificationLines
+ * @param int   $claimId
+ * @param array $serviceLines
  * @return bool
  */
-function hasLedgerTransactionsChanged ($verificationLines) {
+function hasLedgerTransactionsChanged ($claimId, $serviceLines) {
     $db = new Db();
 
-    foreach ($verificationLines as $verificationLine) {
-        $serviceLine = @json_decode($verificationLine);
+    $comparisons = [];
+    $dynamicLines = [];
+    $unorderedLines = ClaimFormData::dynamicLedgerItems($claimId);
 
+    foreach ($unorderedLines as $each) {
+        $dynamicLines [$each['ledgerid']] = $each;
+    }
+
+    foreach ($serviceLines as $serviceLine) {
         if (empty($serviceLine['ledger_id'])) {
             continue;
         }
 
         $ledgerId = intval($serviceLine['ledger_id']);
-        $row = $db->getRow("SELECT *
-            FROM dental_ledger
-            WHERE ledgerid = '$ledgerId'");
+        $row = isset($dynamicLines[$ledgerId]) ? $dynamicLines[$ledgerId] : null;
 
         if (!$row) {
             return true;
         }
 
-        $verificationRow = json_encode($row);
+        $comparisons[$serviceLine['verification']] = $row['verification'];
 
-        if ($verificationLine !== $verificationRow || $row['status'] == DSS_TRXN_NA) {
+        if ($serviceLine['verification'] != $row['verification']) {
+            return true;
+        }
+
+        if ($row['status'] == DSS_TRXN_NA) {
             return true;
         }
     }

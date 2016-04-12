@@ -4,12 +4,6 @@
 	include_once('includes/claim_functions.php');
     include_once('admin/includes/claim_functions.php'); // To use cratePrimaryClaim function
 	include("includes/sescheck.php");
-?>
-	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-	<script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
-	<script type="text/javascript" src="/manage/js/masks.js"></script>
-<?php
-	include("includes/calendarinc.php");
 	include("includes/preauth_functions.php");
 
 	$flowquery = "SELECT * FROM dental_flow_pg1 WHERE pid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' LIMIT 1;";
@@ -206,21 +200,22 @@
 		trigger_error("Die called", E_USER_ERROR);
 	}
 ?>
-
-<script type="text/javascript" src="js/add_ledger.js"></script>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="css/form.css" type="text/css" />
 		<script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
 		<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
-		<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
+        <script type="text/javascript" src="/manage/js/masks.js"></script>
 		<script type="text/javascript" src="script/validation.js"></script>
+        <?php include("includes/calendarinc.php"); ?>
 		<script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
 		<script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
-		<link rel="stylesheet" href="css/form.css" type="text/css" />
+        <script type="text/javascript" src="js/add_ledger.js"></script>
 	</head>
 
 	<body>

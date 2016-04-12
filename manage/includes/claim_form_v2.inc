@@ -51,7 +51,7 @@ if (!$isHistoricView && !empty($_POST['ex_statusbtn'])) { ?>
     trigger_error("Die called", E_USER_ERROR);
 } elseif (!$isHistoricView && !empty($_POST['insurancesub']) && ($_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn']))) {
     // If the status is pending, then confirm changes to ledger transactions
-    if ($isPending && !hasLedgerTransactionsChanged($_POST['verification_lines'])) { ?>
+    if ($isPending && hasLedgerTransactionsChanged($claimId, $_POST['service_lines'])) { ?>
         <script type="text/javascript">
             window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
         </script>
@@ -382,7 +382,7 @@ $acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment =
 $placeServices = $db->getResults('SELECT * FROM dental_place_service ps WHERE status = 1');
 $modifierCodes = $db->getResults('SELECT * FROM dental_modifier_code');
 
-$transactions = ClaimFormData::associatedLedgerItems($claimId, $insurancetype);
+$transactions = ClaimFormData::associatedLedgerItems($claimId);
 
 $realTotalAmount = 0;
 $oldestServiceDate = null;
@@ -1941,7 +1941,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
           <td>
               <input type="text" name="service_lines[<?= $li ?>][rendering_provider][npi]" value="<?= $array['provider_id'] ?>" />
               <input type="hidden" name="service_lines[<?= $li ?>][ledger_id]" value="<?= $array['ledgerid'] ?>" />
-              <input type="hidden" name="verification_lines[<?= $li ?>]" value="<?= rawurlencode(json_encode($array)) ?>" />
+              <input type="hidden" name="service_lines[<?= $li ?>][verification]" value="<?= e($array['verification']) ?>" />
           </td>
       </tr>
     <?php } ?>

@@ -721,7 +721,7 @@ function stateDropdown (fieldName) {
         $mod_array[] = $mod_row;
       }
 
-      $transactions = ClaimFormData::associatedLedgerItems($claimId, $insurancetype);
+      $transactions = ClaimFormData::associatedLedgerItems($claimId);
 
       /**
        * @see CS-29
@@ -762,10 +762,16 @@ function stateDropdown (fieldName) {
       if (!$('input[name="claim[service_lines][<?= $li ?>][ledger_id]"]').length) {
           var $reference = $('input[name="claim[service_lines][<?= $li ?>][rendering_provider][npi]"]');
 
-          $('<input>', { type: 'hidden', name: 'claim[service_lines][<?= $li ?>][ledger_id]', value: <?= json_encode($array['ledgerid']) ?> })
-              .insertAfter($reference);
-          $('<input>', { type: 'hidden', name: 'claim[verification_lines][<?= $li ?>]', value: <?= json_encode(json_encode($array)) ?> })
-              .insertAfter($reference);
+          $('<input>', {
+              type: 'hidden',
+              name: 'claim[service_lines][<?= $li ?>][ledger_id]',
+              value: <?= json_encode($array['ledgerid']) ?>
+          }).insertAfter($reference);
+          $('<input>', {
+              type: 'hidden',
+              name: 'claim[service_lines][<?= $li ?>][verification]',
+              value: <?= json_encode($array['verification']) ?>
+          }).insertAfter($reference);
       }
 <?php
         $li++;

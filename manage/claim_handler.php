@@ -959,11 +959,11 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // Remove extra fiels or Eligible API will fail
     unset($eligibleData['code']);
     unset($eligibleData['eligibleToken']);
-    unset($eligibleData['claim']['verification_lines']);
 
     // We added extra variables to the form, to track ledger ids
     foreach ($eligibleData['claim']['service_lines'] as &$eligibleServiceLine) {
         unset($eligibleServiceLine['ledger_id']);
+        unset($eligibleServiceLine['verification']);
     }
 
     //Curl post call to claim end point

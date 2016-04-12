@@ -116,108 +116,6 @@ $medicaid_resubmission_code = strtoupper($claimData['medicaid_resubmission_code'
 $original_ref_no = strtoupper($claimData['original_ref_no']);
 $prior_authorization_number = strtoupper($claimData['prior_authorization_number']);
 
-$service_date1_from = str_replace('-','/',st($claimData['service_date1_from']));
-$service_date1_to = str_replace('-','/',st($claimData['service_date1_to']));
-$place_of_service1 = strtoupper(st($claimData['place_of_service1']));
-$emg1 = strtoupper(st($claimData['emg1']));
-$cpt_hcpcs1 = strtoupper($claimData['cpt_hcpcs1']);
-$modifier1_1 = strtoupper($claimData['modifier1_1']);
-$modifier1_2 = strtoupper($claimData['modifier1_2']);
-$modifier1_3 = strtoupper($claimData['modifier1_3']);
-$modifier1_4 = strtoupper($claimData['modifier1_4']);
-$diagnosis_pointer1 = strtoupper($claimData['diagnosis_pointer1']);
-$s_charges1_1 = strtoupper($claimData['s_charges1_1']);
-$s_charges1_2 = strtoupper($claimData['s_charges1_2']);
-$days_or_units1 = strtoupper($claimData['days_or_units1']);
-$epsdt_family_plan1 = strtoupper(st($claimData['epsdt_family_plan1']));
-$id_qua1 = strtoupper($claimData['id_qua1']);
-$rendering_provider_id1 = strtoupper($claimData['rendering_provider_id1']);
-
-$service_date2_from = str_replace('-','/',st($claimData['service_date2_from']));
-$service_date2_to = str_replace('-','/',st($claimData['service_date2_to']));
-$place_of_service2 = strtoupper(st($claimData['place_of_service2']));
-$emg2 = strtoupper($claimData['emg2']);
-$cpt_hcpcs2 = strtoupper($claimData['cpt_hcpcs2']);
-$modifier2_1 = strtoupper($claimData['modifier2_1']);
-$modifier2_2 = strtoupper($claimData['modifier2_2']);
-$modifier2_3 = strtoupper($claimData['modifier2_3']);
-$modifier2_4 = strtoupper($claimData['modifier2_4']);
-$diagnosis_pointer2 = strtoupper($claimData['diagnosis_pointer2']);
-$s_charges2_1 = strtoupper($claimData['s_charges2_1']);
-$s_charges2_2 = strtoupper($claimData['s_charges2_2']);
-$days_or_units2 = strtoupper($claimData['days_or_units2']);
-$epsdt_family_plan2 = strtoupper($claimData['epsdt_family_plan2']);
-$id_qua2 = strtoupper($claimData['id_qua2']);
-$rendering_provider_id2 = strtoupper($claimData['rendering_provider_id2']);
-
-$service_date3_from = str_replace('-','/',st($claimData['service_date3_from']));
-$service_date3_to = str_replace('-','/',st($claimData['service_date3_to']));
-$place_of_service3 = strtoupper(st($claimData['place_of_service3']));
-$emg3 = strtoupper($claimData['emg3']);
-$cpt_hcpcs3 = strtoupper($claimData['cpt_hcpcs3']);
-$modifier3_1 = strtoupper($claimData['modifier3_1']);
-$modifier3_2 = strtoupper($claimData['modifier3_2']);
-$modifier3_3 = strtoupper($claimData['modifier3_3']);
-$modifier3_4 = strtoupper($claimData['modifier3_4']);
-$diagnosis_pointer3 = strtoupper($claimData['diagnosis_pointer3']);
-$s_charges3_1 = strtoupper($claimData['s_charges3_1']);
-$s_charges3_2 = strtoupper($claimData['s_charges3_2']);
-$days_or_units3 = strtoupper($claimData['days_or_units3']);
-$epsdt_family_plan3 = strtoupper($claimData['epsdt_family_plan3']);
-$id_qua3 = strtoupper($claimData['id_qua3']);
-$rendering_provider_id3 = strtoupper($claimData['rendering_provider_id3']);
-
-$service_date4_from = str_replace('-','/',st($claimData['service_date4_from']));
-$service_date4_to = str_replace('-','/',st($claimData['service_date4_to']));
-$place_of_service4 = strtoupper(st($claimData['place_of_service4']));
-$emg4 = strtoupper($claimData['emg4']);
-$cpt_hcpcs4 = strtoupper($claimData['cpt_hcpcs4']);
-$modifier4_1 = strtoupper($claimData['modifier4_1']);
-$modifier4_2 = strtoupper($claimData['modifier4_2']);
-$modifier4_3 = strtoupper($claimData['modifier4_3']);
-$modifier4_4 = strtoupper($claimData['modifier4_4']);
-$diagnosis_pointer4 = strtoupper($claimData['diagnosis_pointer4']);
-$s_charges4_1 = strtoupper($claimData['s_charges4_1']);
-$s_charges4_2 = strtoupper($claimData['s_charges4_2']);
-$days_or_units4 = strtoupper($claimData['days_or_units4']);
-$epsdt_family_plan4 = strtoupper($claimData['epsdt_family_plan4']);
-$id_qua4 = strtoupper($claimData['id_qua4']);
-$rendering_provider_id4 = strtoupper($claimData['rendering_provider_id4']);
-
-$service_date5_from = str_replace('-','/',st($claimData['service_date5_from']));
-$service_date5_to = str_replace('-','/',st($claimData['service_date5_to']));
-$place_of_service5 = strtoupper($claimData['place_of_service5']);
-$emg5 = strtoupper($claimData['emg5']);
-$cpt_hcpcs5 = strtoupper($claimData['cpt_hcpcs5']);
-$modifier5_1 = strtoupper($claimData['modifier5_1']);
-$modifier5_2 = strtoupper($claimData['modifier5_2']);
-$modifier5_3 = strtoupper($claimData['modifier5_3']);
-$modifier5_4 = strtoupper($claimData['modifier5_4']);
-$diagnosis_pointer5 = strtoupper($claimData['diagnosis_pointer5']);
-$s_charges5_1 = strtoupper($claimData['s_charges5_1']);
-$s_charges5_2 = strtoupper($claimData['s_charges5_2']);
-$days_or_units5 = strtoupper($claimData['days_or_units5']);
-$epsdt_family_plan5 = strtoupper($claimData['epsdt_family_plan5']);
-$id_qua5 = strtoupper($claimData['id_qua5']);
-$rendering_provider_id5 = strtoupper($claimData['rendering_provider_id5']);
-
-$service_date6_from = str_replace('-','/',st($claimData['service_date6_from']));
-$service_date6_to = str_replace('-','/',st($claimData['service_date6_to']));
-$place_of_service6 = strtoupper($claimData['place_of_service6']);
-$emg6 = strtoupper($claimData['emg6']);
-$cpt_hcpcs6 = strtoupper($claimData['cpt_hcpcs6']);
-$modifier6_1 = strtoupper($claimData['modifier6_1']);
-$modifier6_2 = strtoupper($claimData['modifier6_2']);
-$modifier6_3 = strtoupper($claimData['modifier6_3']);
-$modifier6_4 = strtoupper($claimData['modifier6_4']);
-$diagnosis_pointer6 = strtoupper($claimData['diagnosis_pointer6']);
-$s_charges6_1 = strtoupper($claimData['s_charges6_1']);
-$s_charges6_2 = strtoupper($claimData['s_charges6_2']);
-$days_or_units6 = strtoupper($claimData['days_or_units6']);
-$epsdt_family_plan6 = strtoupper($claimData['epsdt_family_plan6']);
-$id_qua6 = strtoupper($claimData['id_qua6']);
-$rendering_provider_id6 = strtoupper($claimData['rendering_provider_id6']);
-
 $federal_tax_id_number = strtoupper($claimData['federal_tax_id_number']);
 $ssn = strtoupper($claimData['ssn']);
 $ein = strtoupper($claimData['ein']);
@@ -487,31 +385,15 @@ $fdfData['name_referring_provider_qualifier'] =
 $fdfData['prior_auth_number_fill'] =
     !empty($prior_authorization_number) ? $prior_authorization_number : '';
 
-$prefix = array( 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX');
+$prefix = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'];
 
-// Load pending medical trxns if new claim form. Otherwise, load associated trxns.
-$transactionType = DSS_TRXN_TYPE_MED;
-$npiColumn = $insurancetype == '1' ? 'medicare_npi' : 'npi';
+/**
+ * Paper form didn't save ledger details, we need the original transactions as fallback strategy
+ */
+$transactions = ClaimFormData::storedLedgerItems($claimId);
+$diagnosis_array = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'H', 'I', 'J', 'K', 'L', 'M'];
 
-$sql = "SELECT
-        ledger.*,
-        user.$npiColumn AS 'provider_id',
-        ps.place_service AS 'place'
-    FROM dental_ledger ledger
-        JOIN dental_users user ON user.userid = ledger.docid
-        JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
-        LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid
-    WHERE (ledger.primary_claim_id = '$claimId' OR ledger.secondary_claim_id = '$claimId')
-        AND ledger.patientid = '$patientId'
-        AND ledger.docid = '$docId'
-        AND trxn_code.docid = '$docId'
-        AND trxn_code.type = '$transactionType'
-    ORDER BY ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
-
-$query = $db->getResults($sql);
-$diagnosis_array = array('','A','B','C','D','E','F','H','I','J','K','L','M');
-
-foreach ($query as $c=>$array) {
+foreach ($transactions as $c=>$array) {
     $p = $prefix[$c];
     $service_date = dateToTime($array['service_date']);
 

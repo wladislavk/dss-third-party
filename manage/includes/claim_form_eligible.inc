@@ -462,7 +462,9 @@ if ($isSecondary) {
 <script>
 <?php if ($isHistoricView) { ?>
 jQuery(function($){
-    $('form#claim-form').find('input, select, button').prop('disabled', true);
+    $('form#claim-form').find('input, select, button')
+        .removeAttr('placeholder')
+        .prop('disabled', true);
 });
 <?php } ?>
 function stateDropdown (fieldName) {
@@ -719,11 +721,7 @@ function stateDropdown (fieldName) {
         $mod_array[] = $mod_row;
       }
 
-      if ($isPending) {
-          $transactions = ClaimFormData::dynamicLedgerItems($claimId, $docId, $patientId, $insurancetype);
-      } else {
-          $transactions = ClaimFormData::storedLedgerItems($claimId);
-      }
+      $transactions = ClaimFormData::associatedLedgerItems($claimId);
 
       /**
        * @see CS-29
@@ -762,11 +760,19 @@ function stateDropdown (fieldName) {
         $('input[name="claim[service_lines][<?php echo $li;?>][rendering_provider][npi]"]').val("<?php echo  $array['provider_id']; ?>");
 
       if (!$('input[name="claim[service_lines][<?= $li ?>][ledger_id]"]').length) {
-          $('<input>', { type: 'hidden', name: 'claim[service_lines][<?= $li ?>][ledger_id]' })
-              .insertAfter('input[name="claim[service_lines][<?= $li ?>][rendering_provider][npi]"]');
-      }
+          var $reference = $('input[name="claim[service_lines][<?= $li ?>][rendering_provider][npi]"]');
 
-      $('input[name="claim[service_lines][<?= $li ?>][ledger_id]"]').val('<?= $array['ledgerid'] ?>');
+          $('<input>', {
+              type: 'hidden',
+              name: 'claim[service_lines][<?= $li ?>][ledger_id]',
+              value: <?= json_encode($array['ledgerid']) ?>
+          }).insertAfter($reference);
+          $('<input>', {
+              type: 'hidden',
+              name: 'claim[service_lines][<?= $li ?>][verification]',
+              value: <?= json_encode($array['verification']) ?>
+          }).insertAfter($reference);
+      }
 <?php
         $li++;
       }

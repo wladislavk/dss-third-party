@@ -161,7 +161,7 @@ $sleepstudies = "SELECT ss.diagnosis FROM dental_summ_sleeplab ss
   $diagnosis_1 = $d['diagnosis'];
 
   $ins_diag_sql = "select * from dental_ins_diagnosis where ins_diagnosisid='".mysqli_real_escape_string($con,$diagnosis_1)."'";
-     
+
      $ins_diag = $db->getRow($ins_diag_sql);
      $diagnosis_a = $ins_diag['ins_diagnosis'];
 
@@ -420,13 +420,13 @@ if (empty($prior_authorization_number)) {
 		p_m_dss_file='".s_for($p_m_dss_file)."',
                 adddate = now(),
                 ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
-                
+
 	$secondary_claim_id = $db->getInsertId($ins_sql);
 	claim_history_update($secondary_claim_id, $_SESSION['userid'], '');
 
 	$l_sql = "UPDATE dental_ledger SET secondary_claim_id = '".$secondary_claim_id."' 
 			WHERE primary_claim_id='".$primary_claim_id."'";
-	
+
   $db->query($l_sql);
 
 	return $secondary_claim_id;
@@ -719,7 +719,7 @@ class ClaimFormData
      * - whitelist db column fields
      * - escape fields
      * - concatenate fields: column_name = "column value", ...
-     * 
+     *
      * Ready for DB insertion
      *
      * @param array $claimData
@@ -989,17 +989,23 @@ class ClaimFormData
      * Retrieve ledger items for either the given claim, or a new claim
      *
      * @param int $claimId
-     * @param int $docId
-     * @param int $patientId
-     * @param int $insuranceType
      * @return array
      */
-    public static function dynamicLedgerItems ($claimId, $docId, $patientId, $insuranceType) {
+    public static function dynamicLedgerItems ($claimId) {
         $db = new Db();
-
         $claimId = intval($claimId);
-        $docId = intval($docId);
-        $patientId = intval($patientId);
+
+        $claimData = $db->getRow("SELECT docid, patientid, insurance_type
+            FROM dental_insurance
+            WHERE insuranceid = '$claimId'");
+
+        if (!$claimData) {
+            return [];
+        }
+
+        $docId = intval($claimData['docid']);
+        $patientId = intval($claimData['patientid']);
+        $insuranceType = intval($claimData['insurance_type']);
 
         $isNewClaim = !$claimId;
 
@@ -1052,11 +1058,16 @@ class ClaimFormData
         WHERE $pendingOrLinkedConditional
             AND ledger.patientid = '$patientId'
             AND ledger.docid = '$docId'
-            AND trxn_code.docid = '$docId'
+            -- AND trxn_code.docid = '$docId'
             AND trxn_code.type = '$trxnTypeMed'
         ORDER BY ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
 
         $transactions = $db->getResults($transactionsQuery);
+
+        array_walk($transactions, function (&$each) {
+            $each['verification'] = crc32(json_encode($each));
+        });
+
         return $transactions;
     }
 
@@ -1076,6 +1087,7 @@ class ClaimFormData
          * Relationship between dental_insurance and dental_ledger
          */
         $fieldMap = [
+            'rendering_provider_id%n%' => 'ledgerid',
             'service_date%n%_from' => 'service_date',
             'service_date%n%_to' => 'service_date',
             'place_of_service%n%' => 'placeofservice',
@@ -1093,6 +1105,7 @@ class ClaimFormData
             'rendering_provider_first_name_%n%' => 'provider_first_name',
             'rendering_provider_last_name_%n%' => 'provider_last_name',
             'rendering_provider_npi_%n%' => 'provider_id',
+            'verification' => 'verification', // Empty field, to mimic the extra field in the dynamic ledger items
         ];
 
         $transactions = [];
@@ -1123,6 +1136,78 @@ class ClaimFormData
         }
 
         return $transactions;
+    }
+
+    /**
+     * Retrieve associated ledger items, merging modified information with dynamic items
+     *
+     * @param int $claimId
+     * @return array
+     */
+    public static function associatedLedgerItems ($claimId) {
+        $db = new Db();
+        $claimId = intval($claimId);
+
+        $dynamicItems = self::dynamicLedgerItems($claimId);
+        $storedItems = self::storedLedgerItems($claimId);
+
+        if (!$dynamicItems || !$storedItems) {
+            return $dynamicItems;
+        }
+
+        /**
+         * The processing will destroy the previous items arrays, thus we create a new array, and save a copy of the
+         * length of the reference array.
+         */
+        $mergedItems = [];
+        $itemLength = count($dynamicItems);
+
+        /**
+         * Determine if there are stored ledger items that need to be matched with dynamic ledger items.
+         * Attempt to match by ledgerid if present, or a simple match, one to one, otherwise
+         */
+        $dynamicIds = array_unique(array_pluck($dynamicItems, 'ledgerid'));
+        $storedIds = array_unique(array_pluck($storedItems, 'ledgerid'));
+        $intersectedIds = array_unique(array_intersect($dynamicIds, $storedIds));
+
+        if ($intersectedIds) {
+            /**
+             * Some or all stored items have ledger ids set, give these preference in the order, and then match
+             * one on one the rest of the stored items with no id.
+             *
+             * Remove the matched items, to avoid processing a line twice.
+             */
+            foreach ($intersectedIds as $targetId) {
+                $dynamicIndex = array_search($targetId, $dynamicIds);
+                $storedIndex = array_search($targetId, $storedIds);
+
+                $storedItems[$storedIndex]['verification'] = $dynamicItems[$dynamicIndex]['verification'];
+                $mergedItems []= $storedItems[$storedIndex];
+
+                unset($dynamicItems[$dynamicIndex]);
+                unset($storedItems[$storedIndex]);
+                unset($dynamicIds[$dynamicIndex]);
+            }
+
+            /**
+             * Reset the array keys of the items arrays
+             */
+            $dynamicItems = array_values($dynamicItems);
+            $storedItems = array_values($storedItems);
+            $dynamicIds = array_values($dynamicIds);
+        }
+
+        foreach ($dynamicIds as $index=>$id) {
+            $mergedItem = isset($storedItems[$index]) ? $storedItems[$index] : $dynamicItems[$index];
+
+            $mergedItem['ledgerid'] = $dynamicItems[$index]['ledgerid'];
+            $mergedItem['verification'] = $dynamicItems[$index]['verification'];
+
+            $mergedItems []= $mergedItem;
+        }
+
+        $mergedItems = array_slice($mergedItems, 0, $itemLength);
+        return $mergedItems;
     }
 
     /**
@@ -1167,7 +1252,7 @@ class ClaimFormData
 
     /**
      * Gather patient, doctor, and insurance data for the claim. Does not process ledger transactions.
-     * 
+     *
      * @param  int    $patientId
      * @param  int    $producerId
      * @param  string $sequence

@@ -121,11 +121,12 @@ class Db
 		return mysqli_real_escape_string($this->con, $string);
 	}
 
-    public function escapeList (Array $values) {
+    public function escapeList (Array $values, $isIdentifier=false) {
         $db = $this;
+        $delimiter = $isIdentifier ? "`" : "'";
 
-        array_walk($values, function (&$each) use ($db) {
-            $each = "'" . $db->escape($each) . "'";
+        array_walk($values, function (&$each) use ($db, $delimiter) {
+            $each = $delimiter . $db->escape($each) . $delimiter;
         });
 
         return join(', ', $values);
@@ -139,5 +140,37 @@ class Db
         });
 
         return join(', ', $values);
+    }
+
+    /**
+     * Returns the columns of the given table
+     *
+     * @param string $tableName
+     * @return mixed
+     */
+    public function getColumnNames ($tableName) {
+        $tableName = $this->escape($tableName);
+        $columns = $this->getResults("SELECT column_name FROM information_schema.columns WHERE table_name = '$tableName'");
+
+        return array_pluck($columns, 'column_name');
+    }
+
+    /**
+     * Auxiliary method to determine the intersection between the columns of two tables, aimed to simplify the process
+     * of saving one table into its corresponding history table.
+     *
+     * @param string $sourceTable
+     * @param string $historyTable
+     * @return string
+     */
+    public function backupColumns ($sourceTable, $historyTable) {
+        $sourceColumns = $this->getColumnNames($sourceTable);
+        $historyColumns = $this->getColumnNames($historyTable);
+
+        $backupColumns = array_intersect($sourceColumns, $historyColumns);
+        $backupColumns = array_unique($backupColumns);
+        $backupColumns = $this->escapeList($backupColumns, true);
+
+        return $backupColumns;
     }
 }

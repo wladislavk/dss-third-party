@@ -28,7 +28,7 @@ $status = $db->getColumn("SELECT status
 
 $isPending = ClaimFormData::isStatus('pending', $status);
 
-if ($isPending && !confirm_ledger_trxns()) { ?>
+if ($isPending && hasLedgerTransactionsChanged($claimId, $_POST['claim']['service_lines'])) { ?>
     <script type="text/javascript">
         window.location = "manage_claims.php?msg=Error sending claim: Frontoffice user has altered claim. Please reload and try again.";
     </script>
@@ -76,119 +76,6 @@ if (!is_object($jsonResponse) || !isset($jsonResponse->success)) { ?>
         window.location = "manage_claims.php?status=0";
     </script>
 <?php }
-
-//confirm ledger transactions and make sure they haven't changed.
-function confirm_ledger_trxns(){
-    $con = $GLOBALS['con'];
-    $db = new Db();
-
-    $num = 0;
-    $return_val = true;
-
-    $ledgercount = (!empty($_POST['ledgercount']) ? $_POST['ledgercount'] : 0);
-
-    while ($num <= ($ledgercount-1)) {
-        $ledgerid = $_POST['ledgerid'.$num];
-        $sql = "SELECT * "
-            . "  FROM dental_ledger "
-            . "WHERE "
-            . " ledgerid = ".$ledgerid;
-
-        $query = $db->getResults($sql);
-        $c = count($query);
-        if($c){
-            $row = $query[0];
-            if($row['entry_date'] != $_POST['entry_date'.$num] ||
-                $row['service_date'] != $_POST['service_date'.$num] ||
-                $row['transaction_code'] != $_POST['transaction_code'.$num] ||
-                $row['amount'] != $_POST['amount'.$num] ||
-                $row['status'] == DSS_TRXN_NA
-            ){
-                $return_val = false;
-            }
-        } else {
-            $return_val = false;
-        }
-        $num++;
-    }
-    return $return_val;
-}
-
-// update and changes to ledger trxns
-// (updating associated claim id and status later w/ claim form insert and update)
-function update_ledger_trxns($claim_id, $trxn_status) {
-    $con = $GLOBALS['con'];
-    $db = new Db();
-
-    $claim_id = intval($claim_id);
-    $primary_claim_id = $db->getColumn("SELECT IF(primary_claim_id, primary_claim_id, insuranceid) AS claim_id
-        FROM dental_insurance
-        WHERE insuranceid = '$claim_id'", 'claim_id');
-
-    // Add a placeholder to avoid problems with WHERE ... IN (...) clause
-    $added_ledger_ids = [-1];
-
-    foreach ($_POST['claim']['service_lines'] as $serviceLine) {
-        // Only process lines that include ledger_id, otherwise that line was empty
-        if (empty($serviceLine['ledger_id'])) {
-            continue;
-        }
-
-        $placeofservice = $db->escape($serviceLine['place_of_service']);
-        $emg = $db->escape($serviceLine['emergency']);
-        $diagnosispointer = $db->escape($serviceLine['diagnosis_code_pointers'][0]);
-        $daysorunits = $db->escape($serviceLine['units']);
-        $modifiercode = $db->escape($serviceLine['procedure_modifiers'][0]);
-        $modifiercode2 = $db->escape($serviceLine['procedure_modifiers'][1]);
-        $modifiercode3 = $db->escape($serviceLine['procedure_modifiers'][2]);
-        $modifiercode4 = $db->escape($serviceLine['procedure_modifiers'][3]);
-        $ledgerid = $db->escape($serviceLine['ledger_id']);
-        array_push($added_ledger_ids, $ledgerid);
-
-        $sql = "UPDATE "
-            . "  dental_ledger "
-            . "SET "
-            . "  `placeofservice` = '$placeofservice', "
-            . "  `emg` = '$emg', "
-            . "  `diagnosispointer` = '$diagnosispointer', "
-            . "  `daysorunits` = '$daysorunits', "
-            . "  `modcode` = '$modifiercode', "
-            . "  `modcode2` = '$modifiercode2', "
-            . "  `modcode3` = '$modifiercode3', "
-            . "  `modcode4` = '$modifiercode4', "
-            . "  `status` = '$trxn_status', "
-            . "  `primary_claim_id` = '$primary_claim_id' "
-            . "WHERE "
-            . "  `ledgerid` = '$ledgerid'";
-
-        $query = $db->query($sql);
-    }
-
-    $ledger_ids = implode(',', $added_ledger_ids);
-
-    $upsql = "SELECT COUNT(*) as num_ledger from dental_ledger WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
-
-    if(!empty($upr['num_ledger']) && $upr['num_ledger'] > 0){
-        $prod_s = "SELECT producer FROM dental_insurance WHERE insuranceid='".$primary_claim_id."'";
-
-        $prod_r = $db->getRow($prod_s);
-        $claim_producer = $prod_r['producer'];
-        $s = "SELECT insuranceid from dental_insurance where producer = '".$db->escape($claim_producer)." AND patientid='".$db->escape($_GET['pid'])."' AND status='".DSS_CLAIM_PENDING."' LIMIT 1";
-
-        $q = $db->getResults($s);
-        $n = count($q);
-        if($n > 0){
-            $r = $q[0];
-            $claim_id = $r['insuranceid'];
-        }else{
-            $claim_id = ClaimFormData::createPrimaryClaim($_GET['pid'], $claim_producer);
-        }
-
-        $update_sql = "UPDATE dental_ledger set primary_claim_id='".$claim_id."' WHERE primary_claim_id='".$primary_claim_id."' AND ledgerid NOT IN (".$ledger_ids.")";
-
-        $db->query($update_sql);
-    }
-}
 
 /**
  * Auxiliary function to encapsulate the save logic
@@ -461,8 +348,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan1 = $claimData['epsdt_family_plan1'];
     $id_qua1 = !empty($claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id1 = !empty($claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][0]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id1 = !empty($claimData['claim']['service_lines'][0]['ledger_id']) ?
+        $claimData['claim']['service_lines'][0]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_1 = !empty($claimData['claim']['service_lines'][0]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][0]['rendering_provider']['entity'] : '';
@@ -506,8 +393,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan2 = $claimData['epsdt_family_plan1'];
     $id_qua2 = !empty($claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id2 = !empty($claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][1]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id2 = !empty($claimData['claim']['service_lines'][1]['ledger_id']) ?
+        $claimData['claim']['service_lines'][1]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_2 = !empty($claimData['claim']['service_lines'][1]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][1]['rendering_provider']['entity'] : '';
@@ -550,8 +437,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan3 = $claimData['epsdt_family_plan1'];
     $id_qua3 = !empty($claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id3 = !empty($claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][2]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id3 = !empty($claimData['claim']['service_lines'][2]['ledger_id']) ?
+        $claimData['claim']['service_lines'][2]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_3 = !empty($claimData['claim']['service_lines'][2]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][2]['rendering_provider']['entity'] : '';
@@ -594,8 +481,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan4 = $claimData['epsdt_family_plan1'];
     $id_qua4 = !empty($claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id4 = !empty($claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][3]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id4 = !empty($claimData['claim']['service_lines'][3]['ledger_id']) ?
+        $claimData['claim']['service_lines'][3]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_4 = !empty($claimData['claim']['service_lines'][3]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][3]['rendering_provider']['entity'] : '';
@@ -638,8 +525,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan5 = $claimData['epsdt_family_plan1'];
     $id_qua5 = !empty($claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id5 = !empty($claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][4]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id5 = !empty($claimData['claim']['service_lines'][4]['ledger_id']) ?
+        $claimData['claim']['service_lines'][4]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_5 = !empty($claimData['claim']['service_lines'][4]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][4]['rendering_provider']['entity'] : '';
@@ -682,8 +569,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME  $epsdt_family_plan6 = $claimData['epsdt_family_plan1'];
     $id_qua6 = !empty($claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id_type']) ?
         $claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id_type'] : '';
-    $rendering_provider_id6 = !empty($claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id']) ?
-        $claimData['claim']['service_lines'][5]['rendering_provider']['secondary_id'] : '';
+    $rendering_provider_id6 = !empty($claimData['claim']['service_lines'][5]['ledger_id']) ?
+        $claimData['claim']['service_lines'][5]['ledger_id'] : '';
     // WHAT IS THE SECOND ID
     $rendering_provider_entity_6 = !empty($claimData['claim']['service_lines'][5]['rendering_provider']['entity']) ?
         $claimData['claim']['service_lines'][5]['rendering_provider']['entity'] : '';
@@ -1024,7 +911,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
     // update the ledger trxns passed in with the form
     $transactionStatus = ClaimFormData::isStatus('sent', $status) ? DSS_TRXN_SENT : DSS_TRXN_PROCESSING;
-    update_ledger_trxns($claimId, $transactionStatus);
+    updateLedgerTransactions($claimId, $transactionStatus, $claimData['claim']['service_lines']);
 
     // Determine if this payer id is valid
     $db->query("UPDATE dental_patients SET
@@ -1076,6 +963,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // We added extra variables to the form, to track ledger ids
     foreach ($eligibleData['claim']['service_lines'] as &$eligibleServiceLine) {
         unset($eligibleServiceLine['ledger_id']);
+        unset($eligibleServiceLine['verification']);
     }
 
     //Curl post call to claim end point
@@ -1133,7 +1021,6 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             WHERE insuranceid = '$claimId'");
 
         claim_status_history_update($claimId, $rejectedStatus, $newSentStatus, $userId, $_SESSION['adminuserid']);
-        claim_history_update($claimId, $userId, $_SESSION['adminuserid']);
     }
 
     return $jsonResponse;

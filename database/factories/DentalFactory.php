@@ -2127,3 +2127,12 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\QPage2Surgery::class, function ($faker) {
+    return [
+        'patientid'    => $faker->randomDigit,
+        'surgery_date' => $faker->dateTime(),
+        'surgery'      => $faker->sentence($nbWords = 6),
+        'surgeon'      => $faker->name()
+    ];
+});

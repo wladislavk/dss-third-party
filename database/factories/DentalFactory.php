@@ -2127,3 +2127,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\FlowsheetNextStep::class, function ($faker) {
+    return [
+        'parent_id'  => $faker->randomDigit,
+        'child_id'   => $faker->randomDigit,
+        'sort_by'    => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});

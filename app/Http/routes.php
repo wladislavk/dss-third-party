@@ -35,6 +35,8 @@ Route::group(['prefix' => 'webhooks'], function () {
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
+    Route::resource('new-flowsheets', 'NewFlowsheetsController', ['except' => ['create', 'edit']]);
+
     Route::resource('admins', 'AdminsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-settings', 'GuideSettingsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);

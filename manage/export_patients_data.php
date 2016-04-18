@@ -53,82 +53,80 @@ $header = [
 fputcsv($csv, $header);
 
 $docId = intval($_SESSION['userid']);
+$trxnTypeWriteOff = DSS_TRXN_PYMT_WRITEOFF;
 
 $sql = "SELECT
-        TRIM(salutation),
-        TRIM(firstname),
-        TRIM(lastname),
-        TRIM(middlename),
-        TRIM(preferred_name),
-        TRIM(add1),
-        TRIM(add2),
-        TRIM(city),
-        TRIM(state),
-        zip,
-        dob,
-        TRIM(gender),
-        TRIM(marital_status),
-        TRIM(ssn),
-        TRIM(home_phone),
-        TRIM(work_phone),
-        TRIM(cell_phone),
-        TRIM(email),
-        CASE status WHEN 1 THEN 'Active' ELSE 'Inactive' END,
-        COALESCE(
-            (
-                SELECT SUM(COALESCE(first.amount, 0)) AS total
-                FROM dental_ledger first
-                WHERE first.docid = p.docid
-                    AND first.patientid = p.patientid
-                    AND COALESCE(first.paid_amount, 0) = 0
-            ), 0
-        ) AS amount1,
-        COALESCE(
-            (
-                SELECT SUM(COALESCE(second.amount, 0))
-                FROM dental_ledger second
-                WHERE second.docid = p.docid
-                    AND second.patientid = p.patientid
-                    AND second.paid_amount != 0
-            ), 0
-        ) AS amount2,
-        COALESCE(
-            (
-                SELECT SUM(COALESCE(second.paid_amount, 0))
-                FROM dental_ledger second
-                WHERE second.docid = p.docid
-                    AND second.patientid = p.patientid
-                    AND second.paid_amount != 0
-            ), 0
-        ) AS amount3,
-        COALESCE(
-            (
-                SELECT SUM(COALESCE(third_payment.amount, 0))
-                FROM dental_ledger third
-                    LEFT JOIN dental_ledger_payment third_payment ON third_payment.ledgerid = third.ledgerid
-                WHERE third.docid = p.docid
-                    AND third.patientid = p.patientid
-                    AND third_payment.amount != 0
-            ), 0
-        ) AS amount4
-    FROM dental_patients
-    WHERE docid = '$docId'
-    ORDER BY firstname, lastname, middlename";
+        patientid AS id,
+        TRIM(p.salutation),
+        TRIM(p.firstname),
+        TRIM(p.lastname),
+        TRIM(p.middlename),
+        TRIM(p.preferred_name),
+        TRIM(p.add1),
+        TRIM(p.add2),
+        TRIM(p.city),
+        TRIM(p.state),
+        p.zip,
+        p.dob,
+        TRIM(p.gender),
+        TRIM(p.marital_status),
+        TRIM(p.ssn),
+        TRIM(p.home_phone),
+        TRIM(p.work_phone),
+        TRIM(p.cell_phone),
+        TRIM(p.email),
+        CASE p.status WHEN 1 THEN 'Active' ELSE 'Inactive' END,
+        TRUNCATE(
+            COALESCE(
+                (
+                    SELECT SUM(COALESCE(credits.amount, 0)) AS total
+                    FROM dental_ledger credits
+                    WHERE credits.docid = p.docid
+                        AND credits.patientid = p.patientid
+                ), 0.0
+            ), 2
+        ) AS credits,
+        TRUNCATE(
+            COALESCE(
+                (
+                    SELECT SUM(COALESCE(debits.amount, 0))
+                    FROM dental_ledger debits_base
+                        JOIN dental_ledger_payment debits ON debits.ledgerid = debits_base.ledgerid
+                    WHERE debits_base.docid = p.docid
+                        AND debits_base.patientid = p.patientid
+                        AND COALESCE(debits.payment_type, 0) != '$trxnTypeWriteOff'
+                ), 0.0
+            ), 2
+        ) AS debits,
+        TRUNCATE(
+            COALESCE(
+                (
+                    SELECT SUM(COALESCE(adjustments.paid_amount, 0))
+                    FROM dental_ledger adjustments
+                    WHERE adjustments.docid = p.docid
+                        AND adjustments.patientid = p.patientid
+                ), 0.0
+            )
+            + COALESCE(
+                (
+                    SELECT SUM(COALESCE(adjustment_payments.amount, 0))
+                    FROM dental_ledger adjustment_payments_base
+                        JOIN dental_ledger_payment adjustment_payments ON adjustment_payments.ledgerid = adjustment_payments_base.ledgerid
+                    WHERE adjustment_payments_base.docid = p.docid
+                        AND adjustment_payments_base.patientid = p.patientid
+                        AND adjustment_payments.payment_type = '$trxnTypeWriteOff'
+                ), 0.0
+            ), 2
+        ) AS adjustments
+    FROM dental_patients p
+    WHERE p.docid = '$docId'
+    ORDER BY p.firstname, p.lastname, p.middlename";
 
 $patients = $db->getResults($sql);
 $dateFormat = '%Y-%m-%d %h:%i%p';
 
 foreach ($patients as $patient) {
-    [
-        "NoteID" => "123",
-        "Status" => "Signed",
-        "Procedure Date" => "2012-01-01 12:12pm",
-        "Entry Date" => "2012-01-01 12:12pm",
-        "Added By" => "Jack Smith",
-        "Signed By" => "Jack Smith",
-        "Signed By Date" => "2012-01-01 12:12pm",
-        "Text" => "note text is stored here"
-    ];
+    $patient['total'] = $patient['credits'] - $patient['debits'] - $patient['adjustments'];
 
     $notes = $db->getResults("SELECT
             note.notesid AS `NoteID`,
@@ -142,15 +140,17 @@ foreach ($patients as $patient) {
         FROM dental_notes note
             LEFT JOIN dental_users author ON author.userid = note.userid
             LEFT JOIN dental_users signer ON signer.userid = note.signed_id
-        WHERE note.patientid = '{$patient['patientid']}'");
+        WHERE note.patientid = '{$patient['id']}'");
+
+    unset($patient['id']);
 
     if ($notes) {
-        array_walk($notes, function (&$each) {
+        array_walk_recursive($notes, function (&$each) {
             $each = utf8_encode($each);
         });
     }
 
-    $patients['progress_notes'] = json_encode($notes);
+    $patient['progress_notes'] = json_encode($notes);
 
     fputcsv($csv, $patient);
 }

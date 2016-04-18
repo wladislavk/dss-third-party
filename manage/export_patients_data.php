@@ -47,6 +47,7 @@ $header = [
     'Debits',
     'Adjustments',
     'Ledger Balance',
+    'Progress Note'
 ];
 
 fputcsv($csv, $header);
@@ -115,8 +116,42 @@ $sql = "SELECT
     ORDER BY firstname, lastname, middlename";
 
 $patients = $db->getResults($sql);
+$dateFormat = '%Y-%m-%d %h:%i%p';
 
 foreach ($patients as $patient) {
+    [
+        "NoteID" => "123",
+        "Status" => "Signed",
+        "Procedure Date" => "2012-01-01 12:12pm",
+        "Entry Date" => "2012-01-01 12:12pm",
+        "Added By" => "Jack Smith",
+        "Signed By" => "Jack Smith",
+        "Signed By Date" => "2012-01-01 12:12pm",
+        "Text" => "note text is stored here"
+    ];
+
+    $notes = $db->getResults("SELECT
+            note.notesid AS `NoteID`,
+            IF(note.signed_on IS NULL, '', 'Signed') AS `Status`,
+            note.procedure_date AS `Procedure Date`,
+            DATE_FORMAT(note.adddate, '$dateFormat') AS `Entry Date`,
+            CONCAT(author.first_name, ' ', author.last_name) AS `Added By`,
+            CONCAT(signer.first_name, ' ', signer.last_name) AS `Signed By`,
+            DATE_FORMAT(note.signed_on, '$dateFormat') AS `Signed By Date`,
+            note.notes AS `Text`
+        FROM dental_notes note
+            LEFT JOIN dental_users author ON author.userid = note.userid
+            LEFT JOIN dental_users signer ON signer.userid = note.signed_id
+        WHERE note.patientid = '{$patient['patientid']}'");
+
+    if ($notes) {
+        array_walk($notes, function (&$each) {
+            $each = utf8_encode($each);
+        });
+    }
+
+    $patients['progress_notes'] = json_encode($notes);
+
     fputcsv($csv, $patient);
 }
 

@@ -147,7 +147,7 @@ function updateLedgerTransactions ($claimId, $trxnStatus, $serviceLines) {
             'service_date' => $serviceLine['service_date_from'],
             'placeofservice' => $serviceLine['place_of_service'],
             'emg' => $serviceLine['emergency'],
-            'transaction_code' => $serviceLine['procedure_code'],
+            // 'transaction_code' => $serviceLine['procedure_code'],
 
             'modcode' => $serviceLine['procedure_modifiers'][0],
             'modcode2' => $serviceLine['procedure_modifiers'][1],
@@ -155,13 +155,13 @@ function updateLedgerTransactions ($claimId, $trxnStatus, $serviceLines) {
             'modcode4' => $serviceLine['procedure_modifiers'][3],
             'diagnosispointer' => $serviceLine['diagnosis_code_pointers'][0],
 
-            'amount' => $serviceLine['charge_amount'],
+            'amount' => preg_replace('/[^\d\.]+/', '', $serviceLine['charge_amount']),
             'daysorunits' => $serviceLine['units'],
             'epsdt' => $serviceLine['epsdt'],
             'idqual' => $serviceLine['idqual'],
 
             'status' => $trxnStatus,
-            'primary_claim_id' => $primaryClaimId
+            // 'primary_claim_id' => $primaryClaimId
         ]);
 
         $db->query("UPDATE dental_ledger SET $insertData

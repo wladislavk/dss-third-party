@@ -390,7 +390,7 @@ $prefix = ['ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX'];
 /**
  * Paper form didn't save ledger details, we need the original transactions as fallback strategy
  */
-$transactions = ClaimFormData::storedLedgerItems($claimId);
+$transactions = ClaimFormData::associatedLedgerItems($claimId);
 $diagnosis_array = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'H', 'I', 'J', 'K', 'L', 'M'];
 
 foreach ($transactions as $c=>$array) {

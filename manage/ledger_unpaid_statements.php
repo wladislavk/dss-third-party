@@ -112,6 +112,7 @@ $sql = "select
 		dl.service_date,
             	dl.entry_date,
 		CONCAT(p.first_name,' ',p.last_name) as name,
+		p.practice,
  		dl.description,
 		dl.amount,
 		'' as paid_amount,
@@ -134,6 +135,7 @@ $sql = "select
                 dlp.payment_date,
                 dlp.entry_date,
                 CONCAT(p.first_name,' ',p.last_name),
+                p.practice,
                 '',
                 '',
                 dlp.amount,
@@ -154,6 +156,7 @@ $sql = "select
                 dl.service_date,
                 dl.entry_date,
                 CONCAT(p.first_name,' ',p.last_name),
+                p.practice,
                 dl.description,
                 dl.amount,
                 dl.paid_amount,
@@ -175,6 +178,7 @@ $sql = "select
 		n.service_date,
 		n.entry_date,
 		concat('Note - ', p.first_name,' ',p.last_name),
+		p.practice,
 		n.note,
 		'',
 		'',
@@ -194,6 +198,7 @@ $sql = "select
 		i.adddate,
 		i.adddate,
 		'Claim',
+		'Insurance Claim',
 		'Insurance Claim',
 		(select sum(dl2.amount) FROM dental_ledger dl2
 				INNER JOIN dental_insurance i2 on dl2.primary_claim_id=i2.insuranceid
@@ -274,7 +279,7 @@ $html .=' <table width="98%">
        					      	$html .= date('m-d-Y',strtotime(st($myarray["service_date"])));
 				$html .= '</td>
 				<td valign="top">';
-                        $html .= st($myarray["name"]);
+                        $html .= st($myarray["practice"]);
                               $html .=  '</td>
 				<td valign="top">';
 			$html .= ($myarray[0] == 'note' && $myarray['status']==1)?"(P) ":''; 

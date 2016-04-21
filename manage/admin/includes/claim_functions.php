@@ -1100,6 +1100,7 @@ class ClaimFormData
             'diagnosis_pointer%n%' => 'diagnosis_code_pointers',
             's_charges%n%_1' => 'amount',
             'days_or_units%n%' => 'daysorunits',
+            'epsdt_family_plan%n%' => 'epsdt',
             'id_qua%n%' => 'idqual',
             'rendering_provider_entity_%n%' => 'entity',
             'rendering_provider_first_name_%n%' => 'provider_first_name',
@@ -1151,9 +1152,20 @@ class ClaimFormData
         $dynamicItems = self::dynamicLedgerItems($claimId);
         $storedItems = self::storedLedgerItems($claimId);
 
-        return $dynamicItems;
+        /**
+         * Claims before release date won't have the correct fields set. We cannot trust these, therefore
+         * we only merge fields IF the claim was created or updated after this date.
+         */
+        $releaseDate = config('app.ledger.release_date');
+        $storedOverridesDynamic = config('app.ledger.prefer_stored');
 
-        if (!$dynamicItems || !$storedItems) {
+        $isNewerThanRelease = $db->getColumn("SELECT IF(updated_at > '$releaseDate', 1, 0) AS `newer`
+            FROM dental_insurance_history
+            WHERE insuranceid = '$claimId'
+            ORDER BY updated_at DESC
+            LIMIT 1", 'newer', 0);
+
+        if (!$isNewerThanRelease || !$dynamicItems || !$storedItems) {
             return $dynamicItems;
         }
 
@@ -1166,7 +1178,7 @@ class ClaimFormData
 
         /**
          * Determine if there are stored ledger items that need to be matched with dynamic ledger items.
-         * Attempt to match by ledgerid if present, or a simple match, one to one, otherwise
+         * Attempt to match by ledgerid if present, or a simple match, one to one, otherwise.
          */
         $dynamicIds = array_unique(array_pluck($dynamicItems, 'ledgerid'));
         $storedIds = array_unique(array_pluck($storedItems, 'ledgerid'));
@@ -1183,8 +1195,21 @@ class ClaimFormData
                 $dynamicIndex = array_search($targetId, $dynamicIds);
                 $storedIndex = array_search($targetId, $storedIds);
 
-                $storedItems[$storedIndex]['verification'] = $dynamicItems[$dynamicIndex]['verification'];
-                $mergedItems []= $storedItems[$storedIndex];
+                $mergedItem = $dynamicItems[$dynamicIndex];
+
+                if ($storedOverridesDynamic) {
+                    $mergedItem = $storedItems[$storedIndex];
+
+                    array_walk($mergedItem, function (&$value, $key) use ($dynamicItems, $dynamicIndex) {
+                        if (is_null($value)) {
+                            $value = $dynamicItems[$dynamicIndex][$key];
+                        }
+                    });
+
+                    $mergedItem['verification'] = $dynamicItems[$dynamicIndex]['verification'];
+                }
+
+                $mergedItems []= $mergedItem;
 
                 unset($dynamicItems[$dynamicIndex]);
                 unset($storedItems[$storedIndex]);
@@ -1200,7 +1225,12 @@ class ClaimFormData
         }
 
         foreach ($dynamicIds as $index=>$id) {
-            $mergedItem = isset($storedItems[$index]) ? $storedItems[$index] : $dynamicItems[$index];
+            if ($storedOverridesDynamic) {
+                $mergedItem = isset($storedItems[$index]) ? $storedItems[$index] : $dynamicItems[$index];
+            } else {
+                $mergedItem = isset($dynamicItems[$index]) ? $dynamicItems[$index] :
+                    (isset($storedItems[$index]) ? $storedItems[$index] : []);
+            }
 
             $mergedItem['ledgerid'] = $dynamicItems[$index]['ledgerid'];
             $mergedItem['verification'] = $dynamicItems[$index]['verification'];

@@ -133,9 +133,23 @@ function updateLedgerTransactions ($claimId, $trxnStatus, $serviceLines) {
     $db = new Db();
 
     $claimId = intval($claimId);
-    $primaryClaimId = $db->getColumn("SELECT IF(primary_claim_id, primary_claim_id, insuranceid) AS claim_id
-        FROM dental_insurance
-        WHERE insuranceid = '$claimId'", 'claim_id');
+    $placesOfService = $db->getResults('SELECT place_service, description
+        FROM dental_place_service
+        WHERE status = 1');
+
+    $transactionCodes = $db->getResults("SELECT
+            code.transaction_code,
+            code.description,
+            CONCAT(code.transaction_code, ' - ', code.description) AS long_description
+        FROM dental_transaction_code code
+            JOIN dental_insurance claim ON claim.docid = code.docid
+        WHERE claim.insuranceid = '$claimId'");
+
+    $placesOfService = $placesOfService ? array_pluck($placesOfService, 'place_service') : [];
+
+    $codes = array_pluck($transactionCodes, 'transaction_code');
+    $descriptions = array_pluck($transactionCodes, 'description');
+    $longDescriptions = array_pluck($transactionCodes, 'long_description');
 
     foreach ($serviceLines as $serviceLine) {
         if (empty($serviceLine['ledger_id'])) {
@@ -143,11 +157,9 @@ function updateLedgerTransactions ($claimId, $trxnStatus, $serviceLines) {
         }
 
         $ledgerId = intval($serviceLine['ledger_id']);
-        $insertData = $db->escapeAssignmentList([
+        $updateData = [
             'service_date' => $serviceLine['service_date_from'],
-            'placeofservice' => $serviceLine['place_of_service'],
-            'emg' => $serviceLine['emergency'],
-            // 'transaction_code' => $serviceLine['procedure_code'],
+            'emg' => isOptionSelected($serviceLine['emergency']),
 
             'modcode' => $serviceLine['procedure_modifiers'][0],
             'modcode2' => $serviceLine['procedure_modifiers'][1],
@@ -158,13 +170,40 @@ function updateLedgerTransactions ($claimId, $trxnStatus, $serviceLines) {
             'amount' => preg_replace('/[^\d\.]+/', '', $serviceLine['charge_amount']),
             'daysorunits' => $serviceLine['units'],
             'epsdt' => $serviceLine['epsdt'],
-            'idqual' => $serviceLine['idqual'],
 
-            'status' => $trxnStatus,
-            // 'primary_claim_id' => $primaryClaimId
-        ]);
+            'status' => $trxnStatus
+        ];
 
-        $db->query("UPDATE dental_ledger SET $insertData
-            WHERE ledgerid = '$ledgerId'");
+        if (isset($serviceLine['idqual'])) {
+            $updateData['idqual'] = $serviceLine['idqual'];
+        }
+
+        /**
+         * Ensure the place of service exists
+         */
+        if (in_array($serviceLine['place_of_service'], $placesOfService)) {
+            $updateData['placeofservice'] = $serviceLine['place_of_service'];
+        }
+
+        /**
+         * Ensure the procedure code exists, and is associated to the docid
+         */
+        $codeIndex = array_filter([
+            array_search($serviceLine['procedure_code'], $codes),
+            array_search($serviceLine['procedure_code'], $descriptions),
+            array_search($serviceLine['procedure_code'], $longDescriptions),
+        ], function ($each) { return $each !== false; });
+
+        $codeIndex = count($codeIndex) ? array_shift($codeIndex) : false;
+
+        if ($codeIndex !== false) {
+            $updateData['transaction_code'] = $codes[$codeIndex];
+        }
+
+        $updateData = $db->escapeAssignmentList($updateData);
+
+        $db->query("UPDATE dental_ledger SET $updateData
+            WHERE ledgerid = '$ledgerId'
+                AND '$claimId' IN (primary_claim_id, secondary_claim_id)");
     }
 }

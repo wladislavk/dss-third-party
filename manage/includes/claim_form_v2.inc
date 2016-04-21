@@ -379,7 +379,7 @@ list($billing_provider_phone_code, $billing_provider_phone) = parsePhoneNumber(
  */
 $acceptAssignment = isOptionSelected($accept_assignment) || $accept_assignment == 'A';
 
-$placeServices = $db->getResults('SELECT * FROM dental_place_service ps WHERE status = 1');
+$placeServices = $db->getResults('SELECT place_service, description FROM dental_place_service ps WHERE status = 1');
 $modifierCodes = $db->getResults('SELECT * FROM dental_modifier_code');
 
 $transactions = ClaimFormData::associatedLedgerItems($claimId);
@@ -523,6 +523,12 @@ if ($isSecondary) {
         FROM dental_insurance
         WHERE primary_claim_id = '$claimId'", 'insuranceid');
 }
+
+$transactionCodes = $db->getResults("SELECT transaction_code, description
+    FROM dental_transaction_code
+    WHERE docid = '$docId'
+        AND status = 1
+    ORDER BY sortby");
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -1825,203 +1831,187 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
 <?php  if (!count($transactions)) { ?>
     <p style="text-align: center;"><strong>There are currently no ledger entries to be submitted.</strong></p>
 <?php } ?>
-  <table width="100%">
-      <colgroup>
-          <col width="102" />
-          <col width="102" />
-          <col width="60" />
-          <col width="30" />
-          <col width="80" />
-          <col width="200" />
-          <col width="160" />
-          <col width="76" />
-          <col width="48" />
-          <col width="48" />
-          <col width="48" />
-          <col width="100" />
-      </colgroup>
+<table width="100%">
+    <colgroup>
+        <col width="102" />
+        <col width="102" />
+        <col width="60" />
+        <col width="30" />
+        <col width="80" />
+        <col width="200" />
+        <col width="160" />
+        <col width="76" />
+        <col width="48" />
+        <col width="48" />
+        <col width="48" />
+        <col width="100" />
+    </colgroup>
     <?php foreach ($transactions as $li=>$array) { ?>
-      <tr>
-          <td>
-              <input type="text" name="service_lines[<?= $li ?>][service_date_from]"
-                  value="<?= dateFormat($array['service_date']) ?>" />
-          </td>
-          <td>
-              <input type="text" name="service_lines[<?= $li ?>][service_date_to]"
-                  value="<?= dateFormat($array['service_date']) ?>" />
-          </td>
-          <td>
-              <select style="width:76px" name="service_lines[<?= $li ?>][place_of_service]">
-                  <option value=''>Select One</option>
-                  <?php
-
-                  $pos = ($array['placeofservice'] != '') ? $array['placeofservice'] : $array['place'];
-                  $dp = ($array['diagnosispointer'] != '') ? $array['diagnosispointer'] : 1;
-
-                  if (!empty($placeServices)) foreach ($placeServices as $psr) { ?>
-                      <option value="<?= $psr['place_service'] ?>" <?= $pos == $psr['place_service'] ? 'selected' : '' ?>>
-                          <?= e($psr['place_service'] . '-' . $psr['description']) ?>
-                      </option>
-                  <?php } ?>
-              </select>
-          </td>
-          <td>
-              <input style="width:26px;" type="checkbox" name="service_lines[<?= $li ?>][emergency]" value="true"
-                  <?= isOptionSelected($array['emg']) ? 'checked' : '' ?> />
-          </td>
-          <td>
-              <input type="text" name="service_lines[<?= $li ?>][procedure_code]"
-                  value="<?= $array['transaction_code'] . ($array['description'] ? " - " . $array['description'] : '') ?>" />
-          </td>
-          <td class="text-center">
-              <select name="service_lines[<?= $li ?>][procedure_modifiers][0]" style="width:171px;">
-                  <option value=''>Select One</option>
-                  <?php for ($i = 0; $i < count($modifierCodes); $i++) {
-                      $selected = ($array['modcode'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
-                      <option value="<?= $modifierCodes[$i]['modifier_code'] ?>" <?= $selected ?>>
-                          <?= e($modifierCodes[$i]['modifier_code'] . ' ' . $modifierCodes[$i]['description']) ?>
-                      </option>
-                  <?php } ?>
-              </select>
-              <select name="service_lines[<?= $li ?>][procedure_modifiers][1]" style="width:171px;">
-                  <option value=''>Select One</option>
-                  <?php for ($i = 0; $i < count($modifierCodes); $i++) {
-                      $selected = ($array['modcode2'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
-                      <option value="<?= $modifierCodes[$i]['modifier_code'] ?>" <?= $selected ?>>
-                          <?= e($modifierCodes[$i]['modifier_code'] . ' ' . $modifierCodes[$i]['description']) ?>
-                      </option>
-                  <?php } ?>
-              </select>
-              <select name="service_lines[<?= $li ?>][procedure_modifiers][2]" style="width:171px;">
-                  <option value=''>Select One</option>
-                  <?php for ($i = 0; $i < count($modifierCodes); $i++) {
-                      $selected = ($array['modcode3'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
-                      <option value="<?= $modifierCodes[$i]['modifier_code'] ?>" <?= $selected ?>>
-                          <?= e($modifierCodes[$i]['modifier_code'] . ' ' . $modifierCodes[$i]['description']) ?>
-                      </option>
-                  <?php } ?>
-              </select>
-              <select name="service_lines[<?= $li ?>][procedure_modifiers][3]" style="width:171px;">
-                  <option value=''>Select One</option>
-                  <?php for ($i = 0; $i < count($modifierCodes); $i++) {
-                      $selected = ($array['modcode4'] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
-                      <option value="<?= $modifierCodes[$i]['modifier_code'] ?>" <?= $selected ?>>
-                          <?= e($modifierCodes[$i]['modifier_code'] . ' ' . $modifierCodes[$i]['description']) ?>
-                      </option>
-                  <?php } ?>
-              </select>
-          </td>
-          <td>
-              <table class="eligibleapi claim">
-                  <tbody>
-                      <tr class="eligibleapi claim">
-                          <?php for ($n=0; $n<12; $n++) { ?>
-                              <?php if ($n && !($n%4)) { ?></tr><tr class="eligibleapi claim"><?php } ?>
-                              <td class="input-center-hint checkbox-container"><input class="input" value="<?= $n + 1 ?>"
-                                  <?= $dp == ($n + 1) ? 'checked' : '' ?>
-                                  name="service_lines[<?= $li ?>][diagnosis_code_pointers][<?= $n ?>]" type="checkbox"></td>
-                              <td class="input-side-hint"><?= chr(65 + $n) ?></td>
-                          <?php } ?>
-                      </tr>
-                  </tbody>
-              </table>
-          </td>
-          <td align="right" style="padding-right:15px;">
-              <input type="text" name="service_lines[<?= $li ?>][charge_amount]" value="<?= number_format($array['amount'], 2) ?>" />
-          </td>
-          <td>
-              <input style="width:39px;" type="text" name="service_lines[<?= $li ?>][units]" value="<?php echo $array['daysorunits']; ?>">
-          </td>
-          <td>
-              <input style="width:45px;" type="text" name="service_lines[<?= $li ?>][epsdt]" value="<?php echo $array['epsdt']; ?>">
-          </td>
-          <td>
-             <input style="width:37px;" type="text" name="service_lines[<?= $li ?>][qualifier]" value="<?php echo $array['idqual']; ?>">
-          </td>
-          <td>
-              <input type="text" name="service_lines[<?= $li ?>][rendering_provider][npi]" value="<?= $array['provider_id'] ?>" />
-              <input type="hidden" name="service_lines[<?= $li ?>][ledger_id]" value="<?= $array['ledgerid'] ?>" />
-              <input type="hidden" name="service_lines[<?= $li ?>][verification]" value="<?= e($array['verification']) ?>" />
-          </td>
-      </tr>
+        <tr>
+            <td>
+                <input type="text" name="service_lines[<?= $li ?>][service_date_from]"
+                    value="<?= dateFormat($array['service_date']) ?>" />
+            </td>
+            <td>
+                <input type="text" name="service_lines[<?= $li ?>][service_date_to]"
+                    value="<?= dateFormat($array['service_date']) ?>" />
+            </td>
+            <td>
+                <select style="width:76px" name="service_lines[<?= $li ?>][place_of_service]">
+                    <option value=''>Select One</option>
+                    <?php
+    
+                    $pos = ($array['placeofservice'] != '') ? $array['placeofservice'] : $array['place'];
+                    $dp = ($array['diagnosispointer'] != '') ? $array['diagnosispointer'] : 1;
+    
+                    if (!empty($placeServices)) foreach ($placeServices as $psr) { ?>
+                        <option value="<?= $psr['place_service'] ?>" <?= $pos == $psr['place_service'] ? 'selected' : '' ?>>
+                            <?= e($psr['place_service'] . '-' . $psr['description']) ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </td>
+            <td>
+                <input style="width:26px;" type="checkbox" name="service_lines[<?= $li ?>][emergency]" value="true"
+                    <?= isOptionSelected($array['emg']) ? 'checked' : '' ?> />
+            </td>
+            <td>
+                <select name="service_lines[<?= $li ?>][procedure_code]" style="width:100%">
+                    <?php foreach ($transactionCodes as $code) {
+                        $description = $code['transaction_code'] .
+                            ($code['description'] ? ' - ' . $code['description'] : '');
+                        $selected = in_array($array['transaction_code'], [$code['transaction_code'], $description]);
+                        ?>
+                        <option value="<?= $code['transaction_code'] ?>" <?= $selected ? 'selected' : '' ?>>
+                            <?= e($description) ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </td>
+            <td class="text-center">
+                <?php for ($n=0; $n<4; $n++) { ?>
+                    <select name="service_lines[<?= $li ?>][procedure_modifiers][<?= $n ?>]" style="width:171px;">
+                        <option value=''>Select One</option>
+                        <?php for ($i = 0; $i < count($modifierCodes); $i++) {
+                            $selected = ($array['modcode' . ($n ? $n + 1 : '')] == $modifierCodes[$i]['modifier_code']) ? 'selected' : ''; ?>
+                            <option value="<?= $modifierCodes[$i]['modifier_code'] ?>" <?= $selected ?>>
+                                <?= e($modifierCodes[$i]['modifier_code'] . ' ' . $modifierCodes[$i]['description']) ?>
+                            </option>
+                        <?php } ?>
+                    </select>
+                <?php } ?>
+            </td>
+            <td>
+                <table class="eligibleapi claim">
+                    <tbody>
+                        <tr class="eligibleapi claim">
+                            <?php for ($n=0; $n<12; $n++) { ?>
+                                <?php if ($n && !($n%4)) { ?></tr><tr class="eligibleapi claim"><?php } ?>
+                                <td class="input-center-hint checkbox-container"><input class="input" value="<?= $n + 1 ?>"
+                                    <?= $dp == ($n + 1) ? 'checked' : '' ?>
+                                    name="service_lines[<?= $li ?>][diagnosis_code_pointers][<?= $n ?>]" type="checkbox"></td>
+                                <td class="input-side-hint"><?= chr(65 + $n) ?></td>
+                            <?php } ?>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td align="right" style="padding-right:15px;">
+                <input type="text" name="service_lines[<?= $li ?>][charge_amount]" value="<?= number_format($array['amount'], 2) ?>" />
+            </td>
+            <td>
+                <input style="width:39px;" type="text" name="service_lines[<?= $li ?>][units]" value="<?php echo $array['daysorunits']; ?>">
+            </td>
+            <td>
+                <input style="width:45px;" type="text" name="service_lines[<?= $li ?>][epsdt]" value="<?php echo $array['epsdt']; ?>">
+            </td>
+            <td>
+               <input style="width:37px;" type="text" name="service_lines[<?= $li ?>][qualifier]" value="<?php echo $array['idqual']; ?>">
+            </td>
+            <td>
+                <input type="text" name="service_lines[<?= $li ?>][rendering_provider][npi]" value="<?= $array['provider_id'] ?>" />
+                <input type="hidden" name="service_lines[<?= $li ?>][ledger_id]" value="<?= $array['ledgerid'] ?>" />
+                <input type="hidden" name="service_lines[<?= $li ?>][verification]" value="<?= e($array['verification']) ?>" />
+            </td>
+        </tr>
     <?php } ?>
     <?php for ($li=count($transactions); $li<6; $li++) { ?>
-      <tr class="grayout">
-        <td>
-            <input type="text" disabled />
-        </td>
-        <td>
-            <input type="text" disabled />
-        </td>
-        <td>
-            <select style="width:76px" disabled></select>
-        </td>
-        <td>
-            <input style="width:26px;" type="checkbox" disabled />
-        </td>
-        <td>
-            <input type="text" disabled />
-        </td>
-        <td class="text-center">
-          <select style="width:171px;" disabled></select>
-          <select style="width:171px;" disabled></select>
-          <select style="width:171px;" disabled></select>
-          <select style="width:171px;" disabled></select>
-        </td>
-        <td>
-            <table class="eligibleapi claim">
-                <tbody>
-                    <tr class="eligibleapi claim">
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">A</td>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">B</td>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">C</td>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">D</td>
-                    </tr>
-                    <tr>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">E</td>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">F</td>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">G</td>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">H</td>
-                    </tr>
-                    <tr>
-                        <td class="input-center-hintIcheckbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">I</td>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">J</td>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">K</td>
-                        <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
-                        <td class="input-side-hint">L</td>
-                    </tr>
-                </tbody>
-            </table>
-        </td>
-        <td style="padding-right:15px;">
-            <input type="text" disabled />
-        </td>
-        <td>
-            <input style="width:39px;" type="text" disabled />
-        </td>
-        <td>
-            <input style="width:45px;" type="text" disabled />
-        </td>
-        <td>
-            <input style="width:37px;" type="text" disabled />
-        </td>
-        <td>
-            <input type="text" disabled />
-        </td>
-      </tr>
+        <tr class="grayout">
+            <td>
+                <input type="text" disabled />
+            </td>
+            <td>
+                <input type="text" disabled />
+            </td>
+            <td>
+                <select style="width:76px" disabled></select>
+            </td>
+            <td>
+                <input style="width:26px;" type="checkbox" disabled />
+            </td>
+            <td>
+                <input type="text" disabled />
+            </td>
+            <td class="text-center">
+              <select style="width:171px;" disabled></select>
+              <select style="width:171px;" disabled></select>
+              <select style="width:171px;" disabled></select>
+              <select style="width:171px;" disabled></select>
+            </td>
+            <td>
+                <table class="eligibleapi claim">
+                    <tbody>
+                        <tr class="eligibleapi claim">
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">A</td>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">B</td>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">C</td>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">D</td>
+                        </tr>
+                        <tr>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">E</td>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">F</td>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">G</td>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">H</td>
+                        </tr>
+                        <tr>
+                            <td class="input-center-hintIcheckbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">I</td>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">J</td>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">K</td>
+                            <td class="input-center-hint checkbox-container"><input class="input" type="checkbox" disabled /></td>
+                            <td class="input-side-hint">L</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td style="padding-right:15px;">
+                <input type="text" disabled />
+            </td>
+            <td>
+                <input style="width:39px;" type="text" disabled />
+            </td>
+            <td>
+                <input style="width:45px;" type="text" disabled />
+            </td>
+            <td>
+                <input style="width:37px;" type="text" disabled />
+            </td>
+            <td>
+                <input type="text" disabled />
+            </td>
+        </tr>
     <?php } ?>
-  </table>
+</table>
 <!-- /END LEDGER TRXNS -->
 
 					</td>
@@ -2618,6 +2608,24 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $original_ref_no = $claimData['original_ref_no'];
     $prior_authorization_number = $claimData['prior_authorization_number'];
 
+    $placesOfService = $db->getResults('SELECT place_service, description
+        FROM dental_place_service
+        WHERE status = 1');
+
+    $transactionCodes = $db->getResults("SELECT
+            code.transaction_code,
+            code.description,
+            CONCAT(code.transaction_code, ' - ', code.description) AS long_description
+        FROM dental_transaction_code code
+            JOIN dental_insurance claim ON claim.docid = code.docid
+        WHERE claim.insuranceid = '$claimId'");
+
+    $placesOfService = $placesOfService ? array_pluck($placesOfService, 'place_service') : [];
+
+    $codes = array_pluck($transactionCodes, 'transaction_code');
+    $descriptions = array_pluck($transactionCodes, 'description');
+    $longDescriptions = array_pluck($transactionCodes, 'long_description');
+
     $fieldMap = [
         'rendering_provider_id%n%' => 'service_lines.%n%.ledger_id',
         'service_date%n%_from' => 'service_lines.%n%.service_date_from',
@@ -2654,6 +2662,24 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
         foreach ($currentMap as $localVariable => $remoteVariable) {
             ${$localVariable} = array_get($claimData, $remoteVariable);
+
+            if (substr($localVariable, 0, 3) === 'emg') {
+                ${$localVariable} = isOptionSelected(${$localVariable});
+            } elseif (substr($localVariable, 0, 5) === 'place') {
+                ${$localVariable} = in_array(${$localVariable}, $placesOfService) ? ${$localVariable} : null;
+            } elseif (substr($localVariable, 0, 3) === 'cpt') {
+                /**
+                 * Ensure the procedure code exists, and is associated to the docid
+                 */
+                $codeIndex = array_filter([
+                    array_search(${$localVariable}, $codes),
+                    array_search(${$localVariable}, $descriptions),
+                    array_search(${$localVariable}, $longDescriptions),
+                ], function ($each) { return $each !== false; });
+
+                $codeIndex = count($codeIndex) ? array_shift($codeIndex) : false;
+                ${$localVariable} = $codeIndex !== false ? $codes[$codeIndex] : null;
+            }
         }
     }
 
@@ -2801,9 +2827,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id1 = '" . $db->escape($rendering_provider_id1) . "',
             service_date1_from = '".$db->escape($service_date1_from)."',
             service_date1_to = '".$db->escape($service_date1_to)."',
-            place_of_service1 = '".$db->escape($place_of_service1)."',
+            place_of_service1 = '".(is_null($place_of_service1) ? 'NULL' : $db->escape($place_of_service1))."',
             emg1 = '".$db->escape($emg1)."',
-            cpt_hcpcs1 = '".$db->escape($cpt_hcpcs1)."',
+            cpt_hcpcs1 = '".(is_null($cpt_hcpcs1) ? 'NULL' : $db->escape($cpt_hcpcs1))."',
             modifier1_1 = '".$db->escape($modifier1_1)."',
             modifier1_2 = '".$db->escape($modifier1_2)."',
             modifier1_3 = '".$db->escape($modifier1_3)."',
@@ -2818,9 +2844,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id2 = '" . $db->escape($rendering_provider_id2) . "',
             service_date2_from = '".$db->escape($service_date2_from)."',
             service_date2_to = '".$db->escape($service_date2_to)."',
-            place_of_service2 = '".$db->escape($place_of_service2)."',
+            place_of_service2 = '".(is_null($place_of_service2) ? 'NULL' : $db->escape($place_of_service2))."',
             emg2 = '".$db->escape($emg2)."',
-            cpt_hcpcs2 = '".$db->escape($cpt_hcpcs2)."',
+            cpt_hcpcs2 = '".(is_null($cpt_hcpcs2) ? 'NULL' : $db->escape($cpt_hcpcs2))."',
             modifier2_1 = '".$db->escape($modifier2_1)."',
             modifier2_2 = '".$db->escape($modifier2_2)."',
             modifier2_3 = '".$db->escape($modifier2_3)."',
@@ -2835,9 +2861,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id3 = '" . $db->escape($rendering_provider_id3) . "',
             service_date3_from = '".$db->escape($service_date3_from)."',
             service_date3_to = '".$db->escape($service_date3_to)."',
-            place_of_service3 = '".$db->escape($place_of_service3)."',
+            place_of_service3 = '".(is_null($place_of_service3) ? 'NULL' : $db->escape($place_of_service3))."',
             emg3 = '".$db->escape($emg3)."',
-            cpt_hcpcs3 = '".$db->escape($cpt_hcpcs3)."',
+            cpt_hcpcs3 = '".(is_null($cpt_hcpcs3) ? 'NULL' : $db->escape($cpt_hcpcs3))."',
             modifier3_1 = '".$db->escape($modifier3_1)."',
             modifier3_2 = '".$db->escape($modifier3_2)."',
             modifier3_3 = '".$db->escape($modifier3_3)."',
@@ -2852,9 +2878,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id4 = '" . $db->escape($rendering_provider_id4) . "',
             service_date4_from = '".$db->escape($service_date4_from)."',
             service_date4_to = '".$db->escape($service_date4_to)."',
-            place_of_service4 = '".$db->escape($place_of_service4)."',
+            place_of_service4 = '".(is_null($place_of_service4) ? 'NULL' : $db->escape($place_of_service4))."',
             emg4 = '".$db->escape($emg4)."',
-            cpt_hcpcs4 = '".$db->escape($cpt_hcpcs4)."',
+            cpt_hcpcs4 = '".(is_null($cpt_hcpcs4) ? 'NULL' : $db->escape($cpt_hcpcs4))."',
             modifier4_1 = '".$db->escape($modifier4_1)."',
             modifier4_2 = '".$db->escape($modifier4_2)."',
             modifier4_3 = '".$db->escape($modifier4_3)."',
@@ -2871,9 +2897,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id5 = '" . $db->escape($rendering_provider_id5) . "',
             service_date5_from = '".$db->escape($service_date5_from)."',
             service_date5_to = '".$db->escape($service_date5_to)."',
-            place_of_service5 = '".$db->escape($place_of_service5)."',
+            place_of_service5 = '".(is_null($place_of_service5) ? 'NULL' : $db->escape($place_of_service5))."',
             emg5 = '".$db->escape($emg5)."',
-            cpt_hcpcs5 = '".$db->escape($cpt_hcpcs5)."',
+            cpt_hcpcs5 = '".(is_null($cpt_hcpcs5) ? 'NULL' : $db->escape($cpt_hcpcs5))."',
             modifier5_1 = '".$db->escape($modifier5_1)."',
             modifier5_2 = '".$db->escape($modifier5_2)."',
             modifier5_3 = '".$db->escape($modifier5_3)."',
@@ -2888,9 +2914,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id6 = '" . $db->escape($rendering_provider_id6) . "',
             service_date6_from = '".$db->escape($service_date6_from)."',
             service_date6_to = '".$db->escape($service_date6_to)."',
-            place_of_service6 = '".$db->escape($place_of_service6)."',
+            place_of_service6 = '".(is_null($place_of_service6) ? 'NULL' : $db->escape($place_of_service6))."',
             emg6 = '".$db->escape($emg6)."',
-            cpt_hcpcs6 = '".$db->escape($cpt_hcpcs6)."',
+            cpt_hcpcs6 = '".(is_null($cpt_hcpcs6) ? 'NULL' : $db->escape($cpt_hcpcs6))."',
             modifier6_1 = '".$db->escape($modifier6_1)."',
             modifier6_2 = '".$db->escape($modifier6_2)."',
             modifier6_3 = '".$db->escape($modifier6_3)."',
@@ -3048,9 +3074,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         rendering_provider_id1 = '" . $db->escape($rendering_provider_id1) . "',
         service_date1_from = '".$db->escape($service_date1_from)."',
         service_date1_to = '".$db->escape($service_date1_to)."',
-        place_of_service1 = '".$db->escape($place_of_service1)."',
+        place_of_service1 = '".(is_null($place_of_service1) ? 'NULL' : $db->escape($place_of_service1))."',
         emg1 = '".$db->escape($emg1)."',
-        cpt_hcpcs1 = '".$db->escape($cpt_hcpcs1)."',
+        cpt_hcpcs1 = '".(is_null($cpt_hcpcs1) ? 'NULL' : $db->escape($cpt_hcpcs1))."',
         modifier1_1 = '".$db->escape($modifier1_1)."',
         modifier1_2 = '".$db->escape($modifier1_2)."',
         modifier1_3 = '".$db->escape($modifier1_3)."',
@@ -3065,9 +3091,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         rendering_provider_id2 = '" . $db->escape($rendering_provider_id2) . "',
         service_date2_from = '".$db->escape($service_date2_from)."',
         service_date2_to = '".$db->escape($service_date2_to)."',
-        place_of_service2 = '".$db->escape($place_of_service2)."',
+        place_of_service2 = '".(is_null($place_of_service2) ? 'NULL' : $db->escape($place_of_service2))."',
         emg2 = '".$db->escape($emg2)."',
-        cpt_hcpcs2 = '".$db->escape($cpt_hcpcs2)."',
+        cpt_hcpcs2 = '".(is_null($cpt_hcpcs2) ? 'NULL' : $db->escape($cpt_hcpcs2))."',
         modifier2_1 = '".$db->escape($modifier2_1)."',
         modifier2_2 = '".$db->escape($modifier2_2)."',
         modifier2_3 = '".$db->escape($modifier2_3)."',
@@ -3082,9 +3108,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         rendering_provider_id3 = '" . $db->escape($rendering_provider_id3) . "',
         service_date3_from = '".$db->escape($service_date3_from)."',
         service_date3_to = '".$db->escape($service_date3_to)."',
-        place_of_service3 = '".$db->escape($place_of_service3)."',
+        place_of_service3 = '".(is_null($place_of_service3) ? 'NULL' : $db->escape($place_of_service3))."',
         emg3 = '".$db->escape($emg3)."',
-        cpt_hcpcs3 = '".$db->escape($cpt_hcpcs3)."',
+        cpt_hcpcs3 = '".(is_null($cpt_hcpcs3) ? 'NULL' : $db->escape($cpt_hcpcs3))."',
         modifier3_1 = '".$db->escape($modifier3_1)."',
         modifier3_2 = '".$db->escape($modifier3_2)."',
         modifier3_3 = '".$db->escape($modifier3_3)."',
@@ -3099,9 +3125,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         rendering_provider_id4 = '" . $db->escape($rendering_provider_id4) . "',
         service_date4_from = '".$db->escape($service_date4_from)."',
         service_date4_to = '".$db->escape($service_date4_to)."',
-        place_of_service4 = '".$db->escape($place_of_service4)."',
+        place_of_service4 = '".(is_null($place_of_service4) ? 'NULL' : $db->escape($place_of_service4))."',
         emg4 = '".$db->escape($emg4)."',
-        cpt_hcpcs4 = '".$db->escape($cpt_hcpcs4)."',
+        cpt_hcpcs4 = '".(is_null($cpt_hcpcs4) ? 'NULL' : $db->escape($cpt_hcpcs4))."',
         modifier4_1 = '".$db->escape($modifier4_1)."',
         modifier4_2 = '".$db->escape($modifier4_2)."',
         modifier4_3 = '".$db->escape($modifier4_3)."',
@@ -3118,9 +3144,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         rendering_provider_id5 = '" . $db->escape($rendering_provider_id5) . "',
         service_date5_from = '".$db->escape($service_date5_from)."',
         service_date5_to = '".$db->escape($service_date5_to)."',
-        place_of_service5 = '".$db->escape($place_of_service5)."',
+        place_of_service5 = '".(is_null($place_of_service5) ? 'NULL' : $db->escape($place_of_service5))."',
         emg5 = '".$db->escape($emg5)."',
-        cpt_hcpcs5 = '".$db->escape($cpt_hcpcs5)."',
+        cpt_hcpcs5 = '".(is_null($cpt_hcpcs5) ? 'NULL' : $db->escape($cpt_hcpcs5))."',
         modifier5_1 = '".$db->escape($modifier5_1)."',
         modifier5_2 = '".$db->escape($modifier5_2)."',
         modifier5_3 = '".$db->escape($modifier5_3)."',
@@ -3135,9 +3161,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         rendering_provider_id6 = '" . $db->escape($rendering_provider_id6) . "',
         service_date6_from = '".$db->escape($service_date6_from)."',
         service_date6_to = '".$db->escape($service_date6_to)."',
-        place_of_service6 = '".$db->escape($place_of_service6)."',
+        place_of_service6 = '".(is_null($place_of_service6) ? 'NULL' : $db->escape($place_of_service6))."',
         emg6 = '".$db->escape($emg6)."',
-        cpt_hcpcs6 = '".$db->escape($cpt_hcpcs6)."',
+        cpt_hcpcs6 = '".(is_null($cpt_hcpcs6) ? 'NULL' : $db->escape($cpt_hcpcs6))."',
         modifier6_1 = '".$db->escape($modifier6_1)."',
         modifier6_2 = '".$db->escape($modifier6_2)."',
         modifier6_3 = '".$db->escape($modifier6_3)."',

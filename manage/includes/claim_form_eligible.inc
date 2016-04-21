@@ -338,6 +338,17 @@ if ($isSecondary) {
         WHERE primary_claim_id = '$claimId'", 'insuranceid');
 }
 
+$transactions = ClaimFormData::associatedLedgerItems($claimId);
+
+$placeServices = $db->getResults('SELECT place_service, description
+    FROM dental_place_service
+    WHERE status = 1');
+$transactionCodes = $db->getResults("SELECT transaction_code, description
+    FROM dental_transaction_code
+    WHERE docid = '$docId'
+      AND status = 1
+    ORDER BY sortby");
+
 ?>
 <html>
 <head>
@@ -364,6 +375,9 @@ if ($isSecondary) {
         window.eligiblePublicKey = <?= json_encode($eligiblePublicKey) ?>;
         var stateList = <?= json_encode(stateList()) ?>;
         var claimData = <?= json_encode($claimData) ?>;
+        var ledgerTransactions = <?= json_encode($transactions) ?>;
+        var transactionCodes = <?= json_encode($transactionCodes) ?>;
+        var placesOfService = <?= json_encode($placeServices) ?>;
     </script>
 </head>
 <body>
@@ -480,7 +494,51 @@ function stateDropdown (fieldName) {
     return '<select name="' + fieldName + '" class="input state"><option></option>' + options + '</select>';
 }
 
-  $(document).ready( function(){
+$(document).ready( function(){
+    /**
+     * Disable invalid places of service
+     */
+    (function(){
+        var places = [];
+
+        $.each(placesOfService, function(index, each){
+            places.push(each.place_service);
+        });
+
+        places = '[value="' + places.join('"], [value="') + '"]';
+
+        $('select[name*=place_of_service] option:not(' + places + ')').prop('disabled', true);
+    })();
+
+    /**
+     * Replace procedure code field with dropdown, to restrict values to valid ones
+     */
+    (function(){
+        var $select = $('<select/>'), n;
+
+        for (n in transactionCodes) {
+            $select.append($('<option/>', {
+                value: transactionCodes[n].transaction_code,
+                text: [transactionCodes[n].transaction_code, ' - ', transactionCodes[n].description].join('')
+            }));
+        }
+
+        $('input[name*="procedure_code"]:not([readonly])').each(function(){
+            var $this = $(this),
+                name = this.name,
+                index = name.replace(/^claim\[service_lines\]\[(\d+)\]\[procedure_code\]$/, '$1'),
+                $field;
+
+            if (!index.match(/^\d+$/) || +index >= ledgerTransactions.length) {
+                return;
+            }
+
+            $field = $select.clone();
+            $field.attr('name', name);
+
+            $this.replaceWith($field);
+        });
+    })();
 
     // set a patient signed date
     $('.input.grayout').find('input[placeholder="date"]').val('<?php echo $patient_signed_date; ?>');
@@ -721,8 +779,6 @@ function stateDropdown (fieldName) {
         $mod_array[] = $mod_row;
       }
 
-      $transactions = ClaimFormData::associatedLedgerItems($claimId);
-
       /**
        * @see CS-29
        *
@@ -742,12 +798,16 @@ function stateDropdown (fieldName) {
 
         $pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
         $dp = ($array['diagnosispointer']!='')?$array['diagnosispointer']:1;
+    $emg = isOptionSelected($array['emg']) ? 'true' : 'false';
   ?>
         $('input[name="claim[service_lines][<?php echo $li;?>][service_date_from]"]').val("<?php echo  date('Y-m-d', strtotime($array['service_date'])); ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][service_date_to]"]').val("<?php echo  date('Y-m-d', strtotime($array['service_date'])) ?>");
         $('select[name="claim[service_lines][<?php echo $li;?>][place_of_service]"]').val("<?php echo  $pos; ?>");
-        $('input[name="claim[service_lines][<?php echo $li;?>][emergency]"]').val("<?php echo  $x; ?>");
-        $('input[name="claim[service_lines][<?php echo $li;?>][procedure_code]"]').val("<?php echo $array['transaction_code']; ?>");
+        $('input[name="claim[service_lines][<?php echo $li;?>][emergency]"]').prop("checked", <?= $emg ?>);
+        $('\
+            input[name="claim[service_lines][<?php echo $li;?>][procedure_code]"],\
+            select[name="claim[service_lines][<?php echo $li;?>][procedure_code]"]\
+        ').val("<?php echo $array['transaction_code']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][0]"]').val("<?php echo  $array['modcode']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][1]"]').val("<?php echo  $array['modcode2']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][2]"]').val("<?php echo  $array['modcode3']; ?>");
@@ -922,8 +982,7 @@ function stateDropdown (fieldName) {
           .attr('readonly', true)
           .addClass('grayout')
           .closest('td')
-          .addClass('grayout');
-  });
+          .addClass('grayout');});
 
   $(".date_field").keydown(function(e){
       var key = e.charCode || e.keyCode || 0;

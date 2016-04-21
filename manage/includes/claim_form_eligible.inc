@@ -837,6 +837,15 @@ $(document).ready( function(){
         $li++;
       }
 
+    // Deactivate the ledger transactions that cannot be edited
+    for (;$li<6;$li++) { ?>
+    $('[name="claim[service_lines][<?= $li ?>][service_date_from]"]')
+        .closest('tr')
+        .addClass('grayout')
+        .find('input, select')
+        .attr('readonly', true);
+    <?php }
+
     ?>
       $('input[name="claim[frequency]"][value="<?= $resubmission_code_fill ?>"]').prop('checked', true);
       // ICD Indicator: <?= $icd_indicator ?> .
@@ -1032,6 +1041,30 @@ $(document).ready( function(){
   }
   form_changed=false;
 
+$('form#claim-form').submit(function() {
+    var emptyFields = 0;
+
+    $('[name^="claim[service_lines]"]:visible:not([readonly], [name*=emergency])')
+        .filter(':text, select')
+        .closest('td')
+        .each(function () {
+            var $this = $(this),
+                $fields = $this.find(':text:visible, select:visible'),
+                localEmpty = 0;
+
+            $fields.each(function () {
+                localEmpty += +($(this).val() === '');
+            });
+
+            emptyFields += +(localEmpty === $fields.length);
+        });
+
+    if (emptyFields) {
+        return confirm('There are empty fields in the ledger transactions. Are you sure you want to continue?');
+    }
+
+    return true;
+});
 </script>
 
   <div id="change_confirm" style="display:none;top:0;height:100%;background:#fff; position:fixed; top:20px; width:100%; opacity:90%;">

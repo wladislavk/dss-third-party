@@ -15,6 +15,11 @@ return [
     'cipher' => MCRYPT_RIJNDAEL_128,
     'log' => 'daily', // single, daily, syslog
 
+    'ledger' => [
+        'release_date' => env('LEDGER_RELEASE_DATE', '2050-01-01 00:00:00'),
+        'prefer_stored' => env('LEDGER_PREFER_STORED', false),
+    ],
+
     'twilio' => [
         'version' => env('TWILIO_API_VERSION'),
         'debug' => env('TWILIO_DEBUG', false),

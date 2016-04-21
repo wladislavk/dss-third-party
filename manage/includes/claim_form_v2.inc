@@ -2437,10 +2437,6 @@ $('input, select').bind('change', function(){
         $('[name=elec][value="Switch to E-File"]:first')
             .css({ float: 'right', 'margin-right': '5px' })
             .appendTo('#top-banner');
-        
-        $('[name="service_lines["]')
-            .prop('readonly', true)
-            .change(function(){ return false; });
     });
 </script>
 </body>

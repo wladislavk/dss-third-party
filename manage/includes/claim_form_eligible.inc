@@ -837,15 +837,6 @@ $(document).ready( function(){
         $li++;
       }
 
-      // Deactivate the ledger transactions that cannot be edited
-      for (;$li<6;$li++) { ?>
-          $('[name="claim[service_lines][<?= $li ?>][service_date_from]"]')
-              .closest('tr')
-              .addClass('grayout')
-              .find('input, select')
-              .attr('readonly', true);
-      <?php }
-
     ?>
       $('input[name="claim[frequency]"][value="<?= $resubmission_code_fill ?>"]').prop('checked', true);
       // ICD Indicator: <?= $icd_indicator ?> .

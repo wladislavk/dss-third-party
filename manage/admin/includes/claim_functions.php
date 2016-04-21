@@ -1195,8 +1195,20 @@ class ClaimFormData
                 $dynamicIndex = array_search($targetId, $dynamicIds);
                 $storedIndex = array_search($targetId, $storedIds);
 
-                $mergedItem = $storedOverridesDynamic ? $storedItems[$storedIndex] : $dynamicItems[$dynamicIndex];
-                $mergedItem['verification'] = $dynamicItems[$dynamicIndex]['verification'];
+                $mergedItem = $dynamicItems[$dynamicIndex];
+
+                if ($storedOverridesDynamic) {
+                    $mergedItem = $storedItems[$storedIndex];
+
+                    array_walk($mergedItem, function (&$value, $key) use ($dynamicItems, $dynamicIndex) {
+                        if (is_null($value)) {
+                            $value = $dynamicItems[$dynamicIndex][$key];
+                        }
+                    });
+
+                    $mergedItem['verification'] = $dynamicItems[$dynamicIndex]['verification'];
+                }
+
                 $mergedItems []= $mergedItem;
 
                 unset($dynamicItems[$dynamicIndex]);

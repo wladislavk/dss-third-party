@@ -1100,6 +1100,7 @@ class ClaimFormData
             'diagnosis_pointer%n%' => 'diagnosis_code_pointers',
             's_charges%n%_1' => 'amount',
             'days_or_units%n%' => 'daysorunits',
+            'epsdt_family_plan%n%' => 'epsdt',
             'id_qua%n%' => 'idqual',
             'rendering_provider_entity_%n%' => 'entity',
             'rendering_provider_first_name_%n%' => 'provider_first_name',

@@ -637,6 +637,45 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $p_m_eligible_payer_id = !empty($claimData['payer']['id']) ? $claimData['payer']['id'] : '';
     $p_m_eligible_payer_name = !empty($claimData['payer']['name']) ? $claimData['payer']['name'] : '';
 
+    /**
+     * Ensure that place of service and transaction code are linked to docid
+     */
+    $placesOfService = $db->getResults('SELECT place_service, description
+        FROM dental_place_service
+        WHERE status = 1');
+
+    $transactionCodes = $db->getResults("SELECT
+            code.transaction_code,
+            code.description,
+            CONCAT(code.transaction_code, ' - ', code.description) AS long_description
+        FROM dental_transaction_code code
+            JOIN dental_insurance claim ON claim.docid = code.docid
+        WHERE claim.insuranceid = '$claimId'");
+
+    $placesOfService = $placesOfService ? array_pluck($placesOfService, 'place_service') : [];
+
+    $codes = array_pluck($transactionCodes, 'transaction_code');
+    $descriptions = array_pluck($transactionCodes, 'description');
+    $longDescriptions = array_pluck($transactionCodes, 'long_description');
+
+    for ($n=1; $n<=6; $n++) {
+        $localVariable = "emg$n";
+        ${$localVariable} = isOptionSelected(${$localVariable});
+
+        $localVariable = "place_of_service$n";
+        ${$localVariable} = in_array(${$localVariable}, $placesOfService) ? ${$localVariable} : null;
+
+        $localVariable = "cpt_hcpcs$n";
+        $codeIndex = array_filter([
+            array_search(${$localVariable}, $codes),
+            array_search(${$localVariable}, $descriptions),
+            array_search(${$localVariable}, $longDescriptions),
+        ], function ($each) { return $each !== false; });
+
+        $codeIndex = count($codeIndex) ? array_shift($codeIndex) : false;
+        ${$localVariable} = $codeIndex !== false ? $codes[$codeIndex] : null;
+    }
+
     $ed_sql = "UPDATE dental_insurance SET
             payer_id = '".$db->escape($payer['id'])."',
             payer_name = '".$db->escape($payer['name'])."',
@@ -736,9 +775,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             prior_authorization_number = '" . $db->escape($prior_authorization_number) . "',
             service_date1_from = '" . $db->escape($service_date1_from) . "',
             service_date1_to = '" . $db->escape($service_date1_to) . "',
-            place_of_service1 = '" . $db->escape($place_of_service1) . "',
+            place_of_service1 = " . (is_null($place_of_service1) ? 'NULL' : "'" . $db->escape($place_of_service1) . "'") . ",
             emg1 = '" . $db->escape($emg1) . "',
-            cpt_hcpcs1 = '" . $db->escape($cpt_hcpcs1) . "',
+            cpt_hcpcs1 = " . (is_null($cpt_hcpcs1) ? 'NULL' : "'" . $db->escape($cpt_hcpcs1) . "'") . ",
             modifier1_1 = '" . $db->escape($modifier1_1) . "',
             modifier1_2 = '" . $db->escape($modifier1_2) . "',
             modifier1_3 = '" . $db->escape($modifier1_3) . "',
@@ -752,9 +791,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id1 = '" . $db->escape($rendering_provider_id1) . "',
             service_date2_from = '" . $db->escape($service_date2_from) . "',
             service_date2_to = '" . $db->escape($service_date2_to) . "',
-            place_of_service2 = '" . $db->escape($place_of_service2) . "',
+            place_of_service2 = " . (is_null($place_of_service2) ? 'NULL' : "'" . $db->escape($place_of_service2) . "'") . ",
             emg2 = '" . $db->escape($emg2) . "',
-            cpt_hcpcs2 = '" . $db->escape($cpt_hcpcs2) . "',
+            cpt_hcpcs2 = " . (is_null($cpt_hcpcs2) ? 'NULL' : "'" . $db->escape($cpt_hcpcs2) . "'") . ",
             modifier2_1 = '" . $db->escape($modifier2_1) . "',
             modifier2_2 = '" . $db->escape($modifier2_2) . "',
             modifier2_3 = '" . $db->escape($modifier2_3) . "',
@@ -768,9 +807,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id2 = '" . $db->escape($rendering_provider_id2) . "',
             service_date3_from = '" . $db->escape($service_date3_from) . "',
             service_date3_to = '" . $db->escape($service_date3_to) . "',
-            place_of_service3 = '" . $db->escape($place_of_service3) . "',
+            place_of_service3 = " . (is_null($place_of_service3) ? 'NULL' : "'" . $db->escape($place_of_service3) . "'") . ",
             emg3 = '" . $db->escape($emg3) . "',
-            cpt_hcpcs3 = '" . $db->escape($cpt_hcpcs3) . "',
+            cpt_hcpcs3 = " . (is_null($cpt_hcpcs3) ? 'NULL' : "'" . $db->escape($cpt_hcpcs3) . "'") . ",
             modifier3_1 = '" . $db->escape($modifier3_1) . "',
             modifier3_2 = '" . $db->escape($modifier3_2) . "',
             modifier3_3 = '" . $db->escape($modifier3_3) . "',
@@ -784,9 +823,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id3 = '" . $db->escape($rendering_provider_id3) . "',
             service_date4_from = '" . $db->escape($service_date4_from) . "',
             service_date4_to = '" . $db->escape($service_date4_to) . "',
-            place_of_service4 = '" . $db->escape($place_of_service4) . "',
+            place_of_service4 = " . (is_null($place_of_service4) ? 'NULL' : "'" . $db->escape($place_of_service4) . "'") . ",
             emg4 = '" . $db->escape($emg4) . "',
-            cpt_hcpcs4 = '" . $db->escape($cpt_hcpcs4) . "',
+            cpt_hcpcs4 = " . (is_null($cpt_hcpcs4) ? 'NULL' : "'" . $db->escape($cpt_hcpcs4) . "'") . ",
             modifier4_1 = '" . $db->escape($modifier4_1) . "',
             modifier4_2 = '" . $db->escape($modifier4_2) . "',
             modifier4_3 = '" . $db->escape($modifier4_3) . "',
@@ -802,9 +841,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id4 = '" . $db->escape($rendering_provider_id4) . "',
             service_date5_from = '" . $db->escape($service_date5_from) . "',
             service_date5_to = '" . $db->escape($service_date5_to) . "',
-            place_of_service5 = '" . $db->escape($place_of_service5) . "',
+            place_of_service5 = " . (is_null($place_of_service5) ? 'NULL' : "'" . $db->escape($place_of_service5) . "'") . ",
             emg5 = '" . $db->escape($emg5) . "',
-            cpt_hcpcs5 = '" . $db->escape($cpt_hcpcs5) . "',
+            cpt_hcpcs5 = " . (is_null($cpt_hcpcs5) ? 'NULL' : "'" . $db->escape($cpt_hcpcs5) . "'") . ",
             modifier5_1 = '" . $db->escape($modifier5_1) . "',
             modifier5_2 = '" . $db->escape($modifier5_2) . "',
             modifier5_3 = '" . $db->escape($modifier5_3) . "',
@@ -818,9 +857,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             rendering_provider_id5 = '" . $db->escape($rendering_provider_id5) . "',
             service_date6_from = '" . $db->escape($service_date6_from) . "',
             service_date6_to = '" . $db->escape($service_date6_to) . "',
-            place_of_service6 = '" . $db->escape($place_of_service6) . "',
+            place_of_service6 = " . (is_null($place_of_service6) ? 'NULL' : "'" . $db->escape($place_of_service6) . "'") . ",
             emg6 = '" . $db->escape($emg6) . "',
-            cpt_hcpcs6 = '" . $db->escape($cpt_hcpcs6) . "',
+            cpt_hcpcs6 = " . (is_null($cpt_hcpcs6) ? 'NULL' : "'" . $db->escape($cpt_hcpcs6) . "'") . ",
             modifier6_1 = '" . $db->escape($modifier6_1) . "',
             modifier6_2 = '" . $db->escape($modifier6_2) . "',
             modifier6_3 = '" . $db->escape($modifier6_3) . "',

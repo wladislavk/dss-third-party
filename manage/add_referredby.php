@@ -4,7 +4,6 @@ if(isset($_GET['addtopat'])){
 }
 include_once('admin/includes/main_include.php');
 include("includes/sescheck.php");?>
-<script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 <?php
 if(!empty($_POST["referredbysub"]) && $_POST["referredbysub"] == 1)
 {
@@ -84,7 +83,6 @@ if(!empty($_POST["referredbysub"]) && $_POST["referredbysub"] == 1)
 		//trigger_error("Die called", E_USER_ERROR);
 	}
 }?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -95,6 +93,7 @@ if(!empty($_POST["referredbysub"]) && $_POST["referredbysub"] == 1)
 	<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
 	<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 	<script type="text/javascript" src="script/validation.js"></script>
+    <script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 </head>
 <body>
 

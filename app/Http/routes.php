@@ -26,6 +26,15 @@ Route::group(['prefix' => 'webhooks'], function () {
     Route::any('payers', ['as' => 'webhooks.payers', 'uses' => 'Eligible\WebhooksController@payers']);
 });
 
+/*
+|--------------------------------------------------------------------------
+| Getter/Setter Session
+|--------------------------------------------------------------------------
+*/
+Route::group(['prefix' => 'session', 'middleware' => 'jwt.auth'], function () {
+    Route::post('get', 'SessionController@get');
+    Route::post('set', 'SessionController@set');
+});
 
 /*
 |--------------------------------------------------------------------------

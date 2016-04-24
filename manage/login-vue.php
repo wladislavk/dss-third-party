@@ -12,7 +12,7 @@ include('admin/includes/password.php');
         <link href="css/login.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
         <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
-        <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="admin/script/jquery-2.2.3.min.js"></script>
         <script type="text/javascript" src="script/validation.js"></script>
 
         <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
@@ -46,6 +46,7 @@ include('admin/includes/password.php');
                                 type="text"
                                 v-model="credentials.username"
                                 v-el="username"
+                                autofocus
                             >
                         </td>
                     </tr>
@@ -62,6 +63,7 @@ include('admin/includes/password.php');
                     <tr bgcolor="#FFFFFF">
                         <td colspan="2" align="center" >
                             <input type="hidden" name="loginsub" value="1">
+                            <input type="hidden" id="dom-api-token" value="<?php echo apiToken() ?>" v-model="token">
                             <input type="submit" name="btnsubmit" value=" Login " class="addButton">
                             <span style="float:right;">
                                 <a href="/manage/register/new.php">Register</a>
@@ -80,7 +82,6 @@ include('admin/includes/password.php');
         </span>
         <div style="clear:both;"></div>
 
-        <input type="hidden" id="dom-api-token" value="<?php echo apiToken() ?>">
         <script>
             var apiRoot = "<?php echo /*json_encode(config('app.apiUrl'))*/'http://ds3.api:81/' ?>";
         </script>

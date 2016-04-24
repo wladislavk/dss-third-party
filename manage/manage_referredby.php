@@ -1,8 +1,17 @@
-<?php namespace Ds3\Libraries\Legacy;
+<?php
+namespace Ds3\Libraries\Legacy;
 
-include "includes/top.htm";
+ob_start();
+require_once __DIR__ . '/includes/top.htm';
+$header = ob_get_clean();
 
-if(!empty($_REQUEST["delid"])) {
+if (!empty($_POST['contacts'])) {
+    $counters = getReferralCountersForContacts($_POST['contacts']);
+    echo json_encode($counters);
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+if (!empty($_REQUEST["delid"])) {
 	$del_sql = "delete from dental_referredby where referredbyid='".$_REQUEST["delid"]."'";
 	$db->query($del_sql);
 	
@@ -19,6 +28,7 @@ if(!empty($_REQUEST["delid"])) {
 $docId = intval($_SESSION['docid']);
 $referralTypePhysician = DSS_REFERRED_PHYSICIAN;
 $referralTypePatient = DSS_REFERRED_PATIENT;
+$contactsPerPage = 10;
 
 $sql = "SELECT
             dc.contactid,
@@ -81,42 +91,9 @@ $my = $db->getResults($sql);
 $num_referredby = count($my);
 
 // get the counters
-for($index = 0; $index < count($my); ++$index) {
-
-	$patientId = $my[$index]['contactid'];
-	$query = "SELECT count(patientid)
-							  FROM dental_patients p30
-							  WHERE p30.referred_source=" . $my[$index]['referral_type'] . " AND
-									" . $patientId . "=p30.referred_by AND
-									STR_TO_DATE(p30.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()";
-	$data = $db->getResults($query);
-	$my[$index]['num_ref30'] = isset($data['p30']) ? $data['p30'] : 0;
-
-	$query = "SELECT count(patientid)
-							  FROM dental_patients p60
-							  WHERE p60.referred_source=" . $my[$index]['referral_type'] . " AND
-									" . $patientId . "=p60.referred_by AND
-									STR_TO_DATE(p60.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND
-									DATE_SUB(CURDATE(), INTERVAL 30 DAY)";
-	$data = $db->getResults($query);
-	$my[$index]['num_ref60'] = isset($data['p60']) ? $data['p60'] : 0;
-
-	$query = "SELECT count(patientid)
-							  FROM dental_patients p90
-							  WHERE p90.referred_source=" . $my[$index]['referral_type'] . " AND
-									" . $patientId . "=p90.referred_by AND
-									STR_TO_DATE(p90.copyreqdate, '%m/%d/%Y') BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND
-									DATE_SUB(CURDATE(), INTERVAL 60 DAY)";
-	$data = $db->getResults($query);
-	$my[$index]['num_ref90'] = isset($data['p90']) ? $data['p90'] : 0;
-
-	$query = "SELECT count(patientid)
-							  FROM dental_patients p90plus
-							  WHERE p90plus.referred_source=" . $my[$index]['referral_type'] . " AND
-									" . $patientId . "=p90plus.referred_by AND
-									STR_TO_DATE(p90plus.copyreqdate, '%m/%d/%Y') < DATE_SUB(CURDATE(), INTERVAL 90 DAY)";
-	$data = $db->getResults($query);
-	$my[$index]['num_ref90plus'] = isset($data['p90plus']) ? $data['p90plus'] : 0;
+for ($index = 0; $index < count($my) && $index < $contactsPerPage; $index++) {
+    $counters = getReferralCountersForContact($my[$index]['contactid'], $my[$index]['referral_type']);
+    $my[$index] += $counters;
 }
 
 if (!empty($_GET['sort'])) {
@@ -149,12 +126,68 @@ if (!empty($_GET['sort'])) {
 		usort($my, comparator);
 	}
 }
-?>
 
+echo $header;
+
+?>
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/manage.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function(){
+        var contacts = [],
+            targets = {},
+            count = <?= $contactsPerPage ?>,
+            page = 1,
+            total = 0;
 
+        $('tr[data-contact-id]').each(function(){
+            var $this = $(this),
+                id = $this.attr('data-contact-id');
+
+            contacts.push({
+                id: id,
+                type: $this.attr('data-contact-type')
+            });
+
+            targets[id] = $this;
+        });
+
+        total = Math.ceil(contacts.length/count);
+
+        function requestContactCounters () {
+            if (page >= total) {
+                return;
+            }
+
+            $.ajax({
+                url: '/manage/manage_referredby.php',
+                type: 'post',
+                data: { contacts: contacts.slice(page*count, (page + 1)*count) },
+                dataType: 'json',
+                complete: function () {
+                    page++;
+                    setTimeout(requestContactCounters, 100);
+                },
+                success: function (json) {
+                    for (var id in json) {
+                        var $target = targets.hasOwnProperty(id) ? targets[id] : false;
+
+                        if (!$target) {
+                            continue;
+                        }
+
+                        for (var counter in json[id]) {
+                            $target.find('span[class*="' + counter + '"]').text(json[id][counter]);
+                        }
+                    }
+                }
+            });
+        }
+
+        requestContactCounters();
+    });
+</script>
 <span class="admin_head">
 	Manage Referred By
 </span>
@@ -239,7 +272,7 @@ if (!empty($_GET['sort'])) {
 				
 				$name = st($myarray['salutation'])." ".st($myarray['firstname'])." ".st($myarray['middlename'])." ".st($myarray['lastname']);
 			?>
-			<tr >
+			<tr data-contact-id="<?= $myarray['contactid'] ?>" data-contact-type="<?= e($myarray['referral_type']) ?>">
 				<td valign="top" width="20%">
 					<?php if($myarray['referred_source']==DSS_REFERRED_PHYSICIAN){
 						?><a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo  $myarray['contactid'];?>');return false;"><?php echo $name;?></a><?php
@@ -257,22 +290,22 @@ if (!empty($_GET['sort'])) {
 				</td>
 	            <td valign="top" width="10%">
 	                <a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink">
-	                    <?php echo $myarray['num_ref30'];?>
+	                    <span class="num_ref30"><?php echo $myarray['num_ref30'];?></span>
 	                </a>
 	            </td>
 	            <td valign="top" width="10%">
 	                <a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink">
-	                    <?php echo $myarray['num_ref60'];?>
+	                    <span class="num_ref60"><?php echo $myarray['num_ref60'];?></span>
 	                </a>
 	            </td>
 	            <td valign="top" width="10%">
 	                <a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink">
-	                    <?php echo $myarray['num_ref90'];?>
+	                    <span class="num_ref90"><?php echo $myarray['num_ref90'];?></span>
 	                </a>
 	            </td>
 	            <td valign="top" width="10%">
 	                <a href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>" class="editlink">
-	                    <?php echo $myarray['num_ref90plus'];?>
+	                    <span class="num_ref90plus"><?php echo $myarray['num_ref90plus'];?></span>
 	                </a>
 	            </td>
 				<td valign="top" width="10%">
@@ -299,4 +332,52 @@ if (!empty($_GET['sort'])) {
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<? include "includes/bottom.htm";?>
+<?php
+
+require_once __DIR__ . '/includes/bottom.htm';
+
+function getReferralCountersForContact ($contactId, $contactType) {
+    $db = new Db();
+
+    $contactId = intval($contactId);
+    $contactType = $db->escape($contactType);
+    $counters = [];
+
+    $ranges = [
+        [0, 30],
+        [30, 60],
+        [60, 90],
+        [90, 0]
+    ];
+
+    foreach ($ranges as $range) {
+        if ($range[1]) {
+            $key = "num_ref{$range[1]}";
+            $dateConditional = "BETWEEN DATE_SUB(CURDATE(), INTERVAL {$range[1]} DAY) AND " .
+                ($range[0] ? "DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)" : 'CURDATE()');
+        } else {
+            $key = "num_ref{$range[0]}plus";
+            $dateConditional = "< DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)";
+        }
+
+        $count = $db->getColumn("SELECT COUNT(p.patientid) AS total
+            FROM dental_patients p
+                WHERE p.referred_by = '$contactId'
+                    AND p.referred_source = '$contactType'
+                    AND STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') $dateConditional", 'total', 0);
+
+        $counters[$key] = $count;
+    }
+
+    return $counters;
+}
+
+function getReferralCountersForContacts (Array $contacts) {
+    $counters = [];
+
+    foreach ($contacts as $contact) {
+        $counters[$contact['id']] = getReferralCountersForContact($contact['id'], $contact['type']);
+    }
+
+    return $counters;
+}

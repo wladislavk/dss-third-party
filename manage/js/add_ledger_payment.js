@@ -2,6 +2,7 @@ var currentTime = new Date();
 var month = currentTime.getMonth() + 1;
 var day = currentTime.getDate();
 var year = currentTime.getFullYear();
+var currentCount = 0;
 
 var template = '<div>' +
     '<input type="text" name="payments[%ledgerId%][%uniqueId%][entry_date]" id="service_date_field_%uniqueId%" ' +
@@ -74,33 +75,23 @@ function eraseCookie(name)
 }
 
 function appendElement() {
-    if (readCookie('tempforledgerentry') == null || readCookie('tempforledgerentry') == 0) {
-        currentCount = 1;
-    } else if(readCookie('tempforledgerentry') > 0) {
-        currentCount = parseInt(readCookie('tempforledgerentry'), 10) + 1;
-        eraseCookie('tempforledgerentry');
-    }
-
-    createCookie('tempforledgerentry', currentCount, '');
-
     var currentTime = new Date(),
         month = currentTime.getMonth() + 1,
         day = currentTime.getDate(),
         year = currentTime.getFullYear(),
         todayDate = month + "/" + day + "/" + year,
         ledgerId = $('[name=ledgerid]').val(),
-        uniqueId = readCookie('tempforledgerentry');
+        uniqueId = ++currentCount,
+        parsedTemplate = template
+            .replace(/%ledgerId%/g, ledgerId)
+            .replace(/%uniqueId%/g, uniqueId)
+            .replace(/%todayDate%/g, todayDate);
 
     var newDiv = $('<div />', {
         id: 'payment_' + uniqueId
     });
 
-    newDiv.html(
-        template
-            .replace(/%ledgerId%/g, ledgerId)
-            .replace(/%uniqueId%/g, uniqueId)
-            .replace(/%todayDate%/g, todayDate)
-    );
+    newDiv.html(parsedTemplate);
 
     $('#FormFields').append(newDiv);
     afterUpdateFormFields();
@@ -136,18 +127,21 @@ function showsubmitbutton()
   document.getElementById('submitbtn').style.cssFloat = "right";
 }
 
-function setupCal(uniqueId)
-{
-  var cid = 'service_date_field_' + uniqueId;
+function setupCal (uniqueId) {
+    var cid = 'service_date_field_' + uniqueId;
 
-  window["cal"+uniqueId] = Calendar.setup({
-      inputField : cid,
-      trigger    : cid,
-      fdow	   : 0,
-      align	   : "Bl////",
-      onSelect   : function() { this.hide() },
-      dateFormat : "%m/%d/%Y"
-  });
+    if (document.getElementById(cid)) {
+        window["cal" + uniqueId] = Calendar.setup({
+            inputField: cid,
+            trigger: cid,
+            fdow: 0,
+            align: "Bl////",
+            onSelect: function () {
+                this.hide()
+            },
+            dateFormat: "%m/%d/%Y"
+        });
+    }
 }
 
 function removeRow(id)

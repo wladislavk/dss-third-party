@@ -514,7 +514,7 @@ if( $r['homepage'] != '1') {
       </div>
 
       <script type="text/javascript">
-        task_function();
+        if (window.task_function) { task_function(); }
       </script>
 
       <?php

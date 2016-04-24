@@ -274,7 +274,7 @@ function updateType(payer){
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
 <script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
-<script type="text/javascript" src="js/add_ledger_payment.js?v=<?= time() ?>"></script>
+<script type="text/javascript" src="js/add_ledger_payment.js?v=20160426"></script>
 <div class="fullwidth">
 <form id="ledgerentryform" name="ledgerentryform" action="insert_ledger_payments.php" onsubmit="return validSubmission(this)" method="POST" enctype="multipart/form-data">
   <div style="width:200px; margin:0 auto; text-align:center;">

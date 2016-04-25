@@ -32,19 +32,25 @@ var login = new Vue({
                 return false;
             }
 
-            var data = {
-                username: this.credentials.username,
-                password: this.credentials.password
-            };
+            this.getToken(this.credentials, this.setSessionValues, {'pi': 3.14, 'e': 2.71});
 
-            this.getToken(this.credentials);
+            // this.getSessionValues({list: ['pi', 'e']});
         },
-        getToken: function(data) {
+        getToken: function(data, callback, callbackData) {
             this.$http.post(apiRoot + 'auth', data, function(data, status, request) {
                 if (status == 200) {
-                   this.token = data.token;
+                    this.token = data.token;
 
-                   this.http.headers.common['Authorization'] = 'Bearer ' + this.token;
+                    // set header for JWT Authentification
+                    // this.$http.headers.common['Authorization'] = 'Bearer ' + this.token;
+
+                    if (callback && typeof(callback) === "function") {
+                        if (callbackData) {
+                            callback(callbackData);
+                        } else {
+                            callback();
+                        }
+                    }
                 }
             }).error(function (data, status, request) {
                 if (status == 422) {
@@ -56,8 +62,8 @@ var login = new Vue({
         {
             var currentPageFull = window.location.pathname + window.location.search;
             var data = {
-                loginid: this.sessionValues.loginId,
-                userid: this.sessionValues.userId,
+                loginid: this.sessionValues.loginId || 0,
+                userid: this.sessionValues.userId || 0,
                 cur_page: currentPageFull
             };
 
@@ -67,17 +73,23 @@ var login = new Vue({
                 console.log('setLoginDetails [Error]: ', status, data);
             });
         },
-        getSessionValues: function()
+        getSessionValues: function(data)
         {
-            this.$http.post(apiRoot + '', data, function(data, status, request) {
+            this.$http.post(apiRoot + 'session/get', data, function(data, status, request) {
                 console.log('getSessionValues: ', status, data);
+
+                if (data) {
+                    for (var index in data) {
+                        this.sessionValues.index = data.index;
+                    }
+                }
             }).error(function (data, status, request) {
                 console.log('getSessionValues [Error]: ', status, data);
             });
         },
-        setSessionValues: function()
+        setSessionValues: function(data)
         {
-            this.$http.post(apiRoot + '', data, function(data, status, request) {
+            this.$http.post(apiRoot + 'session/set', data, function(data, status, request) {
                 console.log('setSessionValues: ', status, data);
             }).error(function (data, status, request) {
                 console.log('setSessionValues [Error]: ', status, data);

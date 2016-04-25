@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Response;
+use Session;
 
 class SessionController extends Controller
 {
@@ -19,8 +20,8 @@ class SessionController extends Controller
 
         $retrievedData = [];
 
-        foreach ($requestedValues as $value) {
-            $retrievedData[$value] = $request->session()->get($value, '');
+        foreach ($requestedValues['list'] as $value) {
+            $retrievedData[$value] = Session::get($value, '');
         }
 
         return Response::json($retrievedData);
@@ -36,7 +37,7 @@ class SessionController extends Controller
         $listOfValues = $request->all();
 
         foreach ($listOfValues as $key => $value) {
-            $request->session()->put($key, $value);
+            Session::put($key, $value);
         }
 
         return Response::json(['status' => 'All values were pushed to the session.']);

@@ -62,7 +62,6 @@ include('admin/includes/password.php');
                     </tr>
                     <tr bgcolor="#FFFFFF">
                         <td colspan="2" align="center" >
-                            <input type="hidden" name="loginsub" value="1">
                             <input type="hidden" id="dom-api-token" value="<?php echo apiToken() ?>" v-model="token">
                             <input type="submit" name="btnsubmit" value=" Login " class="addButton">
                             <span style="float:right;">

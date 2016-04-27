@@ -17,6 +17,7 @@ include('admin/includes/password.php');
 
         <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
         <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
+        <script src="/assets/vendor/async/async.min.js" type="text/javascript"></script>
     </head>
     <body>
 

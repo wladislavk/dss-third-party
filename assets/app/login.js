@@ -33,23 +33,16 @@ var login = new Vue({
                 return false;
             }
 
-            // get an api token
-            this.getToken(this.credentials);
+            // get an api token, callback - get loginId from the session
+            this.getToken(this.credentials, this.getSessionValues);
 
-            // get loginId from the session
-            this.getSessionValues({list: ['loginid']});
-
-            // if user was not logged in set login details
-            if (!this.loginId) {
-                this.setLoginDetails();
-            }
-
-            // check username and password, check user status, set session values, user logining
-            this.checkUserAuth(this.credentials);
+            // after the setLoginDetails function will be run - (if user was not logged in set login details)
+            // and the checkUserAuth function - (check username and password, check user status, set session
+            // values, user logining)
         },
 
-        // parts of full logic (global method)
-        getToken: function(data, callback, callbackData) {
+        // global methods
+        getToken: function(data, callback) {
             this.$http.post(apiRoot + 'auth', data, function(data, status, request) {
                 this.token = data.token;
 
@@ -57,11 +50,18 @@ var login = new Vue({
                 this.$http.headers.common['Authorization'] = 'Bearer ' + this.token;
 
                 if (callback && typeof(callback) === "function") {
-                    if (callbackData) {
-                        callback(callbackData);
-                    } else {
-                        callback();
-                    }
+                    callback(
+                        {list: ['loginid']}, // parameters for the getSessionValues function
+                        // callbacks - the setLoginDetails and the checkUserAuth functions.
+                        // the second function also need a parameter - credentials
+                        [
+                            this.setLoginDetails,
+                            {
+                                title: this.checkUserAuth,
+                                parameter: this.credentials
+                            }
+                        ]
+                    );
                 }
             }).error(function (data, status, request) {
                 if (status == 422) {
@@ -70,20 +70,24 @@ var login = new Vue({
             })
         },
         setLoginDetails: function() {
-            var currentPageFull = window.location.pathname + window.location.search;
-            var data = {
-                loginid: this.sessionValues.loginid || 0,
-                userid: this.sessionValues.userid || 0,
-                cur_page: currentPageFull
-            };
+            // if user was not logged in -> set login details
+            if (!this.loginId) {
+                var currentPageFull = window.location.pathname + window.location.search;
+                var data = {
+                    loginid: this.sessionValues.loginid || 0,
+                    userid: this.sessionValues.userid || 0,
+                    cur_page: currentPageFull
+                };
 
-            this.$http.post(apiRoot + 'api/v1/login-details', data, function(data, status, request) {
-                console.log('setLoginDetails: ', status, data);
-            }).error(function (data, status, request) {
-                console.log('setLoginDetails [Error]: ', status, data);
-            });
+                this.$http.post(apiRoot + 'api/v1/login-details', data, function(data, status, request) {
+                    console.log('setLoginDetails: ', status, data);
+                }).error(function (data, status, request) {
+                    console.log('setLoginDetails [Error]: ', status, data);
+                });
+            }
         },
         checkUserAuth: function(data) {
+            // check username and password, check user status, set session values, user logining
             this.$http.post(apiRoot + 'api/v1/users/check', data, function(data, status, request) {
                 // if username and password are correct
                 if (data) {
@@ -140,7 +144,7 @@ var login = new Vue({
         },
 
         // helpers for work with the session
-        getSessionValues: function(data) {
+        getSessionValues: function(data, callbacks) {
             this.$http.post(apiRoot + 'session/get', data, function(data, status, request) {
                 console.log('getSessionValues: ', status, data);
 
@@ -149,6 +153,20 @@ var login = new Vue({
                         this.sessionValues.index = data.index;
                     }
                 }
+
+                // check callbacks. It contains: the first callback - the setLoginDetails function
+                // the second callback - object (title - checkUserAuth, parameter - credentials)
+                callbacks.forEach(function(callback) {
+                    if (callback) {
+                        if (typeof(callback) === "function") {
+                            callback();
+                        } else if (typeof(callback) === "object") {
+                            if (typeof(callback.title) === "function") {
+                                callback.title(callback.parameter);
+                            }
+                        }
+                    }
+                });
             }).error(function (data, status, request) {
                 console.log('getSessionValues [Error]: ', status, data);
             });

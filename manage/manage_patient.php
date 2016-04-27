@@ -11,7 +11,7 @@ if (isset($_REQUEST["delid"])) {
         WHERE patientid = '$patientId'
             AND docid = '$docId'");
 
-    $msg= "Deleted Successfully";
+    $msg = "Deleted Successfully";
 
     header("Location: " . $_SERVER['PHP_SELF'] . "?msg=" . $msg);
     trigger_error("Die called", E_USER_ERROR);
@@ -316,9 +316,16 @@ $letters = range('A', 'Z');
             </tr>
         <?php } ?>
         <tr class="tr_bg_h">
-            <?php foreach ($headers as $sort=>$label) { ?>
+            <?php foreach ($headers as $sort=>$label) {
+                if ($sortColumn === $sort) {
+                    $currentDir = strtolower($sortDir) === 'asc' ? 'DESC' : 'ASC';
+                } else {
+                    $currentDir = $sort === 'name' ? 'ASC' : 'DESC';
+                }
+
+                ?>
                 <td valign="top" class="col_head  <?= $sortColumn == $sort ? 'arrow_' . strtolower($sortDir) : '' ?>" width="10%">
-                    <a href="?<?= $patientId ? "pid=$patientId&" : '' ?>sort=<?= rawurlencode($sort) ?>&sortdir=<?= $sortColumn == $sort && $sortDir == 'ASC' ? 'DESC' : 'ASC' ?>">
+                    <a href="?<?= $patientId ? "pid=$patientId&" : '' ?>sort=<?= rawurlencode($sort) ?>&sortdir=<?= $currentDir ?>">
                         <?= e($label) ?>
                     </a>
                 </td>
@@ -671,7 +678,10 @@ function findPatients ($filter, Array $conditionalList=[], $sortDir, $page=0, $c
     $tables = join("\n", $tableList);
     $conditionals = $conditionalList ? join("\nAND ", $conditionalList) : '1=1';
 
-    $resultsQuery = "SELECT $selections FROM $tables WHERE $conditionals ORDER BY $orderBy LIMIT $offset, $count";
+    /**
+     * Given that $orderResults already sliced the results, we don't use any offset here
+     */
+    $resultsQuery = "SELECT $selections FROM $tables WHERE $conditionals ORDER BY $orderBy LIMIT 0, $count";
     $results = $db->getResults($resultsQuery);
 
     return [

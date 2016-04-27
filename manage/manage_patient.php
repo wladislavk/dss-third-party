@@ -44,7 +44,7 @@ switch (intval($_GET['sh'])) {
         $conditionals []= 'p.status = 2';
 }
 
-if (isset($_GET['letter'])) {
+if (isset($_GET['letter']) && strlen($_GET['letter'])) {
     $conditionals []= "p.lastname LIKE '" . $db->escape($_GET['letter']) . "%'";
 }
 

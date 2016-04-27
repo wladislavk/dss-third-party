@@ -674,6 +674,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
         $codeIndex = count($codeIndex) ? array_shift($codeIndex) : false;
         ${$localVariable} = $codeIndex !== false ? $codes[$codeIndex] : null;
+
+        $localVariable = "s_charges{$n}_1";
+        ${$localVariable} = preg_replace('/[^\d\.]+/', '', ${$localVariable});
     }
 
     $ed_sql = "UPDATE dental_insurance SET

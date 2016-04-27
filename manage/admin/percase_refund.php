@@ -5,9 +5,13 @@ include_once('includes/password.php');
 include_once '../includes/general_functions.php';
 include_once '../includes/constants.inc';
 include_once 'includes/access.php';
+
+include_once dirname(__FILE__) . '/includes/popup_top.htm';
+
 ?>
-<?php include_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<script type="text/javascript" src="/manage/3rdParty/jquery.formatCurrency-1.4.0.pack.js"></script>
 <?php
+
 include_once '../3rdParty/stripe/lib/Stripe.php';
 $id = $_GET['docid'];
 $sql = "SELECT * FROM dental_users

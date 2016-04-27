@@ -1189,7 +1189,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             });
         });
         
-        if (hide_expanded) {
+        if (typeof hide_expanded !== 'undefined' && hide_expanded) {
             $('.expanded').hide();
         }
     }(jQuery));

@@ -358,6 +358,7 @@ $letters = range('A', 'Z');
             </tr>
         <?php } else {
             foreach ($patients as $myarray) {
+                $patientId = $myarray['patientid'];
                 $tr_class = $myarray['status'] == 1 ? "tr_active" : "tr_inactive";
                 ?>
                 <tr class="<?php echo $tr_class;?> initial_list">

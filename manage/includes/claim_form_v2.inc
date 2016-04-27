@@ -2437,31 +2437,6 @@ $('input, select').bind('change', function(){
         $('[name=elec][value="Switch to E-File"]:first')
             .css({ float: 'right', 'margin-right': '5px' })
             .appendTo('#top-banner');
-
-        $('form#claim-form').submit(function() {
-            var emptyFields = 0;
-
-            $('[name^="service_lines"]:visible:not([name*=emergency])')
-                .filter(':text, select')
-                .closest('td')
-                .each(function () {
-                    var $this = $(this),
-                        $fields = $this.find(':text:visible, select:visible'),
-                        localEmpty = 0;
-
-                    $fields.each(function () {
-                        localEmpty += +($(this).val() === '');
-                    });
-
-                    emptyFields += +(localEmpty === $fields.length);
-                });
-
-            if (emptyFields) {
-                return confirm('There are empty fields in the ledger transactions. Are you sure you want to continue?');
-            }
-
-            return true;
-        });
     });
 </script>
 </body>
@@ -2686,6 +2661,8 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
             if (substr($localVariable, 0, 3) === 'emg') {
                 ${$localVariable} = isOptionSelected(${$localVariable});
+            } elseif (substr($localVariable, 0, 9) === 's_charges') {
+                ${$localVariable} = preg_replace('/[^\d\.]+/', '', ${$localVariable});
             } elseif (substr($localVariable, 0, 5) === 'place') {
                 ${$localVariable} = in_array(${$localVariable}, $placesOfService) ? ${$localVariable} : null;
             } elseif (substr($localVariable, 0, 3) === 'cpt') {

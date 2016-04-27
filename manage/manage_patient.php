@@ -323,9 +323,16 @@ $letters = range('A', 'Z');
                     $currentDir = $sort === 'name' ? 'ASC' : 'DESC';
                 }
 
+                $letter = isset($_GET['letter']) && strlen($_GET['letter']) ? $_GET['letter'] : '';
+                $sh = isset($_GET['sh']) && strlen($_GET['sh']) ? $_GET['sh'] : '';
+
                 ?>
                 <td valign="top" class="col_head  <?= $sortColumn == $sort ? 'arrow_' . strtolower($sortDir) : '' ?>" width="10%">
-                    <a href="?<?= $patientId ? "pid=$patientId&" : '' ?>sort=<?= rawurlencode($sort) ?>&sortdir=<?= $currentDir ?>">
+                    <a href="?<?=
+                        ($patientId ? "pid=$patientId&" : '') .
+                        ($letter ? "letter=$letter&" : '') .
+                        ($sh ? "sh=$sh&" : '')
+                    ?>sort=<?= rawurlencode($sort) ?>&sortdir=<?= $currentDir ?>">
                         <?= e($label) ?>
                     </a>
                 </td>

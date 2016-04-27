@@ -3,10 +3,13 @@ include('includes/top.htm');
 // include('includes/constants.inc');
 include('includes/formatters.php');
 
-if(isset($_REQUEST["delid"])) {
-    $del_sql = "delete from dental_patients where patientid='".$_REQUEST["delid"]."'";
+$docId = intval($_SESSION['docid']);
 
-    $db->query($del_sql);
+if (isset($_REQUEST["delid"])) {
+    $patientId = intval($_POST['delid']);
+    $db->query("DELETE FROM dental_patients
+        WHERE patientid = '$patientId'
+            AND docid = '$docId'");
 
     $msg= "Deleted Successfully";
 
@@ -14,73 +17,250 @@ if(isset($_REQUEST["delid"])) {
     trigger_error("Die called", E_USER_ERROR);
 }
 
-$rec_disp = 30;
+$count = 30;
+$page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 0;
 
-if(isset($_REQUEST["page"]))
-    $index_val = $_REQUEST["page"];
-else
-    $index_val = 0;
+$patientId = intval($_GET['pid']);
+$sortColumn = $_REQUEST['sort'];
+$sortDir = strtolower($_REQUEST['sortdir']) === 'desc' ? 'DESC' : 'ASC';
 
-$i_val = $index_val * $rec_disp;
+$conditionals = [
+    "p.docid = '$docId'"
+];
 
-if(!isset($_REQUEST['sort']) || $_REQUEST['sort'] == ''){
-    $_REQUEST['sort'] = 'lastname';
-    $_REQUEST['sortdir'] = 'ASC';
+if ($patientId) {
+    $conditionals []= "p.patientid = '$patientId'";
 }
 
-$docId = intval($_SESSION['docid']);
-
-$sql = '';
-
-$sql_sort = "SELECT p.patientid, p.status, p.lastname, p.firstname, p.middlename, p.premedcheck, p.p_m_dss_file
-             FROM dental_patients p";
-
-$sql_count = "SELECT count(*) as total_rec FROM dental_patients p";
-
-$sql .= " WHERE p.docid='$docId'";
-if(isset($_GET['pid'])) {
-    $sql .= " AND p.patientid = ".$_GET['pid'];
-}
-if(!isset($_GET['sh']) || $_GET['sh']=='') {
-    $sql .= " AND p.status = 1";
-}
-elseif($_GET['sh'] == 1 ) {
-    $sql .= " AND p.status = 1";
-}
-elseif($_GET['sh'] == 2) {
-    $sql .= " AND (p.status = 1 OR p.status = 2)";
-}
-elseif($_GET['sh'] == 3) {
-    $sql .= " AND p.status = 2";
-}
-if(isset($_GET['letter'])) {
-    $sql .= " AND p.lastname LIKE '".mysqli_real_escape_string($con, $_GET['letter'])."%' ";
-}
-if(isset($_REQUEST['sort'])) {
-    if ($_REQUEST['sort'] == 'lastname') {
-        $sql .= " ORDER BY p.lastname ".$_REQUEST['sortdir'].", p.firstname ".$_REQUEST['sortdir'];
-    } elseif ($_REQUEST['sort'] == 'ledger') {
-        //$sql .= " ORDER BY (ledger_amount + ledger2_amount - ledger_payment_amount - ledger2_payment_amount) ".$_REQUEST['sortdir'];
-    } else  {
-        //$sql .= " ORDER BY ".$_REQUEST['sort']." ".$_REQUEST['sortdir'];
-    }
+switch (intval($_GET['sh'])) {
+    case 0:
+    case 1:
+        $conditionals []= 'p.status = 1';
+        break;
+    case 2:
+        $conditionals []= '(p.status = 1 OR p.status = 2)';
+        break;
+    case 3:
+        $conditionals []= 'p.status = 2';
 }
 
-$sql_sort .= $sql;
-$sql_count .= $sql;
+if (isset($_GET['letter'])) {
+    $conditionals []= "p.lastname LIKE '" . $db->escape($_GET['letter']) . "%'";
+}
 
-$total_rec = $db->getRow($sql_count)['total_rec'];
+$queries = findPatients($sortColumn, $conditionals, $sortDir, $page, $count);
 
-$no_pages = $total_rec/$rec_disp;
+$sortColumn = $queries['filter'];
+$patients = $queries['results'];
+$totalCount = $queries['count'];
+$totalPages = $totalCount/$count;
 
-$sql_sort .= " limit ". $i_val.",".$rec_disp;
-$my=$db->getResults($sql_sort);
+/**
+ * @see DSS-434
+ *
+ * Original, full query, ahead
+switch ($sortColumn) {
+    default:
+    case 'name':
+        $auxiliaryOrder = false;
+        $orderBy = "p.lastname $sortDir, p.firstname $sortDir";
+        break;
+    case 'tx':
+        $orderBy = "(insurance_no_error AND numsleepstudy > 0) $sortDir";
+        break;
+    case 'next-visit':
+        $orderBy = "date_scheduled $sortDir";
+        break;
+    case 'last-visit':
+        $orderBy = "date_completed $sortDir";
+        break;
+    case 'last-treatment':
+        $orderBy = "segmentid $sortDir";
+        break;
+    case 'appliance':
+        $orderBy = "device $sortDir";
+        break;
+    case 'appliance-since':
+        $orderBy = "dentaldevice_date $sortDir";
+        break;
+    case 'vob':
+        $orderBy = "sm.vob $sortDir";
+        break;
+    case 'rx-lomn':
+        $orderBy = "rx_lomn $sortDir";
+        break;
+    case 'ledger':
+        $orderBy = "ledger IS NOT NULL $sortDir, total $sortDir";
+}
 
-$num_users=count($my);
+if ($auxiliaryOrder) {
+    $orderBy = "patient_info DESC, $orderBy, p.lastname ASC, p.firstname ASC";
+}
 
+$conditionals = join(' AND ', $conditionals);
+
+$totalCount = $db->getColumn("SELECT COUNT(p.patientid) AS total FROM dental_patients p WHERE $conditionals", 'total');
+$totalPages = $totalCount/$count;
+
+$patientsQuery = "SELECT
+        allergens_check.allergenscheck,
+        (
+            (
+                '{$_SESSION['user_type']}' = '$userTypeSoftware'
+                AND COALESCE(p.p_m_dss_file, 0) != 0
+            )
+            OR COALESCE(p.p_m_dss_file, 0) = 1
+        ) AS insurance_no_error,
+        (
+            SELECT COUNT(id)
+            FROM dental_summ_sleeplab sleep_lab
+            WHERE
+                sleep_lab.patiendid = p.patientid
+                AND COALESCE(sleep_lab.diagnosis, '') != ''
+                AND COALESCE(sleep_lab.filename, '') != ''
+                AND (
+                    p.p_m_ins_type != '1'
+                    OR (
+                        COALESCE(sleep_lab.diagnosising_doc, '') != ''
+                        AND COALESCE(sleep_lab.diagnosising_npi, '') != ''
+                    )
+                )
+        ) AS numsleepstudy,
+        summary.vob,
+        summary.ledger AS ledger,
+        summary.patient_info AS patient_info,
+        next_visit.date_scheduled AS date_scheduled,
+        last_dates.date_completed AS date_completed,
+        last_dates.segmentid AS segmentid,
+        device.device AS device,
+        device_date.dentaldevice_date AS dentaldevice_date,
+        CASE
+            WHEN LENGTH(COALESCE(rx_lomn.rxlomnrec, ''))
+                OR (
+                    LENGTH(COALESCE(rx_lomn.lomnrec, '')) AND LENGTH(COALESCE(rx_lomn.rxrec, ''))
+                ) THEN 3
+            WHEN LENGTH(COALESCE(rx_lomn.rxrec, '')) THEN 2
+            WHEN LENGTH(COALESCE(rx_lomn.lomnrec, '')) THEN 1
+            ELSE 0
+        END AS rx_lomn,
+        (
+            COALESCE(
+                (
+                    SELECT SUM(COALESCE(first.amount, 0)) AS total
+                    FROM dental_ledger first
+                    WHERE first.docid = p.docid
+                        AND first.patientid = p.patientid
+                        AND COALESCE(first.paid_amount, 0) = 0
+                ), 0
+            )
+            + COALESCE(
+                (
+                    SELECT SUM(COALESCE(second.amount, 0)) - SUM(COALESCE(second.paid_amount, 0))
+                    FROM dental_ledger second
+                    WHERE second.docid = p.docid
+                        AND second.patientid = p.patientid
+                        AND second.paid_amount != 0
+                ), 0
+            )
+            - COALESCE(
+                (
+                    SELECT -SUM(COALESCE(third_payment.amount, 0))
+                    FROM dental_ledger third
+                        LEFT JOIN dental_ledger_payment third_payment ON third_payment.ledgerid = third.ledgerid
+                    WHERE third.docid = p.docid
+                        AND third.patientid = p.patientid
+                        AND third_payment.amount != 0
+                ), 0
+            )
+        ) AS total,
+        p.*
+    FROM dental_patients p
+        LEFT JOIN (
+            SELECT patientid, MAX(q_page3id) AS max_id
+            FROM dental_q_page3
+            GROUP BY patientid
+        ) allergens_check_pivot ON allergens_check_pivot.patientid = p.patientid
+        LEFT JOIN dental_q_page3 allergens_check ON allergens_check.q_page3id = allergens_check_pivot.max_id
+        
+        LEFT JOIN dental_patient_summary summary ON summary.pid = p.patientid
+        
+        LEFT JOIN (
+            SELECT pid AS patientid, MAX(id) AS max_id
+            FROM dental_flow_pg1
+            GROUP BY pid
+        ) rx_lomn_pivot ON rx_lomn_pivot.patientid = p.patientid
+        LEFT JOIN dental_flow_pg1 rx_lomn ON rx_lomn.id = rx_lomn_pivot.max_id
+        
+        LEFT JOIN (
+            SELECT patientid, MAX(id) AS max_id
+            FROM dental_flow_pg2_info
+            WHERE appointment_type = 0
+            GROUP BY patientid
+        ) next_visit_pivot ON next_visit_pivot.patientid = p.patientid
+        LEFT JOIN dental_flow_pg2_info next_visit ON next_visit.id = next_visit_pivot.max_id
+        
+        LEFT JOIN (
+            SELECT base_last_dates.patientid, MAX(base_last_dates.id) AS max_id, base_last_dates.segmentid
+            FROM dental_flow_pg2_info base_last_dates
+            INNER JOIN (
+                SELECT patientid, max(date_completed) AS max_date
+                FROM dental_flow_pg2_info
+                GROUP BY patientid
+            ) pivot_last_dates ON pivot_last_dates.patientid = base_last_dates.patientid
+                AND pivot_last_dates.max_date = base_last_dates.date_completed
+            GROUP BY base_last_dates.patientid
+        ) last_dates_pivot ON last_dates_pivot.patientid = p.patientid
+        LEFT JOIN dental_flow_pg2_info last_dates ON last_dates.id = last_dates_pivot.max_id
+        
+        LEFT JOIN (
+            SELECT patientid, dentaldevice, MAX(ex_page5id) AS max_id
+            FROM dental_ex_page5
+            GROUP BY patientid
+        ) device_pivot ON device_pivot.patientid = p.patientid
+        LEFT JOIN dental_ex_page5 device_date ON device_date.ex_page5id = device_pivot.max_id
+        LEFT JOIN dental_device device ON device.deviceid = device_pivot.dentaldevice
+    
+    WHERE $conditionals
+    ORDER BY $orderBy
+    LIMIT $offset, $count";
+
+$patients = $db->getResults($patientsQuery);
+*/
+
+$headers = [
+    'name' => 'Name',
+    'tx' => 'Ready for Tx',
+    'next-visit' => 'Next Visit',
+    'last-visit' => 'Last Visit',
+    'last-treatment' => 'Last Treatment',
+    'appliance' => 'Appliance',
+    'appliance-since' => 'Appliance Since',
+    'vob' => 'VOB',
+    'rx-lomn' => 'Rx./L.O.M.N.',
+    'ledger' => 'Ledger'
+];
+
+$segments = [
+    1 => 'Initial Contact',
+    2 => 'Consult',
+    3 => 'Sleep Study',
+    4 => 'Impressions',
+    5 => 'Delaying Tx / Waiting',
+    6 => 'Refused Treatment',
+    7 => 'Device Delivery',
+    8 => 'Check / Follow Up',
+    9 => 'Pt. Non-Compliant',
+    10 => 'Home Sleep Test',
+    11 => 'Treatment Complete',
+    12 => 'Annual Recall',
+    13 => 'Termination',
+    14 => 'Not a Candidate',
+    15 => 'Baseline Sleep Test',
+];
+
+$letters = range('A', 'Z');
 
 ?>
-
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="css/manage_patient.css" type="text/css" media="screen" />
 <script src="admin/popup/popup.js" type="text/javascript"></script>
@@ -94,37 +274,19 @@ $num_users=count($my);
         <option value="3" <?php if(isset($_GET['sh'])){ if($_GET['sh'] == 3) echo " selected"; } ?> >In-active Patients</option>
     </select>
 </span>
-    <!--<div align="right">
-            <div style="float:left;margin-right:386px;width:140px;padding-left:4px;"><script type="text/javascript" language="JavaScript" src="script/find.js">
-    </script>
-    </div>
-
-        <button onclick="Javascript: parent.location='add_patient.php';" class="addButton">
-            Add New Patient
-        </button>
-        &nbsp;&nbsp;
-
-        <button onclick="Javascript: loadPopup('print_patient.php?st=1');" class="addButton">
-            Print Active Patient
-        </button>
-        &nbsp;&nbsp;
-
-        <button onclick="Javascript: loadPopup('print_patient.php?st=2');" class="addButton">
-            Print In-Active Patient
-        </button>
-        &nbsp;&nbsp;
-    </div>-->
     <div class="letter_select">
         <?php
-        $letters = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
-        foreach($letters as $let){
+
+        foreach ($letters as $let) {
             $class = (isset($_GET['letter']) && $_GET['letter']==$let) ? 'class="selected_letter"' : '';
             $sh = isset($_GET['sh']) ? $_GET['sh'] : '';
-            echo '<a ' . $class . 'href="manage_patient.php?letter=' . $let . '&sh=' . $sh . '">' . $let . '</a> ';
+            echo '<a ' . $class . 'href="?letter=' . $let . '&sh=' . $sh . '">' . $let . '</a> ';
         }
-        if(isset($_GET['letter']) && $_GET['letter'] != ''){
-            echo '<a href="manage_patient.php?sh=' . $_GET['sh'] . '">View All</a>';
+
+        if (isset($_GET['letter']) && $_GET['letter'] != '') {
+            echo '<a href="?sh=' . $_GET['sh'] . '">View All</a>';
         }
+
         ?>
     </div>
     </br>
@@ -140,51 +302,27 @@ $num_users=count($my);
 </div>
 <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post" style="clear: both">
     <table id="patients" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-        <?php if($total_rec > $rec_disp) {?>
-            <TR bgColor="#ffffff">
-                <TD  align="right" colspan="15" class="bp">
+        <?php if ($totalCount > $count) { ?>
+            <tr bgColor="#ffffff">
+                <td  align="right" colspan="15" class="bp">
                     Pages:
                     <?php
+
                     $letter = isset($_GET['letter']) ? $_GET['letter'] : '';
-                    $sort = isset($_GET['sort']) ? $_GET['sort'] : '';
-                    $sortdir = isset($_GET['sortdir']) ? $_GET['sortdir'] : '';
                     $sh = isset($_GET['sh']) ? $_GET['sh'] : '';
-                    paging($no_pages,$index_val,"letter=". $letter ."&sort=". $sort ."&sortdir=". $sortdir ."&sh=". $sh );
+                    paging($totalPages, $page, "letter=". $letter ."&sort=". $sortColumn ."&sortdir=". $sortDir ."&sh=". $sh );
                     ?>
-                </TD>
-            </TR>
-        <?php }?>
+                </td>
+            </tr>
+        <?php } ?>
         <tr class="tr_bg_h">
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'lastname')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=lastname&sortdir=<?php echo ($_REQUEST['sort']=='lastname'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Name</a>
-            </td>
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'ready')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=ready&sortdir=<?php echo ($_REQUEST['sort']=='ready'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ready for Tx</a>
-            </td>
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'pg2.date_scheduled')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=pg2.date_scheduled&sortdir=<?php echo ($_REQUEST['sort']=='pg2.date_scheduled'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Next Visit</a>
-            </td>
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'last_completed')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=last_completed&sortdir=<?php echo ($_REQUEST['sort']=='last_completed'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Last Visit</a>
-            </td>
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'last_segmentid')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=last_segmentid&sortdir=<?php echo ($_REQUEST['sort']=='last_segmentid'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Last Treatment</a>
-            </td>
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'device')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=device&sortdir=<?php echo ($_REQUEST['sort']=='device'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Appliance</a>
-            </td>
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'delivery_date')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=delivery_date&sortdir=<?php echo ($_REQUEST['sort']=='delivery_date'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Appliance Since</a>
-            </td>
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'xb')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=vob&sortdir=<?php echo ($_REQUEST['sort']=='vob'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">VOB</a>
-            </td>
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'rxlomn_order')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=rxlomn_order&sortdir=<?php echo ($_REQUEST['sort']=='rxlomn_order'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Rx./L.O.M.N.</a>
-            </td>
-            <td valign="top" class="col_head  <?php echo ($_REQUEST['sort'] == 'ledger')?'arrow_'.strtolower($_REQUEST['sortdir']):''; ?>" width="10%">
-                <a href="manage_patient.php?<?php echo isset($_GET['pid'])?"pid=".$_GET['pid']."&":''; ?>sort=ledger&sortdir=<?php echo ($_REQUEST['sort']=='ledger'&&$_REQUEST['sortdir']=='ASC')?'DESC':'ASC'; ?>">Ledger</a>
-            </td>
+            <?php foreach ($headers as $sort=>$label) { ?>
+                <td valign="top" class="col_head  <?= $sortColumn == $sort ? 'arrow_' . strtolower($sortDir) : '' ?>" width="10%">
+                    <a href="?<?= $patientId ? "pid=$patientId&" : '' ?>sort=<?= rawurlencode($sort) ?>&sortdir=<?= $sortColumn == $sort && $sortDir == 'ASC' ? 'DESC' : 'ASC' ?>">
+                        <?= e($label) ?>
+                    </a>
+                </td>
+            <?php } ?>
         </tr>
         <tr class="template" style="display:none;">
             <td class="patient_name">John Smith</td>
@@ -198,219 +336,83 @@ $num_users=count($my);
             <td class="rxlomn">N/A</td>
             <td class="ledger">($435.75)</td>
         </tr>
-        <?php if($num_users == 0)
-        { ?>
+        <?php if (!count($patients)) { ?>
             <tr class="tr_bg">
                 <td valign="top" class="col_head" colspan="10" align="center">
                     No Records
                 </td>
             </tr>
-            <?php
-        }
-        else
-        {
-            foreach ($my as $myarray)
-            {
+        <?php } else {
+            foreach ($patients as $myarray) {
                 $tr_class = $myarray['status'] == 1 ? "tr_active" : "tr_inactive";
-                $patientid = mysqli_real_escape_string($con, $myarray['patientid']);
                 ?>
                 <tr class="<?php echo $tr_class;?> initial_list">
                     <td valign="top">
-                        <a href="add_patient.php?pid=<?php echo $myarray["patientid"];?>&ed=<?php echo $myarray["patientid"];?>">
-                            <?php
-                            echo st($myarray["lastname"]) . ',&nbsp;
-									' . st($myarray["firstname"]) . '&nbsp;
-									' . (!empty($myarray["middlename"]) ? st($myarray["middlename"]) : "") . '</a>';
-
-                            $query = "SELECT allergenscheck
-                                      FROM dental_q_page3
-                                      WHERE patientid = '$patientid'
-                                      LIMIT 1";
-                            $allergencheck = $db->getRow($query);
-                            $allergen = $allergencheck['allergenscheck'];
-
-                            if($myarray["premedcheck"] == 1 || $allergen == 1) {
-                                echo "&nbsp;&nbsp;&nbsp;<font style=\"font-weight:bold; color:#FF0000;\">*Med</font>";
-                            }
-                            ?>
+                        <a href="add_patient.php?pid=<?= $patientId ?>&ed=<?= $patientId ?>">
+                            <?= e($myarray['lastname']) ?>,&nbsp;
+                            <?= e($myarray['firstname']) ?>&nbsp;
+                            <?= e($myarray['middlename']) ?>
+                        </a>
+                        <?php if ($myarray["premedcheck"] == 1 || $myarray['allergenscheck'] == 1) { ?>
+                            &nbsp;&nbsp;&nbsp;<span style="font-weight:bold; color:#ff0000;">*Med</span>
+                        <?php }?>
                     </td>
-                    <?php
-
-                    $query = "SELECT s.vob, s.ledger, s.patient_info
-                                  FROM dental_patient_summary s
-                                  WHERE s.pid = '$patientid'
-                                  LIMIT 1";
-                    $patient_summary = $db->getRow($query);
-
-                    if( $patient_summary['patient_info'] == 1 )
-                    {
-                        $query = "SELECT COUNT(*) as numsleepstudy
-                                        FROM dental_summ_sleeplab ss
-                                            JOIN dental_patients p on ss.patiendid=p.patientid
-                                        WHERE (
-                                                p.p_m_ins_type != '1'
-                                                OR (
-                                                    (ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '')
-                                                    AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != '')
-                                                )
-                                            )
-                                            AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '')
-                                            AND (ss.filename!='' AND ss.filename IS NOT NULL)
-                                            AND ss.patiendid = '$patientid'";
-
-                        $numsleepstudy = $db->getRow($query);
-
-
-                        $query = "SELECT fpg.rxlomnrec, fpg.lomnrec, fpg.rxrec
-                                  FROM dental_flow_pg1 fpg
-                                  WHERE fpg.pid = '$patientid'
-                                  LIMIT 1";
-                        $fpg = $db->getRow($query);
-
-                        $query = "SELECT date_scheduled
-                                  FROM dental_flow_pg2_info
-                                  WHERE appointment_type = 0 AND patientid = '$patientid'
-                                  LIMIT 1";
-                        $next_scheduled = $db->getRow($query)['date_scheduled'];
-
-
-                        $query = "SELECT pg2_info.date_completed, pg2_info.segmentid
-                                        FROM dental_flow_pg2_info pg2_info
-                                        WHERE pg2_info.appointment_type=1 AND pg2_info.patientid = '$patientid'
-                                        ORDER BY pg2_info.date_completed DESC, pg2_info.id DESC
-                                        LIMIT 1";
-                        $flow_pg2 = $db->getRow($query);
-                        $last_completed = $flow_pg2['date_completed'];
-                        $last_segmentid = $flow_pg2['segmentid'];
-
-                        $query = "SELECT exp5.dentaldevice_date, dd.device
-                                        FROM dental_ex_page5 exp5
-                                            LEFT JOIN dental_device dd ON dd.deviceid=exp5.dentaldevice
-                                        WHERE patientid = '$patientid'
-                                        LIMIT 1";
-                        $dental_page5 = $db->getRow($query);
-                        $delivery_date = $dental_page5['dentaldevice_date'];
-                        $device = $dental_page5['device'];
+                    <?php if ($myarray['patient_info'] != 1) { ?>
+                        <td colspan="9" align="center" class="pat_incomplete">-- Patient Incomplete --</td>
+                    <?php } else {
+                        $next_scheduled = $myarray['date_scheduled'];
+                        $last_completed = $myarray['date_completed'];
+                        $last_segmentid = $myarray['segmentid'];
+                        $delivery_date = $myarray['dentaldevice_date'];
+                        $device = $myarray['device'];
 
                         ?>
-
                         <td valign="top">
                             <?php
 
-                            if( $myarray['p_m_dss_file']!='' && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE ) {
-                                $ins_error = false;
-                            } elseif( $myarray['p_m_dss_file'] != 1) {
-                                $ins_error = true;
-                            } else {
-                                $ins_error = false;
-                            }
+                            $ins_error = !$myarray['insurance_no_error'];
+                            $study_error = $myarray['numsleepstudy'] == 0;
 
-                            if( $numsleepstudy['numsleepstudy'] == 0 ) {
-                                $study_error = true;
-                            } else {
-                                $study_error = false;
-                            }
                             ?>
-                            <a href="manage_flowsheet3.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ((!$ins_error && !$study_error) ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
+                            <a href="manage_flowsheet3.php?pid=<?= $patientId ?>"><?php echo ((!$ins_error && !$study_error) ? "Yes" : "<span class=\"red\">No</span>"); ?></a>
                         </td>
                         <td valign="top">
-                            <a href="manage_flowsheet3.php?pid=<?php echo $myarray["patientid"];?>"><?php echo format_date($next_scheduled); ?></a>
-                        </td>
-                        <?php
-                        $segments = array();
-                        $segments[15] = "Baseline Sleep Test";
-                        $segments[2] = "Consult";
-                        $segments[4] = "Impressions";
-                        $segments[7] = "Device Delivery";
-                        $segments[8] = "Check / Follow Up";
-                        $segments[10] = "Home Sleep Test";
-                        $segments[3] = "Sleep Study";
-                        $segments[11] = "Treatment Complete";
-                        $segments[12] = "Annual Recall";
-                        $segments[14] = "Not a Candidate";
-                        $segments[5] = "Delaying Tx / Waiting";
-                        $segments[9] = "Pt. Non-Compliant";
-                        $segments[6] = "Refused Treatment";
-                        $segments[13] = "Termination";
-                        $segments[1] = "Initial Contact";
-                        ?>
-                        <td valign="top">
-                            <a href="manage_flowsheet3.php?pid=<?php echo $myarray["patientid"];?>"><?php echo format_date($last_completed, true); ?></a>
+                            <a href="manage_flowsheet3.php?pid=<?= $patientId ?>"><?php echo format_date($next_scheduled); ?></a>
                         </td>
                         <td valign="top">
-                            <a href="manage_flowsheet3.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ($last_segmentid == null ? 'N/A' : $segments[$last_segmentid]); ?></a>
+                            <a href="manage_flowsheet3.php?pid=<?= $patientId ?>"><?php echo format_date($last_completed, true); ?></a>
                         </td>
                         <td valign="top">
-                            <a href="dss_summ.php?pid=<?php echo $myarray["patientid"];?>"><?php echo $device; ?></a>
+                            <a href="manage_flowsheet3.php?pid=<?= $patientId ?>"><?php echo ($last_segmentid == null ? 'N/A' : $segments[$last_segmentid]); ?></a>
                         </td>
                         <td valign="top">
-                            <a href="manage_flowsheet3.php?pid=<?php echo $myarray["patientid"];?>"><?php echo format_date($delivery_date, true); ?></a>
+                            <a href="dss_summ.php?pid=<?= $patientId ?>"><?php echo $device; ?></a>
                         </td>
                         <td valign="top">
-                            <a href="manage_insurance.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ($patient_summary['vob'] == null ? 'No' : ($patient_summary['vob']==1 ? "Yes": $dss_preauth_status_labels[$patient_summary['vob']])); ?></a>
+                            <a href="manage_flowsheet3.php?pid=<?= $patientId ?>"><?php echo format_date($delivery_date, true); ?></a>
                         </td>
                         <td valign="top">
-                            <a href="manage_insurance.php?pid=<?php echo $myarray["patientid"];?>">
-                                <?php
-                                if( $fpg['rxlomnrec'] != null  || ( $fpg['lomnrec'] != null && $fpg['rxrec'] != null) ) {
-                                    echo 'Yes';
-                                } elseif( $fpg['rxrec']!=null && $fpg['lomnrec'] == null ) {
-                                    echo 'Yes/No';
-                                } elseif( $fpg['lomnrec'] != null && $fpg['rxrec'] == null ) {
-                                    echo 'No/Yes';
-                                } else {
-                                    echo 'No';
-                                }
-                                ?>
+                            <a href="manage_insurance.php?pid=<?= $patientId ?>"><?php echo ($myarray['vob'] == null ? 'No' : ($myarray['vob']==1 ? "Yes": $dss_preauth_status_labels[$myarray['vob']])); ?></a>
+                        </td>
+                        <td valign="top">
+                            <a href="manage_insurance.php?pid=<?= $patientId ?>">
+                                <?php if ($myarray['rx_lomn'] == 3) { ?>
+                                    Yes
+                                <?php } elseif ($myarray['rx_lomn'] == 2) { ?>
+                                    Yes/No
+                                <?php } elseif ($myarray['rx_lomn'] == 1) { ?>
+                                    No/Yes
+                                <?php } else { ?>
+                                    No
+                                <?php } ?>
                             </a>
                         </td>
                         <td valign="top">
-                            <?php
-
-                            $query = "SELECT SUM(dl.amount) AS amount1
-                                        FROM dental_ledger dl
-                                        WHERE dl.docid = '$docId'
-                                            AND (dl.paid_amount IS NULL || dl.paid_amount = 0)
-                                            AND dl.patientid = '$patientid'";
-                            $amount1 = $db->getRow($query)['amount1'];
-
-                            $query = "SELECT SUM(dl.amount) amount2, SUM(dl.paid_amount) amount4
-                                        FROM dental_ledger dl
-                                        WHERE dl.docid = '$docId'
-                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
-                                            AND dl.patientid='$patientid'";
-                            $amounts = $db->getRow($query);
-                            $amount2 = $amounts['amount2'];
-                            $amount4 = $amounts['amount4'];
-
-                            $query = "SELECT SUM(dlp.amount) amount3
-                                        FROM dental_ledger dl
-                                            LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                                        WHERE dl.docid='$docId'
-                                            AND dlp.amount IS NOT NULL
-                                            AND dlp.amount != 0
-                                            AND dl.patientid = '$patientid'";
-                            $amount3 = $db->getRow($query)['amount3'];
-
-                            /*$query = "SELECT
-                                        FROM dental_ledger dl
-                                        WHERE dl.docid = '$docId'
-                                            AND dl.paid_amount IS NOT NULL AND dl.paid_amount != 0
-                                            AND dl.patientid='$patientid'";
-                            $amount4 = $db->getRow($query)['amount4'];*/
-
-
-                            $total = $amount1 + $amount2 - $amount3 - $amount4;
-                            ?>
-                            <a href="manage_ledger.php?pid=<?php echo $myarray["patientid"];?>"><?php echo ($patient_summary['ledger'] == null ? 'N/A' : format_ledger(number_format($total,0))); ?></a>
+                            <a href="manage_ledger.php?pid=<?= $patientId ?>">
+                                <?= $myarray['ledger'] == null ? 'N/A' : format_ledger(number_format($myarray['total'], 0)) ?>
+                            </a>
                         </td>
-                        <?php
-                    }else{
-                        ?>
-                        <td colspan="9" align="center" class="pat_incomplete">-- Patient Incomplete --</td>
-                        <?php
-                    }
-                    ?>
+                    <?php } ?>
                 </tr>
                 <?php
             }
@@ -425,4 +427,263 @@ $num_users=count($my);
 <div id="backgroundPopup"></div>
 
 <br /><br />
-<?php include "includes/bottom.htm";?>
+<?php
+
+include "includes/bottom.htm";
+
+function itemSelector (Array $array, $section='all') {
+    if ($section === 'all') {
+        return $array;
+    }
+
+    if ($section{0} === '^') {
+        $section = substr($section, 1);
+        unset($array[$section]);
+        return $array;
+    }
+
+    return array_get($array, $section);
+}
+
+function querySections ($section='all') {
+    $userTypeSoftware = DSS_USER_TYPE_SOFTWARE;
+    
+    $querySections = [
+        'name' => [
+            'order' => "p.lastname %DIR%, p.firstname %DIR%",
+        ],
+        'tx' => [
+            'select' => "(
+                (
+                    '{$_SESSION['user_type']}' = '$userTypeSoftware'
+                    AND COALESCE(p.p_m_dss_file, 0) != 0
+                )
+                OR COALESCE(p.p_m_dss_file, 0) = 1
+            ) AS insurance_no_error,
+            (
+                SELECT COUNT(id)
+                FROM dental_summ_sleeplab sleep_lab
+                WHERE sleep_lab.patiendid = p.patientid
+                    AND COALESCE(sleep_lab.filename, '') != ''
+                    AND COALESCE(sleep_lab.diagnosis, '') != ''
+                    AND (
+                        p.p_m_ins_type != '1'
+                        OR (
+                            COALESCE(sleep_lab.diagnosising_doc, '') != ''
+                            AND COALESCE(sleep_lab.diagnosising_npi, '') != ''
+                        )
+                    )
+            ) AS numsleepstudy",
+            'order' => "(insurance_no_error AND numsleepstudy > 0) %DIR%",
+        ],
+        'next-visit' => [
+            'select' => 'next_visit.date_scheduled AS date_scheduled',
+            'join' => 'next-visit',
+            'order' => "date_scheduled %DIR%",
+        ],
+        'last-visit' => [
+            'select' => 'last_dates.date_completed AS date_completed',
+            'join' => 'last-dates',
+            'order' => "date_completed %DIR%",
+        ],
+        'last-treatment' => [
+            'select' => 'last_dates.segmentid AS segmentid',
+            'join' => 'last-dates',
+            'order' => "segmentid %DIR%",
+        ],
+        'appliance' => [
+            'select' => 'device.device AS device',
+            'join' => 'device',
+            'order' => "device %DIR%",
+        ],
+        'appliance-since' => [
+            'select' => 'device_date.dentaldevice_date AS dentaldevice_date',
+            'join' => 'device',
+            'order' => "dentaldevice_date %DIR%",
+        ],
+        'vob' => [
+            'select' => 'summary.vob AS vob',
+            'join' => 'summary',
+            'order' => "vob %DIR%",
+        ],
+        'rx-lomn' => [
+            'select' => "CASE
+                WHEN LENGTH(COALESCE(rx_lomn.rxlomnrec, ''))
+                    OR (
+                        LENGTH(COALESCE(rx_lomn.lomnrec, '')) AND LENGTH(COALESCE(rx_lomn.rxrec, ''))
+                    ) THEN 3
+                WHEN LENGTH(COALESCE(rx_lomn.rxrec, '')) THEN 2
+                WHEN LENGTH(COALESCE(rx_lomn.lomnrec, '')) THEN 1
+                ELSE 0
+            END AS rx_lomn",
+            'join' => 'rx-lomn',
+            'order' => "rx_lomn %DIR%",
+        ],
+        'ledger' => [
+            'select' => '(
+                COALESCE(
+                    (
+                        SELECT SUM(COALESCE(first.amount, 0)) AS total
+                        FROM dental_ledger first
+                        WHERE first.docid = p.docid
+                            AND first.patientid = p.patientid
+                            AND COALESCE(first.paid_amount, 0) = 0
+                    ), 0
+                )
+                + COALESCE(
+                    (
+                        SELECT SUM(COALESCE(second.amount, 0)) - SUM(COALESCE(second.paid_amount, 0))
+                        FROM dental_ledger second
+                        WHERE second.docid = p.docid
+                            AND second.patientid = p.patientid
+                            AND second.paid_amount != 0
+                    ), 0
+                )
+                - COALESCE(
+                    (
+                        SELECT SUM(COALESCE(third_payment.amount, 0))
+                        FROM dental_ledger third
+                            LEFT JOIN dental_ledger_payment third_payment ON third_payment.ledgerid = third.ledgerid
+                        WHERE third.docid = p.docid
+                            AND third.patientid = p.patientid
+                            AND third_payment.amount != 0
+                    ), 0
+                )
+            ) AS total',
+            'order' => "ledger IS NOT NULL %DIR%, total %DIR%",
+        ],
+    ];
+
+    return itemSelector($querySections, $section);
+}
+
+function joinList ($section='all') {
+    $joinSections = [
+        'allergens-check' => 'LEFT JOIN (
+            SELECT patientid, MAX(q_page3id) AS max_id
+            FROM dental_q_page3
+            GROUP BY patientid
+        ) allergens_check_pivot ON allergens_check_pivot.patientid = p.patientid
+        LEFT JOIN dental_q_page3 allergens_check ON allergens_check.q_page3id = allergens_check_pivot.max_id',
+        'summary' => 'LEFT JOIN dental_patient_summary summary ON summary.pid = p.patientid',
+        'rx-lomn' => 'LEFT JOIN (
+            SELECT pid AS patientid, MAX(id) AS max_id
+            FROM dental_flow_pg1
+            GROUP BY pid
+        ) rx_lomn_pivot ON rx_lomn_pivot.patientid = p.patientid
+        LEFT JOIN dental_flow_pg1 rx_lomn ON rx_lomn.id = rx_lomn_pivot.max_id',
+        'next-visit' => 'LEFT JOIN (
+            SELECT patientid, MAX(id) AS max_id
+            FROM dental_flow_pg2_info
+            WHERE appointment_type = 0
+            GROUP BY patientid
+        ) next_visit_pivot ON next_visit_pivot.patientid = p.patientid
+        LEFT JOIN dental_flow_pg2_info next_visit ON next_visit.id = next_visit_pivot.max_id',
+        'last-dates' => 'LEFT JOIN (
+            SELECT base_last_dates.patientid, MAX(base_last_dates.id) AS max_id, base_last_dates.segmentid
+            FROM dental_flow_pg2_info base_last_dates
+                INNER JOIN (
+                    SELECT patientid, max(date_completed) AS max_date
+                    FROM dental_flow_pg2_info
+                    GROUP BY patientid
+                ) pivot_last_dates ON pivot_last_dates.patientid = base_last_dates.patientid
+                    AND pivot_last_dates.max_date = base_last_dates.date_completed
+            GROUP BY base_last_dates.patientid
+        ) last_dates_pivot ON last_dates_pivot.patientid = p.patientid
+        LEFT JOIN dental_flow_pg2_info last_dates ON last_dates.id = last_dates_pivot.max_id',
+        'device' => 'LEFT JOIN (
+            SELECT patientid, dentaldevice, MAX(ex_page5id) AS max_id
+            FROM dental_ex_page5
+            GROUP BY patientid
+        ) device_pivot ON device_pivot.patientid = p.patientid
+        LEFT JOIN dental_ex_page5 device_date ON device_date.ex_page5id = device_pivot.max_id
+        LEFT JOIN dental_device device ON device.deviceid = device_pivot.dentaldevice',
+    ];
+
+    return itemSelector($joinSections, $section);
+}
+
+function findPatients ($filter, Array $conditionalList=[], $sortDir, $page=0, $count=30) {
+    $db = new Db();
+
+    $sections = querySections();
+    $joins = joinList();
+
+    $filter = array_key_exists($filter, $sections) ? $filter : 'name';
+    $section = $sections[$filter];
+    unset($sections[$filter]);
+
+    $selectList = [
+        'p.patientid',
+        'summary.vob',
+        'summary.ledger AS ledger',
+        'summary.patient_info AS patient_info',
+    ];
+    $tableList = [
+        'dental_patients p'
+    ];
+    $joinList = [
+        'summary'
+    ];
+
+    $orderBy = $section['order'];
+    $orderBy = $filter === 'name' ? $orderBy : "patient_info DESC, $orderBy, p.lastname ASC, p.firstname ASC";
+    $orderBy = str_replace('%DIR%', $sortDir, $orderBy);
+
+    if (isset($section['select'])) {
+        $selectList []= $section['select'];
+    }
+
+    if (isset($section['join'])) {
+        $joinList []= $section['join'];
+    }
+
+    foreach ($joinList as $name) {
+        $tableList []= array_get($joins, $name);
+        unset($joins[$name]);
+    }
+
+    $selections = join(', ', $selectList);
+    $tables = join(' ', $tableList);
+    $conditionals = $conditionalList ? join("\nAND ", $conditionalList) : '1=1';
+
+    $page = intval($page);
+    $count = intval($count);
+    $offset = $page*$count;
+
+    $countQuery = "SELECT COUNT(p.patientid) AS total FROM $tables WHERE $conditionals";
+    $countResult = $db->getColumn($countQuery, 'total');
+
+    $orderQuery = "SELECT $selections FROM $tables WHERE $conditionals ORDER BY $orderBy LIMIT $offset, $count";
+    $orderResults = $db->getResults($orderQuery);
+
+    $selectList = array_merge($selectList, array_filter(array_pluck($sections, 'select')), ['p.*']);
+    $tableList = array_merge($tableList, $joins);
+
+    if ($orderResults) {
+        $patientIds = array_pluck($orderResults, 'patientid');
+        $patientIds = $db->escapeList($patientIds);
+
+        array_unshift($conditionalList, "p.patientid IN ($patientIds)");
+    }
+
+    $selections = join(",\n", $selectList);
+    $tables = join("\n", $tableList);
+    $conditionals = $conditionalList ? join("\nAND ", $conditionalList) : '1=1';
+
+    $resultsQuery = "SELECT $selections FROM $tables WHERE $conditionals ORDER BY $orderBy LIMIT $offset, $count";
+    $results = $db->getResults($resultsQuery);
+
+    return [
+        'filter' => $filter,
+        'queries' => [
+            'count' => $countQuery,
+            'order' => $orderQuery,
+            'results' => $resultsQuery
+        ],
+        'count' => $countResult,
+        'order' => $orderResults,
+        'results' => $results
+    ];
+}
+

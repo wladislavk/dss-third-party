@@ -17,7 +17,7 @@ include('admin/includes/password.php');
 
         <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
         <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
-        <script src="/assets/vendor/async/async.min.js" type="text/javascript"></script>
+        <script src="/assets/vendor/moment.js" type="text/javascript"></script>
     </head>
     <body>
 
@@ -83,7 +83,7 @@ include('admin/includes/password.php');
         <div style="clear:both;"></div>
 
         <script>
-            var apiRoot = "<?php echo /*json_encode(config('app.apiUrl'))*/'http://ds3.api:81/' ?>";
+            var apiRoot = "<?php echo json_encode(config('app.apiUrl')) ?>";
         </script>
         <script src="/assets/app/login.js" type="text/javascript"></script>
     </body>

@@ -33,12 +33,32 @@ var login = new Vue({
                 return false;
             }
 
-            // get an api token, callback - get loginId from the session
-            this.getToken(this.credentials, this.getSessionValues);
+            /*
+             The execution order:
 
-            // after the setLoginDetails function will be run - (if user was not logged in set login details)
-            // and the checkUserAuth function - (check username and password, check user status, set session
-            // values, user logining)
+             1. Check if we have not api token (user not logged in) -> getToken.
+             2. getSessionValues - get loginId and userId from the session
+             3. setLoginDetails
+             4. checkUserAuth - check username and password, check user status, set session values, user logining
+             5. get user type
+             6. set login info
+             7. setSessionValues
+             8. Redirect to index.php
+            */
+
+            if (this.token) {
+                // get loginid and userid from the session
+                this.getSessionValues({list: ['loginid', 'userid']}, [
+                    this.setLoginDetails,
+                    {
+                        title: this.checkUserAuth,
+                        parameter: this.credentials
+                    }
+                ]);
+            } else {
+                // get an api token, callback - get loginid and userid from the session
+                this.getToken(this.credentials, this.getSessionValues);
+            }
         },
 
         // global methods
@@ -51,7 +71,7 @@ var login = new Vue({
 
                 if (callback && typeof(callback) === "function") {
                     callback(
-                        {list: ['loginid']}, // parameters for the getSessionValues function
+                        {list: ['loginid', 'userid']}, // parameters for the getSessionValues function
                         // callbacks - the setLoginDetails and the checkUserAuth functions.
                         // the second function also need a parameter - credentials
                         [
@@ -71,7 +91,7 @@ var login = new Vue({
         },
         setLoginDetails: function() {
             // if user was not logged in -> set login details
-            if (!this.loginId) {
+            if (!this.loginid) {
                 var currentPageFull = window.location.pathname + window.location.search;
                 var data = {
                     loginid: this.sessionValues.loginid || 0,
@@ -90,6 +110,8 @@ var login = new Vue({
             // check username and password, check user status, set session values, user logining
             this.$http.post(apiRoot + 'api/v1/users/check', data, function(data, status, request) {
                 // if username and password are correct
+                data = data.data;
+
                 if (data) {
                     if (data.status == 3) {
                         this.message = 'This account has been suspended.';
@@ -97,17 +119,17 @@ var login = new Vue({
                         var dataForSession = {
                             'userid'      : data.userid || 0,
                             'username'    : data.username || 0,
-                            'name'        : data.first_name + ' ' + data.last_name,
+                            'name'        : (data.first_name || '') + ' ' + (data.last_name || ''),
                             'user_access' : data.user_access || 0,
                             'companyid'   : data.companyid || 0,
                             'api_token'   : this.token
                         };
 
-                        if (data.docid != 0) {
+                        if (data.docid > 0) {
                             dataForSession.docid = data.docid;
 
                             // get user type
-                            this.$http.post(apiRoot + 'api/v1/users/' + data.docid + '/type', function(data, status, request) {
+                            this.$http.get(apiRoot + 'api/v1/users/' + data.docid + '/type', function(data, status, request) {
                                 dataForSession.user_type = data.user_type;
                             }).error(function(data, status, request) {
                                 console.log('Get user type [Error]: ', status, data);
@@ -118,22 +140,23 @@ var login = new Vue({
                         }
 
                         var loginData = {
-                            docid  : dataForSession.docid,
-                            userid : dataForSession.userid
+                            docid      : dataForSession.docid || 0,
+                            userid     : dataForSession.userid || 0,
+                            login_date : moment().format("YYYY-MM-DD HH:mm:ss")
                         };
 
                         // pass loginId to the session - user will be log in
                         this.$http.post(apiRoot + 'api/v1/logins', loginData, function(data, status, request) {
                             // pass login id from successfull request to the session
                             dataForSession.loginid = data.data.loginid;
+
+                            this.setSessionValues(dataForSession);
                         }).error(function(data, status, request) {
                             console.log('Log in [Error]: ', status, data);
                         });
 
-                        this.setSessionValues(dataForSession);
-
                         // redirect to FO dashboard
-                        window.location.href = 'index.php';
+                        // window.location.href = 'index.php';
                     }
                 } else {
                     this.message = 'Wrong username or password';

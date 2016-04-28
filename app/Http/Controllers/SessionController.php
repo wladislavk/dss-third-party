@@ -20,8 +20,10 @@ class SessionController extends Controller
 
         $retrievedData = [];
 
-        foreach ($requestedValues['list'] as $value) {
-            $retrievedData[$value] = Session::get($value, '');
+        if (is_array($requestedValues['list']) && count($requestedValues['list'])) {
+            foreach ($requestedValues['list'] as $value) {
+                $retrievedData[$value] = Session::get($value, '');
+            }
         }
 
         return Response::json($retrievedData);

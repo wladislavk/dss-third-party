@@ -6,9 +6,11 @@ use DentalSleepSolutions\Helpers\ApiResponse;
 use DentalSleepSolutions\Http\Requests\UserStore;
 use DentalSleepSolutions\Http\Requests\UserUpdate;
 use DentalSleepSolutions\Http\Requests\UserDestroy;
+use DentalSleepSolutions\Http\Requests\UserCheck;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Contracts\Repositories\Users;
+use DentalSleepSolutions\Libraries\Password;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +90,44 @@ class UsersController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    /**
+     * Check username and password and get user data
+     *
+     * @param  \DentalSleepSolutions\Contracts\Resources\User $resource
+     * @param  \DentalSleepSolutions\Http\Requests\UserCheck $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function check(User $resource, UserCheck $request)
+    {
+        $username = $request->input('username');
+        $password = $request->input('password');
+
+        $salt = $resource->getSalt($username)->salt;
+
+        if (!empty($salt)) {
+            $password = Password::genPassword($password, $salt);
+
+            $data = $resource->check($username, $password);
+        } else {
+            $data = [];
+        }
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    /**
+     * Get user type by user id
+     *
+     * @param  \DentalSleepSolutions\Contracts\Resources\User $resource
+     * @param  \DentalSleepSolutions\Http\Requests\UserCheck $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserType($userId, User $resource)
+    {
+        $data = $resource->getUserType($userId);
+
+        return ApiResponse::responseOk('', $data);
     }
 }

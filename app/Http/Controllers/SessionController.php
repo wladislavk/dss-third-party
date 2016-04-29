@@ -44,4 +44,16 @@ class SessionController extends Controller
 
         return Response::json(['status' => 'All values were pushed to the session.']);
     }
+
+    /**
+     * Remove all data from the session
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function flush()
+    {
+        Session::flush();
+
+        return Response::json(['status' => 'All data was successfully removed from the session.']);
+    }
 }

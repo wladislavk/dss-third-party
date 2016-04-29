@@ -34,6 +34,7 @@ Route::group(['prefix' => 'webhooks'], function () {
 Route::group(['prefix' => 'session'], function () {
     Route::post('get', 'SessionController@get');
     Route::post('set', 'SessionController@set');
+    Route::get('flush', 'SessionController@flush');
 });
 
 /*

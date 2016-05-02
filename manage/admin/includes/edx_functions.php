@@ -1,41 +1,88 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
 
-function edx_user_update($id){
-  $db = new Db();
-  $con = $GLOBALS['con'];
+function edx_command ($instruction, Array $parameters) {
+    $instructions = [
+      'login' => 'edxScript.sh',
+        'new' => 'edxNewUser.sh',
+        'edit' => 'edxEditUser.sh',
+        'delete' => 'edxDeleteUser.sh'
+    ];
 
-  $sql = "SELECT * FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$id)."'";
-  $q = mysqli_query($con,$sql);
-  $r = mysqli_fetch_assoc($q);
+    if (!array_key_exists($instruction, $instructions)) {
+        return false;
+    }
 
-  $edx_id = $r['edx_id'];
-  $docid = ($r['docid']!=0)?$r['docid']:$r['userid'];
+    array_walk($parameters, function (&$each) {
+        $each = '"' . urlencode($each) . '"';
+    });
 
-  $loc_sql = "SELECT * from dental_locations WHERE docid='".mysqli_real_escape_string($con,$docid)."' order by default_location DESC limit 1";
-  $loc_q = mysqli_query($con,$loc_sql);
-  $loc = mysqli_fetch_assoc($loc_q);
-  $address = $loc['address']." ".$loc['city'].", ".$loc['state']." ".$loc['zip'];
-  if($edx_id == '' || $edx_id == '0'){
-    $name = $r['first_name']. ' '.$r['last_name'];
-    $pass = sha1($r['username'].'ed&$s8e'.$r['email'].rand());
-    $username = ($r['username'])?$r['username']:'tempusername_'.$id; 
-    $edx_id = shell_exec('sh ../edx_scripts/edxNewUser.sh '. urlencode($username) .' '.urlencode($r['email']).' "'.urlencode($pass).'" "'.urlencode($name).'"');
-    $u_sql = "UPDATE dental_users SET edx_id='".mysqli_real_escape_string($con,$edx_id)."' WHERE userid='".mysqli_real_escape_string($con,$id)."'";
-    mysqli_query($con,$u_sql);
-  }else{
-    $name = $r['first_name']. ' '.$r['last_name'];
-    $pass = sha1($r['username'].'ed&$s8e'.$r['email'].rand());
-    $edx_id = shell_exec('sh ../edx_scripts/edxEditUser.sh '.urlencode($edx_id).' "'.urlencode($r['username']).'" '.urlencode($r['email']).' '.urlencode($pass).' "'.urlencode($name).'"');
-  }
+    $baseDir = __DIR__ . '/../..';
+    $command = "sh $baseDir/edx_scripts/{$instructions[$instruction]} " . join(' ', $parameters);
+    $lastLine = exec($command, $output, $returnCode);
 
-
+    return $lastLine;
 }
 
+function edx_user_update ($userId) {
+    $db = new Db();
+    $id = intval($userId);
 
-function edx_user_delete($edx_id){
-  if($edx_id != '' && $edx_id != '0'){
-    $ed_id = shell_exec('sh ../edx_scripts/edxDeleteUser.sh '.urlencode($edx_id));
-  }
+    $sql = "SELECT username, email, first_name, last_name, edx_id
+          FROM dental_users
+          WHERE userid = '$userId'";
+
+    $user = $db->getRow($sql);
+    $edxId = $user['edx_id'];
+    $password = sha1($user['username'] . 'ed&$s8e' . $user['email'] . rand());
+
+    if (!$edxId) {
+        $parameters = [
+            $user['username'],
+            $user['email'],
+            $password,
+            "{$user['first_name']} {$user['last_name']}"
+        ];
+
+        $response = edx_command('new', $parameters);
+
+        if (preg_match('/^(User already exists: )?(?P<edx_id>\d+)$/', $response, $match)) {
+            $edxId = $match['edx_id'];
+
+            $sql = "UPDATE dental_users
+                SET edx_id = '" . $db->escape($edxId) . "'
+                WHERE userid = '$userId'";
+            $db->query($sql);
+        }
+    }
+
+    if ($edxId) {
+        $parameters = [
+            $edxId,
+            $user['username'],
+            $user['email'],
+            $password,
+            "{$user['first_name']} {$user['last_name']}"
+        ];
+
+        edx_command('edit', $parameters);
+    }
 }
 
-?>
+function edx_user_delete ($edxId) {
+    if ($edxId) {
+        edx_command('delete', [$edxId]);
+    }
+}
+
+function edx_user_login ($userId) {
+    $db = new Db();
+
+    $userId = intval($userId);
+    $edxId = $db->getColumn("SELECT edx_id
+        FROM dental_users
+        WHERE userid = '$userId'", 'edx_id', 0);
+
+    $sessionId = edx_command('login', [$edxId]);
+    return $sessionId;
+}

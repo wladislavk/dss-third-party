@@ -1,3 +1,5 @@
+var config = require('../../modules/config.js');
+
 Vue.http.options.emulateJSON = true;
 
 var login = new Vue({
@@ -63,7 +65,7 @@ var login = new Vue({
 
         // global methods
         getToken: function(data, callback) {
-            this.$http.post(apiRoot + 'auth', data, function(data, status, request) {
+            this.$http.post(config.API_ROOT + 'auth', data, function(data, status, request) {
                 this.token = data.token;
 
                 // set header for JWT Authentification
@@ -99,7 +101,7 @@ var login = new Vue({
                     cur_page: currentPageFull
                 };
 
-                this.$http.post(apiRoot + 'api/v1/login-details', data, function(data, status, request) {
+                this.$http.post(config.API_PATH + 'login-details', data, function(data, status, request) {
                     console.log('setLoginDetails: ', status, data);
                 }).error(function (data, status, request) {
                     console.log('setLoginDetails [Error]: ', status, data);
@@ -108,7 +110,7 @@ var login = new Vue({
         },
         checkUserAuth: function(data) {
             // check username and password, check user status, set session values, user logining
-            this.$http.post(apiRoot + 'api/v1/users/check', data, function(data, status, request) {
+            this.$http.post(config.API_PATH + 'users/check', data, function(data, status, request) {
                 // if username and password are correct
                 data = data.data;
 
@@ -129,7 +131,7 @@ var login = new Vue({
                             dataForSession.docid = data.docid;
 
                             // get user type
-                            this.$http.get(apiRoot + 'api/v1/users/' + data.docid + '/type', function(data, status, request) {
+                            this.$http.get(config.API_PATH + 'users/' + data.docid + '/type', function(data, status, request) {
                                 dataForSession.user_type = data.user_type;
                             }).error(function(data, status, request) {
                                 console.log('Get user type [Error]: ', status, data);
@@ -146,7 +148,7 @@ var login = new Vue({
                         };
 
                         // pass loginId to the session - user will be log in
-                        this.$http.post(apiRoot + 'api/v1/logins', loginData, function(data, status, request) {
+                        this.$http.post(config.API_PATH + 'logins', loginData, function(data, status, request) {
                             // pass login id from successfull request to the session
                             dataForSession.loginid = data.data.loginid;
 
@@ -156,7 +158,7 @@ var login = new Vue({
                         });
 
                         // redirect to FO dashboard
-                        // window.location.href = 'index.php';
+                        window.location.href = 'index.php';
                     }
                 } else {
                     this.message = 'Wrong username or password';
@@ -168,7 +170,7 @@ var login = new Vue({
 
         // helpers for work with the session
         getSessionValues: function(data, callbacks) {
-            this.$http.post(apiRoot + 'session/get', data, function(data, status, request) {
+            this.$http.post(config.API_ROOT + 'session/get', data, function(data, status, request) {
                 console.log('getSessionValues: ', status, data);
 
                 if (data) {
@@ -195,7 +197,7 @@ var login = new Vue({
             });
         },
         setSessionValues: function(data) {
-            this.$http.post(apiRoot + 'session/set', data, function(data, status, request) {
+            this.$http.post(config.API_ROOT + 'session/set', data, function(data, status, request) {
                 console.log('setSessionValues: ', status, data);
             }).error(function (data, status, request) {
                 console.log('setSessionValues [Error]: ', status, data);

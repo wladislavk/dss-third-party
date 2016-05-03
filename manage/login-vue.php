@@ -82,9 +82,6 @@ include('admin/includes/password.php');
         </span>
         <div style="clear:both;"></div>
 
-        <script>
-            var apiRoot = "<?php echo json_encode(config('app.apiUrl')) ?>";
-        </script>
-        <script src="/assets/app/login.js" type="text/javascript"></script>
+        <script src="/assets/app/manage/login/login.js" type="text/javascript"></script>
     </body>
 </html>

@@ -1880,7 +1880,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
                     <?php foreach ($transactionCodes as $code) {
                         $description = $code['transaction_code'] .
                             ($code['description'] ? ' - ' . $code['description'] : '');
-                        $selected = in_array($array['transaction_code'], [$code['transaction_code'], $description]);
+                        $options = [$code['transaction_code'], $code['description'], $description];
+                        $selected = in_array($array['transaction_code'], $options) ||
+                            in_array($array['description'], $options);
                         ?>
                         <option value="<?= $code['transaction_code'] ?>" <?= $selected ? 'selected' : '' ?>>
                             <?= e($description) ?>

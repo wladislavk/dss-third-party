@@ -159,7 +159,7 @@ var login = new Vue({
                         });
 
                         // redirect to FO dashboard
-                        // window.location.href = 'index.php';
+                        window.location.href = 'index.php';
                     }
                 } else {
                     this.message = 'Wrong username or password';

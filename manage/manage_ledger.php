@@ -628,7 +628,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
 <?php 
       if(st($myarray["amount"]) <> 0 && !empty($myarray['ledger']) && $myarray['ledger']!='claim') {
         echo number_format(st($myarray["amount"]),2);
-        if(!empty($myarray['ledger']) && $myarray['ledger']!='claim' && $myarray['status'] != DSS_CLAIM_REJECTED){
+        if(!empty($myarray['ledger']) && $myarray['ledger']!='claim'){
           if($_GET['sortdir']=='DESC'){
             $cur_bal -= st($myarray["amount"]);
           }else{

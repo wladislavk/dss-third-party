@@ -1,14 +1,14 @@
 // TODO: the functions for work with the session should be moved to separate module
 
-module.export = {
-    data: function () {
+module.exports = {
+    get data () {
         return {
             sessionValues: {
                 loginid: 0
             }
         }
     },
-    logout: function() {
+    excute: function() {
         /*
          The execution order:
 
@@ -33,7 +33,7 @@ module.export = {
             logout_date: moment().format("YYYY-MM-DD HH:mm:ss")
         };
 
-        Vue.$http.put(config.API_PATH + 'logins' + this.data.sessionValues.loginid, data, function(data, status, request) {
+        Vue.http.put(config.API_PATH + 'logins/' + this.data.sessionValues.loginid, data, function(data, status, request) {
             callback();
 
             swal('Logout Successfully!', 'success');
@@ -43,7 +43,7 @@ module.export = {
         });
     },
     getSessionValues: function(data, callbacks) {
-        Vue.$http.post(config.API_ROOT + 'session/get', data, function(data, status, request) {
+        Vue.http.post(config.API_ROOT + 'session/get', data, function(data, status, request) {
             console.log('getSessionValues: ', status, data);
 
             if (data) {
@@ -68,7 +68,7 @@ module.export = {
         });
     },
     flushSession: function() {
-        Vue.$http.get(config.API_ROOT + 'session/flush', function(data, status, request) {
+        Vue.http.get(config.API_ROOT + 'session/flush', function(data, status, request) {
             console.log('flushSession: ', status, data);
         }).error(function(data, status, request) {
             console.log('flushSession [Error]: ', status, data);

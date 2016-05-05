@@ -1,7 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 include('admin/includes/main_include.php');
-include('admin/includes/password.php');
-
 ?>
 
 <!DOCTYPE html>
@@ -76,12 +74,12 @@ include('admin/includes/password.php');
                 <span style="float:right; margin-top:4px;" class="screener">Looking for the screener? <a href="../screener">Click Here</a></span>
             </form>
         </div>
+        <script src="/assets/app/manage/login/login.js" type="text/javascript"></script>
+
         <span style="clear:both;" id="siteseal">
             <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
             <br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a>
         </span>
         <div style="clear:both;"></div>
-
-        <script src="/assets/app/manage/login/login.js" type="text/javascript"></script>
     </body>
 </html>

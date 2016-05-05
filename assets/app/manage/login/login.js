@@ -208,7 +208,7 @@ var login = new Vue({
 });
 },{"../../modules/config.js":2}],2:[function(require,module,exports){
 module.exports = {
-    API_ROOT: 'http://ds3.loc/request.php?url=http://api.ds3.loc/',
+    API_ROOT: 'http://api.ds3.loc/',
     get API_PATH () {
         return this.API_ROOT + 'api/v1/';
     }

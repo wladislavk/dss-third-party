@@ -10,37 +10,23 @@ if (!isset($_GET['print'])) {
     $office_type = DSS_OFFICE_TYPE_FRONT;
 }
 
-require_once __DIR__ . '/admin/includes/report-claim-functions.php';
+require_once __DIR__ . '/admin/includes/ledger-functions.php';
+
+$docId = intval($_SESSION['userid']);
+$subQueries = ledgerBalanceSubQueries('claim', 'claim');
 
 $sql = "SELECT p.firstname, p.lastname, p.patientid
     FROM dental_patients p
-    WHERE p.docid = '{$_SESSION['docid']}'
+    WHERE p.docid = '$docId'
         AND (
-            SELECT (
-                SUM(
-                    COALESCE(
-                        (
-                            SELECT SUM(dl.amount) AS paid_amount
-                            FROM dental_ledger dl
-                            WHERE dl.primary_claim_id = i.insuranceid
-                        ), 0
-                    )
-                )
-                -
-                SUM(
-                    COALESCE(
-                        (
-                            SELECT SUM(dlp.amount) AS paid_amount
-                            FROM dental_ledger dl
-                                LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
-                            WHERE dl.primary_claim_id = i.insuranceid
-                        ), 0
-                    )
-                )
+            SELECT SUM(
+                {$subQueries['debits']}
+                - {$subQueries['credits']}
+                - {$subQueries['adjustments']}
             )
-            FROM dental_insurance i
-            WHERE i.patientid = p.patientid
-                AND i.mailed_date IS NOT NULL
+            FROM dental_insurance claim
+            WHERE claim.patientid = p.patientid
+                AND claim.mailed_date IS NOT NULL
         ) > 0
     ORDER BY p.lastname ASC, p.firstname ASC";
 
@@ -116,15 +102,11 @@ $my = $db->getResults($sql);
                     $c_total = $p_total = 0;
                     $upperLimit = $lowerLimit == 120 ? '' : $lowerLimit + 29;
 
-                    $claimCharges = [];
                     $claimChargesResults = getClaimChargesResults([$lowerLimit, $upperLimit], $r['patientid']);
 
                     foreach ($claimChargesResults as $claimCharges) {
                         $c_total += $claimCharges['total_charge'];
-                    }
-
-                    if ($claimCharges) {
-                        $p_total = getLedgerPaymentAmount($claimCharges['insuranceid']);
+                        $p_total += getLedgerPaymentAmount($claimCharges['insuranceid']);
                     }
 
                     $pat_total += $c_total - $p_total;

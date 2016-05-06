@@ -2,7 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/admin/includes/main_include.php';
-require_once __DIR__ . '/admin/includes/report-claim-functions.php';
+require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
 $isBackOffice = !empty($is_back_office) || empty($is_front_office);
 

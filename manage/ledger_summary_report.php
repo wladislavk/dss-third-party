@@ -1,29 +1,75 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-include_once 'admin/includes/main_include.php';
-include_once 'includes/constants.inc';
+require_once __DIR__ . '/admin/includes/main_include.php';
+require_once __DIR__ . '/includes/constants.inc';
+require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
 $docId = intval($_SESSION['docid']);
 $patientId = intval($_GET['pid']);
 $trxnTypeAdjustment = $db->escape(DSS_TRXN_TYPE_ADJ);
 
-$patientConditional = $patientId ? " AND dl.patientid = '$patientId' " : '';
-$ledgerDateConditional = isset($l_date) && $l_date ? $l_date : '';
-$paymentDateConditional = isset($p_date) && $p_date ? $p_date : '';
+$andPatientConditional = $patientId ? " AND dl.patientid = '$patientId' " : '';
+$andLedgerDateConditional = isset($l_date) && $l_date ? $l_date : '';
+$andPaymentDateConditional = isset($p_date) && $p_date ? $p_date : '';
+
+if (!empty($_GET['mailed'])) {
+    $andMailedOnlyConditional = 'AND di.mailed_date IS NOT NULL';
+    $mailedOnlyJoin = "JOIN dental_insurance di ON di.insuranceid = dl.primary_claim_id $andMailedOnlyConditional";
+} else {
+    $andMailedOnlyConditional = '';
+    $mailedOnlyJoin = '';
+}
+
+$trxnTypeWriteOff = DSS_TRXN_PYMT_WRITEOFF;
+
+$debits = $db->getResults("SELECT
+        COALESCE(dl.description, '') AS payment_description,
+        TRUNCATE(SUM(COALESCE(dl.amount, 0)), 2) AS payment_amount
+    FROM dental_ledger dl
+        JOIN dental_insurance claim ON claim.insuranceid = dl.primary_claim_id
+            AND claim.mailed_date IS NOT NULL
+    WHERE claim.docid = '$docId'
+        $andPatientConditional
+        $andLedgerDateConditional
+    GROUP BY payment_description
+    ");
+
+$credits = $db->getResults("SELECT credits.payer, credits.payment_type, TRUNCATE(SUM(COALESCE(credits.amount, 0)), 2) AS total
+    FROM dental_ledger credits_base
+        JOIN dental_insurance claim ON claim.insuranceid = credits_base.primary_claim_id
+            AND claim.mailed_date IS NOT NULL
+        JOIN dental_ledger_payment credits ON credits.ledgerid = credits_base.ledgerid
+    WHERE claim.docid = '$docId'
+        AND claim.patientid = '$patientId'
+        AND COALESCE(credits.payment_type, 0) != '$trxnTypeWriteOff'
+    GROUP BY credits.payment_type
+    ");
+
+$adjustments = $db->getResults("SELECT adjustments.description, TRUNCATE(SUM(COALESCE(adjustments.paid_amount, 0)), 2) AS total
+    FROM dental_ledger adjustments
+        JOIN dental_insurance claim ON claim.insuranceid = adjustments.primary_claim_id
+            AND claim.mailed_date IS NOT NULL
+    WHERE claim.docid = '$docId'
+        AND claim.patientid = '$patientId'
+    GROUP BY adjustments.description
+    
+    UNION
+    
+    SELECT adjustment_payments.payment_type, TRUNCATE(SUM(COALESCE(adjustment_payments.amount, 0)), 2) AS total
+    FROM dental_ledger adjustment_payments_base
+        JOIN dental_insurance claim ON claim.insuranceid = adjustment_payments_base.primary_claim_id
+            AND claim.mailed_date IS NOT NULL
+        JOIN dental_ledger_payment adjustment_payments
+            ON adjustment_payments.ledgerid = adjustment_payments_base.ledgerid
+    WHERE claim.docid = '$docId'
+        AND claim.patientid = '$patientId'
+        AND adjustment_payments.payment_type = '$trxnTypeWriteOff'
+    GROUP BY adjustment_payments.payment_type
+    ");
 
 // ledger - from UNION
-$chargesQuery = "SELECT
-        COALESCE(dl.description, '') AS payment_description,
-        SUM(dl.amount) AS payment_amount
-    FROM dental_ledger dl
-        JOIN dental_patients p ON p.patientid = dl.patientid
-    WHERE dl.docid = '$docId'
-        $patientConditional
-        $ledgerDateConditional
-        AND COALESCE(dl.paid_amount, 0) = 0
-        AND dl.amount != 0
-        GROUP BY payment_description";
+
 
 // ledger_payment - from UNION
 $creditsTypeQuery = "SELECT

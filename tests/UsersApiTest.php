@@ -60,39 +60,4 @@ class UsersApiTest extends TestCase
             ])
             ->assertResponseOk();
     }
-
-    /**
-     * Test the user check method of the Dental Sleep Solutions API
-     * Post to /api/v1/users/check -> UsersController@check method
-     * 
-     */
-    public function testUserCheck()
-    {
-        $data = [
-            'username' => 'doc1f',
-            'password' => 'admin'
-        ];
-
-        $this->post('/api/v1/users/check', $data)
-            ->seeJsonContains([
-                'userid'      => 1,
-                'user_access' => 2,
-                'companyid'   => 1
-            ])
-            ->assertResponseOk();
-    }
-
-    /**
-     * Test the getUserType method of the Dental Sleep Solutions API
-     * Get to /api/v1/users/{id}/type -> UsersController@getUserType method
-     * 
-     */
-    public function testGetUserType()
-    {
-        $userId = 1;
-
-        $this->get('/api/v1/users/' . $userId . '/type')
-            ->seeJsonContains(['user_type' => 2])
-            ->assertResponseOk();
-    }
 }

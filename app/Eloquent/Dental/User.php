@@ -56,43 +56,6 @@ class User extends Model implements Resource, Repository
     const CREATED_AT = 'adddate';
 
     /**
-     * Check username and password and get user data
-     *
-     * @param string $username
-     * @param string $password
-     * @return \DentalSleepSolutions\Eloquent\Dental\User
-     */
-    public function check($username, $password)
-    {
-        return self::selectRaw('dental_users.userid, username, name, first_name, last_name, user_access, status,
-                CASE docid
-                    WHEN 0 THEN dental_users.userid
-                    ELSE docid
-                END as docid, user_type, uc.companyid')
-            ->leftJoin(DB::raw('dental_user_company uc'), 'uc.userid', '=', DB::raw('
-                (CASE docid
-                    WHEN 0 THEN dental_users.userid
-                    ELSE docid
-                END)
-            '))
-            ->whereRaw('username = ? AND password = ? AND status in (1, 3)', array($username, $password))
-            ->first();
-    }
-
-    /**
-     * Get salt by username
-     *
-     * @param string $username
-     * @return \DentalSleepSolutions\Eloquent\Dental\User
-     */
-    public function getSalt($username)
-    {
-        return self::select('salt')
-            ->where('username', $username)
-            ->first();
-    }
-
-    /**
      * Get user type by user id
      *
      * @param integer $userId

@@ -12,8 +12,8 @@ class LoginDetailStore extends Request
     public function rules()
     {
         return [
-            'loginid'  => 'required|integer',
-            'userid'   => 'required|integer',
+            'loginid'  => 'integer',
+            'userid'   => 'integer',
             'cur_page' => 'required|string'
         ];
     }

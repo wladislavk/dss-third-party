@@ -6,12 +6,10 @@ require_once __DIR__ . '/includes/sescheck.php';
 require_once __DIR__ . '/includes/constants.inc';
 require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
-/*
 header("Content-type: text/csv");
 header("Content-Disposition: attachment; filename=dss_patient_export.csv");
 header("Pragma: no-cache");
 header("Expires: 0");
-*/
 
 $csv = fopen('php://output', 'w');
 

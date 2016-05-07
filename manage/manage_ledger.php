@@ -147,6 +147,7 @@ $i_val = $index_val * $rec_disp;
 
 $docId = intval($_SESSION['docid']);
 $patientId = intval($_GET['pid']);
+$trxnTypeWriteOff = DSS_TRXN_PYMT_WRITEOFF;
 
 $filedByBackOfficeConditional = filedByBackOfficeConditional('di');
 
@@ -188,7 +189,7 @@ if (!empty($_GET['openclaims']) && $_GET['openclaims'] == 1) {
         GROUP BY di.insuranceid
     ";
 } else {
-    $sql = "SELECT
+    $sql = "SELECT -- Debits/Charges
             'ledger',
             dl.ledgerid,
             dl.service_date,
@@ -218,7 +219,7 @@ if (!empty($_GET['openclaims']) && $_GET['openclaims'] == 1) {
 
         UNION
 
-        SELECT
+        SELECT -- Credits
             'ledger_payment',
             dlp.id,
             dlp.payment_date,
@@ -243,15 +244,16 @@ if (!empty($_GET['openclaims']) && $_GET['openclaims'] == 1) {
         WHERE dl.docid = '$docId'
             AND dl.patientid = '$patientId'
             AND dlp.amount != 0
+            AND COALESCE(dlp.payment_type, 0) != '$trxnTypeWriteOff'
 
         UNION
 
-        SELECT
+        SELECT -- Adjustments from ledger
             'ledger_paid',
             dl.ledgerid,
             dl.service_date,
             dl.entry_date,
-            CONCAT(p.first_name,' ',p.last_name),
+            CONCAT(p.first_name, ' ', p.last_name),
             dl.description,
             dl.amount,
             dl.paid_amount,
@@ -273,6 +275,35 @@ if (!empty($_GET['openclaims']) && $_GET['openclaims'] == 1) {
         WHERE dl.docid = '$docId'
             AND dl.patientid = '$patientId'
             AND dl.paid_amount != 0
+
+        UNION
+
+        SELECT -- Adjustments from payments
+            'ledger_paid',
+            dlp.id,
+            dlp.payment_date,
+            dlp.entry_date,
+            CONCAT(p.first_name, ' ', p.last_name),
+            COALESCE(dlp.payment_type, '0'),
+            '',
+            dlp.amount,
+            '',
+            IF(dl.secondary_claim_id && dlp.is_secondary, dl.secondary_claim_id, dl.primary_claim_id),
+            dlp.payer,
+            dlp.payment_type,
+            '',
+            '',
+            '',
+            '',
+            0 AS filed_by_bo
+        FROM dental_ledger dl
+            $mailedOnlyJoin
+            LEFT JOIN dental_users p ON dl.producerid = p.userid
+            LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+        WHERE dl.docid = '$docId'
+            AND dl.patientid = '$patientId'
+            AND dlp.amount != 0
+            AND COALESCE(dlp.payment_type, 0) = '$trxnTypeWriteOff'
 
         UNION
 
@@ -689,7 +720,8 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
         &nbsp;
       </td>
 <?php 
-      if(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ){ ?>
+      if(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' &&
+          ($myarray['payer']==DSS_TRXN_TYPE_ADJ || $myarray['payment_type']==DSS_TRXN_PYMT_WRITEOFF)){ ?>
       <td></td>
 <?php
         if($myarray['ledger']!='claim'){
@@ -714,7 +746,8 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
         &nbsp;
       </td>
 <?php 
-      if(!(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' && $myarray['payer']==DSS_TRXN_TYPE_ADJ)){
+      if(!(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' &&
+          ($myarray['payer']==DSS_TRXN_TYPE_ADJ || $myarray['payment_type']==DSS_TRXN_PYMT_WRITEOFF))){
         if(!empty($myarray['ledger']) && $myarray['ledger']!='claim'){
           if($_GET['sortdir']=='DESC'){
             $cur_bal += st($myarray["paid_amount"]);

@@ -15,8 +15,39 @@ require_once __DIR__ . '/admin/includes/ledger-functions.php';
 $docId = intval($_SESSION['userid']);
 $subQueries = ledgerBalanceSubQueries('claim', 'claim');
 
-$sql = "SELECT p.firstname, p.lastname, p.patientid
+switch ($_GET['group_by']) {
+    case 'insurance':
+        $groupId = 'p_m_ins_co';
+        $groupName = 'insurance';
+        
+        $sortBy = 'primary_insurance.company, secondary_insurance.company';
+        $groupBy = 'p.p_m_ins_co';
+        break;
+    case 'patient':
+    default:
+        $groupId = 'patientid';
+        $groupName = 'patient';
+        
+        $sortBy = 'p.lastname ASC, p.firstname ASC';
+        $groupBy = 'p.patientid';
+        break;
+}
+
+$sql = "SELECT
+        p.firstname,
+        p.lastname,
+        p.patientid,
+        p.p_m_ins_co,
+        p.s_m_ins_co,
+        primary_insurance.company AS primary_insurance,
+        secondary_insurance.company AS secondary_insurance
     FROM dental_patients p
+        LEFT JOIN dental_contact primary_insurance ON primary_insurance.contactid = p.p_m_ins_co
+            AND primary_insurance.merge_id IS NULL
+            AND primary_insurance.docid = '$docId'
+        LEFT JOIN dental_contact secondary_insurance ON secondary_insurance.contactid = p.p_m_ins_co
+            AND secondary_insurance.merge_id IS NULL
+            AND secondary_insurance.docid = '$docId'
     WHERE p.docid = '$docId'
         AND (
             SELECT SUM(
@@ -28,7 +59,9 @@ $sql = "SELECT p.firstname, p.lastname, p.patientid
             WHERE claim.patientid = p.patientid
                 AND claim.mailed_date IS NOT NULL
         ) > 0
-    ORDER BY p.lastname ASC, p.firstname ASC";
+    GROUP BY $groupBy
+    ORDER BY $sortBy
+    ";
 
 $my = $db->getResults($sql);
 
@@ -59,7 +92,19 @@ $my = $db->getResults($sql);
     <thead>
         <tr class="tr_bg_h">
             <th valign="top" class="col_head">
-                Patient Name
+                <?php
+
+                switch ($groupName) {
+                    case 'insurance':
+                        echo 'Insurance Company';
+                        break;
+                    case 'patient':
+                    default:
+                        echo 'Patient Name';
+                        break;
+                }
+
+                ?>
             </th>
             <th valign="top" class="col_head" width="12%">
                 0-29 Days
@@ -92,8 +137,20 @@ $my = $db->getResults($sql);
             ?>
             <tr>
                 <td valign="top">
-                    <a href="manage_ledger.php?pid=<?= $r['patientid'] ?>&amp;addtopat=1">
-                        <?= e($r['firstname'] . ' ' . $r['lastname']) ?>
+                    <a href="manage_ledger.php?pid=<?= $r[$groupId] ?>&amp;addtopat=1">
+                        <?php
+
+                        switch ($groupName) {
+                            case 'insurance':
+                                echo e($r['primary_insurance']);
+                                break;
+                            case 'patient':
+                            default:
+                                echo e($r['firstname'] . ' ' . $r['lastname']);
+                                break;
+                        }
+
+                        ?>
                     </a>
                 </td>
                 <?php
@@ -102,7 +159,11 @@ $my = $db->getResults($sql);
                     $c_total = $p_total = 0;
                     $upperLimit = $lowerLimit == 120 ? '' : $lowerLimit + 29;
 
-                    $claimChargesResults = getClaimChargesResults([$lowerLimit, $upperLimit], $r['patientid']);
+                    $claimChargesResults = getClaimChargesResults(
+                        [$lowerLimit, $upperLimit],
+                        $r[$groupId],
+                        $groupName
+                    );
 
                     foreach ($claimChargesResults as $claimCharges) {
                         $c_total += $claimCharges['total_charge'];

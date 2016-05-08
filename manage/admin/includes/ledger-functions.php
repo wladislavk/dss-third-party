@@ -313,15 +313,25 @@ function mailingDateConditional (Array $dayLimit, $claimAlias='dental_insurance'
  * Retrieve charges from the claims in the given day range, for a given patient id
  *
  * @param array  $dayLimit
- * @param int    $patientId
+ * @param int    $groupId
+ * @param string $groupBy
  * @param string $andExtraConditionals
  * @return array
  */
-function getClaimChargesResults (Array $dayLimit, $patientId, $andExtraConditionals='') {
+function getClaimChargesResults (Array $dayLimit, $groupId, $groupBy, $andExtraConditionals='') {
     $db = new Db();
 
     $mailingDateConditional = mailingDateConditional($dayLimit, 'claim');
-    $patientId = intval($patientId);
+    $groupId = intval($groupId);
+
+    switch ($groupBy) {
+        case 'insurance':
+            $groupConditional = "p.p_m_ins_co = '$groupId'";
+            break;
+        case 'patient':
+        default:
+            $groupConditional = "p.patientid = '$groupId'";
+    }
 
     $query = "SELECT
             claim.insuranceid,
@@ -335,9 +345,10 @@ function getClaimChargesResults (Array $dayLimit, $patientId, $andExtraCondition
                 ), 2
             ) AS total_charge
         FROM dental_insurance claim
-        WHERE patientid = '$patientId'
-          AND $mailingDateConditional
-          $andExtraConditionals";
+            LEFT JOIN dental_patients p ON p.patientid = claim.patientid
+        WHERE $groupConditional
+            AND $mailingDateConditional
+            $andExtraConditionals";
 
     return $db->getResults($query);
 }

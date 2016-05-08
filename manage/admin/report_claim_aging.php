@@ -208,16 +208,17 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
                     $c_total = $p_total = 0;
                     $upperLimit = $lowerLimit == 120 ? '' : $lowerLimit + 29;
 
-                    $claimCharges = [];
                     $claimChargesResults =
-                        getClaimChargesResults([$lowerLimit, $upperLimit], $r['patientid'], $andBillingIdConditional);
+                        getClaimChargesResults(
+                            [$lowerLimit, $upperLimit],
+                            $r['patientid'],
+                            'patient',
+                            $andBillingIdConditional
+                        );
 
                     foreach ($claimChargesResults as $claimCharges) {
                         $c_total += $claimCharges['total_charge'];
-                    }
-
-                    if ($claimCharges) {
-                        $p_total = getLedgerPaymentAmount($claimCharges['insuranceid']);
+                        $p_total += getLedgerPaymentAmount($claimCharges['insuranceid']);
                     }
 
                     $pat_total += $c_total - $p_total;

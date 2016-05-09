@@ -12,9 +12,11 @@ abstract class Controller extends BaseController
     use DispatchesJobs, ValidatesRequests;
 
     protected $currentUser;
+    protected $auth;
 
     public function __construct(JWTAuth $auth)
     {
         $this->currentUser = $auth->toUser();
+        $this->auth        = $auth;
     }
 }

@@ -3,7 +3,7 @@ module.exports = {
         this.logout();
     },
     logout: function() {
-        Vue.http.put(config.API_PATH + 'logout', data, function(data, status, request) {
+        Vue.http.post(config.API_PATH + 'logout', function(data, status, request) {
             swal('Logout Successfully!', 'success');
 
             window.location.href = 'login.php';

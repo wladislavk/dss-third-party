@@ -19,10 +19,10 @@ if (isset($_GET['bc'])) {
 
 if (isset($_GET['group_by'])) {
     $queryString['group_by'] = $_GET['group_by'];
-}
 
-if (isset($_GET['insid'])) {
-    $queryString['insid'] = intval($_GET['insid']);
+    if (isset($_GET['insid'])) {
+        $queryString['insid'] = intval($_GET['insid']);
+    }
 }
 
 $subQueries = ledgerBalanceSubQueries('claim', 'claim');
@@ -188,7 +188,7 @@ $my = $db->getResults($sql);
 </form>
 
 <div style="float:right; margin-right:20px;">
-    <a href="?<?= buildQuery($queryString, 'group_by', null) ?>" class="btn btn-<?= $groupName === 'patient' ? 'success' : 'primary' ?>">
+    <a href="?<?= buildQuery($queryString, ['group_by' => null, 'insid' => null]) ?>" class="btn btn-<?= $groupName === 'patient' ? 'success' : 'primary' ?>">
         Group by Patient
     </a>
     <a href="?<?= buildQuery($queryString, 'group_by', 'insurance') ?>" class="btn btn-<?= $groupName === 'insurance' ? 'success' : 'primary' ?>">

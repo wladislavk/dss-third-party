@@ -14,16 +14,12 @@ require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
 $queryString = [];
 
-if (isset($_GET['bc'])) {
-    $queryString['bc'] = empty($_GET['bc']) ? 0 : 1;
-}
-
 if (isset($_GET['group_by'])) {
     $queryString['group_by'] = $_GET['group_by'];
-}
 
-if (isset($_GET['insid'])) {
-    $queryString['insid'] = intval($_GET['insid']);
+    if (isset($_GET['insid'])) {
+        $queryString['insid'] = intval($_GET['insid']);
+    }
 }
 
 $docId = intval($_SESSION['userid']);
@@ -98,7 +94,7 @@ $my = $db->getResults($sql);
         <b>&lt;&lt;Back</b>
     </a>
     <div style="float:right; margin-right:20px;">
-        <a href="?<?= buildQuery($queryString, 'group_by', null) ?>" class="button <?= $groupName === 'patient' ? 'grayButton' : 'addButton' ?>">
+        <a href="?<?= buildQuery($queryString, ['group_by' => null, 'insid' => null]) ?>" class="button <?= $groupName === 'patient' ? 'grayButton' : 'addButton' ?>">
             Group by Patient
         </a>
         &nbsp;

@@ -1056,16 +1056,20 @@ function linkRequestData ($itemTable, $itemId) {
 }
 
 /**
- * @param array  $query
- * @param string $overrideKey
+ * @param array        $query
+ * @param string|array $overrideKey
  * @param mixed|null   $overrideValue
  */
 function buildQuery (Array $query, $overrideKey='', $overrideValue=null) {
-    if (strlen($overrideKey)) {
-        if (is_null($overrideValue)) {
-            unset($query[$overrideKey]);
+    if (!is_array($overrideKey)) {
+        $overrideKey = [$overrideKey => $overrideValue];
+    }
+
+    foreach ($overrideKey as $key=>$value) {
+        if (is_null($value)) {
+            unset($query[$key]);
         } else {
-            $query[$overrideKey] = $overrideValue;
+            $query[$key] = $value;
         }
     }
 

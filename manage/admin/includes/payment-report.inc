@@ -31,29 +31,6 @@ if (!empty($is_back_office)) {
     $userAccessConditional = "claim.docid = '$docId'";
 }
 
-/**
- * @see DSS-437
- *
- * Retrieve all NPIs associated to member of this office
- */
-$npiList = $db->getResults("SELECT npi, medicare_npi, service_npi, service_medicare_npi
-    FROM dental_users
-    WHERE docid = '$docId'
-        OR userid = '$docId'");
-
-$npiList = $npiList ? array_flatten($npiList) : [];
-$npiList = array_filter(array_unique($npiList));
-
-if ($npiList) {
-    array_walk($npiList, function (&$each) use ($db) {
-        $each = 'report.response LIKE \'%"npi":"' . $db->escape($each) . '"%\'';
-    });
-    $npiList = join(' OR ', $npiList);
-    $orNpiConditional = "OR ($npiList)";
-} else {
-    $orNpiConditional = '';
-}
-
 $reportData = $db->getRow("SELECT
         report.payment_id,
         report.claimid,
@@ -63,14 +40,9 @@ $reportData = $db->getRow("SELECT
         report.ip_address
     FROM dental_payment_reports report
         LEFT JOIN dental_insurance claim ON claim.insuranceid = report.claimid
-            $orNpiConditional
         $extraJoins
     WHERE payment_id = '$reportId'
-        AND (
-            $userAccessConditional
-            $orNpiConditional
-        )
-    ");
+        AND $userAccessConditional");
 
 if (!$reportData) {
     $errorMessages []= 'No Payment Report with provided ID is found';

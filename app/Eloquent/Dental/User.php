@@ -104,4 +104,22 @@ class User extends Model implements Resource, Repository
             ->where('userid', $userId)
             ->first();
     }
+
+
+    /**
+     * Get doc id by user id
+     *
+     * @param integer $userId
+     * @return \DentalSleepSolutions\Eloquent\Dental\User
+     */
+    public function getDocId($userId)
+    {
+        return self::select(DB::raw('
+            CASE docid
+                WHEN 0 THEN userid
+                ELSE docid
+            END as docid'))
+            ->where('userid', $userId)
+            ->first();
+    }
 }

@@ -162,7 +162,7 @@ if (!$reports_res) {
             <? if ($back_office): ?>
                 <td valign="top"><?=$report_data['name'];?></td>
             <? endif; ?>
-            <td valign="top"><a href="<?=$claim_url?>"><?=$report_data['reference_id'] ?: '<i>not set</i>' ?></a></td>
+            <td valign="top"><a href="<?=$claim_url?>"><?=$report_data['reference_id'] ?: '<i>Not Set</i>' ?></a></td>
             <? if (isset($report->success) && !$report->success): ?>
                 <?
                 $errors_message = '';
@@ -174,7 +174,18 @@ if (!$reports_res) {
             <? else: ?>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->effective_date;?></td>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->payer->name;?></td>
-                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->patient->last_name . ' ' . $details->patient->first_name . ' ' . $details->patient->middle_name;?></td>
+                <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>">
+                    <?=
+                        empty(
+                            $details->patient->last_name .
+                            $details->patient->first_name .
+                            $details->patient->middle_name
+                        ) ? '<i>Not Set</i>' :
+                            $details->patient->last_name . ' ' .
+                            $details->patient->first_name . ' ' .
+                            $details->patient->middle_name
+                    ?>
+                </td>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->financials->type_code . ' ' . $details->financials->type_label;?></td>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->financials->total_payment_amount;?></td>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->financials->credit ? 'Credit' : 'Debit';?></td>

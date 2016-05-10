@@ -5,45 +5,41 @@
     }
 </style>
 <?php
-    /*
-     *  Required variables:
-     *  $back_office  {true | false}
-     *  $header_class  {'admin_head' | 'page-header'}
-     *  $table_style  {'width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center"' | class="table table-bordered table-hover"}
-     *  $sql_user_filter
-     *  $sql_join_section
-     */
 
-    $page_count = 30;
-    $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 0;
-    $from = $page * $page_count;
+$docId = intval($_SESSION['docid']);
 
-    $sort_by = strtolower($_REQUEST['sort']);
-    $sort_by = isset($_REQUEST['sort'])  ? strtolower($_REQUEST['sort']) : 'date';
-    $sort_direction = strtolower($_REQUEST['sortdir']);
-    $sort_direction = (empty($sort_direction) || ($sort_direction != 'asc' && $sort_direction != 'desc')) ? 'desc' : $sort_direction;
-    $sort_by_sql = '';
+$page_count = 30;
+$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+$from = $page * $page_count;
 
-    switch ($sort_by) {
-        case 'date':
-            $sort_by_sql = ' pr.adddate ' . $sort_direction;
-            break;
-        default:
-            $sort_by_sql = ' pr.adddate ' . $sort_direction;
-            break;
-    }
+$sort_by = strtolower($_REQUEST['sort']);
+$sort_by = isset($_REQUEST['sort'])  ? strtolower($_REQUEST['sort']) : 'date';
+$sort_direction = strtolower($_REQUEST['sortdir']);
+$sort_direction = (empty($sort_direction) || ($sort_direction != 'asc' && $sort_direction != 'desc')) ? 'desc' : $sort_direction;
+$sort_by_sql = '';
 
-    $is_unviewed = false;
-    if (isset($_REQUEST['unviewed'])) {
-        $is_unviewed = $_REQUEST['unviewed'] == '1' ? true : false;
-    }
+switch ($sort_by) {
+    case 'date':
+        $sort_by_sql = ' pr.adddate ' . $sort_direction;
+        break;
+    default:
+        $sort_by_sql = ' pr.adddate ' . $sort_direction;
+        break;
+}
 
-    $sql_where = '';
-    $unviewed_url = '';
-    if ($is_unviewed) {
-        $sql_where = ' AND viewed != 1';
-        $unviewed_url = 'unviewed=1';
-    }
+$is_unviewed = false;
+
+if (isset($_REQUEST['unviewed'])) {
+    $is_unviewed = $_REQUEST['unviewed'] == '1' ? true : false;
+}
+
+$sql_where = '';
+$unviewed_url = '';
+
+if ($is_unviewed) {
+    $sql_where = ' AND viewed != 1';
+    $unviewed_url = 'unviewed=1';
+}
 
 /**
  * @see DSS-437
@@ -59,37 +55,53 @@ $npiList = $npiList ? array_flatten($npiList) : [];
 $npiList = array_filter(array_unique($npiList));
 
 if ($npiList) {
-    $npiList = $db->escapeList($npiList);
-    $npiList = 'report.response LIKE \'%"npi":"' . join('"%\' OR report.response LIKE \'%"npi":"', $npiList) . '"%\'';
+    array_walk($npiList, function (&$each) use ($db) {
+        $each = 'pr.response LIKE \'%"npi":"' . $db->escape($each) . '"%\'';
+    });
+    $npiList = join(' OR ', $npiList);
     $orNpiConditional = "OR ($npiList)";
 } else {
     $orNpiConditional = '';
 }
 
-    $sql_count = 'SELECT count(*) as total
-        FROM dental_payment_reports AS pr
+$sql_count = "SELECT COUNT(payment_id) AS total
+    FROM dental_payment_reports AS pr
         INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
-        ' . $sql_join_section. '
-        WHERE ' . $sql_user_filter
-        . $sql_where;
-    $total = $db->getRow($sql_count)['total'];
+        $sql_join_section
+    WHERE ($sql_user_filter $orNpiConditional)
+        $sql_where
+    ";
 
-    $pages_quantity = $total/$page_count;
+$total = $db->getColumn($sql_count, 'total', 0);
 
-    $reports_query = 'SELECT pr.payment_id, pr.claimid, pr.reference_id, pr.response, pr.adddate, pr.ip_address, i.patientid, u.name
-        FROM dental_payment_reports AS pr
+$pages_quantity = $total/$page_count;
+
+$reports_query = "SELECT
+        pr.payment_id,
+        pr.claimid,
+        pr.reference_id,
+        pr.response,
+        pr.adddate,
+        pr.ip_address,
+        i.patientid,
+        i.docid,
+        u.name,
+        $sql_user_filter AS doc_matches
+    FROM dental_payment_reports AS pr
         INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
-        ' . $sql_join_section. '
-        WHERE  ' . $sql_user_filter
-        . $sql_where
-        . ' ORDER BY ' . $sort_by_sql . '
-        LIMIT ' . $from . ', '. $page_count;
-    $reports_res = $db->getResults($reports_query);
+        $sql_join_section
+    WHERE ($sql_user_filter $orNpiConditional)
+        $sql_where
+    ORDER BY $sort_by_sql
+    LIMIT $from, $page_count";
+$reports_res = $db->getResults($reports_query);
 
-    $errors_message = '';
-    if (!$reports_res) {
-        $errors_message = 'No Payment Reports found';
-    }
+$errors_message = '';
+
+if (!$reports_res) {
+    $errors_message = 'No Payment Reports found';
+}
+
 ?>
 <br />
 <div class="<?=$header_class?>">
@@ -121,7 +133,7 @@ if ($npiList) {
         <? endif; ?>
         <th valign="top" class="col_head">Claim ID</th>
         <th valign="top" class="col_head <?=($sort_by == 'date') ? 'arrow_' . $sort_direction : '';?>">
-            <a href="payment_reports_list.php?unviewed=<?=$is_unviewed ? '1' : '0';?>&sort=date&sortdir=<?=($sort_by == 'date' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?>">Generation Date (YYYY-MM-DD)</a>
+            <a href="?unviewed=<?=$is_unviewed ? '1' : '0';?>&sort=date&sortdir=<?=($sort_by == 'date' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?>">Generation Date (YYYY-MM-DD)</a>
         </th>
         <th valign="top" class="col_head">Payer</th>
         <th valign="top" class="col_head">Patient</th>
@@ -138,17 +150,19 @@ if ($npiList) {
         <?
         $report = json_decode($report_data['response']);
         $details = $report->details;
+
         if ($back_office) {
-            $claim_url = 'patient_claims.php?pid=' . $report_data['patientid'];
+            $claim_url = $report_data['doc_matches'] ? 'patient_claims.php?pid=' . $report_data['patientid'] : '#';
         } else {
-            $claim_url = 'view_claim.php?claimid=' . $report_data['claimid'] . '&pid=' . $report_data['patientid'];
+            $claim_url = $report_data['doc_matches'] ?
+                'view_claim.php?claimid=' . $report_data['claimid'] . '&pid=' . $report_data['patientid'] : '#';
         }
         ?>
         <tr class="tr_active">
             <? if ($back_office): ?>
                 <td valign="top"><?=$report_data['name'];?></td>
             <? endif; ?>
-            <td valign="top"><a href="<?=$claim_url?>"><?=$report_data['reference_id'];?></a></td>
+            <td valign="top"><a href="<?=$claim_url?>"><?=$report_data['reference_id'] ?: '<i>not set</i>' ?></a></td>
             <? if (isset($report->success) && !$report->success): ?>
                 <?
                 $errors_message = '';

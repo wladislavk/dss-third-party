@@ -12,6 +12,20 @@ if (!isset($_GET['print'])) {
 
 require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
+$queryString = [];
+
+if (isset($_GET['bc'])) {
+    $queryString['bc'] = empty($_GET['bc']) ? 0 : 1;
+}
+
+if (isset($_GET['group_by'])) {
+    $queryString['group_by'] = $_GET['group_by'];
+}
+
+if (isset($_GET['insid'])) {
+    $queryString['insid'] = intval($_GET['insid']);
+}
+
 $docId = intval($_SESSION['userid']);
 $subQueries = ledgerBalanceSubQueries('claim', 'claim');
 
@@ -33,6 +47,8 @@ switch ($_GET['group_by']) {
         break;
 }
 
+$andInsuranceConditional = !empty($_GET['insid']) ? "AND p.p_m_ins_co = '" . intval($_GET['insid']) . "'" : '';
+
 $sql = "SELECT
         p.firstname,
         p.lastname,
@@ -49,6 +65,7 @@ $sql = "SELECT
             AND secondary_insurance.merge_id IS NULL
             AND secondary_insurance.docid = p.docid
     WHERE p.docid = '$docId'
+        $andInsuranceConditional
         AND (
             SELECT SUM(
                 {$subQueries['debits']}
@@ -80,6 +97,15 @@ $my = $db->getResults($sql);
     <a href="ledger.php" class="editlink" title="EDIT">
         <b>&lt;&lt;Back</b>
     </a>
+    <div style="float:right; margin-right:20px;">
+        <a href="?<?= buildQuery($queryString, 'group_by', null) ?>" class="button <?= $groupName === 'patient' ? 'grayButton' : 'addButton' ?>">
+            Group by Patient
+        </a>
+        &nbsp;
+        <a href="?<?= buildQuery($queryString, 'group_by', 'insurance') ?>" class="button <?= $groupName === 'insurance' ? 'grayButton' : 'addButton' ?>">
+            Group by Insurance Company
+        </a>
+    </div>
 </div>
 
 <br /><br />
@@ -137,20 +163,27 @@ $my = $db->getResults($sql);
             ?>
             <tr>
                 <td valign="top">
-                    <a href="manage_ledger.php?pid=<?= $r[$groupId] ?>&amp;addtopat=1">
-                        <?php
+                    <?php
 
-                        switch ($groupName) {
-                            case 'insurance':
-                                echo e($r['primary_insurance']);
-                                break;
-                            case 'patient':
-                            default:
-                                echo e($r['firstname'] . ' ' . $r['lastname']);
-                                break;
-                        }
+                    switch ($groupName) {
+                        case 'insurance':
+                            ?>
+                            <a href="?group_by=insurance&amp;insid=<?= $r[$groupId] ?>">
+                                <?= e($r['primary_insurance']) ?>
+                            </a>
+                            <?php
+                            break;
+                        case 'patient':
+                        default:
+                            ?>
+                            <a href="manage_ledger.php?pid=<?= $r[$groupId] ?>&amp;addtopat=1">
+                                <?= e($r['firstname'] . ' ' . $r['lastname']) ?>
+                            </a>
+                            <?php
+                            break;
+                    }
 
-                        ?>
+                    ?>
                     </a>
                 </td>
                 <?php

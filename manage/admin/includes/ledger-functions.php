@@ -374,6 +374,11 @@ function claimAgingBreakdownResults (Array $dayLimit, $isBackOffice, $filterData
         'JOIN dental_user_company uc ON uc.userid = u.userid' : '';
     $docIdConditional = $isBackOffice ? '1 = 1' : "p.docid = '$docId'";
     $andBackOfficeConditionals = '';
+    $andInsuranceConditional = '';
+
+    if (isset($filterData['insid'])) {
+        $andInsuranceConditional = " AND p.p_m_ins_co = '" . intval($filterData['insid']) . "' ";
+    }
 
     if ($isBackOffice) {
         if (isset($filterData['fid'])) {
@@ -381,11 +386,9 @@ function claimAgingBreakdownResults (Array $dayLimit, $isBackOffice, $filterData
         }
 
         if (isset($filterData['bc'])) {
-            $andBackOfficeConditionals .= " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' ";
-        }
-
-        if (isset($filterData['nbc'])) {
-            $andBackOfficeConditionals .= " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
+            $andBackOfficeConditionals .= $filterData['bc'] ?
+                " AND p_m_billing_id IS NOT NULL AND p_m_billing_id != '' " :
+                " AND (p_m_billing_id IS NULL OR p_m_billing_id = '') ";
         }
 
         if (is_software($_SESSION['admin_access'])) {
@@ -464,6 +467,7 @@ function claimAgingBreakdownResults (Array $dayLimit, $isBackOffice, $filterData
             $userCompanyJoin
         WHERE $docIdConditional
             $andBackOfficeConditionals
+            $andInsuranceConditional
             AND $mailingDateConditional
             AND (
                 {$subQueries['debits']}

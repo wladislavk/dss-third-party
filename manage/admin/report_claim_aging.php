@@ -7,17 +7,34 @@ require_once __DIR__ . '/includes/ledger-functions.php';
 $is_front_office = false;
 $is_back_office = true;
 
-$subQueries = ledgerBalanceSubQueries('claim', 'claim');
-$andDocIdConditional = isset($_GET['fid']) ? " AND p.docid = '" . intval($_GET['fid']) . "' " : '';
-$andBillingIdConditional = '';
+$queryString = [];
 
-if (isset($_GET['bc'])) {
-    $andBillingIdConditional = " AND COALESCE(i.p_m_billing_id, 0) ";
-} elseif (isset($_GET['nbc'])) {
-    $andBillingIdConditional = " AND NOT COALESCE(i.p_m_billing_id, 0) ";
+if (isset($_GET['fid'])) {
+    $queryString['fid'] = intval($_GET['fid']);
 }
 
-switch ($_GET['group_by']) {
+if (isset($_GET['bc'])) {
+    $queryString['bc'] = empty($_GET['bc']) ? 0 : 1;
+}
+
+if (isset($_GET['group_by'])) {
+    $queryString['group_by'] = $_GET['group_by'];
+}
+
+if (isset($_GET['insid'])) {
+    $queryString['insid'] = intval($_GET['insid']);
+}
+
+$subQueries = ledgerBalanceSubQueries('claim', 'claim');
+$andDocIdConditional = isset($queryString['fid']) ? " AND p.docid = '{$queryString['fid']}' " : '';
+$andBillingIdConditional = '';
+
+if (isset($queryString['bc'])) {
+    $andBillingIdConditional = $queryString['bc'] ?
+        "AND COALESCE(claim.p_m_billing_id, 0)" : "AND NOT COALESCE(claim.p_m_billing_id, 0)";
+}
+
+switch ($queryString['group_by']) {
     case 'insurance':
         $groupId = 'p_m_ins_co';
         $groupName = 'insurance';
@@ -34,6 +51,8 @@ switch ($_GET['group_by']) {
         $groupBy = 'p.patientid';
         break;
 }
+
+$andInsuranceConditional = !empty($queryString['insid']) ? "AND p.p_m_ins_co = '{$queryString['insid']}'" : '';
 
 if (is_super($_SESSION['admin_access'])) {
     $sql = "SELECT
@@ -54,17 +73,18 @@ if (is_super($_SESSION['admin_access'])) {
                 AND secondary_insurance.merge_id IS NULL
                 AND secondary_insurance.docid = p.docid
         WHERE (
-            SELECT SUM(
-                {$subQueries['debits']}
-                - {$subQueries['credits']}
-                - {$subQueries['adjustments']}
-            )
-            FROM dental_insurance claim
-            WHERE claim.patientid = p.patientid
-                AND claim.mailed_date IS NOT NULL
-                $andBillingIdConditional
-        ) > 0
-        $andDocIdConditional
+                SELECT SUM(
+                    {$subQueries['debits']}
+                    - {$subQueries['credits']}
+                    - {$subQueries['adjustments']}
+                )
+                FROM dental_insurance claim
+                WHERE claim.patientid = p.patientid
+                    AND claim.mailed_date IS NOT NULL
+                    $andBillingIdConditional
+            ) > 0
+            $andDocIdConditional
+            $andInsuranceConditional
         GROUP BY $groupBy
         ORDER BY $sortBy
         ";
@@ -91,6 +111,7 @@ if (is_super($_SESSION['admin_access'])) {
                 AND secondary_insurance.docid = p.docid
         WHERE uc.companyid = '$adminCompanyId'
             $andDocIdConditional
+            $andInsuranceConditional
         GROUP BY $groupBy
         ORDER BY $sortBy
         ";
@@ -123,29 +144,13 @@ if (is_super($_SESSION['admin_access'])) {
                 AND secondary_insurance.docid = p.docid
         WHERE u.billing_company_id = '$adminCompanyId'
             $andDocIdConditional
+            $andInsuranceConditional
         GROUP BY $groupBy
         ORDER BY $sortBy
         ";
 }
 
 $my = $db->getResults($sql);
-$total_rec = count($my);
-
-$claimChargesQuery = "SELECT
-        insuranceid,
-        COALESCE(
-            CONVERT(
-                REPLACE(IF(primary_claim_id, 0, total_charge), ',', ''),
-                DECIMAL(11, 2)
-            ), 0
-        ) AS total_charge
-    FROM dental_insurance
-    ";
-
-$ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
-    FROM dental_ledger dl
-        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
-    ";
 
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
@@ -183,9 +188,23 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
 </form>
 
 <div style="float:right; margin-right:20px;">
-    <a href="?nbc=1" class="btn btn-primary">No Billing Company</a>
-    <a href="?bc=1" class="btn btn-primary">Billing Company</a>
-    <a href="?all" class="btn btn-primary">All</a>
+    <a href="?<?= buildQuery($queryString, 'group_by', null) ?>" class="btn btn-<?= $groupName === 'patient' ? 'success' : 'primary' ?>">
+        Group by Patient
+    </a>
+    <a href="?<?= buildQuery($queryString, 'group_by', 'insurance') ?>" class="btn btn-<?= $groupName === 'insurance' ? 'success' : 'primary' ?>">
+        Group by Insurance Company
+    </a>
+    <br>
+    <br>
+    <a href="?<?= buildQuery($queryString, 'bc', '0') ?>" class="btn btn-<?= isset($queryString['bc']) && empty($queryString['bc']) ? 'success' : 'primary' ?>">
+        No Billing Company
+    </a>
+    <a href="?<?= buildQuery($queryString, 'bc', '1') ?>" class="btn btn-<?= !empty($queryString['bc']) ? 'success' : 'primary' ?>">
+        Billing Company
+    </a>
+    <a href="?<?= buildQuery($queryString, 'bc', null) ?>" class="btn btn-<?= !isset($queryString['bc']) ? 'success' : 'primary' ?>">
+        All
+    </a>
 </div>
 
 <p class="clearfix"></p>
@@ -246,21 +265,27 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
             ?>
             <tr>
                 <td valign="top">
-                    <a href="view_patient.php?pid=<?= $r['patientid'] ?>">
-                        <?php
+                    <?php
 
-                        switch ($groupName) {
-                            case 'insurance':
-                                echo e($r['primary_insurance']);
-                                break;
-                            case 'patient':
-                            default:
-                                echo e($r['firstname'] . ' ' . $r['lastname']);
-                                break;
-                        }
+                    switch ($groupName) {
+                        case 'insurance':
+                            ?>
+                            <a href="?<?= buildQuery($queryString, 'insid', $r[$groupId]) ?>">
+                                <?= e($r['primary_insurance']) ?>
+                            </a>
+                            <?php
+                            break;
+                        case 'patient':
+                        default:
+                            ?>
+                            <a href="view_patient.php?pid=<?= $r[$groupId] ?>">
+                                <?= e($r['firstname'] . ' ' . $r['lastname']) ?>
+                            </a>
+                            <?php
+                            break;
+                    }
 
-                        ?>
-                    </a>
+                    ?>
                 </td>
                 <td valign="top">
                     <?= e($r['doc_name']) ?>
@@ -276,7 +301,7 @@ $ledgerPaymentsQuery = "SELECT SUM(dlp.amount) AS paid_amount
                             [$lowerLimit, $upperLimit],
                             $r[$groupId],
                             $groupName,
-                            $andBillingIdConditional
+                            "$andBillingIdConditional $andInsuranceConditional"
                         );
 
                     foreach ($claimChargesResults as $claimCharges) {

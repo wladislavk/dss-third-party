@@ -45,6 +45,27 @@
         $unviewed_url = 'unviewed=1';
     }
 
+/**
+ * @see DSS-437
+ *
+ * Retrieve all NPIs associated to member of this office
+ */
+$npiList = $db->getResults("SELECT npi, medicare_npi, service_npi, service_medicare_npi
+    FROM dental_users
+    WHERE docid = '$docId'
+        OR userid = '$docId'");
+
+$npiList = $npiList ? array_flatten($npiList) : [];
+$npiList = array_filter(array_unique($npiList));
+
+if ($npiList) {
+    $npiList = $db->escapeList($npiList);
+    $npiList = 'report.response LIKE \'%"npi":"' . join('"%\' OR report.response LIKE \'%"npi":"', $npiList) . '"%\'';
+    $orNpiConditional = "OR ($npiList)";
+} else {
+    $orNpiConditional = '';
+}
+
     $sql_count = 'SELECT count(*) as total
         FROM dental_payment_reports AS pr
         INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid

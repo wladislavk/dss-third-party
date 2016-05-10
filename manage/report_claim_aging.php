@@ -44,10 +44,10 @@ $sql = "SELECT
     FROM dental_patients p
         LEFT JOIN dental_contact primary_insurance ON primary_insurance.contactid = p.p_m_ins_co
             AND primary_insurance.merge_id IS NULL
-            AND primary_insurance.docid = '$docId'
-        LEFT JOIN dental_contact secondary_insurance ON secondary_insurance.contactid = p.p_m_ins_co
+            AND primary_insurance.docid = p.docid
+        LEFT JOIN dental_contact secondary_insurance ON secondary_insurance.contactid = p.s_m_ins_co
             AND secondary_insurance.merge_id IS NULL
-            AND secondary_insurance.docid = '$docId'
+            AND secondary_insurance.docid = p.docid
     WHERE p.docid = '$docId'
         AND (
             SELECT SUM(

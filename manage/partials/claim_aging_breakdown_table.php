@@ -4,15 +4,16 @@ namespace Ds3\Libraries\Legacy;
 ?><table class="<?= $isBackOffice ? 'table table-hover table-condensed' : 'sort_table' ?>" width="98%" align="center">
   <thead>
     <tr>
-      <th width="10%">Days</th>
-      <th width="10%">Since</th>
-      <th width="10%">DOS</th>
-      <th width="10%">Service</th>
+      <th width="4%">Days</th>
+      <th width="7%">Since</th>
+      <th width="7%">DOS</th>
+      <th width="7%">Service</th>
 <?php if ($isBackOffice) { ?>
-      <th width="10%">Patient</th>
-      <th width="10%">Account</th>
+      <th width="13%">Patient</th>
+      <th width="13%">Account</th>
 <?php } else { ?>
-      <th width="10%">Client</th>
+      <th width="13%">Client</th>
+      <th width="13%">Insurance</th>
 <?php } ?>
       <th width="10%">Charge</th>
       <th width="10%">Ins</th>
@@ -50,6 +51,10 @@ namespace Ds3\Libraries\Legacy;
 <?php if($isBackOffice){ ?>
       <td>
 	<?php echo  $r['doc_name']; ?>
+      </td>
+<?php } else { ?>
+      <td>
+          <?= e($r['primary_insurance'] . ($r['secondary_insurance'] ? $r['secondary_insurance'] : '')) ?>
       </td>
 <?php } ?>
       <td>

@@ -369,9 +369,10 @@ function claimAgingBreakdownResults (Array $dayLimit, $isBackOffice, $filterData
      *
      * Define simple conditionals before the complex conditionals, as MySQL has short-circuit in WHERE statements
      */
+    $docId = intval($_SESSION['docid']);
     $userCompanyJoin = $isBackOffice && is_software($_SESSION['admin_access']) ?
         'JOIN dental_user_company uc ON uc.userid = u.userid' : '';
-    $docIdConditional = $isBackOffice ? '1 = 1' : "p.docid = '" . intval($_SESSION['docid']) . "'";
+    $docIdConditional = $isBackOffice ? '1 = 1' : "p.docid = '$docId'";
     $andBackOfficeConditionals = '';
 
     if ($isBackOffice) {
@@ -407,11 +408,14 @@ function claimAgingBreakdownResults (Array $dayLimit, $isBackOffice, $filterData
 
     $query = "SELECT
             claim.insuranceid,
+            l.secondary_claim_id,
             claim.mailed_date,
             l.service_date,
             p.patientid,
             p.firstname,
             p.lastname,
+            primary_insurance.company AS primary_insurance,
+            secondary_insurance.company AS secondary_insurance,
             claim.total_charge,
             CONCAT(u.first_name, ' ', u.last_name) AS doc_name,
             l.amount,
@@ -450,6 +454,12 @@ function claimAgingBreakdownResults (Array $dayLimit, $isBackOffice, $filterData
         FROM dental_insurance claim
             LEFT JOIN dental_ledger l ON l.primary_claim_id = claim.insuranceid
             LEFT JOIN dental_patients p ON p.patientid = claim.patientid
+            LEFT JOIN dental_contact primary_insurance ON primary_insurance.contactid = p.p_m_ins_co
+                AND primary_insurance.merge_id IS NULL
+                AND primary_insurance.docid = '$docId'
+            LEFT JOIN dental_contact secondary_insurance ON secondary_insurance.contactid = p.s_m_ins_co
+                AND secondary_insurance.merge_id IS NULL
+                AND secondary_insurance.docid = '$docId'
             LEFT JOIN dental_users u ON u.userid = p.docid
             $userCompanyJoin
         WHERE $docIdConditional
@@ -459,7 +469,8 @@ function claimAgingBreakdownResults (Array $dayLimit, $isBackOffice, $filterData
                 {$subQueries['debits']}
                 - {$subQueries['credits']}
                 - {$subQueries['adjustments']}
-            ) > 0";
+            ) > 0
+        ORDER BY DATEDIFF(CURDATE(), claim.mailed_date)";
 
     return $db->getResults($query);
 }

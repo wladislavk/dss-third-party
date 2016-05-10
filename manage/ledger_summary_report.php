@@ -1,105 +1,123 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-include_once 'admin/includes/main_include.php';
-include_once 'includes/constants.inc';
+require_once __DIR__ . '/admin/includes/main_include.php';
+require_once __DIR__ . '/includes/constants.inc';
+require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
 $docId = intval($_SESSION['docid']);
 $patientId = intval($_GET['pid']);
-$trxnTypeAdjustment = $db->escape(DSS_TRXN_TYPE_ADJ);
+$trxnTypeWriteOff = DSS_TRXN_PYMT_WRITEOFF;
 
-$patientConditional = $patientId ? " AND dl.patientid = '$patientId' " : '';
-$ledgerDateConditional = isset($l_date) && $l_date ? $l_date : '';
-$paymentDateConditional = isset($p_date) && $p_date ? $p_date : '';
+$andPatientConditional = $patientId ? " AND dl.patientid = '$patientId' " : '';
+$andLedgerDateConditional = isset($l_date) && $l_date ? $l_date : '';
+$andPaymentDateConditional = isset($p_date) && $p_date ? $p_date : '';
 
-// ledger - from UNION
+if (!empty($_GET['mailed'])) {
+    $mailedOnlyJoin = "JOIN dental_insurance di ON di.insuranceid = dl.primary_claim_id
+        AND di.mailed_date IS NOT NULL";
+} else {
+    $mailedOnlyJoin = '';
+}
+
 $chargesQuery = "SELECT
         COALESCE(dl.description, '') AS payment_description,
-        SUM(dl.amount) AS payment_amount
+        TRUNCATE(SUM(COALESCE(dl.amount, 0)), 2) AS payment_amount
     FROM dental_ledger dl
-        JOIN dental_patients p ON p.patientid = dl.patientid
+        $mailedOnlyJoin
     WHERE dl.docid = '$docId'
-        $patientConditional
-        $ledgerDateConditional
-        AND COALESCE(dl.paid_amount, 0) = 0
-        AND dl.amount != 0
-        GROUP BY payment_description";
+        $andPatientConditional
+        $andLedgerDateConditional
+    GROUP BY payment_description
+    HAVING payment_amount > 0
+    ";
 
-// ledger_payment - from UNION
-$creditsTypeQuery = "SELECT
+$creditsQuery = "SELECT
         COALESCE(dlp.payment_type, '0') AS payment_description,
-        SUM(dlp.amount) AS payment_amount,
-        COALESCE(dlp.payer, '') AS payment_payer
+        TRUNCATE(SUM(COALESCE(dlp.amount, 0)), 2) AS payment_amount,
+        COALESCE(dlp.payer, '') AS payment_payer,
+        'payment' AS rectification_type
     FROM dental_ledger dl
-        JOIN dental_patients p ON p.patientid = dl.patientid
-        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+        $mailedOnlyJoin
+        JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
     WHERE dl.docid = '$docId'
-        $patientConditional
-        AND dlp.amount != 0
-        $paymentDateConditional
-        GROUP BY payment_description, payment_payer";
+        $andPatientConditional
+        AND COALESCE(dlp.payment_type, 0) != '$trxnTypeWriteOff'
+        $andPaymentDateConditional
+    GROUP BY payment_description, payment_payer
+    HAVING payment_amount > 0
+    ";
 
-// ledger_paid - from UNION
-$creditsNamedQuery = "SELECT
-        COALESCE(dl.description, '') AS payment_description,
-        SUM(dl.paid_amount) AS payment_amount,
-        tc.type AS payment_type
-    FROM dental_ledger dl
-        JOIN dental_patients p ON p.patientid = dl.patientid
-        LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
-            AND tc.docid = '$docId'
-    WHERE dl.docid = '$docId'
-        $patientConditional
-        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-        AND COALESCE(tc.type, '') != '$trxnTypeAdjustment'
-        $ledgerDateConditional
-        GROUP BY payment_type, payment_description";
-
-// ledger_paid - from UNION -- but, tx.type conditional INVERTED
-// No need to use COALESCE(tc.type, '') because we WANT TO IGNORE null values
 $adjustmentsQuery = "SELECT
         COALESCE(dl.description, '') AS payment_description,
-        SUM(dl.paid_amount) AS payment_amount
+        TRUNCATE(SUM(COALESCE(dl.paid_amount, 0)), 2) AS payment_amount,
+        COALESCE(tc.type, '') AS payment_payer,
+        'transaction' AS rectification_type
     FROM dental_ledger dl
-        JOIN dental_patients p ON p.patientid = dl.patientid
-        LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
-            AND tc.docid = '$docId'
+        $mailedOnlyJoin
+        LEFT JOIN dental_transaction_code tc ON (
+            tc.transaction_code = dl.transaction_code
+            OR tc.description = dl.description
+        )
     WHERE dl.docid = '$docId'
-        $patientConditional
-        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-        AND tc.type = '$trxnTypeAdjustment'
-        $ledgerDateConditional
-        GROUP BY payment_description";
+        $andPatientConditional
+        $andLedgerDateConditional
+    GROUP BY dl.description
+    HAVING payment_amount > 0
+    
+    UNION
+    
+    SELECT
+        COALESCE(dlp.payment_type, '0') AS payment_description,
+        TRUNCATE(SUM(COALESCE(dlp.amount, 0)), 2) AS payment_amount,
+        COALESCE(dlp.payer, '') AS payment_payer,
+        'payment' AS rectification_type
+    FROM dental_ledger dl
+        $mailedOnlyJoin
+        JOIN dental_ledger_payment dlp
+            ON dlp.ledgerid = dl.ledgerid
+    WHERE dl.docid = '$docId'
+        $andPatientConditional
+        $andPaymentDateConditional
+        AND dlp.payment_type = '$trxnTypeWriteOff'
+    GROUP BY dlp.payment_type
+    HAVING payment_amount > 0
+    ";
 
 $chargeItems = $db->getResults($chargesQuery);
-$creditTypeItems = $db->getResults($creditsTypeQuery);
-$creditNamedItems = $db->getResults($creditsNamedQuery);
+$creditItems = $db->getResults($creditsQuery);
 $adjustmentItems = $db->getResults($adjustmentsQuery);
 
 // Set proper values of labels in credit items
-array_walk($creditTypeItems, function (&$item) use ($dss_trxn_payer_labels, $dss_trxn_pymt_type_labels) {
-    $payer = $item['payment_payer'];
-    $description = trim($dss_trxn_pymt_type_labels[$item['payment_description']]);
+foreach (['credit', 'adjustment'] as $name) {
+    array_walk(${"{$name}Items"}, function (&$item) use ($dss_trxn_payer_labels, $dss_trxn_pymt_type_labels) {
+        if ($item['rectification_type'] !== 'payment') {
+            return;
+        }
 
-    $description = preg_match('/^checks?$/i', $description) ? 'Checks' : $description;
+        $payer = $item['payment_payer'];
+        $description = trim($dss_trxn_pymt_type_labels[$item['payment_description']]);
 
-    switch ($payer) {
-        case DSS_TRXN_PAYER_PRIMARY:
-        case DSS_TRXN_PAYER_SECONDARY:
-            $description = "Ins. $description";
-            break;
-        case DSS_TRXN_PAYER_PATIENT:
-            $description = "Pt. $description";
-            break;
-        case DSS_TRXN_PAYER_WRITEOFF:
-            $description = $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF];
-            break;
-    }
+        $description = preg_match('/^checks?$/i', $description) ? 'Checks' : $description;
 
-    $item['payment_description'] = $description;
-});
+        switch ($payer) {
+            case DSS_TRXN_PAYER_PRIMARY:
+            case DSS_TRXN_PAYER_SECONDARY:
+                $description = "Ins. $description";
+                break;
+            case DSS_TRXN_PAYER_PATIENT:
+                $description = "Pt. $description";
+                break;
+            case DSS_TRXN_PAYER_WRITEOFF:
+                $description = $dss_trxn_payer_labels[DSS_TRXN_PAYER_WRITEOFF];
+                break;
+        }
 
-array_walk($creditNamedItems, function (&$item) {
+        $item['payment_description'] = $description;
+    });
+}
+
+array_walk($adjustmentItems, function (&$item) {
     $payer = $item['payment_type'];
     $description = strlen(trim($item['payment_description'])) ?
         trim($item['payment_description']) : 'Unlabelled transaction type';
@@ -117,29 +135,6 @@ array_walk($creditNamedItems, function (&$item) {
 
     $item['payment_description'] = $description;
 });
-
-/**
- * @see DSS-246
- *
- * Merge credit arrays, "type" items precede named items
- */
-$creditItems = [];
-
-array_map(function ($each) use (&$creditItems) {
-    $amount = $each['payment_amount'];
-    $description = $each['payment_description'];
-
-    $description = preg_replace('/^(Ins\. |Pt\. ){2}/', '$1', $description);
-
-    if (!isset($creditItems[$description])) {
-        $creditItems[$description] = [
-            'payment_description' => $description,
-            'payment_amount' => 0
-        ];
-    }
-
-    $creditItems[$description]['payment_amount'] += $amount;
-}, array_merge($creditTypeItems, $creditNamedItems));
 
 // Calculate totals
 $totalCharges = array_sum(array_pluck($chargeItems, 'payment_amount'));

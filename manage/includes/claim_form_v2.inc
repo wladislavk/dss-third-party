@@ -712,7 +712,7 @@ if (!empty($is_back_office)){
 
 <?php if (!empty($is_front_office)) { ?>
     <p>
-        <input type="submit" name="preserve_status" value="Modify/Reprint Claim" title="This action WILL update the CMS-1500 form, but will NOT change its status" onclick="return false;" />
+        <input type="submit" name="preserve_status" value="Modify/Reprint Claim" title="This action WILL update the CMS-1500 form, but will NOT change claim status" onclick="return false;" />
     </p>
     <p>
         <?php if ($fdf_file != '') { ?>

@@ -49,7 +49,15 @@ if (!$isHistoricView && !empty($_POST['ex_statusbtn'])) { ?>
     </script>
     <?php
     trigger_error("Die called", E_USER_ERROR);
-} elseif (!$isHistoricView && !empty($_POST['insurancesub']) && ($_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn']))) {
+} elseif (
+    !$isHistoricView &&
+    !empty($_POST['insurancesub']) &&
+    (
+        $_POST['insurancesub'] == 1 ||
+        !empty($_POST['ex_pagebtn']) ||
+        !empty($_POST['preserve_status'])
+    )
+) {
     // If the status is pending, then confirm changes to ledger transactions
     if ($isPending && hasLedgerTransactionsChanged($claimId, $_POST['service_lines'])) { ?>
         <script type="text/javascript">
@@ -702,8 +710,17 @@ if (!empty($is_back_office)){
 }
 ?>
 
-<?php if (!empty($is_front_office) && $isSent && $fdf_file!='') { ?>
-    <a href="display_fdf_v2.php?f=<?php echo $fdf_file;?>" class="print-button" >Print Claim Form</a>
+<?php if (!empty($is_front_office)) { ?>
+    <p>
+        <input type="submit" name="preserve_status" value="Modify/Reprint Claim" title="This action WILL update the CMS-1500 form, but will NOT change claim status" onclick="return false;" />
+    </p>
+    <p>
+        <?php if ($fdf_file != '') { ?>
+            <a href="/manage/display_fdf_v2.php?f=<?= rawurlencode($fdf_file) ?>" class="print-button" title="This action will NOT update the CMS-1500 form">View Printed Claim</a>
+        <?php } else { ?>
+            <a href="/manage/insurance_fdf_v2.php?insid=<?= $claimId ?>&amp;pid=<?= $patientId ?>" class="print-button" title="This action will NOT update the CMS-1500 form">View Printed Claim</a>
+        <?php } ?>
+    </p>
 <?php } ?>
 		&nbsp;&nbsp;&nbsp;
     <?php } ?>
@@ -2439,6 +2456,12 @@ $('input, select').bind('change', function(){
         $('[name=elec][value="Switch to E-File"]:first')
             .css({ float: 'right', 'margin-right': '5px' })
             .appendTo('#top-banner');
+
+        $('[name=preserve_status]')
+            .removeAttr('onclick')
+            .click(function(){
+            return confirm("This action creates a new PDF claim with updated data.\n\nThe original claim status will NOT change, but the data\nyou enter will overwrite previous claim data.\n\nProceed?");
+        });
     });
 </script>
 </body>
@@ -2484,13 +2507,16 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     /**
      * Status changes:
      *
+     * - IF marked to preserve the status THEN $formerStatus
      * - IF marked for rejection THEN rejected
      * - IF new claim THEN pending
      * - IF pending THEN sent
      * - IF rejected THEN sent
      * - ELSE preserve the current status
      */
-    if (isset($claimData['reject_but'])) {
+    if (!empty($claimData['preserve_status'])) {
+        $status = $formerStatus;
+    } elseif (isset($claimData['reject_but'])) {
         $status = $isFormerPrimary ? DSS_CLAIM_REJECTED : DSS_CLAIM_SEC_REJECTED;
     } elseif ($isNewClaim) {
         $status = $isFormerPrimary ? DSS_CLAIM_PENDING : DSS_CLAIM_SEC_PENDING;

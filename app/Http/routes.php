@@ -56,6 +56,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('diagnostics', 'DiagnosticsController', ['except' => ['create', 'edit']]);
     Route::resource('documents', 'DocumentsController', ['except' => ['create', 'edit']]);
     Route::resource('document-categories', 'DocumentCategoriesController', ['except' => ['create', 'edit']]);
+    Route::post('document-categories/active', 'DocumentCategoriesController@active');
     Route::resource('insurance-documents', 'InsuranceDocumentsController', ['except' => ['create', 'edit']]);
     Route::resource('faxes', 'FaxesController', ['except' => ['create', 'edit']]);
     Route::resource('epworth-sleepiness-scale', 'EpworthSleepinessScaleController', ['except' => ['create', 'edit']]);

@@ -1049,7 +1049,10 @@ class ClaimFormData
                 ELSE doctor.last_name
             END AS 'provider_last_name'
         FROM dental_ledger ledger
-            JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
+            LEFT JOIN dental_transaction_code trxn_code ON (
+                trxn_code.transaction_code = ledger.transaction_code
+                OR trxn_code.description = ledger.description
+            )
             JOIN dental_users doctor ON doctor.userid = ledger.docid
             LEFT JOIN dental_users producer ON producer.userid = ledger.producerid
             LEFT JOIN dental_place_service name_source ON name_source.place_serviceid = trxn_code.place

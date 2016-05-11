@@ -1,32 +1,37 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include 'admin/includes/main_include.php';
-	include("includes/sescheck.php");
+<?php
+namespace Ds3\Libraries\Legacy;
 
-	$u_sql = "SELECT edx_id FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['userid'])."'";
+require_once __DIR__ . '/admin/includes/main_include.php';
+require_once __DIR__ . '/includes/sescheck.php';
+require_once __DIR__ . '/includes/edx_functions.php';
 
-	$u = $db->getRow($u_sql);
-	$userid = $u['edx_id'];
-	$ses = shell_exec('sh edx_scripts/edxScript.sh '.urlencode($userid));
-	$expire = time() + 60 * 60 * 2;
-	if($_SERVER['HTTP_HOST']=='www.dentalsleepsolutions.com' || $_SERVER['HTTP_HOST']=='dentalsleepsolutions.com'){
-		setcookie("edxloggin", "true", $expire, "/", "dentalsleepsolutions.com", false);
-		setcookie("sessionid", $ses, $expire, "/", "dentalsleepsolutions.com", false);
-	} else {
-		setcookie("edxloggin", "true", $expire, "/", "xforty.com", false);
-		setcookie("sessionid", $ses, $expire, "/", "xforty.com", false);
-	}
+$userId = intval($_SESSION['userid']);
+
+edx_user_update($userId);
+$sessionId = edx_user_login($userId);
+$expire = time() + 60 * 60 * 2;
+
+switch ($_SERVER['HTTP_HOST']) {
+    case 'dentalsleepsolutions.com':
+    case 'www.dentalsleepsolutions.com':
+        $domain = 'dentalsleepsolutions.com';
+        $redirection = 'http://education.dentalsleepsolutions.com';
+        break;
+    case 'xforty.com':
+    case 'preprod.dss.xforty.com':
+    case 'staging.dss-rh.xforty.com':
+        $domain = 'xforty.com';
+        $redirection = 'http://preprod.edx.dss.xforty.com';
+        break;
+    default:
+        $domain = 'xforty.com';
+        $redirection = 'http://staging1.edx.dss.xforty.com';
+}
+
+setcookie('edxloggin', 'true', $expire, '/', $domain, false);
+setcookie('sessionid', $sessionId, $expire, '/', $domain, false);
+
 ?>
-
-<?php if($_SERVER['HTTP_HOST']=='www.dentalsleepsolutions.com' || $_SERVER['HTTP_HOST']=='dentalsleepsolutions.com') { ?>
-	<script type="text/javascript">
-		window.location = 'http://education.dentalsleepsolutions.com/dashboard';
-	</script>
-<?php } elseif($_SERVER['HTTP_HOST']=='preprod.dss.xforty.com' || $_SERVER['HTTP_HOST']=='staging.dss-rh.xforty.com') {	?>
-	<script type="text/javascript">
-		window.location = 'http://preprod.edx.dss.xforty.com/dashboard';
-	</script>
-<?php } else { ?>
-	<script type="text/javascript">
-		window.location = 'http://staging1.edx.dss.xforty.com/dashboard';
-	</script>
-<?php } ?>
+<script type="text/javascript">
+    window.location = '<?= $redirection ?>/dashboard';
+</script>

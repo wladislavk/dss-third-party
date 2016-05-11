@@ -11,13 +11,35 @@ var dashboard = new Vue({
             manage_staff     : '',
             use_course       : '',
             use_eligible_api : ''
-        }
+        },
+        showInvoices: false,
+        showTransactionCode: false,
+        documentCategories: []
     },
     created: function() {
-        this.getCurrentUser(this.getDocInfoById);
+        /*
+        1. getCurrentUser
+        2.1 getDocInfoById
+            2.1.1 redirectToIndex2
+        2.2 getManageStaffOfCurrentUser
+        3. getDocumentCategories
+        */
+
+        this.getCurrentUser();
+    },
+    ready: function() {
+        this.getDocumentCategories();
+    },
+    computed: {
+        showInvoices: function() {
+            return (this.user.docid === this.user.id || this.docInfo.manage_staff == 1);
+        },
+        showTransactionCode: function() {
+            return (this.user.id === this.user.docid || this.user.manage_staff == 1);
+        }
     },
     methods: {
-        getCurrentUser: function(callback) {
+        getCurrentUser: function() {
             this.$http.post(config.API_PATH + 'users/current', function(data, status, request) {
                 data = data.data;
 
@@ -27,14 +49,13 @@ var dashboard = new Vue({
                     }
                 }
 
-                if (callback && typeof(callback) === "function") {
-                    callback();
-                }
+                this.getDocInfoById(this.redirectToIndex2);
+                this.getManageStaffOfCurrentUser();
             }).error(function(data, status, request) {
                 console.log('getCurrentUser [Error]: ', status, data);
             });
         },
-        getDocInfoById: function() {
+        getDocInfoById: function(callback) {
             this.$http.get(config.API_PATH + 'users/' + this.user.docid, function(data, status, request) {
                 data = data.data;
 
@@ -44,12 +65,14 @@ var dashboard = new Vue({
                     this.docInfo['use_course']       = data.use_course || 0;
                     this.docInfo['use_eligible_api'] = data.use_eligible_api || 0;
                 }
+
+                callback();
             }).error(function(data, status, request) {
                 console.log('getDocInfoById [Error]: ', status, data);
             });
         },
         getManageStaffOfCurrentUser: function() {
-            this.$http.get(config.API_PATH + 'users/' + this.user.userid, function(data, status, request) {
+            this.$http.get(config.API_PATH + 'users/' + this.user.id, function(data, status, request) {
                 data = data.data;
 
                 if (data) {
@@ -57,6 +80,20 @@ var dashboard = new Vue({
                 }
             }).error(function(data, status, request) {
                 console.log('getManageStaffOfCurrentUser [Error]: ', status, data);
+            });
+        },
+        redirectToIndex2: function() {
+            if (this.docInfo.homepage != 1) {
+                window.location = 'index2.php';
+            }
+        },
+        getDocumentCategories: function() {
+            this.$http.post(config.API_PATH + 'document-categories/active', function(data, status, request) {
+                data = data.data;
+
+                this.$set('documentCategories', data);
+            }).error(function(data, status, request) {
+                console.log('getDocumentCategories [Error]: ', status, data);
             });
         }
     }

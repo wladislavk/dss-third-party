@@ -31,7 +31,7 @@
                                 <li><a href="manage_screeners.php?contacted=0">Pt. Screener</a></li>
                                 <li><a href='manage_vobs.php'>VOB History</a></li>
 
-                                <li v-if="($_SESSION['docid'] == $_SESSION['userid'] || $r['manage_staff'] == 1)">
+                                <li v-if="showInvoices">
                                     <a href="invoice_history.php">Invoices</a>
                                 </li>
 
@@ -53,7 +53,7 @@
                                 </li>
                                 <li><a href="change_list.php">Change List</a></li>
 
-                                <li v-if="($_SESSION['userid'] == $_SESSION['docid'] || $manageStaff['manage_staff'] == 1)">
+                                <li v-if="showTransactionCode">
                                     <a class="submenu_item" href="manage_transaction_code.php">Transaction Code</a>
                                 </li>
 
@@ -339,7 +339,7 @@
         </td>
     </tr>
 </table>
-<input type="hidden" id="dom-api-token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1XzEiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NjI4NzkyMTEsImV4cCI6MTQ2Mjk2NTYxMSwibmJmIjoxNDYyODc5MjExLCJqdGkiOiJjZmRmOWM2YmMxNTY5ZmMwZWM0ZTE0MjdkNDc3NzE0YSJ9.Raf9VL-a-CLiOlO1AhxG9D4u9IIYP-1_E2vKMVOGJGw" v-model="token">
+<input type="hidden" id="dom-api-token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1XzEiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NjI5NjcxMTcsImV4cCI6MTQ2MzA1MzUxNywibmJmIjoxNDYyOTY3MTE3LCJqdGkiOiJjNGJhOWE3ZWZjMWMzZWI0NjEwZGQwNTBhOTkzMTc4ZSJ9.TvHWs6kIc-2AZpFvZWSOxft93tCC6VGgJxpzGC-b-gI" v-model="token">
 
 <br /><br />
 

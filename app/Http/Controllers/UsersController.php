@@ -150,4 +150,18 @@ class UsersController extends Controller
 
         return ApiResponse::responseOk('', $this->currentUser);
     }
+
+    /**
+     * Get course staff of current logined user
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCourseStaff(User $resource)
+    {
+        $this->currentUser->id = preg_replace('/(?:u_|a_)/', '', $this->currentUser->id);
+
+        $data = $resource->getCourseStaff($this->currentUser->id);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

@@ -47,6 +47,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
     Route::post('users/current', 'UsersController@getCurrentUserInfo');
+    Route::post('users/course-staff', 'UsersController@getCourseStaff');
     Route::post('users/check', 'UsersController@check');
     Route::get('users/{id}/type', 'UsersController@getUserType');
 
@@ -135,6 +136,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
     Route::resource('change-lists', 'ChangeListsController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
+    Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
 
 
     Route::group(['prefix' => 'enrollments'], function () {

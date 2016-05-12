@@ -485,10 +485,33 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
     $first_sleeplab_name = st($sleeplab_myarray['company']);
   }
 
-  $q2_sql = "SELECT date, sleeptesttype, ahi, ahisupine, rdi, t9002, o2nadir, diagnosis, place, dd.device, d.ins_diagnosis, d.description FROM dental_summ_sleeplab dss 
-  	         LEFT JOIN dental_ins_diagnosis d
-  	         ON dss.diagnosis = d.ins_diagnosisid
-  	         LEFT JOIN dental_device dd ON dd.deviceid=dss.dentaldevice WHERE patiendid='".$patientid."' ORDER BY STR_TO_DATE(dss.date, '%m/%d/%Y') DESC LIMIT 1;";
+  $q2_sql = "SELECT
+        date,
+        sleeptesttype,
+        ahi,
+        ahisupine,
+        rdi,
+        t9002,
+        o2nadir,
+        diagnosis,
+        place,
+        dd.device,
+        d.ins_diagnosis,
+        d.description
+    FROM dental_summ_sleeplab dss
+        LEFT JOIN dental_ins_diagnosis d ON dss.diagnosis = d.ins_diagnosisid
+        LEFT JOIN dental_device dd ON dd.deviceid = dss.dentaldevice
+    WHERE patiendid = '$patientid'
+    ORDER BY COALESCE(
+        STR_TO_DATE(dss.date, '%m/%d/%Y'),
+        STR_TO_DATE(dss.date, '%m/%d/%y'),
+        STR_TO_DATE(dss.date, '%Y%m%d'),
+        STR_TO_DATE(dss.date, '%m-%d-%Y'),
+        STR_TO_DATE(dss.date, '%m-%d-%y'),
+        STR_TO_DATE(dss.date, '%m%d%Y'),
+        STR_TO_DATE(dss.date, '%m%d%y')
+    ) DESC
+    LIMIT 1";
   
   $q2_myarray = $db->getRow($q2_sql);
 

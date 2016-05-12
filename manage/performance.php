@@ -93,14 +93,30 @@ $myarray = $db->getRow($sql);
                  ";
 
   $screen_q = $db->getResults($screen_sql);
-  $sleepstudies = "SELECT count(ss.id) as num_ss FROM dental_summ_sleeplab ss                                 
-                   JOIN dental_patients p on ss.patiendid=p.patientid                        
-                   WHERE                                 
-                   (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
-                   (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                   ss.completed = 'Yes' AND ss.filename IS NOT NULL AND p.docid = '".$myarray['userid']."'
-                   AND str_to_date(ss.date, '%m/%d/%Y') BETWEEN '".$start_date."' AND '".$end_date."' 
-                   ;";
+  $sleepstudies = "SELECT count(ss.id) as num_ss
+      FROM dental_summ_sleeplab ss
+        JOIN dental_patients p on ss.patiendid = p.patientid
+      WHERE (
+              p.p_m_ins_type != '1'
+              OR (
+                  COALESCE(ss.diagnosising_doc, '') != ''
+                  AND COALESCE(ss.diagnosising_npi, '') != ''
+              )
+          )
+          AND COALESCE(ss.diagnosis, '') != ''
+          AND ss.completed = 'Yes'
+          AND ss.filename IS NOT NULL
+          AND p.docid = '".$myarray['userid']."'
+          AND COALESCE(
+              STR_TO_DATE(ss.date, '%m/%d/%Y'),
+              STR_TO_DATE(ss.date, '%m/%d/%y'),
+              STR_TO_DATE(ss.date, '%Y%m%d'),
+              STR_TO_DATE(ss.date, '%m-%d-%Y'),
+              STR_TO_DATE(ss.date, '%m-%d-%y'),
+              STR_TO_DATE(ss.date, '%m%d%Y'),
+              STR_TO_DATE(ss.date, '%m%d%y')
+          ) BETWEEN '$start_date' AND '$end_date'
+      ";
 
   $ss = $db->getRow($sleepstudies);
 

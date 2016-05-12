@@ -416,27 +416,26 @@ $last_r = mysqli_fetch_assoc($last_q);
             WHERE (
                 p.p_m_ins_type!='1'
                 OR (
-                    (
-                        ss.diagnosising_doc IS NOT NULL
-                        AND ss.diagnosising_doc != ''
-                    )
-                    AND (
-                        ss.diagnosising_npi IS NOT NULL
-                        AND ss.diagnosising_npi != ''
-                    )
+                    COALESCE(ss.diagnosising_doc, '') != ''
+                    AND COALESCE(ss.diagnosising_npi, '') != ''
                 )
             )
-            AND (
-                ss.diagnosis IS NOT NULL
-                AND ss.diagnosis != ''
-            )
+            AND COALESCE(ss.diagnosis, '') != ''
             AND ss.filename IS NOT NULL
             AND (
-                ss.sleeptesttype='PSG Baseline'
-                OR ss.sleeptesttype='HST Baseline'
+                ss.sleeptesttype = 'PSG Baseline'
+                OR ss.sleeptesttype = 'HST Baseline'
             )
-            AND ss.patiendid = '" . (!empty($_GET['pid']) ? $_GET['pid'] : '') . "'
-            ORDER BY ss.date DESC;";
+            AND ss.patiendid = '" . intval($_GET['pid']) . "'
+            ORDER BY COALESCE(
+                STR_TO_DATE(ss.date, '%m/%d/%Y'),
+                STR_TO_DATE(ss.date, '%m/%d/%y'),
+                STR_TO_DATE(ss.date, '%Y%m%d'),
+                STR_TO_DATE(ss.date, '%m-%d-%Y'),
+                STR_TO_DATE(ss.date, '%m-%d-%y'),
+                STR_TO_DATE(ss.date, '%m%d%Y'),
+                STR_TO_DATE(ss.date, '%m%d%y')
+            ) DESC";
         
         $baseline_result = mysqli_query($con,$baseline_sleepstudies);
         $baseline_numsleepstudy = mysqli_num_rows($baseline_result);
@@ -530,29 +529,28 @@ $last_r = mysqli_fetch_assoc($last_q);
             WHERE (
                 p.p_m_ins_type!='1'
                 OR (
-                    (
-                        ss.diagnosising_doc IS NOT NULL
-                        AND ss.diagnosising_doc != ''
-                    )
-                    AND (
-                        ss.diagnosising_npi IS NOT NULL
-                        AND ss.diagnosising_npi != ''
-                    )
+                    COALESCE(ss.diagnosising_doc, '') != ''
+                    AND COALESCE(ss.diagnosising_npi, '') != ''
                 )
             )
-            AND (
-                ss.diagnosis IS NOT NULL
-                AND ss.diagnosis != ''
-            )
+            AND COALESCE(ss.diagnosis, '') != ''
             AND ss.filename IS NOT NULL
             AND (
-                ss.sleeptesttype!='PSG'
-                AND ss.sleeptesttype!='HST'
-                AND ss.sleeptesttype!='PSG Baseline'
-                AND ss.sleeptesttype!='HST Baseline'
+                ss.sleeptesttype != 'PSG'
+                AND ss.sleeptesttype != 'HST'
+                AND ss.sleeptesttype != 'PSG Baseline'
+                AND ss.sleeptesttype != 'HST Baseline'
             )
-            AND ss.patiendid = '" . (!empty($_GET['pid']) ? $_GET['pid'] : '') . "'
-            ORDER BY ss.date DESC;";
+            AND ss.patiendid = '" . intval($_GET['pid']) . "'
+            ORDER BY COALESCE(
+                STR_TO_DATE(ss.date, '%m/%d/%Y'),
+                STR_TO_DATE(ss.date, '%m/%d/%y'),
+                STR_TO_DATE(ss.date, '%Y%m%d'),
+                STR_TO_DATE(ss.date, '%m-%d-%Y'),
+                STR_TO_DATE(ss.date, '%m-%d-%y'),
+                STR_TO_DATE(ss.date, '%m%d%Y'),
+                STR_TO_DATE(ss.date, '%m%d%y')
+            ) DESC";
         
         $result = mysqli_query($con,$sleepstudies);
         $numsleepstudy = mysqli_num_rows($result);

@@ -350,10 +350,7 @@ $baseline_sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
         )
         AND COALESCE(ss.diagnosis, '') != ''
         AND ss.filename IS NOT NULL
-        AND (
-            ss.sleeptesttype = 'PSG Baseline'
-            OR ss.sleeptesttype = 'HST Baseline'
-        )
+        AND ss.sleeptesttype NOT IN ('PSG Baseline', 'HST Baseline')
         AND ss.patiendid = '" . intval($_GET['pid']) . "'
     ORDER BY COALESCE(
         STR_TO_DATE(ss.date, '%m/%d/%Y'),
@@ -415,27 +412,13 @@ $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
     WHERE (
             p.p_m_ins_type != '1'
             OR (
-                (
-                    ss.diagnosising_doc IS NOT NULL
-                    AND ss.diagnosising_doc != ''
-                )
-                AND (
-                    ss.diagnosising_npi IS NOT NULL
-                    AND ss.diagnosising_npi != ''
-                )
+                COALESCE(ss.diagnosising_doc, '') != ''
+                AND COALESCE(ss.diagnosising_npi, '') != ''
             )
         )
-        AND (
-            ss.diagnosis IS NOT NULL
-            AND ss.diagnosis != ''
-        )
+        AND COALESCE(ss.diagnosis, '') != ''
         AND ss.filename IS NOT NULL
-        AND (
-            ss.sleeptesttype != 'PSG'
-            AND ss.sleeptesttype != 'HST'
-            AND ss.sleeptesttype != 'PSG Baseline'
-            AND ss.sleeptesttype != 'HST Baseline'
-        )
+        AND ss.sleeptesttype NOT IN ('PSG', 'HST', 'PSG Baseline', 'HST Baseline')
         AND ss.patiendid = '" . intval($_GET['pid']) . "'
     ORDER BY COALESCE(
         STR_TO_DATE(ss.date, '%m/%d/%Y'),
@@ -445,7 +428,8 @@ $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
         STR_TO_DATE(ss.date, '%m-%d-%y'),
         STR_TO_DATE(ss.date, '%m%d%Y'),
         STR_TO_DATE(ss.date, '%m%d%y')
-    ) DESC";
+    ) DESC
+    ";
 $sleepstudy = $db->getRow($sleepstudies);?>
 
     <br />

@@ -422,10 +422,7 @@ $last_r = mysqli_fetch_assoc($last_q);
             )
             AND COALESCE(ss.diagnosis, '') != ''
             AND ss.filename IS NOT NULL
-            AND (
-                ss.sleeptesttype = 'PSG Baseline'
-                OR ss.sleeptesttype = 'HST Baseline'
-            )
+            AND ss.sleeptesttype NOT IN ('PSG Baseline', 'HST Baseline')
             AND ss.patiendid = '" . intval($_GET['pid']) . "'
             ORDER BY COALESCE(
                 STR_TO_DATE(ss.date, '%m/%d/%Y'),
@@ -535,12 +532,7 @@ $last_r = mysqli_fetch_assoc($last_q);
             )
             AND COALESCE(ss.diagnosis, '') != ''
             AND ss.filename IS NOT NULL
-            AND (
-                ss.sleeptesttype != 'PSG'
-                AND ss.sleeptesttype != 'HST'
-                AND ss.sleeptesttype != 'PSG Baseline'
-                AND ss.sleeptesttype != 'HST Baseline'
-            )
+            AND ss.sleeptesttype NOT IN ('PSG', 'HST', 'PSG Baseline', 'HST Baseline')
             AND ss.patiendid = '" . intval($_GET['pid']) . "'
             ORDER BY COALESCE(
                 STR_TO_DATE(ss.date, '%m/%d/%Y'),

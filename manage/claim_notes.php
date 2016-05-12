@@ -29,6 +29,13 @@
   <?php if ($my) foreach ($my as $r) { ?>
           <div class="response_type_<?php echo  $r['create_type']; ?>" >
             <?php echo $r['note']; ?>
+            <?php
+            $a_sql = "SELECT * FROM dental_claim_note_attachment WHERE note_id='".mysqli_real_escape_string($con,$r['id'])."'";
+            $a_q = mysqli_query($con,$a_sql);
+            while($a=mysqli_fetch_assoc($a_q)){
+              ?> | <a href="display_file.php?f=<?php echo  $a['filename']; ?>" target="_blank">View Attachment</a><?php
+            }
+            ?>
             <div class="sub"><?php echo  $r['creator_name']; ?> on <?php echo  $r['adddate']; ?></div>
             <?php if($r['create_type'] == '1' && $r['creator_id'] == $_SESSION['userid']) { ?>
               <br />

@@ -1,7 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php   // include 'includes/top.htm';
 ?>
 
-<script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
+<script src="/assets/vendor/vue/vue.min.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
 
 <table id="dashboard">
@@ -77,7 +77,7 @@
                                 <li><a href="manage_locations.php">Manage Locations</a></li>
                                 <li><a href="data_import.php" onclick="return confirm('Data import is supported for certain file types from certain other software. Due to the complexity of data import, you must first create a Support ticket in order to use this feature correctly.');">Data Import</a></li>
 
-                                <li v-if="($r['use_eligible_api'] == 1)">
+                                <li v-if="showEnrollments">
                                     <a href="manage_enrollment.php">Enrollments</a>\
                                 </li>
 
@@ -91,18 +91,14 @@
                                 <li><a href="manual.php">Dental Sleep Solutions Procedures Manual</a></li>
                                 <li><a href="medicine_manual.php">Dental Sleep Medicine Manual</a></li>
 
-                                <li v-if="($_SESSION['user_type'] == DSS_USER_TYPE_FRANCHISEE)">
+                                <li v-if="showDSSFranchiseOperationsManual">
                                     <a href="operations_manual.php">DSS Franchise Operations Manual</a>
                                 </li>
 
                                 <li><a href="quick_facts.php">Quick Facts Reference</a></li>
                                 <li><a href="videos.php">Watch Videos</a></li> 
 
-                                <li v-if="($_SESSION['docid'] == $_SESSION['userid']) && ($r['use_course'] == 1)">
-                                    <a href="edx_login.php" target="_blank">Get C.E.</a>
-                                </li>
-
-                                <li v-else="! ($_SESSION['docid'] == $_SESSION['userid']) && ($course_r['use_course']==1 && $course_r['use_course_staff'] == 1)">
+                                <li v-if="showGetCE">
                                     <a href="edx_login.php" target="_blank">Get C.E.</a>
                                 </li>
 
@@ -121,23 +117,23 @@
                 <div class="notsuckertreemenu">
                     <ul id="notmenu">
                         <li>
-                            <a href="#" class=" count_{{ numPortal }} notification bad_count">{{ numPortal }} Web Portal <div class="arrow_right"></div></a>
+                            <a href="#" class=" count_{{ notificationsNumber }} notification bad_count">{{ notificationsNumber }} Web Portal <div class="arrow_right"></div></a>
                             <ul>
                                 <li>
-                                    <a href="manage_patient_contacts.php" class=" count_{{ numPc }} notification bad_count">
-                                        <span class="count">{{ numPc }}</span>
+                                    <a href="manage_patient_contacts.php" class=" count_{{ patientContactsNumber }} notification bad_count">
+                                        <span class="count">{{ patientContactsNumber }}</span>
                                         <span class="label">Pt Contacts</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="manage_patient_insurance.php" class=" count_{{ numPi }} notification bad_count">
-                                        <span class="count">{{ numPi }}</span>
+                                    <a href="manage_patient_insurance.php" class=" count_{{ patientInsurancesNumber }} notification bad_count">
+                                        <span class="count">{{ patientInsurancesNumber }}</span>
                                         <span class="label">Pt Insurance</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="manage_patient_changes.php" class=" count_{{ numC }} notification bad_count">
-                                        <span class="count">{{ numC }}</span>
+                                    <a href="manage_patient_changes.php" class=" count_{{ patientChangesNumber }} notification bad_count">
+                                        <span class="count">{{ patientChangesNumber }}</span>
                                         <span class="label">Pt Changes</span>
                                     </a>
                                 </li>
@@ -146,75 +142,75 @@
                     </ul>
                 </div>
 
-                <a v-if="$use_letters" href="letters.php?status=pending" class=" count_<?php echo $pending_letters; ?> notification <?php echo ($pending_letters==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $pending_letters;?></span>
+                <a v-if="useLetters" href="letters.php?status=pending" class=" count_{{ pendingLetters }} notification {{ pendingLetters == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ pendingLetters }}</span>
                     <span class="label">Letters</span>
                 </a>
 
-                <a v-if="($use_letters && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE)" href="letters.php?status=sent&mailed=0" class=" count_<?php echo $unmailed_letters; ?> notification bad_count">
-                    <span class="count"><?php echo $unmailed_letters;?></span>
+                <a v-if="showUnmailedLetters" href="letters.php?status=sent&mailed=0" class=" count_{{ unmailedLetters }} notification bad_count">
+                    <span class="count">{{ unmailedLetters }}</span>
                     <span class="label">Unmailed Letters</span>
                 </a>
 
-                <a href="manage_vobs.php?status=<?php echo DSS_PREAUTH_COMPLETE; ?>&viewed=0" class=" count_<?php echo $num_preauth; ?> notification <?php echo ($num_preauth==0)?"good_count":"great_count"; ?>">
-                    <span class="count"><?php echo $num_preauth;?></span>
+                <a href="manage_vobs.php?status={{ constants.DSS_PREAUTH_COMPLETE }}&viewed=0" class=" count_{{ preauthNumber }} notification {{ preauthNumber == 0 ? 'good_count' : 'great_count' }}">
+                    <span class="count">{{ preauthNumber }}</span>
                     <span class="label">VOBs</span>
                 </a>
 
-                <a v-if="$numRejectedPreAuth" href="manage_vobs.php?status=<?= DSS_PREAUTH_REJECTED ?>&viewed=0" class=" count_<?= $numRejectedPreAuth ?> notification bad_count">
-                    <span class="count"><?= $numRejectedPreAuth ?></span>
+                <a v-if="rejectedPreAuthNumber" href="manage_vobs.php?status={{ constants.DSS_PREAUTH_REJECTED }}&viewed=0" class=" count_{{ rejectedPreAuthNumber }} notification bad_count">
+                    <span class="count">{{ rejectedPreAuthNumber }}</span>
                     <span class="label">Rejected VOBs</span>
                 </a>
 
-                <a href="manage_hst.php?status=<?php echo DSS_HST_COMPLETE; ?>&viewed=0" class=" count_<?php echo $num_hst; ?> notification <?php echo ($num_hst==0)?"good_count":"great_count"; ?>">
-                    <span class="count"><?php echo $num_hst;?></span>
+                <a href="manage_hst.php?status={{ constants.DSS_HST_COMPLETE }}&viewed=0" class=" count_{{ hstNumber }} notification {{ hstNumber == 0 ? 'good_count' : 'great_count' }}">
+                    <span class="count">{{ hstNumber }}</span>
                     <span class="label">HSTs</span>
                 </a>
-                <a href="manage_hst.php?status=<?php echo DSS_HST_REJECTED; ?>&viewed=0" class=" count_<?php echo $num_rejected_hst; ?> notification <?php echo ($num_rejected_hst==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_rejected_hst;?></span>
+                <a href="manage_hst.php?status={{ constants.DSS_HST_REJECTED }}&viewed=0" class=" count_{{ rejectedHSTNumber }} notification {{ rejectedHSTNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ rejectedHSTNumber }}</span>
                     <span class="label">Rejected HSTs</span>
                 </a>
-                <a href="manage_hst.php?status=<?php echo DSS_HST_REQUESTED; ?>&viewed=0" class=" count_<?php echo $num_requested_hst; ?> notification <?php echo ($num_requested_hst==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_requested_hst;?></span>
+                <a href="manage_hst.php?status={{ constants.DSS_HST_REQUESTED }}&viewed=0" class=" count_{{ requestedHSTNumber }} notification {{ requestedHSTNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ requestedHSTNumber }}</span>
                     <span class="label">Unsent HSTs</span>
                 </a>
-                <a href="manage_claims.php" class="notification  count_<?php echo $num_pending_nodss_claims; ?> <?php echo ($num_pending_nodss_claims==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_pending_nodss_claims;?></span>
+                <a href="manage_claims.php" class="notification  count_{{ pendingNodssClaimsNumber }} {{ pendingNodssClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ pendingNodssClaimsNumber }}</span>
                     <span class="label">Pending Claims</span>
                 </a>
 
-                <a v-if="($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE)" href="manage_claims.php?unmailed=1" class=" count_<?php echo $num_unmailed_claims; ?> notification <?php echo ($num_unmailed_claims==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_unmailed_claims;?></span>
+                <a v-if="showUnmailedClaims" href="manage_claims.php?unmailed=1" class=" count_{{ unmailedClaimsNumber }} notification {{ unmailedClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ unmailedClaimsNumber }}</span>
                     <span class="label">Unmailed Claims</span>
                 </a>
 
-                <a href="manage_rejected_claims.php" class=" count_<?php echo $num_rejected_claims; ?> notification <?php echo ($num_rejected_claims==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_rejected_claims;?></span>
+                <a href="manage_rejected_claims.php" class=" count_{{ rejectedClaimsNumber }} notification {{ rejectedClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ rejectedClaimsNumber }}</span>
                     <span class="label">Rejected Claims</span>
                 </a>
-                <a href="manage_unsigned_notes.php" class=" count_<?php echo $num_unsigned; ?> notification <?php echo ($num_unsigned==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_unsigned;?></span>
+                <a href="manage_unsigned_notes.php" class=" count_{{ unsignedNotesNumber }} notification {{ unsignedNotesNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ unsignedNotesNumber }}</span>
                     <span class="label">Unsigned Notes</span>
                 </a>
-                <a href="manage_vobs.php?status=<?php echo DSS_PREAUTH_REJECTED; ?>&viewed=0" class=" count_<?php echo $num_alerts; ?> notification bad_count">
-                    <span class="count"><?php echo $num_alerts; ?></span>
+                <a href="manage_vobs.php?status={{ constants.DSS_PREAUTH_REJECTED }}&viewed=0" class=" count_{{ alertsNumber }} notification bad_count">
+                    <span class="count">{{ alertsNumber }}</span>
                     <span class="label">Alerts</span>
                 </a>
-                <a href="manage_faxes.php" class="notification  count_<?php echo $num_fax_alerts; ?> <?php echo ($num_fax_alerts==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_fax_alerts;?></span>
+                <a href="manage_faxes.php" class="notification  count_{{ faxAlertsNumber }} {{ faxAlertsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ faxAlertsNumber }}</span>
                     <span class="label">Failed Faxes</span>
                 </a>
-                <a href="pending_patient.php" class="notification  count_<?php echo $num_pending_duplicates; ?> <?php echo ($num_pending_duplicates==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_pending_duplicates;?></span>
+                <a href="pending_patient.php" class="notification  count_{{ pendingDuplicatesNumber }} {{ pendingDuplicatesNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ pendingDuplicatesNumber }}</span>
                     <span class="label">Pending Duplicates</span>
                 </a>
-                <a href="manage_email_bounces.php" class="notification count_<?php echo $num_bounce; ?> <?php echo ($num_bounce==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_bounce;?></span>
+                <a href="manage_email_bounces.php" class="notification count_{{ emailBouncesNumber }} {{ emailBouncesNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ emailBouncesNumber }}</span>
                     <span class="label">Email Bounces</span>
                 </a>
 
-                <a v-if="$use_payment_reports" href="payment_reports_list.php?unviewed=1" class="notification count_<?php echo $num_payment_reports; ?> <?php echo ($num_payment_reports==0)?"good_count":"bad_count"; ?>">
-                    <span class="count"><?php echo $num_payment_reports;?></span>
+                <a v-if="usePaymentReports" href="payment_reports_list.php?unviewed=1" class="notification count_{{ paymentReportsNumber }} {{ paymentReportsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                    <span class="count">{{ paymentReportsNumber }}</span>
                     <span class="label">Payment Reports</span>
                 </a>
 
@@ -225,102 +221,102 @@
                 <h3>Tasks</h3>
                 <div class="task_menu index_task">
                     <h4>My Tasks</h4>
-                    <h4 v-if="count($od_q) > 0" style="margin-bottom:0px;color:red;" class="task_od_header">Overdue</h4>
-                    <ul v-if="count($od_q) > 0" class="task_od_list">
-                        <li v-for="task in overdueTasks" class="task_item task_<?php echo $od_r['id']; ?>" style="clear:both;">
-                            <div class="task_extra" id="task_extra_<?php echo $od_r['id']; ?>" >
-                                <a href="#" onclick="delete_task('<?php echo $od_r['id']; ?>')" class="task_delete"></a>
-                                <a href="#" onclick="loadPopup('add_task.php?id=<?php echo $od_r['id']; ?>')" class="task_edit">Edit</a>
+                    <h4 v-if="overdueTasks.length > 0" style="margin-bottom:0px;color:red;" class="task_od_header">Overdue</h4>
+                    <ul v-if="overdueTasks.length > 0" class="task_od_list">
+                        <li v-for="task in overdueTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                             </div>
-                            <input type="checkbox" style="float:left; " class="task_status" value="<?php echo $od_r['id']; ?>" />
-                            <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
+                            <input type="checkbox" style="float:left; " class="task_status" value="{{ task.id }}" />
+                            <div style="float:left; width:170px;">{{ task.task }}
 
-                                <a v-if="($od_r['firstname'] != '' && $od_r['lastname'] != '')" href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">$od_r['firstname'] $od_r['lastname']</a>;
+                                <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
 
                             </div>
                         </li>
                     </ul>
 
-                    <h4 v-if="(count($tod_q) > 0)" style="margin-bottom:0px;" class="task_tod_header">Today</h4>
-                    <ul v-if="(count($tod_q) > 0)" class="task_tod_list">
-                        <li v-for="task in todayTasks" class="task_item task_<?php echo $od_r['id']; ?>" style="clear:both;">
-                            <div class="task_extra" id="task_extra_<?php echo $od_r['id']; ?>" >
-                                <a href="#" onclick="delete_task('<?php echo $od_r['id']; ?>')" class="task_delete"></a>
-                                <a href="#" onclick="loadPopup('add_task.php?id=<?php echo $od_r['id']; ?>')" class="task_edit">Edit</a>
+                    <h4 v-if="todayTasks.length > 0" style="margin-bottom:0px;" class="task_tod_header">Today</h4>
+                    <ul v-if="todayTasks.length > 0" class="task_tod_list">
+                        <li v-for="task in todayTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                             </div>
-                            <input type="checkbox" style="float:left;" class="task_status" value="<?php echo $od_r['id']; ?>" />
+                            <input type="checkbox" style="float:left;" class="task_status" value="{{ task.id }}" />
                             <div style="float:left; width:170px;">
-                                <?php echo $od_r['task']; ?>
+                                {{ task.task }}
 
-                                <a if="($od_r['firstname']!='' && $od_r['lastname']!='')" href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>;
-
-                            </div>
-                        </li>
-                    </ul>
-
-                    <h4 v-if="(count($tom_q) > 0)" style="margin-bottom:0px;" class="task_tom_header">Tomorrow</h4>
-                    <ul v-if="(count($tom_q) > 0)" class="task_tom_list">
-                        <li v-for="task in tomorrowTasks" class="task_item task_<?php echo $od_r['id']; ?>" style="clear:both;">
-                            <div class="task_extra" id="task_extra_<?php echo $od_r['id']; ?>" >
-                                <a href="#" onclick="delete_task('<?php echo $od_r['id']; ?>')" class="task_delete"></a>
-                                <a href="#" onclick="loadPopup('add_task.php?id=<?php echo $od_r['id']; ?>')" class="task_edit">Edit</a>
-                            </div>
-                            <input type="checkbox" style="float:left;" class="task_status" value="<?php echo $od_r['id']; ?>" />
-                            <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
-
-                                <a v-if="($od_r['firstname']!='' && $od_r['lastname']!='')" href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>;
+                                <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
 
                             </div>
                         </li>
                     </ul>
 
-                    <h4 v-if="(count($tw_q) > 0)" id="task_tw_header" class="task_tw_header">This Week</h4>
-                    <ul v-if="(count($tw_q) > 0)" id="task_tw_list">
-                        <li v-for="task in thisWeekTasks" class="task_item task_<?php echo $od_r['id']; ?>" style="clear:both;">
-                            <div class="task_extra" id="task_extra_<?php echo $od_r['id']; ?>" >
-                                <a href="#" onclick="delete_task('<?php echo $od_r['id']; ?>')" class="task_delete"></a>
-                                <a href="#" onclick="loadPopup('add_task.php?id=<?php echo $od_r['id']; ?>')" class="task_edit">Edit</a>
+                    <h4 v-if="tomorrowTasks.length > 0" style="margin-bottom:0px;" class="task_tom_header">Tomorrow</h4>
+                    <ul v-if="tomorrowTasks.length > 0" class="task_tom_list">
+                        <li v-for="task in tomorrowTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                             </div>
-                            <input type="checkbox" class="task_status" style="float:left;" value="<?php echo $od_r['id']; ?>" />
-                            <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
+                            <input type="checkbox" style="float:left;" class="task_status" value="{{ task.id }}" />
+                            <div style="float:left; width:170px;">{{ task.task }}
 
-                                <a v-if="($od_r['firstname']!='' && $od_r['lastname']!='')" href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>;
-
-                            </div>
-                        </li>
-                    </ul>
-
-                    <h4 v-if="(count($nw_q) > 0)" id="task_nw_header" class="task_nw_header">Next Week</h4>
-                    <ul v-if="(count($nw_q) > 0)" id="task_nw_list">
-                        <li v-for="task in nextWeekTasks" class="task_item task_<?php echo $od_r['id']; ?>" style="clear:both;">
-                            <div class="task_extra" id="task_extra_<?php echo $od_r['id']; ?>" >
-                                <a href="#" onclick="delete_task('<?php echo $od_r['id']; ?>')" class="task_delete"></a>
-                                <a href="#" onclick="loadPopup('add_task.php?id=<?php echo $od_r['id']; ?>')" class="task_edit">Edit</a>
-                            </div>
-                            <input type="checkbox" class="task_status" style="float:left;" value="<?php echo $od_r['id']; ?>" />
-                            <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
-
-                                <a v-if="($od_r['firstname']!='' && $od_r['lastname']!='')" href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>;
+                                <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
 
                             </div>
                         </li>
                     </ul>
 
-                    <h4 v-if="(count($lat_q) > 0)" id="task_lat_header" class="task_lat_header">Later</h4>
-                    <ul v-if="(count($lat_q) > 0)" id="task_lat_list">
-                        <li v-for="task in laterTasks" class="task_item task_<?php echo $od_r['id']; ?>" style="clear:both;">
-                            <div class="task_extra" id="task_extra_<?php echo $od_r['id']; ?>" >
-                                <a href="#" onclick="delete_task('<?php echo $od_r['id']; ?>')" class="task_delete"></a>
-                                <a href="#" onclick="loadPopup('add_task.php?id=<?php echo $od_r['id']; ?>')" class="task_edit">Edit</a>
+                    <h4 v-if="thisWeekTasks.length > 0" id="task_tw_header" class="task_tw_header">This Week</h4>
+                    <ul v-if="thisWeekTasks.length > 0" id="task_tw_list">
+                        <li v-for="task in thisWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                             </div>
-                            <input type="checkbox" class="task_status" style="float:left;" value="<?php echo $od_r['id']; ?>" />
+                            <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                            <div style="float:left; width:170px;">{{ task.task }}
+
+                                <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+
+                            </div>
+                        </li>
+                    </ul>
+
+                    <h4 v-if="nextWeekTasks.length > 0" id="task_nw_header" class="task_nw_header">Next Week</h4>
+                    <ul v-if="nextWeekTasks.length > 0" id="task_nw_list">
+                        <li v-for="task in nextWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                            </div>
+                            <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                            <div style="float:left; width:170px;">{{ task.task }}
+
+                                <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+
+                            </div>
+                        </li>
+                    </ul>
+
+                    <h4 v-if="laterTasks.length > 0" id="task_lat_header" class="task_lat_header">Later</h4>
+                    <ul v-if="laterTasks.length > 0" id="task_lat_list">
+                        <li v-for="task in laterTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                            </div>
+                            <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                             <div style="float:left; width:170px;">
 
                                 <?php date('M d', strtotime($od_r['due_date'])); ?>
                                 -
-                                <?php echo $od_r['task']; ?>
+                                {{ task.task }}
 
-                                <a v-if="($od_r['firstname']!='' && $od_r['lastname']!='')" href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>;
+                                <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
 
                             </div>
                         </li>
@@ -339,7 +335,7 @@
         </td>
     </tr>
 </table>
-<input type="hidden" id="dom-api-token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1XzEiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NjI5NjcxMTcsImV4cCI6MTQ2MzA1MzUxNywibmJmIjoxNDYyOTY3MTE3LCJqdGkiOiJjNGJhOWE3ZWZjMWMzZWI0NjEwZGQwNTBhOTkzMTc4ZSJ9.TvHWs6kIc-2AZpFvZWSOxft93tCC6VGgJxpzGC-b-gI" v-model="token">
+<input type="hidden" id="dom-api-token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1XzEiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NjMwNTk4MjcsImV4cCI6MTQ2MzE0NjIyNywibmJmIjoxNDYzMDU5ODI3LCJqdGkiOiI0ZDdmODdiZjhkN2MwY2MxNDhmMjkwM2M2MzAzNjNkMiJ9.aMlkd7llRzgsSO20htyhOcpv6nE6kRod5b1UnlsTXIE" v-model="token">
 
 <br /><br />
 

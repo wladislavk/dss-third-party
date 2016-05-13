@@ -1054,24 +1054,3 @@ function linkRequestData ($itemTable, $itemId) {
 
     $db->query("INSERT INTO dental_request_data_type SET $typeData, created_at = NOW()");
 }
-
-/**
- * @param array        $query
- * @param string|array $overrideKey
- * @param mixed|null   $overrideValue
- */
-function buildQuery (Array $query, $overrideKey='', $overrideValue=null) {
-    if (!is_array($overrideKey)) {
-        $overrideKey = [$overrideKey => $overrideValue];
-    }
-
-    foreach ($overrideKey as $key=>$value) {
-        if (is_null($value)) {
-            unset($query[$key]);
-        } else {
-            $query[$key] = $value;
-        }
-    }
-
-    return http_build_query($query);
-}

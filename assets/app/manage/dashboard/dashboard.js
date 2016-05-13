@@ -35,6 +35,7 @@ var dashboard = new Vue({
         pendingNodssClaimsNumber : 2,
         unmailedClaimsNumber     : 3,
         rejectedClaimsNumber     : 4,
+        pendingClaimsNumber      : 3,
         unsignedNotesNumber      : 3,
         alertsNumber             : 2,
         faxAlertsNumber          : 4,
@@ -184,6 +185,48 @@ var dashboard = new Vue({
                 this.$set('memos', data);
             }).error(function(data, status, request) {
                 console.log('getCourseStaff [Error]: ', status, data);
+            });
+        },
+        onClickExportMD: function() {
+            swal({
+                title            : '',
+                text             : 'Enter your password',
+                type             : 'input',
+                showCancelButton : true,
+                closeOnConfirm   : false,
+                animation        : 'slide-from-top',
+                inputPlaceholder : 'Enter password'
+            }, function(inputValue){
+                if (inputValue === "") {
+                    swal.showInputError("You need to write the password!");
+                    return false;
+                }
+
+                if (inputValue === "1234") {
+                    swal.close();
+                    window.location.href = 'export_md.php';
+                } else if (inputValue.length > 0) {
+                    swal("Oops...", "Wrong password!", "error");
+                    return false;
+                }
+            });
+        },
+        onClickDataImport: function() {
+            swal({
+                title              : "",
+                text               : "Data import is supported for certain file types from certain other software. Due to the complexity of data import, you must first create a Support ticket in order to use this feature correctly.",
+                type               : "warning",
+                showCancelButton   : true,
+                confirmButtonColor : "#3CB371",
+                confirmButtonText  : "Ok",
+                cancelButtonText   : "Cancel",
+                closeOnConfirm     : true,
+                closeOnCancel      : true
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    window.location.href = 'data_import.php';
+                }
             });
         }
     }

@@ -3,6 +3,52 @@
 
 <script src="/assets/vendor/vue/vue.min.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
+<script src="/assets/vendor/sweetalert/sweetalert.min.js" type="text/javascript"></script>
+
+<link rel="stylesheet" type="text/css" href="/assets/vendor/sweetalert/sweetalert.css">
+<link rel="stylesheet" type="text/css" href="/assets/css/popup.css">
+
+<!-- template for the Modal component -->
+<script type="x/template" id="modal-template">
+    <div class="modal-mask" @click="close" v-show="show" transition="modal">
+        <div class="modal-container" @click.stop>
+            <slot></slot>
+        </div>
+    </div>
+</script>
+
+<!-- template for the NewPostModal component -->
+<script type="x/template" id="new-post-modal-template">
+    <modal :show.sync="show" :on-close="close">
+        <div class="modal-header">
+            <h3>New Post</h3>
+        </div>
+
+        <div class="modal-body">
+            <label class="form-label">
+                Title
+                <input v-model="title" class="form-control">
+            </label>
+            <label class="form-label">
+                Body
+                <textarea v-model="body" rows="5" class="form-control"></textarea>
+            </label>
+        </div>
+
+        <div class="modal-footer text-right">
+            <button class="modal-default-button" @click="savePost()">
+                Save
+            </button>
+        </div>
+    </modal>
+</script>
+
+<div id="app">
+    <new-post-modal :show.sync="showNewPostModal"></new-post-modal>
+    <button @click="showNewPostModal = true">New Post</button>
+</div>
+
+<script type="text/javascript" src="/assets/app/modules/popup.js"></script>
 
 <table id="dashboard">
     <tr>
@@ -26,7 +72,7 @@
                             <a href="#">Reports</a>
                             <ul>
                                 <li><a href="ledger_reportfull.php">Ledger</a></li>
-                                <li><a href="manage_claims.php">Claims (<?php echo  $num_pending_claims; ?>)</a></li>
+                                <li><a href="manage_claims.php">Claims ({{ pendingClaimsNumber }})</a></li>
                                 <li><a href="performance.php">Performance</a></li>
                                 <li><a href="manage_screeners.php?contacted=0">Pt. Screener</a></li>
                                 <li><a href='manage_vobs.php'>VOB History</a></li>
@@ -65,7 +111,7 @@
                                         <li><a href="manage_appts.php">Appointment Types</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="export_md.php" onclick="return (prompt('Enter password')=='1234');">Export MD</a></li>
+                                <li><a href="#" v-on:click="onClickExportMD">Export MD</a></li>
                                 <li>
                                     <a href="#">DSS Files</a>
                                     <ul>
@@ -75,7 +121,7 @@
                                     </ul>
                                 </li>
                                 <li><a href="manage_locations.php">Manage Locations</a></li>
-                                <li><a href="data_import.php" onclick="return confirm('Data import is supported for certain file types from certain other software. Due to the complexity of data import, you must first create a Support ticket in order to use this feature correctly.');">Data Import</a></li>
+                                <li><a href="#" v-on:click="onClickDataImport">Data Import</a></li>
 
                                 <li v-if="showEnrollments">
                                     <a href="manage_enrollment.php">Enrollments</a>\

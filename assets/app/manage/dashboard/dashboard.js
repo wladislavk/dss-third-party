@@ -1,8 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var config    = require('../../modules/config.js');
 var constants = require('../../modules/constants.js');
-
-Vue.http.headers.common['Authorization'] = 'Bearer ' + document.getElementById('dom-api-token').value;
+var storage   = require('../../modules/storage.js');
 
 var dashboard = new Vue({
     el: '#dashboard',
@@ -61,6 +60,7 @@ var dashboard = new Vue({
         showUnmailedClaims               : false,
     },
     created: function() {
+        Vue.http.headers.common['Authorization'] = 'Bearer ' + storage.get('token');
         /*
         1. getCurrentUser
         2.1 getDocInfoById
@@ -231,7 +231,7 @@ var dashboard = new Vue({
         }
     }
 });
-},{"../../modules/config.js":2,"../../modules/constants.js":3}],2:[function(require,module,exports){
+},{"../../modules/config.js":2,"../../modules/constants.js":3,"../../modules/storage.js":4}],2:[function(require,module,exports){
 module.exports = {
     API_ROOT: 'http://api.ds3.loc/',
     get API_PATH () {
@@ -258,4 +258,21 @@ module.exports = {
     DSS_HST_REJECTED  : 4,
     DSS_HST_CONTACTED : 5
 }
+},{}],4:[function(require,module,exports){
+module.exports = {
+    get: function(key) {
+        if (localStorage.getItem(key)) {
+            return localStorage.getItem(key);
+        }
+        return [];
+    },
+    save: function(key, value) {
+        localStorage.setItem(key, value);
+    },
+    remove: function(key) {
+        if (localStorage.getItem(key)) {
+            localStorage.removeItem(key);
+        }
+    }
+};
 },{}]},{},[1]);

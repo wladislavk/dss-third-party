@@ -4,6 +4,7 @@
 <script src="/assets/vendor/vue/vue.min.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
 <script src="/assets/vendor/sweetalert/sweetalert.min.js" type="text/javascript"></script>
+<script src="/assets/vendor/moment.js" type="text/javascript"></script>
 
 <link rel="stylesheet" type="text/css" href="/assets/vendor/sweetalert/sweetalert.css">
 
@@ -314,8 +315,9 @@
                             </div>
                             <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                             <div style="float:left; width:170px;">
-
-                                <?php date('M d', strtotime($od_r['due_date'])); ?>
+                                <script>
+                                    moment('{{ task.due_date || "" }}', 'MM DD');
+                                </script>
                                 -
                                 {{ task.task }}
 
@@ -338,7 +340,6 @@
         </td>
     </tr>
 </table>
-<input type="hidden" id="dom-api-token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1XzEiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3QiLCJpYXQiOjE0NjMwNTk4MjcsImV4cCI6MTQ2MzE0NjIyNywibmJmIjoxNDYzMDU5ODI3LCJqdGkiOiI0ZDdmODdiZjhkN2MwY2MxNDhmMjkwM2M2MzAzNjNkMiJ9.aMlkd7llRzgsSO20htyhOcpv6nE6kRod5b1UnlsTXIE" v-model="token">
 
 <br /><br />
 

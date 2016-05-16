@@ -1,7 +1,6 @@
 var config    = require('../../modules/config.js');
 var constants = require('../../modules/constants.js');
-
-Vue.http.headers.common['Authorization'] = 'Bearer ' + document.getElementById('dom-api-token').value;
+var storage   = require('../../modules/storage.js');
 
 var dashboard = new Vue({
     el: '#dashboard',
@@ -60,6 +59,7 @@ var dashboard = new Vue({
         showUnmailedClaims               : false,
     },
     created: function() {
+        Vue.http.headers.common['Authorization'] = 'Bearer ' + storage.get('token');
         /*
         1. getCurrentUser
         2.1 getDocInfoById

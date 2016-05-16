@@ -6,49 +6,6 @@
 <script src="/assets/vendor/sweetalert/sweetalert.min.js" type="text/javascript"></script>
 
 <link rel="stylesheet" type="text/css" href="/assets/vendor/sweetalert/sweetalert.css">
-<link rel="stylesheet" type="text/css" href="/assets/css/popup.css">
-
-<!-- template for the Modal component -->
-<script type="x/template" id="modal-template">
-    <div class="modal-mask" @click="close" v-show="show" transition="modal">
-        <div class="modal-container" @click.stop>
-            <slot></slot>
-        </div>
-    </div>
-</script>
-
-<!-- template for the NewPostModal component -->
-<script type="x/template" id="new-post-modal-template">
-    <modal :show.sync="show" :on-close="close">
-        <div class="modal-header">
-            <h3>New Post</h3>
-        </div>
-
-        <div class="modal-body">
-            <label class="form-label">
-                Title
-                <input v-model="title" class="form-control">
-            </label>
-            <label class="form-label">
-                Body
-                <textarea v-model="body" rows="5" class="form-control"></textarea>
-            </label>
-        </div>
-
-        <div class="modal-footer text-right">
-            <button class="modal-default-button" @click="savePost()">
-                Save
-            </button>
-        </div>
-    </modal>
-</script>
-
-<div id="app">
-    <new-post-modal :show.sync="showNewPostModal"></new-post-modal>
-    <button @click="showNewPostModal = true">New Post</button>
-</div>
-
-<script type="text/javascript" src="/assets/app/modules/popup.js"></script>
 
 <table id="dashboard">
     <tr>

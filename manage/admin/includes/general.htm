@@ -98,60 +98,80 @@ function get_mdcontactids ($pid, $active = true) {
 }
 
 function get_mdreferralids ($pid, $active = true) {
+    $db = new DB();
+    $pid = intval($pid);
 
-  $db = new DB(); 
-  $contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid 
-                  	JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
-                  	WHERE dental_patients.patientid IN('".$pid."') AND dental_patients.referred_source IN('2') AND ct.physician=1;";
-  $contact_res = $db->getResults($contact_sql);
-  $contactids = array();
-  if ($contact_res) foreach ($contact_res as $row) {
-    $element = array_shift($row);
-    if(!in_array($element, $contactids)){
-      if($active){
-        $a_sql = "select status FROM dental_contact WHERE contactid='".mysqli_real_escape_string($GLOBALS['con'],$element)."'";
-        $a_r = $db->getRow($a_sql);
-        if($a_r['status']==1){
-          $contactids[] = $element;
+    $contact_sql = "SELECT dental_contact.contactid, dental_contact.status
+        FROM dental_contact
+            JOIN dental_patients ON dental_patients.referred_by = dental_contact.contactid
+            JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
+        WHERE dental_patients.patientid = '$pid'
+            AND dental_patients.referred_source IN ('2')
+            AND ct.physician = 1
+        GROUP BY dental_contact.contactid
+        ORDER BY dental_contact.contactid";
+
+    $contact_res = $db->getResults($contact_sql);
+    $contactids = [];
+
+    foreach ($contact_res as $element) {
+        if (!in_array($element['contactid'], $contactids)) {
+            if ($active) {
+                if ($element['status'] == 1) {
+                    $contactids[] = $element['contactid'];
+                }
+            } else {
+                $contactids[] = $element['contactid'];
+            }
         }
-      }else{
-        $contactids[] = $element;
-      }
-  	}
-  }
+    }
 
-  $contactid_list = clear_id_list(implode(",", $contactids));
-
-  return $contactid_list;
-
+    $contactid_list = clear_id_list(implode(",", $contactids));
+    return $contactid_list;
 }
 
 function get_ptreferralids ($pid) {
+    $db = new Db();
+    $pid = intval($pid);
 
-  $db = new Db();
-  if ($pid) {
-  	$pt_sql = "SELECT referred_source FROM dental_patients WHERE patientid=".$pid." LIMIT 1";
-  	$prow = $db->getRow($pt_sql);
-  }
-	if(!empty($prow['referred_source']) && $prow['referred_source']==1){
-    $contact_sql = "SELECT pr.patientid FROM dental_patients pr INNER JOIN dental_patients p ON p.referred_by = pr.patientid WHERE p.patientid IN('".s_for($pid)."')";
-	}elseif(!empty($prow['referred_source']) && $prow['referred_source']==2){
-		$contact_sql = "SELECT dental_contact.contactid FROM dental_contact JOIN dental_patients ON  dental_patients.referred_by=dental_contact.contactid 
-		JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
-			WHERE dental_patients.patientid IN('".s_for($pid)."') AND ct.physician != 1;";
-	}
-  if(!empty($prow['referred_source']) && ($prow['referred_source']==1 || $prow['referred_source']==2)){
-  	$contact_res = $db->getResults($contact_sql);
-  }
-  $contactids = array();
-  if (!empty($contact_res)) {
-    foreach ($contact_res as $row) {
-      $contactids[] = array_shift($row);
+    if ($pid) {
+        $pt_sql = "SELECT referred_source
+            FROM dental_patients
+            WHERE patientid = '$pid'
+            LIMIT 1";
+        $prow = $db->getRow($pt_sql);
     }
-  }
-  $contactid_list = clear_id_list(implode(",", $contactids));
 
-  return $contactid_list;
+    if (!empty($prow['referred_source']) && $prow['referred_source'] == 1) {
+        $contact_sql = "SELECT pr.patientid
+            FROM dental_patients pr
+                INNER JOIN dental_patients p ON p.referred_by = pr.patientid
+            WHERE p.patientid = '$pid'
+            ORDER BY pr.patientid";
+    } elseif (!empty($prow['referred_source']) && $prow['referred_source']==2){
+        $contact_sql = "SELECT dental_contact.contactid
+            FROM dental_contact
+                JOIN dental_patients ON  dental_patients.referred_by = dental_contact.contactid
+                JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
+            WHERE dental_patients.patientid = '$pid'
+                AND ct.physician != 1
+            ORDER BY dental_contact.contactid";
+    }
+
+    if (!empty($prow['referred_source']) && ($prow['referred_source'] == 1 || $prow['referred_source'] == 2)) {
+        $contact_res = $db->getResults($contact_sql);
+    }
+
+    $contactids = [];
+
+    if (!empty($contact_res)) {
+        foreach ($contact_res as $row) {
+            $contactids[] = array_shift($row);
+        }
+    }
+
+    $contactid_list = clear_id_list(implode(",", $contactids));
+    return $contactid_list;
 }
 
 

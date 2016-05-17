@@ -435,13 +435,13 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
             LEFT JOIN dental_ins_diagnosis d ON s.diagnosis = d.ins_diagnosisid
         WHERE patiendid = '$patientid'
         ORDER BY COALESCE(
-            STR_TO_DATE(ss.date, '%m/%d/%Y'),
-            STR_TO_DATE(ss.date, '%m/%d/%y'),
-            STR_TO_DATE(ss.date, '%Y%m%d'),
-            STR_TO_DATE(ss.date, '%m-%d-%Y'),
-            STR_TO_DATE(ss.date, '%m-%d-%y'),
-            STR_TO_DATE(ss.date, '%m%d%Y'),
-            STR_TO_DATE(ss.date, '%m%d%y')
+            STR_TO_DATE(s.date, '%m/%d/%Y'),
+            STR_TO_DATE(s.date, '%m/%d/%y'),
+            STR_TO_DATE(s.date, '%Y%m%d'),
+            STR_TO_DATE(s.date, '%m-%d-%Y'),
+            STR_TO_DATE(s.date, '%m-%d-%y'),
+            STR_TO_DATE(s.date, '%m%d%Y'),
+            STR_TO_DATE(s.date, '%m%d%y')
         ) ASC
         LIMIT 1";
 
@@ -491,13 +491,13 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
             AND s.patiendid = '$patientid'
             AND s.sleeptesttype IN ('PSG Baseline', 'HST Baseline', 'PSG', 'HST')
         ORDER BY sort_order ASC, COALESCE(
-            STR_TO_DATE(ss.date, '%m/%d/%Y'),
-            STR_TO_DATE(ss.date, '%m/%d/%y'),
-            STR_TO_DATE(ss.date, '%Y%m%d'),
-            STR_TO_DATE(ss.date, '%m-%d-%Y'),
-            STR_TO_DATE(ss.date, '%m-%d-%y'),
-            STR_TO_DATE(ss.date, '%m%d%Y'),
-            STR_TO_DATE(ss.date, '%m%d%y')
+            STR_TO_DATE(s.date, '%m/%d/%Y'),
+            STR_TO_DATE(s.date, '%m/%d/%y'),
+            STR_TO_DATE(s.date, '%Y%m%d'),
+            STR_TO_DATE(s.date, '%m-%d-%Y'),
+            STR_TO_DATE(s.date, '%m-%d-%y'),
+            STR_TO_DATE(s.date, '%m%d%Y'),
+            STR_TO_DATE(s.date, '%m%d%y')
         ) DESC, s.id DESC
         LIMIT 1;";
   

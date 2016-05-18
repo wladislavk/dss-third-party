@@ -554,7 +554,7 @@ $template = htmlspecialchars($template);
   				$md_referrals = explode(",", $row['md_referral_list']);
   				$key = array_search($recipientid, $md_referrals);
   				unset($md_referrals[$key]);
-  				$new_md_referrals = implode(",", $mds);
+  				$new_md_referrals = implode(",", $md_referrals);
   			}
   			if($update_send){
   				$send_method = $update_send;

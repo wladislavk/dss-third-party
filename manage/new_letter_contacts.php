@@ -21,8 +21,8 @@ $contacts = [
             (!empty($contactinfo['patient'][0]['salutation']) ? $contactinfo['patient'][0]['salutation'] : '') . " " .
             (!empty($contactinfo['patient'][0]['firstname']) ? $contactinfo['patient'][0]['firstname'] : '') . " " .
             (!empty($contactinfo['patient'][0]['lastname']) ? $contactinfo['patient'][0]['lastname'] : ''),
-        'email' => (!empty($contactinfo['patient'][0]['email']) ? $contactinfo['patient'][0]['email'] : ''),
-        'fax' => (!empty($contactinfo['patient'][0]['fax']) ? $contactinfo['patient'][0]['fax'] : ''),
+        'email' => !empty($contactinfo['patient'][0]['email']) ? $contactinfo['patient'][0]['email'] : '',
+        'fax' => !empty($contactinfo['patient'][0]['fax']) ? $contactinfo['patient'][0]['fax'] : '',
     ]
 ];
 

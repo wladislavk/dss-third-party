@@ -382,7 +382,6 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
     $location_query = "SELECT * FROM dental_locations WHERE default_location=1 AND docid='".mysqli_real_escape_string($con, $docid)."'";
   }
 
-  error_log($location_query);
   $location_info = $db->getRow($location_query);
 
   // Get Company Name and Address
@@ -420,10 +419,31 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
   }
 
   // Oldest Sleepstudy Results
-  $q1_sql = "SELECT s.date, s.sleeptesttype, s.ahi, s.rdi, s.t9002, s.o2nadir, s.diagnosis, s.place, s.dentaldevice, d.ins_diagnosis, d.description FROM dental_summ_sleeplab s 
-             LEFT JOIN dental_ins_diagnosis d
-             ON s.diagnosis = d.ins_diagnosisid
-             WHERE patiendid='".$patientid."' ORDER BY STR_TO_DATE(s.date, '%m/%d/%Y') ASC LIMIT 1;";
+  $q1_sql = "SELECT
+            s.date,
+            s.sleeptesttype,
+            s.ahi,
+            s.rdi,
+            s.t9002,
+            s.o2nadir,
+            s.diagnosis,
+            s.place,
+            s.dentaldevice,
+            d.ins_diagnosis,
+            d.description
+        FROM dental_summ_sleeplab s
+            LEFT JOIN dental_ins_diagnosis d ON s.diagnosis = d.ins_diagnosisid
+        WHERE patiendid = '$patientid'
+        ORDER BY COALESCE(
+            STR_TO_DATE(s.date, '%m/%d/%Y'),
+            STR_TO_DATE(s.date, '%m/%d/%y'),
+            STR_TO_DATE(s.date, '%Y%m%d'),
+            STR_TO_DATE(s.date, '%m-%d-%Y'),
+            STR_TO_DATE(s.date, '%m-%d-%y'),
+            STR_TO_DATE(s.date, '%m%d%Y'),
+            STR_TO_DATE(s.date, '%m%d%y')
+        ) ASC
+        LIMIT 1";
 
   $q1_myarray = $db->getRow($q1_sql);
 
@@ -436,28 +456,50 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
   $first_type_study = st($q1_myarray['sleeptesttype']) . " sleep test";
   $first_center_name = st($q1_myarray['place']);
 
-  $q2_sql = "SELECT s.date, s.sleeptesttype, s.ahi, s.rdi, s.t9002, s.o2nadir, d.ins_diagnosis, d.description, s.place, s.dentaldevice, sl.company, 
-              CASE s.sleeptesttype
-                 WHEN 'PSG Baseline' THEN '1'
-                 WHEN 'HST Baseline' THEN '2'
-                 WHEN 'PSG' THEN '3'
-                 WHEN 'HST' THEN '4'
-                 ELSE '5'
-              END
-              AS sort_order 
-              FROM dental_summ_sleeplab s 
-              JOIN dental_patients p
-                ON p.patientid=s.patiendid
-              JOIN dental_ins_diagnosis d
-                ON s.diagnosis = d.ins_diagnosisid
-              LEFT JOIN dental_sleeplab sl
-                ON s.place = sl.sleeplabid
-              WHERE 
-                (p.p_m_ins_type!='1' OR ((s.diagnosising_doc IS NOT NULL && s.diagnosising_doc != '') AND 
-                (s.diagnosising_npi IS NOT NULL && s.diagnosising_npi != ''))) AND 
-                (s.diagnosis IS NOT NULL && s.diagnosis != '') AND 
-                s.filename IS NOT NULL AND 
-                s.patiendid='".$patientid."' AND s.sleeptesttype IN ('PSG Baseline', 'HST Baseline', 'PSG', 'HST') ORDER BY sort_order ASC, STR_TO_DATE(s.date, '%m/%d/%Y') DESC, s.id DESC LIMIT 1;";
+  $q2_sql = "SELECT
+            s.date,
+            s.sleeptesttype,
+            s.ahi,
+            s.rdi,
+            s.t9002,
+            s.o2nadir,
+            d.ins_diagnosis,
+            d.description,
+            s.place,
+            s.dentaldevice,
+            sl.company,
+            CASE s.sleeptesttype
+                WHEN 'PSG Baseline' THEN '1'
+                WHEN 'HST Baseline' THEN '2'
+                WHEN 'PSG' THEN '3'
+                WHEN 'HST' THEN '4'
+                ELSE '5'
+            END AS sort_order
+        FROM dental_summ_sleeplab s
+            JOIN dental_patients p ON p.patientid = s.patiendid
+            JOIN dental_ins_diagnosis d ON s.diagnosis = d.ins_diagnosisid
+            LEFT JOIN dental_sleeplab sl ON s.place = sl.sleeplabid
+        WHERE (
+                p.p_m_ins_type != '1'
+                OR (
+                    COALESCE(s.diagnosising_doc, '') != ''
+                    AND COALESCE(s.diagnosising_npi, '') != ''
+                )
+            )
+            AND COALESCE(s.diagnosis, '') != ''
+            AND s.filename IS NOT NULL
+            AND s.patiendid = '$patientid'
+            AND s.sleeptesttype IN ('PSG Baseline', 'HST Baseline', 'PSG', 'HST')
+        ORDER BY sort_order ASC, COALESCE(
+            STR_TO_DATE(s.date, '%m/%d/%Y'),
+            STR_TO_DATE(s.date, '%m/%d/%y'),
+            STR_TO_DATE(s.date, '%Y%m%d'),
+            STR_TO_DATE(s.date, '%m-%d-%Y'),
+            STR_TO_DATE(s.date, '%m-%d-%y'),
+            STR_TO_DATE(s.date, '%m%d%Y'),
+            STR_TO_DATE(s.date, '%m%d%y')
+        ) DESC, s.id DESC
+        LIMIT 1;";
   
   $q2_myarray = $db->getRow($q2_sql);
 
@@ -1638,7 +1680,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       	$replace[] = "<strong>" . $impressions_date . "</strong>";
       	$search[] = "%delay_reason%";
 
-      	if (!empty($delay['reason'])) switch ($delay['reason']) {
+      	switch ($delay['reason']) {
       		case 'insurance':
       			$replace[] = "<strong>insurance problems or issues</strong>";
       			break;
@@ -1663,7 +1705,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       	}
 
       	$search[] = "%noncomp_reason%";
-      	if (!empty($noncomp['reason'])) switch ($noncomp['reason']) {
+      	switch ($noncomp['reason']) {
       		case 'pain/discomfort':
       			$replace[] = "<strong>pain and/or discomfort</strong>";
       			break;
@@ -1753,6 +1795,8 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
 	      <div style="margin: auto; width: 95%; border: 1px solid #ccc; padding: 3px;">
 		      <div align="left" style="width: 40%; padding: 3px; float: left">
+                <input type="hidden" name="contacts[<?= $cur_letter_num ?>][id]" value="<?= $contact['id'] ?>" />
+                <input type="hidden" name="contacts[<?= $cur_letter_num ?>][type]" value="<?= $contact['type'] ?>" />
 			      Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" id="change_method_<?php print $cur_letter_num; ?>" class="addButton"> Change </a>
             
             <div id="del_meth_<?php print $cur_letter_num; ?>" style="display:none;">
@@ -1906,8 +1950,10 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
                 $parent = false;
               }
 
-              $type = $contact['type'];
-              $recipientid = $contact['id'];
+              $type = !empty($_POST['contacts'][$cur_letter_num]['type']) ?
+                  $_POST['contacts'][$cur_letter_num]['type'] : $contact['type'];
+              $recipientid = !empty($_POST['contacts'][$cur_letter_num]['id']) ?
+                  $_POST['contacts'][$cur_letter_num]['id'] : $contact['id'];
         		  $message = $new_template[$cur_letter_num];
               $search= array("<strong>","</strong>");
               $message = str_replace($search, "", $message);

@@ -1795,6 +1795,8 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
 	      <div style="margin: auto; width: 95%; border: 1px solid #ccc; padding: 3px;">
 		      <div align="left" style="width: 40%; padding: 3px; float: left">
+                <input type="hidden" name="contacts[<?= $cur_letter_num ?>][id]" value="<?= $contact['id'] ?>" />
+                <input type="hidden" name="contacts[<?= $cur_letter_num ?>][type]" value="<?= $contact['type'] ?>" />
 			      Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" id="change_method_<?php print $cur_letter_num; ?>" class="addButton"> Change </a>
             
             <div id="del_meth_<?php print $cur_letter_num; ?>" style="display:none;">
@@ -1948,8 +1950,10 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
                 $parent = false;
               }
 
-              $type = $contact['type'];
-              $recipientid = $contact['id'];
+              $type = !empty($_POST['contacts'][$cur_letter_num]['type']) ?
+                  $_POST['contacts'][$cur_letter_num]['type'] : $contact['type'];
+              $recipientid = !empty($_POST['contacts'][$cur_letter_num]['id']) ?
+                  $_POST['contacts'][$cur_letter_num]['id'] : $contact['id'];
         		  $message = $new_template[$cur_letter_num];
               $search= array("<strong>","</strong>");
               $message = str_replace($search, "", $message);

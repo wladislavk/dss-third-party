@@ -26,7 +26,7 @@ var App = Vue.extend({})
  * You can pass in additional options here.
 */
 var router = new VueRouter({
-    hashbang: false
+    // hashbang: false
 })
 
 /*
@@ -37,7 +37,18 @@ var router = new VueRouter({
 */
 router.map({
     '/manage/index': {
-        component: Index
+        component : Index,
+        auth      : true
+    }
+})
+
+router.beforeEach(function (transition) {
+    if (transition.to.auth && !window.storage.get('token')) {
+        transition.redirect('/manage/login');
+    } else {
+        Vue.http.headers.common['Authorization'] = 'Bearer ' + window.storage.get('token');
+
+        transition.next();
     }
 })
 

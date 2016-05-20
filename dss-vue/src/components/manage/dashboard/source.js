@@ -63,14 +63,80 @@ module.exports = {
     created: function() {
         /*
         1. getCurrentUser
-        2.1 getDocInfoById
-            2.1.1 redirectToIndex2
-        2.2 getManageStaffOfCurrentUser
-        3. getDocumentCategories
+            1.1 getDocInfoById
+                1.1.1 redirectToIndex2
+            1.2 getManageStaffOfCurrentUser
+        2. getDocumentCategories
+        3. getCourseStaff
+        4. getCurrentMemos
         */
 
-        this.getCurrentUser();
-        this.getDocumentCategories();
+        this.getCurrentUser()
+            .then(function(response) {
+                var data = response.data.data;
+
+                if (data) {
+                    for (var field in data) {
+                        this.user[field] = data[field];
+                    }
+                }
+            }, function(response) {
+                console.error('getCurrentUser [status]: ', response.status);
+            }).then(function(response) {
+                this.getDocInfoById(this.user.docid)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.docInfo['homepage']         = data.homepage || 0;
+                            this.docInfo['manage_staff']     = data.manage_staff || 0;
+                            this.docInfo['use_course']       = data.use_course || 0;
+                            this.docInfo['use_eligible_api'] = data.use_eligible_api || 0;
+                        }
+                    }, function(response) {
+                        console.error('getDocInfoById [status]: ', response.status);
+                    }).then(this.redirectToIndex2);
+                this.getManageStaffOfCurrentUser(this.user.id)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.user['manage_staff'] = data.manage_staff || 0
+                        }
+                    }, function(response) {
+                        console.error('getManageStaffOfCurrentUser [status]: ', response.status);
+                    });
+            });
+
+        this.getDocumentCategories()
+            .then(function(response) {
+                var data = response.data.data;
+
+                this.$set('documentCategories', data);
+            }, function(response) {
+                console.error('getDocumentCategories [status]: ', response.status);
+            });
+
+        this.getCourseStaff()
+            .then(function(response) {
+                var data = response.data.data;
+
+                if (data) {
+                    this.courseStaff['use_course']       = data.use_course;
+                    this.courseStaff['use_course_staff'] = data.use_course_staff;
+                }
+            }, function(response) {
+                console.error('getCourseStaff [status]: ', response.status);
+            });
+
+        this.getCurrentMemos()
+            .then(function(response) {
+                var data = response.data.data;
+
+                this.$set('memos', data);
+            }, function(response) {
+                console.error('getCurrentMemos [status]: ', response.status);
+            });
     },
     computed: {
         notificationsNumber: function() {
@@ -109,83 +175,32 @@ module.exports = {
     },
     methods: {
         getCurrentUser: function() {
-            this.$http.post(window.config.API_PATH + 'users/current', function(data, status, request) {
-                data = data.data;
-
-                if (data) {
-                    for (field in data) {
-                        this.user[field] = data[field];
-                    }
-                }
-
-                this.getDocInfoById(this.redirectToIndex2);
-                this.getManageStaffOfCurrentUser();
-            }).error(function(data, status, request) {
-                console.log('getCurrentUser [Error]: ', status, data);
-            });
+            return this.$http.post(window.config.API_PATH + 'users/current');
         },
-        getDocInfoById: function(callback) {
-            this.$http.get(window.config.API_PATH + 'users/' + this.user.docid, function(data, status, request) {
-                data = data.data;
+        getDocInfoById: function(docId) {
+            docId = docId || 0;
 
-                if (data) {
-                    this.docInfo['homepage']         = data.homepage || 0;
-                    this.docInfo['manage_staff']     = data.manage_staff || 0;
-                    this.docInfo['use_course']       = data.use_course || 0;
-                    this.docInfo['use_eligible_api'] = data.use_eligible_api || 0;
-                }
-
-                callback();
-            }).error(function(data, status, request) {
-                console.log('getDocInfoById [Error]: ', status, data);
-            });
+            return this.$http.get(window.config.API_PATH + 'users/' + docId);
         },
-        getManageStaffOfCurrentUser: function() {
-            this.$http.get(window.config.API_PATH + 'users/' + this.user.id, function(data, status, request) {
-                data = data.data;
+        getManageStaffOfCurrentUser: function(userId) {
+            userId = userId || 0;
 
-                if (data) {
-                    this.user['manage_staff'] = data.manage_staff || 0
-                }
-            }).error(function(data, status, request) {
-                console.log('getManageStaffOfCurrentUser [Error]: ', status, data);
-            });
+            return this.$http.get(window.config.API_PATH + 'users/' + userId);
+        },
+        getDocumentCategories: function() {
+            return this.$http.post(window.config.API_PATH + 'document-categories/active');
+        },
+        getCourseStaff: function()
+        {
+            return this.$http.post(window.config.API_PATH + 'users/course-staff');
+        },
+        getCurrentMemos: function() {
+            return this.$http.post(window.config.API_PATH + 'memos/current');
         },
         redirectToIndex2: function() {
             if (this.docInfo.homepage != 1) {
                 window.location = 'index2.php';
             }
-        },
-        getDocumentCategories: function() {
-            this.$http.post(window.config.API_PATH + 'document-categories/active', function(data, status, request) {
-                data = data.data;
-
-                this.$set('documentCategories', data);
-            }).error(function(data, status, request) {
-                console.log('getDocumentCategories [Error]: ', status, data);
-            });
-        },
-        getCourseStaff: function()
-        {
-            this.$http.post(window.config.API_PATH + 'users/course-staff', function(data, status, request) {
-                data = data.data;
-
-                if (data) {
-                    this.courseStaff['use_course']       = data.use_course;
-                    this.courseStaff['use_course_staff'] = data.use_course_staff;
-                }
-            }).error(function(data, status, request) {
-                console.log('getCourseStaff [Error]: ', status, data);
-            });
-        },
-        getCurrentMemos: function() {
-            this.$http.post(window.config.API_PATH + 'memos/current', function(data, status, request) {
-                data = data.data;
-
-                this.$set('memos', data);
-            }).error(function(data, status, request) {
-                console.log('getCourseStaff [Error]: ', status, data);
-            });
         },
         onClickExportMD: function() {
             swal({

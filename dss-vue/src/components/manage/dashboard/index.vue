@@ -1,9 +1,10 @@
 <script>
-    import swal   from 'sweetalert'
-    import moment from 'moment'
+    import swal from 'sweetalert';
 </script>
 
 <template>
+    <link rel="stylesheet" type="text/css" href="node_modules/sweetalert/dist/sweetalert.css">
+
     <table id="dashboard">
         <tr>
             <td valign="top" style="border-right:1px solid #00457c;width:980px;">
@@ -311,9 +312,7 @@
                                 </div>
                                 <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
-                                    <script>
-                                        moment('{{ task.due_date || "" }}', 'MM DD');
-                                    </script>
+                                    {{ task.due_date | moment "MM DD" }}
                                     -
                                     {{ task.task }}
 

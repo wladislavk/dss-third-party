@@ -4,6 +4,7 @@ import VueResource from 'vue-resource'
 
 Vue.use(VueRouter)
 Vue.use(VueResource)
+Vue.use(require('vue-moment'))
 
 // components for routing
 import Index from './components/manage/dashboard/index.vue'

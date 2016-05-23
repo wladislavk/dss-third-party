@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>dentalsleepsolutions</title>
-  </head>
-  <body>
-    <div id="app">
-        <div id="header"></div>
-        <div id="body">
-            <!-- route outlet -->
-            <router-view></router-view>
+    <head>
+        <meta charset="utf-8">
+        <title>dentalsleepsolutions</title>
+    </head>
+    <body>
+        <div id="app">
+            <top v-if="$route.withHeader"></top>
+            <div id="body">
+                <!-- route outlet -->
+                <router-view></router-view>
+            </div>
+            <bottom v-if="$route.withFooter"></bottom>
         </div>
-        <div id="bottom"></div>
-    </div>
-    <script src="dist/build.js"></script>
-  </body>
+        <script src="dist/build.js"></script>
+    </body>
 </html>

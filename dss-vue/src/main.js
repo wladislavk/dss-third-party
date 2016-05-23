@@ -6,6 +6,13 @@ Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(require('vue-moment'))
 
+// include the header and footer
+import Header from './components/header/header.vue'
+import Footer from './components/footer/footer.vue'
+
+Vue.component('top', Header);
+Vue.component('bottom', Footer);
+
 // components for routing
 import Index from './components/manage/dashboard/index.vue'
 
@@ -27,7 +34,7 @@ var App = Vue.extend({})
  * You can pass in additional options here.
 */
 var router = new VueRouter({
-    // hashbang: false
+    hashbang: false
 })
 
 /*
@@ -38,8 +45,10 @@ var router = new VueRouter({
 */
 router.map({
     '/manage/index': {
-        component : Index,
-        auth      : true
+        component  : Index,
+        auth       : true,
+        withHeader : true,
+        withFooter : false
     }
 })
 

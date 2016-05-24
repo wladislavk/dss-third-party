@@ -3,11 +3,14 @@ function updateTeeth(teeth){
        s = $(this).attr('src');
        $(this).attr('src', s.replace('_red', ''));
     });
-    teeth = teeth.replace(' ', '');
+    teeth = teeth.replace(/\s+/g, '');
     ts = teeth.split(',');
+    console.info(teeth);
+    console.info(ts);
     for(var tn in ts){
         t = ts[tn];
-        $('#missing_'+t).attr('src', 'missing_teeth/'+t+'_red.png');
+        console.info('[id="missing_' + t + '"]');
+        $('[id="missing_' + t + '"]').attr('src', 'missing_teeth/'+t+'_red.png');
     }
 }
 

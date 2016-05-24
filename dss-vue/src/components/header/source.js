@@ -2,16 +2,42 @@ module.exports = {
     data: function() {
         return {
             headerInfo: {
-                usePaymentReports    : false,
-                paymentReportsNumber : 0
+                pendingLetters           : [],
+                unmailedLettersNumber    : 0,
+                pendingClaimsNumber      : 0,
+                pendingNodssClaimsNumber : 0,
+                unmailedClaimsNumber     : 0,
+                rejectedClaimsNumber     : 0,
+                preauthNumber            : 0,
+                rejectedPreAuthNumber    : 0,
+                alertsNumber             : 0,
+                hstNumber                : 0,
+                requestedHSTNumber       : 0,
+                rejectedHSTNumber        : 0,
+                patientContactsNumber    : 0,
+                patientInsurancesNumber  : 0,
+                patientChangesNumber     : 0,
+                pendingDuplicatesNumber  : 0,
+                emailBouncesNumber       : 0,
+                usePaymentReports        : false,
+                paymentReportsNumber     : 0,
+                unsignedNotesNumber      : 0,
+                faxAlertsNumber          : 0,
+                useLetters               : false,
+
+                overdueTasks             : [],
+                todayTasks               : [],
+                tomorrowTasks            : [],
+                thisWeekTasks            : [],
+                nextWeekTasks            : [],
+                laterTasks               : []
             },
             user: {},
             docInfo: {},
-            pendingLetters: [],
-            unmailedLetters: []
             secondsPerDay: 86400,
             oldestLetter: 0,
-            preauthNumber: 0
+            pendingPreauthNumber: 0,
+            supportTicketsNumber: 0
         }
     },
     created: function() {
@@ -58,7 +84,7 @@ module.exports = {
                                     var data = response.data.data;
 
                                     if (data) {
-                                        this.pendingLetters = data;
+                                        this.headerInfo.pendingLetters = data;
                                     }
                                 }, function(response) {
                                     console.error('getPendingLetters [status]: ', response.status);
@@ -72,118 +98,180 @@ module.exports = {
                                     }
                                 });
 
-                            this.getUnmailedLetters()
+                            this.getUnmailedLettersNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
 
                                     if (data) {
-                                        this.unmailedLetters = data;
+                                        this.headerInfo.unmailedLettersNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getUnmailedLetters [status]: ', response.status);
+                                    console.error('getUnmailedLettersNumber [status]: ', response.status);
                                 });
 
-                            this.getPendingClaims()
+                            this.getPendingClaimsNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.pendingClaimsNumber      = data.total;
+                                        this.headerInfo.pendingNodssClaimsNumber = data.total;
+                                    }
                                 }, function(response) {
-                                    console.error('getPendingClaims [status]: ', response.status);
+                                    console.error('getPendingClaimsNumber [status]: ', response.status);
                                 });
 
-                            this.getUnmailedClaims()
+                            this.getUnmailedClaimsNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.unmailedClaimsNumber = data.total;
+                                    }
                                 }, function(response) {
-                                    console.error('getUnmailedClaims [status]: ', response.status);
+                                    console.error('getUnmailedClaimsNumber [status]: ', response.status);
                                 });
 
-                            this.getRejectedClaims()
+                            this.getRejectedClaimsNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.rejectedClaimsNumber = data.total;
+                                    }
                                 }, function(response) {
-                                    console.error('getRejectedClaims [status]: ', response.status);
+                                    console.error('getRejectedClaimsNumber [status]: ', response.status);
                                 });
 
                             this.getPreauthNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.preauthNumber = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getPreauthNumber [status]: ', response.status);
                                 });
 
                             this.getPendingPreauthNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.pendingPreauthNumber = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getPendingPreauthNumber [status]: ', response.status);
                                 });
 
                             this.getRejectedPreauthNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.rejectedPreAuthNumber = data.total;
+                                        this.headerInfo.alertsNumber          = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getRejectedPreauthNumber [status]: ', response.status);
                                 });
 
                             this.getHSTNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.hstNumber = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getHSTNumber [status]: ', response.status);
                                 });
 
                             this.getRequestedHSTNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.requestedHSTNumber = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getRequestedHSTNumber [status]: ', response.status);
                                 });
 
                             this.getRejectedHSTNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.rejectedHSTNumber = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getRejectedHSTNumber [status]: ', response.status);
                                 });
 
                             this.getPatientContactsNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.patientContactsNumber = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getPatientContactsNumber [status]: ', response.status);
                                 });
 
                             this.getPatientInsurancesNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.patientInsurancesNumber = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getPatientInsurancesNumber [status]: ', response.status);
                                 });
 
                             this.getPatientChangesNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.patientChangesNumber = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getPatientChangesNumber [status]: ', response.status);
                                 });
 
-                            this.getPendingDuplicatesNUmber()
+                            this.getPendingDuplicatesNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.pendingDuplicatesNumber = data.total;
+                                    }
                                 }, function(response) {
-                                    console.error('getPendingDuplicatesNUmber [status]: ', response.status);
+                                    console.error('getPendingDuplicatesNumber [status]: ', response.status);
                                 });
 
                             this.getBouncesNumber()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.emailBouncesNumber = data.total;
+                                    }
                                 }, function(response) {
                                     console.error('getBouncesNumber [status]: ', response.status);
                                 });
 
                             this.getUsingPaymentReports()
                                 .then(function(response) {
-                                    // if success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.usePaymentReports = data.use_payment_reports;
+                                    }
                                 }, function(response) {
                                     console.error('getUsingPaymentReports [status]: ', response.status);
                                 }).then(function(response) {
@@ -199,6 +287,39 @@ module.exports = {
                                                 console.error('getPaymentReportsNumber [status]: ', response.status);
                                             });
                                     }
+                                });
+
+                            this.getUnsignedNotesNumber()
+                                .then(function(response) {
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.unsignedNotesNumber = data.total;
+                                    }
+                                }, function(response) {
+                                    console.error('getUnsignedNotesNumber [status]: ', response.status);
+                                });
+
+                            this.getFaxAlertsNumber()
+                                .then(function(response) {
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.headerInfo.faxAlertsNumber = data.total;
+                                    }
+                                }, function(response) {
+                                    console.error('getFaxAlertsNumber [status]: ', response.status);
+                                });
+
+                            this.getSupportTicketsNumber()
+                                .then(function(response) {
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        this.supportTicketsNumber = data.total;
+                                    }
+                                }, function(response) {
+                                    console.error('getSupportTicketsNumber [status]: ', response.status);
                                 });
                         }
                     });
@@ -226,16 +347,16 @@ module.exports = {
         getPendingLetters: function() {
             return this.$http.post(window.config.API_PATH + 'letters/pending');
         },
-        getUnmailedLetters: function() {
+        getUnmailedLettersNumber: function() {
             return this.$http.post(window.config.API_PATH + 'letters/unmailed');
         },
-        getPendingClaims: function() {
+        getPendingClaimsNumber: function() {
             return this.$http.post(window.config.API_PATH + 'insurances/pending');
         },
-        getUnmailedClaims: function() {
+        getUnmailedClaimsNumber: function() {
             return this.$http.post(window.config.API_PATH + 'insurances/unmailed');
         },
-        getRejectedClaims: function() {
+        getRejectedClaimsNumber: function() {
             return this.$http.post(window.config.API_PATH + 'insurances/rejected');
         },
         getPreauthNumber: function() {
@@ -265,7 +386,7 @@ module.exports = {
         getPatientChangesNumber: function() {
             return this.$http.post(window.config.API_PATH + 'patients/number');
         },
-        getPendingDuplicatesNUmber: function() {
+        getPendingDuplicatesNumber: function() {
             return this.$http.post(window.config.API_PATH + 'patients/duplicates');
         },
         getBouncesNumber: function() {
@@ -276,6 +397,15 @@ module.exports = {
         },
         getPaymentReportsNumber: function() {
             return this.$http.post(window.config.API_PATH + 'payment-reports/number');
+        },
+        getUnsignedNotesNumber: function() {
+            return this.$http.post(window.config.API_PATH + 'notes/unsigned');
+        },
+        getFaxAlertsNumber: function() {
+            return this.$http.post(window.config.API_PATH + 'faxes/alerts');
+        },
+        getSupportTicketsNumber: function() {
+            return this.$http.post(window.config.API_PATH + 'support-tickets/number');
         }
     }
 };

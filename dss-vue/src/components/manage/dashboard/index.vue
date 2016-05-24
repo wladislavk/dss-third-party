@@ -340,5 +340,5 @@
 </template>
 
 <script>
-    module.exports = require('./source.js');
+    // module.exports = require('./source.js');
 </script>>

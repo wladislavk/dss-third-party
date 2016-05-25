@@ -32,12 +32,21 @@ module.exports = {
                 nextWeekTasks            : [],
                 laterTasks               : []
             },
-            user: {},
-            docInfo: {},
-            secondsPerDay: 86400,
-            oldestLetter: 0,
-            pendingPreauthNumber: 0,
-            supportTicketsNumber: 0
+            user                 : {},
+            docInfo              : {},
+            secondsPerDay        : 86400,
+            oldestLetter         : 0,
+            pendingPreauthNumber : 0,
+            supportTicketsNumber : 0,
+            title                : '',
+            premedCheck          : 0,
+            medicare             : 0,
+            alertText            : '',
+            displayAlert         : false,
+            alergen              : 0,
+            patientName          : '',
+            patientTasks         : [],
+            notificationsNumber  : 0
         }
     },
     created: function() {
@@ -323,9 +332,60 @@ module.exports = {
                                 });
                         }
                     });
+            }).then(function(response) {
+                if ($route.query.pid) {
+                    this.getPatientByIdAndDocId(this.user.docid, $route.query.pid)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data) {
+                                this.premedCheck  = data[0].premedcheck;
+                                this.medicare     = (data[0].p_m_ins_type == 1);
+                                this.alertText    = data[0].alert_text;
+                                this.displayAlert = data[0].display_alert;
+
+                                if (this.premedCheck) {
+                                    this.title += 'Pre-medication: ' + data[0].premed + '\n';
+                                }
+
+                                this.patientName = data[0].firstname +  ' ' + data[0].lastname;
+                            }
+                        }, function(response) {
+                            console.error('getPatientByIdAndDocId [status]: ', response.status);
+                        });
+
+                    this.getHealthHistoryByPatientId($route.query.pid)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data) {
+                                this.alergen = data[0].allergenscheck;
+
+                                if (this.alergen) {
+                                    this.title += 'Allergens: ' + data[0].other_allergens;
+                                }
+                            }
+                        }, function(response) {
+                            console.error('getHealthHistoryByPatientId [status]: ', response.status);
+                        });
+                }
+            }).then(function(response) {
+                this.getPatientTasks();
             });
     },
-    computed: {},
+    computed: {
+        notificationsNumber: function() {
+            return this.headerInfo.pendingLetters.lenght
+                + this.headerInfo.preauthNumber
+                + this.headerInfo.rejectedPreAuthNumber
+                + this.headerInfo.patientContactsNumber
+                + this.headerInfo.patientInsurancesNumber
+                + this.headerInfo.patientChangesNumber
+                + this.headerInfo.emailBouncesNumber
+                + this.headerInfo.unsignedNotesNumber
+                + this.headerInfo.pendingDuplicatesNumber;
+        }
+    },
     methods: function() {
         getCurrentUser: function() {
             return this.$http.post(window.config.API_PATH + 'users/current');
@@ -406,6 +466,27 @@ module.exports = {
         },
         getSupportTicketsNumber: function() {
             return this.$http.post(window.config.API_PATH + 'support-tickets/number');
+        },
+        getPatientByIdAndDocId: function(docId, patientId) {
+            var data = {
+                where: {
+                    docid     : docId || 0,
+                    patientid : patientId || 0
+                }
+            };
+
+            return this.$http.post(window.config.API_PATH + 'patients/with-filter', data);
+        },
+        getHealthHistoryByPatientId: function(patientId) {
+            var data = {
+                fields : ['other_allergens', 'allergenscheck'],
+                where  : { patientid : patientId || 0 }
+            };
+
+            return this.$http.post(window.config.API_PATH + 'health-histories/with-filter', data);
+        },
+        getPatientTasks: function() {
+            return this.$http.post(window.config.API_PATH + 'tasks/all');
         }
     }
 };

@@ -78,4 +78,20 @@ class Patient extends Model implements Resource, Repository
         return $this->hasOne(TmjClinicalExam::class, 'patientid', 'patientid');
     }
 
+    public function getWithFilter($fields = [], $where = [])
+    {
+        $object = $this;
+
+        if (count($fields)) {
+            $object = $object->select($fields);
+        }
+
+        if (count($where)) {
+            foreach ($where as $key => $value) {
+                $object = $object->where($key, $value);
+            }
+        }
+
+        return $object->get();
+    }
 }

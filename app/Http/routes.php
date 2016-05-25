@@ -99,6 +99,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('patient-insurances', 'PatientInsurancesController', ['except' => ['create', 'edit']]);
     Route::resource('patient-summaries', 'PatientSummariesController', ['except' => ['create', 'edit']]);
     Route::resource('patients', 'PatientsController', ['except' => ['create', 'edit']]);
+    Route::post('patients/with-filter', 'PatientsController@getWithFilter');
     Route::resource('payment-reports', 'PaymentReportsController', ['except' => ['create', 'edit']]);
     Route::resource('place-services', 'PlaceServicesController', ['except' => ['create', 'edit']]);
     Route::resource('plans', 'PlansController', ['except' => ['create', 'edit']]);
@@ -106,6 +107,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('symptoms', 'SymptomsController', ['except' => ['create', 'edit']]);
     Route::resource('previous-treatments', 'PreviousTreatmentsController', ['except' => ['create', 'edit']]);
     Route::resource('health-histories', 'HealthHistoriesController', ['except' => ['create', 'edit']]);
+    Route::post('health-histories/with-filter', 'HealthHistoriesController@getWithFilter');
     Route::resource('social-histories', 'SocialHistoriesController', ['except' => ['create', 'edit']]);
     Route::resource('recipients', 'RecipientsController', ['except' => ['create', 'edit']]);
     Route::resource('sleep-tests', 'SleepTestsController', ['except' => ['create', 'edit']]);

@@ -89,4 +89,24 @@ class TasksController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getTypeForPatient($type, Tasks $resources)
+    {
+        if ($this->currentUser->id) {
+            $userId = preg_replace('/(?:u_|a_)/', '', $this->currentUser->id);
+        } else {
+            $userId = 0;
+        }
+
+        switch ($type) {
+            case 'all':
+                $tasks = $resources->getAllForPatient($userId);
+                break;
+            default:
+                $tasks = [];
+                break;
+        }
+
+        return ApiResponse::responseOk('', $tasks);
+    }
 }

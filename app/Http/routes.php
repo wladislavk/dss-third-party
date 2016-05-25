@@ -44,14 +44,13 @@ Route::group(['prefix' => 'session'], function () {
 */
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
-
-
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
     Route::post('users/current', 'UsersController@getCurrentUserInfo');
     Route::post('users/course-staff', 'UsersController@getCourseStaff');
     Route::post('users/check', 'UsersController@check');
     Route::get('users/{id}/type', 'UsersController@getUserType');
     Route::resource('tasks', 'TasksController', ['except' => ['create', 'edit']]);
+    Route::post('tasks/{type}', 'TasksController@getTypeForPatient');
     Route::resource('admins', 'AdminsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-settings', 'GuideSettingsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);

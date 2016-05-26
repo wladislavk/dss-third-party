@@ -100,7 +100,25 @@ class TasksController extends Controller
 
         switch ($type) {
             case 'all':
-                $tasks = $resources->getAllForPatient($userId);
+                $tasks = $resources->getAll($userId);
+                break;
+            case 'overdue':
+                $tasks = $resources->getOverdue($userId);
+                break;
+            case 'today':
+                $tasks = $resources->getToday($userId);
+                break;
+            case 'tomorrow':
+                $tasks = $resources->getTomorrow($userId);
+                break;
+            case 'this-week':
+                $tasks = $resources->getThisWeek($userId);
+                break;
+            case 'next-week':
+                $tasks = $resources->getNextWeek($userId);
+                break;
+            case 'later':
+                $tasks = $resources->getLater($userId);
                 break;
             default:
                 $tasks = [];

@@ -6,364 +6,161 @@
         </tr>
         <tr>
             <td valign='top' height="400">
-      <?php
-        $task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
-                JOIN dental_users du ON dt.responsibleid=du.userid
-                LEFT JOIN dental_patients p ON p.patientid=dt.patientid
-           WHERE (dt.status = '0' OR
-                dt.status IS NULL) AND
-                dt.responsibleid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+                <div class="suckertreemenu2">
+                    <ul id="topmenu2">
+                        <li>
+                            <a href="index.php"> Notifications({{ notificationsNumber }})</a>
+                        </li>
+                        <li id="header_support" {{ (supportTicketsNumber > 0) ? 'class="pending"' : '' }}>
+                            <a href="support.php">Support {{ (supportTicketsNumber > 0) ? ('(' + supportTicketsNumber + ')'): '' }}</a>
+                        </li>
+                        <li>
+                            <a href="logout.php">Sign Out</a>
+                        </li>
+                    </ul>
+                </div>
 
-        $num_tasks = $db->getNumberRows($task_sql);
-      ?>
+                <script type="text/javascript">
+                    if (window.task_function) { task_function(); }
+                </script>
 
-      <?php $mess_count = $pending_letters + $num_preauth + $num_rejected_preauth + $num_pc + $num_pi + $num_c + $num_bounce + $num_unsigned + $num_pending_duplicates; ?>
+                <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
+                    <span id="task_header">
+                        My Tasks (<span id="task_count">{{ patientAllTasksNumber }}</span>)
+                    </span>
+                    <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
+                        <h4 v-if="overdueTasks.length > 0" id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
+                        <ul v-if="overdueTasks.length > 0" id="task_od_list">
+                            <li v-for="task in overdueTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                                <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                </div>
+                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <div style="float:left; width:170px;">
+                                    {{ task.task }}
 
-      <?php
-        if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
-         $mess_count += $num_unmailed_claims + $num_pending_nodss_claims;
-        } else {
-         $mess_count += $num_pending_claims;
-        }
-      ?>
+                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                </div>
+                            </li>
+                        </ul>
 
-      <div class="suckertreemenu2">
-        <ul id="topmenu2">
-          <li>
-            <a href="index.php"> Notifications(<?php echo $mess_count; ?>)</a>
-          </li>
+                        <h4 v-if="todayTasks.length > 0" id="task_tod_header" class="task_tod_header">Today</h4>
+                        <ul v-if="todayTasks.length > 0" id="task_tod_list">
+                            <li v-for="task in todayTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                                <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                </div>
+                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <div style="float:left; width:170px;">
+                                    {{ task.task }}
 
-          <li id="header_support" <?php echo  ($num_support>0)?'class="pending"':""; ?>>
-            <a href="support.php">Support <?php echo  ($num_support>0)?"(".$num_support.")":""; ?></a>
-          </li>
+                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                </div>
+                            </li>
+                        </ul>
 
-          <li>
-            <a href="logout.php">Sign Out</a>
-          </li>
-        </ul>
-      </div>
+                        <h4 v-if="tomorrowTasks.length > 0" id="task_tom_header" class="task_tom_header">Tomorrow</h4>
+                        <ul v-if="tomorrowTasks.length > 0" id="task_tom_list">
+                            <li v-for="task in tomorrowTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                                <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                </div>
+                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <div style="float:left; width:170px;">
+                                    {{ task.task }}
 
-      <script type="text/javascript">
-        if (window.task_function) { task_function(); }
-      </script>
+                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                </div>
+                            </li>
+                        </ul>
 
-      <?php
-        $task_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt
-                JOIN dental_users du ON dt.responsibleid=du.userid
-                LEFT JOIN dental_patients p ON p.patientid=dt.patientid
-           WHERE (dt.status = '0' OR
-                dt.status IS NULL) AND
-                dt.responsibleid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
+                        <h4 v-if="thisWeekTasks.length > 0" id="task_tw_header" class="task_tw_header">This Week</h4>
+                        <ul v-if="thisWeekTasks.length > 0" id="task_tw_list">
+                            <li v-for="task in thisWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                                <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                </div>
+                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <div style="float:left; width:170px;">
+                                    {{ task.task }}
 
-        $num_tasks = $db->getNumberRows($task_sql);
-      ?>
+                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                </div>
+                            </li>
+                        </ul>
 
-      <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
-        <span id="task_header">
-          My Tasks (<span id="task_count"><?php echo  $num_tasks; ?></span>)
-        </span>
+                        <h4 v-if="nextWeekTasks.length > 0" id="task_nw_header" class="task_nw_header">Next Week</h4>
+                        <ul v-if="nextWeekTasks.length > 0" id="task_nw_list">
+                            <li class="task_item task_{{ task.id }}" style="clear:both;">
+                                <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                </div>
+                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <div style="float:left; width:170px;">
+                                    {{ task.task }}
 
-        <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
+                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                </div>
+                            </li>
+                        </ul>
 
-          <?php
-            $od_sql = $task_sql . " AND dt.due_date < CURDATE();";
-            $tod_sql = $task_sql . " AND dt.due_date = CURDATE();";
-            $tom_sql = $task_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
+                        <h4 v-if="laterTasks.length > 0" id="task_lat_header" class="task_lat_header">Later</h4>
+                        <ul v-if="laterTasks.length > 0" id="task_lat_list">
+                            <li class="task_item task_{{ task.id }}" style="clear:both;">
+                                <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                </div>
+                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <div style="float:left; width:170px;">
+                                    {{ task.due_date | moment "MM DD" }}
+                                    -
+                                    {{ task.task }}
 
-            if (date('N') == 7) {
-              $this_sun = date('Y-m-d');
-              $next_mon = date('Y-m-d',  strtotime("next Tuesday"));
-              $next_sun = date('Y-m-d',  strtotime("next Sunday"));
-            } else {
-              $this_sun = date('Y-m-d',  strtotime("next Sunday"));
-              $next_mon = date('Y-m-d',  strtotime("next Monday"));
-              $next_sun = date('Y-m-d',  strtotime("next Sunday + 1 week"));
-            }
+                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                </div>
+                            </li>
+                        </ul>
 
-            $tw_sql = $task_sql . " AND dt.due_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 2 DAY) AND '".$this_sun."'";
+                        <br /><br />
 
-            $nw_sql = $task_sql . " AND dt.due_date BETWEEN '".$next_mon."' AND '".$next_sun."'";
-            $lat_sql = $task_sql . " AND dt.due_date > '".$next_sun."' ORDER BY dt.due_date ASC";
-
-            $od_q = $db->getResults($od_sql);
-            $od_num = count($od_q);
-            if ($od_num > 0) {
-          ?>
-
-            <h4 id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
-            <ul id="task_od_list">
-
-              <?php foreach ($od_q as $od_r) { ?>
-
-                <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                  <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                    <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-                    <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
-                  </div>
-
-                  <input type="checkbox" class="task_status" style="float:left;" value="<?php echo  $od_r['id']; ?>" />
-
-                  <div style="float:left; width:170px;">
-                    <?php echo $od_r['task']; ?>
-
-                    <?php
-                      if ($od_r['firstname']!='' && $od_r['lastname']!='') {
-                        echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                      } 
-                    ?>
-                  </div>
-                </li>
-              <?php } ?>
-
-            </ul>
-          <?php }
-            $tod_q = $db->getResults($tod_sql);
-            $tod_num = count($tod_q);
-
-            if ($tod_num > 0) {
-          ?>
-            <h4 id="task_tod_header" class="task_tod_header">Today</h4>
-            <ul id="task_tod_list">
-
-              <?php foreach($tod_q as $od_r) { ?>
-
-                <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                  <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                    <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-                    <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
-                  </div>
-
-                  <input type="checkbox" class="task_status" style="float:left;" value="<?php echo  $od_r['id']; ?>" />
-
-                  <div style="float:left; width:170px;">
-                    <?php echo $od_r['task']; ?>
-
-                    <?php
-                      if($od_r['firstname']!='' && $od_r['lastname']!='') {
-                        echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                      }
-                    ?>
-                  </div>
-                </li>
-
-              <?php } ?>
-
-            </ul>
-
-          <?php }
-
-            $tom_q = $db->getResults($tom_sql);
-            $tom_num = count($tom_q);
-
-            if ($tom_num > 0) {
-          ?>
-              <h4 id="task_tom_header" class="task_tom_header">Tomorrow</h4>
-              <ul id="task_tom_list">
-
-                <?php foreach ($tom_q as $od_r) { ?>
-
-                  <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                    <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                      <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-
-                      <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
+                        <a href="manage_tasks.php" class="button" style="padding:2px 10px;">View All</a>
                     </div>
+                </div>
+                <div v-if="showOnlineCEAndSnoozleHelp">
+                    <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
+                    <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
+                </div>
+                <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar.php">Scheduler</a>
 
-                    <input type="checkbox" class="task_status" style="float:left;" value="<?php echo  $od_r['id']; ?>" />
+                <script type="text/javascript" src="js/task.js"></script> 
+                <script type="text/javascript" src="script/autocomplete.js"></script>
+                <script type="text/javascript" src="script/autocomplete_local.js?v=<?= time() ?>"></script>
 
-                    <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
-                      <?php
-                        if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                          echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                        } 
-                      ?>
+                <div style="height:89px; width:100%; background:url(images/dss_01.png) #0b5c82 no-repeat top left;"> 
+                    <div style="margin-top:10px; margin-left:20px; float:left;">
+                        <a href="/manage" id="logo">Dashboard</a>
                     </div>
-                  </li>
+                    <div style="float:left; width:68%;">
+                        <form>
+                            <div id="patient_search_div">
+                                <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" /><br />
+                                <div id="search_hints"  class="search_hints" style="display:none;">
+                                    <ul id="patient_list">
+                                        <li class="template" style="display:none">Doe, John S</li>
+                                    </ul>
+                                </div>
+                            </div> 
+                        </form>
 
-                <?php } ?>
-              </ul>
-          <?php } ?>
-
-          <?php
-            $tw_q = $db->getResults($tw_sql);
-            $tw_num = count($tw_q);
-
-            if ($tw_num > 0) {
-          ?>
-            <h4 id="task_tw_header" class="task_tw_header">This Week</h4>
-            <ul id="task_tw_list">
-
-              <?php foreach($tw_q as $od_r) { ?>
-
-                <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                  <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                    <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-                    <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
-                  </div>
-
-                  <input type="checkbox" class="task_status" style="float:left;" value="<?php echo  $od_r['id']; ?>" />
-
-                  <div style="float:left; width:170px;">
-                    <?php echo $od_r['task']; ?>
-
-                    <?php
-                      if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                        echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                      }
-                    ?>
-                  </div>
-                </li>
-              <?php } ?>
-
-            </ul>
-
-          <?php } ?>
-
-          <?php
-            $nw_q = $db->getResults($nw_sql);
-            $nw_num = count($nw_q);
-
-            if ($nw_num > 0) {
-          ?>
-
-            <h4 id="task_nw_header" class="task_nw_header">Next Week</h4>
-            <ul id="task_nw_list">
-
-              <?php foreach ($nw_q as $od_r) { ?>
-                <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                  <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                    <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-                    <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
-                  </div>
-
-                  <input type="checkbox" class="task_status" style="float:left;" value="<?php echo  $od_r['id']; ?>" />
-
-                  <div style="float:left; width:170px;"><?php echo $od_r['task']; ?>
-                    <?php
-                      if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                        echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                      }
-                    ?>
-                  </div>
-                </li>
-              <?php } ?>
-
-            </ul>
-          <?php } ?>
-
-          <?php
-            $lat_q = $db->getResults($lat_sql);
-            $lat_num = count($lat_q);
-
-            if ($lat_num > 0) {
-          ?>
-
-            <h4 id="task_lat_header" class="task_lat_header">Later</h4>
-            <ul id="task_lat_list">
-
-              <?php foreach($lat_q as $od_r) { ?>
-
-                <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                  <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                    <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-
-                    <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
-                  </div>
-
-                  <input type="checkbox" class="task_status" style="float:left;" value="<?php echo  $od_r['id']; ?>" />
-
-                  <div style="float:left; width:170px;">
-                    <?php echo  date('M d', strtotime($od_r['due_date'])); ?>
-                    -
-                    <?php echo $od_r['task']; ?>
-
-                    <?php
-                      if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                        echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                      }
-                    ?>
-                  </div>
-                </li>
-              
-              <?php } ?>
-
-            </ul>
-
-          <?php } ?>
-
-          <?php
-            if($od_num == 0 && $tod_num == 0 && $tom_num == 0){
-            }
-          ?>
-
-          <br /><br />
-
-          <a href="manage_tasks.php" class="button" style="padding:2px 10px;">View All</a>
-        </div>
-      </div> 
-
-      <?php
-        if ($_SESSION['docid'] == $_SESSION['userid']) {
-          $course_sql = "SELECT use_course FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
-
-          $course_r = $db->getRow($course_sql);
-
-          if ($course_r['use_course'] == 1) {
-      ?>
-
-            <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
-
-            <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
-
-      <?php
-          }
-        } else {
-          $course_sql = "SELECT s.use_course, d.use_course_staff FROM dental_users s
-                         JOIN dental_users d ON d.userid = s.docid
-                         WHERE s.userid='".mysqli_real_escape_string($con,$_SESSION['userid'])."'";
-
-          $course_r = $db->getRow($course_sql);
-
-          if ($course_r['use_course'] == 1 && $course_r['use_course_staff'] == 1) {
-      ?>
-
-            <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
-
-            <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
-
-      <?php
-          }
-        }
-      ?>
-
-      <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar.php">Scheduler</a>
-
-      <script type="text/javascript" src="js/task.js"></script> 
-      <script type="text/javascript" src="script/autocomplete.js"></script>
-      <script type="text/javascript" src="script/autocomplete_local.js?v=<?= time() ?>"></script>
- 
-      <div style="height:89px; width:100%; background:url(images/dss_01.png) #0b5c82 no-repeat top left;"> 
-        <div style="margin-top:10px; margin-left:20px; float:left;">
-          <a href="/manage" id="logo">Dashboard</a>
-        </div>
-
-        <div style="float:left; width:68%;">
-          <form>
-            <div id="patient_search_div">
-              <input type="text" id="patient_search" value="Patient Search" name="q" autocomplete="off" /><br />
-
-              <div id="search_hints"  class="search_hints" style="display:none;">
-                <ul id="patient_list">
-                  <li class="template" style="display:none">Doe, John S</li>
-                </ul>
-              </div>
-            </div> 
-          </form>
-
-          <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
-
-          <button onclick="loadPopup('add_task.php<?php echo  (isset($_GET['pid']))?'?pid='.$_GET['pid']:''; ?>')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
-        </div>
+                        <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
+                        <button onclick="loadPopup('add_task.php?pid={{ $route.query.pid || 0 }}')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
+                    </div>
 
         <?php
           $logo_sql = "SELECT c.logo FROM companies c

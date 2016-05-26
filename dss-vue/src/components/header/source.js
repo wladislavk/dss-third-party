@@ -2,7 +2,6 @@ module.exports = {
     data: function() {
         return {
             headerInfo: {
-                pendingLetters           : [],
                 unmailedLettersNumber    : 0,
                 pendingClaimsNumber      : 0,
                 pendingNodssClaimsNumber : 0,
@@ -19,12 +18,12 @@ module.exports = {
                 patientChangesNumber     : 0,
                 pendingDuplicatesNumber  : 0,
                 emailBouncesNumber       : 0,
-                usePaymentReports        : false,
                 paymentReportsNumber     : 0,
                 unsignedNotesNumber      : 0,
                 faxAlertsNumber          : 0,
+                usePaymentReports        : false,
                 useLetters               : false,
-
+                pendingLetters           : [],
                 overdueTasks             : [],
                 todayTasks               : [],
                 tomorrowTasks            : [],
@@ -32,21 +31,28 @@ module.exports = {
                 nextWeekTasks            : [],
                 laterTasks               : []
             },
-            user                 : {},
-            docInfo              : {},
-            secondsPerDay        : 86400,
-            oldestLetter         : 0,
-            pendingPreauthNumber : 0,
-            supportTicketsNumber : 0,
-            title                : '',
-            premedCheck          : 0,
-            medicare             : 0,
-            alertText            : '',
-            displayAlert         : false,
-            alergen              : 0,
-            patientName          : '',
-            patientTasks         : [],
-            notificationsNumber  : 0
+            user                       : {},
+            docInfo                    : {},
+            secondsPerDay              : 86400,
+            oldestLetter               : 0,
+            pendingPreauthNumber       : 0,
+            supportTicketsNumber       : 0,
+            title                      : '',
+            premedCheck                : 0,
+            medicare                   : 0,
+            alertText                  : '',
+            displayAlert               : false,
+            alergen                    : 0,
+            patientName                : '',
+            patientTasks               : [],
+            notificationsNumber        : 0,
+            patientAllTasksNumber      : 0,
+            isUserDoctor               : false,
+            showOnlineCEAndSnoozleHelp : false,
+            courseStaff: {
+                use_course       : 0,
+                use_course_staff : 0
+            },
         }
     },
     created: function() {
@@ -370,12 +376,99 @@ module.exports = {
                         });
                 }
             }).then(function(response) {
-                this.getPatientTasks();
+                this.getPatientTasks()
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.patientAllTasksNumber = data.length;
+                        }
+                    }, function(response) {
+                        console.error('getPatientTasks [status]: ', response.status);
+                    });
+
+                this.getPatientOverdueTasks()
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.overdueTasks = data;
+                        }
+                    }, function(response) {
+                        console.error('getPatientOverdueTasks [status]: ', response.status);
+                    });
+
+                this.getPatientTodayTasks()
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.todayTasks = data;
+                        }
+                    }, function(response) {
+                        console.error('getPatientTodayTasks [status]: ', response.status);
+                    });
+
+                this.getPatientTomorrowTasks()
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.tomorrowTasks = data;
+                        }
+                    }, function(response) {
+                        console.error('getPatientTomorrowTasks [status]: ', response.status);
+                    });
+
+                this.getPatientThisWeekTasks()
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.thisWeekTasks = data;
+                        }
+                    }, function(response) {
+                        console.error('getPatientThisWeekTasks [status]: ', response.status);
+                    });
+
+                this.getPatientLaterTasks()
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.laterTasks = data;
+                        }
+                    }, function(response) {
+                        console.error('getPatientLaterTasks [status]: ', response.status);
+                    });
+            }).then(function(response) {
+                this.getUserById(this.user.id)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.user['use_course'] = data.use_course;
+                        }
+                    }, function(response) {
+                        console.error('getUserById [status]: ', response.status);
+                    });
+
+                this.getCourseStaff()
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.courseStaff['use_course']       = data.use_course;
+                            this.courseStaff['use_course_staff'] = data.use_course_staff;
+                        }
+                    }, function(response) {
+                        console.error('getCourseStaff [status]: ', response.status);
+                    });
             });
     },
     computed: {
         notificationsNumber: function() {
-            return this.headerInfo.pendingLetters.lenght
+            var notificationsNumber = this.headerInfo.pendingLetters.lenght
                 + this.headerInfo.preauthNumber
                 + this.headerInfo.rejectedPreAuthNumber
                 + this.headerInfo.patientContactsNumber
@@ -384,6 +477,27 @@ module.exports = {
                 + this.headerInfo.emailBouncesNumber
                 + this.headerInfo.unsignedNotesNumber
                 + this.headerInfo.pendingDuplicatesNumber;
+
+            if (this.user.user_type == window.constants.DSS_USER_TYPE_SOFTWARE) {
+                notificationsNumber += this.headerInfo.unmailedClaimsNumber
+                    + this.headerInfo.pendingNodssClaimsNumber;
+            } else {
+                notificationsNumber += this.headerInfo.pendingClaimsNumber;
+            }
+
+            return notificationsNumber;
+        },
+        isUserDoctor: function() {
+            return (this.user.docid === this.user.id);
+        },
+        showOnlineCEAndSnoozleHelp: function() {
+            return (
+                (this.isUserDoctor && this.user.use_course == 1) ||
+                (
+                    !this.isUserDoctor &&
+                    this.courseStaff.use_course == 1 && this.courseStaff.use_course_staff == 1
+                )
+            );
         }
     },
     methods: function() {
@@ -487,6 +601,34 @@ module.exports = {
         },
         getPatientTasks: function() {
             return this.$http.post(window.config.API_PATH + 'tasks/all');
+        },
+        getPatientOverdueTasks: function() {
+            return this.$http.post(window.config.API_PATH + 'tasks/overdue');
+        },
+        getPatientTodayTasks: function() {
+            return this.$http.post(window.config.API_PATH + 'tasks/today');
+        },
+        getPatientTomorrowTasks: function()
+        {
+            return this.$http.post(window.config.API_PATH + 'tasks/tomorrow');
+        },
+        getPatientThisWeekTasks: function() {
+            return this.$http.post(window.config.API_PATH + 'tasks/this-week');
+        },
+        getPatientNextWeekTasks: fucntion() {
+            return this.$http.post(window.config.API_PATH + 'tasks/next-week');
+        },
+        getPatientLaterTasks: function() {
+            return this.$http.post(window.config.API_PATH + 'tasks/later');
+        },
+        getUserById: function(userId) {
+            userId = userId || 0;
+
+            return this.$http.get(window.config.API_PATH + 'users/' + userId);
+        },
+        getCourseStaff: function()
+        {
+            return this.$http.post(window.config.API_PATH + 'users/course-staff');
         }
     }
 };

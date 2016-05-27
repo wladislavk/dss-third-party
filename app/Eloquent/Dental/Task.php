@@ -103,6 +103,11 @@ class Task extends Model implements Resource, Repository
         return $query->whereRaw('dt.due_date > ? ORDER BY dt.due_date ASC', [$nextSunday]);
     }
 
+    public function scopeFuture($query)
+    {
+        return $query->whereRaw('dt.due_date > DATE_ADD(CURDATE(), INTERVAL 1 DAY)');
+    }
+
     public function getAll($responsibleId)
     {
         return $this->forPatient()
@@ -155,6 +160,65 @@ class Task extends Model implements Resource, Repository
         return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
             ->later()
+            ->get();
+    }
+
+    public function getAllForPatient($docId, $patientId)
+    {
+        return $this->forPatient()
+            ->where(function($query) use ($docId) {
+                $query->where('du.docid', $docId)
+                    ->orWhere('du.userid', $docId);
+            })
+            ->where('dt.patientid', $patientId)
+            ->get();
+    }
+
+    public function getOverdueForPatient($docId, $patientId)
+    {
+        return $this->forPatient()
+            ->where(function($query) use ($docId) {
+                $query->where('du.docid', $docId)
+                    ->orWhere('du.userid', $docId);
+            })
+            ->where('dt.patientid', $patientId)
+            ->overdue()
+            ->get();
+    }
+
+    public function getTodayForPatient($docId, $patientId)
+    {
+        return $this->forPatient()
+            ->where(function($query) use ($docId) {
+                $query->where('du.docid', $docId)
+                    ->orWhere('du.userid', $docId);
+            })
+            ->where('dt.patientid', $patientId)
+            ->today()
+            ->get();
+    }
+
+    public function getTomorrowForPatient($docId, $patientId)
+    {
+        return $this->forPatient()
+            ->where(function($query) use ($docId) {
+                $query->where('du.docid', $docId)
+                    ->orWhere('du.userid', $docId);
+            })
+            ->where('dt.patientid', $patientId)
+            ->tomorrow()
+            ->get();
+    }
+
+    public function getFutureForPatient($docId, $patientId)
+    {
+        return $this->forPatient()
+            ->where(function($query) use ($docId) {
+                $query->where('du.docid', $docId)
+                    ->orWhere('du.userid', $docId);
+            })
+            ->where('dt.patientid', $patientId)
+            ->future()
             ->get();
     }
 }

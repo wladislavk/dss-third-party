@@ -90,7 +90,7 @@ class TasksController extends Controller
         return ApiResponse::responseOk('Resource deleted');
     }
 
-    public function getTypeForPatient($type, Tasks $resources)
+    public function getType($type, Tasks $resources)
     {
         if ($this->currentUser->id) {
             $userId = preg_replace('/(?:u_|a_)/', '', $this->currentUser->id);
@@ -119,6 +119,35 @@ class TasksController extends Controller
                 break;
             case 'later':
                 $tasks = $resources->getLater($userId);
+                break;
+            default:
+                $tasks = [];
+                break;
+        }
+
+        return ApiResponse::responseOk('', $tasks);
+    }
+
+    public function getTypeForPatient($type, $patientId, Tasks $resources)
+    {
+        $docId     = $this->currentUser->docid ?: 0;
+        $patientId = $patientId ?: 0;
+
+        switch ($type) {
+            case 'all':
+                $tasks = $resources->getAllForPatient($docId, $patientId);
+                break;
+            case 'overdue':
+                $tasks = $resources->getOverdueForPatient($docId, $patientId);
+                break;
+            case 'today':
+                $tasks = $resources->getTodayForPatient($docId, $patientId);
+                break;
+            case 'tomorrow':
+                $tasks = $resources->getTomorrowForPatient($docId, $patientId);
+                break;
+            case 'future':
+                $tasks = $resources->getFutureForPatient($docId, $patientId);
                 break;
             default:
                 $tasks = [];

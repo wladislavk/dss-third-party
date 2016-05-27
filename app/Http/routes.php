@@ -50,7 +50,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('users/check', 'UsersController@check');
     Route::get('users/{id}/type', 'UsersController@getUserType');
     Route::resource('tasks', 'TasksController', ['except' => ['create', 'edit']]);
-    Route::post('tasks/{type}', 'TasksController@getTypeForPatient');
+    Route::post('tasks/{type}', 'TasksController@getType');
+    Route::post('tasks/{type}/pid/{patientId}', 'TasksController@getTypeForPatient');
     Route::resource('admins', 'AdminsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-settings', 'GuideSettingsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);
@@ -134,6 +135,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('access-codes', 'AccessCodesController', ['except' => ['create', 'edit']]);
     Route::resource('calendars', 'CalendarsController', ['except' => ['create', 'edit']]);
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
+    Route::post('companies/company-logo', 'CompaniesController@getCompanyLogo');
     Route::resource('allergens', 'AllergensController', ['except' => ['create', 'edit']]);
     Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
     Route::resource('change-lists', 'ChangeListsController', ['except' => ['create', 'edit']]);

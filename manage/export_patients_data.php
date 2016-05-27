@@ -1,10 +1,8 @@
-<?php
-namespace Ds3\Libraries\Legacy;
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 
-require_once __DIR__ . '/admin/includes/main_include.php';
-require_once __DIR__ . '/includes/sescheck.php';
-require_once __DIR__ . '/includes/constants.inc';
-require_once __DIR__ . '/admin/includes/ledger-functions.php';
+include_once 'admin/includes/main_include.php';
+include_once 'includes/sescheck.php';
+include_once 'includes/constants.inc';
 
 header("Content-type: text/csv");
 header("Content-Disposition: attachment; filename=dss_patient_export.csv");
@@ -55,7 +53,7 @@ $header = [
 fputcsv($csv, $header);
 
 $docId = intval($_SESSION['userid']);
-$subQueries = ledgerBalanceSubQueries('patient', 'p');
+$trxnTypeWriteOff = DSS_TRXN_PYMT_WRITEOFF;
 
 $sql = "SELECT
         patientid AS id,
@@ -78,9 +76,48 @@ $sql = "SELECT
         TRIM(p.cell_phone),
         TRIM(p.email),
         CASE p.status WHEN 1 THEN 'Active' ELSE 'Inactive' END,
-        {$subQueries['credits']} AS credits,
-        {$subQueries['debits']} AS debits,
-        {$subQueries['adjustments']} AS adjustments
+        TRUNCATE(
+            COALESCE(
+                (
+                    SELECT SUM(COALESCE(credits.amount, 0)) AS total
+                    FROM dental_ledger credits
+                    WHERE credits.docid = p.docid
+                        AND credits.patientid = p.patientid
+                ), 0.0
+            ), 2
+        ) AS credits,
+        TRUNCATE(
+            COALESCE(
+                (
+                    SELECT SUM(COALESCE(debits.amount, 0))
+                    FROM dental_ledger debits_base
+                        JOIN dental_ledger_payment debits ON debits.ledgerid = debits_base.ledgerid
+                    WHERE debits_base.docid = p.docid
+                        AND debits_base.patientid = p.patientid
+                        AND COALESCE(debits.payment_type, 0) != '$trxnTypeWriteOff'
+                ), 0.0
+            ), 2
+        ) AS debits,
+        TRUNCATE(
+            COALESCE(
+                (
+                    SELECT SUM(COALESCE(adjustments.paid_amount, 0))
+                    FROM dental_ledger adjustments
+                    WHERE adjustments.docid = p.docid
+                        AND adjustments.patientid = p.patientid
+                ), 0.0
+            )
+            + COALESCE(
+                (
+                    SELECT SUM(COALESCE(adjustment_payments.amount, 0))
+                    FROM dental_ledger adjustment_payments_base
+                        JOIN dental_ledger_payment adjustment_payments ON adjustment_payments.ledgerid = adjustment_payments_base.ledgerid
+                    WHERE adjustment_payments_base.docid = p.docid
+                        AND adjustment_payments_base.patientid = p.patientid
+                        AND adjustment_payments.payment_type = '$trxnTypeWriteOff'
+                ), 0.0
+            ), 2
+        ) AS adjustments
     FROM dental_patients p
     WHERE p.docid = '$docId'
     ORDER BY p.firstname, p.lastname, p.middlename";

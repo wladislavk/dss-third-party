@@ -26,7 +26,7 @@
 
                 <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
                     <span id="task_header">
-                        My Tasks (<span id="task_count">{{ patientAllTasksNumber }}</span>)
+                        My Tasks (<span id="task_count">{{ tasksNumber }}</span>)
                     </span>
                     <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
                         <h4 v-if="overdueTasks.length > 0" id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
@@ -161,327 +161,149 @@
                         <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
                         <button onclick="loadPopup('add_task.php?pid={{ $route.query.pid || 0 }}')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
                     </div>
+                    <div v-if="companyLogo" style="float:right;margin:13px 15px 0 0;">
+                        <img src="display_file.php?f={{ companyLogo }}" />
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="background:url(images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;">
+                    <div style="width:98.6%; background:#00457c;margin:0 auto;">
+                        <div v-if="$route.query.pid" id="patient_name_div" {{ (patientName.length > 20) ? 'style="font-size:14px"' : '' }}>
+                            <div id="patient_name_inner">
+                                <img v-if="medicare" src="images/medicare_logo_small.png" /> 
+                                <span v-if="medicare" class="medicare_name">
+                                <span v-else class="name">
+                                    {{ patientName }}
+                                    <a v-if="displayAlert && alertText.length > 0" href="#" title="{{ 'Notes: ' + alertText }}" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>
+                                    <a v-if="premedCheck == 1 || alergen == 1" href="q_page3.php?pid={{ $route.query.pid || 0 }}" title="{{ title }}" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div v-if="$route.query.pid && patientTaskNumber > 0" class="task_menu" id="pat_task_menu" style="float:left; margin:10px 0 0 10px;">
+                            <span id="pat_task_header" style="font-size:14px; font-weight:normal; color:#fff;">Tasks({{ patientTaskNumber }})</span>
+                            <div class="task_list" id="pat_task_list" style="display:none;">
+                                <h4 v-if="headerInfo.patientFutureTasks.length > 0" id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
+                                <ul v-if="headerInfo.patientFutureTasks.length > 0" id="pat_task_od_list">
+                                    <li v-for="task in headerInfo.patientFutureTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                                        <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                            <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                            <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                        </div>
+                                        <input type="checkbox" class="task_status" value="{{ task.id }}" />
+                                        {{ task.task }}
 
-        <?php
-          $logo_sql = "SELECT c.logo FROM companies c
-                       JOIN dental_user_company uc ON uc.companyid = c.id
-                       WHERE uc.userid='".$_SESSION['userid']."'";
+                                        <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    </li>
+                                </ul>
 
-          $logo_r = $db->getRow($logo_sql);
+                                <h4 v-if="headerInfo.patientTodayTasks.length > 0" id="pat_task_tod_header" class="task_tod_header">Today</h4>
+                                <ul v-if="headerInfo.patientTodayTasks.length > 0" id="pat_task_tod_list">
+                                    <li v-for="task in headerInfo.patientTodayTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                                        <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                            <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                            <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                        </div>
+                                        <input type="checkbox" class="task_status" value="{{ task.id }}" />
+                                        {{ task.task }}
 
-          if ($logo_r['logo'] != '') {
-        ?>
-           <div style="float:right;margin:13px 15px 0 0;">
-            <img src="display_file.php?f=<?php echo $logo_r['logo']; ?>" />
-           </div> 
-        <?php } ?>
-        
-        <div style="clear:both;"></div>
-      </div>
-  
-      <div style="background:url(images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;">
-        <div style="width:98.6%; background:#00457c;margin:0 auto;">
+                                        <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    </li>
+                                </ul>
 
-          <?php if (isset($_GET['pid']) && $_GET['pid'] != '') { ?>
+                                <h4 v-if="headerInfo.patientTomorrowTasks.length > 0" id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
+                                <ul v-if="headerInfo.patientTomorrowTasks.length > 0" id="pat_task_tom_list">
+                                    <li v-for="task in headerInfo.patientTomorrowTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                                        <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                            <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                            <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                        </div>
+                                        <input type="checkbox" class="task_status" value="{{ task.id }}" />
+                                        {{ task.task }}
 
-            <div id="patient_name_div" <?php echo  (!empty($thename) && strlen($thename)>20)?'style="font-size:14px"':''; ?>>
-              <div id="patient_name_inner">
+                                        <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    </li>
+                                </ul>
 
-               <?php if (!empty($medicare)) { ?>
-                 <img src="images/medicare_logo_small.png" /> 
+                                <h4 v-if="headerInfo.patientFutureTasks.length > 0" id="pat_task_fut_header" class="task_fut_header">Future</h4>
+                                <ul v-if="headerInfo.patientFutureTasks.length > 0" id="pat_task_fut_list">
+                                    <li v-for="task in headerInfo.patientFutureTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                                        <div class="task_extra" id="task_extra_{{ task.id }}" >
+                                            <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                            <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
+                                        </div>
+                                        <input type="checkbox" class="task_status" value="{{ task.id }}" />
+                                        {{ task.task }}
 
-                 <span class="medicare_name">
-               <?php } else { ?>
-                 <span class="name">
-               <?php } ?>
-
-               <?php echo  (!empty($thename) ? $thename : ''); ?>
-
-               <?php if ($displayAlert && !empty($alertText)) { ?>
-                <a href="#" title="<?php echo 'Notes: ' . $alertText; ?>" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>
-               <?php } ?>
-
-               <?php
-                  if (!empty($premed) && $premed == 1 || !empty($allergen) && $allergen == 1) {
-                    echo "<a href=\"q_page3.php?pid=".$_GET['pid']."\" title=\"".$title."\" style=\"font-weight:bold; font-size:18px; color:#FF0000;\">*Med</a>";
-                  }
-               ?>
-                 </span>
-              </div>
-            </div>
-
-          <?php
-            $t_sql = "select dt.*, du.name, p.firstname, p.lastname from dental_task dt JOIN dental_users du ON dt.responsibleid=du.userid LEFT JOIN dental_patients p ON p.patientid=dt.patientid WHERE (dt.status = '0' OR
-              dt.status IS NULL) AND (du.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' OR du.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."') AND dt.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-
-            $t_num_sql = $t_sql;
-            $num_pat_tasks = $db->getNumberRows($t_num_sql);
-            if($num_pat_tasks > 0) {
-          ?>
-
-            <div class="task_menu" id="pat_task_menu" style="float:left; margin:10px 0 0 10px;">
-              <span id="pat_task_header" style="font-size:14px; font-weight:normal; color:#fff;">Tasks(<?php echo  $num_pat_tasks; ?>)</span>
-
-              <?php
-                $od_sql = $t_sql . " AND dt.due_date < CURDATE();";
-                $tod_sql = $t_sql . " AND dt.due_date = CURDATE();";
-                $tom_sql = $t_sql . " AND dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
-                $fut_sql = $t_sql . " AND dt.due_date > DATE_ADD(CURDATE(), INTERVAL 1 DAY);";
-              ?>
-
-              <div class="task_list" id="pat_task_list" style="display:none;">
-
-                <?php
-                  $od_q = $db->getResults($od_sql);
-                  $od_num = count($od_q);
-
-                  if ($od_num > 0) {
-                ?>
-                  <h4 id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
-                  <ul id="pat_task_od_list">
-
-                    <?php foreach($od_q as $od_r) { ?>
-
-                      <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                        <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                          <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-
-                          <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
+                                        <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <input type="checkbox" class="task_status" value="<?php echo  $od_r['id']; ?>" />
+                        <a v-if="$route.query.pid" href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'':'display:none;';?>" class="button" id="show_patient_warnings" onclick="$.cookie('hide_pat_warnings', '');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+                        <a v-if="$route.query.pid" href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'display:none':'';?>" class="button" id="hide_patient_warnings" onclick="$.cookie('hide_pat_warnings', <?php echo $_GET['pid'];?>);$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
 
-                        <?php echo $od_r['task']; ?>
-
-                        <?php
-                          if($od_r['firstname']!='' && $od_r['lastname']!='') {
-                            echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                          }
-                        ?>
-                      </li>
-                    <?php } ?>
-
-                  </ul>
-
-                <?php } ?>
-
-                <?php
-                  $od_q = $db->getResults($tod_sql);
-                  $od_num = count($od_q);
-
-                  if ($od_num > 0) {
-                ?>
-
-                    <h4 id="pat_task_tod_header" class="task_tod_header">Today</h4>
-                    <ul id="pat_task_tod_list">
-
-                      <?php foreach($od_q as $od_r) { ?>
-
-                        <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                          <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                            <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-
-                            <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
-                          </div>
-
-                          <input type="checkbox" class="task_status" value="<?php echo  $od_r['id']; ?>" />
-
-                          <?php echo $od_r['task']; ?>
-
-                          <?php
-                            if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                              echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                            }
-                          ?>
-                        </li>
-
-                      <?php } ?>
-
-                    </ul>
-
-                <?php } ?>
-
-                <?php
-                  $od_q = $db->getResults($tom_sql);
-                  $od_num = count($od_q);
-
-                  if ($od_num > 0) {
-                ?>
-
-                  <h4 id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
-                  <ul id="pat_task_tom_list">
-
-                    <?php foreach($od_q as $od_r) { ?>
-
-                      <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                        <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                          <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-
-                          <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
+                        <div class="suckertreemenu">
+                            <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">
+                                Welcome {{ user.username }}
+                            </span>
                         </div>
 
-                        <input type="checkbox" class="task_status" value="<?php echo  $od_r['id']; ?>" />
-
-                        <?php echo $od_r['task']; ?>
-
-                        <?php
-                          if($od_r['firstname']!='' && $od_r['lastname']!=''){
-                            echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                          }
-                        ?>
-                      </li>
-
-                    <?php } ?>
-
-                  </ul>
-                <?php } ?>
-
-                <?php
-                  $od_q = $db->getResults($fut_sql);
-                  $od_num = count($od_q);
-
-                  if ($od_num > 0) {
-                ?>
-
-                  <h4 id="pat_task_fut_header" class="task_fut_header">Future</h4>
-                  <ul id="pat_task_fut_list">
-
-                    <?php foreach($od_q as $od_r) { ?>
-
-                      <li class="task_item task_<?php echo  $od_r['id']; ?>" style="clear:both;">
-                        <div class="task_extra" id="task_extra_<?php echo  $od_r['id']; ?>" >
-                          <a href="#" onclick="delete_task('<?php echo  $od_r['id']; ?>')" class="task_delete"></a>
-                          <a href="#" onclick="loadPopup('add_task.php?id=<?php echo  $od_r['id']; ?>')" class="task_edit">Edit</a>
+                        <div v-if="$route.query.pid" id="patient_nav">
+                            <ul>
+                                <li>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" <?php {echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Tracker</a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=notes&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=letters&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid=<?php echo  $_GET['pid'] ?>">Images</a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Questionnaire</a>
+                                </li>
+                                <li>
+                                    <a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Clinical Exam</a>
+                                </li>
+                                <li class="last">
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/add_patient.php')?'nav_active':'';?>" href="add_patient.php?ed=<?php echo  $_GET['pid'] ?>&addtopat=1&pid=<?php echo  $_GET['pid'] ?>">Patient Info</a>
+                                </li>
+                            </ul>
                         </div>
+                        <div v-else style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
+                    <div style="clear:both;"></div>
 
-                        <input type="checkbox" class="task_status" value="<?php echo  $od_r['id']; ?>" />
+                    <div v-if="$route.query.pid" style="margin-left:20px;float:left;width:400px;display:none;">
+                        You are currently in a patient chart - 
+                        <a href="manage_patient.php" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a>
+                    </div>
+                    <div v-if="$route.query.pid" style="float:right;width:300px;"></div>
+                    <br />
 
-                        <?php echo $od_r['task']; ?>
-
-                        <?php
-                          if($od_r['firstname']!='' && $od_r['lastname']!='') {
-                            echo ' (<a href="add_patient.php?ed='.$od_r['patientid'].'&addtopat=1&pid='.$od_r['patientid'].'">'.$od_r['firstname'].' '. $od_r['lastname'].'</a>)';
-                          }
-                        ?>
-                      </li>
-
+                    <?php if(isset($_COOKIE['hide_pat_warnings']) && (!isset($_GET['pid']) || $_COOKIE['hide_pat_warnings'] != $_GET['pid'])) { ?>
+                        <script type="text/javascript">
+                            $.cookie('hide_pat_warnings', '');
+                        </script>
                     <?php } ?>
 
-                  </ul>
-
-                <?php } ?>
-              </div>
-            </div>
-          <?php } ?>
-        <?php } ?>
-
-        <?php if(isset($_GET['pid'])) { ?>
-
-          <a href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'':'display:none;';?>" class="button" id="show_patient_warnings" onclick="$.cookie('hide_pat_warnings', '');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-
-          <a href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'display:none':'';?>" class="button" id="hide_patient_warnings" onclick="$.cookie('hide_pat_warnings', <?php echo $_GET['pid'];?>);$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
-
-        <?php } ?>
-
-        <div class="suckertreemenu">
-          <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">
-            Welcome <?php echo  $_SESSION['username']; ?>
-          </span>
-        </div>
-
-        <?php if(isset($_GET['pid']) && $_GET['pid']!='') { ?>
-
-          <div id="patient_nav">
-            <ul>
-              <li>
-                <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" <?php {echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Tracker</a>
-              </li>
-
-              <li>
-                <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a>
-              </li>
-
-              <li>
-                <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a>
-              </li>
-
-              <li>
-                <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a>
-              </li>
-
-              <li>
-                <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=notes&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a>
-              </li>
-
-              <li>
-                <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=letters&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a>
-              </li>
-
-              <li>
-                <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid=<?php echo  $_GET['pid'] ?>">Images</a>
-              </li>
-
-              <li>
-                <a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Questionnaire</a>
-              </li>
-
-              <li>
-                <a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Clinical Exam</a>
-              </li>
-
-              <li class="last">
-                <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/add_patient.php')?'nav_active':'';?>" href="add_patient.php?ed=<?php echo  $_GET['pid'] ?>&addtopat=1&pid=<?php echo  $_GET['pid'] ?>">Patient Info</a>
-              </li>
-            </ul>
-          </div>
-
-        <?php } else { ?>
-          <div style="clear:both;"></div>
-        <?php } ?>   
-      </div>
-    <div style="clear:both;"></div>
-  </div>
-
-  <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
-    <div style="clear:both;"></div>
-
-      <?php if(isset($_GET['pid']) && $_GET['pid']!= ''){ ?>
-        <div style="margin-left:20px;float:left;width:400px;display:none;">
-          <?php echo "You are currently in a patient chart - " ?>
-
-          <a href="manage_patient.php" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a>
-
-        </div>
-
-        <div style="float:right;width:300px;"> 
-          <?php
-            $sql = "select * from dental_patients where docid='".$_SESSION['docid']."' AND patientid='".$_GET['pid']."'";
-          
-            $my = $db->getResults($sql);
-
-            foreach ($my as $myarray) {
-              $thename = $myarray['firstname'] . " " . $myarray['lastname'];
-              
-              if ($myarray["premedcheck"] == 1) {
-              }
-            }
-          ?>
-        </div>
-      <?php } ?>
-
-      <br />
-
-      <?php if(isset($_COOKIE['hide_pat_warnings']) && (!isset($_GET['pid']) || $_COOKIE['hide_pat_warnings'] != $_GET['pid'])) { ?>
-
-        <script type="text/javascript">
-         $.cookie('hide_pat_warnings', '');
-        </script>
-
-      <?php }
-        if (isset($_GET['pid'])) {
-      ?>
-
-      <div id="patient_warnings" <?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'style="display:none;"':'';?>>
+                    <div v-if="$route.query.pid" id="patient_warnings" <?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'style="display:none;"':'';?>>
 
         <?php
           if (isset($_GET['pid']) && $_GET['pid'] != '' && $_GET['pid'] != '0') {

@@ -283,3 +283,285 @@ function updateLedgerPayments (Array $ledgerPayments, $paymentType, $payer, $use
 
     return $updateIds;
 }
+
+/**
+ * Manage Ledger query, encapsulated for easy reuse.
+ *
+ * @param int    $patientId
+ * @param int    $docId
+ * @param string $orderBy
+ * @param string $limit
+ * @return string
+ */
+function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
+    $docId = intval($docId);
+    $patientId = intval($patientId);
+    $filedByBackOfficeConditional = filedByBackOfficeConditional('i');
+
+    $query = "SELECT
+            'ledger',
+            dl.ledgerid,
+            dl.service_date,
+            dl.entry_date,
+            CONCAT(p.first_name, ' ', p.last_name) AS name,
+            dl.description,
+            dl.amount,
+            '' AS paid_amount,
+            di.status,
+            dl.primary_claim_id,
+            '' AS payer,
+            '' AS payment_type,
+            di.status AS claim_status,
+            '' AS filename,
+            '' AS num_notes,
+            '' AS num_fo_notes,
+            0 AS filed_by_bo
+        FROM dental_ledger dl
+            LEFT JOIN dental_users p ON dl.producerid = p.userid
+            LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
+            LEFT JOIN dental_insurance di ON di.insuranceid = dl.primary_claim_id
+        WHERE dl.docid = '$docId'
+            AND dl.patientid = '$patientId'
+            AND (dl.paid_amount IS NULL OR dl.paid_amount = 0)
+        GROUP BY dl.ledgerid
+
+        UNION
+
+        SELECT
+            'ledger_payment',
+            dlp.id,
+            dlp.payment_date,
+            dlp.entry_date,
+            CONCAT(p.first_name, ' ', p.last_name),
+            '',
+            '',
+            dlp.amount,
+            '',
+            IF(dl.secondary_claim_id && dlp.is_secondary, dl.secondary_claim_id, dl.primary_claim_id),
+            dlp.payer,
+            dlp.payment_type,
+            '',
+            '',
+            '',
+            '',
+            0 AS filed_by_bo
+        FROM dental_ledger dl
+            LEFT JOIN dental_users p ON dl.producerid = p.userid
+            LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+        WHERE dl.docid = '$docId'
+            AND dl.patientid = '$patientId'
+            AND dlp.amount != 0
+
+        UNION
+
+        SELECT
+            'ledger_paid',
+            dl.ledgerid,
+            dl.service_date,
+            dl.entry_date,
+            CONCAT(p.first_name, ' ', p.last_name),
+            dl.description,
+            dl.amount,
+            dl.paid_amount,
+            dl.status,
+            dl.primary_claim_id,
+            tc.type,
+            '',
+            '',
+            '',
+            '',
+            '',
+            0 AS filed_by_bo
+        FROM dental_ledger dl
+            LEFT JOIN dental_users p ON dl.producerid = p.userid
+            LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
+            LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
+                AND tc.docid = '$docId'
+        WHERE dl.docid = '$docId'
+            AND dl.patientid = '$patientId'
+            AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+
+        UNION
+
+        SELECT
+            'note',
+            n.id,
+            n.service_date,
+            n.entry_date,
+            CONCAT('Note - ', p.first_name, ' ', p.last_name),
+            n.note,
+            '',
+            '',
+            n.private,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            0 AS filed_by_bo
+        FROM dental_ledger_note n
+            JOIN dental_users p ON n.producerid = p.userid
+        WHERE n.patientid = '$patientId'
+
+        UNION
+
+        SELECT
+            'statement',
+            s.id,
+            s.service_date,
+            s.entry_date,
+            CONCAT(p.first_name, ' ', p.last_name),
+            'Ledger statement created (Click to view)',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            s.filename,
+            '',
+            '',
+            0 AS filed_by_bo
+        FROM dental_ledger_statement s
+            JOIN dental_users p on s.producerid = p.userid
+        WHERE s.patientid = '$patientId'
+
+        UNION
+
+        SELECT
+            'note',
+            n.id,
+            n.service_date,
+            n.entry_date,
+            CONCAT('Note - Backoffice ID - ', p.adminid),
+            n.note,
+            '',
+            '',
+            n.private,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            0 AS filed_by_bo
+        FROM dental_ledger_note n
+            JOIN admin p ON n.admin_producerid = p.adminid
+        WHERE n.patientid = '$patientId'
+
+        UNION
+
+        SELECT
+            'claim',
+            i.insuranceid,
+            i.adddate,
+            i.adddate,
+            'Claim',
+            'Insurance Claim',
+            (
+                SELECT SUM(dl2.amount)
+                FROM dental_ledger dl2
+                    INNER JOIN dental_insurance i2 ON dl2.primary_claim_id = i2.insuranceid
+                WHERE i2.insuranceid = i.insuranceid
+            ),
+            SUM(pay.amount),
+            i.status,
+            i.primary_claim_id,
+            '',
+            '',
+            '',
+            '',
+            (
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = i.insuranceid
+            ),
+            (
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = i.insuranceid
+                    AND create_type = '1'
+            ),
+            $filedByBackOfficeConditional AS filed_by_bo
+        FROM dental_insurance i
+            LEFT JOIN dental_ledger dl ON dl.primary_claim_id = i.insuranceid
+            LEFT JOIN dental_ledger_payment pay ON dl.ledgerid = pay.ledgerid
+        WHERE i.patientid = '$patientId'
+        GROUP BY i.insuranceid
+        
+        $orderBy
+        $limit";
+
+    return $query;
+}
+
+/**
+ * Manage Ledger report, encapsulated for easier use
+ *
+ * @param int    $patientId
+ * @param int    $docId
+ * @param string $orderBy
+ * @param string $limit
+ * @return array
+ */
+function ledgerReportForPatient ($patientId, $docId, $orderBy='', $limit='') {
+    $db = new Db();
+
+    $query = ledgerReportQuery($patientId, $docId, $orderBy, $limit);
+    $report = $db->getResults($query);
+
+    return $report;
+}
+
+/**
+ * Calculate ledger total for a patient.
+ *
+ * @param int $patientId
+ * @param int $docId
+ * @return array
+ */
+function ledgerBalanceForPatient ($patientId, $docId) {
+    $report = ledgerReportForPatient($patientId, $docId);
+    $cur_bal = $cur_cha = $cur_pay = $cur_adj = 0;
+
+    foreach ($report as $myarray) {
+        if ($myarray['ledger'] === 'claim') {
+            continue;
+        }
+
+        if (st($myarray["amount"]) <> 0 && !empty($myarray['ledger']) && $myarray['ledger'] != 'claim') {
+            if (!empty($myarray['ledger']) && $myarray['ledger'] != 'claim') {
+                $cur_bal += st($myarray["amount"]);
+                $cur_cha += st($myarray["amount"]);
+            }
+        }
+
+        if (!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' && $myarray['payer'] == DSS_TRXN_TYPE_ADJ) {
+            if ($myarray['ledger'] != 'claim') {
+                $cur_bal -= st($myarray["paid_amount"]);
+                $cur_adj += st($myarray["paid_amount"]);
+            }
+        }
+
+        if (!(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' && $myarray['payer'] == DSS_TRXN_TYPE_ADJ)) {
+            if (!empty($myarray['ledger']) && $myarray['ledger'] != 'claim') {
+                $cur_bal -= st($myarray["paid_amount"]);
+                $cur_pay += st($myarray["paid_amount"]);
+            }
+        }
+    }
+
+    $balance = [
+        'debits' => $cur_cha,
+        'credits' => $cur_pay,
+        'adjustments' => $cur_adj,
+        'total' => $cur_bal
+    ];
+
+    return $balance;
+}
+

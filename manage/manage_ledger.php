@@ -2,6 +2,7 @@
 include "includes/top.htm";
 include_once('includes/dental_patient_summary.php');
 include_once('includes/patient_info.php');
+require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
 if ($patient_info)
 $sql = "SELECT  "
@@ -136,6 +137,7 @@ if(empty($pat_myarray['patientid']))
   //trigger_error("Die called", E_USER_ERROR);
 }
 
+$my = null;
 $rec_disp = 2000;
 
 if(!empty($_REQUEST["page"]))
@@ -144,6 +146,18 @@ else
   $index_val = 0;
   
 $i_val = $index_val * $rec_disp;
+
+if (isset($_GET['sort'])) {
+    if ($_GET['sort'] == 'producer') {
+        $orderBy = " ORDER BY name ".$_GET['sortdir'];
+    } else {
+        $orderBy = " ORDER BY ".$_GET['sort']." ".$_GET['sortdir'];
+    }
+} else {
+    $orderBy = '';
+}
+
+$limit = " limit ".$i_val.",".$rec_disp;
 
 $filedByBackOfficeConditional = filedByBackOfficeConditional('i');
 
@@ -170,189 +184,20 @@ if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
             GROUP BY i.insuranceid
   ";
 }else{
-  $sql = "select 
-                  'ledger',
-      dl.ledgerid,
-      dl.service_date,
-                dl.entry_date,
-      CONCAT(p.first_name,' ',p.last_name) as name,
-      dl.description,
-      dl.amount,
-      '' as paid_amount,
-      di.status,
-      dl.primary_claim_id,
-      '' as payer,
-      '' as payment_type,
-      di.status as claim_status,
-      '' as filename,
-                  '' as num_notes,
-                  '' as num_fo_notes,
-                  0 AS filed_by_bo
-    from dental_ledger dl 
-      LEFT JOIN dental_users p ON dl.producerid=p.userid 
-      LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
-      LEFT JOIN dental_insurance di on di.insuranceid = dl.primary_claim_id
-        where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' 
-        and (dl.paid_amount IS NULL || dl.paid_amount = 0)
-      GROUP BY dl.ledgerid
-   UNION
-          select 
-                  'ledger_payment',
-                  dlp.id,
-                  dlp.payment_date,
-                  dlp.entry_date,
-                  CONCAT(p.first_name,' ',p.last_name),
-                  '',
-                  '',
-                  dlp.amount,
-                  '',
-                  IF(dl.secondary_claim_id && dlp.is_secondary, dl.secondary_claim_id, dl.primary_claim_id),
-      dlp.payer,
-      dlp.payment_type,
-      '',
-      '',
-                  '',
-                  '',
-                  0 AS filed_by_bo
-          from dental_ledger dl 
-                  LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                  LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                          where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' 
-        AND dlp.amount != 0
-    UNION
-    select 
-                  'ledger_paid',
-                  dl.ledgerid,
-                  dl.service_date,
-                  dl.entry_date,
-                  CONCAT(p.first_name,' ',p.last_name),
-                  dl.description,
-                  dl.amount,
-                  dl.paid_amount,
-                  dl.status,
-                  dl.primary_claim_id,
-      tc.type,
-      '',
-      '',
-                  '',
-                  '',
-                  '',
-                  0 AS filed_by_bo
-          from dental_ledger dl 
-                  LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                  LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
-      LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
-                          where dl.docid='".$_SESSION['docid']."' and dl.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."' 
-        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-    UNION
-      select 
-      'note',
-      n.id,
-      n.service_date,
-      n.entry_date,
-      concat('Note - ', p.first_name,' ',p.last_name),
-      n.note,
-      '',
-      '',
-      n.private,
-      '',
-      '',
-      '',
-      '',
-                  '',
-                  '',
-                  '',
-                  0 AS filed_by_bo
-    from dental_ledger_note n
-      JOIN dental_users p on n.producerid=p.userid
-        where n.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'       
-    UNION
-          select 
-                  'statement',
-                  s.id,
-                  s.service_date,
-                  s.entry_date,
-      CONCAT(p.first_name,' ',p.last_name),
-                  'Ledger statement created (Click to view)',
-      '',               
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-      s.filename,
-                  '',
-                  '',
-                  0 AS filed_by_bo
-          from dental_ledger_statement s
-                  JOIN dental_users p on s.producerid=p.userid
-                          where s.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
-    UNION
-          select 
-                  'note',
-                  n.id,
-                  n.service_date,
-                  n.entry_date,
-                  concat('Note - Backoffice ID - ', p.adminid),
-                  n.note,
-                  '',
-                  '',
-                  n.private,
-                  '',
-                  '',
-                  '',
-                  '',
-                  '',
-      '',
-      '',
-      0 AS filed_by_bo
-          from dental_ledger_note n
-                  JOIN admin p on n.admin_producerid=p.adminid
-                          where n.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'       
-
-    UNION
-    select
-      'claim',
-      i.insuranceid,
-      i.adddate,
-      i.adddate,
-      'Claim',
-      'Insurance Claim',
-      (select sum(dl2.amount) FROM dental_ledger dl2
-          INNER JOIN dental_insurance i2 on dl2.primary_claim_id=i2.insuranceid
-          where i2.insuranceid=i.insuranceid),
-      sum(pay.amount),
-      i.status,
-      i.primary_claim_id,
-      '',
-      '',
-      '',
-                  '',
-          (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid), 
-          (SELECT count(*) FROM dental_claim_notes where claim_id=i.insuranceid AND create_type='1'),
-          $filedByBackOfficeConditional AS filed_by_bo
-    from dental_insurance i
-      LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
-      LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
-      where i.patientid='".s_for(!empty($_GET['pid']) ? $_GET['pid'] : '')."'
-    GROUP BY i.insuranceid
-  ";
-}
-
-if(isset($_GET['sort'])){
-  if($_GET['sort']=='producer'){
-    $sql .= " ORDER BY name ".$_GET['sortdir']; 
-  }else{
-    $sql .= " ORDER BY ".$_GET['sort']." ".$_GET['sortdir'];
-  }
+  $sql = ledgerReportQuery($_GET['pid'], $_SESSION['docid']);
 }
 
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
 
-$sql .= " limit ".$i_val.",".$rec_disp;
-$my = $db->getResults($sql);
+$sql = "$sql
+    $orderBy
+    $limit";
+
+if (empty($my)) {
+    $my = $db->getResults($sql);
+}
+
 $num_users = count($my);
 ?>
 
@@ -675,7 +520,7 @@ W1: <?php echo st($pat_myarray['cell_phone']);?>
           $cur_pay += st($myarray["paid_amount"]);
         }?>
       <td></td>
-<?php 
+<?php
       } ?>
       <td valign="top" align="right"
 <?php 

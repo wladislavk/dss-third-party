@@ -137,7 +137,6 @@ if(empty($pat_myarray['patientid']))
   //trigger_error("Die called", E_USER_ERROR);
 }
 
-$my = null;
 $rec_disp = 2000;
 
 if(!empty($_REQUEST["page"]))
@@ -194,9 +193,7 @@ $sql = "$sql
     $orderBy
     $limit";
 
-if (empty($my)) {
-    $my = $db->getResults($sql);
-}
+$my = $db->getResults($sql);
 
 $num_users = count($my);
 ?>

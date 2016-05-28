@@ -3,6 +3,7 @@ namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/access.php';
 require_once __DIR__ . '/../../includes/constants.inc';
+require_once __DIR__ . '/claim_functions.php';
 require_once __DIR__ . '/../../includes/claim_functions.php';
 
 /**
@@ -528,38 +529,26 @@ function ledgerBalanceForPatient ($patientId, $docId) {
     $report = ledgerReportForPatient($patientId, $docId);
     $cur_bal = $cur_cha = $cur_pay = $cur_adj = 0;
 
-    foreach ($report as $myarray) {
-        if ($myarray['ledger'] === 'claim') {
+    foreach ($report as $transaction) {
+        if (!in_array($transaction['ledger'], ['ledger', 'ledger_paid', 'ledger_payment'])) {
             continue;
         }
 
-        if (st($myarray["amount"]) <> 0 && !empty($myarray['ledger']) && $myarray['ledger'] != 'claim') {
-            if (!empty($myarray['ledger']) && $myarray['ledger'] != 'claim') {
-                $cur_bal += st($myarray["amount"]);
-                $cur_cha += st($myarray["amount"]);
-            }
-        }
+        $cur_bal += $transaction['amount'] - $transaction['paid_amount'];
+        $cur_cha += $transaction['amount'];
 
-        if (!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' && $myarray['payer'] == DSS_TRXN_TYPE_ADJ) {
-            if ($myarray['ledger'] != 'claim') {
-                $cur_bal -= st($myarray["paid_amount"]);
-                $cur_adj += st($myarray["paid_amount"]);
-            }
-        }
-
-        if (!(!empty($myarray['ledger']) && $myarray['ledger'] == 'ledger_paid' && $myarray['payer'] == DSS_TRXN_TYPE_ADJ)) {
-            if (!empty($myarray['ledger']) && $myarray['ledger'] != 'claim') {
-                $cur_bal -= st($myarray["paid_amount"]);
-                $cur_pay += st($myarray["paid_amount"]);
-            }
+        if ($transaction['ledger'] == 'ledger_paid' && $transaction['payer'] == DSS_TRXN_TYPE_ADJ) {
+            $cur_adj += $transaction['paid_amount'];
+        } else {
+            $cur_pay += $transaction['paid_amount'];
         }
     }
 
     $balance = [
-        'debits' => $cur_cha,
-        'credits' => $cur_pay,
-        'adjustments' => $cur_adj,
-        'total' => $cur_bal
+        'debits' => number_format($cur_pay, 2, '.', ''),
+        'credits' => number_format($cur_cha, 2, '.', ''),
+        'adjustments' => number_format($cur_adj, 2, '.', ''),
+        'total' => number_format($cur_bal, 2, '.', '')
     ];
 
     return $balance;

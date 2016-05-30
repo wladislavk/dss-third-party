@@ -74,6 +74,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('insurance-diagnoses', 'InsuranceDiagnosesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-types', 'InsuranceTypesController', ['except' => ['create', 'edit']]);
     Route::resource('insurances', 'InsurancesController', ['except' => ['create', 'edit']]);
+    Route::post('insurances/rejected', 'InsurancesController@getRejected');
     Route::resource('insurance-files', 'InsuranceFilesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-histories', 'InsuranceHistoriesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-preauth', 'InsurancePreauthController', ['except' => ['create', 'edit']]);
@@ -97,7 +98,9 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('notes', 'NotesController', ['except' => ['create', 'edit']]);
     Route::resource('palpation', 'PalpationController', ['except' => ['create', 'edit']]);
     Route::resource('patient-contacts', 'PatientContactsController', ['except' => ['create', 'edit']]);
+    Route::post('patient-contacts/current', 'PatientContactsController@getCurrent');
     Route::resource('patient-insurances', 'PatientInsurancesController', ['except' => ['create', 'edit']]);
+    Route::post('patient-insurances/current', 'PatientInsurancesController@getCurrent');
     Route::resource('patient-summaries', 'PatientSummariesController', ['except' => ['create', 'edit']]);
     Route::resource('patients', 'PatientsController', ['except' => ['create', 'edit']]);
     Route::post('patients/with-filter', 'PatientsController@getWithFilter');

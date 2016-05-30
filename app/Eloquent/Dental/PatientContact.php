@@ -38,4 +38,16 @@ class PatientContact extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function getCurrent($docId = 0, $patientId = 0)
+    {
+        return $this->from(DB::raw('dental_patient_contacts pc'))
+            ->select(DB::raw('pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1,'
+                . 'pc.address2, pc.city, pc.state, pc.zip, pc.phone, p.firstname as patfirstname,'
+                . 'p.lastname as patlastname'))
+            ->join(DB::raw('dental_patients p'), 'pc.patientid', '=', 'p.patientid')
+            ->where('p.docid', $docId)
+            ->where('p.patientid', $patientId)
+            ->get();
+    }
 }

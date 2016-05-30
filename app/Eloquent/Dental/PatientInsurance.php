@@ -35,4 +35,14 @@ class PatientInsurance extends Model implements Resource, Repository
      * @var bool
      */
     public $timestamps = false;
+
+    public function getCurrent($docId = 0, $patientId = 0)
+    {
+        return $this->from(DB::raw('dental_patient_insurance pi'))
+            ->select('pi.*, p.firstname as patfirstname, p.lastname as patlastname')
+            ->join(DB::raw('dental_patients p'), 'pi.patientid', '=', 'p.patientid')
+            ->where('p.docid', $docId)
+            ->where('p.patientid', $patientId)
+            ->get();
+    }
 }

@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\PatientContactDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\PatientContact;
 use DentalSleepSolutions\Contracts\Repositories\PatientContacts;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +89,15 @@ class PatientContactsController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getCurrent(PatientContacts $resources, Request $request)
+    {
+        $patientId = $request->input('patientId') ?: 0;
+        $docId     = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getCurrent($docId, $patientId);
+
+        return ApiResponse::responseOk('', $data);
     }
 }

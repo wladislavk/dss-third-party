@@ -31,36 +31,45 @@ module.exports = {
                 patientNextWeekTasks     : [],
                 patientLaterTasks        : []
             },
-            user                       : {},
-            docInfo                    : {},
-            secondsPerDay              : 86400,
-            oldestLetter               : 0,
-            pendingPreauthNumber       : 0,
-            supportTicketsNumber       : 0,
-            title                      : '',
-            premedCheck                : 0,
-            medicare                   : 0,
-            alertText                  : '',
-            displayAlert               : false,
-            alergen                    : 0,
-            patientName                : '',
-            patientTasks               : [],
-            notificationsNumber        : 0,
-            tasksNumber                : 0,
-            patientTaskNumber          : 0,
-            isUserDoctor               : false,
-            showOnlineCEAndSnoozleHelp : false,
-            courseStaff                : {
+            user                                 : {},
+            docInfo                              : {},
+            secondsPerDay                        : 86400,
+            oldestLetter                         : 0,
+            pendingPreauthNumber                 : 0,
+            supportTicketsNumber                 : 0,
+            title                                : '',
+            premedCheck                          : 0,
+            medicare                             : 0,
+            alertText                            : '',
+            displayAlert                         : false,
+            alergen                              : 0,
+            patientName                          : '',
+            patientTasks                         : [],
+            notificationsNumber                  : 0,
+            tasksNumber                          : 0,
+            patientTaskNumber                    : 0,
+            isUserDoctor                         : false,
+            showOnlineCEAndSnoozleHelp           : false,
+            courseStaff                          : {
                 use_course       : 0,
                 use_course_staff : 0
             },
-            companyLogo                : '',
-            overdueTasks               : [],
-            todayTasks                 : [],
-            tomorrowTasks              : [],
-            thisWeekTasks              : [],
-            nextWeekTasks              : [],
-            laterTasks                 : []
+            companyLogo                          : '',
+            overdueTasks                         : [],
+            todayTasks                           : [],
+            tomorrowTasks                        : [],
+            thisWeekTasks                        : [],
+            nextWeekTasks                        : [],
+            laterTasks                           : [],
+            childrenPatients                     : [],
+            totalContacts                        : 0,
+            totalInsurances                      : 0,
+            showWarningAboutPatientChanges       : false,
+            questionnaireStatuses                : [],
+            showWarningAboutQuestionnaireChanges : false,
+            bouncedEmailsNumberForCurrentPatient : 0,
+            showWarningAboutBouncedEmails        : false,
+            rejectedClaimsForCurrentPatient      : []
         }
     },
     created: function() {
@@ -131,7 +140,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getUnmailedLettersNumber [status]: ', response.status);
                                 });
-
+                            /*
                             this.getPendingClaimsNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -165,7 +174,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getRejectedClaimsNumber [status]: ', response.status);
                                 });
-
+                            */
                             this.getPreauthNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -549,6 +558,74 @@ module.exports = {
                     }, function(response) {
                         console.error('getPatientFutureTasks [status]: ', response.status);
                     });
+            }).then(function(response) {
+                this.getPatientsByParentId($route.query.pid)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.childrenPatients = data;
+                        }
+                    }, function(response) {
+                        console.error('getPatientsByParentId [status]: ', response.status);
+                    });
+
+                this.getCurrentPatientContacts($route.query.pid)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.totalContacts = data.length;
+                        }
+                    }, function(response) {
+                        console.error('getCurrentPatientContacts [status]: ', response.status);
+                    });
+
+                this.getCurrentPatientInsurances($route.query.pid)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.totalInsurances = data.lenght;
+                        }
+                    }, function(response) {
+                        console.error('getCurrentPatientInsurances [status]: ', response.status);
+                    });
+
+                this.getQuestionnaireStatuses($route.query.pid)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            for (var field in data) {
+                                this.questionnaireStatuses[field] = data[field];
+                            }
+                        }
+                    }, function(response) {
+                        console.error('getQuestionnaireStatuses [status]: ', response.status);
+                    })
+
+                this.getBouncedEmailsNumberForCurrentPatient($route.query.pid)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.bouncedEmailsNumberForCurrentPatient = data.length;
+                        }
+                    }, function(response) {
+                        console.error('getBouncedEmailsNumberForCurrentPatient [status]: ', response.status);
+                    });
+
+                this.getRejectedClaimsForCurrentPatient($route.query.pid)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.$set('rejectedClaimsForCurrentPatient', data);
+                        }
+                    }, function(response) {
+                        console.error('getRejectedClaimsForCurrentPatient [status]: ', response.status);
+                    });
             });
     },
     computed: {
@@ -583,6 +660,18 @@ module.exports = {
                     this.courseStaff.use_course == 1 && this.courseStaff.use_course_staff == 1
                 )
             );
+        },
+        showWarningAboutPatientChanges: function() {
+            return ((this.childrenPatients.length + this.totalContacts + this.totalInsurances) > 0);
+        },
+        showWarningAboutQuestionnaireChanges: function() {
+            return (this.questionnaireStatuses.symptoms_status == 2
+                || this.questionnaireStatuses.treatments_status == 2
+                || this.questionnaireStatuses.history_status == 2
+            );
+        },
+        showWarningAboutBouncedEmails: function() {
+            return this.bouncedEmailsNumberForCurrentPatient;
         }
     },
     methods: function() {
@@ -609,6 +698,7 @@ module.exports = {
         getUnmailedLettersNumber: function() {
             return this.$http.post(window.config.API_PATH + 'letters/unmailed');
         },
+        /*
         getPendingClaimsNumber: function() {
             return this.$http.post(window.config.API_PATH + 'insurances/pending');
         },
@@ -618,6 +708,7 @@ module.exports = {
         getRejectedClaimsNumber: function() {
             return this.$http.post(window.config.API_PATH + 'insurances/rejected');
         },
+        */
         getPreauthNumber: function() {
             return this.$http.post(window.config.API_PATH + 'insurance-preauth/completed');
         },
@@ -740,6 +831,54 @@ module.exports = {
         },
         getCompanyLogo: function() {
             return this.$http.post(window.config.API_PATH + 'companies/company-logo');
+        },
+        getPatientsByParentId: function(parentPatientId) {
+            var data = {
+                where  : { parent_patientid : parentPatientId || 0 }
+            };
+
+            return this.$http.post(window.config.API_PATH + 'patients/with-filter', data);
+        },
+        getCurrentPatientContacts: function(patientId) {
+            var data = {
+                patientId: patientId || 0
+            }
+
+            return this.$http.post(window.config.API_PATH + 'patient-contacts/current', data);
+        },
+        getCurrentPatientInsurances: function(patientId) {
+            var data = {
+                patientId: patientId || 0
+            }
+
+            return this.$http.post(window.config.API_PATH + 'patient-insurances/current', data);
+        },
+        getQuestionnaireStatuses: function(patientId) {
+            var data = {
+                fields: ['symptoms_status', 'treatments_status', 'history_status'],
+                where: {
+                    patientid : patientId || 0
+                }
+            };
+
+            return this.$http.post(window.config.API_PATH + 'patients/with-filter', data);
+        },
+        getBouncedEmailsNumberForCurrentPatient: function(patientId) {
+            var data = {
+                fields: ['patientid'],
+                where: {
+                    patientId : patientId || 0
+                }
+            };
+
+            return this.$http.post(window.config.API_PATH + 'patients/with-filter', data);
+        },
+        getRejectedClaimsForCurrentPatient: function(patientId) {
+            var data = {
+                patientId: patientId || 0
+            }
+
+            return this.$http.post(window.config.API_PATH + 'insurances/rejected', data);
         }
     }
 };

@@ -304,74 +304,20 @@
                     <?php } ?>
 
                     <div v-if="$route.query.pid" id="patient_warnings" <?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'style="display:none;"':'';?>>
-
-        <?php
-          if (isset($_GET['pid']) && $_GET['pid'] != '' && $_GET['pid'] != '0') {
-             $s = "SELECT * FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-           
-            $pat = $db->getRow($s);
-            $n = count($pat);
-            $n = num_patient_changes($_GET['pid']);
-           
-            $contacts_sql = "SELECT pc.id, pc.contacttype, pc.firstname, pc.lastname, pc.address1, pc.address2, pc.city, pc.state, pc.zip, pc.phone,
-              p.firstname as patfirstname, p.lastname as patlastname
-              FROM dental_patient_contacts pc 
-              INNER JOIN dental_patients p ON pc.patientid=p.patientid
-              WHERE p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
-              p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-
-            $total_contacts = $db->getNumberRows($contacts_sql);
-
-            $insurance_sql = "SELECT pi.*, p.firstname as patfirstname, p.lastname as patlastname FROM dental_patient_insurance pi INNER JOIN dental_patients p ON pi.patientid=p.patientid 
-                WHERE p.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND
-                p.patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-
-            $total_insurance = $db->getNumberRows($insurance_sql);
-
-            if (($n + $total_contacts + $total_insurance) > 0) {
-        ?>
-
-          <a class="warning" href="patient_changes.php?pid=<?php echo $_GET['pid'];?>">
-            <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
-          </a>
-        <?php } 
-          $exist_sql = "SELECT symptoms_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-
-          $exist_row = $db->getRow($exist_sql);
-
-          if(isset($exist_row['symptoms_status']) && $exist_row['symptoms_status'] == 2 || isset($exist_row['treatments_status']) && $exist_row['treatments_status'] == 2 || isset($exist_row['history_status']) && $exist_row['history_status'] == 2 || isset($exist_row['sleep_status']) && $exist_row['sleep_status'] == 2) { ?>
-              <a class="warning" href="q_page1.php?pid=<?php echo  $_GET['pid']; ?>&addtopat=1" >
-                <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
-              </a>
-        <?php }
-          $email_sql = "SELECT patientid FROM dental_patients WHERE email_bounce=1 AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-
-          if ($db->getNumberRows($email_sql) > 0) {
-        ?>
-
-          <a class="warning" href="add_patient.php?ed=<?php echo  $_GET['pid']; ?>&pid=<?php echo  $_GET['pid']; ?>&addtopat=1" >
-            <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
-          </a>
-
-        <?php }
-          $rc_sql = "SELECT * FROM dental_insurance WHERE 
-                     (status='".DSS_CLAIM_REJECTED."' OR status='".DSS_CLAIM_SEC_REJECTED."')
-                     AND patientid='".mysqli_real_escape_string($con,$_GET['pid'])."'";
-
-          $rc_q = $db->getResults($rc_sql);
-          $rc_num = count($rc_q);
-
-          if ($rc_num > 0) {
-        ?>
-          <span class="warning">Warning! Patient has the following rejected claims: <br />
-
-            <?php foreach ($rc_q as $rejected) { ?>
-              <a href="view_claim.php?claimid=<?php echo  $rejected['insuranceid']; ?>&pid=<?php echo  $_GET['pid']; ?>">
-                <?php echo  $rejected['insuranceid']; ?> - <?php echo  date('m/d/Y', strtotime($rejected['adddate'])); ?>
-              </a><br />
-            <?php } ?>
-
-          </span>
+                        <a v-if="showWarningAboutPatientChanges" class="warning" href="patient_changes.php?pid={{ $route.query.pid }}">
+                            <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+                        </a>
+                        <a v-if="showWarningAboutQuestionnaireChanges" class="warning" href="q_page1.php?pid={{ $route.query.pid }}&addtopat=1" >
+                            <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
+                        </a>
+                        <a v-if="showWarningAboutBouncedEmails" class="warning" href="add_patient.php?ed={{ $route.query.pid }}&pid={{ $route.query.pid }}&addtopat=1" >
+                            <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
+                        </a>
+                        <span v-if="rejectedClaimsForCurrentPatient.length > 0" class="warning">Warning! Patient has the following rejected claims: <br />
+                            <a v-for="claim in rejectedClaimsForCurrentPatient" href="view_claim.php?claimid={{ claim.insuranceid }}&pid={{ $route.query.pid }}">
+                                {{ claim.insuranceid }} - {{ claim.adddate | moment "MM/DD/YYYY" }}
+                            </a><br />
+                        </span>
         <?php }
           $rc_sql = "SELECT *
               FROM dental_hst

@@ -39,6 +39,16 @@ class HomeSleepTest extends Model implements Resource, Repository
         'rejecteddate', 'canceled_date'
     ];
 
+    private $preAuthorizationStatuses = [
+        'DSS_HST_CANCELED'  => -1,
+        'DSS_HST_REQUESTED' => 0,
+        'DSS_HST_PENDING'   => 1,
+        'DSS_HST_SCHEDULED' => 2,
+        'DSS_HST_COMPLETE'  => 3,
+        'DSS_HST_REJECTED'  => 4,
+        'DSS_HST_CONTACTED' => 5
+    ];
+
     /**
      * The name of the "created at" column.
      *
@@ -52,4 +62,39 @@ class HomeSleepTest extends Model implements Resource, Repository
      * @var string
      */
     const UPDATED_AT = 'updatedate';
+
+    public function scopeRequested($query)
+    {
+        return $query->where('status', self::$preAuthorizationStatuses['DSS_HST_REQUSTED']);
+    }
+
+    public function scopeOrPending($query)
+    {
+        return $query->orWhere('status', self::$preAuthorizationStatuses['DSS_HST_PENDING']);
+    }
+
+    public function scopeOrScheduled($query)
+    {
+        return $query->orWhere('status', self::$preAuthorizationStatuses['DSS_HST_SCHEDULED']);
+    }
+
+    public function scopeOrRejected($query)
+    {
+        return $query->orWhere(function($query) {
+            $query->where('status', self::$preAuthorizationStatuses['DSS_HST_REJECTED'])
+                ->where(function($query) {
+                    $query->whereNull('viewed')
+                        ->orWhere('viewed', 0);
+                });
+        });
+    }
+
+    public function getUncompleted($patientId = 0)
+    {
+        return $this->where(function($query) {
+                $query->requested()->orPending()->orScheduled()->orRejected();
+            })
+            ->where('patient_id', $patientId)
+            ->get();
+    }
 }

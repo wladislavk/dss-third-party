@@ -15,5 +15,15 @@ module.exports = {
     DSS_HST_SCHEDULED : 2,
     DSS_HST_COMPLETE  : 3,
     DSS_HST_REJECTED  : 4,
-    DSS_HST_CONTACTED : 5
+    DSS_HST_CONTACTED : 5,
+
+    preAuthLabels     : {
+        -1 : 'Canceled',
+         0 : 'Unsent',
+         1 : 'Pending',
+         2 : 'Scheduled',
+         3 : 'Complete',
+         4 : 'Rejected',
+         5 : 'Contacted'
+    }
 }

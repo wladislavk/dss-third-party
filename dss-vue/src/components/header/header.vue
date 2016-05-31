@@ -11,7 +11,7 @@
                         <li>
                             <a href="index.php"> Notifications({{ notificationsNumber }})</a>
                         </li>
-                        <li id="header_support" {{ (supportTicketsNumber > 0) ? 'class="pending"' : '' }}>
+                        <li id="header_support" v-bind:class="{'pending': supportTicketsNumber}">
                             <a href="support.php">Support {{ (supportTicketsNumber > 0) ? ('(' + supportTicketsNumber + ')'): '' }}</a>
                         </li>
                         <li>
@@ -142,7 +142,7 @@
                 <script type="text/javascript" src="script/autocomplete.js"></script>
                 <script type="text/javascript" src="script/autocomplete_local.js?v=<?= time() ?>"></script>
 
-                <div style="height:89px; width:100%; background:url(images/dss_01.png) #0b5c82 no-repeat top left;"> 
+                <div style="height:89px; width:100%; background:url(assets/images/dss_01.png) #0b5c82 no-repeat top left;"> 
                     <div style="margin-top:10px; margin-left:20px; float:left;">
                         <a href="/manage" id="logo">Dashboard</a>
                     </div>
@@ -166,11 +166,11 @@
                     </div>
                     <div style="clear:both;"></div>
                 </div>
-                <div style="background:url(images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;">
+                <div style="background:url(assets/images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;">
                     <div style="width:98.6%; background:#00457c;margin:0 auto;">
                         <div v-if="$route.query.pid" id="patient_name_div" {{ (patientName.length > 20) ? 'style="font-size:14px"' : '' }}>
                             <div id="patient_name_inner">
-                                <img v-if="medicare" src="images/medicare_logo_small.png" /> 
+                                <img v-if="medicare" src="assets/images/medicare_logo_small.png" /> 
                                 <span v-if="medicare" class="medicare_name">
                                 <span v-else class="name">
                                     {{ patientName }}
@@ -287,7 +287,7 @@
                     </div>
                     <div style="clear:both;"></div>
                 </div>
-                <div style="background:url(images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
+                <div style="background:url(assets/images/dss_03.jpg) repeat-y top left #FFFFFF;" id="contentMain">
                     <div style="clear:both;"></div>
 
                     <div v-if="$route.query.pid" style="margin-left:20px;float:left;width:400px;display:none;">
@@ -318,79 +318,24 @@
                                 {{ claim.insuranceid }} - {{ claim.adddate | moment "MM/DD/YYYY" }}
                             </a><br />
                         </span>
-        <?php }
-          $rc_sql = "SELECT *
-              FROM dental_hst
-              WHERE (
-                      status = '".(defined('DSS_HST_REQUSTED') ? DSS_HST_REQUSTED : '')."'
-                      OR status = '".(defined('DSS_HST_PENDING') ? DSS_HST_PENDING : '')."'
-                      OR status = '".(defined('DSS_HST_SCHEDULED') ? DSS_HST_SCHEDULED : '')."'
-                      OR (
-                          status = '".(defined('DSS_HST_REJECTED') ? DSS_HST_REJECTED : '')."'
-                          AND (viewed IS NULL OR viewed = 0)
-                      )
-                  )
-                  AND patient_id = '".mysqli_real_escape_string($con,$_GET['pid'])."'";
-
-          $rc_q = $db->getResults($rc_sql);
-          $pat_hst_num_uncompleted = count($rc_q);
-
-          $pat_hst_status = '';
-
-          if (count($rc_q) > 0) {
-        ?>
-
-          <span class="warning">Patient has the following Home Sleep Tests: <br />
-        
-            <?php
-              foreach($rc_q as $hst){          
-            ?>
-
-            <a href="/manage/hst_request.php?pid=<?= $hst['patient_id'] ?>&amp;hst_id=<?= $hst['id'] ?>">HST was requested <?php echo  date('m/d/Y', strtotime($hst['adddate'])); ?></a>
-              and is currently 
-
-            <?php if($hst['status'] == DSS_HST_REJECTED) { ?>
-              <a href="manage_hst.php?status=4&viewed=0"><?php echo  $dss_hst_status_labels[$hst['status']]; ?></a>
-            <?php } else { ?>
-              <?php echo  $dss_hst_status_labels[$hst['status']]; ?>
-            <?php } ?>
-
-            <?php echo ($hst['status'] == DSS_HST_SCHEDULED)?' - ' . $hst['office_notes']:''; ?>
-
-            <?php echo  ($hst['status'] == DSS_HST_REJECTED)?' - ' . $hst['rejected_reason']:''; ?>
-
-            <?php echo  ($hst['status'] == DSS_HST_REJECTED && $hst['rejecteddate']!='')?' - '.date('m/d/Y h:i a', strtotime($hst['rejecteddate'])):''; ?>
-
-            <?php if ($hst['status'] == DSS_HST_REJECTED) { ?>
-              <br />
-              <a href="manage_hst.php?status=4&viewed=0">Click here</a> to remove this error
-            <?php } ?>
-            
-              <br />
-            
-            <?php
-              $pat_hst_status = $dss_hst_status_labels[$hst['status']];
-              }
-            ?>
-
-          </span>
-        <?php }
-            }
-        ?>
-      </div>
-    <?php }
-      $sql = "SELECT use_letters from dental_users WHERE userid='" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'";
-
-      $r = $db->getRow($sql);
-
-      $use_letters = ($r['use_letters']=='1');
-} //CLOSE HOME PAGE CHECK
-
-$office_type = DSS_OFFICE_TYPE_FRONT;
+                        <span v-if="uncompletedHomeSleepTests.length > 0" class="warning">Patient has the following Home Sleep Tests: <br />
+                            <span v-for="test in uncompletedHomeSleepTests">
+                                <a href="/manage/hst_request.php?pid={{ test.patient_id }}&amp;hst_id={{ test.id }}">HST was requested {{ test.adddate | moment "MM/DD/YYYY" }}</a>
+                                    and is currently 
+                                <a v-if="test.status == window.constants.DSS_HST_REJECTED" href="manage_hst.php?status=4&viewed=0">{{ window.constants.preAuthLabels[test.status] }}</a>
+                                <span v-else>{{ window.constants.preAuthLabels[test.status] }}</span>
+                                <span v-if="test.status == window.constants.DSS_HST_SCHEDULED"> - {{ test.office_notes }}</span>
+                                <span v-if="test.status == window.constants.DSS_HST_REJECTED"> - {{ test.rejected_reason }}</span>
+                                <span v-if="test.status == window.constants.DSS_HST_REJECTED && test.rejecteddate"> - {{ test.rejecteddate | moment "MM/DD/YYYY hh:mm a" }}</span>
+                                <br />
+                                <a v-if="test.status == window.constants.DSS_HST_REJECTED" href="manage_hst.php?status=4&viewed=0">Click here</a> to remove this error
+                            </span>
+                        </span>
+                    </div>
 </template>
 
 <script>
-    // module.exports = require('./source.js');
+    module.exports = require('./source.js');
 </script>
 
 <style src="./header.css"></style>

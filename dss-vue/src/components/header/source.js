@@ -69,7 +69,8 @@ module.exports = {
             showWarningAboutQuestionnaireChanges : false,
             bouncedEmailsNumberForCurrentPatient : 0,
             showWarningAboutBouncedEmails        : false,
-            rejectedClaimsForCurrentPatient      : []
+            rejectedClaimsForCurrentPatient      : [],
+            uncompletedHomeSleepTests            : []
         }
     },
     created: function() {
@@ -84,6 +85,10 @@ module.exports = {
                 }
             }, function(response) {
                 console.error('getCurrentUser [status]: ', response.status);
+                // token is expired
+                if (response.status == 401) {
+                    // this.$route.router.go('/manage/login');
+                }
             }).then(function(response) {
                 this.getUser(this.user.docid) //get doc info
                     .then(function(response) {
@@ -356,8 +361,8 @@ module.exports = {
                         }
                     });
             }).then(function(response) {
-                if ($route.query.pid) {
-                    this.getPatientByIdAndDocId(this.user.docid, $route.query.pid)
+                if (this.$route.query.pid) {
+                    this.getPatientByIdAndDocId(this.user.docid, this.$route.query.pid)
                         .then(function(response) {
                             var data = response.data.data;
 
@@ -377,7 +382,7 @@ module.exports = {
                             console.error('getPatientByIdAndDocId [status]: ', response.status);
                         });
 
-                    this.getHealthHistoryByPatientId($route.query.pid)
+                    this.getHealthHistoryByPatientId(this.$route.query.pid)
                         .then(function(response) {
                             var data = response.data.data;
 
@@ -559,7 +564,7 @@ module.exports = {
                         console.error('getPatientFutureTasks [status]: ', response.status);
                     });
             }).then(function(response) {
-                this.getPatientsByParentId($route.query.pid)
+                this.getPatientsByParentId(this.$route.query.pid)
                     .then(function(response) {
                         var data = response.data.data;
 
@@ -570,7 +575,7 @@ module.exports = {
                         console.error('getPatientsByParentId [status]: ', response.status);
                     });
 
-                this.getCurrentPatientContacts($route.query.pid)
+                this.getCurrentPatientContacts(this.$route.query.pid)
                     .then(function(response) {
                         var data = response.data.data;
 
@@ -581,7 +586,7 @@ module.exports = {
                         console.error('getCurrentPatientContacts [status]: ', response.status);
                     });
 
-                this.getCurrentPatientInsurances($route.query.pid)
+                this.getCurrentPatientInsurances(this.$route.query.pid)
                     .then(function(response) {
                         var data = response.data.data;
 
@@ -592,7 +597,7 @@ module.exports = {
                         console.error('getCurrentPatientInsurances [status]: ', response.status);
                     });
 
-                this.getQuestionnaireStatuses($route.query.pid)
+                this.getQuestionnaireStatuses(this.$route.query.pid)
                     .then(function(response) {
                         var data = response.data.data;
 
@@ -605,7 +610,7 @@ module.exports = {
                         console.error('getQuestionnaireStatuses [status]: ', response.status);
                     })
 
-                this.getBouncedEmailsNumberForCurrentPatient($route.query.pid)
+                this.getBouncedEmailsNumberForCurrentPatient(this.$route.query.pid)
                     .then(function(response) {
                         var data = response.data.data;
 
@@ -616,7 +621,7 @@ module.exports = {
                         console.error('getBouncedEmailsNumberForCurrentPatient [status]: ', response.status);
                     });
 
-                this.getRejectedClaimsForCurrentPatient($route.query.pid)
+                this.getRejectedClaimsForCurrentPatient(this.$route.query.pid)
                     .then(function(response) {
                         var data = response.data.data;
 
@@ -625,6 +630,17 @@ module.exports = {
                         }
                     }, function(response) {
                         console.error('getRejectedClaimsForCurrentPatient [status]: ', response.status);
+                    });
+            }).then(function(response) {
+                this.getUncompletedHomeSleepTests()
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.$set('uncompletedHomeSleepTests', data);
+                        }
+                    }, function(response) {
+                        console.error('getUncompletedHomeSleepTests [status]: ', response.status);
                     });
             });
     },
@@ -672,9 +688,12 @@ module.exports = {
         },
         showWarningAboutBouncedEmails: function() {
             return this.bouncedEmailsNumberForCurrentPatient;
+        },
+        useLetters: function() {
+            return (this.docInfo.use_letters == 1);
         }
     },
-    methods: function() {
+    methods: {
         getCurrentUser: function() {
             return this.$http.post(window.config.API_PATH + 'users/current');
         },
@@ -790,7 +809,7 @@ module.exports = {
         getThisWeekTasks: function() {
             return this.$http.post(window.config.API_PATH + 'tasks/this-week');
         },
-        getNextWeekTasks: fucntion() {
+        getNextWeekTasks: function() {
             return this.$http.post(window.config.API_PATH + 'tasks/next-week');
         },
         getLaterTasks: function() {
@@ -820,7 +839,7 @@ module.exports = {
             patientId = patientId || 0;
 
             return this.$http.post(window.config.API_PATH + 'tasks/future/pid/' + patientId);
-        }
+        },
         getUserById: function(userId) {
             userId = userId || 0;
 
@@ -879,6 +898,13 @@ module.exports = {
             }
 
             return this.$http.post(window.config.API_PATH + 'insurances/rejected', data);
+        },
+        getUncompletedHomeSleepTests: function(patientId) {
+            var data = {
+                patientId: patientId || 0
+            }
+
+            return this.$http.post(window.config.API_PATH + 'home-sleep-tests/uncompleted', data);
         }
     }
 };

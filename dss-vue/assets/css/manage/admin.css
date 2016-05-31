@@ -20,7 +20,7 @@ table.ledger a{
 }
 
 body {
-	background:url(../images/tall.jpg) #BFCFDC ;
+	background:url(../../images/tall.jpg) #BFCFDC ;
 	background-repeat: repeat-x ;
 
 	font-family:Arial, Helvetica, sans-serif;
@@ -706,7 +706,7 @@ font-size:18px;
 /*______________BOTTOM __________________________*/
 
 .bottom_bg {
-	background-image:url(../images/bottm_bg.jpg);
+	background-image:url(../../images/bottm_bg.jpg);
 	background-position:top left;
 	background-repeat:repeat-x;
 	width:980px;
@@ -776,7 +776,7 @@ font-size:18px;
 	}
 	
 body.pop {
-	background-image:url(../images/blank.gif);
+	background-image:url(../../images/blank.gif);
 	background-repeat: repeat-x ;
 	background-color: #ffffff;
 	font-family:Arial, Helvetica, sans-serif;
@@ -815,7 +815,7 @@ padding:0;
 
 .slidetabsmenu a{
 float:left;
-background:url(../images/blu_left1.gif) no-repeat left top;
+background:url(../../images/blu_left1.gif) no-repeat left top;
 margin:0;
 margin-right: 5px; /*spacing between each tab*/
 padding:0 0 0 9px;
@@ -826,7 +826,7 @@ color:#FFFFFF;
 .slidetabsmenu a span{
 float:left;
 display:block;
-background:url(../images/blu_right1.gif) no-repeat right top;
+background:url(../../images/blu_right1.gif) no-repeat right top;
 padding:5px 31px 6px 15px;
 font-weight:bold;
 color:#ffffff;
@@ -852,12 +852,12 @@ color: #FFFFFF;
 
 .slidetabsmenu a:hover, .slidetabsmenu li.selected a:hover, .slidetabsmenu li.selected a:link, .slidetabsmenu li.selected a:visited{ /*onMouseover style*/
 background-position:0% -82px; /*Shift background image up to start of 2nd tab image*/
-background:url(../images/blu_left_o1.gif) no-repeat left top;
+background:url(../../images/blu_left_o1.gif) no-repeat left top;
 }
 
 .slidetabsmenu a:hover span, .slidetabsmenu li.selected a:hover span, .slidetabsmenu li.selected a:link span, .slidetabsmenu li.selected a:visited span{ /*onMouseover style*/
 background-position:0% -82px; /*Shift background image up to start of 2nd tab image*/
-background:url(../images/blu_right_o1.gif) no-repeat right top;
+background:url(../../images/blu_right_o1.gif) no-repeat right top;
 
 }
 
@@ -968,12 +968,12 @@ color: #095d81;
 text-align:center;
 font-weight:bold;
 font-size:15px;
-background:url(../images/navigation_button.png) no-repeat top left;
+background:url(../../images/navigation_button.png) no-repeat top left;
 cursor: pointer;
 }
 
 .homesuckertreemenu ul li a:hover, .suckertreemenu ul li a:hover{
-  background: url(../images/navigation_button_hover.png) no-repeat top left;
+  background: url(../../images/navigation_button_hover.png) no-repeat top left;
 }
 	
 /*1st sub level menu*/
@@ -1008,7 +1008,7 @@ margin-left:0;
 border-right:1px solid #095d81;
 border-left:1px solid #095d81;
 border-bottom:1px solid #095d81;
-background:url(../images/btnTrans.png) repeat;
+background:url(../../images/btnTrans.png) repeat;
 }
 
 /*All subsequent sub menu levels offset after 1st level sub menu */
@@ -1057,12 +1057,12 @@ font-size:13px;
 
 /*Background image for top level menu list links */
 .homesuckertreemenu .mainfoldericon, .suckertreemenu .mainfoldericon{
-background:url(../images/navigation_button.png) no-repeat top left;
+background:url(../../images/navigation_button.png) no-repeat top left;
 }
 
 /*Background image for subsequent level menu list links */
 .homesuckertreemenu .subfoldericon, .suckertreemenu .subfoldericon{
-background: url(../images/arrow-right.gif) no-repeat center right;
+background: url(../../images/arrow-right.gif) no-repeat center right;
 }
 
 * html p#iepara{ /*For a paragraph (if any) that immediately follows suckertree menu, add 1em top spacing between the two in IE*/
@@ -1126,7 +1126,7 @@ margin-left:0;
 border-right:1px solid #095d81;
 border-left:1px solid #095d81;
 border-bottom:1px solid #095d81;
-background:url(../images/btnTrans.png) repeat;
+background:url(../../images/btnTrans.png) repeat;
 }
 
 /*All subsequent sub menu levels offset after 1st level sub menu */
@@ -1173,7 +1173,7 @@ font-size:13px;
 
 /*Background image for subsequent level menu list links */
 .suckertreemenu2 .subfoldericon{
-background: url(../images/arrow-right.gif) no-repeat center right;
+background: url(../../images/arrow-right.gif) no-repeat center right;
 }
 
 * html p#iepara{ /*For a paragraph (if any) that immediately follows suckertree menu, add 1em top spacing between the two in IE*/
@@ -1245,12 +1245,12 @@ float:left;
 }
 
 .arrow_asc{
-  background-image: url(../images/arrow-white-up.gif);
+  background-image: url(../../images/arrow-white-up.gif);
   background-repeat: no-repeat;
   background-position: right 11px;
 }
 .arrow_desc{
-  background-image: url(../images/arrow-white-down.gif);
+  background-image: url(../../images/arrow-white-down.gif);
   background-repeat: no-repeat;
   background-position: right 11px;
 }
@@ -1308,13 +1308,13 @@ a.notification.count_0{
   padding-right:5px;
 }
 .notification.good_count{
-  background: url(../images/count_blue.png) no-repeat 0 0;
+  background: url(../../images/count_blue.png) no-repeat 0 0;
   }
 .notification.bad_count{
-  background: url(../images/count_red.png) no-repeat 0 0;
+  background: url(../../images/count_red.png) no-repeat 0 0;
   }
 .notification.great_count{
-  background: url(../images/count_green.png) no-repeat 0 0;
+  background: url(../../images/count_green.png) no-repeat 0 0;
   }
 
 
@@ -1423,13 +1423,13 @@ background: #1f303b;
   }
 
 th.headerSortUp {
-    background-image: url(../images/arrow-white-up.gif);
+    background-image: url(../../images/arrow-white-up.gif);
     background-repeat: no-repeat;
     background-position: right 10px;
 }
 
 th.headerSortDown {
-    background-image: url(../images/arrow-white-down.gif);
+    background-image: url(../../images/arrow-white-down.gif);
     background-repeat: no-repeat;
     background-position: right 10px;
 }

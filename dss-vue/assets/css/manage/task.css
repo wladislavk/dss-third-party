@@ -9,7 +9,7 @@
 
 .task_item { height: 20px; }
 .task_item input {margin-left:10px}
-.task_delete { display:block; width:10px; height:10px; background: url(../images/delete.png) no-repeat 0 0; float:left; margin-right:4px; margin-top:1px;}
+.task_delete { display:block; width:10px; height:10px; background: url(../../images/delete.png) no-repeat 0 0; float:left; margin-right:4px; margin-top:1px;}
 .task_edit { margin:0 10px 0 5px; }
 .task_extra { position:absolute; background:#fff; float:left; padding:3px; display:none;}
 .task_extra{  margin-left:-50px;}

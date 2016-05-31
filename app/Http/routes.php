@@ -52,6 +52,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('tasks', 'TasksController', ['except' => ['create', 'edit']]);
     Route::post('tasks/{type}', 'TasksController@getType');
     Route::post('tasks/{type}/pid/{patientId}', 'TasksController@getTypeForPatient');
+    Route::resource('home-sleep-tests', 'HomeSleepTestsController', ['except' => ['create', 'edit']]);
     Route::resource('admins', 'AdminsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-settings', 'GuideSettingsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);

@@ -65,23 +65,23 @@ class HomeSleepTest extends Model implements Resource, Repository
 
     public function scopeRequested($query)
     {
-        return $query->where('status', self::$preAuthorizationStatuses['DSS_HST_REQUSTED']);
+        return $query->where('status', $this->preAuthorizationStatuses['DSS_HST_REQUESTED']);
     }
 
     public function scopeOrPending($query)
     {
-        return $query->orWhere('status', self::$preAuthorizationStatuses['DSS_HST_PENDING']);
+        return $query->orWhere('status', $this->preAuthorizationStatuses['DSS_HST_PENDING']);
     }
 
     public function scopeOrScheduled($query)
     {
-        return $query->orWhere('status', self::$preAuthorizationStatuses['DSS_HST_SCHEDULED']);
+        return $query->orWhere('status', $this->preAuthorizationStatuses['DSS_HST_SCHEDULED']);
     }
 
     public function scopeOrRejected($query)
     {
         return $query->orWhere(function($query) {
-            $query->where('status', self::$preAuthorizationStatuses['DSS_HST_REJECTED'])
+            $query->where('status', $this->preAuthorizationStatuses['DSS_HST_REJECTED'])
                 ->where(function($query) {
                     $query->whereNull('viewed')
                         ->orWhere('viewed', 0);

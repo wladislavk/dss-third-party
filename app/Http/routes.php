@@ -77,6 +77,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('insurance-types', 'InsuranceTypesController', ['except' => ['create', 'edit']]);
     Route::resource('insurances', 'InsurancesController', ['except' => ['create', 'edit']]);
     Route::post('insurances/rejected', 'InsurancesController@getRejected');
+    Route::post('insurances/{type}', 'InsurancesController@getFrontOfficeClaims');
     Route::resource('insurance-files', 'InsuranceFilesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-histories', 'InsuranceHistoriesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-preauth', 'InsurancePreauthController', ['except' => ['create', 'edit']]);
@@ -91,6 +92,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('letter-templates', 'LetterTemplatesController', ['except' => ['create', 'edit']]);
     Route::resource('custom-letter-templates', 'CustomLetterTemplatesController', ['except' => ['create', 'edit']]);
     Route::resource('letters', 'LettersController', ['except' => ['create', 'edit']]);
+    Route::post('letters/pending', 'LettersController@getPending');
+    Route::post('letters/unmailed', 'LettersController@getUnmailed');
     Route::resource('locations', 'LocationsController', ['except' => ['create', 'edit']]);
     Route::resource('logins', 'LoginsController', ['except' => ['create', 'edit']]);
     Route::resource('login-details', 'LoginDetailsController', ['except' => ['create', 'edit']]);

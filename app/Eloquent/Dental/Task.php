@@ -108,14 +108,14 @@ class Task extends Model implements Resource, Repository
         return $query->whereRaw('dt.due_date > DATE_ADD(CURDATE(), INTERVAL 1 DAY)');
     }
 
-    public function getAll($responsibleId)
+    public function getAll($responsibleId = 0)
     {
         return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
             ->get();
     }
 
-    public function getOverdue($responsibleId)
+    public function getOverdue($responsibleId = 0)
     {
         return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
@@ -123,7 +123,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getToday($responsibleId)
+    public function getToday($responsibleId = 0)
     {
         return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
@@ -131,7 +131,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getTomorrow($responsibleId)
+    public function getTomorrow($responsibleId = 0)
     {
         return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
@@ -139,7 +139,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getThisWeek($responsibleId)
+    public function getThisWeek($responsibleId = 0)
     {
         return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
@@ -147,7 +147,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getNextWeek($responsibleId)
+    public function getNextWeek($responsibleId = 0)
     {
         return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
@@ -155,7 +155,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getLater($responsibleId)
+    public function getLater($responsibleId = 0)
     {
         return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
@@ -163,7 +163,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getAllForPatient($docId, $patientId)
+    public function getAllForPatient($docId = 0, $patientId = 0)
     {
         return $this->forPatient()
             ->where(function($query) use ($docId) {
@@ -174,7 +174,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getOverdueForPatient($docId, $patientId)
+    public function getOverdueForPatient($docId = 0, $patientId = 0)
     {
         return $this->forPatient()
             ->where(function($query) use ($docId) {
@@ -186,7 +186,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getTodayForPatient($docId, $patientId)
+    public function getTodayForPatient($docId = 0, $patientId = 0)
     {
         return $this->forPatient()
             ->where(function($query) use ($docId) {
@@ -198,7 +198,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getTomorrowForPatient($docId, $patientId)
+    public function getTomorrowForPatient($docId = 0, $patientId = 0)
     {
         return $this->forPatient()
             ->where(function($query) use ($docId) {
@@ -210,7 +210,7 @@ class Task extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getFutureForPatient($docId, $patientId)
+    public function getFutureForPatient($docId = 0, $patientId = 0)
     {
         return $this->forPatient()
             ->where(function($query) use ($docId) {

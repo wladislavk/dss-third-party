@@ -99,4 +99,18 @@ class InsurancesController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getFrontOfficeClaims($type, Insurances $resources)
+    {
+        switch ($type) {
+            case 'pending-claims':
+                $data = $resources->getPendingClaims();
+                break;
+            default:
+                $data = [];
+                break;
+        }
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

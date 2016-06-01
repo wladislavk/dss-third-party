@@ -9,7 +9,7 @@
                 <div class="suckertreemenu2">
                     <ul id="topmenu2">
                         <li>
-                            <a href="index.php"> Notifications({{ notificationsNumber }})</a>
+                            <a href="index.php"> Notifications({{ notificationsNumber || 0 }})</a>
                         </li>
                         <li id="header_support" v-bind:class="{'pending': supportTicketsNumber}">
                             <a href="support.php">Support {{ (supportTicketsNumber > 0) ? ('(' + supportTicketsNumber + ')'): '' }}</a>

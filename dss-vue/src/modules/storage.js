@@ -3,7 +3,7 @@ module.exports = {
         if (localStorage.getItem(key)) {
             return localStorage.getItem(key);
         }
-        return [];
+        return null;
     },
     save: function(key, value) {
         localStorage.setItem(key, value);

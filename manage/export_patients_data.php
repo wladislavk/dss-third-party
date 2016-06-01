@@ -54,10 +54,11 @@ $header = [
 fputcsv($csv, $header);
 
 $docId = intval($_SESSION['userid']);
-$trxnTypeWriteOff = DSS_TRXN_PYMT_WRITEOFF;
+$trxnTypeAdj = DSS_TRXN_TYPE_ADJ;
+$reportQuery = ledgerTransactionsQuery($docId);
 
 $sql = "SELECT
-        patientid AS id,
+        p.patientid AS id,
         TRIM(p.salutation),
         TRIM(p.firstname),
         TRIM(p.lastname),
@@ -77,24 +78,43 @@ $sql = "SELECT
         TRIM(p.cell_phone),
         TRIM(p.email),
         CASE p.status WHEN 1 THEN 'Active' ELSE 'Inactive' END,
-        0.0 AS credits,
-        0.0 AS debits,
-        0.0 AS adjustments
+        SUM(COALESCE(
+            report.amount, 0.0
+        )) AS debits,
+        SUM(COALESCE(
+            IF(
+                report.ledger = 'ledger_paid' && report.payer = '$trxnTypeAdj',
+                0.0,
+                report.paid_amount
+            ), 0.0
+        )) AS credits,
+        SUM(COALESCE(
+            IF(
+                report.ledger = 'ledger_paid' && report.payer = '$trxnTypeAdj',
+                report.paid_amount,
+                0.0
+            ), 0.0
+        )) AS adjustments,
+        (
+            SUM(COALESCE(
+                report.amount, 0.0
+            )) -
+            SUM(COALESCE(
+                report.paid_amount, 0.0
+            ))
+        ) AS balance
     FROM dental_patients p
+        LEFT JOIN (
+            $reportQuery
+        ) report ON report.patientid = p.patientid
     WHERE p.docid = '$docId'
-    ORDER BY p.firstname, p.lastname, p.middlename";
+    GROUP BY p.patientid
+    ORDER BY p.firstname, p.lastname, p.middlename, p.patientid";
 
 $patients = $db->getResults($sql);
 $dateFormat = '%Y-%m-%d %h:%i%p';
 
 foreach ($patients as $patient) {
-    $balance = ledgerBalanceForPatient($patient['id'], $docId);
-
-    $patient['credits'] = $balance['credits'];
-    $patient['debits'] = $balance['debits'];
-    $patient['adjustments'] = $balance['adjustments'];
-    $patient['total'] = $balance['total'];
-
     $notes = $db->getResults("SELECT
             note.notesid AS `NoteID`,
             IF(note.signed_on IS NULL, '', 'Signed') AS `Status`,

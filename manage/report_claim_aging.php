@@ -11,40 +11,30 @@ if (!isset($_GET['print'])) {
 }
 
 require_once __DIR__ . '/admin/includes/report-claim-functions.php';
+require_once __DIR__ . '/admin/includes/ledger-functions.php';
 
-$sql = "SELECT p.firstname, p.lastname, p.patientid
-    FROM dental_patients p
-    WHERE p.docid = '{$_SESSION['docid']}'
-        AND (
-            SELECT (
-                SUM(
-                    COALESCE(
-                        (
-                            SELECT SUM(dl.amount) AS paid_amount
-                            FROM dental_ledger dl
-                            WHERE dl.primary_claim_id = i.insuranceid
-                        ), 0
-                    )
-                )
-                -
-                SUM(
-                    COALESCE(
-                        (
-                            SELECT SUM(dlp.amount) AS paid_amount
-                            FROM dental_ledger dl
-                                LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
-                            WHERE dl.primary_claim_id = i.insuranceid
-                        ), 0
-                    )
-                )
-            )
-            FROM dental_insurance i
-            WHERE i.patientid = p.patientid
-                AND i.mailed_date IS NOT NULL
-        ) > 0
-    ORDER BY p.lastname ASC, p.firstname ASC";
+$docId = intval($_SESSION['docid']);
+$my = ledgerBalance($docId, [], true);
 
-$my = $db->getResults($sql);
+$patientIds = $my ? array_pluck($my, 'patientid') : [];
+
+$totals = [];
+$balances = array_fill_keys($patientIds, []);
+
+for ($lowerLimit = 0; $lowerLimit <= 120; $lowerLimit += 30) {
+    $upperLimit = $lowerLimit == 120 ? '' : $lowerLimit + 29;
+
+    $mailingDateConditional = mailingDateConditional([$lowerLimit, $upperLimit], 'report');
+    $currentBalance = ledgerBalance($docId, $patientIds, true, [$mailingDateConditional]);
+
+    foreach ($currentBalance as $each) {
+        $balances [$each['patientid']] [$lowerLimit]= $each['balance'];
+    }
+
+    $totals [$lowerLimit]= array_sum(array_pluck($balances, $lowerLimit));
+}
+
+$grandTotal = array_sum($totals);
 
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
@@ -98,10 +88,9 @@ $my = $db->getResults($sql);
     <tbody>
         <?php
 
-        $total_029 = $total_3059 = $total_6089 = $total_90119 = $total_120 = $grand_total = 0;
-
         foreach($my as $r) {
-            $pat_total = 0;
+            $patientId = $r['patientid'];
+            $patientTotal = $r['balance'];
 
             ?>
             <tr>
@@ -110,44 +99,24 @@ $my = $db->getResults($sql);
                         <?= e($r['firstname'] . ' ' . $r['lastname']) ?>
                     </a>
                 </td>
-                <?php
-
-                for ($lowerLimit=0; $lowerLimit<=120; $lowerLimit+=30) {
-                    $c_total = $p_total = 0;
-                    $upperLimit = $lowerLimit == 120 ? '' : $lowerLimit + 29;
-
-                    $claimCharges = [];
-                    $claimChargesResults = getClaimChargesResults([$lowerLimit, $upperLimit], $r['patientid']);
-
-                    foreach ($claimChargesResults as $claimCharges) {
-                        $c_total += $claimCharges['total_charge'];
-                    }
-
-                    if ($claimCharges) {
-                        $p_total = getLedgerPaymentAmount($claimCharges['insuranceid']);
-                    }
-
-                    $pat_total += $c_total - $p_total;
-                    ${"total_{$lowerLimit}{$upperLimit}"} += $c_total - $p_total;
-
+                <?php for ($lowerLimit = 0; $lowerLimit <= 120; $lowerLimit += 30) {
+                    $currentBalance = array_get($balances, "$patientId.$lowerLimit");
                     ?>
                     <td valign="top">
-                        <?php if (($c_total-$p_total) != 0) { ?>
+                        <?php if ($currentBalance) { ?>
                             <a href="manage_ledger.php?pid=<?= $r['patientid'] ?>&amp;addtopat=1">
-                                $<?= number_format($c_total - $p_total, 2) ?>
+                                $<?= number_format($currentBalance, 2) ?>
                             </a>
                         <?php } else { ?>
-                            $<?= number_format($c_total - $p_total, 2) ?>
+                            $<?= number_format($currentBalance, 2) ?>
                         <?php } ?>
                     </td>
                     <?php
                 }
 
-                $grand_total += $pat_total;
-
                 ?>
                 <td valign="top">
-                    $<?= number_format($pat_total, 2) ?>
+                    $<?= number_format($patientTotal, 2) ?>
                 </td>
             </tr>
         <?php } ?>
@@ -158,22 +127,22 @@ $my = $db->getResults($sql);
                 <b>Totals</b>
             </td>
             <td valign="top">
-                <strong><?php echo "$".number_format($total_029,2); ?></strong>
+                <strong><?php echo "$".number_format($totals[0], 2); ?></strong>
             </td>
             <td valign="top">
-                <strong><?php echo "$".number_format($total_3059,2); ?></strong>
+                <strong><?php echo "$".number_format($totals[30], 2); ?></strong>
             </td>
             <td valign="top">
-                <strong><?php echo "$".number_format($total_6089,2); ?></strong>
+                <strong><?php echo "$".number_format($totals[60], 2); ?></strong>
             </td>
             <td valign="top">
-                <strong><?php echo "$".number_format($total_90119,2); ?></strong>
+                <strong><?php echo "$".number_format($totals[90], 2); ?></strong>
             </td>
             <td valign="top">
-                <strong><?php echo "$".number_format($total_120,2); ?></strong>
+                <strong><?php echo "$".number_format($totals[120], 2); ?></strong>
             </td>
             <td valign="top">
-                <strong><?php echo "$".number_format($grand_total,2); ?></strong>
+                <strong><?php echo "$".number_format($grandTotal, 2); ?></strong>
             </td>
         </tr>
     </tfoot>

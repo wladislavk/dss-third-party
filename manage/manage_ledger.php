@@ -158,32 +158,39 @@ if (isset($_GET['sort'])) {
 
 $limit = " limit ".$i_val.",".$rec_disp;
 
-$filedByBackOfficeConditional = filedByBackOfficeConditional('i');
+if (!empty($_GET['openclaims']) && $_GET['openclaims'] == 1) {
+    $patientId = intval($_GET['pid']);
+    $filedByBackOfficeConditional = filedByBackOfficeConditional('i');
 
-if(!empty($_GET['openclaims']) && $_GET['openclaims']==1){
-  $sql = "SELECT
+    $sql = "SELECT
+            i.patientid,
+            i.docid,
             'claim',
-            i.insuranceid as ledgerid,
-            i.adddate as service_date,
-            i.adddate as entry_date,
-            'Claim' as name,
-            'Insurance Claim' as description,
-            (select sum(dl2.amount) FROM dental_ledger dl2
-                                    INNER JOIN dental_insurance i2 on dl2.primary_claim_id=i2.insuranceid
-                                    where i2.insuranceid=i.insuranceid) as amount,
-            sum(pay.amount) as paid_amount,
+            i.insuranceid AS ledgerid,
+            i.adddate AS service_date,
+            i.adddate AS entry_date,
+            'Claim' AS name,
+            'Insurance Claim' AS description,
+            (
+                SELECT SUM(dl2.amount)
+                FROM dental_ledger dl2
+                    INNER JOIN dental_insurance i2 ON dl2.primary_claim_id = i2.insuranceid
+                WHERE i2.insuranceid = i.insuranceid
+            ) AS amount,
+            SUM(pay.amount) AS paid_amount,
             i.status,
-            i.insuranceid as primary_claim_id,
+            i.insuranceid AS primary_claim_id,
+            i.mailed_date,
             $filedByBackOfficeConditional AS filed_by_bo
-            from dental_insurance i
-            LEFT JOIN dental_ledger dl ON dl.primary_claim_id=i.insuranceid
-            LEFT JOIN dental_ledger_payment pay on dl.ledgerid=pay.ledgerid
-            where i.patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'
+        FROM dental_insurance i
+            LEFT JOIN dental_ledger dl ON dl.primary_claim_id = i.insuranceid
+            LEFT JOIN dental_ledger_payment pay ON dl.ledgerid = pay.ledgerid
+        WHERE i.patientid = '$patientId'
             AND i.status NOT IN (".DSS_CLAIM_PAID_INSURANCE.", ".DSS_CLAIM_PAID_SEC_INSURANCE.", ".DSS_CLAIM_PAID_PATIENT.")
-            GROUP BY i.insuranceid
-  ";
-}else{
-  $sql = ledgerReportQuery($_GET['pid'], $_SESSION['docid']);
+        GROUP BY i.insuranceid
+    ";
+} else {
+    $sql = ledgerReportQuery($_GET['pid'], $_SESSION['docid']);
 }
 
 $total_rec = $db->getNumberRows($sql);

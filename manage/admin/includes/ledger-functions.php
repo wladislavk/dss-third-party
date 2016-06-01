@@ -9,7 +9,8 @@ require_once __DIR__ . '/../../includes/claim_functions.php';
 /**
  * Retrieve payments from a given claim id
  *
- * @param int $claimId
+ * @param int        $claimId
+ * @param bool|mixed $payerType
  * @return mixed
  */
 function getLedgerPaymentAmount ($claimId, $payerType=false) {
@@ -43,6 +44,8 @@ function getLedgerPaymentAmount ($claimId, $payerType=false) {
  * @param array $ledgerPayments
  * @param int   $paymentType
  * @param int   $payer
+ * @param int   $userId
+ * @param int   $adminId
  * @return array
  */
 function insertLedgerPayments ($claimId, Array $ledgerPayments, $paymentType, $payer, $userId, $adminId) {
@@ -218,6 +221,8 @@ function uploadInsuranceFile ($targetName, $tempName, Array $imageData) {
  * @param array $ledgerPayments
  * @param int   $paymentType
  * @param int   $payer
+ * @param int   $userId
+ * @param int   $adminId
  * @return array
  */
 function updateLedgerPayments (Array $ledgerPayments, $paymentType, $payer, $userId, $adminId) {
@@ -286,121 +291,155 @@ function updateLedgerPayments (Array $ledgerPayments, $paymentType, $payer, $use
 }
 
 /**
- * Manage Ledger query, encapsulated for easy reuse.
+ * Ledger transactions, for a given doc id, and optionally, for a set of patient ids
  *
- * @param int    $patientId
- * @param int    $docId
- * @param string $orderBy
- * @param string $limit
+ * @param int   $docId
+ * @param array $patientIds
  * @return string
  */
-function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
+function ledgerTransactionsQuery ($docId, Array $patientIds=[]) {
+    $docId = intval($docId);
+
+    if ($patientIds) {
+        array_walk($patientIds, '\intval');
+        $patientIds = join(',', $patientIds);
+
+        $andPatientIdsConditional = "AND dl.patientid IN ($patientIds)";
+    } else {
+        $andPatientIdsConditional = '';
+    }
+
+    $query = "SELECT
+        dl.patientid,
+        dl.docid,
+        'ledger',
+        dl.ledgerid,
+        dl.service_date,
+        dl.entry_date,
+        CONCAT(p.first_name, ' ', p.last_name) AS name,
+        dl.description,
+        dl.amount,
+        0.0 AS paid_amount,
+        di.status,
+        dl.primary_claim_id,
+        di.mailed_date,
+        '' AS payer,
+        '' AS payment_type,
+        di.status AS claim_status,
+        '' AS filename,
+        '' AS num_notes,
+        '' AS num_fo_notes,
+        0 AS filed_by_bo
+    FROM dental_ledger dl
+        LEFT JOIN dental_users p ON dl.producerid = p.userid
+        LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
+        LEFT JOIN dental_insurance di ON di.insuranceid = dl.primary_claim_id
+    WHERE dl.docid = '$docId'
+        $andPatientIdsConditional
+        AND (dl.paid_amount IS NULL OR dl.paid_amount = 0)
+    GROUP BY dl.ledgerid
+
+    UNION
+
+    SELECT
+        dl.patientid,
+        dl.docid,
+        'ledger_payment',
+        dlp.id,
+        dlp.payment_date,
+        dlp.entry_date,
+        CONCAT(p.first_name, ' ', p.last_name),
+        '',
+        0.0,
+        dlp.amount,
+        '',
+        IF(dl.secondary_claim_id && dlp.is_secondary, dl.secondary_claim_id, dl.primary_claim_id),
+        di.mailed_date,
+        dlp.payer,
+        dlp.payment_type,
+        '',
+        '',
+        '',
+        '',
+        0 AS filed_by_bo
+    FROM dental_ledger dl
+        LEFT JOIN dental_users p ON dl.producerid = p.userid
+        LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+        LEFT JOIN dental_insurance di ON di.insuranceid = dl.primary_claim_id
+    WHERE dl.docid = '$docId'
+        $andPatientIdsConditional
+        AND dlp.amount != 0
+
+    UNION
+
+    SELECT
+        dl.patientid,
+        dl.docid,
+        'ledger_paid',
+        dl.ledgerid,
+        dl.service_date,
+        dl.entry_date,
+        CONCAT(p.first_name, ' ', p.last_name),
+        dl.description,
+        dl.amount,
+        dl.paid_amount,
+        dl.status,
+        dl.primary_claim_id,
+        di.mailed_date,
+        tc.type,
+        '',
+        '',
+        '',
+        '',
+        '',
+        0 AS filed_by_bo
+    FROM dental_ledger dl
+        LEFT JOIN dental_users p ON dl.producerid = p.userid
+        LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
+        LEFT JOIN dental_insurance di ON di.insuranceid = dl.primary_claim_id
+        LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
+            AND tc.docid = '$docId'
+    WHERE dl.docid = '$docId'
+        $andPatientIdsConditional
+        AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+    ";
+
+    return $query;
+}
+
+/**
+ * Ledger items, not transactions, for a given doc id/patient id
+ *
+ * @param int $patientId
+ * @param int $docId
+ * @return string
+ */
+function ledgerDetailsQuery ($docId, $patientId) {
     $docId = intval($docId);
     $patientId = intval($patientId);
+
     $filedByBackOfficeConditional = filedByBackOfficeConditional('i');
 
     $query = "SELECT
-            'ledger',
-            dl.ledgerid,
-            dl.service_date,
-            dl.entry_date,
-            CONCAT(p.first_name, ' ', p.last_name) AS name,
-            dl.description,
-            dl.amount,
-            '' AS paid_amount,
-            di.status,
-            dl.primary_claim_id,
+            n.patientid,
+            n.docid,
+            'note' AS ledger,
+            n.id AS ledgerid,
+            n.service_date,
+            n.entry_date,
+            CONCAT('Note - ', p.first_name, ' ', p.last_name) AS name,
+            n.note AS description,
+            0.0 AS amount,
+            0.0 AS paid_amount,
+            n.private AS status,
+            0 AS primary_claim_id,
+            NULL AS mailed_date,
             '' AS payer,
             '' AS payment_type,
-            di.status AS claim_status,
+            '' AS claim_status,
             '' AS filename,
             '' AS num_notes,
             '' AS num_fo_notes,
-            0 AS filed_by_bo
-        FROM dental_ledger dl
-            LEFT JOIN dental_users p ON dl.producerid = p.userid
-            LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
-            LEFT JOIN dental_insurance di ON di.insuranceid = dl.primary_claim_id
-        WHERE dl.docid = '$docId'
-            AND dl.patientid = '$patientId'
-            AND (dl.paid_amount IS NULL OR dl.paid_amount = 0)
-        GROUP BY dl.ledgerid
-
-        UNION
-
-        SELECT
-            'ledger_payment',
-            dlp.id,
-            dlp.payment_date,
-            dlp.entry_date,
-            CONCAT(p.first_name, ' ', p.last_name),
-            '',
-            '',
-            dlp.amount,
-            '',
-            IF(dl.secondary_claim_id && dlp.is_secondary, dl.secondary_claim_id, dl.primary_claim_id),
-            dlp.payer,
-            dlp.payment_type,
-            '',
-            '',
-            '',
-            '',
-            0 AS filed_by_bo
-        FROM dental_ledger dl
-            LEFT JOIN dental_users p ON dl.producerid = p.userid
-            LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
-        WHERE dl.docid = '$docId'
-            AND dl.patientid = '$patientId'
-            AND dlp.amount != 0
-
-        UNION
-
-        SELECT
-            'ledger_paid',
-            dl.ledgerid,
-            dl.service_date,
-            dl.entry_date,
-            CONCAT(p.first_name, ' ', p.last_name),
-            dl.description,
-            dl.amount,
-            dl.paid_amount,
-            dl.status,
-            dl.primary_claim_id,
-            tc.type,
-            '',
-            '',
-            '',
-            '',
-            '',
-            0 AS filed_by_bo
-        FROM dental_ledger dl
-            LEFT JOIN dental_users p ON dl.producerid = p.userid
-            LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
-            LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
-                AND tc.docid = '$docId'
-        WHERE dl.docid = '$docId'
-            AND dl.patientid = '$patientId'
-            AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-
-        UNION
-
-        SELECT
-            'note',
-            n.id,
-            n.service_date,
-            n.entry_date,
-            CONCAT('Note - ', p.first_name, ' ', p.last_name),
-            n.note,
-            '',
-            '',
-            n.private,
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
             0 AS filed_by_bo
         FROM dental_ledger_note n
             JOIN dental_users p ON n.producerid = p.userid
@@ -409,16 +448,19 @@ function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
         UNION
 
         SELECT
+            s.patientid,
+            '$docId',
             'statement',
             s.id,
             s.service_date,
             s.entry_date,
             CONCAT(p.first_name, ' ', p.last_name),
             'Ledger statement created (Click to view)',
+            0.0,
+            0.0,
             '',
-            '',
-            '',
-            '',
+            0,
+            NULL,
             '',
             '',
             '',
@@ -433,16 +475,19 @@ function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
         UNION
 
         SELECT
+            n.patientid,
+            n.docid,
             'note',
             n.id,
             n.service_date,
             n.entry_date,
             CONCAT('Note - Backoffice ID - ', p.adminid),
             n.note,
-            '',
-            '',
+            0.0,
+            0.0,
             n.private,
-            '',
+            0,
+            NULL,
             '',
             '',
             '',
@@ -457,6 +502,8 @@ function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
         UNION
 
         SELECT
+            i.patientid,
+            i.docid,
             'claim',
             i.insuranceid,
             i.adddate,
@@ -472,6 +519,7 @@ function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
             SUM(pay.amount),
             i.status,
             i.primary_claim_id,
+            i.mailed_date,
             '',
             '',
             '',
@@ -493,6 +541,130 @@ function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
             LEFT JOIN dental_ledger_payment pay ON dl.ledgerid = pay.ledgerid
         WHERE i.patientid = '$patientId'
         GROUP BY i.insuranceid
+        ";
+
+    return $query;
+}
+
+/**
+ * Calculates ledger balance directly, per doc id, instead of limiting it to a single patient.
+ *
+ * @param int   $docId
+ * @param array $patientIds
+ * @param bool  $mailedOnly
+ * @param array $extraConditionals
+ * @return string
+ */
+function ledgerBalanceQuery ($docId, Array $patientIds=[], $mailedOnly=false, $extraConditionals=[]) {
+    $docId = intval($docId);
+    $trxnTypeAdj = DSS_TRXN_TYPE_ADJ;
+
+    if ($patientIds) {
+        array_walk($patientIds, '\intval');
+        $patientIds = join(',', $patientIds);
+
+        $andPatientIdsConditional = "AND patient.patientid IN ($patientIds)";
+    } else {
+        $andPatientIdsConditional = '';
+    }
+
+    if ($mailedOnly) {
+        $extraConditionals []= 'report.mailed_date IS NOT NULL';
+        $havingConditional = 'HAVING (
+            SUM(COALESCE(
+                report.amount, 0.0
+            )) -
+            SUM(COALESCE(
+                report.paid_amount, 0.0
+            ))
+        ) > 0';
+    } else {
+        $havingConditional = '';
+    }
+
+    $andExtraConditionals = $extraConditionals ? 'AND (' . join(') AND (', $extraConditionals) . ')' : '';
+    $reportQuery = ledgerTransactionsQuery($docId);
+
+    $query = "SELECT
+        report.patientid,
+        patient.firstname,
+        patient.lastname,
+        SUM(COALESCE(
+            report.amount, 0.0
+        )) AS debits,
+        SUM(COALESCE(
+            IF(
+                report.ledger = 'ledger_paid' && report.payer = '$trxnTypeAdj',
+                0.0,
+                report.paid_amount
+            ), 0.0
+        )) AS credits,
+        SUM(COALESCE(
+            IF(
+                report.ledger = 'ledger_paid' && report.payer = '$trxnTypeAdj',
+                report.paid_amount,
+                0.0
+            ), 0.0
+        )) AS adjustments,
+        (
+            SUM(COALESCE(
+                report.amount, 0.0
+            )) -
+            SUM(COALESCE(
+                report.paid_amount, 0.0
+            ))
+         ) AS balance
+    FROM dental_patients patient
+        LEFT JOIN (
+            $reportQuery
+        ) report ON report.patientid = patient.patientid
+    WHERE patient.docid = '$docId'
+        $andPatientIdsConditional
+        $andExtraConditionals
+    GROUP BY patient.patientid
+    $havingConditional
+    ORDER BY patient.firstname, patient.lastname
+    ";
+
+    return $query;
+}
+
+/**
+ * Function to calculate ledger balance for a set of patients, or all doc id patients
+ *
+ * @param int   $docId
+ * @param array $patientIds
+ * @param bool  $mailedOnly
+ * @param array $extraConditionals
+ * @return array
+ */
+function ledgerBalance ($docId, Array $patientIds=[], $mailedOnly=false, $extraConditionals=[]) {
+    $db = new Db();
+
+    $query = ledgerBalanceQuery($docId, $patientIds, $mailedOnly, $extraConditionals);
+    $balance = $db->getResults($query);
+
+    return $balance;
+}
+
+/**
+ * Manage Ledger query, for a single patient
+ *
+ * @param int    $patientId
+ * @param int    $docId
+ * @param string $orderBy
+ * @param string $limit
+ * @return string
+ */
+function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
+    $ledgerTransactionsQuery = ledgerTransactionsQuery($docId, [$patientId]);
+    $ledgerDetailsQuery = ledgerDetailsQuery($docId, $patientId);
+
+    $query = "$ledgerTransactionsQuery
+        
+        UNION
+        
+        $ledgerDetailsQuery
         
         $orderBy
         $limit";
@@ -509,7 +681,7 @@ function ledgerReportQuery ($patientId, $docId, $orderBy='', $limit='') {
  * @param string $limit
  * @return array
  */
-function ledgerReportForPatient ($patientId, $docId, $orderBy='', $limit='') {
+function ledgerReport ($patientId, $docId, $orderBy='', $limit='') {
     $db = new Db();
 
     $query = ledgerReportQuery($patientId, $docId, $orderBy, $limit);
@@ -517,40 +689,3 @@ function ledgerReportForPatient ($patientId, $docId, $orderBy='', $limit='') {
 
     return $report;
 }
-
-/**
- * Calculate ledger total for a patient.
- *
- * @param int $patientId
- * @param int $docId
- * @return array
- */
-function ledgerBalanceForPatient ($patientId, $docId) {
-    $report = ledgerReportForPatient($patientId, $docId);
-    $cur_bal = $cur_cha = $cur_pay = $cur_adj = 0;
-
-    foreach ($report as $transaction) {
-        if (!in_array($transaction['ledger'], ['ledger', 'ledger_paid', 'ledger_payment'])) {
-            continue;
-        }
-
-        $cur_bal += $transaction['amount'] - $transaction['paid_amount'];
-        $cur_cha += $transaction['amount'];
-
-        if ($transaction['ledger'] == 'ledger_paid' && $transaction['payer'] == DSS_TRXN_TYPE_ADJ) {
-            $cur_adj += $transaction['paid_amount'];
-        } else {
-            $cur_pay += $transaction['paid_amount'];
-        }
-    }
-
-    $balance = [
-        'debits' => number_format($cur_pay, 2, '.', ''),
-        'credits' => number_format($cur_cha, 2, '.', ''),
-        'adjustments' => number_format($cur_adj, 2, '.', ''),
-        'total' => number_format($cur_bal, 2, '.', '')
-    ];
-
-    return $balance;
-}
-

@@ -11,9 +11,9 @@ $andDocIdConditional = isset($_GET['fid']) ? " AND p.docid = '" . intval($_GET['
 $andBillingIdConditional = '';
 
 if (isset($_GET['bc'])) {
-    $andBillingIdConditional = " AND COALESCE(i.p_m_billing_id) ";
+    $andBillingIdConditional = " AND COALESCE(i.p_m_billing_id, 0) ";
 } elseif (isset($_GET['nbc'])) {
-    $andBillingIdConditional = " AND NOT COALESCE(i.p_m_billing_id) ";
+    $andBillingIdConditional = " AND NOT COALESCE(i.p_m_billing_id, 0) ";
 }
 
 if (is_super($_SESSION['admin_access'])) {

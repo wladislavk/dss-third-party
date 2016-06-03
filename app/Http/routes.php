@@ -49,6 +49,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::get('users/{id}/type', 'UsersController@getUserType');
     Route::resource('tasks', 'TasksController', ['except' => ['create', 'edit']]);
     Route::resource('home-sleep-tests', 'HomeSleepTestsController', ['except' => ['create', 'edit']]);
+    Route::resource('support-tickets', 'SupportTicketsController', ['except' => ['create', 'edit']]);
     Route::resource('admins', 'AdminsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-settings', 'GuideSettingsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);

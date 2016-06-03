@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Insurance as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Insurances as Repository;
+use DentalSleepSolutions\Libraries\ClaimFormData;
+use DB;
 
 class Insurance extends Model implements Resource, Repository
 {
@@ -73,24 +75,33 @@ class Insurance extends Model implements Resource, Repository
         });
     }
 
+    public function scopeFiledByBackOfficeConditional($query, $claimAlias='claim')
+    {
+        // Filed by back office, legacy logic
+        return $query->whereRaw("COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1")
+            // Filed by back office, new logic
+            ->orWhereRaw("COALESCE($claimAlias.p_m_dss_file, 0) = 3");
+    }
+
     public function scopeBackOfficeClaimsConditional($query, $aliases = [])
     {
-        $actionableStatusList = $db->escapeList(ClaimFormData::statusListByName('actionable'));
-        $pendingStatusList = $db->escapeList(ClaimFormData::statusListByName('pending'));
+        $actionableStatusList = ClaimFormData::statusListByName('actionable');
+        $pendingStatusList    = ClaimFormData::statusListByName('pending');
 
-        $claimAlias = $db->escape(array_get($aliases, 'claim', 'claim'));
-        $patientAlias = $db->escape(array_get($aliases, 'patient', 'p'));
-        $companyAlias = $db->escape(array_get($aliases, 'company', 'c'));
+        $claimAlias   = serialize(array_get($aliases, 'claim', 'claim'));
+        $patientAlias = serialize(array_get($aliases, 'patient', 'p'));
+        $companyAlias = serialize(array_get($aliases, 'company', 'c'));
 
-        $filedByBackOfficeConditional = filedByBackOfficeConditional($claimAlias);
-
-        return $query->where(function($query) {
+        return $query->where(function($query) use ($claimAlias, $pendingStatusList) {
+                // Apply claim options only if the status is NOT pending
                 return $query->whereNotIn("$claimAlias.status", $pendingStatusList)
-                    ->where($filedByBackOfficeConditional);
+                    ->where(function($query) use ($claimAlias) {
+                        return $query->filedByBackOfficeConditional($claimAlias);
+                    });
             })
-            ->orWhere(function($query) {
+            ->orWhere(function($query) use ($claimAlias, $companyAlias, $patientAlias, $actionableStatusList) {
                 return $query->whereIn("$claimAlias.status", $actionableStatusList)
-                    ->where(function($query) {
+                    ->where(function($query) use ($claimAlias, $companyAlias, $patientAlias) {
                         return $query->whereRaw("COALESCE($companyAlias.exclusive, 0)")
                             ->orWhereRaw("COALESCE(IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file), 0) = 1");
                     });
@@ -100,18 +111,21 @@ class Insurance extends Model implements Resource, Repository
     public function scopeFrontOfficeClaimsConditional($query, $aliases = [])
     {
         return $query->whereNot(function($query) use ($aliases) {
+            // need to investigate how to use parent scope here 
+
             return $query->backOfficeClaimsConditional($aliases);
         });
     }
 
-    public function scopeFrontofficeClaims($query)
+    public function scopeCountFrontOfficeClaims($query, $docId = 0)
     {
         return $query->from(DB::raw('dental_insurance claim'))
             ->select(DB::raw('COUNT(claim.insuranceid) AS total'))
             ->leftJoin(DB::raw('dental_patients patient'), 'patient.patientid', '=', 'claim.patientid')
             ->join(DB::raw('dental_users users'), 'claim.docid', '=', 'users.userid')
             ->leftJoin(DB::raw('companies company'), 'company.id', '=', 'users.billing_company_id')
-            ->frontOfficeClaimsConditional()
+            ->frontOfficeClaimsConditional(['company' => 'company', 'patient' => 'patient'])
+            ->where('claim.docid', $docId);
     }
 
     public function getRejected($patientId = 0)
@@ -121,8 +135,10 @@ class Insurance extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getPendingClaims()
+    public function getPendingClaims($docId = 0)
     {
-        return $this->
+        return $this->countFrontOfficeClaims($docId)
+            ->whereIn('claim.status', ClaimFormData::statusListByName('actionable'))
+            ->get();
     }
 }

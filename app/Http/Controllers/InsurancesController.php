@@ -102,14 +102,18 @@ class InsurancesController extends Controller
 
     public function getFrontOfficeClaims($type, Insurances $resources)
     {
+        $docId = $this->currentUser->docid ?: 0;
+
         switch ($type) {
             case 'pending-claims':
-                $data = $resources->getPendingClaims();
+                $data = $resources->getPendingClaims($docId);
                 break;
             default:
                 $data = [];
                 break;
         }
+
+        dd($data);
 
         return ApiResponse::responseOk('', $data);
     }

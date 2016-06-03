@@ -146,7 +146,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getUnmailedLettersNumber [status]: ', response.status);
                                 });
-
+                            /*
                             this.getPendingClaimsNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -158,7 +158,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getPendingClaimsNumber [status]: ', response.status);
                                 });
-                            /*
+
                             this.getUnmailedClaimsNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -181,7 +181,7 @@ module.exports = {
                                     console.error('getRejectedClaimsNumber [status]: ', response.status);
                                 });
                             */
-                            /*
+
                             this.getPreauthNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -215,8 +215,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getRejectedPreauthNumber [status]: ', response.status);
                                 });
-                            */
-                            /*
+                            
                             this.getHSTNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -249,8 +248,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getRejectedHSTNumber [status]: ', response.status);
                                 });
-                            */
-                            /*
+
                             this.getPatientContactsNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -261,8 +259,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getPatientContactsNumber [status]: ', response.status);
                                 });
-                            */
-                            /*
+
                             this.getPatientInsurancesNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -273,8 +270,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getPatientInsurancesNumber [status]: ', response.status);
                                 });
-                            */
-                            /*
+
                             this.getPatientChangesNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -285,7 +281,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getPatientChangesNumber [status]: ', response.status);
                                 });
-                            
+
                             this.getPendingDuplicatesNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -296,8 +292,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getPendingDuplicatesNumber [status]: ', response.status);
                                 });
-                            */
-                            /*
+
                             this.getBouncesNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -308,8 +303,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getBouncesNumber [status]: ', response.status);
                                 });
-                            */
-                            /*
+
                             this.getUsingPaymentReports()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -333,8 +327,7 @@ module.exports = {
                                             });
                                     }
                                 });
-                            */
-                            /*
+
                             this.getUnsignedNotesNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -345,8 +338,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getUnsignedNotesNumber [status]: ', response.status);
                                 });
-                            */
-                            /*
+
                             this.getFaxAlertsNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -357,8 +349,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getFaxAlertsNumber [status]: ', response.status);
                                 });
-                            */
-                            /*
+
                             this.getSupportTicketsNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -369,7 +360,6 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getSupportTicketsNumber [status]: ', response.status);
                                 });
-                            */
                         }
                     });
             }).then(function(response) {
@@ -748,13 +738,13 @@ module.exports = {
             return this.$http.post(window.config.API_PATH + 'insurance-preauth/rejected');
         },
         getHSTNumber: function() {
-            return this.$http.post(window.config.API_PATH + 'hst/completed');
+            return this.$http.post(window.config.API_PATH + 'home-sleep-tests/completed');
         },
         getRequestedHSTNumber: function() {
-            return this.$http.post(window.config.API_PATH + 'hst/requested');
+            return this.$http.post(window.config.API_PATH + 'home-sleep-tests/requested');
         },
         getRejectedHSTNumber: function() {
-            return this.$http.post(window.config.API_PATH + 'hst/rejected');
+            return this.$http.post(window.config.API_PATH + 'home-sleep-tests/rejected');
         },
         getPatientContactsNumber: function() {
             return this.$http.post(window.config.API_PATH + 'patient-contacts/number');

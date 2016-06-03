@@ -2290,3 +2290,21 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\HomeSleepTest::class, func
         'hst_positions'        => $faker->sentence($nbWords = 2)
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\SupportTicket::class, function ($faker) {
+    return [
+        'title'       => $faker->sentence($nbWords = 6),
+        'userid'      => $faker->randomDigit,
+        'docid'       => $faker->randomDigit,
+        'body'        => $faker->sentence($nbWords = 5),
+        'category_id' => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'status'      => $faker->randomDigit,
+        'ip_address'  => $faker->ipv4,
+        'attachment'  => $faker->regexify('[a-z0-9_-]{15,20}\.(jpg|jpeg|png|gif|bmp)'),
+        'viewed'      => $faker->boolean,
+        'creator_id'  => $faker->randomDigit,
+        'create_type' => $faker->randomDigit,
+        'company_id'  => $faker->randomDigit
+    ];
+});

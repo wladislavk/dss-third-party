@@ -89,4 +89,13 @@ class SupportTicketsController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getNumber(SupportTickets $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getNumber($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

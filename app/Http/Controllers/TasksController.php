@@ -92,11 +92,7 @@ class TasksController extends Controller
 
     public function getType($type, Tasks $resources)
     {
-        if ($this->currentUser->id) {
-            $userId = preg_replace('/(?:u_|a_)/', '', $this->currentUser->id);
-        } else {
-            $userId = 0;
-        }
+        $userId = $this->currentUser->id ?: 0;
 
         switch ($type) {
             case 'all':

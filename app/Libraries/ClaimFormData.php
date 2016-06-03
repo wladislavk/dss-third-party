@@ -1,5 +1,10 @@
 <?php
+
+namespace DentalSleepSolutions\Libraries;
+
 // Need to rewrite this class to laravel structure
+
+require_once 'constants.inc';
 
 class ClaimFormData
 {

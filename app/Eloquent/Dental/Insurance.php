@@ -88,15 +88,15 @@ class Insurance extends Model implements Resource, Repository
         $actionableStatusList = ClaimFormData::statusListByName('actionable');
         $pendingStatusList    = ClaimFormData::statusListByName('pending');
 
-        $claimAlias   = serialize(array_get($aliases, 'claim', 'claim'));
-        $patientAlias = serialize(array_get($aliases, 'patient', 'p'));
-        $companyAlias = serialize(array_get($aliases, 'company', 'c'));
+        $claimAlias   = array_get($aliases, 'claim', 'claim');
+        $patientAlias = array_get($aliases, 'patient', 'p');
+        $companyAlias = array_get($aliases, 'company', 'c');
 
         return $query->where(function($query) use ($claimAlias, $pendingStatusList) {
                 // Apply claim options only if the status is NOT pending
                 return $query->whereNotIn("$claimAlias.status", $pendingStatusList)
                     ->where(function($query) use ($claimAlias) {
-                        return $query->filedByBackOfficeConditional($claimAlias);
+                        return $this->scopeFiledByBackOfficeConditional($query, $claimAlias);
                     });
             })
             ->orWhere(function($query) use ($claimAlias, $companyAlias, $patientAlias, $actionableStatusList) {
@@ -111,9 +111,7 @@ class Insurance extends Model implements Resource, Repository
     public function scopeFrontOfficeClaimsConditional($query, $aliases = [])
     {
         return $query->whereNot(function($query) use ($aliases) {
-            // need to investigate how to use parent scope here 
-
-            return $query->backOfficeClaimsConditional($aliases);
+            return $this->scopeBackOfficeClaimsConditional($query, $aliases);
         });
     }
 
@@ -139,6 +137,6 @@ class Insurance extends Model implements Resource, Repository
     {
         return $this->countFrontOfficeClaims($docId)
             ->whereIn('claim.status', ClaimFormData::statusListByName('actionable'))
-            ->get();
+            ->toSql();
     }
 }

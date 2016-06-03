@@ -85,11 +85,7 @@ class CompaniesController extends Controller
 
     public function getCompanyLogo(Company $resource)
     {
-        if ($this->currentUser->id) {
-            $userId = preg_replace('/(?:u_|a_)/', '', $this->currentUser->id);
-        } else {
-            $userId = 0;
-        }
+        $userId = $this->currentUser->id ?: 0;
 
         $data = $resource->getCompanyLogo($userId);
 

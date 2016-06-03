@@ -138,16 +138,6 @@ class UsersController extends Controller
      */
     public function getCurrentUserInfo(User $resource)
     {
-        $this->currentUser->id = preg_replace('/(?:u_|a_)/', '', $this->currentUser->id);
-
-        $docId = $resource->getDocId($this->currentUser->id)->docid;
-
-        if ($docId) {
-            $this->currentUser->docid = $docId;
-        } else {
-            $this->currentUser->docid = $this->currentUser->userid;
-        }
-
         return ApiResponse::responseOk('', $this->currentUser);
     }
 
@@ -158,9 +148,9 @@ class UsersController extends Controller
      */
     public function getCourseStaff(User $resource)
     {
-        $this->currentUser->id = preg_replace('/(?:u_|a_)/', '', $this->currentUser->id);
+        $userId = $this->currentUser->id ?: 0;
 
-        $data = $resource->getCourseStaff($this->currentUser->id);
+        $data = $resource->getCourseStaff($userId);
 
         return ApiResponse::responseOk('', $data);
     }

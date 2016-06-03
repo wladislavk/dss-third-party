@@ -137,4 +137,11 @@ class User extends Model implements Resource, Repository
             ->where('s.userid', $userId)
             ->first();
     }
+
+    public function getPaymentReports($docId = 0)
+    {
+        return $this->select('use_payment_reports')
+            ->where('userid', $docId)
+            ->get();
+    }
 }

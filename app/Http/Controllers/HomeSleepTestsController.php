@@ -99,4 +99,26 @@ class HomeSleepTestsController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getByType($type, HomeSleepTests $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        switch ($type) {
+            case 'completed':
+                $data = $resources->getCompleted($docId);
+                break;
+            case 'requested':
+                $data = $resources->getRequested($docId);
+                break;
+            case 'rejected':
+                $data = $resources->getRejected($docId);
+                break;
+            default:
+                $data = [];
+                break;
+        }
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

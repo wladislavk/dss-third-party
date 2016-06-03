@@ -96,4 +96,13 @@ class PatientInsurancesController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getNumber(PatientInsurances $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getNumber($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

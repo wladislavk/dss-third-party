@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Note as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Notes as Repository;
+use DB;
 
 class Note extends Model implements Resource, Repository
 {
@@ -45,4 +46,31 @@ class Note extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function getUnsigned($docId = 0)
+    {
+        return $this->select(DB::raw('COUNT(m.notesid) AS total'))
+            ->from(DB::raw("
+                (
+                    SELECT n.*
+                    FROM (
+                        SELECT
+                            notesid,
+                            signed_on,
+                            signed_id,
+                            parentid,
+                            procedure_date
+                        FROM dental_notes
+                        WHERE status != 0
+                            AND docid = ?
+                        ORDER BY adddate DESC
+                    ) AS n
+                    LEFT JOIN dental_users u ON u.userid = n.signed_id
+                    LEFT JOIN dental_notes p ON p.notesid = n.parentid
+                    GROUP BY n.parentid
+                ) AS m
+                ", [$docId]))
+            ->whereRaw("COALESCE(m.signed_on, '') = ''")
+            ->get();
+    }
 }

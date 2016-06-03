@@ -51,4 +51,13 @@ class PatientContact extends Model implements Resource, Repository
             ->where('p.patientid', $patientId)
             ->get();
     }
+
+    public function getNumber($docId = 0)
+    {
+        return $this->select(DB::raw('COUNT(id) AS total'))
+            ->from(DB::raw('dental_patient_contacts pc'))
+            ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'pc.patientid')
+            ->where('p.docid', $docId)
+            ->get();
+    }
 }

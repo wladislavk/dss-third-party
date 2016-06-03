@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Patient as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Patients as Repository;
+use DB;
 
 class Patient extends Model implements Resource, Repository
 {
@@ -93,5 +94,51 @@ class Patient extends Model implements Resource, Repository
         }
 
         return $object->get();
+    }
+
+    public function getNumber($docId = 0)
+    {
+        return $this->select(DB::raw('COUNT(p2.patientid) AS total'))
+            ->from(DB::raw('dental_patients p2'))
+            ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'p2.parent_patientid')
+            ->where('p.docid', $docId)
+            ->get();
+    }
+
+    public function getDuplicates($docId = 0)
+    {
+        return $this->select(DB::raw('COUNT(p.patientid) AS total'))
+            ->from(DB::raw('dental_patients p'))
+            ->whereIn('p.status', [3, 4])
+            ->where('p.docid', $docId)
+            ->whereRaw("
+                (SELECT COUNT(dp.patientid)
+                FROM dental_patients dp
+                WHERE dp.status = 1
+                    AND dp.docid = ?
+                    AND (
+                        (
+                            dp.firstname = p.firstname
+                            AND dp.lastname = p.lastname
+                        )
+                        OR (
+                            dp.add1 = p.add1
+                            AND dp.city = p.city
+                            AND dp.state = p.state
+                            AND dp.zip = p.zip
+                        )
+                    )
+                ) != 0", [$docId]
+            )
+            ->get();
+    }
+
+    public function getBounces($docId = 0)
+    {
+        return $this->select(DB::raw('COUNT(p.patientid) AS total'))
+            ->from(DB::raw('dental_patients p'))
+            ->where('p.email_bounce', 1)
+            ->where('p.docid', $docId)
+            ->get();
     }
 }

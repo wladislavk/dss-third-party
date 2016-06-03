@@ -92,4 +92,13 @@ class FaxesController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getAlerts(Faxes $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getAlerts($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

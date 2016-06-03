@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resources\HomeSleepTest as Resource;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests as Repository;
+use DB;
 
 class HomeSleepTest extends Model implements Resource, Repository
 {
@@ -89,12 +90,50 @@ class HomeSleepTest extends Model implements Resource, Repository
         });
     }
 
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', $this->preAuthorizationStatuses['DSS_HST_COMPLETE']);
+    }
+
+    public function scopeRejected($query)
+    {
+        return $query->where('status', $this->preAuthorizationStatuses['DSS_HST_REJECTED']);
+    }
+
+    public function scopeBase($query, $docId = 0)
+    {
+        return $query->select(DB::raw('COUNT(id) AS total'))
+            ->where('doc_id', $docId)
+            ->whereRaw('COALESCE(viewed, 0) != 1');
+    }
+
     public function getUncompleted($patientId = 0)
     {
         return $this->where(function($query) {
                 $query->requested()->orPending()->orScheduled()->orRejected();
             })
             ->where('patient_id', $patientId)
+            ->get();
+    }
+
+    public function getCompleted($docId = 0)
+    {
+        return $this->base($docId)
+            ->completed()
+            ->get();
+    }
+
+    public function getRequested($docId = 0)
+    {
+        return $this->base($docId)
+            ->requested()
+            ->get();
+    }
+
+    public function getRejected($docId = 0)
+    {
+        return $this->base($docId)
+            ->rejected()
             ->get();
     }
 }

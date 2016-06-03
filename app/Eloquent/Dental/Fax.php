@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Fax as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Faxes as Repository;
+use DB;
 
 class Fax extends Model implements Resource, Repository
 {
@@ -50,4 +51,13 @@ class Fax extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function getAlerts($docId = 0)
+    {
+        return $this->select(DB::raw('COUNT(id) AS total'))
+            ->where('docid', $docId)
+            ->whereRaw('COALESCE(viewed, 0) = 0')
+            ->where('sfax_status', 2)
+            ->get();
+    }
 }

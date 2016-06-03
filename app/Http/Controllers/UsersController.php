@@ -164,4 +164,13 @@ class UsersController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getPaymentReports(Users $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getPaymentReports($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

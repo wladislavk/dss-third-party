@@ -106,4 +106,31 @@ class PatientsController extends Controller
 
         return ApiResponse::responseOk('', $patients);
     }
+
+    public function getNumber(Patients $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getNumber($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getDuplicates(Patients $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getDuplicates($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getBounces(Patients $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getBounces($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

@@ -1879,7 +1879,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
                     <?php
     
                     $pos = ($array['placeofservice'] != '') ? $array['placeofservice'] : $array['place'];
-                    $dp = ($array['diagnosispointer'] != '') ? $array['diagnosispointer'] : 1;
+                    $dp = ($array['diagnosis_code_pointers'] != '') ? explode(',', $array['diagnosis_code_pointers']) : [1];
     
                     if (!empty($placeServices)) foreach ($placeServices as $psr) { ?>
                         <option value="<?= $psr['place_service'] ?>" <?= $pos == $psr['place_service'] ? 'selected' : '' ?>>
@@ -1927,7 +1927,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
                             <?php for ($n=0; $n<12; $n++) { ?>
                                 <?php if ($n && !($n%4)) { ?></tr><tr class="eligibleapi claim"><?php } ?>
                                 <td class="input-center-hint checkbox-container"><input class="input" value="<?= $n + 1 ?>"
-                                    <?= $dp == ($n + 1) ? 'checked' : '' ?>
+                                    <?= in_array($n + 1, $dp) ? 'checked' : '' ?>
                                     name="service_lines[<?= $li ?>][diagnosis_code_pointers][<?= $n ?>]" type="checkbox"></td>
                                 <td class="input-side-hint"><?= chr(65 + $n) ?></td>
                             <?php } ?>
@@ -2661,7 +2661,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         'modifier%n%_2' => 'service_lines.%n%.procedure_modifiers.1',
         'modifier%n%_3' => 'service_lines.%n%.procedure_modifiers.2',
         'modifier%n%_4' => 'service_lines.%n%.procedure_modifiers.3',
-        'diagnosis_pointer%n%' => 'service_lines.%n%.diagnosis_code_pointers.0',
+        'diagnosis_pointer%n%' => 'service_lines.%n%.diagnosis_code_pointers',
         's_charges%n%_1' => 'service_lines.%n%.charge_amount',
         's_charges%n%_2' => '',
         'days_or_units%n%' => 'service_lines.%n%.units',
@@ -2693,6 +2693,10 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
                 ${$localVariable} = preg_replace('/[^\d\.]+/', '', ${$localVariable});
             } elseif (substr($localVariable, 0, 5) === 'place') {
                 ${$localVariable} = in_array(${$localVariable}, $placesOfService) ? ${$localVariable} : null;
+            } elseif (substr($localVariable, 0, 17) === 'diagnosis_pointer') {
+                if (is_array(${$localVariable})) {
+                    ${$localVariable} = join(',', ${$localVariable});
+                }
             } elseif (substr($localVariable, 0, 3) === 'cpt') {
                 /**
                  * Ensure the procedure code exists, and is associated to the docid

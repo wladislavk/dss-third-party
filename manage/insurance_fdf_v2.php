@@ -414,7 +414,14 @@ foreach ($transactions as $c=>$array) {
     $fdfData["{$p}_modifier_two_fill"] = $array['modcode2'];
     $fdfData["{$p}_modifier_three_fill"] = $array['modcode3'];
     $fdfData["{$p}_modifier_four_fill"] = $array['modcode4'];
-    $fdfData["{$p}_diagnosis_pointer_fill"] = $diagnosis_array[$array['diagnosispointer']];
+
+    $array['diagnosis_code_pointers'] = explode(',', $array['diagnosis_code_pointers']);
+    $fdfData["{$p}_diagnosis_pointer_fill"] = '';
+
+    foreach ($array['diagnosis_code_pointers'] as $pointer) {
+        $fdfData["{$p}_diagnosis_pointer_fill"] .= $diagnosis_array[$pointer];
+    }
+
     $fdfData["{$p}_charges_dollars_fill"] = number_format(floor($array['amount']),0,'.','');
     $fdfData["{$p}_charges_cents_fill"] = fill_cents(roundToCents($array['amount']));
     $fdfData["{$p}_days_or_units_fill"] = $array['daysorunits'];

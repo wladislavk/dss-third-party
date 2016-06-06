@@ -797,7 +797,7 @@ $(document).ready( function(){
         }
 
         $pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
-        $dp = ($array['diagnosispointer']!='')?$array['diagnosispointer']:1;
+        $dp = $array['diagnosis_code_pointers'] != '' ? explode(',', $array['diagnosis_code_pointers']) : [1];
     $emg = isOptionSelected($array['emg']) ? 'true' : 'false';
   ?>
         $('input[name="claim[service_lines][<?php echo $li;?>][service_date_from]"]').val("<?php echo  date('Y-m-d', strtotime($array['service_date'])); ?>");
@@ -812,7 +812,9 @@ $(document).ready( function(){
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][1]"]').val("<?php echo  $array['modcode2']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][2]"]').val("<?php echo  $array['modcode3']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][3]"]').val("<?php echo  $array['modcode4']; ?>");
-        $('input[name="claim[service_lines][<?php echo $li;?>][diagnosis_code_pointers][<?php echo $dp-1; ?>]"]').prop('checked', true);
+        <?php foreach ($dp as $codePointer) { ?>
+            $('input[name="claim[service_lines][<?php echo $li;?>][diagnosis_code_pointers][<?= $codePointer - 1 ?>]"]').prop('checked', true);
+        <?php } ?>
         $('input[name="claim[service_lines][<?php echo $li;?>][charge_amount]"]').val("<?php echo  number_format($array['amount'], 2,'.',''); ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][units]"]').val("<?php echo  $array['daysorunits']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][rendering_provider][first_name]"]').val("<?php echo  $array['provider_first_name']; ?>");

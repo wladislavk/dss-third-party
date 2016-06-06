@@ -588,6 +588,7 @@ $(document).ready( function(){
     <?php }elseif($patient_relation_insured == 'Other' || $patient_relation_insured == 'G8'){ ?>
           $('input[name="dependent[relationship]"][value="G8"]').prop('checked', true);
     <?php } ?>
+
     $('input[name="subscriber[last_name]"]').val("<?= $insured_lastname;?>");
     $('input[name="subscriber[first_name]"]').val("<?= $insured_firstname;?>");
     $('input[name="subscriber[middle_name]"]').val("<?= $insured_middle;?>");
@@ -609,6 +610,11 @@ $(document).ready( function(){
     $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
     $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $responsibility_sequence ?>");
     $('select[name="other_payers[0][subscriber][insurance_type_code]"]').val(<?= json_encode($other_insured_insurance_type) ?>);
+
+    $('\
+        select[name="other_payers[0][subscriber][relationship]"] option[value="<?= e($patient_relation_other_insured) ?>"],\
+        select[name="other_payers[0][subscriber][relationship]"] option:contains(<?= e($patient_relation_other_insured) ?>),\
+    ').prop('selected', true);
 
     <?php
 

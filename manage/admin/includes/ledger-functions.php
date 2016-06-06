@@ -354,7 +354,7 @@ function ledgerTransactionsQuery ($docId, Array $patientIds=[]) {
         dlp.amount,
         '',
         IF(dl.secondary_claim_id && dlp.is_secondary, dl.secondary_claim_id, dl.primary_claim_id),
-        di.mailed_date,
+        IF(dl.primary_claim_id, di.mailed_date, dl.service_date),
         dlp.payer,
         dlp.payment_type,
         '',
@@ -385,7 +385,7 @@ function ledgerTransactionsQuery ($docId, Array $patientIds=[]) {
         dl.paid_amount,
         dl.status,
         dl.primary_claim_id,
-        di.mailed_date,
+        IF(dl.primary_claim_id, di.mailed_date, dl.service_date),
         tc.type,
         '',
         '',
@@ -570,14 +570,14 @@ function ledgerBalanceQuery ($docId, Array $patientIds=[], $mailedOnly=false, $e
 
     if ($mailedOnly) {
         $extraConditionals []= 'report.mailed_date IS NOT NULL';
-        $havingConditional = 'HAVING (
+        $havingConditional = 'HAVING ABS(
             SUM(COALESCE(
                 report.amount, 0.0
             )) -
             SUM(COALESCE(
                 report.paid_amount, 0.0
             ))
-        ) > 0';
+        ) >= 0.005';
     } else {
         $havingConditional = '';
     }

@@ -115,10 +115,10 @@ $patients = $db->getResults($sql);
 $dateFormat = '%Y-%m-%d %h:%i%p';
 
 foreach ($patients as $patient) {
-    $patient['credits'] = number_format($patient['credits'], 2);
-    $patient['debits'] = number_format($patient['debits'], 2);
-    $patient['adjustments'] = number_format($patient['adjustments'], 2);
-    $patient['total'] = number_format($patient['total'], 2);
+    $patient['credits'] = number_format($patient['credits'], 2, '.', '');
+    $patient['debits'] = number_format($patient['debits'], 2, '.', '');
+    $patient['adjustments'] = number_format($patient['adjustments'], 2, '.', '');
+    $patient['total'] = number_format($patient['total'], 2, '.', '');
 
     $notes = $db->getResults("SELECT
             note.notesid AS `NoteID`,

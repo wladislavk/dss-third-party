@@ -152,7 +152,7 @@ $num_users = count($my);
 
 <br />
 <div align="right">
-    <a href="report_claim_aging.php" class="addButton">
+    <a href="report_claim_aging.php" class="addButton" title="This report can take several minutes to generate">
         Claim Aging
     </a>
 &nbsp;&nbsp;&nbsp;&nbsp;

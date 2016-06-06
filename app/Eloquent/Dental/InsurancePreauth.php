@@ -66,20 +66,20 @@ class InsurancePreauth extends Model implements Resource, Repository
     {
         return $this->basedPreauth($docId)
             ->completed()
-            ->get();
+            ->first();
     }
 
     public function getPending($docId = 0)
     {
         return $this->basedPreauth($docId)
             ->pending()
-            ->get();
+            ->first();
     }
 
     public function getRejected($docId = 0)
     {
         return $this->basedPreauth($docId)
             ->rejected()
-            ->get();
+            ->first();
     }
 }

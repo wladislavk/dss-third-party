@@ -81,6 +81,6 @@ class Letter extends Model implements Resource, Repository
             ->whereNull('mailed_date')
             ->where('dental_letters.deleted', 0)
             ->where('dental_letters.docid', $docId)
-            ->get();
+            ->first();
     }
 }

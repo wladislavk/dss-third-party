@@ -69,8 +69,9 @@ class Note extends Model implements Resource, Repository
                     LEFT JOIN dental_notes p ON p.notesid = n.parentid
                     GROUP BY n.parentid
                 ) AS m
-                ", [$docId]))
+                "))
+            ->addBinding($docId, 'select')
             ->whereRaw("COALESCE(m.signed_on, '') = ''")
-            ->get();
+            ->first();
     }
 }

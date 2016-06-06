@@ -120,20 +120,20 @@ class HomeSleepTest extends Model implements Resource, Repository
     {
         return $this->base($docId)
             ->completed()
-            ->get();
+            ->first();
     }
 
     public function getRequested($docId = 0)
     {
         return $this->base($docId)
             ->requested()
-            ->get();
+            ->first();
     }
 
     public function getRejected($docId = 0)
     {
         return $this->base($docId)
             ->rejected()
-            ->get();
+            ->first();
     }
 }

@@ -53,6 +53,6 @@ class PatientInsurance extends Model implements Resource, Repository
             ->from(DB::raw('dental_patient_insurance pi'))
             ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'pi.patientid')
             ->where('p.docid', $docId)
-            ->get();
+            ->first();
     }
 }

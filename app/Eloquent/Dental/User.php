@@ -142,6 +142,6 @@ class User extends Model implements Resource, Repository
     {
         return $this->select('use_payment_reports')
             ->where('userid', $docId)
-            ->get();
+            ->first();
     }
 }

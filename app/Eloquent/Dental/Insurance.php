@@ -67,6 +67,50 @@ class Insurance extends Model implements Resource, Repository
      */
     const CREATED_AT = 'adddate';
 
+    private function filedByBackOfficeConditional($claimAlias = 'claim')
+    {
+        return "(
+                -- Filed by back office, legacy logic
+                COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
+                -- Filed by back office, new logic
+                OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
+            )";
+    }
+
+    private function backOfficeClaimsConditional($aliases = [])
+    {
+        $actionableStatusList = "'" . implode("', '", ClaimFormData::statusListByName('actionable')) . "'";
+        $pendingStatusList    = "'" . implode("', '", ClaimFormData::statusListByName('pending')) . "'";
+
+        $claimAlias   = array_get($aliases, 'claim', 'claim');
+        $patientAlias = array_get($aliases, 'patient', 'p');
+        $companyAlias = array_get($aliases, 'company', 'c');
+
+        $filedByBackOfficeConditional = $this->filedByBackOfficeConditional($claimAlias);
+
+        return "(
+            -- Apply claim options only if the status is NOT pending
+            (
+                $claimAlias.status NOT IN ($pendingStatusList)
+                AND $filedByBackOfficeConditional
+            )
+            OR (
+                $claimAlias.status IN ($actionableStatusList)
+                AND (
+                    -- Doctor BO exclusivity
+                    COALESCE($companyAlias.exclusive, 0)
+                    -- Patient's BO filing permission
+                    OR COALESCE(IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file), 0) = 1
+                )
+            )
+        )";
+    }
+
+    private function frontOfficeClaimsConditional($aliases = [])
+    {
+        return '(NOT ' . $this->backOfficeClaimsConditional($aliases) . ')';
+    }
+
     public function scopeRejected($globalQuery)
     {
         return $globalQuery->where(function($query) {
@@ -83,38 +127,6 @@ class Insurance extends Model implements Resource, Repository
             ->orWhereRaw("COALESCE($claimAlias.p_m_dss_file, 0) = 3");
     }
 
-    public function scopeBackOfficeClaimsConditional($query, $aliases = [])
-    {
-        $actionableStatusList = ClaimFormData::statusListByName('actionable');
-        $pendingStatusList    = ClaimFormData::statusListByName('pending');
-
-        $claimAlias   = array_get($aliases, 'claim', 'claim');
-        $patientAlias = array_get($aliases, 'patient', 'p');
-        $companyAlias = array_get($aliases, 'company', 'c');
-
-        return $query->where(function($query) use ($claimAlias, $pendingStatusList) {
-                // Apply claim options only if the status is NOT pending
-                return $query->whereNotIn("$claimAlias.status", $pendingStatusList)
-                    ->where(function($query) use ($claimAlias) {
-                        return $this->scopeFiledByBackOfficeConditional($query, $claimAlias);
-                    });
-            })
-            ->orWhere(function($query) use ($claimAlias, $companyAlias, $patientAlias, $actionableStatusList) {
-                return $query->whereIn("$claimAlias.status", $actionableStatusList)
-                    ->where(function($query) use ($claimAlias, $companyAlias, $patientAlias) {
-                        return $query->whereRaw("COALESCE($companyAlias.exclusive, 0)")
-                            ->orWhereRaw("COALESCE(IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file), 0) = 1");
-                    });
-            });
-    }
-
-    public function scopeFrontOfficeClaimsConditional($query, $aliases = [])
-    {
-        return $query->whereNot(function($query) use ($aliases) {
-            return $this->scopeBackOfficeClaimsConditional($query, $aliases);
-        });
-    }
-
     public function scopeCountFrontOfficeClaims($query, $docId = 0)
     {
         return $query->from(DB::raw('dental_insurance claim'))
@@ -122,7 +134,7 @@ class Insurance extends Model implements Resource, Repository
             ->leftJoin(DB::raw('dental_patients patient'), 'patient.patientid', '=', 'claim.patientid')
             ->join(DB::raw('dental_users users'), 'claim.docid', '=', 'users.userid')
             ->leftJoin(DB::raw('companies company'), 'company.id', '=', 'users.billing_company_id')
-            ->frontOfficeClaimsConditional(['company' => 'company', 'patient' => 'patient'])
+            ->whereRaw($this->frontOfficeClaimsConditional(['company' => 'company', 'patient' => 'patient']))
             ->where('claim.docid', $docId);
     }
 
@@ -137,6 +149,22 @@ class Insurance extends Model implements Resource, Repository
     {
         return $this->countFrontOfficeClaims($docId)
             ->whereIn('claim.status', ClaimFormData::statusListByName('actionable'))
-            ->toSql();
+            ->first();
+    }
+
+    public function getUnmailedClaims($docId = 0)
+    {
+        return $this->countFrontOfficeClaims($docId)
+            ->whereNull('claim.mailed_date')
+            ->whereNull('claim.sec_mailed_date')
+            ->whereNotIn('claim.status', ClaimFormData::statusListByName('pending'))
+            ->first();
+    }
+
+    public function getRejectedClaims($docId = 0)
+    {
+        return $this->countFrontOfficeClaims($docId)
+            ->whereIn('claim.status', ClaimFormData::statusListByName('rejected'))
+            ->first();
     }
 }

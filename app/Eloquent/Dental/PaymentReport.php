@@ -50,6 +50,6 @@ class PaymentReport extends Model implements Resource, Repository
             ->join(DB::raw('dental_insurance AS i'), 'i.insuranceid', '=', 'pr.claimid')
             ->where('i.docid', $docId)
             ->whereRaw('COALESCE(pr.viewed, 0) != 1')
-            ->get();
+            ->first();
     }
 }

@@ -102,7 +102,7 @@ class Patient extends Model implements Resource, Repository
             ->from(DB::raw('dental_patients p2'))
             ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'p2.parent_patientid')
             ->where('p.docid', $docId)
-            ->get();
+            ->first();
     }
 
     public function getDuplicates($docId = 0)
@@ -130,7 +130,7 @@ class Patient extends Model implements Resource, Repository
                     )
                 ) != 0", [$docId]
             )
-            ->get();
+            ->first();
     }
 
     public function getBounces($docId = 0)
@@ -139,6 +139,6 @@ class Patient extends Model implements Resource, Repository
             ->from(DB::raw('dental_patients p'))
             ->where('p.email_bounce', 1)
             ->where('p.docid', $docId)
-            ->get();
+            ->first();
     }
 }

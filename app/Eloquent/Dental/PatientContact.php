@@ -58,6 +58,6 @@ class PatientContact extends Model implements Resource, Repository
             ->from(DB::raw('dental_patient_contacts pc'))
             ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'pc.patientid')
             ->where('p.docid', $docId)
-            ->get();
+            ->first();
     }
 }

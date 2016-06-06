@@ -58,6 +58,6 @@ class Fax extends Model implements Resource, Repository
             ->where('docid', $docId)
             ->whereRaw('COALESCE(viewed, 0) = 0')
             ->where('sfax_status', 2)
-            ->get();
+            ->first();
     }
 }

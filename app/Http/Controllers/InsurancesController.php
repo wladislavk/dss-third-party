@@ -108,12 +108,16 @@ class InsurancesController extends Controller
             case 'pending-claims':
                 $data = $resources->getPendingClaims($docId);
                 break;
+            case 'unmailed-claims':
+                $data = $resources->getUnmailedClaims($docId);
+                break;
+            case 'rejected-claims':
+                $data = $resources->getRejectedClaims($docId);
+                break;
             default:
                 $data = [];
                 break;
         }
-
-        dd($data);
 
         return ApiResponse::responseOk('', $data);
     }

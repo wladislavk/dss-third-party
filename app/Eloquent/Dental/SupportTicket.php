@@ -73,7 +73,9 @@ class SupportTicket extends Model implements Resource, Repository
                             )
                         GROUP BY t.id
                     ) AS derived_table
-                ", [$docId, $this->ticketStatuses['DSS_TICKET_STATUS_CLOSED']]))
-            ->get();
+                "))
+            ->addBinding($docId, 'select')
+            ->addBinding($this->ticketStatuses['DSS_TICKET_STATUS_CLOSED'], 'select')
+            ->first();
     }
 }

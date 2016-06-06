@@ -164,6 +164,7 @@ list($insured_phone_code, $insured_phone) = parsePhoneNumber(
 );
 $insured_sex = st($claimData['insured_sex']);
 $patient_relation_insured = st($claimData['patient_relation_insured']);
+$patient_relation_other_insured = st($claimData['patient_relation_other_insured']);
 
 $patient_address = st($claimData['patient_address']);
 $patient_city = st($claimData['patient_city']);
@@ -537,6 +538,18 @@ $transactionCodes = $db->getResults("SELECT transaction_code, description
     WHERE docid = '$docId'
         AND status = 1
     ORDER BY sortby");
+
+$otherRelationships = [
+    '18' => 'Self',
+    '01' => 'Spouse',
+    '19' => 'Child',
+    'G8' => 'Other',
+    '20' => 'Employee',
+    '21' => 'Unknown',
+    '39' => 'Organ Donor',
+    '40' => 'Cadaver Donor',
+    '53' => 'Life Partner',
+];
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -1259,10 +1272,31 @@ Medicare
 				</tr>
 				<tr>
 					<td align="left" valign="top">
-						<span class="num_a">a.</span>
-						Other Insured's policy Or Group Number
-						<br />
-						<input value="<?php echo $other_insured_policy_group_feca?>" name="other_insured_policy_group_feca" type="text" class="inbox_line3" size="28"  />
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td>
+                                    <span class="num_a">a1.</span>
+                                    Other Insured's policy Or Group Number
+                                    <br />
+                                    <input value="<?= $other_insured_policy_group_feca ?>"
+                                        name="other_insured_policy_group_feca" type="text" class="inbox_line3" size="28" />
+                                </td>
+                                <td>
+                                    <span class="num_a">a2.</span>
+                                    Relationship
+                                    <br />
+                                    <select name="patient_relation_other_insured">
+                                        <option value=""></option>
+                                        <?php foreach ($otherRelationships as $code=>$label) { ?>
+                                            <option value="<?= e($code) ?>"
+                                                <?= in_array($patient_relation_other_insured, [$code, $label]) ?' selected' : '' ?>>
+                                                <?= e($label) ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
 					</td>
 					<td align="left" valign="top">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -1879,7 +1913,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
                     <?php
     
                     $pos = ($array['placeofservice'] != '') ? $array['placeofservice'] : $array['place'];
-                    $dp = ($array['diagnosispointer'] != '') ? $array['diagnosispointer'] : 1;
+                    $dp = ($array['diagnosis_code_pointers'] != '') ? explode(',', $array['diagnosis_code_pointers']) : [1];
     
                     if (!empty($placeServices)) foreach ($placeServices as $psr) { ?>
                         <option value="<?= $psr['place_service'] ?>" <?= $pos == $psr['place_service'] ? 'selected' : '' ?>>
@@ -1927,7 +1961,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
                             <?php for ($n=0; $n<12; $n++) { ?>
                                 <?php if ($n && !($n%4)) { ?></tr><tr class="eligibleapi claim"><?php } ?>
                                 <td class="input-center-hint checkbox-container"><input class="input" value="<?= $n + 1 ?>"
-                                    <?= $dp == ($n + 1) ? 'checked' : '' ?>
+                                    <?= in_array($n + 1, $dp) ? 'checked' : '' ?>
                                     name="service_lines[<?= $li ?>][diagnosis_code_pointers][<?= $n ?>]" type="checkbox"></td>
                                 <td class="input-side-hint"><?= chr(65 + $n) ?></td>
                             <?php } ?>
@@ -2559,6 +2593,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $insured_lastname = $claimData['insured_lastname'];
     $insured_middle = $claimData['insured_middle'];
     $patient_relation_insured = $claimData['patient_relation_insured'];
+    $patient_relation_other_insured = $claimData['patient_relation_other_insured'];
     $insured_address = $claimData['insured_address'];
     $insured_state = $claimData['insured_state'];
     $insured_city = $claimData['insured_city'];
@@ -2661,7 +2696,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         'modifier%n%_2' => 'service_lines.%n%.procedure_modifiers.1',
         'modifier%n%_3' => 'service_lines.%n%.procedure_modifiers.2',
         'modifier%n%_4' => 'service_lines.%n%.procedure_modifiers.3',
-        'diagnosis_pointer%n%' => 'service_lines.%n%.diagnosis_code_pointers.0',
+        'diagnosis_pointer%n%' => 'service_lines.%n%.diagnosis_code_pointers',
         's_charges%n%_1' => 'service_lines.%n%.charge_amount',
         's_charges%n%_2' => '',
         'days_or_units%n%' => 'service_lines.%n%.units',
@@ -2693,6 +2728,10 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
                 ${$localVariable} = preg_replace('/[^\d\.]+/', '', ${$localVariable});
             } elseif (substr($localVariable, 0, 5) === 'place') {
                 ${$localVariable} = in_array(${$localVariable}, $placesOfService) ? ${$localVariable} : null;
+            } elseif (substr($localVariable, 0, 17) === 'diagnosis_pointer') {
+                if (is_array(${$localVariable})) {
+                    ${$localVariable} = join(',', ${$localVariable});
+                }
             } elseif (substr($localVariable, 0, 3) === 'cpt') {
                 /**
                  * Ensure the procedure code exists, and is associated to the docid
@@ -2777,6 +2816,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             insured_middle = '".$db->escape($insured_middle)."',
             patient_address = '".$db->escape($patient_address)."',
             patient_relation_insured = '".$db->escape($patient_relation_insured)."',
+            patient_relation_other_insured = '".$db->escape($patient_relation_other_insured)."',
             patient_city = '".$db->escape($patient_city)."',
             patient_state = '".$db->escape($patient_state)."',
             patient_status = '".$db->escape($patient_status_arr)."',
@@ -3025,6 +3065,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         patient_phone_code = '".$db->escape($patient_phone_code)."',
         patient_phone = '".$db->escape($patient_phone)."',
         patient_relation_insured = '".$db->escape($patient_relation_insured)."',
+        patient_relation_other_insured = '".$db->escape($patient_relation_other_insured)."',
         insurance_type = '".$db->escape($insurance_type)."',
         insured_id_number = '".$db->escape($insured_id_number)."',
         insured_firstname = '".$db->escape($insured_firstname)."',

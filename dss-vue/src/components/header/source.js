@@ -126,12 +126,14 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getPendingLetters [status]: ', response.status);
                                 }).then(function(response) {
-                                    if (this.pendingLetters[0].generated_date == 0) {
+                                    // console.info(Math.floor((this.moment.valueOf() - this.headerInfo.pendingLetters[0].generated_date) / this.secondsPerDay));
+
+                                    if (this.headerInfo.pendingLetters[0].generated_date == 0) {
                                         this.oldestLetter = 0
                                     } else {
                                         // need check if correct 
                                         this.oldestLetter = Math.floor(
-                                            (moment().valueOf() - this.pendingLetters[0].generated_date) / this.secondsPerDay
+                                            (moment().valueOf() - this.headerInfo.pendingLetters[0].generated_date) / this.secondsPerDay
                                         );
                                     }
                                 });
@@ -146,7 +148,7 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getUnmailedLettersNumber [status]: ', response.status);
                                 });
-                            /*
+
                             this.getPendingClaimsNumber()
                                 .then(function(response) {
                                     var data = response.data.data;
@@ -180,7 +182,6 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getRejectedClaimsNumber [status]: ', response.status);
                                 });
-                            */
 
                             this.getPreauthNumber()
                                 .then(function(response) {
@@ -648,21 +649,21 @@ module.exports = {
     },
     computed: {
         notificationsNumber: function() {
-            var notificationsNumber = this.headerInfo.pendingLetters.lenght
-                + this.headerInfo.preauthNumber
-                + this.headerInfo.rejectedPreAuthNumber
-                + this.headerInfo.patientContactsNumber
-                + this.headerInfo.patientInsurancesNumber
-                + this.headerInfo.patientChangesNumber
-                + this.headerInfo.emailBouncesNumber
-                + this.headerInfo.unsignedNotesNumber
-                + this.headerInfo.pendingDuplicatesNumber;
+            var notificationsNumber = this.headerInfo.pendingLetters.lenght || 0 +
+                +this.headerInfo.preauthNumber +
+                +this.headerInfo.rejectedPreAuthNumber +
+                +this.headerInfo.patientContactsNumber +
+                +this.headerInfo.patientInsurancesNumber +
+                +this.headerInfo.patientChangesNumber +
+                +this.headerInfo.emailBouncesNumber +
+                +this.headerInfo.unsignedNotesNumber +
+                +this.headerInfo.pendingDuplicatesNumber;
 
             if (this.user.user_type == window.constants.DSS_USER_TYPE_SOFTWARE) {
-                notificationsNumber += this.headerInfo.unmailedClaimsNumber
-                    + this.headerInfo.pendingNodssClaimsNumber;
+                notificationsNumber += +this.headerInfo.unmailedClaimsNumber
+                    + +this.headerInfo.pendingNodssClaimsNumber;
             } else {
-                notificationsNumber += this.headerInfo.pendingClaimsNumber;
+                notificationsNumber += +this.headerInfo.pendingClaimsNumber;
             }
 
             return notificationsNumber;
@@ -720,13 +721,13 @@ module.exports = {
             return this.$http.post(window.config.API_PATH + 'letters/unmailed');
         },
         getPendingClaimsNumber: function() {
-            return this.$http.post(window.config.API_PATH + 'insurances/pending');
+            return this.$http.post(window.config.API_PATH + 'insurances/pending-claims');
         },
         getUnmailedClaimsNumber: function() {
-            return this.$http.post(window.config.API_PATH + 'insurances/unmailed');
+            return this.$http.post(window.config.API_PATH + 'insurances/unmailed-claims');
         },
         getRejectedClaimsNumber: function() {
-            return this.$http.post(window.config.API_PATH + 'insurances/rejected');
+            return this.$http.post(window.config.API_PATH + 'insurances/rejected-claims');
         },
         getPreauthNumber: function() {
             return this.$http.post(window.config.API_PATH + 'insurance-preauth/completed');

@@ -452,7 +452,7 @@ $statusDropdown = [
     <a style="float:right;"  href="payment_reports_list.php?unviewed=1" class="btn btn-primary">Payment Reports</a>
     <?php   if(is_billing($_SESSION['admin_access']) || is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])){
 ?>
-    <a style="float:right;margin-right:3px;"  href="report_claim_aging.php" class="btn btn-primary"> Claim Aging </a>
+    <a style="float:right;margin-right:3px;"  href="report_claim_aging.php" class="btn btn-primary" title="This report can take several minutes to generate"> Claim Aging </a>
 <?php } ?>
 <?php if(isset($_GET['closedby']) && $_GET['closedby']==1){ ?>
 <a style="float:right;margin-right:3px;"  href="manage_claims.php?status=<?php echo (isset($_GET['status']) ? $_GET['status'] : '');?>&fid=<?php echo (!empty($_GET['fid']) ? $_GET['fid'] : '');?>&pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sort_by=<?php echo  (isset($_GET['sort_by']) ? $_GET['sort_by'] : ''); ?>&sort_dir=<?php echo (!empty($_GET['sort_dir']) ? $_GET['sort_dir'] : ''); ?>" class="btn btn-primary"> Show All Claims </a>

@@ -424,7 +424,7 @@ $letters = range('A', 'Z');
                         </td>
                         <td valign="top">
                             <a href="manage_ledger.php?pid=<?= $patientId ?>">
-                                <?= $myarray['ledger'] == null ? 'N/A' : format_ledger(number_format($myarray['total'], 0)) ?>
+                                <?= $myarray['ledger'] == null ? 'N/A' : format_ledger(number_format($myarray['total'], 2)) ?>
                             </a>
                         </td>
                     <?php } ?>

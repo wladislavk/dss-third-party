@@ -35,6 +35,8 @@ abstract class Controller extends BaseController
             $user->docid = $user->userid;
         }
 
+        $user->user_type = $userModel->getUserType($user->docid)->user_type ?: 0;
+
         return $user;
     }
 }

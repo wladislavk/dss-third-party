@@ -611,10 +611,12 @@ $(document).ready( function(){
     $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $responsibility_sequence ?>");
     $('select[name="other_payers[0][subscriber][insurance_type_code]"]').val(<?= json_encode($other_insured_insurance_type) ?>);
 
-    $('\
-        select[name="other_payers[0][subscriber][relationship]"] option[value="<?= e($patient_relation_other_insured) ?>"],\
-        select[name="other_payers[0][subscriber][relationship]"] option:contains(<?= e($patient_relation_other_insured) ?>),\
-    ').prop('selected', true);
+    <?php if (strlen(trim($patient_relation_other_insured))) { ?>
+        $('\
+            select[name="other_payers[0][subscriber][relationship]"] option[value="<?= e($patient_relation_other_insured) ?>"],\
+            select[name="other_payers[0][subscriber][relationship]"] option:contains(<?= e($patient_relation_other_insured) ?>)\
+        ').prop('selected', true);
+    <?php } ?>
 
     <?php
 

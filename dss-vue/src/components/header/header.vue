@@ -245,7 +245,7 @@
 
                         <div class="suckertreemenu">
                             <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">
-                                Welcome {{ user.username }}
+                                Welcome {{ headerInfo.user.username }}
                             </span>
                         </div>
 

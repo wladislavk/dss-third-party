@@ -7,10 +7,8 @@
     <body>
         <div id="app">
             <top v-if="$route.withHeader"></top>
-            <!-- <div id="body"> -->
-                <!-- route outlet -->
-                <router-view></router-view>
-            <!-- </div> -->
+            <!-- route outlet -->
+            <router-view></router-view>
             <bottom v-if="$route.withFooter"></bottom>
         </div>
         <script src="dist/build.js"></script>

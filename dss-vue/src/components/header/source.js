@@ -29,9 +29,9 @@ module.exports = {
                 patientTomorrowTasks     : [],
                 patientThisWeekTasks     : [],
                 patientNextWeekTasks     : [],
-                patientLaterTasks        : []
+                patientLaterTasks        : [],
+                user                     : {},
             },
-            user                                 : {},
             docInfo                              : {},
             secondsPerDay                        : 86400,
             oldestLetter                         : 0,
@@ -80,7 +80,7 @@ module.exports = {
 
                 if (data) {
                     for (var field in data) {
-                        this.user[field] = data[field];
+                        this.$set('headerInfo.user.' + field, data[field]);
                     }
                 }
             }, function(response) {
@@ -90,7 +90,7 @@ module.exports = {
                     this.$route.router.go('/manage/login');
                 }
             }).then(function(response) {
-                this.getUser(this.user.docid) //get doc info
+                this.getUser(this.headerInfo.user.docid) //get doc info
                     .then(function(response) {
                         var data = response.data.data;
 
@@ -105,7 +105,7 @@ module.exports = {
                         if (this.docInfo.homepage != '1') {
                             // include_once 'includes/top2.htm';
                         } else {
-                            if (this.user.loginid) {
+                            if (this.headerInfo.user.loginid) {
                                 var currentPage = this.$route.query;
 
                                 this.setLoginDetails(currentPage)
@@ -126,8 +126,6 @@ module.exports = {
                                 }, function(response) {
                                     console.error('getPendingLetters [status]: ', response.status);
                                 }).then(function(response) {
-                                    // console.info(Math.floor((this.moment.valueOf() - this.headerInfo.pendingLetters[0].generated_date) / this.secondsPerDay));
-
                                     if (this.headerInfo.pendingLetters[0].generated_date == 0) {
                                         this.oldestLetter = 0
                                     } else {
@@ -365,7 +363,7 @@ module.exports = {
                     });
             }).then(function(response) {
                 if (this.$route.query.pid) {
-                    this.getPatientByIdAndDocId(this.user.docid, this.$route.query.pid)
+                    this.getPatientByIdAndDocId(this.headerInfo.user.docid, this.$route.query.pid)
                         .then(function(response) {
                             var data = response.data.data;
 
@@ -478,12 +476,12 @@ module.exports = {
                         console.error('getLaterTasks [status]: ', response.status);
                     });
             }).then(function(response) {
-                this.getUserById(this.user.id)
+                this.getUserById(this.headerInfo.user.id)
                     .then(function(response) {
                         var data = response.data.data;
 
                         if (data) {
-                            this.user['use_course'] = data.use_course;
+                            this.$set('headerInfo.user.use_course', data.use_course);
                         }
                     }, function(response) {
                         console.error('getUserById [status]: ', response.status);
@@ -494,8 +492,8 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.courseStaff['use_course']       = data.use_course;
-                            this.courseStaff['use_course_staff'] = data.use_course_staff;
+                            this.$set('courseStaff.use_course', data.use_course);
+                            this.$set('courseStaff.use_course_staff', data.use_course_staff);
                         }
                     }, function(response) {
                         console.error('getCourseStaff [status]: ', response.status);
@@ -649,7 +647,7 @@ module.exports = {
     },
     computed: {
         notificationsNumber: function() {
-            var notificationsNumber = this.headerInfo.pendingLetters.lenght || 0 +
+            var notificationsNumber = +this.headerInfo.pendingLetters.length +
                 +this.headerInfo.preauthNumber +
                 +this.headerInfo.rejectedPreAuthNumber +
                 +this.headerInfo.patientContactsNumber +
@@ -659,7 +657,7 @@ module.exports = {
                 +this.headerInfo.unsignedNotesNumber +
                 +this.headerInfo.pendingDuplicatesNumber;
 
-            if (this.user.user_type == window.constants.DSS_USER_TYPE_SOFTWARE) {
+            if (this.headerInfo.user.user_type == window.constants.DSS_USER_TYPE_SOFTWARE) {
                 notificationsNumber += +this.headerInfo.unmailedClaimsNumber
                     + +this.headerInfo.pendingNodssClaimsNumber;
             } else {
@@ -669,11 +667,11 @@ module.exports = {
             return notificationsNumber;
         },
         isUserDoctor: function() {
-            return (this.user.docid === this.user.id);
+            return (this.headerInfo.user.docid === this.headerInfo.user.id);
         },
         showOnlineCEAndSnoozleHelp: function() {
             return (
-                (this.isUserDoctor && this.user.use_course == 1) ||
+                (this.isUserDoctor && this.headerInfo.user.use_course == 1) ||
                 (
                     !this.isUserDoctor &&
                     this.courseStaff.use_course == 1 && this.courseStaff.use_course_staff == 1
@@ -707,8 +705,8 @@ module.exports = {
         },
         setLoginDetails: function(currentPage) {
             var data = {
-                loginid  : this.user.loginid || 0,
-                userid   : this.user.id || 0,
+                loginid  : this.headerInfo.user.loginid || 0,
+                userid   : this.headerInfo.user.id || 0,
                 cur_page : currentPage || ""
             };
 

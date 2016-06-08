@@ -6,12 +6,10 @@ Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(require('vue-moment'))
 
-// include the header and footer
-import Header from './components/header/header.vue'
-import Footer from './components/footer/footer.vue'
+// include the manage main template
+import ManageTemplate from './components/header/header.vue'
 
-Vue.component('top', Header);
-Vue.component('bottom', Footer);
+Vue.component('manage-template', ManageTemplate);
 
 // components for routing
 import Index from './components/manage/dashboard/index.vue'
@@ -46,9 +44,7 @@ var router = new VueRouter({
 router.map({
     '/manage/index': {
         component  : Index,
-        auth       : true,
-        withHeader : true,
-        withFooter : false
+        auth       : true
     }
 })
 

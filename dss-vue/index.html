@@ -6,10 +6,9 @@
     </head>
     <body>
         <div id="app">
-            <top v-if="$route.withHeader"></top>
-            <!-- route outlet -->
-            <router-view></router-view>
-            <bottom v-if="$route.withFooter"></bottom>
+            <manage-template v-if="$route.auth"></manage-template>
+
+            <router-view v-else></router-view>
         </div>
         <script src="dist/build.js"></script>
     </body>

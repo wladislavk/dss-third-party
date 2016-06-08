@@ -12,7 +12,7 @@ import ManageTemplate from './components/header/header.vue'
 Vue.component('manage-template', ManageTemplate);
 
 // components for routing
-import Index from './components/manage/dashboard/index.vue'
+import Index from './components/manage/dashboard/dashboard.vue'
 
 // global variables
 window.config    = require('./modules/config.js');

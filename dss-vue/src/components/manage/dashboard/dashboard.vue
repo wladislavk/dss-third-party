@@ -336,7 +336,7 @@
 </template>
 
 <script>
-    // module.exports = require('./source.js');
+    module.exports = require('./dashboard.js');
 </script>
 
 <style src="./dashboard.css"></style>

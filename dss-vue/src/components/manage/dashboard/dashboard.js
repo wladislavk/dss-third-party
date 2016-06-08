@@ -2,10 +2,16 @@ module.exports = {
     el: function() {
         return '#dashboard'
     },
+    props: function() {
+        return ['headerInfo']
+    },
     data: function() {
         return {
             // need to change logic for global values
             constants: window.constants,
+            // headerInfo: this.$parent.headerInfo,
+
+
             user: {},
             documentCategories: [],
             memos: [],
@@ -71,6 +77,9 @@ module.exports = {
         4. getCurrentMemos
         */
 
+        console.info(this.headerInfo.user);
+
+/*
         this.getCurrentUser()
             .then(function(response) {
                 var data = response.data.data;
@@ -137,6 +146,7 @@ module.exports = {
             }, function(response) {
                 console.error('getCurrentMemos [status]: ', response.status);
             });
+*/
     },
     computed: {
         notificationsNumber: function() {

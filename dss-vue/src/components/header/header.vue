@@ -368,7 +368,7 @@
 </template>
 
 <script>
-    module.exports = require('./source.js');
+    module.exports = require('./header.js');
 </script>
 
 <!-- <script type="text/javascript" src="js/bottom.js"></script> -->

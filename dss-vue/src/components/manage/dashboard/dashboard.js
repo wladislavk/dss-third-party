@@ -2,59 +2,48 @@ module.exports = {
     el: function() {
         return '#dashboard'
     },
-    props: function() {
-        return ['headerInfo']
-    },
     data: function() {
         return {
             // need to change logic for global values
             constants: window.constants,
-            // headerInfo: this.$parent.headerInfo,
-
-
-            user: {},
+            headerInfo: {
+                unmailedLettersNumber    : 0,
+                pendingClaimsNumber      : 0,
+                pendingNodssClaimsNumber : 0,
+                unmailedClaimsNumber     : 0,
+                rejectedClaimsNumber     : 0,
+                preauthNumber            : 0,
+                rejectedPreAuthNumber    : 0,
+                alertsNumber             : 0,
+                hstNumber                : 0,
+                requestedHSTNumber       : 0,
+                rejectedHSTNumber        : 0,
+                patientContactsNumber    : 0,
+                patientInsurancesNumber  : 0,
+                patientChangesNumber     : 0,
+                pendingDuplicatesNumber  : 0,
+                emailBouncesNumber       : 0,
+                paymentReportsNumber     : 0,
+                unsignedNotesNumber      : 0,
+                faxAlertsNumber          : 0,
+                usePaymentReports        : false,
+                useLetters               : false,
+                pendingLetters           : [],
+                patientOverdueTasks      : [],
+                patientTodayTasks        : [],
+                patientTomorrowTasks     : [],
+                patientThisWeekTasks     : [],
+                patientNextWeekTasks     : [],
+                patientLaterTasks        : [],
+                user                     : {},
+                docInfo                  : {},
+                courseStaff: {
+                    use_course       : 0,
+                    use_course_staff : 0
+                },
+            },
             documentCategories: [],
             memos: [],
-            docInfo: {
-                homepage         : '',
-                manage_staff     : '',
-                use_course       : '',
-                use_eligible_api : ''
-            },
-            courseStaff: {
-                use_course       : 0,
-                use_course_staff : 0
-            },
-            // from top
-            patientContactsNumber    : 1,
-            patientInsurancesNumber  : 3,
-            patientChangesNumber     : 4,
-            useLetters               : false,
-            pendingLetters           : 5,
-            unmailedLetters          : 3,
-            preauthNumber            : 2,
-            rejectedPreAuthNumber    : 6,
-            hstNumber                : 4,
-            rejectedHSTNumber        : 1,
-            requestedHSTNumber       : 3,
-            pendingNodssClaimsNumber : 2,
-            unmailedClaimsNumber     : 3,
-            rejectedClaimsNumber     : 4,
-            pendingClaimsNumber      : 3,
-            unsignedNotesNumber      : 3,
-            alertsNumber             : 2,
-            faxAlertsNumber          : 4,
-            pendingDuplicatesNumber  : 2,
-            emailBouncesNumber       : 3,
-            usePaymentReports        : false,
-            paymentReportsNumber     : 2,
-            overdueTasks             : [],
-            todayTasks               : [],
-            tomorrowTasks            : [],
-            thisWeekTasks            : [],
-            nextWeekTasks            : [],
-            laterTasks               : [],
-
             notificationsNumber              : 0,
             isUserDoctor                     : false,
             showInvoices                     : false,
@@ -62,61 +51,31 @@ module.exports = {
             showEnrollments                  : false,
             showDSSFranchiseOperationsManual : false,
             showGetCE                        : false,
-            showUnmailedLetters              : false,
-            showUnmailedClaims               : false,
+            showUnmailedLettersNumber        : false,
+            showUnmailedClaims               : false
+        }
+    },
+    watch: {
+        'headerInfo.docInfo.homepage': 'redirectToIndex2',
+        'headerInfo.user.id': function() {
+            this.getManageStaffOfCurrentUser(this.headerInfo.user.id)
+                .then(function(response) {
+                    var data = response.data.data;
+
+                    if (data) {
+                        this.headerInfo.user['manage_staff'] = data.manage_staff || 0
+                    }
+                }, function(response) {
+                    console.error('getManageStaffOfCurrentUser [status]: ', response.status);
+                });
+        }
+    },
+    events: {
+        'update-header-info': function(headerInfo) {
+            this.headerInfo = headerInfo;
         }
     },
     created: function() {
-        /*
-        1. getCurrentUser
-            1.1 getDocInfoById
-                1.1.1 redirectToIndex2
-            1.2 getManageStaffOfCurrentUser
-        2. getDocumentCategories
-        3. getCourseStaff
-        4. getCurrentMemos
-        */
-
-        console.info(this.headerInfo.user);
-
-/*
-        this.getCurrentUser()
-            .then(function(response) {
-                var data = response.data.data;
-
-                if (data) {
-                    for (var field in data) {
-                        this.user[field] = data[field];
-                    }
-                }
-            }, function(response) {
-                console.error('getCurrentUser [status]: ', response.status);
-            }).then(function(response) {
-                this.getDocInfoById(this.user.docid)
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            this.docInfo['homepage']         = data.homepage || 0;
-                            this.docInfo['manage_staff']     = data.manage_staff || 0;
-                            this.docInfo['use_course']       = data.use_course || 0;
-                            this.docInfo['use_eligible_api'] = data.use_eligible_api || 0;
-                        }
-                    }, function(response) {
-                        console.error('getDocInfoById [status]: ', response.status);
-                    }).then(this.redirectToIndex2);
-                this.getManageStaffOfCurrentUser(this.user.id)
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            this.user['manage_staff'] = data.manage_staff || 0
-                        }
-                    }, function(response) {
-                        console.error('getManageStaffOfCurrentUser [status]: ', response.status);
-                    });
-            });
-
         this.getDocumentCategories()
             .then(function(response) {
                 var data = response.data.data;
@@ -124,18 +83,6 @@ module.exports = {
                 this.$set('documentCategories', data);
             }, function(response) {
                 console.error('getDocumentCategories [status]: ', response.status);
-            });
-
-        this.getCourseStaff()
-            .then(function(response) {
-                var data = response.data.data;
-
-                if (data) {
-                    this.courseStaff['use_course']       = data.use_course;
-                    this.courseStaff['use_course_staff'] = data.use_course_staff;
-                }
-            }, function(response) {
-                console.error('getCourseStaff [status]: ', response.status);
             });
 
         this.getCurrentMemos()
@@ -146,51 +93,47 @@ module.exports = {
             }, function(response) {
                 console.error('getCurrentMemos [status]: ', response.status);
             });
-*/
     },
     computed: {
         notificationsNumber: function() {
-            return this.patientContactsNumber + this.patientInsurancesNumber + this.patientChangesNumber;
+            return this.headerInfo.patientContactsNumber + this.headerInfo.patientInsurancesNumber + this.headerInfo.patientChangesNumber;
         },
         isUserDoctor: function() {
-            return (this.user.docid === this.user.id);
+            return (this.headerInfo.user.docid === this.headerInfo.user.id);
         },
         showInvoices: function() {
-            return (this.user.docid === this.user.id || this.docInfo.manage_staff == 1);
+            return (this.headerInfo.user.docid === this.headerInfo.user.id || this.docInfo.manage_staff == 1);
         },
         showTransactionCode: function() {
-            return (this.user.id === this.user.docid || this.user.manage_staff == 1);
+            return (this.headerInfo.user.id === this.headerInfo.user.docid || this.headerInfo.user.manage_staff == 1);
         },
         showEnrollments: function() {
             return (this.docInfo.use_eligible_api == 1);
         },
         showDSSFranchiseOperationsManual: function() {
-            return (this.user.user_type == window.constants.DSS_USER_TYPE_FRANCHISEE);
+            return (this.headerInfo.user.user_type == window.constants.DSS_USER_TYPE_FRANCHISEE);
         },
         showGetCE: function() {
             return (
                 (this.isUserDoctor && this.docInfo.use_course == 1) ||
                 (
                     !this.isUserDoctor &&
-                    this.courseStaff.use_course == 1 && this.courseStaff.use_course_staff == 1
+                    this.headerInfo.courseStaff.use_course == 1 && this.headerInfo.courseStaff.use_course_staff == 1
                 )
             );
         },
-        showUnmailedLetters: function() {
-            return (this.useLetters && this.user.user_type == window.constants.DSS_USER_TYPE_SOFTWARE);
+        showUnmailedLettersNumber: function() {
+            return (this.headerInfo.useLetters && this.headerInfo.user.user_type == window.constants.DSS_USER_TYPE_SOFTWARE);
         },
         showUnmailedClaims: function() {
-            return (this.user.user_type == window.constants.DSS_USER_TYPE_SOFTWARE);
+            return (this.headerInfo.user.user_type == window.constants.DSS_USER_TYPE_SOFTWARE);
         }
     },
     methods: {
-        getCurrentUser: function() {
-            return this.$http.post(window.config.API_PATH + 'users/current');
-        },
-        getDocInfoById: function(docId) {
-            docId = docId || 0;
-
-            return this.$http.get(window.config.API_PATH + 'users/' + docId);
+        redirectToIndex2: function() {
+            if (this.docInfo.homepage != 1) {
+                this.$route.router.go('/manage/index2');
+            }
         },
         getManageStaffOfCurrentUser: function(userId) {
             userId = userId || 0;
@@ -200,17 +143,8 @@ module.exports = {
         getDocumentCategories: function() {
             return this.$http.post(window.config.API_PATH + 'document-categories/active');
         },
-        getCourseStaff: function()
-        {
-            return this.$http.post(window.config.API_PATH + 'users/course-staff');
-        },
         getCurrentMemos: function() {
             return this.$http.post(window.config.API_PATH + 'memos/current');
-        },
-        redirectToIndex2: function() {
-            if (this.docInfo.homepage != 1) {
-                window.location = 'index2.php';
-            }
         },
         onClickExportMD: function() {
             swal({

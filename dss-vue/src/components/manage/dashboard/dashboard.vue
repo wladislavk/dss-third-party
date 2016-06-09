@@ -23,7 +23,7 @@
                                 <a href="#">Reports</a>
                                 <ul>
                                     <li><a href="ledger_reportfull.php">Ledger</a></li>
-                                    <li><a href="manage_claims.php">Claims ({{ pendingClaimsNumber }})</a></li>
+                                    <li><a href="manage_claims.php">Claims ({{ headerInfo.pendingClaimsNumber }})</a></li>
                                     <li><a href="performance.php">Performance</a></li>
                                     <li><a href="manage_screeners.php?contacted=0">Pt. Screener</a></li>
                                     <li><a href='manage_vobs.php'>VOB History</a></li>
@@ -117,20 +117,20 @@
                                 <a href="#" class=" count_{{ notificationsNumber }} notification bad_count">{{ notificationsNumber }} Web Portal <div class="arrow_right"></div></a>
                                 <ul>
                                     <li>
-                                        <a href="manage_patient_contacts.php" class=" count_{{ patientContactsNumber }} notification bad_count">
-                                            <span class="count">{{ patientContactsNumber }}</span>
+                                        <a href="manage_patient_contacts.php" class=" count_{{ headerInfo.patientContactsNumber }} notification bad_count">
+                                            <span class="count">{{ headerInfo.patientContactsNumber }}</span>
                                             <span class="label">Pt Contacts</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="manage_patient_insurance.php" class=" count_{{ patientInsurancesNumber }} notification bad_count">
-                                            <span class="count">{{ patientInsurancesNumber }}</span>
+                                        <a href="manage_patient_insurance.php" class=" count_{{ headerInfo.patientInsurancesNumber }} notification bad_count">
+                                            <span class="count">{{ headerInfo.patientInsurancesNumber }}</span>
                                             <span class="label">Pt Insurance</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="manage_patient_changes.php" class=" count_{{ patientChangesNumber }} notification bad_count">
-                                            <span class="count">{{ patientChangesNumber }}</span>
+                                        <a href="manage_patient_changes.php" class=" count_{{ headerInfo.patientChangesNumber }} notification bad_count">
+                                            <span class="count">{{ headerInfo.patientChangesNumber }}</span>
                                             <span class="label">Pt Changes</span>
                                         </a>
                                     </li>
@@ -139,75 +139,75 @@
                         </ul>
                     </div>
 
-                    <a v-if="useLetters" href="letters.php?status=pending" class=" count_{{ pendingLetters }} notification {{ pendingLetters == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ pendingLetters }}</span>
+                    <a v-if="headerInfo.useLetters" href="letters.php?status=pending" class=" count_{{ headerInfo.pendingLetters.length }} notification {{ headerInfo.pendingLetters.length == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.pendingLetters.length }}</span>
                         <span class="label">Letters</span>
                     </a>
 
-                    <a v-if="showUnmailedLetters" href="letters.php?status=sent&mailed=0" class=" count_{{ unmailedLetters }} notification bad_count">
-                        <span class="count">{{ unmailedLetters }}</span>
+                    <a v-if="showUnmailedLettersNumber" href="letters.php?status=sent&mailed=0" class=" count_{{ headerInfo.unmailedLettersNumber }} notification bad_count">
+                        <span class="count">{{ headerInfo.unmailedLettersNumber }}</span>
                         <span class="label">Unmailed Letters</span>
                     </a>
 
-                    <a href="manage_vobs.php?status={{ constants.DSS_PREAUTH_COMPLETE }}&viewed=0" class=" count_{{ preauthNumber }} notification {{ preauthNumber == 0 ? 'good_count' : 'great_count' }}">
-                        <span class="count">{{ preauthNumber }}</span>
+                    <a href="manage_vobs.php?status={{ constants.DSS_PREAUTH_COMPLETE }}&viewed=0" class=" count_{{ headerInfo.preauthNumber }} notification {{ headerInfo.preauthNumber == 0 ? 'good_count' : 'great_count' }}">
+                        <span class="count">{{ headerInfo.preauthNumber }}</span>
                         <span class="label">VOBs</span>
                     </a>
 
-                    <a v-if="rejectedPreAuthNumber" href="manage_vobs.php?status={{ constants.DSS_PREAUTH_REJECTED }}&viewed=0" class=" count_{{ rejectedPreAuthNumber }} notification bad_count">
-                        <span class="count">{{ rejectedPreAuthNumber }}</span>
+                    <a v-if="headerInfo.rejectedPreAuthNumber" href="manage_vobs.php?status={{ constants.DSS_PREAUTH_REJECTED }}&viewed=0" class=" count_{{ headerInfo.rejectedPreAuthNumber }} notification bad_count">
+                        <span class="count">{{ headerInfo.rejectedPreAuthNumber }}</span>
                         <span class="label">Rejected VOBs</span>
                     </a>
 
-                    <a href="manage_hst.php?status={{ constants.DSS_HST_COMPLETE }}&viewed=0" class=" count_{{ hstNumber }} notification {{ hstNumber == 0 ? 'good_count' : 'great_count' }}">
-                        <span class="count">{{ hstNumber }}</span>
+                    <a href="manage_hst.php?status={{ constants.DSS_HST_COMPLETE }}&viewed=0" class=" count_{{ headerInfo.hstNumber }} notification {{ headerInfo.hstNumber == 0 ? 'good_count' : 'great_count' }}">
+                        <span class="count">{{ headerInfo.hstNumber }}</span>
                         <span class="label">HSTs</span>
                     </a>
-                    <a href="manage_hst.php?status={{ constants.DSS_HST_REJECTED }}&viewed=0" class=" count_{{ rejectedHSTNumber }} notification {{ rejectedHSTNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ rejectedHSTNumber }}</span>
+                    <a href="manage_hst.php?status={{ constants.DSS_HST_REJECTED }}&viewed=0" class=" count_{{ headerInfo.rejectedHSTNumber }} notification {{ headerInfo.rejectedHSTNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.rejectedHSTNumber }}</span>
                         <span class="label">Rejected HSTs</span>
                     </a>
-                    <a href="manage_hst.php?status={{ constants.DSS_HST_REQUESTED }}&viewed=0" class=" count_{{ requestedHSTNumber }} notification {{ requestedHSTNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ requestedHSTNumber }}</span>
+                    <a href="manage_hst.php?status={{ constants.DSS_HST_REQUESTED }}&viewed=0" class=" count_{{ headerInfo.requestedHSTNumber }} notification {{ headerInfo.requestedHSTNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.requestedHSTNumber }}</span>
                         <span class="label">Unsent HSTs</span>
                     </a>
-                    <a href="manage_claims.php" class="notification  count_{{ pendingNodssClaimsNumber }} {{ pendingNodssClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ pendingNodssClaimsNumber }}</span>
+                    <a href="manage_claims.php" class="notification  count_{{ headerInfo.pendingNodssClaimsNumber }} {{ headerInfo.pendingNodssClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.pendingNodssClaimsNumber }}</span>
                         <span class="label">Pending Claims</span>
                     </a>
 
-                    <a v-if="showUnmailedClaims" href="manage_claims.php?unmailed=1" class=" count_{{ unmailedClaimsNumber }} notification {{ unmailedClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ unmailedClaimsNumber }}</span>
+                    <a v-if="showUnmailedClaims" href="manage_claims.php?unmailed=1" class=" count_{{ headerInfo.unmailedClaimsNumber }} notification {{ headerInfo.unmailedClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.unmailedClaimsNumber }}</span>
                         <span class="label">Unmailed Claims</span>
                     </a>
 
-                    <a href="manage_rejected_claims.php" class=" count_{{ rejectedClaimsNumber }} notification {{ rejectedClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ rejectedClaimsNumber }}</span>
+                    <a href="manage_rejected_claims.php" class=" count_{{ headerInfo.rejectedClaimsNumber }} notification {{ headerInfo.rejectedClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.rejectedClaimsNumber }}</span>
                         <span class="label">Rejected Claims</span>
                     </a>
-                    <a href="manage_unsigned_notes.php" class=" count_{{ unsignedNotesNumber }} notification {{ unsignedNotesNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ unsignedNotesNumber }}</span>
+                    <a href="manage_unsigned_notes.php" class=" count_{{ headerInfo.unsignedNotesNumber }} notification {{ headerInfo.unsignedNotesNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.unsignedNotesNumber }}</span>
                         <span class="label">Unsigned Notes</span>
                     </a>
-                    <a href="manage_vobs.php?status={{ constants.DSS_PREAUTH_REJECTED }}&viewed=0" class=" count_{{ alertsNumber }} notification bad_count">
-                        <span class="count">{{ alertsNumber }}</span>
+                    <a href="manage_vobs.php?status={{ constants.DSS_PREAUTH_REJECTED }}&viewed=0" class=" count_{{ headerInfo.alertsNumber }} notification bad_count">
+                        <span class="count">{{ headerInfo.alertsNumber }}</span>
                         <span class="label">Alerts</span>
                     </a>
-                    <a href="manage_faxes.php" class="notification  count_{{ faxAlertsNumber }} {{ faxAlertsNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ faxAlertsNumber }}</span>
+                    <a href="manage_faxes.php" class="notification  count_{{ headerInfo.faxAlertsNumber }} {{ headerInfo.faxAlertsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.faxAlertsNumber }}</span>
                         <span class="label">Failed Faxes</span>
                     </a>
-                    <a href="pending_patient.php" class="notification  count_{{ pendingDuplicatesNumber }} {{ pendingDuplicatesNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ pendingDuplicatesNumber }}</span>
+                    <a href="pending_patient.php" class="notification  count_{{ headerInfo.pendingDuplicatesNumber }} {{ headerInfo.pendingDuplicatesNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.pendingDuplicatesNumber }}</span>
                         <span class="label">Pending Duplicates</span>
                     </a>
-                    <a href="manage_email_bounces.php" class="notification count_{{ emailBouncesNumber }} {{ emailBouncesNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ emailBouncesNumber }}</span>
+                    <a href="manage_email_bounces.php" class="notification count_{{ headerInfo.emailBouncesNumber }} {{ headerInfo.emailBouncesNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.emailBouncesNumber }}</span>
                         <span class="label">Email Bounces</span>
                     </a>
 
-                    <a v-if="usePaymentReports" href="payment_reports_list.php?unviewed=1" class="notification count_{{ paymentReportsNumber }} {{ paymentReportsNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ paymentReportsNumber }}</span>
+                    <a v-if="headerInfo.usePaymentReports" href="payment_reports_list.php?unviewed=1" class="notification count_{{ headerInfo.paymentReportsNumber }} {{ headerInfo.paymentReportsNumber == 0 ? 'good_count' : 'bad_count' }}">
+                        <span class="count">{{ headerInfo.paymentReportsNumber }}</span>
                         <span class="label">Payment Reports</span>
                     </a>
 
@@ -218,9 +218,9 @@
                     <h3>Tasks</h3>
                     <div class="task_menu index_task">
                         <h4>My Tasks</h4>
-                        <h4 v-if="overdueTasks.length > 0" style="margin-bottom:0px;color:red;" class="task_od_header">Overdue</h4>
-                        <ul v-if="overdueTasks.length > 0" class="task_od_list">
-                            <li v-for="task in overdueTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                        <h4 v-if="headerInfo.patientOverdueTasks.length > 0" style="margin-bottom:0px;color:red;" class="task_od_header">Overdue</h4>
+                        <ul v-if="headerInfo.patientOverdueTasks.length > 0" class="task_od_list">
+                            <li v-for="task in headerInfo.patientOverdueTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
@@ -234,9 +234,9 @@
                             </li>
                         </ul>
 
-                        <h4 v-if="todayTasks.length > 0" style="margin-bottom:0px;" class="task_tod_header">Today</h4>
-                        <ul v-if="todayTasks.length > 0" class="task_tod_list">
-                            <li v-for="task in todayTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                        <h4 v-if="headerInfo.patientTodayTasks.length > 0" style="margin-bottom:0px;" class="task_tod_header">Today</h4>
+                        <ul v-if="headerInfo.patientTodayTasks.length > 0" class="task_tod_list">
+                            <li v-for="task in headerInfo.patientTodayTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
@@ -251,9 +251,9 @@
                             </li>
                         </ul>
 
-                        <h4 v-if="tomorrowTasks.length > 0" style="margin-bottom:0px;" class="task_tom_header">Tomorrow</h4>
-                        <ul v-if="tomorrowTasks.length > 0" class="task_tom_list">
-                            <li v-for="task in tomorrowTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                        <h4 v-if="headerInfo.patientTomorrowTasks.length > 0" style="margin-bottom:0px;" class="task_tom_header">Tomorrow</h4>
+                        <ul v-if="headerInfo.patientTomorrowTasks.length > 0" class="task_tom_list">
+                            <li v-for="task in headerInfo.patientTomorrowTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
@@ -267,9 +267,9 @@
                             </li>
                         </ul>
 
-                        <h4 v-if="thisWeekTasks.length > 0" id="task_tw_header" class="task_tw_header">This Week</h4>
-                        <ul v-if="thisWeekTasks.length > 0" id="task_tw_list">
-                            <li v-for="task in thisWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                        <h4 v-if="headerInfo.patientThisWeekTasks.length > 0" id="task_tw_header" class="task_tw_header">This Week</h4>
+                        <ul v-if="headerInfo.patientThisWeekTasks.length > 0" id="task_tw_list">
+                            <li v-for="task in headerInfo.patientThisWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
@@ -283,9 +283,9 @@
                             </li>
                         </ul>
 
-                        <h4 v-if="nextWeekTasks.length > 0" id="task_nw_header" class="task_nw_header">Next Week</h4>
-                        <ul v-if="nextWeekTasks.length > 0" id="task_nw_list">
-                            <li v-for="task in nextWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                        <h4 v-if="headerInfo.patientNextWeekTasks.length > 0" id="task_nw_header" class="task_nw_header">Next Week</h4>
+                        <ul v-if="headerInfo.patientNextWeekTasks.length > 0" id="task_nw_list">
+                            <li v-for="task in headerInfo.patientNextWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
@@ -299,9 +299,9 @@
                             </li>
                         </ul>
 
-                        <h4 v-if="laterTasks.length > 0" id="task_lat_header" class="task_lat_header">Later</h4>
-                        <ul v-if="laterTasks.length > 0" id="task_lat_list">
-                            <li v-for="task in laterTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                        <h4 v-if="headerInfo.patientLaterTasks.length > 0" id="task_lat_header" class="task_lat_header">Later</h4>
+                        <ul v-if="headerInfo.patientLaterTasks.length > 0" id="task_lat_list">
+                            <li v-for="task in headerInfo.patientLaterTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>

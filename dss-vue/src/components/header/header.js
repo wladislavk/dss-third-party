@@ -31,8 +31,12 @@ module.exports = {
                 patientNextWeekTasks     : [],
                 patientLaterTasks        : [],
                 user                     : {},
+                docInfo                  : {},
+                courseStaff              : {
+                    use_course       : 0,
+                    use_course_staff : 0
+                },
             },
-            docInfo                              : {},
             secondsPerDay                        : 86400,
             oldestLetter                         : 0,
             pendingPreauthNumber                 : 0,
@@ -50,10 +54,6 @@ module.exports = {
             patientTaskNumber                    : 0,
             isUserDoctor                         : false,
             showOnlineCEAndSnoozleHelp           : false,
-            courseStaff                          : {
-                use_course       : 0,
-                use_course_staff : 0
-            },
             companyLogo                          : '',
             overdueTasks                         : [],
             todayTasks                           : [],
@@ -96,13 +96,13 @@ module.exports = {
 
                         if (data) {
                             for (var field in data) {
-                                this.docInfo[field] = data[field];
+                                this.headerInfo.docInfo[field] = data[field];
                             }
                         }
                     }, function(response) {
                         console.error('getUser [status]: ', response.status);
                     }).then(function(response) {
-                        if (this.docInfo.homepage != '1') {
+                        if (this.headerInfo.docInfo.homepage != '1') {
                             // include_once 'includes/top2.htm';
                         } else {
                             if (this.headerInfo.user.loginid) {
@@ -492,8 +492,8 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.$set('courseStaff.use_course', data.use_course);
-                            this.$set('courseStaff.use_course_staff', data.use_course_staff);
+                            this.$set('headerInfo.courseStaff.use_course', data.use_course);
+                            this.$set('headerInfo.courseStaff.use_course_staff', data.use_course_staff);
                         }
                     }, function(response) {
                         console.error('getCourseStaff [status]: ', response.status);
@@ -645,6 +645,14 @@ module.exports = {
                     });
             });
     },
+    watch: {
+        'headerInfo': {
+            handler: function(val, oldVal) {
+                this.$broadcast('update-header-info', this.headerInfo);
+            },
+            deep: true
+        }
+    },
     computed: {
         notificationsNumber: function() {
             var notificationsNumber = +this.headerInfo.pendingLetters.length +
@@ -674,7 +682,7 @@ module.exports = {
                 (this.isUserDoctor && this.headerInfo.user.use_course == 1) ||
                 (
                     !this.isUserDoctor &&
-                    this.courseStaff.use_course == 1 && this.courseStaff.use_course_staff == 1
+                    this.headerInfo.courseStaff.use_course == 1 && this.headerInfo.courseStaff.use_course_staff == 1
                 )
             );
         },
@@ -691,7 +699,7 @@ module.exports = {
             return this.bouncedEmailsNumberForCurrentPatient;
         },
         useLetters: function() {
-            return (this.docInfo.use_letters == 1);
+            return (this.headerInfo.docInfo.use_letters == 1);
         }
     },
     methods: {

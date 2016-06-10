@@ -99,7 +99,7 @@ class LettersController extends Controller
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getUnmailed();
+        $data = $resources->getUnmailed($docId);
 
         return ApiResponse::responseOk('', $data);
     }

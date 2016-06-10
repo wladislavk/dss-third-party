@@ -24,12 +24,12 @@ module.exports = {
                 usePaymentReports        : false,
                 useLetters               : false,
                 pendingLetters           : [],
-                patientOverdueTasks      : [],
-                patientTodayTasks        : [],
-                patientTomorrowTasks     : [],
-                patientThisWeekTasks     : [],
-                patientNextWeekTasks     : [],
-                patientLaterTasks        : [],
+                overdueTasks             : [],
+                todayTasks               : [],
+                tomorrowTasks            : [],
+                thisWeekTasks            : [],
+                nextWeekTasks            : [],
+                laterTasks               : [],
                 user                     : {},
                 docInfo                  : {},
                 courseStaff              : {
@@ -58,9 +58,7 @@ module.exports = {
             overdueTasks                         : [],
             todayTasks                           : [],
             tomorrowTasks                        : [],
-            thisWeekTasks                        : [],
-            nextWeekTasks                        : [],
-            laterTasks                           : [],
+            futureTasks                          : [],
             childrenPatients                     : [],
             totalContacts                        : 0,
             totalInsurances                      : 0,
@@ -96,7 +94,7 @@ module.exports = {
 
                         if (data) {
                             for (var field in data) {
-                                this.headerInfo.docInfo[field] = data[field];
+                                this.$set('headerInfo.docInfo.' + field, data[field]);
                             }
                         }
                     }, function(response) {
@@ -415,7 +413,8 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.overdueTasks = data;
+                            this.overdueTasks            = data;
+                            this.headerInfo.overdueTasks = data;
                         }
                     }, function(response) {
                         console.error('getOverdueTasks [status]: ', response.status);
@@ -426,7 +425,8 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.todayTasks = data;
+                            this.todayTasks            = data;
+                            this.headerInfo.todayTasks = data;
                         }
                     }, function(response) {
                         console.error('getTodayTasks [status]: ', response.status);
@@ -437,7 +437,8 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.tomorrowTasks = data;
+                            this.tomorrowTasks            = data;
+                            this.headerInfo.tomorrowTasks = data;
                         }
                     }, function(response) {
                         console.error('getTomorrowTasks [status]: ', response.status);
@@ -448,7 +449,7 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.thisWeekTasks = data;
+                            this.headerInfo.thisWeekTasks = data;
                         }
                     }, function(response) {
                         console.error('getThisWeekTasks [status]: ', response.status);
@@ -459,10 +460,10 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.nextWeekTasks = data;
+                            this.headerInfo.nextWeekTasks = data;
                         }
                     }, function(response) {
-                        console.error('getThisWeekTasks [status]: ', response.status);
+                        console.error('getNextWeekTasks [status]: ', response.status);
                     });
 
                 this.getLaterTasks()
@@ -470,7 +471,7 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.laterTasks = data;
+                            this.headerInfo.laterTasks = data;
                         }
                     }, function(response) {
                         console.error('getLaterTasks [status]: ', response.status);
@@ -510,128 +511,134 @@ module.exports = {
                         console.error('getCompanyLogo [status]: ', response.status);
                     });
             }).then(function(response) {
-                this.getPatientTasks()
-                    .then(function(response) {
-                        var data = response.data.data;
+                if (this.$route.query.pid) {
+                    this.getPatientTasks(this.$route.query.pid)
+                        .then(function(response) {
+                            var data = response.data.data;
 
-                        if (data) {
-                            this.patientTaskNumber = data.length;
-                        }
-                    }, function(response) {
-                        console.error('getPatientTasks [status]: ', response.status);
-                    });
-
-                this.getPatientOverdueTasks()
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            this.headerInfo.patientOverdueTasks = data;
-                        }
-                    }, function(response) {
-                        console.error('getPatientOverdueTasks [status]: ', response.status);
-                    });
-
-                this.getPatientTodayTasks()
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            this.headerInfo.patientTodayTasks = data;
-                        }
-                    }, function(response) {
-                        console.error('getPatientTodayTasks [status]: ', response.status);
-                    });
-
-                this.getPatientTomorrowTasks()
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            this.headerInfo.patientTomorrowTasks = data;
-                        }
-                    }, function(response) {
-                        console.error('getPatientTomorrowTasks [status]: ', response.status);
-                    });
-
-                this.getPatientFutureTasks()
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            this.headerInfo.patientFutureTasks = data;
-                        }
-                    }, function(response) {
-                        console.error('getPatientFutureTasks [status]: ', response.status);
-                    });
-            }).then(function(response) {
-                this.getPatientsByParentId(this.$route.query.pid)
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            this.childrenPatients = data;
-                        }
-                    }, function(response) {
-                        console.error('getPatientsByParentId [status]: ', response.status);
-                    });
-
-                this.getCurrentPatientContacts(this.$route.query.pid)
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            this.totalContacts = data.length;
-                        }
-                    }, function(response) {
-                        console.error('getCurrentPatientContacts [status]: ', response.status);
-                    });
-
-                this.getCurrentPatientInsurances(this.$route.query.pid)
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            this.totalInsurances = data.lenght;
-                        }
-                    }, function(response) {
-                        console.error('getCurrentPatientInsurances [status]: ', response.status);
-                    });
-
-                this.getQuestionnaireStatuses(this.$route.query.pid)
-                    .then(function(response) {
-                        var data = response.data.data;
-
-                        if (data) {
-                            for (var field in data) {
-                                this.questionnaireStatuses[field] = data[field];
+                            if (data) {
+                                this.patientTaskNumber = data.length;
                             }
-                        }
-                    }, function(response) {
-                        console.error('getQuestionnaireStatuses [status]: ', response.status);
-                    })
+                        }, function(response) {
+                            console.error('getPatientTasks [status]: ', response.status);
+                        }).then(function(response) {
+                            if (this.patientTaskNumber > 0) {
+                                this.getPatientOverdueTasks(this.$route.query.pid)
+                                    .then(function(response) {
+                                        var data = response.data.data;
 
-                this.getBouncedEmailsNumberForCurrentPatient(this.$route.query.pid)
-                    .then(function(response) {
-                        var data = response.data.data;
+                                        if (data) {
+                                            this.headerInfo.overdueTasks = data;
+                                        }
+                                    }, function(response) {
+                                        console.error('getPatientOverdueTasks [status]: ', response.status);
+                                    });
 
-                        if (data) {
-                            this.bouncedEmailsNumberForCurrentPatient = data.length;
-                        }
-                    }, function(response) {
-                        console.error('getBouncedEmailsNumberForCurrentPatient [status]: ', response.status);
-                    });
+                                this.getPatientTodayTasks(this.$route.query.pid)
+                                    .then(function(response) {
+                                        var data = response.data.data;
 
-                this.getRejectedClaimsForCurrentPatient(this.$route.query.pid)
-                    .then(function(response) {
-                        var data = response.data.data;
+                                        if (data) {
+                                            this.headerInfo.todayTasks = data;
+                                        }
+                                    }, function(response) {
+                                        console.error('getPatientTodayTasks [status]: ', response.status);
+                                    });
 
-                        if (data) {
-                            this.$set('rejectedClaimsForCurrentPatient', data);
-                        }
-                    }, function(response) {
-                        console.error('getRejectedClaimsForCurrentPatient [status]: ', response.status);
-                    });
+                                this.getPatientTomorrowTasks(this.$route.query.pid)
+                                    .then(function(response) {
+                                        var data = response.data.data;
+
+                                        if (data) {
+                                            this.headerInfo.tomorrowTasks = data;
+                                        }
+                                    }, function(response) {
+                                        console.error('getPatientTomorrowTasks [status]: ', response.status);
+                                    });
+
+                                this.getPatientFutureTasks(this.$route.query.pid)
+                                    .then(function(response) {
+                                        var data = response.data.data;
+
+                                        if (data) {
+                                            this.futureTasks = data;
+                                        }
+                                    }, function(response) {
+                                        console.error('getPatientFutureTasks [status]: ', response.status);
+                                    });
+                            }
+                        });
+                }
+            }).then(function(response) {
+                if (this.$route.query.pid) {
+                    this.getPatientsByParentId(this.$route.query.pid)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data) {
+                                this.childrenPatients = data;
+                            }
+                        }, function(response) {
+                            console.error('getPatientsByParentId [status]: ', response.status);
+                        });
+
+                    this.getCurrentPatientContacts(this.$route.query.pid)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data) {
+                                this.totalContacts = data.length;
+                            }
+                        }, function(response) {
+                            console.error('getCurrentPatientContacts [status]: ', response.status);
+                        });
+
+                    this.getCurrentPatientInsurances(this.$route.query.pid)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data) {
+                                this.totalInsurances = data.lenght;
+                            }
+                        }, function(response) {
+                            console.error('getCurrentPatientInsurances [status]: ', response.status);
+                        });
+
+                    this.getQuestionnaireStatuses(this.$route.query.pid)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data) {
+                                for (var field in data) {
+                                    this.questionnaireStatuses[field] = data[field];
+                                }
+                            }
+                        }, function(response) {
+                            console.error('getQuestionnaireStatuses [status]: ', response.status);
+                        })
+
+                    this.getBouncedEmailsNumberForCurrentPatient(this.$route.query.pid)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data) {
+                                this.bouncedEmailsNumberForCurrentPatient = data.length;
+                            }
+                        }, function(response) {
+                            console.error('getBouncedEmailsNumberForCurrentPatient [status]: ', response.status);
+                        });
+
+                    this.getRejectedClaimsForCurrentPatient(this.$route.query.pid)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data) {
+                                this.$set('rejectedClaimsForCurrentPatient', data);
+                            }
+                        }, function(response) {
+                            console.error('getRejectedClaimsForCurrentPatient [status]: ', response.status);
+                        });
+                }
             }).then(function(response) {
                 this.getUncompletedHomeSleepTests()
                     .then(function(response) {
@@ -647,10 +654,13 @@ module.exports = {
     },
     watch: {
         'headerInfo': {
-            handler: function(val, oldVal) {
+            handler: function() {
                 this.$broadcast('update-header-info', this.headerInfo);
             },
             deep: true
+        },
+        'headerInfo.docInfo.use_letters': function() {
+            this.headerInfo.useLetters = (this.headerInfo.docInfo.use_letters == 1);
         }
     },
     computed: {
@@ -697,9 +707,6 @@ module.exports = {
         },
         showWarningAboutBouncedEmails: function() {
             return this.bouncedEmailsNumberForCurrentPatient;
-        },
-        useLetters: function() {
-            return (this.headerInfo.docInfo.use_letters == 1);
         }
     },
     methods: {

@@ -79,9 +79,9 @@
                             </li>
                         </ul>
 
-                        <h4 v-if="thisWeekTasks.length > 0" id="task_tw_header" class="task_tw_header">This Week</h4>
-                        <ul v-if="thisWeekTasks.length > 0" id="task_tw_list">
-                            <li v-for="task in thisWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                        <h4 v-if="headerInfo.thisWeekTasks.length > 0" id="task_tw_header" class="task_tw_header">This Week</h4>
+                        <ul v-if="headerInfo.thisWeekTasks.length > 0" id="task_tw_list">
+                            <li v-for="task in headerInfo.thisWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
@@ -95,9 +95,9 @@
                             </li>
                         </ul>
 
-                        <h4 v-if="nextWeekTasks.length > 0" id="task_nw_header" class="task_nw_header">Next Week</h4>
-                        <ul v-if="nextWeekTasks.length > 0" id="task_nw_list">
-                            <li class="task_item task_{{ task.id }}" style="clear:both;">
+                        <h4 v-if="headerInfo.nextWeekTasks.length > 0" id="task_nw_header" class="task_nw_header">Next Week</h4>
+                        <ul v-if="headerInfo.nextWeekTasks.length > 0" id="task_nw_list">
+                            <li v-for="task in headerInfo.nextWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
@@ -111,9 +111,9 @@
                             </li>
                         </ul>
 
-                        <h4 v-if="laterTasks.length > 0" id="task_lat_header" class="task_lat_header">Later</h4>
-                        <ul v-if="laterTasks.length > 0" id="task_lat_list">
-                            <li class="task_item task_{{ task.id }}" style="clear:both;">
+                        <h4 v-if="headerInfo.laterTasks.length > 0" id="task_lat_header" class="task_lat_header">Later</h4>
+                        <ul v-if="headerInfo.laterTasks.length > 0" id="task_lat_list">
+                            <li v-for="task in headerInfo.laterTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
@@ -184,9 +184,9 @@
                         <div v-if="$route.query.pid && patientTaskNumber > 0" class="task_menu" id="pat_task_menu" style="float:left; margin:10px 0 0 10px;">
                             <span id="pat_task_header" style="font-size:14px; font-weight:normal; color:#fff;">Tasks({{ patientTaskNumber }})</span>
                             <div class="task_list" id="pat_task_list" style="display:none;">
-                                <h4 v-if="headerInfo.patientFutureTasks.length > 0" id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
-                                <ul v-if="headerInfo.patientFutureTasks.length > 0" id="pat_task_od_list">
-                                    <li v-for="task in headerInfo.patientFutureTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                                <h4 v-if="headerInfo.patientOverdueTasks.length > 0" id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
+                                <ul v-if="headerInfo.patientOverdueTasks.length > 0" id="pat_task_od_list">
+                                    <li v-for="task in headerInfo.patientOverdueTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                         <div class="task_extra" id="task_extra_{{ task.id }}" >
                                             <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                             <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>

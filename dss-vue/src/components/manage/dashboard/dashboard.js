@@ -29,12 +29,12 @@ module.exports = {
                 usePaymentReports        : false,
                 useLetters               : false,
                 pendingLetters           : [],
-                patientOverdueTasks      : [],
-                patientTodayTasks        : [],
-                patientTomorrowTasks     : [],
-                patientThisWeekTasks     : [],
-                patientNextWeekTasks     : [],
-                patientLaterTasks        : [],
+                overdueTasks             : [],
+                todayTasks               : [],
+                tomorrowTasks            : [],
+                thisWeekTasks            : [],
+                nextWeekTasks            : [],
+                laterTasks               : [],
                 user                     : {},
                 docInfo                  : {},
                 courseStaff: {
@@ -96,26 +96,28 @@ module.exports = {
     },
     computed: {
         notificationsNumber: function() {
-            return this.headerInfo.patientContactsNumber + this.headerInfo.patientInsurancesNumber + this.headerInfo.patientChangesNumber;
+            return +this.headerInfo.patientContactsNumber +
+                +this.headerInfo.patientInsurancesNumber +
+                +this.headerInfo.patientChangesNumber;
         },
         isUserDoctor: function() {
             return (this.headerInfo.user.docid === this.headerInfo.user.id);
         },
         showInvoices: function() {
-            return (this.headerInfo.user.docid === this.headerInfo.user.id || this.docInfo.manage_staff == 1);
+            return (this.headerInfo.user.docid === this.headerInfo.user.id || this.headerInfo.docInfo.manage_staff == 1);
         },
         showTransactionCode: function() {
             return (this.headerInfo.user.id === this.headerInfo.user.docid || this.headerInfo.user.manage_staff == 1);
         },
         showEnrollments: function() {
-            return (this.docInfo.use_eligible_api == 1);
+            return (this.headerInfo.docInfo.use_eligible_api == 1);
         },
         showDSSFranchiseOperationsManual: function() {
             return (this.headerInfo.user.user_type == window.constants.DSS_USER_TYPE_FRANCHISEE);
         },
         showGetCE: function() {
             return (
-                (this.isUserDoctor && this.docInfo.use_course == 1) ||
+                (this.isUserDoctor && this.headerInfo.docInfo.use_course == 1) ||
                 (
                     !this.isUserDoctor &&
                     this.headerInfo.courseStaff.use_course == 1 && this.headerInfo.courseStaff.use_course_staff == 1
@@ -131,7 +133,7 @@ module.exports = {
     },
     methods: {
         redirectToIndex2: function() {
-            if (this.docInfo.homepage != 1) {
+            if (this.headerInfo.docInfo.homepage != 1) {
                 this.$route.router.go('/manage/index2');
             }
         },

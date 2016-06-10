@@ -172,15 +172,17 @@ $p_query = $db->getResults($p_sql);
 foreach ($p_query as $p) {?>
 			case '<?php echo $p["patientid"]; ?>':
 				pat = '<?php echo addslashes($p["firstname"])." ".addslashes($p["lastname"]); ?>';
-				phone = '<?= strlen($p['home_phone']) ? $p['home_phone'] : (
-					$p['cell_phone'] ? $p['cell_phone'] : ($p['work_phone'] ? $p['work_phone'] : '')
-				) ?>';
+				phone = {
+					home: '<?= format_phone($p['home_phone']) ?>',
+					cell: '<?= format_phone($p['cell_phone']) ?>',
+					work: '<?= format_phone($p['work_phone']) ?>',
+				};
 				break;
 <?php
 }?>
 			default:
 				pat = 'None';
-				phone = '';
+				phone = { home: '', cell: '', work: ''};
 				break;
 		}
 
@@ -189,7 +191,9 @@ foreach ($p_query as $p) {?>
 			"<b>Producer:</b> "+prod+"<br/>" +
 			"<b>Resource:</b> " + resource + "<br/>" +
 			"<b>Patient:</b> "+pat+"<br/>" +
-			(phone.length ? "<b>Patient Phone:</b> "+phone+"<br/>" : "") +
+			(phone.home.length ? "<b>Pt Home:</b> "+phone.home+"<br/>" : "") +
+			(phone.cell.length ? "<b>Pt Cell:</b> "+phone.cell+"<br/>" : "") +
+			(phone.work.length ? "<b>Pt Work:</b> "+phone.work+"<br/>" : "") +
 			"<b>Start Date:</b> "+scheduler.templates.tooltip_date_format(start)+"<br/>" +
 			"<b>End Date:</b> "+scheduler.templates.tooltip_date_format(end);
 	}

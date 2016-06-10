@@ -516,7 +516,7 @@ $eligibleResponse = [];
 if (!$isHistoricView && $isRejected) {
     $eDescriptions = eligibleDetailsFromClaimId($claimId);
     $eResponse = $eDescriptions['e_response'];
-    $eligibleResponse = $eDescriptions['eligible_response'];
+    $eligibleResponse = $eDescriptions['latest_rejection'] ?: $eDescriptions['eligible_response'];
 }
 
 $insuranceCompanyId = intval($isSecondary ? $patientData['s_m_ins_co'] : $patientData['p_m_ins_co']);
@@ -747,6 +747,10 @@ if (!empty($is_back_office)){
                 on
                 <?= $eligibleResponse['adddate'] ?>
             </h3>
+            <p>
+                <strong>Reference ID:</strong>
+                <?= strlen($eligibleResponse['reference_id']) ? e($eligibleResponse['reference_id']) : '<i>Not set</i>' ?>
+            </p>
             <?php if (is_object($eligibleResponse['response']->details)) { ?>
                 <p>
                     Category:
@@ -771,7 +775,10 @@ if (!empty($is_back_office)){
                 Claim Electronically filed on
                 <?= $eResponse['adddate'] ?>
             </h3>
-
+            <p>
+                <strong>Reference ID:</strong>
+                <?= strlen($eResponse['reference_id']) ? e($eResponse['reference_id']) : '<i>Not set</i>' ?>
+            </p>
             <?php if ($eResponse['response']->success === 'true' || $eResponse['response']->success === true) { ?>
                 <p>
                     Success Response

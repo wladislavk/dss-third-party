@@ -2180,12 +2180,14 @@ function eligibleDetailsFromClaimId ($claimId) {
 
     $eResponse = $eResponse ?: [];
     $eligibleResponse = [];
+    $latestRejection = [];
 
     if ($eResponse) {
         $eResponse['response'] = json_decode($eResponse['response']);
 
         /**
-         * Some eligible responses don't report status changes, we need to exclude those
+         * Some eligible responses don't report status changes, we need to exclude those.
+         * Also, we need to retrieve the latest rejection response, in case we are dealing with a status mismatch.
          */
         if ($eResponse['reference_id']) {
             $referenceId = $db->escape($eResponse['reference_id']);
@@ -2203,9 +2205,18 @@ function eligibleDetailsFromClaimId ($claimId) {
 
                 if ($eDetails) {
                     $each['response']->details = $eDetails;
-                    $eligibleResponse = $each;
 
-                    break;
+                    if (!$eligibleResponse) {
+                        $eligibleResponse = $each;
+                    }
+
+                    if (in_array($each['event_type'], ['rejected', 'claim_rejected']) && !$latestRejection) {
+                        $latestRejection = $each;
+                    }
+
+                    if ($eligibleResponse && $latestRejection) {
+                        break;
+                    }
                 }
             }
         }
@@ -2213,7 +2224,8 @@ function eligibleDetailsFromClaimId ($claimId) {
 
     return [
         'e_response' => $eResponse,
-        'eligible_response' => $eligibleResponse
+        'eligible_response' => $eligibleResponse,
+        'latest_rejection' => $latestRejection
     ];
 }
 

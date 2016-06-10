@@ -1063,6 +1063,7 @@ class ClaimFormData
             AND ledger.docid = '$docId'
             AND trxn_code.docid = '$docId'
             AND trxn_code.type = '$trxnTypeMed'
+        GROUP BY ledger.ledgerid
         ORDER BY ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
 
         $transactions = $db->getResults($transactionsQuery);

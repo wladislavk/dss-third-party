@@ -368,6 +368,18 @@
 </template>
 
 <script>
+    // these modules must be rewritten/included to vue structure in the future
+    require('../../../assets/js/tracekit/tracekit.js');
+    require('../../../assets/js/tracekit/tracekit.handler.js');
+    require('../../../assets/js/jquery-1.6.2.min.js');
+    // require('../../../assets/js/jquery-ui-1.8.22.custom.min.js');
+    require('../../../assets/js/input-mask/jquery.maskedinput-1.3.min.js');
+    require('../../../assets/js/table-sorter/jquery.tablesorter.min.js');
+    require('../../../assets/js/table-sorter/jquery.tablesorter.pager.js');
+    require('../../../assets/js/table-sorter/jquery.tablesorter.widgets.js');
+    require('../../../assets/js/manage/masks.js');
+    require('../../../assets/js/calendar/calendar2.js');
+
     module.exports = require('./header.js');
 </script>
 

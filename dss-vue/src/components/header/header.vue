@@ -22,10 +22,6 @@
                     </ul>
                 </div>
 
-                <script type="text/javascript">
-                    if (window.task_function) { task_function(); }
-                </script>
-
                 <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
                     <span id="task_header">
                         My Tasks (<span id="task_count">{{ tasksNumber }}</span>)
@@ -379,6 +375,23 @@
     require('../../../assets/js/table-sorter/jquery.tablesorter.widgets.js');
     require('../../../assets/js/manage/masks.js');
     require('../../../assets/js/calendar/calendar2.js');
+    require('../../../assets/js/manage/logout_timer.js');
+    require('../../../assets/js/manage/ddlevelsmenu.js');
+    require('../../../assets/js/manage/validation.js');
+    require('../../../assets/js/manage/top.js');
+
+    this.task_function();
+
+    require('../../../assets/js/manage/hideshow.js');
+    require('../../../assets/js/manage/file-upload-check.js');
+    // require('../../../assets/js/jscal/jscal2.js');
+    // require('../../../assets/js/jscal/lang/en.js');
+    require('../../../assets/js/jquery.colorbox-min.js');
+    require('../../../assets/js/jquery.blockUI.js');
+    require('../../../assets/js/popup/popup.js');
+    require('../../../assets/js/manage/task.js');
+    require('../../../assets/js/manage/autocomplete.js');
+    require('../../../assets/js/manage/autocomplete_local.js');
 
     module.exports = require('./header.js');
 </script>

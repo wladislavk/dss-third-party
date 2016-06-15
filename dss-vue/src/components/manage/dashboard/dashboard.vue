@@ -339,6 +339,8 @@
     <br /><br />
 </template>
 
+<script src="../../../../assets/js/manage/sucker_tree_home.js"></script>
+
 <script>
     module.exports = require('./dashboard.js');
 </script>

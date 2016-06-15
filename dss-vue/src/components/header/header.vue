@@ -363,35 +363,34 @@
     </div>
 </template>
 
+<!-- these modules must be rewritten/included to vue structure in the future -->
+<script src="../../../assets/js/tracekit/tracekit.js"></script>
+<script src="../../../assets/js/tracekit/tracekit.handler.js"></script>
+<script src="../../../assets/js/jquery-1.6.2.min.js"></script>
+<script src="../../../assets/js/jquery-ui-1.8.22.custom.min.js"></script>
+<script src="../../../assets/js/input-mask/jquery.maskedinput-1.3.min.js"></script>
+<script src="../../../assets/js/table-sorter/jquery.tablesorter.min.js"></script>
+<script src="../../../assets/js/table-sorter/jquery.tablesorter.pager.js"></script>
+<script src="../../../assets/js/table-sorter/jquery.tablesorter.widgets.js"></script>
+<script src="../../../assets/js/manage/masks.js"></script>
+<script src="../../../assets/js/calendar/calendar2.js"></script>
+<script src="../../../assets/js/manage/logout_timer.js"></script>
+<script src="../../../assets/js/manage/ddlevelsmenu.js"></script>
+<script src="../../../assets/js/manage/validation.js"></script>
+<script src="../../../assets/js/manage/top.js"></script>
+<script src="../../../assets/js/manage/hideshow.js"></script>
+<script src="../../../assets/js/manage/file-upload-check.js"></script>
+<script src="../../../assets/js/jscal/jscal2.js"></script>
+<script src="../../../assets/js/jscal/lang/en.js"></script>
+<script src="../../../assets/js/jquery.colorbox-min.js"></script>
+<script src="../../../assets/js/jquery.blockUI.js"></script>
+<script src="../../../assets/js/popup/popup.js"></script>
+<script src="../../../assets/js/manage/task.js"></script>
+<script src="../../../assets/js/manage/autocomplete.js"></script>
+<script src="../../../assets/js/manage/autocomplete_local.js"></script>
+
 <script>
-    // these modules must be rewritten/included to vue structure in the future
-    require('../../../assets/js/tracekit/tracekit.js');
-    require('../../../assets/js/tracekit/tracekit.handler.js');
-    require('../../../assets/js/jquery-1.6.2.min.js');
-    // require('../../../assets/js/jquery-ui-1.8.22.custom.min.js');
-    require('../../../assets/js/input-mask/jquery.maskedinput-1.3.min.js');
-    require('../../../assets/js/table-sorter/jquery.tablesorter.min.js');
-    require('../../../assets/js/table-sorter/jquery.tablesorter.pager.js');
-    require('../../../assets/js/table-sorter/jquery.tablesorter.widgets.js');
-    require('../../../assets/js/manage/masks.js');
-    require('../../../assets/js/calendar/calendar2.js');
-    require('../../../assets/js/manage/logout_timer.js');
-    require('../../../assets/js/manage/ddlevelsmenu.js');
-    require('../../../assets/js/manage/validation.js');
-    require('../../../assets/js/manage/top.js');
-
-    this.task_function();
-
-    require('../../../assets/js/manage/hideshow.js');
-    require('../../../assets/js/manage/file-upload-check.js');
-    // require('../../../assets/js/jscal/jscal2.js');
-    // require('../../../assets/js/jscal/lang/en.js');
-    require('../../../assets/js/jquery.colorbox-min.js');
-    require('../../../assets/js/jquery.blockUI.js');
-    require('../../../assets/js/popup/popup.js');
-    require('../../../assets/js/manage/task.js');
-    require('../../../assets/js/manage/autocomplete.js');
-    require('../../../assets/js/manage/autocomplete_local.js');
+    task_function();
 
     module.exports = require('./header.js');
 </script>

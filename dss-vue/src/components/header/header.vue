@@ -37,8 +37,9 @@
                                 <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
-
-                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    <span v-if="task.firstname && task.lastname">
+                                        (<a href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>)
+                                    </span>
                                 </div>
                             </li>
                         </ul>
@@ -53,8 +54,9 @@
                                 <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
-
-                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    <span v-if="task.firstname && task.lastname">
+                                        (<a href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>)
+                                    </span>
                                 </div>
                             </li>
                         </ul>
@@ -69,8 +71,9 @@
                                 <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
-
-                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    <span v-if="task.firstname && task.lastname">
+                                        (<a href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>)
+                                    </span>
                                 </div>
                             </li>
                         </ul>
@@ -85,8 +88,9 @@
                                 <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
-
-                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    <span v-if="task.firstname && task.lastname">
+                                        (<a href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>)
+                                    </span>
                                 </div>
                             </li>
                         </ul>
@@ -101,8 +105,9 @@
                                 <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
-
-                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    <span v-if="task.firstname && task.lastname">
+                                        (<a href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>)
+                                    </span>
                                 </div>
                             </li>
                         </ul>
@@ -119,8 +124,9 @@
                                     {{ task.due_date | moment "MM DD" }}
                                     -
                                     {{ task.task }}
-
-                                    <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
+                                    <span v-if="task.firstname && task.lastname">
+                                        (<a href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>)
+                                    </span>
                                 </div>
                             </li>
                         </ul>

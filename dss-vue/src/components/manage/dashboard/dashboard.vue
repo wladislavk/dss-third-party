@@ -75,7 +75,7 @@
                                     <li><a href="#" v-on:click="onClickDataImport">Data Import</a></li>
 
                                     <li v-if="showEnrollments">
-                                        <a href="manage_enrollment.php">Enrollments</a>\
+                                        <a href="manage_enrollment.php">Enrollments</a>
                                     </li>
 
                                 </ul>

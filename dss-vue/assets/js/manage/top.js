@@ -420,10 +420,11 @@ function sendValue (searchTerm, $reference) {
     searchRequest = $.ajax({
       type: "post",
       dataType: "json",
-      url: "list_patients.php",
+      url: window.config.API_PATH + 'patients/list',
+      headers: {"Authorization": "Bearer " + window.storage.get('token')},
       data: { partial_name: searchTerm },
       success: function(data){
-        handleResults(data, $reference);
+        handleResults(data.data, $reference);
       },
       complete: function(){
         searchTimeout = 0;

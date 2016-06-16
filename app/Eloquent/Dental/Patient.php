@@ -141,4 +141,35 @@ class Patient extends Model implements Resource, Repository
             ->where('p.docid', $docId)
             ->first();
     }
+
+    public function getListPatients($docId = 0, $names)
+    {
+        if (empty($names[0])) {
+            $names[0] = '';
+        }
+
+        if (empty($names[1])) {
+            $names[1] = '';
+        }
+
+        if (empty($names[2])) {
+            $names[2] = '';
+        }
+
+        return $this->select(DB::raw('p.patientid, p.lastname, p.firstname, p.middlename, s.patient_info'))
+            ->from(DB::raw('dental_patients p'))
+            ->leftJoin(DB::raw('dental_patient_summary s'), 'p.patientid', '=', 's.pid')
+            ->where(function($query) use ($names) {
+                $query->where(function($query) use ($names) {
+                    $query->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", array($names[0] . '%', $names[0] . '%'))
+                        ->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", array($names[1] . '%', $names[1] . '%'));
+                })
+                ->orWhereRaw("(firstname LIKE ? AND middlename LIKE ? AND lastname LIKE ?)", array($names[0] . '%', $names[1] . '%', $names[2] . '%'));
+            })
+            ->where('p.status', '=', 1)
+            ->where('docid', '=', $docId)
+            ->orderBy('lastname')
+            ->take(12)
+            ->get();
+    }
 }

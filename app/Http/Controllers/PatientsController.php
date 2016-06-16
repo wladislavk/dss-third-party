@@ -133,4 +133,18 @@ class PatientsController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getListPatients(Patients $resources, Request $request)
+    {
+        $partialName = $request->input('partial_name') ?: '';
+        $partialName = preg_replace("[^ A-Za-z'\-]", '', $partialName);
+
+        $names = explode(' ', $partialName);
+
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getListPatients($docId, $names);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

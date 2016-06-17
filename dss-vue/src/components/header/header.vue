@@ -142,10 +142,6 @@
                 </div>
                 <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar.php">Scheduler</a>
 
-                <script type="text/javascript" src="js/task.js"></script> 
-                <script type="text/javascript" src="script/autocomplete.js"></script>
-                <script type="text/javascript" src="script/autocomplete_local.js?v=<?= time() ?>"></script>
-
                 <div style="height:89px; width:100%; background:url(assets/images/dss_01.png) #0b5c82 no-repeat top left;"> 
                     <div style="margin-top:10px; margin-left:20px; float:left;">
                         <a href="/manage" id="logo">Dashboard</a>
@@ -244,8 +240,8 @@
                             </div>
                         </div>
 
-                        <a v-if="$route.query.pid" href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'':'display:none;';?>" class="button" id="show_patient_warnings" onclick="$.cookie('hide_pat_warnings', '');$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-                        <a v-if="$route.query.pid" href="#" style="float:left; margin-left:10px;margin-top:8px;<?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'display:none':'';?>" class="button" id="hide_patient_warnings" onclick="$.cookie('hide_pat_warnings', <?php echo $_GET['pid'];?>);$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+                        <a v-if="$route.query.pid" href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="show_patient_warnings" onclick="showWarnings();$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
+                        <a v-if="$route.query.pid" href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="hide_patient_warnings" onclick="hideWarnings();$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
 
                         <div class="suckertreemenu">
                             <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">
@@ -256,34 +252,34 @@
                         <div v-if="$route.query.pid" id="patient_nav">
                             <ul>
                                 <li>
-                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" <?php {echo "href='manage_flowsheet3.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Tracker</a>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" href='manage_flowsheet3.php?pid={{ $route.query.pid }}&addtopat=1'>Tracker</a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?pid=".$_GET['pid']."&addtopat=1'";} ?>>Summary Sheet</a>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" href='dss_summ.php?pid={{ $route.query.pid }}&addtopat=1'>Summary Sheet</a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" <?php {echo "href='manage_ledger.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Ledger</a>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" href='manage_ledger.php?pid={{ $route.query.pid }}&addtopat=1'>Ledger</a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" <?php { echo "href='manage_insurance.php?pid=".$_GET["pid"]."&addtopat=1'";} ?>>Insurance</a>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" href='manage_insurance.php?pid={{ $route.query.pid }}&addtopat=1'>Insurance</a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=notes&pid=".$_GET["pid"]."&addtopat=1'";} ?>>Progress Notes</a>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" href='dss_summ.php?sect=notes&pid={{ $route.query.pid }}&addtopat=1'>Progress Notes</a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" <?php {echo "href='dss_summ.php?sect=letters&pid=".$_GET['pid']."&addtopat=1'";} ?>>Letters</a>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" href='dss_summ.php?sect=letters&pid={{ $route.query.pid }}&addtopat=1'>Letters</a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid=<?php echo  $_GET['pid'] ?>">Images</a>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" href="q_image.php?pid={{ $route.query.pid }}">Images</a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Questionnaire</a>
+                                    <a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" href="q_page1.php?pid={{ $route.query.pid }}&addtopat=1">Questionnaire</a>
                                 </li>
                                 <li>
-                                    <a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid=<?php echo  $_GET['pid'] ?>&addtopat=1">Clinical Exam</a>
+                                    <a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid={{ $route.query.pid }}&addtopat=1">Clinical Exam</a>
                                 </li>
                                 <li class="last">
-                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/add_patient.php')?'nav_active':'';?>" href="add_patient.php?ed=<?php echo  $_GET['pid'] ?>&addtopat=1&pid=<?php echo  $_GET['pid'] ?>">Patient Info</a>
+                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/add_patient.php')?'nav_active':'';?>" href="add_patient.php?ed={{ $route.query.pid }}&addtopat=1&pid={{ $route.query.pid }}">Patient Info</a>
                                 </li>
                             </ul>
                         </div>
@@ -301,13 +297,7 @@
                     <div v-if="$route.query.pid" style="float:right;width:300px;"></div>
                     <br />
 
-                    <?php if(isset($_COOKIE['hide_pat_warnings']) && (!isset($_GET['pid']) || $_COOKIE['hide_pat_warnings'] != $_GET['pid'])) { ?>
-                        <script type="text/javascript">
-                            $.cookie('hide_pat_warnings', '');
-                        </script>
-                    <?php } ?>
-
-                    <div v-if="$route.query.pid" id="patient_warnings" <?php echo  (!empty($_COOKIE['hide_pat_warnings']) && $_COOKIE['hide_pat_warnings'] == $_GET['pid'])?'style="display:none;"':'';?>>
+                    <div v-if="$route.query.pid" id="patient_warnings" {{ showAllWarnings ? 'style="display:none;"' :'' }}>
                         <a v-if="showWarningAboutPatientChanges" class="warning" href="patient_changes.php?pid={{ $route.query.pid }}">
                             <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
                         </a>

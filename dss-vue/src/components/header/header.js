@@ -68,7 +68,8 @@ module.exports = {
             bouncedEmailsNumberForCurrentPatient : 0,
             showWarningAboutBouncedEmails        : false,
             rejectedClaimsForCurrentPatient      : [],
-            uncompletedHomeSleepTests            : []
+            uncompletedHomeSleepTests            : [],
+            showAllWarnings                      : false
         }
     },
     created: function() {
@@ -919,6 +920,12 @@ module.exports = {
             }
 
             return this.$http.post(window.config.API_PATH + 'home-sleep-tests/uncompleted', data);
+        },
+        showWarnings: function() {
+            this.$set('showAllWarnings', true);
+        },
+        hideWarnings: function() {
+            this.$set('showAllWarnings', false);
         }
     }
 };

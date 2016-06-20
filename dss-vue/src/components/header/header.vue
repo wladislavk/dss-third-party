@@ -29,12 +29,12 @@
                     <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
                         <h4 v-if="overdueTasks.length > 0" id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
                         <ul v-if="overdueTasks.length > 0" id="task_od_list">
-                            <li v-for="task in overdueTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <li v-on:mouseenter="onMouseEnterTaskItem" v-for="task in overdueTasks" class="task_item task_{{ task.id }}" style="clear:both;">
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <input v-on:click="onClickTaskStatus" type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -51,7 +51,7 @@
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <input v-on:click="onClickTaskStatus" type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -68,7 +68,7 @@
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <input v-on:click="onClickTaskStatus" type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -85,7 +85,7 @@
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <input v-on:click="onClickTaskStatus" type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -102,7 +102,7 @@
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <input v-on:click="onClickTaskStatus" type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -119,7 +119,7 @@
                                     <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <input v-on:click="onClickTaskStatus" type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
                                 <div style="float:left; width:170px;">
                                     {{ task.due_date | moment "MM DD" }}
                                     -

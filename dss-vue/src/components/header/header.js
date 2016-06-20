@@ -926,6 +926,69 @@ module.exports = {
         },
         hideWarnings: function() {
             this.$set('showAllWarnings', false);
+        },
+        updateTaskToActive: function(id) {
+            id = id || 0;
+
+            var data = {
+                status: 1
+            };
+
+            return this.$http.put(window.config.API_PATH + 'tasks/' + id, data);
+        },
+        onClickTaskStatus: function(event) {
+            var id = event.target.value || 0;
+
+            this.updateTaskToActive(id)
+                .then(function(response) {
+                    switch (event.target.parentElement.parentElement.id) {
+                        case 'task_od_list':
+                            this.overdueTasks.$remove(this.searchItemById(this.overdueTasks, id));
+                            break;
+                        case 'task_tod_list':
+                            this.todayTasks.$remove(this.searchItemById(this.todayTasks, id));
+                            break;
+                        case 'task_tom_list':
+                            this.tomorrowTasks.$remove(this.searchItemById(this.tomorrowTasks, id));
+                            break;
+                        case 'task_tw_list':
+                            this.thisWeekTasks.$remove(this.searchItemById(this.thisWeekTasks, id));
+                            break;
+                        case 'task_nw_list':
+                            this.nextWeekTasks.$remove(this.searchItemById(this.nextWeekTasks, id));
+                            break;
+                        case 'task_lat_list':
+                            this.laterTasks.$remove(this.searchItemById(this.laterTasks, id));
+                            break;
+                        default:
+                            break;
+                    }
+
+                    this.$set('tasksNumber', --this.tasksNumber);
+                }, function(response) {
+                    console.error('updateTaskToActive [status]: ', response.status);
+                });
+        },
+        onMouseEnterTaskItem: function(event) {
+            // get id from .task_status element
+            // var id = event.target.children[1].value || 0;
+
+            event.target.children['task_extra_94'].show();
+
+            // show task_extra
+            // event.target.children[0].show();
+        },
+        searchItemById: function(data, id) {
+            id = id || 0;
+            var removeId = -1;
+
+            data.forEach(function(task, index) {
+                if (task.id == id) {
+                    removeId = index;
+                }
+            });
+
+            return removeId;
         }
     }
 };

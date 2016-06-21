@@ -92,11 +92,23 @@ if ($_POST['dispute'] == 1) { // Dispute
 } elseif ($_POST['close'] == 1) { // Close
     $newStatus = $isPrimary ? DSS_CLAIM_PAID_INSURANCE : DSS_CLAIM_PAID_SEC_INSURANCE;
 
-    if ($isPrimary && ClaimFormData::isStatus(['sent', 'efile-accepted'], $claimData['status'])) {
+    /**
+     * Legacy policy: generate secondary claim is and only if, the primary claim status is Sent or E-file Accepted
+     * New policy: generate secondary claim as long as there is no secondary claim already
+     */
+    $hasSecondaryClaim = $db->getColumn("SELECT insuranceid
+        FROM dental_insurance
+        WHERE primary_claim_id = '$claimId'
+        LIMIT 1", 'insuranceid', 0);
+    
+    if ($isPrimary && !$hasSecondaryClaim) {
+        $ledgerBalance = ledgerBalanceForPrimaryClaim($docId, $patientId, $claimId);
+
         /**
          * IF has secondary insurance AND there's amount due THEN create secondary claims
+         * Apply the same float tolerance as in ledgerBalanceQuery
          */
-        if (isOptionSelected($patientData['has_s_m_ins']) && ($amountPayment < $claimData['amount_due'])) { //secondary
+        if (isOptionSelected($patientData['has_s_m_ins']) && array_get($ledgerBalance, 'balance') > 0.005) {
             if ($patientData['p_m_ins_type'] == 1) { //medicare
                 if (isOptionSelected($patientData['s_m_ins_ass'])) { // Accept assignment of benefits
                     $alertMessages []= 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';

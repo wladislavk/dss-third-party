@@ -647,6 +647,13 @@ function ledgerBalance ($docId, Array $patientIds=[], $mailedOnly=false, $extraC
     return $balance;
 }
 
+function ledgerBalanceForPrimaryClaim ($docId, $patientId, $claimId) {
+    $claimId = intval($claimId);
+    $balance = ledgerBalance($docId, [$patientId], false, ["report.primary_claim_id = '$claimId'"]);
+
+    return $balance ? $balance[0] : [];
+}
+
 /**
  * Manage Ledger query, for a single patient
  *

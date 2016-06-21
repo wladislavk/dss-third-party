@@ -903,8 +903,8 @@ $(document).ready( function(){
       $('input[name="claim[direct_payment_authorized]"]').prop('checked', <?= $insured_signature ? 'true' : 'false' ?>);
 
 <?php
-      $total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
-      $amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
+      $total_charge = empty($total_charge) ? 0.00 : number_format($total_charge, 2);
+      $amount_paid = empty($amount_paid) ? 0.00 : number_format($amount_paid, 2);
 
       // We only calculate the dollar amounts when a new claim is created because
       // right now we aren't appending any trxns to an existing claim.

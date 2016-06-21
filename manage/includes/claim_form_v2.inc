@@ -412,9 +412,9 @@ foreach ($transactions as $array) {
  *
  * ICD indicator default relies on service dates
  */
-$total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
-$amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
-$balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
+$total_charge = empty($total_charge) ? 0.00 : number_format($total_charge, 2, '.', '');
+$amount_paid = empty($amount_paid) ? 0.00 : number_format($amount_paid, 2, '.', '');
+$balance_due = empty($balance_due) ? 0.00 : number_format($balance_due, 2, '.', '');
 
 // We only calculate the dollar amounts when a new claim is created because
 // right now we aren't appending any trxns to an existing claim.
@@ -505,10 +505,14 @@ if (!$isHistoricView && $isPending) {
     }
 
     // format calculations
-    $total_charge = number_format($total_charge, 2, '.','');
-    $amount_paid = number_format($amount_paid, 2, '.','');
-    $balance_due = number_format($balance_due, 2, '.','');
+    $total_charge = number_format($total_charge, 2, '.', '');
+    $amount_paid = number_format($amount_paid, 2, '.', '');
+    $balance_due = number_format($balance_due, 2, '.', '');
 }
+
+$total_charge = preg_replace('/[^\d\.]+/', '', $total_charge);
+$amount_paid = preg_replace('/[^\d\.]+/', '', $amount_paid);
+$balance_due = preg_replace('/[^\d\.]+/', '', $balance_due);
 
 $eResponse = [];
 $eligibleResponse = [];
@@ -2802,6 +2806,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     }
 
     $patient_status_arr = '~'.$patient_status.'~'.$work_status.'~';
+
+    $total_charge = number_format(preg_replace('/[^\d\.]+/', '', $total_charge), 2, '.', '');
+    $amount_paid = number_format(preg_replace('/[^\d\.]+/', '', $amount_paid), 2, '.', '');
 
     // Insert new claim into dental_insurance table
     if ($isNewClaim) {

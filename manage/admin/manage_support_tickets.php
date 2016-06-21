@@ -37,6 +37,8 @@ $showPerPage = $showPerPage > 0 ? $showPerPage : $countDefault;
 $currentOffset = $currentPage * $showPerPage;
 
 $queryString = [];
+$searchConditionals = [];
+$andSearchConditional = '';
 
 if ($showClosed) {
     $queryString['closed'] = 1;
@@ -44,6 +46,24 @@ if ($showClosed) {
 
 if ($showPerPage != $countDefault) {
     $queryString['count'] = $showPerPage;
+}
+
+if (isset($_GET['catid'])) {
+    $queryString['catid'] = intval($_GET['catid']);
+}
+
+if (isset($_GET['title']) && trim($_GET['title'])) {
+    $queryString['title'] = trim($_GET['title']);
+    $searchConditional['title'] = $queryString['title'];
+}
+
+if (isset($_GET['account']) && trim($_GET['account'])) {
+    $queryString['account'] = trim($_GET['account']);
+    $searchConditional['account'] = $queryString['account'];
+}
+
+if ($searchConditionals) {
+
 }
 
 if (!$showClosed) {
@@ -96,9 +116,16 @@ if (!$showClosed) {
         $sql .= " AND t.company_id = '" . intval($_SESSION['admincompanyid']) . "' ";
     }
 
-    if (isset($_GET['catid'])) {
-        $sql .= " AND t.category_id = '" . $db->escape($_GET['catid']) . "' ";
-        $queryString['catid'] = $_GET['catid'];
+    if ($queryString['catid']) {
+        $sql .= " AND t.category_id = '{$queryString['catid']}' ";
+    }
+
+    if (strlen($queryString['title'])) {
+        $sql .= " AND t.title LIKE '%" . $db->escape($queryString['title']) . "%' ";
+    }
+
+    if (strlen($queryString['account'])) {
+        $sql .= " AND CONCAT(a.first_name, ' ', a.last_name) LiKE '%" . $db->escape($queryString['account']) . "%' ";
     }
 
     $totalSql = preg_replace(
@@ -110,7 +137,7 @@ if (!$showClosed) {
     $totalTickets = $db->getColumn($totalSql, 'total', 0);
     $totalPages = $totalTickets/$showPerPage;
 
-    $sql .= " order by COALESCE(response.last_response, t.adddate) DESC LIMIT $currentOffset, $showPerPage";
+    $sql .= " ORDER BY COALESCE(response.last_response, t.adddate) DESC LIMIT $currentOffset, $showPerPage";
     $ticketList = $db->getResults($sql);
 
     ?>
@@ -120,10 +147,22 @@ if (!$showClosed) {
     <div class="page-header">
         Open Tickets
     </div>
-    <a href="manage_support_tickets.php?closed" class="btn btn-success pull-right" style="margin-left:5px">
-        View Closed Tickets
-        <span class="glyphicon glyphicon-ok-sign"></span>
-    </a>
+    <form action="?" method="get">
+        <input type="hidden" name="catid" value="<?= intval($queryString['catid']) ?>" />
+        <label for="search_title">Title:</label>
+        <input id="search_title" class="form-control input-sm input-inline" type="text" name="title"
+               value="<?= e($queryString['title']) ?>" />
+        &nbsp;
+        <label for="search_account">Account:</label>
+        <input id="search_account" class="form-control input-sm input-inline" type="text" name="account"
+               value="<?= e($queryString['account']) ?>" />
+        &nbsp;
+        <input class="btn btn-primary btn-sm" type="submit" value="Search" />
+        <a href="manage_support_tickets.php?closed=1" class="btn btn-success pull-right" style="margin-left:5px">
+            View Closed Tickets
+            <span class="glyphicon glyphicon-ok-sign"></span>
+        </a>
+    </form>
     <button onclick="loadPopup('add_ticket.php'); return false;" class="btn btn-success pull-right">
         Add Ticket
         <span class="glyphicon glyphicon-plus"></span>
@@ -225,7 +264,7 @@ if (!$showClosed) {
         }?>
         </tbody>
     </table>
-    <a href="manage_support_tickets.php?closed" class="btn btn-success pull-right" style="margin-left:5px">
+    <a href="manage_support_tickets.php?closed=1" class="btn btn-success pull-right" style="margin-left:5px">
         View Closed Tickets
         <span class="glyphicon glyphicon-ok-sign"></span>
     </a>
@@ -277,9 +316,16 @@ if (!$showClosed) {
         $sql .= " AND t.company_id = '$companyId' ";
     }
 
-    if (isset($_GET['catid'])) {
-        $sql .= " AND category_id = '" . $db->escape($_GET['catid']) . "' ";
-        $queryString['catid'] = $_GET['catid'];
+    if ($queryString['catid']) {
+        $sql .= " AND category_id = '{$queryString['catid']}' ";
+    }
+
+    if (strlen($queryString['title'])) {
+        $sql .= " AND t.title LIKE '%" . $db->escape($queryString['title']) . "%' ";
+    }
+
+    if (strlen($queryString['account'])) {
+        $sql .= " AND CONCAT(a.first_name, ' ', a.last_name) LiKE '%" . $db->escape($queryString['account']) . "%' ";
     }
 
     $totalSql = preg_replace(
@@ -291,17 +337,30 @@ if (!$showClosed) {
     $totalTickets = $db->getColumn($totalSql, 'total', 0);
     $totalPages = $totalTickets/$showPerPage;
 
-    $sql .= " order by t.adddate DESC LIMIT $currentOffset, $showPerPage";
+    $sql .= " ORDER BY t.adddate DESC LIMIT $currentOffset, $showPerPage";
     $ticketList = $db->getResults($sql);
 
     ?>
     <div class="page-header">
         Resolved
     </div>
-    <a href="manage_support_tickets.php" class="btn btn-success pull-right" style="margin-left:5px">
-        View Open Tickets
-        <span class="glyphicon glyphicon-question-sign"></span>
-    </a>
+    <form action="?" method="get">
+        <input type="hidden" name="closed" value="1" />
+        <input type="hidden" name="catid" value="<?= intval($queryString['catid']) ?>" />
+        <label for="search_title">Title:</label>
+        <input id="search_title" class="form-control input-sm input-inline" type="text" name="title"
+            value="<?= e($queryString['title']) ?>" />
+        &nbsp;
+        <label for="search_account">Account:</label>
+        <input id="search_account" class="form-control input-sm input-inline" type="text" name="account"
+            value="<?= e($queryString['account']) ?>" />
+        &nbsp;
+        <input class="btn btn-primary btn-sm" type="submit" value="Search" />
+        <a href="manage_support_tickets.php" class="btn btn-success pull-right" style="margin-left:5px">
+            View Open Tickets
+            <span class="glyphicon glyphicon-question-sign"></span>
+        </a>
+    </form>
     <?php paging($totalPages, $currentPage, http_build_query($queryString)) ?>
     <table class="sort_table table table-bordered table-hover">
         <thead>

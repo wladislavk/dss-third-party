@@ -595,7 +595,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME $patient_account_no = $claimData['patient_account_no'];
     $accept_assignment = !empty($claimData['claim']['accept_assignment_code']) ?
         $claimData['claim']['accept_assignment_code'] : '';
-    $total_charge = !empty($claimData['claim']['total_charge']) ? $claimData['claim']['total_charge'] : '';
+    $total_charge = !empty($claimData['claim']['total_charge']) ? $claimData['claim']['total_charge'] : '0.00';
     $amount_paid =
         !empty($claimData['claim']['patient_amount_paid']) ? $claimData['claim']['patient_amount_paid'] : NULL;
     $signature_physician = !empty($claimData['claim']['provider_signature_on_file']) ?
@@ -684,6 +684,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             ${$localVariable} = join(',', ${$localVariable});
         }
     }
+
+    $total_charge = number_format(preg_replace('/[^\d\.]+/', '', $total_charge), 2, '.', '');
+    $amount_paid = is_null($amount_paid) ? NULL : number_format(preg_replace('/[^\d\.]+/', '', $amount_paid), 2, '.', '');
 
     $ed_sql = "UPDATE dental_insurance SET
             payer_id = '".$db->escape($payer['id'])."',

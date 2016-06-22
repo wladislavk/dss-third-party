@@ -688,6 +688,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $total_charge = number_format(preg_replace('/[^\d\.]+/', '', $total_charge), 2, '.', '');
     $amount_paid = is_null($amount_paid) ? NULL : number_format(preg_replace('/[^\d\.]+/', '', $amount_paid), 2, '.', '');
 
+    $mailedDate = date('Y-m-d H:i:s');
+
     $ed_sql = "UPDATE dental_insurance SET
             payer_id = '".$db->escape($payer['id'])."',
             payer_name = '".$db->escape($payer['name'])."',
@@ -954,6 +956,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             other_insured_insurance_type = '" . $db->escape($other_insured_insurance_type) . "',
 
             status = '$status',
+            mailed_date = '$mailedDate',
             " . ($needsBackOfficeMarkerUpdate ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '') . "
             reject_reason = '" . $db->escape($reject_reason) . "'
         WHERE insuranceid = '$claimId'";

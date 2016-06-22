@@ -655,13 +655,19 @@ $num_pending_claims = mysqli_num_rows($pending_q);
 									</a>
 								</li>
 								<?php } ?>
-								
+
 								<li>
 									<a href="/manage/admin/franchisee_monthly.php">
 										<i class="fa fa-bell"></i>Monthly Report
 									</a>
 								</li>
-																
+								<?php if (is_super($_SESSION['admin_access']) || is_software($_SESSION['admin_access'])) { ?>
+									<li>
+										<a href="/manage/admin/frontoffice_producers.php">
+											<i class="fa fa-user"></i>Additional Producer Report
+										</a>
+									</li>
+								<?php } ?>
 							</ul>
 						</li>
 						<li>

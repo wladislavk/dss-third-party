@@ -1,3 +1,5 @@
+var taskMixin  = require('../../modules/tasks/TaskMixin.js');
+
 module.exports = {
     data: function() {
         return {
@@ -72,6 +74,7 @@ module.exports = {
             showAllWarnings                      : false
         }
     },
+    mixins: [taskMixin],
     created: function() {
         this.getCurrentUser() // get current user info
             .then(function(response) {
@@ -927,123 +930,11 @@ module.exports = {
         hideWarnings: function() {
             this.$set('showAllWarnings', false);
         },
-        updateTaskToActive: function(id) {
-            id = id || 0;
-
-            var data = {
-                status: 1
-            };
-
-            return this.$http.put(window.config.API_PATH + 'tasks/' + id, data);
-        },
-        deleteTask: function(id) {
-            id = id || 0;
-
-            return this.$http.delete(window.config.API_PATH + 'tasks/' + id);
-        },
-        onClickTaskStatus: function(event) {
-            var id = event.target.value || 0;
-
-            this.updateTaskToActive(id)
-                .then(function(response) {
-                    switch (event.target.parentElement.parentElement.id) {
-                        case 'task_od_list':
-                            this.overdueTasks.$remove(this.searchItemById(this.overdueTasks, id));
-                            break;
-                        case 'task_tod_list':
-                            this.todayTasks.$remove(this.searchItemById(this.todayTasks, id));
-                            break;
-                        case 'task_tom_list':
-                            this.tomorrowTasks.$remove(this.searchItemById(this.tomorrowTasks, id));
-                            break;
-                        case 'task_tw_list':
-                            this.thisWeekTasks.$remove(this.searchItemById(this.thisWeekTasks, id));
-                            break;
-                        case 'task_nw_list':
-                            this.nextWeekTasks.$remove(this.searchItemById(this.nextWeekTasks, id));
-                            break;
-                        case 'task_lat_list':
-                            this.laterTasks.$remove(this.searchItemById(this.laterTasks, id));
-                            break;
-                        default:
-                            break;
-                    }
-
-                    this.$set('tasksNumber', --this.tasksNumber);
-                }, function(response) {
-                    console.error('updateTaskToActive [status]: ', response.status);
-                });
-        },
-        onMouseEnterTaskItem: function(event) {
-            // get id from .task_status element
-            var id = event.target.children[1].value || 0;
-
-            event.target.children['task_extra_' + id].style.display = 'block';
-        },
-        onMouseLeaveTaskItem: function(event) {
-            // get id from .task_status element
-            var id = event.target.children[1].value || 0;
-
-            event.target.children['task_extra_' + id].style.display = 'none';
-        },
         onMouseOverPatientTaskHeader: function(event) {
             event.target.parentElement.children['pat_task_list'].style.display = 'block';
         },
         onMouseLeavePatientTaskMenu: function(event) {
             event.target.children['pat_task_list'].style.display = 'none';
-        },
-        onClickDeleteTask: function(id, event) {
-            event.preventDefault();
-
-            if (confirm('Are you sure you want to delete this task?')) {
-                id = id || 0;
-
-                this.deleteTask(id)
-                    .then(function(response) {
-                        switch (event.target.parentElement.parentElement.parentElement.id) {
-                            case 'task_od_list':
-                                this.overdueTasks.$remove(this.searchItemById(this.overdueTasks, id));
-                                break;
-                            case 'task_tod_list':
-                                this.todayTasks.$remove(this.searchItemById(this.todayTasks, id));
-                                break;
-                            case 'task_tom_list':
-                                this.tomorrowTasks.$remove(this.searchItemById(this.tomorrowTasks, id));
-                                break;
-                            case 'task_tw_list':
-                                this.thisWeekTasks.$remove(this.searchItemById(this.thisWeekTasks, id));
-                                break;
-                            case 'task_nw_list':
-                                this.nextWeekTasks.$remove(this.searchItemById(this.nextWeekTasks, id));
-                                break;
-                            case 'task_lat_list':
-                                this.laterTasks.$remove(this.searchItemById(this.laterTasks, id));
-                                break;
-                            default:
-                                break;
-                        }
-
-                        this.$set('tasksNumber', --this.tasksNumber);
-                    }, function(response) {
-                        console.error('deleteTask [status]: ', response.status);
-                    });
-            }
-        },
-        searchItemById: function(data, id) {
-            id = id || 0;
-            var removeId = -1;
-
-            data.forEach(function(task, index) {
-                if (task.id == id) {
-                    removeId = index;
-                }
-            });
-
-            if (removeId >= 0) {
-                return data[removeId];
-            } else {
-                return null;
-            }
         }
     }
 };

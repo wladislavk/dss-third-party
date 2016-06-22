@@ -216,16 +216,28 @@
                 </div>
                 <div class="home_third">
                     <h3>Tasks</h3>
-                    <div class="task_menu index_task">
+                    <div class="task_menu index_task" id="index_task_list">
                         <h4>My Tasks</h4>
                         <h4 v-if="headerInfo.overdueTasks.length > 0" style="margin-bottom:0px;color:red;" class="task_od_header">Overdue</h4>
                         <ul v-if="headerInfo.overdueTasks.length > 0" class="task_od_list">
-                            <li v-for="task in headerInfo.overdueTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <li
+                                v-on:mouseenter="onMouseEnterTaskItem"
+                                v-on:mouseleave="onMouseLeaveTaskItem"
+                                v-for="task in headerInfo.overdueTasks"
+                                class="task_item task_{{ task.id }}"
+                                style="clear:both;"
+                            >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" style="float:left; " class="task_status" value="{{ task.id }}" />
+                                <input
+                                    v-on:click="onClickTaskStatus"
+                                    type="checkbox"
+                                    style="float:left; "
+                                    class="task_status"
+                                    value="{{ task.id }}"
+                                />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -237,12 +249,24 @@
 
                         <h4 v-if="headerInfo.todayTasks.length > 0" style="margin-bottom:0px;" class="task_tod_header">Today</h4>
                         <ul v-if="headerInfo.todayTasks.length > 0" class="task_tod_list">
-                            <li v-for="task in headerInfo.todayTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <li
+                                v-on:mouseenter="onMouseEnterTaskItem"
+                                v-on:mouseleave="onMouseLeaveTaskItem"
+                                v-for="task in headerInfo.todayTasks"
+                                class="task_item task_{{ task.id }}"
+                                style="clear:both;"
+                            >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" style="float:left;" class="task_status" value="{{ task.id }}" />
+                                <input
+                                    v-on:click="onClickTaskStatus"
+                                    type="checkbox"
+                                    style="float:left;"
+                                    class="task_status"
+                                    value="{{ task.id }}"
+                                />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -254,12 +278,24 @@
 
                         <h4 v-if="headerInfo.tomorrowTasks.length > 0" style="margin-bottom:0px;" class="task_tom_header">Tomorrow</h4>
                         <ul v-if="headerInfo.tomorrowTasks.length > 0" class="task_tom_list">
-                            <li v-for="task in headerInfo.tomorrowTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <li
+                                v-on:mouseenter="onMouseEnterTaskItem"
+                                v-on:mouseleave="onMouseLeaveTaskItem"
+                                v-for="task in headerInfo.tomorrowTasks"
+                                class="task_item task_{{ task.id }}"
+                                style="clear:both;"
+                            >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" style="float:left;" class="task_status" value="{{ task.id }}" />
+                                <input
+                                    v-on:click="onClickTaskStatus"
+                                    type="checkbox"
+                                    style="float:left;"
+                                    class="task_status"
+                                    value="{{ task.id }}"
+                                />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -271,12 +307,24 @@
 
                         <h4 v-if="headerInfo.thisWeekTasks.length > 0" id="task_tw_header" class="task_tw_header">This Week</h4>
                         <ul v-if="headerInfo.thisWeekTasks.length > 0" id="task_tw_list">
-                            <li v-for="task in headerInfo.thisWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <li
+                                v-on:mouseenter="onMouseEnterTaskItem"
+                                v-on:mouseleave="onMouseLeaveTaskItem"
+                                v-for="task in headerInfo.thisWeekTasks"
+                                class="task_item task_{{ task.id }}"
+                                style="clear:both;"
+                            >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <input
+                                    v-on:click="onClickTaskStatus"
+                                    type="checkbox"
+                                    class="task_status"
+                                    style="float:left;"
+                                    value="{{ task.id }}"
+                                />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -288,12 +336,24 @@
 
                         <h4 v-if="headerInfo.nextWeekTasks.length > 0" id="task_nw_header" class="task_nw_header">Next Week</h4>
                         <ul v-if="headerInfo.nextWeekTasks.length > 0" id="task_nw_list">
-                            <li v-for="task in headerInfo.nextWeekTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <li
+                                v-on:mouseenter="onMouseEnterTaskItem"
+                                v-on:mouseleave="onMouseLeaveTaskItem"
+                                v-for="task in headerInfo.nextWeekTasks"
+                                class="task_item task_{{ task.id }}"
+                                style="clear:both;"
+                            >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <input
+                                    v-on:click="onClickTaskStatus"
+                                    type="checkbox"
+                                    class="task_status"
+                                    style="float:left;"
+                                    value="{{ task.id }}"
+                                />
                                 <div style="float:left; width:170px;">
                                     {{ task.task }}
                                     <span v-if="task.firstname && task.lastname">
@@ -305,12 +365,24 @@
 
                         <h4 v-if="headerInfo.laterTasks.length > 0" id="task_lat_header" class="task_lat_header">Later</h4>
                         <ul v-if="headerInfo.laterTasks.length > 0" id="task_lat_list">
-                            <li v-for="task in headerInfo.laterTasks" class="task_item task_{{ task.id }}" style="clear:both;">
+                            <li
+                                v-on:mouseenter="onMouseEnterTaskItem"
+                                v-on:mouseleave="onMouseLeaveTaskItem"
+                                v-for="task in headerInfo.laterTasks"
+                                class="task_item task_{{ task.id }}"
+                                style="clear:both;"
+                            >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" onclick="delete_task('{{ task.id }}')" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
-                                <input type="checkbox" class="task_status" style="float:left;" value="{{ task.id }}" />
+                                <input
+                                    v-on:click="onClickTaskStatus"
+                                    type="checkbox"
+                                    class="task_status"
+                                    style="float:left;"
+                                    value="{{ task.id }}"
+                                />
                                 <div style="float:left; width:170px;">
                                     {{ task.due_date | moment "MM DD" }}
                                     -

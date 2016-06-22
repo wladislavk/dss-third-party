@@ -37,7 +37,7 @@
                                 style="clear:both;"
                             >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
                                 <input
@@ -66,7 +66,7 @@
                                 style="clear:both;"
                             >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
                                 <input
@@ -95,7 +95,7 @@
                                 style="clear:both;"
                             >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
                                 <input
@@ -124,7 +124,7 @@
                                 style="clear:both;"
                             >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
                                 <input
@@ -153,7 +153,7 @@
                                 style="clear:both;"
                             >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
                                 <input
@@ -182,7 +182,7 @@
                                 style="clear:both;"
                             >
                                 <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                    <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                    <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                     <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                 </div>
                                 <input
@@ -264,80 +264,100 @@
                                 style="font-size:14px; font-weight:normal; color:#fff;"
                             >Tasks({{ patientTaskNumber }})</span>
                             <div class="task_list" id="pat_task_list" style="display:none;">
-                                <h4 v-if="headerInfo.patientOverdueTasks.length > 0" id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
-                                <ul v-if="headerInfo.patientOverdueTasks.length > 0" id="pat_task_od_list">
+                                <h4 v-if="headerInfo.overdueTasks.length > 0" id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
+                                <ul v-if="headerInfo.overdueTasks.length > 0" id="pat_task_od_list">
                                     <li
                                         v-on:mouseenter="onMouseEnterTaskItem"
                                         v-on:mouseleave="onMouseLeaveTaskItem"
-                                        v-for="task in headerInfo.patientOverdueTasks"
+                                        v-for="task in headerInfo.overdueTasks"
                                         class="task_item task_{{ task.id }}"
                                         style="clear:both;"
                                     >
                                         <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                            <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                            <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                             <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                         </div>
-                                        <input type="checkbox" class="task_status" value="{{ task.id }}" />
+                                        <input
+                                            v-on:click="onClickTaskStatus"
+                                            type="checkbox"
+                                            class="task_status"
+                                            value="{{ task.id }}"
+                                        />
                                         {{ task.task }}
 
                                         <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
                                     </li>
                                 </ul>
 
-                                <h4 v-if="headerInfo.patientTodayTasks.length > 0" id="pat_task_tod_header" class="task_tod_header">Today</h4>
-                                <ul v-if="headerInfo.patientTodayTasks.length > 0" id="pat_task_tod_list">
+                                <h4 v-if="headerInfo.todayTasks.length > 0" id="pat_task_tod_header" class="task_tod_header">Today</h4>
+                                <ul v-if="headerInfo.todayTasks.length > 0" id="pat_task_tod_list">
                                     <li
                                         v-on:mouseenter="onMouseEnterTaskItem"
                                         v-on:mouseleave="onMouseLeaveTaskItem"
-                                        v-for="task in headerInfo.patientTodayTasks"
+                                        v-for="task in headerInfo.todayTasks"
                                         class="task_item task_{{ task.id }}"
                                         style="clear:both;"
                                     >
                                         <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                            <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                            <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                             <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                         </div>
-                                        <input type="checkbox" class="task_status" value="{{ task.id }}" />
+                                        <input
+                                            v-on:click="onClickTaskStatus"
+                                            type="checkbox"
+                                            class="task_status"
+                                            value="{{ task.id }}"
+                                        />
                                         {{ task.task }}
 
                                         <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
                                     </li>
                                 </ul>
 
-                                <h4 v-if="headerInfo.patientTomorrowTasks.length > 0" id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
-                                <ul v-if="headerInfo.patientTomorrowTasks.length > 0" id="pat_task_tom_list">
+                                <h4 v-if="headerInfo.tomorrowTasks.length > 0" id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
+                                <ul v-if="headerInfo.tomorrowTasks.length > 0" id="pat_task_tom_list">
                                     <li
                                         v-on:mouseenter="onMouseEnterTaskItem"
                                         v-on:mouseleave="onMouseLeaveTaskItem"
-                                        v-for="task in headerInfo.patientTomorrowTasks"
+                                        v-for="task in headerInfo.tomorrowTasks"
                                         class="task_item task_{{ task.id }}"
                                         style="clear:both;"
                                     >
                                         <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                            <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                            <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                             <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                         </div>
-                                        <input type="checkbox" class="task_status" value="{{ task.id }}" />
+                                        <input
+                                            v-on:click="onClickTaskStatus"
+                                            type="checkbox"
+                                            class="task_status"
+                                            value="{{ task.id }}"
+                                        />
                                         {{ task.task }}
 
                                         <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>
                                     </li>
                                 </ul>
 
-                                <h4 v-if="headerInfo.patientFutureTasks.length > 0" id="pat_task_fut_header" class="task_fut_header">Future</h4>
-                                <ul v-if="headerInfo.patientFutureTasks.length > 0" id="pat_task_fut_list">
+                                <h4 v-if="futureTasks.length > 0" id="pat_task_fut_header" class="task_fut_header">Future</h4>
+                                <ul v-if="futureTasks.length > 0" id="pat_task_fut_list">
                                     <li
                                         v-on:mouseenter="onMouseEnterTaskItem"
                                         v-on:mouseleave="onMouseLeaveTaskItem"
-                                        v-for="task in headerInfo.patientFutureTasks"
+                                        v-for="task in futureTasks"
                                         class="task_item task_{{ task.id }}"
                                         style="clear:both;"
                                     >
                                         <div class="task_extra" id="task_extra_{{ task.id }}" >
-                                            <a href="#" v-on:click="onClickDeleteTask('{{ task.id }}', $event)" class="task_delete"></a>
+                                            <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
                                             <a href="#" onclick="loadPopup('add_task.php?id={{ task.id }}')" class="task_edit">Edit</a>
                                         </div>
-                                        <input type="checkbox" class="task_status" value="{{ task.id }}" />
+                                        <input
+                                            v-on:click="onClickTaskStatus"
+                                            type="checkbox"
+                                            class="task_status"
+                                            value="{{ task.id }}"
+                                        />
                                         {{ task.task }}
 
                                         <a v-if="task.firstname && task.lastname" href="add_patient.php?ed={{ task.patientid }}&addtopat=1&pid={{ task.patientid }}">{{ task.firstname }} {{ task.lastname }}</a>

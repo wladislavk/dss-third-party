@@ -1,3 +1,5 @@
+var taskMixin  = require('../../../modules/tasks/TaskMixin.js');
+
 module.exports = {
     el: function() {
         return '#dashboard'
@@ -55,6 +57,7 @@ module.exports = {
             showUnmailedClaims               : false
         }
     },
+    mixins: [taskMixin],
     watch: {
         'headerInfo.docInfo.homepage': 'redirectToIndex2',
         'headerInfo.user.id': function() {

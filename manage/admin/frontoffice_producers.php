@@ -60,8 +60,8 @@ $unorderedProducerList = $db->getResults("SELECT
         staff.username,
         staff.first_name,
         staff.last_name,
-        staff.docid,
         company.name AS software_company,
+        doctor.userid AS docid,
         doctor.username AS doc_username,
         doctor.first_name AS doc_first_name,
         doctor.last_name AS doc_last_name
@@ -79,7 +79,20 @@ foreach ($unorderedProducerList as $producer) {
     $currentDocId = $producer['docid'];
 
     if (!isset($orderedProducerList[$currentDocId])) {
-        $orderedProducerList[$currentDocId] = [];
+        // Add the current doctor as the first element of the list
+        $orderedProducerList[$currentDocId] = [
+            [
+                'userid' => $producer['docid'],
+                'username' => $producer['doc_username'],
+                'first_name' => $producer['doc_first_name'],
+                'last_name' => $producer['doc_last_name'],
+                'software_company' => $producer['software_company'],
+                'docid' => $producer['docid'],
+                'doc_username' => $producer['doc_username'],
+                'doc_first_name' => $producer['doc_first_name'],
+                'doc_last_name' => $producer['doc_last_name'],
+            ]
+        ];
     }
 
     $orderedProducerList[$currentDocId] []= $producer;
@@ -105,7 +118,7 @@ if ($sortBy === 'count') {
 require_once __DIR__ . '/includes/top.htm';
 
 ?>
-<h2>Producer List</h2>
+<h2>Producer List - Accounts with More than One (1) Producer</h2>
 <table class="table table-hover table-condensed">
     <thead>
         <tr>

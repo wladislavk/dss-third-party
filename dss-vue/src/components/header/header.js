@@ -38,6 +38,8 @@ module.exports = {
                     use_course       : 0,
                     use_course_staff : 0
                 },
+                tasksNumber              : 0,
+                patientTaskNumber        : 0
             },
             secondsPerDay                        : 86400,
             oldestLetter                         : 0,
@@ -52,8 +54,6 @@ module.exports = {
             patientName                          : '',
             patientTasks                         : [],
             notificationsNumber                  : 0,
-            tasksNumber                          : 0,
-            patientTaskNumber                    : 0,
             isUserDoctor                         : false,
             showOnlineCEAndSnoozleHelp           : false,
             companyLogo                          : '',
@@ -406,7 +406,7 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.tasksNumber = data.length;
+                            this.headerInfo.tasksNumber = data.length;
                         }
                     }, function(response) {
                         console.error('getTasks [status]: ', response.status);
@@ -521,12 +521,12 @@ module.exports = {
                             var data = response.data.data;
 
                             if (data) {
-                                this.patientTaskNumber = data.length;
+                                this.headerInfo.patientTaskNumber = data.length;
                             }
                         }, function(response) {
                             console.error('getPatientTasks [status]: ', response.status);
                         }).then(function(response) {
-                            if (this.patientTaskNumber > 0) {
+                            if (this.headerInfo.patientTaskNumber > 0) {
                                 this.getPatientOverdueTasks(this.$route.query.pid)
                                     .then(function(response) {
                                         var data = response.data.data;

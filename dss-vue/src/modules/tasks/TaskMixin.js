@@ -82,6 +82,7 @@ module.exports = {
                         this.headerInfo.overdueTasks.$remove(
                             this.searchItemById(this.headerInfo.overdueTasks, id)
                         );
+                        patientTask = true;
                     } else {
                         this.overdueTasks.$remove(this.searchItemById(this.overdueTasks, id));
                     }
@@ -91,6 +92,7 @@ module.exports = {
                         this.headerInfo.todayTasks.$remove(
                             this.searchItemById(this.headerInfo.todayTasks, id)
                         );
+                        patientTask = true;
                     } else {
                         this.todayTasks.$remove(this.searchItemById(this.todayTasks, id));
                     }
@@ -100,6 +102,7 @@ module.exports = {
                         this.headerInfo.tomorrowTasks.$remove(
                             this.searchItemById(this.headerInfo.tomorrowTasks, id)
                         );
+                        patientTask = true;
                     } else {
                         this.tomorrowTasks.$remove(this.searchItemById(this.tomorrowTasks, id));
                     }
@@ -109,6 +112,7 @@ module.exports = {
                         this.headerInfo.thisWeekTasks.$remove(
                             this.searchItemById(this.headerInfo.thisWeekTasks, id)
                         );
+                        patientTask = true;
                     } else {
                         this.thisWeekTasks.$remove(this.searchItemById(this.thisWeekTasks, id));
                     }
@@ -118,6 +122,7 @@ module.exports = {
                         this.headerInfo.nextWeekTasks.$remove(
                             this.searchItemById(this.headerInfo.nextWeekTasks, id)
                         );
+                        patientTask = true;
                     } else {
                         this.nextWeekTasks.$remove(this.searchItemById(this.nextWeekTasks, id));
                     }
@@ -127,11 +132,12 @@ module.exports = {
                         this.headerInfo.laterTasks.$remove(
                             this.searchItemById(this.headerInfo.laterTasks, id)
                         );
+                        patientTask = true;
                     } else {
                         this.laterTasks.$remove(this.searchItemById(this.laterTasks, id));
                     }
                     break;
-                // patient tasks
+                // patient tasks from header
                 case 'pat_task_od_list':
                     this.headerInfo.overdueTasks.$remove(
                         this.searchItemById(this.headerInfo.overdueTasks, id)
@@ -161,9 +167,9 @@ module.exports = {
             }
 
             if (!patientTask) {
-                this.$set('tasksNumber', --this.tasksNumber);
+                this.$set('headerInfo.tasksNumber', --this.headerInfo.tasksNumber);
             } else {
-                this.$set('patientTaskNumber', --this.patientTaskNumber);
+                this.$set('headerInfo.patientTaskNumber', --this.headerInfo.patientTaskNumber);
             }
         },
         searchItemById: function(data, id) {

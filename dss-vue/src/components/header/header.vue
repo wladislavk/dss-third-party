@@ -24,7 +24,7 @@
 
                 <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
                     <span id="task_header">
-                        My Tasks (<span id="task_count">{{ tasksNumber }}</span>)
+                        My Tasks (<span id="task_count">{{ headerInfo.tasksNumber }}</span>)
                     </span>
                     <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
                         <h4 v-if="overdueTasks.length > 0" id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
@@ -253,7 +253,7 @@
                         </div>
                         <div
                             v-on:mouseleave="onMouseLeavePatientTaskMenu"
-                            v-if="$route.query.pid && patientTaskNumber > 0"
+                            v-if="$route.query.pid && headerInfo.patientTaskNumber > 0"
                             class="task_menu"
                             id="pat_task_menu"
                             style="float:left; margin:10px 0 0 10px;"
@@ -262,7 +262,7 @@
                                 v-on:mouseover="onMouseOverPatientTaskHeader"
                                 id="pat_task_header"
                                 style="font-size:14px; font-weight:normal; color:#fff;"
-                            >Tasks({{ patientTaskNumber }})</span>
+                            >Tasks({{ headerInfo.patientTaskNumber }})</span>
                             <div class="task_list" id="pat_task_list" style="display:none;">
                                 <h4 v-if="headerInfo.overdueTasks.length > 0" id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
                                 <ul v-if="headerInfo.overdueTasks.length > 0" id="pat_task_od_list">

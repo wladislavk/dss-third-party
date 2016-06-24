@@ -1,3 +1,5 @@
+var moment     = require('moment');
+
 var taskMixin  = require('../../modules/tasks/TaskMixin.js');
 
 module.exports = {
@@ -131,9 +133,8 @@ module.exports = {
                                     if (this.headerInfo.pendingLetters[0].generated_date == 0) {
                                         this.oldestLetter = 0
                                     } else {
-                                        // need check if correct 
                                         this.oldestLetter = Math.floor(
-                                            (moment().valueOf() - this.headerInfo.pendingLetters[0].generated_date) / this.secondsPerDay
+                                            (moment().valueOf() - moment(this.headerInfo.pendingLetters[0].generated_date).valueOf()) / this.secondsPerDay
                                         );
                                     }
                                 });

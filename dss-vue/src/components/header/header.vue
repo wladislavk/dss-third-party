@@ -470,7 +470,6 @@
 
     <div id="backgroundPopup"></div>
 
-    <!--  <script type="text/javascript" src="js/task.js"></script>-->
     <div id="warn_logout">
         <br /><br />
 
@@ -507,7 +506,6 @@
 <script src="../../../assets/js/jquery.colorbox-min.js"></script>
 <script src="../../../assets/js/jquery.blockUI.js"></script>
 <script src="../../../assets/js/popup/popup.js"></script>
-<script src="../../../assets/js/manage/task.js"></script>
 <script src="../../../assets/js/manage/autocomplete.js"></script>
 <script src="../../../assets/js/manage/autocomplete_local.js"></script>
 

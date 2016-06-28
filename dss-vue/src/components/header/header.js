@@ -1,5 +1,6 @@
 var moment     = require('moment');
 
+var modal      = require('../modal/modal.vue');
 var taskMixin  = require('../../modules/tasks/TaskMixin.js');
 
 module.exports = {
@@ -75,6 +76,9 @@ module.exports = {
             uncompletedHomeSleepTests            : [],
             showAllWarnings                      : false
         }
+    },
+    components: {
+        'modal': modal
     },
     mixins: [taskMixin],
     created: function() {

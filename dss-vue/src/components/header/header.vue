@@ -463,12 +463,7 @@
         <!-- Stick Footer Section Here -->
     </table>
 
-    <div id="popupContact" style="width:750px;">
-        <a id="popupContactClose"><button>X</button></a>
-        <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
-    </div>
-
-    <div id="backgroundPopup"></div>
+    <modal></modal>
 
     <div id="warn_logout">
         <br /><br />
@@ -505,7 +500,7 @@
 <script src="../../../assets/js/jscal/lang/en.js"></script>
 <script src="../../../assets/js/jquery.colorbox-min.js"></script>
 <script src="../../../assets/js/jquery.blockUI.js"></script>
-<script src="../../../assets/js/popup/popup.js"></script>
+<!-- <script src="../../../assets/js/popup/popup.js"></script> -->
 <script src="../../../assets/js/manage/autocomplete.js"></script>
 <script src="../../../assets/js/manage/autocomplete_local.js"></script>
 

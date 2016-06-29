@@ -24,7 +24,7 @@ include_once "includes/constants.inc";
 <?php
 if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
 	if(!empty($_POST["ed"])){
-		$ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' , dea_number = '".s_for($_POST["dea_number"])."' where contactid='".$_POST["ed"]."'";
+		$ed_sql = "update dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for($_POST["firstname"])."', lastname = '".s_for($_POST["lastname"])."', middlename = '".s_for($_POST["middlename"])."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', status = '".s_for($_POST["status"])."', preferredcontact = '".s_for($_POST["preferredcontact"])."' where contactid='".$_POST["ed"]."'";
 		$db->query($ed_sql) or trigger_error($ed_sql." | ".mysqli_error($con), E_USER_ERROR);
 		
 		//echo $ed_sql.mysqli_error($con);
@@ -37,7 +37,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1){
 		<?
 		trigger_error("Die called", E_USER_ERROR);
 	} else {
-		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for(ucfirst($_POST["firstname"]))."', lastname = '".s_for(ucfirst($_POST["lastname"]))."', middlename = '".s_for(ucfirst($_POST["middlename"]))."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$_POST['preferredcontact']."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."', dea_number = '".s_for($_POST["dea_number"])."'";
+		$ins_sql = "insert into dental_contact set salutation = '".s_for($_POST["salutation"])."', firstname = '".s_for(ucfirst($_POST["firstname"]))."', lastname = '".s_for(ucfirst($_POST["lastname"]))."', middlename = '".s_for(ucfirst($_POST["middlename"]))."', company = '".s_for($_POST["company"])."', add1 = '".s_for($_POST["add1"])."', add2 = '".s_for($_POST["add2"])."', city = '".s_for($_POST["city"])."', state = '".s_for($_POST["state"])."', zip = '".s_for($_POST["zip"])."', phone1 = '".s_for(num($_POST["phone1"]))."', phone2 = '".s_for(num($_POST["phone2"]))."', fax = '".s_for(num($_POST["fax"]))."', email = '".s_for($_POST["email"])."', national_provider_id = '".s_for($_POST["national_provider_id"])."', qualifier = '".s_for($_POST["qualifier"])."', qualifierid = '".s_for($_POST["qualifierid"])."', greeting = '".s_for($_POST["greeting"])."', sincerely = '".s_for($_POST["sincerely"])."', contacttypeid = '".s_for($_POST["contacttypeid"])."', notes = '".s_for($_POST["notes"])."', docid='".$_SESSION['docid']."', status = '".s_for($_POST["status"])."', preferredcontact = '".$_POST['preferredcontact']."',adddate=now(),ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		$rid = $db->getInsertId($ins_sql);
 		$let_sql = "SELECT use_letters, intro_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
 		error_log($let_sql);
@@ -148,7 +148,6 @@ if(!empty($msg)){
 	$phone2 = $_POST['phone2'];
 	$fax = $_POST['fax'];
 	$email = $_POST['email'];
-	$dea_number = $_POST['dea_number'];
 	$national_provider_id = $_POST['national_provider_id'];
 	$qualifier = $_POST['qualifier'];
 	$qualifierid = $_POST['qualifierid'];
@@ -173,7 +172,6 @@ if(!empty($msg)){
 	$phone2 = st($themyarray['phone2']);
 	$fax = st($themyarray['fax']);
 	$email = st($themyarray['email']);
-	$dea_number = st($themyarray['dea_number']);
 	$national_provider_id = st($themyarray['national_provider_id']);
 	$qualifier = st($themyarray['qualifier']);
 	$qualifierid = st($themyarray['qualifierid']);
@@ -386,20 +384,6 @@ if ($ctype_my) foreach ($ctype_my as $ctype_myarray) {?>
                         </div>
                     </li>
 				</ul>
-            </td>
-        </tr>
-        <tr class="content physician">
-                <td valign="top" colspan="2" class="frmhead">
-                <ul>
-                        <li id="foli8" class="complex">
-                        <div>
-                            <span>
-                                <input id="dea_number" name="dea_number" type="text" class="field text addr tbox" value="<?= $dea_number; ?>" tabindex="11" maxlength="255" style="width:200px;" />
-                                <label for="dea_number">DEA License Number</label>
-                            </span>
-                        </div>
-                    </li>
-                                </ul>
             </td>
         </tr>
         <tr class="content physician"> 

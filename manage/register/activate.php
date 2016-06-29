@@ -55,7 +55,7 @@ if(count($q) > 0){
     <!--[if IE]>
         <link rel="stylesheet" type="text/css" href="css/login_ie.css" />
     <![endif]-->
-    <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
+    <script type="text/javascript" src="/manage/script/autocomplete.js?v=20160629"></script>
     <script type="text/javascript" src="/manage/register/js/activate.js"></script>
     <script>
         var phone = '<?php echo  substr($r['phone'], strlen($r['phone'])-2); ?>';

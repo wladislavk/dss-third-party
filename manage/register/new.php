@@ -10,7 +10,7 @@ include __DIR__ . '/includes/header.php';
 
   <script type="text/javascript" src="js/new.js"></script>
   <script type="text/javascript" src="js/patient_dob.js"></script>
-  <script type="text/javascript" src="js/autocomplete.js"></script>
+  <script type="text/javascript" src="js/autocomplete.js?v=20160629"></script>
   <script type="text/javascript" src="js/register_masks.js"></script>
   <script type="text/javascript" src="lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 

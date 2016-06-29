@@ -38,7 +38,6 @@
 		$fields[] = "status";
 		$fields[] = "referredby_info";
 		$fields[] = "referredby_notes";
-		$fields[] = "dea_number";
         $up_sql = [];
 
 		foreach($fields as $field){

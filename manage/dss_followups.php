@@ -503,7 +503,7 @@ foreach ($device_my as $device_myarray) {?>
     </tr>
     <tr>
       <td style="background: #F9FFDF;">
-        <input type="text" size="12" name="dsetadd" class="no_questionnaire" value="<?= $r['initial_device_titration_1'] ?>" />
+        <input type="text" size="12" name="dsetadd" class="no_questionnaire" value="" />
       </td>
     <tr>
       <td style="background: #E4FFCF;">

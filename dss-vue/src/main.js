@@ -43,8 +43,8 @@ var router = new VueRouter({
 */
 router.map({
     '/manage/index': {
-        component  : Index,
-        auth       : true
+        component : Index,
+        auth      : true
     }
 })
 

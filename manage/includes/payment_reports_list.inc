@@ -175,7 +175,7 @@ if (!$reports_res) {
         <? endif; ?>
         <th valign="top" class="col_head">Claim ID</th>
         <th valign="top" class="col_head <?=($sort_by == 'date') ? 'arrow_' . $sort_direction : '';?>">
-            <a href="?unviewed=<?= $is_unviewed ? 1 : 0 ?>&fid=<?= $franchiseeId ?>&sort=<?= $sort_by ?>&sortdir=<?= $sort_by == 'date' && $sort_direction == 'asc' ? 'desc' : 'asc' ?>">Generation Date (YYYY-MM-DD)</a>
+            <a href="?unviewed=<?= $is_unviewed ? 1 : 0 ?>&amp;fid=<?= $franchiseeId ?>&amp;sort=<?= $sort_by ?>&amp;sortdir=<?= $sort_by == 'date' && $sort_direction == 'asc' ? 'desc' : 'asc' ?>">Generation Date (YYYY-MM-DD)</a>
         </th>
         <th valign="top" class="col_head">Payer</th>
         <th valign="top" class="col_head">Patient</th>

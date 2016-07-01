@@ -7,6 +7,7 @@
 <?php
 
 $docId = intval($_SESSION['docid']);
+$franchiseeId = intval($_REQUEST['fid']);
 
 $page_count = 30;
 $page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 0;
@@ -17,6 +18,8 @@ $sort_by = isset($_REQUEST['sort'])  ? strtolower($_REQUEST['sort']) : 'date';
 $sort_direction = strtolower($_REQUEST['sortdir']);
 $sort_direction = (empty($sort_direction) || ($sort_direction != 'asc' && $sort_direction != 'desc')) ? 'desc' : $sort_direction;
 $sort_by_sql = '';
+
+$npiList = [];
 
 switch ($sort_by) {
     case 'date':
@@ -46,13 +49,20 @@ if ($is_unviewed) {
  *
  * Retrieve all NPIs associated to member of this office
  */
-$npiList = $db->getResults("SELECT npi, medicare_npi, service_npi, service_medicare_npi
-    FROM dental_users
-    WHERE docid = '$docId'
-        OR userid = '$docId'");
+if (empty($back_office)) {
+    $franchiseeId = $docId;
+}
 
-$npiList = $npiList ? array_flatten($npiList) : [];
-$npiList = array_filter(array_unique($npiList));
+if ($franchiseeId) {
+    $sql_user_filter = "i.docid = '$franchiseeId'";
+    $npiList = $db->getResults("SELECT npi, medicare_npi, service_npi, service_medicare_npi
+        FROM dental_users
+        WHERE docid = '$docId'
+            OR userid = '$docId'");
+
+    $npiList = $npiList ? array_flatten($npiList) : [];
+    $npiList = array_filter(array_unique($npiList));
+}
 
 if ($npiList) {
     array_walk($npiList, function (&$each) use ($db) {
@@ -105,11 +115,43 @@ if (!$reports_res) {
 ?>
 <br />
 <div class="<?=$header_class?>">
-    Payment Reports
-    <select name="show" onchange="Javascript: window.location ='<?php echo $_SERVER['PHP_SELF'];?>?unviewed=' + this.value;">
-        <option value="0" <?=!$is_unviewed ? ' selected' : '';?> >All</option>
-        <option value="1" <?=$is_unviewed ? ' selected' : '';?> >Unviewed</option>
-    </select>
+    <form name="sortfrm" method="get">
+        Payment Reports
+        <select name="show">
+            <option value="0" <?=!$is_unviewed ? ' selected' : '';?> >All</option>
+            <option value="1" <?=$is_unviewed ? ' selected' : '';?> >Unviewed</option>
+        </select>
+        &nbsp;&nbsp;&nbsp;
+
+        Account:
+        <select name="fid">
+            <option value="">Any</option>
+            <?php
+
+            if (is_super($_SESSION['admin_access'])) {
+                $franchisees = get_franchisees();
+            } elseif (is_software($_SESSION['admin_access'])) {
+                $franchisees = get_software_franchisees();
+            } elseif (is_billing($_SESSION['admin_access'])) {
+                $franchisees = get_billing_franchisees();
+            } elseif (is_hst($_SESSION['admin_access'])) {
+                $franchisees = get_hst_franchisees();
+            } else {
+                $franchisees = [];
+            }
+
+            if ($franchisees) foreach ($franchisees as $row) {
+                $selected = ($row['userid'] == $franchiseeId) ? 'selected' : ''; ?>
+                <option value="<?php echo  $row['userid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['userid'] ?>] <?php echo  $row['first_name'] ?> <?php echo  $row['last_name'] ?></option>
+            <?php } ?>
+        </select>
+        &nbsp;&nbsp;&nbsp;
+
+        <input type="hidden" name="sort" value="<?php echo $sort_by?>"/>
+        <input type="hidden" name="sortdir" value="<?php echo $sort_direction?>"/>
+        <input type="submit" value="Filter List" class="btn btn-primary">
+        <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'" class="btn btn-primary">
+    </form>
 </div>
 <br />
 <br />
@@ -133,7 +175,7 @@ if (!$reports_res) {
         <? endif; ?>
         <th valign="top" class="col_head">Claim ID</th>
         <th valign="top" class="col_head <?=($sort_by == 'date') ? 'arrow_' . $sort_direction : '';?>">
-            <a href="?unviewed=<?=$is_unviewed ? '1' : '0';?>&sort=date&sortdir=<?=($sort_by == 'date' && $sort_direction == 'asc') ? 'desc' : 'asc'; ?>">Generation Date (YYYY-MM-DD)</a>
+            <a href="?unviewed=<?= $is_unviewed ? 1 : 0 ?>&fid=<?= $franchiseeId ?>&sort=<?= $sort_by ?>&sortdir=<?= $sort_by == 'date' && $sort_direction == 'asc' ? 'desc' : 'asc' ?>">Generation Date (YYYY-MM-DD)</a>
         </th>
         <th valign="top" class="col_head">Payer</th>
         <th valign="top" class="col_head">Patient</th>

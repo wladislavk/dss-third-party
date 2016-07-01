@@ -1,4 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/../admin/includes/access.php';
+
+?>
 <style>
     .clickable_row{
         cursor: pointer;

@@ -544,22 +544,22 @@ foreach ($device_my as $device_myarray) {?>
 <?php $morning_headaches = $q_row['morning_headaches']; ?>
         <select name="morning_headaches" class="field text addr tbox" style="width:150px;">
           <option value=""></option>
-          <option value="Most Mornings" <?php if($morning_headaches == 'Most Mornings') echo " selected";?>>
+          <option value="Most Mornings" <?php if($morning_headaches == '0') echo " selected";?>>
             Most Mornings
           </option>
-          <option value="Several times per week" <?php if($morning_headaches == 'Several times per week') echo " selected";?>>
+          <option value="Several times per week" <?php if($morning_headaches == '1') echo " selected";?>>
             Several times per week
           </option>
-          <option value="Several times per month" <?php if($morning_headaches == 'Several times per month') echo " selected";?>>
+          <option value="Several times per month" <?php if($morning_headaches == '2') echo " selected";?>>
             Several times per month
           </option>
-          <option value="Occasionally" <?php if($morning_headaches == 'Occasionally') echo " selected";?>>
+          <option value="Occasionally" <?php if($morning_headaches == '3') echo " selected";?>>
             Occasionally
           </option>
-          <option value="Rarely" <?php if($morning_headaches == 'Rarely') echo " selected";?>>
+          <option value="Rarely" <?php if($morning_headaches == '3') echo " selected";?>>
             Rarely
           </option>
-          <option value="Never" <?php if($morning_headaches == 'Never') echo " selected";?>>
+          <option value="Never" <?php if($morning_headaches == '4') echo " selected";?>>
             Never
           </option>
         </select>

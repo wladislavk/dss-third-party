@@ -37,11 +37,9 @@ if (isset($_REQUEST['unviewed'])) {
 }
 
 $sql_where = '';
-$unviewed_url = '';
 
 if ($is_unviewed) {
     $sql_where = ' AND viewed != 1';
-    $unviewed_url = 'unviewed=1';
 }
 
 /**
@@ -57,8 +55,8 @@ if ($franchiseeId) {
     $sql_user_filter = "i.docid = '$franchiseeId'";
     $npiList = $db->getResults("SELECT npi, medicare_npi, service_npi, service_medicare_npi
         FROM dental_users
-        WHERE docid = '$docId'
-            OR userid = '$docId'");
+        WHERE docid = '$franchiseeId'
+            OR userid = '$franchiseeId'");
 
     $npiList = $npiList ? array_flatten($npiList) : [];
     $npiList = array_filter(array_unique($npiList));
@@ -111,6 +109,8 @@ $errors_message = '';
 if (!$reports_res) {
     $errors_message = 'No Payment Reports found';
 }
+
+$unviewed_url = "unviewed=$is_unviewed&fid=$franchiseeId&sort=$sort_by";
 
 ?>
 <br />
@@ -165,7 +165,7 @@ if (!$reports_res) {
         <tr bgColor="#ffffff">
             <td  align="right" colspan="15" class="bp">
                 Pages:
-                <? paging($pages_quantity, $page, $unviewed_url); ?>
+                <?= paging($pages_quantity, $page, "$unviewed_url&sortdir=$sort_direction"); ?>
             </td>
         </tr>
     <? endif; ?>
@@ -175,7 +175,7 @@ if (!$reports_res) {
         <? endif; ?>
         <th valign="top" class="col_head">Claim ID</th>
         <th valign="top" class="col_head <?=($sort_by == 'date') ? 'arrow_' . $sort_direction : '';?>">
-            <a href="?unviewed=<?= $is_unviewed ? 1 : 0 ?>&amp;fid=<?= $franchiseeId ?>&amp;sort=<?= $sort_by ?>&amp;sortdir=<?= $sort_by == 'date' && $sort_direction == 'asc' ? 'desc' : 'asc' ?>">Generation Date (YYYY-MM-DD)</a>
+            <a href="?<?= $unviewed_url ?>&amp;sortdir=<?= $sort_by == 'date' && $sort_direction == 'asc' ? 'desc' : 'asc' ?>">Generation Date (YYYY-MM-DD)</a>
         </th>
         <th valign="top" class="col_head">Payer</th>
         <th valign="top" class="col_head">Patient</th>

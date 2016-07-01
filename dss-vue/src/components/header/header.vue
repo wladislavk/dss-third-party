@@ -463,7 +463,8 @@
         <!-- Stick Footer Section Here -->
     </table>
 
-    <modal></modal>
+    <!-- Popup global template -->
+    <modal v-ref:modal></modal>
 
     <div id="warn_logout">
         <br /><br />
@@ -500,7 +501,6 @@
 <script src="../../../assets/js/jscal/lang/en.js"></script>
 <script src="../../../assets/js/jquery.colorbox-min.js"></script>
 <script src="../../../assets/js/jquery.blockUI.js"></script>
-<!-- <script src="../../../assets/js/popup/popup.js"></script> -->
 <script src="../../../assets/js/manage/autocomplete.js"></script>
 <script src="../../../assets/js/manage/autocomplete_local.js"></script>
 

@@ -17,19 +17,15 @@
 
         <div id="backgroundPopup" v-on:click="disable"></div>
     </div>
-
-    <button v-on:click="display('abc')">Popup</button>
 </template>
 
 <script>
     module.exports = {
         data: function() {
             return {
-                //SETTING UP OUR POPUP
-                //0 means disabled; 1 means enabled;
-                popupStatus : 0,
+                popupStatus : 0, // 0 - disabled, 1 - enabled
                 popupEdit   : false,
-                currentView : 'test'
+                currentView : 'empty'
             }
         },
         created: function() {
@@ -39,12 +35,7 @@
             this.$off('keyup');
         },
         components: {
-            'test': {
-                template: '<h1>Test</h1>'
-            },
-            'test1': {
-                template: '<h1>Test1</h1>'
-            }
+            'empty'  : { template: '' }
         },
         methods: {
             centering: function() {
@@ -68,23 +59,25 @@
                     "height": windowHeight
                 });
             },
-            display: function(view) {
-                this.centering();
+            display: function(component) {
+                if (this.hasComponent(component)) {
+                    this.centering();
 
-                this.popupEdit = false;
+                    // this.popupEdit = false;
 
-                this.currentView = view;
-                this.popupEdit = true;
+                    this.currentView = component;
+                    this.popupEdit   = true;
 
-                //loads popup only if it is disabled
-                if (this.popupStatus == 0) {
-                    $("#backgroundPopup").css({
-                        "opacity": "0.7"
-                    });
-                    $("#backgroundPopup").fadeIn("slow");
-                    $("#popupContact").fadeIn("slow");
+                    //loads popup only if it is disabled
+                    if (this.popupStatus == 0) {
+                        $("#backgroundPopup").css({
+                            "opacity": "0.7"
+                        });
+                        $("#backgroundPopup").fadeIn("slow");
+                        $("#popupContact").fadeIn("slow");
 
-                    this.popupStatus = 1;
+                        this.popupStatus = 1;
+                    }
                 }
             },
             disable: function() {
@@ -100,14 +93,22 @@
                         $("#backgroundPopup").fadeOut("slow");
                         $("#popupContact").fadeOut("slow");
                         this.popupStatus = 0;
-
-                        $('#modal-content').empty();
+                        this.currentView = 'empty';
                     }
                 }
             },
             onKeyUp: function(e) {
                 if (e.keyCode == 27 && this.popupStatus == 1) {
                     this.disable();
+                }
+            },
+            hasComponent: function(component) {
+                var existedComponents = Object.keys(this.$options.components.__proto__);
+
+                if (existedComponents.indexOf(component) > -1) {
+                    return true;
+                } else {
+                    return false;
                 }
             }
         }

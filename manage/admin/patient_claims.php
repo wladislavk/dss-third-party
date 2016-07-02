@@ -220,13 +220,13 @@ $sql = "SELECT
         WHEN '" . DSS_CLAIM_PAID_SEC_INSURANCE . "' THEN 9
         WHEN '" . DSS_CLAIM_PAID_PATIENT . "' THEN 10
         WHEN '" . DSS_CLAIM_PAID_SEC_PATIENT . "' THEN 11
-    END AS status_order
+    END AS status_order,
+    c.name AS billing_name
     ";
 
 if (is_super($_SESSION['admin_access'])) {
     $sql .= ",
             $filedByBackOfficeConditional AS filed_by_bo,
-            c.name AS billing_name,
             (
                 SELECT COUNT(id)
                 FROM dental_claim_notes

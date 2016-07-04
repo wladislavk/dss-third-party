@@ -7,13 +7,28 @@ include_once 'includes/claim_functions.php';
 include_once 'includes/invoice_functions.php';
 include_once '../includes/claim_functions.php';
 
-if(isset($_GET['upstatus'])){
-  $old_sql = "SELECT status FROM dental_insurance WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
-  $old_q = mysqli_query($con,$old_sql);
-  $old = mysqli_fetch_assoc($old_q);
-  $sql = "UPDATE dental_insurance SET status='".mysqli_real_escape_string($con,$_GET['upstatus'])."' WHERE insuranceid='".mysqli_real_escape_string($con,$_GET['insid'])."'";
-  mysqli_query($con,$sql);
-  claim_status_history_update($_GET['ins_id'], $old['status'], $_GET['upstatus'], '', $_SESSION['adminuserid']);
+if (isset($_GET['upstatus'])) {
+    $claimId = intval($_GET['insid']);
+    $proposedStatus = $_GET['upstatus'];
+
+    $oldStatus = $db->getColumn("SELECT status
+        FROM dental_insurance
+        WHERE insuranceid = '$claimId'", 'status');
+
+    $oldStatusName = ClaimFormData::statusName($oldStatus);
+    $proposedStatusName = ClaimFormData::statusName($proposedStatus);
+
+    if ($proposedStatusName && $proposedStatusName != $oldStatusName) {
+        $possibleStatuses = ClaimFormData::statusListByStatus($proposedStatus);
+        $newStatus = ClaimFormData::isPrimary($oldStatus) ?
+            $possibleStatuses[$proposedStatusName][0] : $possibleStatuses[$proposedStatusName][1];
+
+        $db->query("UPDATE dental_insurance
+            SET status = '$newStatus'
+            WHERE insuranceid = '$claimId'");
+
+        claim_status_history_update($claimId, $newStatus, $oldStatus, '', $_SESSION['adminuserid']);
+    }
 }
 
 

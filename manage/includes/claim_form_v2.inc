@@ -4,6 +4,7 @@ namespace Ds3\Libraries\Legacy;
 $is_front_office = empty($is_back_office);
 
 require_once __DIR__ . '/../admin/includes/claim_functions.php';
+require_once __DIR__ . '/../admin/includes/claim-status-switcher.inc';
 
 $isHistoricView = !empty($isHistoricView) || isset($_GET['history_id']);
 $historyId = intval($_GET['history_id']);
@@ -631,6 +632,7 @@ $otherRelationships = [
         <?php } ?>
     </div>
 
+    <?php claimStatusSwitcher($claimId) ?>
     <?php echo (!empty($msg) ? $msg : ''); ?>
 
     <h4>

@@ -74,6 +74,24 @@
 				});
 				$('.contact_add').click(function(){
                                         show_referredby(cid, partial_name);
+
+                    var $this = $(this),
+                        $container = $this.closest('.dp75'),
+                        $wrapper = $container.closest('#register');
+
+                    if (!$container.length || !$wrapper.length) {
+                        return;
+                    }
+
+                    $container.css({
+                        height: $wrapper.outerHeight(),
+                        'overflow-y': 'auto'
+                    });
+
+                    $container.find('.cf').css({
+                        'clear': 'both',
+                        padding: '15px 0'
+                    });
                                 });
 
                 },

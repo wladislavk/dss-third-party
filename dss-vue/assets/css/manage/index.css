@@ -1,0 +1,39 @@
+.home_third {
+  width: 30%;
+  float: left;
+  padding: 0 1%;
+  margin: 0;
+  border-left: 2px solid #095D81;
+  min-height: 400px; 
+}
+
+.home_third h3 {
+  font-family: "Times", serif;
+  color:#095D81;
+  font-size: 32px;
+  width: 100%;
+  text-align: center;
+  margin-top: 0px;
+}
+
+.home_menu {
+  padding-left: 15px;
+}
+
+.home_menu a {
+  padding: 3px 0;
+  display: block;
+  font-size: 16px;
+}
+
+.arrow_right {
+	width: 0; 
+	height: 0; 
+	float: right;
+  margin-top: 15px;
+  margin-right: 10px;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	
+	border-left: 10px solid #666;
+}

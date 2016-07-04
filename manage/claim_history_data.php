@@ -82,6 +82,9 @@ jQuery(function($){
             <?= ucwords(str_replace('_', ' ', $w_r['event_type'])) ?> on
             <?= $w_r['adddate'] ?>
           </h3>
+          <p>
+              <strong>Reference ID:</strong> <?= strlen($w_r['reference_id']) ? e($w_r['reference_id']) : '<i>Not set</i>' ?>
+          </p>
 
           <?php if ($w_r['event_type'] !== 'claim_created') { ?>
             <p>
@@ -102,6 +105,9 @@ jQuery(function($){
     ?>
 
 		<h3>Claim Electronically filed on <?php echo  $r['adddate']; ?></h3>
+      <p>
+          <strong>Reference ID:</strong> <?= strlen($r['reference_id']) ? e($r['reference_id']) : '<i>Not set</i>' ?>
+      </p>
 		<?php
  			$d = json_decode($r['response']);
       if (!empty($d)) {

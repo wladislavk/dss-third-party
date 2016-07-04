@@ -186,14 +186,29 @@ $num_users = mysqli_num_rows($my);
 		group by u.username
 ";
 $screen_q = mysqli_query($con,$screen_sql);
-$sleepstudies = "SELECT count(ss.id) as num_ss FROM dental_summ_sleeplab ss                                 
-                        JOIN dental_patients p on ss.patiendid=p.patientid                        
-                WHERE                                 
-                        (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
-                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
-                        ss.filename IS NOT NULL AND p.docid = '".$myarray['userid']."'
-			AND str_to_date(ss.date, '%m/%d/%Y') BETWEEN '".$start_date."' AND '".$end_date."' 
-		;";
+$sleepstudies = "SELECT count(ss.id) as num_ss
+    FROM dental_summ_sleeplab ss
+        JOIN dental_patients p on ss.patiendid = p.patientid
+    WHERE (
+            p.p_m_ins_type != '1'
+            OR (
+                COALESCE(ss.diagnosising_doc, '') != ''
+                AND COALESCE(ss.diagnosising_npi, '') != ''
+            )
+        )
+        AND COALESCE(ss.diagnosis, '') != ''
+        AND ss.filename IS NOT NULL
+        AND p.docid = '".$myarray['userid']."'
+        AND COALESCE(
+            STR_TO_DATE(ss.date, '%m/%d/%Y'),
+            STR_TO_DATE(ss.date, '%m/%d/%y'),
+            STR_TO_DATE(ss.date, '%Y%m%d'),
+            STR_TO_DATE(ss.date, '%m-%d-%Y'),
+            STR_TO_DATE(ss.date, '%m-%d-%y'),
+            STR_TO_DATE(ss.date, '%m%d%Y'),
+            STR_TO_DATE(ss.date, '%m%d%y')
+        ) BETWEEN '$start_date' AND '$end_date'
+        ";
   $ss_q = mysqli_query($con,$sleepstudies);
   $ss = mysqli_fetch_assoc($ss_q);
 

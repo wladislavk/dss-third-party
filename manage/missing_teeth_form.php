@@ -130,7 +130,7 @@ $mob_arr = explode('~',$mob);
 	<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
 	<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
 	<script type="text/javascript" src="script/validation.js"></script>
-	<script type="text/javascript" src="js/missing_teeth_form.js"></script>
+	<script type="text/javascript" src="js/missing_teeth_form.js?v=20160524"></script>
 </head>
 <body>
 
@@ -272,9 +272,9 @@ $mob_arr = explode('~',$mob);
 											<tr>
 												<td id="missing_cell_<?php echo $i;?>" valign="top" align="center">
 												<?php if($miss == 1) {?>
-													<img class="tooth_image" id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>_red.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />	
+													<img class="tooth_image" id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>_red.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
 												<?php }else{?>
-													<img id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
+													<img class="tooth_image" id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
 												<?php }?>
 												</td>
 											</tr>
@@ -318,9 +318,9 @@ $mob_arr = explode('~',$mob);
 											<tr>
 												<td valign="top" align="center">
 												<?php if($miss == 1) {?>
-													<img src="missing_teeth/<?php echo $i;?>_red.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />	
+													<img class="tooth_image" id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>_red.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
 												<?php }else{ ?>
-													<img src="missing_teeth/<?php echo $i;?>.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
+													<img class="tooth_image" id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
 												<?php }?>
 												</td>
 											</tr>
@@ -414,9 +414,9 @@ $mob_arr = explode('~',$mob);
 											<tr>
 												<td valign="top" align="center">
 												<?php if($miss == 1) {?>
-													<img src="missing_teeth/<?php echo $i;?>_red.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />	
+													<img class="tooth_image" id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>_red.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
 												<?php }else{?>
-													<img src="missing_teeth/<?php echo $i;?>.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
+													<img class="tooth_image" id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
 												<?php }?>
 												</td>
 											</tr>
@@ -464,9 +464,9 @@ $mob_arr = explode('~',$mob);
 											<tr>
 												<td valign="top" align="center">
 												<?php if($miss == 1) {?>
-													<img src="missing_teeth/<?php echo $i;?>_red.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />	
+													<img class="tooth_image" id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>_red.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
 												<?php }else{?>
-													<img src="missing_teeth/<?php echo $i;?>.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
+													<img class="tooth_image" id="missing_<?php echo $i;?>" src="missing_teeth/<?php echo $i;?>.png" width="33" height="60" border="0" alt="<?php echo $i;?>" />
 												<?php }?>
 												</td>
 											</tr>

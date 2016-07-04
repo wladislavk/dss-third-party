@@ -339,8 +339,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][0]['procedure_modifiers'][2] : '';
     $modifier1_4 = !empty($claimData['claim']['service_lines'][0]['procedure_modifiers'][3]) ?
         $claimData['claim']['service_lines'][0]['procedure_modifiers'][3] : '';
-    $diagnosis_pointer1 = !empty($claimData['claim']['service_lines'][0]['diagnosis_pointers']) ?
-        $claimData['claim']['service_lines'][0]['diagnosis_pointers'] : '';
+    $diagnosis_pointer1 = !empty($claimData['claim']['service_lines'][0]['diagnosis_code_pointers']) ?
+        $claimData['claim']['service_lines'][0]['diagnosis_code_pointers'] : '';
     $s_charges1_1 = !empty($claimData['claim']['service_lines'][0]['charge_amount']) ?
         $claimData['claim']['service_lines'][0]['charge_amount'] : '';
     $days_or_units1 = !empty($claimData['claim']['service_lines'][0]['units']) ?
@@ -384,8 +384,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][1]['procedure_modifiers'][2] : '';
     $modifier2_4 = !empty($claimData['claim']['service_lines'][1]['procedure_modifiers'][3]) ?
         $claimData['claim']['service_lines'][1]['procedure_modifiers'][3] : '';
-    $diagnosis_pointer2 = !empty($claimData['claim']['service_lines'][1]['diagnosis_pointers']) ?
-        $claimData['claim']['service_lines'][1]['diagnosis_pointers'] : '';
+    $diagnosis_pointer2 = !empty($claimData['claim']['service_lines'][1]['diagnosis_code_pointers']) ?
+        $claimData['claim']['service_lines'][1]['diagnosis_code_pointers'] : '';
     $s_charges2_1 = !empty($claimData['claim']['service_lines'][1]['charge_amount']) ?
         $claimData['claim']['service_lines'][1]['charge_amount'] : '';
     $days_or_units2 = !empty($claimData['claim']['service_lines'][1]['units']) ?
@@ -428,8 +428,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][2]['procedure_modifiers'][2] : '';
     $modifier3_4 = !empty($claimData['claim']['service_lines'][2]['procedure_modifiers'][3]) ?
         $claimData['claim']['service_lines'][2]['procedure_modifiers'][3] : '';
-    $diagnosis_pointer3 = !empty($claimData['claim']['service_lines'][2]['diagnosis_pointers']) ?
-        $claimData['claim']['service_lines'][2]['diagnosis_pointers'] : '';
+    $diagnosis_pointer3 = !empty($claimData['claim']['service_lines'][2]['diagnosis_code_pointers']) ?
+        $claimData['claim']['service_lines'][2]['diagnosis_code_pointers'] : '';
     $s_charges3_1 = !empty($claimData['claim']['service_lines'][2]['charge_amount']) ?
         $claimData['claim']['service_lines'][2]['charge_amount'] : '';
     $days_or_units3 = !empty($claimData['claim']['service_lines'][2]['units']) ?
@@ -472,8 +472,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][3]['procedure_modifiers'][2] : '';
     $modifier4_4 = !empty($claimData['claim']['service_lines'][3]['procedure_modifiers'][3]) ?
         $claimData['claim']['service_lines'][3]['procedure_modifiers'][3] : '';
-    $diagnosis_pointer4 = !empty($claimData['claim']['service_lines'][3]['diagnosis_pointers']) ?
-        $claimData['claim']['service_lines'][3]['diagnosis_pointers'] : '';
+    $diagnosis_pointer4 = !empty($claimData['claim']['service_lines'][3]['diagnosis_code_pointers']) ?
+        $claimData['claim']['service_lines'][3]['diagnosis_code_pointers'] : '';
     $s_charges4_1 = !empty($claimData['claim']['service_lines'][3]['charge_amount']) ?
         $claimData['claim']['service_lines'][3]['charge_amount'] : '';
     $days_or_units4 = !empty($claimData['claim']['service_lines'][3]['units']) ?
@@ -516,8 +516,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][4]['procedure_modifiers'][2] : '';
     $modifier5_4 = !empty($claimData['claim']['service_lines'][4]['procedure_modifiers'][3]) ?
         $claimData['claim']['service_lines'][4]['procedure_modifiers'][3] : '';
-    $diagnosis_pointer5 = !empty($claimData['claim']['service_lines'][4]['diagnosis_pointers']) ?
-        $claimData['claim']['service_lines'][4]['diagnosis_pointers'] : '';
+    $diagnosis_pointer5 = !empty($claimData['claim']['service_lines'][4]['diagnosis_code_pointers']) ?
+        $claimData['claim']['service_lines'][4]['diagnosis_code_pointers'] : '';
     $s_charges5_1 = !empty($claimData['claim']['service_lines'][4]['charge_amount']) ?
         $claimData['claim']['service_lines'][4]['charge_amount'] : '';
     $days_or_units5 = !empty($claimData['claim']['service_lines'][4]['units']) ?
@@ -560,8 +560,8 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         $claimData['claim']['service_lines'][5]['procedure_modifiers'][2] : '';
     $modifier6_4 = !empty($claimData['claim']['service_lines'][5]['procedure_modifiers'][3]) ?
         $claimData['claim']['service_lines'][5]['procedure_modifiers'][3] : '';
-    $diagnosis_pointer6 = !empty($claimData['claim']['service_lines'][5]['diagnosis_pointers']) ?
-        $claimData['claim']['service_lines'][5]['diagnosis_pointers'] : '';
+    $diagnosis_pointer6 = !empty($claimData['claim']['service_lines'][5]['diagnosis_code_pointers']) ?
+        $claimData['claim']['service_lines'][5]['diagnosis_code_pointers'] : '';
     $s_charges6_1 = !empty($claimData['claim']['service_lines'][5]['charge_amount']) ?
         $claimData['claim']['service_lines'][5]['charge_amount'] : '';
     $days_or_units6 = !empty($claimData['claim']['service_lines'][5]['units']) ?
@@ -595,7 +595,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     // NO NAME $patient_account_no = $claimData['patient_account_no'];
     $accept_assignment = !empty($claimData['claim']['accept_assignment_code']) ?
         $claimData['claim']['accept_assignment_code'] : '';
-    $total_charge = !empty($claimData['claim']['total_charge']) ? $claimData['claim']['total_charge'] : '';
+    $total_charge = !empty($claimData['claim']['total_charge']) ? $claimData['claim']['total_charge'] : '0.00';
     $amount_paid =
         !empty($claimData['claim']['patient_amount_paid']) ? $claimData['claim']['patient_amount_paid'] : NULL;
     $signature_physician = !empty($claimData['claim']['provider_signature_on_file']) ?
@@ -674,7 +674,21 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
         $codeIndex = count($codeIndex) ? array_shift($codeIndex) : false;
         ${$localVariable} = $codeIndex !== false ? $codes[$codeIndex] : null;
+
+        $localVariable = "s_charges{$n}_1";
+        ${$localVariable} = preg_replace('/[^\d\.]+/', '', ${$localVariable});
+
+        $localVariable = "diagnosis_pointer{$n}";
+
+        if (is_array(${$localVariable})) {
+            ${$localVariable} = join(',', ${$localVariable});
+        }
     }
+
+    $total_charge = number_format(preg_replace('/[^\d\.]+/', '', $total_charge), 2, '.', '');
+    $amount_paid = is_null($amount_paid) ? NULL : number_format(preg_replace('/[^\d\.]+/', '', $amount_paid), 2, '.', '');
+
+    $mailedDate = date('Y-m-d H:i:s');
 
     $ed_sql = "UPDATE dental_insurance SET
             payer_id = '".$db->escape($payer['id'])."',
@@ -942,6 +956,7 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             other_insured_insurance_type = '" . $db->escape($other_insured_insurance_type) . "',
 
             status = '$status',
+            mailed_date = '$mailedDate',
             " . ($needsBackOfficeMarkerUpdate ? "p_m_dss_file = '$filedByBackOfficeMarker'," : '') . "
             reject_reason = '" . $db->escape($reject_reason) . "'
         WHERE insuranceid = '$claimId'";
@@ -987,11 +1002,19 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $eligibleData['api_key'] = $apiKey; //Setting your api key
 
     // If the diagnosis codes array is not zero based, the array will be encoded as a JSON object
-    if (isset($eligibleData['claim']) && isset($eligibleData['claim']['diagnosis_codes'])) {
-        if (is_array($eligibleData['claim']['diagnosis_codes'])) {
-            $eligibleData['claim']['diagnosis_codes'] = array_values($eligibleData['claim']['diagnosis_codes']);
-        } else {
-            $eligibleData['claim']['diagnosis_codes'] = array();
+    if (isset($eligibleData['claim'])) {
+        if (isset($eligibleData['claim']['diagnosis_codes'])) {
+            if (is_array($eligibleData['claim']['diagnosis_codes'])) {
+                $eligibleData['claim']['diagnosis_codes'] = array_values($eligibleData['claim']['diagnosis_codes']);
+            } else {
+                $eligibleData['claim']['diagnosis_codes'] = [];
+            }
+        }
+
+        if (isset($eligibleData['claim']['service_lines']) && is_array($eligibleData['claim']['service_lines'])) {
+            array_walk($eligibleData['claim']['service_lines'], function (&$each) {
+                $each['diagnosis_code_pointers'] = array_values($each['diagnosis_code_pointers']);
+            });
         }
     }
 

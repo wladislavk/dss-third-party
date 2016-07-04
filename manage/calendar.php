@@ -119,6 +119,8 @@ function initCal() {
 	};
 
 	scheduler.templates.tooltip_text = function(start,end,event) {
+		var cat, prod, pat, phone, resource;
+
 		switch(event.category){
 			case 'follow_up':
 				cat = 'Follow-up';
@@ -160,6 +162,8 @@ foreach ($p_query as $p) {?>
 				break;
 <?php
 }?>
+			default:
+				resource = 'None';
 		}
 		switch(event.patient){
 <?php
@@ -168,14 +172,30 @@ $p_query = $db->getResults($p_sql);
 foreach ($p_query as $p) {?>
 			case '<?php echo $p["patientid"]; ?>':
 				pat = '<?php echo addslashes($p["firstname"])." ".addslashes($p["lastname"]); ?>';
+				phone = {
+					home: '<?= format_phone($p['home_phone']) ?>',
+					cell: '<?= format_phone($p['cell_phone']) ?>',
+					work: '<?= format_phone($p['work_phone']) ?>',
+				};
 				break;
 <?php
 }?>
 			default:
 				pat = 'None';
+				phone = { home: '', cell: '', work: ''};
 				break;
 		}
-		return "<b>Event:</b> "+event.text+"<br/><b>Appt Type:</b> "+cat+"<br/><b>Producer:</b> "+prod+"<br/><b>Resource:</b> " + resource + "<br/><b>Patient:</b> "+pat+"<br/><b>Start date:</b> "+scheduler.templates.tooltip_date_format(start)+"<br/><b>End date:</b> "+scheduler.templates.tooltip_date_format(end);
+
+		return "<b>Event:</b> "+event.text+"<br/>" +
+			"<b>Appt Type:</b> "+cat+"<br/>" +
+			"<b>Producer:</b> "+prod+"<br/>" +
+			"<b>Resource:</b> " + resource + "<br/>" +
+			"<b>Patient:</b> "+pat+"<br/>" +
+			(phone.home.length ? "<b>Pt Home:</b> "+phone.home+"<br/>" : "") +
+			(phone.cell.length ? "<b>Pt Cell:</b> "+phone.cell+"<br/>" : "") +
+			(phone.work.length ? "<b>Pt Work:</b> "+phone.work+"<br/>" : "") +
+			"<b>Start Date:</b> "+scheduler.templates.tooltip_date_format(start)+"<br/>" +
+			"<b>End Date:</b> "+scheduler.templates.tooltip_date_format(end);
 	}
 
 	scheduler.templates.hour_scale = function(date){

@@ -7,7 +7,7 @@
 	<br /><br />
 
 	<div style="float:right; margin-right:20px;">
-		<button class="addButton" onclick="window.location.href='report_claim_aging.php'">Claim Aging</button>
+		<button class="addButton" onclick="window.location.href='report_claim_aging.php'" title="This report can take several minutes to generate">Claim Aging</button>
 		<button class="addButton" onclick="window.location.href='unpaid_patient.php'">Unpaid Patient</button>
 		<button class="addButton" onclick="window.location.href='report_day_sheet.php'">Day Sheet</button>
 		<button class="addButton" onclick="window.location.href='ledger_reconciliation.php'">Reconciliation</button>

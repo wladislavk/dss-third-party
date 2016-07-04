@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../../3rdParty/tcpdf/tcpdf.php';
 require_once __DIR__ . '/../../3rdParty/fpdi/fpdi.php';
+require_once __DIR__ . '/../../includes/constants.inc';
 
 function claim_status_history_update($insuranceid, $new, $old, $userid, $adminid=''){
 
@@ -459,14 +460,18 @@ function retrieveEClaimResponse ($claimId) {
     }
 
     // No payment, therefore search for eligible webhooks, or initial response
-    $eResponse = $db->getRow("SELECT reference_id, response, adddate
-        FROM dental_claim_electronic
-        WHERE claimid = '$claimId'
-        ORDER BY adddate DESC
-        LIMIT 1");
+    $eResponses = $db->getRow("SELECT
+            claim.status,
+            eclaim.reference_id,
+            eclaim.response,
+            eclaim.adddate
+        FROM dental_claim_electronic eclaim
+            LEFT JOIN dental_insurance claim ON claim.insuranceid = eclaim.claimid
+        WHERE eclaim.claimid = '$claimId'
+        ORDER BY eclaim.adddate DESC");
 
     // If there are no e-responses of any kind, return the default, empty response
-    if (!$eResponse) {
+    if (!$eResponses) {
         $response = [
             'type' => 'none',
             'data' => []
@@ -475,14 +480,30 @@ function retrieveEClaimResponse ($claimId) {
         return $response;
     }
 
+    $eResponse = $eResponses[0];
+    $referenceIds = array_pluck($eResponses, 'reference_id');
+    $referenceIds = array_filter(array_unique($referenceIds));
+
+    /**
+     * Retrieve the latest rejection message if the claim is rejected
+     */
+    $andEventTypeConditional = in_array($eResponse['status'], [DSS_CLAIM_REJECTED, DSS_CLAIM_SEC_REJECTED]) ?
+        'AND event_type IN ("rejected", "claim_rejected")' : '';
+
     // If there is an eligible reference, search for data in webhooks
-    if ($eResponse['reference_id']) {
-        $referenceId = $db->escape($eResponse['reference_id']);
+    if ($referenceIds) {
+        $referenceIds = $db->escapeList($referenceIds);
 
         $eWebHook = $db->getRow("SELECT reference_id, event_type, adddate
             FROM dental_eligible_response
-            WHERE (reference_id != '' AND reference_id = '$referenceId')
-                OR claimid = '$claimId'
+            WHERE (
+                    (
+                        reference_id != ''
+                        AND reference_id IN ($referenceIds)
+                    )
+                    OR claimid = '$claimId'
+                )
+                $andEventTypeConditional
             ORDER BY adddate DESC
             LIMIT 1");
 
@@ -1049,7 +1070,10 @@ class ClaimFormData
                 ELSE doctor.last_name
             END AS 'provider_last_name'
         FROM dental_ledger ledger
-            JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code
+            LEFT JOIN dental_transaction_code trxn_code ON (
+                trxn_code.transaction_code = ledger.transaction_code
+                OR trxn_code.description = ledger.description
+            )
             JOIN dental_users doctor ON doctor.userid = ledger.docid
             LEFT JOIN dental_users producer ON producer.userid = ledger.producerid
             LEFT JOIN dental_place_service name_source ON name_source.place_serviceid = trxn_code.place
@@ -1060,6 +1084,7 @@ class ClaimFormData
             AND ledger.docid = '$docId'
             AND trxn_code.docid = '$docId'
             AND trxn_code.type = '$trxnTypeMed'
+        GROUP BY ledger.ledgerid
         ORDER BY ledger.service_date ASC, ledger.amount DESC, ledger.ledgerid DESC";
 
         $transactions = $db->getResults($transactionsQuery);
@@ -1355,8 +1380,18 @@ class ClaimFormData
         $claimData['patient_dob'] = $patientData['dob'];
         $claimData['patient_sex'] = $patientData['gender'];
 
-        // Not sure what these fields do
-        $claimData['p_m_dss_file'] = $patientData["{$primaryPrefix}_dss_file"];
+        // Inherit this value from the primary claim, otherwise set a default from the patient's profile
+        if ($primaryClaimId) {
+            $filedByBackOfficeIndicator = $db->getColumn("SELECT p_m_dss_file
+                FROM dental_insurance
+                WHERE insuranceid = '$primaryClaimId'", 'p_m_dss_file', 0);
+
+            $claimData['p_m_dss_file'] = in_array($filedByBackOfficeIndicator, [1, 3]) ? 3 : 0;
+        } else {
+            $claimData['p_m_dss_file'] = $patientData["{$primaryPrefix}_dss_file"];
+        }
+
+        // Not sure what this field do
         $claimData['p_m_billing_id'] = $patientData['billing_company_id'];
 
         $insuranceType = $patientData["{$primaryPrefix}_ins_type"];
@@ -1649,7 +1684,11 @@ class ClaimFormData
          * Add amount_paid if the claim is secondary
          */
         if ($sequence === 'secondary') {
-            $claimData['amount_paid'] = self::amountPaidForClaim($primaryClaimId);
+            $docId = intval($claimData['docid']);
+            $ledgerBalance = ledgerBalanceForPrimaryClaim($docId, $patientId, $primaryClaimId);
+            
+            $claimData['total_charge'] = number_format($ledgerBalance['debits'], 2, '.', '');
+            $claimData['amount_paid'] = number_format($ledgerBalance['credits'], 2, '.', '');
         }
 
         if (
@@ -2177,12 +2216,14 @@ function eligibleDetailsFromClaimId ($claimId) {
 
     $eResponse = $eResponse ?: [];
     $eligibleResponse = [];
+    $latestRejection = [];
 
     if ($eResponse) {
         $eResponse['response'] = json_decode($eResponse['response']);
 
         /**
-         * Some eligible responses don't report status changes, we need to exclude those
+         * Some eligible responses don't report status changes, we need to exclude those.
+         * Also, we need to retrieve the latest rejection response, in case we are dealing with a status mismatch.
          */
         if ($eResponse['reference_id']) {
             $referenceId = $db->escape($eResponse['reference_id']);
@@ -2200,9 +2241,18 @@ function eligibleDetailsFromClaimId ($claimId) {
 
                 if ($eDetails) {
                     $each['response']->details = $eDetails;
-                    $eligibleResponse = $each;
 
-                    break;
+                    if (!$eligibleResponse) {
+                        $eligibleResponse = $each;
+                    }
+
+                    if (in_array($each['event_type'], ['rejected', 'claim_rejected']) && !$latestRejection) {
+                        $latestRejection = $each;
+                    }
+
+                    if ($eligibleResponse && $latestRejection) {
+                        break;
+                    }
                 }
             }
         }
@@ -2210,7 +2260,8 @@ function eligibleDetailsFromClaimId ($claimId) {
 
     return [
         'e_response' => $eResponse,
-        'eligible_response' => $eligibleResponse
+        'eligible_response' => $eligibleResponse,
+        'latest_rejection' => $latestRejection
     ];
 }
 

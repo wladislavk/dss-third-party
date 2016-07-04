@@ -118,9 +118,9 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
             empty($_POST['first_name']) ||
             empty($_POST['last_name']) ||
             empty($_POST['email']) ||
-            empty($_POST['companyid']) ||
             empty($_POST['admin_access']) ||
-            empty($_POST['status'])
+            empty($_POST['status']) ||
+            ($isSuperAdmin && empty($_POST['companyid']))
         ) { ?>
             <script>
                 alert('Some required fields are missing');
@@ -151,7 +151,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 			if(is_super($_SESSION['admin_access'])){
                           mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
                           mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_POST["companyid"])."'");
-                        }elseif(is_super($_SESSION['admin_access'])){
+                        }else{
                           mysqli_query($con,"DELETE FROM admin_company WHERE adminid='".mysqli_real_escape_string($con,$_POST["ed"])."'");
                           mysqli_query($con,"INSERT INTO admin_company SET adminid='".mysqli_real_escape_string($con,$_POST["ed"])."', companyid='".mysqli_real_escape_string($con,$_SESSION["companyid"])."'");
 			}

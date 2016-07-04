@@ -49,7 +49,15 @@ if (!$isHistoricView && !empty($_POST['ex_statusbtn'])) { ?>
     </script>
     <?php
     trigger_error("Die called", E_USER_ERROR);
-} elseif (!$isHistoricView && !empty($_POST['insurancesub']) && ($_POST['insurancesub'] == 1 || !empty($_POST['ex_pagebtn']))) {
+} elseif (
+    !$isHistoricView &&
+    !empty($_POST['insurancesub']) &&
+    (
+        $_POST['insurancesub'] == 1 ||
+        !empty($_POST['ex_pagebtn']) ||
+        !empty($_POST['preserve_status'])
+    )
+) {
     // If the status is pending, then confirm changes to ledger transactions
     if ($isPending && hasLedgerTransactionsChanged($claimId, $_POST['service_lines'])) { ?>
         <script type="text/javascript">
@@ -156,6 +164,7 @@ list($insured_phone_code, $insured_phone) = parsePhoneNumber(
 );
 $insured_sex = st($claimData['insured_sex']);
 $patient_relation_insured = st($claimData['patient_relation_insured']);
+$patient_relation_other_insured = st($claimData['patient_relation_other_insured']);
 
 $patient_address = st($claimData['patient_address']);
 $patient_city = st($claimData['patient_city']);
@@ -403,9 +412,9 @@ foreach ($transactions as $array) {
  *
  * ICD indicator default relies on service dates
  */
-$total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
-$amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
-$balance_due = (empty($balance_due)) ? 0.00 : number_format($balance_due,2);
+$total_charge = empty($total_charge) ? 0.00 : number_format($total_charge, 2, '.', '');
+$amount_paid = empty($amount_paid) ? 0.00 : number_format($amount_paid, 2, '.', '');
+$balance_due = empty($balance_due) ? 0.00 : number_format($balance_due, 2, '.', '');
 
 // We only calculate the dollar amounts when a new claim is created because
 // right now we aren't appending any trxns to an existing claim.
@@ -496,10 +505,14 @@ if (!$isHistoricView && $isPending) {
     }
 
     // format calculations
-    $total_charge = number_format($total_charge, 2, '.','');
-    $amount_paid = number_format($amount_paid, 2, '.','');
-    $balance_due = number_format($balance_due, 2, '.','');
+    $total_charge = number_format($total_charge, 2, '.', '');
+    $amount_paid = number_format($amount_paid, 2, '.', '');
+    $balance_due = number_format($balance_due, 2, '.', '');
 }
+
+$total_charge = preg_replace('/[^\d\.]+/', '', $total_charge);
+$amount_paid = preg_replace('/[^\d\.]+/', '', $amount_paid);
+$balance_due = preg_replace('/[^\d\.]+/', '', $balance_due);
 
 $eResponse = [];
 $eligibleResponse = [];
@@ -507,7 +520,7 @@ $eligibleResponse = [];
 if (!$isHistoricView && $isRejected) {
     $eDescriptions = eligibleDetailsFromClaimId($claimId);
     $eResponse = $eDescriptions['e_response'];
-    $eligibleResponse = $eDescriptions['eligible_response'];
+    $eligibleResponse = $eDescriptions['latest_rejection'] ?: $eDescriptions['eligible_response'];
 }
 
 $insuranceCompanyId = intval($isSecondary ? $patientData['s_m_ins_co'] : $patientData['p_m_ins_co']);
@@ -529,6 +542,18 @@ $transactionCodes = $db->getResults("SELECT transaction_code, description
     WHERE docid = '$docId'
         AND status = 1
     ORDER BY sortby");
+
+$otherRelationships = [
+    '18' => 'Self',
+    '01' => 'Spouse',
+    '19' => 'Child',
+    'G8' => 'Other',
+    '20' => 'Employee',
+    '21' => 'Unknown',
+    '39' => 'Organ Donor',
+    '40' => 'Cadaver Donor',
+    '53' => 'Life Partner',
+];
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -702,8 +727,17 @@ if (!empty($is_back_office)){
 }
 ?>
 
-<?php if (!empty($is_front_office) && $isSent && $fdf_file!='') { ?>
-    <a href="display_fdf_v2.php?f=<?php echo $fdf_file;?>" class="print-button" >Print Claim Form</a>
+<?php if (!empty($is_front_office)) { ?>
+    <p>
+        <input type="submit" name="preserve_status" value="Modify/Reprint Claim" title="This action WILL update the CMS-1500 form, but will NOT change claim status" onclick="return false;" />
+    </p>
+    <p>
+        <?php if ($fdf_file != '') { ?>
+            <a href="/manage/display_fdf_v2.php?f=<?= rawurlencode($fdf_file) ?>" class="print-button" title="This action will NOT update the CMS-1500 form">View Printed Claim</a>
+        <?php } else { ?>
+            <a href="/manage/insurance_fdf_v2.php?insid=<?= $claimId ?>&amp;pid=<?= $patientId ?>" class="print-button" title="This action will NOT update the CMS-1500 form">View Printed Claim</a>
+        <?php } ?>
+    </p>
 <?php } ?>
 		&nbsp;&nbsp;&nbsp;
     <?php } ?>
@@ -717,6 +751,10 @@ if (!empty($is_back_office)){
                 on
                 <?= $eligibleResponse['adddate'] ?>
             </h3>
+            <p>
+                <strong>Reference ID:</strong>
+                <?= strlen($eligibleResponse['reference_id']) ? e($eligibleResponse['reference_id']) : '<i>Not set</i>' ?>
+            </p>
             <?php if (is_object($eligibleResponse['response']->details)) { ?>
                 <p>
                     Category:
@@ -741,7 +779,10 @@ if (!empty($is_back_office)){
                 Claim Electronically filed on
                 <?= $eResponse['adddate'] ?>
             </h3>
-
+            <p>
+                <strong>Reference ID:</strong>
+                <?= strlen($eResponse['reference_id']) ? e($eResponse['reference_id']) : '<i>Not set</i>' ?>
+            </p>
             <?php if ($eResponse['response']->success === 'true' || $eResponse['response']->success === true) { ?>
                 <p>
                     Success Response
@@ -1242,10 +1283,31 @@ Medicare
 				</tr>
 				<tr>
 					<td align="left" valign="top">
-						<span class="num_a">a.</span>
-						Other Insured's policy Or Group Number
-						<br />
-						<input value="<?php echo $other_insured_policy_group_feca?>" name="other_insured_policy_group_feca" type="text" class="inbox_line3" size="28"  />
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td>
+                                    <span class="num_a">a1.</span>
+                                    Other Insured's policy Or Group Number
+                                    <br />
+                                    <input value="<?= $other_insured_policy_group_feca ?>"
+                                        name="other_insured_policy_group_feca" type="text" class="inbox_line3" size="28" />
+                                </td>
+                                <td>
+                                    <span class="num_a">a2.</span>
+                                    Relationship
+                                    <br />
+                                    <select name="patient_relation_other_insured">
+                                        <option value=""></option>
+                                        <?php foreach ($otherRelationships as $code=>$label) { ?>
+                                            <option value="<?= e($code) ?>"
+                                                <?= in_array($patient_relation_other_insured, [$code, $label]) ?' selected' : '' ?>>
+                                                <?= e($label) ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
 					</td>
 					<td align="left" valign="top">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -1862,7 +1924,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
                     <?php
     
                     $pos = ($array['placeofservice'] != '') ? $array['placeofservice'] : $array['place'];
-                    $dp = ($array['diagnosispointer'] != '') ? $array['diagnosispointer'] : 1;
+                    $dp = ($array['diagnosis_code_pointers'] != '') ? explode(',', $array['diagnosis_code_pointers']) : [1];
     
                     if (!empty($placeServices)) foreach ($placeServices as $psr) { ?>
                         <option value="<?= $psr['place_service'] ?>" <?= $pos == $psr['place_service'] ? 'selected' : '' ?>>
@@ -1880,7 +1942,9 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
                     <?php foreach ($transactionCodes as $code) {
                         $description = $code['transaction_code'] .
                             ($code['description'] ? ' - ' . $code['description'] : '');
-                        $selected = in_array($array['transaction_code'], [$code['transaction_code'], $description]);
+                        $options = [$code['transaction_code'], $code['description'], $description];
+                        $selected = in_array($array['transaction_code'], $options) ||
+                            in_array($array['description'], $options);
                         ?>
                         <option value="<?= $code['transaction_code'] ?>" <?= $selected ? 'selected' : '' ?>>
                             <?= e($description) ?>
@@ -1908,7 +1972,7 @@ DATE OF CURRENT ILLNESS, INJURY, or PREGNANCY (LMP)
                             <?php for ($n=0; $n<12; $n++) { ?>
                                 <?php if ($n && !($n%4)) { ?></tr><tr class="eligibleapi claim"><?php } ?>
                                 <td class="input-center-hint checkbox-container"><input class="input" value="<?= $n + 1 ?>"
-                                    <?= $dp == ($n + 1) ? 'checked' : '' ?>
+                                    <?= in_array($n + 1, $dp) ? 'checked' : '' ?>
                                     name="service_lines[<?= $li ?>][diagnosis_code_pointers][<?= $n ?>]" type="checkbox"></td>
                                 <td class="input-side-hint"><?= chr(65 + $n) ?></td>
                             <?php } ?>
@@ -2438,29 +2502,10 @@ $('input, select').bind('change', function(){
             .css({ float: 'right', 'margin-right': '5px' })
             .appendTo('#top-banner');
 
-        $('form#claim-form').submit(function() {
-            var emptyFields = 0;
-
-            $('[name^="service_lines"]:visible:not([name*=emergency])')
-                .filter(':text, select')
-                .closest('td')
-                .each(function () {
-                    var $this = $(this),
-                        $fields = $this.find(':text:visible, select:visible'),
-                        localEmpty = 0;
-
-                    $fields.each(function () {
-                        localEmpty += +($(this).val() === '');
-                    });
-
-                    emptyFields += +(localEmpty === $fields.length);
-                });
-
-            if (emptyFields) {
-                return confirm('There are empty fields in the ledger transactions. Are you sure you want to continue?');
-            }
-
-            return true;
+        $('[name=preserve_status]')
+            .removeAttr('onclick')
+            .click(function(){
+            return confirm("This action creates a new PDF claim with updated data.\n\nThe original claim status will NOT change, but the data\nyou enter will overwrite previous claim data.\n\nProceed?");
         });
     });
 </script>
@@ -2507,13 +2552,16 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     /**
      * Status changes:
      *
+     * - IF marked to preserve the status THEN $formerStatus
      * - IF marked for rejection THEN rejected
      * - IF new claim THEN pending
      * - IF pending THEN sent
      * - IF rejected THEN sent
      * - ELSE preserve the current status
      */
-    if (isset($claimData['reject_but'])) {
+    if (!empty($claimData['preserve_status'])) {
+        $status = $formerStatus;
+    } elseif (isset($claimData['reject_but'])) {
         $status = $isFormerPrimary ? DSS_CLAIM_REJECTED : DSS_CLAIM_SEC_REJECTED;
     } elseif ($isNewClaim) {
         $status = $isFormerPrimary ? DSS_CLAIM_PENDING : DSS_CLAIM_SEC_PENDING;
@@ -2556,6 +2604,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
     $insured_lastname = $claimData['insured_lastname'];
     $insured_middle = $claimData['insured_middle'];
     $patient_relation_insured = $claimData['patient_relation_insured'];
+    $patient_relation_other_insured = $claimData['patient_relation_other_insured'];
     $insured_address = $claimData['insured_address'];
     $insured_state = $claimData['insured_state'];
     $insured_city = $claimData['insured_city'];
@@ -2658,7 +2707,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         'modifier%n%_2' => 'service_lines.%n%.procedure_modifiers.1',
         'modifier%n%_3' => 'service_lines.%n%.procedure_modifiers.2',
         'modifier%n%_4' => 'service_lines.%n%.procedure_modifiers.3',
-        'diagnosis_pointer%n%' => 'service_lines.%n%.diagnosis_code_pointers.0',
+        'diagnosis_pointer%n%' => 'service_lines.%n%.diagnosis_code_pointers',
         's_charges%n%_1' => 'service_lines.%n%.charge_amount',
         's_charges%n%_2' => '',
         'days_or_units%n%' => 'service_lines.%n%.units',
@@ -2686,8 +2735,14 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
             if (substr($localVariable, 0, 3) === 'emg') {
                 ${$localVariable} = isOptionSelected(${$localVariable});
+            } elseif (substr($localVariable, 0, 9) === 's_charges') {
+                ${$localVariable} = preg_replace('/[^\d\.]+/', '', ${$localVariable});
             } elseif (substr($localVariable, 0, 5) === 'place') {
                 ${$localVariable} = in_array(${$localVariable}, $placesOfService) ? ${$localVariable} : null;
+            } elseif (substr($localVariable, 0, 17) === 'diagnosis_pointer') {
+                if (is_array(${$localVariable})) {
+                    ${$localVariable} = join(',', ${$localVariable});
+                }
             } elseif (substr($localVariable, 0, 3) === 'cpt') {
                 /**
                  * Ensure the procedure code exists, and is associated to the docid
@@ -2752,6 +2807,9 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
 
     $patient_status_arr = '~'.$patient_status.'~'.$work_status.'~';
 
+    $total_charge = number_format(preg_replace('/[^\d\.]+/', '', $total_charge), 2, '.', '');
+    $amount_paid = number_format(preg_replace('/[^\d\.]+/', '', $amount_paid), 2, '.', '');
+
     // Insert new claim into dental_insurance table
     if ($isNewClaim) {
         $ins_sql = "INSERT INTO dental_insurance SET
@@ -2772,6 +2830,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
             insured_middle = '".$db->escape($insured_middle)."',
             patient_address = '".$db->escape($patient_address)."',
             patient_relation_insured = '".$db->escape($patient_relation_insured)."',
+            patient_relation_other_insured = '".$db->escape($patient_relation_other_insured)."',
             patient_city = '".$db->escape($patient_city)."',
             patient_state = '".$db->escape($patient_state)."',
             patient_status = '".$db->escape($patient_status_arr)."',
@@ -3020,6 +3079,7 @@ function savePaperClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         patient_phone_code = '".$db->escape($patient_phone_code)."',
         patient_phone = '".$db->escape($patient_phone)."',
         patient_relation_insured = '".$db->escape($patient_relation_insured)."',
+        patient_relation_other_insured = '".$db->escape($patient_relation_other_insured)."',
         insurance_type = '".$db->escape($insurance_type)."',
         insured_id_number = '".$db->escape($insured_id_number)."',
         insured_firstname = '".$db->escape($insured_firstname)."',

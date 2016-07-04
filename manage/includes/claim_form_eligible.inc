@@ -327,7 +327,7 @@ $eligibleResponse = [];
 if ($isRejected) {
     $eDescriptions = eligibleDetailsFromClaimId($claimId);
     $eResponse = $eDescriptions['e_response'];
-    $eligibleResponse = $eDescriptions['eligible_response'];
+    $eligibleResponse = $eDescriptions['latest_rejection'] ?: $eDescriptions['eligible_response'];
 }
 
 if ($isSecondary) {
@@ -417,6 +417,10 @@ $transactionCodes = $db->getResults("SELECT transaction_code, description
                 on
                 <?= $eligibleResponse['adddate'] ?>
             </h3>
+            <p>
+                <strong>Reference ID:</strong>
+                <?= strlen($eligibleResponse['reference_id']) ? e($eligibleResponse['reference_id']) : '<i>Not set</i>' ?>
+            </p>
             <?php if (is_object($eligibleResponse['response']->details)) { ?>
                 <p>
                     Category:
@@ -441,7 +445,10 @@ $transactionCodes = $db->getResults("SELECT transaction_code, description
                 Claim Electronically filed on
                 <?= $eResponse['adddate'] ?>
             </h3>
-
+            <p>
+                <strong>Reference ID:</strong>
+                <?= strlen($eResponse['reference_id']) ? e($eResponse['reference_id']) : '<i>Not set</i>' ?>
+            </p>
             <?php if ($eResponse['response']->success === 'true' || $eResponse['response']->success === true) { ?>
                 <p>
                     Success Response
@@ -588,6 +595,7 @@ $(document).ready( function(){
     <?php }elseif($patient_relation_insured == 'Other' || $patient_relation_insured == 'G8'){ ?>
           $('input[name="dependent[relationship]"][value="G8"]').prop('checked', true);
     <?php } ?>
+
     $('input[name="subscriber[last_name]"]').val("<?= $insured_lastname;?>");
     $('input[name="subscriber[first_name]"]').val("<?= $insured_firstname;?>");
     $('input[name="subscriber[middle_name]"]').val("<?= $insured_middle;?>");
@@ -609,6 +617,13 @@ $(document).ready( function(){
     $('input[name="other_payers[0][subscriber][group_id]"]').val("<?= $other_insured_policy_group_feca;?>");
     $('select[name="other_payers[0][responsibility_sequence]"]').val("<?php echo $responsibility_sequence ?>");
     $('select[name="other_payers[0][subscriber][insurance_type_code]"]').val(<?= json_encode($other_insured_insurance_type) ?>);
+
+    <?php if (strlen(trim($patient_relation_other_insured))) { ?>
+        $('\
+            select[name="other_payers[0][subscriber][relationship]"] option[value="<?= e($patient_relation_other_insured) ?>"],\
+            select[name="other_payers[0][subscriber][relationship]"] option:contains(<?= e($patient_relation_other_insured) ?>)\
+        ').prop('selected', true);
+    <?php } ?>
 
     <?php
 
@@ -797,7 +812,7 @@ $(document).ready( function(){
         }
 
         $pos = ($array['placeofservice']!='')?$array['placeofservice']:$array['place'];
-        $dp = ($array['diagnosispointer']!='')?$array['diagnosispointer']:1;
+        $dp = $array['diagnosis_code_pointers'] != '' ? explode(',', $array['diagnosis_code_pointers']) : [1];
     $emg = isOptionSelected($array['emg']) ? 'true' : 'false';
   ?>
         $('input[name="claim[service_lines][<?php echo $li;?>][service_date_from]"]').val("<?php echo  date('Y-m-d', strtotime($array['service_date'])); ?>");
@@ -812,7 +827,9 @@ $(document).ready( function(){
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][1]"]').val("<?php echo  $array['modcode2']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][2]"]').val("<?php echo  $array['modcode3']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][procedure_modifiers][3]"]').val("<?php echo  $array['modcode4']; ?>");
-        $('input[name="claim[service_lines][<?php echo $li;?>][diagnosis_code_pointers][<?php echo $dp-1; ?>]"]').prop('checked', true);
+        <?php foreach ($dp as $codePointer) { ?>
+            $('input[name="claim[service_lines][<?php echo $li;?>][diagnosis_code_pointers][<?= $codePointer - 1 ?>]"]').prop('checked', true);
+        <?php } ?>
         $('input[name="claim[service_lines][<?php echo $li;?>][charge_amount]"]').val("<?php echo  number_format($array['amount'], 2,'.',''); ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][units]"]').val("<?php echo  $array['daysorunits']; ?>");
         $('input[name="claim[service_lines][<?php echo $li;?>][rendering_provider][first_name]"]').val("<?php echo  $array['provider_first_name']; ?>");
@@ -886,8 +903,8 @@ $(document).ready( function(){
       $('input[name="claim[direct_payment_authorized]"]').prop('checked', <?= $insured_signature ? 'true' : 'false' ?>);
 
 <?php
-      $total_charge = (empty($total_charge)) ? 0.00 : $total_charge;
-      $amount_paid = (empty($amount_paid)) ? 0.00 : number_format($amount_paid, 2);
+      $total_charge = empty($total_charge) ? 0.00 : number_format($total_charge, 2);
+      $amount_paid = empty($amount_paid) ? 0.00 : number_format($amount_paid, 2);
 
       // We only calculate the dollar amounts when a new claim is created because
       // right now we aren't appending any trxns to an existing claim.
@@ -1040,31 +1057,6 @@ $(document).ready( function(){
       return false;
   }
   form_changed=false;
-
-$('form#claim-form').submit(function() {
-    var emptyFields = 0;
-
-    $('[name^="claim[service_lines]"]:visible:not([readonly], [name*=emergency])')
-        .filter(':text, select')
-        .closest('td')
-        .each(function () {
-            var $this = $(this),
-                $fields = $this.find(':text:visible, select:visible'),
-                localEmpty = 0;
-
-            $fields.each(function () {
-                localEmpty += +($(this).val() === '');
-            });
-
-            emptyFields += +(localEmpty === $fields.length);
-        });
-
-    if (emptyFields) {
-        return confirm('There are empty fields in the ledger transactions. Are you sure you want to continue?');
-    }
-
-    return true;
-});
 </script>
 
   <div id="change_confirm" style="display:none;top:0;height:100%;background:#fff; position:fixed; top:20px; width:100%; opacity:90%;">

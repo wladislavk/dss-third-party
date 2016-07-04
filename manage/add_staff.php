@@ -18,14 +18,7 @@ if (!$canEdit) { ?>
     <br />You do not have permissions to edit staff.
     <?php
     trigger_error("Die called", E_USER_ERROR);
-} ?>
-    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
-    <script type="text/javascript" src="/manage/includes/modal.js"></script>
-    <link rel="stylesheet" href="/manage/admin/css/jquery-ui-1.8.22.custom.css" />
-    <link rel="stylesheet" href="css/modal.css" />
-
-<?php
+}
 
 if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
     $postUserId = intval($_POST['ed']);
@@ -161,11 +154,15 @@ if (!empty($_POST["staffsub"]) && $_POST["staffsub"] == 1) {
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-        <link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
+        <link type="text/css" rel="stylesheet" href="css/admin.css?v=20160404" />
+        <link type="text/css" rel="stylesheet" href="/manage/admin/css/jquery-ui-1.8.22.custom.css" />
+        <link type="text/css" rel="stylesheet" href="css/modal.css" />
         <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
         <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
         <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
         <script type="text/javascript" src="script/validation.js"></script>
+        <script type="text/javascript" src="/manage/includes/modal.js"></script>
     </head>
 
     <body>

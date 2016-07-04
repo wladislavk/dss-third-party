@@ -399,7 +399,44 @@ if( $r['homepage'] != '1') {
     <script src="/assets/vendor/moment.js" type="text/javascript"></script>
     <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
     <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var popupWindows = {
+                education: {
+                    link: '/manage/edx_login.php',
+                    name: 'edx_help'
+                },
+                help: {
+                    link: '/manage/help_login.php',
+                    name: 'snoozle_help'
+                }
+            };
 
+            $('a[href*="education.dentalsleepsolutions.com/"], a[href*="help.dentalsleepsolutions.com/"]').click(function(){
+                var $this = $(this),
+                    link = this.href,
+                    match = link.match(/^https?:\/\/(education|help).dentalsleepsolutions.com/);
+
+                if (!match) {
+                    return true;
+                }
+
+                match = match[1];
+
+                if (typeof removeCECookies === 'function') {
+                    removeCECookies();
+                }
+
+                window.open(popupWindows[match].link, popupWindows[match].name);
+
+                setTimeout(function(){
+                    window.open(link, popupWindows[match].name);
+                }, 3500);
+
+                return false;
+            });
+        });
+    </script>
 
 <?php
   $hideallblocks = 0;
@@ -514,7 +551,7 @@ if( $r['homepage'] != '1') {
       </div>
 
       <script type="text/javascript">
-        task_function();
+        if (window.task_function) { task_function(); }
       </script>
 
       <?php

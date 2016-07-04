@@ -89,4 +89,17 @@ class DocumentCategoriesController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    /**
+     * Get active document categories.
+     *
+     * @param  \DentalSleepSolutions\Contracts\Repositories\DocumentCategories $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function active(DocumentCategories $resources)
+    {
+        $data = $resources->getActiveDocumentCategories();
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

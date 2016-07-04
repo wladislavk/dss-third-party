@@ -45,6 +45,8 @@ Route::group(['prefix' => 'session'], function () {
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
+    Route::post('users/current', 'UsersController@getCurrentUserInfo');
+    Route::post('users/course-staff', 'UsersController@getCourseStaff');
     Route::post('users/check', 'UsersController@check');
     Route::get('users/{id}/type', 'UsersController@getUserType');
     Route::resource('tasks', 'TasksController', ['except' => ['create', 'edit']]);
@@ -56,6 +58,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('diagnostics', 'DiagnosticsController', ['except' => ['create', 'edit']]);
     Route::resource('documents', 'DocumentsController', ['except' => ['create', 'edit']]);
     Route::resource('document-categories', 'DocumentCategoriesController', ['except' => ['create', 'edit']]);
+    Route::post('document-categories/active', 'DocumentCategoriesController@active');
     Route::resource('insurance-documents', 'InsuranceDocumentsController', ['except' => ['create', 'edit']]);
     Route::resource('faxes', 'FaxesController', ['except' => ['create', 'edit']]);
     Route::resource('epworth-sleepiness-scale', 'EpworthSleepinessScaleController', ['except' => ['create', 'edit']]);
@@ -134,6 +137,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
     Route::resource('change-lists', 'ChangeListsController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
+    Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
 
 
     Route::group(['prefix' => 'enrollments'], function () {

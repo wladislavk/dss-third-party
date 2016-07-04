@@ -115,4 +115,11 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
 
         return $this->instance;
     }
+
+    public function getCurrent()
+    {
+        $model = $this->getModelName();
+
+        return $model::getCurrent();
+    }
 }

@@ -130,4 +130,38 @@ class UsersController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    /**
+     * Get info about current logined user
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCurrentUserInfo(User $resource)
+    {
+        $this->currentUser->id = preg_replace('/(?:u_|a_)/', '', $this->currentUser->id);
+
+        $docId = $resource->getDocId($this->currentUser->id)->docid;
+
+        if ($docId) {
+            $this->currentUser->docid = $docId;
+        } else {
+            $this->currentUser->docid = $this->currentUser->userid;
+        }
+
+        return ApiResponse::responseOk('', $this->currentUser);
+    }
+
+    /**
+     * Get course staff of current logined user
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCourseStaff(User $resource)
+    {
+        $this->currentUser->id = preg_replace('/(?:u_|a_)/', '', $this->currentUser->id);
+
+        $data = $resource->getCourseStaff($this->currentUser->id);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

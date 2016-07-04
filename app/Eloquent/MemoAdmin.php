@@ -33,4 +33,15 @@ class MemoAdmin extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public static function getCurrent()
+    {
+        return self::current()
+            ->get();
+    }
+
+    public function scopeCurrent($query)
+    {
+        return $query->where('off_date', '<=', 'CURDATE()');
+    }
 }

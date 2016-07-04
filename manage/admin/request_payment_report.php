@@ -6,6 +6,7 @@
   include_once 'includes/invoice_functions.php';
   include_once '../includes/claim_functions.php';
 
+$redirect = !empty($_GET['redirect']) || empty($_GET['embed']);
 
   $reference_id_sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con, $_GET['insid'])."' ORDER BY adddate DESC LIMIT 1"; 
   $reference_id_query = mysqli_query($con, $reference_id_sql);
@@ -35,14 +36,10 @@
       }
 
       $ch = curl_init();
-
       curl_setopt($ch, CURLOPT_URL, $url);
-
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
       $result = curl_exec ($ch);
-      echo $result;
-
       $json_response = json_decode($result);
 
       $payment_report_sql = "INSERT INTO dental_payment_reports SET
@@ -56,9 +53,20 @@
       $message = "STATUS CHECKED.";
     }
   }
-?>
 
-<script type="text/javascript">
-   alert("<?php echo $message ?>");
-   window.location = "manage_claims.php"; 
-</script>
+if ($redirect) { ?>
+    <script type="text/javascript">
+        alert("<?= e($message) ?>");
+        window.location = "manage_claims.php";
+    </script>
+    <?php
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+require_once __DIR__ . '/includes/popup_top.htm';
+
+if (!empty($message)) { ?>
+    <h3><?= nl2br(e($message)) ?></h3>
+<?php } else { ?>
+    <h3>No new payment reports</h3>
+<?php } ?>

@@ -9,6 +9,7 @@ require_once __DIR__ . '/includes/invoice_functions.php';
 require_once __DIR__ . '/../includes/claim_functions.php';
 
 $claimId = intval($_GET['insid']);
+$redirect = !empty($_GET['redirect']) || empty($_GET['embed']);
 
 $eClaimData = $db->getRow("SELECT *
     FROM dental_claim_electronic
@@ -58,10 +59,21 @@ if ($eClaimData) {
     }
 }
 
-?>
-<script type="text/javascript">
-    <?php if (!empty($message)) { ?>
-        alert("<?= e($message) ?>");
-    <?php } ?>
-    window.location = "manage_claims.php";
-</script>
+if ($redirect) { ?>
+    <script type="text/javascript">
+        <?php if (!empty($message)) { ?>
+            alert("<?= e($message) ?>");
+        <?php } ?>
+        window.location = "manage_claims.php";
+    </script>
+    <?php
+    trigger_error('Die called', E_USER_ERROR);
+}
+
+require_once __DIR__ . '/includes/popup_top.htm';
+
+if (!empty($message)) { ?>
+    <h3><?= nl2br(e($message)) ?></h3>
+<?php } else { ?>
+    <h3>No status changes</h3>
+<?php } ?>

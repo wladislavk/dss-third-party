@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\HomeSleepTestDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\HomeSleepTest;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +89,36 @@ class HomeSleepTestsController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getUncompleted(HomeSleepTests $resources, Request $request)
+    {
+        $patientId = $request->input('patientId') ?: 0;
+
+        $data = $resources->getUncompleted($patientId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getByType($type, HomeSleepTests $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        switch ($type) {
+            case 'completed':
+                $data = $resources->getCompleted($docId);
+                break;
+            case 'requested':
+                $data = $resources->getRequested($docId);
+                break;
+            case 'rejected':
+                $data = $resources->getRejected($docId);
+                break;
+            default:
+                $data = [];
+                break;
+        }
+
+        return ApiResponse::responseOk('', $data);
     }
 }

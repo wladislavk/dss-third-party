@@ -85,4 +85,22 @@ class LettersController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getPending(Letters $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getPending($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getUnmailed(Letters $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getUnmailed($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

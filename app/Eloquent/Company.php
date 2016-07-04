@@ -7,6 +7,7 @@ use DentalSleepSolutions\Eloquent\Dental\UserCompany;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Company as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Companies as Repository;
+use DB;
 
 class Company extends Model implements Resource, Repository
 {
@@ -57,5 +58,14 @@ class Company extends Model implements Resource, Repository
     public function users()
     {
         return $this->hasMany(UserCompany::class, 'companyid');
+    }
+
+    public function getCompanyLogo($userId)
+    {
+        return $this->from(DB::raw('companies c'))
+            ->select(DB::raw('c.logo'))
+            ->join(DB::raw('dental_user_company uc'), 'uc.companyid', '=', 'c.id')
+            ->where('uc.userid', $userId)
+            ->first();
     }
 }

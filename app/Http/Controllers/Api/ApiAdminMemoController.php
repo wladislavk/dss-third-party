@@ -11,6 +11,7 @@ use DentalSleepSolutions\Http\Requests\Request;
 use \DentalSleepSolutions\Interfaces\MemoAdminInterface;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
+use DentalSleepSolutions\Helpers\ApiResponse;
 
 class ApiAdminMemoController extends ApiBaseController
 {
@@ -162,4 +163,10 @@ class ApiAdminMemoController extends ApiBaseController
 
     }
 
+    public function getCurrent()
+    {
+        $data = $this->memo->getCurrent();
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

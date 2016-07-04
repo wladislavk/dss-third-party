@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\HealthHistoryDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\HealthHistory;
 use DentalSleepSolutions\Contracts\Repositories\HealthHistories;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +89,21 @@ class HealthHistoriesController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    /**
+     * Get health histories by filter.
+     *
+     * @param  \DentalSleepSolutions\Contracts\Repositories\HealthHistories $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getWithFilter(HealthHistories $resources, Request $request)
+    {
+        $fields = $request->input('fields') ?: [];
+        $where  = $request->input('where') ?: [];
+
+        $healthHistories = $resources->getWithFilter($fields, $where);
+
+        return ApiResponse::responseOk('', $healthHistories);
     }
 }

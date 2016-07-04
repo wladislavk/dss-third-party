@@ -89,4 +89,13 @@ class NotesController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getUnsigned(Notes $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getUnsigned($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

@@ -494,13 +494,17 @@ if(isset($_GET['msg'])){
             if($reference_id != "" && !in_array($myarray['status'], $paid_statuses)){
               $update_claim_url = "request_claim_update.php?insid=".$myarray['insuranceid'];
               ?>
-                <a href="<?php echo $update_claim_url?>" class="btn btn-primary btn-sm" >Check Status</a>
+                <a href="<?= $update_claim_url ?>"
+                    onclick="Javascript: loadPopup('<?= $update_claim_url ?>&amp;embed=1'); return false;"
+                    class="btn btn-primary btn-sm" >Check Status</a>
 
               <?php
             } else if($reference_id != "" && in_array($myarray['status'], $paid_statuses)){
               $payment_status_url = "request_payment_report.php?insid=".$myarray['insuranceid'];
               ?>
-                <a href="<?php echo $payment_status_url?>" class="btn btn-primary btn-sm" >Check Payment Status</a>
+                <a href="<?= $payment_status_url ?>"
+                   onclick="Javascript: loadPopup('<?= $payment_status_url ?>&amp;embed=1'); return false;"
+                    class="btn btn-primary btn-sm" >Check Payment Status</a>
 
               <?php
             }

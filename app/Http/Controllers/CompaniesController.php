@@ -82,4 +82,13 @@ class CompaniesController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getCompanyLogo(Company $resource)
+    {
+        $userId = $this->currentUser->id ?: 0;
+
+        $data = $resource->getCompanyLogo($userId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

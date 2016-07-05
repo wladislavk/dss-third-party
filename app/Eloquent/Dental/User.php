@@ -67,4 +67,44 @@ class User extends Model implements Resource, Repository
             ->where('userid', $userId)
             ->first();
     }
+
+
+    /**
+     * Get doc id by user id
+     *
+     * @param integer $userId
+     * @return \DentalSleepSolutions\Eloquent\Dental\User
+     */
+    public function getDocId($userId)
+    {
+        return self::select(DB::raw('
+            CASE docid
+                WHEN 0 THEN userid
+                ELSE docid
+            END as docid'))
+            ->where('userid', $userId)
+            ->first();
+    }
+
+    /**
+     * Get course staff by user id
+     *
+     * @param integer $userId
+     * @return \DentalSleepSolutions\Eloquent\Dental\User
+     */
+    public function getCourseStaff($userId)
+    {
+        return self::from(DB::raw('dental_users s'))
+            ->select(DB::raw('s.use_course, d.use_course_staff'))
+            ->join(DB::raw('dental_users d'), 'd.userid', '=', 's.docid')
+            ->where('s.userid', $userId)
+            ->first();
+    }
+
+    public function getPaymentReports($docId = 0)
+    {
+        return $this->select('use_payment_reports')
+            ->where('userid', $docId)
+            ->first();
+    }
 }

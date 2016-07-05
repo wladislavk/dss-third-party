@@ -121,4 +121,37 @@ class UsersController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    /**
+     * Get info about current logined user
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCurrentUserInfo(User $resource)
+    {
+        return ApiResponse::responseOk('', $this->currentUser);
+    }
+
+    /**
+     * Get course staff of current logined user
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCourseStaff(User $resource)
+    {
+        $userId = $this->currentUser->id ?: 0;
+
+        $data = $resource->getCourseStaff($userId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getPaymentReports(Users $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getPaymentReports($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\PatientDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +89,62 @@ class PatientsController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    /**
+     * Get patients by filter.
+     *
+     * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getWithFilter(Patients $resources, Request $request)
+    {
+        $fields = $request->input('fields') ?: [];
+        $where  = $request->input('where') ?: [];
+
+        $patients = $resources->getWithFilter($fields, $where);
+
+        return ApiResponse::responseOk('', $patients);
+    }
+
+    public function getNumber(Patients $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getNumber($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getDuplicates(Patients $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getDuplicates($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getBounces(Patients $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getBounces($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getListPatients(Patients $resources, Request $request)
+    {
+        $partialName = $request->input('partial_name') ?: '';
+        $partialName = preg_replace("[^ A-Za-z'\-]", '', $partialName);
+
+        $names = explode(' ', $partialName);
+
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getListPatients($docId, $names);
+
+        return ApiResponse::responseOk('', $data);
     }
 }

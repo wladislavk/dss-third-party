@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\InsuranceDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Insurance;
 use DentalSleepSolutions\Contracts\Repositories\Insurances;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +89,36 @@ class InsurancesController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getRejected(Insurances $resources, Request $request)
+    {
+        $patientId = $request->input('patientId');
+
+        $data = $resources->getRejected($patientId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getFrontOfficeClaims($type, Insurances $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        switch ($type) {
+            case 'pending-claims':
+                $data = $resources->getPendingClaims($docId);
+                break;
+            case 'unmailed-claims':
+                $data = $resources->getUnmailedClaims($docId);
+                break;
+            case 'rejected-claims':
+                $data = $resources->getRejectedClaims($docId);
+                break;
+            default:
+                $data = [];
+                break;
+        }
+
+        return ApiResponse::responseOk('', $data);
     }
 }

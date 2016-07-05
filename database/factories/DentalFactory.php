@@ -2218,3 +2218,93 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
         'filename'           => $faker->regexify('[a-z0-9_]{15}')
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Task::class, function ($faker) {
+    return [
+        'task'           => $faker->sentence($nbWords = 5),
+        'description'    => $faker->sentence($nbWords = 5),
+        'userid'         => $faker->randomDigit,
+        'responsibleid'  => $faker->randomDigit,
+        'status'         => $faker->randomDigit,
+        'due_date'       => $faker->dateTime(),
+        'recurring'      => $faker->randomDigit,
+        'recurring_unit' => $faker->randomDigit,
+        'adddate'        => $faker->dateTime(),
+        'ip_address'     => $faker->ipv4,
+        'patientid'      => $faker->randomDigit
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\HomeSleepTest::class, function ($faker) {
+    return [
+        'doc_id'               => $faker->randomDigit,
+        'user_id'              => $faker->randomDigit,
+        'company_id'           => $faker->randomDigit,
+        'patient_id'           => $faker->randomDigit,
+        'screener_id'          => $faker->randomDigit,
+        'ins_co_id'            => $faker->randomDigit,
+        'ins_phone'            => $faker->numerify('##########'),
+        'patient_ins_group_id' => $faker->numerify('##'),
+        'patient_ins_id'       => $faker->numerify('##'),
+        'patient_firstname'    => $faker->firstNameMale,
+        'patient_lastname'     => $faker->lastName,
+        'patient_add1'         => $faker->address,
+        'patient_add2'         => $faker->address,
+        'patient_city'         => $faker->city,
+        'patient_state'        => $faker->stateAbbr,
+        'patient_zip'          => $faker->numerify('#####'),
+        'patient_dob'          => $faker->date,
+        'patient_cell_phone'   => $faker->numerify('##########'),
+        'patient_home_phone'   => $faker->numerify('##########'),
+        'patient_email'        => $faker->email,
+        'diagnosis_id'         => $faker->randomDigit,
+        'hst_type'             => $faker->randomDigit,
+        'provider_firstname'   => $faker->firstNameMale,
+        'provider_lastname'    => $faker->lastName,
+        'provider_phone'       => $faker->numerify('##########'),
+        'provider_address'     => $faker->address,
+        'provider_city'        => $faker->city,
+        'provider_state'       => $faker->stateAbbr,
+        'provider_zip'         => $faker->numerify('#####'),
+        'provider_signature'   => $faker->word,
+        'provider_date'        => $faker->date,
+        'snore_1'              => $faker->randomDigit,
+        'snore_2'              => $faker->randomDigit,
+        'snore_3'              => $faker->randomDigit,
+        'snore_4'              => $faker->randomDigit,
+        'snore_5'              => $faker->randomDigit,
+        'viewed'               => $faker->randomDigit,
+        'status'               => $faker->randomDigit,
+        'adddate'              => $faker->dateTime(),
+        'ip_address'           => $faker->ipv4,
+        'office_notes'         => $faker->sentence($nbWords = 6),
+        'sleep_study_id'       => $faker->randomDigit,
+        'authorized_id'        => $faker->randomDigit,
+        'authorizeddate'       => $faker->dateTime(),
+        'updatedate'           => $faker->dateTime(),
+        'rejected_reason'      => $faker->sentence($nbWords = 6),
+        'rejecteddate'         => $faker->dateTime(),
+        'canceled_id'          => $faker->randomDigit,
+        'canceled_date'        => $faker->dateTime(),
+        'hst_nights'           => $faker->randomDigit,
+        'hst_positions'        => $faker->sentence($nbWords = 2)
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\SupportTicket::class, function ($faker) {
+    return [
+        'title'       => $faker->sentence($nbWords = 6),
+        'userid'      => $faker->randomDigit,
+        'docid'       => $faker->randomDigit,
+        'body'        => $faker->sentence($nbWords = 5),
+        'category_id' => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'status'      => $faker->randomDigit,
+        'ip_address'  => $faker->ipv4,
+        'attachment'  => $faker->regexify('[a-z0-9_-]{15,20}\.(jpg|jpeg|png|gif|bmp)'),
+        'viewed'      => $faker->boolean,
+        'creator_id'  => $faker->randomDigit,
+        'create_type' => $faker->randomDigit,
+        'company_id'  => $faker->randomDigit
+    ];
+});

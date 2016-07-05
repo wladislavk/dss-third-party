@@ -85,4 +85,26 @@ class InsurancePreauthController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getByType($type, InsPreauth $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        switch ($type) {
+            case 'completed':
+                $data = $resources->getCompleted($docId);
+                break;
+            case 'pending':
+                $data = $resources->getPending($docId);
+                break;
+            case 'rejected':
+                $data = $resources->getRejected($docId);
+                break;
+            default:
+                $data = [];
+                break;
+        }
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

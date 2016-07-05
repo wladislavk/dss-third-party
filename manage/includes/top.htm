@@ -122,8 +122,13 @@ if( $r['homepage'] != '1') {
 
     $claim_query = "$countFrontOfficeClaimsQuery
             AND claim.mailed_date IS NULL
-            AND claim.sec_mailed_date IS NULL
-            AND claim.status NOT IN (" . $db->escapeList(ClaimFormData::statusListByName('pending')) . ")";
+            AND claim.sec_mailed_date IS NULL";
+
+    if ($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) {
+        $claim_query .= "
+            AND claim.status NOT IN (" . $db->escapeList(ClaimFormData::statusListByName('actionable')) . ")
+            ";
+    }
 
     $num_unmailed_claims = $db->getColumn($claim_query, 'total', 0);
 

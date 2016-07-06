@@ -1,5 +1,9 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/includes/claim-status-switcher.inc';
 include "includes/top.htm";
+
 ?>
 <link rel="stylesheet" href="css/ledger.css" />
 <?php

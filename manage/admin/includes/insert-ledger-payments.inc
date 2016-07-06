@@ -109,7 +109,7 @@ if ($_POST['dispute'] == 1) { // Dispute
          * Apply the same float tolerance as in ledgerBalanceQuery
          */
         if (isOptionSelected($patientData['has_s_m_ins']) && array_get($ledgerBalance, 'balance') > 0.005) {
-            if ($patientData['p_m_ins_type'] == 1) { //medicare
+            if ($patientData['p_m_ins_type'] == 1 && empty($_POST['force_pending'])) { //medicare
                 if (isOptionSelected($patientData['s_m_ins_ass'])) { // Accept assignment of benefits
                     $alertMessages []= 'This patient has Medicare and Secondary Insurance. Secondary Insurance has been automatically filed by Medicare. Claim status will now be changed to "Secondary Sent".';
                     $secondaryStatus = DSS_CLAIM_SEC_SENT;

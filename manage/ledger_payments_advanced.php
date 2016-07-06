@@ -1,22 +1,79 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-    include "includes/top.htm";
-    include_once "includes/constants.inc";
-    require "includes/calendarinc.php";
+<?php
+namespace Ds3\Libraries\Legacy;
 
-    $sql = "SELECT * FROM dental_ledger_payment dlp JOIN dental_ledger dl on dlp.ledgerid=dl.ledgerid WHERE (dl.primary_claim_id='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."' or dl.secondary_claim_id='".$_GET['cid']."');";
-    $payments = $db->getRow($sql);
-    $csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name FROM dental_insurance i JOIN dental_patients p ON p.patientid=i.patientid WHERE i.insuranceid='".(!empty($_GET['cid']) ? $_GET['cid'] : '')."';";
-    $claim = $db->getRow($csql);
-    $pasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-    		  (status = ".DSS_CLAIM_SENT." OR status = ".DSS_CLAIM_DISPUTE." OR status = ".DSS_CLAIM_EFILE_ACCEPTED.")";
+include "includes/top.htm";
+include_once "includes/constants.inc";
+require "includes/calendarinc.php";
 
-    $num_pa = $db->getNumberRows($pasql);
-    $sasql = "SELECT * FROM dental_insurance_file where claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' AND
-              (status = ".DSS_CLAIM_SEC_SENT." OR status = ".DSS_CLAIM_SEC_DISPUTE." OR status = ".DSS_CLAIM_EFILE_ACCEPTED.")";
+$claimId = intval($_GET['cid']);
 
-    $num_sa = $db->getNumberRows($sasql);
+$sql = "SELECT *
+    FROM dental_ledger_payment dlp
+        JOIN dental_ledger dl ON dlp.ledgerid = dl.ledgerid
+    WHERE dl.primary_claim_id = '$claimId' OR dl.secondary_claim_id = '$claimId'";
+$payments = $db->getRow($sql);
+
+$csql = "SELECT i.*, CONCAT(p.firstname, ' ',p.lastname) name
+    FROM dental_insurance i
+        JOIN dental_patients p ON p.patientid = i.patientid
+    WHERE i.insuranceid = '$claimId'";
+$claim = $db->getRow($csql);
+
+$pasql = "SELECT *
+    FROM dental_insurance_file
+    WHERE claimid = '$claimId'
+        AND status IN (".DSS_CLAIM_SENT.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_EFILE_ACCEPTED.")";
+$num_pa = $db->getNumberRows($pasql);
+
+$sasql = "SELECT *
+    FROM dental_insurance_file
+    WHERE claimid = '$claimId'
+        AND status IN (".DSS_CLAIM_SEC_SENT.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_EFILE_ACCEPTED.")";
+$num_sa = $db->getNumberRows($sasql);
+
+$patientId = intval($claim['patientid']);
+$patientData = $db->getRow("SELECT has_s_m_ins, p_m_ins_type
+    FROM dental_patients p
+    WHERE p.patientid = '$patientId'");
+
+$hasMedicare = $patientData['p_m_ins_type'] == 1;
+$hasSecondaryInsurance = isOptionSelected($patientData['has_s_m_ins']);
+
+$secondaryExists = $claim['primary_claim_id'] ||
+    $db->getColumn("SELECT insuranceid
+        FROM dental_insurance
+        WHERE primary_claim_id = '$claimId'", 'insuranceid', 0);
+
 ?>
+<script>
+    jQuery(function($){
+        $('#close:checkbox').change(function(){
+            if ($(this).is(':checked')) {
+                $('#dispute:checkbox').prop('checked', false).change();
 
+                $('#force_pending_container').show('slow');
+                $('#ins_attach').show('slow');
+            } else {
+                $('#force_pending').prop('checked', false);
+
+                $('#force_pending_container').hide('slow');
+                $('#ins_attach').hide('slow');
+            }
+        });
+
+        $('#dispute:checkbox').change(function(){
+            if ($(this).is(':checked')) {
+                $('#close:checkbox').prop('checked', false).change();
+
+                $('#dispute_reason_div').show('slow');
+                $('#ins_attach').show('slow');
+            } else {
+                $('#dispute_reason_div').hide('slow');
+                $('#ins_attach').hide('slow');
+            }
+        });
+    });
+</script>
     <div class="fullwidth">
       <br />
       <span class="admin_head">
@@ -190,9 +247,19 @@
                     </table>
                     <br />
 
-                    <input type="checkbox" id="close" name="close" onclick=" if(this.checked){ $('#dispute').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').hide('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value="1"  <?= (isset($_GET['close']) && $_GET['close']==1)?'checked="checked"':''; ?> /> <label >Close Claim</label>
+                    <input type="checkbox" id="close" name="close" value="1" <?= (isset($_GET['close']) && $_GET['close']==1)?'checked="checked"':''; ?> /> <label >Close Claim</label>
                     <br />
-                    <input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' /> <label>Dispute</label>
+                    <?php if ($hasMedicare && $hasSecondaryInsurance && !$secondaryExists) { ?>
+                        <div id="force_pending_container" style="display:none;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input type="checkbox" id="force_pending" name="force_pending" value="1" />
+                            <label for="force_pending">
+                                If a secondary claim needs to be generated, set the status as Pending.
+                                Do NOT close the secondary claim.
+                            </label>
+                        </div>
+                    <?php } ?>
+                    <input type="checkbox" id="dispute" name="dispute" value="1" /> <label>Dispute</label>
                     <div id="dispute_reason_div" style="display: none">
                         <label>Reason for dispute:</label> <input type="text" name="dispute_reason" />
                     </div>

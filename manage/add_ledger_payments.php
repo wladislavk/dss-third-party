@@ -24,12 +24,24 @@ $pasql = "SELECT *
         AND status IN (".DSS_CLAIM_SENT.", ".DSS_CLAIM_DISPUTE.", ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
 $num_pa = $db->getNumberRows($pasql);
 
-
 $sasql = "SELECT *
     FROM dental_insurance_file
     WHERE claimid = '$claimId'
         AND status IN (".DSS_CLAIM_SEC_SENT.", ".DSS_CLAIM_SEC_DISPUTE.", ".DSS_CLAIM_SEC_EFILE_ACCEPTED.")";
 $num_sa = $db->getNumberRows($sasql);
+
+$patientId = intval($claim['patientid']);
+$patientData = $db->getRow("SELECT has_s_m_ins, p_m_ins_type
+    FROM dental_patients p
+    WHERE p.patientid = '$patientId'");
+
+$hasMedicare = $patientData['p_m_ins_type'] == 1;
+$hasSecondaryInsurance = isOptionSelected($patientData['has_s_m_ins']);
+
+$secondaryExists = $claim['primary_claim_id'] ||
+    $db->getColumn("SELECT insuranceid
+        FROM dental_insurance
+        WHERE primary_claim_id = '$claimId'", 'insuranceid', 0);
 
 ?>
 <script>
@@ -77,12 +89,27 @@ $num_sa = $db->getNumberRows($sasql);
 
         $('#close:checkbox').change(function(){
             if ($(this).is(':checked')) {
-                $('#dispute').removeAttr('checked');
+                $('#dispute:checkbox').prop('checked', false).change();
+
+                $('#force_pending_container').show('slow');
                 $('#ins_attach').show('slow');
-                $('#dispute_reason_div').hide('slow');
             } else {
+                $('#force_pending').prop('checked', false);
+
+                $('#force_pending_container').hide('slow');
                 $('#ins_attach').hide('slow');
+            }
+        });
+
+        $('#dispute:checkbox').change(function(){
+            if ($(this).is(':checked')) {
+                $('#close:checkbox').prop('checked', false).change();
+
+                $('#dispute_reason_div').show('slow');
+                $('#ins_attach').show('slow');
+            } else {
                 $('#dispute_reason_div').hide('slow');
+                $('#ins_attach').hide('slow');
             }
         });
     });
@@ -421,7 +448,17 @@ function updateType(payer){
     <input type="checkbox" id="close" name="close" value="1" />
      <label for="close">Close Claim</label>
     <br />
-    <input type="checkbox" id="dispute" name="dispute" onclick=" if(this.checked){ $('#close').removeAttr('checked');$('#ins_attach').show('slow');$('#dispute_reason_div').show('slow'); }else{ $('#ins_attach').hide('slow');$('#dispute_reason_div').hide('slow'); }" value='1' />
+      <?php if ($hasMedicare && $hasSecondaryInsurance && !$secondaryExists) { ?>
+          <div id="force_pending_container" style="display:none;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <input type="checkbox" id="force_pending" name="force_pending" value="1" />
+              <label for="force_pending">
+                  If a secondary claim needs to be generated, set the status as Pending.
+                  Do NOT close the secondary claim.
+              </label>
+          </div>
+      <?php } ?>
+    <input type="checkbox" id="dispute" name="dispute" value="1" />
      <label for="dispute">Dispute</label>
     <div id="dispute_reason_div" style="display: none">
       <label>Reason for dispute:</label> <input type="text" name="dispute_reason" />

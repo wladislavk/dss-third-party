@@ -2,6 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/../admin/includes/claim_functions.php';
+require_once __DIR__ . '/../admin/includes/claim-status-switcher.inc';
 
 $isHistoricView = !empty($isHistoricView) || isset($_GET['history_id']);
 $historyId = intval($_GET['history_id']);
@@ -408,6 +409,8 @@ $transactionCodes = $db->getResults("SELECT transaction_code, description
             <?php } ?>
         <?php } ?>
     </div>
+
+    <?php claimStatusSwitcher($claimId) ?>
 
 <?php if ($isRejected) { ?>
     <div class="rejected-banner">

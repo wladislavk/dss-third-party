@@ -16,16 +16,16 @@ module.exports = {
             };
 
             this.setLoginDetails(data);
+
+            this.$route.router.go('/manage/index');
         }
     },
     methods: {
-        submitForm: function(e) {
-            e.preventDefault();
-
+        submitForm: function() {
             // username is a required field
             if (this.credentials.username.trim() == '') {
                 alert("Username is Required");
-                this.$$.username.focus();
+                this.$els.username.focus();
 
                 return false;
             }
@@ -33,27 +33,19 @@ module.exports = {
             // password is a required field
             if (this.credentials.password.trim() == '') {
                 alert("Password is Required");
-                this.$$.password.focus();
+                this.$els.password.focus();
 
                 return false;
             }
 
             this.getToken(this.credentials)
                 .then(function(response) {
-                    var data = response.data.data;
+                    var data = response.data;
 
                     if (data.token) {
                         window.storage.save('token', data.token);
                     }
 
-                    console.log(response);
-                }, function(response) {
-                    if (true) {
-                        // todo this.message = 'Wrong username or password'; if status == 422
-                    } else {
-                        console.error('getToken [status]: ', response.status);
-                    }
-                }).then(function(response) {
                     this.getAccountStatus()
                         .then(function(response) {
                             var data = response.data.data;
@@ -66,6 +58,12 @@ module.exports = {
                         }, function(response) {
                             console.error('getAccountStatus [status]: ', response.status);
                         });
+                }, function(response) {
+                    if (response.status == 422) {
+                        this.message = 'Wrong username or password';
+                    } else {
+                        console.error('getToken [status]: ', response.status);
+                    }
                 });
         },
 
@@ -76,7 +74,11 @@ module.exports = {
             return this.$http.post(config.API_PATH + 'login-details', data);
         },
         getAccountStatus: function() {
-            return this.$http.post(config.API_PATH + 'users/check');
+            return this.$http.post(config.API_PATH + 'users/check', {}, {
+                headers: {
+                    Authorization: 'Bearer ' + window.storage.get('token')
+                }
+            });
         }
     }
 }

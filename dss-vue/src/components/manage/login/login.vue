@@ -2,7 +2,7 @@
 
 <template>
     <div id="login_container">
-        <form name="loginfrm" id="loginForm" v-on="submit: submitForm">
+        <form name="loginfrm" id="loginForm" v-on:submit.prevent="submitForm">
             <table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
                 <tr bgcolor="#FFFFFF">
                     <td colspan="2" class="t_head">
@@ -20,7 +20,7 @@
                         <input
                             type="text"
                             v-model="credentials.username"
-                            v-el="username"
+                            v-el:username
                             autofocus
                         >
                     </td>
@@ -31,7 +31,7 @@
                         <input
                             type="password"
                             v-model="credentials.password"
-                            v-el="password"
+                            v-el:password
                         >
                     </td>
                 </tr>

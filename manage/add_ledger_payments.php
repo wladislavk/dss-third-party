@@ -453,7 +453,7 @@ function updateType(payer){
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <input type="checkbox" id="force_pending" name="force_pending" value="1" />
               <label for="force_pending">
-                  If a secondary claim is generated, set the status as Pending.
+                  If a secondary claim needs to be generated, set the status as Pending.
                   Do NOT close the secondary claim.
               </label>
           </div>

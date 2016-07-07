@@ -4,10 +4,10 @@
   "author": "Sergey Gerashchenko",
   "private": true,
   "scripts": {
-    "watchify": "watchify -vd -p browserify-hmr -e src/main.js -o dist/build.js",
+    "watchify": "watchify -vd -p browserify-hmr -t browserify-css -e src/main.js -o dist/build.js",
     "serve": "http-server -c 1 -a localhost",
     "dev": "npm-run-all --parallel watchify",
-    "build": "cross-env NODE_ENV=production browserify -e src/main.js | uglifyjs -c warnings=false -m > dist/build.js",
+    "build": "cross-env NODE_ENV=production browserify -t browserify-css -e src/main.js | uglifyjs -c warnings=false -m > dist/build.js",
     "lint": "eslint --ext .js,.vue src test/unit",
     "test": "karma start karma.conf.js"
   },
@@ -32,6 +32,7 @@
     "babel-runtime": "^6.0.0",
     "babelify": "^7.2.0",
     "browserify": "^12.0.1",
+    "browserify-css": "^0.9.1",
     "browserify-hmr": "^0.3.1",
     "cross-env": "^1.0.5",
     "eslint": "^1.10.3",

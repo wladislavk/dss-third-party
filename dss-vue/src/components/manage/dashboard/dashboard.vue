@@ -1,7 +1,3 @@
-<script>
-    import swal from 'sweetalert';
-</script>
-
 <template>
     <table id="dashboard">
         <tr>
@@ -414,9 +410,7 @@
 <script src="../../../../assets/js/manage/sucker_tree_home.js"></script>
 
 <script>
+    var css = require('./dashboard.css');
+
     module.exports = require('./dashboard.js');
 </script>
-
-<style src="./dashboard.css"></style>
-
-<link rel="stylesheet" type="text/css" href="node_modules/sweetalert/dist/sweetalert.css">

@@ -1,5 +1,3 @@
-<style src="./header.css"></style>
-
 <template>
     <table width="980" border="0" cellpadding="0" cellspacing="0" align="center">
     <!-- Header and nav goes here -->
@@ -490,21 +488,23 @@
 <script src="../../../assets/js/table-sorter/jquery.tablesorter.pager.js"></script>
 <script src="../../../assets/js/table-sorter/jquery.tablesorter.widgets.js"></script>
 <script src="../../../assets/js/manage/masks.js"></script>
-<script src="../../../assets/js/calendar/calendar2.js"></script>
+<!-- <script src="../../../assets/js/calendar/calendar2.js"></script> -->
 <script src="../../../assets/js/manage/logout_timer.js"></script>
 <script src="../../../assets/js/manage/ddlevelsmenu.js"></script>
 <script src="../../../assets/js/manage/validation.js"></script>
 <script src="../../../assets/js/manage/top.js"></script>
 <script src="../../../assets/js/manage/hideshow.js"></script>
 <script src="../../../assets/js/manage/file-upload-check.js"></script>
-<script src="../../../assets/js/jscal/jscal2.js"></script>
-<script src="../../../assets/js/jscal/lang/en.js"></script>
+<!-- <script src="../../../assets/js/jscal/jscal2.js"></script> -->
+<!-- <script src="../../../assets/js/jscal/lang/en.js"></script> -->
 <script src="../../../assets/js/jquery.colorbox-min.js"></script>
 <script src="../../../assets/js/jquery.blockUI.js"></script>
 <script src="../../../assets/js/manage/autocomplete.js"></script>
 <script src="../../../assets/js/manage/autocomplete_local.js"></script>
 
 <script>
+    var css = require('./header.css');
+
     task_function();
 
     module.exports = require('./header.js');

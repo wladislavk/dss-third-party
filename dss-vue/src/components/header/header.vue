@@ -15,7 +15,7 @@
                             <a href="support.php">Support {{ (supportTicketsNumber > 0) ? ('(' + supportTicketsNumber + ')'): '' }}</a>
                         </li>
                         <li>
-                            <a href="logout.php">Sign Out</a>
+                            <a href="#" v-on:click.prevent="logout">Sign Out</a>
                         </li>
                     </ul>
                 </div>
@@ -473,7 +473,7 @@
 
         <br /><br />
 
-        <a href="logout.php">Logout</a>
+        <a href="#" v-on:click.prevent="logout">Logout</a>
         <a href="#" onclick="reset_interval(0)">Stay logged in</a>
     </div>
 </template>
@@ -483,11 +483,11 @@
 <script src="../../../assets/js/tracekit/tracekit.handler.js"></script>
 <script src="../../../assets/js/jquery-1.6.2.min.js"></script>
 <script src="../../../assets/js/jquery-ui-1.8.22.custom.min.js"></script>
-<script src="../../../assets/js/input-mask/jquery.maskedinput-1.3.min.js"></script>
+<!-- <script src="../../../assets/js/input-mask/jquery.maskedinput-1.3.min.js"></script> -->
 <script src="../../../assets/js/table-sorter/jquery.tablesorter.min.js"></script>
 <script src="../../../assets/js/table-sorter/jquery.tablesorter.pager.js"></script>
 <script src="../../../assets/js/table-sorter/jquery.tablesorter.widgets.js"></script>
-<script src="../../../assets/js/manage/masks.js"></script>
+<!-- <script src="../../../assets/js/manage/masks.js"></script> -->
 <!-- <script src="../../../assets/js/calendar/calendar2.js"></script> -->
 <script src="../../../assets/js/manage/logout_timer.js"></script>
 <script src="../../../assets/js/manage/ddlevelsmenu.js"></script>

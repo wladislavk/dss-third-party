@@ -1,7 +1,8 @@
-var moment     = require('moment');
+var moment       = require('moment');
 
-var modal      = require('../modal/modal.vue');
-var taskMixin  = require('../../modules/tasks/TaskMixin.js');
+var modal        = require('../modal/modal.vue');
+var taskMixin    = require('../../modules/tasks/TaskMixin.js');
+var logoutMixin  = require('../../modules/logout/LogoutMixin.js');
 
 module.exports = {
     data: function() {
@@ -80,7 +81,7 @@ module.exports = {
     components: {
         'modal': modal
     },
-    mixins: [taskMixin],
+    mixins: [taskMixin, logoutMixin],
     created: function() {
         this.getCurrentUser() // get current user info
             .then(function(response) {

@@ -112,9 +112,12 @@ include_once "../includes/constants.inc";
 <script>
     var apiRoot = <?= json_encode(config('app.apiUrl')) ?>;
 </script>
+<script src="/assets/vendor/jquery.serialize-json-2.7.2.js" type="text/javascript"></script>
+<script src="/manage/admin/admin/template/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
 <script src="/assets/vendor/moment.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
-<script src="/assets/app/memos.js?v=20160405" type="text/javascript"></script>
+<script src="/assets/app/memos.js?v=20160715" type="text/javascript"></script>
+<?php
 
-<?php include "includes/bottom.htm";?>
+include "includes/bottom.htm";

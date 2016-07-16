@@ -121,23 +121,7 @@ Sleep Tests:
   </table>
 
 
-<script type="text/javascript">
-function updateiframe(w){
-//$('#sleepstudies').css('width', ((w+1)*185)+'px');
-}
-function show_new_study(){
-$('#new_sleep_study_but').hide();
-document.getElementById('sleepstudies').contentWindow.show_new_study();
-}
-function show_new_sleep_but(){
-$('#new_sleep_study_but').show();
-}
-function show_study_table(){
-  show_new_study();
-  $('#no_sleep_studies_div').hide();
-  $('#sleep_studies_div').show();
-}
-</script>
+    <script src="/manage/js/summ_sleep.js" type="text/javascript"></script>
 
         <div id="sleepstudies" style="border: medium none; width: 630px;float: left; margin-bottom: 20px; height: 559px;overflow-x:scroll;">
 		<div style="border: medium none; overflow: hidden;width:<?= $body_width; ?>px;">

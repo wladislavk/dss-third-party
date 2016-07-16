@@ -4,7 +4,8 @@ function updateiframe(w){
 
 function show_new_study(){
     $('#new_sleep_study_but').hide();
-    document.getElementById('sleepstudies').contentWindow.show_new_study();
+    $('#new_sleep_study_form').show();
+    $('#new_sleep_study_form .bootstrap-filestyle').show();
 }
 
 function show_new_sleep_but(){

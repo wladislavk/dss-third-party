@@ -3,6 +3,8 @@
 include "includes/top.htm";
 include 'includes/patient_nav.php';
 
+$is_back_office = true;
+
 ?>
 <div id="content">
     <ul class="nav nav-tabs nav-justified">

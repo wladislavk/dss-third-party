@@ -2,7 +2,6 @@
 
 namespace Ds3\Libraries\Legacy;
 
-
 include_once('admin/includes/main_include.php');
 include_once("includes/sescheck.php"); 
 include_once('includes/constants.inc');
@@ -145,7 +144,7 @@ if ($isDeleteStudy) {
             $banner1 = $name.'_'.date('dmy_Hi');
             $banner1 .= ".".$extension;
 
-            $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
+            $uploaded = uploadImage($_FILES['ss_file'], __DIR__ . "/../../../shared/q_file/".$banner1);
 
             if ($uploaded) {
                 if ($image_id) {
@@ -263,7 +262,7 @@ if ($isDeleteStudy) {
             $banner1 = $name.'_'.date('dmy_Hi');
             $banner1 .= ".".$extension;
 
-            $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
+            $uploaded = uploadImage($_FILES['ss_file'], __DIR__ . "/../../../shared/q_file/".$banner1);
 
             if ($uploaded) {
                 $ins_sql = " insert into dental_q_image set

@@ -67,7 +67,8 @@ function sendValueRef(partial_name, in_field, hint, id_field, source, file, hint
     autoCompleteRequest = $.post(
         file,
         {
-            "partial_name": partial_name
+            "partial_name": partial_name,
+            "patient_id": pid
         },
         function(data) {
             if (data.length == 0) {

@@ -41,7 +41,7 @@ function cancelAutoCompleteLocalRequest () {
 }
 
 function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type, endpoint){
-    autoCompleteLocalRequest = $.getJSON(file).done(function(data){
+    autoCompleteLocalRequest = $.getJSON(file + '?patient_id=' + pid).done(function(data){
         local_data = new Array();
         var cpl = data;
         var array_index = 0;

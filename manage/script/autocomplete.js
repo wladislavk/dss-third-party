@@ -55,7 +55,7 @@ function setup_autocomplete(in_field, hint, id_field, source, file, hinttype, pi
         } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($this.val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
             $('#'+hint).css("display", "inline").find('li:not(.template)').remove();
             var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('no_matches');
-            template_list_ref(newLi, "Searching...")
+            template_list_ref(newLi, '<img src="/manage/images/loading.gif" alt="Searching..." />')
                 .appendTo('#'+hint+' ul')
                 .fadeIn();
             sendValueRef($('#'+in_field).val(), in_field, hint, id_field, source, file, hinttype, pid);

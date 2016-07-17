@@ -53,7 +53,11 @@ function setup_autocomplete(in_field, hint, id_field, source, file, hinttype, pi
         if ($this.val().trim() == "") {
             $('#'+hint).css('display', 'none');
         } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($this.val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
-            $('#'+hint).css("display", "inline");
+            $('#'+hint).css("display", "inline").find('li:not(.template)').remove();
+            var newLi = $('#'+hint+' ul .template').clone(true).removeClass('template').addClass('no_matches');
+            template_list_ref(newLi, "Searching...")
+                .appendTo('#'+hint+' ul')
+                .fadeIn();
             sendValueRef($('#'+in_field).val(), in_field, hint, id_field, source, file, hinttype, pid);
             if ($this.val() > 2) {
                 window.searchVal = $this.val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
@@ -97,6 +101,7 @@ function sendValueRef(partial_name, in_field, hint, id_field, source, file, hint
 
             }else{
                 if (data.error) {
+                    $('#' + hint).hide();
                     alert(data.error);
                 } else {
                     $('.json_patient').remove();

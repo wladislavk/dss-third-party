@@ -4,7 +4,7 @@ include("includes/calendarinc.php");
 $pat_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."';";
 $pat_r = $db->getRow($pat_sql);
 ?>
-<script type="text/javascript" src="script/autocomplete.js"></script>
+<script type="text/javascript" src="script/autocomplete.js?v=20160719"></script>
 <script type="text/javascript" src="script/autocomplete_local.js?v=<?= time() ?>"></script>
 <script type="text/javascript" src="js/add_image_sleep_study.js"></script>
 <link rel="stylesheet" href="css/add_sleep_study.css" type="text/css" media="screen" />

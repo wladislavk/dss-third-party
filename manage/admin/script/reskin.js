@@ -116,8 +116,7 @@ $(function(){
         $replacement = $file.next('.bootstrap-filestyle');
 
         $replacement.find('input').removeClass('input-large').addClass('input-xs');
-        $replacement.attr('id', id);
-        $file.attr('id', '');
+        $replacement.attr('id', 'filestyle-' + id);
 
         if ($file.is(':hidden')) {
             $replacement.css('display', 'none');

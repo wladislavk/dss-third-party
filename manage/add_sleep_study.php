@@ -1,7 +1,5 @@
 <?php
-
 namespace Ds3\Libraries\Legacy;
-
 
 include_once('admin/includes/main_include.php');
 include_once("includes/sescheck.php"); 
@@ -34,6 +32,9 @@ function selected ($value, $reference) {
 $errorMessage = '';
 
 $patientId = intval($_GET['pid']);
+$isBackOffice = !empty($is_back_office);
+$formAction = $isBackOffice ?
+    "/manage/admin/patient_summary.php?pid=$patientId" : "/manage/dss_summ.php?pid=$patientId&addtopat=1";
 
 $isDeleteStudy = isset($_POST['submitdeletesleeplabsumm']);
 $isUpdateStudy = isset($_POST['submitupdatesleeplabsumm']);
@@ -142,7 +143,7 @@ if ($isDeleteStudy) {
             $banner1 = $name.'_'.date('dmy_Hi');
             $banner1 .= ".".$extension;
 
-            $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
+            $uploaded = uploadImage($_FILES['ss_file'], __DIR__ . "/../../../shared/q_file/".$banner1);
 
             if ($uploaded) {
                 if ($image_id) {
@@ -260,7 +261,7 @@ if ($isDeleteStudy) {
             $banner1 = $name.'_'.date('dmy_Hi');
             $banner1 .= ".".$extension;
 
-            $uploaded = uploadImage($_FILES['ss_file'], "../../../shared/q_file/".$banner1);
+            $uploaded = uploadImage($_FILES['ss_file'], __DIR__ . "/../../../shared/q_file/".$banner1);
 
             if ($uploaded) {
                 $ins_sql = " insert into dental_q_image set
@@ -360,10 +361,10 @@ $pat_r = $db->getRow($pat_sql);
 ?>
 <link rel="stylesheet" type="text/css" href="css/admin.css?v=20160404" />
 <link rel="stylesheet" type="text/css" href="css/form.css" />
-<link rel="stylesheet" type="text/css" href="css/add_sleep_study.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/manage/css/add_sleep_study.css" media="screen" />
 <!--  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
 <script type="text/javascript">if (parent.updateiframe) { parent.updateiframe(<?= $num_labs ?>); }</script>
-<script type="text/javascript" src="js/add_sleep_study.js?v=<?= time() ?>"></script>
+<script type="text/javascript" src="/manage/js/add_sleep_study.js?v=<?= time() ?>"></script>
 <?php if ($errorMessage) { ?>
     <script type="text/javascript">
         alert(<?= json_encode($errorMessage) ?>);
@@ -374,7 +375,8 @@ if ($msg && $msg != $errorMessage) { ?>
         alert("<?= $msg ?>");
     </script>
 <?php } ?>
-<form id="new_sleep_study_form" class="sleep-study-form" action="dss_summ.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&addtopat=1" method="POST" style="float:left; width:185px;<?= $isNewStudy && !$changesSaved ? '' : 'display:none;' ?>" enctype="multipart/form-data">
+<form id="new_sleep_study_form" class="sleep-study-form" action="<?= $formAction ?>" method="POST"
+    style="float:left; width:185px;<?= $isNewStudy && !$changesSaved ? '' : 'display:none;' ?>" enctype="multipart/form-data">
     <input type="hidden" name="submitnewsleeplabsumm" value="1" />
     <table class="sleeplabstable new_table <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>" id="sleepstudyscrolltable">
         <tr>
@@ -457,7 +459,7 @@ if ($msg && $msg != $errorMessage) { ?>
         </tr>
         <tr>
             <td valign="top" class="odd">
-                <input style="width:140px" size="8" type="file" name="ss_file" />
+                <input id="file_0" style="width:140px" size="8" type="file" name="ss_file" />
                 <span id="req_0" class="req">*</span>
             </td>
         </tr>
@@ -528,7 +530,7 @@ if ($msg && $msg != $errorMessage) { ?>
             <td valign="top" class="odd">
                 <input type="submit" name="submitnewsleeplabsumm" onclick="window.onbeforeunload=false;$(this).parent().find('.loading').show();" value="Submit Study" />
                 <input type="button" onclick="$('#new_sleep_study_form').hide(); parent.show_new_sleep_but(); return false;" value="Cancel" />
-                <img src="images/loading.gif" class="loading" style="display:none;"/>
+                <img src="/manage/images/loading.gif" class="loading" style="display:none;"/>
             </td>
         </tr>
     </table>
@@ -553,7 +555,7 @@ if ($s_lab_result) {
         $device = $device_result['device'];
 
         ?>
-        <form class="sleep-study-form" action="dss_summ.php?pid=<?= $patientId ?>&addtopat=1" style="float:left;" method="post" enctype="multipart/form-data">
+        <form class="sleep-study-form" action="<?= $formAction ?>" style="float:left;" method="post" enctype="multipart/form-data">
             <input type="hidden" name="sleeplabid" value="<?php echo $s_lab['id']; ?>" />
             <table id="sleepstudycrolltable" class="sleeplabstable <?php print ($show_yellow && !$sleepstudy  ? 'yellow' : ''); ?>">
                 <tr>
@@ -638,11 +640,11 @@ if ($s_lab_result) {
                         <?php if ($s_lab['filename'] != '') { ?>
                             <div id="file_edit_<?php echo $s_lab['id']; ?>">
                                 <a href="display_file.php?f=<?= rawurlencode($s_lab['filename']) ?>" target="_blank" class="button">View</a>
-                                <input type="button" id="edit" onclick="$('#file_edit_<?php echo $s_lab['id']; ?>').hide();$('#file_<?php echo $s_lab['id']; ?>').show();return false;" value="Edit" title="Edit" />
+                                <input type="button" id="edit" class="file-input-edit" data-id="<?= $s_lab['id'] ?>" value="Edit" title="Edit" />
                             </div>
                             <input id="file_<?php echo $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />
                         <?php } else { ?>
-                            <input style="width:140px;" size="8" type="file" name="ss_file" />
+                            <input id="file_<?= $s_lab['id'] ?>" style="width:140px;" size="8" type="file" name="ss_file" />
                             <span id="req_0" class="req">*</span>
                         <?php } ?>
                     </td>
@@ -708,7 +710,7 @@ if ($s_lab_result) {
                     <td valign="top" class="odd">
                         <input type="submit" name="submitupdatesleeplabsumm" onclick="window.onbeforeunload=false;$(this).parent().find('.loading').show();" value="Save" />
                         <input type="submit" name="submitdeletesleeplabsumm" onclick='return delete_confirm();' value="Delete" />
-                        <img src="images/loading.gif" class="loading" style="display:none;"/>
+                        <img src="/manage/images/loading.gif" class="loading" style="display:none;"/>
                     </td>
                 </tr>
             </table>

@@ -46,8 +46,8 @@ if(!isset($_GET['noheaders'])){
 <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
 <link rel="stylesheet" href="css/form.css" type="text/css" />
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-<script src="script/autocomplete.js" type="text/javascript"></script>
-<script src="script/autocomplete_local.js" type="text/javascript"></script>
+<script src="script/autocomplete.js?v=20160719" type="text/javascript"></script>
+<script src="script/autocomplete_local.js?v=20160719" type="text/javascript"></script>
 <?php
 }
 require_once('includes/dental_patient_summary.php');

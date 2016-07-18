@@ -36,7 +36,12 @@ function delete_confirm(){
 } 
 
 function show_new_study(){
-  $('#new_sleep_study_form').show();
+    $('#new_sleep_study_but').hide();
+    $('#new_sleep_study_form').show();
+
+    /* Remove label from upload button */
+    var $fileUpload = $('#new_sleep_study_form .bootstrap-filestyle');
+    $fileUpload.show().css({ display: 'inline-block' });
 }
 function updatePlace(f){
   if(f.sleeptesttype.value == "HST"){
@@ -88,5 +93,34 @@ $(document).ready(function(){
         }
 
         return submit;
+    });
+
+    /* Remove label from upload button */
+    $('.sleep-study-form .bootstrap-filestyle').each(function() {
+        var $fileUpload = $(this),
+            $input = $fileUpload.find(':text'),
+            $label = $fileUpload.find('label');
+
+        $input.width(120);
+
+        $label.contents().filter(function () {
+            return this.nodeType === Node.TEXT_NODE;
+        }).remove();
+
+        $label.find('span').html('&nbsp;');
+
+        if (!$fileUpload.closest('td').find('a:contains(View)').length) {
+            $fileUpload.show();
+        }
+    });
+
+    $('.sleep-study-form .file-input-edit').click(function(){
+        var $this = $(this),
+            id = $this.data('id');
+
+        $('#file_edit_' + id).hide();
+        $('#file_' + id + ', #filestyle-file_' + id).show();
+
+        return false;
     });
 });

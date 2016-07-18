@@ -3,7 +3,7 @@ include 'includes/invoice_functions.php';
 require_once('../includes/constants.inc');
 ?>
 <link rel="stylesheet" href="../css/eligible_api.css" />
- <script type="text/javascript" src="../script/autocomplete.js"></script>
+ <script type="text/javascript" src="../script/autocomplete.js?v=20160719"></script>
  <script type="text/javascript" src="../script/autocomplete_local.js?v=<?= time() ?>"></script>
 
 <?php

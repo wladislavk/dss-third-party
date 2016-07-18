@@ -1,6 +1,12 @@
 var hasVB = false;
+var searchRequest = null;
 
-
+function cancelSearchRequest () {
+  if (searchRequest) {
+    searchRequest.abort();
+    searchRequest = null;
+  }
+}
 
 if (typeof String.prototype.trim !== 'function') {
     String.prototype.trim = function() {
@@ -20,12 +26,37 @@ function consoleLog () {
     }
 }
 
+function debounceCall (call, options) {
+  var timeoutId = 0;
+
+  options = $.extend({
+    timeout: 600,
+    context: null,
+    onTick: null
+  }, options);
+
+  return function () {
+    var argumentArray = Array.prototype.slice.call(arguments, 0);
+
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = 0;
+    }
+
+    if (options.onTick) {
+      options.onTick.apply(options.context, argumentArray);
+    }
+
+    timeoutId = setTimeout(function(){
+      call.apply(options.context, argumentArray);
+    }, options.timeout);
+  };
+}
+
   $(document).ready(function() {
     $('#patient_search, #pat_name').keypress(function(event) { return event.keyCode != 13; });
-    $('#patient_search, #pat_name').keyup(function(e) {
-      var $this = $(this);
-
-      consoleLog('START', $this.val(), (new Date().getTime()));
+    $('#patient_search, #pat_name').keyup(debounceCall(function(e) {
+      var $this = $(e.target);
 
       var $parent = $this.parent();
       var a = e.which; // ascii decimal value
@@ -45,7 +76,7 @@ function consoleLog () {
           window.searchVal = $this.val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
         }
       }
-    });
+    }, { onTick: cancelSearchRequest }));
 
     $(document).keyup(function(e) {
       switch (e.which) {
@@ -92,8 +123,8 @@ function consoleLog () {
       window.selectedUrl = '';
     });
 
-    $('#patient_list > li, .search_list li').click(function() {
-      var $this = $(this),
+    $('#patient_list > li, .search_list li').click(function(e) {
+      var $this = $(e.target),
           $parent = $this.closest('.search_hints').parent(),
           $search = $parent.find('input[type=text]');
 
@@ -345,10 +376,6 @@ function popitup(url)
   return false;
 }
 
-var searchBounce = 600,
-  searchTimeout = 0,
-  searchRequest = null;
-
 function handleResults (data, $reference) {
   var $target = typeof $reference === 'undefined' ? $('#patient_list') : $reference;
 
@@ -407,30 +434,18 @@ function sendValue (searchTerm, $reference) {
     return;
   }
 
-  if (searchTimeout) {
-    clearTimeout(searchTimeout);
-  }
-
-  if (searchRequest) {
-    searchRequest.abort();
-    searchRequest = null;
-  }
-
-  searchTimeout = setTimeout(function(){
-    searchRequest = $.ajax({
-      type: "post",
-      dataType: "json",
-      url: "list_patients.php",
-      data: { partial_name: searchTerm },
-      success: function(data){
-        handleResults(data, $reference);
-      },
-      complete: function(){
-        searchTimeout = 0;
-        searchRequest = null;
-      }
-    });
-  }, searchBounce);
+  searchRequest = $.ajax({
+    type: "post",
+    dataType: "json",
+    url: "list_patients.php",
+    data: { partial_name: searchTerm },
+    success: function(data){
+      handleResults(data, $reference);
+    },
+    complete: function(){
+      searchRequest = null;
+    }
+  });
 }
 
 function move_selection(direction)

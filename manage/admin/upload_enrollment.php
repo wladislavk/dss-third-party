@@ -57,8 +57,8 @@ if(isset($json_response->{"error"})){
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <script type="text/javascript" src="../3rdParty/input_mask/jquery.maskedinput.min.js"></script>
 	<script type="text/javascript" src="/manage/script/masks.js"></script>
- <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
- <script type="text/javascript" src="/manage/script/autocomplete_local.js"></script>	
+ <script type="text/javascript" src="/manage/script/autocomplete.js?v=20160719"></script>
+ <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=20160719"></script>
 <link href="/manage/css/search-hints.css" rel="stylesheet" type="text/css">
 	<? if($msg != '') {?>
     <div class="alert alert-danger text-center">

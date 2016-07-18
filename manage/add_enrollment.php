@@ -17,7 +17,7 @@
     <script type="text/javascript" src="script/validation.js"></script>
     <script type="text/javascript" src="/manage/3rdParty/input_mask/jquery.maskedinput-1.3.min.js"></script>
     <script type="text/javascript" src="/manage/js/masks.js"></script>
-    <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
+    <script type="text/javascript" src="/manage/script/autocomplete.js?v=20160719"></script>
     <script type="text/javascript" src="/manage/script/autocomplete_local.js?v=<?= time() ?>"></script>
     <link rel="stylesheet" href="/manage/css/form.css" type="text/css" />
     <link href="/manage/css/search-hints.css" rel="stylesheet" type="text/css">

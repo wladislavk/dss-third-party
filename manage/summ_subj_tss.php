@@ -59,7 +59,7 @@
 ?>
 	<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 	<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-	<script type="text/javascript" src="/manage/script/autocomplete.js"></script>
+	<script type="text/javascript" src="/manage/script/autocomplete.js?v=20160719"></script>
 	<script src="admin/popup/popup2.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="css/form.css" type="text/css" />
 

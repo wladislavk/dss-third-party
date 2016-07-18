@@ -47,7 +47,7 @@ Payer ID
                   $p_m_ins_payer_name = "";
                 }
 ?>
-  <script type="text/javascript" src="/manage/script/autocomplete.js"></script>
+  <script type="text/javascript" src="/manage/script/autocomplete.js?v=20160719"></script>
   <link rel="stylesheet" href="/manage/css/search-hints.css" />
 
                                         <input type="text" id="ins_payer_name" onclick="updateval(this)" autocomplete="off" name="ins_payer_name" value="<?= ($p_m_ins_payer_name!='')?$p_m_ins_payer_name:'Type insurance payer name'; ?>" style="width:300px;" />

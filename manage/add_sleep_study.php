@@ -459,7 +459,7 @@ if ($msg && $msg != $errorMessage) { ?>
         </tr>
         <tr>
             <td valign="top" class="odd">
-                <input style="width:140px" size="8" type="file" name="ss_file" />
+                <input id="file_0" style="width:140px" size="8" type="file" name="ss_file" />
                 <span id="req_0" class="req">*</span>
             </td>
         </tr>
@@ -640,11 +640,11 @@ if ($s_lab_result) {
                         <?php if ($s_lab['filename'] != '') { ?>
                             <div id="file_edit_<?php echo $s_lab['id']; ?>">
                                 <a href="display_file.php?f=<?= rawurlencode($s_lab['filename']) ?>" target="_blank" class="button">View</a>
-                                <input type="button" id="edit" onclick="$('#file_edit_<?php echo $s_lab['id']; ?>').hide();$('#file_<?php echo $s_lab['id']; ?>').show();return false;" value="Edit" title="Edit" />
+                                <input type="button" id="edit" class="file-input-edit" data-id="<?= $s_lab['id'] ?>" value="Edit" title="Edit" />
                             </div>
                             <input id="file_<?php echo $s_lab['id']; ?>" style="width: 170px;display:none;" name="ss_file" type="file" size="8" />
                         <?php } else { ?>
-                            <input style="width:140px;" size="8" type="file" name="ss_file" />
+                            <input id="file_<?= $s_lab['id'] ?>" style="width:140px;" size="8" type="file" name="ss_file" />
                             <span id="req_0" class="req">*</span>
                         <?php } ?>
                     </td>

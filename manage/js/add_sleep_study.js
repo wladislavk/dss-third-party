@@ -113,4 +113,14 @@ $(document).ready(function(){
             $fileUpload.show();
         }
     });
+
+    $('.sleep-study-form .file-input-edit').click(function(){
+        var $this = $(this),
+            id = $this.data('id');
+
+        $('#file_edit_' + id).hide();
+        $('#file_' + id + ', #filestyle-file_' + id).show();
+
+        return false;
+    });
 });

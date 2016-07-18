@@ -33,8 +33,10 @@ function debounceCall (call, options) {
 var autoCompleteRequest = null;
 
 function cancelAutoCompleteRequest () {
-    autoCompleteRequest.abort();
-    autoCompleteRequest = null;
+    if (autoCompleteRequest) {
+        autoCompleteRequest.abort();
+        autoCompleteRequest = null;
+    }
 }
 
 function setup_autocomplete(in_field, hint, id_field, source, file, cid){

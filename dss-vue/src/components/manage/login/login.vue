@@ -1,3 +1,5 @@
+<style src="../../../../assets/css/manage/login.css"></style>
+
 <template>
     <div id="login_container">
         <form name="loginfrm" id="loginForm" v-on:submit.prevent="submitForm">
@@ -61,7 +63,5 @@
 <script src="../../../../assets/js/manage/validation.js"></script>
 
 <script>
-    var css = require('./login.css');
-
     module.exports = require('./login.js');
 </script>

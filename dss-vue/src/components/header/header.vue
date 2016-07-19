@@ -1,3 +1,13 @@
+<style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/task.css" scoped></style>
+<style src="../../../assets/css/manage/notifications.css" scoped></style>
+<style src="../../../assets/css/manage/search-hints.css" scoped></style>
+<style src="../../../assets/css/manage/top.css" scoped></style>
+<style src="../../../assets/css/manage/letter-form.css" scoped></style>
+<style src="../../../assets/css/manage/form.css" scoped></style>
+<style src="../../../assets/css/manage/popup.css" scoped></style>
+<style src="../../../assets/css/jscal/border-radius.css" scoped></style>
+
 <template>
     <table width="980" border="0" cellpadding="0" cellspacing="0" align="center">
     <!-- Header and nav goes here -->
@@ -503,8 +513,6 @@
 <script src="../../../assets/js/manage/autocomplete_local.js"></script>
 
 <script>
-    var css = require('./header.css');
-
     task_function();
 
     module.exports = require('./header.js');

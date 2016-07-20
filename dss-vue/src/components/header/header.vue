@@ -477,7 +477,7 @@
     <div id="warn_logout">
         <br /><br />
 
-        <img src="images/logo.gif" /><br />
+        <img src="assets/images/logo.gif" /><br />
         <h1>Your screen has been locked for privacy due to inactivity.<br />Click to reopen your Dental Sleep Solutions software.</h1>
         <p style="color:#fff;font-size:20px;">Log out in <span id="logout_time_remaining"></span>!</p>
 

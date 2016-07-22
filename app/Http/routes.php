@@ -28,17 +28,6 @@ Route::group(['prefix' => 'webhooks'], function () {
 
 /*
 |--------------------------------------------------------------------------
-| Getter/Setter Session
-|--------------------------------------------------------------------------
-*/
-Route::group(['prefix' => 'session'], function () {
-    Route::post('get', 'SessionController@get');
-    Route::post('set', 'SessionController@set');
-    Route::get('flush', 'SessionController@flush');
-});
-
-/*
-|--------------------------------------------------------------------------
 | API routes
 |--------------------------------------------------------------------------
 */

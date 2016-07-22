@@ -1,4 +1,5 @@
-<style>
+<style src="../../../assets/css/manage/popup.css" scoped></style>
+<style scoped>
     #modal-content {
         width  : 100%;
         height : 100%;

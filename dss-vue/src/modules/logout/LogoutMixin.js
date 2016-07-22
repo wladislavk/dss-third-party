@@ -8,7 +8,7 @@ module.exports = {
                     window.storage.remove('token');
                     this.$route.router.go('/manage/login');
                 }, function(response) {
-                    console.error('invalidateToken [Error]: ', status, data);
+                    console.error('invalidateToken [status]: ', response.status);
                 });
         },
         invalidateToken: function() {

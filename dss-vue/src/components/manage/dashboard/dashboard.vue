@@ -1,4 +1,8 @@
-<style src="../../../../assets/css/manage/index.css"></style>
+<style src="../../../../assets/css/manage/index.css" scoped></style>
+<style src="../../../../assets/css/manage/homesuckertreemenu.css" scoped></style>
+<style src="../../../../assets/css/manage/dashboard-notifications.css" scoped></style>
+<style src="../../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../../assets/css/manage/task.css" scoped></style>
 
 <template>
     <table id="dashboard">

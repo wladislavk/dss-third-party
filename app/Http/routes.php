@@ -37,7 +37,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('users/current', 'UsersController@getCurrentUserInfo');
     Route::post('users/course-staff', 'UsersController@getCourseStaff');
     Route::post('users/check', 'UsersController@check');
-    Route::get('users/{id}/type', 'UsersController@getUserType');
     Route::post('users/payment-reports', 'UsersController@getPaymentReports');
     Route::resource('tasks', 'TasksController', ['except' => ['create', 'edit']]);
     Route::post('tasks/{type}', 'TasksController@getType');
@@ -91,6 +90,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('letters/unmailed', 'LettersController@getUnmailed');
     Route::resource('locations', 'LocationsController', ['except' => ['create', 'edit']]);
     Route::resource('logins', 'LoginsController', ['except' => ['create', 'edit']]);
+    Route::post('logout', 'LoginsController@logout');
     Route::resource('login-details', 'LoginDetailsController', ['except' => ['create', 'edit']]);
     Route::resource('mandibles', 'MandiblesController', ['except' => ['create', 'edit']]);
     Route::resource('maxillas', 'MaxillasController', ['except' => ['create', 'edit']]);

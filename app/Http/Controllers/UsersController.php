@@ -6,11 +6,9 @@ use DentalSleepSolutions\Helpers\ApiResponse;
 use DentalSleepSolutions\Http\Requests\UserStore;
 use DentalSleepSolutions\Http\Requests\UserUpdate;
 use DentalSleepSolutions\Http\Requests\UserDestroy;
-use DentalSleepSolutions\Http\Requests\UserCheck;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Contracts\Repositories\Users;
-use DentalSleepSolutions\Libraries\Password;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -22,6 +20,16 @@ use DentalSleepSolutions\Libraries\Password;
  */
 class UsersController extends Controller
 {
+    const DSS_USER_STATUS_ACTIVE    = 1;
+    const DSS_USER_STATUS_INACTIVE  = 2;
+    const DSS_USER_STATUS_SUSPENDED = 3;
+
+    private $statusLabels = [
+        self::DSS_USER_STATUS_ACTIVE    => 'Active',
+        self::DSS_USER_STATUS_INACTIVE  => 'In-Active',
+        self::DSS_USER_STATUS_SUSPENDED => 'Suspended'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -93,40 +101,23 @@ class UsersController extends Controller
     }
 
     /**
-     * Check username and password and get user data
+     * Get the account status
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\User $resource
-     * @param  \DentalSleepSolutions\Http\Requests\UserCheck $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function check(User $resource, UserCheck $request)
+    public function check()
     {
-        $username = $request->input('username');
-        $password = $request->input('password');
+        $accountStatuses = [
+            self::DSS_USER_STATUS_ACTIVE,
+            self::DSS_USER_STATUS_INACTIVE,
+            self::DSS_USER_STATUS_SUSPENDED
+        ];
 
-        $salt = $resource->getSalt($username)->salt;
+        $data = [];
 
-        if (!empty($salt)) {
-            $password = Password::genPassword($password, $salt);
-
-            $data = $resource->check($username, $password);
-        } else {
-            $data = [];
+        if ($this->currentUser && in_array($this->currentUser->status, $accountStatuses)) {
+            $data['type'] = $this->statusLabels[$this->currentUser->status];
         }
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * Get user type by user id
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\User $resource
-     * @param  \DentalSleepSolutions\Http\Requests\UserCheck $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getUserType($userId, User $resource)
-    {
-        $data = $resource->getUserType($userId);
 
         return ApiResponse::responseOk('', $data);
     }

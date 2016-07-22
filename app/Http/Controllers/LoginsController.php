@@ -89,4 +89,18 @@ class LoginsController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    /**
+     * Log out the user.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        // TODO: Need to implement setting the logout_date field in dental_login
+
+        $this->auth->invalidate($this->auth->getToken());
+
+        return ApiResponse::responseOk('User was logged out');
+    }
 }

@@ -53,7 +53,12 @@ class LoginDetailsController extends Controller
      */
     public function store(LoginDetails $resources, LoginDetailStore $request)
     {
+        $loginId = $this->currentUser->loginid ?: 0;
+        $userId = $this->currentUser->id ?: 0;
+
         $data = array_merge($request->all(), [
+            'loginid'    => $loginId,
+            'userid'     => $userId,
             'ip_address' => $request->ip()
         ]);
 

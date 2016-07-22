@@ -1,6 +1,8 @@
-<script>
-    import swal from 'sweetalert';
-</script>
+<style src="../../../../assets/css/manage/index.css" scoped></style>
+<style src="../../../../assets/css/manage/homesuckertreemenu.css" scoped></style>
+<style src="../../../../assets/css/manage/dashboard-notifications.css" scoped></style>
+<style src="../../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../../assets/css/manage/task.css" scoped></style>
 
 <template>
     <table id="dashboard">
@@ -416,7 +418,3 @@
 <script>
     module.exports = require('./dashboard.js');
 </script>
-
-<style src="./dashboard.css"></style>
-
-<link rel="stylesheet" type="text/css" href="node_modules/sweetalert/dist/sweetalert.css">

@@ -12,6 +12,7 @@ import ManageTemplate from './components/header/header.vue'
 Vue.component('manage-template', ManageTemplate);
 
 // components for routing
+import Login from './components/manage/login/login.vue'
 import Index from './components/manage/dashboard/dashboard.vue'
 
 // global variables
@@ -45,6 +46,9 @@ router.map({
     '/manage/index': {
         component : Index,
         auth      : true
+    },
+    '/manage/login': {
+        component : Login
     }
 })
 

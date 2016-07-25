@@ -21,6 +21,9 @@ use Illuminate\Http\Request;
  */
 class InsurancesController extends Controller
 {
+    const DSS_USER_TYPE_FRANCHISEE = 1;
+    const DSS_USER_TYPE_SOFTWARE   = 2;
+
     /**
      * Display a listing of the resource.
      *
@@ -104,12 +107,14 @@ class InsurancesController extends Controller
     {
         $docId = $this->currentUser->docid ?: 0;
 
+        $isUserTypeSoftware = ($this->currentUser->user_type == self::DSS_USER_TYPE_SOFTWARE);
+
         switch ($type) {
             case 'pending-claims':
                 $data = $resources->getPendingClaims($docId);
                 break;
             case 'unmailed-claims':
-                $data = $resources->getUnmailedClaims($docId);
+                $data = $resources->getUnmailedClaims($docId, $isUserTypeSoftware);
                 break;
             case 'rejected-claims':
                 $data = $resources->getRejectedClaims($docId);

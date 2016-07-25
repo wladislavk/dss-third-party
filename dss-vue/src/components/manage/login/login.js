@@ -1,3 +1,5 @@
+var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
+
 module.exports = {
     data: function() {
         return {
@@ -8,6 +10,7 @@ module.exports = {
             }
         }
     },
+    mixins: [handlerMixin],
     compiled: function()
     {
         if (window.storage.get('token')) {
@@ -56,13 +59,13 @@ module.exports = {
                                 this.$route.router.go('/manage/index');
                             }
                         }, function(response) {
-                            console.error('getAccountStatus [status]: ', response.status);
+                            this.handleErrors('getAccountStatus', response);
                         });
                 }, function(response) {
                     if (response.status == 422) {
                         this.message = 'Wrong username or password';
                     } else {
-                        console.error('getToken [status]: ', response.status);
+                        this.handleErrors('getToken', response);
                     }
                 });
         },

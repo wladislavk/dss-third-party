@@ -1,4 +1,5 @@
-var taskMixin  = require('../../../modules/tasks/TaskMixin.js');
+var taskMixin    = require('../../../modules/tasks/TaskMixin.js');
+var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
 
 module.exports = {
     el: function() {
@@ -57,7 +58,7 @@ module.exports = {
             showUnmailedClaims               : false
         }
     },
-    mixins: [taskMixin],
+    mixins: [taskMixin, handlerMixin],
     watch: {
         'headerInfo.docInfo.homepage': 'redirectToIndex2',
         'headerInfo.user.id': function() {
@@ -69,7 +70,7 @@ module.exports = {
                         this.headerInfo.user['manage_staff'] = data.manage_staff || 0
                     }
                 }, function(response) {
-                    console.error('getManageStaffOfCurrentUser [status]: ', response.status);
+                    this.handleErrors('getManageStaffOfCurrentUser', response);
                 });
         }
     },
@@ -85,7 +86,7 @@ module.exports = {
 
                 this.$set('documentCategories', data);
             }, function(response) {
-                console.error('getDocumentCategories [status]: ', response.status);
+                this.handleErrors('getDocumentCategories', response);
             });
 
         this.getCurrentMemos()
@@ -94,7 +95,7 @@ module.exports = {
 
                 this.$set('memos', data);
             }, function(response) {
-                console.error('getCurrentMemos [status]: ', response.status);
+                this.handleErrors('getCurrentMemos', response);
             });
     },
     computed: {

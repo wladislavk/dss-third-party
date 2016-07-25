@@ -3,6 +3,7 @@ var moment       = require('moment');
 var modal        = require('../modal/modal.vue');
 var taskMixin    = require('../../modules/tasks/TaskMixin.js');
 var logoutMixin  = require('../../modules/logout/LogoutMixin.js');
+var handlerMixin = require('../../modules/handler/HandlerMixin.js');
 
 module.exports = {
     data: function() {
@@ -81,7 +82,7 @@ module.exports = {
     components: {
         'modal': modal
     },
-    mixins: [taskMixin, logoutMixin],
+    mixins: [taskMixin, logoutMixin, handlerMixin],
     created: function() {
         this.getCurrentUser() // get current user info
             .then(function(response) {
@@ -93,11 +94,7 @@ module.exports = {
                     }
                 }
             }, function(response) {
-                console.error('getCurrentUser [status]: ', response.status);
-                // token is expired
-                if (response.status == 401) {
-                    this.$route.router.go('/manage/login');
-                }
+                this.handleErrors('getCurrentUser', response);
             }).then(function(response) {
                 this.getUser(this.headerInfo.user.docid) //get doc info
                     .then(function(response) {
@@ -109,7 +106,7 @@ module.exports = {
                             }
                         }
                     }, function(response) {
-                        console.error('getUser [status]: ', response.status);
+                        this.handleErrors('getUser', response);
                     }).then(function(response) {
                         if (this.headerInfo.docInfo.homepage != '1') {
                             // include_once 'includes/top2.htm';
@@ -121,7 +118,7 @@ module.exports = {
                                     .then(function(response) {
                                         // if success
                                     }, function(response) {
-                                        console.error('setLoginDetails [status]: ', response.status);
+                                        this.handleErrors('setLoginDetails', response);
                                     });
                             }
 
@@ -133,7 +130,7 @@ module.exports = {
                                         this.headerInfo.pendingLetters = data;
                                     }
                                 }, function(response) {
-                                    console.error('getPendingLetters [status]: ', response.status);
+                                    this.handleErrors('getPendingLetters', response);
                                 }).then(function(response) {
                                     if (this.headerInfo.pendingLetters[0].generated_date == 0) {
                                         this.oldestLetter = 0
@@ -152,7 +149,7 @@ module.exports = {
                                         this.headerInfo.unmailedLettersNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getUnmailedLettersNumber [status]: ', response.status);
+                                    this.handleErrors('getUnmailedLettersNumber', response);
                                 });
 
                             this.getPendingClaimsNumber()
@@ -164,7 +161,7 @@ module.exports = {
                                         this.headerInfo.pendingNodssClaimsNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getPendingClaimsNumber [status]: ', response.status);
+                                    this.handleErrors('getPendingClaimsNumber', response);
                                 });
 
                             this.getUnmailedClaimsNumber()
@@ -175,7 +172,7 @@ module.exports = {
                                         this.headerInfo.unmailedClaimsNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getUnmailedClaimsNumber [status]: ', response.status);
+                                    this.handleErrors('getUnmailedClaimsNumber', response);
                                 });
 
                             this.getRejectedClaimsNumber()
@@ -186,7 +183,7 @@ module.exports = {
                                         this.headerInfo.rejectedClaimsNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getRejectedClaimsNumber [status]: ', response.status);
+                                    this.handleErrors('getRejectedClaimsNumber', response);
                                 });
 
                             this.getPreauthNumber()
@@ -197,7 +194,7 @@ module.exports = {
                                         this.headerInfo.preauthNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getPreauthNumber [status]: ', response.status);
+                                    this.handleErrors('getPreauthNumber', response);
                                 });
 
                             this.getPendingPreauthNumber()
@@ -208,7 +205,7 @@ module.exports = {
                                         this.headerInfo.pendingPreauthNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getPendingPreauthNumber [status]: ', response.status);
+                                    this.handleErrors('getPendingPreauthNumber', response);
                                 });
 
                             this.getRejectedPreauthNumber()
@@ -220,7 +217,7 @@ module.exports = {
                                         this.headerInfo.alertsNumber          = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getRejectedPreauthNumber [status]: ', response.status);
+                                    this.handleErrors('getRejectedPreauthNumber', response);
                                 });
                             
                             this.getHSTNumber()
@@ -231,7 +228,7 @@ module.exports = {
                                         this.headerInfo.hstNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getHSTNumber [status]: ', response.status);
+                                    this.handleErrors('getHSTNumber', response);
                                 });
 
                             this.getRequestedHSTNumber()
@@ -242,7 +239,7 @@ module.exports = {
                                         this.headerInfo.requestedHSTNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getRequestedHSTNumber [status]: ', response.status);
+                                    this.handleErrors('getRequestedHSTNumber', response);
                                 });
 
                             this.getRejectedHSTNumber()
@@ -253,7 +250,7 @@ module.exports = {
                                         this.headerInfo.rejectedHSTNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getRejectedHSTNumber [status]: ', response.status);
+                                    this.handleErrors('getRejectedHSTNumber', response);
                                 });
 
                             this.getPatientContactsNumber()
@@ -264,7 +261,7 @@ module.exports = {
                                         this.headerInfo.patientContactsNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getPatientContactsNumber [status]: ', response.status);
+                                    this.handleErrors('getPatientContactsNumber', response);
                                 });
 
                             this.getPatientInsurancesNumber()
@@ -275,7 +272,7 @@ module.exports = {
                                         this.headerInfo.patientInsurancesNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getPatientInsurancesNumber [status]: ', response.status);
+                                    this.handleErrors('getPatientInsurancesNumber', response);
                                 });
 
                             this.getPatientChangesNumber()
@@ -286,7 +283,7 @@ module.exports = {
                                         this.headerInfo.patientChangesNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getPatientChangesNumber [status]: ', response.status);
+                                    this.handleErrors('getPatientChangesNumber', response);
                                 });
 
                             this.getPendingDuplicatesNumber()
@@ -297,7 +294,7 @@ module.exports = {
                                         this.headerInfo.pendingDuplicatesNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getPendingDuplicatesNumber [status]: ', response.status);
+                                    this.handleErrors('getPendingDuplicatesNumber', response);
                                 });
 
                             this.getBouncesNumber()
@@ -308,7 +305,7 @@ module.exports = {
                                         this.headerInfo.emailBouncesNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getBouncesNumber [status]: ', response.status);
+                                    this.handleErrors('getBouncesNumber', response);
                                 });
 
                             this.getUsingPaymentReports()
@@ -319,7 +316,7 @@ module.exports = {
                                         this.headerInfo.usePaymentReports = data.use_payment_reports;
                                     }
                                 }, function(response) {
-                                    console.error('getUsingPaymentReports [status]: ', response.status);
+                                    this.handleErrors('getUsingPaymentReports', response);
                                 }).then(function(response) {
                                     if (this.headerInfo.usePaymentReports) {
                                         this.getPaymentReportsNumber()
@@ -330,7 +327,7 @@ module.exports = {
                                                     this.headerInfo.paymentReportsNumber = data.total;
                                                 }
                                             }, function(response) {
-                                                console.error('getPaymentReportsNumber [status]: ', response.status);
+                                                this.handleErrors('getPaymentReportsNumber', response);
                                             });
                                     }
                                 });
@@ -343,7 +340,7 @@ module.exports = {
                                         this.headerInfo.unsignedNotesNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getUnsignedNotesNumber [status]: ', response.status);
+                                    this.handleErrors('getUnsignedNotesNumber', response);
                                 });
 
                             this.getFaxAlertsNumber()
@@ -354,7 +351,7 @@ module.exports = {
                                         this.headerInfo.faxAlertsNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getFaxAlertsNumber [status]: ', response.status);
+                                    this.handleErrors('getFaxAlertsNumber', response);
                                 });
 
                             this.getSupportTicketsNumber()
@@ -365,7 +362,7 @@ module.exports = {
                                         this.supportTicketsNumber = data.total;
                                     }
                                 }, function(response) {
-                                    console.error('getSupportTicketsNumber [status]: ', response.status);
+                                    this.handleErrors('getSupportTicketsNumber', response);
                                 });
                         }
                     });
@@ -388,7 +385,7 @@ module.exports = {
                                 this.patientName = data[0].firstname +  ' ' + data[0].lastname;
                             }
                         }, function(response) {
-                            console.error('getPatientByIdAndDocId [status]: ', response.status);
+                            this.handleErrors('getPatientByIdAndDocId', response);
                         });
 
                     this.getHealthHistoryByPatientId(this.$route.query.pid)
@@ -403,7 +400,7 @@ module.exports = {
                                 }
                             }
                         }, function(response) {
-                            console.error('getHealthHistoryByPatientId [status]: ', response.status);
+                            this.handleErrors('getHealthHistoryByPatientId', response);
                         });
                 }
             }).then(function(response) {
@@ -415,7 +412,7 @@ module.exports = {
                             this.headerInfo.tasksNumber = data.length;
                         }
                     }, function(response) {
-                        console.error('getTasks [status]: ', response.status);
+                        this.handleErrors('getTasks', response);
                     });
 
                 this.getOverdueTasks()
@@ -427,7 +424,7 @@ module.exports = {
                             this.headerInfo.overdueTasks = data;
                         }
                     }, function(response) {
-                        console.error('getOverdueTasks [status]: ', response.status);
+                        this.handleErrors('getOverdueTasks', response);
                     });
 
                 this.getTodayTasks()
@@ -439,7 +436,7 @@ module.exports = {
                             this.headerInfo.todayTasks = data;
                         }
                     }, function(response) {
-                        console.error('getTodayTasks [status]: ', response.status);
+                        this.handleErrors('getTodayTasks', response);
                     });
 
                 this.getTomorrowTasks()
@@ -451,7 +448,7 @@ module.exports = {
                             this.headerInfo.tomorrowTasks = data;
                         }
                     }, function(response) {
-                        console.error('getTomorrowTasks [status]: ', response.status);
+                        this.handleErrors('getTomorrowTasks', response);
                     });
 
                 this.getThisWeekTasks()
@@ -462,7 +459,7 @@ module.exports = {
                             this.headerInfo.thisWeekTasks = data;
                         }
                     }, function(response) {
-                        console.error('getThisWeekTasks [status]: ', response.status);
+                        this.handleErrors('getThisWeekTasks', response);
                     });
 
                 this.getNextWeekTasks()
@@ -473,7 +470,7 @@ module.exports = {
                             this.headerInfo.nextWeekTasks = data;
                         }
                     }, function(response) {
-                        console.error('getNextWeekTasks [status]: ', response.status);
+                        this.handleErrors('getNextWeekTasks', response);
                     });
 
                 this.getLaterTasks()
@@ -484,7 +481,7 @@ module.exports = {
                             this.headerInfo.laterTasks = data;
                         }
                     }, function(response) {
-                        console.error('getLaterTasks [status]: ', response.status);
+                        this.handleErrors('getLaterTasks', response);
                     });
             }).then(function(response) {
                 this.getUserById(this.headerInfo.user.id)
@@ -495,7 +492,7 @@ module.exports = {
                             this.$set('headerInfo.user.use_course', data.use_course);
                         }
                     }, function(response) {
-                        console.error('getUserById [status]: ', response.status);
+                        this.handleErrors('getUserById', response);
                     });
 
                 this.getCourseStaff()
@@ -507,7 +504,7 @@ module.exports = {
                             this.$set('headerInfo.courseStaff.use_course_staff', data.use_course_staff);
                         }
                     }, function(response) {
-                        console.error('getCourseStaff [status]: ', response.status);
+                        this.handleErrors('getCourseStaff', response);
                     });
             }).then(function(response) {
                 this.getCompanyLogo()
@@ -518,7 +515,7 @@ module.exports = {
                             this.$set('companyLogo', data.logo);
                         }
                     }, function(response) {
-                        console.error('getCompanyLogo [status]: ', response.status);
+                        this.handleErrors('getCompanyLogo', response);
                     });
             }).then(function(response) {
                 if (this.$route.query.pid) {
@@ -530,7 +527,7 @@ module.exports = {
                                 this.headerInfo.patientTaskNumber = data.length;
                             }
                         }, function(response) {
-                            console.error('getPatientTasks [status]: ', response.status);
+                            this.handleErrors('getPatientTasks', response);
                         }).then(function(response) {
                             if (this.headerInfo.patientTaskNumber > 0) {
                                 this.getPatientOverdueTasks(this.$route.query.pid)
@@ -541,7 +538,7 @@ module.exports = {
                                             this.headerInfo.overdueTasks = data;
                                         }
                                     }, function(response) {
-                                        console.error('getPatientOverdueTasks [status]: ', response.status);
+                                        this.handleErrors('getPatientOverdueTasks', response);
                                     });
 
                                 this.getPatientTodayTasks(this.$route.query.pid)
@@ -552,7 +549,7 @@ module.exports = {
                                             this.headerInfo.todayTasks = data;
                                         }
                                     }, function(response) {
-                                        console.error('getPatientTodayTasks [status]: ', response.status);
+                                        this.handleErrors('getPatientTodayTasks', response);
                                     });
 
                                 this.getPatientTomorrowTasks(this.$route.query.pid)
@@ -563,7 +560,7 @@ module.exports = {
                                             this.headerInfo.tomorrowTasks = data;
                                         }
                                     }, function(response) {
-                                        console.error('getPatientTomorrowTasks [status]: ', response.status);
+                                        this.handleErrors('getPatientTomorrowTasks', response);
                                     });
 
                                 this.getPatientFutureTasks(this.$route.query.pid)
@@ -574,7 +571,7 @@ module.exports = {
                                             this.futureTasks = data;
                                         }
                                     }, function(response) {
-                                        console.error('getPatientFutureTasks [status]: ', response.status);
+                                        this.handleErrors('getPatientFutureTasks', response);
                                     });
                             }
                         });
@@ -589,7 +586,7 @@ module.exports = {
                                 this.childrenPatients = data;
                             }
                         }, function(response) {
-                            console.error('getPatientsByParentId [status]: ', response.status);
+                            this.handleErrors('getPatientsByParentId', response);
                         });
 
                     this.getCurrentPatientContacts(this.$route.query.pid)
@@ -600,7 +597,7 @@ module.exports = {
                                 this.totalContacts = data.length;
                             }
                         }, function(response) {
-                            console.error('getCurrentPatientContacts [status]: ', response.status);
+                            this.handleErrors('getCurrentPatientContacts', response);
                         });
 
                     this.getCurrentPatientInsurances(this.$route.query.pid)
@@ -611,7 +608,7 @@ module.exports = {
                                 this.totalInsurances = data.lenght;
                             }
                         }, function(response) {
-                            console.error('getCurrentPatientInsurances [status]: ', response.status);
+                            this.handleErrors('getCurrentPatientInsurances', response);
                         });
 
                     this.getQuestionnaireStatuses(this.$route.query.pid)
@@ -624,7 +621,7 @@ module.exports = {
                                 }
                             }
                         }, function(response) {
-                            console.error('getQuestionnaireStatuses [status]: ', response.status);
+                            this.handleErrors('getQuestionnaireStatuses', response);
                         })
 
                     this.getBouncedEmailsNumberForCurrentPatient(this.$route.query.pid)
@@ -635,7 +632,7 @@ module.exports = {
                                 this.bouncedEmailsNumberForCurrentPatient = data.length;
                             }
                         }, function(response) {
-                            console.error('getBouncedEmailsNumberForCurrentPatient [status]: ', response.status);
+                            this.handleErrors('getBouncedEmailsNumberForCurrentPatient', response);
                         });
 
                     this.getRejectedClaimsForCurrentPatient(this.$route.query.pid)
@@ -646,7 +643,7 @@ module.exports = {
                                 this.$set('rejectedClaimsForCurrentPatient', data);
                             }
                         }, function(response) {
-                            console.error('getRejectedClaimsForCurrentPatient [status]: ', response.status);
+                            this.handleErrors('getRejectedClaimsForCurrentPatient', response);
                         });
                 }
             }).then(function(response) {
@@ -658,7 +655,7 @@ module.exports = {
                             this.$set('uncompletedHomeSleepTests', data);
                         }
                     }, function(response) {
-                        console.error('getUncompletedHomeSleepTests [status]: ', response.status);
+                        this.handleErrors('getUncompletedHomeSleepTests', response);
                     });
             });
     },

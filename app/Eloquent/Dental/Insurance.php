@@ -152,13 +152,17 @@ class Insurance extends Model implements Resource, Repository
             ->first();
     }
 
-    public function getUnmailedClaims($docId = 0)
+    public function getUnmailedClaims($docId = 0, $isUserTypeSoftware = false)
     {
-        return $this->countFrontOfficeClaims($docId)
+        $query = $this->countFrontOfficeClaims($docId)
             ->whereNull('claim.mailed_date')
-            ->whereNull('claim.sec_mailed_date')
-            ->whereNotIn('claim.status', ClaimFormData::statusListByName('pending'))
-            ->first();
+            ->whereNull('claim.sec_mailed_date');
+
+        if ($isUserTypeSoftware) {
+            $query = $query->whereNotIn('claim.status', ClaimFormData::statusListByName('actionable'));
+        }
+
+        return $query->first();
     }
 
     public function getRejectedClaims($docId = 0)

@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\UserDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Contracts\Repositories\Users;
+use Carbon\Carbon;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -153,5 +154,24 @@ class UsersController extends Controller
         $data = $resources->getPaymentReports($docId);
 
         return ApiResponse::responseOk('', $data);
+    }
+
+    public function checkLogout(User $resource)
+    {
+        $userId = $this->currentUser->id ?: 0;
+        $logoutTime = 60 * 60;
+
+        $data = $resource->getLastAccessedDate($userId);
+
+        $lastAccessedDate = strtotime($data->last_accessed_date);
+        $now = strtotime(Carbon::now());
+
+        if ($lastAccessedDate > $now - $logoutTime) {
+            $resetTime = ($logoutTime - ($now - $lastAccessedDate)) * 1000;
+
+            return ApiResponse::responseOk('', ['resetTime' => $resetTime]);
+        } else {
+            return ApiResponse::responseOk('', ['logout' => true]);
+        }
     }
 }

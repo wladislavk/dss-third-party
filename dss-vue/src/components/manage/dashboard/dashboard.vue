@@ -120,20 +120,17 @@
                                 <ul>
                                     <li>
                                         <a href="manage_patient_contacts.php" class=" count_{{ headerInfo.patientContactsNumber }} notification bad_count">
-                                            <span class="count">{{ headerInfo.patientContactsNumber }}</span>
-                                            <span class="label">Pt Contacts</span>
+                                            <span class="count">{{ headerInfo.patientContactsNumber }}</span><span class="label">Pt Contacts</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="manage_patient_insurance.php" class=" count_{{ headerInfo.patientInsurancesNumber }} notification bad_count">
-                                            <span class="count">{{ headerInfo.patientInsurancesNumber }}</span>
-                                            <span class="label">Pt Insurance</span>
+                                            <span class="count">{{ headerInfo.patientInsurancesNumber }}</span><span class="label">Pt Insurance</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="manage_patient_changes.php" class=" count_{{ headerInfo.patientChangesNumber }} notification bad_count">
-                                            <span class="count">{{ headerInfo.patientChangesNumber }}</span>
-                                            <span class="label">Pt Changes</span>
+                                            <span class="count">{{ headerInfo.patientChangesNumber }}</span><span class="label">Pt Changes</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -142,8 +139,7 @@
                     </div>
 
                     <a v-if="headerInfo.useLetters" href="letters.php?status=pending" class=" count_{{ headerInfo.pendingLetters.length }} notification {{ headerInfo.pendingLetters.length == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ headerInfo.pendingLetters.length }}</span>
-                        <span class="label">Letters</span>
+                        <span class="count">{{ headerInfo.pendingLetters.length }}</span><span class="label">Letters</span>
                     </a>
 
                     <a v-if="showUnmailedLettersNumber" href="letters.php?status=sent&mailed=0" class=" count_{{ headerInfo.unmailedLettersNumber }} notification bad_count">
@@ -174,13 +170,11 @@
                         <span class="label">Unsent HSTs</span>
                     </a>
                     <a href="manage_claims.php" class="notification  count_{{ headerInfo.pendingNodssClaimsNumber }} {{ headerInfo.pendingNodssClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ headerInfo.pendingNodssClaimsNumber }}</span>
-                        <span class="label">Pending Claims</span>
+                        <span class="count">{{ headerInfo.pendingNodssClaimsNumber }}</span><span class="label">Pending Claims</span>
                     </a>
 
                     <a v-if="showUnmailedClaims" href="manage_claims.php?unmailed=1" class=" count_{{ headerInfo.unmailedClaimsNumber }} notification {{ headerInfo.unmailedClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">
-                        <span class="count">{{ headerInfo.unmailedClaimsNumber }}</span>
-                        <span class="label">Unmailed Claims</span>
+                        <span class="count">{{ headerInfo.unmailedClaimsNumber }}</span><span class="label">Unmailed Claims</span>
                     </a>
 
                     <a href="manage_rejected_claims.php" class=" count_{{ headerInfo.rejectedClaimsNumber }} notification {{ headerInfo.rejectedClaimsNumber == 0 ? 'good_count' : 'bad_count' }}">

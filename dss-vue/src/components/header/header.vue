@@ -484,7 +484,7 @@
             <br /><br />
 
             <a href="#" v-on:click.prevent="logout">Logout</a>
-            <a href="#" onclick="reset_interval(0)">Stay logged in</a>
+            <a href="#" v-on:click.prevent="resetInterval">Stay logged in</a>
         </div>
     </div>
 </template>
@@ -500,7 +500,7 @@
 <script src="../../../assets/js/table-sorter/jquery.tablesorter.widgets.js"></script>
 <!-- <script src="../../../assets/js/manage/masks.js"></script> -->
 <!-- <script src="../../../assets/js/calendar/calendar2.js"></script> -->
-<script src="../../../assets/js/manage/logout_timer.js"></script>
+<!-- <script src="../../../assets/js/manage/logout_timer.js"></script> -->
 <script src="../../../assets/js/manage/ddlevelsmenu.js"></script>
 <script src="../../../assets/js/manage/validation.js"></script>
 <script src="../../../assets/js/manage/top.js"></script>

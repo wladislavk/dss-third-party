@@ -1,91 +1,98 @@
 module.exports = {
     data: function() {
         return {
-            lastActivity: this.currentTime(),
+            lastActivity       : this.currentTime(),
+            modalWindow        : $('#warn_logout'),
+            seconds            : 1000,
+            minutes            : 0,
+            hours              : 0,
+            modalWait          : 0,
+            logoutWait         : 0,
+            ticker             : 0,
+            interval           : 0,
+            waitingForResponse : false,
+            timerDisplay       : $('#logout_time_remaining')
         }
+    },
+    created: function() {
+        console.log(this.$els, this.$els.warning);
+
+        window.addEventListener('keydown', this.catchUserMoving);
+        window.addEventListener('mousemove', this.catchUserMoving);
+
+        this.minutes    = 60 * this.seconds;
+        this.hours      = 60 * this.minutes;
+        this.modalWait  = 1 * this.minutes / 2;
+        this.logoutWait = 1 * this.hours;
+        this.ticker     = 1 * this.seconds - 1;
+    },
+    beforeDestroy: function() {
+        window.removeEventListener('keydown', this.catchUserMoving);
+        window.removeEventListener('mousemove', this.catchUserMoving);
     },
     methods: {
         setLogoutTimer: function() {
-            var seconds            = 1000,
-                minutes            = 60 * seconds,
-                hours              = 60 * minutes,
-                modalWait          = 15 * minutes,
-                logoutWait         = 1 * hours,
-                ticker             = 1 * seconds - 1,
-                interval           = 0,
-                waitingForResponse = false,
-                modalWindow        = $('#warn_logout'),
-                cancelButton       = 'a:contains(logged)',
-                timerDisplay       = $('#logout_time_remaining');
+            this.interval = setInterval(this.displayTimer, this.ticker);
+        },
+        resetInterval: function() {
+            this.modalWindow.hide();
+            this.lastActivity = this.currentTime();
+        },
+        catchUserMoving: function() {
+            if (this.modalWindow.is(':visible')) {
+                return;
+            }
 
-            $(document).delegate('body', 'keydown mousemove', function(){
-                if (modalWindow.is(':visible')) {
+            this.lastActivity = this.currentTime();
+        },
+        displayTimer: function() {
+            var now              = this.currentTime(),
+                inactiveTime     = now - this.lastActivity,
+                timeBeforeModal  = this.modalWait - inactiveTime,
+                timeBeforeLogout = this.logoutWait - inactiveTime;
+
+            timeBeforeModal  = timeBeforeModal > 0 ? timeBeforeModal : 0;
+            timeBeforeLogout = timeBeforeLogout > 0 ? timeBeforeLogout : 0;
+
+            this.timerDisplay.text(this.formatTime(timeBeforeLogout));
+
+            if (timeBeforeLogout <= 0) {
+                if (this.waitingForResponse) {
                     return;
                 }
 
-                console.log(this.lastActivity);
+                this.waitingForResponse = true;
 
-                this.lastActivity = this.currentTime();
-            });
+                this.checkLogout()
+                    .then(function(response) {
+                        var data = response.data;
 
-            modalWindow.delegate(cancelButton, 'click', function(){
-                modalWindow.hide();
+                        var newLast = this.currentTime() + (data.resetTime || 0) - this.logoutWait;
 
-                this.lastActivity = this.currentTime();
-            });
+                        if (data.resetTime) {
+                            this.lastActivity = newLast > this.lastActivity ? newLast : this.lastActivity;
+                        } else {
+                            clearInterval(this.interval);
+                            this.logout();
+                        }
 
-            interval = setInterval(function(){
-                var now              = this.currentTime(),
-                    inactiveTime     = now - this.lastActivity,
-                    timeBeforeModal  = modalWait - inactiveTime,
-                    timeBeforeLogout = logoutWait - inactiveTime;
+                        this.waitingForResponse = false;
+                    }, function(response) {
+                        this.handleErrors('checkLogout', response);
+                    });
+            }
 
-                timeBeforeModal  = timeBeforeModal > 0 ? timeBeforeModal : 0;
-                timeBeforeLogout = timeBeforeLogout > 0 ? timeBeforeLogout : 0;
-
-                timerDisplay.text(this.formatTime(timeBeforeLogout));
-
-                if (timeBeforeLogout <= 0) {
-                    if (waitingForResponse) {
-                        return;
-                    }
-
-                    waitingForResponse = true;
-
-                    this.checkLogout()
-                        .then(function(response) {
-                            var data = response.data;
-
-                            var newLast = this.currentTime() + (data.resetTime || 0) - logoutWait;
-
-                            if (data.resetTime) {
-                                this.lastActivity = newLast > this.lastActivity ? newLast : this.lastActivity;
-                            } else {
-                                clearInterval(interval);
-                                this.logout();
-                            }
-
-                            waitingForResponse = false;
-                        }, function(response) {
-                            this.handleErrors('checkLogout', response);
-                        });
-                }
-
-                if (timeBeforeModal <= 0 && !modalWindow.is(':visible')) {
-                    modalWindow.show();
-                }
-            }, ticker);
-        },
-        resetInterval: function() {
-            this.lastActivity = this.currentTime();
+            if (timeBeforeModal <= 0 && !this.modalWindow.is(':visible')) {
+                this.modalWindow.show();
+            }
         },
         currentTime: function() {
             return (new Date).getTime();
         },
         formatTime: function(time) {
-            var h = Math.floor(time / hours),
-                m = Math.floor((time - h * hours) / minutes),
-                s = Math.floor((time - h * hours - m * minutes) / seconds),
+            var h = Math.floor(time / this.hours),
+                m = Math.floor((time - h * this.hours) / this.minutes),
+                s = Math.floor((time - h * this.hours - m * this.minutes) / this.seconds),
                 time;
 
                 if (h) {

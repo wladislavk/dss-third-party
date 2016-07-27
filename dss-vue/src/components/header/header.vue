@@ -474,7 +474,7 @@
         <!-- Popup global template -->
         <modal v-ref:modal></modal>
 
-        <div id="warn_logout">
+        <div id="warn_logout" v-el:warning>
             <br /><br />
 
             <img src="assets/images/logo.gif" /><br />

@@ -474,12 +474,12 @@
         <!-- Popup global template -->
         <modal v-ref:modal></modal>
 
-        <div id="warn_logout" v-el:warning>
+        <div id="warn_logout" v-el:warning-logout>
             <br /><br />
 
             <img src="assets/images/logo.gif" /><br />
             <h1>Your screen has been locked for privacy due to inactivity.<br />Click to reopen your Dental Sleep Solutions software.</h1>
-            <p style="color:#fff;font-size:20px;">Log out in <span id="logout_time_remaining"></span>!</p>
+            <p style="color:#fff;font-size:20px;">Log out in <span id="logout_time_remaining" v-el:logout-timer></span>!</p>
 
             <br /><br />
 
@@ -500,7 +500,6 @@
 <script src="../../../assets/js/table-sorter/jquery.tablesorter.widgets.js"></script>
 <!-- <script src="../../../assets/js/manage/masks.js"></script> -->
 <!-- <script src="../../../assets/js/calendar/calendar2.js"></script> -->
-<!-- <script src="../../../assets/js/manage/logout_timer.js"></script> -->
 <script src="../../../assets/js/manage/ddlevelsmenu.js"></script>
 <script src="../../../assets/js/manage/validation.js"></script>
 <script src="../../../assets/js/manage/top.js"></script>

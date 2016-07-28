@@ -2,7 +2,7 @@ module.exports = {
     data: function() {
         return {
             lastActivity       : this.currentTime(),
-            modalWindow        : $('#warn_logout'),
+            modalWindow        : null,
             seconds            : 1000,
             minutes            : 0,
             hours              : 0,
@@ -11,20 +11,22 @@ module.exports = {
             ticker             : 0,
             interval           : 0,
             waitingForResponse : false,
-            timerDisplay       : $('#logout_time_remaining')
+            timerDisplay       : null
         }
     },
     created: function() {
-        console.log(this.$els, this.$els.warning);
-
         window.addEventListener('keydown', this.catchUserMoving);
         window.addEventListener('mousemove', this.catchUserMoving);
 
         this.minutes    = 60 * this.seconds;
         this.hours      = 60 * this.minutes;
-        this.modalWait  = 1 * this.minutes / 2;
+        this.modalWait  = 15 * this.minutes;
         this.logoutWait = 1 * this.hours;
         this.ticker     = 1 * this.seconds - 1;
+    },
+    ready: function() {
+        this.modalWindow  = $(this.$els.warningLogout);
+        this.timerDisplay = $(this.$els.logoutTimer);
     },
     beforeDestroy: function() {
         window.removeEventListener('keydown', this.catchUserMoving);

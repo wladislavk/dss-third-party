@@ -1,9 +1,10 @@
-var moment       = require('moment');
+var moment           = require('moment');
 
-var modal        = require('../modal/modal.vue');
-var taskMixin    = require('../../modules/tasks/TaskMixin.js');
-var logoutMixin  = require('../../modules/logout/LogoutMixin.js');
-var handlerMixin = require('../../modules/handler/HandlerMixin.js');
+var modal            = require('../modal/modal.vue');
+var taskMixin        = require('../../modules/tasks/TaskMixin.js');
+var logoutMixin      = require('../../modules/logout/LogoutMixin.js');
+var handlerMixin     = require('../../modules/handler/HandlerMixin.js');
+var logoutTimerMixin = require('../../modules/logout/LogoutTimerMixin.js');
 
 module.exports = {
     data: function() {
@@ -82,8 +83,10 @@ module.exports = {
     components: {
         'modal': modal
     },
-    mixins: [taskMixin, logoutMixin, handlerMixin],
+    mixins: [taskMixin, logoutMixin, handlerMixin, logoutTimerMixin],
     created: function() {
+        this.setLogoutTimer();
+
         this.getCurrentUser() // get current user info
             .then(function(response) {
                 var data = response.data.data;

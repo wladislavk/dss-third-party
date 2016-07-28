@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('users/course-staff', 'UsersController@getCourseStaff');
     Route::post('users/check', 'UsersController@check');
     Route::post('users/payment-reports', 'UsersController@getPaymentReports');
+    Route::post('users/check-logout', 'UsersController@checkLogout');
     Route::resource('tasks', 'TasksController', ['except' => ['create', 'edit']]);
     Route::post('tasks/{type}', 'TasksController@getType');
     Route::post('tasks/{type}/pid/{patientId}', 'TasksController@getTypeForPatient');

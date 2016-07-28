@@ -107,4 +107,11 @@ class User extends Model implements Resource, Repository
             ->where('userid', $docId)
             ->first();
     }
+
+    public function getLastAccessedDate($userId = 0)
+    {
+        return $this->select('last_accessed_date')
+            ->where('userid', $userId)
+            ->first();
+    }
 }

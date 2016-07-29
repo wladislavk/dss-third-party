@@ -515,7 +515,14 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.$set('companyLogo', data.logo);
+                            this.getFileForDisplaying(data.logo)
+                                .then(function(response) {
+                                    var data = response.data.data;
+
+                                    this.$set('companyLogo', data.image);
+                                }, function(response) {
+                                    this.handleErrors('getFileForDisplaying', response);
+                                });
                         }
                     }, function(response) {
                         this.handleErrors('getCompanyLogo', response);
@@ -929,6 +936,11 @@ module.exports = {
             }
 
             return this.$http.post(window.config.API_PATH + 'home-sleep-tests/uncompleted', data);
+        },
+        getFileForDisplaying: function(filename) {
+            filename = filename || '';
+
+            return this.$http.get(window.config.API_PATH + 'display-file/' + filename);
         },
         showWarnings: function() {
             this.$set('showAllWarnings', true);

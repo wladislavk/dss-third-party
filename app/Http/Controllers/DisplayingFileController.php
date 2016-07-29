@@ -11,9 +11,13 @@ class DisplayingFileController extends Controller
 {
     public function getFile($filename)
     {
-        if (Storage::has($filename)) {
-            $imageContent = Storage::get($filename);
-            $mime         = Storage::mimeType($filename);
+        // access only to own directory
+        $userId     = $this->currentUser->id;
+        $pathToFile = 'user_' . $userId . '/' . $filename;
+
+        if (Storage::has($pathToFile)) {
+            $imageContent = Storage::get($pathToFile);
+            $mime         = Storage::mimeType($pathToFile);
 
             $data = [
                 'image' => 'data:' . $mime . ';base64,' . base64_encode($imageContent)

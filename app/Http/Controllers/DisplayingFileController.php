@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Http\Controllers\Controller;
+use DentalSleepSolutions\Helpers\ApiResponse;
 use Illuminate\Http\Response;
 use Storage;
 
@@ -14,10 +15,13 @@ class DisplayingFileController extends Controller
             $imageContent = Storage::get($filename);
             $mime         = Storage::mimeType($filename);
 
-            return response($imageContent, 200)
-                ->header('Content-Type', $mime);
+            $data = [
+                'image' => 'data:' . $mime . ';base64,' . base64_encode($imageContent)
+            ];
+
+            return ApiResponse::responseOk('', $data);
         } else {
-            return response(null, 404);
+            return ApiResponse::responseError();
         }
     }
 }

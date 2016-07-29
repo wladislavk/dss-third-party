@@ -242,7 +242,7 @@
                             <button onclick="loadPopup('add_task.php?pid={{ $route.query.pid || 0 }}')" style="padding: 3px; margin-top:27px;">+ Add Task</button>
                         </div>
                         <div v-if="companyLogo" style="float:right;margin:13px 15px 0 0;">
-                            <img src="display_file.php?f={{ companyLogo }}" />
+                            <img v-bind:src="companyLogo" />
                         </div>
                         <div style="clear:both;"></div>
                     </div>

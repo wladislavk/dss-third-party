@@ -1,4 +1,5 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
+var handlerMixin      = require('../../../modules/handler/HandlerMixin.js');
+var scriptLoaderMixin = require('../../../modules/loader/ScriptLoaderMixin.js');
 
 module.exports = {
     data: function() {
@@ -10,9 +11,8 @@ module.exports = {
             }
         }
     },
-    mixins: [handlerMixin],
-    compiled: function()
-    {
+    mixins: [handlerMixin, scriptLoaderMixin],
+    compiled: function() {
         if (window.storage.get('token')) {
             var data = {
                 cur_page: this.$route.path
@@ -22,6 +22,12 @@ module.exports = {
 
             this.$route.router.go('/manage/index');
         }
+    },
+    ready: function() {
+        this.loadScriptFrom(
+            'https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf',
+            '#siteseal'
+        );
     },
     methods: {
         submitForm: function() {

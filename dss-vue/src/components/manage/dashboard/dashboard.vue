@@ -13,7 +13,7 @@
                     <div class="homesuckertreemenu">
                         <ul id="homemenu">
                             <li>
-                                <a href="#">Directory</a>
+                                <a v-on:click.prevent>Directory</a>
                                 <ul>
                                     <li><a href="manage_contact.php">Contacts</a></li>
                                     <li><a href="manage_referredby.php">Referral List</a></li>
@@ -22,7 +22,7 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="#">Reports</a>
+                                <a v-on:click.prevent>Reports</a>
                                 <ul>
                                     <li><a href="ledger_reportfull.php">Ledger</a></li>
                                     <li><a href="manage_claims.php">Claims ({{ headerInfo.pendingClaimsNumber }})</a></li>
@@ -39,12 +39,12 @@
                                 </ul>
                             </li>
                             <li>
-                                <a class="menu_item" href="#">Admin</a>
+                                <a class="menu_item" v-on:click.prevent>Admin</a>
                                 <ul>
                                     <li><a href="manage_claim_setup.php">Claim Setup</a></li>
                                     <li><a href="manage_profile.php">Profile</a></li>
                                     <li>
-                                        <a href="#">Text</a>
+                                        <a v-on:click.prevent>Text</a>
                                         <ul>
                                             <li><a href="manage_custom.php">Custom Text</a></li>
                                             <li><a href="manage_custom_letters.php">Custom Letters</a></li>
@@ -58,15 +58,15 @@
 
                                     <li><a href="manage_staff.php">Staff</a></li>
                                     <li>
-                                        <a href="#">Scheduler</a>
+                                        <a v-on:click.prevent>Scheduler</a>
                                         <ul>
                                             <li><a href="manage_chairs.php">Resources</a></li>
                                             <li><a href="manage_appts.php">Appointment Types</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="#" v-on:click="onClickExportMD">Export MD</a></li>
+                                    <li><a v-on:click.prevent="onClickExportMD">Export MD</a></li>
                                     <li>
-                                        <a href="#">DSS Files</a>
+                                        <a v-on:click.prevent>DSS Files</a>
                                         <ul>
                                             <li v-for="documentCategory in documentCategories">
                                                 <a class="submenu_item" href="view_documents.php?cat={{ documentCategory.categoryid }}">{{ documentCategory.name }}</a>
@@ -74,7 +74,7 @@
                                         </ul>
                                     </li>
                                     <li><a href="manage_locations.php">Manage Locations</a></li>
-                                    <li><a href="#" v-on:click="onClickDataImport">Data Import</a></li>
+                                    <li><a v-on:click.prevent="onClickDataImport">Data Import</a></li>
 
                                     <li v-if="showEnrollments">
                                         <a href="manage_enrollment.php">Enrollments</a>
@@ -85,7 +85,7 @@
                             <li><a href="/screener/auto_login.php">Pt. Screener App</a></li>
                             <li><a href="manage_user_forms.php">Forms</a></li>
                             <li>
-                                <a href="#">Education</a>
+                                <a v-on:click.prevent>Education</a>
                                 <ul>
                                     <li><a href="manual.php">Dental Sleep Solutions Procedures Manual</a></li>
                                     <li><a href="medicine_manual.php">Dental Sleep Medicine Manual</a></li>
@@ -116,7 +116,7 @@
                     <div class="notsuckertreemenu">
                         <ul id="notmenu">
                             <li>
-                                <a href="#" class=" count_{{ notificationsNumber }} notification bad_count">{{ notificationsNumber }} Web Portal <div class="arrow_right"></div></a>
+                                <a v-on:click.prevent class=" count_{{ notificationsNumber }} notification bad_count">{{ notificationsNumber }} Web Portal <div class="arrow_right"></div></a>
                                 <ul>
                                     <li>
                                         <a href="manage_patient_contacts.php" class=" count_{{ headerInfo.patientContactsNumber }} notification bad_count">

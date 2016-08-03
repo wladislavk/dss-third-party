@@ -6,6 +6,7 @@
 <style src="../../../assets/css/manage/letter-form.css" scoped></style>
 <style src="../../../assets/css/manage/form.css" scoped></style>
 <style src="../../../assets/css/jscal/border-radius.css" scoped></style>
+<style src="../../../node_modules/sweetalert/dist/sweetalert.css"></style>
 
 <template>
     <div class="bg_image">
@@ -19,7 +20,7 @@
                     <div class="suckertreemenu2">
                         <ul id="topmenu2">
                             <li>
-                                <a href="index.php"> Notifications({{ notificationsNumber || 0 }})</a>
+                                <a v-link="{ path: '/manage/index' }"> Notifications({{ notificationsNumber || 0 }})</a>
                             </li>
                             <li id="header_support" v-bind:class="{'pending': supportTicketsNumber}">
                                 <a href="support.php">Support {{ (supportTicketsNumber > 0) ? ('(' + supportTicketsNumber + ')'): '' }}</a>
@@ -224,7 +225,7 @@
 
                     <div style="height:89px; width:100%; background:url(assets/images/dss_01.png) #0b5c82 no-repeat top left;"> 
                         <div style="margin-top:10px; margin-left:20px; float:left;">
-                            <a href="/manage" id="logo">Dashboard</a>
+                            <a v-link="{ path: '/manage/index' }" id="logo">Dashboard</a>
                         </div>
                         <div style="float:left; width:68%;">
                             <form>

@@ -19,6 +19,7 @@ import Index from './components/manage/dashboard/dashboard.vue'
 window.config    = require('./modules/config.js');
 window.constants = require('./modules/constants.js');
 window.storage   = require('./modules/storage.js');
+window.swal      = require('sweetalert');
 
 /*
  * The router needs a root component to render.

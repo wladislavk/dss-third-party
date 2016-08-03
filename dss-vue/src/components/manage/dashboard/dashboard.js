@@ -157,6 +157,7 @@ module.exports = {
                 title            : '',
                 text             : 'Enter your password',
                 type             : 'input',
+                // inputType        : "password",
                 showCancelButton : true,
                 closeOnConfirm   : false,
                 animation        : 'slide-from-top',

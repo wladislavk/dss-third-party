@@ -51,8 +51,8 @@
             </form>
         </div>
 
-        <span style="clear:both;" id="siteseal">
-            <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
+        <span style="clear:both;" class="siteseal">
+            <span id="siteseal"></span>
             <br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a>
         </span>
         <div style="clear:both;"></div>

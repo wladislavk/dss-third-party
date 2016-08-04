@@ -157,7 +157,7 @@ module.exports = {
                 title            : '',
                 text             : 'Enter your password',
                 type             : 'input',
-                // inputType        : "password",
+                inputType        : "password",
                 showCancelButton : true,
                 closeOnConfirm   : false,
                 animation        : 'slide-from-top',
@@ -170,7 +170,7 @@ module.exports = {
 
                 if (inputValue === "1234") {
                     swal.close();
-                    window.location.href = 'export_md.php';
+                    window.location.href = '/manage/export_md.php';
                 } else if (inputValue.length > 0) {
                     swal("Oops...", "Wrong password!", "error");
                     return false;
@@ -191,7 +191,7 @@ module.exports = {
             },
             function(isConfirm){
                 if (isConfirm) {
-                    window.location.href = 'data_import.php';
+                    window.location.href = '/manage/data_import.php';
                 }
             });
         }

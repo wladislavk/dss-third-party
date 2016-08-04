@@ -3,10 +3,16 @@ module.exports = {
         logout: function() {
             this.invalidateToken()
                 .then(function(response) {
-                    alert('Logout Successfully!');
+                    var vm = this;
 
-                    window.storage.remove('token');
-                    this.$route.router.go('/manage/login');
+                    swal({
+                        title : '',
+                        text  : 'Logout Successfully!',
+                        type  : 'success'
+                    }, function() {
+                        window.storage.remove('token');
+                        vm.$route.router.go('/manage/login');
+                    });
                 }, function(response) {
                     console.error('invalidateToken [status]: ', response.status);
                 });

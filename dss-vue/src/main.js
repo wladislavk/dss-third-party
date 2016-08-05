@@ -12,8 +12,9 @@ import ManageTemplate from './components/header/header.vue'
 Vue.component('manage-template', ManageTemplate);
 
 // components for routing
-import Login from './components/manage/login/login.vue'
-import Index from './components/manage/dashboard/dashboard.vue'
+import Login    from './components/manage/login/login.vue'
+import Index    from './components/manage/dashboard/dashboard.vue'
+import Patients from './components/manage/patients/patients.vue'
 
 // global variables
 window.config    = require('./modules/config.js');
@@ -46,6 +47,10 @@ var router = new VueRouter({
 router.map({
     '/manage/index': {
         component : Index,
+        auth      : true
+    },
+    '/manage/patients': {
+        component : Patients,
         auth      : true
     },
     '/manage/login': {

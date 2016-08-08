@@ -12,8 +12,11 @@ module.exports = {
             message             : '',
             patientsTotalCount  : 0,
             patientsPerPage     : 30,
+            totalPages          : 0,
+            currentPageNumber   : 0,
             sortDirection       : 'asc',
             currentDirection    : 'asc',
+            sortColumn          : '',
             patientId           : 0,
             patientTypeSelect   : [
                 { text: 'Active Patients', value: '1' },
@@ -43,28 +46,57 @@ module.exports = {
         }
     },
     mixins: [handlerMixin],
-    created: function() {
-
-    },
-    computed: {
-        selectedPatientType: function() {
+    watch: {
+        '$route.query.sh': function() {
             if (this.$route.query.sh) {
                 var foundOption = this.patientTypeSelect.find(el => el.value == this.$route.query.sh);
 
                 if (foundOption) {
-                    return this.$route.query.sh;
+                    this.$set('selectedPatientType', this.$route.query.sh);
                 } else {
-                    return '1';
+                    this.$set('selectedPatientType', 1);
                 }
             } else {
-                return '1';
+                this.$set('selectedPatientType', 1);
             }
-        }/*,
+        },
+        '$route.query.page': function() {
+            if (this.$route.query.page) {
+                if (this.$route.query.page <= totalPages) {
+                    this.$set('currentPageNumber', this.$route.query.page);
+                }
+            }
+        },
+        '$route.query.sort': function() {
+            if (this.$route.query.sort) {
+                if (this.$route.query.sort in tableHeaders) {
+                    this.$set('sortColumn', this.$route.query.sort);
+                }
+            }
+        },
+        '$route.query.sortdir': function() {
+            if (this.$route.query.sortdir) {
+                if (this.$route.query.sortdir.toLowerCase() == 'desc') {
+                    this.$set('sortDirection', this.$route.query.sortdir.toLowerCase());
+                } else {
+                    this.$set('sortDirection', 'asc');
+                }
+            }
+        }
+    },
+    computed: {
+        totalPages: function() {
+            return this.patientsTotalCount / this.patientsPerPage;
+        }
+        /*,
         currentDirection: function() {
             if () {
 
             }
         }*/
+    },
+    created: function() {
+
     },
     methods: {
         onChangePatientTypeSelect: function() {
@@ -74,6 +106,20 @@ module.exports = {
                     sh: this.selectedPatientType
                 }
             });
+        },
+        onClickDeletePatient: function(patientId) {
+            this.deletePatient(patientId)
+                .then(function(response) {
+                    this.$set('message', 'Deleted Successfully');
+                }, function(response) {
+                    this.handleErrors('deletePatient', response);
+                });
+        },
+        deletePatient: function(patientId)
+        {
+            patientId = patientId || 0;
+
+            return this.$http.delete(window.config.API_PATH + 'patients/' + patientId);
         }
     }
 }

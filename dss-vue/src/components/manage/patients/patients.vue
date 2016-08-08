@@ -40,7 +40,23 @@
                 <tr v-if="patientsTotalCount > patientsPerPage" bgColor="#ffffff">
                     <td  align="right" colspan="15" class="bp">
                         Pages:
-                        paging($totalPages, $page, "letter=". $letter ."&sort=". $sortColumn ."&sortdir=". $sortDir ."&sh=". $sh );
+                        <span v-for="index in totalPages">
+                            <strong v-if="currentPageNumber == index"></strong>
+                            <a
+                                v-else
+                                v-link="{
+                                    name: $route.name,
+                                    query: {
+                                        page    : index,
+                                        letter  : $route.query.letter,
+                                        sort    : sortColumn,
+                                        sortdir : sortDirection,
+                                        sh      : $route.query.sh
+                                    }
+                                }"
+                                class="fp"
+                            >{{ index + 1 }}</a>
+                        </span>
                     </td>
                 </tr>
                 <tr class="tr_bg_h">

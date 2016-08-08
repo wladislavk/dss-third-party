@@ -147,4 +147,29 @@ class PatientsController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function destroyForDoctor($patientId, Patient $resource)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $resource->deleteForDoctor($patientId, $docId);
+
+        return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function find(Patients $resources, Request $request)
+    {
+        $docId           = $this->currentUser->docid ?: 0;
+        $patientId       = $request->input('patientId') ?: 0;
+        $type            = $request->input('type') ?: 1;
+        $pageNumber      = $request->input('page') ?: 0;
+        $patientsPerPage = $request->input('patientsPerPage') ?: 30;
+        $letter          = $request->input('letter') ?: '';
+        $sortColumn      = $request->input('sortColumn') ?: 'name';
+        $sortDir         = $request->input('sortDir') ?: '';
+
+        $data = $resources->find($docId, $patientId, $type, $pageNumber, $patientsPerPage, $letter, $sortColumn, $sortDir);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

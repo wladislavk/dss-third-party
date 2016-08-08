@@ -172,4 +172,54 @@ class Patient extends Model implements Resource, Repository
             ->take(12)
             ->get();
     }
+
+    public function deleteForDoctor($patientId = 0, $docId = 0)
+    {
+        return $this->where('patientid', $patientId)
+            ->where('docid', $docId)
+            ->delete();
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('p.status', 1);
+    }
+
+    public function scopeAll($query)
+    {
+        return $query->where(function($query) {
+            $query->where('p.status', 1)
+                ->orWhere('p.status', 2);
+        });
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('p.status', 2);
+    }
+
+    public function find($docId = 0, $patientId = 0, $type = 1, $pageNumber = 0, $patientsPerPage = 30, $letter = '', $sortColumn = '', $sortDir = '')
+    {
+        $query = $this;
+
+        switch ($type) {
+            case 1:
+                $query = $query->active();
+                break;
+            case 2:
+                $query = $query->all();
+                break;
+            case 3:
+                $query = $query->inactive();
+                break;
+            default:
+                break;
+        }
+
+        if (!empty($letter)) {
+            $query = $query->where('p.lastname', 'like', $letter . '%');
+        }
+        
+        return $query->get();
+    }
 }

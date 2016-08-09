@@ -160,6 +160,8 @@ class PatientsController extends Controller
     public function find(Patients $resources, Request $request)
     {
         $docId           = $this->currentUser->docid ?: 0;
+        $userType        = $this->currentUser->user_type ?: 0;
+
         $patientId       = $request->input('patientId') ?: 0;
         $type            = $request->input('type') ?: 1;
         $pageNumber      = $request->input('page') ?: 0;
@@ -168,7 +170,17 @@ class PatientsController extends Controller
         $sortColumn      = $request->input('sortColumn') ?: 'name';
         $sortDir         = $request->input('sortDir') ?: '';
 
-        $data = $resources->find($docId, $patientId, $type, $pageNumber, $patientsPerPage, $letter, $sortColumn, $sortDir);
+        $data = $resources->find(
+            $docId,
+            $userType,
+            $patientId,
+            $type,
+            $pageNumber,
+            $patientsPerPage,
+            $letter,
+            $sortColumn,
+            $sortDir
+        );
 
         return ApiResponse::responseOk('', $data);
     }

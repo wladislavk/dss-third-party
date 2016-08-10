@@ -6,11 +6,11 @@ module.exports = {
     },
     data: function() {
         return {
+            constants           : window.constants,
             patientInfo         : '',
             selectedPatientType : '1',
             letters             : 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(','),
             message             : '',
-            patientsTotalCount  : 0,
             patientsPerPage     : 30,
             totalPages          : 0,
             currentPageNumber   : 0,
@@ -86,7 +86,7 @@ module.exports = {
     },
     computed: {
         totalPages: function() {
-            return this.patientsTotalCount / this.patientsPerPage;
+            return this.patients.length / this.patientsPerPage;
         }
         /*,
         currentDirection: function() {
@@ -96,7 +96,7 @@ module.exports = {
         }*/
     },
     created: function() {
-
+        this.getPatients();
     },
     methods: {
         onChangePatientTypeSelect: function() {
@@ -115,11 +115,77 @@ module.exports = {
                     this.handleErrors('deletePatient', response);
                 });
         },
-        deletePatient: function(patientId)
-        {
+        getRxLomn: function(value) {
+            var title = '';
+
+            switch (value) {
+                case 3:
+                    title = 'Yes';
+                    break;
+                case 2:
+                    title = 'Yes/No';
+                    break;
+                case 1:
+                    title = 'No/Yes';
+                    break;
+                default:
+                    title = 'No';
+                    break;
+            }
+
+            return title;
+        },
+        formatLedger: function(value) {
+            return accounting.formatMoney(value, '$');
+        },
+        checkIfThisWeek: function(value) {
+            var totalDays = moment(value).diff(moment(), 'days');
+            var negative  = (moment(value) - moment()) < 0;
+
+            if (totalDays >= 0 && $totalDays <= 7 && !negative) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        getPatients: function() {
+            this.findPatients()
+                .then(function(response) {
+                    var data = response.data.data;
+
+                    var totalCount = data.count[0].total;
+                    var patients   = data.results;
+
+                    this.$set('patients', patients);
+                }, function(response) {
+                    this.handleErrors('findPatients', response);
+                });
+        },
+        deletePatient: function(patientId) {
             patientId = patientId || 0;
 
             return this.$http.delete(window.config.API_PATH + 'patients/' + patientId);
+        },
+        findPatients: function(
+            patientId,
+            type,
+            pageNumber,
+            patientsPerPage,
+            letter,
+            sortColumn,
+            sortDir
+        ) {
+            var data = {
+                patientId       : patientId || 0,
+                type            : type || 0,
+                pageNumber      : pageNumber || 0,
+                patientsPerPage : patientsPerPage || 0,
+                letter          : letter || '',
+                sortColumn      : sortColumn || '',
+                sortDir         : sortDir || ''
+            }
+
+            return this.$http.post(window.config.API_PATH + 'patients/find', data);
         }
     }
 }

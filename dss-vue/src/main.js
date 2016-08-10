@@ -17,10 +17,11 @@ import Index    from './components/manage/dashboard/dashboard.vue'
 import Patients from './components/manage/patients/patients.vue'
 
 // global variables
-window.config    = require('./modules/config.js');
-window.constants = require('./modules/constants.js');
-window.storage   = require('./modules/storage.js');
-window.swal      = require('sweetalert');
+window.config     = require('./modules/config.js');
+window.constants  = require('./modules/constants.js');
+window.storage    = require('./modules/storage.js');
+window.swal       = require('sweetalert');
+window.accounting = require('accounting');
 
 /*
  * The router needs a root component to render.

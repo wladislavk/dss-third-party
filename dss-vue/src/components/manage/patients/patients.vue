@@ -37,17 +37,17 @@
         </div>
         <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post" style="clear: both">
             <table id="patients" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-                <tr v-if="patients.length > patientsPerPage" bgColor="#ffffff">
+                <tr v-if="patientsTotalNumber > patientsPerPage" bgColor="#ffffff">
                     <td  align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages">
-                            <strong v-if="currentPageNumber == index"></strong>
+                            <strong v-if="currentPageNumber == index + 1">{{ index + 1 }}</strong>
                             <a
                                 v-else
                                 v-link="{
                                     name: $route.name,
                                     query: {
-                                        page    : index,
+                                        page    : index + 1,
                                         letter  : $route.query.letter,
                                         sort    : sortColumn,
                                         sortdir : sortDirection,
@@ -55,7 +55,7 @@
                                     }
                                 }"
                                 class="fp"
-                            >{{ index }}</a>
+                            >{{ index + 1 }}</a>
                         </span>
                     </td>
                 </tr>
@@ -113,7 +113,7 @@
                             }"
                         >
                             {{ patient.lastname }},&nbsp;
-                            {{ patient.firstname }},&nbsp;
+                            {{ patient.firstname }}&nbsp;
                             {{ patient.middlename }}
                         </a>
                         <span v-if="patient.premedcheck == 1 || patient.allergenscheck == 1">
@@ -146,18 +146,24 @@
                                     }
                                 }"
                             >
-                                <span
-                                    v-if="moment(patient.date_scheduled) - moment() < 0"
-                                    class="red"
+                                <template
+                                    v-if="!patient.date_scheduled || patient.date_scheduled == '0000-00-00'"
                                 >
-                                    {{ patient.date_scheduled | moment "from" }}
-                                </span>
+                                    <span>N/A</span>
+                                </template>
                                 <template v-else>
-                                    <span
-                                        v-if="checkIfThisWeek(patient.date_scheduled)"]
-                                        class="green"
-                                    >{{ patient.date_scheduled | moment "from" }}</span>
-                                    <span v-else>{{ patient.date_scheduled | moment "from" }}</span>
+                                    <template v-if="isNegativeTime(patient.date_scheduled)">
+                                        <span class="red">
+                                            {{ patient.date_scheduled | moment "from" }}
+                                        </span>
+                                    </template>
+                                    <template v-else>
+                                        <span
+                                            v-if="checkIfThisWeek(patient.date_scheduled)"]
+                                            class="green"
+                                        >{{ patient.date_scheduled | moment "from" }}</span>
+                                        <span v-else>{{ patient.date_scheduled | moment "from" }}</span>
+                                    </template>
                                 </template>
                             </a>
                         </td>

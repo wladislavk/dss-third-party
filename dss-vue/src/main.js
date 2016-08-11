@@ -22,6 +22,7 @@ window.constants  = require('./modules/constants.js');
 window.storage    = require('./modules/storage.js');
 window.swal       = require('sweetalert');
 window.accounting = require('accounting');
+window.moment     = require('moment');
 
 /*
  * The router needs a root component to render.

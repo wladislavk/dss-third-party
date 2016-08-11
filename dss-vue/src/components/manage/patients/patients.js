@@ -11,9 +11,10 @@ module.exports = {
             selectedPatientType : '1',
             letters             : 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(','),
             message             : '',
+            patientsTotalNumber : 0,
             patientsPerPage     : 30,
             totalPages          : 0,
-            currentPageNumber   : 0,
+            currentPageNumber   : 1,
             sortDirection       : 'asc',
             currentDirection    : 'asc',
             sortColumn          : '',
@@ -86,7 +87,7 @@ module.exports = {
     },
     computed: {
         totalPages: function() {
-            return this.patients.length / this.patientsPerPage;
+            return this.patientsTotalNumber / this.patientsPerPage;
         }
         /*,
         currentDirection: function() {
@@ -148,6 +149,9 @@ module.exports = {
                 return false;
             }
         },
+        isNegativeTime: function(value) {
+            return (moment(value) - moment()) < 0;
+        },
         getPatients: function() {
             this.findPatients()
                 .then(function(response) {
@@ -156,6 +160,7 @@ module.exports = {
                     var totalCount = data.count[0].total;
                     var patients   = data.results;
 
+                    this.$set('patientsTotalNumber', totalCount);
                     this.$set('patients', patients);
                 }, function(response) {
                     this.handleErrors('findPatients', response);

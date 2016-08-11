@@ -254,13 +254,13 @@ class Patient extends Model implements Resource, Repository
         $countQuery = $this->select(DB::raw('COUNT(p.patientid) AS total'))
             ->from(DB::raw($tables));
 
-        $countQuery  = $this->getConditions($countQuery, $type);
+        $countQuery  = $this->getConditions($countQuery, $type, $docId, $patientId);
         $countResult = $countQuery->get();
 
         $orderQuery = $this->select(DB::raw($selections))
             ->from(DB::raw($tables));
 
-        $orderQuery  = $this->getConditions($orderQuery, $type);
+        $orderQuery  = $this->getConditions($orderQuery, $type, $docId, $patientId);
         $orderResults = $orderQuery->orderBy(DB::raw($orderBy))
             ->skip($offset)
             ->take($patientsPerPage)
@@ -281,7 +281,7 @@ class Patient extends Model implements Resource, Repository
         $results = $this->select(DB::raw($selections))
             ->from(DB::raw($tables));
 
-        $results = $this->getConditions($results, $type, $letter, $patientIds);
+        $results = $this->getConditions($results, $type, $docId, $patientId, $letter, $patientIds);
         $results = $results->orderBy(DB::raw($orderBy))
             ->take($patientsPerPage)
             ->get();
@@ -293,8 +293,20 @@ class Patient extends Model implements Resource, Repository
         ];
     }
 
-    private function getConditions($query, $type, $letter = '', $patientIds = [])
-    {
+    private function getConditions(
+        $query,
+        $type,
+        $docId      = 0,
+        $patientId  = 0,
+        $letter     = '',
+        $patientIds = []
+    ) {
+        $query = $query->where('p.docid', $docId);
+
+        if (!empty($patientId)) {
+            $query = $query->where('p.patientid', $patientId);
+        }
+
         switch ($type) {
             case 1:
                 $query = $query->active();

@@ -133,7 +133,7 @@
                                     }
                                 }"
                             >
-                                <span v-if="patient.insurance_no_error && patient.numsleepstudy != 0">Yes</span>
+                                <span v-if="readyForTx(patient.insurance_no_error, patient.numsleepstudy)">Yes</span>
                                 <span v-else class="red">No</span>
                             </a>
                         </td>
@@ -159,7 +159,7 @@
                                     </template>
                                     <template v-else>
                                         <span
-                                            v-if="checkIfThisWeek(patient.date_scheduled)"]
+                                            v-if="checkIfThisWeek(patient.date_scheduled)"
                                             class="green"
                                         >{{ patient.date_scheduled | moment "from" }}</span>
                                         <span v-else>{{ patient.date_scheduled | moment "from" }}</span>
@@ -175,7 +175,26 @@
                                         pid: patient.patientId
                                     }
                                 }"
-                            >{{ patient.date_completed | moment "from" }}</a>
+                            >
+                                <template
+                                    v-if="!patient.date_completed || patient.date_completed == '0000-00-00'"
+                                >
+                                    <span>N/A</span>
+                                </template>
+                                <template v-else>
+                                    <template
+                                        v-if="checkIfThisWeek(patient.date_completed) &&
+                                              !isNegativeTime(patient.date_completed)"
+                                    >
+                                        <span class="green">
+                                            {{ patient.date_completed | moment "from" }}
+                                        </span>
+                                    </template>
+                                    <template v-else>
+                                        <span>{{ patient.date_completed | moment "from" }}</span>
+                                    </template>
+                                </template>
+                            </a>
                         </td>
                         <td valign="top">
                             <a
@@ -205,7 +224,26 @@
                                         pid: patient.patientId
                                     }
                                 }"
-                            >{{ patient.dentaldevice_date }}</a>
+                            >
+                                <template
+                                    v-if="!patient.dentaldevice_date || patient.dentaldevice_date == '0000-00-00'"
+                                >
+                                    <span>N/A</span>
+                                </template>
+                                <template v-else>
+                                    <template
+                                        v-if="checkIfThisWeek(patient.dentaldevice_date) &&
+                                              !isNegativeTime(patient.dentaldevice_date)"
+                                    >
+                                        <span class="green">
+                                            {{ patient.dentaldevice_date | moment "from" }}
+                                        </span>
+                                    </template>
+                                    <template v-else>
+                                        <span>{{ patient.dentaldevice_date | moment "from" }}</span>
+                                    </template>
+                                </template>
+                            </a>
                         </td>
                         <td valign="top">
                             <a
@@ -216,9 +254,13 @@
                                     }
                                 }"
                             >
-                                <span v-if="patient.vob == null">No</span>
-                                <span v-if="patient.vob == 1">Yes</span>
-                                <span v-else="">{{ constants.dssPreauthStatusLabels[patient.vob] }}</span>
+                                <template v-if="patient.vob == null || patient.vob == ''">
+                                    <span>No</span>
+                                </template>
+                                <template v-else>
+                                    <span v-if="patient.vob == 1">Yes</span>
+                                    <span v-else="">{{ constants.dssPreauthStatusLabels[patient.vob] }}</span>
+                                </template>
                             </a>
                         </td>
                         <td valign="top">

@@ -119,7 +119,7 @@ module.exports = {
         getRxLomn: function(value) {
             var title = '';
 
-            switch (value) {
+            switch (+value) {
                 case 3:
                     title = 'Yes';
                     break;
@@ -151,6 +151,9 @@ module.exports = {
         },
         isNegativeTime: function(value) {
             return (moment(value) - moment()) < 0;
+        },
+        readyForTx: function(insuranceNoError, numSleepStudy) {
+            return +insuranceNoError && numSleepStudy != 0;
         },
         getPatients: function() {
             this.findPatients()

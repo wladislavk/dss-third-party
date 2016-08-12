@@ -8,17 +8,19 @@ module.exports = {
         return {
             constants           : window.constants,
             patientInfo         : '',
-            selectedPatientType : '1',
+            routeParameters     : {
+                patientId           : 0,
+                currentPageNumber   : 0,
+                sortDirection       : 'asc',
+                selectedPatientType : '1',
+                sortColumn          : '',
+                currentLetter       : ''
+            },
             letters             : 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(','),
             message             : '',
             patientsTotalNumber : 0,
             patientsPerPage     : 30,
             totalPages          : 0,
-            currentPageNumber   : 1,
-            sortDirection       : 'asc',
-            currentDirection    : 'asc',
-            sortColumn          : '',
-            patientId           : 0,
             patientTypeSelect   : [
                 { text: 'Active Patients', value: '1' },
                 { text: 'All Patients', value: '2' },
@@ -53,48 +55,56 @@ module.exports = {
                 var foundOption = this.patientTypeSelect.find(el => el.value == this.$route.query.sh);
 
                 if (foundOption) {
-                    this.$set('selectedPatientType', this.$route.query.sh);
+                    this.$set('routeParameters.selectedPatientType', this.$route.query.sh);
                 } else {
-                    this.$set('selectedPatientType', 1);
+                    this.$set('routeParameters.selectedPatientType', 1);
                 }
-            } else {
-                this.$set('selectedPatientType', 1);
             }
         },
         '$route.query.page': function() {
             if (this.$route.query.page) {
-                if (this.$route.query.page <= totalPages) {
-                    this.$set('currentPageNumber', this.$route.query.page);
+                if (this.$route.query.page <= this.totalPages) {
+                    this.$set('routeParameters.currentPageNumber', this.$route.query.page);
                 }
             }
         },
         '$route.query.sort': function() {
             if (this.$route.query.sort) {
                 if (this.$route.query.sort in tableHeaders) {
-                    this.$set('sortColumn', this.$route.query.sort);
+                    this.$set('routeParameters.sortColumn', this.$route.query.sort);
                 }
             }
         },
         '$route.query.sortdir': function() {
             if (this.$route.query.sortdir) {
                 if (this.$route.query.sortdir.toLowerCase() == 'desc') {
-                    this.$set('sortDirection', this.$route.query.sortdir.toLowerCase());
+                    this.$set('routeParameters.sortDirection', this.$route.query.sortdir.toLowerCase());
                 } else {
-                    this.$set('sortDirection', 'asc');
+                    this.$set('routeParameters.sortDirection', 'asc');
                 }
             }
+        },
+        '$route.query.pid': function() {
+            if (this.$route.query.pid > 0) {
+                this.$set('routeParameters.patientId', this.$route.query.pid);
+            }
+        },
+        '$route.query.letter': function() {
+            if (this.letters.indexOf(this.$route.query.letter) > -1) {
+                this.$set('routeParameters.currentLetter', this.$route.query.letter);
+            }
+        },
+        'routeParameters': {
+            handler: function() {
+                this.getPatients();
+            },
+            deep: true
         }
     },
     computed: {
         totalPages: function() {
             return this.patientsTotalNumber / this.patientsPerPage;
         }
-        /*,
-        currentDirection: function() {
-            if () {
-
-            }
-        }*/
     },
     created: function() {
         this.getPatients();
@@ -104,7 +114,7 @@ module.exports = {
             this.$route.router.go({
                 name  : this.$route.name,
                 query : {
-                    sh: this.selectedPatientType
+                    sh: this.routeParameters.selectedPatientType
                 }
             });
         },
@@ -156,8 +166,15 @@ module.exports = {
             return +insuranceNoError && numSleepStudy != 0;
         },
         getPatients: function() {
-            this.findPatients()
-                .then(function(response) {
+            this.findPatients(
+                this.routeParameters.patientId,
+                this.routeParameters.selectedPatientType,
+                this.routeParameters.currentPageNumber,
+                this.patientsPerPage,
+                this.routeParameters.currentLetter,
+                this.routeParameters.sortColumn,
+                this.routeParameters.sortDirection
+            ).then(function(response) {
                     var data = response.data.data;
 
                     var totalCount = data.count[0].total;
@@ -186,7 +203,7 @@ module.exports = {
             var data = {
                 patientId       : patientId || 0,
                 type            : type || 0,
-                pageNumber      : pageNumber || 0,
+                page            : pageNumber || 0,
                 patientsPerPage : patientsPerPage || 0,
                 letter          : letter || '',
                 sortColumn      : sortColumn || '',

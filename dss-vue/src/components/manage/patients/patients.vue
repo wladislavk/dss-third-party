@@ -8,7 +8,7 @@
                 Manage Patient {{ patientInfo }}
                 -
                 <select
-                    v-model="selectedPatientType"
+                    v-model="routeParameters.selectedPatientType"
                     v-on:change="onChangePatientTypeSelect"
                     name="show"
                 >
@@ -20,14 +20,14 @@
             <div class="letter_select">
                 <a
                     v-for="letter in letters"
-                    v-bind:class="{ 'selected_letter': letter == $route.query.letter }"
-                    v-link="{ name: $route.name, query: { letter: letter, sh: $route.query.sh }}"
+                    v-bind:class="{ 'selected_letter': letter == routeParameters.currentLetter }"
+                    v-link="{ name: $route.name, query: { letter: letter, sh: selectedPatientType }}"
                     class="letters"
                 >{{ letter }}</a>
 
                 <a
-                    v-if="$route.query.letter"
-                    v-link="{ name: $route.name, query: { sh: $route.query.sh }}"
+                    v-if="routeParameters.currentLetter"
+                    v-link="{ name: $route.name, query: { sh: selectedPatientType }}"
                 >View All</a>
             </div>
             </br>
@@ -41,17 +41,17 @@
                     <td  align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages">
-                            <strong v-if="currentPageNumber == index + 1">{{ index + 1 }}</strong>
+                            <strong v-if="routeParameters.currentPageNumber == index">{{ index + 1 }}</strong>
                             <a
                                 v-else
                                 v-link="{
                                     name: $route.name,
                                     query: {
-                                        page    : index + 1,
-                                        letter  : $route.query.letter,
-                                        sort    : sortColumn,
-                                        sortdir : sortDirection,
-                                        sh      : $route.query.sh
+                                        page    : index,
+                                        letter  : routeParameters.currentLetter,
+                                        sort    : routeParameters.sortColumn,
+                                        sortdir : routeParameters.sortDirection,
+                                        sh      : selectedPatientType
                                     }
                                 }"
                                 class="fp"
@@ -62,7 +62,7 @@
                 <tr class="tr_bg_h">
                     <td
                         v-for="(sort, label) in tableHeaders"
-                        class="col_head  {{ sortColumn == sort ? arrow_ + sortDirection : '' }}"
+                        class="col_head  {{ routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '' }}"
                         valign="top"
                         width="10%"
                     >
@@ -70,9 +70,9 @@
                             v-link="{
                                 name: $route.name,
                                 query: {
-                                    pid: patientId,
-                                    letter: $route.query.letter,
-                                    sh: $route.query.sh,
+                                    pid: routeParameters.patientId,
+                                    letter: routeParameters.currentLetter,
+                                    sh: selectedPatientType,
                                     sort: sort,
                                     sortDir: currentDirection
                                 }

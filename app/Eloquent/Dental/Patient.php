@@ -212,8 +212,12 @@ class Patient extends Model implements Resource, Repository
         $sections = $this->getQuerySections(null, $userType);
         $joins    = $this->getJoinList();
 
-        $section = $sections[$sortColumn];
-        unset($sections[$sortColumn]);
+        if (array_key_exists($sortColumn, $sections)) {
+            $section = $sections[$sortColumn];
+            unset($sections[$sortColumn]);
+        } else {
+            $section = ['order' => ''];
+        }
 
         $selectList = [
             'p.patientid',
@@ -231,7 +235,15 @@ class Patient extends Model implements Resource, Repository
         ];
 
         $orderBy = $section['order'];
-        $orderBy = $sortColumn === 'name' ? $orderBy : "patient_info DESC, $orderBy, p.lastname ASC, p.firstname ASC";
+
+        if ($sortColumn === 'name') {
+
+        } else {
+            $orderBy = "patient_info DESC, "
+                . ($orderBy ? $orderBy . ", " : "")
+                . "p.lastname ASC, p.firstname ASC";
+        }
+
         $orderBy = str_replace('%DIR%', $sortDir, $orderBy);
 
         if (isset($section['select'])) {
@@ -261,7 +273,7 @@ class Patient extends Model implements Resource, Repository
             ->from(DB::raw($tables));
 
         $orderQuery  = $this->getConditions($orderQuery, $type, $docId, $patientId);
-        $orderResults = $orderQuery->orderBy(DB::raw($orderBy))
+        $orderResults = $orderQuery->orderByRaw($orderBy)
             ->skip($offset)
             ->take($patientsPerPage)
             ->get();
@@ -282,7 +294,7 @@ class Patient extends Model implements Resource, Repository
             ->from(DB::raw($tables));
 
         $results = $this->getConditions($results, $type, $docId, $patientId, $letter, $patientIds);
-        $results = $results->orderBy(DB::raw($orderBy))
+        $results = $results->orderByRaw($orderBy)
             ->take($patientsPerPage)
             ->get();
 

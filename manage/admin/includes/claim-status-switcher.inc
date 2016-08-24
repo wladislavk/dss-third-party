@@ -16,7 +16,7 @@ function claimStatusSwitcher ($targetClaimId, $displayCurrentStatus=true) {
     $allowBO = false;
     $allowFO = false;
 
-    if (isset($_SESSION['admin_access'])) {
+    if (!empty($_SESSION['adminuserid'])) {
         $allowBO = is_super($_SESSION['admin_access']) ||
             is_admin($_SESSION['admin_access']) ||
             is_billing_admin($_SESSION['admin_access']);
@@ -24,7 +24,7 @@ function claimStatusSwitcher ($targetClaimId, $displayCurrentStatus=true) {
     } else {
         $userId = intval($_SESSION['userid']);
 
-        $permissions = $db->query("SELECT docid, edit_ledger_entries
+        $permissions = $db->getRow("SELECT docid, edit_ledger_entries
             FROM dental_users
             WHERE userid = '$userId'");
 

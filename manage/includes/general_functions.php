@@ -7,6 +7,29 @@ define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
 require_once __DIR__ . '/constants.inc';
 require_once __DIR__ . '/../../reg/twilio/Services/Twilio.php';
 
+function logoutFO () {
+    $db = new Db();
+
+    $db->query("UPDATE dental_login
+        SET logout_date = NOW()
+        WHERE loginid = '" . $db->escape($_SESSION['loginid']) . "'");
+
+    $_SESSION['loginid'] = '';
+    $_SESSION['userid'] = '';
+    $_SESSION['username'] = '';
+    $_SESSION['name'] = '';
+    $_SESSION['user_access'] = '';
+    $_SESSION['companyid'] = '';
+    $_SESSION['api_token'] = '';
+}
+
+function logoutBO () {
+    $_SESSION['adminuserid'] = '';
+    $_SESSION['admin_access'] = '';
+    $_SESSION['admincompanyid'] = '';
+    $_SESSION['admin_api_token'] = '';
+}
+
 function generateApiToken($idOrEmail) {
     $apiPath = env('API_PATH');
     $phpPath = env('PHP_PATH');

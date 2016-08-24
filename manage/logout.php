@@ -1,17 +1,15 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-	include "admin/includes/main_include.php";
-
-	$login_up_sql = "update dental_login set logout_date = now() where loginid='".$_SESSION['loginid']."'";
-	
-	$db->query($login_up_sql);
-	if(isset($_SESSION['userid'])){
-		$_SESSION['userid'] = '';
-	}
-?>
-	<script type="text/javascript">
-		alert("Logout Successfully");
-		window.location = "login.php";
-	</script>
 <?php
-	trigger_error("Die called", E_USER_ERROR);
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/admin/includes/main_include.php';
+
+logoutFO();
+
 ?>
+<script type="text/javascript">
+    alert('Logout Successfully');
+    window.location = 'login.php';
+</script>
+<?php
+
+trigger_error('Die called', E_USER_ERROR);

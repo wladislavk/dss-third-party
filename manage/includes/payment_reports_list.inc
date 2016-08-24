@@ -127,35 +127,37 @@ $unviewed_url = "unviewed=$is_unviewed&fid=$franchiseeId&sort=$sort_by";
             <option value="1" <?=$is_unviewed ? ' selected' : '';?> >Unviewed</option>
         </select>
         &nbsp;&nbsp;&nbsp;
+        <?php if (!empty($back_office)) { ?>
+            Account:
+            <select name="fid">
+                <option value="">Any</option>
+                <?php
 
-        Account:
-        <select name="fid">
-            <option value="">Any</option>
-            <?php
-
-            if (is_super($_SESSION['admin_access'])) {
-                $franchisees = get_franchisees();
-            } elseif (is_software($_SESSION['admin_access'])) {
-                $franchisees = get_software_franchisees();
-            } elseif (is_billing($_SESSION['admin_access'])) {
-                $franchisees = get_billing_franchisees();
-            } elseif (is_hst($_SESSION['admin_access'])) {
-                $franchisees = get_hst_franchisees();
-            } else {
                 $franchisees = [];
-            }
 
-            if ($franchisees) foreach ($franchisees as $row) {
-                $selected = ($row['userid'] == $franchiseeId) ? 'selected' : ''; ?>
-                <option value="<?php echo  $row['userid'] ?>" <?php echo  $selected ?>>[<?php echo  $row['userid'] ?>] <?php echo  $row['first_name'] ?> <?php echo  $row['last_name'] ?></option>
-            <?php } ?>
-        </select>
-        &nbsp;&nbsp;&nbsp;
+                if (is_super($_SESSION['admin_access'])) {
+                    $franchisees = get_franchisees();
+                } elseif (is_software($_SESSION['admin_access'])) {
+                    $franchisees = get_software_franchisees();
+                } elseif (is_billing($_SESSION['admin_access'])) {
+                    $franchisees = get_billing_franchisees();
+                } elseif (is_hst($_SESSION['admin_access'])) {
+                    $franchisees = get_hst_franchisees();
+                }
 
-        <input type="hidden" name="sort" value="<?php echo $sort_by?>"/>
-        <input type="hidden" name="sortdir" value="<?php echo $sort_direction?>"/>
+                foreach ($franchisees as $row) {
+                    $selected = ($row['userid'] == $franchiseeId) ? 'selected' : ''; ?>
+                    <option value="<?= $row['userid'] ?>" <?= $selected ?>>
+                        [<?= $row['userid'] ?>] <?= e("{$row['first_name']} {$row['last_name']}") ?>
+                    </option>
+                <?php } ?>
+            </select>
+            &nbsp;&nbsp;&nbsp;
+        <?php } ?>
+        <input type="hidden" name="sort" value="<?= e($sort_by) ?>"/>
+        <input type="hidden" name="sortdir" value="<?= e($sort_direction) ?>"/>
         <input type="submit" value="Filter List" class="btn btn-primary">
-        <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'" class="btn btn-primary">
+        <input type="button" value="Reset" onclick="window.location = '<?= e($_SERVER['PHP_SELF']) ?>'" class="btn btn-primary">
     </form>
 </div>
 <br />

@@ -117,6 +117,37 @@ $('#next_step').change( function(){
   update_next_sched();
 });
 
+(function() {
+    var ajaxCall = null,
+        $this = $('#tracker-notes');
+
+    $this.bind('change keyup', debounceCall(function (e) {
+        $this.css('border-color', 'orange');
+        $this.attr('title', 'Saving notes...');
+
+        if (ajaxCall) {
+            ajaxCall.abort();
+            ajaxCall = null;
+        }
+
+        $.ajax({
+            url: '/manage/add_patient.php?noheaders=1&pid=' + getParameterByName('pid'),
+            type: 'post',
+            data: { from_tracker: true, tracker_notes: $this.val().trim() },
+            success: function () {
+                $this.css('border-color', 'green');
+                $this.attr('title', 'Notes saved');
+            },
+            error: function () {
+                $this.css('border-color', 'red');
+                $this.attr('title', 'Error while saving the notes, type again to attempt to save once more');
+            },
+            complete: function () {
+                ajaxCall = null;
+            }
+        });
+    }, { timeout: 2000 }));
+}());
 
 function update_next_sched(){
     var id = $('#next_step').val();

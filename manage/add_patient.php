@@ -50,6 +50,20 @@ if(!isset($_GET['noheaders'])){
 <script src="script/autocomplete_local.js?v=20160719" type="text/javascript"></script>
 <?php
 }
+
+if (!empty($_POST['from_tracker'])) {
+    $notes = $db->escape($_POST['tracker_notes']);
+    $docId = intval($_SESSION['docid']);
+
+    $db->query("UPDATE dental_patient_summary summary
+            LEFT JOIN dental_patients patient ON patient.patientid = summary.pid
+        SET summary.tracker_notes = '$notes'
+        WHERE summary.pid = '$patientId'
+            AND patient.docid = '$docId'");
+
+    trigger_error('Die called', E_USER_ERROR);
+}
+
 require_once('includes/dental_patient_summary.php');
 require_once('admin/includes/password.php');
 require_once('includes/preauth_functions.php');

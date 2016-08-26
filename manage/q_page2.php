@@ -625,7 +625,6 @@
 		                                showPatientValue('dental_q_page2', $_GET['pid'], 'other_therapy', $pat_row['other_therapy'], $other_therapy, true, $showEdits);
 		                            ?>
 								</span>
-                                <script>other_chk1();</script>
                         	</div>
                     		<br />
                         </li>

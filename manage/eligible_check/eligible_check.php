@@ -22,7 +22,7 @@ include_once '../includes/calendarinc.php';
   </script>
   <script src="js/lib/jquery-1.10.2.min.js"></script>
   <script src="js/lib/jquery-ui-1.10.3.custom.min.js"></script>
-  <script src="../script/autocomplete_local.js?v=<?= time() ?>"></script>
+  <script src="../script/autocomplete_local.js?v=20160721"></script>
   <script src="js/eligible.js"></script>
   <script src="js/sample_1.js?v=20160404"></script>
 

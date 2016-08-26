@@ -31,35 +31,42 @@ function debounceCall (call, options) {
     };
 }
 
-var autoCompleteLocalRequest = null;
+function setup_autocomplete_local (in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type, endpoint){
+    function populateLocalData (cpl) {
+        local_data = [];
 
-function cancelAutoCompleteLocalRequest () {
-    if (autoCompleteLocalRequest) {
-        autoCompleteLocalRequest.abort();
-        autoCompleteLocalRequest = null;
-    }
-}
+        for (var i=0; i<cpl.length; i++) {
+            if (typeof cpl[i]['names'] === 'undefined' || cpl[i]['names'].length === 0) {
+                continue;
+            }
 
-function setup_autocomplete_local(in_field, hint, id_field, source, file, hinttype, pid, id_only, check_enrollment, npi, office_type, endpoint){
-    autoCompleteLocalRequest = $.getJSON(file).done(function(data){
-        local_data = new Array();
-        var cpl = data;
-        var array_index = 0;
-        for(var i=0; i<cpl.length;i++){
-            if( typeof cpl[i]['names'] !== 'undefined' && cpl[i]['names'].length > 0 ) {
-                for( var nameIndex = 0; nameIndex < cpl[i]['names'].length; nameIndex++ ) {
-                    if(!!cpl[i]['names'][nameIndex]) {
-                        local_data[array_index] = new Array();
-                        local_data[array_index]['payer_id'] = cpl[i]['payer_id'];
-                        local_data[array_index]['payer_name'] = cpl[i]['names'][nameIndex];
-                        local_data[array_index]['enrollment_required'] = cpl[i]['enrollment_required'];
-                        local_data[array_index]['enrollment_mandatory_fields'] = cpl[i]['enrollment_mandatory_fields'];
-                        array_index++;
-                    }
+            for (var nameIndex = 0; nameIndex < cpl[i]['names'].length; nameIndex++ ) {
+                if (!cpl[i]['names'][nameIndex]) {
+                    continue;
                 }
+
+                local_data.push({
+                    payer_id: cpl[i]['payer_id'],
+                    payer_name: cpl[i]['names'][nameIndex],
+                    enrollment_required: cpl[i]['enrollment_required'],
+                    enrollment_mandatory_fields: cpl[i]['enrollment_mandatory_fields']
+                });
             }
         }
-    }).complete(function(){ autoCompleteLocalRequest = null; });
+    }
+
+    function staticEligiblePayerSource () {
+        $.getJSON('/manage/eligible_check/eligible-payers.php')
+            .done(populateLocalData);
+    }
+
+    $.getJSON(file)
+        .done(populateLocalData)
+        .error(function(){
+            if (file.match(/^https:\/\/gds\.eligibleapi\.com\/v1\.5\/payers\.json/)) {
+                staticEligiblePayerSource();
+            }
+        });
 
     $('#'+in_field).keyup(debounceCall(function(e) {
         var $this = $(e.target);
@@ -80,7 +87,7 @@ function setup_autocomplete_local(in_field, hint, id_field, source, file, hintty
                 window.searchVal = $this.val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
             }
         }
-    }, { onTick: cancelAutoCompleteLocalRequest }));
+    }));
 }
 
 
@@ -250,42 +257,3 @@ function updateval_local(t){
         t.value = '';
     }
 }
-/*
- $(document).keyup(function(e) {
- switch (e.which) {
- case 38:
- move_selectionref('up');
- break;
- case 40:
- move_selectionref('down');
- break;
- case 13:
- //alert('');
- break;
- }
- });
-
- function move_selectionref(direction) {
- if ($('#referredby_list > li.list_hover').size() == 0) {
- window.selectionref = 0;
- }
- if (direction == 'up' && window.selectionref != 0) {
- if (window.selectionref != 1) {
- window.selectionref--;
- }
- } else if (direction == 'down') {
- if (window.selectionref != ($("#referredby_list li").size() -1)) {
- window.selectionref++;
- }
- }
- set_selectedref(window.selectionref);
- }
- function set_selectedref(menuitem) {
- $('#referredby_list li').removeClass('list_hover');
- $('#referredby_list li').eq(menuitem).addClass('list_hover');
- var rowid = $('#referred_list li').eq(menuitem).data("rowid");
- var rowsource = $('#referred_list li').eq(menuitem).data("rowsource");
- var rowname = $('#referred_list li').eq(menuitem).data("rowname");
- $('#referred_name').val(rowname);
- }
- */

@@ -69,7 +69,10 @@ if ($_POST['dispute'] == 1) { // Dispute
     $db->query("INSERT INTO dental_ledger_note
         SET service_date = CURDATE(), entry_date = CURDATE(), private = 1, $noteData");
 
-    if (ClaimFormData::isStatus(['sent', 'paid-insurance', 'paid-patient'], $claimData['status'])) {
+    /**
+     * @see DSS-486 Always allow disputes
+     */
+    if (true || ClaimFormData::isStatus(['sent', 'paid-insurance', 'paid-patient'], $claimData['status'])) {
         if (ClaimFormData::isStatus('paid-patient', $claimData['status'])) {
             $newStatus = $isPrimary ? DSS_CLAIM_PATIENT_DISPUTE : DSS_CLAIM_SEC_PATIENT_DISPUTE;
         } else {

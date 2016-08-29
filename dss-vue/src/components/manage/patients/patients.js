@@ -92,6 +92,8 @@ module.exports = {
         '$route.query.letter': function() {
             if (this.letters.indexOf(this.$route.query.letter) > -1) {
                 this.$set('routeParameters.currentLetter', this.$route.query.letter);
+            } else {
+                // remove `selected_letter` from a letter
             }
         },
         'routeParameters': {

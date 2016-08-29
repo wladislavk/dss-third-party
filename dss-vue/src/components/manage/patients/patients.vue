@@ -21,13 +21,13 @@
                 <a
                     v-for="letter in letters"
                     v-bind:class="{ 'selected_letter': letter == routeParameters.currentLetter }"
-                    v-link="{ name: $route.name, query: { letter: letter, sh: selectedPatientType }}"
+                    v-link="{ name: $route.name, query: { letter: letter, sh: routeParameters.selectedPatientType }}"
                     class="letters"
                 >{{ letter }}</a>
 
                 <a
                     v-if="routeParameters.currentLetter"
-                    v-link="{ name: $route.name, query: { sh: selectedPatientType }}"
+                    v-link="{ name: $route.name, query: { sh: routeParameters.selectedPatientType }}"
                 >View All</a>
             </div>
             </br>
@@ -51,7 +51,7 @@
                                         letter  : routeParameters.currentLetter,
                                         sort    : routeParameters.sortColumn,
                                         sortdir : routeParameters.sortDirection,
-                                        sh      : selectedPatientType
+                                        sh      : routeParameters.selectedPatientType
                                     }
                                 }"
                                 class="fp"
@@ -72,7 +72,7 @@
                                 query: {
                                     pid: routeParameters.patientId,
                                     letter: routeParameters.currentLetter,
-                                    sh: selectedPatientType,
+                                    sh: routeParameters.selectedPatientType,
                                     sort: sort,
                                     sortDir: currentDirection
                                 }

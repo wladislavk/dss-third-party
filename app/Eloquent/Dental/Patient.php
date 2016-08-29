@@ -266,13 +266,13 @@ class Patient extends Model implements Resource, Repository
         $countQuery = $this->select(DB::raw('COUNT(p.patientid) AS total'))
             ->from(DB::raw($tables));
 
-        $countQuery  = $this->getConditions($countQuery, $type, $docId, $patientId);
+        $countQuery  = $this->getConditions($countQuery, $type, $docId, $patientId, $letter);
         $countResult = $countQuery->get();
 
         $orderQuery = $this->select(DB::raw($selections))
             ->from(DB::raw($tables));
 
-        $orderQuery  = $this->getConditions($orderQuery, $type, $docId, $patientId);
+        $orderQuery  = $this->getConditions($orderQuery, $type, $docId, $patientId, $letter);
         $orderResults = $orderQuery->orderByRaw($orderBy)
             ->skip($offset)
             ->take($patientsPerPage)

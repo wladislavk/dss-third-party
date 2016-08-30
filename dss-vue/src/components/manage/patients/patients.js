@@ -100,6 +100,11 @@ module.exports = {
                 this.$set('routeParameters.currentLetter', null);
             }
         },
+        '$route.query.delid': function() {
+            if (this.$route.query.delid > 0) {
+                this.onDeletePatient(this.$route.query.delid);
+            }
+        },
         'routeParameters': {
             handler: function() {
                 this.getPatients();
@@ -124,7 +129,7 @@ module.exports = {
                 }
             });
         },
-        onClickDeletePatient: function(patientId) {
+        onDeletePatient: function(patientId) {
             this.deletePatient(patientId)
                 .then(function(response) {
                     this.$set('message', 'Deleted Successfully');
@@ -171,8 +176,7 @@ module.exports = {
         readyForTx: function(insuranceNoError, numSleepStudy) {
             return +insuranceNoError && numSleepStudy != 0;
         },
-        getCurrentDirection: function(sort)
-        {
+        getCurrentDirection: function(sort) {
             if (this.routeParameters.sortColumn == sort) {
                 return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc';
             } else {
@@ -203,7 +207,7 @@ module.exports = {
         deletePatient: function(patientId) {
             patientId = patientId || 0;
 
-            return this.$http.delete(window.config.API_PATH + 'patients/' + patientId);
+            return this.$http.delete(window.config.API_PATH + 'patients-by-doctor/' + patientId);
         },
         findPatients: function(
             patientId,

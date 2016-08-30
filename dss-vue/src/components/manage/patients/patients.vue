@@ -35,7 +35,7 @@
                 <b>{{ message }}</b>
             </div>
         </div>
-        <form name="sortfrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post" style="clear: both">
+        <form name="sortfrm" style="clear: both">
             <table id="patients" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
                 <tr v-if="patientsTotalNumber > patientsPerPage" bgColor="#ffffff">
                     <td  align="right" colspan="15" class="bp">

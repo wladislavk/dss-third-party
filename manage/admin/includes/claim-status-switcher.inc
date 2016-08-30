@@ -9,7 +9,29 @@ function claimStatusSwitcher ($targetClaimId, $displayCurrentStatus=true) {
 
     $db = new Db();
 
-    if (!isset($_SESSION['admin_access']) || !is_super($_SESSION['admin_access'])) {
+    /**
+     * Allow BO users: super, admin software, admin billing
+     * Allow FO users: main account, and users allowed to edit ledger entries
+     */
+    $allowBO = false;
+    $allowFO = false;
+
+    if (!empty($_SESSION['adminuserid'])) {
+        $allowBO = is_super($_SESSION['admin_access']) ||
+            is_admin($_SESSION['admin_access']) ||
+            is_billing_admin($_SESSION['admin_access']);
+
+    } else {
+        $userId = intval($_SESSION['userid']);
+
+        $permissions = $db->getRow("SELECT docid, edit_ledger_entries
+            FROM dental_users
+            WHERE userid = '$userId'");
+
+        $allowFO = $permissions['docid'] == 0 || $permissions['edit_ledger_entries'] == 1;
+    }
+
+    if (!$allowBO && !$allowFO) {
         return;
     }
 

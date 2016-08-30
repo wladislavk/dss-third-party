@@ -74,7 +74,7 @@
                                     letter: routeParameters.currentLetter,
                                     sh: routeParameters.selectedPatientType,
                                     sort: sort,
-                                    sortDir: currentDirection
+                                    sortdir: getCurrentDirection(sort)
                                 }
                             }"
                         >{{ label }}</a>

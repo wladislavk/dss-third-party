@@ -9,12 +9,12 @@ module.exports = {
             constants           : window.constants,
             patientInfo         : '',
             routeParameters     : {
-                patientId           : 0,
+                patientId           : null,
                 currentPageNumber   : 0,
                 sortDirection       : 'asc',
                 selectedPatientType : '1',
-                sortColumn          : '',
-                currentLetter       : ''
+                sortColumn          : 'name',
+                currentLetter       : null
             },
             letters             : 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(','),
             message             : '',
@@ -70,8 +70,10 @@ module.exports = {
         },
         '$route.query.sort': function() {
             if (this.$route.query.sort) {
-                if (this.$route.query.sort in tableHeaders) {
+                if (this.$route.query.sort in this.tableHeaders) {
                     this.$set('routeParameters.sortColumn', this.$route.query.sort);
+                } else {
+                    this.$set('routeParameters.sortColumn', null);
                 }
             }
         },
@@ -87,13 +89,15 @@ module.exports = {
         '$route.query.pid': function() {
             if (this.$route.query.pid > 0) {
                 this.$set('routeParameters.patientId', this.$route.query.pid);
+            } else {
+                this.$set('routeParameters.patientId', null);
             }
         },
         '$route.query.letter': function() {
             if (this.letters.indexOf(this.$route.query.letter) > -1) {
                 this.$set('routeParameters.currentLetter', this.$route.query.letter);
             } else {
-                this.$set('routeParameters.currentLetter', '');
+                this.$set('routeParameters.currentLetter', null);
             }
         },
         'routeParameters': {
@@ -166,6 +170,14 @@ module.exports = {
         },
         readyForTx: function(insuranceNoError, numSleepStudy) {
             return +insuranceNoError && numSleepStudy != 0;
+        },
+        getCurrentDirection: function(sort)
+        {
+            if (this.routeParameters.sortColumn == sort) {
+                return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc';
+            } else {
+                return sort === 'name' ? 'asc': 'desc';
+            }
         },
         getPatients: function() {
             this.findPatients(

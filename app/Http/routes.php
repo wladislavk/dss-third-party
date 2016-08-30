@@ -112,7 +112,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('patients/duplicates', 'PatientsController@getDuplicates');
     Route::post('patients/bounces', 'PatientsController@getBounces');
     Route::post('patients/list', 'PatientsController@getListPatients');
-    Route::delete('patients/{patientId}', 'PatientsController@destroyForDoctor');
+    Route::delete('patients-by-doctor/{patientId}', 'PatientsController@destroyForDoctor');
     Route::post('patients/find', 'PatientsController@find');
     Route::resource('payment-reports', 'PaymentReportsController', ['except' => ['create', 'edit']]);
     Route::post('payment-reports/number', 'PaymentReportsController@getNumber');

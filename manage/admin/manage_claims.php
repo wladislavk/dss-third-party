@@ -8,26 +8,32 @@ include_once 'includes/invoice_functions.php';
 include_once '../includes/claim_functions.php';
 
 if (isset($_GET['upstatus'])) {
-    $claimId = intval($_GET['insid']);
-    $proposedStatus = $_GET['upstatus'];
+    $allowBO = is_super($_SESSION['admin_access']) ||
+        is_admin($_SESSION['admin_access']) ||
+        is_billing_admin($_SESSION['admin_access']);
 
-    $oldStatus = $db->getColumn("SELECT status
-        FROM dental_insurance
-        WHERE insuranceid = '$claimId'", 'status');
+    if ($allowBO) {
+        $claimId = intval($_GET['insid']);
+        $proposedStatus = $_GET['upstatus'];
 
-    $oldStatusName = ClaimFormData::statusName($oldStatus);
-    $proposedStatusName = ClaimFormData::statusName($proposedStatus);
+        $oldStatus = $db->getColumn("SELECT status
+            FROM dental_insurance
+            WHERE insuranceid = '$claimId'", 'status');
 
-    if ($proposedStatusName && $proposedStatusName != $oldStatusName) {
-        $possibleStatuses = ClaimFormData::statusListByStatus($proposedStatus);
-        $newStatus = ClaimFormData::isPrimary($oldStatus) ?
-            $possibleStatuses[$proposedStatusName][0] : $possibleStatuses[$proposedStatusName][1];
+        $oldStatusName = ClaimFormData::statusName($oldStatus);
+        $proposedStatusName = ClaimFormData::statusName($proposedStatus);
 
-        $db->query("UPDATE dental_insurance
-            SET status = '$newStatus'
-            WHERE insuranceid = '$claimId'");
+        if ($proposedStatusName && $proposedStatusName != $oldStatusName) {
+            $possibleStatuses = ClaimFormData::statusListByStatus($proposedStatus);
+            $newStatus = ClaimFormData::isPrimary($oldStatus) ?
+                $possibleStatuses[$proposedStatusName][0] : $possibleStatuses[$proposedStatusName][1];
 
-        claim_status_history_update($claimId, $newStatus, $oldStatus, '', $_SESSION['adminuserid']);
+            $db->query("UPDATE dental_insurance
+                SET status = '$newStatus'
+                WHERE insuranceid = '$claimId'");
+
+            claim_status_history_update($claimId, $newStatus, $oldStatus, '', $_SESSION['adminuserid']);
+        }
     }
 }
 

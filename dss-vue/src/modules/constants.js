@@ -15,5 +15,7 @@ module.exports = {
     DSS_HST_SCHEDULED : 2,
     DSS_HST_COMPLETE  : 3,
     DSS_HST_REJECTED  : 4,
-    DSS_HST_CONTACTED : 5
+    DSS_HST_CONTACTED : 5,
+
+    dssPreauthStatusLabels: ['Pending', 'Complete', 'Pre-Auth Pending', 'Rejected']
 }

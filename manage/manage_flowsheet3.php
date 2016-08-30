@@ -20,6 +20,11 @@ if($last['section']==1){
                     WHERE (date_completed != '' AND date_completed IS NOT NULL) AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' order by steps.section DESC, steps.sort_by DESC";
 }
 
+$patientId = intval($_GET['pid']);
+$trackerNotes = $db->getColumn("SELECT tracker_notes
+    FROM dental_patient_summary
+    WHERE pid = '$patientId'", 'tracker_notes', '');
+
 $final = $db->getRow($final_sql);
 $final_segment = $final['segmentid'];
 $final_rank = 0;
@@ -38,7 +43,7 @@ $sched_q = $db->getResults($sched_sql);
 $sched_appt = (count($sched_q)>0);
 
 ?>
-<link rel="stylesheet" href="css/flowsheet.css" />
+<link rel="stylesheet" href="css/flowsheet.css?v=20160824" />
 <div style="width:100%;">
 <?php
 $bu_sql = "SELECT h.*, uhc.id as uhc_id FROM companies h 
@@ -139,6 +144,10 @@ $next_q = $db->getResults($next_sql);
         <input id="next_step_date" class="flow_next_calendar" type="text" value="<?= ($sched_r['date_scheduled']!='' && $sched_r['date_scheduled']!="0000-00-00")?date('m/d/Y', strtotime($sched_r['date_scheduled'])):''; ?>" />
         <span id="next_step_until"><?= date_in_words_until($sched_r['date_scheduled']); ?></span>
     </div>
+        <div id="tracker-notes-container">
+            <label>Notes</label>
+            <input id="tracker-notes" type="text" value="<?= e($trackerNotes) ?>" />
+        </div>
     <div class="clear"></div>
 </div>
 <span class="sub_text" style="width:280px;">*After Step 1, choose the next patient treatment and date</span>
@@ -229,7 +238,7 @@ if($r){
 */ ?>
 <div style="clear:both;"></div>
 
-<script src="js/manage_flowsheet3.js" type="text/javascript"></script>
+<script src="js/manage_flowsheet3.js?v=20160824" type="text/javascript"></script>
 
 <?php include "includes/bottom.htm";?>
 

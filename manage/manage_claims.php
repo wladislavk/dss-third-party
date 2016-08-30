@@ -5,6 +5,54 @@ include_once "includes/constants.inc";
 $specialFilter = '';
 $isDefaultFilter = false;
 
+if (isset($_GET['upstatus'])) {
+    $userId = intval($_SESSION['userid']);
+    $docId = intval($_SESSION['docid']);
+
+    $permissions = $db->getRow("SELECT docid, edit_ledger_entries
+            FROM dental_users
+            WHERE userid = '$userId'");
+
+    $allowFO = $permissions['docid'] == 0 || $permissions['edit_ledger_entries'] == 1;
+
+    if (!$allowFO) {
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
+    $claimId = intval($_GET['insid']);
+    $proposedStatus = $_GET['upstatus'];
+
+    $oldStatus = $db->getColumn("SELECT status
+        FROM dental_insurance
+        WHERE insuranceid = '$claimId'
+            AND docid = '$docId'", 'status', null);
+
+    /**
+     * Claim doesn't exist, or it belongs to another office
+     */
+    if (is_null($oldStatus)) {
+        trigger_error('Die called', E_USER_ERROR);
+    }
+
+    $oldStatusName = ClaimFormData::statusName($oldStatus);
+    $proposedStatusName = ClaimFormData::statusName($proposedStatus);
+
+    if ($proposedStatusName && $proposedStatusName != $oldStatusName) {
+        $possibleStatuses = ClaimFormData::statusListByStatus($proposedStatus);
+        $newStatus = ClaimFormData::isPrimary($oldStatus) ?
+            $possibleStatuses[$proposedStatusName][0] : $possibleStatuses[$proposedStatusName][1];
+
+        $db->query("UPDATE dental_insurance
+            SET status = '$newStatus'
+            WHERE insuranceid = '$claimId'
+                AND docid = '$docId'");
+
+        claim_status_history_update($claimId, $newStatus, $oldStatus, '', $_SESSION['adminuserid']);
+    }
+
+    trigger_error('Die called', E_USER_ERROR);
+}
+
 if (isset($_GET['filed_by'])) {
     switch ($_GET['filed_by']) {
         case 'back':

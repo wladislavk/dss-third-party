@@ -92,9 +92,15 @@ function claimStatusSwitcher ($targetClaimId, $displayCurrentStatus=true) {
 
                     $select.prop('disabled', true);
 
+                    /**
+                     * Guess front/back office, from location.pathname
+                     */
+                    var isBackOffice = !!location.pathname.match(/^\/manage\/admin($|\/)/);
+                    var url = isBackOffice ? '/manage/admin/manage_claims.php' : '/manage/manage_claims.php';
+
                     $.ajax({
                         type: 'get',
-                        url: '/manage/admin/manage_claims.php',
+                        url: url,
                         data: { insid: claimId, upstatus: claimStatus },
                         complete: function () {
                             $select.prop('disabled', false);

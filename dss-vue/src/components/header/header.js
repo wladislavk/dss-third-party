@@ -680,6 +680,11 @@ module.exports = {
             this.headerInfo.useLetters = (this.headerInfo.docInfo.use_letters == 1);
         }
     },
+    events: {
+        'get-header-info': function() {
+            this.$broadcast('update-header-info', this.headerInfo);
+        }
+    },
     computed: {
         notificationsNumber: function() {
             var notificationsNumber = +this.headerInfo.pendingLetters.length +

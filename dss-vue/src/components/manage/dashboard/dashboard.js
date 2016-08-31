@@ -80,6 +80,8 @@ module.exports = {
         }
     },
     created: function() {
+        this.$dispatch('get-header-info');
+
         this.getDocumentCategories()
             .then(function(response) {
                 var data = response.data.data;

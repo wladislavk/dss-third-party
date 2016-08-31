@@ -32,6 +32,35 @@ function getLedgerPaymentAmount ($claimId, $payerType=false) {
 }
 
 /**
+ * Estimate the total amount in payment from the given ledger payments array.
+ * Useful to determine if the payment is zero for sake of closing/disputing a claim.
+ *
+ * @param array $ledgerPayments
+ * @return float
+ */
+function possiblePaymentAmount (Array $ledgerPayments) {
+    $total = 0.00;
+
+    foreach ($ledgerPayments as $payments) {
+        $amounts = array_pluck($payments, 'amount');
+
+        if ($amounts) {
+            array_walk($amounts, function (&$each) {
+                if (is_numeric($each)) {
+                    $each = floatval($each);
+                } else {
+                    $each = 0;
+                }
+            });
+
+            $total += array_sum($amounts);
+        }
+    }
+
+    return $total;
+}
+
+/**
  * Encapsulates the logic to add payments to claims
  *
  * $ledgerPayments is an array of arrays. The indexes represent the ledger ids:

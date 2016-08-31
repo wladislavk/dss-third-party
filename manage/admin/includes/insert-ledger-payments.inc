@@ -42,37 +42,46 @@ $patientData = $db->getRow("SELECT *
     FROM dental_patients p
     WHERE p.patientid = '$patientId'");
 
+$isPending = ClaimFormData::isStatus('pending', $claimData['status']);
 $isPrimary = ClaimFormData::isPrimary($claimData['status']);
 $statusType = $isPrimary ? 'primary' : 'secondary';
+
 $amountPayment = getLedgerPaymentAmount($claimId, DSS_TRXN_PAYER_PRIMARY);
+$possiblePaymentAmount = 0;
+$paymentsAdded = [];
 
 $userId = $is_front_office ? intval($_SESSION['userid']) : 0;
 $adminId = intval($_SESSION['adminid']);
 $docId = $is_front_office ? intval($_SESSION['docid']) : $patientData['docid'];
 
+/**
+ * @ToDo: Determine if pending claims can receive payments
+ */
 if (isset($_POST['payments']) && is_array($_POST['payments'])) {
     $paymentsAdded = insertLedgerPayments(
         $claimId, $_POST['payments'], $_POST['payment_type'], $_POST['payer'], $userId, $adminId
     );
-} else {
-    $paymentsAdded = [];
+    $possiblePaymentAmount = possiblePaymentAmount($_POST['payments']);
 }
 
+/**
+ * @ToDo: Determine if pending claims should be processed here, like being closed
+ */
 if ($_POST['dispute'] == 1) { // Dispute
-    $noteData = $db->escapeAssignmentList([
-        'docid' => $docId,
-        'patientid' => $patientId,
-        'producerid' => $userId,
-        'note' => "Insurance claim $claimId disputed because: {$_POST['dispute_reason']}."
-    ]);
-
-    $db->query("INSERT INTO dental_ledger_note
-        SET service_date = CURDATE(), entry_date = CURDATE(), private = 1, $noteData");
-
     /**
      * @see DSS-486 Always allow disputes
      */
-    if (true || ClaimFormData::isStatus(['sent', 'paid-insurance', 'paid-patient'], $claimData['status'])) {
+    if (!ClaimFormData::isStatus('pending', $claimData['status'])) {
+        $noteData = $db->escapeAssignmentList([
+            'docid' => $docId,
+            'patientid' => $patientId,
+            'producerid' => $userId,
+            'note' => "Insurance claim $claimId disputed because: {$_POST['dispute_reason']}."
+        ]);
+
+        $db->query("INSERT INTO dental_ledger_note
+            SET service_date = CURDATE(), entry_date = CURDATE(), private = 1, $noteData");
+
         if (ClaimFormData::isStatus('paid-patient', $claimData['status'])) {
             $newStatus = $isPrimary ? DSS_CLAIM_PATIENT_DISPUTE : DSS_CLAIM_SEC_PATIENT_DISPUTE;
         } else {
@@ -140,6 +149,11 @@ if ($_POST['dispute'] == 1) { // Dispute
             'status' => $newStatus
         ]);
     }
+} elseif (ClaimFormData::isStatus('disputed', $claimData['status'])) {
+    /**
+     * @ToDo: Determine if this conditional is valid, or if more statuses need to be included here
+     */
+    $newStatus = 'paid-insurance';
 }
 
 if ($newStatus !== false) {
@@ -173,8 +187,12 @@ if ($secondaryStatus !== false && empty($_POST['empty-claim'])) {
 }
 
 if ($_POST['payments'] && !$paymentsAdded) {
-    $alertMessages [] = 'It was not possible to add any payments due technical reasons. Please verify the amounts and try again.';
-    error_log('Insert Ledger Payments: could not add ledger payments.');
+    if ($possiblePaymentAmount >= 0.005) {
+        $alertMessages [] = 'It was not possible to add any payments due technical reasons. Please verify the amounts and try again.';
+        error_log('Insert Ledger Payments: could not add ledger payments.');
+    } else {
+        $alertMessages [] = 'No payment value entered, so no value will be displayed. If you selected additional actions they will be applied now.';
+    }
 } elseif ($paymentsAdded) {
     $alertMessages []= count($paymentsAdded) . ' payment(s) added successfully.';
 } elseif ($_POST['empty-claim']) {

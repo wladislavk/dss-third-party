@@ -54,26 +54,31 @@ function debounceCall (call, options) {
 }
 
   $(document).ready(function() {
+    var lastSearch = '';
+
     $('#patient_search, #pat_name').keypress(function(event) { return event.keyCode != 13; });
     $('#patient_search, #pat_name').keyup(debounceCall(function(e) {
-      var $this = $(e.target);
+      var $this = $(e.target),
+        $parent = $this.parent(),
+        currentSearch = $this.val().trim();
 
-      var $parent = $this.parent();
-      var a = e.which; // ascii decimal value
-      var listSize = $parent.find('#patient_list li, .search_list li').size();
-      var stringSize = $this.val().length;
+      if (currentSearch == '') {
+        lastSearch = currentSearch;
 
-      if ($this.val().trim() == "") {
         $parent.find('.search_hints').css('display', 'none');
         $parent.find('.json_patient').remove();
         $parent.find('.create_new').remove();
-        $parent.find('.initial_list').css("display", "table-row");
-      } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($this.val() == window.searchVal)) && ((a >= 39 && a <= 122 && a != 40) || a == 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
-        $parent.find('.initial_list').css("display", "none");
-        $parent.find('.search_hints').css("display", "inline");
-        sendValue($this.val(), $parent.find('#patient_list, .search_list'));
-        if ($this.val() > 2) {
-          window.searchVal = $this.val().replace(/(\s+)?.$/, ""); // strip last character to match last positive result
+        $parent.find('.initial_list').css('display', 'table-row');
+      } else if (currentSearch.length > 1 && lastSearch !== currentSearch) {
+        lastSearch = currentSearch;
+
+        $parent.find('.initial_list').css('display', 'none');
+        $parent.find('.search_hints').css('display', 'inline');
+
+        sendValue(currentSearch, $parent.find('#patient_list, .search_list'));
+
+        if (currentSearch > 2) {
+          window.searchVal = currentSearch.substr(0, currentSearch.length - 1); // strip last character to match last positive result
         }
       }
     }, { onTick: cancelSearchRequest }));

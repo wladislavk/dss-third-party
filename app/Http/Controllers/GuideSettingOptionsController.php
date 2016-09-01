@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\GuideSettingOptionDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\GuideSettingOption;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +89,16 @@ class GuideSettingOptionsController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getWithFilter(GuideSettingOptions $resources, Request $request)
+    {
+        $fields = $request->input('fields') ?: [];
+        $where  = $request->input('where') ?: [];
+        $order  = $request->input('order') ?: null;
+
+        $guideSettingOptions = $resources->getWithFilter($fields, $where, $order);
+
+        return ApiResponse::responseOk('', $guideSettingOptions);
     }
 }

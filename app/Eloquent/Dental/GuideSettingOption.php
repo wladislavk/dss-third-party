@@ -4,8 +4,10 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Contracts\Resources\GuideSettingOption as Resource;
+use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions as Repository;
 
-class GuideSettingOption extends Model
+class GuideSettingOption extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
@@ -39,4 +41,25 @@ class GuideSettingOption extends Model
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function getWithFilter($fields = [], $where = [], $order = null)
+    {
+        $object = $this;
+
+        if (count($fields)) {
+            $object = $object->select($fields);
+        }
+
+        if (count($where)) {
+            foreach ($where as $key => $value) {
+                $object = $object->where($key, $value);
+            }
+        }
+
+        if (!empty($order)) {
+            $object = $object->orderBy($order);
+        }
+
+        return $object->get();
+    }
 }

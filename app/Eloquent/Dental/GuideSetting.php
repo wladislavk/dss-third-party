@@ -60,4 +60,10 @@ class GuideSetting extends Model implements Resource, Repository
     {
         return $this->hasMany(GuideDeviceSetting::class, 'id', 'setting_id');
     }
+
+    public function getAllOrderBy($order = 'name')
+    {
+        return $this->orderBy($order)
+            ->get();
+    }
 }

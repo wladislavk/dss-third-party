@@ -16,25 +16,25 @@
         </div>
     </div>
 
-    <h2 style="margin-top:20px;">Device C-Lect for {{ firstname + ' ' + lastname }}?</h2>
+    <h2 style="margin-top:20px;">Device C-Lect for {{ currentPatient.firstname + ' ' + currentPatient.lastname }}?</h2>
 
     <form action="device_guide_results.php" method="post" id="device_form" style="border:solid 2px #cce3fc;padding:0 10px 0 25px; width:24%; margin-left:2%; float:left;">
         <input type="hidden" name="id" value="{{ $route.query.id }}" />
         <input type="hidden" name="pid" value="{{ $route.query.pid }}" />
 
         <div
-            v-if="s_q.length > 0"
-            v-for="s_r in s_q"
+            v-if="deviceGuideSettings.length > 0"
+            v-for="deviceGuideSetting in deviceGuideSettings"
             class="setting"
-            id="setting_{{ s_r.id }}"
+            id="setting_{{ deviceGuideSetting.id }}"
             style="padding: 5px 0;"
         >
-            <strong style="padding: 5px 0;display:block;">{{ s_r.name }}</strong>
-            <template v-if="s_r.setting_type == DSS_DEVICE_SETTING_TYPE_RANGE">
-                <div class="slider" id="slider_{{ s_r.id }}"></div>
-                <input type="checkbox" class="imp_chk" value="1" name="setting_imp_{{ s_r.id }}" id="setting_imp_{{ s_r.id }}" />
-                <div class="label" id="label_{{ s_r.id }}" style="padding: 5px 0;display: block;"></div>
-                <input type="hidden" name="setting{{ s_r.id }}" id="input_opt_{{ s_r.id }}" />
+            <strong style="padding: 5px 0;display:block;">{{ deviceGuideSetting.name }}</strong>
+            <template v-if="deviceGuideSetting.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE">
+                <div class="slider" id="slider_{{ deviceGuideSetting.id }}"></div>
+                <input type="checkbox" class="imp_chk" value="1" name="setting_imp_{{ deviceGuideSetting.id }}" id="setting_imp_{{ deviceGuideSetting.id }}" />
+                <div class="label" id="label_{{ deviceGuideSetting.id }}" style="padding: 5px 0;display: block;"></div>
+                <input type="hidden" name="setting{{ deviceGuideSetting.id }}" id="input_opt_{{ deviceGuideSetting.id }}" />
 
                 <?php
                     $o_sql = "SELECT * FROM dental_device_guide_setting_options WHERE setting_id='".mysqli_real_escape_string($con,$s_r['id'])."' ORDER BY option_id ASC";

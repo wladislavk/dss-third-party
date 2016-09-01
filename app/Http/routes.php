@@ -49,6 +49,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('support-tickets/number', 'SupportTicketsController@getNumber');
     Route::resource('admins', 'AdminsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-settings', 'GuideSettingsController', ['except' => ['create', 'edit']]);
+    Route::resource('guide-setting-options', 'GuideSettingOptionsController', ['except' => ['create', 'edit']]);
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);
     Route::resource('diagnostics', 'DiagnosticsController', ['except' => ['create', 'edit']]);
     Route::resource('documents', 'DocumentsController', ['except' => ['create', 'edit']]);

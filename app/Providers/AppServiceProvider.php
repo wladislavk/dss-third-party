@@ -63,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\ChangeList::class => [Repositories\ChangeLists::class, Resources\ChangeList::class],
             Eloquent\Dental\GuideSetting::class => [Repositories\GuideSettings::class, Resources\GuideSetting::class],
             Eloquent\Dental\GuideDevice::class => [Repositories\GuideDevices::class, Resources\GuideDevice::class],
+            Eloquent\Dental\GuideSettingOption::class => [Repositories\GuideSettingOptions::class, Resources\GuideSettingOption::class],
             Eloquent\Dental\Diagnostic::class => [Repositories\Diagnostics::class, Resources\Diagnostic::class],
             Eloquent\Dental\Document::class => [Repositories\Documents::class, Resources\Document::class],
             Eloquent\Dental\DocumentCategory::class => [Repositories\DocumentCategories::class, Resources\DocumentCategory::class],

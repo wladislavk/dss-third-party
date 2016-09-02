@@ -35,29 +35,9 @@
                 <input type="checkbox" class="imp_chk" value="1" name="setting_imp_{{ deviceGuideSetting.id }}" id="setting_imp_{{ deviceGuideSetting.id }}" />
                 <div class="label" id="label_{{ deviceGuideSetting.id }}" style="padding: 5px 0;display: block;"></div>
                 <input type="hidden" name="setting{{ deviceGuideSetting.id }}" id="input_opt_{{ deviceGuideSetting.id }}" />
-
-                <?php
-                    $o_sql = "SELECT * FROM dental_device_guide_setting_options WHERE setting_id='".mysqli_real_escape_string($con,$s_r['id'])."' ORDER BY option_id ASC";
-                    
-                    $o_q = $db->getResults($o_sql);
-                    $setting_options = count($o_q);
-                    $setting_options = (($setting_options != 1) ? $setting_options : 2);
-                    $range_step = ($s_r['range_end']-$s_r['range_start'])/($setting_options-1);
-                  ?>
-
-                  <?php
-                    $labelArray = ""; 
-                    if ($o_q) foreach ($o_q as $o_r){ 
-                      $labelArray .= ',' . $o_r['label'] . '';
-                    }
-                  ?>
-
-                  <script type="text/javascript">
-                    setSlider("<?php echo $labelArray; ?>", <?php echo  $s_r['id']; ?>, <?php echo  $s_r['range_start']; ?>, <?php echo $s_r['range_end']; ?>, <?php echo $range_step; ?>);
-                  </script>
             </template>
             <template v-else>
-                <input type="checkbox" name="setting{{ s_r.id }}" value="1" />
+                <input type="checkbox" name="setting{{ deviceGuideSetting.id }}" value="1" />
             </template>
         </div>
     </form>
@@ -73,7 +53,7 @@
     </div>
 </template>
 
-<!-- <script type="text/javascript" src="../js/device_guide.js"></script> -->
+<script type="text/javascript" src="../../../../../assets/js/manage/device_guide.js"></script>
 
 <script>
     module.exports = require('./deviceSelector.js');

@@ -1,11 +1,12 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
+var handlerMixin = require('../../../../modules/handler/HandlerMixin.js');
 
 module.exports = {
     data: function() {
         return {
-            currentPatient            : null,
+            constants                 : window.constants,
+            currentPatient            : {},
             deviceGuideSettings       : [],
-            deviceGuideSettingOptions : []
+            deviceGuideSettingOptions : {}
         }
     },
     mixins: [handlerMixin],
@@ -35,12 +36,20 @@ module.exports = {
 
                                 if (data) {
                                     var countSettingOptions = data.length != 1 ? data.length - 1 : 1;
-
-                                    this.deviceGuideSettingOptions[setting.id].rangeStep = (setting.range_end - setting.range_endrange_start) / countSettingOptions;
-
                                     var labels = data.map((element) => element.label);
 
-                                    this.deviceGuideSettingOptions[setting.id].label = labels.join(',');
+                                    this.deviceGuideSettingOptions[setting.id] = {
+                                        rangeStep : (setting.range_end - setting.range_start) / countSettingOptions,
+                                        label     : labels.join(',')
+                                    };
+
+                                    setSlider(
+                                        this.deviceGuideSettingOptions[setting.id].label,
+                                        this.setting.id,
+                                        this.setting.range_start,
+                                        this.setting.range_end,
+                                        this.deviceGuideSettingOptions[setting.id].rangeStep
+                                    );
                                 }
                             }, function(response) {
                                 this.handleErrors('getDeviceGuideSettingOptions', response);
@@ -51,7 +60,19 @@ module.exports = {
                 this.handleErrors('getDeviceGuideSettings', response);
             });
     },
+    ready: function() {
+        $('.imp_chk').click( function(){
+            if($(this).is(':checked')){
+                if($('.imp_chk:checked').length > 3){
+                  $(this).prop("checked", false);
+                }
+            }
+        });
+    },
     methods: {
+        onDeviceSubmit: function() {
+            
+        },
         getPatientById: function(patientId) {
             patientId = patientId || 0;
 

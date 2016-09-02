@@ -21,6 +21,8 @@
 </template>
 
 <script>
+    var deviceSelector = require('../manage/dashboard/device-selector/deviceSelector.vue');
+
     module.exports = {
         data: function() {
             return {
@@ -36,7 +38,8 @@
             this.$off('keyup');
         },
         components: {
-            'empty'  : { template: '' }
+            'empty'           : { template: '' },
+            'device-selector' : deviceSelector
         },
         methods: {
             centering: function() {

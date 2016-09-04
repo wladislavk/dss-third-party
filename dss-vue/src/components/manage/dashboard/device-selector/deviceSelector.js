@@ -6,10 +6,28 @@ module.exports = {
             constants                 : window.constants,
             currentPatient            : {},
             deviceGuideSettings       : [],
-            deviceGuideSettingOptions : {}
+            deviceGuideSettingOptions : {},
+            id                        : 0,
+            patientId                 : 0
         }
     },
     mixins: [handlerMixin],
+    watch: {
+        '$route.query.id': function() {
+            if ($route.query.id) {
+                this.$set('id', $route.query.id);
+            } else {
+                this.$set('id', 0);
+            }
+        },
+        '$route.query.pid': function() {
+            if ($route.query.pid) {
+                this.$set('patientId', $route.query.pid);
+            } else {
+                this.$set('patientId', 0);
+            }
+        }
+    },
     created: function() {
         this.getPatientById()
             .then(function(response) {
@@ -71,7 +89,74 @@ module.exports = {
     },
     methods: {
         onDeviceSubmit: function() {
-            
+            var data = $('#device_form').serialize();
+
+            this.getDeviceGuideResults(data)
+                .then(function(response) {
+                    var data = response.data.data;
+
+                    if (data) {
+                        $('#results li').remove();
+                        data.forEach(function(element){
+                            if(element.image_path != ''){
+                                $('#results').append("<li class='box_go'><div class='ico'><img src='" + element.image_path + "' /></div><a href='#' onclick=\"updateDevice(" + element.id + ", '" + element.name + "');return false();\">" + element['name'] + " (" + element.value + ")</a></li>");
+                            } else {
+                                $('#results').append("<li><a href='#' onclick=\"updateDevice(" + element.id + ", '" + element.name + "');return false();\">" + element['name'] + " (" + v.value + ")</a></li>");
+                            }
+                        });
+                    }
+                }, function(response) {
+                    this.handleErrors('getDeviceGuideResults', response);
+                });
+        },
+        resetForm: function() {
+            $(".setting").each(function(){
+                $(this).find(".slider").slider("value", $(this).find(".slider").slider("option", "min") );
+                $(this).find(".label").html( $(this).find('.label').attr('data-init'));
+                $(this).find(".imp_chk").prop("checked", false);
+            });
+
+            $('#results li').remove();
+        },
+        updateDevice: function(device, name) {
+            if (this.id && this.patientId) {
+                if (confirm("Do you want to select " + name + " for " + currentPatient.firstname + " " + currentPatient.lastname)) {
+                    this.updateFlowDevice(device)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data) {
+                                var r = $.parseJSON(data);
+                                if(r.error){
+                                }else{
+                                    parent.updateDentalDevice(valId, device)
+                                    parent.disablePopupClean();
+                                }
+                            }
+                        }, function(response) {
+                            this.handleErrors('updateFlowDevice', response);
+                        });
+                }
+            }
+        },
+        setSlider: function(labelArr, id, rangeStart, rangeEnd, rangeStep) {
+            var labelArr = labelArr.split(',');
+
+            $( "#slider_" + id ).slider({
+                value: range_start,
+                min: range_start,
+                max: range_end,
+                step: range_step,
+                slide: function( event, ui ) {
+                  $( "#input_opt_" + id ).val( ui.value );
+                  $("#label_" + id).html(labelArr[ui.value]);
+                  $('#results li').remove();
+                }
+            });
+
+            $( "#input_opt_" + id ).val($( "#slider_" + id ).slider( "value" ) );
+            $("#label_" + id).html(labelArr[$( "#slider_" + id ).slider( "value" )]);
+            $("#label_" + id).attr('data-init', labelArr[$( "#slider_" + id ).slider( "value" )]);
         },
         getPatientById: function(patientId) {
             patientId = patientId || 0;
@@ -85,8 +170,7 @@ module.exports = {
 
             return this.$http.post(window.config.API_PATH + 'guide-settings/sort', data);
         },
-        getDeviceGuideSettingOptions: function(settingId)
-        {
+        getDeviceGuideSettingOptions: function(settingId) {
             var data = {
                 where : {
                     setting_id: settingId
@@ -95,6 +179,18 @@ module.exports = {
             };
 
             return this.$http.post(window.config.API_PATH + 'guide-setting-options/filter', data);
+        },
+        getDeviceGuideResults: function(data) {
+            return this.$http.post(window.config.API_PATH + 'guide-devices/with-images', data);
+        },
+        updateFlowDevice: function(device) {
+            var data = {
+                id     : this.id,
+                device : device,
+                pid    : this.patientId
+            };
+
+            return this.$http.post(window.config.API_PATH + '', data);
         }
     }
 }

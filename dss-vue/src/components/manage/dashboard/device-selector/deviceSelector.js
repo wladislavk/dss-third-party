@@ -6,7 +6,6 @@ module.exports = {
             constants                 : window.constants,
             currentPatient            : {},
             deviceGuideSettings       : [],
-            deviceGuideSettingOptions : {},
             id                        : 0,
             patientId                 : 0
         }
@@ -47,32 +46,31 @@ module.exports = {
                 if (data) {
                     this.$set('deviceGuideSettings', data);
 
-                    data.forEach((setting) => {
-                        this.getDeviceGuideSettingOptions(setting.id)
-                            .then(function(response) {
-                                var data = response.data.data;
+                    var settingIds = data.map((element) => element.id);
 
-                                if (data) {
-                                    var countSettingOptions = data.length != 1 ? data.length - 1 : 1;
-                                    var labels = data.map((element) => element.label);
+                    this.getDeviceGuideSettingOptions(settingIds)
+                        .then(function(response) {
+                            var data = response.data.data;
 
-                                    this.deviceGuideSettingOptions[setting.id] = {
-                                        rangeStep : (setting.range_end - setting.range_start) / countSettingOptions,
-                                        label     : labels.join(',')
-                                    };
+                            if (data) {
+                                var self = this;
 
-                                    this.setSlider(
-                                        this.deviceGuideSettingOptions[setting.id].label,
-                                        setting.id,
-                                        setting.range_start,
-                                        setting.range_end,
-                                        this.deviceGuideSettingOptions[setting.id].rangeStep
+                                data.forEach(function(element) {
+                                    var currentSetting = self.deviceGuideSettings.find((el) => el.id === element.setting_id);
+                                    var countSettingOptions = currentSetting.number != 1 ? currentSetting.number - 1 : 1;
+
+                                    self.setSlider(
+                                        element.labels,
+                                        element.setting_id,
+                                        currentSetting.range_start,
+                                        currentSetting.range_end,
+                                        (currentSetting.range_end - currentSetting.range_start) / countSettingOptions
                                     );
-                                }
-                            }, function(response) {
-                                this.handleErrors('getDeviceGuideSettingOptions', response);
-                            });
-                    });
+                                });
+                            }
+                        }, function(response) {
+                            this.handleErrors('getDeviceGuideSettingOptions', response);
+                        });
                 }
             }, function(response) {
                 this.handleErrors('getDeviceGuideSettings', response);
@@ -166,15 +164,12 @@ module.exports = {
 
             return this.$http.post(window.config.API_PATH + 'guide-settings/sort', data);
         },
-        getDeviceGuideSettingOptions: function(settingId) {
+        getDeviceGuideSettingOptions: function(settingIds) {
             var data = {
-                where : {
-                    setting_id: settingId
-                },
-                order : 'option_id'
+                settingIds: settingIds
             };
 
-            return this.$http.post(window.config.API_PATH + 'guide-setting-options/filter', data);
+            return this.$http.post(window.config.API_PATH + 'guide-setting-options/settingIds', data);
         },
         getDeviceGuideResults: function(data) {
             return this.$http.post(window.config.API_PATH + 'guide-devices/with-images', data);

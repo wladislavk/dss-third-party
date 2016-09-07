@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\GuideSettingOption as Resource;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions as Repository;
+use DB;
 
 class GuideSettingOption extends Model implements Resource, Repository
 {
@@ -42,24 +43,12 @@ class GuideSettingOption extends Model implements Resource, Repository
      */
     const CREATED_AT = 'adddate';
 
-    public function getWithFilter($fields = [], $where = [], $order = null)
+    public function getOptionsBy($settingIds = [])
     {
-        $object = $this;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        if (!empty($order)) {
-            $object = $object->orderBy($order);
-        }
-
-        return $object->get();
+        return $this->select('setting_id', DB::raw('GROUP_CONCAT(label) as labels'))
+            ->whereIn('setting_id', $settingIds)
+            ->groupBy('setting_id')
+            ->orderBy('option_id')
+            ->get();
     }
 }

@@ -53,8 +53,6 @@
     </div>
 </template>
 
-<script type="text/javascript" src="../../../../../assets/js/manage/device_guide.js"></script>
-
 <script>
     module.exports = require('./deviceSelector.js');
 </script>

@@ -61,11 +61,11 @@ module.exports = {
                                         label     : labels.join(',')
                                     };
 
-                                    setSlider(
+                                    this.setSlider(
                                         this.deviceGuideSettingOptions[setting.id].label,
-                                        this.setting.id,
-                                        this.setting.range_start,
-                                        this.setting.range_end,
+                                        setting.id,
+                                        setting.range_start,
+                                        setting.range_end,
                                         this.deviceGuideSettingOptions[setting.id].rangeStep
                                     );
                                 }
@@ -126,12 +126,8 @@ module.exports = {
                             var data = response.data.data;
 
                             if (data) {
-                                var r = $.parseJSON(data);
-                                if(r.error){
-                                }else{
-                                    parent.updateDentalDevice(valId, device)
-                                    parent.disablePopupClean();
-                                }
+                                parent.updateDentalDevice(valId, device)
+                                parent.disablePopupClean();
                             }
                         }, function(response) {
                             this.handleErrors('updateFlowDevice', response);
@@ -143,10 +139,10 @@ module.exports = {
             var labelArr = labelArr.split(',');
 
             $( "#slider_" + id ).slider({
-                value: range_start,
-                min: range_start,
-                max: range_end,
-                step: range_step,
+                value: rangeStart,
+                min: rangeStart,
+                max: rangeEnd,
+                step: rangeStep,
                 slide: function( event, ui ) {
                   $( "#input_opt_" + id ).val( ui.value );
                   $("#label_" + id).html(labelArr[ui.value]);

@@ -9,6 +9,8 @@ use DentalSleepSolutions\Http\Requests\GuideDeviceDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\GuideDevice;
 use DentalSleepSolutions\Contracts\Repositories\GuideDevices;
+use DentalSleepSolutions\Contracts\Repositories\Devices;
+use DentalSleepSolutions\Contracts\Repositories\GuideSettings;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +90,65 @@ class GuideDevicesController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getWithImages(Devices $devicesResource, GuideSettings $guideSettingsResource)
+    {
+        $fields = ['deviceid', 'device', 'image_path'];
+        $devices = $devicesResource->getWithFilter($fields);
+        $devicesArray = [];
+
+        if (count($devices)) {
+            foreach ($devices as $device) {
+                $total = 0;
+                $show  = true;
+
+                $guideSettings = $guideSettingsResource->getSettingType($device->id);
+
+                if (count($guideSettings)) {
+                    foreach ($guideSettings as $guideSetting) {
+                        $postSettingId = !empty($settingIds[$guideSetting->id])
+                            ? $settingIds[$guideSetting->id]
+                            : 0;
+
+                        if ($guideSetting->setting_type == 1) {
+                            if ($guideSetting->value != '1' && $postSettingId == 1) {
+                                $show = false;
+                            }
+                        } else {
+                            $value = $postSettingId * $guideSetting->value;
+
+                            if (isset($settingImpIds[$guideSetting->id])) {
+                                $value *= 1.75;
+                            }
+
+                            $total += $value;
+                        }
+                    }
+                }
+
+                if ($show) {
+                    array_push($devicesArray, [
+                        'name'       => $device->name,
+                        'id'         => $device->id,
+                        'value'      => $total,
+                        'image_path' => $device->image_path
+                    ]);
+                }
+            }
+        }
+
+        usort($devicesArray, ['GuideDevicesController', 'sort']);
+
+        return ApiResponse::responseOk('', $devicesArray);
+    }
+
+    private function sort($firstElement, $secondElement)
+    {
+        if ($firstElement['value'] == $secondElement['value']) {
+            return 0;
+        }
+
+        return ($firstElement['value'] > $secondElement['value']) ? -1 : 1;
     }
 }

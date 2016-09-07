@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\GuideSetting as Resource;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettings as Repository;
+use DB;
 
 class GuideSetting extends Model implements Resource, Repository
 {
@@ -64,6 +65,17 @@ class GuideSetting extends Model implements Resource, Repository
     public function getAllOrderBy($order = 'name')
     {
         return $this->orderBy($order)
+            ->get();
+    }
+
+    public function getSettingType($deviceId = 0)
+    {
+        return $this->select('s.id', 's.setting_type', 'ds.value')
+            ->from(DB::raw('dental_device_guide_settings s'))
+            ->leftJoin(DB::raw('dental_device_guide_device_setting ds'), function($join) use ($deviceId) {
+                $join->on('s.id', '=', 'ds.setting_id')
+                    ->where('ds.device_id', $deviceId);
+            })
             ->get();
     }
 }

@@ -53,6 +53,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('guide-setting-options', 'GuideSettingOptionsController', ['except' => ['create', 'edit']]);
     Route::post('guide-setting-options/filter', 'GuideSettingOptionsController@getWithFilter');
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);
+    Route::post('guide-devices/with-images', 'GuideDevicesController@getWithImages');
     Route::resource('diagnostics', 'DiagnosticsController', ['except' => ['create', 'edit']]);
     Route::resource('documents', 'DocumentsController', ['except' => ['create', 'edit']]);
     Route::resource('document-categories', 'DocumentCategoriesController', ['except' => ['create', 'edit']]);

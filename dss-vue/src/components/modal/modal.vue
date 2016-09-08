@@ -1,8 +1,9 @@
 <style src="../../../assets/css/manage/popup.css" scoped></style>
 <style scoped>
     #modal-content {
-        width  : 100%;
-        height : 100%;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
     }
 </style>
 

@@ -31,6 +31,7 @@
         >
             <strong style="padding: 5px 0;display:block;">{{ deviceGuideSetting.name }}</strong>
             <template v-if="deviceGuideSetting.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE">
+                <ui-slider :value.sync="25" label="None"></ui-slider>
                 <div class="slider" id="slider_{{ deviceGuideSetting.id }}"></div>
                 <input type="checkbox" class="imp_chk" value="1" name="setting_imp_{{ deviceGuideSetting.id }}" id="setting_imp_{{ deviceGuideSetting.id }}" />
                 <div class="label" id="label_{{ deviceGuideSetting.id }}" style="padding: 5px 0;display: block;"></div>

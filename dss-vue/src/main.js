@@ -2,9 +2,12 @@ import Vue         from 'vue'
 import VueRouter   from 'vue-router'
 import VueResource from 'vue-resource'
 
+import Keen from 'keen-ui'
+
 Vue.use(VueRouter)
 Vue.use(VueResource)
 Vue.use(require('vue-moment'))
+Vue.use(Keen)
 
 // include the manage main template
 import ManageTemplate from './components/header/header.vue'

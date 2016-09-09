@@ -30,7 +30,8 @@ if ($patientData) {
     } else {
         if ($patientData['recover_hash'] == '') {
             $patientData['recover_hash'] = hash('sha256', $patientData['patientid'] . $patientData['email'] . rand());
-            
+            $mailerData['patientData']['recover_hash'] = $patientData['recover_hash'];
+
             $db->query("UPDATE dental_patients
                 SET recover_hash = '{$patientData['recover_hash']}', recover_time = NOW()
                 WHERE patientid = '$patientId'");

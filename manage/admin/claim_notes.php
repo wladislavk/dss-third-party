@@ -3,12 +3,14 @@
 include 'includes/top.htm';
 include_once '../includes/constants.inc';
 
+$claimId = intval($_GET['id']);
+$patientId = intval($_GET['pid']);
 
 $c_sql = "SELECT CONCAT(p.firstname,' ', p.lastname) pat_name, CONCAT(u.first_name, ' ',u.last_name) doc_name 
                 FROM dental_insurance i
                 JOIN dental_patients p ON i.patientid=p.patientid
                 JOIN dental_users u ON u.userid=p.docid
-		WHERE i.insuranceid='".mysqli_real_escape_string($con,$_GET['id'])."'";
+		WHERE i.insuranceid='$claimId'";
 $c_q = mysqli_query($con,$c_sql);
 $c = mysqli_fetch_assoc($c_q);
 
@@ -337,8 +339,8 @@ if($insurancetype == '1'){
        . "  LEFT JOIN dental_place_service ps ON trxn_code.place = ps.place_serviceid "
        . "  LEFT JOIN dental_place_service ps2 ON ledger.placeofservice = ps2.place_service "
        . "WHERE "
-       . "  ledger.primary_claim_id = " . $_GET['id'] . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  '$claimId' IN (ledger.primary_claim_id, ledger.secondary_claim_id)"
+       . "  AND ledger.patientid = '$patientId' "
        . "  AND ledger.docid = '" . $docid . "' "
        . "  AND trxn_code.docid = '" . $docid . "' "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -357,7 +359,7 @@ if ($is_pending) {
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
        . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  AND ledger.patientid = '$patientId' "
        . "  AND ledger.docid = " . $docid . " "
        . "  AND trxn_code.docid = " . $docid . " "
        . "  AND trxn_code.type = " . DSS_TRXN_TYPE_MED . " "
@@ -377,22 +379,22 @@ if ($is_pending) {
        . "  JOIN dental_transaction_code trxn_code ON trxn_code.transaction_code = ledger.transaction_code "
        . "WHERE "
        . "  ledger.status = " . DSS_TRXN_PENDING . " "
-       . "  AND ledger.patientid = " . $_GET['pid'] . " "
+       . "  AND ledger.patientid = '$patientId' "
        . "  AND ledger.docid = " . $docid . " "
        . "  AND trxn_code.docid = " . $docid . " "
        . "  AND trxn_code.type IN (" . DSS_TRXN_TYPE_PATIENT . "," . DSS_TRXN_TYPE_INS . "," . DSS_TRXN_TYPE_ADJ . ") "
        . "ORDER BY "
        . "  ledger.service_date ASC";
   if(!empty($_GET['instype']) && $_GET['instype']==2 && $status == DSS_CLAIM_SEC_PENDING){
-    $sql = "SELECT
-                sum(dlp.amount) as amount_paid
-        from dental_ledger dl
-                LEFT JOIN dental_users p ON dl.producerid=p.userid
-                LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                        where dl.docid='".$docid."' and dl.patientid='".s_for($_GET['pid'])."'
-                        AND primary_claim_id=".$_GET['insid']."
-                        AND dlp.amount != 0
-                        AND dlp.payer = 0
+    $sql = "SELECT SUM(dlp.amount) AS amount_paid
+        FROM dental_ledger dl
+            LEFT JOIN dental_users p ON dl.producerid = p.userid
+            LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+        WHERE dl.docid = '$docid'
+            AND dl.patientid = '$patientId'
+            AND '$claimId' IN (primary_claim_id, secondary_claim_id)
+            AND dlp.amount != 0
+            AND dlp.payer = 0
         ";
   }
   $paid_my = mysqli_query($con,$sql);

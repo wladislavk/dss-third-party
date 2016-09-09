@@ -590,12 +590,24 @@ $statusDropdown = [
                     <?php
 
                     $eResponse = retrieveEClaimResponse($myarray['insuranceid']);
+                    $latestStatusChange = $db->getRow("SELECT adddate, userid, adminid
+                        FROM dental_insurance_status_history
+                        WHERE insuranceid = '{$myarray['insuranceid']}'
+                        ORDER BY adddate DESC
+                        LIMIT 1");
+
+                    $updatedByUser = $latestStatusChange['userid'] || $latestStatusChange['adminid'];
+                    $updatedAfterEResponse = $eResponse ?
+                        strtotime($latestStatusChange['adddate']) > strtotime($eResponse['data']['adddate']) : true;
+
+                    $statusOverriden = $updatedByUser && $updatedAfterEResponse;
+                    $validEResponse = $eResponse['type'] === 'webhook' || $eResponse['type'] === 'response';
 
                     if ($eResponse['type'] === 'payment') { ?>
                         <a href="payment_report.php?report_id=<?= $eResponse['data']['payment_id'] ?>">
                             Paid - <?= $eResponse['data']['adddate'] ?> (View)
                         </a>
-                    <?php } elseif ($eResponse['type'] === 'webhook' || $eResponse['type'] === 'response') { ?>
+                    <?php } elseif (!$statusOverriden && $validEResponse) { ?>
                         <?= $eResponse['data']['event_type'] ?> - <?= $eResponse['data']['adddate'] ?>
                     <?php } ?>
                 </td>

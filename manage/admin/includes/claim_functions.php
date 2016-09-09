@@ -460,7 +460,7 @@ function retrieveEClaimResponse ($claimId) {
     }
 
     // No payment, therefore search for eligible webhooks, or initial response
-    $eResponses = $db->getRow("SELECT
+    $eResponses = $db->getResults("SELECT
             claim.status,
             eclaim.reference_id,
             eclaim.response,

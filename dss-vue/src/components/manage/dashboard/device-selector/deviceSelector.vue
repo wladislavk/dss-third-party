@@ -23,19 +23,25 @@
         <input type="hidden" name="pid" value="{{ $route.query.pid }}" />
 
         <div
-            v-if="deviceGuideSettings.length > 0"
-            v-for="deviceGuideSetting in deviceGuideSettings"
+            v-if="deviceGuideSettingOptions.length > 0"
+            v-for="deviceGuideSetting in deviceGuideSettingOptions"
             class="setting"
             id="setting_{{ deviceGuideSetting.id }}"
             style="padding: 5px 0;"
         >
             <strong style="padding: 5px 0;display:block;">{{ deviceGuideSetting.name }}</strong>
             <template v-if="deviceGuideSetting.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE">
-                <ui-slider :value.sync="25" label="None"></ui-slider>
-                <div class="slider" id="slider_{{ deviceGuideSetting.id }}"></div>
+                <mt-range
+                    :value.sync="deviceGuideSetting.checkedOption"
+                    :min="0"
+                    :max="deviceGuideSetting.number - 1"
+                ></mt-range>
+                <div
+                    class="label"
+                    id="label_{{ deviceGuideSetting.id }}"
+                    style="padding: 5px 0;display: block;"
+                >{{ deviceGuideSetting.labels[deviceGuideSetting.checkedOption] }}</div>
                 <input type="checkbox" class="imp_chk" value="1" name="setting_imp_{{ deviceGuideSetting.id }}" id="setting_imp_{{ deviceGuideSetting.id }}" />
-                <div class="label" id="label_{{ deviceGuideSetting.id }}" style="padding: 5px 0;display: block;"></div>
-                <input type="hidden" name="setting{{ deviceGuideSetting.id }}" id="input_opt_{{ deviceGuideSetting.id }}" />
             </template>
             <template v-else>
                 <input type="checkbox" name="setting{{ deviceGuideSetting.id }}" value="1" />

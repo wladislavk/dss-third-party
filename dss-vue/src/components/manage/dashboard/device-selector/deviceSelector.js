@@ -44,14 +44,12 @@ module.exports = {
                 var data = response.data.data;
 
                 if (data) {
-                    this.$set('deviceGuideSettingOptions', data);
-
-                    var self = this;
-
-                    this.deviceGuideSettingOptions.forEach(function(element) {
+                    data.forEach(function(element) {
                         element.labels = element.labels.split(',');
                         element.checkedOption = 0;
                     });
+
+                    this.$set('deviceGuideSettingOptions', data);
                 }
             }, function(response) {
                 this.handleErrors('getDeviceGuideSettingOptions', response);

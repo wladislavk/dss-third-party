@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <h2 style="margin-top:20px;">Device C-Lect for {{ currentPatient.firstname + ' ' + currentPatient.lastname }}?</h2>
+    <h2 style="margin-top:20px;">Device C-Lect for {{ currentPatient.firstname }} {{ currentPatient.lastname }}?</h2>
 
     <form action="device_guide_results.php" method="post" id="device_form" style="border:solid 2px #cce3fc;padding:0 10px 0 25px; width:24%; margin-left:2%; float:left;">
         <input type="hidden" name="id" value="{{ $route.query.id }}" />

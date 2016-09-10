@@ -91,11 +91,9 @@ class GuideSettingOptionsController extends Controller
         return ApiResponse::responseOk('Resource deleted');
     }
 
-    public function getOptionsForSettingIds(GuideSettingOptions $resources, Request $request)
+    public function getOptionsForSettingIds(GuideSettingOptions $resources)
     {
-        $settingIds = $request->input('settingIds') ?: [];
-
-        $guideSettingOptions = $resources->getOptionsBy($settingIds);
+        $guideSettingOptions = $resources->getOptionsBySettingIds();
 
         return ApiResponse::responseOk('', $guideSettingOptions);
     }

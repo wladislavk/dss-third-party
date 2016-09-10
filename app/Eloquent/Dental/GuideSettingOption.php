@@ -43,12 +43,18 @@ class GuideSettingOption extends Model implements Resource, Repository
      */
     const CREATED_AT = 'adddate';
 
-    public function getOptionsBy($settingIds = [])
+    public function getOptionsBySettingIds()
     {
-        return $this->select('setting_id', DB::raw('GROUP_CONCAT(label) as labels'))
-            ->whereIn('setting_id', $settingIds)
+        return $this->select(
+                DB::raw('setting_id as id'),
+                DB::raw('GROUP_CONCAT(label ORDER BY option_id) as labels'),
+                'name',
+                'setting_type',
+                DB::raw('options as number')
+            )->from(DB::raw('dental_device_guide_setting_options o'))
+            ->join(DB::raw('dental_device_guide_settings s'), 's.id', '=', 'o.setting_id')
             ->groupBy('setting_id')
-            ->orderBy('option_id')
+            ->orderBy('rank')
             ->get();
     }
 }

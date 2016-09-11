@@ -4,9 +4,9 @@
 
 <template>
     <div style="margin-left: 30px;">
-        <a href="#" onclick="$('#instructions').show('200');$(this).hide();return false;" id="ins_show">Instructions</a>
+        <a v-on:click.prevent="onClickInstructions" id="ins_show">Instructions</a>
         <div id="instructions" style="display:none;">
-            <strong>Instructions</strong> <a href="#" onclick="$('#instructions').hide('200');$('#ins_show').show();">hide</a>
+            <strong>Instructions</strong> <a v-on:click.prevent="onClickHide">hide</a>
             <ol>
                 <li>Evaluate pt for each category using sliding bar</li>
                 <li>Choose the three most important categories (if needed)</li>
@@ -35,13 +35,21 @@
                     :value.sync="deviceGuideSetting.checkedOption"
                     :min="0"
                     :max="deviceGuideSetting.number - 1"
+                    class="slider"
                 ></mt-range>
+                <input
+                    type="checkbox"
+                    class="imp_chk"
+                    value="1"
+                    name="setting_imp_{{ deviceGuideSetting.id }}"
+                    id="setting_imp_{{ deviceGuideSetting.id }}"
+                />
+                <div style="clear:both;"></div>
                 <div
                     class="label"
                     id="label_{{ deviceGuideSetting.id }}"
                     style="padding: 5px 0;display: block;"
                 >{{ deviceGuideSetting.labels[deviceGuideSetting.checkedOption] }}</div>
-                <input type="checkbox" class="imp_chk" value="1" name="setting_imp_{{ deviceGuideSetting.id }}" id="setting_imp_{{ deviceGuideSetting.id }}" />
             </template>
             <template v-else>
                 <input type="checkbox" name="setting{{ deviceGuideSetting.id }}" value="1" />
@@ -56,7 +64,7 @@
     <div style="float:left; width:50%;">
         <ul id="results" style="border:solid 2px #a7cefa;">
         </ul>
-        <a href="#" class="addButton" onclick="reset_form();return false;">Reset</a>
+        <a class="addButton" v-on:click.prevent="onClickReset">Reset</a>
     </div>
 </template>
 

@@ -86,15 +86,6 @@ module.exports = {
                     this.handleErrors('getDeviceGuideResults', response);
                 });
         },
-        resetForm: function() {
-            $(".setting").each(function(){
-                $(this).find(".slider").slider("value", $(this).find(".slider").slider("option", "min") );
-                $(this).find(".label").html( $(this).find('.label').attr('data-init'));
-                $(this).find(".imp_chk").prop("checked", false);
-            });
-
-            $('#results li').remove();
-        },
         updateDevice: function(device, name) {
             if (this.id && this.patientId) {
                 if (confirm("Do you want to select " + name + " for " + currentPatient.firstname + " " + currentPatient.lastname)) {
@@ -111,6 +102,25 @@ module.exports = {
                         });
                 }
             }
+        },
+        onClickInstructions: function() {
+            $('#instructions').show('200');
+            $('#ins_show').hide();
+        },
+        onClickHide: function() {
+            $('#instructions').hide('200');
+            $('#ins_show').show();
+        },
+        onClickReset: function() {
+            this.deviceGuideSettingOptions.forEach((element) => {
+                element.checkedOption = 0;
+            });
+
+            $(".setting").each(function(){
+                $(this).find(".imp_chk").prop("checked", false);
+            });
+
+            $('#results li').remove();
         },
         getPatientById: function(patientId) {
             patientId = patientId || 0;

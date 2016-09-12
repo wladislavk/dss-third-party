@@ -74,7 +74,7 @@ class GuideSetting extends Model implements Resource, Repository
             ->from(DB::raw('dental_device_guide_settings s'))
             ->leftJoin(DB::raw('dental_device_guide_device_setting ds'), function($join) use ($deviceId) {
                 $join->on('s.id', '=', 'ds.setting_id')
-                    ->where('ds.device_id', $deviceId);
+                    ->where('ds.device_id', '=', $deviceId);
             })
             ->get();
     }

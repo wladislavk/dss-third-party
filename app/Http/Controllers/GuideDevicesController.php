@@ -11,6 +11,7 @@ use DentalSleepSolutions\Contracts\Resources\GuideDevice;
 use DentalSleepSolutions\Contracts\Repositories\GuideDevices;
 use DentalSleepSolutions\Contracts\Repositories\Devices;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettings;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -92,8 +93,10 @@ class GuideDevicesController extends Controller
         return ApiResponse::responseOk('Resource deleted');
     }
 
-    public function getWithImages(Devices $devicesResource, GuideSettings $guideSettingsResource)
+    public function getWithImages(Devices $devicesResource, GuideSettings $guideSettingsResource, Request $request)
     {
+        $settings = $request->input('settings');
+
         $fields = ['deviceid', 'device', 'image_path'];
         $devices = $devicesResource->getWithFilter($fields);
         $devicesArray = [];
@@ -103,22 +106,24 @@ class GuideDevicesController extends Controller
                 $total = 0;
                 $show  = true;
 
-                $guideSettings = $guideSettingsResource->getSettingType($device->id);
+                $guideSettings = $guideSettingsResource->getSettingType($device->deviceid);
 
                 if (count($guideSettings)) {
                     foreach ($guideSettings as $guideSetting) {
-                        $postSettingId = !empty($settingIds[$guideSetting->id])
-                            ? $settingIds[$guideSetting->id]
-                            : 0;
+                        if (!empty($settings[$guideSetting->id])) {
+                            $setting = $settings[$guideSetting->id];
+                        } else {
+                            continue;
+                        }
 
                         if ($guideSetting->setting_type == 1) {
-                            if ($guideSetting->value != '1' && $postSettingId == 1) {
+                            if ($guideSetting->value != '1' && $setting['checked'] == 1) {
                                 $show = false;
                             }
                         } else {
-                            $value = $postSettingId * $guideSetting->value;
+                            $value = $setting['checked'] * $guideSetting->value;
 
-                            if (isset($settingImpIds[$guideSetting->id])) {
+                            if (isset($setting['checkedImp'])) {
                                 $value *= 1.75;
                             }
 
@@ -129,21 +134,21 @@ class GuideDevicesController extends Controller
 
                 if ($show) {
                     array_push($devicesArray, [
-                        'name'       => $device->name,
-                        'id'         => $device->id,
+                        'name'       => $device->device,
+                        'id'         => $device->deviceid,
                         'value'      => $total,
-                        'image_path' => $device->image_path
+                        'imagePath'  => $device->image_path
                     ]);
                 }
             }
         }
 
-        usort($devicesArray, ['GuideDevicesController', 'sort']);
+        usort($devicesArray, ['DentalSleepSolutions\Http\Controllers\GuideDevicesController', 'sortDevices']);
 
         return ApiResponse::responseOk('', $devicesArray);
     }
 
-    private function sort($firstElement, $secondElement)
+    private function sortDevices($firstElement, $secondElement)
     {
         if ($firstElement['value'] == $secondElement['value']) {
             return 0;

@@ -38,6 +38,7 @@
                     class="slider"
                 ></mt-range>
                 <input
+                    v-model="deviceGuideSetting.checkedImp"
                     type="checkbox"
                     class="imp_chk"
                     value="1"
@@ -52,17 +53,37 @@
                 >{{ deviceGuideSetting.labels[deviceGuideSetting.checkedOption] }}</div>
             </template>
             <template v-else>
-                <input type="checkbox" name="setting{{ deviceGuideSetting.id }}" value="1" />
+                <input
+                    v-model="deviceGuideSetting.checked"
+                    type="checkbox"
+                    name="setting{{ deviceGuideSetting.id }}"
+                    value="1"
+                />
             </template>
         </div>
     </form>
 
     <div style="float:left; width: 13%; margin-left:2%;">
-        <a href="#" style="border:1px solid #000; padding: 5px;" class="device_submit addButton">Sort Devices</a>
+        <a
+            v-on:click="onDeviceSubmit"
+            style="border:1px solid #000; padding: 5px;"
+            class="addButton"
+        >Sort Devices</a>
     </div>
 
     <div style="float:left; width:50%;">
         <ul id="results" style="border:solid 2px #a7cefa;">
+            <li
+                v-for="deviceResult in deviceGuideResults"
+                :class="{ 'box_go' : deviceResult.imagePath}"
+            >
+                <div v-if="deviceResult.imagePath" class='ico'>
+                    <img :src="deviceResult.imagePath" />
+                </div>
+                <a v-on:click.prevent="updateDevice(deviceResult.id, deviceResult.name)">
+                    {{ deviceResult.name }} ({{ deviceResult.value }})
+                <a>
+            </li>
         </ul>
         <a class="addButton" v-on:click.prevent="onClickReset">Reset</a>
     </div>

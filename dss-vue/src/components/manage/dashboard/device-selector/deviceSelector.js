@@ -6,6 +6,7 @@ module.exports = {
             constants                 : window.constants,
             currentPatient            : {},
             deviceGuideSettingOptions : [],
+            deviceGuideResults        : [],
             id                        : 0,
             patientId                 : 0
         }
@@ -45,8 +46,15 @@ module.exports = {
 
                 if (data) {
                     data.forEach(function(element) {
-                        element.labels = element.labels.split(',');
+                        element.labels        = element.labels.split(',');
                         element.checkedOption = 0;
+                        
+                        if (element.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+                            element.checkedImp = false;
+                            element.checked    = true;
+                        } else {
+                            element.checked = false;
+                        }
                     });
 
                     this.$set('deviceGuideSettingOptions', data);
@@ -66,21 +74,28 @@ module.exports = {
     },
     methods: {
         onDeviceSubmit: function() {
-            var data = $('#device_form').serialize();
+            var data = {
+                settings: {}
+            };
+
+            this.deviceGuideSettingOptions.forEach(function(element) {
+                var settingObj = {
+                    checked: element.checked
+                };
+
+                if (element.hasOwnProperty('checkedImp') && element.checkedImp) {
+                    settingObj['checkedImp'] = element.checkedImp;
+                }
+
+                data.settings[element.id] = settingObj;
+            });
 
             this.getDeviceGuideResults(data)
                 .then(function(response) {
                     var data = response.data.data;
 
                     if (data) {
-                        $('#results li').remove();
-                        data.forEach(function(element){
-                            if(element.image_path != ''){
-                                $('#results').append("<li class='box_go'><div class='ico'><img src='" + element.image_path + "' /></div><a href='#' onclick=\"updateDevice(" + element.id + ", '" + element.name + "');return false();\">" + element['name'] + " (" + element.value + ")</a></li>");
-                            } else {
-                                $('#results').append("<li><a href='#' onclick=\"updateDevice(" + element.id + ", '" + element.name + "');return false();\">" + element['name'] + " (" + v.value + ")</a></li>");
-                            }
-                        });
+                        this.$set('deviceGuideResults', data);
                     }
                 }, function(response) {
                     this.handleErrors('getDeviceGuideResults', response);
@@ -120,7 +135,7 @@ module.exports = {
                 $(this).find(".imp_chk").prop("checked", false);
             });
 
-            $('#results li').remove();
+            this.$set('deviceGuideResults', []);
         },
         getPatientById: function(patientId) {
             patientId = patientId || 0;

@@ -48,12 +48,11 @@ module.exports = {
                     data.forEach(function(element) {
                         element.labels        = element.labels.split(',');
                         element.checkedOption = 0;
-                        
+
                         if (element.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
-                            element.checkedImp = false;
-                            element.checked    = true;
+                            element.checkedImp = 0;
                         } else {
-                            element.checked = false;
+                            element.checked = 0;
                         }
                     });
 
@@ -79,9 +78,13 @@ module.exports = {
             };
 
             this.deviceGuideSettingOptions.forEach(function(element) {
-                var settingObj = {
-                    checked: element.checked
-                };
+                var settingObj = {};
+
+                if (element.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+                    settingObj['checked'] = element.checkedOption + 1;
+                } else {
+                    settingObj['checked'] = element.checked;
+                }
 
                 if (element.hasOwnProperty('checkedImp') && element.checkedImp) {
                     settingObj['checkedImp'] = element.checkedImp;
@@ -129,10 +132,12 @@ module.exports = {
         onClickReset: function() {
             this.deviceGuideSettingOptions.forEach((element) => {
                 element.checkedOption = 0;
-            });
 
-            $(".setting").each(function(){
-                $(this).find(".imp_chk").prop("checked", false);
+                if (element.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+                    element.checkedImp = 0;
+                } else {
+                    element.checked = 0;
+                }
             });
 
             this.$set('deviceGuideResults', []);

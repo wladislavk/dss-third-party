@@ -97,7 +97,7 @@ $is_secondary = ($status == DSS_CLAIM_SEC_PENDING || $status == DSS_CLAIM_SEC_SE
 //currently if secondary it just pulls info from primary
 //Need to change eventually to pull info from secondary
 if($status_r['primary_claim_id']){
-    $sql = "select * from dental_insurance where primary_claim_id='".$status_r['primary_claim_id']."' and patientid='".$_GET['pid']."'";
+    $sql = "select * from dental_insurance where insuranceid='".$status_r['primary_claim_id']."' and patientid='".$_GET['pid']."'";
 }else{
     $sql = "select * from dental_insurance where insuranceid='".$_GET['id']."' and patientid='".$_GET['pid']."'";
 }

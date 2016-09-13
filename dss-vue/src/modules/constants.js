@@ -17,5 +17,8 @@ module.exports = {
     DSS_HST_REJECTED  : 4,
     DSS_HST_CONTACTED : 5,
 
-    dssPreauthStatusLabels: ['Pending', 'Complete', 'Pre-Auth Pending', 'Rejected']
+    dssPreauthStatusLabels: ['Pending', 'Complete', 'Pre-Auth Pending', 'Rejected'],
+
+    DSS_DEVICE_SETTING_TYPE_RANGE : 0,
+    DSS_DEVICE_SETTING_TYPE_FLAG  : 1
 }

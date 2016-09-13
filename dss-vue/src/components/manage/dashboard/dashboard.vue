@@ -107,7 +107,7 @@
                             <li><a href="sw_tutorials.php">SW Tutorials</a></li>
                             <li><a href="calendar.php">Scheduler</a></li>
                             <li><a v-link="'/manage/patients'">Manage Pts</a></li>
-                            <li><a href="#" onclick="loadPopup('includes/device_guide.php'); return false;">Device Selector</a></li>
+                            <li><a v-on:click.prevent="$parent.$refs.modal.display('device-selector')">Device Selector</a></li>
                         </ul>
                     </div>
                 </div>

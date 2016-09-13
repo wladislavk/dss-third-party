@@ -8,6 +8,7 @@
 <style src="../../../assets/css/manage/form.css" scoped></style>
 <style src="../../../assets/css/jscal/border-radius.css" scoped></style>
 <style src="../../../node_modules/sweetalert/dist/sweetalert.css"></style>
+<style src="../../../node_modules/mint-ui/lib/style.css"></style>
 
 <template>
     <table width="980" border="0" cellpadding="0" cellspacing="0" align="center">

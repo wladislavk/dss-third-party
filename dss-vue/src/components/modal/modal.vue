@@ -1,8 +1,9 @@
 <style src="../../../assets/css/manage/popup.css" scoped></style>
 <style scoped>
     #modal-content {
-        width  : 100%;
-        height : 100%;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
     }
 </style>
 
@@ -21,6 +22,8 @@
 </template>
 
 <script>
+    var deviceSelector = require('../manage/dashboard/device-selector/deviceSelector.vue');
+
     module.exports = {
         data: function() {
             return {
@@ -36,7 +39,8 @@
             this.$off('keyup');
         },
         components: {
-            'empty'  : { template: '' }
+            'empty'           : { template: '' },
+            'device-selector' : deviceSelector
         },
         methods: {
             centering: function() {

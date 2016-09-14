@@ -517,9 +517,21 @@ function querySections ($section='all') {
             'order' => "dentaldevice_date %DIR%",
         ],
         'vob' => [
-            'select' => 'summary.vob AS vob',
-            'join' => 'summary',
-            'order' => "vob %DIR%",
+            'select' => 'COALESCE((
+                SELECT status
+                FROM dental_insurance_preauth
+                WHERE patient_id = p.patientid
+                ORDER BY front_office_request_date DESC
+                LIMIT 1
+            ), 0) > 0 AS vob_sort,
+            (
+                SELECT status
+                FROM dental_insurance_preauth
+                WHERE patient_id = p.patientid
+                ORDER BY front_office_request_date DESC
+                LIMIT 1
+            ) AS vob',
+            'order' => "vob_sort %DIR%, vob %DIR%",
         ],
         'rx-lomn' => [
             'select' => "CASE
@@ -630,9 +642,9 @@ function findPatients ($filter, Array $conditionalList=[], $sortDir, $page=0, $c
 
     $selectList = [
         'p.patientid',
-        'summary.vob',
+        'summary.vob AS vob_index',
         'summary.ledger AS ledger',
-        'summary.patient_info AS patient_info',
+        'COALESCE(summary.patient_info, 0) AS patient_info',
     ];
     $tableList = [
         'dental_patients p'
@@ -704,4 +716,3 @@ function findPatients ($filter, Array $conditionalList=[], $sortDir, $page=0, $c
         'results' => $results
     ];
 }
-

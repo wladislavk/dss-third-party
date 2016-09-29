@@ -1989,6 +1989,7 @@ function claimStatusChangePolicy () {
             'efile-accepted'
         ],
         'efile-accepted' => [
+            'rejected',
             'paid-patient',
             'paid-insurance'
         ]

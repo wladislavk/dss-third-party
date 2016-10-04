@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\ContactDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Contact;
 use DentalSleepSolutions\Contracts\Repositories\Contacts;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class ContactsController extends Controller
@@ -81,5 +82,31 @@ class ContactsController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function find(Contacts $resources, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $contactType     = $request->input('contacttype') ?: 0;
+        $status          = $request->input('status') ?: 0;
+        $letter          = $request->input('letter') ?: '';
+        $sortBy          = $request->input('sort_column') ?: '';
+        $sortDir         = $request->input('sort_direction') ?: '';
+        $page            = $request->input('page') ?: 0;
+        $contactsPerPage = $request->input('contacts_per_page') ?: 0;
+
+        $data = $resources->find(
+            $contactType,
+            $status,
+            $docId,
+            $letter,
+            $sortBy,
+            $sortDir,
+            $page,
+            $contactsPerPage
+        );
+
+        return ApiResponse::responseOk('', $data);
     }
 }

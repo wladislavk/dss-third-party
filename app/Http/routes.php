@@ -142,7 +142,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('complaints', 'ComplaintsController', ['except' => ['create', 'edit']]);
     Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);
     Route::resource('contact-types', 'ContactTypesController', ['except' => ['create', 'edit']]);
-    Route::get('contact-types/active-non-corporate', 'ContactTypesController@getActiveNonCorporateTypes');
+    Route::post('contact-types/active-non-corporate', 'ContactTypesController@getActiveNonCorporate');
     Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
     Route::post('contacts/find', 'ContactsController@find');
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);

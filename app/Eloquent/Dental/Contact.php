@@ -62,7 +62,7 @@ class Contact extends Model implements Resource, Repository
         $contacts = $this->from(DB::raw('dental_contact dc'))
             ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
             ->where('docid', $docId)
-            ->whereIsNull('merge_id');
+            ->whereNull('merge_id');
 
         if ($contactType) {
             $contacts = $contacts->where('dct.contacttypeid', $contactType)
@@ -74,9 +74,9 @@ class Contact extends Model implements Resource, Repository
         }
 
         if ($letter) {
-            $contacts = $contacts->where(function($query) {
+            $contacts = $contacts->where(function($query) use ($letter) {
                 $query->where('dc.lastname', 'like', $letter . '%')
-                    ->orWhere(function($query) {
+                    ->orWhere(function($query) use ($letter) {
                         $query->where('dc.lastname', '')
                             ->where('dc.company', 'like', $letter . '%');
                     });
@@ -111,7 +111,7 @@ class Contact extends Model implements Resource, Repository
             }
         }
 
-        $contacts = $contacts->get();
+        $contacts = $contacts->get()->toArray();
         $totalCount = count($contacts);
         $contacts = array_splice($contacts, $page * $contactsPerPage, $contactsPerPage);
 

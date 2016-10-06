@@ -12,16 +12,20 @@
     <div style="margin-left:10px;margin-right:10px;">
         <form name="jump1" style="float:left; width:350px;">
             Filter by type:
-            <select name="myjumpbox" OnChange="location.href=jump1.myjumpbox.options[jump1.myjumpbox.selectedIndex].value">
+            <select
+                v-model="routeParameters.selectedContactType"
+                v-on:change="onChangeContactType"
+                name="myjumpbox"
+            >
                 <option selected>Please Select...</option>
-                <option value="manage_contact.php">Display All</option>
+                <option :value="0">Display All</option>
                 <option
                     v-for="option in contactTypes"
-                    value="manage_contact.php?contacttype={{ option.contacttypeid }}"
+                    :value="option.contacttypeid"
                 >
                     {{ option.contacttype }}
                 </option>
-                <option value="manage_contact.php?status=2">In-active</option>
+                <option :value="0" v-on:click="onClickInActive">In-active</option>
             </select>
         </form>
         <br /><br />
@@ -133,7 +137,7 @@
             <tr
                 v-else
                 v-for="contact in contacts"
-                class="{{ patient.status == 1 ? 'tr_active' : 'tr_inactive' }}"
+                class="{{ contact.status == 1 ? 'tr_active' : 'tr_inactive' }}"
             >
                 <td valign="top" width="20%">
                     {{ contact.fullName }}

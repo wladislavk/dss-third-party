@@ -11,7 +11,7 @@ module.exports = {
                 status              : 0,
                 currentPageNumber   : 0,
                 sortDirection       : 'asc',
-                selectedContactType : '1',
+                selectedContactType : 0,
                 sortColumn          : 'name',
                 currentLetter       : null
             },
@@ -39,7 +39,7 @@ module.exports = {
                 if (foundOption) {
                     this.$set('routeParameters.selectedContactType', this.$route.query.contacttype);
                 } else {
-                    this.$set('routeParameters.selectedContactType', 1);
+                    this.$set('routeParameters.selectedContactType', 0);
                 }
             }
         },
@@ -85,6 +85,21 @@ module.exports = {
                 this.onInactiveContact(this.$route.query.inactiveid);
             }
         },
+        'contacts': function() {
+            this.contacts.forEach((el) => {
+                if (!el.firstname && !el.middlename && !el.lastname) {
+                    el.fullName = '<i class="name-empty">Empty name</i>';
+                } else if (!el.lastname) {
+                    el.fullName = '<i class="name-empty">Empty last name</i> ' + el.middlename + ', ' + el.firstname;
+                } else if (!el.middlename) {
+                    el.fullName = el.lastname + ', ' + el.firstname;
+                } else if (!el.firstname) {
+                    el.fullName = el.lastname + ' ' + el.middlename + ', ' + '<i class="name-empty">empty first name</i>';
+                } else {
+                    el.fullName = el.lastname + ' ' + el.middlename + ', ' + el.firstname;
+                }
+            });
+        },
         'routeParameters': {
             handler: function() {
                 this.getContacts();
@@ -108,8 +123,26 @@ module.exports = {
             }, function(response) {
                 this.handleErrors('getActiveNonCorporateContactTypes', response);
             });
+
+        this.getContacts();
     },
     methods: {
+        onClickInActive: function() {
+            this.$route.router.go({
+                name  : this.$route.name,
+                query : {
+                    status: 2
+                }
+            });
+        },
+        onChangeContactType: function() {
+            this.$route.router.go({
+                name  : this.$route.name,
+                query : {
+                    contacttype: this.routeParameters.selectedContactType
+                }
+            });
+        },
         getContacts: function() {
             this.findContacts(
                 this.routeParameters.selectedContactType,
@@ -147,19 +180,19 @@ module.exports = {
             contactsPerPage
         ) {
             var data = {
-                contacttype       : contactType
-                status            : status
-                letter            : currentLetter
-                sort_column       : sortColumn
-                sort_direction    : sortDirection
-                page              : pageNumber
+                contacttype       : contactType,
+                status            : status,
+                letter            : currentLetter,
+                sort_column       : sortColumn,
+                sort_direction    : sortDirection,
+                page              : pageNumber,
                 contacts_per_page : contactsPerPage
             };
 
             return this.$http.post(window.config.API_PATH + 'contacts/find', data);
         },
         getActiveNonCorporateContactTypes: function() {
-            return this.$http.get(window.config.API_PATH + 'contact-types/active-non-corporate');
+            return this.$http.post(window.config.API_PATH + 'contact-types/active-non-corporate');
         }
     }
 }

@@ -85,21 +85,6 @@ module.exports = {
                 this.onInactiveContact(this.$route.query.inactiveid);
             }
         },
-        'contacts': function() {
-            this.contacts.forEach((el) => {
-                if (!el.firstname && !el.middlename && !el.lastname) {
-                    el.fullName = '<i class="name-empty">Empty name</i>';
-                } else if (!el.lastname) {
-                    el.fullName = '<i class="name-empty">Empty last name</i> ' + el.middlename + ', ' + el.firstname;
-                } else if (!el.middlename) {
-                    el.fullName = el.lastname + ', ' + el.firstname;
-                } else if (!el.firstname) {
-                    el.fullName = el.lastname + ' ' + el.middlename + ', ' + '<i class="name-empty">empty first name</i>';
-                } else {
-                    el.fullName = el.lastname + ' ' + el.middlename + ', ' + el.firstname;
-                }
-            });
-        },
         'routeParameters': {
             handler: function() {
                 this.getContacts();
@@ -127,6 +112,18 @@ module.exports = {
         this.getContacts();
     },
     methods: {
+        getContactTypeLabel: function(contactTypeId) {
+            var foundContactType = this.contactTypes.find((el) => el.contacttypeid == contactTypeId);
+
+            if (foundContactType) {
+                return foundContactType.contacttype;
+            } else {
+                return 'Contact Type Not Set';
+            }
+        },
+        onClickPatientsByContact: function(contactId) {
+            $('#ref_pat_' + contactId).toggle();
+        },
         onClickInActive: function() {
             this.$route.router.go({
                 name  : this.$route.name,
@@ -153,15 +150,33 @@ module.exports = {
                 this.routeParameters.currentPageNumber,
                 this.contactsPerPage
             ).then(function(response) {
-                    var data = response.data.data;
+                var data = response.data.data;
 
-                    if (data) {
-                        this.$set('contactsTotalNumber', data.totalCount);
-                        this.$set('contacts', data.result);
-                    }
-                }, function(response) {
-                    this.handleErrors('findContacts', response);
+                if (data) {
+                    this.$set('contactsTotalNumber', data.totalCount);
+                    this.$set('contacts', data.result);
+                }
+            }, function(response) {
+                this.handleErrors('findContacts', response);
+            }).then(function() {
+                this.contacts.forEach((el) => {
+                    this.findPatientsByContactId(el.contactid)
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data.length) {
+                                el.$set('patients', data);
+                            }
+                        }, function(response) {
+                            this.handleErrors('findPatientsByContactId', response);
+                        });
                 });
+            });
+        },
+        findPatientsByContactId: function(contactId) {
+            var data = { contact_id: contactId };
+
+            return this.$http.post(window.config.API_PATH + 'patients/by-contact', data);
         },
         getCurrentDirection: function(sort) {
             if (this.routeParameters.sortColumn == sort) {

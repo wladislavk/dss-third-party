@@ -63,6 +63,7 @@
                                     contacttype : routeParameters.selectedContactType
                                 }
                             }"
+                            class="letters"
                         >{{ letter }}</a>
                         <a
                             v-link="{ name: $route.name,
@@ -140,17 +141,34 @@
                 class="{{ contact.status == 1 ? 'tr_active' : 'tr_inactive' }}"
             >
                 <td valign="top" width="20%">
-                    {{ contact.fullName }}
+                    <i
+                        v-if="!contact.firstname && !contact.middlename && !contact.lastname"
+                        class="name-empty"
+                    >Empty name</i>
+                    <span v-else>
+                            <i v-if="!contact.lastname" class="name-empty">Empty last name</i>
+                            <template v-else>
+                                {{ contact.lastname }}{{ !contact.middlename ? ',' : '' }}
+                            </template>
+
+                            <template v-if="contact.middlename">{{ contact.middlename }},</template>
+
+                            <i v-if="!contact.firstname" class="name-empty">empty first name</i>
+                            <template v-else>{{ contact.firstname }}</template>
+                    </span>
                 </td>
                 <td valign="top" width="25%">
                     {{ contact.company }}
                 </td>
                 <td valign="top" width="25%">
-                    <span v-if="contact.type">{{ contact.type }}</span>
-                    <span v-else>Contact Type Not Set</span>
+                    {{ getContactTypeLabel(contact.contacttypeid) }}
                 </td>
                 <td valign="top" width="10%">
-                    <?php echo ($num_ref) ? '<a href="#" onclick="$(\'#ref_pat_' . $myarray['contactid'] . '\').toggle();return false;">' . $num_ref . '</a>':''; ?>
+                    <a
+                        v-if="contact.patients"
+                        href="#"
+                        v-on:click.prevent="onClickPatientsByContact(contact.contactid)"
+                    >{{ contact.patients.length }}</a>
                 </td>
                 <td valign="top" width="10%">
                     <?php echo ($num_pat) ? '<a href="#" onclick="$(\'#ref_pat_' . $myarray['contactid'] . '\').toggle();return false;">' . $num_pat . '</a>' : ''; ?>

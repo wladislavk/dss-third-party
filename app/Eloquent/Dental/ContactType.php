@@ -54,7 +54,8 @@ class ContactType extends Model implements Resource, Repository
 
     public function getActiveNonCorporateTypes()
     {
-        return $this->active()
+        return $this->select('contacttypeid', 'contacttype')
+            ->active()
             ->nonCorporate()
             ->orderBy('sortby')
             ->get();

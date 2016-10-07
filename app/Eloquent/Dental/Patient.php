@@ -523,4 +523,16 @@ class Patient extends Model implements Resource, Repository
 
         return $this->itemSelector($joinSections, $section);
     }
+
+    public function getByContact($contactId)
+    {
+        return $this->select('patientid', 'firstname', 'lastname')
+            ->where(function($query) {
+                $query->whereNull('parent_patientid')
+                    ->orWhere('parent_patientid', '=', '');
+            })
+            ->where('referred_source', 2)
+            ->where('referred_by', $contactId)
+            ->get();
+    }
 }

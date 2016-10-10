@@ -23,6 +23,8 @@ module.exports = {
                 'type'    : 'Contact Type'
             },
             contacts            : [],
+            referrers           : {},
+            patients            : {},
             contactsTotalNumber : 0,
             contactsPerPage     : 50,
             totalPages          : 0
@@ -121,7 +123,7 @@ module.exports = {
                 return 'Contact Type Not Set';
             }
         },
-        onClickPatientsByContact: function(contactId) {
+        onClickPatients: function(contactId) {
             $('#ref_pat_' + contactId).toggle();
         },
         onClickInActive: function() {
@@ -159,19 +161,45 @@ module.exports = {
             }, function(response) {
                 this.handleErrors('findContacts', response);
             }).then(function() {
-                this.contacts.forEach((el) => {
-                    this.findPatientsByContactId(el.contactid)
-                        .then(function(response) {
-                            var data = response.data.data;
+                var referrers = {};
+                var patients  = {};
 
-                            if (data.length) {
-                                el.$set('patients', data);
-                            }
-                        }, function(response) {
-                            this.handleErrors('findPatientsByContactId', response);
-                        });
+                this.contacts.forEach((contact) => { 
+                    if (contact.referrers > 0) {
+                        this.findReferrersByContactId(contact.contactid)
+                            .then(function(response) {
+                                var data = response.data.data;
+
+                                if (data.length) {
+                                    referrers[contact.contactid] = data;
+                                }
+                            }, function(response) {
+                                this.handleErrors('findReferrersByContactId', response);
+                            });
+                    }
+
+                    if (contact.patients > 0) {
+                        this.findPatientsByContactId(contact.contactid)
+                            .then(function(response) {
+                                var data = response.data.data;
+
+                                if (data.length) {
+                                    patients[contact.contactid] = data;
+                                }
+                            }, function(response) {
+                                this.handleErrors('findPatientsByContactId', response);
+                            });
+                    }
                 });
+
+                this.$set('referrers', referrers);
+                this.$set('patients', patients);
             });
+        },
+        findReferrersByContactId: function(contactId) {
+            var data = { contact_id: contactId };
+
+            return this.$http.post(window.config.API_PATH + 'patients/referred-by-contact', data);
         },
         findPatientsByContactId: function(contactId) {
             var data = { contact_id: contactId };

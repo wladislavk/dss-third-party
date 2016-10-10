@@ -165,25 +165,29 @@
                 </td>
                 <td valign="top" width="10%">
                     <a
-                        v-if="contact.patients"
+                        v-if="contact.referrers > 0"
                         href="#"
-                        v-on:click.prevent="onClickPatientsByContact(contact.contactid)"
-                    >{{ contact.patients.length }}</a>
+                        v-on:click.prevent="onClickPatients(contact.contactid)"
+                    >{{ contact.referrers }}</a>
                 </td>
                 <td valign="top" width="10%">
-                    <?php echo ($num_pat) ? '<a href="#" onclick="$(\'#ref_pat_' . $myarray['contactid'] . '\').toggle();return false;">' . $num_pat . '</a>' : ''; ?>
+                    <a
+                        v-if="contact.patients > 0"
+                        href="#"
+                        v-on:click.prevent="onClickPatients(contact.contactid)"
+                    >{{ contact.patients }}</a>
                 </td>
                 <td valign="top" width="20%">
                     <div class="actions" style="display:none;">
                         <a
                             href="#"
-                            onclick="loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"];?>')"
+                            onclick="loadPopup('view_contact.php?ed={{ contact.contactid }}')"
                             class="editlink"
                             title="EDIT"
                         >Quick View</a> |
                         <a
                             href="#"
-                            onclick="loadPopup('add_contact.php?ed=<?php echo $myarray["contactid"];?>')"
+                            onclick="loadPopup('add_contact.php?ed={{ contact.contactid }}')"
                             class="editlink"
                             title="EDIT"
                         >Edit</a>

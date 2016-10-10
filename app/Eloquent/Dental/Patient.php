@@ -524,7 +524,7 @@ class Patient extends Model implements Resource, Repository
         return $this->itemSelector($joinSections, $section);
     }
 
-    public function getByContact($contactId)
+    public function getReferredByContact($contactId)
     {
         return $this->select('patientid', 'firstname', 'lastname')
             ->where(function($query) {
@@ -534,5 +534,22 @@ class Patient extends Model implements Resource, Repository
             ->where('referred_source', 2)
             ->where('referred_by', $contactId)
             ->get();
+    }
+
+    public function getByContact($contactId)
+    {
+        return $this->select('patientid', 'firstname', 'lastname')
+            ->where(function($query) {
+                $query->whereNull('parent_patientid')
+                    ->orWhere('parent_patientid', '=', '');
+            })->where(function($query) use ($contactId) {
+                $query->where('docpcp', '=', $contactId)
+                    ->orWhere('docent', '=', $contactId)
+                    ->orWhere('docsleep', '=', $contactId)
+                    ->orWhere('docdentist', '=', $contactId)
+                    ->orWhere('docmdother', '=', $contactId)
+                    ->orWhere('docmdother2', '=', $contactId)
+                    ->orWhere('docmdother3', '=', $contactId);
+            })->get();
     }
 }

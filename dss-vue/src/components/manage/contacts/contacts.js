@@ -27,7 +27,8 @@ module.exports = {
             patients            : {},
             contactsTotalNumber : 0,
             contactsPerPage     : 50,
-            totalPages          : 0
+            totalPages          : 0,
+            showActions         : false
         }
     },
     mixins: [handlerMixin],
@@ -113,7 +114,18 @@ module.exports = {
 
         this.getContacts();
     },
+    ready: function() {
+        this.$set('showActions', true);
+        /*
+        function(){
+            setup_autocomplete('contact_name', 'contact_hints', 'contact', '', 'list_contacts_and_companies.php');
+        }
+        */
+    },
     methods: {
+        /*test: function(data) {
+            console.log(data);
+        },*/
         getContactTypeLabel: function(contactTypeId) {
             var foundContactType = this.contactTypes.find((el) => el.contacttypeid == contactTypeId);
 
@@ -158,6 +170,17 @@ module.exports = {
                     this.$set('contactsTotalNumber', data.totalCount);
                     this.$set('contacts', data.result);
                 }
+                /*
+                this.$nextTick(function() {
+                    var bufObject = this.contacts[0] || {};
+                    bufObject['test'] = [{ hello: 'world' }];
+                    this.contacts.$set(0, bufObject);
+
+                    this.$nextTick(function() {
+                        console.log(this.contacts);
+                    });
+                });
+                */
             }, function(response) {
                 this.handleErrors('findContacts', response);
             }).then(function() {

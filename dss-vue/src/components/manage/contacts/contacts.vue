@@ -135,93 +135,88 @@
                     No Records
                 </td>
             </tr>
-            <tr
-                v-else
-                v-for="contact in contacts"
-                class="{{ contact.status == 1 ? 'tr_active' : 'tr_inactive' }}"
-            >
-                <td valign="top" width="20%">
-                    <i
-                        v-if="!contact.firstname && !contact.middlename && !contact.lastname"
-                        class="name-empty"
-                    >Empty name</i>
-                    <span v-else>
-                            <i v-if="!contact.lastname" class="name-empty">Empty last name</i>
-                            <template v-else>
-                                {{ contact.lastname }}{{ !contact.middlename ? ',' : '' }}
-                            </template>
+            <tbody v-else v-for="contact in contacts">
+                <tr class="{{ contact.status == 1 ? 'tr_active' : 'tr_inactive' }}">
+                    <td valign="top" width="20%">
+                        <i
+                            v-if="!contact.firstname && !contact.middlename && !contact.lastname"
+                            class="name-empty"
+                        >Empty name</i>
+                        <span v-else>
+                                <i v-if="!contact.lastname" class="name-empty">Empty last name</i>
+                                <template v-else>
+                                    {{ contact.lastname }}{{ !contact.middlename ? ',' : '' }}
+                                </template>
 
-                            <template v-if="contact.middlename">{{ contact.middlename }},</template>
+                                <template v-if="contact.middlename">{{ contact.middlename }},</template>
 
-                            <i v-if="!contact.firstname" class="name-empty">empty first name</i>
-                            <template v-else>{{ contact.firstname }}</template>
-                    </span>
-                </td>
-                <td valign="top" width="25%">
-                    {{ contact.company }}
-                </td>
-                <td valign="top" width="25%">
-                    {{ getContactTypeLabel(contact.contacttypeid) }}
-                </td>
-                <td valign="top" width="10%">
-                    <a
-                        v-if="contact.referrers > 0"
-                        href="#"
-                        v-on:click.prevent="onClickPatients(contact.contactid)"
-                    >{{ contact.referrers }}</a>
-                </td>
-                <td valign="top" width="10%">
-                    <a
-                        v-if="contact.patients > 0"
-                        href="#"
-                        v-on:click.prevent="onClickPatients(contact.contactid)"
-                    >{{ contact.patients }}</a>
-                </td>
-                <td valign="top" width="20%">
-                    <div class="actions" style="display:none;">
+                                <i v-if="!contact.firstname" class="name-empty">empty first name</i>
+                                <template v-else>{{ contact.firstname }}</template>
+                        </span>
+                    </td>
+                    <td valign="top" width="25%">
+                        {{ contact.company }}
+                    </td>
+                    <td valign="top" width="25%">
+                        {{ getContactTypeLabel(contact.contacttypeid) }}
+                    </td>
+                    <td valign="top" width="10%">
                         <a
+                            v-if="contact.referrers > 0"
                             href="#"
-                            onclick="loadPopup('view_contact.php?ed={{ contact.contactid }}')"
-                            class="editlink"
-                            title="EDIT"
-                        >Quick View</a> |
+                            v-on:click.prevent="onClickPatients(contact.contactid)"
+                        >{{ contact.referrers }}</a>
+                    </td>
+                    <td valign="top" width="10%">
                         <a
+                            v-if="contact.patients > 0"
                             href="#"
-                            onclick="loadPopup('add_contact.php?ed={{ contact.contactid }}')"
-                            class="editlink"
-                            title="EDIT"
-                        >Edit</a>
-                    </div>
-                </td>
-            </tr>
-            <tr id="ref_pat_<?php echo  $myarray['contactid'];?>" style="display:none;">
-                <td colspan="2" valign="top">
-                    <strong>REFERRED</strong><br />
-                    <a
-                        v-if="$num_ref > 0"
-                        v-for="ref in ref_q"
-                        href="add_patient.php?pid=<?php echo $ref['patientid'];?>&ed=<?php echo  $ref['patientid'];?>"
-                    >{{ ref.firstname }} {{ ref.lastname }}<br />
-                </td>
-                <td colspan="4" valign="top">
-                    <strong>PATIENTS</strong><br />
-                    <a
-                        v-if="$num_pat > 0"
-                        v-for="pat in pat_q"
-                        href="add_patient.php?pid=<?php echo  $pat['patientid'];?>&ed=<?php echo  $pat['patientid'];?>"
-                    >{{ pat.firstname }} {{ pat.lastname }}<br />
-                </td>
-            </tr>
+                            v-on:click.prevent="onClickPatients(contact.contactid)"
+                        >{{ contact.patients }}</a>
+                    </td>
+                    <td valign="top" width="20%">
+                        <div v-show="showActions" class="actions">
+                            <a
+                                href="#"
+                                onclick="loadPopup('view_contact.php?ed={{ contact.contactid }}')"
+                                class="editlink"
+                                title="EDIT"
+                            >Quick View</a> |
+                            <a
+                                href="#"
+                                onclick="loadPopup('add_contact.php?ed={{ contact.contactid }}')"
+                                class="editlink"
+                                title="EDIT"
+                            >Edit</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr
+                    v-if="contact.referrers > 0 || contact.patients > 0"
+                    id="ref_pat_{{ contact.contactid }}"
+                    style="display: none"
+                >
+                    <td colspan="2" valign="top">
+                        <strong>REFERRED</strong><br />
+                        <a
+                            v-if="contact.referrers > 0"
+                            v-for="referrer in referrers[contact.contactid]"
+                            href="add_patient.php?pid={{ referrer.patientid }}&ed={{ referrer.patientid }}"
+                        >{{ ref.firstname }} {{ ref.lastname }}<br />
+                    </td>
+                    <td colspan="4" valign="top">
+                        <strong>PATIENTS</strong><br />
+                        <a
+                            v-if="contact.patients > 0"
+                            v-for="patient in patients[contact.contactid]"
+                            href="add_patient.php?pid={{ patient.patientid }}&ed={{ patient.patientid }}"
+                        >{{ pat.firstname }} {{ pat.lastname }}<br />
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </form>
 </template>
-
-<script src="js/manage_contact.js" type="text/javascript"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('.actions').show();
-    });
-</script>
 
 <script>
     module.exports = require('./contacts.js');

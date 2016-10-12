@@ -200,17 +200,17 @@
                         <strong>REFERRED</strong><br />
                         <a
                             v-if="contact.referrers > 0"
-                            v-for="referrer in referrers[contact.contactid]"
+                            v-for="referrer in contact.referrers_data"
                             href="add_patient.php?pid={{ referrer.patientid }}&ed={{ referrer.patientid }}"
-                        >{{ ref.firstname }} {{ ref.lastname }}<br />
+                        >{{ referrer.firstname }} {{ referrer.lastname }}<br />
                     </td>
                     <td colspan="4" valign="top">
                         <strong>PATIENTS</strong><br />
                         <a
                             v-if="contact.patients > 0"
-                            v-for="patient in patients[contact.contactid]"
+                            v-for="patient in contact.patients_data"
                             href="add_patient.php?pid={{ patient.patientid }}&ed={{ patient.patientid }}"
-                        >{{ pat.firstname }} {{ pat.lastname }}<br />
+                        >{{ patient.firstname }} {{ patient.lastname }}<br />
                     </td>
                 </tr>
             </tbody>

@@ -23,8 +23,6 @@ module.exports = {
                 'type'    : 'Contact Type'
             },
             contacts            : [],
-            referrers           : {},
-            patients            : {},
             contactsTotalNumber : 0,
             contactsPerPage     : 50,
             totalPages          : 0,
@@ -123,9 +121,6 @@ module.exports = {
         */
     },
     methods: {
-        /*test: function(data) {
-            console.log(data);
-        },*/
         getContactTypeLabel: function(contactTypeId) {
             var foundContactType = this.contactTypes.find((el) => el.contacttypeid == contactTypeId);
 
@@ -170,31 +165,18 @@ module.exports = {
                     this.$set('contactsTotalNumber', data.totalCount);
                     this.$set('contacts', data.result);
                 }
-                /*
-                this.$nextTick(function() {
-                    var bufObject = this.contacts[0] || {};
-                    bufObject['test'] = [{ hello: 'world' }];
-                    this.contacts.$set(0, bufObject);
-
-                    this.$nextTick(function() {
-                        console.log(this.contacts);
-                    });
-                });
-                */
             }, function(response) {
                 this.handleErrors('findContacts', response);
             }).then(function() {
-                var referrers = {};
-                var patients  = {};
-
-                this.contacts.forEach((contact) => { 
+                this.contacts.forEach((contact, index) => { 
                     if (contact.referrers > 0) {
                         this.findReferrersByContactId(contact.contactid)
                             .then(function(response) {
                                 var data = response.data.data;
 
                                 if (data.length) {
-                                    referrers[contact.contactid] = data;
+                                    var updatedContact = Object.assign(contact, { referrers_data: data });
+                                    this.contacts.$set(index, updatedContact);
                                 }
                             }, function(response) {
                                 this.handleErrors('findReferrersByContactId', response);
@@ -207,16 +189,14 @@ module.exports = {
                                 var data = response.data.data;
 
                                 if (data.length) {
-                                    patients[contact.contactid] = data;
+                                    var updatedContact = Object.assign(contact, { patients_data: data });
+                                    this.contacts.$set(index, updatedContact);
                                 }
                             }, function(response) {
                                 this.handleErrors('findPatientsByContactId', response);
                             });
                     }
                 });
-
-                this.$set('referrers', referrers);
-                this.$set('patients', patients);
             });
         },
         findReferrersByContactId: function(contactId) {

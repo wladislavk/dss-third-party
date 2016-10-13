@@ -168,28 +168,39 @@ module.exports = {
             }, function(response) {
                 this.handleErrors('findContacts', response);
             }).then(function() {
-                this.contacts.forEach((contact, index) => { 
-                    if (contact.referrers > 0) {
-                        this.findReferrersByContactId(contact.contactid)
+                var contactsHaveReferrers = this.contacts.map(el => el.referrers > 0 ? el.contactid : 0);
+                var contactsHavePatients  = this.contacts.map(el => el.patients > 0 ? el.contactid : 0);
+
+                contactsHaveReferrers.forEach((contactId, index) => {
+                    if (contactId > 0) {
+                        this.findReferrersByContactId(contactId)
                             .then(function(response) {
                                 var data = response.data.data;
 
                                 if (data.length) {
-                                    var updatedContact = Object.assign(contact, { referrers_data: data });
+                                    var updatedContact = Object.assign({
+                                        referrers_data: data
+                                    }, this.contacts[index]);
+
                                     this.contacts.$set(index, updatedContact);
                                 }
                             }, function(response) {
                                 this.handleErrors('findReferrersByContactId', response);
                             });
                     }
+                });
 
-                    if (contact.patients > 0) {
-                        this.findPatientsByContactId(contact.contactid)
+                contactsHavePatients.forEach((contactId, index) => {
+                    if (contactId > 0) {
+                        this.findPatientsByContactId(contactId)
                             .then(function(response) {
                                 var data = response.data.data;
 
                                 if (data.length) {
-                                    var updatedContact = Object.assign(contact, { patients_data: data });
+                                    var updatedContact = Object.assign({
+                                        patients_data: data
+                                    }, this.contacts[index]);
+
                                     this.contacts.$set(index, updatedContact);
                                 }
                             }, function(response) {

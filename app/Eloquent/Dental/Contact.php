@@ -61,7 +61,6 @@ class Contact extends Model implements Resource, Repository
     ) {
         $contacts = $this->select(
                 'dc.*',
-                'dct.*',
                 DB::raw('COUNT(dp_ref.patientid) as referrers'),
                 DB::raw('COUNT(dp_pat.patientid) as patients')
             )
@@ -133,10 +132,10 @@ class Contact extends Model implements Resource, Repository
 
                 default:
                     $contacts = $contacts->orderBy(DB::raw("IF (dc.lastname = '' OR dc.lastname IS NULL, 1, 0)"), $sortDir)
-                        ->orderBy('dct.contacttype', 'asc')
                         ->orderBy('dc.lastname', $sortDir)
                         ->orderBy('firstname', $sortDir)
-                        ->orderBy('company', 'asc');
+                        ->orderBy('company', 'asc')
+                        ->orderBy('dct.contacttype', 'asc');
                     break;
             }
         }

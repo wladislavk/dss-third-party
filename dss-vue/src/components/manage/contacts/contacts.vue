@@ -15,7 +15,6 @@
             <select
                 v-model="routeParameters.selectedContactType"
                 v-on:change="onChangeContactType"
-                name="myjumpbox"
             >
                 <option selected>Please Select...</option>
                 <option :value="0">Display All</option>
@@ -158,7 +157,7 @@
                         {{ contact.company }}
                     </td>
                     <td valign="top" width="25%">
-                        {{ getContactTypeLabel(contact.contacttypeid) }}
+                        {{ contact.contacttype ? contact.contacttype : 'Contact Type Not Set' }}
                     </td>
                     <td valign="top" width="10%">
                         <a

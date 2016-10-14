@@ -121,15 +121,6 @@ module.exports = {
         */
     },
     methods: {
-        getContactTypeLabel: function(contactTypeId) {
-            var foundContactType = this.contactTypes.find((el) => el.contacttypeid == contactTypeId);
-
-            if (foundContactType) {
-                return foundContactType.contacttype;
-            } else {
-                return 'Contact Type Not Set';
-            }
-        },
         onClickPatients: function(contactId) {
             $('#ref_pat_' + contactId).toggle();
         },

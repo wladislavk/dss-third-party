@@ -34,7 +34,7 @@ module.exports = {
         '$route.query.contacttype': function() {
             if (this.$route.query.contacttype) {
                 var foundOption = this.contactTypes.find(
-                    el => el.contacttype == this.$route.query.contacttype
+                    el => el.contacttypeid == this.$route.query.contacttype
                 );
 
                 if (foundOption) {
@@ -42,6 +42,8 @@ module.exports = {
                 } else {
                     this.$set('routeParameters.selectedContactType', 0);
                 }
+            } else {
+                this.$set('routeParameters.selectedContactType', 0);
             }
         },
         '$route.query.page': function() {
@@ -58,6 +60,8 @@ module.exports = {
                 } else {
                     this.$set('routeParameters.sortColumn', null);
                 }
+            } else {
+                this.$set('routeParameters.sortColumn', 'name');
             }
         },
         '$route.query.sortdir': function() {
@@ -67,6 +71,8 @@ module.exports = {
                 } else {
                     this.$set('routeParameters.sortDirection', 'asc');
                 }
+            } else {
+                this.$set('routeParameters.sortDirection', 'asc');
             }
         },
         '$route.query.letter': function() {
@@ -215,7 +221,7 @@ module.exports = {
             if (this.routeParameters.sortColumn == sort) {
                 return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc';
             } else {
-                return sort === 'name' ? 'asc': 'desc';
+                return 'asc';
             }
         },
         findContacts: function(

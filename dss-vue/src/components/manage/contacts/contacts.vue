@@ -16,8 +16,7 @@
                 v-model="routeParameters.selectedContactType"
                 v-on:change="onChangeContactType"
             >
-                <option selected>Please Select...</option>
-                <option :value="0">Display All</option>
+                <option :value="0" selected>Display All</option>
                 <option
                     v-for="option in contactTypes"
                     :value="option.contacttypeid"
@@ -65,6 +64,7 @@
                             class="letters"
                         >{{ letter }}</a>
                         <a
+                            v-if="routeParameters.currentLetter"
                             v-link="{ name: $route.name,
                                 query: {
                                     status      : routeParameters.status,
@@ -77,7 +77,7 @@
                     </div>
                 </td>
                 <td
-                    v-if="contactTotalNumber > contactsPerPage"
+                    v-if="contactsTotalNumber > contactsPerPage"
                     align="right"
                     colspan="15"
                     class="bp"

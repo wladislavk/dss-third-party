@@ -61,8 +61,9 @@ class Contact extends Model implements Resource, Repository
     ) {
         $contacts = $this->select(
                 'dc.*',
-                DB::raw('COUNT(dp_ref.patientid) as referrers'),
-                DB::raw('COUNT(dp_pat.patientid) as patients')
+                'dct.contacttype',
+                DB::raw('COUNT(distinct dp_ref.patientid) as referrers'),
+                DB::raw('COUNT(distinct dp_pat.patientid) as patients')
             )
             ->from(DB::raw('dental_contact dc'))
             ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')

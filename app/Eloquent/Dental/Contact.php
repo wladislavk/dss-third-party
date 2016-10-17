@@ -150,4 +150,37 @@ class Contact extends Model implements Resource, Repository
             'result'     => $contacts
         ];
     }
+
+    public function getListContactsAndCompanies($docId, $partial, $names, $referredPhysician)
+    {
+        return $this->select(
+                'c.contactid',
+                'c.lastname',
+                'c.firstname',
+                'c.middlename',
+                'c.company',
+                DB::raw($referredPhysician . ' as referral_type'),
+                'ct.contacttype'
+            )->from(DB::raw('dental_contact c'))
+            ->leftJoin(DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
+            ->where(function($query) use ($names, $partial) {
+                $query->where(function($query) use ($names, $partial) {
+                    $query->where(function($query) use ($names) {
+                        $query->where('lastname', 'like', $names[0] . '%')
+                            ->orWhere('firstname', 'like', $names[0] . '%');
+                    })->where(function($query) use ($names) {
+                        $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
+                            ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
+                    });
+                })->orWhere(function($query) use ($names) {
+                    $query->where('firstname', 'like', $names[0] . '%')
+                        ->where('middlename', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
+                        ->where('lastname', 'like', (!empty($names[2]) ? $names[2] : '') . '%');
+                })->orWhere('company', 'like', $partial . '%');
+            })->whereNull('merge_id')
+            ->where('c.status', 1)
+            ->where('docid', $docId)
+            ->orderBy('lastname')
+            ->get();
+    }
 }

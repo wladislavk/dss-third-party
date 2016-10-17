@@ -147,6 +147,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('contact-types/active-non-corporate', 'ContactTypesController@getActiveNonCorporate');
     Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
     Route::post('contacts/find', 'ContactsController@find');
+    Route::post('contacts/list-contacts-and-companies', 'ContactsController@getListContactsAndCompanies');
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
     Route::get('display-file/{filename}', 'DisplayingFileController@getFile');
 

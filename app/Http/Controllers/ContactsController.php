@@ -14,6 +14,8 @@ use Carbon\Carbon;
 
 class ContactsController extends Controller
 {
+    const DSS_REFERRED_PHYSICIAN = 2;
+
     /**
      * Display a listing of the resource.
      *
@@ -108,5 +110,36 @@ class ContactsController extends Controller
         );
 
         return ApiResponse::responseOk('', $data);
+    }
+
+    public function getListContactsAndCompanies(Contacts $resources, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        if ($request->has('partial_name')) {
+            $partial = preg_replace("[^ A-Za-z'\-]", "", $request->input('partial_name'));
+        } else {
+            $partial = '';
+        }
+
+        $names = explode(' ', $partial);
+
+        $contactsAndCompanies = $resources->getListContactsAndCompanies($docId, $partial, $names, self::DSS_REFERRED_PHYSICIAN);
+
+        if (count($contactsAndCompanies)) {
+            foreach ($contactsAndCompanies as $item) {
+                $response[] = [
+                    'id'     => $item->contactid,
+                    'name'   => $item->company . ' - ' . $item->lastname . ', ' . $item->firstname . ' ' . $item->middlename . ' - ' . $item->contacttype,
+                    'source' => $item->referral_type
+                ];
+            }
+        } else {
+            $response = [
+                'error' => 'Error: No match found for this criteria.'
+            ];
+        }
+
+        return ApiResponse::responseOk('', $response);
     }
 }

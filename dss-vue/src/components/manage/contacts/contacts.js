@@ -26,7 +26,9 @@ module.exports = {
             contactsTotalNumber : 0,
             contactsPerPage     : 50,
             totalPages          : 0,
-            showActions         : false
+            showActions         : false,
+            requiredContactName : '',
+            foundContactsByName : []
         }
     },
     mixins: [handlerMixin],
@@ -120,13 +122,29 @@ module.exports = {
     },
     ready: function() {
         this.$set('showActions', true);
-        /*
-        function(){
-            setup_autocomplete('contact_name', 'contact_hints', 'contact', '', 'list_contacts_and_companies.php');
-        }
-        */
     },
     methods: {
+        onKeyUpSearchContacts: function(event) {
+            if (this.requiredContactName.trim() != '') {
+                // console.log(event.keyCode);
+
+                if (this.requiredContactName.trim().length > 2) {
+                    this.getListContactsAndCompanies(this.requiredContactName.trim())
+                        .then(function(response) {
+                            var data = response.data.data;
+
+                            if (data.length) {
+                                this.$set('foundContactsByName', data);
+                            } else if (data.error) {
+                                this.$set('foundContactsByName', []);
+                                alert(data.error);
+                            }
+                        }, function(response) {
+                            this.handleErrors('getListContactsAndCompanies', response);
+                        });
+                }
+            }
+        },
         onClickPatients: function(contactId) {
             $('#ref_pat_' + contactId).toggle();
         },
@@ -247,6 +265,11 @@ module.exports = {
         },
         getActiveNonCorporateContactTypes: function() {
             return this.$http.post(window.config.API_PATH + 'contact-types/active-non-corporate');
+        },
+        getListContactsAndCompanies: function(requestedName) {
+            var data = { partial_name: requestedName };
+
+            return this.$http.post(window.config.API_PATH + 'contacts/list-contacts-and-companies', data);
         }
     }
 }

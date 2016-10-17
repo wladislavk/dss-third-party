@@ -1,5 +1,6 @@
 <style src="../../../../assets/css/manage/admin.css" scoped></style>
 <style src="../../../../assets/css/manage/manage.css" scoped></style>
+<style src="../../../../assets/css/manage/search-hints.css" scoped></style>
 <style type="text/css" scoped>
     .name-empty { font-weight: normal; }
     .name { width: 20% }
@@ -28,11 +29,22 @@
         </form>
         <br /><br />
         Search Contacts:
-        <input type="text" id="contact_name" style="width:300px;" onclick="updateval(this)" autocomplete="off" name="contact_name" value="Type contact name" />
+        <input
+            v-model="requiredContactName"
+            v-on:keyup="onKeyUpSearchContacts"
+            placeholder="Type contact name"
+            id="contact_name"
+            style="width:300px;"
+            autocomplete="off"
+        />
         <br />
-        <div id="contact_hints" class="search_hints" style="display:none;">
+        <div v-show="foundContactsByName.length > 0" id="contact_hints" class="search_hints">
             <ul id="contact_list" class="search_list">
-                <li class="template" style="display:none">Doe, John S</li>
+                <li
+                    v-for="contact in foundContactsByName"
+                    class="json_patient"
+                    v-on:click="loadPopup('view_contact.php?ed=' + contact.id)"
+                >{{ contact.name }}</li>
             </ul>
         </div>
         <button style="margin-right:10px; float:right;" onclick="loadPopup('add_contact.php')" class="addButton">

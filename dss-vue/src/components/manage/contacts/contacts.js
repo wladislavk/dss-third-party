@@ -28,7 +28,9 @@ module.exports = {
             totalPages          : 0,
             showActions         : false,
             requiredContactName : '',
-            foundContactsByName : []
+            foundContactsByName : [],
+            typingTimer         : null,
+            doneTypingInterval  : 600
         }
     },
     mixins: [handlerMixin],
@@ -125,25 +127,33 @@ module.exports = {
     },
     methods: {
         onKeyUpSearchContacts: function(event) {
-            if (this.requiredContactName.trim() != '') {
-                // console.log(event.keyCode);
+            clearTimeout(this.typingTimer);
 
-                if (this.requiredContactName.trim().length > 2) {
-                    this.getListContactsAndCompanies(this.requiredContactName.trim())
-                        .then(function(response) {
-                            var data = response.data.data;
+            var self = this;
+            this.typingTimer = setTimeout(function() {
+                if (self.requiredContactName.trim() != '') {
+                    // console.log(event.keyCode);
 
-                            if (data.length) {
-                                this.$set('foundContactsByName', data);
-                            } else if (data.error) {
-                                this.$set('foundContactsByName', []);
-                                alert(data.error);
-                            }
-                        }, function(response) {
-                            this.handleErrors('getListContactsAndCompanies', response);
-                        });
+                    if (self.requiredContactName.trim().length > 1) {
+                        self.getListContactsAndCompanies(self.requiredContactName.trim())
+                            .then(function(response) {
+                                var data = response.data.data;
+
+                                if (data.length) {
+                                    self.$set('foundContactsByName', data);
+                                    $('#contact_hints').show();
+                                } else if (data.error) {
+                                    self.$set('foundContactsByName', []);
+                                    alert(data.error);
+                                }
+                            }, function(response) {
+                                self.handleErrors('getListContactsAndCompanies', response);
+                            });
+                    } else {
+                        $('#contact_hints').hide();
+                    }
                 }
-            }
+            }, this.doneTypingInterval);
         },
         onClickPatients: function(contactId) {
             $('#ref_pat_' + contactId).toggle();

@@ -118,6 +118,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('patients/list', 'PatientsController@getListPatients');
     Route::delete('patients-by-doctor/{patientId}', 'PatientsController@destroyForDoctor');
     Route::post('patients/find', 'PatientsController@find');
+    Route::post('patients/referred-by-contact', 'PatientsController@getReferredByContact');
+    Route::post('patients/by-contact', 'PatientsController@getByContact');
     Route::resource('payment-reports', 'PaymentReportsController', ['except' => ['create', 'edit']]);
     Route::post('payment-reports/number', 'PaymentReportsController@getNumber');
     Route::resource('place-services', 'PlaceServicesController', ['except' => ['create', 'edit']]);
@@ -142,7 +144,10 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('complaints', 'ComplaintsController', ['except' => ['create', 'edit']]);
     Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);
     Route::resource('contact-types', 'ContactTypesController', ['except' => ['create', 'edit']]);
+    Route::post('contact-types/active-non-corporate', 'ContactTypesController@getActiveNonCorporate');
     Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
+    Route::post('contacts/find', 'ContactsController@find');
+    Route::post('contacts/list-contacts-and-companies', 'ContactsController@getListContactsAndCompanies');
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
     Route::get('display-file/{filename}', 'DisplayingFileController@getFile');
 

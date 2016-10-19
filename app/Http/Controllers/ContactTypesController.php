@@ -82,4 +82,11 @@ class ContactTypesController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getActiveNonCorporate(ContactTypes $resources)
+    {
+        $data = $resources->getActiveNonCorporateTypes();
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

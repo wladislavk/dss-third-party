@@ -41,4 +41,23 @@ class ContactType extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
+
+    public function scopeNonCorporate($query)
+    {
+        return $query->where('corporate', 0);
+    }
+
+    public function getActiveNonCorporateTypes()
+    {
+        return $this->select('contacttypeid', 'contacttype')
+            ->active()
+            ->nonCorporate()
+            ->orderBy('sortby')
+            ->get();
+    }
 }

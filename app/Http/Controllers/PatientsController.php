@@ -184,4 +184,20 @@ class PatientsController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getReferredByContact(Patients $resources, Request $request)
+    {
+        $contactId = $request->input('contact_id') ?: 0;
+        $data = $resources->getReferredByContact($contactId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getByContact(Patients $resources, Request $request)
+    {
+        $contactId = $request->input('contact_id') ?: 0;
+        $data = $resources->getByContact($contactId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

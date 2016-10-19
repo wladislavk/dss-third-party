@@ -142,4 +142,12 @@ class ContactsController extends Controller
 
         return ApiResponse::responseOk('', $response);
     }
+
+    public function getWithContactType(Contact $resource, Request $request)
+    {
+        $contactId = $request->input('contact_id') ?: 0;
+        $data = $resource->getWithContactType($contactId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

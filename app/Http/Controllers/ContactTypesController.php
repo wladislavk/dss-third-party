@@ -89,4 +89,11 @@ class ContactTypesController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getPhysician(ContactTypes $resources)
+    {
+        $data = $resources->getPhysicianTypes();
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

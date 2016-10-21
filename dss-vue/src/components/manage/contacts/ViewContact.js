@@ -9,11 +9,16 @@ module.exports = {
     },
     mixins: [handlerMixin],
     computed: {
-        'contact.phone1': function() {
-            var phone = this.contact.phone1;
-            phone = phone.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+        filteredContact: function() {
+            var phoneFields = ['phone1', 'phone2', 'fax'];
 
-            this.$set('contact.phone1', phone);
+            phoneFields.forEach(el => {
+                if (this.contact.hasOwnProperty(el)) {
+                    this.contact[el] = this.contact[el].replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+                }
+            });
+
+            return this.contact;
         }
     },
     events: {

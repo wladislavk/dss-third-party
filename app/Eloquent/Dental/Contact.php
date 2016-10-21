@@ -183,4 +183,13 @@ class Contact extends Model implements Resource, Repository
             ->orderBy('lastname')
             ->get();
     }
+
+    public function getWithContactType($contactId = 0)
+    {
+        return $this->select('c.*', 'ct.contacttype')
+            ->from(DB::raw('dental_contact c'))
+            ->leftJoin(DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'c.contacttypeid')
+            ->where('c.contactid', $contactId)
+            ->first();
+    }
 }

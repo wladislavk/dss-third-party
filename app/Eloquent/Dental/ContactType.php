@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ContactType as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ContactTypes as Repository;
+use DB;
 
 class ContactType extends Model implements Resource, Repository
 {
@@ -52,6 +53,11 @@ class ContactType extends Model implements Resource, Repository
         return $query->where('corporate', 0);
     }
 
+    public function scopePhysician($query)
+    {
+        return $query->where('physician', 1);
+    }
+
     public function getActiveNonCorporateTypes()
     {
         return $this->select('contacttypeid', 'contacttype')
@@ -59,5 +65,13 @@ class ContactType extends Model implements Resource, Repository
             ->nonCorporate()
             ->orderBy('sortby')
             ->get();
+    }
+
+    public function getPhysicianTypes()
+    {
+        return $this->select(DB::raw('GROUP_CONCAT(contacttypeid) as physician_types'))
+            ->physician()
+            ->groupBy('physician')
+            ->first();
     }
 }

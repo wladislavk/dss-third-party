@@ -145,9 +145,11 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('custom-texts', 'CustomTextsController', ['except' => ['create', 'edit']]);
     Route::resource('contact-types', 'ContactTypesController', ['except' => ['create', 'edit']]);
     Route::post('contact-types/active-non-corporate', 'ContactTypesController@getActiveNonCorporate');
+    Route::post('contact-types/physician', 'ContactTypesController@getPhysician');
     Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
     Route::post('contacts/find', 'ContactsController@find');
     Route::post('contacts/list-contacts-and-companies', 'ContactsController@getListContactsAndCompanies');
+    Route::post('contacts/with-contact-type', 'ContactsController@getWithContactType');
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
     Route::get('display-file/{filename}', 'DisplayingFileController@getFile');
 

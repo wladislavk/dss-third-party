@@ -189,7 +189,7 @@
                         <div v-show="showActions" class="actions">
                             <a
                                 href="#"
-                                onclick="loadPopup('view_contact.php?ed={{ contact.contactid }}')"
+                                v-on:click.prevent="onClickQuickView(contact.contactid)"
                                 class="editlink"
                                 title="EDIT"
                             >Quick View</a> |

@@ -23,6 +23,7 @@
 
 <script>
     var deviceSelector = require('../manage/dashboard/device-selector/deviceSelector.vue');
+    var viewContact    = require('../manage/contacts/ViewContact.vue');
 
     module.exports = {
         data: function() {
@@ -40,9 +41,15 @@
         },
         components: {
             'empty'           : { template: '' },
-            'device-selector' : deviceSelector
+            'device-selector' : deviceSelector,
+            'view-contact'    : viewContact
         },
         methods: {
+            setComponentParameters: function(parameters) {
+                this.$nextTick(function() {
+                    this.$broadcast('setting-component-params', parameters);
+                });
+            },
             centering: function() {
                 var windowWidth  = document.documentElement.clientWidth;
                 var windowHeight = document.documentElement.clientHeight;

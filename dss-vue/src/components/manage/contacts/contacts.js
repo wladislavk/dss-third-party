@@ -158,6 +158,10 @@ module.exports = {
         onClickPatients: function(contactId) {
             $('#ref_pat_' + contactId).toggle();
         },
+        onClickQuickView: function (contactId) {
+            this.$parent.$refs.modal.display('view-contact');
+            this.$parent.$refs.modal.setComponentParameters({ contactId: contactId });
+        },
         onClickInActive: function() {
             this.$route.router.go({
                 name  : this.$route.name,

@@ -162,6 +162,10 @@ module.exports = {
             this.$parent.$refs.modal.display('view-contact');
             this.$parent.$refs.modal.setComponentParameters({ contactId: contactId });
         },
+        onClickEditContact: function(contactId) {
+            this.$parent.$refs.modal.display('edit-contact');
+            this.$parent.$refs.modal.setComponentParameters({ contactId: contactId });
+        },
         onClickInActive: function() {
             this.$route.router.go({
                 name  : this.$route.name,

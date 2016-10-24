@@ -24,6 +24,7 @@
 <script>
     var deviceSelector = require('../manage/dashboard/device-selector/deviceSelector.vue');
     var viewContact    = require('../manage/contacts/ViewContact.vue');
+    var editContact    = require('../manage/contacts/EditContact.vue');
 
     module.exports = {
         data: function() {
@@ -42,7 +43,8 @@
         components: {
             'empty'           : { template: '' },
             'device-selector' : deviceSelector,
-            'view-contact'    : viewContact
+            'view-contact'    : viewContact,
+            'edit-contact'    : editContact
         },
         methods: {
             setComponentParameters: function(parameters) {

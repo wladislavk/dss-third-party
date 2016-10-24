@@ -195,7 +195,7 @@
                             >Quick View</a> |
                             <a
                                 href="#"
-                                onclick="loadPopup('add_contact.php?ed={{ contact.contactid }}')"
+                                v-on:click.prevent="onClickEditContact(contact.contactid)"
                                 class="editlink"
                                 title="EDIT"
                             >Edit</a>

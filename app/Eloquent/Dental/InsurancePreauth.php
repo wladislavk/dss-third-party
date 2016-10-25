@@ -82,4 +82,21 @@ class InsurancePreauth extends Model implements Resource, Repository
             ->rejected()
             ->first();
     }
+
+    public function getPendingVOBByContactId($contactId)
+    {
+        return $this->select('ip.*')
+            ->from(DB::raw('dental_insurance_preauth ip'))
+            ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'ip.patient_id')
+            ->where(function($query) use ($contactId) {
+                $query->where(function($query) use ($contactId) {
+                    $query->where('p.p_m_ins_co', '=', $contactId)
+                        ->orWhere('p.s_m_ins_co', '=', $contactId);
+                })->where(function($query) {
+                    $query->where('ip.status', '=', self::DSS_PREAUTH_PENDING)
+                        ->orWhere('ip.status', '=', self::DSS_PREAUTH_PREAUTH_PENDING);
+                });
+            })->orderBy('ip.front_office_request_date', 'desc')
+            ->first();
+    }
 }

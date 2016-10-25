@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\ContactTypeDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\ContactType;
 use DentalSleepSolutions\Contracts\Repositories\ContactTypes;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class ContactTypesController extends Controller
@@ -95,5 +96,15 @@ class ContactTypesController extends Controller
         $data = $resources->getPhysicianTypes();
 
         return ApiResponse::responseOk('', $data);
+    }
+
+    public function getWithFilter(Patients $resources, Request $request)
+    {
+        $fields = $request->input('fields') ?: [];
+        $where  = $request->input('where') ?: [];
+
+        $patients = $resources->getWithFilter($fields, $where);
+
+        return ApiResponse::responseOk('', $patients);
     }
 }

@@ -13,8 +13,16 @@ module.exports = {
     },
     mixins: [handlerMixin],
     computed: {
-        'contact.name': function() {
-            return this.contact.firstname + ' ' + this.contact.middlename + ' ' + this.contact.lastname;
+        filteredContact: function() {
+            var phoneFields = ['phone1', 'phone2', 'fax'];
+
+            phoneFields.forEach(el => {
+                if (this.contact.hasOwnProperty(el)) {
+                    this.contact[el] = this.contact[el].replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+                }
+            });
+
+            return this.contact;
         }
     },
     events: {
@@ -79,6 +87,9 @@ module.exports = {
             });
     },
     methods: {
+        getFullName: function(contact) {
+            return contact.firstname + ' ' + contact.middlename + ' ' + contact.lastname;
+        },
         updateContact: function(contact) {
             return this.$http.put(window.config.API_PATH + 'contacts/' + contact.contactid, contact);
         },

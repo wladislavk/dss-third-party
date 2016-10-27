@@ -33,7 +33,7 @@
                                         >
                                             <option value="0" disabled selected>Select a contact type</option>
                                             <option
-                                                v-if="type in activeNonCorporateContactTypes"
+                                                v-for="type in activeNonCorporateContactTypes"
                                                 :value="type.contacttypeid"
                                                 {{ (type.contacttypeid == componentParams.type) ? 'selected' : '' }}
                                             >{{ type.contacttype }}</option>
@@ -226,7 +226,7 @@
                                 <div>
                                     <span>
                                         <input
-                                            v-model="contact.phone1"
+                                            v-model="filteredContact.phone1"
                                             id="phone1"
                                             name="phone1"
                                             type="text"
@@ -239,7 +239,7 @@
                                     </span>
                                     <span>
                                         <input
-                                            v-model="contact.phone2"
+                                            v-model="filteredContact.phone2"
                                             id="phone2"
                                             name="phone2"
                                             type="text"
@@ -252,7 +252,7 @@
                                     </span>
                                     <span>
                                         <input
-                                            v-model="contact.fax"
+                                            v-model="filteredContact.fax"
                                             id="fax"
                                             name="fax"
                                             type="text"

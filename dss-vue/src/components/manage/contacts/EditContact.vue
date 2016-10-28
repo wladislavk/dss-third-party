@@ -418,7 +418,7 @@
                             >Is This a Duplicate? </a>
                             <br />
                             <a
-                                v-if="pendingVOB"
+                                v-if="pendingVOB.length"
                                 style="float:right;"
                                 href="manage_contact.php?delid={{ contact.contactid }}"
                                 onclick="javascript: return confirm('Warning! There is currently a patient with this insurance company that has a pending VOB. Deleting this insurance company will cause the VOB to fail. Do you want to proceed?');"
@@ -427,7 +427,7 @@
                                 title="DELETE"
                             >Delete</a>
                             <template v-else>
-                                <template v-if="get_contact_sent_letters(contact.contactid) > 0">
+                                <template v-if="contactSentLetters.length > 0">
                                     <a
                                         style="float:right;"
                                         href="manage_contact.php?inactiveid={{ contact.contactid }}"
@@ -448,7 +448,7 @@
                                     >Delete </a>
                                     <template v-else>
                                         <a
-                                            v-if="get_contact_pending_letters(contact.contactid)> 0"
+                                            v-if="contactPendingLetters.length > 0"
                                             style="float:right;"
                                             href="manage_contact.php?delid={{ contact.contactid }}"
                                             onclick="javascript: return confirm('Warning: There are pending letters associated with this contact.  When you delete the contact the pending letters will also be deleted. Proceed?');"

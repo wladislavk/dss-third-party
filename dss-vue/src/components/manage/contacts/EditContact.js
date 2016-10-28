@@ -8,7 +8,9 @@ module.exports = {
             contact                        : {},
             activeNonCorporateContactTypes : [],
             activeQualifiers               : [],
-            pendingVOB                     : {}
+            pendingVOB                     : {},
+            contactSentLetters             : [],
+            contactPendingLetters          : []
         }
     },
     mixins: [handlerMixin],
@@ -23,6 +25,33 @@ module.exports = {
             });
 
             return this.contact;
+        }
+    },
+    watch: {
+        pendingVOB: function() {
+            if (!this.pendingVOB.length) {
+                this.getContactSentLetters(this.contact.contactid)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data.length) {
+                            this.$set('contactSentLetters', data);
+                        }
+                    }, function(response) {
+                        this.handleErrors('getContactSentLetters', response);
+                    });
+
+                this.getContactPendingLetters(this.contact.contactid)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data.length) {
+                            this.$set('contactPendingLetters', data);
+                        }
+                    }, function(response) {
+                        this.handleErrors('getContactPendingLetters', response);
+                    });
+            }
         }
     },
     events: {
@@ -44,7 +73,7 @@ module.exports = {
                 .then(function(response) {
                     var data = response.data.data;
 
-                    if (data) {
+                    if (data.length) {
                         this.$set('pendingVOB', data);
                     }
                 }, function(response) {
@@ -87,6 +116,18 @@ module.exports = {
             });
     },
     methods: {
+        getContactPendingLetters: function(contactId) {
+            // gets letters that were not delivered for contact
+            var data = { contact_id: contactId };
+
+            return this.$http.post(window.config.API_PATH + 'letters/not-delivered-for-contact', data);
+        },
+        getContactSentLetters: function(contactId) {
+            // gets letters that were delivered for contact
+            var data = { contact_id: contactId };
+
+            return this.$http.post(window.config.API_PATH + 'letters/delivered-for-contact', data);
+        },
         getFullName: function(contact) {
             return contact.firstname + ' ' + contact.middlename + ' ' + contact.lastname;
         },

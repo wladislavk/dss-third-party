@@ -54,6 +54,16 @@ class Letter extends Model implements Resource, Repository
      */
     const UPDATED_AT = 'edit_date';
 
+    public function scopeDelivered($query)
+    {
+        return $query->where('delivered', 1);
+    }
+
+    public function scopeNonDelivered($query)
+    {
+        return $query->where('delivered', 0);
+    }
+
     public function getPending($docId = 0)
     {
         return $this->select(DB::raw('UNIX_TIMESTAMP(dental_letters.generated_date) AS generated_date'))
@@ -82,5 +92,23 @@ class Letter extends Model implements Resource, Repository
             ->where('dental_letters.deleted', 0)
             ->where('dental_letters.docid', $docId)
             ->first();
+    }
+
+    public function getContactSentLetters(contactId = 0)
+    {
+        return $this->delivered()
+            ->where(function($query) {
+                $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
+                    ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
+            })->get();
+    }
+
+    public function getContactPendingLetters(contactId = 0)
+    {
+        return $this->nonDelivered()
+            ->where(function($query) {
+                $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
+                    ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
+            })->get();
     }
 }

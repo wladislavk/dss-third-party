@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\LetterDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Repositories\Letters;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -100,6 +101,24 @@ class LettersController extends Controller
         $docId = $this->currentUser->docid ?: 0;
 
         $data = $resources->getUnmailed($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    // gets letters that were delivered for contact
+    public function getContactSentLetters(Letters $resources, Request $request)
+    {
+        $contactId = $request->input('contact_id') ?: 0;
+        $data = $resources->getContactSentLetters($contactId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    // gets letters that were not delivered for contact
+    public function getContactPendingLetters(Letters $resources, Request $request)
+    {
+        $contactId = $request->input('contact_id') ?: 0;
+        $data = $resources->getContactPendingLetters($contactId);
 
         return ApiResponse::responseOk('', $data);
     }

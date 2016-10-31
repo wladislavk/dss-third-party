@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resources\Letter as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Letters as Repository;
+use Carbon\Carbon;
 use DB;
 
 class Letter extends Model implements Resource, Repository
@@ -110,5 +111,19 @@ class Letter extends Model implements Resource, Repository
                 $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
                     ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
             })->get();
+    }
+
+    public function createWelcomeLetter($docId, $templateId, $mdList)
+    {
+        $generateDate = Carbon::now();
+        $status = 0;
+        $delivered = 0;
+        $deleted = 0;
+
+        $data = [
+            ''
+        ];
+
+        return $this->create($data);
     }
 }

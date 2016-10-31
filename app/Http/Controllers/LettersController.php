@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\LetterDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Repositories\Letters;
+use DentalSleepSolutions\Contracts\Resources\User;
 use Illuminate\Http\Request;
 
 /**
@@ -119,6 +120,23 @@ class LettersController extends Controller
     {
         $contactId = $request->input('contact_id') ?: 0;
         $data = $resources->getContactPendingLetters($contactId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function createWelcomeLetter(User $user, Letter $resource, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+        $letterInfo = $user->getLetterInfo($docId);
+
+        $templateId = $request->input('template_id') ?: 0;
+        $mdList = $request->input('md_list');
+
+        if ($letterInfo->use_letters && $letterInfo->intro_letters) {
+            $data = $resource->createWelcomeLetter($docId, $templateId, $mdList);
+        } else {
+            $data = [];
+        }
 
         return ApiResponse::responseOk('', $data);
     }

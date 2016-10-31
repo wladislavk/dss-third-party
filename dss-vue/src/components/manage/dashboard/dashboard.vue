@@ -15,7 +15,7 @@
                             <li>
                                 <a v-on:click.prevent>Directory</a>
                                 <ul>
-                                    <li><a href="manage_contact.php">Contacts</a></li>
+                                    <li><a v-link="'/manage/contacts'">Contacts</a></li>
                                     <li><a href="manage_referredby.php">Referral List</a></li>
                                     <li><a href="manage_sleeplab.php">Sleep Labs</a></li>
                                     <li><a href="manage_fcontact.php">Corporate Contacts</a></li>

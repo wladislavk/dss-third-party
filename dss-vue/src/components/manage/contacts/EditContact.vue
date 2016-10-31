@@ -255,6 +255,7 @@
                                             v-model="filteredContact.fax"
                                             id="fax"
                                             name="fax"
+                                            v-el:fax
                                             type="text"
                                             class="phonemask field text addr tbox"
                                             tabindex="13"
@@ -270,6 +271,7 @@
                                             v-model="contact.email"
                                             id="email"
                                             name="email"
+                                            v-el:email
                                             type="text"
                                             class="field text addr tbox"
                                             tabindex="14"
@@ -369,6 +371,7 @@
                     <td valign="top" class="frmdata">
                         <select
                             v-model="contact.preferredcontact"
+                            v-on:change="onPreferredContactChange"
                             id="preferredcontact"
                             name="preferredcontact"
                             class="tbox"
@@ -403,12 +406,15 @@
                         <span class="red">
                             * Required Fields
                         </span><br />
-                        <input type="hidden" name="contactsub" value="1" />
-                        <input type="hidden" name="ed" :value="contact.contactid" />
                         <a href="#" id="google_link" target="_blank" style="float:left;">
                             Google
                         </a>
-                        <input type="submit" value="{{ contact.contactid != '' ? 'Edit' : 'Add' }} Contact" class="button" />
+                        <input
+                            v-on:click.prevent="onClickSubmit"
+                            type="submit"
+                            value="{{ contact.contactid != '' ? 'Edit' : 'Add' }} Contact"
+                            class="button"
+                        />
 
                         <template v-if="contact.contactid > 0">
                             <a
@@ -420,49 +426,49 @@
                             <a
                                 v-if="pendingVOB.length"
                                 style="float:right;"
-                                href="manage_contact.php?delid={{ contact.contactid }}"
-                                onclick="javascript: return confirm('Warning! There is currently a patient with this insurance company that has a pending VOB. Deleting this insurance company will cause the VOB to fail. Do you want to proceed?');"
+                                href="#"
+                                v-on:click.prevent="onClickConfirm('delete-pending-vobs', contact.contactid)"
                                 class="dellink"
-                                target="_parent"
                                 title="DELETE"
                             >Delete</a>
                             <template v-else>
                                 <template v-if="contactSentLetters.length > 0">
                                     <a
                                         style="float:right;"
-                                        href="manage_contact.php?inactiveid={{ contact.contactid }}"
-                                        onclick="javascript: return confirm('Letters have previously been sent to this contact; therefore, for medical record purposes the contact cannot be deleted. This contact now will be marked as INACTIVE in your software and will no longer display in search results. Any pending letters associated with this contact will be deleted.');"
+                                        href="#"
+                                        v-on:click.prevent="onClickConfirm('inactive', contact.contactid)"
                                         class="dellink"
-                                        target="_parent"
                                         title="DELETE"
                                     >
-                                    <input type="submit" value="{{ contact.contactid != '' ? 'Edit' : 'Add' }} Contact" class="button" />
+                                    <input
+                                        v-on:click.prevent="onClickSubmit"
+                                        type="submit"
+                                        value="{{ contact.contactid != '' ? 'Edit' : 'Add' }} Contact"
+                                        class="button"
+                                    />
                                     <a
                                         v-if="contact.contactid > 0"
                                         style="float:right;"
-                                        href="manage_contact.php?delid={{ contact.contactid }}"
-                                        onclick="javascript: return confirm('Do Your Really want to Delete?.');"
+                                        href="#"
+                                        v-on:click.prevent="onClickConfirm('delete', contact.contactid)"
                                         class="dellink"
                                         title="DELETE"
-                                        target="_parent"
                                     >Delete </a>
                                     <template v-else>
                                         <a
                                             v-if="contactPendingLetters.length > 0"
                                             style="float:right;"
-                                            href="manage_contact.php?delid={{ contact.contactid }}"
-                                            onclick="javascript: return confirm('Warning: There are pending letters associated with this contact.  When you delete the contact the pending letters will also be deleted. Proceed?');"
+                                            href="#"
+                                            v-on:click.prevent="onClickConfirm('delete-pending-letters', contact.contactid)"
                                             class="dellink"
-                                            target="_parent"
                                             title="DELETE"
                                         >Delete </a>
                                         <a
                                             v-else
                                             style="float:right;"
-                                            href="manage_contact.php?delid={{ contact.contactid }}"
-                                            onclick="javascript: return confirm('Do Your Really want to Delete?.');"
+                                            href="#"
+                                            v-on:click.prevent="onClickConfirm('delete', contact.contactid)"
                                             class="dellink"
-                                            target="_parent"
                                             title="DELETE"
                                         >Delete</a>
                                     </template>
@@ -475,8 +481,6 @@
         </form>
     </div>
 </template>
-
-<script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
 
 <script>
     module.exports = require('./EditContact.js');

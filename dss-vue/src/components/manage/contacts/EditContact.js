@@ -116,6 +116,51 @@ module.exports = {
             });
     },
     methods: {
+        onClickSubmit: function() {
+            alert('submit');
+            // to do on submit
+        },
+        onClickConfirm: function(type, contactId) {
+            var message = '';
+            var url = '';
+            contactId = contactId || 0;
+
+            switch (type) {
+                case 'delete-pending-vobs':
+                    message = 'Warning! There is currently a patient with this insurance company that has a pending VOB. Deleting this insurance company will cause the VOB to fail. Do you want to proceed?';
+                    url = '/manage/contacts?delid=' + contactId;
+                    break;
+                case 'inactive':
+                    message = 'Letters have previously been sent to this contact; therefore, for medical record purposes the contact cannot be deleted. This contact now will be marked as INACTIVE in your software and will no longer display in search results. Any pending letters associated with this contact will be deleted.';
+                    url = '/manage/contacts?inactiveid=' + contactId;
+                    break;
+                case 'delete':
+                    message = 'Do Your Really want to Delete?.';
+                    url = '/manage/contacts?delid=' + contactId;
+                    break;
+                case 'delete-pending-letters':
+                    message = 'Warning: There are pending letters associated with this contact.  When you delete the contact the pending letters will also be deleted. Proceed?';
+                    url = '/manage/contacts?delid=' + contactId;
+                    break;
+                default:
+                    break;
+            }
+
+            if (confirm(message) && url.length) {
+                this.$route.router.go(url);
+            }
+        },
+        onPreferredContactChange: function() {
+            if (this.contact.preferredcontact == 'email' && this.contact.email == '') {
+                alert("You must enter an email address to use email as the preferred contact method.");
+
+                this.$els.email.focus();
+            } else if (this.contact.preferredcontact == 'fax' && this.contact.fax == '') {
+                alert("You must enter a fax number to use email as the preferred contact method.");
+
+                this.$els.fax.focus();
+            }
+        },
         getContactPendingLetters: function(contactId) {
             // gets letters that were not delivered for contact
             var data = { contact_id: contactId };

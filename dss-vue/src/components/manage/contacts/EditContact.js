@@ -119,6 +119,34 @@ module.exports = {
         onClickSubmit: function() {
             alert('submit');
             // to do on submit
+
+            // if `ed` is not empty
+            if (true) {
+                this.updateContact(this.contact)
+                    .then(function(response) {
+                        this.$set('message', 'Edited Successfully');
+                    }, function(response) {
+                        this.handleErrors('updateContact', response);
+                    });
+            } else {
+                this.insertContact(this.contact)
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data) {
+                            this.createWelcomeLetter(data.inserted_contact_id, this.contact.contacttypeid)
+                                .then(function(response) {
+                                    // to do on success
+                                }, function(response) {
+                                    this.handleErrors('createWelcomeLetter', response);
+                                });
+
+                            
+                        }
+                    }, function(response) {
+                        this.handleErrors('insertContact', response);
+                    });
+            }
         },
         onClickConfirm: function(type, contactId) {
             var message = '';
@@ -204,6 +232,14 @@ module.exports = {
             var data = { contact_id: contactId };
 
             return this.$http.post(window.config.API_PATH + 'insurance-preauth/pending-VOB', data);
+        },
+        createWelcomeLetter: function(templateId, contactTypeId) {
+            var data = {
+                template_id     : templateId,
+                contact_type_id : contactTypeId
+            };
+
+            return this.$http.post(window.config.API_PATH + 'letters/create-welcome-letter')
         }
     }
 }

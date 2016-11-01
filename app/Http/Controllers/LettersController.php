@@ -10,6 +10,7 @@ use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Repositories\Letters;
 use DentalSleepSolutions\Contracts\Resources\User;
+use DentalSleepSolutions\Contracts\Resources\ContactType;
 use Illuminate\Http\Request;
 
 /**
@@ -22,6 +23,8 @@ use Illuminate\Http\Request;
  */
 class LettersController extends Controller
 {
+    const DSS_USER_TYPE_SOFTWARE = 2;
+
     /**
      * Display a listing of the resource.
      *
@@ -124,16 +127,32 @@ class LettersController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function createWelcomeLetter(User $user, Letter $resource, Request $request)
-    {
+    public function createWelcomeLetter(
+        User $userResource,
+        Letter $resource,
+        ContactType $contactTypeResource,
+        Request $request
+    ) {
         $docId = $this->currentUser->docid ?: 0;
-        $letterInfo = $user->getLetterInfo($docId);
+
+        $letterInfo = $userResource->getLetterInfo($docId);
 
         $templateId = $request->input('template_id') ?: 0;
-        $mdList = $request->input('md_list');
+        $contactTypeId = $request->input('contact_type_id') ?: 0;
 
         if ($letterInfo->use_letters && $letterInfo->intro_letters) {
-            $data = $resource->createWelcomeLetter($docId, $templateId, $mdList);
+            $contactType = $contactTypeResource->find($contactTypeId);
+
+            if ($contactType && $contactType->physician == 1) {
+                if ($this->currentUser->user_type != self::DSS_USER_TYPE_SOFTWARE) {
+                    $resource->createWelcomeLetter(1, $templateId, $docId);
+                }
+                $resource->createWelcomeLetter(2, $templateId, $docId);
+
+                $data = [
+                    'message' => 'This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.'
+                ];
+            }
         } else {
             $data = [];
         }

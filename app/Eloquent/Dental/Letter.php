@@ -115,14 +115,34 @@ class Letter extends Model implements Resource, Repository
 
     public function createWelcomeLetter($docId, $templateId, $mdList)
     {
-        $generateDate = Carbon::now();
-        $status = 0;
-        $delivered = 0;
-        $deleted = 0;
+        $status = '0';
+        $delivered = '0';
+        $deleted = '0';
 
         $data = [
-            ''
+            'templateid'     => $templateId
+            'generated_date' => Carbon::now(),
+            'delivered'      => $delivered,
+            'docid'          => $docId,
+            'userid'         => $docId
         ];
+
+        if ($status == 1) {
+            $data['date_sent'] = Carbon::now();
+        }
+
+        if (isset($md_list)) {
+            $data['md_list'] = $mdList;
+            $data['cc_md_list'] = $mdList;
+        }
+
+        if (isset($status)) {
+            $data['status'] = $status;
+        }
+
+        if (isset($deleted)) {
+            $data['deleted'] = $deleted;
+        }
 
         return $this->create($data);
     }

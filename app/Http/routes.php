@@ -97,6 +97,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('letters/unmailed', 'LettersController@getUnmailed');
     Route::post('letters/delivered-for-contact', 'LettersController@getContactSentLetters');
     Route::post('letters/not-delivered-for-contact', 'LettersController@getContactPendingLetters');
+    Route::post('letters/create-welcome-letter', 'LettersController@createWelcomeLetter');
     Route::resource('locations', 'LocationsController', ['except' => ['create', 'edit']]);
     Route::resource('logins', 'LoginsController', ['except' => ['create', 'edit']]);
     Route::post('logout', 'LoginsController@logout');

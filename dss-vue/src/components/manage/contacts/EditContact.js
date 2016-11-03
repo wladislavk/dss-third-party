@@ -69,7 +69,7 @@ module.exports = {
                     this.handleErrors('getContactTypesOfPhysician', response);
                 });
 
-            this.getPendingVOBsByContactId()
+            this.getPendingVOBsByContactId(this.componentParams.contactId)
                 .then(function(response) {
                     var data = response.data.data;
 
@@ -120,7 +120,8 @@ module.exports = {
             if (this.componentParams.ed > 0) {
                 this.updateContact(this.contact)
                     .then(function(response) {
-                        this.$set('message', 'Edited Successfully');
+                        this.$parent.message = 'Edited Successfully';
+                        this.$route.router.go('/manage/contacts');
                     }, function(response) {
                         this.handleErrors('updateContact', response);
                     });
@@ -152,9 +153,11 @@ module.exports = {
                                     }
                                 });
                             } else {
-                                parent.window.location='manage_contact.php?msg=<?php echo $msg;?>';
                                 this.$parent.message = 'Added Successfully';
+                                this.$route.router.go('/manage/contacts');
                             }
+
+                            this.$parent.$refs.modal.disable();
                         }
                     }, function(response) {
                         this.handleErrors('insertContact', response);

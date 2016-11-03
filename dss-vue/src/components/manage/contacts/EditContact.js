@@ -117,11 +117,7 @@ module.exports = {
     },
     methods: {
         onClickSubmit: function() {
-            alert('submit');
-            // to do on submit
-
-            // if `ed` is not empty
-            if (true) {
+            if (this.componentParams.ed > 0) {
                 this.updateContact(this.contact)
                     .then(function(response) {
                         this.$set('message', 'Edited Successfully');
@@ -136,12 +132,29 @@ module.exports = {
                         if (data) {
                             this.createWelcomeLetter(data.inserted_contact_id, this.contact.contacttypeid)
                                 .then(function(response) {
-                                    // to do on success
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        alert(data.message);
+                                    }
                                 }, function(response) {
                                     this.handleErrors('createWelcomeLetter', response);
                                 });
 
-                            
+                            if (this.componentParams.activePat != '') {
+                                this.$route.router.go({
+                                    path: '/add/patient',
+                                    query: {
+                                        ed       : this.componentParams.activePat,
+                                        preview  : 1,
+                                        addtopat : 1,
+                                        pid      : this.componentParams.activePat
+                                    }
+                                });
+                            } else {
+                                parent.window.location='manage_contact.php?msg=<?php echo $msg;?>';
+                                this.$parent.message = 'Added Successfully';
+                            }
                         }
                     }, function(response) {
                         this.handleErrors('insertContact', response);
@@ -150,32 +163,35 @@ module.exports = {
         },
         onClickConfirm: function(type, contactId) {
             var message = '';
-            var url = '';
+            var query = {};
             contactId = contactId || 0;
 
             switch (type) {
                 case 'delete-pending-vobs':
                     message = 'Warning! There is currently a patient with this insurance company that has a pending VOB. Deleting this insurance company will cause the VOB to fail. Do you want to proceed?';
-                    url = '/manage/contacts?delid=' + contactId;
+                    query = { delid: contactId };
                     break;
                 case 'inactive':
                     message = 'Letters have previously been sent to this contact; therefore, for medical record purposes the contact cannot be deleted. This contact now will be marked as INACTIVE in your software and will no longer display in search results. Any pending letters associated with this contact will be deleted.';
-                    url = '/manage/contacts?inactiveid=' + contactId;
+                    query = { inactiveid: contactId };
                     break;
                 case 'delete':
                     message = 'Do Your Really want to Delete?.';
-                    url = '/manage/contacts?delid=' + contactId;
+                    query = { delid: contactId };
                     break;
                 case 'delete-pending-letters':
                     message = 'Warning: There are pending letters associated with this contact.  When you delete the contact the pending letters will also be deleted. Proceed?';
-                    url = '/manage/contacts?delid=' + contactId;
+                    query = { delid: contactId };
                     break;
                 default:
                     break;
             }
 
             if (confirm(message) && url.length) {
-                this.$route.router.go(url);
+                this.$route.router.go({
+                    path  : '/manage/contacts',
+                    query : query
+                });
             }
         },
         onPreferredContactChange: function() {

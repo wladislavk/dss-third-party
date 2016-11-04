@@ -14,7 +14,7 @@
                         <span v-if="componentParams.ctype == 'ins'">Add Insurance Company</span>
                         <span v-else>
                             {{ contact.contactid != '' ? 'Edit' : 'Add' }} {{ componentParams.heading }} Contact
-                            <template v-if="contact.name">&quot;{{ contact.name }}&quot;</template>
+                            <template v-if="contact.firstname && contact.lastname">&quot;{{ getFullName(contact) }}&quot;</template>
                         </span>
                     </td>
                 </tr>
@@ -51,7 +51,7 @@
                             <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Name
-                                    <span v-if="componentParams.ctype != 'ins'" id="req_0" class="req">*</span>
+                                    <span v-if="componentParams.ctype && componentParams.ctype != 'ins'" id="req_0" class="req">*</span>
                                 </label>
                                 <div>
                                     <span>
@@ -377,6 +377,7 @@
                             class="tbox"
                             tabindex="22"
                         >
+                            <option value="" selected disabled>Select a method</option>
                             <option value="fax">Fax</option>
                             <option value="paper">Paper Mail</option>
                             <option value="email">Email</option>

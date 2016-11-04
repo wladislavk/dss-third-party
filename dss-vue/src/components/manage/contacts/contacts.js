@@ -103,6 +103,11 @@ module.exports = {
             deep: true
         }
     },
+    events: {
+        'get-data-from-modal': function(data) {
+            this.$set('message', data.message);
+        }
+    },
     computed: {
         totalPages: function() {
             return this.contactsTotalNumber / this.contactsPerPage;

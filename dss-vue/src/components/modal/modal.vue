@@ -52,6 +52,9 @@
                     this.$broadcast('setting-component-params', parameters);
                 });
             },
+            passDataToParent: function(data) {
+                this.$dispatch('get-data-from-modal', data);
+            },
             centering: function() {
                 var windowWidth  = document.documentElement.clientWidth;
                 var windowHeight = document.documentElement.clientHeight;

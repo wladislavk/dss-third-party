@@ -10,7 +10,8 @@ module.exports = {
             activeQualifiers               : [],
             pendingVOB                     : {},
             contactSentLetters             : [],
-            contactPendingLetters          : []
+            contactPendingLetters          : [],
+            message                        : ''
         }
     },
     mixins: [handlerMixin],
@@ -117,13 +118,28 @@ module.exports = {
     },
     methods: {
         onClickSubmit: function() {
-            if (this.componentParams.ed > 0) {
+            this.$set('message', '');
+
+            this.$parent.passDataToParent({ message: 'test' });
+/*
+            if (this.componentParams.contactId > 0) {
                 this.updateContact(this.contact)
                     .then(function(response) {
                         this.$parent.message = 'Edited Successfully';
                         this.$route.router.go('/manage/contacts');
                     }, function(response) {
-                        this.handleErrors('updateContact', response);
+                        if (response.status == 422) {
+                            var data = response.data.data;
+                            var message = '';
+
+                            for (var key in data.errors) {
+                                message += key + ': ' + data.errors[key].join('; ') + "\n";
+                            }
+
+                            this.$set('message', message);
+                        } else {
+                            this.handleErrors('updateContact', response);
+                        }
                     });
             } else {
                 this.insertContact(this.contact)
@@ -163,6 +179,7 @@ module.exports = {
                         this.handleErrors('insertContact', response);
                     });
             }
+*/
         },
         onClickConfirm: function(type, contactId) {
             var message = '';
@@ -201,10 +218,12 @@ module.exports = {
             if (this.contact.preferredcontact == 'email' && this.contact.email == '') {
                 alert("You must enter an email address to use email as the preferred contact method.");
 
+                this.$set('contact.preferredcontact', '');
                 this.$els.email.focus();
             } else if (this.contact.preferredcontact == 'fax' && this.contact.fax == '') {
                 alert("You must enter a fax number to use email as the preferred contact method.");
 
+                this.$set('contact.preferredcontact', '');
                 this.$els.fax.focus();
             }
         },

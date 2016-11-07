@@ -1,31 +1,44 @@
 FROM centos:6.6
 RUN yum update -y
 
-RUN export BUILD_DIR=/tmp/build && mkdir -p $BUILD_DIR && cd $BUILD_DIR \
-    && curl -sSo epel-release-6-8.noarch.rpm http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm  \
-    && curl -sSo remi-release-6.rpm http://rpms.famillecollet.com/enterprise/remi-release-6.rpm \
-    && rpm -Uvh remi-release-6*.rpm epel-release-6*.rpm
-
-RUN echo 'Enable remi repositories for php 5.6' \
-    && cat /etc/yum.repos.d/remi.repo | tr '\n' '\0' | \
-        sed -e 's/^.*\(\[remi\][^[]*\)enabled=0\([^[]*\).*$/\1enabled=1\2/g' \
-            | tr '\0' '\n' >> /etc/yum.repos.d/remi-enabled.repo \
-    && cat /etc/yum.repos.d/remi.repo | tr '\n' '\0' | \
-        sed -e 's/^.*\(\[remi-php56\][^[]*\)enabled=0\([^[]*\).*$/\1enabled=1\2/g' \
-            | tr '\0' '\n' >> /etc/yum.repos.d/remi-enabled.repo \
-    && cat /etc/yum.repos.d/remi-enabled.repo
+RUN yum --enablerepo=extras install -y centos-release-scl
 
 RUN yum install -y \
-    httpd \
-    php \
-    php-gd \
-    php-mcrypt \
-    php-mbstring \
-    php-xml \
-    php-pdo \
-    php-mysql \
-    php-mysqli \
-    php-tidy
+    httpd24 \
+    rh-php56 \
+    rh-php56-php \
+    rh-php56-php-gd \
+    rh-php56-php-mcrypt \
+    rh-php56-php-mbstring \
+    rh-php56-php-xml \
+    rh-php56-php-pdo \
+    rh-php56-php-mysql \
+    rh-php56-php-mysqli \
+    rh-php56-php-tidy
 
-RUN curl -sS https://getcomposer.org/installer | php \
+RUN source /opt/rh/rh-php56/enable \
+    && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
+
+ARG PROJECT_DIR=/var/www/html/api/
+WORKDIR $PROJECT_DIR
+
+# Copy composer manifest before the rest source codes. To be able to install
+# all requirements and cache this build step. Use --no-autoloader --no-scripts
+# because there is no app source code yet.
+COPY composer* $PROJECT_DIR
+RUN source /opt/rh/rh-php56/enable \
+    && composer install --no-autoloader --no-scripts
+
+# Copy the project's source code.
+COPY . $PROJECT_DIR
+# Do composer install again to apply autoloader and scripts sections.
+RUN source /opt/rh/rh-php56/enable \
+    && composer install
+
+# Remove default apache configs
+RUN rm -f /opt/rh/httpd24/root/etc/httpd/conf.d/{autoindex,userdir,welcome}.conf
+# Copy custom apache configs for the project
+COPY etc/httpd/ /opt/rh/httpd24/root/etc/httpd/
+
+CMD ["/opt/rh/httpd24/root/usr/sbin/httpd", "-D", "FOREGROUND"]

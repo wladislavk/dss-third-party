@@ -683,6 +683,9 @@ module.exports = {
     events: {
         'get-header-info': function() {
             this.$broadcast('update-header-info', this.headerInfo);
+        },
+        'getting-data-from-modal': function(data) {
+            this.$broadcast('transfer-data-from-modal', data);
         }
     },
     computed: {

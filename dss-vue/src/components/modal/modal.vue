@@ -47,13 +47,16 @@
             'edit-contact'    : editContact
         },
         methods: {
+            isEditedPopup: function(status) {
+                this.popupEdit = status;
+            },
+            passDataToComponents: function(data) {
+                this.$dispatch('getting-data-from-modal', data);
+            },
             setComponentParameters: function(parameters) {
                 this.$nextTick(function() {
                     this.$broadcast('setting-component-params', parameters);
                 });
-            },
-            passDataToParent: function(data) {
-                this.$dispatch('get-data-from-modal', data);
             },
             centering: function() {
                 var windowWidth  = document.documentElement.clientWidth;
@@ -83,7 +86,7 @@
                     // this.popupEdit = false;
 
                     this.currentView = component;
-                    this.popupEdit   = true;
+                    this.popupEdit   = false;
 
                     //loads popup only if it is disabled
                     if (this.popupStatus == 0) {
@@ -110,6 +113,7 @@
                         $("#backgroundPopup").fadeOut("slow");
                         $("#popupContact").fadeOut("slow");
                         this.popupStatus = 0;
+                        this.popupEdit = false;
                         this.currentView = 'empty';
                     }
                 }

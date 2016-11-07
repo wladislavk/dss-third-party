@@ -104,7 +104,7 @@ module.exports = {
         }
     },
     events: {
-        'get-data-from-modal': function(data) {
+        'transfer-data-from-modal': function(data) {
             this.$set('message', data.message);
         }
     },

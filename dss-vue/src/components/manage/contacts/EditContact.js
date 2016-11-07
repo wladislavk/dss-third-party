@@ -11,7 +11,8 @@ module.exports = {
             pendingVOB                     : {},
             contactSentLetters             : [],
             contactPendingLetters          : [],
-            message                        : ''
+            message                        : '',
+            wasContactDataReceived         : false
         }
     },
     mixins: [handlerMixin],
@@ -53,6 +54,14 @@ module.exports = {
                         this.handleErrors('getContactPendingLetters', response);
                     });
             }
+        },
+        'contact': {
+            handler: function() {
+                if (this.wasContactDataReceived) {
+                    this.$parent.$parent.$refs.modal.isEditedPopup(true);
+                }
+            },
+            deep: true
         }
     },
     events: {
@@ -65,6 +74,10 @@ module.exports = {
 
                     if (data) {
                         this.$set('contact', data);
+
+                        this.$nextTick(function() {
+                            this.wasContactDataReceived = true;
+                        });
                     }
                 }, function(response) {
                     this.handleErrors('getContactTypesOfPhysician', response);
@@ -120,12 +133,13 @@ module.exports = {
         onClickSubmit: function() {
             this.$set('message', '');
 
-            this.$parent.passDataToParent({ message: 'test' });
-/*
             if (this.componentParams.contactId > 0) {
                 this.updateContact(this.contact)
                     .then(function(response) {
-                        this.$parent.message = 'Edited Successfully';
+                        // pass message to parent component
+                        this.$parent.passDataToComponents({ message: 'Edited Successfully' });
+                        this.$parent.$parent.$refs.modal.isEditedPopup(false);
+                        this.$parent.$parent.$refs.modal.disable();
                         this.$route.router.go('/manage/contacts');
                     }, function(response) {
                         if (response.status == 422) {
@@ -169,17 +183,17 @@ module.exports = {
                                     }
                                 });
                             } else {
-                                this.$parent.message = 'Added Successfully';
+                                this.$parent.passDataToComponents({ message: 'Added Successfully' });
                                 this.$route.router.go('/manage/contacts');
                             }
 
-                            this.$parent.$refs.modal.disable();
+                            this.$parent.$parent.$refs.modal.isEditedPopup(false);
+                            this.$parent.$parent.$refs.modal.disable();
                         }
                     }, function(response) {
                         this.handleErrors('insertContact', response);
                     });
             }
-*/
         },
         onClickConfirm: function(type, contactId) {
             var message = '';

@@ -106,6 +106,13 @@ module.exports = {
     events: {
         'transfer-data-from-modal': function(data) {
             this.$set('message', data.message);
+            this.$nextTick(function() {
+                var self = this;
+
+                setTimeout(function() {
+                    self.$set('message', '');
+                }, 3000);
+            });
         }
     },
     computed: {

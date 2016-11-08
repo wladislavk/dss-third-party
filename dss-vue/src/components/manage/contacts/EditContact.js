@@ -144,13 +144,20 @@ module.exports = {
                     }, function(response) {
                         if (response.status == 422) {
                             var data = response.data.data;
-                            var message = '';
+                            var message = '<ul style="text-align: left">';
 
                             for (var key in data.errors) {
-                                message += key + ': ' + data.errors[key].join('; ') + "\n";
+                                message += '<li>' + key + ': ' + data.errors[key].join(' ') + '</li>';
                             }
 
-                            this.$set('message', message);
+                            message += '</ul>';
+
+                            swal({
+                                title : "Wrong data!",
+                                text  : message,
+                                html  : true,
+                                type  : "error"
+                            });
                         } else {
                             this.handleErrors('updateContact', response);
                         }
@@ -257,9 +264,25 @@ module.exports = {
             return contact.firstname + ' ' + contact.middlename + ' ' + contact.lastname;
         },
         updateContact: function(contact) {
+            var phoneFields = ['phone1', 'phone2', 'fax'];
+
+            phoneFields.forEach(el => {
+                if (this.contact.hasOwnProperty(el)) {
+                    this.contact[el] = this.contact[el].replace(/[^0-9]/g, '');
+                }
+            });
+
             return this.$http.put(window.config.API_PATH + 'contacts/' + contact.contactid, contact);
         },
         insertContact: function(contact) {
+            var phoneFields = ['phone1', 'phone2', 'fax'];
+
+            phoneFields.forEach(el => {
+                if (this.contact.hasOwnProperty(el)) {
+                    this.contact[el] = this.contact[el].replace(/[^0-9]/g, '');
+                }
+            });
+
             return this.$http.post(window.config.API_PATH + 'contacts', contact);
         },
         getLetterInfoByDocId: function() {

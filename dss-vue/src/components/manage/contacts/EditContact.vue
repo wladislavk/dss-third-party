@@ -393,6 +393,7 @@
                         <select
                             v-model="contact.status"
                             name="status"
+                            id="status"
                             class="tbox"
                             tabindex="22"
                         >

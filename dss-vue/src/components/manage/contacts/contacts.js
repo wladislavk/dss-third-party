@@ -170,6 +170,9 @@ module.exports = {
         onClickPatients: function(contactId) {
             $('#ref_pat_' + contactId).toggle();
         },
+        onClickAddNewContact: function() {
+            this.$parent.$refs.modal.display('edit-contact');
+        },
         onClickQuickView: function (contactId) {
             this.$parent.$refs.modal.display('view-contact');
             this.$parent.$refs.modal.setComponentParameters({ contactId: contactId });

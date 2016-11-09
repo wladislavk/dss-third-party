@@ -1,6 +1,11 @@
 <style src="../../../assets/css/manage/popup.css" scoped></style>
 <style scoped>
     #modal-content {
+        background: url(assets/images/tall.jpg);
+        background-repeat: repeat-x;
+        background-color: rgb(191, 207, 220);
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
         width: 100%;
         height: 100%;
         overflow: auto;

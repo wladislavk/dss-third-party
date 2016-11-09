@@ -47,9 +47,11 @@
                 >{{ contact.name }}</li>
             </ul>
         </div>
-        <button style="margin-right:10px; float:right;" onclick="loadPopup('add_contact.php')" class="addButton">
-            Add New Contact
-        </button>
+        <button
+            style="margin-right:10px; float:right;"
+            v-on:click.prevent="onClickAddNewContact"
+            class="addButton"
+        >Add New Contact</button>
         &nbsp;&nbsp;
     </div>
     <br />

@@ -4,7 +4,7 @@ module.exports = {
     data: function() {
         return {
             componentParams                : {},
-            contactTypesOfPhysician        : '',
+            contactTypesOfPhysician        : [],
             contact                        : {},
             activeNonCorporateContactTypes : [],
             activeQualifiers               : [],
@@ -12,7 +12,9 @@ module.exports = {
             contactSentLetters             : [],
             contactPendingLetters          : [],
             message                        : '',
-            wasContactDataReceived         : false
+            wasContactDataReceived         : false,
+            showNationalProviderId         : true,
+            showName                       : true
         }
     },
     mixins: [handlerMixin],
@@ -27,6 +29,18 @@ module.exports = {
             });
 
             return this.contact;
+        },
+        googleLink: function() {
+            var link = 'http://google.com/search?q=' + 
+                this.contact.firstname + '+' +
+                this.contact.lastname + '+' +
+                this.contact.company + '+' +
+                this.contact.add1 + '+' +
+                this.contact.city + '+' +
+                this.contact.state + '+' +
+                this.contact.zip;
+
+            return link;
         }
     },
     watch: {
@@ -55,6 +69,21 @@ module.exports = {
                     });
             }
         },
+        'contact.contacttypeid': function() {
+            if (this.contactTypesOfPhysician.indexOf(this.contact.contacttypeid) > -1) {
+                this.$set('contact.salutation', 'Dr.');
+                this.$set('showName', true);
+                this.$set('showNationalProviderId', true);
+            } else if (this.contact.contacttypeid == 11) {
+                this.$set('contact.firstname', '');
+                this.$set('contact.lastname', '');
+                this.$set('showName', false);
+                this.$set('showNationalProviderId', false);
+            } else if (this.contact.contacttypeid > 0) {
+                this.$set('showName', true);
+                this.$set('showNationalProviderId', false);
+            }
+        },
         'contact': {
             handler: function() {
                 if (this.wasContactDataReceived) {
@@ -68,31 +97,33 @@ module.exports = {
         'setting-component-params': function(parameters) {
             this.componentParams = parameters;
 
-            this.getContact(this.componentParams.contactId)
-                .then(function(response) {
-                    var data = response.data.data;
+            if (this.componentParams.contactId > 0) {
+                this.getContact(this.componentParams.contactId)
+                    .then(function(response) {
+                        var data = response.data.data;
 
-                    if (data) {
-                        this.$set('contact', data);
+                        if (data) {
+                            this.$set('contact', data);
 
-                        this.$nextTick(function() {
-                            this.wasContactDataReceived = true;
-                        });
-                    }
-                }, function(response) {
-                    this.handleErrors('getContactTypesOfPhysician', response);
-                });
+                            this.$nextTick(function() {
+                                this.wasContactDataReceived = true;
+                            });
+                        }
+                    }, function(response) {
+                        this.handleErrors('getContact', response);
+                    });
 
-            this.getPendingVOBsByContactId(this.componentParams.contactId)
-                .then(function(response) {
-                    var data = response.data.data;
+                this.getPendingVOBsByContactId(this.componentParams.contactId)
+                    .then(function(response) {
+                        var data = response.data.data;
 
-                    if (data.length) {
-                        this.$set('pendingVOB', data);
-                    }
-                }, function(response) {
-                    this.handleErrors('getPendingVOBsByContactId', response);
-                });
+                        if (data.length) {
+                            this.$set('pendingVOB', data);
+                        }
+                    }, function(response) {
+                        this.handleErrors('getPendingVOBsByContactId', response);
+                    });
+            }
         }
     },
     ready: function() {
@@ -100,8 +131,8 @@ module.exports = {
             .then(function(response) {
                 var data = response.data.data;
 
-                if (data) {
-                    this.$set('contactTypesOfPhysician', data);
+                if (data.physician_types) {
+                    this.$set('contactTypesOfPhysician', data.physician_types.split(','));
                 }
             }, function(response) {
                 this.handleErrors('getContactTypesOfPhysician', response);
@@ -143,21 +174,7 @@ module.exports = {
                         this.$route.router.go('/manage/contacts');
                     }, function(response) {
                         if (response.status == 422) {
-                            var data = response.data.data;
-                            var message = '<ul style="text-align: left">';
-
-                            for (var key in data.errors) {
-                                message += '<li>' + key + ': ' + data.errors[key].join(' ') + '</li>';
-                            }
-
-                            message += '</ul>';
-
-                            swal({
-                                title : "Wrong data!",
-                                text  : message,
-                                html  : true,
-                                type  : "error"
-                            });
+                            this.displayErrorResponseFromAPI(response.data.data);
                         } else {
                             this.handleErrors('updateContact', response);
                         }
@@ -168,7 +185,7 @@ module.exports = {
                         var data = response.data.data;
 
                         if (data) {
-                            this.createWelcomeLetter(data.inserted_contact_id, this.contact.contacttypeid)
+                            this.createWelcomeLetter(data.contactid, this.contact.contacttypeid)
                                 .then(function(response) {
                                     var data = response.data.data;
 
@@ -198,9 +215,29 @@ module.exports = {
                             this.$parent.$parent.$refs.modal.disable();
                         }
                     }, function(response) {
-                        this.handleErrors('insertContact', response);
+                        if (response.status == 422) {
+                            this.displayErrorResponseFromAPI(response.data.data);
+                        } else {
+                            this.handleErrors('updateContact', response);
+                        }
                     });
             }
+        },
+        displayErrorResponseFromAPI: function(data) {
+            var message = '<ul style="text-align: left">';
+
+            for (var key in data.errors) {
+                message += '<li>' + key + ': ' + data.errors[key].join(' ') + '</li>';
+            }
+
+            message += '</ul>';
+
+            swal({
+                title : "Wrong data!",
+                text  : message,
+                html  : true,
+                type  : "error"
+            });
         },
         onClickConfirm: function(type, contactId) {
             var message = '';

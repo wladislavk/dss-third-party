@@ -189,14 +189,18 @@ module.exports = {
                                 .then(function(response) {
                                     var data = response.data.data;
 
-                                    if (data) {
-                                        alert(data.message);
+                                    if (data.message) {
+                                        swal({
+                                            title : "",
+                                            text  : data.message,
+                                            type  : "info"
+                                        });
                                     }
                                 }, function(response) {
                                     this.handleErrors('createWelcomeLetter', response);
                                 });
 
-                            if (this.componentParams.activePat != '') {
+                            if (this.componentParams.activePat) {
                                 this.$route.router.go({
                                     path: '/add/patient',
                                     query: {
@@ -298,7 +302,10 @@ module.exports = {
             return this.$http.post(window.config.API_PATH + 'letters/delivered-for-contact', data);
         },
         getFullName: function(contact) {
-            return contact.firstname + ' ' + contact.middlename + ' ' + contact.lastname;
+            var middlename = contact.middlename ? contact.middlename + ' ' : '';
+            var fullname = contact.firstname + ' ' + middlename + contact.lastname;
+
+            return fullname;
         },
         updateContact: function(contact) {
             var phoneFields = ['phone1', 'phone2', 'fax'];
@@ -351,7 +358,7 @@ module.exports = {
                 contact_type_id : contactTypeId
             };
 
-            return this.$http.post(window.config.API_PATH + 'letters/create-welcome-letter')
+            return this.$http.post(window.config.API_PATH + 'letters/create-welcome-letter', data)
         }
     }
 }

@@ -227,7 +227,7 @@
                                     <div>
                                         <span>
                                             <input
-                                                v-model="filteredContact.phone1"
+                                                v-model="contact.phone1"
                                                 id="phone1"
                                                 name="phone1"
                                                 type="text"
@@ -240,7 +240,7 @@
                                         </span>
                                         <span>
                                             <input
-                                                v-model="filteredContact.phone2"
+                                                v-model="contact.phone2"
                                                 id="phone2"
                                                 name="phone2"
                                                 type="text"
@@ -253,7 +253,7 @@
                                         </span>
                                         <span>
                                             <input
-                                                v-model="filteredContact.fax"
+                                                v-model="contact.fax"
                                                 id="fax"
                                                 name="fax"
                                                 v-el:fax

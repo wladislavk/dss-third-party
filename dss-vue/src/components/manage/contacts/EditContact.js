@@ -5,7 +5,12 @@ module.exports = {
         return {
             componentParams                : {},
             contactTypesOfPhysician        : [],
-            contact                        : {},
+            contact                        : {
+                email  : '',
+                phone1 : '',
+                phone2 : '',
+                fax    : ''
+            },
             activeNonCorporateContactTypes : [],
             activeQualifiers               : [],
             pendingVOB                     : {},
@@ -19,17 +24,6 @@ module.exports = {
     },
     mixins: [handlerMixin],
     computed: {
-        filteredContact: function() {
-            var phoneFields = ['phone1', 'phone2', 'fax'];
-
-            phoneFields.forEach(el => {
-                if (this.contact.hasOwnProperty(el)) {
-                    this.contact[el] = this.contact[el].replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
-                }
-            });
-
-            return this.contact;
-        },
         googleLink: function() {
             var link = 'http://google.com/search?q=' + 
                 this.contact.firstname + '+' +
@@ -83,6 +77,15 @@ module.exports = {
                 this.$set('showName', true);
                 this.$set('showNationalProviderId', false);
             }
+        },
+        'contact.phone1': function() {
+            this.$set('contact.phone1', this.contact.phone1.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'));
+        },
+        'contact.phone2': function() {
+            this.$set('contact.phone2', this.contact.phone2.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'));
+        },
+        'contact.fax': function() {
+            this.$set('contact.fax', this.contact.fax.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'));
         },
         'contact': {
             handler: function() {
@@ -277,12 +280,12 @@ module.exports = {
             }
         },
         onPreferredContactChange: function() {
-            if (this.contact.preferredcontact == 'email' && this.contact.email == '') {
+            if (this.contact.preferredcontact == 'email' && this.contact.email.length == 0) {
                 alert("You must enter an email address to use email as the preferred contact method.");
 
                 this.$set('contact.preferredcontact', '');
                 this.$els.email.focus();
-            } else if (this.contact.preferredcontact == 'fax' && this.contact.fax == '') {
+            } else if (this.contact.preferredcontact == 'fax' && this.contact.fax.length == 0) {
                 alert("You must enter a fax number to use email as the preferred contact method.");
 
                 this.$set('contact.preferredcontact', '');

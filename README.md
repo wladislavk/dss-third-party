@@ -44,4 +44,19 @@ It has a entrypoint script which is going to:
 - Create self-signes SSL sertificates for a domain specified by `HTTPD_SERVER_NAME` environment variable
 - Run `httpd` in foreground
 
+## Make
+
+Makefile provides shortcuts to build images:
+
+- `make base` to build base image
+- `make all` to build everything required to start a cluster
+
 ## Compose
+
+There is a `docker-compose.yml` file which has the following services described:
+
+- `db` is a mysql database container based on custom *mysql* image from *ds3-private01*
+- `loader` is a container to run application from *ds3-private02* repository (which code base is strongly coupled with legacy *ds3-private01* and api from *ds3-private03*)
+- `api` is a container running *api* application from *ds3-private03*
+
+**NOTE** this setup implies that all repositories are clone in one root.

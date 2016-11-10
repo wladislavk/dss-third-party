@@ -59,17 +59,8 @@ RUN set -xe \
     && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer \
 
-    # Remove default httpd configs and create TLS sertificates.
-    && rm -f ${ETC_HTTPD}/conf.d/{autoindex,userdir,welcome}.conf \
-    && mkdir ${ETC_HTTPD}/ssl \
-    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout ${ETC_HTTPD}/ssl/tls.key \
-        -out ${ETC_HTTPD}/ssl/tls.crt \
-        -subj "/C=US" \
-    && echo "s:$\(SSLCertificateKeyFile\).*$:\1 ${ETC_HTTPD}/ssl/tls.key:" \
-    && sed -i \
-        -e "s:$\(SSLCertificateKeyFile\).*$:\1 ${ETC_HTTPD}/ssl/tls.key:" \
-        -e "s:$\(SSLCertificateFile\).*$:\1 ${ETC_HTTPD}/ssl/tls.crt:" \
-            ${ETC_HTTPD}/conf.d/ssl.conf
+    # Remove default httpd configs
+    && rm -f ${ETC_HTTPD}/conf.d/{autoindex,userdir,welcome}.conf
 
-CMD ["/opt/rh/httpd24/root/usr/sbin/httpd", "-D", "FOREGROUND"]
+COPY docker-entrypoint.sh /usr/sbin/
+CMD /usr/sbin/docker-entrypoint.sh

@@ -95,7 +95,7 @@ class Letter extends Model implements Resource, Repository
             ->first();
     }
 
-    public function getContactSentLetters(contactId = 0)
+    public function getContactSentLetters($contactId = 0)
     {
         return $this->delivered()
             ->where(function($query) {
@@ -104,7 +104,7 @@ class Letter extends Model implements Resource, Repository
             })->get();
     }
 
-    public function getContactPendingLetters(contactId = 0)
+    public function getContactPendingLetters($contactId = 0)
     {
         return $this->nonDelivered()
             ->where(function($query) {
@@ -120,7 +120,7 @@ class Letter extends Model implements Resource, Repository
         $deleted = '0';
 
         $data = [
-            'templateid'     => $templateId
+            'templateid'     => $templateId,
             'generated_date' => Carbon::now(),
             'delivered'      => $delivered,
             'docid'          => $docId,

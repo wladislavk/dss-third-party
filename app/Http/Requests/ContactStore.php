@@ -14,7 +14,7 @@ class ContactStore extends Request
     public function rules()
     {
         return [
-            'docid'                => 'required|integer',
+            'docid'                => 'integer',
             'salutation'           => 'string',
             'lastname'             => 'required|string',
             'firstname'            => 'required|string',

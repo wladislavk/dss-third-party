@@ -140,7 +140,7 @@ class LettersController extends Controller
         $templateId = $request->input('template_id') ?: 0;
         $contactTypeId = $request->input('contact_type_id') ?: 0;
 
-        if ($letterInfo->use_letters && $letterInfo->intro_letters) {
+        if ($letterInfo && $letterInfo->use_letters && $letterInfo->intro_letters) {
             $contactType = $contactTypeResource->find($contactTypeId);
 
             if ($contactType && $contactType->physician == 1) {

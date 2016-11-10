@@ -14,7 +14,7 @@ class ContactUpdate extends Request
     public function rules()
     {
         return [
-            'docid'                => 'sometimes|required|integer',
+            'docid'                => 'integer',
             'salutation'           => 'string',
             'lastname'             => 'sometimes|required|string',
             'firstname'            => 'sometimes|required|string',

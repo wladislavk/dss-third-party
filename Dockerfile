@@ -12,9 +12,12 @@ RUN source /opt/rh/rh-php56/enable \
 
 # Copy the project's source code.
 COPY . $PROJECT_DIR
-# Do composer install again to apply autoloader and scripts sections.
-RUN source /opt/rh/rh-php56/enable \
-    && composer install
+RUN set -x \
+    # Do composer install again to apply autoloader and scripts sections.
+    && source /opt/rh/rh-php56/enable \
+    && composer install \
+    # Fix permissions
+    && chown apache storage/logs
 
 # Copy custom apache configs for the project
 COPY etc/httpd/ ${ETC_HTTPD}

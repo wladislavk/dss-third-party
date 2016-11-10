@@ -1,6 +1,6 @@
 .PHONY: base
 base:
-	docker build -t ds3_base .
+	docker build -t ds3-base .
 
 .PHONY: all
 all: base

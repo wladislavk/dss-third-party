@@ -1,38 +1,40 @@
 FROM centos:6.7
 
-ARG ETC_HTTPD=/opt/rh/httpd24/root/etc/httpd
-RUN yum update -y \
+ENV ETC_HTTPD=/opt/rh/httpd24/root/etc/httpd
+RUN set -xe \
+    yum update -y \
+
+    # Install EPEL and SCL repos
+    && yum --enablerepo=extras install -y \
+        epel-release \
+        centos-release-scl \
+
     # Install php 5.6 and httpd 2.4 using SCL repo.
-    && yum --enablerepo=extras install -y centos-release-scl \
     && yum --enablerepo=centos-sclo-rh install -y \
         httpd24 \
         httpd24-mod_ssl \
         rh-php56 \
         rh-php56-php \
+        rh-php56-php-bcmath \
+        rh-php56-php-cli \
+        rh-php56-php-common \
         rh-php56-php-gd \
-        rh-php56-php-mcrypt \
         rh-php56-php-mbstring \
-        rh-php56-php-xml \
+        rh-php56-php-mysqlnd \
+        rh-php56-php-opcache \
         rh-php56-php-pdo \
-        rh-php56-php-mysql \
-        rh-php56-php-mysqli \
+        rh-php56-php-process \
         rh-php56-php-tidy \
+        rh-php56-php-xml \
 
-    # Remove default httpd configs and create TLS sertificates.
-    && rm -f ${ETC_HTTPD}/conf.d/{autoindex,userdir,welcome}.conf \
-    && mkdir ${ETC_HTTPD}/ssl \
-    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout ${ETC_HTTPD}/ssl/tls.key \
-        -out ${ETC_HTTPD}/ssl/tls.crt \
-        -subj "/C=US" \
-    && echo "s:$\(SSLCertificateKeyFile\).*$:\1 ${ETC_HTTPD}/ssl/tls.key:" \
-    && sed -i \
-        -e "s:$\(SSLCertificateKeyFile\).*$:\1 ${ETC_HTTPD}/ssl/tls.key:" \
-        -e "s:$\(SSLCertificateFile\).*$:\1 ${ETC_HTTPD}/ssl/tls.crt:" \
-            ${ETC_HTTPD}/conf.d/ssl.conf \
+    # Install mcrypt from php56more by Remi Collet, because CentsOS-SCL doesn't
+    # heve this library in their repo. Here is answer why this happened:
+    # http://stackoverflow.com/a/34824192/456517
+    && rpm -Uvh https://www.softwarecollections.org/en/scls/remi/php56more/epel-6-x86_64/download/remi-php56more-epel-6-x86_64.noarch.rpm \
+    && yum --enablerepo=epel,remi-php56more-epel-6-x86_64 install -y \
+        more-php56-php-mcrypt \
 
     # Install TCPDF from EPEL repo.
-    && yum --enablerepo=extras install -y epel-release \
     && yum --enablerepo=epel install -y \
         php-tcpdf \
         php-tcpdf-dejavu-sans-fonts \
@@ -55,7 +57,20 @@ RUN yum update -y \
     # Instal composer using php 5.6
     && source /opt/rh/rh-php56/enable \
     && curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
+    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer \
+
+    # Remove default httpd configs and create TLS sertificates.
+    && rm -f ${ETC_HTTPD}/conf.d/{autoindex,userdir,welcome}.conf \
+    && mkdir ${ETC_HTTPD}/ssl \
+    && openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        -keyout ${ETC_HTTPD}/ssl/tls.key \
+        -out ${ETC_HTTPD}/ssl/tls.crt \
+        -subj "/C=US" \
+    && echo "s:$\(SSLCertificateKeyFile\).*$:\1 ${ETC_HTTPD}/ssl/tls.key:" \
+    && sed -i \
+        -e "s:$\(SSLCertificateKeyFile\).*$:\1 ${ETC_HTTPD}/ssl/tls.key:" \
+        -e "s:$\(SSLCertificateFile\).*$:\1 ${ETC_HTTPD}/ssl/tls.crt:" \
+            ${ETC_HTTPD}/conf.d/ssl.conf
 
 ARG PROJECT_DIR=/var/www/html/api/
 WORKDIR $PROJECT_DIR

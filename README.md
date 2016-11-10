@@ -2,6 +2,33 @@
 
 This repositry contains base docker image for *DS3* project development. It also contains scripts to run all projects as a bunch of containers
 
+## Quickstart
+
+To build and run all containers you should clone all repos into one directory
+
+```
+$ ls -l
+drwxr-xr-x  ds3-private01
+drwxr-xr-x  ds3-private02
+drwxr-xr-x  ds3-private03
+drwxr-xr-x  ds3-private04-Docker
+```
+
+Build and run all containers with two commands
+
+```bash
+make all
+docker-compose up -d
+```
+
+Patch you DNS
+
+```bash
+sudo echo 127.0.0.1 loader.ds3soft.dev api.ds3soft.dev >> /etc/hosts
+```
+
+Go to a browser and get access to https://loader.ds3soft.dev
+
 ## Base Image
 
 Base image is built on top of `centos:6.7` and users `SCL` repos to install `php56` and `httpd24`. Here is the list installed software, required for *DS3* projects runtime:

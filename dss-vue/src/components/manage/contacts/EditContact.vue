@@ -410,7 +410,7 @@
                                 * Required Fields
                             </span><br />
                             <a
-                                :href="googleLink"
+                                href="{{ googleLink ? googleLink : '#' }}"
                                 id="google_link"
                                 target="_blank"
                                 style="float:left;"

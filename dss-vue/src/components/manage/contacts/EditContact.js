@@ -25,16 +25,21 @@ module.exports = {
     mixins: [handlerMixin],
     computed: {
         googleLink: function() {
-            var link = 'http://google.com/search?q=' + 
-                this.contact.firstname + '+' +
-                this.contact.lastname + '+' +
-                this.contact.company + '+' +
-                this.contact.add1 + '+' +
-                this.contact.city + '+' +
-                this.contact.state + '+' +
-                this.contact.zip;
+            var link = 'http://google.com/search?q=';
+            var requiredFields = [
+                'firstname', 'lastname', 'company',
+                'add1', 'city', 'state', 'zip'
+            ];
 
-            return link;
+            var notEmptyRequiredFields = [];
+            var self = this;
+            requiredFields.forEach(function(el, index) {
+                if (self.contact[el]) {
+                    notEmptyRequiredFields.push(self.contact[el]);
+                }
+            });
+
+            return link + notEmptyRequiredFields.join('+');
         }
     },
     watch: {

@@ -14,14 +14,15 @@ drwxr-xr-x  ds3-private03
 drwxr-xr-x  ds3-private04-Docker
 ```
 
-Build and run all containers with two commands
+Navigate to the Docker repo, then build and run all containers with two commands
 
 ```bash
+cd ds3-private04-Docker
 make all
 docker-compose up -d
 ```
 
-Patch you DNS
+Patch your DNS hosts file
 
 ```bash
 sudo echo 127.0.0.1 loader.ds3soft.dev api.ds3soft.dev >> /etc/hosts

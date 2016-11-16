@@ -21,3 +21,6 @@ RUN set -x \
 
 # Copy custom apache configs for the project
 COPY etc/httpd/ ${ETC_HTTPD}
+
+COPY docker-entrypoint.sh /usr/sbin/
+RUN chmod +x /usr/sbin/docker-entrypoint.sh

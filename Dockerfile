@@ -63,4 +63,5 @@ RUN set -xe \
     && rm -f ${ETC_HTTPD}/conf.d/{autoindex,userdir,welcome}.conf
 
 COPY docker-entrypoint.sh /usr/sbin/
+RUN chmod +x /usr/sbin/docker-entrypoint.sh
 CMD /usr/sbin/docker-entrypoint.sh

@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash
 
 . /opt/rh/httpd24/enable
 

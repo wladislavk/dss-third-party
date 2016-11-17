@@ -62,6 +62,7 @@ RUN set -xe \
     # Remove default httpd configs
     && rm -f ${ETC_HTTPD}/conf.d/{autoindex,userdir,welcome}.conf
 
+ENV DOCUMENT_ROOT=/opt/rh/httpd24/root/var/www/html
 COPY docker-entrypoint.sh /usr/sbin/
 RUN chmod +x /usr/sbin/docker-entrypoint.sh
 CMD /usr/sbin/docker-entrypoint.sh

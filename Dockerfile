@@ -1,17 +1,17 @@
 FROM ds3-base
 
-ARG PROJECT_DIR=/var/www/html/api/
-WORKDIR $PROJECT_DIR
+ENV API_PATH=${DOCUMENT_ROOT}/api
+WORKDIR $API_PATH
 
 # Copy composer manifest before the rest source codes. To be able to install
 # all requirements and cache this build step. Use --no-autoloader --no-scripts
 # because there is no app source code yet.
-COPY composer* $PROJECT_DIR
+COPY composer* $API_PATH/
 RUN source /opt/rh/rh-php56/enable \
     && composer install --no-autoloader --no-scripts
 
 # Copy the project's source code.
-COPY . $PROJECT_DIR
+COPY . $API_PATH
 RUN set -x \
     # Do composer install again to apply autoloader and scripts sections.
     && source /opt/rh/rh-php56/enable \

@@ -1,15 +1,16 @@
-<style>
-    <link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
-    <link href="css/task.css" rel="stylesheet" type="text/css" />
-    <link href="css/notifications.css" rel="stylesheet" type="text/css" />
-    <link href="css/search-hints.css" rel="stylesheet" type="text/css">
-    <link href="css/top.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="css/letter-form.css" type="text/css" />
-    <link rel="stylesheet" href="css/form.css" type="text/css" />
-    <link rel="stylesheet" href="css/add_patient.css?v=<?= time() ?>" type="text/css" media="screen" />
-</style>
+<style src="../../../../../assets/css/manage/admin.css" scoped></style>
+<!-- <style src="../../../../../assets/css/manage/task.css" scoped></style> -->
+<!-- <style src="../../../../../assets/css/manage/notifications.css" scoped></style> -->
+<!-- <style src="../../../../../assets/css/manage/search-hints.css" scoped></style> -->
+<!-- <style src="../../../../../assets/css/manage/top.css" scoped></style> -->
+<!-- <style src="../../../../../assets/css/manage/letter-form.css" scoped></style> -->
+<style src="../../../../../assets/css/manage/form.css" scoped></style>
+<!-- <style src="../../../../../assets/css/manage/add_patient.css" scoped></style> -->
 
 <template>
+    <div v-if="message" align="center" class="red">
+        {{ message }}
+    </div>
     <div
         v-if="patientNotifications"
         v-for="notification in patientNotifications"
@@ -18,7 +19,7 @@
         <a
             href="#"
             class="close_but"
-            onclick="remove_notification('<?php echo $not['id']; ?>');return false;"
+            onclick="remove_notification('{{ notification.id }}');return false;"
         >X</a>
     </div>
     <form
@@ -45,9 +46,9 @@
                         value=" <?php echo $but_text?> Patient"
                         class="button"
                     />
-                    <template v-if="$doc_patient_portal && $use_patient_portal">
+                    <template v-if="showSendingEmails">
                         <input
-                            v-if="$themyarray['registration_status']==1 || $themyarray['registration_status']==0"
+                            v-if="patient.registration_status == 1 || patient.registration_status == 0"
                             type="submit"
                             name="sendReg"
                             value="Send Registration Email"
@@ -61,9 +62,9 @@
                             class="button"
                         />
                     </template>
-                    <template v-if="count($bu_q) > 0">
+                    <template v-if="homeSleepTestCompanies.length > 0">
                         <a
-                            v-if="!empty($pat_hst_num_uncompleted) && $pat_hst_num_uncompleted > 0"
+                            v-if="headerInfo.uncompletedHomeSleepTests.length > 0"
                             href="#"
                             onclick="alert('Patient has existing HST with status <?php echo $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;"
                             class="button"
@@ -86,20 +87,18 @@
                             <div id="profile_image" style="float:right; width:270px;">
                                 <span style="float:right">
                                     <a
-                                        v-if="$num_face==0"
+                                        v-if="!profilePhoto"
                                         href="#"
                                         onclick="loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;"
                                     >
                                         <img src="images/add_patient_photo.png" />
                                     </a>
-                                    <template v-else>
-                                        <img
-                                            v-for="image in $itype_my"
-                                            src="display_file.php?f={{ image.image_file }}"
-                                            style="max-height:150px;max-width:200px;"
-                                            style="float:right;"
-                                        />
-                                    </template>
+                                    <img
+                                        v-else
+                                        src="display_file.php?f={{ profilePhoto.image_file }}"
+                                        style="max-height:150px;max-width:200px;"
+                                        style="float:right;"
+                                    />
                                 </span>
                             </div>
                             <label class="desc" id="title0" for="Field0" style="float:left;">
@@ -108,21 +107,25 @@
                             </label>
                             <div style="float:left; clear:left;">
                                 <span>
-                                    <select name="salutation" style="width:80px;" >
-                                        <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
-                                        <option value="Mrs." <?php if($salutation == "Mrs."){echo "selected='selected'";} ?>>Mrs.</option>
-                                        <option value="Ms." <?php if($salutation == "Ms."){echo "selected='selected'";} ?>>Ms.</option>
-                                        <option value="Dr." <?php if($salutation == "Dr."){echo "selected='selected'";} ?>>Dr.</option>
+                                    <select
+                                        v-model="patient.salutation"
+                                        name="salutation"
+                                        style="width:80px;"
+                                    >
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        <option value="Dr.">Dr.</option>
                                     </select>
                                     <label for="salutation">Salutation</label>
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.firstname"
                                         id="firstname"
                                         name="firstname"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $firstname?>"
                                         maxlength="255"
                                         style="width:150px;"
                                     />
@@ -130,11 +133,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.lastname"
                                         id="lastname"
                                         name="lastname"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $lastname?>"
                                         maxlength="255"
                                         style="width:190px;"
                                     />
@@ -142,11 +145,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.middlename"
                                         id="middlename"
                                         name="middlename"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $middlename?>"
                                         style="width:30px;"
                                         maxlength="1"
                                     />
@@ -154,11 +157,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.preferred_name"
                                         id="preferred_name"
                                         name="preferred_name"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $preferred_name?>"
                                         maxlength="255"
                                         style="width:150px"
                                     />
@@ -168,11 +171,11 @@
                             <div style="float:left">
                                 <span>
                                     <input
+                                        v-model="patient.home_phone"
                                         id="home_phone"
                                         name="home_phone"
                                         type="text"
                                         class="phonemask field text addr tbox"
-                                        value="<?php echo $home_phone?>"
                                         maxlength="255"
                                         style="width:100px;"
                                     />
@@ -183,11 +186,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.cell_phone"
                                         id="cell_phone"
                                         name="cell_phone"
                                         type="text"
                                         class="phonemask field text addr tbox"
-                                        value="<?php echo $cell_phone?>"
                                         maxlength="255"
                                         style="width:100px;"
                                     />
@@ -195,11 +198,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.work_phone"
                                         id="work_phone"
                                         name="work_phone"
                                         type="text"
                                         class="extphonemask field text addr tbox"
-                                        value="<?php echo $work_phone?>"
                                         maxlength="255"
                                         style="width:150px;"
                                     />
@@ -207,11 +210,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.email"
                                         id="email"
                                         name="email"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $email?>"
                                         maxlength="255"
                                         style="width:275px;"
                                     />
@@ -220,27 +223,39 @@
                             </div>
                             <div style="clear:both">
                                 <span style="width:140px;">
-                                    <select id="best_time" name="best_time">
-                                        <option value="">Please Select</option>
-                                        <option value="morning" <?php echo ($best_time=='morning')?'selected="selected"':''; ?>>Morning</option>
-                                        <option value="midday" <?php echo ($best_time=='midday')?'selected="selected"':''; ?>>Mid-Day</option>
-                                        <option value="evening" <?php echo ($best_time=='evening')?'selected="selected"':''; ?>>Evening</option>
+                                    <select
+                                        v-model="patient.best_time"
+                                        id="best_time"
+                                        name="best_time"
+                                    >
+                                        <option value="" selected disabled>Please Select</option>
+                                        <option value="morning">Morning</option>
+                                        <option value="midday">Mid-Day</option>
+                                        <option value="evening">Evening</option>
                                     </select>
                                     <label for="best_time">Best time to contact</label>
                                 </span>
                                 <span style="width:150px;">
-                                    <select id="best_number" name="best_number">
-                                        <option value="">Please Select</option>
-                                        <option value="home" <?php echo ($best_number=='home')?'selected="selected"':''; ?>>Home Phone</option>
-                                        <option value="work" <?php echo ($best_number=='work')?'selected="selected"':''; ?>>Work Phone</option>
-                                        <option value="cell" <?php echo ($best_number=='cell')?'selected="selected"':''; ?>>Cell Phone</option>
+                                    <select
+                                        v-model="patient.best_number"
+                                        id="best_number"
+                                        name="best_number"
+                                    >
+                                        <option value="" selected disabled>Please Select</option>
+                                        <option value="home">Home Phone</option>
+                                        <option value="work">Work Phone</option>
+                                        <option value="cell">Cell Phone</option>
                                     </select>
                                     <label for="best_number">Best number to contact</label>
                                 </span>
                                 <span style="width:160px;">
-                                    <select id="preferredcontact" name="preferredcontact" >
-                                        <option value="paper" <?php if($preferredcontact == 'paper') echo " selected";?>>Paper Mail</option>
-                                        <option value="email" <?php if($preferredcontact == 'email') echo " selected";?>>Email</option>
+                                    <select
+                                        v-model="patient.preferredcontact"
+                                        id="preferredcontact"
+                                        name="preferredcontact"
+                                    >
+                                        <option value="paper">Paper Mail</option>
+                                        <option value="email">Email</option>
                                     </select>
                                     <label>Preferred Contact Method</label>
                                 </span>
@@ -254,8 +269,8 @@
                                         value="Patient can't receive text message?"
                                         class="button"
                                     />
-                                    <template v-if="$themyarray['registration_status']==1">
-                                        PIN Code: <?php echo $themyarray['access_code']; ?> 
+                                    <template v-if="patient.registration_status == 1">
+                                        PIN Code: {{ patient.access_code }}
                                     </template>
                                 </div>
                             </div>
@@ -274,11 +289,11 @@
                             <div>
                                 <span>
                                     <input
+                                        v-model="patient.add1"
                                         id="add1"
                                         name="add1"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $add1?>"
                                         style="width:225px;"
                                         maxlength="255"
                                     />
@@ -286,11 +301,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.add2"
                                         id="add2"
                                         name="add2"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $add2?>"
                                         style="width:175px;"
                                         maxlength="255"
                                     />
@@ -298,11 +313,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.city"
                                         id="city"
                                         name="city"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $city?>"
                                         style="width:200px;"
                                         maxlength="255"
                                     />
@@ -310,11 +325,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.state"
                                         id="state"
                                         name="state"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $state?>"
                                         style="width:25px;"
                                         maxlength="2"
                                     />
@@ -322,22 +337,25 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.zip"
                                         id="zip"
                                         name="zip"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $zip?>"
                                         style="width:80px;"
                                         maxlength="255"
                                     />
                                     <label for="zip">Zip / Post Code </label>
                                 </span>
-                                <span v-if="$num_loc >= 1">
-                                    <select name="location">
-                                        <option value="">Select</option>
+                                <span v-if="docLocations.length >= 1">
+                                    <select
+                                        v-model="patient.location"
+                                        name="location"
+                                    >
+                                        <option value="" selected disabled>Select</option>
                                         <option
-                                            v-for="location in $loc_q"
-                                            {{ ($location == location.id || (location.default_location == 1 && !isset($_GET['pid']))) ? 'selected="selected"' : '' }}
+                                            v-for="location in docLocations"
+                                            {{ (patient.location == location.id || (location.default_location == 1 && !isset($_GET['pid']))) ? 'selected="selected"' : '' }}
                                             :value="location.id"
                                         >{{ location.location }}</option>
                                     </select>
@@ -355,40 +373,40 @@
                             <div>
                                 <span>
                                     <input
+                                        v-model="patient.dob"
                                         id="dob"
                                         name="dob"
                                         type="text"
                                         class="field text addr tbox calendar"
-                                        value="<?php echo $dob?>"
                                         style="width:100px;"
                                         maxlength="255"
                                         onChange="validateDate('dob');"
-                                        value="example 11/11/1234"
                                     />
                                     <span id="req_0" class="req">*</span>
                                     <label for="dob">Birthday</label>
                                 </span>
                                 <span>
                                     <select
+                                        v-model="patient.gender"
                                         name="gender"
                                         id="gender"
                                         class="field text addr tbox"
                                         style="width:100px;"
                                     >
-                                        <option value="">Select</option>
-                                        <option value="Male" <?php if($gender == 'Male') echo " selected";?>>Male</option>
-                                        <option value="Female" <?php if($gender == 'Female') echo " selected";?>>Female</option>
+                                        <option value="" selected disabled>Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
                                     <span id="req_0" class="req">*</span>
                                     <label for="gender">Gender</label>
                                 </span>
                                 <span style="width:150px">
                                     <input
+                                        v-model="patient.ssn"
                                         id="ssn"
                                         name="ssn"
                                         type="text"
                                         class="ssnmask field text addr tbox"
-                                        value="<?php echo $ssn?>"
                                         maxlength="255"
                                         style="width:100px;"
                                     />
@@ -396,6 +414,7 @@
                                 </span>
                                 <span>
                                     <select
+                                        v-model="patient.feet"
                                         name="feet"
                                         id="feet"
                                         class="field text addr tbox"
@@ -403,17 +422,17 @@
                                         tabindex="5"
                                         onchange="cal_bmi();"
                                     >
-                                        <option value="0">Feet</option>
+                                        <option value="0" selected disabled>Feet</option>
                                         <option
-                                            v-for="1 in 9"
+                                            v-for="i in 9"
                                             :value="i"
-                                            {{ ($feet == $i) ? 'selected' : '' }}
                                         >{{ i }}</option>
                                     </select>
                                     <label for="feet">Height: Feet</label>
                                 </span>
                                 <span>
                                     <select
+                                        v-model="patient.inches"
                                         name="inches"
                                         id="inches"
                                         class="field text addr tbox"
@@ -421,17 +440,17 @@
                                         tabindex="6"
                                         onchange="cal_bmi();"
                                     >
-                                        <option value="-1">Inches</option>
+                                        <option value="-1" selected disabled>Inches</option>
                                         <option
-                                            v-for="0 in 12"
+                                            v-for="i in inches"
                                             :value="i"
-                                            {{ ($inches!='' && $inches == $i) ? 'selected' : '' }}
                                         >{{ i }}</option>
                                     </select>
                                     <label for="inches">Inches</label>
                                 </span>
                                 <span>
                                     <select
+                                        v-model="patient.weight"
                                         name="weight"
                                         id="weight"
                                         class="field text addr tbox"
@@ -439,22 +458,21 @@
                                         tabindex="7"
                                         onchange="cal_bmi();"
                                     >
-                                        <option value="0">Weight</option>
+                                        <option value="0" selected disabled>Weight</option>
                                         <option
-                                            v-for="80 in 500"
+                                            v-for="i in weight"
                                             :value="i"
-                                            {{ ($weight == $i) ? 'selected' : '' }}
                                         >{{ i }}</option>
                                     </select>
                                     <label for="weight">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 </span>
                                 <span style="color:#000000; padding-top:2px;">BMI</span>
                                     <input
+                                        v-model="patient.bmi"
                                         id="bmi"
                                         name="bmi"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $bmi?>"
                                         tabindex="8"
                                         maxlength="255"
                                         style="width:50px;"
@@ -1062,7 +1080,7 @@
                                         onchange="update_insurance_type()"
                                         maxlength="255"
                                         style="width:200px;"
-                                    />
+                                    >
                                         <option value=""></option>
                                         <option value="1" <?php if($p_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                         <option value="2" <?php if($p_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
@@ -1446,7 +1464,7 @@
                                         class="field text addr tbox"
                                         maxlength="255"
                                         style="width:200px;"
-                                    />
+                                    >
                                         <option value=""></option>
                                         <option value="1" <?php if($s_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
                                         <option value="2" <?php if($s_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
@@ -1918,6 +1936,61 @@
                         <option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
                     </select>
                     <br />&nbsp;
+                </td>
+            </tr>
+            <template v-if="$doc_patient_portal">
+                <tr bgcolor="#FFFFFF">
+                    <td valign="top" class="frmhead">
+                        Portal Status
+                        <br />
+                        <span id="ppAlert" style="font-weight:normal;font-size:12px; <?php echo ($status == 2)?'':'display:none;'; ?>">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
+                    </td>
+                    <td valign="top" class="frmdata">
+                        <select
+                            name="use_patient_portal"
+                            class="tbox"
+                        >
+                          <option value="1" <?php if($use_patient_portal == 1) echo " selected";?>>Active</option>
+                          <option value="0" <?php if($use_patient_portal!='' && $use_patient_portal == 0) echo " selected";?>>In-Active</option>
+                        </select>
+                        <br />&nbsp;
+                    </td>
+                </tr>
+            </template>
+            <tr>
+                <td valign="top">
+                    <input
+                        v-if="!$result"
+                        id="introletter"
+                        name="introletter"
+                        type="checkbox"
+                        value="1"
+                    > Send Intro Letter to DSS patient
+                    <template v-else>
+                        DSS Intro Letter Sent to Patient {{ $date_generated }}
+                    </template>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right">
+                    <span class="red">
+                      * Required Fields
+                    </span><br />
+                    <input
+                        type="hidden"
+                        name="patientsub"
+                        value="1"
+                    />
+                    <input
+                        type="hidden"
+                        name="ed"
+                        value="<?php echo $themyarray["patientid"]?>"
+                    />
+                    <input
+                        type="submit"
+                        value=" <?php echo $but_text?> Patient"
+                        class="button"
+                    />
                 </td>
             </tr>
         </table>

@@ -19,7 +19,7 @@ services:
         API_DIR: ds3-private03
     env_file: ../ds3-private02/.env.example
     environment:
-      APP_URL: https://loader.ds3soft.dev/
+      APP_URL: https://loader.ds3soft.dev:9443/
       API_URL: https://api.ds3soft.dev:8443/
       PHP_PATH: /opt/rh/rh-php56/root/bin/php
       HTTPD_SERVER_NAME: loader.ds3soft.dev

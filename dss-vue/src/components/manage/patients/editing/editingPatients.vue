@@ -504,26 +504,27 @@
                             <div>
                                 <span>
                                     <select
+                                        v-model="patient.marital_status"
                                         name="marital_status"
                                         id="marital_status"
                                         class="field text addr tbox"
                                         style="width:130px;"
                                     >
-                                        <option value="">Select</option>
-                                        <option value="Married" <?php if($marital_status == 'Married') echo " selected";?>>Married</option>
-                                        <option value="Single" <?php if($marital_status == 'Single') echo " selected";?>>Single</option>
-                                        <option value="Life Partner" <?php if($marital_status == 'Life Partner') echo " selected";?>>Life Partner</option>
-                                        <option value="Minor" <?php if($marital_status == 'Minor') echo " selected";?>>Minor</option>
+                                        <option value="" selected disabled>Select</option>
+                                        <option value="Married">Married</option>
+                                        <option value="Single">Single</option>
+                                        <option value="Life Partner">Life Partner</option>
+                                        <option value="Minor">Minor</option>
                                     </select>
                                     <label for="marital_status">Marital Status</label>
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.partner_name"
                                         id="partner_name"
                                         name="partner_name"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $partner_name?>"
                                         maxlength="255"
                                     />
                                     <label for="partner_name">Partner/Guardian Name</label>
@@ -538,6 +539,7 @@
                             <div>
                                 <span>
                                     <textarea
+                                        v-model="patient.patient_notes"
                                         name="patient_notes"
                                         id="patient_notes"
                                         class="field text addr tbox"
@@ -550,24 +552,28 @@
                                 <span>
                                     <label for="alert_text" style="display: inline">Patient alert (display text notification at top of chart)?</label>
                                     <input
+                                        v-model="patient.display_alert"
                                         type="radio"
                                         name="display_alert"
                                         value="1"
                                         onclick="$('#alert_text').show()"
-                                        {{ ($display_alert) ? 'checked="checked"' : '' }}
                                     >Yes
                                     <input
+                                        v-model="patient.display_alert"
                                         type="radio"
                                         name="display_alert"
                                         value="0"
                                         onclick="$('#alert_text').hide()"
-                                        {{ (!$display_alert) ? 'checked="checked"' : '' }}
                                     >No
                                 </span>
                                 <textarea
+                                    v-model="patient.alert_text"
+                                    :class="{
+                                        'show-alert-text' : patient.display_alert,
+                                        'hide-alert-text' : !patient.display_alert
+                                    }"
                                     name="alert_text"
                                     id="alert_text"
-                                    {{ ($display_alert) ? 'class="show-alert-text"' : 'class="hide-alert-text"' }}
                                 >{{ $alert_text }}</textarea>
                             </div>
                         </li>
@@ -584,11 +590,11 @@
                             <div>
                                 <span>
                                     <input
+                                        v-model="patient.emergency_name"
                                         id="emergency_name"
                                         name="emergency_name"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $emergency_name?>"
                                         maxlength="255"
                                         style="width:200px;"
                                     />
@@ -596,11 +602,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.emergency_relationship"
                                         id="emergency_relationship"
                                         name="emergency_relationship"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $emergency_relationship?>"
                                         maxlength="255"
                                         style="width:150px;"
                                     />
@@ -608,11 +614,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.emergency_number"
                                         id="emergency_number"
                                         name="emergency_number"
                                         type="text"
                                         class="extphonemask field text addr tbox"
-                                        value="<?php echo $emergency_number?>"
                                         maxlength="255"
                                         style="width:150px;"
                                     />
@@ -636,64 +642,76 @@
                             <div>
                                 <div style="float:left;">
                                     <input
+                                        v-model="patient.copyreqdate"
                                         id="copyreqdate"
                                         name="copyreqdate"
                                         type="text"
                                         class="field text addr tbox calendar"
-                                        value="<?php echo $copyreqdate; ?>"
                                         style="width:100px;"
                                         maxlength="255"
                                         onChange="validateDate('copyreqdate');"
-                                        value="example 11/11/1234"
                                     />
                                     <label>Date</label>
                                 </div>
                                 <div style="float:left;" id="referred_source_div">
                                     <input
+                                        v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ ($referred_source==DSS_REFERRED_PATIENT||$referred_source==DSS_REFERRED_PHYSICIAN)?'checked="checked"':'' }}
+                                        {{ (patient.referred_source == constants.DSS_REFERRED_PATIENT ||
+                                            patient.referred_source == constants.DSS_REFERRED_PHYSICIAN) ? 'checked="checked"' : '' }}
                                         type="radio"
                                         value="person"
                                         onclick="show_referredby('person', '')"
                                     /> Person
                                     <input
+                                        v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ ($referred_source==DSS_REFERRED_MEDIA)?'checked="checked"':'' }}
+                                        {{ (patient.referred_source == constants.DSS_REFERRED_MEDIA) ? 'checked="checked"' : '' }}
                                         type="radio"
-                                        value="<?php echo DSS_REFERRED_MEDIA; ?>"
+                                        :value="constants.DSS_REFERRED_MEDIA"
                                         onclick="show_referredby('notes', <?php echo DSS_REFERRED_MEDIA; ?>)"
                                     /> {{ $dss_referred_labels[DSS_REFERRED_MEDIA] }}
                                     <input
+                                        v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ ($referred_source==DSS_REFERRED_FRANCHISE)?'checked="checked"':'' }}
+                                        {{ (patient.referred_source == constants.DSS_REFERRED_FRANCHISE) ? 'checked="checked"' : '' }}
                                         type="radio"
-                                        value="<?php echo DSS_REFERRED_FRANCHISE; ?>"
+                                        :value="constants.DSS_REFERRED_FRANCHISE"
                                         onclick="show_referredby('notes',<?php echo DSS_REFERRED_FRANCHISE; ?>)"
                                     /> {{ $dss_referred_labels[DSS_REFERRED_FRANCHISE] }}
                                     <input
+                                        v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ ($referred_source==DSS_REFERRED_DSSOFFICE)?'checked="checked"':'' }}
+                                        {{ (patient.referred_source == constants.DSS_REFERRED_DSSOFFICE) ? 'checked="checked"' : '' }}
                                         type="radio"
-                                        value="<?php echo DSS_REFERRED_DSSOFFICE; ?>"
+                                        :value="constants.DSS_REFERRED_DSSOFFICE"
                                         onclick="show_referredby('notes',<?php echo DSS_REFERRED_DSSOFFICE; ?>)"
                                     /> {{ $dss_referred_labels[DSS_REFERRED_DSSOFFICE] }}
                                     <input
+                                        v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ ($referred_source==DSS_REFERRED_OTHER)?'checked="checked"':'' }}
+                                        {{ (patient.referred_source == constants.DSS_REFERRED_OTHER) ? 'checked="checked"' : '' }}
                                         type="radio"
-                                        value="<?php echo DSS_REFERRED_OTHER; ?>"
+                                        :value="constants.DSS_REFERRED_OTHER"
                                         onclick="show_referredby('notes',<?php echo DSS_REFERRED_OTHER; ?>)"
                                     /> {{ $dss_referred_labels[DSS_REFERRED_OTHER] }}
                                 </div>
                                 <div style="clear:both;float:left;">
-                                    <div id="referred_person" <?php echo ($referred_source!=DSS_REFERRED_PATIENT && $referred_source!=DSS_REFERRED_PHYSICIAN )?'style="display:none;margin-left:100px;"':'style="margin-left:100px"'; ?>> 
+                                    <div
+                                        id="referred_person"
+                                        {{ (patient.referred_source != constants.DSS_REFERRED_PATIENT &&
+                                            patient.referred_source != constants.DSS_REFERRED_PHYSICIAN) ?
+                                            'style="display:none;margin-left:100px;"' :
+                                            'style="margin-left:100px"' }}
+                                    >
                                         <input
+                                            v-model="patient.referredby_name"
                                             type="text"
                                             id="referredby_name"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="referredby_name"
-                                            value="<?php echo (!empty($referred_name))?$referred_name:'Type referral name'; ?>"
+                                            :value="patient.referredby_name ? patient.referredby_name : 'Type referral name'"
                                             style="width:300px;"
                                         />
                                         <input
@@ -709,26 +727,21 @@
                                                 <li class="template" style="display:none">Doe, John S</li>
                                             </ul>
                                         </div>
-                                        <div id="referred_notes" <?php echo ($referred_source!=DSS_REFERRED_MEDIA && $referred_source!=DSS_REFERRED_FRANCHISE && $referred_source!=DSS_REFERRED_DSSOFFICE && $referred_source!=DSS_REFERRED_OTHER )?'style="display:none;margin-left:200px;"':'style="margin-left:200px;"'; ?>>
+                                        <div
+                                            id="referred_notes"
+                                            {{ (patient.referred_source != constants.DSS_REFERRED_MEDIA &&
+                                                patient.referred_source != constants.DSS_REFERRED_FRANCHISE &&
+                                                patient.referred_source != constants.DSS_REFERRED_DSSOFFICE &&
+                                                patient.referred_source != constants.DSS_REFERRED_OTHER) ?
+                                                'style="display:none;margin-left:200px;"' :
+                                                'style="margin-left:200px;"' }}
+                                        >
                                             <textarea
+                                                v-model="patient.referred_notes"
                                                 name="referred_notes"
                                                 style="width:300px;"
-                                            >
-                                                {{ $referred_notes }}
-                                            </textarea>
+                                            ></textarea>
                                         </div>
-                                        <input
-                                            type="hidden"
-                                            name="referred_by"
-                                            id="referred_by"
-                                            value="<?php echo $referred_by;?>"
-                                        />
-                                        <input
-                                            type="hidden"
-                                            name="referred_source"
-                                            id="referred_source"
-                                            value="<?php echo $referred_source;?>"
-                                        />
                                     </div>
                                 </div>
                             </div>
@@ -751,11 +764,11 @@
                             <div>
                                 <span>
                                     <input
+                                        v-model="patient.employer"
                                         id="employer"
                                         name="employer"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $employer; ?>"
                                         style="width:325px;"
                                         maxlength="255"
                                     />
@@ -763,11 +776,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.emp_phone"
                                         id="emp_phone"
                                         name="emp_phone"
                                         type="text"
                                         class="extphonemask field text addr tbox"
-                                        value="<?php echo $emp_phone?>"
                                         style="width:150px;"
                                         maxlength="255"
                                     />
@@ -775,11 +788,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.emp_fax"
                                         id="emp_fax"
                                         name="emp_fax"
                                         type="text"
                                         class="phonemask field text addr tbox"
-                                        value="<?php echo $emp_fax?>"
                                         style="width:120px;"
                                         maxlength="255"
                                     />
@@ -789,11 +802,11 @@
                             <div>
                                 <span>
                                     <input
+                                        v-model="patient.emp_add1"
                                         id="emp_add1"
                                         name="emp_add1"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $emp_add1?>"
                                         style="width:225px;"
                                         maxlength="255"
                                     />
@@ -801,11 +814,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.emp_add2"
                                         id="emp_add2"
                                         name="emp_add2"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $emp_add2?>"
                                         style="width:175px;"
                                         maxlength="255"
                                     />
@@ -813,11 +826,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.emp_city"
                                         id="emp_city"
                                         name="emp_city"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $emp_city?>"
                                         style="width:200px;"
                                         maxlength="255"
                                     />
@@ -825,11 +838,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.emp_state"
                                         id="emp_state"
                                         name="emp_state"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $emp_state?>"
                                         style="width:80px;"
                                         maxlength="255"
                                     />
@@ -837,11 +850,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.emp_zip"
                                         id="emp_zip"
                                         name="emp_zip"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $emp_zip?>"
                                         style="width:80px;"
                                         maxlength="255"
                                     />
@@ -858,17 +871,18 @@
                     <font style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</font>
                 </td>
             </tr>
-            <template v-if="$api_r['use_eligible_api']==1">
+            <template v-if="headerInfo.docInfo.use_eligible_api == 1">
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         Insurance Co.
                         <input
+                            v-model="patient.ins_payer_name"
                             type="text"
                             id="ins_payer_name"
                             onclick="updateval(this)"
                             autocomplete="off"
                             name="ins_payer_name"
-                            value="<?php echo ($p_m_eligible_payer_id!='')?$p_m_eligible_payer_id.' - '.$p_m_eligible_payer_name:'Type insurance payer name'; ?>"
+                            :value="eligiblePayerId ? (eligiblePayerId + ' - ' + eligiblePayerName) : 'Type insurance payer name'"
                             style="width:300px;"
                         />
                         <br />
@@ -877,12 +891,6 @@
                                 <li class="template" style="display:none"></li>
                             </ul>
                         </div>
-                        <input
-                            type="hidden"
-                            name="p_m_eligible_payer"
-                            id="p_m_eligible_payer"
-                            value="<?php echo $p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>"
-                        />
                     </td>
                 </tr>
             </template>
@@ -892,30 +900,30 @@
                         <li id="foli8" class="complex">
                             <label class="desc" id="title0" for="Field0">
                                 Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <template v-if="$exclusive_billing">
-                                    {{ $billing_co . ' filing insurance' }}
+                                <template v-if="exclusiveBilling">
+                                    {{ billingCompany + ' filing insurance' }}
                                 </template>
                                 <a
                                     v-else
                                     onclick="return false;"
                                     class="plain"
-                                    title="Select YES if you would like <?php echo $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
-                                >{{ $billing_co }} filing insurance?</a>
+                                    title="Select YES if you would like {{ billingCompany }} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
+                                >{{ billingCompany }} filing insurance?</a>
                                 <input
+                                    v-mode="patient.p_m_dss_file_yes"
                                     id="p_m_dss_file_yes"
                                     class="dss_file_radio"
                                     type="radio"
                                     name="p_m_dss_file"
                                     value="1"
-                                    {{ ($p_m_dss_file == '1') ? "checked='checked'" : '' }}
                                 >Yes&nbsp;&nbsp;&nbsp;&nbsp;
                                 <input
+                                    v-mode="patient.p_m_dss_file_yes"
                                     id="p_m_dss_file_no"
                                     type="radio"
                                     class="dss_file_radio"
                                     name="p_m_dss_file"
                                     value="2"
-                                    {{ ($p_m_dss_file == '2') ? "checked='checked'" : '' }}
                                 >No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <a
                                     onclick="return false"
@@ -923,61 +931,62 @@
                                     title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO."
                                 >Insured Address same as Pt. address?</a>
                                 <input
+                                    v-mode="patient.p_m_same_address"
                                     type="radio"
                                     onclick="$('#p_m_address_fields').hide();"
                                     name="p_m_same_address"
                                     value="1"
-                                    {{ ($p_m_same_address !== '2') ? "checked='checked'" : '' }}
                                 > Yes
                                 <input
+                                    v-mode="patient.p_m_same_address"
                                     type="radio"
                                     onclick="$('#p_m_address_fields').show();"
                                     name="p_m_same_address"
                                     value="2"
-                                    {{ ($p_m_same_address == '2') ? "checked='checked'" : '' }}
                                 > No
                             </label>
                             <div>
                                 <span>
                                     <select
+                                        v-mode="patient.p_m_relation"
                                         id="p_m_relation"
                                         name="p_m_relation"
                                         class="field text addr tbox"
                                         style="width:200px;"
                                     >
-                                        <option value="" <?php if($p_m_relation == '') echo " selected";?>>None</option>
-                                        <option value="Self" <?php if($p_m_relation == 'Self') echo " selected";?>>Self</option>
-                                        <option value="Spouse" <?php if($p_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
-                                        <option value="Child" <?php if($p_m_relation == 'Child') echo " selected";?>>Child</option>
-                                        <option value="Other" <?php if($p_m_relation == 'Other') echo " selected";?>>Other</option>
+                                        <option value="" selected disabled>None</option>
+                                        <option value="Self">Self</option>
+                                        <option value="Spouse">Spouse</option>
+                                        <option value="Child">Child</option>
+                                        <option value="Other">Other</option>
                                     </select>
                                     <label for="work_phone">Relationship to insured party</label>
                                 </span>
                                 <span>
                                     <input
+                                        v-mode="patient.p_m_partyfname"
                                         id="p_m_partyfname"
                                         name="p_m_partyfname"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $p_m_partyfname?>"
                                         maxlength="255"
                                         style="width:150px;"
                                     />
                                     <input
+                                        v-mode="patient.p_m_partymname"
                                         id="p_m_partymname"
                                         name="p_m_partymname"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $p_m_partymname?>"
                                         maxlength="255"
                                         style="width:50px;"
                                     />
                                     <input
+                                        v-mode="patient.p_m_partylname"
                                         id="p_m_partylname"
                                         name="p_m_partylname"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $p_m_partylname?>"
                                         maxlength="255"
                                         style="width:150px;"
                                     />
@@ -985,11 +994,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-mode="patient.ins_dob"
                                         id="ins_dob"
                                         name="ins_dob"
                                         type="text"
                                         class="field text addr tbox calendar"
-                                        value="<?php echo $ins_dob?>"
                                         maxlength="255"
                                         style="width:150px;"
                                         onChange="validateDate('ins_dob');"
@@ -998,14 +1007,15 @@
                                 </span>
                                 <span>
                                     <select
+                                        v-mode="patient.ins_dob"
                                         name="p_m_gender"
                                         id="p_m_gender"
                                         class="field text addr tbox"
                                         style="width:100px;"
                                     >
-                                        <option value="">Select</option>
-                                        <option value="Male" <?php if($p_m_gender == 'Male') echo " selected";?>>Male</option>
-                                        <option value="Female" <?php if($p_m_gender == 'Female') echo " selected";?>>Female</option>
+                                        <option value="" selected disabled>Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
                                     <span id="req_0" class="req">*</span>
                                     <label for="p_m_gender">Insured Gender</label>
@@ -1014,16 +1024,19 @@
                             <div></div>
                         </li>
                     </ul>
-                    <ul id="p_m_address_fields" <?php echo ($p_m_same_address == "1")?'style="display:none;"':''; ?>>
+                    <ul
+                        id="p_m_address_fields"
+                        {{ (patient.p_m_same_address == "1") ? 'style="display:none;"' : '' }}
+                    >
                         <li id="foli8" class="complex">
                             <div>
                                 <span>
                                     <input
+                                        v-model="patient.p_m_address"
                                         id="p_m_address"
                                         name="p_m_address"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $p_m_address?>"
                                         style="width:225px;"
                                         maxlength="255"
                                     />
@@ -1031,11 +1044,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.p_m_city"
                                         id="p_m_city"
                                         name="p_m_city"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $p_m_city?>"
                                         style="width:200px;"
                                         maxlength="255"
                                     />
@@ -1043,11 +1056,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.p_m_state"
                                         id="p_m_state"
                                         name="p_m_state"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $p_m_state?>"
                                         style="width:80px;"
                                         maxlength="2"
                                     />
@@ -1055,11 +1068,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.p_m_zip"
                                         id="p_m_zip"
                                         name="p_m_zip"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $p_m_zip?>"
                                         style="width:80px;"
                                         maxlength="255"
                                     />
@@ -1074,6 +1087,7 @@
                             <div>
                                 <span>
                                     <select
+                                        v-model="patient.p_m_zip"
                                         id="p_m_ins_type"
                                         name="p_m_ins_type"
                                         class="field text addr tbox"
@@ -1081,38 +1095,38 @@
                                         maxlength="255"
                                         style="width:200px;"
                                     >
-                                        <option value=""></option>
-                                        <option value="1" <?php if($p_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
-                                        <option value="2" <?php if($p_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
-                                        <option value="3" <?php if($p_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
-                                        <option value="4" <?php if($p_m_ins_type == '4'){ echo " selected='selected'";} ?>>Champ VA</option>
-                                        <option value="5" <?php if($p_m_ins_type == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
-                                        <option value="6" <?php if($p_m_ins_type == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
-                                        <option value="7" <?php if($p_m_ins_type == '7'){ echo " selected='selected'";} ?>>Other</option>
+                                        <option value="" selected disabled>Insurance Type</option>
+                                        <option value="1">Medicare</option>
+                                        <option value="2">Medicaid</option>
+                                        <option value="3">Tricare Champus</option>
+                                        <option value="4">Champ VA</option>
+                                        <option value="5">Group Health Plan</option>
+                                        <option value="6">FECA BLKLUNG</option>
+                                        <option value="7">Other</option>
                                     </select>
                                     <label for="p_m_ins_type">Insurance Type</label>
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.p_m_ins_ass"
                                         class="p_m_ins_ass"
                                         id="p_m_ins_ass_yes"
                                         type="radio"
                                         name="p_m_ins_ass"
                                         value="Yes"
-                                        {{ ($p_m_ins_ass == 'Yes') ? "checked='checked'" : '' }}
                                     >Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;
                                     <input
+                                        v-model="patient.p_m_ins_ass"
                                         class="p_m_ins_ass pay_to_patient_radio"
                                         id="p_m_ins_ass_no"
                                         type="radio"
                                         name="p_m_ins_ass"
                                         value="No"
-                                        {{ ($p_m_ins_ass == 'No') ? "checked='checked'" : '' }}
                                     >Payment to Patient
                                 </span>
                                 <span style="float:right">
                                     <button
-                                        v-if="!$image"
+                                        v-if="!insuranceCardImage"
                                         id="p_m_ins_card"
                                         onclick="Javascript: loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;"
                                         class="addButton"
@@ -1137,6 +1151,7 @@
                             <div>
                                 <span>
                                     <select
+                                        v-model="patient.p_m_ins_co"
                                         id="p_m_ins_co"
                                         name="p_m_ins_co"
                                         class="field text addr tbox"
@@ -1144,12 +1159,11 @@
                                         onchange="updateNumber('p_m_ins_phone');"
                                         style="width:200px;"
                                     >
-                                        <option value="">Select Insurance Company</option>
+                                        <option value="" selected disabled>Select Insurance Company</option>
                                         <option
-                                            v-if="$ins_contact_qry_run"
-                                            v-for="contact in $ins_contact_qry_run"
+                                            v-if="insuranceContacts.length"
+                                            v-for="contact in insuranceContacts"
                                             :value="contact.contactid"
-                                            {{ ($p_m_ins_co == contact.contactid) ? "selected='selected'" : '' }}
                                         >{{ contact.company }}</option>
                                     </select>
                                     <label for="p_m_ins_co">Insurance Co.</label><br />
@@ -1163,11 +1177,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.p_m_party"
                                         id="p_m_party"
                                         name="p_m_ins_id"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $p_m_ins_id?>"
                                         maxlength="255"
                                         style="width:190px;"
                                     />
@@ -1175,11 +1189,12 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.p_m_ins_grp"
                                         id="p_m_ins_grp"
                                         name="p_m_ins_grp"
                                         type="text"
                                         class="field text addr tbox"
-                                        {{ ($p_m_ins_type == '1') ? 'value="NONE" readonly="readonly"' : 'value="<?php echo $p_m_ins_grp?>"' }}
+                                        {{ (patient.p_m_ins_type == '1') ? 'value="NONE" readonly="readonly"' : '' }}
                                         maxlength="255"
                                         style="width:100px;"
                                     />
@@ -1187,11 +1202,12 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.p_m_ins_plan"
                                         id="p_m_ins_plan"
                                         name="p_m_ins_plan"
                                         type="text"
                                         class="field text addr tbox"
-                                        {{ ($p_m_ins_type == '1') ? 'value="" readonly="readonly"' : 'value="<?php echo $p_m_ins_plan?>"' }}
+                                        {{ (patient.p_m_ins_type == '1') ? 'readonly="readonly"' : '' }}
                                         maxlength="255"
                                         style="width:200px;"
                                     />
@@ -1199,6 +1215,7 @@
                                 </span>
                                 <span>
                                     <textarea
+                                        v-model="patient.p_m_ins_phone"
                                         id="p_m_ins_phone"
                                         name="p_m_ins_phone"
                                         class="field text addr tbox"
@@ -1224,16 +1241,18 @@
                                 <span>
                                     <label style="display:inline;">Does patient have secondary insurance?</label>
                                     <input
+                                        v-model="patient.s_m_ins"
                                         type="radio"
                                         value="Yes"
-                                        {{ ($has_s_m_ins == "Yes")?'checked="checked"':'' }}
+                                        {{ (patient.has_s_m_ins == "Yes") ? 'checked="checked"' : '' }}
                                         name="s_m_ins"
                                         onclick="$('.s_m_ins_div').show();"
                                     /> Yes
                                     <input
+                                        v-model="patient.s_m_ins"
                                         type="radio"
                                         value="No"
-                                        {{ ($has_s_m_ins != "Yes")?'checked="checked"':'' }}
+                                        {{ (patient.has_s_m_ins != "Yes") ? 'checked="checked"':'' }}
                                         name="s_m_ins"
                                         onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();"
                                     /> No
@@ -1243,17 +1262,20 @@
                     </ul>
                 </td>
             </tr>
-            <template v-if="$api_r['use_eligible_api']==1">
+            <template v-if="headerInfo.docInfo.use_eligible_api == 1">
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         Insurance Co.
                         <input
+                            v-model="patient.s_m_ins_payer_name"
                             type="text"
                             id="s_m_ins_payer_name"
                             onclick="updateval(this)"
                             autocomplete="off"
                             name="s_m_ins_payer_name"
-                            value="<?php echo ($s_m_eligible_payer_id!='')?$s_m_eligible_payer_id.' - '.$s_m_eligible_payer_name:'Type insurance payer name'; ?>"
+                            :value="patient.s_m_eligible_payer_id ?
+                                    (patient.s_m_eligible_payer_id + ' - ' + patient.s_m_eligible_payer_name) :
+                                    'Type insurance payer name'"
                             style="width:300px;"
                         />
                         <br />
@@ -1262,12 +1284,6 @@
                                 <li class="template" style="display:none"></li>
                             </ul>
                         </div>
-                        <input
-                            type="hidden"
-                            name="s_m_eligible_payer"
-                            id="s_m_eligible_payer"
-                            value="<?php echo $s_m_eligible_payer_id."-".$s_m_eligible_payer_name;?>"
-                        />
                     </td>
                 </tr>
             </template>
@@ -1275,31 +1291,36 @@
                 <td valign="top" colspan="2" class="frmhead">
                     <ul>
                         <li id="foli8" class="complex"> 
-                            <label class="desc s_m_ins_div" id="title0" for="Field0"  <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                            <label
+                                class="desc s_m_ins_div"
+                                id="title0"
+                                for="Field0"
+                                {{ patient.has_s_m_ins != "Yes" ? 'style="display:none;"' : '' }}
+                            >
                                 Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <template v-if="$exclusive_billing">
-                                    {{ $billing_co . ' filing insurance' }}
+                                <template v-if="exclusiveBilling">
+                                    {{ billingCompany . ' filing insurance' }}
                                 </template>
                                 <a
                                     onclick="return false;"
                                     class="plain"
-                                    title="Select YES if you would like <?php echo $billing_co; ?> to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
-                                >{{ $billing_co }} filing insurance?</a>
+                                    title="Select YES if you would like {{ billingCompany }} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
+                                >{{ billingCompany }} filing insurance?</a>
                                 <input
+                                    v-model="patient.dss_file_radio"
                                     id="s_m_dss_file_yes"
                                     type="radio"
                                     class="dss_file_radio"
                                     name="s_m_dss_file"
                                     value="1"
-                                    {{ ($s_m_dss_file == '1') ? "checked='checked'" : '' }}
                                 >Yes&nbsp;&nbsp;&nbsp;&nbsp;
                                 <input
+                                    v-model="patient.dss_file_radio"
                                     id="s_m_dss_file_no"
                                     type="radio"
                                     class="dss_file_radio"
                                     name="s_m_dss_file"
                                     value="2"
-                                    {{ ($s_m_dss_file == '2') ? "checked='checked'" : '' }}
                                 >No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <a
                                     onclick="return false"
@@ -1307,61 +1328,65 @@
                                     title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO."
                                 >Insured Address same as Pt. address?</a>
                                 <input
+                                    v-model="s_m_same_address"
                                     type="radio"
                                     onclick="$('#s_m_address_fields').hide();"
                                     name="s_m_same_address"
                                     value="1"
-                                    {{ ($s_m_same_address !== '2') ? "checked='checked'" : '' }}
                                 > Yes
                                 <input
+                                    v-model="s_m_same_address"
                                     type="radio"
                                     onclick="$('#s_m_address_fields').show();"
                                     name="s_m_same_address"
                                     value="2"
-                                    {{ ($s_m_same_address == '2') ? "checked='checked'" : '' }}
                                 > No
                             </label>
-                            <div class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                            <div
+                                class="s_m_ins_div"
+                                {{ patient.has_s_m_ins != "Yes" ? 'style="display:none;"' : '' }}
+                            >
                                 <span>
                                     <select
+                                        v-model="patient.s_m_relation"
                                         id="s_m_relation"
                                         name="s_m_relation"
                                         class="field text addr tbox"
                                         style="width:200px;"
                                     >
-                                        <option value="" <?php if($s_m_relation == '') echo " selected";?>>None</option>
-                                        <option value="Self" <?php if($s_m_relation == 'Self') echo " selected";?>>Self</option>
-                                        <option value="Spouse" <?php if($s_m_relation == 'Spouse') echo " selected";?>>Spouse</option>
-                                        <option value="Child" <?php if($s_m_relation == 'Child') echo " selected";?>>Child</option>
-                                        <option value="Other" <?php if($s_m_relation == 'Other') echo " selected";?>>Other</option>
+                                        <option value="" selected disabled>None</option>
+                                        <option value="Self">Self</option>
+                                        <option value="Spouse">Spouse</option>
+                                        <option value="Child">Child</option>
+                                        <option value="Other">Other</option>
                                     </select>
                                     <label for="s_m_relation">Relationship to insured party</label>
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.s_m_partyfname"
                                         id="s_m_partyfname" 
                                         name="s_m_partyfname"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_partyfname?>"
                                         maxlength="255"
                                         style="width:150px;"
                                     />
                                     <input
+                                        v-model="patient.s_m_partymname"
                                         id="s_m_partymname"
                                         name="s_m_partymname"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_partymname?>"
                                         maxlength="255"
                                         style="width:50px;"
                                     />
                                     <input
+                                        v-model="patient.s_m_partylname"
                                         id="s_m_partylname"
                                         name="s_m_partylname"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_partylname?>"
                                         maxlength="255"
                                         style="width:150px;"
                                     />
@@ -1369,11 +1394,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.ins2_dob"
                                         id="ins2_dob"
                                         name="ins2_dob"
                                         type="text"
                                         class="field text addr tbox calendar"
-                                        value="<?php echo $ins2_dob?>"
                                         maxlength="255"
                                         style="width:150px;"
                                         onChange="validateDate('ins2_dob');"
@@ -1382,14 +1407,15 @@
                                 </span>
                                 <span>
                                     <select
+                                        v-model="patient.s_m_gender"
                                         name="s_m_gender"
                                         id="s_m_gender"
                                         class="field text addr tbox"
                                         style="width:100px;"
                                     >
-                                        <option value="">Select</option>
-                                        <option value="Male" <?php if($s_m_gender == 'Male') echo " selected";?>>Male</option>
-                                        <option value="Female" <?php if($s_m_gender == 'Female') echo " selected";?>>Female</option>
+                                        <option value="" selected disabled>Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
                                     </select>
                                     <span id="req_0" class="req">*</span>
                                     <label for="s_m_gender">Insured Gender</label>
@@ -1398,16 +1424,21 @@
                             <div></div>
                         </li>
                     </ul>
-                    <ul id="s_m_address_fields" <?php echo ($s_m_same_address == "1" || $has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                    <ul
+                        id="s_m_address_fields"
+                        {{ (patient.s_m_same_address == "1" ||
+                            patient.has_s_m_ins != "Yes") ?
+                            'style="display:none;"' : ''}}
+                    >
                         <li id="foli8" class="complex">
                             <div>
                                 <span>
                                     <input
+                                        v-model="patient.s_m_address"
                                         id="s_m_address"
                                         name="s_m_address"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_address?>"
                                         style="width:225px;"
                                         maxlength="255"
                                     />
@@ -1415,11 +1446,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.s_m_city"
                                         id="s_m_city"
                                         name="s_m_city"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_city?>"
                                         style="width:200px;"
                                         maxlength="255"
                                     />
@@ -1427,11 +1458,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.s_m_state"
                                         id="s_m_state"
                                         name="s_m_state"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_state?>"
                                         style="width:80px;"
                                         maxlength="2"
                                     />
@@ -1439,11 +1470,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.s_m_zip"
                                         id="s_m_zip"
                                         name="s_m_zip"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_zip?>"
                                         style="width:80px;"
                                         maxlength="255"
                                     />
@@ -1455,9 +1486,13 @@
                     </ul>
                     <ul>
                         <li id="foli8" class="complex">
-                            <div  class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                            <div
+                                class="s_m_ins_div"
+                                {{ (patient.has_s_m_ins != "Yes") ? 'style="display:none;"' : '' }}
+                            >
                                 <span>
                                     <select
+                                        v-model="patient.s_m_ins_type"
                                         id="s_m_ins_type"
                                         name="s_m_ins_type"
                                         onchange="checkMedicare()" 
@@ -1465,36 +1500,36 @@
                                         maxlength="255"
                                         style="width:200px;"
                                     >
-                                        <option value=""></option>
-                                        <option value="1" <?php if($s_m_ins_type == '1'){ echo " selected='selected'";} ?>>Medicare</option>
-                                        <option value="2" <?php if($s_m_ins_type == '2'){ echo " selected='selected'";} ?>>Medicaid</option>
-                                        <option value="3" <?php if($s_m_ins_type == '3'){ echo " selected='selected'";} ?>>Tricare Champus</option>
-                                        <option value="4" <?php if($s_m_ins_type == '4'){ echo " selected='selected'";} ?>>Champ VA</option>
-                                        <option value="5" <?php if($s_m_ins_type == '5'){ echo " selected='selected'";} ?>>Group Health Plan</option>
-                                        <option value="6" <?php if($s_m_ins_type == '6'){ echo " selected='selected'";} ?>>FECA BLKLUNG</option>
-                                        <option value="7" <?php if($s_m_ins_type == '7'){ echo " selected='selected'";} ?>>Other</option>
+                                        <option value="" selected disabled></option>
+                                        <option value="1">Medicare</option>
+                                        <option value="2">Medicaid</option>
+                                        <option value="3">Tricare Champus</option>
+                                        <option value="4">Champ VA</option>
+                                        <option value="5">Group Health Plan</option>
+                                        <option value="6">FECA BLKLUNG</option>
+                                        <option value="7">Other</option>
                                     </select>
                                     <label for="s_m_ins_type">Insurance Type</label>
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.s_m_ins_ass"
                                         id="s_m_ins_ass_yes"
                                         type="radio"
                                         name="s_m_ins_ass"
                                         value="Yes"
-                                        {{ ($s_m_ins_ass == 'Yes') ? " checked='checked'" : '' }}
                                     >Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;
                                     <input
+                                        v-model="patient.s_m_ins_ass"
                                         id="s_m_ins_ass_no pay_to_patient_radio"
                                         type="radio"
                                         name="s_m_ins_ass"
                                         value="No"
-                                        {{ ($s_m_ins_ass == 'No') ? " checked='checked'" : '' }}
                                     >Payment to Patient
                                 </span>
                                 <span style="float:right">
                                     <button
-                                        v-if="!$image"
+                                        v-if="!insuranceCardImage"
                                         id="s_m_ins_card"
                                         onclick="Javascript: loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;"
                                         class="addButton"
@@ -1519,6 +1554,7 @@
                             <div class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
                                 <span>
                                     <select
+                                        v-model="patient.s_m_ins_co"
                                         id="s_m_ins_co"
                                         name="s_m_ins_co"
                                         class="field text addr tbox"
@@ -1526,12 +1562,11 @@
                                         style="width:200px;"
                                         onchange="updateNumber2('s_m_ins_phone')"
                                     >
-                                        <option value="">Select Insurance Company</option>
+                                        <option value="" selected disabled>Select Insurance Company</option>
                                         <option
-                                            v-if="$ins_contact_qry_run"
-                                            v-for="contact in $ins_contact_qry_run"
+                                            v-if="insuranceContacts.length > 0"
+                                            v-for="contact in insuranceContacts"
                                             :value="contact.contactid"
-                                            {{ ($s_m_ins_co == contact.contactid) ? "selected='selected'" : '' }}
                                         >{{ contact.company }}</option>
                                     </select>
                                     <label for="s_m_ins_co">Insurance Co.</label><br />
@@ -1545,11 +1580,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.s_m_ins_id"
                                         id="s_m_party"
                                         name="s_m_ins_id"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_ins_id?>"
                                         maxlength="255"
                                         style="width:190px;"
                                     />
@@ -1557,11 +1592,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.s_m_ins_grp"
                                         id="s_m_ins_grp"
                                         name="s_m_ins_grp"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_ins_grp?>"
                                         maxlength="255"
                                         style="width:100px;"
                                     />
@@ -1569,11 +1604,11 @@
                                 </span>
                                 <span>
                                     <input
+                                        v-model="patient.s_m_ins_plan"
                                         id="s_m_ins_plan"
                                         name="s_m_ins_plan"
                                         type="text"
                                         class="field text addr tbox"
-                                        value="<?php echo $s_m_ins_plan?>"
                                         maxlength="255"
                                         style="width:200px;"
                                     />
@@ -1581,6 +1616,7 @@
                                 </span>
                                 <span>
                                     <textarea
+                                        v-model="patient.s_m_ins_phone"
                                         id="s_m_ins_phone"
                                         name="s_m_ins_phone"
                                         type="text"
@@ -1619,8 +1655,11 @@
                                 <ul>
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
-                                        <div id="docpcp_static_info" style="<?php echo ($docpcp!='')?'':'display:none'; ?>">
-                                            <span id="docpcp_name_static" style="width:300px;"><?php echo $docpcp_name; ?></span>
+                                        <div
+                                            id="docpcp_static_info"
+                                            style="{{ patient.docpcp != '' ? '' : 'display:none' }}"
+                                        >
+                                            <span id="docpcp_name_static" style="width:300px;">{{ patient.docpcp_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docpcp;?>');return false;"
@@ -1633,13 +1672,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-model="patient.docpcp_name"
                                             type="text"
                                             id="docpcp_name"
                                             style="width:300px;<?php echo ($docpcp!='')?'display:none;':'';?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docpcp_name"
-                                            value="<?php echo ($docpcp!='')?$docpcp_name:'Type contact name'; ?>"
+                                            :value="patient.docpcp != '' ? patient.docpcp_name : 'Type contact name'"
                                         />
                                         <br />
                                         <div id="docpcp_hints" class="search_hints" style="display:none;">
@@ -1647,12 +1687,6 @@
                                                 <li class="template" style="display:none">Doe, John S</li>
                                             </ul>
                                         </div>
-                                        <input
-                                            type="hidden"
-                                            name="docpcp"
-                                            id="docpcp"
-                                            value="<?php echo $docpcp;?>"
-                                        />
                                     </li>
                                 </ul>
                             </td>
@@ -1662,7 +1696,11 @@
                                 <ul>
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">ENT</label>
-                                        <div id="docent_static_info" style="<?php echo ($docent!='')?'':'display:none'; ?>"><span id="docent_name_static" style="width:300px;"><?php echo $docent_name; ?></span>
+                                        <div
+                                            id="docent_static_info"
+                                            style="{{ patient.docent != '' ? '' : 'display:none' }}"
+                                        >
+                                            <span id="docent_name_static" style="width:300px;">{{ patient.docent_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docent;?>');return false;"
@@ -1675,13 +1713,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-model="patient.docent_name"
                                             type="text"
                                             id="docent_name"
                                             style="width:300px;<?php echo ($docent!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docent_name"
-                                            value="<?php echo ($docent!='')?$docent_name:'Type contact name'; ?>"
+                                            :value="patient.docent != '' ? patient.docent_name : 'Type contact name'"
                                         />
                                         <br />
                                         <div id="docent_hints" class="search_hints" style="display:none;">
@@ -1689,12 +1728,6 @@
                                                 <li class="template" style="display:none">Doe, John S</li>
                                             </ul>
                                         </div>
-                                        <input
-                                            type="hidden"
-                                            name="docent"
-                                            id="docent"
-                                            value="<?php echo $docent;?>"
-                                        />
                                     </li>
                                 </ul>
                             </td>
@@ -1704,7 +1737,11 @@
                                 <ul>
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Sleep MD</label>
-                                        <div id="docsleep_static_info" style="<?php echo ($docsleep!='')?'':'display:none'; ?>"><span id="docsleep_name_static" style="width:300px;"><?php echo $docsleep_name; ?></span>
+                                        <div
+                                            id="docsleep_static_info"
+                                            style="{{ patient.docsleep != '' ? '' : 'display:none' }}"
+                                        >
+                                            <span id="docsleep_name_static" style="width:300px;">{{ patient.docsleep_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docsleep;?>');return false;"
@@ -1717,13 +1754,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-model="patient.docsleep_name"
                                             type="text"
                                             id="docsleep_name"
                                             style="width:300px;<?php echo ($docsleep!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docsleep_name"
-                                            value="<?php echo ($docsleep!='')?$docsleep_name:'Type contact name'; ?>"
+                                            :value="patient.docsleep ? patient.docsleep_name : 'Type contact name'"
                                         />
                                         <br />
                                         <div id="docsleep_hints" class="search_hints" style="display:none;">
@@ -1731,12 +1769,6 @@
                                                 <li class="template" style="display:none">Doe, John S</li>
                                             </ul>
                                         </div>
-                                        <input
-                                            type="hidden"
-                                            name="docsleep"
-                                            id="docsleep"
-                                            value="<?php echo $docsleep;?>"
-                                        />
                                     </li>
                                 </ul>
                             </td>
@@ -1746,7 +1778,11 @@
                                 <ul>
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Dentist</label>
-                                        <div id="docdentist_static_info" style="<?php echo ($docdentist!='')?'':'display:none'; ?>"><span id="docdentist_name_static" style="width:300px;"><?php echo $docdentist_name; ?></span>
+                                        <div
+                                            id="docdentist_static_info"
+                                            style="{{ patient.docdentist != '' ? '' : 'display:none' }}"
+                                        >
+                                            <span id="docdentist_name_static" style="width:300px;">{{ patient.docdentist_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docdentist;?>');return false;"
@@ -1759,13 +1795,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-model="patient.docdentist_name"
                                             type="text"
                                             id="docdentist_name"
                                             style="width:300px;<?php echo ($docdentist!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docdentist_name"
-                                            value="<?php echo ($docdentist!='')?$docdentist_name:'Type contact name'; ?>"
+                                            :value="patient.docdentist != '' ? patient.docdentist_name : 'Type contact name'"
                                         />
                                         <br />
                                         <div id="docdentist_hints" class="search_hints" style="display:none;">
@@ -1773,12 +1810,6 @@
                                                 <li class="template" style="display:none">Doe, John S</li>
                                             </ul>
                                         </div>
-                                        <input
-                                            type="hidden"
-                                            name="docdentist"
-                                            id="docdentist"
-                                            value="<?php echo $docdentist;?>"
-                                        />
                                     </li>
                                 </ul>
                             </td>
@@ -1788,8 +1819,11 @@
                                 <ul>
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Other MD</label>
-                                        <div id="docmdother_static_info" style="<?php echo ($docmdother!='')?'':'display:none;'; ?>height:25px;">
-                                            <span id="docmdother_name_static" style="width:300px;"><?php echo $docmdother_name; ?></span>
+                                        <div
+                                            id="docmdother_static_info"
+                                            style="{{ patient.docmdother != '' ? '' : 'display:none;' }} height:25px;"
+                                        >
+                                            <span id="docmdother_name_static" style="width:300px;">{{ patient.docmdother_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother;?>');return false;"
@@ -1802,13 +1836,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-model="patient.docmdother_name"
                                             type="text"
                                             id="docmdother_name"
                                             style="width:300px;<?php echo ($docmdother!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docmdother_name"
-                                            value="<?php echo ($docmdother!='')?$docmdother_name:'Type contact name'; ?>"
+                                            :value="patient.docmdother != '' ? patient.docmdother_name : 'Type contact name'"
                                         />
                                         <a
                                             v-if="($docmdother2=='' || $docmdother3=='')"

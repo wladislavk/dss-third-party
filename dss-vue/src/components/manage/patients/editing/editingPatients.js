@@ -8,8 +8,14 @@ module.exports = {
             homeSleepTestCompanies : [],
             patient                : {},
             profilePhoto           : {},
+            insuranceCardImage     : {},
             docLocations           : [],
-            message                : ''
+            insuranceContacts      : [],
+            message                : '',
+            eligiblePayerId        : 0,
+            eligiblePayerName      : '',
+            exclusiveBilling       : false,
+            billingCompany         : ''
         }
     },
     mixins: [handlerMixin],
@@ -53,7 +59,7 @@ module.exports = {
                 this.handleErrors('findPatientNotifications', response);
             });
 
-        this.getPatientById(patientId)
+        this.getPatientById(0)
             .then(function(response) {
                 var data = response.data.data;
 
@@ -99,19 +105,19 @@ module.exports = {
     },
     methods: {
         getDocLocations: function() {
-            return this.$http.get(window.config.API_PATH + );
+            return this.$http.get(window.config.API_PATH + '');
         },
         getProfilePhoto: function() {
-            return this.$http.get(window.config.API_PATH + );
+            return this.$http.get(window.config.API_PATH + '');
         },
         getHomeSleepTestCompanies: function() {
-            return this.$http.get(window.config.API_PATH + );
+            return this.$http.get(window.config.API_PATH + '');
         },
         getPatientById: function() {
-            return this.$http.get(window.config.API_PATH + );
+            return this.$http.get(window.config.API_PATH + '');
         },
         findPatientNotifications: function() {
-            return this.$http.post(window.config.API_PATH + );
+            return this.$http.post(window.config.API_PATH + '');
         }
     }
 }

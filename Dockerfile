@@ -57,10 +57,7 @@ RUN set -xe \
     # Instal composer using php 5.6
     && source /opt/rh/rh-php56/enable \
     && curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer \
-
-    # Remove default httpd configs
-    && rm -f ${ETC_HTTPD}/conf.d/{autoindex,userdir,welcome}.conf
+    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
 ENV DOCUMENT_ROOT=/opt/rh/httpd24/root/var/www/html
 COPY docker-entrypoint.sh /usr/sbin/

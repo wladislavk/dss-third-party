@@ -17,7 +17,7 @@ RUN set -x \
     && source /opt/rh/rh-php56/enable \
     && composer install \
     # Fix permissions
-    && chown apache storage/logs
+    && chown -R apache ${DOCUMENT_ROOT}
 
 # Copy custom apache configs for the project
 COPY etc/httpd/ ${ETC_HTTPD}

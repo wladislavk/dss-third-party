@@ -61,5 +61,9 @@ RUN set -xe \
 
 ENV DOCUMENT_ROOT=/opt/rh/httpd24/root/var/www/html
 COPY docker-entrypoint.sh /usr/sbin/
-RUN chmod +x /usr/sbin/docker-entrypoint.sh
+RUN set -x \
+    # Customize php setup
+    && echo 'short_open_tag = On' > /etc/opt/rh/rh-php56/php.d/custom.ini \
+    # Ensure entrypoint is executable
+    && chmod +x /usr/sbin/docker-entrypoint.sh
 CMD /usr/sbin/docker-entrypoint.sh

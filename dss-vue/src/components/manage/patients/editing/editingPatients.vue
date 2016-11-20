@@ -1846,7 +1846,7 @@
                                             :value="patient.docmdother != '' ? patient.docmdother_name : 'Type contact name'"
                                         />
                                         <a
-                                            v-if="($docmdother2=='' || $docmdother3=='')"
+                                            v-if="patient.docmdother2 == '' || patient.docmdother3 == ''"
                                             href="#"
                                             id="add_new_md"
                                             onclick="add_md(); return false;"
@@ -1859,22 +1859,24 @@
                                                 <li class="template" style="display:none">Doe, John S</li>
                                             </ul>
                                         </div>
-                                        <input
-                                            type="hidden"
-                                            name="docmdother"
-                                            id="docmdother"
-                                            value="<?php echo $docmdother;?>"
-                                        />
                                     </li>
                                 </ul>
                             </td>
                         </tr>
-                        <tr height="35" id="docmdother2_tr" <?php echo ($docmdother2=='')?'style="display:none;"':''; ?>>
+                        <tr
+                            height="35"
+                            id="docmdother2_tr"
+                            {{ patient.docmdother2 == '' ? 'style="display:none;"' : '' }}
+                        >
                             <td>
                                 <ul>
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Other MD 2</label>
-                                        <div id="docmdother2_static_info" style="<?php echo ($docmdother2!='')?'':'display:none'; ?>"><span id="docmdother2_name_static" style="width:300px;"><?php echo $docmdother2_name; ?></span>
+                                        <div
+                                            id="docmdother2_static_info"
+                                            style="{{ patient.docmdother2 != '' ? '' : 'display:none' }}"
+                                        >
+                                            <span id="docmdother2_name_static" style="width:300px;">{{ patient.docmdother2_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother2;?>');return false;"
@@ -1887,13 +1889,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-model="patient.docmdother2_name"
                                             type="text"
                                             id="docmdother2_name"
                                             style="width:300px;<?php echo ($docmdother2!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docmdother2_name"
-                                            value="<?php echo ($docmdother2!='')?$docmdother2_name:'Type contact name'; ?>"
+                                            value="{{ patient.docmdother2 != '' ? patient.docmdother2_name : 'Type contact name' }}"
                                         />
                                         <br />
                                         <div id="docmdother2_hints" class="search_hints" style="display:none;">
@@ -1901,22 +1904,24 @@
                                                 <li class="template" style="display:none">Doe, John S</li>
                                             </ul>
                                         </div>
-                                        <input
-                                            type="hidden"
-                                            name="docmdother2"
-                                            id="docmdother2"
-                                            value="<?php echo $docmdother2;?>"
-                                        />
                                     </li>
                                 </ul>
                             </td>
                         </tr>
-                        <tr height="35" id="docmdother3_tr" <?php echo ($docmdother3=='')?'style="display:none;"':''; ?>>
+                        <tr
+                            height="35"
+                            id="docmdother3_tr"
+                            {{ patient.docmdother3 == '' ? 'style="display:none;"' : '' }}
+                        >
                             <td>
                                 <ul>
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Other MD 3</label>
-                                        <div id="docmdother3_static_info" style="<?php echo ($docmdother3!='')?'':'display:none'; ?>"><span id="docmdother3_name_static" style="width:300px;"><?php echo $docmdother3_name; ?></span>
+                                        <div
+                                            id="docmdother3_static_info"
+                                            style="{{ patient.docmdother3 != '' ? '' : 'display:none' }}"
+                                        >
+                                            <span id="docmdother3_name_static" style="width:300px;">{{ patient.docmdother3_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother3;?>');return false;"
@@ -1929,13 +1934,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-model="patient.docmdother3_name"
                                             type="text"
                                             id="docmdother3_name"
                                             style="width:300px;<?php echo ($docmdother3!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docmdother3_name"
-                                            value="<?php echo ($docmdother3!='')?$docmdother3_name:'Type contact name'; ?>"
+                                            value="{{ patient.docmdother3 != '' ? patient.docmdother3_name : 'Type contact name' }}"
                                         />
                                         <br />
                                         <div id="docmdother3_hints" class="search_hints" style="display:none;">
@@ -1943,12 +1949,6 @@
                                                 <li class="template" style="display:none">Doe, John S</li>
                                             </ul>
                                         </div>
-                                        <input
-                                            type="hidden"
-                                            name="docmdother3"
-                                            id="docmdother3"
-                                            value="<?php echo $docmdother3;?>"
-                                        />
                                     </li>
                                 </ul>
                             </td>
@@ -1962,31 +1962,36 @@
                 </td>
                 <td valign="top" class="frmdata">
                     <select
+                        v-model="patient.status"
                         name="status"
                         id="status"
                         class="tbox"
                         onchange="updatePPAlert()";
                     >
-                        <option value="1" <?php if($status == 1) echo " selected";?>>Active</option>
-                        <option value="2" <?php if($status == 2) echo " selected";?>>In-Active</option>
+                        <option value="1">Active</option>
+                        <option value="2">In-Active</option>
                     </select>
                     <br />&nbsp;
                 </td>
             </tr>
-            <template v-if="$doc_patient_portal">
+            <template v-if="headerInfo.docInfo.doc_patient_portal">
                 <tr bgcolor="#FFFFFF">
                     <td valign="top" class="frmhead">
                         Portal Status
                         <br />
-                        <span id="ppAlert" style="font-weight:normal;font-size:12px; <?php echo ($status == 2)?'':'display:none;'; ?>">Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
+                        <span
+                            id="ppAlert"
+                            style="font-weight:normal;font-size:12px; {{ patient.status == 2 ? '' : 'display:none;' }}"
+                        >Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
                     </td>
                     <td valign="top" class="frmdata">
                         <select
+                            v-model="patient.use_patient_portal"
                             name="use_patient_portal"
                             class="tbox"
                         >
-                          <option value="1" <?php if($use_patient_portal == 1) echo " selected";?>>Active</option>
-                          <option value="0" <?php if($use_patient_portal!='' && $use_patient_portal == 0) echo " selected";?>>In-Active</option>
+                          <option value="1">Active</option>
+                          <option value="0">In-Active</option>
                         </select>
                         <br />&nbsp;
                     </td>

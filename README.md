@@ -1,6 +1,6 @@
 # Docker setup for DS3
 
-This repositry contains base docker image for *DS3* project development. It also contains scripts to run all projects as a bunch of containers
+This repositry contains base docker image for *DS3* project development. It also contains scripts to run all DS3-Docker projects as a group of linked containers.
 
 ## Quickstart
 
@@ -14,21 +14,48 @@ drwxr-xr-x  ds3-private03
 drwxr-xr-x  ds3-private04-Docker
 ```
 
-Navigate to the Docker repo, then build and run all containers with two commands
+#### REQUIRED DOCKER FIX for Windows
+If you run Docker in Windows you **must** change the end-of-line encoding for a particular Docker file BEFORE you 'make' the images or the containers will fail. Docker expects Linux-style end-of-line encoding, but for some reason Windows *automatically* reads the Docker text file with Windows-style encoding.  
+
+With MS Visual Studio code, open this file:  
+> ds3-private04-Docker/docker-entrypoint.sh
+
+In VS code on the bottom left pane, change the "CRLF" option to "LF".  Save the file.  That's it.  For a screenshot see the bottom section "The Simple Fix - VS Code Rocks" on [this page](https://blogs.msdn.microsoft.com/stevelasker/2016/09/22/running-scripts-in-a-docker-container-from-windows-cr-or-crlf/).
+
+If you see something like this when starting containers on your Windows machine, this means you failed to save the file correctly.
+```bash
+/bin/sh: /usr/sbin/docker-entrypoint.sh: /bin/bash^M: bad interpreter: No such file or directory
+```
+###Build Images
+Navigate to the Docker repo, then build and run all containers with two commands. (Make sure you apply the 'Windows fix' above if using W10 before doing this.)
+
+**Note:** These images take a *long time* to build initially (40 min+). Go do something else.
 
 ```bash
 cd ds3-private04-Docker
 make all
-docker-compose up -d
 ```
 
-Patch your DNS hosts file
+
+
+###Start Containers
+After the images are built, run docker-compose (within ds3-private04-Docker) to initialize the containers.
+```bash
+docker-compose up -d
+```
+###Patch Hosts
+Patch your DNS hosts file.  On Windows, Hosts file is located at {c:\windows\system32\drivers\etc\hosts}.
+
+On Mac/Linux use command below.  
 
 ```bash
 sudo echo 127.0.0.1 loader.ds3soft.dev api.ds3soft.dev >> /etc/hosts
 ```
+###Test Containers
+Go to a browser and verify access to https://loader.ds3soft.dev
 
-Go to a browser and get access to https://loader.ds3soft.dev
+Verify the images are connected by navigating to https://loader.ds3soft.dev:9443/manage
+Login with Username: doc1f Password: cr3at1vItY.  If you can login then all containers run correctly.
 
 ## Base Image
 
@@ -88,3 +115,20 @@ There is a `docker-compose.yml` file which has the following services described:
 - `api` is a container running *api* application from *ds3-private03*
 
 **NOTE** this setup implies that all repositories are clone in one root.
+
+## Docker Tips
+
+There is no simple command in Docker to delete all containers or images.
+
+Delete all Docker containers
+```bash
+# Must be run first because images are attached to containers
+docker rm $(docker ps -a -q)
+```
+Delete all Docker images
+
+```bash
+docker rmi $(docker images -q)
+```
+## Kitematic
+If you use Windows, you can use the Docker addon "Kitematic" as a GUI to manage your containers.  It is just a GUI wrapper for the command line, but it is useful for debugging and viewing container info.  It is included with Docker for Windows.  https://kitematic.com/

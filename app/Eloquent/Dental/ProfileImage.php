@@ -38,4 +38,17 @@ class ProfileImage extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function profilePhotoScope($query)
+    {
+        return $query->where('imagetypeid', 4);
+    }
+
+    public function getProfilePhoto($patientId = 0)
+    {
+        return $this->profilePhoto()
+            ->where('patientid', $patientId)
+            ->orderBy('adddate', 'desc')
+            ->first();
+    }
 }

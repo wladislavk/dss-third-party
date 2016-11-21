@@ -54,6 +54,11 @@ class Letter extends Model implements Resource, Repository
      */
     const UPDATED_AT = 'edit_date';
 
+    public function nonDeletedScope($query)
+    {
+        return $query->where('deleted', '0');
+    }
+
     public function getPending($docId = 0)
     {
         return $this->select(DB::raw('UNIX_TIMESTAMP(dental_letters.generated_date) AS generated_date'))
@@ -81,6 +86,16 @@ class Letter extends Model implements Resource, Repository
             ->whereNull('mailed_date')
             ->where('dental_letters.deleted', 0)
             ->where('dental_letters.docid', $docId)
+            ->first();
+    }
+
+    public function getGeneratedDateOfIntroLetter($patientId = 0)
+    {
+        return $this->select('generated_date')
+            ->where('templateid', 3)
+            ->nonDeleted()
+            ->where('patientid', $patientId)
+            ->orderBy('generated_date')
             ->first();
     }
 }

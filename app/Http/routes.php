@@ -93,7 +93,9 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('letters', 'LettersController', ['except' => ['create', 'edit']]);
     Route::post('letters/pending', 'LettersController@getPending');
     Route::post('letters/unmailed', 'LettersController@getUnmailed');
+    Route::post('letters/gen-date-of-intro', 'LettersController@getGeneratedDateOfIntroLetter');
     Route::resource('locations', 'LocationsController', ['except' => ['create', 'edit']]);
+    Route::post('locations/by-doctor', 'LocationsController@getDoctorLocations');
     Route::resource('logins', 'LoginsController', ['except' => ['create', 'edit']]);
     Route::post('logout', 'LoginsController@logout');
     Route::resource('login-details', 'LoginDetailsController', ['except' => ['create', 'edit']]);
@@ -125,6 +127,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('place-services', 'PlaceServicesController', ['except' => ['create', 'edit']]);
     Route::resource('plans', 'PlansController', ['except' => ['create', 'edit']]);
     Route::resource('profile-images', 'ProfileImagesController', ['except' => ['create', 'edit']]);
+    Route::post('profile-images/photo', 'ProfileImagesController@getProfilePhoto');
     Route::resource('symptoms', 'SymptomsController', ['except' => ['create', 'edit']]);
     Route::resource('previous-treatments', 'PreviousTreatmentsController', ['except' => ['create', 'edit']]);
     Route::resource('health-histories', 'HealthHistoriesController', ['except' => ['create', 'edit']]);

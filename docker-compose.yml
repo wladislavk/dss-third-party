@@ -29,6 +29,10 @@ services:
       DB_PASSWORD: secret
     ports:
       - "9443:443"
+    volumes:
+      - "../ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
+      - "../ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
+      - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
 
   api:
     build: ../ds3-private03
@@ -39,5 +43,8 @@ services:
       DB_DATABASE: homestead
       DB_USERNAME: homestead
       DB_PASSWORD: secret
+    volumes:
+      - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+
     ports:
       - "8443:443"

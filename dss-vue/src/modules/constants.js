@@ -20,5 +20,14 @@ module.exports = {
     dssPreauthStatusLabels: ['Pending', 'Complete', 'Pre-Auth Pending', 'Rejected'],
 
     DSS_DEVICE_SETTING_TYPE_RANGE : 0,
-    DSS_DEVICE_SETTING_TYPE_FLAG  : 1
+    DSS_DEVICE_SETTING_TYPE_FLAG  : 1,
+
+    DSS_REFERRED_PATIENT   : 1,
+    DSS_REFERRED_PHYSICIAN : 2,
+    DSS_REFERRED_MEDIA     : 3,
+    DSS_REFERRED_FRANCHISE : 4,
+    DSS_REFERRED_DSSOFFICE : 5,
+    DSS_REFERRED_OTHER     : 6,
+
+    dssReferredLabels: ['', 'Patient', 'Physician', 'Media', 'Internal', 'DSS Office', 'Other']
 }

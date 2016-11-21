@@ -95,7 +95,7 @@
                                     </a>
                                     <img
                                         v-else
-                                        src="display_file.php?f={{ profilePhoto.image_file }}"
+                                        :src="profilePhoto.image_file"
                                         style="max-height:150px;max-width:200px;"
                                         style="float:right;"
                                     />
@@ -211,6 +211,7 @@
                                 <span>
                                     <input
                                         v-model="patient.email"
+                                        v-el:email
                                         id="email"
                                         name="email"
                                         type="text"
@@ -657,8 +658,8 @@
                                     <input
                                         v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ (patient.referred_source == constants.DSS_REFERRED_PATIENT ||
-                                            patient.referred_source == constants.DSS_REFERRED_PHYSICIAN) ? 'checked="checked"' : '' }}
+                                        {{ (patient.referred_source == consts.DSS_REFERRED_PATIENT ||
+                                            patient.referred_source == consts.DSS_REFERRED_PHYSICIAN) ? 'checked="checked"' : '' }}
                                         type="radio"
                                         value="person"
                                         onclick="show_referredby('person', '')"
@@ -666,41 +667,41 @@
                                     <input
                                         v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ (patient.referred_source == constants.DSS_REFERRED_MEDIA) ? 'checked="checked"' : '' }}
+                                        {{ (patient.referred_source == consts.DSS_REFERRED_MEDIA) ? 'checked="checked"' : '' }}
                                         type="radio"
-                                        :value="constants.DSS_REFERRED_MEDIA"
+                                        :value="consts.DSS_REFERRED_MEDIA"
                                         onclick="show_referredby('notes', <?php echo DSS_REFERRED_MEDIA; ?>)"
-                                    /> {{ $dss_referred_labels[DSS_REFERRED_MEDIA] }}
+                                    /> {{ consts.dssReferredLabels[consts.DSS_REFERRED_MEDIA] }}
                                     <input
                                         v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ (patient.referred_source == constants.DSS_REFERRED_FRANCHISE) ? 'checked="checked"' : '' }}
+                                        {{ (patient.referred_source == consts.DSS_REFERRED_FRANCHISE) ? 'checked="checked"' : '' }}
                                         type="radio"
-                                        :value="constants.DSS_REFERRED_FRANCHISE"
+                                        :value="consts.DSS_REFERRED_FRANCHISE"
                                         onclick="show_referredby('notes',<?php echo DSS_REFERRED_FRANCHISE; ?>)"
-                                    /> {{ $dss_referred_labels[DSS_REFERRED_FRANCHISE] }}
+                                    /> {{ consts.dssReferredLabels[consts.DSS_REFERRED_FRANCHISE] }}
                                     <input
                                         v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ (patient.referred_source == constants.DSS_REFERRED_DSSOFFICE) ? 'checked="checked"' : '' }}
+                                        {{ (patient.referred_source == consts.DSS_REFERRED_DSSOFFICE) ? 'checked="checked"' : '' }}
                                         type="radio"
-                                        :value="constants.DSS_REFERRED_DSSOFFICE"
+                                        :value="consts.DSS_REFERRED_DSSOFFICE"
                                         onclick="show_referredby('notes',<?php echo DSS_REFERRED_DSSOFFICE; ?>)"
-                                    /> {{ $dss_referred_labels[DSS_REFERRED_DSSOFFICE] }}
+                                    /> {{ consts.dssReferredLabels[consts.DSS_REFERRED_DSSOFFICE] }}
                                     <input
                                         v-model="patient.referred_source_r"
                                         name="referred_source_r"
-                                        {{ (patient.referred_source == constants.DSS_REFERRED_OTHER) ? 'checked="checked"' : '' }}
+                                        {{ (patient.referred_source == consts.DSS_REFERRED_OTHER) ? 'checked="checked"' : '' }}
                                         type="radio"
-                                        :value="constants.DSS_REFERRED_OTHER"
+                                        :value="consts.DSS_REFERRED_OTHER"
                                         onclick="show_referredby('notes',<?php echo DSS_REFERRED_OTHER; ?>)"
-                                    /> {{ $dss_referred_labels[DSS_REFERRED_OTHER] }}
+                                    /> {{ consts.dssReferredLabels[consts.DSS_REFERRED_OTHER] }}
                                 </div>
                                 <div style="clear:both;float:left;">
                                     <div
                                         id="referred_person"
-                                        {{ (patient.referred_source != constants.DSS_REFERRED_PATIENT &&
-                                            patient.referred_source != constants.DSS_REFERRED_PHYSICIAN) ?
+                                        {{ (patient.referred_source != consts.DSS_REFERRED_PATIENT &&
+                                            patient.referred_source != consts.DSS_REFERRED_PHYSICIAN) ?
                                             'style="display:none;margin-left:100px;"' :
                                             'style="margin-left:100px"' }}
                                     >
@@ -729,10 +730,10 @@
                                         </div>
                                         <div
                                             id="referred_notes"
-                                            {{ (patient.referred_source != constants.DSS_REFERRED_MEDIA &&
-                                                patient.referred_source != constants.DSS_REFERRED_FRANCHISE &&
-                                                patient.referred_source != constants.DSS_REFERRED_DSSOFFICE &&
-                                                patient.referred_source != constants.DSS_REFERRED_OTHER) ?
+                                            {{ (patient.referred_source != consts.DSS_REFERRED_MEDIA &&
+                                                patient.referred_source != consts.DSS_REFERRED_FRANCHISE &&
+                                                patient.referred_source != consts.DSS_REFERRED_DSSOFFICE &&
+                                                patient.referred_source != consts.DSS_REFERRED_OTHER) ?
                                                 'style="display:none;margin-left:200px;"' :
                                                 'style="margin-left:200px;"' }}
                                         >
@@ -910,7 +911,7 @@
                                     title="Select YES if you would like {{ billingCompany }} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
                                 >{{ billingCompany }} filing insurance?</a>
                                 <input
-                                    v-mode="patient.p_m_dss_file_yes"
+                                    v-model="patient.p_m_dss_file_yes"
                                     id="p_m_dss_file_yes"
                                     class="dss_file_radio"
                                     type="radio"
@@ -918,7 +919,7 @@
                                     value="1"
                                 >Yes&nbsp;&nbsp;&nbsp;&nbsp;
                                 <input
-                                    v-mode="patient.p_m_dss_file_yes"
+                                    v-model="patient.p_m_dss_file_yes"
                                     id="p_m_dss_file_no"
                                     type="radio"
                                     class="dss_file_radio"
@@ -931,14 +932,14 @@
                                     title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO."
                                 >Insured Address same as Pt. address?</a>
                                 <input
-                                    v-mode="patient.p_m_same_address"
+                                    v-model="patient.p_m_same_address"
                                     type="radio"
                                     onclick="$('#p_m_address_fields').hide();"
                                     name="p_m_same_address"
                                     value="1"
                                 > Yes
                                 <input
-                                    v-mode="patient.p_m_same_address"
+                                    v-model="patient.p_m_same_address"
                                     type="radio"
                                     onclick="$('#p_m_address_fields').show();"
                                     name="p_m_same_address"
@@ -948,7 +949,8 @@
                             <div>
                                 <span>
                                     <select
-                                        v-mode="patient.p_m_relation"
+                                        v-model="patient.p_m_relation"
+                                        v-on:change="onChangeRelations('primary_insurance')"
                                         id="p_m_relation"
                                         name="p_m_relation"
                                         class="field text addr tbox"
@@ -964,7 +966,7 @@
                                 </span>
                                 <span>
                                     <input
-                                        v-mode="patient.p_m_partyfname"
+                                        v-model="patient.p_m_partyfname"
                                         id="p_m_partyfname"
                                         name="p_m_partyfname"
                                         type="text"
@@ -973,7 +975,7 @@
                                         style="width:150px;"
                                     />
                                     <input
-                                        v-mode="patient.p_m_partymname"
+                                        v-model="patient.p_m_partymname"
                                         id="p_m_partymname"
                                         name="p_m_partymname"
                                         type="text"
@@ -982,7 +984,7 @@
                                         style="width:50px;"
                                     />
                                     <input
-                                        v-mode="patient.p_m_partylname"
+                                        v-model="patient.p_m_partylname"
                                         id="p_m_partylname"
                                         name="p_m_partylname"
                                         type="text"
@@ -994,7 +996,7 @@
                                 </span>
                                 <span>
                                     <input
-                                        v-mode="patient.ins_dob"
+                                        v-model="patient.ins_dob"
                                         id="ins_dob"
                                         name="ins_dob"
                                         type="text"
@@ -1007,7 +1009,7 @@
                                 </span>
                                 <span>
                                     <select
-                                        v-mode="patient.ins_dob"
+                                        v-model="patient.ins_dob"
                                         name="p_m_gender"
                                         id="p_m_gender"
                                         class="field text addr tbox"
@@ -1349,6 +1351,7 @@
                                 <span>
                                     <select
                                         v-model="patient.s_m_relation"
+                                        v-on:change="onChangeRelations('secondary_insurance')"
                                         id="s_m_relation"
                                         name="s_m_relation"
                                         class="field text addr tbox"
@@ -1657,7 +1660,7 @@
                                         <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
                                         <div
                                             id="docpcp_static_info"
-                                            style="{{ patient.docpcp != '' ? '' : 'display:none' }}"
+                                            :style="patient.docpcp != '' ? '' : 'display:none'"
                                         >
                                             <span id="docpcp_name_static" style="width:300px;">{{ patient.docpcp_name }}</span>
                                             <a
@@ -1698,7 +1701,7 @@
                                         <label style="display: block; float: left; width: 110px;">ENT</label>
                                         <div
                                             id="docent_static_info"
-                                            style="{{ patient.docent != '' ? '' : 'display:none' }}"
+                                            :style="patient.docent != '' ? '' : 'display:none'"
                                         >
                                             <span id="docent_name_static" style="width:300px;">{{ patient.docent_name }}</span>
                                             <a
@@ -1739,7 +1742,7 @@
                                         <label style="display: block; float: left; width: 110px;">Sleep MD</label>
                                         <div
                                             id="docsleep_static_info"
-                                            style="{{ patient.docsleep != '' ? '' : 'display:none' }}"
+                                            :style="patient.docsleep != '' ? '' : 'display:none'"
                                         >
                                             <span id="docsleep_name_static" style="width:300px;">{{ patient.docsleep_name }}</span>
                                             <a
@@ -1780,7 +1783,7 @@
                                         <label style="display: block; float: left; width: 110px;">Dentist</label>
                                         <div
                                             id="docdentist_static_info"
-                                            style="{{ patient.docdentist != '' ? '' : 'display:none' }}"
+                                            :style="patient.docdentist != '' ? '' : 'display:none'"
                                         >
                                             <span id="docdentist_name_static" style="width:300px;">{{ patient.docdentist_name }}</span>
                                             <a
@@ -1821,7 +1824,8 @@
                                         <label style="display: block; float: left; width: 110px;">Other MD</label>
                                         <div
                                             id="docmdother_static_info"
-                                            style="{{ patient.docmdother != '' ? '' : 'display:none;' }} height:25px;"
+                                            style="height:25px;"
+                                            :style="patient.docmdother != '' ? '' : 'display:none;'"
                                         >
                                             <span id="docmdother_name_static" style="width:300px;">{{ patient.docmdother_name }}</span>
                                             <a
@@ -1866,7 +1870,7 @@
                         <tr
                             height="35"
                             id="docmdother2_tr"
-                            {{ patient.docmdother2 == '' ? 'style="display:none;"' : '' }}
+                            :style="patient.docmdother2 != '' ? '' : 'display:none'"
                         >
                             <td>
                                 <ul>
@@ -1874,7 +1878,7 @@
                                         <label style="display: block; float: left; width: 110px;">Other MD 2</label>
                                         <div
                                             id="docmdother2_static_info"
-                                            style="{{ patient.docmdother2 != '' ? '' : 'display:none' }}"
+                                            :style="patient.docmdother2 != '' ? '' : 'display:none'"
                                         >
                                             <span id="docmdother2_name_static" style="width:300px;">{{ patient.docmdother2_name }}</span>
                                             <a
@@ -1911,7 +1915,7 @@
                         <tr
                             height="35"
                             id="docmdother3_tr"
-                            {{ patient.docmdother3 == '' ? 'style="display:none;"' : '' }}
+                            :style="patient.docmdother3 != '' ? '' : 'display:none'"
                         >
                             <td>
                                 <ul>
@@ -1919,7 +1923,7 @@
                                         <label style="display: block; float: left; width: 110px;">Other MD 3</label>
                                         <div
                                             id="docmdother3_static_info"
-                                            style="{{ patient.docmdother3 != '' ? '' : 'display:none' }}"
+                                            :style="patient.docmdother3 != '' ? '' : 'display:none'"
                                         >
                                             <span id="docmdother3_name_static" style="width:300px;">{{ patient.docmdother3_name }}</span>
                                             <a
@@ -2000,14 +2004,14 @@
             <tr>
                 <td valign="top">
                     <input
-                        v-if="!$result"
+                        v-if="!introLetter"
                         id="introletter"
                         name="introletter"
                         type="checkbox"
                         value="1"
                     > Send Intro Letter to DSS patient
                     <template v-else>
-                        DSS Intro Letter Sent to Patient {{ $date_generated }}
+                        DSS Intro Letter Sent to Patient {{ introLetter.date_generated }}
                     </template>
                 </td>
             </tr>
@@ -2016,16 +2020,6 @@
                     <span class="red">
                       * Required Fields
                     </span><br />
-                    <input
-                        type="hidden"
-                        name="patientsub"
-                        value="1"
-                    />
-                    <input
-                        type="hidden"
-                        name="ed"
-                        value="<?php echo $themyarray["patientid"]?>"
-                    />
                     <input
                         type="submit"
                         value=" <?php echo $but_text?> Patient"
@@ -2037,16 +2031,7 @@
     </form>
 </template>
 
-<script type="text/javascript" src="js/add_patient.js?v=<?= time() ?>"></script>
-<script type="text/javascript" src="script/logout_timer.js"></script>
-<script src="script/autocomplete.js?v=20160719" type="text/javascript"></script>
-<script src="script/autocomplete_local.js?v=20160719" type="text/javascript"></script>
-<script type="text/javascript" src="/manage/js/preferred_contact.js"></script>
-<script type="text/javascript" src="/manage/js/patient_dob.js"></script>
-<script type="text/javascript" src="/manage/js/add_patient.js?v=<?= time() ?>"></script>
-
-<script type="text/javascript" src="/manage/calendar1.js?v=20160328"></script>
-<script type="text/javascript" src="/manage/calendar2.js?v=20160328"></script>
+<!-- <script type="text/javascript" src="js/add_patient.js?v=<?= time() ?>"></script> -->
 
 <script>
     module.exports = require('./editingPatients.js');

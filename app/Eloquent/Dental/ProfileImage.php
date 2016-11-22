@@ -39,7 +39,7 @@ class ProfileImage extends Model implements Resource, Repository
      */
     const CREATED_AT = 'adddate';
 
-    public function profilePhotoScope($query)
+    public function scopeProfilePhoto($query)
     {
         return $query->where('imagetypeid', 4);
     }

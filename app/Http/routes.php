@@ -165,6 +165,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('calendars', 'CalendarsController', ['except' => ['create', 'edit']]);
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
     Route::post('companies/company-logo', 'CompaniesController@getCompanyLogo');
+    Route::post('companies/home-sleep-test', 'CompaniesController@getHomeSleepTestCompanies');
     Route::resource('allergens', 'AllergensController', ['except' => ['create', 'edit']]);
     Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
     Route::resource('change-lists', 'ChangeListsController', ['except' => ['create', 'edit']]);

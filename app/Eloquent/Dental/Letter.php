@@ -54,7 +54,7 @@ class Letter extends Model implements Resource, Repository
      */
     const UPDATED_AT = 'edit_date';
 
-    public function nonDeletedScope($query)
+    public function scopeNonDeleted($query)
     {
         return $query->where('deleted', '0');
     }

@@ -64,7 +64,7 @@
                     </template>
                     <template v-if="homeSleepTestCompanies.length > 0">
                         <a
-                            v-if="headerInfo.uncompletedHomeSleepTests.length > 0"
+                            v-if="uncompletedHomeSleepTests.length > 0"
                             href="#"
                             onclick="alert('Patient has existing HST with status <?php echo $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;"
                             class="button"
@@ -91,7 +91,7 @@
                                         href="#"
                                         onclick="loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;"
                                     >
-                                        <img src="images/add_patient_photo.png" />
+                                        <img src="assets/images/add_patient_photo.png" />
                                     </a>
                                     <img
                                         v-else

@@ -4,25 +4,26 @@ module.exports = {
     data: function() {
         return {
             consts: window.constants,
-            headerInfo             : {
-                docInfo: {}
+            headerInfo: {
+                docInfo : {}
             },
             routeParameters: {
                 patientId : this.$route.query.pid > 0 ? this.$route.query.pid : null
             },
-            patientNotifications   : [],
-            homeSleepTestCompanies : [],
-            patient                : {},
-            profilePhoto           : {},
-            insuranceCardImage     : {},
-            docLocations           : [],
-            insuranceContacts      : [],
-            introLetter            : {},
-            message                : '',
-            eligiblePayerId        : 0,
-            eligiblePayerName      : '',
-            exclusiveBilling       : false,
-            billingCompany         : ''
+            patientNotifications      : [],
+            homeSleepTestCompanies    : [],
+            patient                   : {},
+            profilePhoto              : {},
+            insuranceCardImage        : {},
+            docLocations              : [],
+            insuranceContacts         : [],
+            introLetter               : {},
+            uncompletedHomeSleepTests : [],
+            message                   : '',
+            eligiblePayerId           : 0,
+            eligiblePayerName         : '',
+            exclusiveBilling          : false,
+            billingCompany            : ''
         }
     },
     mixins: [handlerMixin],
@@ -108,38 +109,49 @@ module.exports = {
                 this.handleErrors('getHomeSleepTestCompanies', response);
             });
 
-            this.getProfilePhoto(this.routeParameters.patientId)
-                .then(function(response) {
-                    var data = response.data.data;
+        this.getProfilePhoto(this.routeParameters.patientId)
+            .then(function(response) {
+                var data = response.data.data;
 
-                    if (data) {
-                        this.$set('profilePhoto', data);
-                    }
-                }, function(response) {
-                    this.handleErrors('getProfilePhoto', response);
-                });
+                if (data) {
+                    this.$set('profilePhoto', data);
+                }
+            }, function(response) {
+                this.handleErrors('getProfilePhoto', response);
+            });
 
-            this.getDocLocations()
-                .then(function(response) {
-                    var data = response.data.data;
+        this.getDocLocations()
+            .then(function(response) {
+                var data = response.data.data;
 
-                    if (data) {
-                        this.$set('docLocations', data);
-                    }
-                }, function(response) {
-                    this.handleErrors('getDocLocations', response);
-                });
+                if (data) {
+                    this.$set('docLocations', data);
+                }
+            }, function(response) {
+                this.handleErrors('getDocLocations', response);
+            });
 
-            this.getGeneratedDateOfIntroLetter(this.routeParameters.patientId)
-                .then(function(response) {
-                    var data = response.data.data;
+        this.getGeneratedDateOfIntroLetter(this.routeParameters.patientId)
+            .then(function(response) {
+                var data = response.data.data;
 
-                    if (data) {
-                        this.$set('introLetter', data);
-                    }
-                }, function(response) {
-                    this.handleErrors('getGeneratedDateOfIntroLetter', response);
-                });
+                if (data) {
+                    this.$set('introLetter', data);
+                }
+            }, function(response) {
+                this.handleErrors('getGeneratedDateOfIntroLetter', response);
+            });
+
+        this.getUncompletedHomeSleepTests()
+            .then(function(response) {
+                var data = response.data.data;
+
+                if (data) {
+                    this.$set('uncompletedHomeSleepTests', data);
+                }
+            }, function(response) {
+                this.handleErrors('getUncompletedHomeSleepTests', response);
+            });
     },
     methods: {
         onChangeRelations: function(type) {
@@ -187,8 +199,13 @@ module.exports = {
                 this.$els.fax.focus();
             }
         },
+        getUncompletedHomeSleepTests: function(patientId) {
+            var data = { patientId: patientId || 0};
+
+            return this.$http.post(window.config.API_PATH + 'home-sleep-tests/uncompleted', data);
+        },
         getGeneratedDateOfIntroLetter: function(patientId) {
-            var data = { patient_id: patientId };
+            var data = { patient_id: patientId || 0};
 
             return this.$http.post(window.config.API_PATH + 'letters/gen-date-of-intro', data);
         },
@@ -196,14 +213,16 @@ module.exports = {
             return this.$http.post(window.config.API_PATH + 'locations/by-doctor');
         },
         getProfilePhoto: function(patientId) {
-            var data = { patient_id: patientId };
+            var data = { patient_id: patientId || 0};
 
             return this.$http.post(window.config.API_PATH + 'profile-images/photo', data);
         },
         getHomeSleepTestCompanies: function() {
-            return this.$http.get(window.config.API_PATH + '');
+            return this.$http.post(window.config.API_PATH + 'companies/home-sleep-test');
         },
         getPatientById: function(patientId) {
+            patientId = patientId || 0;
+
             return this.$http.get(window.config.API_PATH + 'patients/' + patientId);
         },
         findPatientNotifications: function() {

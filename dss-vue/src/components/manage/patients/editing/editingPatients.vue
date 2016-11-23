@@ -43,7 +43,7 @@
                     <input
                         type="submit"
                         style="float:right; margin-left: 5px;"
-                        value=" <?php echo $but_text?> Patient"
+                        :value="buttonText + 'Patient'"
                         class="button"
                     />
                     <template v-if="showSendingEmails">
@@ -87,7 +87,7 @@
                             <div id="profile_image" style="float:right; width:270px;">
                                 <span style="float:right">
                                     <a
-                                        v-if="!profilePhoto"
+                                        v-if="!profilePhoto.image_file"
                                         href="#"
                                         onclick="loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;"
                                     >
@@ -901,15 +901,15 @@
                         <li id="foli8" class="complex">
                             <label class="desc" id="title0" for="Field0">
                                 Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <template v-if="exclusiveBilling">
-                                    {{ billingCompany + ' filing insurance' }}
+                                <template v-if="billingCompany.exclusive">
+                                    {{ billingCompany.name + ' filing insurance' }}
                                 </template>
                                 <a
                                     v-else
                                     onclick="return false;"
                                     class="plain"
-                                    title="Select YES if you would like {{ billingCompany }} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
-                                >{{ billingCompany }} filing insurance?</a>
+                                    title="Select YES if you would like {{ billingCompany.name }} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
+                                >{{ billingCompany.name }} filing insurance?</a>
                                 <input
                                     v-model="patient.p_m_dss_file_yes"
                                     id="p_m_dss_file_yes"
@@ -1300,14 +1300,14 @@
                                 {{ patient.has_s_m_ins != "Yes" ? 'style="display:none;"' : '' }}
                             >
                                 Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <template v-if="exclusiveBilling">
-                                    {{ billingCompany . ' filing insurance' }}
+                                <template v-if="billingCompany.exclusive">
+                                    {{ billingCompany.name + ' filing insurance' }}
                                 </template>
                                 <a
                                     onclick="return false;"
                                     class="plain"
-                                    title="Select YES if you would like {{ billingCompany }} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
-                                >{{ billingCompany }} filing insurance?</a>
+                                    title="Select YES if you would like {{ billingCompany.name }} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
+                                >{{ billingCompany.name }} filing insurance?</a>
                                 <input
                                     v-model="patient.dss_file_radio"
                                     id="s_m_dss_file_yes"
@@ -2022,7 +2022,7 @@
                     </span><br />
                     <input
                         type="submit"
-                        value=" <?php echo $but_text?> Patient"
+                        :value="buttonText + 'Patient'"
                         class="button"
                     />
                 </td>

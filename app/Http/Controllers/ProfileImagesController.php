@@ -99,4 +99,13 @@ class ProfileImagesController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getInsuranceCardImage(ProfileImage $resource, Request $request)
+    {
+        $patientId = $request->input('patient_id') ?: 0;
+
+        $data = $resource->getInsuranceCardImage($patientId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

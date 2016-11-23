@@ -59,6 +59,11 @@ class Letter extends Model implements Resource, Repository
         return $query->where('deleted', '0');
     }
 
+    public function scopePatientTreatmentComplete($query)
+    {
+        return $query->where('templateid', 20);
+    }
+
     public function getPending($docId = 0)
     {
         return $this->select(DB::raw('UNIX_TIMESTAMP(dental_letters.generated_date) AS generated_date'))
@@ -97,5 +102,14 @@ class Letter extends Model implements Resource, Repository
             ->where('patientid', $patientId)
             ->orderBy('generated_date')
             ->first();
+    }
+
+    public function getPatientTreatmentComplete($patientId = 0, $patientReferralId)
+    {
+        return $this->select('letterid')
+            ->where('patientid', $patientId)
+            ->patientTreatmentComplete()
+            ->where('pat_referral_list', $patientReferralId)
+            ->get();
     }
 }

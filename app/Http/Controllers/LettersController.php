@@ -113,4 +113,29 @@ class LettersController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function triggerPatientTreatmentComplete(Letters $resources, Request $request)
+    {
+        $patientId = $request->input('patient_id') ?: 0;
+
+        $patientReferralId = get_ptreferralids($patientId);
+
+        if ($patientReferralId) {
+            $letters = $resources->getPatientTreatmentComplete($patientId, $patientReferralId);
+
+            if (!count($letters)) {
+                $contactIds = get_mdcontactids($patientId);
+
+                $letter = create_letter($letterid, $pid, '', '', '', '', $pt_referral_list);
+                if (!is_numeric($letter)) {
+                    print "Can't send letter 20: " . $letter;
+                    trigger_error("Die called", E_USER_ERROR);
+                } else {
+                    return $letter;
+                }
+            }
+        }
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

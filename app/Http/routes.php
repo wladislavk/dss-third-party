@@ -94,6 +94,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('letters/pending', 'LettersController@getPending');
     Route::post('letters/unmailed', 'LettersController@getUnmailed');
     Route::post('letters/gen-date-of-intro', 'LettersController@getGeneratedDateOfIntroLetter');
+    Route::post('letters/trigger-patient-treatment-complete', 'LettersController@triggerPatientTreatmentComplete');
     Route::resource('locations', 'LocationsController', ['except' => ['create', 'edit']]);
     Route::post('locations/by-doctor', 'LocationsController@getDoctorLocations');
     Route::resource('logins', 'LoginsController', ['except' => ['create', 'edit']]);
@@ -112,6 +113,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('patient-insurances/current', 'PatientInsurancesController@getCurrent');
     Route::post('patient-insurances/number', 'PatientInsurancesController@getNumber');
     Route::resource('patient-summaries', 'PatientSummariesController', ['except' => ['create', 'edit']]);
+    Route::post('patient-summaries/update-tracker-notes', 'PatientSummariesController@updateTrackerNotes');
     Route::resource('patients', 'PatientsController', ['except' => ['create', 'edit']]);
     Route::post('patients/with-filter', 'PatientsController@getWithFilter');
     Route::post('patients/number', 'PatientsController@getNumber');
@@ -128,6 +130,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('plans', 'PlansController', ['except' => ['create', 'edit']]);
     Route::resource('profile-images', 'ProfileImagesController', ['except' => ['create', 'edit']]);
     Route::post('profile-images/photo', 'ProfileImagesController@getProfilePhoto');
+    Route::post('profile-images/insurance-card-image', 'ProfileImagesController@getInsuranceCardImage');
     Route::resource('symptoms', 'SymptomsController', ['except' => ['create', 'edit']]);
     Route::resource('previous-treatments', 'PreviousTreatmentsController', ['except' => ['create', 'edit']]);
     Route::resource('health-histories', 'HealthHistoriesController', ['except' => ['create', 'edit']]);
@@ -166,6 +169,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
     Route::post('companies/company-logo', 'CompaniesController@getCompanyLogo');
     Route::post('companies/home-sleep-test', 'CompaniesController@getHomeSleepTestCompanies');
+    Route::post('companies/billing-exclusive-company', 'CompaniesController@getBillingExclusiveCompany');
     Route::resource('allergens', 'AllergensController', ['except' => ['create', 'edit']]);
     Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
     Route::resource('change-lists', 'ChangeListsController', ['except' => ['create', 'edit']]);

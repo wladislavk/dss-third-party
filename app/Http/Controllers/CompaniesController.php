@@ -100,4 +100,13 @@ class CompaniesController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getBillingExclusiveCompany(Company $resource)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resource->getBillingExclusiveCompany($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

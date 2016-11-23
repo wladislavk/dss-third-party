@@ -83,4 +83,13 @@ class Company extends Model implements Resource, Repository
             ->orderBY('name')
             ->get();
     }
+
+    public function getBillingExclusiveCompany($docId = 0)
+    {
+        return $this->select('c.name', 'c.exclusive')
+            ->from(DB::raw('companies c'))
+            ->join(DB::raw('dental_users u'), 'c.id', '=', 'u.billing_company_id')
+            ->where('u.userid', $docId)
+            ->first();
+    }
 }

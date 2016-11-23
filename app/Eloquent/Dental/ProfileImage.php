@@ -44,9 +44,22 @@ class ProfileImage extends Model implements Resource, Repository
         return $query->where('imagetypeid', 4);
     }
 
+    public function scopeInsuranceCardImage($query)
+    {
+        return $query->where('imagetypeid', 10);
+    }
+
     public function getProfilePhoto($patientId = 0)
     {
         return $this->profilePhoto()
+            ->where('patientid', $patientId)
+            ->orderBy('adddate', 'desc')
+            ->first();
+    }
+
+    public function getInsuranceCardImage($patientId = 0)
+    {
+        return $this->insuranceCardImage()
             ->where('patientid', $patientId)
             ->orderBy('adddate', 'desc')
             ->first();

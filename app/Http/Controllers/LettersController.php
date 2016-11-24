@@ -9,6 +9,8 @@ use DentalSleepSolutions\Http\Requests\LetterDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Repositories\Letters;
+use DentalSleepSolutions\Contracts\Repositories\Patients;
+use DentalSleepSolutions\Contracts\Resources\Contact;
 use Illuminate\Http\Request;
 
 /**
@@ -114,17 +116,30 @@ class LettersController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function triggerPatientTreatmentComplete(Letters $resources, Request $request)
-    {
+    public function triggerPatientTreatmentComplete(
+        Letters $resources,
+        Patients $patientsResource,
+        Contact $contactResource,
+        Request $request
+    ) {
         $patientId = $request->input('patient_id') ?: 0;
 
-        $patientReferralId = get_ptreferralids($patientId);
+        if ($patientId) {
+            $currentPatient = $patientsResource->getWithFilter([
+                'referred_source', 'docsleep', 'docpcp', 'docdentist',
+                'docent', 'docmdother', 'docmdother2', 'docmdother3'
+            ], [
+                'patientid' => $patientId
+            ]);
+        }
 
-        if ($patientReferralId) {
-            $letters = $resources->getPatientTreatmentComplete($patientId, $patientReferralId);
+        $patientReferralIds = $patientsResource->getPatientReferralIds($patientId, $currentPatient);
+
+        if ($patientReferralIds) {
+            $letters = $resources->getPatientTreatmentComplete($patientId, $patientReferralIds);
 
             if (!count($letters)) {
-                $contactIds = get_mdcontactids($patientId);
+                $contactIds = $contactResource->getMdContactIds($patientId, $currentPatient);
 
                 $letter = create_letter($letterid, $pid, '', '', '', '', $pt_referral_list);
                 if (!is_numeric($letter)) {

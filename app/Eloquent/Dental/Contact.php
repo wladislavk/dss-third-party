@@ -192,4 +192,39 @@ class Contact extends Model implements Resource, Repository
             ->where('c.contactid', $contactId)
             ->first();
     }
+
+    public function getMdContactIds($patientId = 0, $currentPatient, $active = true)
+    {
+        $requiredFields = [
+            'docsleep', 'docpcp', 'docdentist', 'docent',
+            'docmdother', 'docmdother2', 'docmdother3'
+        ];
+
+        $currentPatient = $currentPatient->toArray();
+        $contactIds = [];
+
+        foreach ($requiredFields as $field) {
+            if ($currentPatient[$field] != 'Not Set') {
+                $contacts = explode(',', $currentPatient[$field]);
+
+                foreach ($contacts as $contact) {
+                    if (!in_array($contact, $contactIds)) {
+                        if ($active) {
+                            $contactStatus = $this->select('status')
+                                ->where('contactid', $contact)
+                                ->first();
+
+                            if ($contactStatus && $contactStatus->status == 1) {
+                                $contactIds[] = $contact;
+                            }
+                        } else {
+                            $contactIds[] = $contact;
+                        }
+                    }
+                }
+            }
+        }
+
+        return implode(',', $contactIds);
+    }
 }

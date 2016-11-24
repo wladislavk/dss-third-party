@@ -552,4 +552,36 @@ class Patient extends Model implements Resource, Repository
                     ->orWhere('docmdother3', '=', $contactId);
             })->get();
     }
+
+    public function getPatientReferralIds($patientId = 0, $patientReferredSource = null)
+    {
+        if (!empty($patientReferredSource) && $patientReferredSource[0]->referred_source == 1) {
+            $contactQuery = $this->select(DB::raw('GROUP_CONCAT(distinct pr.patientid) as ids'))
+                ->from(DB::raw('dental_patients pr'))
+                ->join(DB::raw('dental_patients p'), 'p.referred_by', '=', 'pr.patientid')
+                ->where('p.patientid', $patientId)
+                ->groupBy('p.referred_by')
+                ->orderBy('pr.patientid');
+        } elseif (!empty($patientReferredSource) && $patientReferredSource[0]->referred_source == 2) {
+            $contactQuery = $this->select(DB::raw('GROUP_CONCAT(distinct dental_contact.contactid) as ids'))
+                ->join('dental_patients', 'dental_patients.referred_by', '=', 'dental_contact.contactid')
+                ->join(DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'dental_contact.contacttypeid')
+                ->where('dental_patients.patientid', $patientId)
+                ->where('ct.physician', '!=', 1)
+                ->groupBy('dental_patients.referred_by')
+                ->orderBy('dental_contact.contactid');
+        }
+
+        $contactidList = '';
+
+        if ($contactQuery) {
+            $contacts = $contactQuery->get();
+
+            if (count($contacts)) {
+                $contactidList = $contacts[0]->ids;
+            }
+        }
+
+        return $contactidList;
+    }
 }

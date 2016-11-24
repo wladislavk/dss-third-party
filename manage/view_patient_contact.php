@@ -148,7 +148,7 @@
                                             <option value="Dr." <?php if($salutation == 'Dr.' || $salutation=='') echo " selected";?>>Dr.</option>
                                             <option value="Mr." <?php if($salutation == 'Mr.') echo " selected";?>>Mr.</option>
                                             <option value="Mrs." <?php if($salutation == 'Mrs.') echo " selected";?>>Mrs.</option>
-                                            <option value="Miss." <?php if($salutation == 'Miss.') echo " selected";?>>Miss.</option>
+                                            <option value="Ms." <?php if($salutation == 'Miss.'||$salutation == 'Ms.') echo " selected";?>>Ms.</option>
                                         </select>
                                         <label for="salutation">Salutation</label>
                                     </span>

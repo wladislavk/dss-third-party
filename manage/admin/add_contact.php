@@ -183,7 +183,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
                         <option value="Dr." <?php echo  ($salutation == 'Dr.') ? 'selected' : '' ?>>Dr.</option>
                         <option value="Mr." <?php echo  ($salutation == 'Mr.') ? 'selected' : '' ?>>Mr.</option>
                         <option value="Mrs." <?php echo  ($salutation == 'Mrs.') ? 'selected' : '' ?>>Mrs.</option>
-                        <option value="Miss." <?php echo  ($salutation == 'Miss.') ? 'selected' : '' ?>>Miss.</option>
+                        <option value="Ms." <?php echo  ($salutation == 'Miss.'||$salutation == 'Ms.') ? 'selected' : '' ?>>Ms.</option>
                     </select>
                 </div>
             </div>

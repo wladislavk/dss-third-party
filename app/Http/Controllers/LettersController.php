@@ -12,6 +12,7 @@ use DentalSleepSolutions\Contracts\Repositories\Letters;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Contracts\Resources\Contact;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -135,22 +136,60 @@ class LettersController extends Controller
 
         $patientReferralIds = $patientsResource->getPatientReferralIds($patientId, $currentPatient);
 
+        $letterId = 0;
+
         if ($patientReferralIds) {
             $letters = $resources->getPatientTreatmentComplete($patientId, $patientReferralIds);
 
             if (!count($letters)) {
                 $contactIds = $contactResource->getMdContactIds($patientId, $currentPatient);
 
-                $letter = create_letter($letterid, $pid, '', '', '', '', $pt_referral_list);
-                if (!is_numeric($letter)) {
-                    print "Can't send letter 20: " . $letter;
-                    trigger_error("Die called", E_USER_ERROR);
-                } else {
-                    return $letter;
-                }
+                $letterId = $this->createLetter($letterid, $pid, '', '', '', '', $pt_referral_list);
             }
         }
 
-        return ApiResponse::responseOk('', $data);
+        return ApiResponse::responseOk('', ['letter_id' => $letterId]);
+    }
+
+    private function createLetter(User $userResource, Letter $letterResource, $data = []) {
+        $docId = $this->currentUser->docid ?: 0;
+        $userId = $this->currentUser->userid ?: 0;
+
+        if ($docId > 0) {
+            $user = $userResource->getWithFilter(['use_letters'], [
+                'userid' => $docId
+            ]);
+
+            if ($user && $user->use_letters != 1) {
+                return -1;
+            }
+        }
+
+        if ((!$data['to_patient'] && !$data['md_referral_list'] && !$data['md_list'] && !$data['patient_referral_list']) ||
+            ($data['check_recipient'] && !$data['md_referral_list'] && !$data['md_list'] &&
+            ($data['templateid'] == 16 || $data['templateid'] == 19))
+        ) {
+            return false;
+        }
+
+        if (!isset($templateid)) {
+            return "Error: Letter Template not specified";
+        }
+
+        //To remove referral source from md list if exists
+        $mdArray = explode(',', $data['md_list']);
+        $mdArray = array_filter($mdArray, [new MDReferralFilter($data['md_referral_list']), 'isReferrer']);
+        $data['md_list'] = implode(',', $mdArray);
+
+        $data['user_id'] = $userId;
+        $data['doc_id'] = $docId;
+
+        $createdLetter = $letterResource->createLetter($data);
+
+        if ($createdLetter) {
+            return $createdLetter->letterid;
+        } else {
+            return 0;
+        }
     }
 }

@@ -2308,3 +2308,14 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SupportTicket::class, func
         'company_id'  => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Dental\Notification::class, function ($faker) {
+    return [
+        'patientid'         => $faker->randomDigit,
+        'docid'             => $faker->randomDigit,
+        'notification'      => $faker->sentence($nbWords = 4),
+        'notification_type' => $faker->word,
+        'status'            => $faker->randomDigit,
+        'notification_date' => $faker->dateTime()
+    ];
+});

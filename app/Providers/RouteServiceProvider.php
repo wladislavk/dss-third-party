@@ -28,6 +28,7 @@ class RouteServiceProvider extends ServiceProvider
         'tasks' => \DentalSleepSolutions\Eloquent\Dental\Task::class,
         'home-sleep-tests' => \DentalSleepSolutions\Eloquent\Dental\HomeSleepTest::class,
         'support-tickets' => \DentalSleepSolutions\Eloquent\Dental\SupportTicket::class,
+        'notifications' => \DentalSleepSolutions\Eloquent\Dental\Notification::class,
         'guide-settings' => \DentalSleepSolutions\Eloquent\Dental\GuideSetting::class,
         'guide-setting-options' => \DentalSleepSolutions\Eloquent\Dental\GuideSettingOption::class,
         'guide-devices' => \DentalSleepSolutions\Eloquent\Dental\GuideDevice::class,

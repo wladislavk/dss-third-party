@@ -74,17 +74,6 @@ module.exports = {
     created: function() {
         this.updatePatientData(this.routeParameters.patientId);
 
-        this.findPatientNotifications()
-            .then(function(response) {
-                var data = response.data.data;
-
-                if (data.length) {
-                    this.$set('patientNotifications', data);
-                }
-            }, function(response) {
-                this.handleErrors('findPatientNotifications', response);
-            });
-
         this.getHomeSleepTestCompanies()
             .then(function(response) {
                 var data = response.data.data;
@@ -190,6 +179,17 @@ module.exports = {
                 }, function(response) {
                     this.handleErrors('getUncompletedHomeSleepTests', response);
                 });
+
+            this.findPatientNotifications(patientId)
+                .then(function(response) {
+                    var data = response.data.data;
+
+                    if (data.length) {
+                        this.$set('patientNotifications', data);
+                    }
+                }, function(response) {
+                    this.handleErrors('findPatientNotifications', response);
+                });
         },
         onChangeRelations: function(type) {
             // need to test this function
@@ -267,8 +267,15 @@ module.exports = {
 
             return this.$http.get(window.config.API_PATH + 'patients/' + patientId);
         },
-        findPatientNotifications: function() {
-            return this.$http.post(window.config.API_PATH + '');
+        findPatientNotifications: function(patientId) {
+            var data = {
+                where: {
+                    patientid : patientId || 0,
+                    status : 1
+                }
+            };
+
+            return this.$http.post(window.config.API_PATH + 'notifications/with-filter', data);
         }
     }
 }

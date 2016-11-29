@@ -49,6 +49,11 @@ class Contact extends Model implements Resource, Repository
      */
     const CREATED_AT = 'adddate';
 
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
+
     public function find(
         $contactType     = 0,
         $status          = 0,
@@ -226,5 +231,12 @@ class Contact extends Model implements Resource, Repository
         }
 
         return implode(',', $contactIds);
+    }
+
+    public function getActiveContact($contactId = 0)
+    {
+        return $this->where('contactid', $contactId)
+            ->active()
+            ->first();
     }
 }

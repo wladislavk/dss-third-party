@@ -24,6 +24,9 @@ use Carbon\Carbon;
  */
 class LettersController extends Controller
 {
+    const DSS_USER_TYPE_FRANCHISEE = 1;
+    const DSS_USER_TYPE_SOFTWARE = 2;
+
     /**
      * Display a listing of the resource.
      *
@@ -149,6 +152,88 @@ class LettersController extends Controller
         }
 
         return ApiResponse::responseOk('', ['letter_id' => $letterId]);
+    }
+
+    public function triggerIntroLettersOf12Types(
+        User $userResource,
+        Letter $letterResource,
+        Contact $contactResource,
+        Request $request,
+        $mdContacts = []
+    ) {
+        // trigger intro letter to MD from DSSFLLC and intro letter to MD from Franchisee
+
+        $patientId = $request->input('patient_id') ?: 0;
+        $docId = $this->currentUser->docid ?: 0;
+        $userType = $this->currentUser->user_type ?: 0;
+
+        $userLetterInfo = $userResource->getWithFilter(['use_letters', 'intro_letters'], [
+            'userid' => $docId
+        ]);
+
+        if ($userLetterInfo && $userLetterInfo->use_letters && $userLetterInfo->intro_letters) {
+            $letter1Id = 1;
+            $letter2Id = 2;
+
+            $recipients = [];
+            if (count($mdContacts)) {
+                foreach ($mdContacts as $contact) {
+                    if ($contact != "Not Set") {
+                        $mdLists = $letterResource->getMdList($contact, $letter1Id, $letter2Id);
+
+                        if (count($mdLists) && $contact != "") {
+                            $foundContact = $contactResource->getActiveContact($contact);
+
+                            if ($foundContact) {
+                                $recipients[] = $contact;
+                            }
+                        }
+                    }
+                }
+            }
+
+            $createdLetter1Id = 0;
+            $createdLetter2Id = 0;
+
+            if (count($recipients)) {
+                $recipientsList = implode(',', $recipients);
+
+                $createdLetter2Id = $this->createLetter($letter2Id, $patientId, '', '', $recipientsList);
+
+                //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
+                if ($userType == self::DSS_USER_TYPE_SOFTWARE) {
+                    $createdLetter1Id = $this->createLetter($letter1Id, $patientId, '', '', $recipientsList);
+                }
+            }
+
+            $data = [
+                'letter_1_id' => $createdLetter1Id,
+                'letter_2_id' => $createdLetter2Id
+            ];
+        } else {
+            $data = null;
+        }
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function triggerIntroLetterOf3Type(Request $request)
+    {
+        // trigger intro letter to DSS Patient of Record
+
+        $patientId = $request->input('patient_id') ?: 0;
+        $letterId = 3;
+        $toPatient = 1;
+
+        $letterId = $this->createLetter($letterId, $patientId, '', $toPatient);
+
+        if ($letterId > 0) {
+            $data = ['letter_id' => $letterId];
+        } else {
+            $data = null;
+        }
+
+        return ApiResponse::responseOk('', $data);
     }
 
     private function createLetter(User $userResource, Letter $letterResource, $data = []) {

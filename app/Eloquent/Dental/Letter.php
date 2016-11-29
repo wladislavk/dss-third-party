@@ -181,4 +181,13 @@ class Letter extends Model implements Resource, Repository
 
         return $this->create($newLetter);
     }
+
+    public function getMdList($contactId, $letter1Id = 0, $letter2Id = 0)
+    {
+        return $this->select('md_list')
+            ->whereNotNull('md_list')
+            ->whereRaw("CONCAT(',', md_list, ',') LIKE ?", ['%,' . $contactId . ',%'])
+            ->whereIn('templateid', [$letter1Id, $letter2Id])
+            ->get();
+    }
 }

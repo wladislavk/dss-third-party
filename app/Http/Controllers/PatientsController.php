@@ -200,4 +200,48 @@ class PatientsController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function addNewPatient(Patient $patientResource, PatientStore $request)
+    {
+        $patient = $request->all();
+
+        if ($patient['p_m_eligible_payer'] != '') {
+            $patient['p_m_eligible_payer_id'] = substr($patient['p_m_eligible_payer'], 0, strpos($patient['p_m_eligible_payer'], '-'));
+            $patient['p_m_eligible_payer_name'] = substr($patient['p_m_eligible_payer'], (strpos($patient['p_m_eligible_payer'], '-') + 1));
+        } else {
+            $patient['p_m_eligible_payer_id'] = '';
+            $patient['p_m_eligible_payer_name'] = '';
+        }
+
+        if ($patient['s_m_eligible_payer'] != '') {
+            $patient['s_m_eligible_payer_id'] = substr($patient['s_m_eligible_payer'], 0, strpos($patient['s_m_eligible_payer'], '-'));
+            $patient['s_m_eligible_payer_name'] = substr($patient['s_m_eligible_payer'], (strpos($patient['s_m_eligible_payer'], '-') + 1));
+        } else {
+            $patient['s_m_eligible_payer_id'] = '';
+            $patient['s_m_eligible_payer_name'] = '';
+        }
+
+        if (/* existing patient (update) */) {
+            $oldPatient = $patientResource->find($patientId);
+
+            if ($oldPatient->registration_status == 2 && $patient['email'] != $oldPatient->email) {
+                sendUpdatedEmail($patientId, $patient['email'], $oldPatient->email, 'doc');
+            } elseif (isset($patient['sendRem'])) {
+                // send reminder email
+                sendRemEmail($newPatientId, $patient['email']);
+            } elseif (!isset($patient['sendReg']) && $oldPatient->registration_status == 1 && trim($patient['email']) != trim($oldPatient['email'])) {
+                if ($docPatientPortal && $usePatientPortal) {
+                    // send reg email if email is updated and not registered
+                    sendRegEmail($newPatientId, $patient['email'], '');
+                }
+            }
+
+            if ($patient['email'] != $oldPatient['email']) {
+                $patient['email_bounce'] = 0;
+            }
+
+            $patientResource->update($patient);
+            $patientResource->updateChildrenPatients($patientId, ['email' => $patient['email']]);
+        }
+    }
 }

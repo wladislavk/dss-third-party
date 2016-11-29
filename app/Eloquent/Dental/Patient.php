@@ -584,4 +584,10 @@ class Patient extends Model implements Resource, Repository
 
         return $contactidList;
     }
+
+    public function updateChildrenPatients($parentPatientId = 0, $data = [])
+    {
+        $this->where('parent_patientid', $parentPatientId)
+            ->update($data);
+    }
 }

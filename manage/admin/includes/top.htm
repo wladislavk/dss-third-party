@@ -141,37 +141,38 @@ require_once __DIR__ . '/claim_functions.php';
 	        <div class="clearfix"></div>
         </div>
 <?php
+
 // Count letters
-// Select Letters into Array
+$userTypeFranchisee = DSS_USER_TYPE_FRANCHISEE;
+$adminCompanyId = intval($_SESSION['admincompanyid']);
+
 if (is_super($_SESSION['admin_access'])) {
-    $letters_query = "SELECT COUNT(dental_letters.letterid) AS total
-        FROM dental_letters
-            JOIN dental_users u ON u.userid = dental_letters.docid
-            LEFT JOIN dental_patients on dental_letters.patientid = dental_patients.patientid
-        WHERE (
-                (
-                    dental_letters.status = '1'
-                    AND COALESCE(dental_letters.delivered, 0) = 0
-                )
-            )
-            AND COALESCE(dental_letters.deleted) = 0
-            AND u.user_type = '" . DSS_USER_TYPE_FRANCHISEE . "'";
+    $companyJoin = '';
+    $companyConditional = '1 = 1';
 } else {
-    $letters_query = "SELECT COUNT(dental_letters.letterid) AS total
-        FROM dental_letters
-            JOIN dental_user_company uc ON uc.userid = dental_letters.docid
-            JOIN dental_users u ON u.userid = dental_letters.docid
-            LEFT JOIN dental_patients on dental_letters.patientid=dental_patients.patientid
-        WHERE uc.companyid = '".$db->escape($_SESSION['admincompanyid'])."'
-            AND (
-                (
-                    dental_letters.status = '1'
-                    AND COALESCE(dental_letters.delivered, 0) = 0
-                )
-            )
-            AND COALESCE(dental_letters.deleted, 0) = 0
-            AND u.user_type = '" . DSS_USER_TYPE_FRANCHISEE . "'";
+    $companyJoin = 'JOIN dental_user_company uc ON uc.userid = dental_letters.docid';
+    $companyConditional = "uc.companyid = '$adminCompanyId'";
 }
+
+$letters_query = "SELECT COUNT(dental_letters.letterid) AS total
+    FROM dental_letters
+        $companyJoin
+        JOIN dental_users u ON u.userid = dental_letters.docid
+        LEFT JOIN dental_patients on dental_letters.patientid = dental_patients.patientid
+    WHERE $companyConditional
+        AND (
+            (
+                dental_letters.status = '1'
+                AND dental_letters.delivered = 0
+            )
+            OR (
+                dental_letters.delivered = '1'
+                AND dental_letters.mailed_date IS NULL
+            )
+        )
+        AND dental_letters.deleted = '0'
+        AND u.user_type = '$userTypeFranchisee'
+    ";
 
 $pending_letters = $db->getColumn($letters_query, 'total', 0);
 

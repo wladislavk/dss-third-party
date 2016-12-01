@@ -590,4 +590,21 @@ class Patient extends Model implements Resource, Repository
         $this->where('parent_patientid', $parentPatientId)
             ->update($data);
     }
+
+    /**
+     * Search for similar logins (it need for creation of an unique login)
+     */
+    public function getSimilarPatientLogin($login = '')
+    {
+        $this->select('login')
+            ->where('login', 'LIKE', $login . '%')
+            ->orderBy('login', 'desc')
+            ->first();
+    }
+
+    public function updatePatient($patientId = 0, $data = [])
+    {
+        $this->where('patientid', $patientId)
+            ->update($data);
+    }
 }

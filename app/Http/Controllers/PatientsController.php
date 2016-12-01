@@ -10,6 +10,7 @@ use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
+use DentalSleepSolutions\Contracts\Repositories\Summaries;
 use Illuminate\Http\Request;
 
 /**
@@ -205,6 +206,7 @@ class PatientsController extends Controller
     public function addNewPatient(
         Patient $patientResource,
         InsurancePreauth $insurancePreauthResource,
+        Summaries $summariesResource,
         PatientStore $request
     ) {
         $patient = $request->all();
@@ -271,6 +273,35 @@ class PatientsController extends Controller
                     $c = create_vob($newPatientId);
 
                     if (isset($patient['location'])) {
+                        $summaries = $summariesResource->getWithFilter(null, ['patientid' => $patientId]);
+
+                        if (count($summaries)) {
+                            $summaries->updateForPatient($patientId, [
+                                'location' => $patient['location']
+                            ]);
+                        } else {
+                            $summaries->create([
+                                'location'  => $patient['location'],
+                                'patientid' => $patientId
+                            ]);
+                        }
+                    }
+
+                    if ($oldPatient->login == '') {
+                        $cLogin = strtolower(substr($patient["firstname"], 0, 1) . $patient["lastname"]);
+
+                        $similarPatientLogin = $patientResource->getSimilarPatientLogin($cLogin);
+
+                        if ($similarPatientLogin) {
+                            $number = str_replace($cLogin, '', $similarPatientLogin->login);
+
+                            $cLogin = $cLogin . ++$number;
+                        }
+
+                        $patientResource->updatePatient($newPatientId, ['login' => $cLogin]);
+                    }
+
+                    if () {
                         
                     }
                 }

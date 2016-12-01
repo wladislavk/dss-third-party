@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\PatientDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
+use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use Illuminate\Http\Request;
 
 /**
@@ -201,8 +202,11 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function addNewPatient(Patient $patientResource, PatientStore $request)
-    {
+    public function addNewPatient(
+        Patient $patientResource,
+        InsurancePreauth $insurancePreauthResource,
+        PatientStore $request
+    ) {
         $patient = $request->all();
 
         if ($patient['p_m_eligible_payer'] != '') {
@@ -242,6 +246,35 @@ class PatientsController extends Controller
 
             $patientResource->update($patient);
             $patientResource->updateChildrenPatients($patientId, ['email' => $patient['email']]);
+
+            $insuranceInfoFieldsArray = [
+                'p_m_relation', 'p_m_partyfname', 'p_m_partylname',
+                'ins_dob', 'p_m_ins_type', 'p_m_ins_ass',
+                'p_m_ins_id', 'p_m_ins_grp', 'p_m_ins_plan'
+            ];
+
+            $hasInsuranceInfoChanged = false;
+
+            foreach ($insuranceInfoFieldsArray as $field) {
+                if ($oldPatient[$field] != $patient[$field]) {
+                    $hasInsuranceInfoChanged = true;
+                    break;
+                }
+            }
+
+            if ($hasInsuranceInfoChanged) {
+                $userName = $this->currentUser->name ?: '';
+
+                $updatedVob = $insurancePreauthResource->updateVob($newPatientId, $userName);
+
+                if ($updatedVob) {
+                    $c = create_vob($newPatientId);
+
+                    if (isset($patient['location'])) {
+                        
+                    }
+                }
+            }
         }
     }
 }

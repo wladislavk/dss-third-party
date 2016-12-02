@@ -11,6 +11,7 @@ use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\Summaries;
+use DentalSleepSolutions\Contracts\Resources\Letter;
 use Illuminate\Http\Request;
 
 /**
@@ -207,6 +208,7 @@ class PatientsController extends Controller
         Patient $patientResource,
         InsurancePreauth $insurancePreauthResource,
         Summaries $summariesResource,
+        Letter $letterResource,
         PatientStore $request
     ) {
         $patient = $request->all();
@@ -301,11 +303,52 @@ class PatientsController extends Controller
                         $patientResource->updatePatient($newPatientId, ['login' => $cLogin]);
                     }
 
-                    if () {
-                        
+                    if (isset($patient['sendReg']) && $patient['doc_patient_portal'] && $patient['use_patient_portal']) {
+                        if (trim($patient['email']) != '' && trim($patient['cell_phone']) != '') {
+                            sendRegEmail($newPatientId, $patient['email'], $cLogin, $oldPatient['email']);
+                        } else {
+                            $message = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
+                        }
+                    }
+
+                    /*
+                    if (!empty($_POST['copyreqdate'])) {
+                        $dateCompleted = date('Y-m-d', strtotime($_POST['copyreqdate']));
+                    } else {
+                        $dateCompleted = date('Y-m-d');
+                    }
+
+                    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".intval($_POST['ed'])."' AND stepid='1';";
+                    $db->query($s1);
+                    */
+
+                    if ($oldPatient['referred_by'] != $patient['referred_by'] ||
+                        $oldPatient['referred_source'] != $patient['referred_source']
+                    ) {
+                        if ($oldPatient['referred_source'] == 2 && $patient['referred_source'] == 2) {
+                            //PHYSICIAN -> PHYSICIAN
+
+                            $letterResource->updatePendingLettersToNewReferrer(
+                                $oldPatient['referred_by'],
+                                $patient['referred_by'],
+                                $newPatientId,
+                                'physician'
+                            );
+                        } elseif ($oldPatient['referred_source'] == 1 && $patient['referred_source'] == 1) {
+                            //PATIENT -> PATIENT
+
+                            $letterResource->updatePendingLettersToNewReferrer(
+                                $oldPatient['referred_by'],
+                                $patient['referred_by'],
+                                $newPatientId,
+                                'patient'
+                            );
+                        }
                     }
                 }
             }
         }
+
+        return ApiResponse::responseOk('', ['message' => $message]);
     }
 }

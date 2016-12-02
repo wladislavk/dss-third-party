@@ -64,6 +64,11 @@ class Letter extends Model implements Resource, Repository
         return $query->where('templateid', 20);
     }
 
+    public function scopePending($query)
+    {
+        return $query->where('status', 0);
+    }
+
     public function getPending($docId = 0)
     {
         return $this->select(DB::raw('UNIX_TIMESTAMP(dental_letters.generated_date) AS generated_date'))
@@ -189,5 +194,29 @@ class Letter extends Model implements Resource, Repository
             ->whereRaw("CONCAT(',', md_list, ',') LIKE ?", ['%,' . $contactId . ',%'])
             ->whereIn('templateid', [$letter1Id, $letter2Id])
             ->get();
+    }
+
+    public function updatePendingLettersToNewReferrer($oldReferredBy, $newReferredBy, $patientId, $type)
+    {
+        $letter = $this->pending()
+            ->where('patientid', $patientId);
+
+        switch ($type) {
+            case 'physician':
+                $letter = $letter->where('md_referral_list', $oldReferredBy);
+                break;
+
+            case 'patient':
+                $letter = $letter->where('pat_referral_list', $oldReferredBy);
+                break;
+
+            default:
+                break;
+        }
+
+        return $letter->update([
+            'template'         => null,
+            'md_referral_list' => $newReferredBy
+        ]);
     }
 }

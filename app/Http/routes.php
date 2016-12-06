@@ -98,6 +98,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('letters/unmailed', 'LettersController@getUnmailed');
     Route::post('letters/gen-date-of-intro', 'LettersController@getGeneratedDateOfIntroLetter');
     Route::post('letters/trigger-patient-treatment-complete', 'LettersController@triggerPatientTreatmentComplete');
+    Route::post('letters/trigger-letters-12', 'LettersController@triggerIntroLettersOf12Types');
+    Route::post('letters/trigger-letter-3', 'LettersController@triggerIntroLetterOf3Type');
     Route::resource('locations', 'LocationsController', ['except' => ['create', 'edit']]);
     Route::post('locations/by-doctor', 'LocationsController@getDoctorLocations');
     Route::resource('logins', 'LoginsController', ['except' => ['create', 'edit']]);

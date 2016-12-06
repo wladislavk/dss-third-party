@@ -203,20 +203,43 @@ class Letter extends Model implements Resource, Repository
 
         switch ($type) {
             case 'physician':
-                $letter = $letter->where('md_referral_list', $oldReferredBy);
+                $field = 'md_referral_list';
                 break;
 
             case 'patient':
-                $letter = $letter->where('pat_referral_list', $oldReferredBy);
+                $field = 'pat_referral_list';
                 break;
 
             default:
                 break;
         }
 
-        return $letter->update([
-            'template'         => null,
-            'md_referral_list' => $newReferredBy
-        ]);
+        return $letter->where($field, $oldReferredBy)
+            ->update([
+                'template' => null,
+                $field     => $newReferredBy
+            ]);
+    }
+
+    public function getPhysicianOrPatientPendingLetters($referralList, $patientId, $type = 'physician')
+    {
+        switch ($type) {
+            case 'physician':
+                $field = 'md_referral_list';
+                break;
+
+            case 'patient':
+                $field = 'pat_referral_list';
+                break;
+
+            default:
+                $field = '';
+                break;
+        }
+
+        return $this->where($field, $referralList)
+            ->where('patientid', $patientId)
+            ->pending()
+            ->get();
     }
 }

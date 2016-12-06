@@ -12,6 +12,7 @@ use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\Summaries;
 use DentalSleepSolutions\Contracts\Resources\Letter;
+use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
 
 /**
@@ -229,6 +230,19 @@ class PatientsController extends Controller
             $patient['s_m_eligible_payer_name'] = '';
         }
 
+        // generation of an unique patient login
+        $cLogin = strtolower(substr($patient["firstname"], 0, 1) . $patient["lastname"]);
+
+        $similarPatientLogin = $patientResource->getSimilarPatientLogin($cLogin);
+
+        if ($similarPatientLogin) {
+            $number = str_replace($cLogin, '', $similarPatientLogin->login);
+
+            $cLogin = $cLogin . ++$number;
+        }
+
+        $triggerLetters = false;
+
         if (/* existing patient (update) */) {
             $oldPatient = $patientResource->find($patientId);
 
@@ -290,16 +304,6 @@ class PatientsController extends Controller
                     }
 
                     if ($oldPatient->login == '') {
-                        $cLogin = strtolower(substr($patient["firstname"], 0, 1) . $patient["lastname"]);
-
-                        $similarPatientLogin = $patientResource->getSimilarPatientLogin($cLogin);
-
-                        if ($similarPatientLogin) {
-                            $number = str_replace($cLogin, '', $similarPatientLogin->login);
-
-                            $cLogin = $cLogin . ++$number;
-                        }
-
                         $patientResource->updatePatient($newPatientId, ['login' => $cLogin]);
                     }
 
@@ -343,12 +347,58 @@ class PatientsController extends Controller
                                 $newPatientId,
                                 'patient'
                             );
+                        } elseif ($oldPatient['referred_source'] == 2 && $patient['referred_source'] != 2) {
+                            //PHYSICIAN -> NOT PHYSICIAN
+
+                            $letters = $letterResource->getPhysicianOrPatientPendingLetters(
+                                $oldPatient['referred_by'],
+                                $newPatientId
+                            );
+
+                            if (count($letters)) {
+                                foreach ($letters as $letter) {
+                                    $this->deleteLetter($letter->letterid, null, 'md_referral', $oldPatient['referred_by']);
+                                }
+                            }
+                        } elseif ($oldPatient['referred_source'] == 1 && $patient['referred_source'] != 1) {
+                            //PATIENT -> NOT PATIENT
+
+                            $letters = $letterResource->getPhysicianOrPatientPendingLetters(
+                                $oldPatient['referred_by'],
+                                $newPatientId,
+                                'patient'
+                            );
+
+                            if (count($letters)) {
+                                foreach ($letters as $letter) {
+                                    $this->deleteLetter($letter->letterid, null, 'pat_referral', $oldPatient['referred_by']);
+                                }
+                            }
                         }
                     }
+
+                    $triggerLetters = true;
+                    $message = 'Edited Successfully';
                 }
             }
+        } else {
+            if ($patient['ssn'] != '') {
+                $salt = Password::createSalt();
+                $password = preg_replace('/\D/', '', $patient['ssn']);
+                $password = Password::genPassword($password, $salt);
+            } else {
+                $salt = '';
+                $password = '';
+            }
+
+            
         }
 
-        return ApiResponse::responseOk('', ['message' => $message]);
+        $data = [
+            'message'            => $message,
+            'is_trigger_letters' => $triggerLetters
+        ];
+
+        return ApiResponse::responseOk('', $data);
     }
 }

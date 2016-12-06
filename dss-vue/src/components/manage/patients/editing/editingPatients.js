@@ -25,7 +25,8 @@ module.exports = {
             uncompletedHomeSleepTests : [],
             message                   : '',
             eligiblePayerId           : 0,
-            eligiblePayerName         : ''
+            eligiblePayerName         : '',
+            sendPin                   : ''
         }
     },
     mixins: [handlerMixin],
@@ -108,10 +109,80 @@ module.exports = {
             });
     },
     methods: {
+        editPatient: function() {
+            this.addNewPatient()
+                .then(function(response) {
+                    var data = response.data.data;
+
+                    if (data) {
+                        if (data.is_trigger_letters) {
+                            this.triggerLetters1and2()
+                                .then(function(response) {
+                                    var data = response.data.data;
+
+                                    if (data) {
+                                        // TODO
+                                    }
+                                }, function(response) {
+                                    this.handleErrors('triggerLetters1and2', response);
+                                });
+
+                            if ($patient['introletter'] == 1) {
+                                this.triggerLetter3()
+                                    .then(function(response) {
+                                        var data = response.data.data;
+
+                                        if (data) {
+                                            // TODO
+                                        }
+                                    }, function(response) {
+                                        this.handleErrors('triggerLetter3', response);
+                                    });
+                            }
+
+                            if (isset($patient['add_ref_but'])) {
+                                // redirect to add_referredby.php?addtopat= + $patientId
+                            }
+
+                            if (isset($patient['add_ins_but'])) {
+                                // redicrect to add_contact.php?ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$patientId."&type=11&ctypeeq=1&activePat=".$patientId;} ?>
+                            }
+
+                            if (isset($patient['add_contact_but'])) {
+                                // redirect to add_patient_to.php?ed=<?= $patientId ?>
+                            }
+
+                            if (isset($patient['sendHST'])) {
+                                // redirect to hst_request_co.php?ed=<?= $patientId ?>
+                            }
+
+                            if (this.sendPin) {
+                                this.sendPin = '&sendPin=1';
+                            } else {
+                                this.sendPin = '';
+                            }
+
+                            // redirect in parent window to add_patient.php?ed=<?= $patientId ?>&addtopat=1&pid=<?= $patientId ?>&msg=<?php echo $msg;?><?php echo $sendPin; ?>
+                        }
+                    }
+                }, function(response) {
+                    this.handleErrors('addNewPatient', response);
+                });
+        },
         triggerLetter20: function() {
             var data = {};
 
             return this.$http.post(window.config.API_PATH + 'letters/trigger-patient-treatment-complete', data);
+        },
+        triggerLetters1and2: function() {
+            var data = {};
+
+            return this.$http.post(window.config.API_PATH + 'letters/trigger-letters-12', data);
+        },
+        triggerLetter3: function() {
+            var data = {};
+
+            return this.$http.post(window.config.API_PATH + 'letters/trigger-letter-3', data);
         },
         getBillingCompany: function() {
             return this.$http.post(window.config.API_PATH + 'companies/billing-exclusive-company');
@@ -276,6 +347,11 @@ module.exports = {
             };
 
             return this.$http.post(window.config.API_PATH + 'notifications/with-filter', data);
+        },
+        addNewPatient: function() {
+            var data = {};
+
+            return this.$http.post(window.config.API_PATH + 'patients/add-new-patient', data);
         }
     }
 }

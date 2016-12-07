@@ -243,6 +243,8 @@ class PatientsController extends Controller
 
         $triggerLetters = false;
 
+        $errors = [];
+
         if (/* existing patient (update) */) {
             $oldPatient = $patientResource->find($patientId);
 
@@ -391,12 +393,42 @@ class PatientsController extends Controller
                 $password = '';
             }
 
-            
+            $patient['salt'] = $salt;
+            $patient['password'] = $password;
+            $patient['salt'] = $salt;
+            $patient['userid'] = $this->currentUser->userid ?: 0;
+            $patient['docid'] = $this->currentUser->docid ?: 0;
+            $patient['ip_address'] = $request->ip();
+
+            // filters
+            $patient['firstname'] = ucfirst($patient['firstname']);
+            $patient['lastname'] = ucfirst($patient['lastname']);
+            $patient['middlename'] = ucfirst($patient['middlename']);
+
+            $createdPatientId = $patientResource->create($patient);
+
+            if (isset($patient['location'])) {
+                $summariesResource->create([
+                    'location'  => $patient['location'],
+                    'patientid' => $createdPatientId
+                ]);
+            }
+
+            $triggerLetters = true;
+
+            if (isset($patient['sendReg']) && $patient["use_patient_portal"]) {
+                if (trim($patient['email']) != '' && trim($patient['cell_phone']) != '') {
+                    sendRegEmail($newPatientId, $patient['email'], '');
+                } else {
+                    $errors[] = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
+                }
+            }
         }
 
         $data = [
             'message'            => $message,
-            'is_trigger_letters' => $triggerLetters
+            'is_trigger_letters' => $triggerLetters,
+            'errors'             => $errors
         ];
 
         return ApiResponse::responseOk('', $data);

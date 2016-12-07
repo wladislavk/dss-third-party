@@ -1413,13 +1413,16 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
     $margin_footer = PDF_MARGIN_FOOTER;
   }
 
+  // Set a default bottom margin
+  $margin_bottom = $margin_bottom ?: 20;
+
   //set margins
-  $pdf->SetMargins($margin_left, $margin_top, $margin_right);
+  $pdf->SetMargins($margin_left, $margin_top, $margin_right, true);
   $pdf->SetHeaderMargin($margin_header);
   $pdf->SetFooterMargin($margin_footer);
 
   //set auto page breaks
-  $pdf->SetAutoPageBreak(TRUE, /*$margin_bottom*/20);
+  $pdf->SetAutoPageBreak(true, $margin_bottom);
 
   //set image scale factor
   $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -1432,12 +1435,12 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 
   if($cover != ''){
     $cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);
-    $pdf->AddPage();
+    $pdf->AddPage('', '', true, false);
     $pdf->writeHTML($cover, true, false, true, false, '');
   }
 
   // add a page
-  $pdf->AddPage();
+  $pdf->AddPage('', '', true, false);
 
   //fix to allow signature to show for both html and pdf
   $html = str_replace('display_file.php?f=', '../../../shared/q_file/' , $html);
@@ -1452,12 +1455,11 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 
   // output the HTML content
   $pdf->writeHTML($html, true, false, true, false, '');
-  //Close and output PDF document
-  //WORK AROUND FOR MASS LETTER CREATION
-  //$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs2/' . $filename, 'F');
+  $pdf->lastPage();
+
   //Close and output PDF document
   $file = $_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename;
-  $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
+  $pdf->Output($file, 'F');
 }
 
 

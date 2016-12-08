@@ -96,13 +96,24 @@ class InsurancePreauth extends Model implements Resource, Repository
 
         return $this->where('patient_id', $newPatientId)
             ->where(function($query) {
-                $query->where('status', self::DSS_PREAUTH_PENDING)
-                    ->orWhere('status', self::DSS_PREAUTH_PREAUTH_PENDING);
+                $query->where('status', '=', self::DSS_PREAUTH_PENDING)
+                    ->orWhere('status', '=', self::DSS_PREAUTH_PREAUTH_PENDING);
             })
             ->update([
                 'status'        => self::DSS_PREAUTH_REJECTED,
                 'reject_reason' => $rejectReason,
                 'viewed'        => 1
             ]);
+    }
+
+    public function getPendingVob($patientId)
+    {
+        return $this->where('patient_id', $patientId)
+            ->where(function($query) {
+                $query->where('status', '=', self::DSS_PREAUTH_PENDING)
+                    ->orWhere('status', '=', self::DSS_PREAUTH_PREAUTH_PENDING);
+            })
+            ->orderBy('front_office_request_date', 'desc')
+            ->first();
     }
 }

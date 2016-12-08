@@ -12,6 +12,7 @@ use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\Summaries;
 use DentalSleepSolutions\Contracts\Resources\Letter;
+use DentalSleepSolutions\Contracts\Resources\Contact;
 use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
 
@@ -230,7 +231,7 @@ class PatientsController extends Controller
             $patient['s_m_eligible_payer_name'] = '';
         }
 
-        // generation of an unique patient login
+        // generation an unique patient login
         $cLogin = strtolower(substr($patient["firstname"], 0, 1) . $patient["lastname"]);
 
         $similarPatientLogin = $patientResource->getSimilarPatientLogin($cLogin);
@@ -244,6 +245,7 @@ class PatientsController extends Controller
         $triggerLetters = false;
 
         $errors = [];
+        $data = [];
 
         if (/* existing patient (update) */) {
             $oldPatient = $patientResource->find($patientId);
@@ -423,12 +425,144 @@ class PatientsController extends Controller
                     $errors[] = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
                 }
             }
+
+            $similarPatient = $this->getSimilarPatients($patientId);
+
+            if (count($similarPatient)) {
+                $data['similar_patients'] = true;
+            } else {
+                $data['alert_message'] = 'Patient' . $patient['firstname'] . ' ' . $patient['lastname'] . ' added Successfully';
+            }
         }
 
-        $data = [
+        $data = array_merge($data, [
             'message'            => $message,
             'is_trigger_letters' => $triggerLetters,
             'errors'             => $errors
+        ]);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getDataForFillingPatientForm(
+        InsurancePreauth $insPreauthResource,
+        Patient $patientResource,
+        Contact $contactResource
+    ) {
+        // $patientId = (!empty($_REQUEST['ed'])) ? $_REQUEST['ed'] : '-1';
+
+        //Check if user has pending VOB
+        $pendingVob = $insPreauthResource->getPendingVob($patientId);
+
+        $foundPatient = $patientResource->find($patientId);
+
+        if ($foundPatient->has('docsleep') && $foundPatient->docsleep != 'Not Set') {
+            $docsleepShortInfo = $contactResource->getDocsleepShortInfo($foundPatient->docsleep);
+
+            if ($docsleepShortInfo) {
+                $docsleepName = $docsleepShortInfo->lastname . ', ' . $docsleepShortInfo->firstname
+                    . ($docsleepShortInfo->contacttype != '' ? ' - ' . $docsleepShortInfo->contacttype : '');
+            } else {
+                $docsleepName = '';
+            }
+        } else {
+            $docsleepName = '';
+        }
+
+        if ($foundPatient->has('docpcp') && $foundPatient->docpcp != 'Not Set') {
+            $docpcpShortInfo = $contactResource->getDocpcpShortInfo($foundPatient->docpcp);
+
+            if ($docpcpShortInfo) {
+                $docpcpName = $docpcpShortInfo->lastname . ', ' . $docpcpShortInfo->firstname . ' '
+                    . $docpcpShortInfo->middlename
+                    . ($docpcpShortInfo->contacttype != '' ? ' - ' . $docpcpShortInfo->contacttype : '');
+            } else {
+                $docpcpName = '';
+            }
+        } else {
+            $docpcpName = '';
+        }
+
+        if ($foundPatient->has('docdentist') && $foundPatient->docdentist != 'Not Set') {
+            $docdentistShortInfo = $contactResource->getDocdentistShortInfo($foundPatient->docdentist);
+
+            if ($docdentistShortInfo) {
+                $docdentistName = $docdentistShortInfo->lastname . ', ' . $docdentistShortInfo->firstname . ' '
+                    . $docdentistShortInfo->middlename
+                    . ($docdentistShortInfo->contacttype != '' ? ' - ' . $docdentistShortInfo->contacttype : '');
+            } else {
+                $docdentistName = '';
+            }
+        } else {
+            $docdentistName = '';
+        }
+
+        if ($foundPatient->has('docent') && $foundPatient->docent != 'Not Set') {
+            $docentShortInfo = $contactResource->getDocentShortInfo($foundPatient->docent);
+
+            if ($docentShortInfo) {
+                $docentName = $docentShortInfo->lastname . ', ' . $docentShortInfo->firstname . ' '
+                    . $docentShortInfo->middlename
+                    . ($docentShortInfo->contacttype != '' ? ' - ' . $docentShortInfo->contacttype : '');
+            } else {
+                $docentName = '';
+            }
+        } else {
+            $docentName = '';
+        }
+
+        if ($foundPatient->has('docmdother') && $foundPatient->docmdother != 'Not Set') {
+            $docmdotherShortInfo = $contactResource->getDocmdotherShortInfo($foundPatient->docmdother);
+
+            if ($docmdotherShortInfo) {
+                $docmdotherName = $docmdotherShortInfo->lastname . ', ' . $docmdotherShortInfo->firstname . ' '
+                    . $docmdotherShortInfo->middlename
+                    . ($docmdotherShortInfo->contacttype != '' ? ' - ' . $docmdotherShortInfo->contacttype : '');
+            } else {
+                $docmdotherName = '';
+            }
+        } else {
+            $docmdotherName = '';
+        }
+
+        if ($foundPatient->has('docmdother2') && $foundPatient->docmdother2 != 'Not Set') {
+            $docmdother2ShortInfo = $contactResource->getDocmdother2ShortInfo($foundPatient->docmdother2);
+
+            if ($docmdother2ShortInfo) {
+                $docmdother2Name = $docmdother2ShortInfo->lastname . ', ' . $docmdother2ShortInfo->firstname . ' '
+                    . $docmdother2ShortInfo->middlename
+                    . ($docmdother2ShortInfo->contacttype != '' ? ' - ' . $docmdother2ShortInfo->contacttype : '');
+            } else {
+                $docmdother2Name = '';
+            }
+        } else {
+            $docmdother2Name = '';
+        }
+
+        if ($foundPatient->has('docmdother3') && $foundPatient->docmdother3 != 'Not Set') {
+            $docmdother3ShortInfo = $contactResource->getDocmdother3ShortInfo($foundPatient->docmdother3);
+
+            if ($docmdother3ShortInfo) {
+                $docmdother3Name = $docmdother3ShortInfo->lastname . ', ' . $docmdother3ShortInfo->firstname . ' '
+                    . $docmdother3ShortInfo->middlename
+                    . ($docmdother3ShortInfo->contacttype != '' ? ' - ' . $docmdother3ShortInfo->contacttype : '');
+            } else {
+                $docmdother3Name = '';
+            }
+        } else {
+            $docmdother3Name = '';
+        }
+
+        $data = [
+            'patient'          => $foundPatient,
+            'pending_vob'      => $pendingVob,
+            'docsleep_name'    => $docsleepName,
+            'docpcp_name'      => $docpcpName,
+            'docdentist_name'  => $docdentistName,
+            'docent_name'      => $docentName,
+            'docmdother_name'  => $docmdotherName,
+            'docmdother2_name' => $docmdother2Name,
+            'docmdother3_name' => $docmdother3Name
         ];
 
         return ApiResponse::responseOk('', $data);

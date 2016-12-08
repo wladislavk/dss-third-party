@@ -239,4 +239,67 @@ class Contact extends Model implements Resource, Repository
             ->active()
             ->first();
     }
+
+    public function getDocsleepShortInfo($contactId)
+    {
+        return $this->select('dc.lastname', 'dc.firstname', 'dct.contacttype')
+            ->from(DB::raw('dental_contact dc'))
+            ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+            ->where('contactid', $contactId)
+            ->first();
+    }
+
+    public function getDocpcpShortInfo($contactId)
+    {
+        return $this->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
+            ->from(DB::raw('dental_contact dc'))
+            ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+            ->where('contactid', $contactId)
+            ->first();
+    }
+
+    public function getDocdentistShortInfo($contactId)
+    {
+        return $this->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
+            ->from(DB::raw('dental_contact dc'))
+            ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+            ->where('contactid', $contactId)
+            ->first();
+    }
+
+    public function getDocentShortInfo($contactId)
+    {
+        return $this->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
+            ->from(DB::raw('dental_contact dc'))
+            ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+            ->where('contactid', $contactId)
+            ->first();
+    }
+
+    public function getDocmdotherShortInfo($contactId)
+    {
+        return $this->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
+            ->from(DB::raw('dental_contact dc'))
+            ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+            ->where('contactid', $contactId)
+            ->first();
+    }
+
+    public function getDocmdother2ShortInfo($contactId)
+    {
+        return $this->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
+            ->from(DB::raw('dental_contact dc'))
+            ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+            ->where('contactid', $contactId)
+            ->first();
+    }
+
+    public function getDocmdother3ShortInfo($contactId)
+    {
+        return $this->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
+            ->from(DB::raw('dental_contact dc'))
+            ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+            ->where('contactid', $contactId)
+            ->first();
+    }
 }

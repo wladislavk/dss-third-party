@@ -13,6 +13,7 @@ use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\Summaries;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Resources\Contact;
+use DentalSleepSolutions\Contracts\Resources\PatientSummary;
 use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,13 @@ use Illuminate\Http\Request;
  */
 class PatientsController extends Controller
 {
+    const DSS_REFERRED_PATIENT = 1;
+    const DSS_REFERRED_PHYSICIAN = 2;
+    const DSS_REFERRED_MEDIA = 3;
+    const DSS_REFERRED_FRANCHISE = 4;
+    const DSS_REFERRED_DSSOFFICE = 5;
+    const DSS_REFERRED_OTHER = 6;
+
     /**
      * Display a listing of the resource.
      *
@@ -435,6 +443,32 @@ class PatientsController extends Controller
             }
         }
 
+        // check if required information is filled out
+        $completeInfo = 0;
+        if (
+            !empty($patient['home_phone'])
+            || !empty($patient['work_phone'])
+            || !empty($patient['cell_phone'])
+        ) {
+            $patientPhone = true;
+        }
+
+        if (!empty($patient['email'])) {
+            $patientEmail = true;
+        }
+
+        if (
+            (!empty($patientEmail) || !empty($patientPhone))
+            && !empty($patient['add1']) && !empty($patient['city'])
+            && !empty($patient['state']) && !empty($patient['zip'])
+            && !empty($patient['dob']) && !empty($patient['gender'])
+        ) {
+            $completeInfo = 1;
+        }
+
+        // determine whether patient info has been set
+        $this->updatePatientSummary($patientId, 'patient_info', $completeInfo);
+
         $data = array_merge($data, [
             'message'            => $message,
             'is_trigger_letters' => $triggerLetters,
@@ -447,7 +481,8 @@ class PatientsController extends Controller
     public function getDataForFillingPatientForm(
         InsurancePreauth $insPreauthResource,
         Patient $patientResource,
-        Contact $contactResource
+        Contact $contactResource,
+        Summaries $summariesResource,
     ) {
         // $patientId = (!empty($_REQUEST['ed'])) ? $_REQUEST['ed'] : '-1';
 
@@ -470,9 +505,26 @@ class PatientsController extends Controller
             $data[$field . '_name'] = $this->getDocNameFromShortInfo($foundPatient->$field, $shortInfo);
         }
 
-        
+        if ($foundPatient->referred_source == self::DSS_REFERRED_PATIENT) {
+            $referredPatient = $patientResource->getWithFilter([
+                'lastname', 'firstname', 'middlename'
+            ], ['patientid' => $foundPatient->referred_by]);
+
+            $data['referred_name'] = $referredPatient->lastname . ', ' . $referredPatient->firstname . ' '
+                . $referredPatient->middlename . ' - Patient';
+        } elseif($foundPatient->referred_source == self::DSS_REFERRED_PHYSICIAN) {
+            $shortInfo = $contactResource->getDocShortInfo($foundPatient->referred_by);
+
+            $data['referred_name'] = $shortInfo->lastname . ', ' . $shortInfo->firstname . ' '
+                . $shortInfo->middlename
+                . ($shortInfo->contacttype != '' ? ' - ' . $shortInfo->contacttype : '');
+        }
+
+        $foundLocation = $summariesResource->getWithFilter(['location'], ['patientid' => $patientId]);
 
         $data['patient'] = $foundPatient;
+        $data['name'] = $foundPatient->lastname . ' ' . $foundPatient->middlename . ', ' . $foundPatient->firstname;
+        $data['location'] = $foundLocation ? $foundLocation->location : '';
 
         return ApiResponse::responseOk('', $data);
     }
@@ -488,5 +540,30 @@ class PatientsController extends Controller
         }
 
         return $name;
+    }
+
+    private function updatePatientSummary(
+        PatientSummary $patientSummaryResource,
+        $patientId,
+        $column,
+        $value
+    ) {
+        if (empty($patientId) || empty($column)) {
+            return false;
+        }
+
+        $patientSummary = $patientSummaryResource->find($patientId);
+
+        if ($patientSummary) {
+            $patientSummary->$column = $value;
+            $patientSummary->save();
+        } else {
+            $patientSummary->create([
+                'pid'   => $patientId,
+                $column => $value
+            ]);
+        }
+
+        return true;
     }
 }

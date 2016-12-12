@@ -198,7 +198,7 @@ class Patient extends Model implements Resource, Repository
         return $query->where('p.status', 2);
     }
 
-    public function find(
+    public function findBy(
             $docId           = 0,
             $userType        = 0,
             $patientId       = 0,

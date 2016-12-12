@@ -129,6 +129,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('patients/find', 'PatientsController@find');
     Route::post('patients/referred-by-contact', 'PatientsController@getReferredByContact');
     Route::post('patients/by-contact', 'PatientsController@getByContact');
+    Route::post('patients/filling-form', 'PatientsController@getDataForFillingPatientForm');
     Route::resource('payment-reports', 'PaymentReportsController', ['except' => ['create', 'edit']]);
     Route::post('payment-reports/number', 'PaymentReportsController@getNumber');
     Route::resource('place-services', 'PlaceServicesController', ['except' => ['create', 'edit']]);

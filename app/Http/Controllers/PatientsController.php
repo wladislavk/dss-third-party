@@ -14,6 +14,9 @@ use DentalSleepSolutions\Contracts\Repositories\Summaries;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Resources\Contact;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary;
+use DentalSleepSolutions\Contracts\Resources\ProfileImage;
+use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
+use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
 
@@ -183,7 +186,7 @@ class PatientsController extends Controller
         $sortColumn      = $request->input('sortColumn') ?: 'name';
         $sortDir         = $request->input('sortDir') ?: '';
 
-        $data = $resources->find(
+        $data = $resources->findBy(
             $docId,
             $userType,
             $patientId,
@@ -255,7 +258,7 @@ class PatientsController extends Controller
         $errors = [];
         $data = [];
 
-        if (/* existing patient (update) */) {
+        if (true/* existing patient (update) */) {
             $oldPatient = $patientResource->find($patientId);
 
             if ($oldPatient->registration_status == 2 && $patient['email'] != $oldPatient->email) {
@@ -483,48 +486,64 @@ class PatientsController extends Controller
         Patient $patientResource,
         Contact $contactResource,
         Summaries $summariesResource,
+        ProfileImage $profileImageResource,
+        Letter $letterResource,
+        HomeSleepTests $homeSleepTestResource,
+        Notifications $notificationResource,
+        Request $request
     ) {
-        // $patientId = (!empty($_REQUEST['ed'])) ? $_REQUEST['ed'] : '-1';
-
-        // data for response
-        $data = [];
-
-        //Check if user has pending VOB
-        $data['pending_vob'] = $insPreauthResource->getPendingVob($patientId);
-
+        $patientId = $request->has('patient_id') ? $request->input('patient_id') : 0;
         $foundPatient = $patientResource->find($patientId);
 
-        // fields for getting certain short info and forming full name 
-        $docFields = [
-            'docsleep', 'docpcp', 'docdentist', 'docent',
-            'docmdother', 'docmdother2', 'docmdother3'
-        ];
+        if (!empty($foundPatient)) {
+            $formedFullNames = [];
+            // fields for getting certain short info and forming full name 
+            $docFields = [
+                'docsleep', 'docpcp', 'docdentist', 'docent',
+                'docmdother', 'docmdother2', 'docmdother3'
+            ];
 
-        foreach ($docFields as $field) {
-            $shortInfo = $contactResource->getDocShortInfo($foundPatient->$field);
-            $data[$field . '_name'] = $this->getDocNameFromShortInfo($foundPatient->$field, $shortInfo);
+            foreach ($docFields as $field) {
+                $shortInfo = $contactResource->getDocShortInfo($foundPatient->$field);
+                $formedFullNames[$field . '_name'] = $this->getDocNameFromShortInfo($foundPatient->$field, $shortInfo);
+            }
+
+            if ($foundPatient->referred_source == self::DSS_REFERRED_PATIENT) {
+                $referredPatient = $patientResource->getWithFilter([
+                    'lastname', 'firstname', 'middlename'
+                ], ['patientid' => $foundPatient->referred_by]);
+
+                $formedFullNames['referred_name'] = $referredPatient->lastname . ', ' . $referredPatient->firstname . ' '
+                    . $referredPatient->middlename . ' - Patient';
+            } elseif($foundPatient->referred_source == self::DSS_REFERRED_PHYSICIAN) {
+                $shortInfo = $contactResource->getDocShortInfo($foundPatient->referred_by);
+
+                $formedFullNames['referred_name'] = $shortInfo->lastname . ', ' . $shortInfo->firstname . ' '
+                    . $shortInfo->middlename
+                    . ($shortInfo->contacttype != '' ? ' - ' . $shortInfo->contacttype : '');
+            }
+
+            $foundLocation = $summariesResource->getWithFilter(['location'], ['patientid' => $patientId])[0];
+
+            // data for response
+            $data = [
+                // check if user has pending VOB
+                'pending_vob'                 => $insPreauthResource->getPendingVob($patientId),
+                'profile_photo'               => $profileImageResource->getProfilePhoto($patientId),
+                'intro_letter'                => $letterResource->getGeneratedDateOfIntroLetter($patientId),
+                'insurance_card_image'        => $profileImageResource->getInsuranceCardImage($patientId),
+                'uncompleted_home_sleep_test' => $homeSleepTestResource->getUncompleted($patientId),
+                'patient_notification'        => $notificationResource->getWithFilter(null, [
+                                                     'patientid' => $patientId,
+                                                     'status'    => 1
+                                                 ]),
+                'patient'                     => $foundPatient,
+                'formed_full_names'           => $formedFullNames,
+                'patient_location'            => $foundLocation ? $foundLocation->location : ''
+            ];
+        } else {
+            $data = [];
         }
-
-        if ($foundPatient->referred_source == self::DSS_REFERRED_PATIENT) {
-            $referredPatient = $patientResource->getWithFilter([
-                'lastname', 'firstname', 'middlename'
-            ], ['patientid' => $foundPatient->referred_by]);
-
-            $data['referred_name'] = $referredPatient->lastname . ', ' . $referredPatient->firstname . ' '
-                . $referredPatient->middlename . ' - Patient';
-        } elseif($foundPatient->referred_source == self::DSS_REFERRED_PHYSICIAN) {
-            $shortInfo = $contactResource->getDocShortInfo($foundPatient->referred_by);
-
-            $data['referred_name'] = $shortInfo->lastname . ', ' . $shortInfo->firstname . ' '
-                . $shortInfo->middlename
-                . ($shortInfo->contacttype != '' ? ' - ' . $shortInfo->contacttype : '');
-        }
-
-        $foundLocation = $summariesResource->getWithFilter(['location'], ['patientid' => $patientId]);
-
-        $data['patient'] = $foundPatient;
-        $data['name'] = $foundPatient->lastname . ' ' . $foundPatient->middlename . ', ' . $foundPatient->firstname;
-        $data['location'] = $foundLocation ? $foundLocation->location : '';
 
         return ApiResponse::responseOk('', $data);
     }

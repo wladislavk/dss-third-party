@@ -23,6 +23,9 @@ module.exports = {
             insuranceContacts         : [],
             introLetter               : {},
             uncompletedHomeSleepTests : [],
+            formedFullNames           : {},
+            pendingVob                : {},
+            patientLocation           : '',
             message                   : '',
             eligiblePayerId           : 0,
             eligiblePayerName         : '',
@@ -40,7 +43,7 @@ module.exports = {
             if (this.$route.query.pid > 0) {
                 this.$set('routeParameters.patientId', this.$route.query.pid);
 
-                this.updatePatientData(this.$route.query.pid);
+                this.fillForm(this.$route.query.pid);
             } else {
                 this.$set('routeParameters.patientId', null);
             }
@@ -73,7 +76,7 @@ module.exports = {
         }
     },
     created: function() {
-        this.updatePatientData(this.routeParameters.patientId);
+        this.fillForm(this.routeParameters.patientId);
 
         this.getHomeSleepTestCompanies()
             .then(function(response) {
@@ -105,7 +108,7 @@ module.exports = {
                     this.$set('billingCompany', data);
                 }
             }, function(response) {
-                this.handleErrors('getDocLocations', response);
+                this.handleErrors('getBillingCompany', response);
             });
     },
     methods: {
@@ -195,71 +198,24 @@ module.exports = {
 
             return this.$http.post(window.config.API_PATH + 'patient-summaries/update-tracker-notes', data);
         },
-        updatePatientData: function(patientId) {
-            this.getPatientById(patientId)
+        fillForm: function(patientId) {
+            this.getDataForFillingPatientForm(patientId)
                 .then(function(response) {
                     var data = response.data.data;
 
                     if (data) {
-                        this.$set('patient', data);
+                        this.$set('patient', data.patient);
+                        this.$set('profilePhoto', data.profile_photo);
+                        this.$set('introLetter', data.intro_letter);
+                        this.$set('insuranceCardImage', data.insurance_card_image);
+                        this.$set('uncompletedHomeSleepTests', data.uncompleted_home_sleep_test);
+                        this.$set('patientNotifications', data.patient_notification);
+                        this.$set('formedFullNames', data.formed_full_names);
+                        this.$set('pendingVob', data.formed_full_names);
+                        this.$set('patientLocation', data.patient_location);
                     }
                 }, function(response) {
-                    this.handleErrors('getPatientById', response);
-                });
-
-            this.getProfilePhoto(patientId)
-                .then(function(response) {
-                    var data = response.data.data;
-
-                    if (data) {
-                        this.$set('profilePhoto', data);
-                    }
-                }, function(response) {
-                    this.handleErrors('getProfilePhoto', response);
-                });
-
-            this.getGeneratedDateOfIntroLetter(patientId)
-                .then(function(response) {
-                    var data = response.data.data;
-
-                    if (data) {
-                        this.$set('introLetter', data);
-                    }
-                }, function(response) {
-                    this.handleErrors('getGeneratedDateOfIntroLetter', response);
-                });
-
-            this.getInsuranceCardImage(patientId)
-                .then(function(response) {
-                    var data = response.data.data;
-
-                    if (data) {
-                        this.$set('insuranceCardImage', data);
-                    }
-                }, function(response) {
-                    this.handleErrors('getInsuranceCardImage', response);
-                });
-
-            this.getUncompletedHomeSleepTests(patientId)
-                .then(function(response) {
-                    var data = response.data.data;
-
-                    if (data) {
-                        this.$set('uncompletedHomeSleepTests', data);
-                    }
-                }, function(response) {
-                    this.handleErrors('getUncompletedHomeSleepTests', response);
-                });
-
-            this.findPatientNotifications(patientId)
-                .then(function(response) {
-                    var data = response.data.data;
-
-                    if (data.length) {
-                        this.$set('patientNotifications', data);
-                    }
-                }, function(response) {
-                    this.handleErrors('findPatientNotifications', response);
+                    this.handleErrors('getDataForFillingPatientForm', response);
                 });
         },
         onChangeRelations: function(type) {
@@ -352,6 +308,11 @@ module.exports = {
             var data = {};
 
             return this.$http.post(window.config.API_PATH + 'patients/add-new-patient', data);
+        },
+        getDataForFillingPatientForm: function(patientId) {
+            var data = { 'patient_id': patientId || 0 }
+
+            return this.$http.post(window.config.API_PATH + 'patients/filling-form', data);
         }
     }
 }

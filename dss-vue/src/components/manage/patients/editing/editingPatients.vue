@@ -350,13 +350,13 @@
                                 </span>
                                 <span v-if="docLocations.length >= 1">
                                     <select
-                                        v-model="patient.location"
+                                        v-model="patientLocation"
                                         name="location"
                                     >
                                         <option value="" selected disabled>Select</option>
                                         <option
                                             v-for="location in docLocations"
-                                            {{ (patient.location == location.id || (location.default_location == 1 && !isset($_GET['pid']))) ? 'selected="selected"' : '' }}
+                                            {{ (patientLocation == location.id || (location.default_location == 1 && !isset($_GET['pid']))) ? 'selected="selected"' : '' }}
                                             :value="location.id"
                                         >{{ location.location }}</option>
                                     </select>
@@ -1662,7 +1662,7 @@
                                             id="docpcp_static_info"
                                             :style="patient.docpcp != '' ? '' : 'display:none'"
                                         >
-                                            <span id="docpcp_name_static" style="width:300px;">{{ patient.docpcp_name }}</span>
+                                            <span id="docpcp_name_static" style="width:300px;">{{ formedFullNames.docpcp_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docpcp;?>');return false;"
@@ -1675,14 +1675,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
-                                            v-model="patient.docpcp_name"
+                                            v-model="formedFullNames.docpcp_name"
                                             type="text"
                                             id="docpcp_name"
                                             style="width:300px;<?php echo ($docpcp!='')?'display:none;':'';?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docpcp_name"
-                                            :value="patient.docpcp != '' ? patient.docpcp_name : 'Type contact name'"
+                                            :value="patient.docpcp != '' ? formedFullNames.docpcp_name : 'Type contact name'"
                                         />
                                         <br />
                                         <div id="docpcp_hints" class="search_hints" style="display:none;">
@@ -1703,7 +1703,7 @@
                                             id="docent_static_info"
                                             :style="patient.docent != '' ? '' : 'display:none'"
                                         >
-                                            <span id="docent_name_static" style="width:300px;">{{ patient.docent_name }}</span>
+                                            <span id="docent_name_static" style="width:300px;">{{ formedFullNames.docent_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docent;?>');return false;"
@@ -1716,14 +1716,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
-                                            v-model="patient.docent_name"
+                                            v-model="formedFullNames.docent_name"
                                             type="text"
                                             id="docent_name"
                                             style="width:300px;<?php echo ($docent!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docent_name"
-                                            :value="patient.docent != '' ? patient.docent_name : 'Type contact name'"
+                                            :value="patient.docent != '' ? formedFullNames.docent_name : 'Type contact name'"
                                         />
                                         <br />
                                         <div id="docent_hints" class="search_hints" style="display:none;">
@@ -1744,7 +1744,7 @@
                                             id="docsleep_static_info"
                                             :style="patient.docsleep != '' ? '' : 'display:none'"
                                         >
-                                            <span id="docsleep_name_static" style="width:300px;">{{ patient.docsleep_name }}</span>
+                                            <span id="docsleep_name_static" style="width:300px;">{{ formedFullNames.docsleep_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docsleep;?>');return false;"
@@ -1757,14 +1757,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
-                                            v-model="patient.docsleep_name"
+                                            v-model="formedFullNames.docsleep_name"
                                             type="text"
                                             id="docsleep_name"
                                             style="width:300px;<?php echo ($docsleep!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docsleep_name"
-                                            :value="patient.docsleep ? patient.docsleep_name : 'Type contact name'"
+                                            :value="patient.docsleep ? formedFullNames.docsleep_name : 'Type contact name'"
                                         />
                                         <br />
                                         <div id="docsleep_hints" class="search_hints" style="display:none;">
@@ -1785,7 +1785,7 @@
                                             id="docdentist_static_info"
                                             :style="patient.docdentist != '' ? '' : 'display:none'"
                                         >
-                                            <span id="docdentist_name_static" style="width:300px;">{{ patient.docdentist_name }}</span>
+                                            <span id="docdentist_name_static" style="width:300px;">{{ formedFullNames.docdentist_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docdentist;?>');return false;"
@@ -1798,14 +1798,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
-                                            v-model="patient.docdentist_name"
+                                            v-model="formedFullNames.docdentist_name"
                                             type="text"
                                             id="docdentist_name"
                                             style="width:300px;<?php echo ($docdentist!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docdentist_name"
-                                            :value="patient.docdentist != '' ? patient.docdentist_name : 'Type contact name'"
+                                            :value="patient.docdentist != '' ? formedFullNames.docdentist_name : 'Type contact name'"
                                         />
                                         <br />
                                         <div id="docdentist_hints" class="search_hints" style="display:none;">
@@ -1827,7 +1827,7 @@
                                             style="height:25px;"
                                             :style="patient.docmdother != '' ? '' : 'display:none;'"
                                         >
-                                            <span id="docmdother_name_static" style="width:300px;">{{ patient.docmdother_name }}</span>
+                                            <span id="docmdother_name_static" style="width:300px;">{{ formedFullNames.docmdother_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother;?>');return false;"
@@ -1840,14 +1840,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
-                                            v-model="patient.docmdother_name"
+                                            v-model="formedFullNames.docmdother_name"
                                             type="text"
                                             id="docmdother_name"
                                             style="width:300px;<?php echo ($docmdother!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docmdother_name"
-                                            :value="patient.docmdother != '' ? patient.docmdother_name : 'Type contact name'"
+                                            :value="patient.docmdother != '' ? formedFullNames.docmdother_name : 'Type contact name'"
                                         />
                                         <a
                                             v-if="patient.docmdother2 == '' || patient.docmdother3 == ''"
@@ -1880,7 +1880,7 @@
                                             id="docmdother2_static_info"
                                             :style="patient.docmdother2 != '' ? '' : 'display:none'"
                                         >
-                                            <span id="docmdother2_name_static" style="width:300px;">{{ patient.docmdother2_name }}</span>
+                                            <span id="docmdother2_name_static" style="width:300px;">{{ formedFullNames.docmdother2_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother2;?>');return false;"
@@ -1893,14 +1893,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
-                                            v-model="patient.docmdother2_name"
+                                            v-model="formedFullNames.docmdother2_name"
                                             type="text"
                                             id="docmdother2_name"
                                             style="width:300px;<?php echo ($docmdother2!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docmdother2_name"
-                                            value="{{ patient.docmdother2 != '' ? patient.docmdother2_name : 'Type contact name' }}"
+                                            value="{{ patient.docmdother2 != '' ? formedFullNames.docmdother2_name : 'Type contact name' }}"
                                         />
                                         <br />
                                         <div id="docmdother2_hints" class="search_hints" style="display:none;">
@@ -1925,7 +1925,7 @@
                                             id="docmdother3_static_info"
                                             :style="patient.docmdother3 != '' ? '' : 'display:none'"
                                         >
-                                            <span id="docmdother3_name_static" style="width:300px;">{{ patient.docmdother3_name }}</span>
+                                            <span id="docmdother3_name_static" style="width:300px;">{{ formedFullNames.docmdother3_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother3;?>');return false;"
@@ -1938,14 +1938,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
-                                            v-model="patient.docmdother3_name"
+                                            v-model="formedFullNames.docmdother3_name"
                                             type="text"
                                             id="docmdother3_name"
                                             style="width:300px;<?php echo ($docmdother3!='')?'display:none':''; ?>"
                                             onclick="updateval(this)"
                                             autocomplete="off"
                                             name="docmdother3_name"
-                                            value="{{ patient.docmdother3 != '' ? patient.docmdother3_name : 'Type contact name' }}"
+                                            value="{{ patient.docmdother3 != '' ? formedFullNames.docmdother3_name : 'Type contact name' }}"
                                         />
                                         <br />
                                         <div id="docmdother3_hints" class="search_hints" style="display:none;">

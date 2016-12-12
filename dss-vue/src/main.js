@@ -53,21 +53,26 @@ var router = new VueRouter({
 */
 router.map({
     '/manage/index': {
+        name      : 'dashboard',
         component : Index,
         auth      : true
     },
     '/manage/patients': {
+        name      : 'patients',
         component : Patients,
         auth      : true
     },
     '/manage/login': {
+        name      : 'login',
         component : Login
     },
     '/manage/contacts': {
+        name      : 'contacts',
         component : Contacts,
         auth      : true
     },
     '/manage/edit-patient': {
+        name      : 'edit-patient',
         component : EditingPatients,
         auth      : true
     }

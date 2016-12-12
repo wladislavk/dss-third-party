@@ -250,7 +250,11 @@
                 </div>
                 <div style="background:url(assets/images/dss_03.jpg) #0b5c82 repeat-y top left;width:100%;">
                     <div style="width:98.6%; background:#00457c;margin:0 auto;">
-                        <div v-if="$route.query.pid" id="patient_name_div" {{ (patientName.length > 20) ? 'style="font-size:14px"' : '' }}>
+                        <div
+                            v-if="$route.query.pid"
+                            id="patient_name_div"
+                            :style="patientName.length > 20 ? 'font-size:14px' : ''"
+                        >
                             <div id="patient_name_inner">
                                 <img v-if="medicare" src="assets/images/medicare_logo_small.png" /> 
                                 <span v-if="medicare" class="medicare_name">
@@ -376,8 +380,24 @@
                             </div>
                         </div>
 
-                        <a v-if="$route.query.pid" href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="show_patient_warnings" onclick="showWarnings();$('#patient_warnings').show();$('#show_patient_warnings').hide();$('#hide_patient_warnings').show();return false;">Show Warnings</a>
-                        <a v-if="$route.query.pid" href="#" style="float:left; margin-left:10px;margin-top:8px;" class="button" id="hide_patient_warnings" onclick="hideWarnings();$('#patient_warnings').hide();$('#show_patient_warnings').show();$('#hide_patient_warnings').hide();return false;">Hide Warnings</a>
+                        <template v-if="$route.query.pid">
+                            <a
+                                v-show="!showAllWarnings"
+                                href="#"
+                                style="float:left; margin-left:10px;margin-top:8px;"
+                                class="button"
+                                id="show_patient_warnings"
+                                v-on:click.prevent="showWarnings()"
+                            >Show Warnings</a>
+                            <a
+                                v-show="showAllWarnings"
+                                href="#"
+                                style="float:left; margin-left:10px;margin-top:8px;"
+                                class="button"
+                                id="hide_patient_warnings"
+                                v-on:click.prevent="hideWarnings()"
+                            >Hide Warnings</a>
+                        </template>
 
                         <div class="suckertreemenu">
                             <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">
@@ -415,7 +435,10 @@
                                     <a class="<?php echo  (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" href="ex_page4.php?pid={{ $route.query.pid }}&addtopat=1">Clinical Exam</a>
                                 </li>
                                 <li class="last">
-                                    <a class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/add_patient.php')?'nav_active':'';?>" href="add_patient.php?ed={{ $route.query.pid }}&addtopat=1&pid={{ $route.query.pid }}">Patient Info</a>
+                                    <a
+                                        :class="$route.name == 'edit-patient' ? 'nav_active' : ''"
+                                        href="add_patient.php?ed={{ $route.query.pid }}&addtopat=1&pid={{ $route.query.pid }}"
+                                    >Patient Info</a>
                                 </li>
                             </ul>
                         </div>
@@ -433,7 +456,11 @@
                     <div v-if="$route.query.pid" style="float:right;width:300px;"></div>
                     <br />
 
-                    <div v-if="$route.query.pid" id="patient_warnings" {{ showAllWarnings ? 'style="display:none;"' :'' }}>
+                    <div
+                        v-if="$route.query.pid"
+                        v-show="showAllWarnings"
+                        id="patient_warnings"
+                    >
                         <a v-if="showWarningAboutPatientChanges" class="warning" href="patient_changes.php?pid={{ $route.query.pid }}">
                             <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
                         </a>
@@ -444,9 +471,12 @@
                             <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
                         </a>
                         <span v-if="rejectedClaimsForCurrentPatient.length > 0" class="warning">Warning! Patient has the following rejected claims: <br />
-                            <a v-for="claim in rejectedClaimsForCurrentPatient" href="view_claim.php?claimid={{ claim.insuranceid }}&pid={{ $route.query.pid }}">
-                                {{ claim.insuranceid }} - {{ claim.adddate | moment "MM/DD/YYYY" }}
-                            </a><br />
+                            <template v-for="claim in rejectedClaimsForCurrentPatient">
+                                <a href="view_claim.php?claimid={{ claim.insuranceid }}&pid={{ $route.query.pid }}">
+                                    {{ claim.insuranceid }} - {{ claim.adddate | moment "MM/DD/YYYY" }}
+                                </a>
+                                <br />
+                            </template>
                         </span>
                         <span v-if="uncompletedHomeSleepTests.length > 0" class="warning">Patient has the following Home Sleep Tests: <br />
                             <span v-for="test in uncompletedHomeSleepTests">

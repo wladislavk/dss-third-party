@@ -77,7 +77,7 @@ module.exports = {
             showWarningAboutBouncedEmails        : false,
             rejectedClaimsForCurrentPatient      : [],
             uncompletedHomeSleepTests            : [],
-            showAllWarnings                      : false
+            showAllWarnings                      : true
         }
     },
     components: {
@@ -922,7 +922,8 @@ module.exports = {
             var data = {
                 fields: ['patientid'],
                 where: {
-                    patientId : patientId || 0
+                    email_bounce : 1,
+                    patientId    : patientId || 0
                 }
             };
 

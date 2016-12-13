@@ -51,7 +51,7 @@ module.exports = {
     },
     computed: {
         showSendingEmails: function() {
-            return this.headerInfo.docIdnfo && this.patient.use_patient_portal;
+            return this.headerInfo.docInfo.use_patient_portal && this.patient.use_patient_portal;
         },
         inches: function() {
             var result = [];
@@ -73,6 +73,31 @@ module.exports = {
         },
         buttonText: function() {
             return this.patient.userid > 0 ? 'Save/Update ' : 'Add ';
+        },
+        portalStatus: function() {
+            var status = 'Patient Portal In-active';
+
+            if (this.patient.use_patient_portal == 1) {
+                switch (+this.patient.registration_status) {
+                    case 0:
+                        status = 'Unregistered';
+                        break;
+
+                    case 1:
+                        status = 'Registration Emailed ' + moment(this.patient.registration_senton, 'MM/DD/YYYY h:m a') + ' ET';
+                        break;
+
+                    case 2:
+                        status = 'Registered';
+                        break;
+
+                    default:
+                        status = '';
+                        break;
+                }
+            }
+
+            return status;
         }
     },
     created: function() {
@@ -204,6 +229,9 @@ module.exports = {
                     var data = response.data.data;
 
                     if (data) {
+                        this.filterPhoneFields(data.patient);
+                        this.filterSsnField(data.patient);
+
                         this.$set('patient', data.patient);
                         this.$set('profilePhoto', data.profile_photo);
                         this.$set('introLetter', data.intro_letter);
@@ -262,6 +290,34 @@ module.exports = {
                 this.$set('patient.preferredcontact', '');
                 this.$els.fax.focus();
             }
+        },
+        filterPhoneFields: function(patient) {
+            var fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number'];
+
+            var self = this;
+            fields.forEach((el) => {
+                patient[el] = self.phone(patient[el]);
+            });
+        },
+        filterSsnField: function(patient) {
+            patient.ssn = this.ssn(patient.ssn);
+        },
+        onChangePhone: function(event) {
+            this.$set(
+                'patient.' + event.target.name,
+                this.phone(this.patient[event.target.name])
+            );
+        },
+        onChangeSsn: function(event) {
+            this.$set('ssn', this.ssn(this.patient.ssn));
+        },
+        phone: function(value) {
+            return value.replace(/\D/g, '')
+                .replace(/^(\d{3})(\d{3})(\d{4})$/, '($1) $2-$3');
+        },
+        ssn: function(value) {
+            return value.replace(/\D/g, '')
+                .replace(/^(\d{3})(\d{2})(\d{4})$/, '$1-$2-$3');
         },
         getUncompletedHomeSleepTests: function(patientId) {
             var data = { patientId: patientId || 0};

@@ -172,11 +172,12 @@
                                 <span>
                                     <input
                                         v-model="patient.home_phone"
+                                        v-on:change="onChangePhone"
                                         id="home_phone"
                                         name="home_phone"
                                         type="text"
                                         class="phonemask field text addr tbox"
-                                        maxlength="255"
+                                        maxlength="14"
                                         style="width:100px;"
                                     />
                                     <label for="home_phone">
@@ -187,11 +188,12 @@
                                 <span>
                                     <input
                                         v-model="patient.cell_phone"
+                                        v-on:change="onChangePhone"
                                         id="cell_phone"
                                         name="cell_phone"
                                         type="text"
                                         class="phonemask field text addr tbox"
-                                        maxlength="255"
+                                        maxlength="14"
                                         style="width:100px;"
                                     />
                                     <label for="cell_phone">Cell Phone</label>
@@ -199,11 +201,12 @@
                                 <span>
                                     <input
                                         v-model="patient.work_phone"
+                                        v-on:change="onChangePhone"
                                         id="work_phone"
                                         name="work_phone"
                                         type="text"
                                         class="extphonemask field text addr tbox"
-                                        maxlength="255"
+                                        maxlength="14"
                                         style="width:150px;"
                                     />
                                     <label for="work_phone">Work Phone</label>
@@ -262,6 +265,7 @@
                                 </span>
                                 <div>Portal:
                                     <span style="color:#933; float:none;">
+                                        {{ portalStatus }}
                                     </span>
                                     <br />
                                     <input
@@ -356,7 +360,7 @@
                                         <option value="" selected disabled>Select</option>
                                         <option
                                             v-for="location in docLocations"
-                                            {{ (patientLocation == location.id || (location.default_location == 1 && !isset($_GET['pid']))) ? 'selected="selected"' : '' }}
+                                            {{ (patientLocation == location.id || (location.default_location == 1 && !routeParameters.patientId)) ? 'selected="selected"' : '' }}
                                             :value="location.id"
                                         >{{ location.location }}</option>
                                     </select>
@@ -404,11 +408,12 @@
                                 <span style="width:150px">
                                     <input
                                         v-model="patient.ssn"
+                                        v-on:change="onChangeSsn"
                                         id="ssn"
                                         name="ssn"
                                         type="text"
                                         class="ssnmask field text addr tbox"
-                                        maxlength="255"
+                                        maxlength="11"
                                         style="width:100px;"
                                     />
                                     <label for="ssn">Social Security No.</label>
@@ -467,7 +472,8 @@
                                     </select>
                                     <label for="weight">Weight in Pounds&nbsp;&nbsp;&nbsp;&nbsp;</label>
                                 </span>
-                                <span style="color:#000000; padding-top:2px;">BMI</span>
+                                <span>
+                                    <span style="color:#000000; padding-top:2px;">BMI</span>
                                     <input
                                         v-model="patient.bmi"
                                         id="bmi"
@@ -616,11 +622,12 @@
                                 <span>
                                     <input
                                         v-model="patient.emergency_number"
+                                        v-on:change="onChangePhone"
                                         id="emergency_number"
                                         name="emergency_number"
                                         type="text"
                                         class="extphonemask field text addr tbox"
-                                        maxlength="255"
+                                        maxlength="14"
                                         style="width:150px;"
                                     />
                                     <label for="emergency_number">Number</label>

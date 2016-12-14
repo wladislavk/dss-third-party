@@ -5,7 +5,7 @@
 <!-- <style src="../../../../../assets/css/manage/top.css" scoped></style> -->
 <!-- <style src="../../../../../assets/css/manage/letter-form.css" scoped></style> -->
 <style src="../../../../../assets/css/manage/form.css" scoped></style>
-<!-- <style src="../../../../../assets/css/manage/add_patient.css" scoped></style> -->
+<style src="../../../../../assets/css/manage/add_patient.css" scoped></style>
 
 <template>
     <div v-if="message" align="center" class="red">
@@ -563,14 +563,12 @@
                                         type="radio"
                                         name="display_alert"
                                         value="1"
-                                        onclick="$('#alert_text').show()"
                                     >Yes
                                     <input
                                         v-model="patient.display_alert"
                                         type="radio"
                                         name="display_alert"
                                         value="0"
-                                        onclick="$('#alert_text').hide()"
                                     >No
                                 </span>
                                 <textarea

@@ -140,7 +140,7 @@ class ApiResponse
      * @param  mixed $data
      * @return mixed
      */
-    private static function transform($data)
+    public static function transform($data)
     {
         $fractal = new Manager;
 

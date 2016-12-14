@@ -537,7 +537,7 @@ class PatientsController extends Controller
                                                      'patientid' => $patientId,
                                                      'status'    => 1
                                                  ]),
-                'patient'                     => $foundPatient,
+                'patient'                     => ApiResponse::transform($foundPatient),
                 'formed_full_names'           => $formedFullNames,
                 'patient_location'            => $foundLocation ? $foundLocation->location : ''
             ];

@@ -12,6 +12,9 @@ class Patient extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
+    const DSS_REFERRED_PATIENT = 1;
+    const DSS_REFERRED_PHYSICIAN = 2;
+
     /**
      * Guarded attributes
      *
@@ -606,5 +609,51 @@ class Patient extends Model implements Resource, Repository
     {
         $this->where('patientid', $patientId)
             ->update($data);
+    }
+
+    public function getReferrers($docId, $names)
+    {
+        $contacts = DB::table(DB::raw('dental_contact c'))
+            ->select(
+                'c.contactid',
+                'c.lastname',
+                'c.firstname',
+                'c.middlename',
+                DB::raw(self::DSS_REFERRED_PHYSICIAN),
+                'ct.contacttype'
+            )->leftJoin(DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
+            ->where(function($query) use ($names) {
+                $query->where(function($query) use ($names) {
+                    $query->where('lastname', 'like', $names[0] . '%')
+                        ->orWhere('firstname', 'like', $names[0] . '%');
+                })->where(function($query) {
+                    $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
+                        ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
+                });
+            })->whereNull('merge_id')
+            ->where('docid', $docId);
+
+        return $this->select(
+                'p.patientid',
+                'p.lastname',
+                'p.firstname',
+                'p.middlename',
+                DB::raw(self::DSS_REFERRED_PATIENT . ' AS referral_type'),
+                DB::raw("'Patient' as label")
+            )->from(DB::raw('dental_patients p'))
+            ->leftJoin(DB::raw('dental_patient_summary s'), 'p.patientid', '=', 's.pid')
+            ->leftJoin(DB::raw('dental_device d'), 's.appliance', '=', 'd.deviceid')
+            ->where(function($query) use ($names) {
+                $query->where(function($query) use ($names) {
+                    $query->where('lastname', 'like', $names[0] . '%')
+                        ->orWhere('firstname', 'like', $names[0] . '%');
+                })->where(function($query) {
+                    $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
+                        ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
+                });
+            })->where('docid', $docId)
+            ->union($contacts)
+            ->orderBy('lastname')
+            ->get();
     }
 }

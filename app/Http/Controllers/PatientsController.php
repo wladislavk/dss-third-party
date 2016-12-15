@@ -511,7 +511,7 @@ class PatientsController extends Controller
             if ($foundPatient->referred_source == self::DSS_REFERRED_PATIENT) {
                 $referredPatient = $patientResource->getWithFilter([
                     'lastname', 'firstname', 'middlename'
-                ], ['patientid' => $foundPatient->referred_by]);
+                ], ['patientid' => $foundPatient->referred_by])[0];
 
                 $formedFullNames['referred_name'] = $referredPatient->lastname . ', ' . $referredPatient->firstname . ' '
                     . $referredPatient->middlename . ' - Patient';
@@ -546,6 +546,37 @@ class PatientsController extends Controller
         }
 
         return ApiResponse::responseOk('', $data);
+    }
+
+    public function getReferrers(Patients $patientResource, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        if ($request->has('partial_name')) {
+            $partial = preg_replace("[^ A-Za-z'\-]", "", $request->input('partial_name'));
+        } else {
+            $partial = '';
+        }
+
+        $names = explode(' ', $partial);
+
+        $contacts = $patientResource->getReferrers($docId, $names);
+
+        if (count($contacts)) {
+            foreach ($contacts as $item) {
+                $response[] = [
+                    'id'     => $item->patientid,
+                    'name'   => $item->lastname . ', ' . $item->firstname . ' ' . $item->middlename . ' - ' . $item->label,
+                    'source' => $item->referral_type
+                ];
+            }
+        } else {
+            $response = [
+                'error' => 'Error: No match found for this criteria.'
+            ];
+        }
+
+        return ApiResponse::responseOk('', $response);
     }
 
     private function getDocNameFromShortInfo($field, $shortInfo)

@@ -1,7 +1,7 @@
 <style src="../../../../../assets/css/manage/admin.css" scoped></style>
 <!-- <style src="../../../../../assets/css/manage/task.css" scoped></style> -->
 <!-- <style src="../../../../../assets/css/manage/notifications.css" scoped></style> -->
-<!-- <style src="../../../../../assets/css/manage/search-hints.css" scoped></style> -->
+<style src="../../../../../assets/css/manage/search-hints.css" scoped></style>
 <!-- <style src="../../../../../assets/css/manage/top.css" scoped></style> -->
 <!-- <style src="../../../../../assets/css/manage/letter-form.css" scoped></style> -->
 <style src="../../../../../assets/css/manage/form.css" scoped></style>
@@ -661,64 +661,52 @@
                                 </div>
                                 <div style="float:left;" id="referred_source_div">
                                     <input
-                                        v-model="patient.referred_source_r"
-                                        name="referred_source_r"
-                                        {{ (patient.referred_source == consts.DSS_REFERRED_PATIENT ||
-                                            patient.referred_source == consts.DSS_REFERRED_PHYSICIAN) ? 'checked="checked"' : '' }}
+                                        v-model="patient.referred_source"
+                                        :checked="patient.referred_source == consts.DSS_REFERRED_PHYSICIAN ? 'checked' : ''"
+                                        :value="consts.DSS_REFERRED_PATIENT"
                                         type="radio"
-                                        value="person"
-                                        onclick="show_referredby('person', '')"
+                                        v-on:click="showReferredBy('person', '')"
                                     /> Person
                                     <input
-                                        v-model="patient.referred_source_r"
-                                        name="referred_source_r"
-                                        {{ (patient.referred_source == consts.DSS_REFERRED_MEDIA) ? 'checked="checked"' : '' }}
-                                        type="radio"
+                                        v-model="patient.referred_source"
                                         :value="consts.DSS_REFERRED_MEDIA"
-                                        onclick="show_referredby('notes', <?php echo DSS_REFERRED_MEDIA; ?>)"
+                                        type="radio"
+                                        v-on:click="showReferredBy('notes', consts.DSS_REFERRED_MEDIA)"
                                     /> {{ consts.dssReferredLabels[consts.DSS_REFERRED_MEDIA] }}
                                     <input
-                                        v-model="patient.referred_source_r"
-                                        name="referred_source_r"
-                                        {{ (patient.referred_source == consts.DSS_REFERRED_FRANCHISE) ? 'checked="checked"' : '' }}
-                                        type="radio"
+                                        v-model="patient.referred_source"
                                         :value="consts.DSS_REFERRED_FRANCHISE"
-                                        onclick="show_referredby('notes',<?php echo DSS_REFERRED_FRANCHISE; ?>)"
+                                        type="radio"
+                                        v-on:click="showReferredBy('notes', consts.DSS_REFERRED_FRANCHISE)"
                                     /> {{ consts.dssReferredLabels[consts.DSS_REFERRED_FRANCHISE] }}
                                     <input
-                                        v-model="patient.referred_source_r"
-                                        name="referred_source_r"
-                                        {{ (patient.referred_source == consts.DSS_REFERRED_DSSOFFICE) ? 'checked="checked"' : '' }}
-                                        type="radio"
+                                        v-model="patient.referred_source"
                                         :value="consts.DSS_REFERRED_DSSOFFICE"
-                                        onclick="show_referredby('notes',<?php echo DSS_REFERRED_DSSOFFICE; ?>)"
+                                        type="radio"
+                                        v-on:click="showReferredBy('notes', consts.DSS_REFERRED_DSSOFFICE)"
                                     /> {{ consts.dssReferredLabels[consts.DSS_REFERRED_DSSOFFICE] }}
                                     <input
-                                        v-model="patient.referred_source_r"
-                                        name="referred_source_r"
-                                        {{ (patient.referred_source == consts.DSS_REFERRED_OTHER) ? 'checked="checked"' : '' }}
-                                        type="radio"
+                                        v-model="patient.referred_source"
                                         :value="consts.DSS_REFERRED_OTHER"
-                                        onclick="show_referredby('notes',<?php echo DSS_REFERRED_OTHER; ?>)"
+                                        type="radio"
+                                        v-on:click="showReferredBy('notes', consts.DSS_REFERRED_OTHER)"
                                     /> {{ consts.dssReferredLabels[consts.DSS_REFERRED_OTHER] }}
                                 </div>
                                 <div style="clear:both;float:left;">
                                     <div
+                                        v-if="showReferredPerson"
                                         id="referred_person"
-                                        {{ (patient.referred_source != consts.DSS_REFERRED_PATIENT &&
-                                            patient.referred_source != consts.DSS_REFERRED_PHYSICIAN) ?
-                                            'style="display:none;margin-left:100px;"' :
-                                            'style="margin-left:100px"' }}
+                                        style="margin-left:100px;"
                                     >
                                         <input
-                                            v-model="patient.referredby_name"
+                                            v-model="formedFullNames.referred_name"
+                                            v-on:click="onKeyUpSearchReferrers"
                                             type="text"
                                             id="referredby_name"
-                                            onclick="updateval(this)"
                                             autocomplete="off"
                                             name="referredby_name"
-                                            :value="patient.referredby_name ? patient.referredby_name : 'Type referral name'"
                                             style="width:300px;"
+                                            placeholder="Type referral name"
                                         />
                                         <input
                                             type="button"
@@ -728,26 +716,31 @@
                                             value="+ Create New Contact"
                                         />
                                         <br />
-                                        <div id="referredby_hints" class="search_hints" style="margin-top:20px; display:none;">
+                                        <div
+                                            v-show="foundContactsByName.length > 0"
+                                            id="referredby_hints"
+                                            class="search_hints"
+                                            style="margin-top:20px;"
+                                        >
                                             <ul id="referredby_list" class="search_list">
-                                                <li class="template" style="display:none">Doe, John S</li>
+                                                <li
+                                                    v-for="contact in foundContactsByName"
+                                                    class="json_patient"
+                                                    v-on:click="loadPopup('view_contact.php?ed=' + contact.id)"
+                                                >{{ contact.name }}</li>
                                             </ul>
                                         </div>
-                                        <div
-                                            id="referred_notes"
-                                            {{ (patient.referred_source != consts.DSS_REFERRED_MEDIA &&
-                                                patient.referred_source != consts.DSS_REFERRED_FRANCHISE &&
-                                                patient.referred_source != consts.DSS_REFERRED_DSSOFFICE &&
-                                                patient.referred_source != consts.DSS_REFERRED_OTHER) ?
-                                                'style="display:none;margin-left:200px;"' :
-                                                'style="margin-left:200px;"' }}
-                                        >
-                                            <textarea
-                                                v-model="patient.referred_notes"
-                                                name="referred_notes"
-                                                style="width:300px;"
-                                            ></textarea>
-                                        </div>
+                                    </div>
+                                    <div
+                                        v-if="showReferredNotes"
+                                        id="referred_notes"
+                                        style="margin-left:200px;"
+                                    >
+                                        <textarea
+                                            v-model="patient.referred_notes"
+                                            name="referred_notes"
+                                            style="width:300px;"
+                                        ></textarea>
                                     </div>
                                 </div>
                             </div>

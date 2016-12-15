@@ -29,7 +29,13 @@ module.exports = {
             message                   : '',
             eligiblePayerId           : 0,
             eligiblePayerName         : '',
-            sendPin                   : ''
+            sendPin                   : '',
+            showReferredNotes         : false,
+            showReferredPerson        : false,
+            showReferredbyHints       : false,
+            foundContactsByName       : [],
+            typingTimer               : null,
+            doneTypingInterval        : 600
         }
     },
     mixins: [handlerMixin],
@@ -98,6 +104,16 @@ module.exports = {
             }
 
             return status;
+        },
+        showReferredPerson: function() {
+            if (
+                this.patient.referred_source == window.constants.DSS_REFERRED_PATIENT ||
+                this.patient.referred_source == window.constants.DSS_REFERRED_PHYSICIAN
+            ) {
+                return true;
+            } else {
+                return false;
+            }
         }
     },
     created: function() {
@@ -137,6 +153,43 @@ module.exports = {
             });
     },
     methods: {
+        onKeyUpSearchReferrers: function(event) {
+            clearTimeout(this.typingTimer);
+
+            var self = this;
+            this.typingTimer = setTimeout(function() {
+                if (self.formedFullNames.referred_name.trim() != '') {
+                    if (self.formedFullNames.referred_name.trim().length > 1) {
+                        self.getReferrers(self.formedFullNames.referred_name.trim())
+                            .then(function(response) {
+                                var data = response.data.data;
+
+                                if (data.length) {
+                                    self.$set('foundContactsByName', data);
+                                    self.$set('showReferredbyHints', true);
+                                } else if (data.error) {
+                                    self.$set('foundContactsByName', []);
+                                    alert(data.error);
+                                }
+                            }, function(response) {
+                                self.handleErrors('getListContactsAndCompanies', response);
+                            });
+                    } else {
+                        self.$set('showReferredbyHints', false);
+                    }
+                }
+            }, this.doneTypingInterval);
+        },
+        showReferredBy: function(type, referredSource) {
+            if (type == 'person') {
+                this.$set('showReferredNotes', false);
+                this.$set('showReferredPerson', true);
+            } else {
+                this.$set('showReferredNotes', true);
+                this.$set('showReferredPerson', false);
+            }
+            this.$set('patient.referred_source', referredSource);
+        },
         editPatient: function() {
             this.addNewPatient()
                 .then(function(response) {
@@ -369,6 +422,11 @@ module.exports = {
             var data = { 'patient_id': patientId || 0 }
 
             return this.$http.post(window.config.API_PATH + 'patients/filling-form', data);
+        },
+        getReferrers: function(requestedName) {
+            var data = { partial_name: requestedName };
+
+            return this.$http.post(window.config.API_PATH + 'patients/referrers', data);
         }
     }
 }

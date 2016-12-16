@@ -508,6 +508,8 @@ class PatientsController extends Controller
                 $formedFullNames[$field . '_name'] = $this->getDocNameFromShortInfo($foundPatient->$field, $shortInfo);
             }
 
+            $formedFullNames['ins_payer_name'] = $foundPatient->p_m_eligible_payer_id . ' - ' . $foundPatient->p_m_eligible_payer_name;
+
             if ($foundPatient->referred_source == self::DSS_REFERRED_PATIENT) {
                 $referredPatient = $patientResource->getWithFilter([
                     'lastname', 'firstname', 'middlename'

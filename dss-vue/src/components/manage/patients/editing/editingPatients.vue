@@ -700,7 +700,7 @@
                                     >
                                         <input
                                             v-model="formedFullNames.referred_name"
-                                            v-on:click="onKeyUpSearchReferrers"
+                                            v-on:keyup="onKeyUpSearchReferrers"
                                             type="text"
                                             id="referredby_name"
                                             autocomplete="off"
@@ -726,7 +726,7 @@
                                                 <li
                                                     v-for="contact in foundContactsByName"
                                                     class="json_patient"
-                                                    v-on:click="loadPopup('view_contact.php?ed=' + contact.id)"
+                                                    v-on:click="setReferredBy(contact.id, contact.source)"
                                                 >{{ contact.name }}</li>
                                             </ul>
                                         </div>
@@ -875,19 +875,28 @@
                     <td valign="top" colspan="2" class="frmhead">
                         Insurance Co.
                         <input
-                            v-model="patient.ins_payer_name"
+                            v-model="formedFullNames.ins_payer_name"
+                            v-on:keyup="onKeyUpSearchInsuranceCompanies"
                             type="text"
                             id="ins_payer_name"
-                            onclick="updateval(this)"
                             autocomplete="off"
                             name="ins_payer_name"
-                            :value="eligiblePayerId ? (eligiblePayerId + ' - ' + eligiblePayerName) : 'Type insurance payer name'"
                             style="width:300px;"
+                            placeholder="Type insurance payer name"
                         />
                         <br />
-                        <div id="ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
+                        <div
+                            v-show="foundInsCompaniesByName.length > 0"
+                            id="ins_payer_hints"
+                            class="search_hints"
+                            style="margin-top:20px;"
+                        >
                             <ul id="ins_payer_list" class="search_list">
-                                <li class="template" style="display:none"></li>
+                                <li
+                                    v-for="company in foundInsCompaniesByName"
+                                    class="json_patient"
+                                    v-on:click="setReferredBy(company.id, company.source)"
+                                >{{ company.name }}</li>
                             </ul>
                         </div>
                     </td>

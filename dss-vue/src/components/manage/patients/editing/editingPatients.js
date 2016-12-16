@@ -35,7 +35,9 @@ module.exports = {
             showReferredbyHints       : false,
             foundContactsByName       : [],
             typingTimer               : null,
-            doneTypingInterval        : 600
+            doneTypingInterval        : 600,
+            foundInsCompaniesByName   : [],
+            eligiblePayerSource       : []
         }
     },
     mixins: [handlerMixin],
@@ -53,6 +55,9 @@ module.exports = {
             } else {
                 this.$set('routeParameters.patientId', null);
             }
+        },
+        'eligiblePayerSource': function() {
+            this.eligiblePayerSource = this.populateEligiblePayerSource(this.eligiblePayerSource);
         }
     },
     computed: {
@@ -151,8 +156,57 @@ module.exports = {
             }, function(response) {
                 this.handleErrors('getBillingCompany', response);
             });
+
+        this.getEligiblePayerSource()
+            .then(function(response) {
+                var data = response.data.data;
+
+                if (data.length) {
+                    this.$set('eligiblePayerSource', data);
+                }
+            }, function(response) {
+                this.handleErrors('getBillingCompany', response);
+
+                // get static eligible payer source
+            });
     },
     methods: {
+        populateEligiblePayerSource: function(source) {
+            source.map((el, index) => {
+                
+            });
+        },
+        onKeyUpSearchInsuranceCompanies: function() {
+            clearTimeout(this.typingTimer);
+
+            var self = this;
+            this.typingTimer = setTimeout(function() {
+                if (self.formedFullNames.ins_payer_name.trim() != '') {
+                    if (self.formedFullNames.ins_payer_name.trim().length > 1) {
+                        self.getReferrers(self.formedFullNames.ins_payer_name.trim())
+                            .then(function(response) {
+                                var data = response.data.data;
+
+                                if (data.length) {
+                                    self.$set('foundContactsByName', data);
+                                    self.$set('showReferredbyHints', true);
+                                } else if (data.error) {
+                                    self.$set('foundContactsByName', []);
+                                    alert(data.error);
+                                }
+                            }, function(response) {
+                                self.handleErrors('getListContactsAndCompanies', response);
+                            });
+                    } else {
+                        self.$set('showReferredbyHints', false);
+                    }
+                }
+            }, this.doneTypingInterval);
+        },
+        setReferredBy: function(id, referredType) {
+            this.$set('patient.referred_by', id);
+            this.$set('patient.referred_source', referredType);
+        },
         onKeyUpSearchReferrers: function(event) {
             clearTimeout(this.typingTimer);
 
@@ -427,6 +481,9 @@ module.exports = {
             var data = { partial_name: requestedName };
 
             return this.$http.post(window.config.API_PATH + 'patients/referrers', data);
+        },
+        getEligiblePayerSource: function() {
+            return this.$http.get('https://eligibleapi.com/resources/payers/claims/medical.json');
         }
     }
 }

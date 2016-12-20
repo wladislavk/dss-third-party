@@ -36,8 +36,8 @@ module.exports = {
             foundContactsByName       : [],
             typingTimer               : null,
             doneTypingInterval        : 600,
-            foundInsCompaniesByName   : [],
-            eligiblePayerSource       : []
+            eligiblePayerSource       : [],
+            eligiblePayers            : []
         }
     },
     mixins: [handlerMixin],
@@ -55,9 +55,6 @@ module.exports = {
             } else {
                 this.$set('routeParameters.patientId', null);
             }
-        },
-        'eligiblePayerSource': function() {
-            this.eligiblePayerSource = this.populateEligiblePayerSource(this.eligiblePayerSource);
         }
     },
     computed: {
@@ -162,44 +159,99 @@ module.exports = {
                 var data = response.data.data;
 
                 if (data.length) {
+                    data = this.populateEligiblePayerSource(data)
                     this.$set('eligiblePayerSource', data);
                 }
             }, function(response) {
-                this.handleErrors('getBillingCompany', response);
+                this.handleErrors('getEligiblePayerSource', response);
 
-                // get static eligible payer source
+                this.getStaticEligiblePayerSource()
+                    .then(function(response) {
+                        var data = response.data.data;
+
+                        if (data.length) {
+                            data = this.populateEligiblePayerSource(data)
+                            this.$set('eligiblePayerSource', data);
+                        }
+                    }, function(response) {
+                        this.handleErrors('getStaticEligiblePayerSource', response);
+                    });
             });
     },
     methods: {
-        populateEligiblePayerSource: function(source) {
-            source.map((el, index) => {
-                
+        setEligiblePayer: function(id, name) {
+            this.$set('patient.p_m_eligible_payer_id', id);
+            this.$set('patient.p_m_eligible_payer_name', name);
+        },
+        searchEligiblePayersByName: function(name) {
+            const LIMIT_RECORDS_TO_DISPLAY = 5;
+            var partsOfRequiredName = name.toLowerCase().split(' ');
+            // the description of it is here: http://stackoverflow.com/a/4389683
+            var regRequiredName = new RegExp("(?=.*\\b.*" + partsOfRequiredName.join('.*\\b)(?=.*\\b.*') + ".*\\b).*", 'i');
+
+            var foundPayers = [];
+            var recordsToDisplay = 0;
+            this.eligiblePayerSource.some((el) => {
+                var payerId = el.payer_id.replace(/(\r\n|\n|\r)/gm, '');
+                // check unique id
+                var foundPayerId = foundPayers.find((el) => {
+                    return el.id == payerId;
+                });
+
+                if (el.payer_name.toLowerCase().search(regRequiredName) != -1 && !foundPayerId) {
+                    foundPayers.push({
+                        id   : payerId,
+                        name : el.payer_name.replace(/(\r\n|\n|\r)/gm, '')
+                    });
+
+                    if (++recordsToDisplay == LIMIT_RECORDS_TO_DISPLAY) {
+                        return true;
+                    }
+                }
             });
+
+            return foundPayers;
+        },
+        populateEligiblePayerSource: function(source) {
+            var data = [];
+
+            source.forEach((el) => {
+                if (typeof el['names'] === 'undefined' || el['names'].length === 0) {
+                    return;
+                }
+
+                el['names'].forEach((name) => {
+                    data.push({
+                        payer_id: el['payer_id'],
+                        payer_name: name,
+                        enrollment_required: el['enrollment_required'],
+                        enrollment_mandatory_fields: el['enrollment_mandatory_fields']
+                    });
+                });
+            });
+
+            return data;
         },
         onKeyUpSearchInsuranceCompanies: function() {
             clearTimeout(this.typingTimer);
 
+            var insPayerName = this.formedFullNames.ins_payer_name.trim();
+
             var self = this;
             this.typingTimer = setTimeout(function() {
-                if (self.formedFullNames.ins_payer_name.trim() != '') {
-                    if (self.formedFullNames.ins_payer_name.trim().length > 1) {
-                        self.getReferrers(self.formedFullNames.ins_payer_name.trim())
-                            .then(function(response) {
-                                var data = response.data.data;
+                if (insPayerName.length > 1) {
+                    var foundPayers = self.searchEligiblePayersByName(insPayerName);
 
-                                if (data.length) {
-                                    self.$set('foundContactsByName', data);
-                                    self.$set('showReferredbyHints', true);
-                                } else if (data.error) {
-                                    self.$set('foundContactsByName', []);
-                                    alert(data.error);
-                                }
-                            }, function(response) {
-                                self.handleErrors('getListContactsAndCompanies', response);
-                            });
+                    if (foundPayers.length > 0) {
+                        self.$set('eligiblePayers', foundPayers);
                     } else {
-                        self.$set('showReferredbyHints', false);
+                        self.$set('eligiblePayers', []);
+                        self.$els.insPayerName.focus();
+
+                        alert('Error: No match found for this criteria.');
                     }
+                } else {
+                    self.$set('eligiblePayers', []);
                 }
             }, this.doneTypingInterval);
         },
@@ -484,6 +536,9 @@ module.exports = {
         },
         getEligiblePayerSource: function() {
             return this.$http.get('https://eligibleapi.com/resources/payers/claims/medical.json');
+        },
+        getStaticEligiblePayerSource: function() {
+            return this.$http.get(window.config.API_PATH + 'eligible/payers');
         }
     }
 }

@@ -877,6 +877,7 @@
                         <input
                             v-model="formedFullNames.ins_payer_name"
                             v-on:keyup="onKeyUpSearchInsuranceCompanies"
+                            v-el:ins-payer-name
                             type="text"
                             id="ins_payer_name"
                             autocomplete="off"
@@ -886,17 +887,17 @@
                         />
                         <br />
                         <div
-                            v-show="foundInsCompaniesByName.length > 0"
+                            v-show="eligiblePayers.length > 0"
                             id="ins_payer_hints"
                             class="search_hints"
                             style="margin-top:20px;"
                         >
                             <ul id="ins_payer_list" class="search_list">
                                 <li
-                                    v-for="company in foundInsCompaniesByName"
+                                    v-for="payer in eligiblePayers"
                                     class="json_patient"
-                                    v-on:click="setReferredBy(company.id, company.source)"
-                                >{{ company.name }}</li>
+                                    v-on:click="setEligiblePayer(payer.id, payer.name)"
+                                >{{ payer.id + ' - ' + payer.name}}</li>
                             </ul>
                         </div>
                     </td>

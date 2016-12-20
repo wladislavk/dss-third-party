@@ -33,6 +33,10 @@ Route::group(['prefix' => 'webhooks'], function () {
 */
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
+    Route::group(['prefix' => 'eligible'], function() {
+        Route::get('payers', 'Eligible\EligibleController@getPayers');
+    });
+
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
     Route::post('users/current', 'UsersController@getCurrentUserInfo');
     Route::post('users/course-staff', 'UsersController@getCourseStaff');

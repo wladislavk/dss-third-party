@@ -876,7 +876,7 @@
                         Insurance Co.
                         <input
                             v-model="formedFullNames.ins_payer_name"
-                            v-on:keyup="onKeyUpSearchInsuranceCompanies"
+                            v-on:keyup="onKeyUpSearchEligiblePayers"
                             v-el:ins-payer-name
                             type="text"
                             id="ins_payer_name"
@@ -909,17 +909,16 @@
                         <li id="foli8" class="complex">
                             <label class="desc" id="title0" for="Field0">
                                 Primary Medical &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <template v-if="billingCompany.exclusive">
+                                <template v-if="+billingCompany.exclusive">
                                     {{ billingCompany.name + ' filing insurance' }}
                                 </template>
                                 <a
                                     v-else
-                                    onclick="return false;"
                                     class="plain"
                                     title="Select YES if you would like {{ billingCompany.name }} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
                                 >{{ billingCompany.name }} filing insurance?</a>
                                 <input
-                                    v-model="patient.p_m_dss_file_yes"
+                                    v-model="patient.p_m_dss_file"
                                     id="p_m_dss_file_yes"
                                     class="dss_file_radio"
                                     type="radio"
@@ -927,7 +926,7 @@
                                     value="1"
                                 >Yes&nbsp;&nbsp;&nbsp;&nbsp;
                                 <input
-                                    v-model="patient.p_m_dss_file_yes"
+                                    v-model="patient.p_m_dss_file"
                                     id="p_m_dss_file_no"
                                     type="radio"
                                     class="dss_file_radio"
@@ -1017,7 +1016,7 @@
                                 </span>
                                 <span>
                                     <select
-                                        v-model="patient.ins_dob"
+                                        v-model="patient.p_m_gender"
                                         name="p_m_gender"
                                         id="p_m_gender"
                                         class="field text addr tbox"
@@ -1097,7 +1096,7 @@
                             <div>
                                 <span>
                                     <select
-                                        v-model="patient.p_m_zip"
+                                        v-model="patient.p_m_ins_type"
                                         id="p_m_ins_type"
                                         name="p_m_ins_type"
                                         class="field text addr tbox"
@@ -1181,13 +1180,13 @@
                                         type="button"
                                         class="button"
                                         style="width:215px;"
-                                        onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');"
+                                        v-oclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins{{ routeParameters.patientId ? '&pid=' + routeParameters.patientId + '&type=11&ctypeeq=1&activePat=' + routeParameters.patientId }}');"
                                         value="+ Create New Insurance Company"
                                     />
                                 </span>
                                 <span>
                                     <input
-                                        v-model="patient.p_m_party"
+                                        v-model="patient.p_m_ins_id"
                                         id="p_m_party"
                                         name="p_m_ins_id"
                                         type="text"
@@ -1225,13 +1224,12 @@
                                 </span>
                                 <span>
                                     <textarea
-                                        v-model="patient.p_m_ins_phone"
                                         id="p_m_ins_phone"
                                         name="p_m_ins_phone"
                                         class="field text addr tbox"
                                         disabled="disabled"
                                         style="width:190px;height:60px;background:#ccc;"
-                                    ></textarea>
+                                    >{{ insCompanyContactInfo }}</textarea>
                                     <label for="p_m_ins_phone">Address</label>
                                 </span>
                             </div>
@@ -1251,20 +1249,16 @@
                                 <span>
                                     <label style="display:inline;">Does patient have secondary insurance?</label>
                                     <input
-                                        v-model="patient.s_m_ins"
+                                        v-model="patient.has_s_m_ins"
                                         type="radio"
                                         value="Yes"
-                                        {{ (patient.has_s_m_ins == "Yes") ? 'checked="checked"' : '' }}
                                         name="s_m_ins"
-                                        onclick="$('.s_m_ins_div').show();"
                                     /> Yes
                                     <input
-                                        v-model="patient.s_m_ins"
+                                        v-model="patient.has_s_m_ins"
                                         type="radio"
                                         value="No"
-                                        {{ (patient.has_s_m_ins != "Yes") ? 'checked="checked"':'' }}
                                         name="s_m_ins"
-                                        onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();"
                                     /> No
                                 </span>
                             </div>
@@ -1353,8 +1347,8 @@
                                 > No
                             </label>
                             <div
+                                v-if="patient.has_s_m_ins == "Yes""
                                 class="s_m_ins_div"
-                                {{ patient.has_s_m_ins != "Yes" ? 'style="display:none;"' : '' }}
                             >
                                 <span>
                                     <select

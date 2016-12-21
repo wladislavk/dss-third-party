@@ -36,6 +36,7 @@ module.exports = {
             foundContactsByName       : [],
             typingTimer               : null,
             doneTypingInterval        : 600,
+            autoCompleteSearchValue   : '',
             eligiblePayerSource       : [],
             eligiblePayers            : []
         }
@@ -116,6 +117,20 @@ module.exports = {
             } else {
                 return false;
             }
+        },
+        insCompanyContactInfo: function() {
+            var foundCompany = this.insuranceContacts.find((el) => {
+                return el.contactid == this.patient.p_m_ins_co;
+            });
+
+            if (foundCompany) {
+                return foundCompany.add1 + "\n"
+                    + (foundCompany.add2 ? foundCompany.add2 + "\n" : '')
+                    + foundCompany.city + ' ' + foundCompany.state + ' ' + foundCompany.zip + "\n"
+                    + this.phone(foundCompany.phone1);
+            } else {
+                return '';
+            }
         }
     },
     created: function() {
@@ -177,11 +192,23 @@ module.exports = {
                         this.handleErrors('getStaticEligiblePayerSource', response);
                     });
             });
+
+        this.getInsuranceContacts()
+            .then(function(response) {
+                var data = response.data.data;
+
+                if (data.length) {
+                    this.$set('insuranceContacts', data);
+                }
+            }, function(response) {
+                this.handleErrors('getInsuranceContacts', response);
+            });
     },
     methods: {
         setEligiblePayer: function(id, name) {
             this.$set('patient.p_m_eligible_payer_id', id);
             this.$set('patient.p_m_eligible_payer_name', name);
+            this.$set('formedFullNames.ins_payer_name', id + ' - ' + name);
         },
         searchEligiblePayersByName: function(name) {
             const LIMIT_RECORDS_TO_DISPLAY = 5;
@@ -232,7 +259,7 @@ module.exports = {
 
             return data;
         },
-        onKeyUpSearchInsuranceCompanies: function() {
+        onKeyUpSearchEligiblePayers: function() {
             clearTimeout(this.typingTimer);
 
             var insPayerName = this.formedFullNames.ins_payer_name.trim();
@@ -240,15 +267,18 @@ module.exports = {
             var self = this;
             this.typingTimer = setTimeout(function() {
                 if (insPayerName.length > 1) {
-                    var foundPayers = self.searchEligiblePayersByName(insPayerName);
+                    if (self.autoCompleteSearchValue != insPayerName) {
+                        self.autoCompleteSearchValue = insPayerName;
+                        var foundPayers = self.searchEligiblePayersByName(insPayerName);
 
-                    if (foundPayers.length > 0) {
-                        self.$set('eligiblePayers', foundPayers);
-                    } else {
-                        self.$set('eligiblePayers', []);
-                        self.$els.insPayerName.focus();
+                        if (foundPayers.length > 0) {
+                            self.$set('eligiblePayers', foundPayers);
+                        } else {
+                            self.$set('eligiblePayers', []);
+                            self.$els.insPayerName.focus();
 
-                        alert('Error: No match found for this criteria.');
+                            alert('Error: No match found for this criteria.');
+                        }
                     }
                 } else {
                     self.$set('eligiblePayers', []);
@@ -539,6 +569,9 @@ module.exports = {
         },
         getStaticEligiblePayerSource: function() {
             return this.$http.get(window.config.API_PATH + 'eligible/payers');
+        },
+        getInsuranceContacts: function() {
+            return this.$http.post(window.config.API_PATH + 'contacts/insurance');
         }
     }
 }

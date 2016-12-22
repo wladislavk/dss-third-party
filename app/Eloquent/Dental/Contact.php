@@ -248,4 +248,14 @@ class Contact extends Model implements Resource, Repository
             ->where('contactid', $contactId)
             ->first();
     }
+
+    public function getInsuranceContacts($docId)
+    {
+        return $this->active()
+            ->whereNull('merge_id')
+            ->where('contacttypeid', 11)
+            ->where('docid', $docId)
+            ->orderBy('company')
+            ->get();
+    }
 }

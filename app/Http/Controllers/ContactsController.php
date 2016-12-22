@@ -150,4 +150,12 @@ class ContactsController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getInsuranceContacts(Contacts $resource, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+        $data = $resource->getInsuranceContacts($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

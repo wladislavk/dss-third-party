@@ -876,7 +876,7 @@
                         Insurance Co.
                         <input
                             v-model="formedFullNames.ins_payer_name"
-                            v-on:keyup="onKeyUpSearchEligiblePayers"
+                            v-on:keyup="onKeyUpSearchEligiblePayers('primary')"
                             v-el:ins-payer-name
                             type="text"
                             id="ins_payer_name"
@@ -896,7 +896,7 @@
                                 <li
                                     v-for="payer in eligiblePayers"
                                     class="json_patient"
-                                    v-on:click="setEligiblePayer(payer.id, payer.name)"
+                                    v-on:click="setEligiblePayer(payer.id, payer.name, 'primary')"
                                 >{{ payer.id + ' - ' + payer.name}}</li>
                             </ul>
                         </div>
@@ -1271,41 +1271,45 @@
                     <td valign="top" colspan="2" class="frmhead">
                         Insurance Co.
                         <input
-                            v-model="patient.s_m_ins_payer_name"
+                            v-model="formedFullNames.s_m_ins_payer_name"
+                            v-on:keyup="onKeyUpSearchEligiblePayers('secondary')"
+                            v-el:secondary-ins-payer-name
                             type="text"
                             id="s_m_ins_payer_name"
-                            onclick="updateval(this)"
                             autocomplete="off"
                             name="s_m_ins_payer_name"
-                            :value="patient.s_m_eligible_payer_id ?
-                                    (patient.s_m_eligible_payer_id + ' - ' + patient.s_m_eligible_payer_name) :
-                                    'Type insurance payer name'"
                             style="width:300px;"
+                            placeholder="Type insurance payer name"
                         />
                         <br />
-                        <div id="s_m_ins_payer_hints" class="search_hints" style="margin-top:20px; display:none;">
+                        <div
+                            v-show="secondaryEligiblePayers.length > 0"
+                            id="s_m_ins_payer_hints"
+                            class="search_hints"
+                            style="margin-top:20px;"
+                        >
                             <ul id="s_m_ins_payer_list" class="search_list">
-                                <li class="template" style="display:none"></li>
+                                <li
+                                    v-for="payer in secondaryEligiblePayers"
+                                    class="json_patient"
+                                    v-on:click="setEligiblePayer(payer.id, payer.name, 'secondary')"
+                                >{{ payer.id + ' - ' + payer.name}}</li>
                             </ul>
                         </div>
                     </td>
                 </tr>
             </template>
-            <tr>
+            <tr v-show="patient.has_s_m_ins == 'Yes'">
                 <td valign="top" colspan="2" class="frmhead">
                     <ul>
                         <li id="foli8" class="complex"> 
-                            <label
-                                class="desc s_m_ins_div"
-                                id="title0"
-                                for="Field0"
-                                {{ patient.has_s_m_ins != "Yes" ? 'style="display:none;"' : '' }}
-                            >
+                            <label class="desc s_m_ins_div" id="title0" for="Field0">
                                 Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <template v-if="billingCompany.exclusive">
+                                <template v-if="+billingCompany.exclusive">
                                     {{ billingCompany.name + ' filing insurance' }}
                                 </template>
                                 <a
+                                    v-else
                                     onclick="return false;"
                                     class="plain"
                                     title="Select YES if you would like {{ billingCompany.name }} to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended)."
@@ -1332,24 +1336,19 @@
                                     title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO."
                                 >Insured Address same as Pt. address?</a>
                                 <input
-                                    v-model="s_m_same_address"
+                                    v-model="patient.s_m_same_address"
                                     type="radio"
-                                    onclick="$('#s_m_address_fields').hide();"
                                     name="s_m_same_address"
                                     value="1"
                                 > Yes
                                 <input
-                                    v-model="s_m_same_address"
+                                    v-model="patient.s_m_same_address"
                                     type="radio"
-                                    onclick="$('#s_m_address_fields').show();"
                                     name="s_m_same_address"
                                     value="2"
                                 > No
                             </label>
-                            <div
-                                v-if="patient.has_s_m_ins == "Yes""
-                                class="s_m_ins_div"
-                            >
+                            <div class="s_m_ins_div">
                                 <span>
                                     <select
                                         v-model="patient.s_m_relation"
@@ -1395,7 +1394,7 @@
                                         maxlength="255"
                                         style="width:150px;"
                                     />
-                                    <label for="s_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
+                                    <label for="s_m_partyfname">Insured party First&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Middle&nbsp;&nbsp;&nbsp;&nbsp;Last</label>
                                 </span>
                                 <span>
                                     <input
@@ -1430,10 +1429,8 @@
                         </li>
                     </ul>
                     <ul
+                        v-show="patient.s_m_same_address == 2"
                         id="s_m_address_fields"
-                        {{ (patient.s_m_same_address == "1" ||
-                            patient.has_s_m_ins != "Yes") ?
-                            'style="display:none;"' : ''}}
                     >
                         <li id="foli8" class="complex">
                             <div>
@@ -1491,10 +1488,7 @@
                     </ul>
                     <ul>
                         <li id="foli8" class="complex">
-                            <div
-                                class="s_m_ins_div"
-                                {{ (patient.has_s_m_ins != "Yes") ? 'style="display:none;"' : '' }}
-                            >
+                            <div class="s_m_ins_div">
                                 <span>
                                     <select
                                         v-model="patient.s_m_ins_type"
@@ -1556,7 +1550,7 @@
                     </ul>
                     <ul>
                         <li id="foli8" class="complex">
-                            <div class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+                            <div class="s_m_ins_div">
                                 <span>
                                     <select
                                         v-model="patient.s_m_ins_co"
@@ -1579,7 +1573,7 @@
                                         type="button"
                                         class="button"
                                         style="width:215px;"
-                                        onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins<?php if(isset($_GET['pid'])){echo "&pid=".$_GET['pid']."&type=11&ctypeeq=1&activePat=".$_GET['pid'];} ?>');"
+                                        onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins{{ routeParameters.patientId ? '&pid=' + routeParameters.patientId + '&type=11&ctypeeq=1&activePat=' + routeParameters.patientId }}');"
                                         value="+ Create New Insurance Company"
                                     />
                                 </span>
@@ -1621,14 +1615,13 @@
                                 </span>
                                 <span>
                                     <textarea
-                                        v-model="patient.s_m_ins_phone"
                                         id="s_m_ins_phone"
                                         name="s_m_ins_phone"
                                         type="text"
                                         class="field text addr tbox"
                                         disabled="disabled"
                                         style="width:190px;height:60px;background:#ccc;"
-                                    ></textarea>
+                                    >{{ secondaryInsCompanyContactInfo }}</textarea>
                                     <label for="s_m_ins_phone">Address</label>
                                 </span>
                             </div>
@@ -1661,8 +1654,8 @@
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Primary Care MD</label>
                                         <div
+                                            v-show="patient.docpcp != ''"
                                             id="docpcp_static_info"
-                                            :style="patient.docpcp != '' ? '' : 'display:none'"
                                         >
                                             <span id="docpcp_name_static" style="width:300px;">{{ formedFullNames.docpcp_name }}</span>
                                             <a
@@ -1677,14 +1670,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-if="patient.docpcp == ''"
                                             v-model="formedFullNames.docpcp_name"
                                             type="text"
                                             id="docpcp_name"
-                                            style="width:300px;<?php echo ($docpcp!='')?'display:none;':'';?>"
-                                            onclick="updateval(this)"
+                                            style="width:300px;"
                                             autocomplete="off"
                                             name="docpcp_name"
-                                            :value="patient.docpcp != '' ? formedFullNames.docpcp_name : 'Type contact name'"
+                                            placeholder="Type contact name"
                                         />
                                         <br />
                                         <div id="docpcp_hints" class="search_hints" style="display:none;">
@@ -1702,8 +1695,8 @@
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">ENT</label>
                                         <div
+                                            v-show="patient.docent != ''"
                                             id="docent_static_info"
-                                            :style="patient.docent != '' ? '' : 'display:none'"
                                         >
                                             <span id="docent_name_static" style="width:300px;">{{ formedFullNames.docent_name }}</span>
                                             <a
@@ -1718,14 +1711,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-if="patient.docent == ''"
                                             v-model="formedFullNames.docent_name"
                                             type="text"
                                             id="docent_name"
-                                            style="width:300px;<?php echo ($docent!='')?'display:none':''; ?>"
-                                            onclick="updateval(this)"
+                                            style="width:300px;"
                                             autocomplete="off"
                                             name="docent_name"
-                                            :value="patient.docent != '' ? formedFullNames.docent_name : 'Type contact name'"
+                                            placeholder="Type contact name"
                                         />
                                         <br />
                                         <div id="docent_hints" class="search_hints" style="display:none;">
@@ -1743,8 +1736,8 @@
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Sleep MD</label>
                                         <div
+                                            v-show="patient.docsleep != ''"
                                             id="docsleep_static_info"
-                                            :style="patient.docsleep != '' ? '' : 'display:none'"
                                         >
                                             <span id="docsleep_name_static" style="width:300px;">{{ formedFullNames.docsleep_name }}</span>
                                             <a
@@ -1759,14 +1752,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-if="patient.docsleep == ''"
                                             v-model="formedFullNames.docsleep_name"
                                             type="text"
                                             id="docsleep_name"
-                                            style="width:300px;<?php echo ($docsleep!='')?'display:none':''; ?>"
-                                            onclick="updateval(this)"
+                                            style="width:300px;"
                                             autocomplete="off"
                                             name="docsleep_name"
-                                            :value="patient.docsleep ? formedFullNames.docsleep_name : 'Type contact name'"
+                                            placeholder="Type contact name"
                                         />
                                         <br />
                                         <div id="docsleep_hints" class="search_hints" style="display:none;">
@@ -1784,8 +1777,8 @@
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Dentist</label>
                                         <div
+                                            v-show="patient.docdentist != ''"
                                             id="docdentist_static_info"
-                                            :style="patient.docdentist != '' ? '' : 'display:none'"
                                         >
                                             <span id="docdentist_name_static" style="width:300px;">{{ formedFullNames.docdentist_name }}</span>
                                             <a
@@ -1800,14 +1793,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-if="patient.docdentist == ''"
                                             v-model="formedFullNames.docdentist_name"
                                             type="text"
                                             id="docdentist_name"
-                                            style="width:300px;<?php echo ($docdentist!='')?'display:none':''; ?>"
-                                            onclick="updateval(this)"
+                                            style="width:300px;"
                                             autocomplete="off"
                                             name="docdentist_name"
-                                            :value="patient.docdentist != '' ? formedFullNames.docdentist_name : 'Type contact name'"
+                                            placeholder="Type contact name"
                                         />
                                         <br />
                                         <div id="docdentist_hints" class="search_hints" style="display:none;">
@@ -1825,9 +1818,9 @@
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Other MD</label>
                                         <div
+                                            v-show="patient.docmdother != ''"
                                             id="docmdother_static_info"
                                             style="height:25px;"
-                                            :style="patient.docmdother != '' ? '' : 'display:none;'"
                                         >
                                             <span id="docmdother_name_static" style="width:300px;">{{ formedFullNames.docmdother_name }}</span>
                                             <a
@@ -1842,14 +1835,14 @@
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-if="patient.docmdother == ''"
                                             v-model="formedFullNames.docmdother_name"
                                             type="text"
                                             id="docmdother_name"
-                                            style="width:300px;<?php echo ($docmdother!='')?'display:none':''; ?>"
-                                            onclick="updateval(this)"
+                                            style="width:300px;"
                                             autocomplete="off"
                                             name="docmdother_name"
-                                            :value="patient.docmdother != '' ? formedFullNames.docmdother_name : 'Type contact name'"
+                                            placeholder='Type contact name'
                                         />
                                         <a
                                             v-if="patient.docmdother2 == '' || patient.docmdother3 == ''"
@@ -1980,7 +1973,7 @@
                     <br />&nbsp;
                 </td>
             </tr>
-            <template v-if="headerInfo.docInfo.doc_patient_portal">
+            <template v-if="headerInfo.docInfo.use_patient_portal">
                 <tr bgcolor="#FFFFFF">
                     <td valign="top" class="frmhead">
                         Portal Status
@@ -2005,15 +1998,16 @@
             </template>
             <tr>
                 <td valign="top">
-                    <input
-                        v-if="!introLetter"
-                        id="introletter"
-                        name="introletter"
-                        type="checkbox"
-                        value="1"
-                    > Send Intro Letter to DSS patient
+                    <template v-if="!introLetter">
+                        <input
+                            id="introletter"
+                            name="introletter"
+                            type="checkbox"
+                            value="1"
+                        > Send Intro Letter to DSS patient
+                    </template>
                     <template v-else>
-                        DSS Intro Letter Sent to Patient {{ introLetter.date_generated }}
+                        DSS Intro Letter Sent to Patient {{ introLetter.generated_date }}
                     </template>
                 </td>
             </tr>

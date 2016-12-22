@@ -38,7 +38,8 @@ module.exports = {
             doneTypingInterval        : 600,
             autoCompleteSearchValue   : '',
             eligiblePayerSource       : [],
-            eligiblePayers            : []
+            eligiblePayers            : [],
+            secondaryEligiblePayers   : []
         }
     },
     mixins: [handlerMixin],
@@ -131,6 +132,20 @@ module.exports = {
             } else {
                 return '';
             }
+        },
+        secondaryInsCompanyContactInfo: function() {
+            var foundCompany = this.insuranceContacts.find((el) => {
+                return el.contactid == this.patient.s_m_ins_co;
+            });
+
+            if (foundCompany) {
+                return foundCompany.add1 + "\n"
+                    + (foundCompany.add2 ? foundCompany.add2 + "\n" : '')
+                    + foundCompany.city + ' ' + foundCompany.state + ' ' + foundCompany.zip + "\n"
+                    + this.phone(foundCompany.phone1);
+            } else {
+                return '';
+            }
         }
     },
     created: function() {
@@ -205,10 +220,22 @@ module.exports = {
             });
     },
     methods: {
-        setEligiblePayer: function(id, name) {
-            this.$set('patient.p_m_eligible_payer_id', id);
-            this.$set('patient.p_m_eligible_payer_name', name);
-            this.$set('formedFullNames.ins_payer_name', id + ' - ' + name);
+        setEligiblePayer: function(id, name, type) {
+            var idField, nameField, fullNameField;
+
+            if (type == 'primary') {
+                idField = 'p_m_eligible_payer_id';
+                nameField = 'p_m_eligible_payer_name';
+                fullNameField = 'ins_payer_name';
+            } else {
+                idField = 's_m_eligible_payer_id';
+                nameField = 's_m_eligible_payer_name';
+                fullNameField = 's_m_ins_payer_name';
+            }
+
+            this.$set('patient.' + idField, id);
+            this.$set('patient.' + nameField, name);
+            this.$set('formedFullNames.' + fullNameField, id + ' - ' + name);
         },
         searchEligiblePayersByName: function(name) {
             const LIMIT_RECORDS_TO_DISPLAY = 5;
@@ -259,10 +286,20 @@ module.exports = {
 
             return data;
         },
-        onKeyUpSearchEligiblePayers: function() {
+        onKeyUpSearchEligiblePayers: function(type) {
             clearTimeout(this.typingTimer);
 
-            var insPayerName = this.formedFullNames.ins_payer_name.trim();
+            var insPayerName, arrName, elementName;
+
+            if (type == 'primary') {
+                insPayerName = this.formedFullNames.ins_payer_name.trim();
+                arrName = 'eligiblePayers';
+                elementName = 'insPayerName';
+            } else {
+                insPayerName = this.formedFullNames.s_m_ins_payer_name.trim();
+                arrName = 'secondaryEligiblePayers';
+                elementName = 'secondaryInsPayerName';
+            }
 
             var self = this;
             this.typingTimer = setTimeout(function() {
@@ -272,16 +309,16 @@ module.exports = {
                         var foundPayers = self.searchEligiblePayersByName(insPayerName);
 
                         if (foundPayers.length > 0) {
-                            self.$set('eligiblePayers', foundPayers);
+                            self.$set(arrName, foundPayers);
                         } else {
-                            self.$set('eligiblePayers', []);
-                            self.$els.insPayerName.focus();
+                            self.$set(arrName, []);
+                            self.$els[elementName].focus();
 
                             alert('Error: No match found for this criteria.');
                         }
                     }
                 } else {
-                    self.$set('eligiblePayers', []);
+                    self.$set(arrName, []);
                 }
             }, this.doneTypingInterval);
         },

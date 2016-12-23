@@ -33,7 +33,9 @@ module.exports = {
             showReferredNotes         : false,
             showReferredPerson        : false,
             showReferredbyHints       : false,
-            foundContactsByName       : [],
+            foundReferrersByName      : [],
+            foundPrimaryCareMdByName  : [],
+
             typingTimer               : null,
             doneTypingInterval        : 600,
             autoCompleteSearchValue   : '',
@@ -94,7 +96,7 @@ module.exports = {
                         break;
 
                     case 1:
-                        status = 'Registration Emailed ' + moment(this.patient.registration_senton, 'MM/DD/YYYY h:m a') + ' ET';
+                        status = 'Registration Emailed ' + moment(this.patient.registration_senton).format('MM/DD/YYYY h:m a') + ' ET';
                         break;
 
                     case 2:
@@ -220,6 +222,36 @@ module.exports = {
             });
     },
     methods: {
+        onKeyUpSearchContacts: function() {
+            clearTimeout(this.typingTimer);
+
+            var requiredName = this.formedFullNames.docpcp_name.trim();
+
+            var self = this;
+            this.typingTimer = setTimeout(function() {
+                if (requiredName.length > 1) {
+                    if (self.autoCompleteSearchValue != requiredName) {
+                        self.autoCompleteSearchValue = requiredName;
+
+                        self.getListContactsAndCompanies(requiredName)
+                            .then(function(response) {
+                                var data = response.data.data;
+
+                                if (data.length) {
+                                    self.$set('foundPrimaryCareMdByName', data);
+                                } else if (data.error) {
+                                    self.$set('foundPrimaryCareMdByName', []);
+                                    alert(data.error);
+                                }
+                            }, function(response) {
+                                self.handleErrors('getListContactsAndCompanies', response);
+                            });
+                    }
+                } else {
+                    self.$set('foundPrimaryCareMdByName', []);
+                }
+            }, this.doneTypingInterval);
+        },
         setEligiblePayer: function(id, name, type) {
             var idField, nameField, fullNameField;
 
@@ -338,14 +370,14 @@ module.exports = {
                                 var data = response.data.data;
 
                                 if (data.length) {
-                                    self.$set('foundContactsByName', data);
+                                    self.$set('foundReferrersByName', data);
                                     self.$set('showReferredbyHints', true);
                                 } else if (data.error) {
-                                    self.$set('foundContactsByName', []);
+                                    self.$set('foundReferrersByName', []);
                                     alert(data.error);
                                 }
                             }, function(response) {
-                                self.handleErrors('getListContactsAndCompanies', response);
+                                self.handleErrors('getReferrers', response);
                             });
                     } else {
                         self.$set('showReferredbyHints', false);
@@ -609,6 +641,11 @@ module.exports = {
         },
         getInsuranceContacts: function() {
             return this.$http.post(window.config.API_PATH + 'contacts/insurance');
+        },
+        getListContactsAndCompanies: function(requestedName) {
+            var data = { partial_name: requestedName };
+
+            return this.$http.post(window.config.API_PATH + 'contacts/list-contacts-and-companies', data);
         }
     }
 }

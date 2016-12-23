@@ -717,14 +717,14 @@
                                         />
                                         <br />
                                         <div
-                                            v-show="foundContactsByName.length > 0"
+                                            v-show="foundReferrersByName.length > 0"
                                             id="referredby_hints"
                                             class="search_hints"
                                             style="margin-top:20px;"
                                         >
                                             <ul id="referredby_list" class="search_list">
                                                 <li
-                                                    v-for="contact in foundContactsByName"
+                                                    v-for="contact in foundReferrersByName"
                                                     class="json_patient"
                                                     v-on:click="setReferredBy(contact.id, contact.source)"
                                                 >{{ contact.name }}</li>
@@ -1657,7 +1657,11 @@
                                             v-show="patient.docpcp != ''"
                                             id="docpcp_static_info"
                                         >
-                                            <span id="docpcp_name_static" style="width:300px;">{{ formedFullNames.docpcp_name }}</span>
+                                            <span
+                                                v-if="patient.docpcp != ''"
+                                                id="docpcp_name_static"
+                                                style="width:300px;"
+                                            >{{ formedFullNames.docpcp_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docpcp;?>');return false;"
@@ -1665,13 +1669,14 @@
                                             >Quick View</a>
                                             <a
                                                 href="#"
-                                                onclick="$('#docpcp_static_info').hide();$('#docpcp_name').show();return false;"
+                                                v-on:click.prevent="patient.docpcp = ''"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
                                         <input
                                             v-if="patient.docpcp == ''"
                                             v-model="formedFullNames.docpcp_name"
+                                            v-on:keyup="onKeyUpSearchContacts"
                                             type="text"
                                             id="docpcp_name"
                                             style="width:300px;"
@@ -1680,9 +1685,17 @@
                                             placeholder="Type contact name"
                                         />
                                         <br />
-                                        <div id="docpcp_hints" class="search_hints" style="display:none;">
+                                        <div
+                                            v-show="foundPrimaryCareMdByName.length > 0"
+                                            id="contact_hints"
+                                            class="search_hints"
+                                        >
                                             <ul id="docpcp_list" class="search_list">
-                                                <li class="template" style="display:none">Doe, John S</li>
+                                                <li
+                                                    v-for="contact in foundPrimaryCareMdByName"
+                                                    class="json_patient"
+                                                    v-on:click=""
+                                                >{{ contact.name }}</li>
                                             </ul>
                                         </div>
                                     </li>

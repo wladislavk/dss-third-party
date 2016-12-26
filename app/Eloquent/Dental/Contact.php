@@ -156,9 +156,9 @@ class Contact extends Model implements Resource, Repository
         ];
     }
 
-    public function getListContactsAndCompanies($docId, $partial, $names, $referredPhysician)
+    public function getListContactsAndCompanies($docId, $partial, $names, $referredPhysician, $searchForCompanies = true)
     {
-        return $this->select(
+        $query = $this->select(
                 'c.contactid',
                 'c.lastname',
                 'c.firstname',
@@ -168,7 +168,7 @@ class Contact extends Model implements Resource, Repository
                 'ct.contacttype'
             )->from(DB::raw('dental_contact c'))
             ->leftJoin(DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
-            ->where(function($query) use ($names, $partial) {
+            ->where(function($query) use ($names, $partial, $searchForCompanies) {
                 $query->where(function($query) use ($names, $partial) {
                     $query->where(function($query) use ($names) {
                         $query->where('lastname', 'like', $names[0] . '%')
@@ -181,11 +181,20 @@ class Contact extends Model implements Resource, Repository
                     $query->where('firstname', 'like', $names[0] . '%')
                         ->where('middlename', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
                         ->where('lastname', 'like', (!empty($names[2]) ? $names[2] : '') . '%');
-                })->orWhere('company', 'like', $partial . '%');
+                });
+
+                if ($searchForCompanies) {
+                    $query = $query->orWhere('company', 'like', $partial . '%');
+                }
             })->whereNull('merge_id')
             ->where('c.status', 1)
-            ->where('docid', $docId)
-            ->orderBy('lastname')
+            ->where('docid', $docId);
+
+        if (!$searchForCompanies) {
+            $query = $query->where('ct.physician', 1);
+        }
+
+        return $query->orderBy('lastname')
             ->get();
     }
 

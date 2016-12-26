@@ -1676,7 +1676,7 @@
                                         <input
                                             v-if="patient.docpcp == ''"
                                             v-model="formedFullNames.docpcp_name"
-                                            v-on:keyup="onKeyUpSearchContacts"
+                                            v-on:keyup="onKeyUpSearchContacts('docpcp')"
                                             type="text"
                                             id="docpcp_name"
                                             style="width:300px;"
@@ -1687,14 +1687,14 @@
                                         <br />
                                         <div
                                             v-show="foundPrimaryCareMdByName.length > 0"
-                                            id="contact_hints"
+                                            id="docpcp_hints"
                                             class="search_hints"
                                         >
                                             <ul id="docpcp_list" class="search_list">
                                                 <li
                                                     v-for="contact in foundPrimaryCareMdByName"
                                                     class="json_patient"
-                                                    v-on:click=""
+                                                    v-on:click="setContact('docpcp', contact.id)"
                                                 >{{ contact.name }}</li>
                                             </ul>
                                         </div>
@@ -1711,7 +1711,11 @@
                                             v-show="patient.docent != ''"
                                             id="docent_static_info"
                                         >
-                                            <span id="docent_name_static" style="width:300px;">{{ formedFullNames.docent_name }}</span>
+                                            <span
+                                                v-if="patient.docent != ''"
+                                                id="docent_name_static"
+                                                style="width:300px;"
+                                            >{{ formedFullNames.docent_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docent;?>');return false;"
@@ -1719,13 +1723,14 @@
                                             >Quick View</a>
                                             <a
                                                 href="#"
-                                                onclick="$('#docent_static_info').hide();$('#docent_name').show();return false;"
+                                                v-on:click.prevent="patient.docent = ''"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
                                         <input
                                             v-if="patient.docent == ''"
                                             v-model="formedFullNames.docent_name"
+                                            v-on:keyup="onKeyUpSearchContacts('docent')"
                                             type="text"
                                             id="docent_name"
                                             style="width:300px;"
@@ -1734,9 +1739,17 @@
                                             placeholder="Type contact name"
                                         />
                                         <br />
-                                        <div id="docent_hints" class="search_hints" style="display:none;">
+                                        <div
+                                            v-show="foundEntByName.length > 0"
+                                            id="docent_hints"
+                                            class="search_hints"
+                                        >
                                             <ul id="docent_list" class="search_list">
-                                                <li class="template" style="display:none">Doe, John S</li>
+                                                <li
+                                                    v-for="contact in foundEntByName"
+                                                    class="json_patient"
+                                                    v-on:click="setContact('docent', contact.id)"
+                                                >{{ contact.name }}</li>
                                             </ul>
                                         </div>
                                     </li>
@@ -1752,7 +1765,11 @@
                                             v-show="patient.docsleep != ''"
                                             id="docsleep_static_info"
                                         >
-                                            <span id="docsleep_name_static" style="width:300px;">{{ formedFullNames.docsleep_name }}</span>
+                                            <span
+                                                v-if="patient.docsleep != ''"
+                                                id="docsleep_name_static"
+                                                style="width:300px;"
+                                            >{{ formedFullNames.docsleep_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docsleep;?>');return false;"
@@ -1760,13 +1777,14 @@
                                             >Quick View</a>
                                             <a
                                                 href="#"
-                                                onclick="$('#docsleep_static_info').hide();$('#docsleep_name').show();return false;"
+                                                v-on:click.prevent="patient.docsleep = ''"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
                                         <input
                                             v-if="patient.docsleep == ''"
                                             v-model="formedFullNames.docsleep_name"
+                                            v-on:keyup="onKeyUpSearchContacts('docsleep')"
                                             type="text"
                                             id="docsleep_name"
                                             style="width:300px;"
@@ -1775,9 +1793,17 @@
                                             placeholder="Type contact name"
                                         />
                                         <br />
-                                        <div id="docsleep_hints" class="search_hints" style="display:none;">
+                                        <div
+                                            v-show="foundSleepMdByName.length > 0"
+                                            id="docsleep_hints"
+                                            class="search_hints"
+                                        >
                                             <ul id="docsleep_list" class="search_list">
-                                                <li class="template" style="display:none">Doe, John S</li>
+                                                <li
+                                                    v-for="contact in foundSleepMdByName"
+                                                    class="json_patient"
+                                                    v-on:click="setContact('docsleep', contact.id)"
+                                                >{{ contact.name }}</li>
                                             </ul>
                                         </div>
                                     </li>
@@ -1793,7 +1819,11 @@
                                             v-show="patient.docdentist != ''"
                                             id="docdentist_static_info"
                                         >
-                                            <span id="docdentist_name_static" style="width:300px;">{{ formedFullNames.docdentist_name }}</span>
+                                            <span
+                                                v-if="patient.docdentist != ''"
+                                                id="docdentist_name_static"
+                                                style="width:300px;"
+                                            >{{ formedFullNames.docdentist_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docdentist;?>');return false;"
@@ -1801,13 +1831,14 @@
                                             >Quick View</a>
                                             <a
                                                 href="#"
-                                                onclick="$('#docdentist_static_info').hide();$('#docdentist_name').show();return false;"
+                                                v-on:click.prevent="patient.docdentist = ''"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
                                         <input
                                             v-if="patient.docdentist == ''"
                                             v-model="formedFullNames.docdentist_name"
+                                            v-on:keyup="onKeyUpSearchContacts('docdentist')"
                                             type="text"
                                             id="docdentist_name"
                                             style="width:300px;"
@@ -1816,9 +1847,17 @@
                                             placeholder="Type contact name"
                                         />
                                         <br />
-                                        <div id="docdentist_hints" class="search_hints" style="display:none;">
+                                        <div
+                                            v-show="foundDentistContactsByName.length > 0"
+                                            id="docdentist_hints"
+                                            class="search_hints"
+                                        >
                                             <ul id="docdentist_list" class="search_list">
-                                                <li class="template" style="display:none">Doe, John S</li>
+                                                <li
+                                                    v-for="contact in foundDentistContactsByName"
+                                                    class="json_patient"
+                                                    v-on:click="setContact('docdentist', contact.id)"
+                                                >{{ contact.name }}</li>
                                             </ul>
                                         </div>
                                     </li>
@@ -1835,7 +1874,11 @@
                                             id="docmdother_static_info"
                                             style="height:25px;"
                                         >
-                                            <span id="docmdother_name_static" style="width:300px;">{{ formedFullNames.docmdother_name }}</span>
+                                            <span
+                                                v-if="patient.docmdother != ''"
+                                                id="docmdother_name_static"
+                                                style="width:300px;"
+                                            >{{ formedFullNames.docmdother_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother;?>');return false;"
@@ -1843,13 +1886,14 @@
                                             >Quick View</a>
                                             <a
                                                 href="#"
-                                                onclick="$('#docmdother_static_info').hide();$('#docmdother_name').show();return false;"
+                                                v-on:click.prevent="patient.docmdother = ''"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
                                         <input
                                             v-if="patient.docmdother == ''"
                                             v-model="formedFullNames.docmdother_name"
+                                            v-on:keyup="onKeyUpSearchContacts('docmdother')"
                                             type="text"
                                             id="docmdother_name"
                                             style="width:300px;"
@@ -1866,9 +1910,17 @@
                                             class="addButton"
                                         >+ Add Additional MD</a>
                                         <br />
-                                        <div id="docmdother_hints" class="search_hints" style="display:none;">
+                                        <div
+                                            v-show="foundOtherMdByName.length > 0"
+                                            id="docmdother_hints"
+                                            class="search_hints"
+                                        >
                                             <ul id="docmdother_list" class="search_list">
-                                                <li class="template" style="display:none">Doe, John S</li>
+                                                <li
+                                                    v-for="contact in foundOtherMdByName"
+                                                    class="json_patient"
+                                                    v-on:click="setContact('docmdother', contact.id)"
+                                                >{{ contact.name }}</li>
                                             </ul>
                                         </div>
                                     </li>
@@ -1876,19 +1928,23 @@
                             </td>
                         </tr>
                         <tr
+                            v-show="patient.docmdother2 != ''"
                             height="35"
                             id="docmdother2_tr"
-                            :style="patient.docmdother2 != '' ? '' : 'display:none'"
                         >
                             <td>
                                 <ul>
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Other MD 2</label>
                                         <div
+                                            v-show="patient.docmdother2 != ''"
                                             id="docmdother2_static_info"
-                                            :style="patient.docmdother2 != '' ? '' : 'display:none'"
                                         >
-                                            <span id="docmdother2_name_static" style="width:300px;">{{ formedFullNames.docmdother2_name }}</span>
+                                            <span
+                                                v-if="patient.docmdother2 != ''"
+                                                id="docmdother2_name_static"
+                                                style="width:300px;"
+                                            >{{ formedFullNames.docmdother2_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother2;?>');return false;"
@@ -1896,24 +1952,33 @@
                                             >Quick View</a>
                                             <a
                                                 href="#"
-                                                onclick="$('#docmdother2_static_info').hide();$('#docmdother2_name').show();return false;"
+                                                v-on:click.prevent="patient.docmdother2 = ''"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-if="patient.docmdother2 == ''"
                                             v-model="formedFullNames.docmdother2_name"
+                                            v-on:keyup="onKeyUpSearchContacts('docmdother2')"
                                             type="text"
                                             id="docmdother2_name"
-                                            style="width:300px;<?php echo ($docmdother2!='')?'display:none':''; ?>"
-                                            onclick="updateval(this)"
+                                            style="width:300px;"
                                             autocomplete="off"
                                             name="docmdother2_name"
-                                            value="{{ patient.docmdother2 != '' ? formedFullNames.docmdother2_name : 'Type contact name' }}"
+                                            placeholder="Type contact name"
                                         />
                                         <br />
-                                        <div id="docmdother2_hints" class="search_hints" style="display:none;">
+                                        <div
+                                            v-show="foundOtherMd2ByName.length > 0"
+                                            id="docmdother2_hints"
+                                            class="search_hints"
+                                        >
                                             <ul id="docmdother2_list" class="search_list">
-                                                <li class="template" style="display:none">Doe, John S</li>
+                                                <li
+                                                    v-for="contact in foundOtherMd2ByName"
+                                                    class="json_patient"
+                                                    v-on:click="setContact('docmdother2', contact.id)"
+                                                >{{ contact.name }}</li>
                                             </ul>
                                         </div>
                                     </li>
@@ -1921,19 +1986,23 @@
                             </td>
                         </tr>
                         <tr
+                            v-show="patient.docmdother3 != ''"
                             height="35"
                             id="docmdother3_tr"
-                            :style="patient.docmdother3 != '' ? '' : 'display:none'"
                         >
                             <td>
                                 <ul>
                                     <li id="foli8" class="complex">
                                         <label style="display: block; float: left; width: 110px;">Other MD 3</label>
                                         <div
+                                            v-show="patient.docmdother3 != ''"
                                             id="docmdother3_static_info"
-                                            :style="patient.docmdother3 != '' ? '' : 'display:none'"
                                         >
-                                            <span id="docmdother3_name_static" style="width:300px;">{{ formedFullNames.docmdother3_name }}</span>
+                                            <span
+                                                v-if="patient.docmdother3 != ''"
+                                                id="docmdother3_name_static"
+                                                style="width:300px;"
+                                            >{{ formedFullNames.docmdother3_name }}</span>
                                             <a
                                                 href="#"
                                                 onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother3;?>');return false;"
@@ -1941,24 +2010,33 @@
                                             >Quick View</a>
                                             <a
                                                 href="#"
-                                                onclick="$('#docmdother3_static_info').hide();$('#docmdother3_name').show();return false;"
+                                                v-on:click.prevent="patient.docmdother3 = ''"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
                                         <input
+                                            v-if="patient.docmdother3 == ''"
                                             v-model="formedFullNames.docmdother3_name"
+                                            v-on:keyup="onKeyUpSearchContacts('docmdother3')"
                                             type="text"
                                             id="docmdother3_name"
-                                            style="width:300px;<?php echo ($docmdother3!='')?'display:none':''; ?>"
-                                            onclick="updateval(this)"
+                                            style="width:300px;"
                                             autocomplete="off"
                                             name="docmdother3_name"
-                                            value="{{ patient.docmdother3 != '' ? formedFullNames.docmdother3_name : 'Type contact name' }}"
+                                            placeholder="Type contact name"
                                         />
                                         <br />
-                                        <div id="docmdother3_hints" class="search_hints" style="display:none;">
+                                        <div
+                                            v-show="foundOtherMd3ByName.length > 0"
+                                            id="docmdother3_hints"
+                                            class="search_hints"
+                                        >
                                             <ul id="docmdother3_list" class="search_list">
-                                                <li class="template" style="display:none">Doe, John S</li>
+                                                <li
+                                                    v-for="contact in foundOtherMd3ByName"
+                                                    class="json_patient"
+                                                    v-on:click="setContact('docmdother3', contact.id)"
+                                                >{{ contact.name }}</li>
                                             </ul>
                                         </div>
                                     </li>
@@ -1978,7 +2056,6 @@
                         name="status"
                         id="status"
                         class="tbox"
-                        onchange="updatePPAlert()";
                     >
                         <option value="1">Active</option>
                         <option value="2">In-Active</option>
@@ -1992,9 +2069,11 @@
                         Portal Status
                         <br />
                         <span
+                            v-show="patient.status == 2"
                             id="ppAlert"
-                            style="font-weight:normal;font-size:12px; {{ patient.status == 2 ? '' : 'display:none;' }}"
-                        >Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.</span>
+                            style="font-weight:normal;font-size:12px;"
+                        >Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.
+                        </span>
                     </td>
                     <td valign="top" class="frmdata">
                         <select

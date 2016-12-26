@@ -14,34 +14,39 @@ module.exports = {
                 exclusive : 0,
                 name      : 'DSS'
             },
-            patientNotifications      : [],
-            homeSleepTestCompanies    : [],
-            patient                   : {},
-            profilePhoto              : {},
-            insuranceCardImage        : {},
-            docLocations              : [],
-            insuranceContacts         : [],
-            introLetter               : {},
-            uncompletedHomeSleepTests : [],
-            formedFullNames           : {},
-            pendingVob                : {},
-            patientLocation           : '',
-            message                   : '',
-            eligiblePayerId           : 0,
-            eligiblePayerName         : '',
-            sendPin                   : '',
-            showReferredNotes         : false,
-            showReferredPerson        : false,
-            showReferredbyHints       : false,
-            foundReferrersByName      : [],
-            foundPrimaryCareMdByName  : [],
-
-            typingTimer               : null,
-            doneTypingInterval        : 600,
-            autoCompleteSearchValue   : '',
-            eligiblePayerSource       : [],
-            eligiblePayers            : [],
-            secondaryEligiblePayers   : []
+            patientNotifications       : [],
+            homeSleepTestCompanies     : [],
+            patient                    : {},
+            profilePhoto               : {},
+            insuranceCardImage         : {},
+            docLocations               : [],
+            insuranceContacts          : [],
+            introLetter                : {},
+            uncompletedHomeSleepTests  : [],
+            formedFullNames            : {},
+            pendingVob                 : {},
+            patientLocation            : '',
+            message                    : '',
+            eligiblePayerId            : 0,
+            eligiblePayerName          : '',
+            sendPin                    : '',
+            showReferredNotes          : false,
+            showReferredPerson         : false,
+            showReferredbyHints        : false,
+            foundReferrersByName       : [],
+            foundPrimaryCareMdByName   : [],
+            foundEntByName             : [],
+            foundSleepMdByName         : [],
+            foundDentistContactsByName : [],
+            foundOtherMdByName         : [],
+            foundOtherMd2ByName        : [],
+            foundOtherMd3ByName        : [],
+            typingTimer                : null,
+            doneTypingInterval         : 600,
+            autoCompleteSearchValue    : '',
+            eligiblePayerSource        : [],
+            eligiblePayers             : [],
+            secondaryEligiblePayers    : []
         }
     },
     mixins: [handlerMixin],
@@ -222,10 +227,39 @@ module.exports = {
             });
     },
     methods: {
-        onKeyUpSearchContacts: function() {
+        setContact: function(type, id) {
+            this.$set('patient.' + type, id);
+        },
+        onKeyUpSearchContacts: function(type) {
             clearTimeout(this.typingTimer);
 
-            var requiredName = this.formedFullNames.docpcp_name.trim();
+            var requiredName = this.formedFullNames[type + '_name'].trim();
+            var arrName = '';
+            switch (type) {
+                case 'docpcp':
+                    arrName = 'foundPrimaryCareMdByName';
+                    break;
+                case 'docent':
+                    arrName = 'foundEntByName';
+                    break;
+                case 'docsleep':
+                    arrName = 'foundSleepMdByName';
+                    break;
+                case 'docdentist':
+                    arrName = 'foundDentistContactsByName';
+                    break;
+                case 'docmdother':
+                    arrName = 'foundOtherMdByName';
+                    break;
+                case 'docmdother2':
+                    arrName = 'foundOtherMd2ByName';
+                    break;
+                case 'docmdother3':
+                    arrName = 'foundOtherMd3ByName';
+                    break;
+                default:
+                    break;
+            }
 
             var self = this;
             this.typingTimer = setTimeout(function() {
@@ -238,9 +272,9 @@ module.exports = {
                                 var data = response.data.data;
 
                                 if (data.length) {
-                                    self.$set('foundPrimaryCareMdByName', data);
+                                    self.$set(arrName, data);
                                 } else if (data.error) {
-                                    self.$set('foundPrimaryCareMdByName', []);
+                                    self.$set(arrName, []);
                                     alert(data.error);
                                 }
                             }, function(response) {
@@ -248,7 +282,7 @@ module.exports = {
                             });
                     }
                 } else {
-                    self.$set('foundPrimaryCareMdByName', []);
+                    self.$set(arrName, []);
                 }
             }, this.doneTypingInterval);
         },
@@ -643,7 +677,10 @@ module.exports = {
             return this.$http.post(window.config.API_PATH + 'contacts/insurance');
         },
         getListContactsAndCompanies: function(requestedName) {
-            var data = { partial_name: requestedName };
+            var data = {
+                partial_name      : requestedName,
+                without_companies : true
+            };
 
             return this.$http.post(window.config.API_PATH + 'contacts/list-contacts-and-companies', data);
         }

@@ -558,14 +558,14 @@ class Patient extends Model implements Resource, Repository
 
     public function getPatientReferralIds($patientId = 0, $patientReferredSource = null)
     {
-        if (!empty($patientReferredSource) && $patientReferredSource[0]->referred_source == 1) {
+        if (!empty($patientReferredSource) && $patientReferredSource->referred_source == 1) {
             $contactQuery = $this->select(DB::raw('GROUP_CONCAT(distinct pr.patientid) as ids'))
                 ->from(DB::raw('dental_patients pr'))
                 ->join(DB::raw('dental_patients p'), 'p.referred_by', '=', 'pr.patientid')
                 ->where('p.patientid', $patientId)
                 ->groupBy('p.referred_by')
                 ->orderBy('pr.patientid');
-        } elseif (!empty($patientReferredSource) && $patientReferredSource[0]->referred_source == 2) {
+        } elseif (!empty($patientReferredSource) && $patientReferredSource->referred_source == 2) {
             $contactQuery = $this->select(DB::raw('GROUP_CONCAT(distinct dental_contact.contactid) as ids'))
                 ->join('dental_patients', 'dental_patients.referred_by', '=', 'dental_contact.contactid')
                 ->join(DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'dental_contact.contacttypeid')

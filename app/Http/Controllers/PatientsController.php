@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\Helpers\LetterHelper;
 use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
 use DentalSleepSolutions\Http\Requests\PatientDestroy;
@@ -17,6 +18,7 @@ use DentalSleepSolutions\Contracts\Resources\PatientSummary;
 use DentalSleepSolutions\Contracts\Resources\ProfileImage;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use DentalSleepSolutions\Contracts\Repositories\Notifications;
+use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
 
@@ -217,30 +219,41 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function addNewPatient(
+    public function editingPatient(
+        $patientId,
+        LetterHelper $letterHelper,
         Patient $patientResource,
+        PatientSummary $patientSummaryResource,
         InsurancePreauth $insurancePreauthResource,
         Summaries $summariesResource,
         Letter $letterResource,
-        PatientStore $request
+        Request $request,
+        PatientSummaryUpdate $patientSummaryValidator
     ) {
-        $patient = $request->all();
+        $docId = $this->currentUser->docid ?: 0;
+        $userType = $this->currentUser->user_type ?: 0;
 
-        if ($patient['p_m_eligible_payer'] != '') {
-            $patient['p_m_eligible_payer_id'] = substr($patient['p_m_eligible_payer'], 0, strpos($patient['p_m_eligible_payer'], '-'));
-            $patient['p_m_eligible_payer_name'] = substr($patient['p_m_eligible_payer'], (strpos($patient['p_m_eligible_payer'], '-') + 1));
-        } else {
-            $patient['p_m_eligible_payer_id'] = '';
-            $patient['p_m_eligible_payer_name'] = '';
+        // get form data for a current patient
+        $patientFormData = $request->input('patient_form_data');
+
+        // check if the request contains tracker notes
+        if ($request->has('tracker_notes')) {
+            $this->validate($request->input('tracker_notes'), $patientSummaryValidator->rules());
+
+            $patientSummaryResource->updateTrackerNotes($patientId, $docId, $request->input('tracker_notes'));
+
+            return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
-        if ($patient['s_m_eligible_payer'] != '') {
-            $patient['s_m_eligible_payer_id'] = substr($patient['s_m_eligible_payer'], 0, strpos($patient['s_m_eligible_payer'], '-'));
-            $patient['s_m_eligible_payer_name'] = substr($patient['s_m_eligible_payer'], (strpos($patient['s_m_eligible_payer'], '-') + 1));
-        } else {
-            $patient['s_m_eligible_payer_id'] = '';
-            $patient['s_m_eligible_payer_name'] = '';
+        $letterHelpers = new LetterHelper($docId, $patientId);
+
+        $letterHelper->triggerPatientTreatmentComplete();
+
+        if ($patientId) {
+            
         }
+
+
 
         // generation an unique patient login
         $cLogin = strtolower(substr($patient["firstname"], 0, 1) . $patient["lastname"]);

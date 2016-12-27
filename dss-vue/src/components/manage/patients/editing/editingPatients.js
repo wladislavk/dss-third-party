@@ -14,6 +14,7 @@ module.exports = {
                 exclusive : 0,
                 name      : 'DSS'
             },
+            componentParams            : {},
             patientNotifications       : [],
             homeSleepTestCompanies     : [],
             patient                    : {},
@@ -53,6 +54,9 @@ module.exports = {
     events: {
         'update-header-info': function(headerInfo) {
             this.headerInfo = headerInfo;
+        },
+        'setting-component-params': function(parameters) {
+            this.componentParams = parameters;
         }
     },
     watch: {
@@ -101,7 +105,7 @@ module.exports = {
                         break;
 
                     case 1:
-                        status = 'Registration Emailed ' + moment(this.patient.registration_senton).format('MM/DD/YYYY h:m a') + ' ET';
+                        status = 'Registration Emailed ' + moment(this.patient.registration_senton).format('MM/DD/YYYY hh:mm a') + ' ET';
                         break;
 
                     case 2:

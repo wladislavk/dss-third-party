@@ -4,6 +4,8 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Helpers\ApiResponse;
 use DentalSleepSolutions\Helpers\LetterHelper;
+use DentalSleepSolutions\Helpers\PreauthHelper;
+use DentalSleepSolutions\Helpers\EmailHelper;
 use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
 use DentalSleepSolutions\Http\Requests\PatientDestroy;
@@ -18,6 +20,7 @@ use DentalSleepSolutions\Contracts\Resources\PatientSummary;
 use DentalSleepSolutions\Contracts\Resources\ProfileImage;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use DentalSleepSolutions\Contracts\Repositories\Notifications;
+use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
@@ -222,19 +225,44 @@ class PatientsController extends Controller
     public function editingPatient(
         $patientId,
         LetterHelper $letterHelper,
+        EmailHelper $emailHelper,
+        PreauthHelper $preauthHelper,
         Patient $patientResource,
         PatientSummary $patientSummaryResource,
         InsurancePreauth $insurancePreauthResource,
         Summaries $summariesResource,
         Letter $letterResource,
+        User $userResource,
         Request $request,
         PatientSummaryUpdate $patientSummaryValidator
+        PatientStore $patientStoreValidator,
+        PatientUpdate $patientUpdateValidator,
     ) {
         $docId = $this->currentUser->docid ?: 0;
         $userType = $this->currentUser->user_type ?: 0;
 
+        // check if the request has emails for sending
+        $emailTypesForSending = $request->has('requested_emails') ? $request->input('requested_emails') : false;
+
+        $usePatientPortal = $request->input('use_patient_portal');
+        // get doc info by id
+        $docInfo = $userResource->getWithFilter('use_patient_portal', ['userid' => $docId]);
+
+        if (count($docInfo)) {
+            $docPatientPortal = $docInfo[0]->use_patient_portal;
+        } else {
+            $docPatientPortal = false;
+        }
+
         // get form data for a current patient
         $patientFormData = $request->input('patient_form_data');
+
+        // validate input patient form data
+        if (patientId) {
+            $this->validate($patientFormData, $patientUpdateValidator->rules());
+        } else {
+            $this->validate($patientFormData, $patientStoreValidator->rules());
+        }
 
         // check if the request contains tracker notes
         if ($request->has('tracker_notes')) {
@@ -245,54 +273,85 @@ class PatientsController extends Controller
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
-        $letterHelpers = new LetterHelper($docId, $patientId);
+        // $letterHelpers = new LetterHelper($docId, $patientId);
 
         $letterHelper->triggerPatientTreatmentComplete();
 
-        if ($patientId) {
-            
-        }
-
-
+        // need to add logic for logging actions
+        // linkRequestData
 
         // generation an unique patient login
-        $cLogin = strtolower(substr($patient["firstname"], 0, 1) . $patient["lastname"]);
+        $uniqueLogin = strtolower(substr($patientFormData["firstname"], 0, 1) . $patientFormData["lastname"]);
 
-        $similarPatientLogin = $patientResource->getSimilarPatientLogin($cLogin);
+        $similarPatientLogin = $patientResource->getSimilarPatientLogin($uniqueLogin);
 
         if ($similarPatientLogin) {
-            $number = str_replace($cLogin, '', $similarPatientLogin->login);
+            $number = str_replace($uniqueLogin, '', $similarPatientLogin->login);
 
-            $cLogin = $cLogin . ++$number;
+            $uniqueLogin = $uniqueLogin . ++$number;
         }
 
-        $triggerLetters = false;
+        $responseData = [];
+        if ($patientId) {
+            // find an unchanged patient by id
+            $unchangedPatient = $patientResource->find($patientId);
 
-        $errors = [];
-        $data = [];
+            // check registration status:
+            // Unregistered - 0
+            // Registration Emailed - 1
+            // Registered - 2
+            if ($unchangedPatient->registration_status == 2 && $patientFormData['email'] != $unchangedPatient->email) {
+                // need to notify the user about changing his email
+                $emailHelper->sendUpdatedEmail($patientId, $patientFormData['email'], $unchangedPatient->email, 'doc');
 
-        if (true/* existing patient (update) */) {
-            $oldPatient = $patientResource->find($patientId);
-
-            if ($oldPatient->registration_status == 2 && $patient['email'] != $oldPatient->email) {
-                sendUpdatedEmail($patientId, $patient['email'], $oldPatient->email, 'doc');
-            } elseif (isset($patient['sendRem'])) {
+                $responseData['mails'] = [
+                    'updated_mail' => 'The mail about changing patient email was successfully sent.'
+                ];
+            } elseif ($emailTypesForSending && !empty($emailTypesForSending['reminder'])) {
                 // send reminder email
-                sendRemEmail($newPatientId, $patient['email']);
-            } elseif (!isset($patient['sendReg']) && $oldPatient->registration_status == 1 && trim($patient['email']) != trim($oldPatient['email'])) {
+                $emailHelper->sendRemEmail($patientId, $patientFormData['email']);
+
+                $responseData['mails'] = [
+                    'reminder_mail' => 'The reminding mail was successfully sent.'
+                ];
+            } elseif (
+                $emailTypesForSending && empty($emailTypesForSending['registration']) &&
+                $unchangedPatient->registration_status == 1 && $patientFormData['email'] != $unchangedPatient['email']
+            ) {
                 if ($docPatientPortal && $usePatientPortal) {
-                    // send reg email if email is updated and not registered
-                    sendRegEmail($newPatientId, $patient['email'], '');
+                    // send registration email if email is updated and not registered
+                    $emailHelper->sendRegEmail($patientId, $patientFormData['email'], '');
                 }
+
+                $responseData['mails'] = [
+                    'registration_mail' => 'Your email address was updated and not registered. The registration mail was successfully sent.'
+                ];
+            } elseif (
+                $emailTypesForSending && !empty($emailTypesForSending['registration']) &&
+                $docPatientPortal && $usePatientPortal
+            ) {
+                if ($patientFormData['email'] && $patientFormData['cell_phone']) {
+                    $emailHelper->sendRegEmail($patientId, $patientFormData['email'], $uniqueLogin, $unchangedPatient->email);
+                    $message = 'The registration mail was successfully sent.';
+                } else {
+                    $message = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
+                }
+
+                $responseData['mails'] = [
+                    'registration_mail' => $message
+                ];
             }
 
-            if ($patient['email'] != $oldPatient['email']) {
-                $patient['email_bounce'] = 0;
+            if ($patientFormData['email'] != $unchangedPatient->email) {
+                $patientFormData['email_bounce'] = 0;
             }
 
-            $patientResource->update($patient);
-            $patientResource->updateChildrenPatients($patientId, ['email' => $patient['email']]);
+            // update patient
+            $patientResource->updatePatient($patientId, $patientFormData);
+            // update email of parent patient for all his children
+            $patientResource->updateChildrenPatients($patientId, ['email' => $patientFormData['email']]);
 
+            // remove pending vobs if insurance info has changed
             $insuranceInfoFieldsArray = [
                 'p_m_relation', 'p_m_partyfname', 'p_m_partylname',
                 'ins_dob', 'p_m_ins_type', 'p_m_ins_ass',
@@ -301,8 +360,9 @@ class PatientsController extends Controller
 
             $hasInsuranceInfoChanged = false;
 
+            // check if any field has been changed
             foreach ($insuranceInfoFieldsArray as $field) {
-                if ($oldPatient[$field] != $patient[$field]) {
+                if ($unchangedPatient->$field != $patientFormData[$field]) {
                     $hasInsuranceInfoChanged = true;
                     break;
                 }
@@ -311,104 +371,110 @@ class PatientsController extends Controller
             if ($hasInsuranceInfoChanged) {
                 $userName = $this->currentUser->name ?: '';
 
-                $updatedVob = $insurancePreauthResource->updateVob($newPatientId, $userName);
+                $updatedVob = $insurancePreauthResource->updateVob($patientId, $userName);
 
                 if ($updatedVob) {
-                    $c = create_vob($newPatientId);
-
-                    if (isset($patient['location'])) {
-                        $summaries = $summariesResource->getWithFilter(null, ['patientid' => $patientId]);
-
-                        if (count($summaries)) {
-                            $summaries->updateForPatient($patientId, [
-                                'location' => $patient['location']
-                            ]);
-                        } else {
-                            $summaries->create([
-                                'location'  => $patient['location'],
-                                'patientid' => $patientId
-                            ]);
-                        }
-                    }
-
-                    if ($oldPatient->login == '') {
-                        $patientResource->updatePatient($newPatientId, ['login' => $cLogin]);
-                    }
-
-                    if (isset($patient['sendReg']) && $patient['doc_patient_portal'] && $patient['use_patient_portal']) {
-                        if (trim($patient['email']) != '' && trim($patient['cell_phone']) != '') {
-                            sendRegEmail($newPatientId, $patient['email'], $cLogin, $oldPatient['email']);
-                        } else {
-                            $message = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
-                        }
-                    }
-
-                    /*
-                    if (!empty($_POST['copyreqdate'])) {
-                        $dateCompleted = date('Y-m-d', strtotime($_POST['copyreqdate']));
-                    } else {
-                        $dateCompleted = date('Y-m-d');
-                    }
-
-                    $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".intval($_POST['ed'])."' AND stepid='1';";
-                    $db->query($s1);
-                    */
-
-                    if ($oldPatient['referred_by'] != $patient['referred_by'] ||
-                        $oldPatient['referred_source'] != $patient['referred_source']
-                    ) {
-                        if ($oldPatient['referred_source'] == 2 && $patient['referred_source'] == 2) {
-                            //PHYSICIAN -> PHYSICIAN
-
-                            $letterResource->updatePendingLettersToNewReferrer(
-                                $oldPatient['referred_by'],
-                                $patient['referred_by'],
-                                $newPatientId,
-                                'physician'
-                            );
-                        } elseif ($oldPatient['referred_source'] == 1 && $patient['referred_source'] == 1) {
-                            //PATIENT -> PATIENT
-
-                            $letterResource->updatePendingLettersToNewReferrer(
-                                $oldPatient['referred_by'],
-                                $patient['referred_by'],
-                                $newPatientId,
-                                'patient'
-                            );
-                        } elseif ($oldPatient['referred_source'] == 2 && $patient['referred_source'] != 2) {
-                            //PHYSICIAN -> NOT PHYSICIAN
-
-                            $letters = $letterResource->getPhysicianOrPatientPendingLetters(
-                                $oldPatient['referred_by'],
-                                $newPatientId
-                            );
-
-                            if (count($letters)) {
-                                foreach ($letters as $letter) {
-                                    $this->deleteLetter($letter->letterid, null, 'md_referral', $oldPatient['referred_by']);
-                                }
-                            }
-                        } elseif ($oldPatient['referred_source'] == 1 && $patient['referred_source'] != 1) {
-                            //PATIENT -> NOT PATIENT
-
-                            $letters = $letterResource->getPhysicianOrPatientPendingLetters(
-                                $oldPatient['referred_by'],
-                                $newPatientId,
-                                'patient'
-                            );
-
-                            if (count($letters)) {
-                                foreach ($letters as $letter) {
-                                    $this->deleteLetter($letter->letterid, null, 'pat_referral', $oldPatient['referred_by']);
-                                }
-                            }
-                        }
-                    }
-
-                    $triggerLetters = true;
-                    $message = 'Edited Successfully';
+                    $insurancePreauthId = $preauthHelper->createVob($patientId);
                 }
             }
+
+            // update patient summary if location is set
+            if ($patientFormData['location']) {
+                $summaries = $summariesResource->getWithFilter(null, ['patientid' => $patientId]);
+
+                if (count($summaries)) {
+                    $summaries->updateForPatient($patientId, [
+                        'location' => $patientFormData['location']
+                    ]);
+                } else {
+                    $summaries->create([
+                        'location'  => $patientFormData['location'],
+                        'patientid' => $patientId
+                    ]);
+                }
+            }
+
+            if ($unchangedPatient->login == '') {
+                $patientResource->updatePatient($patientId, ['login' => $uniqueLogin]);
+            }
+
+            // if it is required need to do:
+            /*
+            if (!empty($_POST['copyreqdate'])) {
+              $dateCompleted = date('Y-m-d', strtotime($_POST['copyreqdate']));
+            } else {
+              $dateCompleted = date('Y-m-d');
+            }
+
+            $s1 = "UPDATE dental_flow_pg2_info SET date_completed = '" . $dateCompleted . "' WHERE patientid='".intval($_POST['ed'])."' AND stepid='1';";
+            $db->query($s1);
+            */
+
+            // if referrer was changed need to update certain letters
+            if ($unchangedPatient->referred_by != $patientFormData['referred_by'] ||
+                $unchangedPatient->referred_source != $patientFormData['referred_source']
+            ) {
+                if ($unchangedPatient->referred_source == 2 && $patientFormData['referred_source'] == 2) {
+                    // physician -> physician
+
+                    $letterResource->updatePendingLettersToNewReferrer(
+                        $unchangedPatient->referred_by,
+                        $patientFormData['referred_by'],
+                        $patientId,
+                        'physician'
+                    );
+                } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] == 1) {
+                    // patient -> patient
+
+                    $letterResource->updatePendingLettersToNewReferrer(
+                        $unchangedPatient->referred_by,
+                        $patientFormData['referred_by'],
+                        $patientId,
+                        'patient'
+                    );
+                } elseif ($unchangedPatient->referred_source == 2 && $patientFormData['referred_source'] != 2) {
+                    // physician -> not physician
+
+                    $letters = $letterResource->getPhysicianOrPatientPendingLetters(
+                        $unchangedPatient->referred_by,
+                        $patientId
+                    );
+
+                    if (count($letters)) {
+                        foreach ($letters as $letter) {
+                            $letterHelper->deleteLetter($letter->letterid, null, 'md_referral', $unchangedPatient->referred_by);
+                        }
+                    }
+                } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] != 1) {
+                    // patient -> not patient
+
+                    $letters = $letterResource->getPhysicianOrPatientPendingLetters(
+                        $unchangedPatient->referred_by,
+                        $patientId,
+                        'patient'
+                    );
+
+                    if (count($letters)) {
+                        foreach ($letters as $letter) {
+                            $letterHelper->deleteLetter($letter->letterid, null, 'pat_referral', $unchangedPatient->referred_by);
+                        }
+                    }
+                }
+            }
+
+            $letterHelper->triggerIntroLettersOf12Types($patientId);
+
+            if (!empty($patientFormData['introletter']) && $patientFormData['introletter'] == 1) {
+                $letterHelper->triggerIntroLetterOf3Type($patientId);
+            }
+
+            $responseData['status'] = 'Edited Successfully';
+        } else { // patientId = 0 -> creating a new patient
+
+        }
+
+        return ApiResponse::responseOk('', $responseData);
+
         } else {
             if ($patient['ssn'] != '') {
                 $salt = Password::createSalt();

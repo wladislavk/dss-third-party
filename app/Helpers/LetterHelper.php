@@ -129,6 +129,11 @@ class LetterHelper
         return $letterId;
     }
 
+    public function deleteLetter()
+    {
+        
+    }
+
     private function createLetter($data = []) {
         if ($this->docId > 0) {
             $user = $this->user->getWithFilter(['use_letters'], [

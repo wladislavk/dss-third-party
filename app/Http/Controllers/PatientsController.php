@@ -6,6 +6,7 @@ use DentalSleepSolutions\Helpers\ApiResponse;
 use DentalSleepSolutions\Helpers\LetterHelper;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use DentalSleepSolutions\Helpers\EmailHelper;
+use DentalSleepSolutions\Helpers\SimilarHelper;
 use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
 use DentalSleepSolutions\Http\Requests\PatientDestroy;
@@ -227,6 +228,7 @@ class PatientsController extends Controller
         LetterHelper $letterHelper,
         EmailHelper $emailHelper,
         PreauthHelper $preauthHelper,
+        SimilarHelper $similarHelper,
         Patient $patientResource,
         PatientSummary $patientSummaryResource,
         InsurancePreauth $insurancePreauthResource,
@@ -292,6 +294,7 @@ class PatientsController extends Controller
         }
 
         $responseData = [];
+        $isUpdateAction = true;
         if ($patientId) {
             // find an unchanged patient by id
             $unchangedPatient = $patientResource->find($patientId);
@@ -325,20 +328,6 @@ class PatientsController extends Controller
 
                 $responseData['mails'] = [
                     'registration_mail' => 'Your email address was updated and not registered. The registration mail was successfully sent.'
-                ];
-            } elseif (
-                $emailTypesForSending && !empty($emailTypesForSending['registration']) &&
-                $docPatientPortal && $usePatientPortal
-            ) {
-                if ($patientFormData['email'] && $patientFormData['cell_phone']) {
-                    $emailHelper->sendRegEmail($patientId, $patientFormData['email'], $uniqueLogin, $unchangedPatient->email);
-                    $message = 'The registration mail was successfully sent.';
-                } else {
-                    $message = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
-                }
-
-                $responseData['mails'] = [
-                    'registration_mail' => $message
                 ];
             }
 
@@ -462,88 +451,98 @@ class PatientsController extends Controller
                 }
             }
 
-            $letterHelper->triggerIntroLettersOf12Types($patientId);
-
-            if (!empty($patientFormData['introletter']) && $patientFormData['introletter'] == 1) {
-                $letterHelper->triggerIntroLetterOf3Type($patientId);
-            }
-
             $responseData['status'] = 'Edited Successfully';
         } else { // patientId = 0 -> creating a new patient
+            $isUpdateAction = false;
 
-        }
-
-        return ApiResponse::responseOk('', $responseData);
-
-        } else {
-            if ($patient['ssn'] != '') {
+            if ($patientFormData['ssn']) {
                 $salt = Password::createSalt();
-                $password = preg_replace('/\D/', '', $patient['ssn']);
+                $password = preg_replace('/\D/', '', $patientFormData['ssn']);
                 $password = Password::genPassword($password, $salt);
             } else {
                 $salt = '';
                 $password = '';
             }
 
-            $patient['salt'] = $salt;
-            $patient['password'] = $password;
-            $patient['salt'] = $salt;
-            $patient['userid'] = $this->currentUser->userid ?: 0;
-            $patient['docid'] = $this->currentUser->docid ?: 0;
-            $patient['ip_address'] = $request->ip();
+            $patientFormData = array_merge($patientFormData, [
+                'salt'       => $salt,
+                'password'   => $password,
+                'salt'       => $salt,
+                'userid'     => $this->currentUser->userid ?: 0,
+                'docid'      => $docId,
+                'ip_address' => $request->ip(),
+                // set filters
+                'firstname'  => ucfirst($patientFormData['firstname']),
+                'lastname'   => ucfirst($patientFormData['lastname']),
+                'middlename' => ucfirst($patientFormData['middlename'])
+            ]);
 
-            // filters
-            $patient['firstname'] = ucfirst($patient['firstname']);
-            $patient['lastname'] = ucfirst($patient['lastname']);
-            $patient['middlename'] = ucfirst($patient['middlename']);
+            $createdPatientId = $patientResource->create($patientFormData);
 
-            $createdPatientId = $patientResource->create($patient);
-
-            if (isset($patient['location'])) {
+            if ($patientFormData['location']) {
                 $summariesResource->create([
-                    'location'  => $patient['location'],
+                    'location'  => $patientFormData['location'],
                     'patientid' => $createdPatientId
                 ]);
             }
 
-            $triggerLetters = true;
-
-            if (isset($patient['sendReg']) && $patient["use_patient_portal"]) {
-                if (trim($patient['email']) != '' && trim($patient['cell_phone']) != '') {
-                    sendRegEmail($newPatientId, $patient['email'], '');
-                } else {
-                    $errors[] = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
-                }
-            }
-
-            $similarPatient = $this->getSimilarPatients($patientId);
+            $similarPatient = $similarHelper->getSimilarPatients($createdPatientId);
 
             if (count($similarPatient)) {
-                $data['similar_patients'] = true;
+                $responseData['redirect_to'] = 'duplicate_patients.php?pid=' . $createdPatientId;
             } else {
-                $data['alert_message'] = 'Patient' . $patient['firstname'] . ' ' . $patient['lastname'] . ' added Successfully';
+                $responseData['status'] = 'Patient "' . $patientFormData['firstname'] . ' ' . $patientFormData['lastname'] . '" was added successfully.';
             }
+
+            $patientId = $createdPatientId;
+        }
+
+        $letterHelper->triggerIntroLettersOf12Types($patientId);
+
+        if (!empty($patientFormData['introletter']) && $patientFormData['introletter'] == 1) {
+            $letterHelper->triggerIntroLetterOf3Type($patientId);
+        }
+
+        if (
+            $emailTypesForSending && !empty($emailTypesForSending['registration']) &&
+            $docPatientPortal && $usePatientPortal
+        ) {
+            if ($patientFormData['email'] && $patientFormData['cell_phone']) {
+                if ($isUpdateAction) {
+                    $emailHelper->sendRegEmail($patientId, $patientFormData['email'], $uniqueLogin, $unchangedPatient->email);
+                } else {
+                    $emailHelper->sendRegEmail($patientId, $patientFormData['email'], $uniqueLogin);
+                }
+
+                $message = 'The registration mail was successfully sent.';
+            } else {
+                $message = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
+            }
+
+            $responseData['mails'] = [
+                'registration_mail' => $message
+            ];
         }
 
         // check if required information is filled out
         $completeInfo = 0;
-        if (
-            !empty($patient['home_phone'])
-            || !empty($patient['work_phone'])
-            || !empty($patient['cell_phone'])
-        ) {
+        if (!empty($patientFormData['home_phone']) || !empty($patientFormData['work_phone']) || !empty($patientFormData['cell_phone'])) {
             $patientPhone = true;
+        } else {
+            $patientPhone = false;
         }
 
-        if (!empty($patient['email'])) {
+        if (!empty($patientFormData['email'])) {
             $patientEmail = true;
+        } else {
+            $patientEmail = false;
         }
 
         if (
             (!empty($patientEmail) || !empty($patientPhone))
-            && !empty($patient['add1']) && !empty($patient['city'])
-            && !empty($patient['state']) && !empty($patient['zip'])
-            && !empty($patient['dob']) && !empty($patient['gender'])
+            && !empty($patientFormData['add1']) && !empty($patientFormData['city'])
+            && !empty($patientFormData['state']) && !empty($patientFormData['zip'])
+            && !empty($patientFormData['dob']) && !empty($patientFormData['gender'])
         ) {
             $completeInfo = 1;
         }
@@ -551,13 +550,7 @@ class PatientsController extends Controller
         // determine whether patient info has been set
         $this->updatePatientSummary($patientId, 'patient_info', $completeInfo);
 
-        $data = array_merge($data, [
-            'message'            => $message,
-            'is_trigger_letters' => $triggerLetters,
-            'errors'             => $errors
-        ]);
-
-        return ApiResponse::responseOk('', $data);
+        return ApiResponse::responseOk('', $responseData);
     }
 
     public function getDataForFillingPatientForm(

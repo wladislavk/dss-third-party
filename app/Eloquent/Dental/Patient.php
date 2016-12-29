@@ -656,4 +656,74 @@ class Patient extends Model implements Resource, Repository
             ->orderBy('lastname')
             ->get();
     }
+
+    public function getDentalDeviceTransactionCode($patientId)
+    {
+        return $this->select('tc.*')
+            ->from(DB::raw('dental_patients p'))
+            ->join(DB::raw('dental_transaction_code tc'), function($query) {
+                $query->on('p.docid', '=', 'tc.docid')
+                    ->where('tc.transaction_code', '=', 'E0486');
+            })->where('p.patientid', $patientId)
+            ->first();
+    }
+
+    public function getUserInfo($patientId)
+    {
+        return $this->select('u.*')
+            ->from(DB::raw('dental_patients p'))
+            ->join(DB::raw('dental_users u'), 'p.docid', '=', 'u.userid')
+            ->where('p.patientid', $patientId)
+            ->where('u.npi', '!=', '')
+            ->whereNotNull('u.npi')
+            ->where('u.tax_id_or_ssn', '!=', '')
+            ->whereNotNull('u.tax_id_or_ssn')
+            ->where(function($query) {
+                $query->where('u.ssn', '=', 1)
+                    ->orWhere('u.ein', '=', 1);
+            })->first();
+    }
+
+    public function getInsurancePreauthInfo($patinetId)
+    {
+        return $this->select(
+                DB::raw('i.company as ins_co'),
+                DB::raw("'primary' as 'ins_rank'"),
+                DB::raw('i.phone1 as ins_phone'),
+                DB::raw('p.p_m_ins_grp as patient_ins_group_id'),
+                DB::raw('p.p_m_ins_id as patient_ins_id'),
+                DB::raw('p.firstname as patient_firstname'),
+                DB::raw('p.lastname as patient_lastname'),
+                DB::raw('p.add1 as patient_add1'),
+                DB::raw('p.add2 as patient_add2'),
+                DB::raw('p.city as patient_city'),
+                DB::raw('p.state as patient_state'),
+                DB::raw('p.zip as patient_zip'),
+                DB::raw('p.dob as patient_dob'),
+                DB::raw('p.p_m_partyfname as insured_first_name'),
+                DB::raw('p.p_m_partylname as insured_last_name'),
+                DB::raw('p.ins_dob as insured_dob'),
+                DB::raw('d.npi as doc_npi'),
+                DB::raw('r.national_provider_id as referring_doc_npi'),
+                DB::raw('d.medicare_npi as doc_medicare_npi'),
+                DB::raw('d.tax_id_or_ssn as doc_tax_id_or_ssn'),
+                DB::raw("CONCAT(d.first_name, ' ', d.last_name) as doc_name"),
+                DB::raw("CONCAT(d.address, ', ', d.city, ', ',d.state,' ',d.zip) as doc_address"),
+                DB::raw('d.practice as doc_practice'),
+                DB::raw('d.phone as doc_phone'),
+                DB::raw('tc.amount as trxn_code_amount'),
+                DB::raw('q2.confirmed_diagnosis as diagnosis_code'),
+                DB::raw('d.userid as doc_id'),
+                DB::raw('p.home_phone as patient_phone')
+            )->from(DB::raw('dental_patients p'))
+            ->leftJoin(DB::raw('dental_contact r'), 'p.referred_by', '=', 'r.contactid')
+            ->join(DB::raw('dental_contact i'), 'p.p_m_ins_co', '=', 'i.contactid')
+            ->join(DB::raw('dental_users d'), 'p.docid', '=', 'd.userid')
+            ->join(DB::raw('dental_transaction_code tc'), function($query) {
+                $query->on('p.docid', '=', 'tc.docid')
+                    ->where('tc.transaction_code', '=', 'E0486');
+            })->leftJoin(DB::raw('dental_q_page2 q2'), 'p.patientid', '=', 'q2.patientid')
+            ->where('p.patientid', $patinetId)
+            ->first();
+    }
 }

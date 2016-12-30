@@ -305,7 +305,7 @@ class PatientsController extends Controller
             // Registered - 2
             if ($unchangedPatient->registration_status == 2 && $patientFormData['email'] != $unchangedPatient->email) {
                 // need to notify the user about changing his email
-                $emailHelper->sendUpdatedEmail($patientId, $patientFormData['email'], $unchangedPatient->email, 'doc');
+                $emailHelper->sendUpdatedEmail($docId, $patientId, $patientFormData['email'], $unchangedPatient->email, 'doc');
 
                 $responseData['mails'] = [
                     'updated_mail' => 'The mail about changing patient email was successfully sent.'

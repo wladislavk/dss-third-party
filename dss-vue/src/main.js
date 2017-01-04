@@ -19,6 +19,7 @@ import Login    from './components/manage/login/login.vue'
 import Index    from './components/manage/dashboard/dashboard.vue'
 import Patients from './components/manage/patients/patients.vue'
 import Contacts from './components/manage/contacts/contacts.vue'
+import Vobs from './components/manage/vobs/vobs.vue'
 
 // global variables
 window.config     = require('./modules/config.js');
@@ -64,6 +65,10 @@ router.map({
     },
     '/manage/contacts': {
         component : Contacts,
+        auth      : true
+    },
+    '/manage/vobs': {
+        component : Vobs,
         auth      : true
     }
 })

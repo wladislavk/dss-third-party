@@ -82,4 +82,30 @@ class InsurancePreauth extends Model implements Resource, Repository
             ->rejected()
             ->first();
     }
+
+    public function getListVobs($docId = 0, $status)
+    {
+        return $this->select(DB::raw('
+                preauth.id,
+                p.firstname,
+                p.lastname,
+                preauth.viewed,
+                preauth.front_office_request_date,
+                preauth.patient_id,
+                preauth.status,
+                preauth.reject_reason'
+            ))
+            ->from(DB::raw('dental_insurance_preauth preauth'))
+            ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'preauth.patient_id')
+            ->where('preauth.doc_id', '=', $docId)
+            ->when($status, function($query) {
+                return $query->where('preauth.status', '=', $status);
+            })
+            ->when($status, function($query) {
+                return $query->where('preauth.status', '=', $status);
+            })
+            ->orderBy('lastname')
+            ->take(12)
+            ->get();
+    }
 }

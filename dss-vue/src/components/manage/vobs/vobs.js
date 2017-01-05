@@ -5,9 +5,13 @@ module.exports = {
     data: function() {
         return {
             routeParameters : {
-                currentPageNumber   : 0,
-                sortDirection       : 'asc',
-                sortColumn          : 'requested'
+                patientId         : null,
+                readId            : null,
+                unreadId          : null,
+                currentPageNumber : 0,
+                sortDirection     : 'asc',
+                sortColumn        : 'requested',
+                viewed            : 0
             },
             vobsTotalNumber : 0,
             vobsPerPage     : 30,
@@ -40,6 +44,32 @@ module.exports = {
                     this.$set('routeParameters.sortDirection', 'asc');
                 }
             }
+        },
+        '$route.query.pid': function() {
+            if (this.$route.query.pid > 0) {
+                this.$set('routeParameters.patientId', this.$route.query.pid);
+            } else {
+                this.$set('routeParameters.patientId', null);
+            }
+        },
+        '$route.query.rid': function() {
+            if (this.$route.query.rid > 0) {
+                this.$set('routeParameters.readId', this.$route.query.rid);
+                this.updateVob('viewed', 1, this.routeParameters.readId);
+            }
+        },
+        '$route.query.urid': function() {
+            if (this.$route.query.urid > 0) {
+                this.$set('routeParameters.unreadId', this.$route.query.urid);
+                this.updateVob('viewed', 0, this.routeParameters.unreadId);
+            }
+        },
+        '$route.query.viewed': function() {
+            if (this.$route.query.viewed === 1) {
+                this.$set('routeParameters.viewed', this.$route.query.viewed);
+            } else {
+                this.$set('routeParameters.viewed', null);
+            }
         }
     },
     created: function() {
@@ -71,6 +101,22 @@ module.exports = {
                 this.handleErrors('findVobs', response);
             });
         },
+        updateVob: function(
+            param,
+            value,
+            id
+        ) {
+            this.alterVob(                
+                param,
+                value,
+                id,
+                this.routeParameters.patientId
+            ).then(function(response) {
+                var data = response.data.data;
+            }, function(response) {
+                this.handleErrors('alterVob', response);
+            });
+        },
         findVobs: function(
             vobsPerPage,
             pageNumber,
@@ -84,7 +130,22 @@ module.exports = {
                 sortDir     : sortDir || ''
             }
 
-            return this.$http.post(window.config.API_PATH + 'insurance-preauth/find', data);
+            return this.$http.post(window.config.API_PATH + 'insurance-preauthes/find', data);
+        },
+        alterVob: function(
+            param,
+            value,
+            id,
+            patientId
+        ) {
+            var data = {
+                param     : param || '',
+                value     : value || 0,
+                id        : id || 0,
+                patientId : patientId || 0
+            }
+
+            return this.$http.post(window.config.API_PATH + 'insurance-preauthes/update', data);
         }
     }
 }

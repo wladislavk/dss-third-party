@@ -80,8 +80,9 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('insurances/{type}', 'InsurancesController@getFrontOfficeClaims');
     Route::resource('insurance-files', 'InsuranceFilesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-histories', 'InsuranceHistoriesController', ['except' => ['create', 'edit']]);
-    Route::resource('insurance-preauth', 'InsurancePreauthController', ['except' => ['create', 'edit']]);
-    Route::post('insurance-preauth/{type}', 'InsurancePreauthController@getByType');
+    Route::resource('insurance-preauthes', 'InsurancePreauthController', ['except' => ['create', 'edit']]);
+    Route::post('insurance-preauthes/find', 'InsurancePreauthController@find');
+    Route::post('insurance-preauthes/{type}', 'InsurancePreauthController@getByType');
     Route::resource('intolerances', 'IntolerancesController', ['except' => ['create', 'edit']]);
     Route::resource('joints', 'JointsController', ['except' => ['create', 'edit']]);
     Route::resource('joint-exams', 'JointExamsController', ['except' => ['create', 'edit']]);

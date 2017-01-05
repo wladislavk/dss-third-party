@@ -107,4 +107,28 @@ class InsurancePreauthController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function find(InsPreauth $resources, Request $request)
+    {
+        $docId           = $this->currentUser->docid ?: 0;
+
+        $pageNumber      = $request->input('page') ?: 0;
+        $vobsPerPage     = $request->input('vobsPerPage') ?: 30;
+        $sortColumn      = $request->input('sortColumn') ?: 'name';
+        $sortDir         = $request->input('sortDir') ?: '';
+        $status          = $request->input('status') ?: '';
+        $viewed          = $request->input('viewed') ?: 0;
+
+        $data = $resources->getListVobs(
+            $docId, 
+            $status, 
+            $viewed, 
+            $sortColumn,
+            $sortDir,
+            $vobsPerPage,
+            $pageNumber
+        );
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

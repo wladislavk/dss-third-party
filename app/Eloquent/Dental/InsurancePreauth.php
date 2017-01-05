@@ -83,9 +83,18 @@ class InsurancePreauth extends Model implements Resource, Repository
             ->first();
     }
 
-    public function getListVobs($docId = 0, $status)
-    {
-        return $this->select(DB::raw('
+    public function getListVobs(
+        $docId       = 0, 
+        $status      = '', 
+        $viewed      = 0, 
+        $sortColumn  = '',
+        $sortDir     = '',
+        $vobsPerPage = 30,
+        $pageNumber  = 0
+    ) {
+        $offset = $vobsPerPage * pageNumber;
+
+        $query = $this->select(DB::raw('
                 preauth.id,
                 p.firstname,
                 p.lastname,
@@ -97,15 +106,19 @@ class InsurancePreauth extends Model implements Resource, Repository
             ))
             ->from(DB::raw('dental_insurance_preauth preauth'))
             ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'preauth.patient_id')
-            ->where('preauth.doc_id', '=', $docId)
-            ->when($status, function($query) {
-                return $query->where('preauth.status', '=', $status);
-            })
-            ->when($status, function($query) {
-                return $query->where('preauth.status', '=', $status);
-            })
-            ->orderBy('lastname')
-            ->take(12)
-            ->get();
+            ->where('preauth.doc_id', '=', $docId);
+
+        if($status) {
+            $query = $query->where('preauth.status', '=', $status);
+        }
+
+        if($viewed === 1) {
+            $query = $query->where('preauth.viewed', '=', $viewed);
+        }
+
+        $query = $query->orderBy($sort, $sortdir)
+            ->skip($offset)->take($vobsPerPage)->get();
+
+        return $query;
     }
 }

@@ -85,14 +85,14 @@ class InsurancePreauth extends Model implements Resource, Repository
 
     public function getListVobs(
         $docId       = 0, 
-        $status      = '', 
+        // $status      = 'rejected', 
         $viewed      = 0, 
-        $sortColumn  = '',
-        $sortDir     = '',
+        $sortColumn  = 'name',
+        $sortDir     = 'desc',
         $vobsPerPage = 30,
         $pageNumber  = 0
     ) {
-        $offset = $vobsPerPage * pageNumber;
+        $offset = $vobsPerPage * $pageNumber;
 
         $query = $this->select(DB::raw('
                 preauth.id,
@@ -102,23 +102,26 @@ class InsurancePreauth extends Model implements Resource, Repository
                 preauth.front_office_request_date,
                 preauth.patient_id,
                 preauth.status,
-                preauth.reject_reason'
-            ))
+                preauth.reject_reason
+            '))
             ->from(DB::raw('dental_insurance_preauth preauth'))
             ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'preauth.patient_id')
             ->where('preauth.doc_id', '=', $docId);
 
-        if($status) {
-            $query = $query->where('preauth.status', '=', $status);
+        // if(isset($status)) {
+        //     $query = $query->where('preauth.status', '=', $status);
+        // }
+
+        if(isset($viewed)) {
+            if($viewed === 1) {
+                $query = $query->where('preauth.viewed', '=', $viewed);
+            } else {
+                $query = $query->whereRaw('(preauth.viewed = \'0\' OR preauth.viewed IS NULL)');
+            }
         }
 
-        if($viewed === 1) {
-            $query = $query->where('preauth.viewed', '=', $viewed);
-        }
+        $queryResult = $query->orderBy($sortColumn, $sortDir)->get();
 
-        $query = $query->orderBy($sort, $sortdir)
-            ->skip($offset)->take($vobsPerPage)->get();
-
-        return $query;
+        return $queryResult;
     }
 }

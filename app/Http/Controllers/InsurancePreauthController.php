@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\InsurancePreauthDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as InsPreauth;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -115,13 +116,13 @@ class InsurancePreauthController extends Controller
         $pageNumber      = $request->input('page') ?: 0;
         $vobsPerPage     = $request->input('vobsPerPage') ?: 30;
         $sortColumn      = $request->input('sortColumn') ?: 'name';
-        $sortDir         = $request->input('sortDir') ?: '';
-        $status          = $request->input('status') ?: '';
+        $sortDir         = $request->input('sortDir') ?: 'desc';
+        // $status          = $request->input('status') ?: '';
         $viewed          = $request->input('viewed') ?: 0;
 
         $data = $resources->getListVobs(
             $docId, 
-            $status, 
+            // $status, 
             $viewed, 
             $sortColumn,
             $sortDir,

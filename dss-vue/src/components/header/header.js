@@ -765,13 +765,13 @@ module.exports = {
             return this.$http.post(window.config.API_PATH + 'insurances/rejected-claims');
         },
         getPreauthNumber: function() {
-            return this.$http.post(window.config.API_PATH + 'insurance-preauth/completed');
+            return this.$http.post(window.config.API_PATH + 'insurance-preauthes/completed');
         },
         getPendingPreauthNumber: function() {
-            return this.$http.post(window.config.API_PATH + 'insurance-preauth/pending');
+            return this.$http.post(window.config.API_PATH + 'insurance-preauthes/pending');
         },
         getRejectedPreauthNumber: function() {
-            return this.$http.post(window.config.API_PATH + 'insurance-preauth/rejected');
+            return this.$http.post(window.config.API_PATH + 'insurance-preauthes/rejected');
         },
         getHSTNumber: function() {
             return this.$http.post(window.config.API_PATH + 'home-sleep-tests/completed');

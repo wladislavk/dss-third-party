@@ -4,22 +4,23 @@ module.exports = {
     },
     data: function() {
         return {
+            constants       : window.constants,
             routeParameters : {
                 patientId         : null,
                 readId            : null,
                 unreadId          : null,
                 currentPageNumber : 0,
                 sortDirection     : 'asc',
-                sortColumn        : 'requested',
-                viewed            : 0
+                sortColumn        : 'status',
+                viewed            : 1
             },
             vobsTotalNumber : 0,
             vobsPerPage     : 30,
             totalPages      : 0,
             vobs            : [],
             tableHeaders    : {
-                'requested'    : 'Requested',
-                'patient-name' : 'Patient Name',
+                'front_office_request_date' : 'Requested',
+                'patient_name' : 'Patient Name',
                 'status'       : 'Status',
                 'comments'     : 'Comments',
                 'action'       : 'Action'
@@ -30,7 +31,11 @@ module.exports = {
         '$route.query.sort': function() {
             if (this.$route.query.sort) {
                 if (this.$route.query.sort in this.tableHeaders) {
-                    this.$set('routeParameters.sortColumn', this.$route.query.sort);
+                    if (this.$route.query.sort == 'patient_name') {
+                        this.$set('routeParameters.sortColumn', 'p.lastname');
+                    } else {
+                        this.$set('routeParameters.sortColumn', this.$route.query.sort);
+                    }
                 } else {
                     this.$set('routeParameters.sortColumn', null);
                 }
@@ -70,6 +75,12 @@ module.exports = {
             } else {
                 this.$set('routeParameters.viewed', null);
             }
+        },
+        'routeParameters': {
+            handler: function() {
+                this.getVobs();
+            },
+            deep: true
         }
     },
     created: function() {
@@ -77,10 +88,11 @@ module.exports = {
     },
     methods: {
         getCurrentDirection: function(sort) {
-            if (this.routeParameters.sortColumn == sort) {
+            if (this.routeParameters.sortColumn == sort || 
+                (this.routeParameters.sortColumn == 'p.lastname' && sort == 'patient_name')) {
                 return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc';
             } else {
-                return sort === 'name' ? 'asc': 'desc';
+                return sort === 'patient_name' ? 'asc': 'desc';
             }
         },
         getVobs: function() {
@@ -88,15 +100,15 @@ module.exports = {
                 this.vobsPerPage,
                 this.routeParameters.currentPageNumber,
                 this.routeParameters.sortColumn,
-                this.routeParameters.sortDirection
+                this.routeParameters.sortDirection,
+                this.routeParameters.viewed
             ).then(function(response) {
                 var data = response.data.data;
-
-                var totalCount = data.count[0].total;
-                var vobs       = data.results;
+                var totalCount = data.length;
+                // var vobs       = data.results;
 
                 this.$set('vobsTotalNumber', totalCount);
-                this.$set('vobs', vobs);
+                this.$set('vobs', data);
             }, function(response) {
                 this.handleErrors('findVobs', response);
             });
@@ -121,15 +133,16 @@ module.exports = {
             vobsPerPage,
             pageNumber,
             sortColumn,
-            sortDir
+            sortDir,
+            viewed
         ) {
             var data = {
                 page        : pageNumber || 0,
                 vobsPerPage : vobsPerPage || 0,
                 sortColumn  : sortColumn || '',
-                sortDir     : sortDir || ''
+                sortDir     : sortDir || '',
+                viewed      : viewed || 1
             }
-
             return this.$http.post(window.config.API_PATH + 'insurance-preauthes/find', data);
         },
         alterVob: function(

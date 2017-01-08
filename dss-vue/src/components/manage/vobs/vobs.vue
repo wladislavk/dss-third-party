@@ -8,10 +8,10 @@
             v-link="{
                 name: $route.name,
                 query: {
-                    pid: routeParameters.patientId,
-                    sort: routeParameters.sortColumn,
-                    sortdir: routeParameters.sortDirection,
-                    viewed: 1
+                    pid     : routeParameters.patientId,
+                    sort    : routeParameters.sortColumn,
+                    sortdir : routeParameters.sortDirection,
+                    viewed  : getViewed()
                 }
             }"
             style="float:right; margin-right:10px;" 
@@ -24,10 +24,10 @@
             v-link="{
                 name: $route.name,
                 query: {
-                    pid: routeParameters.patientId,
-                    sort: routeParameters.sortColumn,
-                    sortdir: routeParameters.sortDirection,
-                    viewed: 0
+                    pid     : routeParameters.patientId,
+                    sort    : routeParameters.sortColumn,
+                    sortdir : routeParameters.sortDirection,
+                    viewed  : getViewed()
                 }
             }"
             style="float:right; margin-right:10px;" 
@@ -37,8 +37,8 @@
         </a>
         <form name="sortfrm" method="post">
             <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-                <!-- <tr v-if="patientsTotalNumber > patientsPerPage" bgColor="#ffffff">
-                    <td  align="right" colspan="15" class="bp">
+                <tr v-if="vobsTotalNumber > vobsPerPage" bgColor="#ffffff">
+                    <td align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages">
                             <strong v-if="routeParameters.currentPageNumber == index">{{ index + 1 }}</strong>
@@ -48,17 +48,16 @@
                                     name: $route.name,
                                     query: {
                                         page    : index,
-                                        letter  : routeParameters.currentLetter,
                                         sort    : routeParameters.sortColumn,
                                         sortdir : routeParameters.sortDirection,
-                                        sh      : routeParameters.selectedPatientType
+                                        viewed  : routeParameters.viewed
                                     }
                                 }"
                                 class="fp"
                             >{{ index + 1 }}</a>
                         </span>
                     </td>
-                </tr> -->
+                </tr>
                 <tr class="tr_bg_h">
                     <td
                         v-for="(sort, label) in tableHeaders"
@@ -69,6 +68,7 @@
                         width="10%"
                     >
                         <a
+                            v-if="label != 'Comments' || label != 'Action'"
                             v-link="{
                                 name: $route.name,
                                 query: {

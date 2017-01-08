@@ -28,6 +28,13 @@ module.exports = {
         }
     },
     watch: {
+        '$route.query.page': function() {
+            if (this.$route.query.page) {
+                if (this.$route.query.page <= this.totalPages) {
+                    this.$set('routeParameters.currentPageNumber', this.$route.query.page);
+                }
+            }
+        },
         '$route.query.sort': function() {
             if (this.$route.query.sort) {
                 if (this.$route.query.sort in this.tableHeaders) {
@@ -73,7 +80,7 @@ module.exports = {
             if (this.$route.query.viewed === 1) {
                 this.$set('routeParameters.viewed', this.$route.query.viewed);
             } else {
-                this.$set('routeParameters.viewed', null);
+                this.$set('routeParameters.viewed', 0);
             }
         },
         'routeParameters': {
@@ -81,6 +88,11 @@ module.exports = {
                 this.getVobs();
             },
             deep: true
+        }
+    },
+    computed: {
+        totalPages: function() {
+            return this.vobsTotalNumber / this.vobsPerPage;
         }
     },
     created: function() {
@@ -95,6 +107,9 @@ module.exports = {
                 return sort === 'patient_name' ? 'asc': 'desc';
             }
         },
+        getViewed: function() {
+            return this.routeParameters.viewed === 1 ? 0 : 1;
+        },
         getVobs: function() {
             this.findVobs(                
                 this.vobsPerPage,
@@ -104,11 +119,12 @@ module.exports = {
                 this.routeParameters.viewed
             ).then(function(response) {
                 var data = response.data.data;
-                var totalCount = data.length;
-                // var vobs       = data.results;
+
+                var totalCount = data.count[0].total;
+                var vobs   = data.results;
 
                 this.$set('vobsTotalNumber', totalCount);
-                this.$set('vobs', data);
+                this.$set('vobs', vobs);
             }, function(response) {
                 this.handleErrors('findVobs', response);
             });

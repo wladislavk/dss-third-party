@@ -115,10 +115,10 @@ class InsurancePreauthController extends Controller
 
         $pageNumber      = $request->input('page') ?: 0;
         $vobsPerPage     = $request->input('vobsPerPage') ?: 30;
-        $sortColumn      = $request->input('sortColumn') ?: 'name';
+        $sortColumn      = $request->input('sortColumn') ?: 'status';
         $sortDir         = $request->input('sortDir') ?: 'desc';
         // $status          = $request->input('status') ?: '';
-        $viewed          = $request->input('viewed') ?: 0;
+        $viewed          = $request->input('viewed') ?: 1;
 
         $data = $resources->getListVobs(
             $docId, 

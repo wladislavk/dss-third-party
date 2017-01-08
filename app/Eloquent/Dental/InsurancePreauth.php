@@ -86,8 +86,8 @@ class InsurancePreauth extends Model implements Resource, Repository
     public function getListVobs(
         $docId       = 0, 
         // $status      = 'rejected', 
-        $viewed      = 0, 
-        $sortColumn  = 'name',
+        $viewed      = 1, 
+        $sortColumn  = 'status',
         $sortDir     = 'desc',
         $vobsPerPage = 30,
         $pageNumber  = 0
@@ -112,16 +112,26 @@ class InsurancePreauth extends Model implements Resource, Repository
         //     $query = $query->where('preauth.status', '=', $status);
         // }
 
-        if(isset($viewed)) {
-            if($viewed === 1) {
-                $query = $query->where('preauth.viewed', '=', $viewed);
-            } else {
-                $query = $query->whereRaw('(preauth.viewed = \'0\' OR preauth.viewed IS NULL)');
-            }
+        if($viewed == 0) {
+            $query = $query->whereRaw('(preauth.viewed = \'0\' OR preauth.viewed IS NULL)');
         }
 
-        $queryResult = $query->orderBy($sortColumn, $sortDir)->get();
+        $results = $query->orderBy($sortColumn, $sortDir)
+            ->skip($offset)
+            ->take($vobsPerPage)
+            ->get();
 
-        return $queryResult;
+        $countQuery = $this->select(DB::raw('
+                COUNT(preauth.id) AS total
+            '))
+            ->from(DB::raw('dental_insurance_preauth preauth'))
+            ->where('preauth.doc_id', '=', $docId);
+
+        $countResult = $countQuery->get();
+
+        return [
+            'results' => $results,
+            'count' => $countResult
+        ];
     }
 }

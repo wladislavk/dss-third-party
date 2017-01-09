@@ -6,6 +6,11 @@ use DentalSleepSolutions\Eloquent\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Dental\Fax;
+
+use DentalSleepSolutions\Helpers\GeneralHelper;
+
+use Carbon\Carbon;
 
 class LetterHelper
 {
@@ -13,6 +18,9 @@ class LetterHelper
     private $patient;
     private $contact;
     private $user;
+    private $fax;
+
+    private $generalHelper;
 
     private $docId;
     private $patientId;
@@ -23,6 +31,8 @@ class LetterHelper
         Patient $patient,
         Contact $contact,
         User $user,
+        Fax $fax,
+        GeneralHelper $generalHelper,
         $docId,
         $patientId,
         $userType
@@ -31,6 +41,9 @@ class LetterHelper
         $this->patient = $patient;
         $this->contact = $contact;
         $this->user = $user;
+        $this->fax = $fax;
+
+        $this->generalHelper = $generalHelper;
 
         $this->docId = $docId;
         $this->patientId = $patientId;
@@ -129,9 +142,52 @@ class LetterHelper
         return $letterId;
     }
 
-    public function deleteLetter()
+    public function deleteLetter($userId, $letterId, $parent = null, $type, $recipientId, $template = null)
     {
-        
+        if (!isset($letterId)) {
+            return false;
+        }
+
+        $letter = $this->letter->find($letterId);
+        $contacts = $this->generalHelper->getContactInfo(
+            (($letter->topatient == "1") ? $letter->patientid : ''),
+            $letter->md_list,
+            $letter->md_referral_list,
+            $letter->pat_referral_list
+        );
+
+        $totalContacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']) + count($contacts['pat_referrals']);
+
+        if ($totalContacts == 1) {
+            $data = [
+                'parentid'   => null,
+                'deleted'    => 1,
+                'deleted_by' => $userId,
+                'deleted_on' => Carbon::now()
+            ];
+            $updatedLetter = $this->letter->updateLetterBy(['letterid' => $letterId], $data);
+
+            $data = ['viewed' => 1];
+            $this->fax->updateByLetterId($letterId, $data);
+
+            $data = ['parentid' => null];
+            $this->letter->updateLetterBy(['parentid' => $letterId], $data);
+
+            return $updatedLetter;
+        } else {
+            if ($letter) {
+                $deleted = '1';
+
+                if ($type == 'patient') {
+                    $toPatient = 1;
+                    $removePatient = 0;
+                } elseif ($type == 'md') {
+                    $mdList = $recipientId;
+                    $mds = explode(",", $letter->md_list);
+                    $key = array_search($recipientId, $mds);
+                }
+            }
+        }
     }
 
     private function createLetter($data = []) {

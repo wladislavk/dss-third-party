@@ -726,4 +726,48 @@ class Patient extends Model implements Resource, Repository
             ->where('p.patientid', $patinetId)
             ->first();
     }
+
+    public function getContactInfo($letterId, $patient)
+    {
+        return $this->select(
+                'patientid AS id',
+                'salutation',
+                'firstname',
+                'lastname',
+                'add1',
+                'add2',
+                'city',
+                'state',
+                'zip',
+                'email',
+                'preferredcontact',
+                DB::raw($letterId . ' AS letterid')
+            )->whereIn('patientid', $patient)
+            ->get();
+    }
+
+    public function getReferralList($letterId, $patReferralList)
+    {
+        return $this->select(
+                'p.patientid AS id',
+                'p.salutation',
+                'p.lastname',
+                'p.middlename',
+                'p.firstname',
+                DB::raw("'' as company"),
+                'p.add1',
+                'p.add2',
+                'p.city',
+                'p.state',
+                'p.zip',
+                'p.email',
+                DB::raw("'' as fax"),
+                'p.preferredcontact',
+                DB::raw("'' as contacttypeid"),
+                DB::raw($letterId . ' AS letterid'),
+                'p.status'
+            )->from(DB::raw('dental_patients p'))
+            ->whereIn('p.patientid', $patReferralList)
+            ->get();
+    }
 }

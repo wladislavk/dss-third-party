@@ -267,4 +267,30 @@ class Contact extends Model implements Resource, Repository
             ->orderBy('company')
             ->get();
     }
+
+    public function getContactInfo($letterId, $mdList)
+    {
+        return $this->select(
+                'dental_contact.contactid AS id',
+                'dental_contact.salutation',
+                'dental_contact.firstname',
+                'dental_contact.lastname',
+                'dental_contact.middlename',
+                'dental_contact.company',
+                'dental_contact.add1',
+                'dental_contact.add2',
+                'dental_contact.city',
+                'dental_contact.state',
+                'dental_contact.zip',
+                'dental_contact.email',
+                'dental_contact.fax',
+                'dental_contact.preferredcontact',
+                'dental_contacttype.contacttype',
+                'dental_contact.contacttypeid',
+                DB::raw($letterId . ' AS letterid'),
+                'dental_contact.status'
+            )->leftJoin('dental_contacttype', 'dental_contact.contacttypeid', '=', 'dental_contacttype.contacttypeid')
+            ->whereIn('dental_contact.contactid', $mdList)
+            ->get();
+    }
 }

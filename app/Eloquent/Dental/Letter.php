@@ -242,4 +242,15 @@ class Letter extends Model implements Resource, Repository
             ->pending()
             ->get();
     }
+
+    public function updateLetterBy($where, $data)
+    {
+        $query = $this;
+
+        foreach ($where as $key => $value) {
+            $query = $query->where($key, $value);
+        }
+
+        return $query->update($data);
+    }
 }

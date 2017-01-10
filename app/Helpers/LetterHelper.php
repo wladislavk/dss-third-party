@@ -185,6 +185,78 @@ class LetterHelper
                     $mdList = $recipientId;
                     $mds = explode(",", $letter->md_list);
                     $key = array_search($recipientId, $mds);
+
+                    unset($mds[$key]);
+
+                    $newMds = implode(",", $mds);
+                    $ccMds = explode(",", $letter->cc_md_list);
+                    $ccKey = array_search($recipientId, $ccMds);
+
+                    unset($cc_mds[$cc_key]);
+
+                    $newCcMds = implode(",", $ccMds);
+                } elseif ($type == 'md_referral') {
+                    $mdReferralList = $recipientId;
+                    $mdReferrals = explode(",", $letter->md_referral_list);
+                    $key = array_search($recipientId, $mdReferrals);
+
+                    unset($mdReferrals[$key]);
+
+                    $newMdReferrals = implode(",", $mdReferrals);
+                    $ccMdReferrals = explode(",", $letter->cc_md_referral_list);
+                    $ccKey = array_search($recipientId, $ccMdReferrals);
+
+                    unset($ccMdReferrals[$ccKey]);
+
+                    $newCcMdReferrals = implode(",", $ccMdReferrals);
+                } elseif ($type == 'pat_referral') {
+                    $patReferralList = $recipientId;
+                    $patReferrals = explode(",", $letter->pat_referral_list);
+                    $key = array_search($recipientId, $patReferrals);
+
+                    unset($patReferrals[$key]);
+
+                    $newPatReferrals = implode(",", $patReferrals);
+                    $ccPatReferrals = explode(",", $letter->cc_pat_referral_list);
+                    $ccKey = array_search($recipientId, $ccPatReferrals);
+
+                    unset($ccPatReferrals[$ccKey]);
+
+                    $newCcPatReferrals = implode(",", $ccPatReferrals);
+                }
+
+                $newLetterId = $this->createLetter($letter->templateid, $letter->patientid, $letter->info_id, $toPatient, $mdList, $mdReferralList, $patReferralList, $letterId, $template, $letter->send_method, '', $deleted, false);
+            }
+
+            if (is_numeric($newLetterId)) {
+                if ($type == 'patient') {
+                    $data = [
+                        'topatient'    => $removePatient,
+                        'cc_topatient' => $removePatient
+                    ];
+                } elseif ($type == 'md') {
+                    $data = [
+                        'md_list'    => $newMds,
+                        'cc_md_list' => $newCcMds
+                    ]
+                } elseif ($type == 'md_referral') {
+                    $data = [
+                        'md_referral_list'    => $newMdReferrals,
+                        'cc_md_referral_list' => $newCcMdReferrals
+                    ];
+                } elseif ($type == 'pat_referral') {
+                    $data = [
+                        'pat_referral_list'    => $newPatReferrals,
+                        'cc_pat_referral_list' => $newCcPatReferrals
+                    ];
+                }
+
+                $updateLetter = $this->letter->updateLetterBy(['letterid' => $letterId], $data);
+
+                if (!$updateLetter) {
+                    return false;
+                } else {
+                    return $newLetterId;
                 }
             }
         }

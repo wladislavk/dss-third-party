@@ -242,6 +242,7 @@ class PatientsController extends Controller
     ) {
         $docId = $this->currentUser->docid ?: 0;
         $userType = $this->currentUser->user_type ?: 0;
+        $userId = $this->currentUser->userid ?: 0;
 
         // check if the request has emails for sending
         $emailTypesForSending = $request->has('requested_emails') ? $request->input('requested_emails') : false;
@@ -431,7 +432,7 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($letter->letterid, null, 'md_referral', $unchangedPatient->referred_by);
+                            $letterHelper->deleteLetter($userId, $letter->letterid, null, 'md_referral', $unchangedPatient->referred_by);
                         }
                     }
                 } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] != 1) {
@@ -445,10 +446,14 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($letter->letterid, null, 'pat_referral', $unchangedPatient->referred_by);
+                            $letterHelper->deleteLetter($userId, $letter->letterid, null, 'pat_referral', $unchangedPatient->referred_by);
                         }
                     }
                 }
+            }
+
+            if () {
+                $responseData['redirect_to'] = 'duplicate_patients.php?pid=' . $createdPatientId;
             }
 
             $responseData['status'] = 'Edited Successfully';

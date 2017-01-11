@@ -20,6 +20,9 @@ import Index    from './components/manage/dashboard/dashboard.vue'
 import Patients from './components/manage/patients/patients.vue'
 import Contacts from './components/manage/contacts/contacts.vue'
 
+// service routes
+import PageNotFound from './components/services/pageNotFound.vue'
+
 // global variables
 window.config     = require('./modules/config.js');
 window.constants  = require('./modules/constants.js');
@@ -65,6 +68,9 @@ router.map({
     '/manage/contacts': {
         component : Contacts,
         auth      : true
+    },
+    '*': {
+        component : PageNotFound
     }
 })
 

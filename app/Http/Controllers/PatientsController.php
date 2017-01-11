@@ -247,6 +247,9 @@ class PatientsController extends Controller
         // check if the request has emails for sending
         $emailTypesForSending = $request->has('requested_emails') ? $request->input('requested_emails') : false;
 
+        // check if some buttons were pressed on the page
+        $pressedButtons = $request->has('pressed_buttons') ? $request->input('pressed_buttons') : false;
+
         $usePatientPortal = $request->input('use_patient_portal');
         // get doc info by id
         $docInfo = $userResource->getWithFilter('use_patient_portal', ['userid' => $docId]);
@@ -452,8 +455,8 @@ class PatientsController extends Controller
                 }
             }
 
-            if () {
-                $responseData['redirect_to'] = 'duplicate_patients.php?pid=' . $createdPatientId;
+            if ($pressedButtons && $pressedButtons['sendHST']) {
+                $responseData['redirect_to'] = 'hst_request_co.php?ed=' . $patientId;
             }
 
             $responseData['status'] = 'Edited Successfully';

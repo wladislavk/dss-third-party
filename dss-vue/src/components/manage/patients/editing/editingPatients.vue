@@ -22,11 +22,7 @@
             onclick="remove_notification('{{ notification.id }}');return false;"
         >X</a>
     </div>
-    <form
-        name="patientfrm"
-        id="patientfrm"
-        onSubmit="return validate_add_patient(this);"
-    >
+    <form name="patientfrm" id="patientfrm">
         <table
             width="98%"
             style="margin-left:11px;"
@@ -41,9 +37,10 @@
                 </td>
                 <td align="right">
                     <input
+                        v-on:click.prevent=""
+                        :value="buttonText + 'Patient'"
                         type="submit"
                         style="float:right; margin-left: 5px;"
-                        :value="buttonText + 'Patient'"
                         class="button"
                     />
                     <template v-if="showSendingEmails">
@@ -122,6 +119,7 @@
                                 <span>
                                     <input
                                         v-model="patient.firstname"
+                                        v-el:firstname
                                         id="firstname"
                                         name="firstname"
                                         type="text"
@@ -134,6 +132,7 @@
                                 <span>
                                     <input
                                         v-model="patient.lastname"
+                                        v-el:lastname
                                         id="lastname"
                                         name="lastname"
                                         type="text"
@@ -269,6 +268,7 @@
                                     </span>
                                     <br />
                                     <input
+                                        v-on:click.prevent="submitSendingPinCode"
                                         type="submit"
                                         name="sendPin"
                                         value="Patient can't receive text message?"
@@ -379,6 +379,7 @@
                                 <span>
                                     <input
                                         v-model="patient.dob"
+                                        v-el:dob
                                         id="dob"
                                         name="dob"
                                         type="text"
@@ -701,6 +702,7 @@
                                         <input
                                             v-model="formedFullNames.referred_name"
                                             v-on:keyup="onKeyUpSearchReferrers"
+                                            v-el:referred_by_name
                                             type="text"
                                             id="referredby_name"
                                             autocomplete="off"
@@ -958,6 +960,7 @@
                                     <select
                                         v-model="patient.p_m_relation"
                                         v-on:change="onChangeRelations('primary_insurance')"
+                                        v-el:p_m_relation
                                         id="p_m_relation"
                                         name="p_m_relation"
                                         class="field text addr tbox"
@@ -974,6 +977,7 @@
                                 <span>
                                     <input
                                         v-model="patient.p_m_partyfname"
+                                        v-el:p_m_partyfname
                                         id="p_m_partyfname"
                                         name="p_m_partyfname"
                                         type="text"
@@ -992,6 +996,7 @@
                                     />
                                     <input
                                         v-model="patient.p_m_partylname"
+                                        v-el:p_m_partylname
                                         id="p_m_partylname"
                                         name="p_m_partylname"
                                         type="text"
@@ -1004,6 +1009,7 @@
                                 <span>
                                     <input
                                         v-model="patient.ins_dob"
+                                        v-el:ins_dob
                                         id="ins_dob"
                                         name="ins_dob"
                                         type="text"
@@ -1017,6 +1023,7 @@
                                 <span>
                                     <select
                                         v-model="patient.p_m_gender"
+                                        v-el:p_m_gender
                                         name="p_m_gender"
                                         id="p_m_gender"
                                         class="field text addr tbox"
@@ -1097,6 +1104,7 @@
                                 <span>
                                     <select
                                         v-model="patient.p_m_ins_type"
+                                        v-el:p_m_ins_type
                                         id="p_m_ins_type"
                                         name="p_m_ins_type"
                                         class="field text addr tbox"
@@ -1161,6 +1169,7 @@
                                 <span>
                                     <select
                                         v-model="patient.p_m_ins_co"
+                                        v-el:p_m_ins_co
                                         id="p_m_ins_co"
                                         name="p_m_ins_co"
                                         class="field text addr tbox"
@@ -1187,6 +1196,7 @@
                                 <span>
                                     <input
                                         v-model="patient.p_m_ins_id"
+                                        v-el:p_m_party
                                         id="p_m_party"
                                         name="p_m_ins_id"
                                         type="text"
@@ -1199,6 +1209,7 @@
                                 <span>
                                     <input
                                         v-model="patient.p_m_ins_grp"
+                                        v-el:p_m_ins_grp
                                         id="p_m_ins_grp"
                                         name="p_m_ins_grp"
                                         type="text"
@@ -1212,6 +1223,7 @@
                                 <span>
                                     <input
                                         v-model="patient.p_m_ins_plan"
+                                        v-el:p_m_ins_plan
                                         id="p_m_ins_plan"
                                         name="p_m_ins_plan"
                                         type="text"
@@ -1353,6 +1365,7 @@
                                     <select
                                         v-model="patient.s_m_relation"
                                         v-on:change="onChangeRelations('secondary_insurance')"
+                                        v-el:s_m_relation
                                         id="s_m_relation"
                                         name="s_m_relation"
                                         class="field text addr tbox"
@@ -1369,6 +1382,7 @@
                                 <span>
                                     <input
                                         v-model="patient.s_m_partyfname"
+                                        v-el:s_m_partyfname
                                         id="s_m_partyfname" 
                                         name="s_m_partyfname"
                                         type="text"
@@ -1387,6 +1401,7 @@
                                     />
                                     <input
                                         v-model="patient.s_m_partylname"
+                                        v-el:s_m_partylname
                                         id="s_m_partylname"
                                         name="s_m_partylname"
                                         type="text"
@@ -1399,6 +1414,7 @@
                                 <span>
                                     <input
                                         v-model="patient.ins2_dob"
+                                        v-el:ins2_dob
                                         id="ins2_dob"
                                         name="ins2_dob"
                                         type="text"
@@ -1412,6 +1428,7 @@
                                 <span>
                                     <select
                                         v-model="patient.s_m_gender"
+                                        v-el:s_m_gender
                                         name="s_m_gender"
                                         id="s_m_gender"
                                         class="field text addr tbox"
@@ -1492,6 +1509,7 @@
                                 <span>
                                     <select
                                         v-model="patient.s_m_ins_type"
+                                        v-el:s_m_ins_type
                                         id="s_m_ins_type"
                                         name="s_m_ins_type"
                                         onchange="checkMedicare()" 
@@ -1554,6 +1572,7 @@
                                 <span>
                                     <select
                                         v-model="patient.s_m_ins_co"
+                                        v-el:s_m_ins_co
                                         id="s_m_ins_co"
                                         name="s_m_ins_co"
                                         class="field text addr tbox"
@@ -1592,6 +1611,7 @@
                                 <span>
                                     <input
                                         v-model="patient.s_m_ins_grp"
+                                        v-el:s_m_ins_grp
                                         id="s_m_ins_grp"
                                         name="s_m_ins_grp"
                                         type="text"
@@ -1604,6 +1624,7 @@
                                 <span>
                                     <input
                                         v-model="patient.s_m_ins_plan"
+                                        v-el:s_m_ins_plan
                                         id="s_m_ins_plan"
                                         name="s_m_ins_plan"
                                         type="text"
@@ -2109,8 +2130,9 @@
                       * Required Fields
                     </span><br />
                     <input
-                        type="submit"
+                        v-on:click.prevent="submitAddingOrEditingPatient"
                         :value="buttonText + 'Patient'"
+                        type="submit"
                         class="button"
                     />
                 </td>

@@ -250,7 +250,6 @@ class PatientsController extends Controller
         // check if some buttons were pressed on the page
         $pressedButtons = $request->has('pressed_buttons') ? $request->input('pressed_buttons') : false;
 
-        $usePatientPortal = $request->input('use_patient_portal');
         // get doc info by id
         $docInfo = $userResource->getWithFilter('use_patient_portal', ['userid' => $docId]);
 
@@ -262,12 +261,21 @@ class PatientsController extends Controller
 
         // get form data for a current patient
         $patientFormData = $request->input('patient_form_data');
+        $usePatientPortal = $patientFormData['use_patient_portal'];
 
         // validate input patient form data
         if (patientId) {
             $this->validate($patientFormData, $patientUpdateValidator->rules());
         } else {
             $this->validate($patientFormData, $patientStoreValidator->rules());
+        }
+
+        // check patient email address
+        if (!$this->isPatientEmailValid($patientFormData['email'], $patientId)) {
+            return ApiResponse::responseError(
+                $message = 'Error: The email address you entered is already associated with another patient. Please enter a different email address.',
+                $code = 417
+            );
         }
 
         // check if the request contains tracker notes
@@ -703,5 +711,14 @@ class PatientsController extends Controller
         }
 
         return true;
+    }
+
+    private function isPatientEmailValid(Patient $patientResource, $email, $patientId)
+    {
+        if ($patientResource->getSameEmails($email, $patientId) > 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

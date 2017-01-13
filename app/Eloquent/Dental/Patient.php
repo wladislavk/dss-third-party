@@ -770,4 +770,19 @@ class Patient extends Model implements Resource, Repository
             ->whereIn('p.patientid', $patReferralList)
             ->get();
     }
+
+    public function getSameEmails($email, $patientId)
+    {
+        return $this->select('patientid')
+            ->where('email', $email)
+            ->where(function($query) use ($patientId) {
+                $query->where(function($query) use ($patientId) {
+                    $query->where('patientid', '!=', $patientId)
+                        ->where('parent_patientid', '!=', $patientId);
+                })->orWhere(function($query) use ($patientId) {
+                    $query->where('patientid', '!=', $patientId)
+                        ->whereNull('parent_patientid');
+                });
+            })->count();
+    }
 }

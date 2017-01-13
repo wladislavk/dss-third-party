@@ -959,7 +959,7 @@
                                 <span>
                                     <select
                                         v-model="patient.p_m_relation"
-                                        v-on:change="onChangeRelations('primary_insurance')"
+                                        v-on:change="handleChangingInsuranceInfo, onChangeRelations('primary_insurance')"
                                         v-el:p_m_relation
                                         id="p_m_relation"
                                         name="p_m_relation"
@@ -977,6 +977,7 @@
                                 <span>
                                     <input
                                         v-model="patient.p_m_partyfname"
+                                        v-on:change="handleChangingInsuranceInfo"
                                         v-el:p_m_partyfname
                                         id="p_m_partyfname"
                                         name="p_m_partyfname"
@@ -996,6 +997,7 @@
                                     />
                                     <input
                                         v-model="patient.p_m_partylname"
+                                        v-on:change="handleChangingInsuranceInfo"
                                         v-el:p_m_partylname
                                         id="p_m_partylname"
                                         name="p_m_partylname"
@@ -1009,6 +1011,7 @@
                                 <span>
                                     <input
                                         v-model="patient.ins_dob"
+                                        v-on:change="handleChangingInsuranceInfo"
                                         v-el:ins_dob
                                         id="ins_dob"
                                         name="ins_dob"
@@ -1104,6 +1107,7 @@
                                 <span>
                                     <select
                                         v-model="patient.p_m_ins_type"
+                                        v-on:change="handleChangingInsuranceInfo"
                                         v-el:p_m_ins_type
                                         id="p_m_ins_type"
                                         name="p_m_ins_type"
@@ -1170,11 +1174,11 @@
                                     <select
                                         v-model="patient.p_m_ins_co"
                                         v-el:p_m_ins_co
+                                        v-on:change="handleChangingInsuranceInfo, updateNumber('p_m_ins_phone')"
                                         id="p_m_ins_co"
                                         name="p_m_ins_co"
                                         class="field text addr tbox"
                                         maxlength="255"
-                                        onchange="updateNumber('p_m_ins_phone');"
                                         style="width:200px;"
                                     >
                                         <option value="" selected disabled>Select Insurance Company</option>
@@ -1196,6 +1200,7 @@
                                 <span>
                                     <input
                                         v-model="patient.p_m_ins_id"
+                                        v-on:change="handleChangingInsuranceInfo"
                                         v-el:p_m_party
                                         id="p_m_party"
                                         name="p_m_ins_id"
@@ -1209,6 +1214,7 @@
                                 <span>
                                     <input
                                         v-model="patient.p_m_ins_grp"
+                                        v-on:change="handleChangingInsuranceInfo"
                                         v-el:p_m_ins_grp
                                         id="p_m_ins_grp"
                                         name="p_m_ins_grp"
@@ -1223,6 +1229,7 @@
                                 <span>
                                     <input
                                         v-model="patient.p_m_ins_plan"
+                                        v-on:change="handleChangingInsuranceInfo"
                                         v-el:p_m_ins_plan
                                         id="p_m_ins_plan"
                                         name="p_m_ins_plan"

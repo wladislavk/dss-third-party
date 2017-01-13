@@ -36,6 +36,7 @@ module.exports = {
             showReferredPerson         : false,
             showReferredbyHints        : false,
             isReferredByChanged        : false,
+            isInsuranceInfoChanged     : false,
             foundReferrersByName       : [],
             foundPrimaryCareMdByName   : [],
             foundEntByName             : [],
@@ -233,6 +234,9 @@ module.exports = {
             });
     },
     methods: {
+        handleChangingInsuranceInfo: function() {
+            this.isInsuranceInfoChanged = true;
+        },
         submitAddingOrEditingPatient: function() {
             if (this.validatePatientData(this.patient)) {
                 this.editPatient(this.routeParameters.patientId, this.patient, this.formedFullNames);
@@ -481,7 +485,7 @@ module.exports = {
                         this.$set('uncompletedHomeSleepTests', data.uncompleted_home_sleep_test);
                         this.$set('patientNotifications', data.patient_notification);
                         this.$set('formedFullNames', data.formed_full_names);
-                        this.$set('pendingVob', data.formed_full_names);
+                        this.$set('pendingVob', data.pending_vob);
                         this.$set('patientLocation', data.patient_location);
                     }
                 }, function(response) {

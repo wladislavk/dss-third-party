@@ -163,7 +163,16 @@ module.exports = {
                 return false;
             }
 
-            
+            // if pending VOB make sure insurance hasn't changed
+            if (this.pendingVob && this.isInsuranceInfoChanged) {
+                if (this.pendingVob.status == window.constants.DSS_PREAUTH_PREAUTH_PENDING) {
+                    if(!confirm("Warning! This patient has a Verification of Benefits (VOB) that is currently awaiting pre-authorization from the insurance company. You have changed the patient's insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?"));
+                } else {
+                    if (!confirm("Warning! This patient has a pending Verification of Benefits (VOB). You have changed the patient's insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?")) {
+                        return false;
+                    }
+                }
+            }
 
             return true;
         }

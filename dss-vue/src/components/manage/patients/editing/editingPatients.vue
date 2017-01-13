@@ -1531,6 +1531,7 @@
                                 <span>
                                     <input
                                         v-model="patient.s_m_ins_ass"
+                                        v-el:s_m_ins_ass
                                         id="s_m_ins_ass_yes"
                                         type="radio"
                                         name="s_m_ins_ass"
@@ -1698,6 +1699,7 @@
                                             v-if="patient.docpcp == ''"
                                             v-model="formedFullNames.docpcp_name"
                                             v-on:keyup="onKeyUpSearchContacts('docpcp')"
+                                            v-el:docpcp_name
                                             type="text"
                                             id="docpcp_name"
                                             style="width:300px;"
@@ -1752,6 +1754,7 @@
                                             v-if="patient.docent == ''"
                                             v-model="formedFullNames.docent_name"
                                             v-on:keyup="onKeyUpSearchContacts('docent')"
+                                            v-el:docent_name
                                             type="text"
                                             id="docent_name"
                                             style="width:300px;"
@@ -1806,6 +1809,7 @@
                                             v-if="patient.docsleep == ''"
                                             v-model="formedFullNames.docsleep_name"
                                             v-on:keyup="onKeyUpSearchContacts('docsleep')"
+                                            v-el:docsleep_name
                                             type="text"
                                             id="docsleep_name"
                                             style="width:300px;"
@@ -1860,6 +1864,7 @@
                                             v-if="patient.docdentist == ''"
                                             v-model="formedFullNames.docdentist_name"
                                             v-on:keyup="onKeyUpSearchContacts('docdentist')"
+                                            v-el:docdentist_name
                                             type="text"
                                             id="docdentist_name"
                                             style="width:300px;"
@@ -1915,6 +1920,7 @@
                                             v-if="patient.docmdother == ''"
                                             v-model="formedFullNames.docmdother_name"
                                             v-on:keyup="onKeyUpSearchContacts('docmdother')"
+                                            v-el:docmdother_name
                                             type="text"
                                             id="docmdother_name"
                                             style="width:300px;"

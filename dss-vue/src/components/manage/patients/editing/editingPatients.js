@@ -1,4 +1,5 @@
 var handlerMixin = require('../../../../modules/handler/HandlerMixin.js');
+var patientValidator = require('../../../../modules/validators/PatientMixin.js');
 
 module.exports = {
     data: function() {
@@ -34,6 +35,7 @@ module.exports = {
             showReferredNotes          : false,
             showReferredPerson         : false,
             showReferredbyHints        : false,
+            isReferredByChanged        : false,
             foundReferrersByName       : [],
             foundPrimaryCareMdByName   : [],
             foundEntByName             : [],
@@ -50,7 +52,7 @@ module.exports = {
             secondaryEligiblePayers    : []
         }
     },
-    mixins: [handlerMixin],
+    mixins: [handlerMixin, patientValidator],
     events: {
         'update-header-info': function(headerInfo) {
             this.headerInfo = headerInfo;
@@ -408,6 +410,10 @@ module.exports = {
             }, this.doneTypingInterval);
         },
         setReferredBy: function(id, referredType) {
+            if (this.patient.referred_by != id || this.patient.referred_source != referredType) {
+                this.isReferredByChanged = true;
+            }
+
             this.$set('patient.referred_by', id);
             this.$set('patient.referred_source', referredType);
         },
@@ -555,161 +561,6 @@ module.exports = {
             return value.replace(/\D/g, '')
                 .replace(/^(\d{3})(\d{2})(\d{4})$/, '$1-$2-$3');
         },
-        validatePatientData: function(patient) {
-            if (trim(patient.firstname) == '') {
-                alert('First Name is Required');
-                this.$els.firstname.focus();
-
-                return false;
-            }
-
-            if (trim(patient.lastname) == '') {
-                alert('Last Name is Required');
-                this.$els.lastname.focus();
-
-                return false;
-            }
-
-            if (trim(formedFullNames.referred_name) != '' && !patient.referred_by) {
-                alert('Invalid referred by.');
-                this.$els.referredByName.focus();
-
-                return false;
-            }
-
-            var date = new Date(patient.dob);
-            if (date instanceof Date && !isNaN(date.valueOf())) {
-                alert("Invalid Date Format For Birthday. (mm/dd/YYYY) is valid format");
-                this.$els.dob.focus();
-
-                return false;
-            }
-
-            if (trim(patient.home_phone) == '' && trim(patient.work_phone) == '' && trim(patient.cell_phone) == '' && trim(patient.email) == '') {
-                alert("Either a Phone Number or Email Address are required");
-
-                return false;
-            }
-
-            if (trim(patient.preferredcontact) == 'email' && patient.email == '') {
-                alert("Email is Required if Preferred Contact Method is Email");
-                this.$els.email.focus();
-
-                return false;
-            }
-
-            if (patient.p_m_dss_file == 1) {
-                if (trim(patient.p_m_partyfname) == '') {
-                    alert("Insured Party First Name is a Required Field");
-                    this.$els.pMPartyfname.focus();
-
-                    return false;
-                } else if (trim(patient.p_m_partylname) == '') {
-                    alert("Insured Party Last Name is a Required Field");
-                    this.$els.pMPartylname.focus();
-
-                    return false;
-                } else if (trim(patient.p_m_relation) == '') {
-                    alert("Relationship to insured party is a Required Field");
-                    this.$els.pMRelation.focus();
-
-                    return false;
-                } else if (trim(patient.ins_dob) == '') {
-                    alert("Insured Date of Birth is a Required Field");
-                    this.$els.insDob.focus();
-
-                    return false;
-                } else if (trim(patient.p_m_gender) == '') {
-                    alert("Insured Gender is a Required Field");
-                    this.$els.pMGender.focus();
-
-                    return false;
-                } else if (trim(patient.p_m_ins_co) == '') {
-                    alert("Insurance Company is a Required Field");
-                    this.$els.pMInsCo.focus();
-
-                    return false;
-                } else if (trim(patient.p_m_party) == '') {
-                    alert("Insurance ID. is a Required Field");
-                    this.$els.pMParty.focus();
-
-                    return false;
-                } else if (trim(patient.p_m_ins_grp) == '') {
-                    alert("Group # is a Required Field");
-                    this.$els.pMInsGrp.focus();
-
-                    return false;
-                } else if (trim(patient.p_m_ins_plan) == '' && patient.p_m_ins_type.value != 1) {
-                    alert("Plan Name is a Required Field");
-                    this.$els.pMInsPlan.focus();
-
-                    return false;
-                } else if (trim(patient.p_m_ins_type) == '') {
-                    alert("Insurance Type is a Required Field");
-                    this.$els.pMInsType.focus();
-
-                    return false;
-                }
-
-                if (patient.has_s_m_ins == 'Yes' && patient.s_m_dss_file == 1) {
-                    if (trim(patient.s_m_partyfname) == '') {
-                        alert("Secondary Insured Party First Name is a Required Field");
-                        this.$els.sMPartyfname.focus();
-
-                        return false;
-                    } else if (trim(patient.s_m_partylname) == '') {
-                        alert("Secondary Insured Party Last Name is a Required Field");
-                        this.$els.sMPartylname.focus();
-
-                        return false;
-                    } else if (trim(patient.s_m_relation) == '') {
-                        alert("Secondary Relationship to insured party is a Required Field");
-                        this.$els.sMRelation.focus();
-
-                        return false;
-                    } else if (trim(patient.ins2_dob) == '') {
-                        alert("Secondary Insured Date of Birth is a Required Field");
-                        this.$els.ins2Dob.focus();
-
-                        return false;
-                    } else if (trim(patient.s_m_gender) == '') {
-                        alert("Secondary Insured Gender is a Required Field");
-                        this.$els.sMGender.focus();
-
-                        return false;
-                    } else if (trim(patient.s_m_ins_co) == '') {
-                        alert("Secondary Insurance Company is a Required Field");
-                        this.$els.sMInsCo.focus();
-
-                        return false;
-                    } else if (trim(patient.s_m_party) == '') {
-                        alert("Secondary Insurance ID. is a Required Field");
-                        this.$els.sMParty.focus();
-
-                        return false;
-                    } else if (trim(patient.s_m_ins_grp) == '') {
-                        alert("Secondary Group # is a Required Field");
-                        this.$els.sMInsGrp.focus();
-
-                        return false;
-                    } else if (trim(patient.s_m_ins_plan) == "" && patient.p_m_ins_type.value != 1) {
-                        alert("Secondary Plan Name is a Required Field");
-                        this.$els.sMInsPlan.focus();
-
-                        return false;
-                    } else if (trim(patient.s_m_ins_type) == '') {
-                        alert("Secondary Insurance Type is a Required Field");
-                        this.$els.sMInsType.focus();
-
-                        return false;
-                    }
-                }
-
-                
-            }
-
-            return true;
-        },
         getUncompletedHomeSleepTests: function(patientId) {
             var data = { patientId: patientId || 0};
 
@@ -792,6 +643,10 @@ module.exports = {
             trackerNotes
         ) {
             patientFormData['referredby_name'] = formedFullNames.referred_name;
+            patientFormData['docsleep_name'] = formedFullNames.docsleep_name;
+            patientFormData['docpcp_name'] = formedFullNames.docpcp_name;
+            patientFormData['docdentist_name'] = formedFullNames.docdentist_name;
+            patientFormData['docent_name'] = formedFullNames.docent_name;
 
             var data = {
                 patient_form_data  : patientFormData

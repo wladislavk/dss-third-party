@@ -1,44 +1,61 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-    include_once('admin/includes/main_include.php');
-    include("includes/sescheck.php");
-    include_once('admin/includes/password.php');
-    //include('includes/general_functions.php');
-    include 'includes/constants.inc';
-?>
-
-    <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
-    <script type="text/javascript" src="/manage/includes/modal.js"></script>
-    <link rel="stylesheet" href="/manage/admin/css/jquery-ui-1.8.22.custom.css" />
-    <link rel="stylesheet" href="css/modal.css" />
-
 <?php
-    if(isset($_POST['email_but'])){
-        $mailerData = retrieveMailerData($_POST['pid']);
+namespace Ds3\Libraries\Legacy;
 
-        $pat = $mailerData['patientData'];
-        $location_info = $mailerData['mailingData'];
-        $mailerData = $location_info + $pat;
-        $filename = "user_pin_{$pat['patientid']}.pdf";
+require_once __DIR__ . '/admin/includes/main_include.php';
+require_once __DIR__ . '/includes/sescheck.php';
+require_once __DIR__ . '/admin/includes/password.php';
+require_once __DIR__ . '/includes/constants.inc';
 
-        // Set active_status = 2
-        sendRegEmail($pat['patientid'], $pat['email'], '', $pat['email'], 2);
+$patientId = intval($_GET['pid']);
 
-        $template = getTemplate('patient/pin-instructions');
-        $html = parseTemplate($template, $mailerData);
+$patientQuery = "SELECT access_code, access_code_date
+    FROM dental_patients
+    WHERE patientid = '$patientId'";
+$patientData = $db->getRow($patientQuery);
 
-        create_pdf('User Temporary PIN', $filename, $html, null, '', '', '', $_SESSION['docid']);
+$isResetAccessCode = empty($patientData['access_code']) || (isset($_GET['reset']) && !isset($_POST['email_but']));
 
-        echo "<br /><br /><h3>Temporary PIN document created and email sent to patient.</h3>";
+if ($isResetAccessCode) {
+    $accessCode = rand(100000, 999999);
+    $db->query("UPDATE dental_patients
+        SET access_code = '$accessCode', access_code_date = NOW()
+        WHERE patientid = '$patientId'");
+
+    $patientData = $db->getRow($patientQuery);
+}
+
+if (isset($_POST['email_but'])) {
+    $mailerData = retrieveMailerData($_POST['pid']);
+
+    $pat = $mailerData['patientData'];
+    $location_info = $mailerData['mailingData'];
+    $mailerData = $location_info + $pat;
+    $filename = "user_pin_{$pat['patientid']}.pdf";
+
+    // Set active_status = 2
+    sendRegEmail($pat['patientid'], $pat['email'], '', $pat['email'], 2);
+
+    $template = getTemplate('patient/pin-instructions');
+    $html = parseTemplate($template, $mailerData);
+
+    create_pdf('User Temporary PIN', $filename, $html, null, '', '', '', $_SESSION['docid']);
+
     ?>
-        <script type="text/javascript">
-            window.location = 'letterpdfs/<?php echo  $filename; ?>';
-        </script>
+    <br /><br />
+    <h3>Temporary PIN document created and email sent to patient.</h3>
+    <script type="text/javascript">
+        window.location = 'letterpdfs/<?php echo  $filename; ?>';
+    </script>
     <?php
-        trigger_error("Die called", E_USER_ERROR);
-    }
-    ?>
 
+    trigger_error("Die called", E_USER_ERROR);
+}
+
+$accessCode = $patientData['access_code'];
+$startDate = date('m/d/Y', strtotime($patientData['access_code_date']));
+$expirationDate = date('m/d/Y', strtotime(date('Y-m-d', strtotime($patientData['access_code_date'])). '+5 days'));
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -46,39 +63,32 @@
         <link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
         <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
-        <script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
+        <script type="text/javascript" src="/manage/includes/modal.js"></script>
         <script type="text/javascript" src="script/validation.js"></script>
+        <link rel="stylesheet" href="/manage/admin/css/jquery-ui-1.8.22.custom.css" />
+        <link rel="stylesheet" href="css/modal.css" />
     </head>
-
     <body style="background:#fff;">
         <br />
         <h3>Online Patient Registration Without Text Messaging:</h3>
-        <?php
-            $a_sql = "SELECT access_code, access_code_date FROM dental_patients WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-            
-            $a_r = $db->getRow($a_sql);
-            if($a_r['access_code']!='' && !isset($_GET['reset'])){
-            $access_code = $a_r['access_code'];
-            $c_date = date('m/d/Y', strtotime($a_r['access_code_date'])); 
-            $e_date = date('m/d/Y', strtotime(date('Y-m-d', strtotime($a_r['access_code_date']) ). "+5 days"));
-        ?>
-        A temporary PIN was created for this patient on <?php echo  $c_date; ?> and is valid until <?php echo  $e_date; ?>.  The temporary PIN is: <?php echo  $access_code; ?>.
-        <br /><br />
-        <a href="patient_access_code.php?pid=<?php echo  $_GET['pid']; ?>&reset=1">Generate New PIN</a>
-        <?php
-            }else{
-                $access_code = rand(100000, 999999);
-                $ins_sql = "UPDATE dental_patients set access_code='".$access_code."', access_code_date = NOW() WHERE patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-                
-                $db->query($ins_sql);
-        ?> 
-                <p>Is this patient unable or unwilling to receive text messages?  If so you can generate a temporary PIN that will allow the user to register without receiving a text message activation code.</p>
-                <p>Temporary PIN: <?php echo  $access_code; ?></p>
-                <form method="post">
-                    <input type="hidden" name="pid" value="<?php echo  (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>" />
-                    <input type="hidden" name="access_code" value="<?php echo  $access_code; ?>" />
-                    <input type="submit" name="email_but" value="Email Patient and Print PIN" />
-                </form>
+        <?php if ($isResetAccessCode) { ?>
+            <p>
+                Is this patient unable or unwilling to receive text messages?
+                If so you can generate a temporary PIN that will allow the user to register without receiving a text message activation code.
+            </p>
+            <p>Temporary PIN: <?= $accessCode ?></p>
+            <form method="post">
+                <input type="hidden" name="pid" value="<?= $patientId ?>" />
+                <input type="hidden" name="access_code" value="<?= $accessCode ?>" />
+                <input type="submit" name="email_but" value="Email Patient and Print PIN" />
+            </form>
+        <?php } else { ?>
+            A temporary PIN was created for this patient on <?= $startDate ?> and is valid until <?= $expirationDate ?>.
+            The temporary PIN is: <?= $accessCode ?>.
+            <br /><br />
+            <a href="?pid=<?= $patientId ?>&reset=1">Generate New PIN</a>
         <?php } ?>
     </body>
 </html>

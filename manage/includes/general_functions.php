@@ -1036,10 +1036,11 @@ function logRequestData () {
     $logData = $db->escapeAssignmentList([
         'patientid' => intval($_SESSION['patientid']),
         'userid' => intval($_SESSION['userid']),
-        'adminid' => intval($_SESSION['adminid']),
+        'adminid' => intval($_SESSION['adminuserid']),
         'script' => $_SERVER['SCRIPT_NAME'],
         'referer' => $_SERVER['HTTP_REFERER'],
         'request_time' => $_SERVER['REQUEST_TIME_FLOAT'],
+        'ip_address' => $_SERVER['REMOTE_ADDR'],
         'get_data' => json_encode($_GET),
         'post_data' => json_encode($postData),
         'files_data' => json_encode($_FILES)

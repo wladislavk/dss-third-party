@@ -239,7 +239,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
             <div class="form-group">
                 <label for="state" class="col-md-3 control-label">State</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?php echo  $state ?>">
+                    <input type="text" class="form-control" name="state" id="state" placeholder="State" autocomplete="off" value="<?php echo  $state ?>">
                 </div>
             </div>
             <div class="form-group">

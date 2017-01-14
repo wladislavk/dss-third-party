@@ -1619,7 +1619,7 @@ if($themyarray['use_patient_portal']==1){
                 <label for="city">City</label>
               </span>
               <span>
-                <input id="state" name="state" type="text" class="field text addr tbox" value="<?php echo $state?>" style="width:25px;" maxlength="2" />
+                <input id="state" name="state" type="text" autocomplete="off" class="field text addr tbox" value="<?php echo $state?>" style="width:25px;" maxlength="2" />
                 <label for="state">State</label>
               </span>
               <span>
@@ -1890,7 +1890,7 @@ for($i=80;$i<=500;$i++){?>
                 <label for="emp_city">City</label>
               </span>
               <span>
-                <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?php echo $emp_state?>"  style="width:80px;" maxlength="255" />
+                <input id="emp_state" name="emp_state" type="text" autocomplete="off" class="field text addr tbox" value="<?php echo $emp_state?>"  style="width:80px;" maxlength="255" />
                 <label for="emp_state">State</label>
               </span>
               <span>
@@ -1992,7 +1992,7 @@ if($exclusive_billing){
                 <label for="p_m_city">Insured City</label>
               </span>
               <span>
-                <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?php echo $p_m_state?>"  style="width:80px;" maxlength="2" />
+                <input id="p_m_state" name="p_m_state" type="text" autocomplete="off" class="field text addr tbox" value="<?php echo $p_m_state?>"  style="width:80px;" maxlength="2" />
                 <label for="p_m_state">Insured State</label>
               </span>
               <span>
@@ -2195,7 +2195,7 @@ if($api_r['use_eligible_api']==1){
                 <label for="s_m_city">Insured City</label>
               </span>
               <span>
-                <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?php echo $s_m_state?>"  style="width:80px;" maxlength="2" />
+                <input id="s_m_state" name="s_m_state" type="text" autocomplete="off" class="field text addr tbox" value="<?php echo $s_m_state?>"  style="width:80px;" maxlength="2" />
                 <label for="s_m_state">Insured State</label>
               </span>
               <span>

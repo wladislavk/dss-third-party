@@ -6,7 +6,7 @@ require_once __DIR__ . '/includes/main_include.php';
 if (!empty($_POST['report'])) {
     $logData = $db->escapeAssignmentList([
         'userid' => intval($_SESSION['userid']),
-        'adminid' => intval($_SESSION['adminid']),
+        'adminid' => intval($_SESSION['adminuserid']),
         'report' => $_POST['report'],
         'ip_address' => $_SERVER['REMOTE_ADDR'],
         'referrer' => $_SERVER['HTTP_REFERER']

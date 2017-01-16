@@ -77,10 +77,8 @@ module.exports = {
             }
         },
         '$route.query.viewed': function() {
-            if (this.$route.query.viewed === 1) {
+            if (this.$route.query.viewed) {
                 this.$set('routeParameters.viewed', this.$route.query.viewed);
-            } else {
-                this.$set('routeParameters.viewed', 0);
             }
         },
         'routeParameters': {
@@ -104,11 +102,11 @@ module.exports = {
                 (this.routeParameters.sortColumn == 'p.lastname' && sort == 'patient_name')) {
                 return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc';
             } else {
-                return sort === 'patient_name' ? 'asc': 'desc';
+                return sort === 'patient_name' ? 'asc' : 'desc';
             }
         },
         getViewed: function() {
-            return this.routeParameters.viewed === 1 ? 0 : 1;
+            return this.$route.query.viewed === 1 ? this.routeParameters.viewed = 0 : this.routeParameters.viewed = 1;
         },
         getVobs: function() {
             this.findVobs(                

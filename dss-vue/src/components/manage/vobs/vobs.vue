@@ -11,7 +11,7 @@
                     pid     : routeParameters.patientId,
                     sort    : routeParameters.sortColumn,
                     sortdir : routeParameters.sortDirection,
-                    viewed  : getViewed()
+                    viewed  : 1
                 }
             }"
             style="float:right; margin-right:10px;" 
@@ -27,7 +27,7 @@
                     pid     : routeParameters.patientId,
                     sort    : routeParameters.sortColumn,
                     sortdir : routeParameters.sortDirection,
-                    viewed  : getViewed()
+                    viewed  : 0
                 }
             }"
             style="float:right; margin-right:10px;" 

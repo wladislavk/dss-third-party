@@ -188,6 +188,7 @@
                                     <input
                                         v-model="patient.cell_phone"
                                         v-on:change="onChangePhone"
+                                        v-el:cell_phone
                                         id="cell_phone"
                                         name="cell_phone"
                                         type="text"
@@ -295,6 +296,7 @@
                                 <span>
                                     <input
                                         v-model="patient.add1"
+                                        v-el:add1
                                         id="add1"
                                         name="add1"
                                         type="text"
@@ -319,6 +321,7 @@
                                 <span>
                                     <input
                                         v-model="patient.city"
+                                        v-el:city
                                         id="city"
                                         name="city"
                                         type="text"
@@ -331,6 +334,7 @@
                                 <span>
                                     <input
                                         v-model="patient.state"
+                                        v-el:state
                                         id="state"
                                         name="state"
                                         type="text"
@@ -343,6 +347,7 @@
                                 <span>
                                     <input
                                         v-model="patient.zip"
+                                        v-el:zip
                                         id="zip"
                                         name="zip"
                                         type="text"
@@ -394,6 +399,7 @@
                                 <span>
                                     <select
                                         v-model="patient.gender"
+                                        v-el:gender
                                         name="gender"
                                         id="gender"
                                         class="field text addr tbox"
@@ -1011,7 +1017,7 @@
                                 <span>
                                     <input
                                         v-model="patient.ins_dob"
-                                        v-on:change="handleChangingInsuranceInfo"
+                                        v-on:change="handleChangingInsuranceInfo, validateDate(patient.ins_dob)"
                                         v-el:ins_dob
                                         id="ins_dob"
                                         name="ins_dob"
@@ -1019,7 +1025,6 @@
                                         class="field text addr tbox calendar"
                                         maxlength="255"
                                         style="width:150px;"
-                                        onChange="validateDate('ins_dob');"
                                     />
                                     <label for="ins_dob">Insured Date of Birth</label>
                                 </span>
@@ -1422,13 +1427,13 @@
                                     <input
                                         v-model="patient.ins2_dob"
                                         v-el:ins2_dob
+                                        v-on:change="validateDate(patient.ins2_dob)"
                                         id="ins2_dob"
                                         name="ins2_dob"
                                         type="text"
                                         class="field text addr tbox calendar"
                                         maxlength="255"
                                         style="width:150px;"
-                                        onChange="validateDate('ins2_dob');"
                                     />
                                     <label for="ins2_dob">Insured Date of Birth</label>
                                 </span>

@@ -15,6 +15,10 @@ module.exports = {
                 exclusive : 0,
                 name      : 'DSS'
             },
+            pressedButtons : {
+                registration : false,
+                reminder     : false
+            },
             componentParams            : {},
             patientNotifications       : [],
             homeSleepTestCompanies     : [],
@@ -238,12 +242,21 @@ module.exports = {
             this.isInsuranceInfoChanged = true;
         },
         submitAddingOrEditingPatient: function() {
-            if (this.validatePatientData(this.patient)) {
-                this.editPatient(this.routeParameters.patientId, this.patient, this.formedFullNames);
+            if (this.validatePatientData(this.patient, this.pressedButtons)) {
+                this.checkEmail(function(response) {
+                    var data = response.data.data;
+
+                    if (confirm(data.confirm_message)) {
+                        this.editPatient(this.routeParameters.patientId, this.patient, this.formedFullNames);
+                    }
+                }, function(response) {
+                    alert(response.message);
+                    this.handleErrors('checkEmail', response);
+                });
             }
         },
         submitSendingPinCode: function() {
-            if (this.validatePatientData(this.patient)) {
+            if (this.validatePatientData(this.patient, this.pressedButtons)) {
                 this.editPatient(
                     this.routeParameters.patientId,
                     this.patient,
@@ -669,6 +682,11 @@ module.exports = {
             }
 
             return this.$http.post(window.config.API_PATH + 'patients/edit/' + patientId, data);
+        },
+        checkEmail: function(email, patientId) {
+            var data = { email: email, patient_id: patientId };
+
+            return this.$http.post(window.config.API_PATH + 'patients/check-email', data);
         }
     }
 }

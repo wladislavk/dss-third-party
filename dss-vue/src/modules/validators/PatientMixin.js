@@ -33,10 +33,17 @@ module.exports = {
                 }
             }
         },
-        validatePatientData: function(patient) {
+        validatePatientData: function(patient, pressedButtons) {
             var messages = {
-                firstname : 'First Name is Required',
-                lastname  : 'Last Name is Required'
+                firstname  : 'First Name is Required',
+                lastname   : 'Last Name is Required',
+                email      : 'Email is Required',
+                add1       : 'Address is Required',
+                city       : 'City is Required',
+                state      : 'State is Required',
+                zip        : 'Zip is Required',
+                gender     : 'Gender is Required',
+                cell_phone : 'Cell phone is Required'
             };
 
             if (!this.walkThroughMessages(messages, patient)) {
@@ -58,15 +65,8 @@ module.exports = {
                 return false;
             }
 
-            if (trim(patient.home_phone) == '' && trim(patient.work_phone) == '' && trim(patient.cell_phone) == '' && trim(patient.email) == '') {
-                alert("Either a Phone Number or Email Address are required");
-
-                return false;
-            }
-
-            if (trim(patient.preferredcontact) == 'email' && patient.email == '') {
-                alert("Email is Required if Preferred Contact Method is Email");
-                this.$els.email.focus();
+            if (trim(patient.home_phone) == '' && trim(patient.work_phone) == '' && trim(patient.cell_phone) == '') {
+                alert("Phone Number is required");
 
                 return false;
             }
@@ -174,7 +174,39 @@ module.exports = {
                 }
             }
 
+            if (
+                pressedButtons && pressedButtons.registration &&
+                !confirm(
+                    'You are about to send the patient a registration email. \
+                    The patient will receive a text message activation code by clicking \
+                    a link contained in this email, and the patient can complete his/her \
+                    forms online. Are you sure you want to continue?'
+                )
+            ) {
+                return false;
+            }
+
+            if (
+                pressedButtons && pressedButtons.reminder &&
+                !confirm(
+                    'You are about to send the patient an email. \
+                    Are you sure you want to continue?'
+                )
+            ) {
+                return false;
+            }
+
             return true;
+        },
+        validateDate: function(date) {
+            var dateObject = new Date(date);
+            if (dateObject instanceof Date && !isNaN(dateObject.valueOf())) {
+                alert('Invalid Day, Month, or Year range detected. Please correct.');
+
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 }

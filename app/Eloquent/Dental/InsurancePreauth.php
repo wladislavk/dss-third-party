@@ -113,7 +113,7 @@ class InsurancePreauth extends Model implements Resource, Repository
         // }
 
         if($viewed == 0) {
-            $query = $query->whereRaw('(preauth.viewed = \'0\' OR preauth.viewed IS NULL)');
+            $query = $query->where('preauth.viewed', '=', 0)->orWhere('preauth.viewed', '=', 'NULL');
         }
 
         $results = $query->orderBy($sortColumn, $sortDir)

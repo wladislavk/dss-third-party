@@ -270,14 +270,6 @@ class PatientsController extends Controller
             $this->validate($patientFormData, $patientStoreValidator->rules());
         }
 
-        // check patient email address
-        if (!$this->isPatientEmailValid($patientFormData['email'], $patientId)) {
-            return ApiResponse::responseError(
-                $message = 'Error: The email address you entered is already associated with another patient. Please enter a different email address.',
-                $code = 417
-            );
-        }
-
         // check if the request contains tracker notes
         if ($request->has('tracker_notes')) {
             $this->validate($request->input('tracker_notes'), $patientSummaryValidator->rules());
@@ -675,6 +667,24 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $response);
     }
 
+    public function checkEmail(Request $request, Patient $patientResource)
+    {
+        $email = $request->input('email', '');
+        $patientId = $request->input('patient_id', 0);
+
+        // check patient email address
+        if ($this->isPatientEmailValid($email, $patientId) && $this->confirmPatientEmail($email, $patientId)) {
+            return ApiResponse::responseOk('', [
+                'confirm_message' => "You have changed the patient's email address. The patient must be notified via email or he/she will not be able to access the Patient Portal. Send email notification and proceed?"
+            ]);
+        } else {
+            return ApiResponse::responseError(
+                $message = 'The email address you entered is already associated with another patient. Please enter a different email address.',
+                $code = 417
+            );
+        }
+    }
+
     private function getDocNameFromShortInfo($field, $shortInfo)
     {
         if ($field != 'Not Set' && $shortInfo) {
@@ -719,6 +729,21 @@ class PatientsController extends Controller
             return false;
         } else {
             return true;
+        }
+    }
+
+    private function confirmPatientEmail(Patient $patientResource, $email, $patientId)
+    {
+        $patient = $patientResource->getPatientInfoWithDocInfo($patientId);
+
+        if (
+            $patient && in_array($patient->registration_status, [1, 2]) &&
+            $patient->use_patient_portal == 1 && $patient->doc_use_patient_portal == 1 &&
+            $patient->email != $email
+        ) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

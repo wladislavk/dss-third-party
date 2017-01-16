@@ -785,4 +785,13 @@ class Patient extends Model implements Resource, Repository
                 });
             })->count();
     }
+
+    public function getPatientInfoWithDocInfo($patientId)
+    {
+        return $this->select('dp.*', 'du.use_patient_portal AS doc_use_patient_portal')
+            ->from(DB::raw('dental_patients dp'))
+            ->join(DB::raw('dental_users du'), 'du.userid', '=', 'dp.docid')
+            ->where('dp.patientid', $patientId)
+            ->first();
+    }
 }

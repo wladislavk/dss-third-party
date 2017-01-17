@@ -16,6 +16,10 @@ module.exports = {
                 name      : 'DSS'
             },
             pressedButtons : {
+                send_pin_code : false,
+                send_hst      : false
+            },
+            requestedEmails : {
                 registration : false,
                 reminder     : false
             },
@@ -242,7 +246,7 @@ module.exports = {
             this.isInsuranceInfoChanged = true;
         },
         submitAddingOrEditingPatient: function() {
-            if (this.validatePatientData(this.patient, this.pressedButtons)) {
+            if (this.validatePatientData(this.patient)) {
                 this.checkEmail(function(response) {
                     var data = response.data.data;
 
@@ -256,12 +260,59 @@ module.exports = {
             }
         },
         submitSendingPinCode: function() {
-            if (this.validatePatientData(this.patient, this.pressedButtons)) {
+            if (this.validatePatientData(this.patient)) {
+                this.pressedButtons.send_pin_code = true;
+
                 this.editPatient(
                     this.routeParameters.patientId,
                     this.patient,
                     this.formedFullNames,
-                    { send_pin: true }
+                    this.pressedButtons
+                );
+            }
+        },
+        submitSendingRegistrationEmail: function() {
+            this.requestedEmails.registration = true;
+
+            if (this.validatePatientData(this.patient, this.requestedEmails)) {
+                this.editPatient(
+                    this.routeParameters.patientId,
+                    this.patient,
+                    this.formedFullNames,
+                    null,
+                    this.requestedEmails
+                );
+            }
+        },
+        submitSendingReminderEmail: function() {
+            this.requestedEmails.reminder = true;
+
+            if (this.validatePatientData(this.patient, this.requestedEmails)) {
+                this.editPatient(
+                    this.routeParameters.patientId,
+                    this.patient,
+                    this.formedFullNames,
+                    null,
+                    this.requestedEmails
+                );
+            }
+        },
+        submitSendingHst: function() {
+            if (
+                confirm(
+                    'Click OK to initiate a Home Sleep Test request. \
+                    The HST request must be electronically signed by an authorized \
+                    provider before it can be transmitted. You can view and save/update \
+                    the request on the next screen.'
+                ) && this.validatePatientData(this.patient)
+            ) {
+                this.pressedButtons.send_hst = true;
+
+                this.editPatient(
+                    this.routeParameters.patientId,
+                    this.patient,
+                    this.formedFullNames,
+                    this.pressedButtons
                 );
             }
         },

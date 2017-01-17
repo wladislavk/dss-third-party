@@ -37,7 +37,7 @@
                 </td>
                 <td align="right">
                     <input
-                        v-on:click.prevent=""
+                        v-on:click.prevent="submitAddingOrEditingPatient"
                         :value="buttonText + 'Patient'"
                         type="submit"
                         style="float:right; margin-left: 5px;"
@@ -46,6 +46,7 @@
                     <template v-if="showSendingEmails">
                         <input
                             v-if="patient.registration_status == 1 || patient.registration_status == 0"
+                            v-on:click="submitSendingRegistrationEmail"
                             type="submit"
                             name="sendReg"
                             value="Send Registration Email"
@@ -53,6 +54,7 @@
                         />
                         <input
                             v-else
+                            v-on:click.prevent="submitSendingReminderEmail"
                             type="submit"
                             name="sendRem"
                             value="Send Reminder Email"
@@ -68,9 +70,9 @@
                         >Order HST</a>
                         <input
                             v-else
+                            v-on:click.prevent="submitSendingHst"
                             type="submit"
                             name="sendHST"
-                            onclick="return confirm('Click OK to initiate a Home Sleep Test request. The HST request must be electronically signed by an authorized provider before it can be transmitted. You can view and save/update the request on the next screen.');"
                             value="Order HST"
                             class="button"
                         />

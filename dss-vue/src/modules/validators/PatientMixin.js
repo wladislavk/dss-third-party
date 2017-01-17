@@ -33,7 +33,7 @@ module.exports = {
                 }
             }
         },
-        validatePatientData: function(patient, pressedButtons) {
+        validatePatientData: function(patient, requestedEmails) {
             var messages = {
                 firstname  : 'First Name is Required',
                 lastname   : 'Last Name is Required',
@@ -175,7 +175,7 @@ module.exports = {
             }
 
             if (
-                pressedButtons && pressedButtons.registration &&
+                requestedEmails && requestedEmails.registration &&
                 !confirm(
                     'You are about to send the patient a registration email. \
                     The patient will receive a text message activation code by clicking \
@@ -187,7 +187,7 @@ module.exports = {
             }
 
             if (
-                pressedButtons && pressedButtons.reminder &&
+                requestedEmails && requestedEmails.reminder &&
                 !confirm(
                     'You are about to send the patient an email. \
                     Are you sure you want to continue?'

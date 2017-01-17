@@ -33,9 +33,9 @@ class LetterHelper
         User $user,
         Fax $fax,
         GeneralHelper $generalHelper,
-        $docId,
-        $patientId,
-        $userType
+        $docId = 0,
+        $patientId = 0,
+        $userType = 0
     ) {
         $this->letter = $letter;
         $this->patient = $patient;
@@ -238,7 +238,7 @@ class LetterHelper
                     $data = [
                         'md_list'    => $newMds,
                         'cc_md_list' => $newCcMds
-                    ]
+                    ];
                 } elseif ($type == 'md_referral') {
                     $data = [
                         'md_referral_list'    => $newMdReferrals,

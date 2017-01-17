@@ -17,7 +17,7 @@ class GeneralHelper
         $this->contact = $contact;
     }
 
-    public function function isSharedFile($name)
+    public function isSharedFile($name)
     {
         return strlen($name) && is_file(Q_FILE_FOLDER . $name);
     }

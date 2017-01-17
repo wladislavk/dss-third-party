@@ -25,6 +25,7 @@ use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
+use Validator;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -235,14 +236,11 @@ class PatientsController extends Controller
         Summaries $summariesResource,
         Letter $letterResource,
         User $userResource,
-        Request $request,
-        PatientSummaryUpdate $patientSummaryValidator
-        PatientStore $patientStoreValidator,
-        PatientUpdate $patientUpdateValidator,
+        Request $request
     ) {
         $docId = $this->currentUser->docid ?: 0;
         $userType = $this->currentUser->user_type ?: 0;
-        $userId = $this->currentUser->userid ?: 0;
+        $userId = $this->currentUser->id ?: 0;
 
         // check if the request has emails for sending
         $emailTypesForSending = $request->has('requested_emails') ? $request->input('requested_emails') : false;
@@ -260,19 +258,19 @@ class PatientsController extends Controller
         }
 
         // get form data for a current patient
-        $patientFormData = $request->input('patient_form_data');
-        $usePatientPortal = $patientFormData['use_patient_portal'];
+        $patientFormData = $request->input('patient_form_data') ?: [];
+        $usePatientPortal = !empty($patientFormData['use_patient_portal']) ? $patientFormData['use_patient_portal'] : 0;
 
         // validate input patient form data
-        if (patientId) {
-            $this->validate($patientFormData, $patientUpdateValidator->rules());
+        if ($patientId) {
+            Validator::make($patientFormData, (new PatientUpdate())->rules())->validate();
         } else {
-            $this->validate($patientFormData, $patientStoreValidator->rules());
+            Validator::make($patientFormData, (new PatientStore())->rules())->validate();
         }
 
         // check if the request contains tracker notes
         if ($request->has('tracker_notes')) {
-            $this->validate($request->input('tracker_notes'), $patientSummaryValidator->rules());
+            $this->validate($request->input('tracker_notes'), (new PatientSummaryUpdate())->rules());
 
             $patientSummaryResource->updateTrackerNotes($patientId, $docId, $request->input('tracker_notes'));
 
@@ -455,7 +453,7 @@ class PatientsController extends Controller
                 }
             }
 
-            if ($pressedButtons && $pressedButtons['sendHST']) {
+            if ($pressedButtons && $pressedButtons['send_hst']) {
                 $responseData['redirect_to'] = 'hst_request_co.php?ed=' . $patientId;
             }
 

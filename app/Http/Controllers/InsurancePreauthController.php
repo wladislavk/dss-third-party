@@ -118,7 +118,7 @@ class InsurancePreauthController extends Controller
         $sortColumn      = $request->input('sortColumn') ?: 'status';
         $sortDir         = $request->input('sortDir') ?: 'desc';
         // $status          = $request->input('status') ?: '';
-        $viewed          = $request->input('viewed') ?: 1;
+        $viewed          = $request->input('viewed');
 
         $data = $resources->getListVobs(
             $docId, 

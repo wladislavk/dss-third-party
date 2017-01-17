@@ -127,6 +127,10 @@ class InsurancePreauth extends Model implements Resource, Repository
             ->from(DB::raw('dental_insurance_preauth preauth'))
             ->where('preauth.doc_id', '=', $docId);
 
+        if($viewed == 0) {
+            $countQuery = $countQuery->where('preauth.viewed', '=', 0)->orWhere('preauth.viewed', '=', 'NULL');
+        }
+
         $countResult = $countQuery->get();
 
         return [

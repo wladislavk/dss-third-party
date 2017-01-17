@@ -196,6 +196,16 @@ module.exports = {
                 return false;
             }
 
+            if (patient.s_m_dss_file == 1 && patient.p_m_dss_file != 1) {
+                alert(this.billingCompany.name + ' must file Primary Insurance in order to file Secondary Insurance.');
+
+                return false;
+            }
+
+            if (patient.s_m_ins_type == 1) {
+                alert("Warning! It is very rare that Medicare is listed as a patient’s Secondary Insurance.  Please verify that Medicare is the secondary payer for this patient before proceeding.");
+            }
+
             return true;
         },
         validateDate: function(date) {

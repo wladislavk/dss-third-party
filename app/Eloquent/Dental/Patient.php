@@ -577,7 +577,7 @@ class Patient extends Model implements Resource, Repository
 
         $contactidList = '';
 
-        if ($contactQuery) {
+        if (!empty($contactQuery)) {
             $contacts = $contactQuery->get();
 
             if (count($contacts)) {
@@ -599,8 +599,8 @@ class Patient extends Model implements Resource, Repository
      */
     public function getSimilarPatientLogin($login = '')
     {
-        $this->select('login')
-            ->where('login', 'LIKE', $login . '%')
+        return $this->select('login')
+            ->where('login', 'like', $login . '%')
             ->orderBy('login', 'desc')
             ->first();
     }

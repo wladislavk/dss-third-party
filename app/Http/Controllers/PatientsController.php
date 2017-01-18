@@ -25,7 +25,6 @@ use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
-use Validator;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -263,9 +262,15 @@ class PatientsController extends Controller
 
         // validate input patient form data
         if ($patientId) {
-            Validator::make($patientFormData, (new PatientUpdate())->rules())->validate();
+            $validator = $this->getValidationFactory()->make($patientFormData, (new PatientUpdate())->rules());
         } else {
-            Validator::make($patientFormData, (new PatientStore())->rules())->validate();
+            $validator = $this->getValidationFactory()->make($patientFormData, (new PatientStore())->rules());
+        }
+
+        if ($validator->fails()) {
+            return ApiResponse::responseError('', 422, $validator->messages());
+        } elseif (count($patientFormData) == 0) {
+            return ApiResponse::responseError('Patient data is empty.', 422);
         }
 
         // check if the request contains tracker notes
@@ -277,8 +282,7 @@ class PatientsController extends Controller
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
-        // $letterHelpers = new LetterHelper($docId, $patientId);
-
+        $letterHelper->setIdentificators($docId, $patientId, $userType);
         $letterHelper->triggerPatientTreatmentComplete();
 
         // need to add logic for logging actions
@@ -291,7 +295,6 @@ class PatientsController extends Controller
 
         if ($similarPatientLogin) {
             $number = str_replace($uniqueLogin, '', $similarPatientLogin->login);
-
             $uniqueLogin = $uniqueLogin . ++$number;
         }
 

@@ -50,10 +50,17 @@ class LetterHelper
         $this->userType = $userType;
     }
 
+    public function setIdentificators($docId, $patientId, $userType)
+    {
+        $this->docId = $docId;
+        $this->patientId = $patientId;
+        $this->userType = $userType;
+    }
+
     public function triggerPatientTreatmentComplete()
     {
         if ($this->patientId) {
-            $currentPatient = $this->patient->getWithFilter([
+            $foundPatients = $this->patient->getWithFilter([
                 'referred_source', 'docsleep', 'docpcp', 'docdentist',
                 'docent', 'docmdother', 'docmdother2', 'docmdother3'
             ], [
@@ -61,7 +68,8 @@ class LetterHelper
             ]);
         }
 
-        $patientReferralIds = $this->patient->getPatientReferralIds($this->patientId, $currentPatient[0]);
+        $currentPatient = !empty($foundPatients) ? $foundPatients[0] : null;
+        $patientReferralIds = $this->patient->getPatientReferralIds($this->patientId, $currentPatient);
 
         $letterId = 0;
 
@@ -69,9 +77,10 @@ class LetterHelper
             $letters = $this->letter->getPatientTreatmentComplete($this->patientId, $patientReferralIds);
 
             if (!count($letters)) {
-                $contactIds = $this->contact->getMdContactIds($this->patientId, $currentPatient);
+                // this logic exists in the legacy code, but is not used anywhere
+                // $contactIds = $this->contact->getMdContactIds($this->patientId, $currentPatient);
 
-                $letterId = $this->createLetter($letterid, $pid, '', '', '', '', $pt_referral_list);
+                $letterId = $this->createLetter($id = 20, ['pid' => $this->patientId, 'pat_referral_list' => $patientReferralIds]);
             }
         }
 
@@ -262,37 +271,62 @@ class LetterHelper
         }
     }
 
-    private function createLetter($data = []) {
+    private function createLetter($templateId, $args = []) {
+        $defaultArgs = [
+            'pid'                  => null,
+            'info_id'              => null,
+            'topatient'            => null,
+            'md_list'              => null,
+            'md_referral_list'     => null,
+            'pat_referral_list'    => null,
+            'parentid'             => null,
+            'template'             => null,
+            'send_method'          => null,
+            'status'               => null,
+            'deleted'              => null,
+            'check_recipient'      => true,
+            'template_type'        => null,
+            'cc_topatient'         => null,
+            'cc_md_list'           => null,
+            'cc_md_referral_list'  => null,
+            'cc_pat_referral_list' => null,
+            'font_size'            => null,
+            'font_family'          => null
+        ];
+
+        $args = array_merge($defaultArgs, $args);
+
         if ($this->docId > 0) {
-            $user = $this->user->getWithFilter(['use_letters'], [
+            $foundUsers = $this->user->getWithFilter(['use_letters'], [
                 'userid' => $this->docId
             ]);
 
-            if ($user && $user->use_letters != 1) {
+            $doctor = count($foundUsers) ? $foundUsers[0] : null;
+
+            if (!empty($doctor) && $doctor->use_letters != 1) {
                 return -1;
             }
         }
 
-        if ((!$data['to_patient'] && !$data['md_referral_list'] && !$data['md_list'] && !$data['patient_referral_list']) ||
-            ($data['check_recipient'] && !$data['md_referral_list'] && !$data['md_list'] &&
-            ($data['templateid'] == 16 || $data['templateid'] == 19))
+        if ((empty($args['topatient']) && empty($args['md_referral_list']) && empty($args['md_list']) && empty($args['patient_referral_list']) ||
+            ($args['check_recipient'] && empty($args['md_referral_list']) && empty($args['md_list']) &&
+            ($templateId == 16 || $templateId == 19)))
         ) {
             return false;
         }
 
-        if (!isset($data['templateid'])) {
-            return "Error: Letter Template not specified";
+        //To remove referral source from md list if exists
+        $mdArray = explode(',', $args['md_list']);
+
+        if(($key = array_search($args['md_referral_list'], $mdArray)) !== false) {
+            unset($mdArray[$key]);
         }
 
-        //To remove referral source from md list if exists
-        $mdArray = explode(',', $data['md_list']);
-        $mdArray = array_filter($mdArray, [new MDReferralFilter($data['md_referral_list']), 'isReferrer']);
-        $data['md_list'] = implode(',', $mdArray);
+        $args['md_list'] = implode(',', $mdArray);
+        $args['user_id'] = $this->userId;
+        $args['doc_id'] = $this->docId;
 
-        $data['user_id'] = $this->userId;
-        $data['doc_id'] = $this->docId;
-
-        $createdLetter = $this->letter->createLetter($data);
+        $createdLetter = $this->letter->createLetter($args);
 
         if ($createdLetter) {
             return $createdLetter->letterid;

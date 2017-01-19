@@ -120,8 +120,8 @@
                             v-link="{
                                 name: $route.name,
                                 query: {
-                                    pid: routeParameters.patientId,
-                                    rid: routeParameters.readId
+                                    pid: vob.patient_id,
+                                    rid: vob.id
                                 }
                             }"
                             v-if="vob.viewed"
@@ -132,8 +132,8 @@
                             v-link="{
                                 name: $route.name,
                                 query: {
-                                    pid: routeParameters.patientId,
-                                    urid: routeParameters.unreadId
+                                    pid: vob.patient_id,
+                                    urid: vob.id
                                 }
                             }"
                             v-else

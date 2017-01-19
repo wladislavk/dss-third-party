@@ -67,13 +67,13 @@ module.exports = {
         '$route.query.rid': function() {
             if (this.$route.query.rid > 0) {
                 this.$set('routeParameters.readId', this.$route.query.rid);
-                this.updateVob('viewed', 1, this.routeParameters.readId);
+                this.updateVob('viewed', 1, this.routeParameters.readId, this.routeParameters.patientId);
             }
         },
         '$route.query.urid': function() {
             if (this.$route.query.urid > 0) {
                 this.$set('routeParameters.unreadId', this.$route.query.urid);
-                this.updateVob('viewed', 0, this.routeParameters.unreadId);
+                this.updateVob('viewed', 0, this.routeParameters.unreadId, this.routeParameters.patientId);
             }
         },
         '$route.query.viewed': function() {
@@ -130,13 +130,14 @@ module.exports = {
         updateVob: function(
             param,
             value,
-            id
+            id,
+            parentId
         ) {
             this.alterVob(                
                 param,
                 value,
                 id,
-                this.routeParameters.patientId
+                patientId
             ).then(function(response) {
                 var data = response.data.data;
             }, function(response) {
@@ -157,6 +158,7 @@ module.exports = {
                 sortDir     : sortDir || '',
                 viewed      : viewed || 1
             }
+
             return this.$http.post(window.config.API_PATH + 'insurance-preauthes/find', data);
         },
         alterVob: function(

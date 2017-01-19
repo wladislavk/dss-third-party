@@ -138,4 +138,33 @@ class InsurancePreauth extends Model implements Resource, Repository
             'count' => $countResult
         ];
     }
+
+    public function alterVob(
+        $docId         = 0,
+        $vobParam      = 'viewed',
+        $vobParamValue = 1,
+        $vobId         = 0,
+        $patientId     = 0
+    ) {
+        $query = $this->where('preauth.doc_id', '=', $docId)
+            ->update(
+                DB::raw('
+                    UPDATE dental_insurance_preauth 
+                    SET :param = :value 
+                    WHERE id = :id 
+                    AND patient_id = :patient_id 
+                    AND doc_id = :doc_id
+                '), 
+                array(
+                   'param' => $vobParam,
+                   'value' => $vobParamValue,
+                   'id' => 
+                 )
+            );
+
+        return [
+            'results' => $results,
+            'count' => $countResult
+        ];
+    }
 }

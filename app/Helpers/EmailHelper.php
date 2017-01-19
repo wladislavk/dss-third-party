@@ -62,8 +62,8 @@ class EmailHelper
         $subject = 'Online Patient Portal Email Update';
         $message = $this->generalHelper->getTemplate('patient/update');
 
-        $return = sendEmail($from, "$to <$oldEmail>", $subject, $message, $mailingData);
-        $return = sendEmail($from, "$to <$newEmail>", $subject, $message, $mailingData) && $return;
+        $return = $this->sendEmail($from, "$to <$oldEmail>", $subject, $message, $mailingData);
+        $return = $this->sendEmail($from, "$to <$newEmail>", $subject, $message, $mailingData) && $return;
 
         return $return;
     }
@@ -169,9 +169,10 @@ class EmailHelper
     private function retrieveMailerData($patientId, $docId)
     {
         $patient = $this->patient->find($patientId);
-        $location = array_shift($this->summary->getWithFilter('location', ['patientid' => $patientId]));
+        $summaryInfo = $this->summary->getWithFilter('location', ['patientid' => $patientId]);
+        $location = !empty($summaryInfo) ? $summaryInfo[0]->location : 0;
 
-        $mailingData = $this->user->getMailingData($docId, $patientId, $location->location);
+        $mailingData = $this->user->getMailingData($docId, $patientId, $location);
 
         if ($mailingData->user_type == self::DSS_USER_TYPE_SOFTWARE &&
             $this->generalHelper->isSharedFile($mailingData->logo)

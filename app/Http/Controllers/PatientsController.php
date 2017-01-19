@@ -224,7 +224,6 @@ class PatientsController extends Controller
     }
 
     public function editingPatient(
-        $patientId,
         LetterHelper $letterHelper,
         EmailHelper $emailHelper,
         PreauthHelper $preauthHelper,
@@ -235,7 +234,8 @@ class PatientsController extends Controller
         Summaries $summariesResource,
         Letter $letterResource,
         User $userResource,
-        Request $request
+        Request $request,
+        $patientId = null
     ) {
         $docId = $this->currentUser->docid ?: 0;
         $userType = $this->currentUser->user_type ?: 0;
@@ -259,6 +259,8 @@ class PatientsController extends Controller
         // get form data for a current patient
         $patientFormData = $request->input('patient_form_data') ?: [];
         $usePatientPortal = !empty($patientFormData['use_patient_portal']) ? $patientFormData['use_patient_portal'] : 0;
+        $patientLocation = !empty($patientFormData['location']) ? $patientFormData['location'] : 0;
+        unset($patientFormData['location']);
 
         // validate input patient form data
         if ($patientId) {
@@ -308,6 +310,8 @@ class PatientsController extends Controller
             // Unregistered - 0
             // Registration Emailed - 1
             // Registered - 2
+
+            // TODO: need to rewrite this logic from legacy code to the new Laravel structure
             if ($unchangedPatient->registration_status == 2 && $patientFormData['email'] != $unchangedPatient->email) {
                 // need to notify the user about changing his email
                 $emailHelper->sendUpdatedEmail($docId, $patientId, $patientFormData['email'], $unchangedPatient->email, 'doc');
@@ -368,21 +372,21 @@ class PatientsController extends Controller
                 $updatedVob = $insurancePreauthResource->updateVob($patientId, $userName);
 
                 if ($updatedVob) {
-                    $insurancePreauthId = $preauthHelper->createVob($patientId);
+                    $insurancePreauthId = $preauthHelper->createVob($patientId)->id;
                 }
             }
 
             // update patient summary if location is set
-            if ($patientFormData['location']) {
+            if (!empty($patientLocation)) {
                 $summaries = $summariesResource->getWithFilter(null, ['patientid' => $patientId]);
 
                 if (count($summaries)) {
-                    $summaries->updateForPatient($patientId, [
-                        'location' => $patientFormData['location']
+                    $summariesResource->updateForPatient($patientId, [
+                        'location' => $patientLocation
                     ]);
                 } else {
-                    $summaries->create([
-                        'location'  => $patientFormData['location'],
+                    $summariesResource->create([
+                        'location'  => $patientLocation,
                         'patientid' => $patientId
                     ]);
                 }
@@ -392,7 +396,7 @@ class PatientsController extends Controller
                 $patientResource->updatePatient($patientId, ['login' => $uniqueLogin]);
             }
 
-            // if it is required need to do:
+            // TODO: if it is required need to rewrite it to the new Laravel structure:
             /*
             if (!empty($_POST['copyreqdate'])) {
               $dateCompleted = date('Y-m-d', strtotime($_POST['copyreqdate']));
@@ -436,7 +440,7 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($userId, $letter->letterid, null, 'md_referral', $unchangedPatient->referred_by);
+                            $letterHelper->deleteLetter($userId, $letter->letterid, $parent = null, $type = 'md_referral', $recipientId = $unchangedPatient->referred_by);
                         }
                     }
                 } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] != 1) {
@@ -450,7 +454,7 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($userId, $letter->letterid, null, 'pat_referral', $unchangedPatient->referred_by);
+                            $letterHelper->deleteLetter($userId, $letter->letterid, $parent = null, $type = 'pat_referral', $recipientId = $unchangedPatient->referred_by);
                         }
                     }
                 }
@@ -483,14 +487,14 @@ class PatientsController extends Controller
                 // set filters
                 'firstname'  => ucfirst($patientFormData['firstname']),
                 'lastname'   => ucfirst($patientFormData['lastname']),
-                'middlename' => ucfirst($patientFormData['middlename'])
+                'middlename' => !empty($patientFormData['middlename']) ? ucfirst($patientFormData['middlename']) : ''
             ]);
 
             $createdPatientId = $patientResource->create($patientFormData);
 
-            if ($patientFormData['location']) {
+            if ($patientLocation) {
                 $summariesResource->create([
-                    'location'  => $patientFormData['location'],
+                    'location'  => $patientLocation,
                     'patientid' => $createdPatientId
                 ]);
             }

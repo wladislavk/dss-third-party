@@ -607,7 +607,7 @@ class Patient extends Model implements Resource, Repository
 
     public function updatePatient($patientId = 0, $data = [])
     {
-        $this->where('patientid', $patientId)
+        return $this->where('patientid', $patientId)
             ->update($data);
     }
 

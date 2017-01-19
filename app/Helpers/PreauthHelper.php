@@ -56,6 +56,6 @@ class PreauthHelper
             'viewed'                    => 1
         ]);
 
-        $this->insurancePreauth->create($patientPreauthInfo);
+        return $this->insurancePreauth->create($patientPreauthInfo);
     }
 }

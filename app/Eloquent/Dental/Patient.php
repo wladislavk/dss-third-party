@@ -794,4 +794,39 @@ class Patient extends Model implements Resource, Repository
             ->where('dp.patientid', $patientId)
             ->first();
     }
+
+    public function getSimilarPatients($docId, $patientInfo)
+    {
+        $defaultPatientInfo = [
+            'patient_id' => 0,
+            'firstname'  => '',
+            'lastname'   => '',
+            'add1'       => '',
+            'city'       => '',
+            'state'      => '',
+            'zip'        => ''
+        ];
+
+        $patientInfo = array_merge($defaultPatientInfo, $patientInfo);
+
+        return $this->from(DB::raw('dental_patients p'))
+            ->where('patientid', '!=', $patientInfo['patient_id'])
+            ->where('docid', $docId)
+            ->active()
+            ->where(function($query) use ($patientInfo) {
+                $query->where(function($query) use ($patientInfo) {
+                    $query->where('firstname', '=', $patientInfo['firstname'])
+                        ->where('lastname', '=', $patientInfo['lastname']);
+                })->orWhere(function($query) use ($patientInfo) {
+                    $query->where('add1', '=', $patientInfo['add1'])
+                        ->where('add1', '!=', '')
+                        ->where('city', '=', $patientInfo['city'])
+                        ->where('city', '!=', '')
+                        ->where('state', '=', $patientInfo['state'])
+                        ->where('state', '!=', '')
+                        ->where('zip', '=', $patientInfo['zip'])
+                        ->where('zip', '!=', '');
+                });
+            })->get();
+    }
 }

@@ -499,9 +499,9 @@ class PatientsController extends Controller
                 ]);
             }
 
-            $similarPatient = $similarHelper->getSimilarPatients($createdPatientId);
+            $similarPatients = $similarHelper->getSimilarPatients($createdPatientId, $docId);
 
-            if (count($similarPatient)) {
+            if (count($similarPatients)) {
                 $responseData['redirect_to'] = 'duplicate_patients.php?pid=' . $createdPatientId;
             } else {
                 $responseData['status'] = 'Patient "' . $patientFormData['firstname'] . ' ' . $patientFormData['lastname'] . '" was added successfully.';
@@ -510,7 +510,17 @@ class PatientsController extends Controller
             $patientId = $createdPatientId;
         }
 
-        $letterHelper->triggerIntroLettersOf12Types($patientId);
+        $docFields = [
+            'docsleep', 'docpcp', 'docdentist', 'docent',
+            'docmdother', 'docmdother2', 'docmdother3'
+        ];
+
+        $mdContacts = [];
+        foreach ($docFields as $field) {
+            $mdContacts[] = !empty($patientFormData[$field]) ? $patientFormData[$field] : 0;
+        }
+
+        $letterHelper->triggerIntroLettersOf12Types($patientId, $mdContacts);
 
         if (!empty($patientFormData['introletter']) && $patientFormData['introletter'] == 1) {
             $letterHelper->triggerIntroLetterOf3Type($patientId);
@@ -538,7 +548,6 @@ class PatientsController extends Controller
         }
 
         // check if required information is filled out
-        $completeInfo = 0;
         if (!empty($patientFormData['home_phone']) || !empty($patientFormData['work_phone']) || !empty($patientFormData['cell_phone'])) {
             $patientPhone = true;
         } else {
@@ -551,16 +560,17 @@ class PatientsController extends Controller
             $patientEmail = false;
         }
 
-        if (
-            (!empty($patientEmail) || !empty($patientPhone))
+        if (($patientEmail || $patientPhone)
             && !empty($patientFormData['add1']) && !empty($patientFormData['city'])
             && !empty($patientFormData['state']) && !empty($patientFormData['zip'])
             && !empty($patientFormData['dob']) && !empty($patientFormData['gender'])
         ) {
             $completeInfo = 1;
+        } else {
+            $completeInfo = 0;
         }
 
-        // determine whether patient info has been set
+        // determine whether patient info has been completely set
         $this->updatePatientSummary($patientId, 'patient_info', $completeInfo);
 
         return ApiResponse::responseOk('', $responseData);
@@ -715,7 +725,7 @@ class PatientsController extends Controller
 
         $patientSummary = $patientSummaryResource->find($patientId);
 
-        if ($patientSummary) {
+        if (!empty($patientSummary)) {
             $patientSummary->$column = $value;
             $patientSummary->save();
         } else {

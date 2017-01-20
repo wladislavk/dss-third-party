@@ -87,27 +87,29 @@ class LetterHelper
         return $letterId;
     }
 
-    public function triggerIntroLettersOf12Types($mdContacts = [])
+    public function triggerIntroLettersOf12Types($patientId, $mdContacts = [])
     {
         // trigger intro letter to MD from DSSFLLC and intro letter to MD from Franchisee
         $userLetterInfo = $this->user->getWithFilter(['use_letters', 'intro_letters'], [
             'userid' => $this->docId
         ]);
 
-        if ($userLetterInfo && $userLetterInfo->use_letters && $userLetterInfo->intro_letters) {
+        $userLetterInfo = count($userLetterInfo) ? $userLetterInfo[0] : null;
+
+        if (!empty($userLetterInfo) && $userLetterInfo->use_letters && $userLetterInfo->intro_letters) {
             $letter1Id = 1;
             $letter2Id = 2;
 
             $recipients = [];
             if (count($mdContacts)) {
                 foreach ($mdContacts as $contact) {
-                    if ($contact != "Not Set") {
+                    if ($contact > 0) {
                         $mdLists = $this->letter->getMdList($contact, $letter1Id, $letter2Id);
 
-                        if (count($mdLists) && $contact != "") {
+                        if (count($mdLists)) {
                             $foundContact = $this->contact->getActiveContact($contact);
 
-                            if ($foundContact) {
+                            if (!empty($foundContact)) {
                                 $recipients[] = $contact;
                             }
                         }
@@ -121,11 +123,11 @@ class LetterHelper
             if (count($recipients)) {
                 $recipientsList = implode(',', $recipients);
 
-                $createdLetter2Id = $this->createLetter($letter2Id, $this->patientId, '', '', $recipientsList);
+                $createdLetter2Id = $this->createLetter($letter2Id, ['pid' => $this->patientId, 'md_list' => $recipientsList]);
 
                 //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
                 if ($this->userType == self::DSS_USER_TYPE_SOFTWARE) {
-                    $createdLetter1Id = $this->createLetter($letter1Id, $this->patientId, '', '', $recipientsList);
+                    $createdLetter1Id = $this->createLetter($letter1Id, ['pid' => $this->patientId, 'md_list' => $recipientsList]);
                 }
             }
 
@@ -146,7 +148,7 @@ class LetterHelper
         $letterId = 3;
         $toPatient = 1;
 
-        $letterId = $this->createLetter($letterId, $this->patientId, '', $toPatient);
+        $letterId = $this->createLetter($letterId, ['pid' => $this->patientId, 'topatient' => $toPatient]);
 
         return $letterId;
     }

@@ -12,7 +12,6 @@ RUN set -xe \
     # Install php 5.6 and httpd 2.4 using SCL repo.
     && yum --enablerepo=centos-sclo-rh install -y \
         httpd24 \
-        httpd24-mod_ssl \
         rh-php56 \
         rh-php56-php \
         rh-php56-php-bcmath \
@@ -28,7 +27,7 @@ RUN set -xe \
         rh-php56-php-xml \
 
     # Install mcrypt from php56more by Remi Collet, because CentsOS-SCL doesn't
-    # heve this library in their repo. Here is answer why this happened:
+    # have this library in their repo. Here is answer why this happened:
     # http://stackoverflow.com/a/34824192/456517
     && rpm -Uvh https://www.softwarecollections.org/en/scls/remi/php56more/epel-6-x86_64/download/remi-php56more-epel-6-x86_64.noarch.rpm \
     && yum --enablerepo=epel,remi-php56more-epel-6-x86_64 install -y \

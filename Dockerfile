@@ -1,4 +1,4 @@
-FROM ds3-base
+FROM ds3-baseimage
 
 ENV API_PATH=${DOCUMENT_ROOT}/api
 WORKDIR $API_PATH

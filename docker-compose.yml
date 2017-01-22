@@ -21,8 +21,8 @@ services:
         API_DIR: ds3-private03
     env_file: ../ds3-private02/.env.example
     environment:
-      APP_URL: http://loader.docker.localhost:8000/
-      API_URL: http://api.docker.localhost:8000/
+      APP_URL: https://loader.docker.localhost:8000/
+      API_URL: https://api.docker.localhost:8000/
       PHP_PATH: /opt/rh/rh-php56/root/bin/php
       DB_HOST: db
       DB_DATABASE: homestead

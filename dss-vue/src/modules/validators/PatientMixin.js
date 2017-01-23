@@ -12,7 +12,7 @@ module.exports = {
         walkThroughMessages: function(messages, patient) {
             for (var property in messages) {
                 if (messages.hasOwnProperty(property)) {
-                    if (trim(patient[property]) == '') {
+                    if (patient[property] === undefined || patient[property].trim() == '') {
                         alert(messages[property]);
                         this.$els[property.toCamelCase()].focus();
 
@@ -24,7 +24,7 @@ module.exports = {
         walkThroughComplexMessages: function(messages, patient) {
             for (var property in messages) {
                 if (messages.hasOwnProperty(property)) {
-                    if (trim(patient[property]) != '' && patient[messages[property].connect_to] == '') {
+                    if (patient[property].trim() != '' && patient[messages[property].connect_to] == '') {
                         alert(messages[property].message);
                         this.$els[property.toCamelCase()].focus();
 
@@ -50,7 +50,7 @@ module.exports = {
                 return false;
             }
 
-            if (trim(formedFullNames.referred_name) != '' && !patient.referred_by) {
+            if (formedFullNames.referred_name.trim() != '' && !patient.referred_by) {
                 alert('Invalid referred by.');
                 this.$els.referredByName.focus();
 
@@ -65,7 +65,7 @@ module.exports = {
                 return false;
             }
 
-            if (trim(patient.home_phone) == '' && trim(patient.work_phone) == '' && trim(patient.cell_phone) == '') {
+            if (patient.home_phone.trim() == '' && patient.work_phone.trim() == '' && patient.cell_phone.trim() == '') {
                 alert("Phone Number is required");
 
                 return false;
@@ -88,7 +88,7 @@ module.exports = {
                     return false;
                 }
 
-                if (trim(patient.p_m_ins_plan) == '' && patient.p_m_ins_type.value != 1) {
+                if (patient.p_m_ins_plan.trim() == '' && patient.p_m_ins_type.value != 1) {
                     alert("Plan Name is a Required Field");
                     this.$els.pMInsPlan.focus();
 
@@ -112,7 +112,7 @@ module.exports = {
                         return false;
                     }
 
-                    if (trim(patient.s_m_ins_plan) == "" && patient.p_m_ins_type.value != 1) {
+                    if (patient.s_m_ins_plan.trim() == "" && patient.p_m_ins_type.value != 1) {
                         alert("Secondary Plan Name is a Required Field");
                         this.$els.sMInsPlan.focus();
 

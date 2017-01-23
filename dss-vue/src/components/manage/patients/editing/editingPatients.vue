@@ -12,7 +12,6 @@
         {{ message }}
     </div>
     <div
-        v-if="patientNotifications"
         v-for="notification in patientNotifications"
         id="not_{{ notification.id }}" class="warning {{ notification.notification_type }}">
         <span>{{ notofication.notification }} {{ notification.notification_date }}</span>
@@ -1190,7 +1189,6 @@
                                     >
                                         <option value="" selected disabled>Select Insurance Company</option>
                                         <option
-                                            v-if="insuranceContacts.length"
                                             v-for="contact in insuranceContacts"
                                             :value="contact.contactid"
                                         >{{ contact.company }}</option>
@@ -1597,7 +1595,6 @@
                                     >
                                         <option value="" selected disabled>Select Insurance Company</option>
                                         <option
-                                            v-if="insuranceContacts.length > 0"
                                             v-for="contact in insuranceContacts"
                                             :value="contact.contactid"
                                         >{{ contact.company }}</option>

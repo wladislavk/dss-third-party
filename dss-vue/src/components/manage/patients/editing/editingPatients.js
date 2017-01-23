@@ -247,16 +247,44 @@ module.exports = {
         },
         submitAddingOrEditingPatient: function() {
             if (this.validatePatientData(this.patient)) {
-                this.checkEmail(function(response) {
-                    var data = response.data.data;
+                this.checkEmail(this.patient.email, this.routeParameters.patientId)
+                    .then(function(response) {
+                        var data = response.data.data;
 
-                    if (confirm(data.confirm_message)) {
-                        this.editPatient(this.routeParameters.patientId, this.patient, this.formedFullNames);
-                    }
-                }, function(response) {
-                    alert(response.message);
-                    this.handleErrors('checkEmail', response);
-                });
+                        var isReadyForProcessing = false;
+                        if (data.confirm_message.length > 0) {
+                            isReadyForProcessing = confirm(data.confirm_message);
+                        } else {
+                            isReadyForProcessing = true;
+                        }
+
+                        if (isReadyForProcessing) {
+                            this.editPatient(this.routeParameters.patientId, this.patient, this.formedFullNames)
+                                .then(function(response) {
+                                    var data = response.data.data;
+
+                                    // TODO: update data about created/updated patient and show notifications from the request
+                                }, function(response) {
+                                    var errors = response.data.data.errors.shift();
+
+                                    if (errors != undefined) {
+                                        var objKeys = Object.keys(errors);
+
+                                        var arrOfMessages = objKeys.map((el) => {
+                                            return el + ':' + errors[el].join('|').toLowerCase();
+                                        });
+
+                                        // TODO: create more readable format
+                                        alert(arrOfMessages.join("\n"));
+                                    }
+
+                                    this.handleErrors('getInsuranceContacts', response);
+                                });
+                        }
+                    }, function(response) {
+                        alert(response.data.message);
+                        this.handleErrors('checkEmail', response);
+                    });
             }
         },
         submitSendingPinCode: function() {
@@ -538,7 +566,7 @@ module.exports = {
                 .then(function(response) {
                     var data = response.data.data;
 
-                    if (data) {
+                    if (data.length != 0) {
                         this.filterPhoneFields(data.patient);
                         this.filterSsnField(data.patient);
 
@@ -710,6 +738,7 @@ module.exports = {
             requestedEmails,
             trackerNotes
         ) {
+            patientId = patientId || 0;
             patientFormData['referredby_name'] = formedFullNames.referred_name;
             patientFormData['docsleep_name'] = formedFullNames.docsleep_name;
             patientFormData['docpcp_name'] = formedFullNames.docpcp_name;
@@ -735,7 +764,7 @@ module.exports = {
             return this.$http.post(window.config.API_PATH + 'patients/edit/' + patientId, data);
         },
         checkEmail: function(email, patientId) {
-            var data = { email: email, patient_id: patientId };
+            var data = { email: email || '', patient_id: patientId || 0 };
 
             return this.$http.post(window.config.API_PATH + 'patients/check-email', data);
         }

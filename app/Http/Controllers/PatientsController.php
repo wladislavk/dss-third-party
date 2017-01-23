@@ -688,10 +688,19 @@ class PatientsController extends Controller
         $patientId = $request->input('patient_id', 0);
 
         // check patient email address
-        if ($this->isPatientEmailValid($email, $patientId) && $this->confirmPatientEmail($email, $patientId)) {
-            return ApiResponse::responseOk('', [
-                'confirm_message' => "You have changed the patient's email address. The patient must be notified via email or he/she will not be able to access the Patient Portal. Send email notification and proceed?"
-            ]);
+        if (strlen($email) == 0) {
+            return ApiResponse::responseError(
+                $message = 'The email address you entered is empty.',
+                $code = 417
+            );
+        } elseif ($this->isPatientEmailValid($patientResource, $email, $patientId)) {
+            if ($this->confirmPatientEmail($patientResource, $email, $patientId)) {
+                $message = "You have changed the patient's email address. The patient must be notified via email or he/she will not be able to access the Patient Portal. Send email notification and proceed?";
+            } else {
+                $message = '';
+            }
+
+            return ApiResponse::responseOk('', ['confirm_message' => $message]);
         } else {
             return ApiResponse::responseError(
                 $message = 'The email address you entered is already associated with another patient. Please enter a different email address.',

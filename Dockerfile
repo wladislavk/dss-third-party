@@ -1,4 +1,4 @@
-FROM ds3-baseimage
+FROM 484964515519.dkr.ecr.us-east-1.amazonaws.com/baseimage
 
 ENV API_PATH=${DOCUMENT_ROOT}/api
 WORKDIR $API_PATH

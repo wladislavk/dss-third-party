@@ -490,7 +490,8 @@ class PatientsController extends Controller
                 'middlename' => !empty($patientFormData['middlename']) ? ucfirst($patientFormData['middlename']) : ''
             ]);
 
-            $createdPatientId = $patientResource->create($patientFormData);
+            $createdPatientId = $patientResource->create($patientFormData)->patientid;
+            $responseData['created_patient_id'] = $createdPatientId;
 
             if ($patientLocation) {
                 $summariesResource->create([
@@ -571,7 +572,7 @@ class PatientsController extends Controller
         }
 
         // determine whether patient info has been completely set
-        $this->updatePatientSummary($patientId, 'patient_info', $completeInfo);
+        $this->updatePatientSummary($patientSummaryResource, $patientId, 'patient_info', $completeInfo);
 
         return ApiResponse::responseOk('', $responseData);
     }
@@ -724,9 +725,9 @@ class PatientsController extends Controller
 
     private function updatePatientSummary(
         PatientSummary $patientSummaryResource,
-        $patientId,
-        $column,
-        $value
+        $patientId = 0,
+        $column = '',
+        $value = null
     ) {
         if (empty($patientId) || empty($column)) {
             return false;
@@ -738,7 +739,7 @@ class PatientsController extends Controller
             $patientSummary->$column = $value;
             $patientSummary->save();
         } else {
-            $patientSummary->create([
+            $patientSummaryResource->create([
                 'pid'   => $patientId,
                 $column => $value
             ]);

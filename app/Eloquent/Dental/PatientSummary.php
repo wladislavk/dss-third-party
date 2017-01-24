@@ -31,7 +31,7 @@ class PatientSummary extends Model implements Resource, Repository
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'pid';
 
     /**
      * Indicates if the model should be timestamped.

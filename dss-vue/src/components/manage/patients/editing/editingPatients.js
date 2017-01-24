@@ -75,6 +75,13 @@ module.exports = {
             if (this.$route.query.pid > 0) {
                 this.$set('routeParameters.patientId', this.$route.query.pid);
 
+                // if patient data need to be updated - check local storage, it may contain status message
+                var message = window.storage.get('message');
+                if (message && message.length > 0) {
+                    this.$set('message', message);
+                    window.storage.remove('message');
+                }
+
                 this.fillForm(this.$route.query.pid);
             } else {
                 this.$set('routeParameters.patientId', null);
@@ -245,6 +252,18 @@ module.exports = {
         handleChangingInsuranceInfo: function() {
             this.isInsuranceInfoChanged = true;
         },
+        parseSuccessfulResponseOnEditingPatient: function(data) {
+            if (data.hasOwnProperty('redirect_to') && data.redirect_to.length > 0) {
+                this.$route.router.go(data.redirect_to);
+            }
+
+            if (data.hasOwnProperty('created_patient_id') && data.created_patient_id > 0) {
+                window.storage.save('message', data.status);
+                this.$route.router.go(this.$route.path + '?pid=' + data.created_patient_id);
+            }
+
+            // TODO: add actions on other response statuses
+        },
         submitAddingOrEditingPatient: function() {
             if (this.validatePatientData(this.patient)) {
                 this.checkEmail(this.patient.email, this.routeParameters.patientId)
@@ -263,7 +282,7 @@ module.exports = {
                                 .then(function(response) {
                                     var data = response.data.data;
 
-                                    // TODO: update data about created/updated patient and show notifications from the request
+                                    this.parseSuccessfulResponseOnEditingPatient(data);
                                 }, function(response) {
                                     var errors = response.data.data.errors.shift();
 
@@ -744,6 +763,7 @@ module.exports = {
             patientFormData['docpcp_name'] = formedFullNames.docpcp_name;
             patientFormData['docdentist_name'] = formedFullNames.docdentist_name;
             patientFormData['docent_name'] = formedFullNames.docent_name;
+            patientFormData['location'] = this.patientLocation;
 
             var data = {
                 patient_form_data  : patientFormData

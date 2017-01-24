@@ -19,5 +19,15 @@ RUN set -x \
     # Fix permissions
     && chown -R apache ${DOCUMENT_ROOT}
 
-# Copy custom apache configs for the project
-COPY etc/httpd/ ${ETC_HTTPD}
+# Apache config to serve application
+# NOTE this is a tiny config, no reasons to move it to separate file
+RUN echo -e '\
+ErrorLog "/dev/stderr"\n\
+CustomLog "/dev/stdout" common\n\
+<VirtualHost *:80>\n\
+    DocumentRoot "${API_PATH}/public"\n\
+    <Directory "${API_PATH}/public">\n\
+        AllowOverride All\n\
+    </Directory>\n\
+</VirtualHost>\n\
+' > ${ETC_HTTPD}/conf.d/app.conf

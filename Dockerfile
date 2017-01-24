@@ -1,6 +1,5 @@
 FROM centos:6.7
 
-ENV ETC_HTTPD=/opt/rh/httpd24/root/etc/httpd
 RUN set -xe \
     yum update -y \
 
@@ -58,7 +57,10 @@ RUN set -xe \
     && curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
 
-ENV DOCUMENT_ROOT=/opt/rh/httpd24/root/var/www/html
+ENV ETC_HTTPD=/opt/rh/httpd24/root/etc/httpd \
+    DOCUMENT_ROOT=/opt/rh/httpd24/root/var/www/html \
+    PHP_PATH=/opt/rh/rh-php56/root/bin/php
+
 COPY docker-entrypoint.sh /usr/sbin/
 RUN set -x \
     # Customize php setup

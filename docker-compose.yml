@@ -23,7 +23,7 @@ services:
   loader:
     build:
       context: ..
-      dockerfile: ds3-private02/Dockerfile
+      dockerfile: ds3-private01/Dockerfile
       args:
         LEGACY_DIR: ds3-private01
         LOADER_DIR: ds3-private02

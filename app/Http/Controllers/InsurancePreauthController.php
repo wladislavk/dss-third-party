@@ -135,10 +135,10 @@ class InsurancePreauthController extends Controller
 
     public function alter(InsPreauth $resources, Request $request)
     {
-        $docId           = $this->currentUser->docid ?: 0;
+        $docId           = $this->currentUser->docid ?: 1;
 
         $vobParam      = $request->input('param') ?: 'viewed';
-        $vobParamValue  = $request->input('value') ?: 1;
+        $vobParamValue  = $request->input('value') ?: 0;
         $vobId         = $request->input('id') ?: 0;
         $patientId     = $request->input('patientId') ?: 0;
 

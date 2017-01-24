@@ -11,6 +11,13 @@ services:
     labels:
       - "traefik.enable=false"
 
+  baseimage:
+    build: .
+    image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/baseimage
+    command: bash -c 'yum list installed | grep -e php56 -e mcrypt -e pdf -e httpd24'
+    labels:
+      - "traefik.enable=false"
+
   loader:
     build:
       context: ..

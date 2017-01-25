@@ -172,7 +172,6 @@
                                 <span>
                                     <input
                                         v-model="patient.home_phone"
-                                        v-on:change="onChangePhone"
                                         id="home_phone"
                                         name="home_phone"
                                         type="text"
@@ -188,7 +187,6 @@
                                 <span>
                                     <input
                                         v-model="patient.cell_phone"
-                                        v-on:change="onChangePhone"
                                         v-el:cell_phone
                                         id="cell_phone"
                                         name="cell_phone"
@@ -202,7 +200,6 @@
                                 <span>
                                     <input
                                         v-model="patient.work_phone"
-                                        v-on:change="onChangePhone"
                                         id="work_phone"
                                         name="work_phone"
                                         type="text"
@@ -416,7 +413,6 @@
                                 <span style="width:150px">
                                     <input
                                         v-model="patient.ssn"
-                                        v-on:change="onChangeSsn"
                                         id="ssn"
                                         name="ssn"
                                         type="text"
@@ -628,7 +624,6 @@
                                 <span>
                                     <input
                                         v-model="patient.emergency_number"
-                                        v-on:change="onChangePhone"
                                         id="emergency_number"
                                         name="emergency_number"
                                         type="text"
@@ -721,7 +716,7 @@
                                             type="button"
                                             class="button"
                                             style="width:150px;"
-                                            onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&from=add_patient');"
+                                            onclick="loadPopupRefer('add_contact.php?addtopat={{ routeParameters.patientId }}&from=add_patient');"
                                             value="+ Create New Contact"
                                         />
                                         <br />
@@ -1198,7 +1193,7 @@
                                         type="button"
                                         class="button"
                                         style="width:215px;"
-                                        v-oclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=p_m_ins_co&ctype=ins{{ routeParameters.patientId ? '&pid=' + routeParameters.patientId + '&type=11&ctypeeq=1&activePat=' + routeParameters.patientId }}');"
+                                        v-on:click="onClickCreatingNewInsuranceCompany('p_m_ins_co')"
                                         value="+ Create New Insurance Company"
                                     />
                                 </span>
@@ -1604,7 +1599,7 @@
                                         type="button"
                                         class="button"
                                         style="width:215px;"
-                                        onclick="loadPopupRefer('add_contact.php?from=add_patient&from_id=s_m_ins_co&ctype=ins{{ routeParameters.patientId ? '&pid=' + routeParameters.patientId + '&type=11&ctypeeq=1&activePat=' + routeParameters.patientId }}');"
+                                        v-on:click="onClickCreatingNewInsuranceCompany('s_m_ins_co')"
                                         value="+ Create New Insurance Company"
                                     />
                                 </span>

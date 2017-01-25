@@ -86,6 +86,21 @@ module.exports = {
             } else {
                 this.$set('routeParameters.patientId', null);
             }
+        },
+        'patient.home_phone': function() {
+            this.$set('patient.home_phone', this.phone(this.patient.home_phone));
+        },
+        'patient.cell_phone': function() {
+            this.$set('patient.cell_phone', this.phone(this.patient.cell_phone));
+        },
+        'patient.work_phone': function() {
+            this.$set('patient.work_phone', this.phone(this.patient.work_phone));
+        },
+        'patient.emergency_number': function() {
+            this.$set('patient.emergency_number', this.phone(this.patient.emergency_number));
+        },
+        'patient.ssn': function() {
+            this.$set('patient.ssn', this.ssn(this.patient.ssn));
         }
     },
     computed: {
@@ -249,6 +264,11 @@ module.exports = {
             });
     },
     methods: {
+        onClickCreatingNewInsuranceCompany: function(fromId) {
+            // TODO: implement loading a popup for creating new insurance company
+
+            // loadPopupRefer('add_contact.php?from=add_patient&from_id= + fromId + &ctype=ins{{ routeParameters.patientId ? '&pid=' + routeParameters.patientId + '&type=11&ctypeeq=1&activePat=' + routeParameters.patientId }}');
+        },
         handleChangingInsuranceInfo: function() {
             this.isInsuranceInfoChanged = true;
         },
@@ -659,15 +679,6 @@ module.exports = {
         filterSsnField: function(patient) {
             patient.ssn = this.ssn(patient.ssn);
         },
-        onChangePhone: function(event) {
-            this.$set(
-                'patient.' + event.target.name,
-                this.phone(this.patient[event.target.name])
-            );
-        },
-        onChangeSsn: function(event) {
-            this.$set('ssn', this.ssn(this.patient.ssn));
-        },
         phone: function(value) {
             return value.replace(/\D/g, '')
                 .replace(/^(\d{3})(\d{3})(\d{4})$/, '($1) $2-$3');
@@ -675,6 +686,10 @@ module.exports = {
         ssn: function(value) {
             return value.replace(/\D/g, '')
                 .replace(/^(\d{3})(\d{2})(\d{4})$/, '$1-$2-$3');
+        },
+        number: function(value) {
+            value = value || '';
+            return value.replace(/\D/g, '');
         },
         getUncompletedHomeSleepTests: function(patientId) {
             var data = { patientId: patientId || 0};
@@ -758,28 +773,28 @@ module.exports = {
             trackerNotes
         ) {
             patientId = patientId || 0;
-            patientFormData['referredby_name'] = formedFullNames.referred_name;
-            patientFormData['docsleep_name'] = formedFullNames.docsleep_name;
-            patientFormData['docpcp_name'] = formedFullNames.docpcp_name;
-            patientFormData['docdentist_name'] = formedFullNames.docdentist_name;
-            patientFormData['docent_name'] = formedFullNames.docent_name;
-            patientFormData['location'] = this.patientLocation;
+            patientFormData = Object.assign(patientFormData, {
+                referredby_name : formedFullNames.referred_name,
+                docsleep_name   : formedFullNames.docsleep_name,
+                docpcp_name     : formedFullNames.docpcp_name,
+                docdentist_name : formedFullNames.docdentist_name,
+                docent_name     : formedFullNames.docent_name,
+                location        : this.patientLocation
+            });
+
+            var fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number', 'ssn'];
+
+            var self = this;
+            fields.forEach((el) => {
+                patientFormData[el] = self.number(patientFormData[el]);
+            });
 
             var data = {
-                patient_form_data  : patientFormData
+                patient_form_data  : patientFormData,
+                pressed_buttons    : pressedButtons ? pressedButtons : undefined,
+                requested_emails   : requestedEmails ? requestedEmails : undefined,
+                tracker_notes      : trackerNotes ? trackerNotes : undefined
             };
-
-            if (pressedButtons) {
-                data['pressed_buttons'] = pressedButtons;
-            }
-
-            if (requestedEmails) {
-                data['requested_emails'] = requestedEmails;
-            }
-
-            if (trackerNotes) {
-                data['tracker_notes'] = trackerNotes;
-            }
 
             return this.$http.post(window.config.API_PATH + 'patients/edit/' + patientId, data);
         },

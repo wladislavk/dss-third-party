@@ -1002,7 +1002,103 @@ $(document).ready( function(){
           .attr('readonly', true)
           .addClass('grayout')
           .closest('td')
-          .addClass('grayout');});
+          .addClass('grayout');
+
+    function debounceCall (call, options) {
+        var timeoutId = 0;
+
+        options = $.extend({
+            timeout: 600,
+            context: null,
+            onTick: null
+        }, options);
+
+        return function () {
+            var argumentArray = Array.prototype.slice.call(arguments, 0);
+
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+                timeoutId = 0;
+            }
+
+            if (options.onTick) {
+                options.onTick.apply(options.context, argumentArray);
+            }
+
+            timeoutId = setTimeout(function(){
+                call.apply(options.context, argumentArray);
+            }, options.timeout);
+        };
+    }
+
+    /**
+     * Handle Secondary Insurance logic, field 11.d and fields in box 9.
+     *
+     * @see DSS-517
+     * @see CS-338
+     */
+    (function(){
+        $('body').append('<style>.warning{background-color:#fcc;}</style>');
+
+        var $secondaryInsuranceIndicator = $('[name=another_plan], [name=other_payer]'),
+            $parent = $secondaryInsuranceIndicator.closest('td.label, table.eligibleapi.claim'),
+            $requiredFields = $('\
+                [name=other_insured_lastname], [name="other_payers[0][subscriber][last_name]"],\
+                [name=other_insured_firstname], [name="other_payers[0][subscriber][first_name]"],\
+                [name=other_insured_middle], [name="other_payers[0][subscriber][middle_name]"],\
+                [name=other_insured_policy_group_feca], [name="other_payers[0][subscriber][group_id]"],\
+                [name=patient_relation_other_insured], [name="other_payers[0][subscriber][relationship]"],\
+                [name=other_insured_insurance_plan], [name="other_payers[0][name]"],\
+                [name=responsibility_sequence], [name="other_payers[0][responsibility_sequence]"]\
+            '),
+            $optionalFields = $('[name=other_insured_insurance_type], [name="other_payers[0][subscriber][insurance_type_code]"]'),
+            $associatedFields = $requiredFields.add($optionalFields),
+            $allFields = $secondaryInsuranceIndicator.add($associatedFields);
+
+        function onIndicatorChange () {
+            var $indicator = $secondaryInsuranceIndicator.filter(':checked'),
+                indicatorSelected = !!$indicator.val().match(/yes|true/),
+                fieldTitle = '', parentTitle = '', $fieldList;
+
+            $associatedFields.removeClass('warning');
+            $parent.removeClass('warning');
+
+            if (!$indicator.length) {
+                return;
+            }
+
+            if (indicatorSelected) {
+                $fieldList = $requiredFields;
+                fieldTitle = 'Secondary Insurance is marked as "Yes", this field is required.';
+                parentTitle = 'Required fields in Box 9 related to secondary insurance are incomplete.';
+            } else {
+                $fieldList = $associatedFields;
+                fieldTitle = 'Secondary Insurance is marked as "No", this field should be empty.';
+                parentTitle = 'No secondary insurance specified. Fields in Box 9 should be empty.';
+            }
+
+            $fieldList.each(function () {
+                var $this = $(this),
+                    empty = !$this.val().trim().length;
+
+                if (indicatorSelected ? empty : !empty) {
+                    $this.addClass('warning').attr('title', fieldTitle);
+                } else {
+                    $this.removeAttr('title');
+                }
+            });
+
+            if ($fieldList.filter('.warning').length) {
+                $parent.addClass('warning').attr('title', parentTitle);
+            } else {
+                $parent.removeAttr('title');
+            }
+        }
+
+        $allFields.change(debounceCall(onIndicatorChange));
+        $secondaryInsuranceIndicator.change();
+    }());
+});
 
   $(".date_field").keydown(function(e){
       var key = e.charCode || e.keyCode || 0;

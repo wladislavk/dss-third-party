@@ -53,6 +53,7 @@ function num_patient_changes($pid){
 	$fields['p_m_ins_plan'] = "Insurance Plan";
 	$fields['p_m_ins_type'] = "Insurance Type";
 
+	$fields['has_s_m_ins'] = "Has Secondary Insurance?";
 	$fields['s_m_relation'] = "2nd Relationship to Insured";
 	$fields['s_m_partyfname'] = "2nd Insured First Name";
 	$fields['s_m_partymname'] = "2nd Insured Middle Name";

@@ -282,7 +282,9 @@ module.exports = {
                 this.$route.router.go(this.$route.path + '?pid=' + data.created_patient_id);
             }
 
-            // TODO: add actions on other response statuses
+            if (data.hasOwnProperty('status') && data.status.length > 0) {
+                this.$set('message', data.status);
+            }
         },
         submitAddingOrEditingPatient: function() {
             if (this.validatePatientData(this.patient)) {
@@ -618,6 +620,9 @@ module.exports = {
                         this.$set('formedFullNames', data.formed_full_names);
                         this.$set('pendingVob', data.pending_vob);
                         this.$set('patientLocation', data.patient_location);
+
+                        // update patient name in the header
+                        // this.$set('headerInfo.patientName', data.patient.firstname + ' ' + data.patient.lastname);
                     }
                 }, function(response) {
                     this.handleErrors('getDataForFillingPatientForm', response);
@@ -774,12 +779,7 @@ module.exports = {
         ) {
             patientId = patientId || 0;
             patientFormData = Object.assign(patientFormData, {
-                referredby_name : formedFullNames.referred_name,
-                docsleep_name   : formedFullNames.docsleep_name,
-                docpcp_name     : formedFullNames.docpcp_name,
-                docdentist_name : formedFullNames.docdentist_name,
-                docent_name     : formedFullNames.docent_name,
-                location        : this.patientLocation
+                location: this.patientLocation
             });
 
             var fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number', 'ssn'];

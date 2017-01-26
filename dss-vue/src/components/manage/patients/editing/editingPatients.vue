@@ -85,7 +85,7 @@
                             <div id="profile_image" style="float:right; width:270px;">
                                 <span style="float:right">
                                     <a
-                                        v-if="!profilePhoto.image_file"
+                                        v-if="!profilePhoto"
                                         href="#"
                                         onclick="loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;"
                                     >
@@ -110,7 +110,7 @@
                                         name="salutation"
                                         style="width:80px;"
                                     >
-                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mr." checked>Mr.</option>
                                         <option value="Mrs.">Mrs.</option>
                                         <option value="Ms.">Ms.</option>
                                         <option value="Dr.">Dr.</option>
@@ -665,7 +665,7 @@
                                 <div style="float:left;" id="referred_source_div">
                                     <input
                                         v-model="patient.referred_source"
-                                        :checked="patient.referred_source == consts.DSS_REFERRED_PHYSICIAN ? 'checked' : ''"
+                                        :checked="patient.referred_source == consts.DSS_REFERRED_PHYSICIAN"
                                         :value="consts.DSS_REFERRED_PATIENT"
                                         type="radio"
                                         v-on:click="showReferredBy('person', '')"

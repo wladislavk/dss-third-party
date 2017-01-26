@@ -45,7 +45,8 @@ module.exports = {
                     use_course_staff : 0
                 },
                 tasksNumber              : 0,
-                patientTaskNumber        : 0
+                patientTaskNumber        : 0,
+                patientName              : ''
             },
             secondsPerDay                        : 86400,
             oldestLetter                         : 0,
@@ -57,7 +58,6 @@ module.exports = {
             alertText                            : '',
             displayAlert                         : false,
             alergen                              : 0,
-            patientName                          : '',
             patientTasks                         : [],
             notificationsNumber                  : 0,
             isUserDoctor                         : false,
@@ -375,7 +375,7 @@ module.exports = {
                         .then(function(response) {
                             var data = response.data.data;
 
-                            if (data) {
+                            if (data.length) {
                                 this.premedCheck  = data[0].premedcheck;
                                 this.medicare     = (data[0].p_m_ins_type == 1);
                                 this.alertText    = data[0].alert_text;
@@ -385,7 +385,7 @@ module.exports = {
                                     this.title += 'Pre-medication: ' + data[0].premed + '\n';
                                 }
 
-                                this.patientName = data[0].firstname +  ' ' + data[0].lastname;
+                                this.$set('headerInfo.patientName', data[0].firstname + ' ' + data[0].lastname);
                             }
                         }, function(response) {
                             this.handleErrors('getPatientByIdAndDocId', response);
@@ -395,7 +395,7 @@ module.exports = {
                         .then(function(response) {
                             var data = response.data.data;
 
-                            if (data) {
+                            if (data.length) {
                                 this.alergen = data[0].allergenscheck;
 
                                 if (this.alergen) {

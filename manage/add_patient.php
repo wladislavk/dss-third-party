@@ -2108,7 +2108,7 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
               <span>
                 <label style="display:inline;">Does patient have secondary insurance?</label>
                 <input type="radio" value="Yes" <?php echo ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-                <input type="radio" value="No" <?php echo ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();" /> No
+                <input type="radio" value="No" <?php echo ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide();" /> No
               </span>
             </div>
           </li>
@@ -2249,7 +2249,7 @@ if(!$image){ ?>
         </ul>
         <ul>
           <li id="foli8" class="complex"> 
-            <div class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+            <div class="s_m_ins_div" style="position:relative;<?= $has_s_m_ins != 'Yes' ? 'display:none;' : '' ?>">
               <span>
                 <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
                   <option value="">Select Insurance Company</option>
@@ -2284,6 +2284,10 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                 <textarea id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
                 <label for="s_m_ins_phone">Address</label>
               </span>
+              <button id="clear-secondary-insurance" class="button" style="position:absolute;bottom:5px;right:5px;"
+                onclick="javascript:if(confirm('Empty all fields in Secondary Insurance?')){clearInfo();}return false;">
+                &mdash; Clear All Values
+              </button>
             </div>
             <div>          
             </div>

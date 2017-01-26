@@ -478,10 +478,10 @@ class PatientsController extends Controller
             }
 
             $patientFormData = array_merge($patientFormData, [
-                'salt'       => $salt,
+                'login'      => $uniqueLogin,
                 'password'   => $password,
                 'salt'       => $salt,
-                'userid'     => $this->currentUser->userid ?: 0,
+                'userid'     => $userId,
                 'docid'      => $docId,
                 'ip_address' => $request->ip(),
                 // set filters
@@ -627,7 +627,11 @@ class PatientsController extends Controller
                     . ($shortInfo->contacttype != '' ? ' - ' . $shortInfo->contacttype : '');
             }
 
-            $foundLocation = $summariesResource->getWithFilter(['location'], ['patientid' => $patientId])[0];
+            $foundLocations = $summariesResource->getWithFilter(['location'], ['patientid' => $patientId]);
+
+            if (count($foundLocations)) {
+                $foundLocation = $foundLocations[0];
+            }
 
             // data for response
             $data = [
@@ -643,7 +647,7 @@ class PatientsController extends Controller
                                                  ]),
                 'patient'                     => ApiResponse::transform($foundPatient),
                 'formed_full_names'           => $formedFullNames,
-                'patient_location'            => $foundLocation ? $foundLocation->location : ''
+                'patient_location'            => !empty($foundLocation) ? $foundLocation->location : ''
             ];
         } else {
             $data = [];

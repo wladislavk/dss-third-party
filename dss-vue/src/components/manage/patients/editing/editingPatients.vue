@@ -389,7 +389,6 @@
                                         class="field text addr tbox calendar"
                                         style="width:100px;"
                                         maxlength="255"
-                                        onChange="validateDate('dob');"
                                     />
                                     <span id="req_0" class="req">*</span>
                                     <label for="dob">Birthday</label>

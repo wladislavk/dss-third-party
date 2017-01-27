@@ -103,6 +103,9 @@ module.exports = {
         },
         'patient.ssn': function() {
             this.$set('patient.ssn', this.ssn(this.patient.ssn));
+        },
+        'patient.dob': function() {
+            this.$set('patient.dob', this.date(this.patient.dob));
         }
     },
     computed: {
@@ -293,7 +296,7 @@ module.exports = {
             this.fillForm(this.routeParameters.patientId);
         },
         submitAddingOrEditingPatient: function() {
-            if (this.validatePatientData(this.patient)) {
+            if (this.validatePatientData(this.patient, null, this.formedFullNames.referred_name)) {
                 this.checkEmail(this.patient.email, this.routeParameters.patientId)
                     .then(function(response) {
                         var data = response.data.data;
@@ -715,6 +718,11 @@ module.exports = {
             value = value || '';
             return value.replace(/\D/g, '')
                 .replace(/^(\d{3})(\d{2})(\d{4})$/, '$1-$2-$3');
+        },
+        date: function(value) {
+            value = value || '';
+            return value.replace(/\D/g, '')
+                .replace(/^(\d{2})(\d{2})(\d{4})$/, '$1/$2/$3');
         },
         number: function(value) {
             value = value || '';

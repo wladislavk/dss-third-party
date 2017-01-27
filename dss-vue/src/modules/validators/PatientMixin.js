@@ -14,26 +14,32 @@ module.exports = {
                 if (messages.hasOwnProperty(property)) {
                     if (patient[property] === undefined || patient[property].trim() == '') {
                         alert(messages[property]);
-                        this.$els[property.toCamelCase()].focus();
+                        this.$els[property].focus();
 
                         return false;
                     }
                 }
             }
+
+            return true;
         },
         walkThroughComplexMessages: function(messages, patient) {
             for (var property in messages) {
                 if (messages.hasOwnProperty(property)) {
-                    if (patient[property].trim() != '' && patient[messages[property].connect_to] == '') {
+                    if (patient.hasOwnProperty(property) && patient[property].length > 0 && patient[messages[property].connect_to] == '') {
                         alert(messages[property].message);
-                        this.$els[property.toCamelCase()].focus();
+                        this.$els[property].focus();
 
                         return false;
                     }
                 }
             }
+
+            return true;
         },
-        validatePatientData: function(patient, requestedEmails) {
+        validatePatientData: function(patient, requestedEmails, referredName) {
+            referredName = referredName || '';
+
             var messages = {
                 firstname  : 'First Name is Required',
                 lastname   : 'Last Name is Required',
@@ -50,15 +56,14 @@ module.exports = {
                 return false;
             }
 
-            if (formedFullNames.referred_name.trim() != '' && !patient.referred_by) {
+            if (referredName.length > 0 && !patient.referred_by) {
                 alert('Invalid referred by.');
-                this.$els.referredByName.focus();
+                this.$els.referred_by_name.focus();
 
                 return false;
             }
 
-            var date = new Date(patient.dob);
-            if (date instanceof Date && !isNaN(date.valueOf())) {
+            if (!this.isValidDate(patient.dob)) {
                 alert("Invalid Date Format For Birthday. (mm/dd/YYYY) is valid format");
                 this.$els.dob.focus();
 
@@ -90,7 +95,7 @@ module.exports = {
 
                 if (patient.p_m_ins_plan.trim() == '' && patient.p_m_ins_type.value != 1) {
                     alert("Plan Name is a Required Field");
-                    this.$els.pMInsPlan.focus();
+                    this.$els.p_m_ins_plan.focus();
 
                     return false;
                 }
@@ -114,7 +119,7 @@ module.exports = {
 
                     if (patient.s_m_ins_plan.trim() == "" && patient.p_m_ins_type.value != 1) {
                         alert("Secondary Plan Name is a Required Field");
-                        this.$els.sMInsPlan.focus();
+                        this.$els.s_m_ins_plan.focus();
 
                         return false;
                     }
@@ -122,7 +127,7 @@ module.exports = {
 
                 if (patient.s_m_ins_ass != 'Yes' && patient.s_m_ins_ass != 'No') {
                     alert("You must choose 'Accept Assignment of Benefits' or 'Payment to Patient'");
-                    this.$els.sMInsAss.focus();
+                    this.$els.s_m_ins_ass.focus();
 
                     return false;
                 }
@@ -134,19 +139,19 @@ module.exports = {
                         connect_to : 'docsleep',
                         message    : 'Invalid sleep md.'
                     },
-                    docpcp_name   : {
+                    docpcp_name : {
                         connect_to : 'docpcp',
                         message    : 'Invalid primary care md.'
                     },
-                    docdentist_name   : {
+                    docdentist_name : {
                         connect_to : 'docdentist',
                         message    : 'Invalid dentist'
                     },
-                    docent_name   : {
+                    docent_name : {
                         connect_to : 'docent',
                         message    : 'Invalid ENT.'
                     },
-                    docmdother_name   : {
+                    docmdother_name : {
                         connect_to : 'docmdother',
                         message    : 'Invalid other md.'
                     },
@@ -208,14 +213,12 @@ module.exports = {
 
             return true;
         },
-        validateDate: function(date) {
+        isValidDate: function(date) {
             var dateObject = new Date(date);
             if (dateObject instanceof Date && !isNaN(dateObject.valueOf())) {
-                alert('Invalid Day, Month, or Year range detected. Please correct.');
-
-                return false;
-            } else {
                 return true;
+            } else {
+                return false;
             }
         }
     }

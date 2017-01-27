@@ -6,7 +6,8 @@ module.exports = {
         return {
             consts: window.constants,
             headerInfo: {
-                docInfo : {}
+                docInfo     : {},
+                patientName : ''
             },
             routeParameters: {
                 patientId : this.$route.query.pid > 0 ? this.$route.query.pid : null
@@ -27,7 +28,7 @@ module.exports = {
             patientNotifications       : [],
             homeSleepTestCompanies     : [],
             patient                    : {},
-            profilePhoto               : {},
+            profilePhoto               : null,
             insuranceCardImage         : {},
             docLocations               : [],
             insuranceContacts          : [],
@@ -75,7 +76,7 @@ module.exports = {
             if (this.$route.query.pid > 0) {
                 this.$set('routeParameters.patientId', this.$route.query.pid);
 
-                // if patient data need to be updated - check local storage, it may contain status message
+                // if patient data need to be updated - check local storage, it may contain status message about created patient
                 var message = window.storage.get('message');
                 if (message && message.length > 0) {
                     this.$set('message', message);
@@ -85,6 +86,7 @@ module.exports = {
                 this.fillForm(this.$route.query.pid);
             } else {
                 this.$set('routeParameters.patientId', null);
+                this.cleanPatientData();
             }
         },
         'patient.home_phone': function() {
@@ -193,6 +195,8 @@ module.exports = {
         }
     },
     created: function() {
+        this.$dispatch('get-header-info');
+
         this.fillForm(this.routeParameters.patientId);
 
         this.getHomeSleepTestCompanies()
@@ -285,6 +289,8 @@ module.exports = {
             if (data.hasOwnProperty('status') && data.status.length > 0) {
                 this.$set('message', data.status);
             }
+
+            this.fillForm(this.routeParameters.patientId);
         },
         submitAddingOrEditingPatient: function() {
             if (this.validatePatientData(this.patient)) {
@@ -602,6 +608,20 @@ module.exports = {
 
             return this.$http.post(window.config.API_PATH + 'patient-summaries/update-tracker-notes', data);
         },
+        cleanPatientData: function() {
+            this.$set('patient', {});
+            this.$set('profilePhoto', null);
+            this.$set('introLetter', {});
+            this.$set('insuranceCardImage', {});
+            this.$set('uncompletedHomeSleepTests', []);
+            this.$set('patientNotifications', []);
+            this.$set('formedFullNames', {});
+            this.$set('pendingVob', {});
+            this.$set('patientLocation', '');
+
+            // update patient name in the header
+            this.$dispatch('update-from-child', { patientName: '' });
+        },
         fillForm: function(patientId) {
             this.getDataForFillingPatientForm(patientId)
                 .then(function(response) {
@@ -622,7 +642,9 @@ module.exports = {
                         this.$set('patientLocation', data.patient_location);
 
                         // update patient name in the header
-                        // this.$set('headerInfo.patientName', data.patient.firstname + ' ' + data.patient.lastname);
+                        this.$dispatch('update-from-child', {
+                            patientName: data.patient.firstname + ' ' + data.patient.lastname
+                        });
                     }
                 }, function(response) {
                     this.handleErrors('getDataForFillingPatientForm', response);
@@ -685,10 +707,12 @@ module.exports = {
             patient.ssn = this.ssn(patient.ssn);
         },
         phone: function(value) {
+            value = value || '';
             return value.replace(/\D/g, '')
                 .replace(/^(\d{3})(\d{3})(\d{4})$/, '($1) $2-$3');
         },
         ssn: function(value) {
+            value = value || '';
             return value.replace(/\D/g, '')
                 .replace(/^(\d{3})(\d{2})(\d{4})$/, '$1-$2-$3');
         },

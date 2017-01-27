@@ -683,6 +683,14 @@ module.exports = {
     events: {
         'get-header-info': function() {
             this.$broadcast('update-header-info', this.headerInfo);
+        },
+        'update-from-child': function(headerInfo) {
+            var keys = Object.keys(headerInfo);
+
+            var self = this;
+            keys.forEach((el) => {
+                self.headerInfo[el] = headerInfo[el];
+            });
         }
     },
     computed: {

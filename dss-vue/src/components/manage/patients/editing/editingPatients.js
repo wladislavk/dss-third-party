@@ -612,7 +612,11 @@ module.exports = {
             return this.$http.post(window.config.API_PATH + 'patient-summaries/update-tracker-notes', data);
         },
         cleanPatientData: function() {
-            this.$set('patient', {});
+            var patient = {};
+
+            this.setDefaultValues(patient);
+
+            this.$set('patient', patient);
             this.$set('profilePhoto', null);
             this.$set('introLetter', {});
             this.$set('insuranceCardImage', {});
@@ -712,7 +716,12 @@ module.exports = {
         },
         setDefaultValues: function(patient) {
             var values = {
-                copyreqdate: moment().format('DD/MM/YYYY')
+                copyreqdate      : moment().format('DD/MM/YYYY'),
+                salutation       : 'Mr.',
+                preferredcontact : 'paper',
+                display_alert    : 0,
+                p_m_same_address : 1,
+                has_s_m_ins      : 'No'
             };
 
             var fields = Object.keys(values);

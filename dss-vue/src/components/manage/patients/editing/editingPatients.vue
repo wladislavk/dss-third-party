@@ -945,6 +945,7 @@
                                     onclick="$('#p_m_address_fields').hide();"
                                     name="p_m_same_address"
                                     value="1"
+                                    checked
                                 > Yes
                                 <input
                                     v-model="patient.p_m_same_address"
@@ -952,7 +953,6 @@
                                     onclick="$('#p_m_address_fields').show();"
                                     name="p_m_same_address"
                                     value="2"
-                                    checked
                                 > No
                             </label>
                             <div>

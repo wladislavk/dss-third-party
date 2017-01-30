@@ -604,8 +604,12 @@ class PatientsController extends Controller
                 $formedFullNames[$field . '_name'] = $this->getDocNameFromShortInfo($foundPatient->$field, $shortInfo);
             }
 
-            $formedFullNames['ins_payer_name'] = $foundPatient->p_m_eligible_payer_id . ' - ' . $foundPatient->p_m_eligible_payer_name;
-            
+            if (!empty($foundPatient->p_m_eligible_payer_id)) {
+                $formedFullNames['ins_payer_name'] = $foundPatient->p_m_eligible_payer_id . ' - ' . $foundPatient->p_m_eligible_payer_name;
+            } else {
+                $formedFullNames['ins_payer_name'] = '';
+            }
+
             if (!empty($foundPatient->s_m_eligible_payer_id)) {
                 $formedFullNames['s_m_ins_payer_name'] = $foundPatient->s_m_eligible_payer_id . ' - ' . $foundPatient->s_m_eligible_payer_name;
             } else {

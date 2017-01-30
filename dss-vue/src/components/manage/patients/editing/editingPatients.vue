@@ -110,7 +110,7 @@
                                         name="salutation"
                                         style="width:80px;"
                                     >
-                                        <option value="Mr." checked>Mr.</option>
+                                        <option value="Mr." selected>Mr.</option>
                                         <option value="Mrs.">Mrs.</option>
                                         <option value="Ms.">Ms.</option>
                                         <option value="Dr.">Dr.</option>
@@ -256,7 +256,7 @@
                                         id="preferredcontact"
                                         name="preferredcontact"
                                     >
-                                        <option value="paper">Paper Mail</option>
+                                        <option value="paper" selected>Paper Mail</option>
                                         <option value="email">Email</option>
                                     </select>
                                     <label>Preferred Contact Method</label>
@@ -572,14 +572,12 @@
                                         type="radio"
                                         name="display_alert"
                                         value="0"
+                                        checked
                                     >No
                                 </span>
                                 <textarea
+                                    v-show="patient.display_alert == 1"
                                     v-model="patient.alert_text"
-                                    :class="{
-                                        'show-alert-text' : patient.display_alert,
-                                        'hide-alert-text' : !patient.display_alert
-                                    }"
                                     name="alert_text"
                                     id="alert_text"
                                 >{{ $alert_text }}</textarea>
@@ -954,6 +952,7 @@
                                     onclick="$('#p_m_address_fields').show();"
                                     name="p_m_same_address"
                                     value="2"
+                                    checked
                                 > No
                             </label>
                             <div>
@@ -1044,8 +1043,8 @@
                         </li>
                     </ul>
                     <ul
+                        v-show="patient.p_m_same_address == 2"
                         id="p_m_address_fields"
-                        {{ (patient.p_m_same_address == "1") ? 'style="display:none;"' : '' }}
                     >
                         <li id="foli8" class="complex">
                             <div>
@@ -1277,6 +1276,7 @@
                                         type="radio"
                                         value="No"
                                         name="s_m_ins"
+                                        checked
                                     /> No
                                 </span>
                             </div>

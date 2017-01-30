@@ -633,6 +633,7 @@ module.exports = {
                     if (data.length != 0) {
                         this.filterPhoneFields(data.patient);
                         this.filterSsnField(data.patient);
+                        this.setDefaultValues(data.patient);
 
                         this.$set('patient', data.patient);
                         this.$set('profilePhoto', data.profile_photo);
@@ -708,6 +709,19 @@ module.exports = {
         },
         filterSsnField: function(patient) {
             patient.ssn = this.ssn(patient.ssn);
+        },
+        setDefaultValues: function(patient) {
+            var values = {
+                copyreqdate: moment().format('DD/MM/YYYY')
+            };
+
+            var fields = Object.keys(values);
+
+            fields.forEach((el) => {
+                if (!patient[el]) {
+                    patient[el] = values[el];
+                }
+            });
         },
         phone: function(value) {
             value = value || '';

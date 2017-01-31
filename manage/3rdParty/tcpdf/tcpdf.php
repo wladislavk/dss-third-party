@@ -157,7 +157,7 @@ class TCPDF {
 	 * Current TCPDF version.
 	 * @private
 	 */
-	private $tcpdf_version = '5.9.093';
+	private $tcpdf_version = '5.9.093-dss';
 
 	// Protected properties
 
@@ -262,6 +262,7 @@ class TCPDF {
 	 * @protected
 	 */
 	protected $lMargin;
+	protected $baseLMargin;
 
 	/**
 	 * Top margin.
@@ -274,6 +275,7 @@ class TCPDF {
 	 * @protected
 	 */
 	protected $rMargin;
+	protected $baseRMargin;
 
 	/**
 	 * Page break margin.
@@ -1888,7 +1890,8 @@ class TCPDF {
 		$this->setPageFormat($format, $orientation);
 		// page margins (1 cm)
 		$margin = 28.35 / $this->k;
-		$this->SetMargins($margin, $margin);
+		// Force the initial margins to propagate through the document, until new values are set
+		$this->SetMargins($margin, $margin, -1, true);
 		// internal cell padding
 		$cpadding = $margin / 10;
 		$this->setCellPaddings($cpadding, 0, $cpadding, 0);
@@ -3249,7 +3252,27 @@ class TCPDF {
 			// overwrite original values
 			$this->original_lMargin = $this->lMargin;
 			$this->original_rMargin = $this->rMargin;
+			$this->storeDefaultMargins($left, $right);
 		}
+	}
+
+	/**
+	 * Store a copy of the margins, to avoid overwriting when setting the header and a new page
+	 * 
+	 * @param $left  integer Left margin, in mm
+	 * @param $right integer Right margin, in mm
+	 */
+	protected function storeDefaultMargins($left, $right) {
+		$this->baseLMargin = $left;
+		$this->baseRMargin = $right;
+	}
+
+	/**
+	 * Recover the stored copy of the default margins
+	 */
+	protected function restoreDefaultMargins() {
+		$this->lMargin = $this->baseLMargin;
+		$this->rMargin = $this->baseRMargin;
 	}
 
 	/**
@@ -3823,6 +3846,9 @@ class TCPDF {
 	 * @see startPage(), endPage(), addTOCPage(), endTOCPage(), getPageSizeFromFormat(), setPageFormat()
 	 */
 	public function AddPage($orientation='', $format='', $keepmargins=false, $tocpage=false) {
+		// Ensure the default margins are used for each new page
+		// Ignore temporary margins, as switching back and forth causes problems
+		$this->restoreDefaultMargins();
 		if ($this->inxobj) {
 			// we are inside an XObject template
 			return;

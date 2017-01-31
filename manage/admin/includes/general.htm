@@ -1435,12 +1435,12 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
 
   if($cover != ''){
     $cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);
-    $pdf->AddPage('', '', true, false);
+    $pdf->AddPage();
     $pdf->writeHTML($cover, true, false, true, false, '');
   }
 
   // add a page
-  $pdf->AddPage('', '', true, false);
+  $pdf->AddPage();
 
   //fix to allow signature to show for both html and pdf
   $html = str_replace('display_file.php?f=', '../../../shared/q_file/' , $html);

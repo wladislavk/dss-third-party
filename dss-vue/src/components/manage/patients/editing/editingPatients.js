@@ -279,6 +279,20 @@ module.exports = {
         handleChangingInsuranceInfo: function() {
             this.isInsuranceInfoChanged = true;
         },
+        parseFailedResponseOnEditingPatient: function(data) {
+            var errors = data.errors.shift();
+
+            if (errors != undefined) {
+                var objKeys = Object.keys(errors);
+
+                var arrOfMessages = objKeys.map((el) => {
+                    return el + ':' + errors[el].join('|').toLowerCase();
+                });
+
+                // TODO: create more readable format
+                alert(arrOfMessages.join("\n"));
+            }
+        },
         parseSuccessfulResponseOnEditingPatient: function(data) {
             if (data.hasOwnProperty('redirect_to') && data.redirect_to.length > 0) {
                 this.$route.router.go(data.redirect_to);
@@ -291,6 +305,16 @@ module.exports = {
 
             if (data.hasOwnProperty('status') && data.status.length > 0) {
                 this.$set('message', data.status);
+            }
+
+            if (data.hasOwnProperty('mails')) {
+                var mails = data.mails;
+
+                mails.forEach((el) => {
+                    if (mails[el] && mails[el].length > 0) {
+                        alert(mails[el]);
+                    }
+                });
             }
 
             this.fillForm(this.routeParameters.patientId);
@@ -311,22 +335,9 @@ module.exports = {
                         if (isReadyForProcessing) {
                             this.editPatient(this.routeParameters.patientId, this.patient, this.formedFullNames)
                                 .then(function(response) {
-                                    var data = response.data.data;
-
-                                    this.parseSuccessfulResponseOnEditingPatient(data);
+                                    this.parseSuccessfulResponseOnEditingPatient(response.data.data);
                                 }, function(response) {
-                                    var errors = response.data.data.errors.shift();
-
-                                    if (errors != undefined) {
-                                        var objKeys = Object.keys(errors);
-
-                                        var arrOfMessages = objKeys.map((el) => {
-                                            return el + ':' + errors[el].join('|').toLowerCase();
-                                        });
-
-                                        // TODO: create more readable format
-                                        alert(arrOfMessages.join("\n"));
-                                    }
+                                    this.parseFailedResponseOnEditingPatient(response.data.data)
 
                                     this.handleErrors('getInsuranceContacts', response);
                                 });
@@ -346,7 +357,13 @@ module.exports = {
                     this.patient,
                     this.formedFullNames,
                     this.pressedButtons
-                );
+                ).then(function(response) {
+                    this.parseSuccessfulResponseOnEditingPatient(response.data.data);
+                }, function(response) {
+                    this.parseFailedResponseOnEditingPatient(response.data.data);
+
+                    this.handleErrors('editPatient', response);
+                });
             }
         },
         submitSendingRegistrationEmail: function() {
@@ -359,7 +376,13 @@ module.exports = {
                     this.formedFullNames,
                     null,
                     this.requestedEmails
-                );
+                ).then(function(response) {
+                    this.parseSuccessfulResponseOnEditingPatient(response.data.data);
+                }, function(response) {
+                    this.parseFailedResponseOnEditingPatient(response.data.data);
+
+                    this.handleErrors('editPatient', response);
+                });
             }
         },
         submitSendingReminderEmail: function() {

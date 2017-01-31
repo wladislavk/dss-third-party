@@ -262,6 +262,12 @@ class PatientsController extends Controller
         $patientLocation = !empty($patientFormData['location']) ? $patientFormData['location'] : 0;
         unset($patientFormData['location']);
 
+        /*
+        $emailHelper->setDocId($docId);
+        $emailHelper->sendRegEmail($patientId, 'test@mail.com', '', 'test1@mail.com');
+        dd('sending a registration email...');
+        */
+
         // validate input patient form data
         if ($patientId) {
             $validator = $this->getValidationFactory()->make($patientFormData, (new PatientUpdate())->rules());
@@ -302,6 +308,8 @@ class PatientsController extends Controller
 
         $responseData = [];
         $isUpdateAction = true;
+        $emailHelper->setDocId($docId);
+
         if ($patientId) {
             // find an unchanged patient by id
             $unchangedPatient = $patientResource->find($patientId);

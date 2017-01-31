@@ -11,6 +11,9 @@ use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\Summary;
 use DentalSleepSolutions\Eloquent\Dental\User;
 
+use Carbon\Carbon;
+use Mail;
+
 class EmailHelper
 {
     const DSS_USER_TYPE_SOFTWARE = 2;
@@ -18,19 +21,30 @@ class EmailHelper
     private $patient;
     private $summary;
     private $user;
+    private $docId;
     private $generalHelper;
+    private $mail;
 
     public function __construct(
         GeneralHelper $generalHelper,
         Patient $patient,
         Summary $summary,
-        User $user
+        User $user,
+        Mail $mail
     ) {
         $this->generalHelper = $generalHelper;
 
         $this->patient = $patient;
         $this->summary = $summary;
         $this->user = $user;
+        $this->docId = 0;
+
+        $this->mail = $mail;
+    }
+
+    public function setDocId($docId)
+    {
+        $this->docId = $docId;
     }
 
     /**
@@ -105,39 +119,37 @@ class EmailHelper
      *
      * @return bool
      */
-
-    // need to rewrite this function to the sctucture of Laravel
     private function sendRegistrationRelatedEmail($patientId, $patientEmail, $isPasswordReset = false, $oldEmail = '', $accessType = 1)
     {
-        $db = new Db();
         $patientId = intval($patientId);
         $accessType = intval($accessType);
 
-        $contactData = retrieveMailerData($patientId);
+        $contactData = $this->retrieveMailerData($patientId, $this->docId);
         $patientData = $contactData['patientData'];
         $mailingData = $contactData['mailingData'];
 
         if ($isPasswordReset) {
             if ($patientData['recover_hash'] == '' || $patientEmail != $oldEmail) {
                 $accessCode = rand(100000, 999999);
-                $recoverHash = hash('sha256', $patientData['patientid'] . $patientData['email'] . rand());
+                $recoverHash = hash('sha256', $patientId . $patientData['email'] . rand());
 
-                $db->query("UPDATE dental_patients SET
-                        text_num = 0,
-                        access_type = $accessType,
-                        registration_status = 1,
-                        access_code = '$accessCode',
-                        recover_hash = '$recoverHash',
-                        text_date = NOW(),
-                        recover_time = NOW(),
-                        registration_senton = NOW()
-                    WHERE patientid = '$patientId'");
+                $this->patient->updatePatient($patientId, [
+                    'text_num'            => 0,
+                    'access_type'         => $accessType,
+                    'registration_status' => 1,
+                    'access_code'         => "$accessCode",
+                    'recover_hash'        => "$recoverHash",
+                    'text_date'           => Carbon::now(),
+                    'recover_time'        => Carbon::now(),
+                    'registration_senton' => Carbon::now()
+                ]);
             } else {
-                $db->query("UPDATE dental_patients SET
-                        access_type = $accessType,
-                        registration_status = 1,
-                        registration_senton = NOW()
-                    WHERE patientid = '$patientId'");
+                $this->patient->updatePatient($patientId, [
+                    'access_type'         => $accessType,
+                    'registration_status' => 1,
+                    'registration_senton' => Carbon::now()
+                ]);
+
                 $recoverHash = $patientData['recover_hash'];
             }
 
@@ -151,12 +163,19 @@ class EmailHelper
 
         $mailingData['email'] = $patientEmail;
 
-        $from = 'Dental Sleep Solutions <patient@dentalsleepsolutions.com>';
-        $to = "{$patientData['firstname']} {$patientData['lastname']} <{$patientEmail}>";
-        $subject = 'Online Patient Registration';
-        $message = getTemplate('patient/registration');
+        $headerInfo = [
+            'from_email' => '<patient@dentalsleepsolutions.com>',
+            'from_name'  => 'Dental Sleep Solutions',
+            'to_email'   => $patientEmail,
+            'to_name'    => $patientData['firstname'] . ' ' . $patientData['lastname'],
+            'subject'    => 'Online Patient Registration'
+        ];
 
-        return sendEmail($from, $to, $subject, $message, $mailingData);
+        return $this->mail->send('emails.registration', $mailingData, function ($message) use ($headerInfo) {
+            $message->from($headerInfo['from_email'], $headerInfo['from_name'])
+                ->to($headerInfo['to_email'], $headerInfo['to_name'])
+                ->subject($headerInfo['subject']);
+        });
     }
 
     /**
@@ -166,11 +185,11 @@ class EmailHelper
      *
      * @return array
      */
-    private function retrieveMailerData($patientId, $docId)
+    private function retrieveMailerData($patientId, $docId = 0)
     {
         $patient = $this->patient->find($patientId);
         $summaryInfo = $this->summary->getWithFilter('location', ['patientid' => $patientId]);
-        $location = !empty($summaryInfo) ? $summaryInfo[0]->location : 0;
+        $location = count($summaryInfo) ? $summaryInfo[0]->location : 0;
 
         $mailingData = $this->user->getMailingData($docId, $patientId, $location);
 

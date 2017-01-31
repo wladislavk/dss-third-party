@@ -34,31 +34,6 @@ class GeneralHelper
         }
     }
 
-    /**
-     * Retrieve template from the template folder
-     *
-     * @param string $filename
-     * @return string
-     */
-
-    // need to rewrite to the structure of Laravel
-    public function getTemplate($filename)
-    {
-        $templatePath = __DIR__ . '/../admin/includes/templates';
-
-        $sections = explode('/', $filename);
-        $sections = array_filter($sections);
-        $sections = preg_replace('/[^a-z0-9_-]+/', '', $sections);
-
-        $filename = join('/', $sections);
-
-        if (!file_exists("$templatePath/$filename.tpl")) {
-            return '';
-        }
-
-        return file_get_contents("$templatePath/$filename.tpl");
-    }
-
     // Retrieve Names Salutation and more from Database
     // Returns an array of the form [patient, mds, or md_referrals][id]['fieldname']
     public function getContactInfo($patient, $mdList, $mdReferralList, $patReferralList = null, $letterId = 0)

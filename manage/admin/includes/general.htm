@@ -1300,140 +1300,155 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 
 // Extend the TCPDF class to create custom Header and Footer
-class MYPDF extends \TCPDF {
+class DS3PDF extends \TCPDF {
+    protected $footerText = '';
+    protected $footerImage = '';
 
-  public $footerText = '';
-  //Page header
-  public function Header() {
-    // Logo
-    $image_file = K_PATH_IMAGES.'dss_print_header.jpg';
-    //$this->Image($image_file, 0, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-  }
-  // Page footer
-  public function Footer() {
-    // Position at 26 mm from bottom
-    $this->SetY(-17);
-    $this->Cell(0, 10, html_entity_decode($this->footerText), 0, false, 'C', 0, '', 0, false, 'T', 'M');
-  }
-  public function AcceptPageBreak() {
-    if ($this->num_columns > 1) {
-      // multi column mode
-      if ($this->current_column < ($this->num_columns - 1)) {
-        // go to next column
-        $this->selectColumn($this->current_column + 1);
-      } else {
-        // add a new page
-        $this->AddPage();
-        // set first column
-        $this->selectColumn(0);
-      }
-      // avoid page breaking from checkPageBreak()
-      return false;
+    public function __construct () {
+        parent::__construct();
+
+        $this->SetCreator(PDF_CREATOR);
+        $this->SetAuthor('Dental Sleep Solutions');
+        $this->SetKeywords('DSS Correspondence');
+        $this->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $this->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
     }
-    $this->setMargins(18,40,18);
-    return $this->AutoPageBreak;
-  }
+
+    public function SetTitle ($title) {
+        parent::SetTitle($title);
+        $this->SetSubject($title);
+    }
+
+    public function ConfigureFont ($family, $style, $size) {
+        $this->SetFont($family, $style, $size);
+        $this->setHeaderFont([$family, $style, $size]);
+        $this->setFooterFont([$family, $style, $size]);
+    }
+
+    public function ConfigureMargins ($top, $right, $bottom, $left, $header=0, $footer=0) {
+        $this->SetMargins($left, $top, $right, true);
+        $this->SetAutoPageBreak(true, $bottom);
+        $this->setHeaderMargin($header);
+        $this->setFooterMargin($footer);
+    }
+
+    public function SetHeaderImage ($image) {
+        $this->header_logo = $image;
+    }
+
+    public function SetHeaderTitle ($text) {
+        $this->header_title = $text;
+    }
+
+    public function SetHeaderText ($text) {
+        $this->header_string = $text;
+    }
+
+    public function SetFooterText ($text) {
+        $this->footerText = $text;
+    }
+
+    public function SetFooterImage ($image) {
+        $this->footerImage = $image;
+    }
+
+    public function Header () {
+        if ($this->header_logo) {
+            $this->Image($this->header_logo, $this->lMargin, $this->header_margin, 20, 0, 'JPG', '', 'M');
+        }
+
+        if ($this->header_string) {
+            $this->SetXY($this->lMargin, $this->header_margin);
+            $this->Cell(0, 0, html_entity_decode($this->header_string), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        }
+    }
+
+    public function Footer () {
+        if ($this->footerImage) {
+            $this->Image($this->footerImage, $this->lMargin, $this->h - $this->footer_margin, 20, 0, 'JPG', '', 'M');
+        }
+
+        if ($this->footerText) {
+            $this->SetXY($this->lMargin, -$this->footer_margin);
+            $this->Cell(0, 0, html_entity_decode($this->footerText), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        }
+    }
+
+    public function AcceptPageBreak () {
+        if ($this->num_columns <= 1) {
+            return $this->AutoPageBreak;
+        }
+
+        // multi column mode
+        if ($this->current_column < ($this->num_columns - 1)) {
+            $this->selectColumn($this->current_column + 1);
+        } else {
+            $this->AddPage();
+            $this->selectColumn(0);
+        }
+
+        // avoid page breaking from checkPageBreak()
+        return false;
+    }
 }
 
-function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '', $docid = null, $letterid = null) {	
-	// create new PDF document
-  if ($fax) {
-    global $pdf_header, $pdf_footer;
-    $pdf_header = $header;
-    $pdf_footer = $footer;
-    // Extend the TCPDF class to create custom Header and Footer
-    class FAXPDF extends \TCPDF {
-      //Page header
-      public function Header() {
-        // Logo
-        global $pdf_header;
-        if ($pdf_header) {
-          $this->Image($pdf_header, 24, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-        }
-      }
+function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '', $docid = null, $letterid = null) {
+  $db = new Db();
 
-      // Page footer
-      public function Footer() {
-        // Position at 26 mm from bottom
-        $this->SetY(-26);
-        global $pdf_footer;
-        if ($pdf_footer) {
-          $this->Image($pdf_footer, 24, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-        }
-      }
-    }
-    $pdf = new FAXPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-  } else {
-    $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-    $pdf->footerText = $footer;
-  }
+  // Default values
+  $margin_top = PDF_MARGIN_TOP;
+  $margin_left = PDF_MARGIN_LEFT;
+  $margin_right = PDF_MARGIN_RIGHT;
+  $margin_bottom = PDF_MARGIN_BOTTOM;
+  $margin_header = PDF_MARGIN_HEADER;
+  $margin_footer = PDF_MARGIN_FOOTER;
 
-  // set document information
-  $pdf->SetCreator(PDF_CREATOR);
-  $pdf->SetAuthor('Dental Sleep Solutions');
-  $pdf->SetTitle($title);
-  $pdf->SetSubject($title);
-  $pdf->SetKeywords('DSS Correspondence');
-
-  // set default monospaced font
-  $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
   $font_size = 10;
   $font_family = "dejavusans";
-  $db = new Db();
-  if($docid){
-    $m_sql = "SELECT * from dental_users where userid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";
-    $m_r = $db->getRow($m_sql);
-    if($m_r['user_type']==2){
+
+  if ($docid) {
+    $docid = intval($docid);
+    $m_r = $db->getRow("SELECT user_type,
+        letter_margin_top, letter_margin_bottom,
+        letter_margin_left, letter_margin_right,
+        letter_margin_header, letter_margin_footer
+      FROM dental_users
+      WHERE userid = '$docid'");
+
+    if ($m_r['user_type'] == 2) {
       $margin_top = $m_r['letter_margin_top'];
       $margin_left = $m_r['letter_margin_left'];
       $margin_right = $m_r['letter_margin_right'];
       $margin_bottom = $m_r['letter_margin_bottom'];
-      $margin_header = $m_r['letter_margin_header']; 
+      $margin_header = $m_r['letter_margin_header'];
       $margin_footer = $m_r['letter_margin_footer'];
-      if($letterid){
-        $l_sql = "SELECT * FROM dental_letters where letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
-        $l_r = $db->getRow($l_sql);
+
+      if ($letterid) {
+        $letterid = intval($letterid);
+        $l_r = $db->getRow("SELECT font_size, font_family
+          FROM dental_letters
+          WHERE letterid = '$letterid'");
         $font_size = $l_r['font_size'];
         $font_family = $l_r['font_family'];
       }
-    }else{
-      $margin_top = PDF_MARGIN_TOP;
-      $margin_left = PDF_MARGIN_LEFT;
-      $margin_right = PDF_MARGIN_RIGHT;
-      $margin_bottom = PDF_MARGIN_BOTTOM;
-      $margin_header = PDF_MARGIN_HEADER; 
-      $margin_footer = PDF_MARGIN_FOOTER;
     }
-  }else{
-    $margin_top = PDF_MARGIN_TOP;
-    $margin_left = PDF_MARGIN_LEFT;
-    $margin_right = PDF_MARGIN_RIGHT;
-    $margin_bottom = PDF_MARGIN_BOTTOM;
-    $margin_header = PDF_MARGIN_HEADER;
-    $margin_footer = PDF_MARGIN_FOOTER;
   }
 
-  // Set a default bottom margin
-  $margin_bottom = $margin_bottom ?: 20;
+  $margin_bottom = $margin_bottom > 0 ? $margin_bottom : 20;
 
-  //set margins
-  $pdf->SetMargins($margin_left, $margin_top, $margin_right, true);
-  $pdf->SetHeaderMargin($margin_header);
-  $pdf->SetFooterMargin($margin_footer);
+  $pdf = new DS3PDF();
+  $pdf->ConfigureMargins($margin_top, $margin_right, $margin_bottom, $margin_left, $margin_header, $margin_footer);
+  $pdf->ConfigureFont($font_family, '', $font_size);
+  $pdf->SetTitle($title);
 
-  //set auto page breaks
-  $pdf->SetAutoPageBreak(true, $margin_bottom);
+  if ($fax) {
+    $pdf->SetHeaderImage($header);
+    $pdf->SetFooterImage($footer);
+  } else {
+    $pdf->SetFooterText($footer);
+  }
 
-  //set image scale factor
-  $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-  //set some language-dependent strings
-  //$pdf->setLanguageArray($l);
-
-  // set font
-  $pdf->SetFont($font_family, '', $font_size);
-
-  if($cover != ''){
+  if ($cover != '') {
     $cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);
     $pdf->AddPage();
     $pdf->writeHTML($cover, true, false, true, false, '');

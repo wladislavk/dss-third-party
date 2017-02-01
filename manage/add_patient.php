@@ -593,6 +593,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       $salt = '';
       $password = '';
     }
+    $accessCode = rand(100000, 999999);
     $ins_sql = "insert 
                   into 
                   dental_patients 
@@ -723,6 +724,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
                   status = '".s_for($_POST["status"])."',
                   use_patient_portal = '".s_for($_POST["use_patient_portal"])."',
                   adddate=now(),
+                  access_code = '$accessCode', access_code_date = NOW(),
                   ip_address='".$_SERVER['REMOTE_ADDR']."',
                   preferredcontact='".s_for($_POST["preferredcontact"])."';";
 
@@ -737,7 +739,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
 
     if(isset($_POST['sendReg'])&& $doc_patient_portal && $_POST["use_patient_portal"]){
       if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
-        sendRegEmail($pid, $_POST['email'], $login);
+        sendRegEmail($pid, $_POST['email'], $login, '');
       }else{?>
         <script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script>
 <?php
@@ -817,6 +819,16 @@ $pending_vob_status = $vob_myarray['status'];
 
 $thesql = "select * from dental_patients where patientid='".$request_ed."'";
 $themyarray = $db->getRow($thesql);
+
+if ($themyarray['registration_status'] == 1 && $themyarray['access_code'] == '') {
+  $patientId = intval($request_ed);
+  $accessCode = rand(100000, 999999);
+  $themyarray['access_code'] = $accessCode;
+
+  $db->query("UPDATE dental_patients
+    SET access_code = '$accessCode', access_code_date = NOW()
+    WHERE patientid = '$patientId'");
+}
 
 if(isset($msg) && $msg != ''){
   $firstname = $_POST['firstname'];

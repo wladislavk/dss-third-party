@@ -739,7 +739,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
 
     if(isset($_POST['sendReg'])&& $doc_patient_portal && $_POST["use_patient_portal"]){
       if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
-        sendRegEmail($pid, $_POST['email'], $login, $_POST['email']);
+        sendRegEmail($pid, $_POST['email'], $login, '');
       }else{?>
         <script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script>
 <?php

@@ -12,10 +12,15 @@
         </tr>
         <tr>
             <td>
-                <h2>Your New Account</h2>
-                <p>A new patient account has been created for you by {{ $mailing_practice }}.<br />
-                    Your Patient Portal login information is:</p>
-                <p><b>Email:</b> {{ $email }}</p>
+                <h2>Your Updated Account</h2>
+                <p>
+                    An update has been made to your account.<br />
+                    Please use the updated email address below to login:
+                </p>
+                <h3>New Email: {{ $new_email }}</h3>
+                <p>
+                    <b>Old Email:</b> {{ $old_email }}
+                </p>
             </td>
             <td>
                 <center>
@@ -25,33 +30,17 @@
         </tr>
         <tr>
             <td colspan="2">
-                <center>
-                    <h2>Save Time - Complete Your Paperwork Online</h2>
-                </center>
                 <p>
-                    Click the link below to log in and complete your patient forms online.
-                    Paperless forms take only a few minutes to complete and let you avoid unnecessary waiting during your next visit.
-                    Saving trees is good too!
+                    Click the link below to login with your new email address:<br />
+                    <a href="{{ URL::to('reg/login.php') }}">{{ URL::to('reg/login.php') }}</a>
                 </p>
-                <center>
-                    <h3>
-                        <a href="{{ URL::to($link) }}">
-                            Click Here to Complete Your Forms Online
-                        </a>
-                    </h3>
-                </center>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                {!! $legend or '' !!}
                 <p>
                     {{ $mailing_practice }}<br />
                     {{ $mailing_address }}<br />
                     {{ $mailing_city }} {{ $mailing_state }} {{ $mailing_zip }}<br />
                     {{ $mailing_phone }}
                 </p>
-                <h3>Need Assistance?</h3>
+                <h3>Need assistance?</h3>
                 <p>
                     <b>Contact us at {{ $mailing_phone }}</b>
                 </p>

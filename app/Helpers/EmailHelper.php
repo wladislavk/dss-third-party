@@ -2,10 +2,6 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-// need to fix it
-define('SHARED_FOLDER', __DIR__ . '/../../../../shared/');
-define('Q_FILE_FOLDER', SHARED_FOLDER . '/q_file/');
-
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\Summary;
@@ -23,14 +19,12 @@ class EmailHelper
     private $user;
     private $docId;
     private $generalHelper;
-    private $mail;
 
     public function __construct(
         GeneralHelper $generalHelper,
         Patient $patient,
         Summary $summary,
-        User $user,
-        Mail $mail
+        User $user
     ) {
         $this->generalHelper = $generalHelper;
 
@@ -38,8 +32,6 @@ class EmailHelper
         $this->summary = $summary;
         $this->user = $user;
         $this->docId = 0;
-
-        $this->mail = $mail;
     }
 
     public function setDocId($docId)
@@ -55,13 +47,13 @@ class EmailHelper
      *
      * @return bool
      */
-    public function sendUpdatedEmail($docId, $patientId, $newEmail, $oldEmail, $sentBy)
+    public function sendUpdatedEmail($patientId, $newEmail, $oldEmail, $sentBy)
     {
         if (strtolower(trim($oldEmail)) === strtolower(trim($newEmail))) {
             return false;
         }
 
-        $contactData = $this->retrieveMailerData($patientId, $docId);
+        $contactData = $this->retrieveMailerData($patientId, $this->docId);
         $patientData = $contactData['patientData'];
         $mailingData = $contactData['mailingData'];
 
@@ -71,15 +63,28 @@ class EmailHelper
             ? 'An update has been made to your account.'
             : 'You have updated your account.';
 
-        $from = 'Dental Sleep Solutions <patient@dentalsleepsolutions.com>';
-        $to = "{$patientData['firstname']} {$patientData['lastname']}";
-        $subject = 'Online Patient Portal Email Update';
-        $message = $this->generalHelper->getTemplate('patient/update');
+        $headerInfo = [
+            'from_email'   => 'patient@dentalsleepsolutions.com',
+            'from_name'    => 'Dental Sleep Solutions',
+            'to_old_email' => $oldEmail,
+            'to_new_email' => $newEmail,
+            'to_name'      => $patientData['firstname'] . ' ' . $patientData['lastname'],
+            'subject'      => 'Online Patient Portal Email Update'
+        ];
 
-        $return = $this->sendEmail($from, "$to <$oldEmail>", $subject, $message, $mailingData);
-        $return = $this->sendEmail($from, "$to <$newEmail>", $subject, $message, $mailingData) && $return;
+        $usingOldEmail = Mail::send('emails.update', $mailingData, function ($message) use ($headerInfo) {
+            $message->from($headerInfo['from_email'], $headerInfo['from_name'])
+                ->to($headerInfo['to_old_email'], $headerInfo['to_name'])
+                ->subject($headerInfo['subject']);
+        });
 
-        return $return;
+        $usingNewEmail = Mail::send('emails.update', $mailingData, function ($message) use ($headerInfo) {
+            $message->from($headerInfo['from_email'], $headerInfo['from_name'])
+                ->to($headerInfo['to_new_email'], $headerInfo['to_name'])
+                ->subject($headerInfo['subject']);
+        });
+
+        return $usingOldEmail && $usingNewEmail;
     }
 
     /**
@@ -153,25 +158,23 @@ class EmailHelper
                 $recoverHash = $patientData['recover_hash'];
             }
 
-            $mailingData['patient_id'] = $patientId;
-            $mailingData['recover_hash'] = $recoverHash;
             $mailingData['legend'] = '<p>We hope to hear from you soon!</p>';
-            $mailingData['link'] = '{{baseUrl}}/reg/activate.php?id={%patient_id%}&amp;hash={%recover_hash%}';
+            $mailingData['link'] = 'reg/activate.php?id=' . $patientId . '&amp;hash=' . $recoverHash;
         } else {
-            $mailingData['link'] = '{{baseUrl}}/reg/login.php?email={%email%}';
+            $mailingData['link'] = 'reg/login.php?email=' . $patientEmail;
         }
 
         $mailingData['email'] = $patientEmail;
 
         $headerInfo = [
-            'from_email' => '<patient@dentalsleepsolutions.com>',
+            'from_email' => 'patient@dentalsleepsolutions.com',
             'from_name'  => 'Dental Sleep Solutions',
             'to_email'   => $patientEmail,
             'to_name'    => $patientData['firstname'] . ' ' . $patientData['lastname'],
             'subject'    => 'Online Patient Registration'
         ];
 
-        return $this->mail->send('emails.registration', $mailingData, function ($message) use ($headerInfo) {
+        return Mail::send('emails.registration', $mailingData, function ($message) use ($headerInfo) {
             $message->from($headerInfo['from_email'], $headerInfo['from_name'])
                 ->to($headerInfo['to_email'], $headerInfo['to_name'])
                 ->subject($headerInfo['subject']);
@@ -198,7 +201,7 @@ class EmailHelper
         ) {
             $mailingData->logo = 'manage/display_file.php?f=' . $mailingData->logo;
         } else {
-            $mailingData->logo = 'reg/images/email/reg_logo.gif';
+            $mailingData->logo = 'foreign_images/email/reg_logo.gif';
         }
 
         $mailingData->mailing_phone = $this->generalHelper->formatPhone($mailingData->mailing_phone);
@@ -207,76 +210,5 @@ class EmailHelper
             'patientData' => $patient->toArray(),
             'mailingData' => $mailingData->toArray()
         ];
-    }
-
-    /**
-     * Centralized place to send emails.
-     *
-     * The function will create a multipart email from either an HTML template, or an array of html/text templates.
-     *
-     * @param string       $from
-     * @param string       $to
-     * @param string       $subject
-     * @param string|array $template
-     * @param array        $variables
-     * @param array        $extraHeaders
-     *
-     * @return bool
-     */
-
-    // need to rewrite this function to the sctucture of Laravel
-    private function sendEmail($from, $to, $subject, $template, $variables = [], $extraHeaders = [])
-    {
-        $newLine = "\n";
-        $boundary = uniqid('ds3');
-        $returnPath = preg_replace('/^.*?<(.+?)>$/', '$1', $from);
-        $htmlContentType = 'Content-Type: text/html; charset=UTF-8';
-
-        $headers = [
-                "From: $from",
-                "Reply-To: $from",
-                "Return-Path: $returnPath",
-                'X-Mailer: Dental Sleep Solutions Mailer',
-                'MIME-Version: 1.0',
-                "Content-Type: multipart/alternative; boundary=$boundary",
-                'Date: '.date('n/d/Y g:i A'),
-            ] + $extraHeaders;
-        $headers = join($newLine, $headers) . $newLine;
-
-        if (is_array($template)) {
-            if (!isset($template['text']) && !isset($template['html'])) {
-                throw new \RuntimeException('sendEmail requires the html or the text version of the message.');
-            }
-
-            $textBody = (string)array_get($template, 'text');
-            $htmlBody = (string)array_get($template, 'html');
-        } else {
-            $htmlBody = (string)$template;
-        }
-
-        $htmlBody = tidyHtml($htmlBody);
-
-        if (!isset($textBody) || !strlen($textBody)) {
-            $textBody = \Html2Text\Html2Text::convert($htmlBody);
-        }
-
-        if ($variables) {
-            $htmlBody = parseTemplate($htmlBody, $variables, true);
-            $textBody = parseTemplate($textBody, $variables, true);
-        }
-
-        $body = $textBody .
-            $newLine .
-            $newLine .
-            "--$boundary" .
-            $newLine .
-            $htmlContentType .
-            $newLine .
-            $newLine .
-            $htmlBody;
-
-        logEmailActivity($from, $to, $subject, $body, $headers);
-
-        return mail($to, $subject, $body, $headers, "-f$returnPath");
     }
 }

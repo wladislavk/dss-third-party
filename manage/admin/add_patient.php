@@ -121,6 +121,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 	}
 	else
 	{
+        $accessCode = rand(100000, 999999);
 		$ins_sql = "insert 
 		into 
 		dental_patients 
@@ -218,6 +219,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
 		userid='".(!empty($_SESSION['userid']) ? $_SESSION['userid'] : '')."',  
 		status = '".s_for($_POST["status"])."',
 		adddate=now(),
+		access_code = '$accessCode', access_code_date = NOW(),
 		ip_address='".$_SERVER['REMOTE_ADDR']."'";
 		mysqli_query($con,$ins_sql) or trigger_error($ins_sql.mysqli_error($con), E_USER_ERROR);
 		
@@ -240,7 +242,17 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1)
     $thesql = "select * from dental_patients where patientid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
-	
+
+    if ($themyarray['registration_status'] == 1 && $themyarray['access_code'] == '') {
+        $patientId = intval($_REQUEST['ed']);
+        $accessCode = rand(100000, 999999);
+        $themyarray['access_code'] = $accessCode;
+
+        $db->query("UPDATE dental_patients
+            SET access_code = '$accessCode', access_code_date = NOW()
+            WHERE patientid = '$patientId'");
+    }
+
 	if(!empty($msg) || !isset($_REQUEST["ed"]))
 	{
 		$firstname = (!empty($_POST['firstname']) ? $_POST['firstname'] : '');

@@ -417,6 +417,15 @@ function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordRes
     $patientData = $contactData['patientData'];
     $mailingData = $contactData['mailingData'];
 
+    if ($patientData['registration_status'] != 2 && $patientData['access_code'] == '') {
+        $accessCode = rand(100000, 999999);
+        $accessDate = $db->getColumn('SELECT NOW() AS ts', 'ts');
+    }
+     else {
+         $accessCode = $patientData['access_code'];
+         $accessDate = $patientData['access_code_date'];
+     }
+
     if ($isPasswordReset) {
         if ($patientData['recover_hash'] == '' || $patientEmail != $oldEmail) {
             $recoverHash = hash('sha256', $patientData['patientid'] . $patientData['email'] . rand());
@@ -428,13 +437,17 @@ function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordRes
                     recover_hash = '$recoverHash',
                     text_date = NOW(),
                     recover_time = NOW(),
-                    registration_senton = NOW()
+                    registration_senton = NOW(),
+                    access_code = '$accessCode',
+                    access_code_date = '$accessDate'
                 WHERE patientid = '$patientId'");
         } else {
             $db->query("UPDATE dental_patients SET
                     access_type = $accessType,
                     registration_status = 1,
-                    registration_senton = NOW()
+                    registration_senton = NOW(),
+                    access_code = '$accessCode',
+                    access_code_date = '$accessDate'
                 WHERE patientid = '$patientId'");
             $recoverHash = $patientData['recover_hash'];
         }

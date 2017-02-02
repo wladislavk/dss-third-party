@@ -85,7 +85,6 @@ class InsurancePreauth extends Model implements Resource, Repository
 
     public function getListVobs(
         $docId       = 0, 
-        // $status      = 'rejected', 
         $viewed      = 1, 
         $sortColumn  = 'status',
         $sortDir     = 'desc',
@@ -107,10 +106,6 @@ class InsurancePreauth extends Model implements Resource, Repository
             ->from(DB::raw('dental_insurance_preauth preauth'))
             ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'preauth.patient_id')
             ->where('preauth.doc_id', '=', $docId);
-
-        // if(isset($status)) {
-        //     $query = $query->where('preauth.status', '=', $status);
-        // }
 
         if($viewed == 0) {
             $query = $query->where('preauth.viewed', '=', 0)->orWhere('preauth.viewed', '=', 'NULL');
@@ -142,9 +137,9 @@ class InsurancePreauth extends Model implements Resource, Repository
     public function alterVob(
         $docId         = 1,
         $vobParam      = 'viewed',
-        $vobParamValue = 0,
-        $vobId         = 0,
-        $patientId     = 0
+        $vobParamValue,
+        $vobId,
+        $patientId
     ) {
         $query = $this
         ->where('id', '=', $vobId)

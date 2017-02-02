@@ -117,12 +117,10 @@ class InsurancePreauthController extends Controller
         $vobsPerPage     = $request->input('vobsPerPage') ?: 30;
         $sortColumn      = $request->input('sortColumn') ?: 'status';
         $sortDir         = $request->input('sortDir') ?: 'desc';
-        // $status          = $request->input('status') ?: '';
         $viewed          = $request->input('viewed');
 
         $data = $resources->getListVobs(
             $docId, 
-            // $status, 
             $viewed, 
             $sortColumn,
             $sortDir,
@@ -138,9 +136,9 @@ class InsurancePreauthController extends Controller
         $docId           = $this->currentUser->docid ?: 1;
 
         $vobParam      = $request->input('param') ?: 'viewed';
-        $vobParamValue  = $request->input('value') ?: 0;
-        $vobId         = $request->input('id') ?: 0;
-        $patientId     = $request->input('patientId') ?: 0;
+        $vobParamValue  = $request->input('value');
+        $vobId         = $request->input('id');
+        $patientId     = $request->input('patientId');
 
         $data = $resources->alterVob(
             $docId, 
@@ -150,6 +148,6 @@ class InsurancePreauthController extends Controller
             $patientId
         );
 
-        return ApiResponse::responseOk('', $data);
+        return ApiResponse::responseOk('updated');
     }
 }

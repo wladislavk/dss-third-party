@@ -38,7 +38,12 @@ class GeneralHelper
     // Returns an array of the form [patient, mds, or md_referrals][id]['fieldname']
     public function getContactInfo($patient, $mdList, $mdReferralList, $patReferralList = null, $letterId = 0)
     {
-        $contactInfo = [];
+        $contactInfo = [
+            'patient'       => [],
+            'mds'           => [],
+            'md_referrals'  => [],
+            'pat_referrals' => []
+        ];
 
         $patient = $this->clearIdList($patient);
         $mdList = $this->clearIdList($mdList);

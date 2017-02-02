@@ -284,7 +284,7 @@ class PatientsController extends Controller
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
-        $letterHelper->setIdentificators($docId, $patientId, $userType);
+        $letterHelper->setIdentificators($docId, $patientId, $userType, $userId);
         $letterHelper->triggerPatientTreatmentComplete();
 
         // need to add logic for logging actions
@@ -442,7 +442,7 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($userId, $letter->letterid, $parent = null, $type = 'md_referral', $recipientId = $unchangedPatient->referred_by);
+                            $letterHelper->deleteLetter($letter->letterid, $parent = null, $type = 'md_referral', $recipientId = $unchangedPatient->referred_by);
                         }
                     }
                 } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] != 1) {
@@ -456,7 +456,7 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($userId, $letter->letterid, $parent = null, $type = 'pat_referral', $recipientId = $unchangedPatient->referred_by);
+                            $letterHelper->deleteLetter($letter->letterid, $parent = null, $type = 'pat_referral', $recipientId = $unchangedPatient->referred_by);
                         }
                     }
                 }

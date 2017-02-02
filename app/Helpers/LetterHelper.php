@@ -25,6 +25,7 @@ class LetterHelper
     private $docId;
     private $patientId;
     private $userType;
+    private $userId;
 
     public function __construct(
         Letter $letter,
@@ -35,7 +36,8 @@ class LetterHelper
         GeneralHelper $generalHelper,
         $docId = 0,
         $patientId = 0,
-        $userType = 0
+        $userType = 0,
+        $userId = 0
     ) {
         $this->letter = $letter;
         $this->patient = $patient;
@@ -48,13 +50,15 @@ class LetterHelper
         $this->docId = $docId;
         $this->patientId = $patientId;
         $this->userType = $userType;
+        $this->userId = $userId;
     }
 
-    public function setIdentificators($docId, $patientId, $userType)
+    public function setIdentificators($docId, $patientId, $userType, $userId)
     {
         $this->docId = $docId;
         $this->patientId = $patientId;
         $this->userType = $userType;
+        $this->userId = $userId;
     }
 
     public function triggerPatientTreatmentComplete()
@@ -153,13 +157,18 @@ class LetterHelper
         return $letterId;
     }
 
-    public function deleteLetter($userId, $letterId, $parent = null, $type, $recipientId, $template = null)
+    public function deleteLetter($letterId, $parent = null, $type, $recipientId, $template = null)
     {
-        if (!isset($letterId)) {
+        if ($letterId <= 0) {
             return false;
         }
 
         $letter = $this->letter->find($letterId);
+
+        if (empty($letter)) {
+            return false;
+        }
+
         $contacts = $this->generalHelper->getContactInfo(
             (($letter->topatient == "1") ? $letter->patientid : ''),
             $letter->md_list,
@@ -173,9 +182,10 @@ class LetterHelper
             $data = [
                 'parentid'   => null,
                 'deleted'    => 1,
-                'deleted_by' => $userId,
+                'deleted_by' => $this->userId,
                 'deleted_on' => Carbon::now()
             ];
+
             $updatedLetter = $this->letter->updateLetterBy(['letterid' => $letterId], $data);
 
             $data = ['viewed' => 1];
@@ -186,83 +196,61 @@ class LetterHelper
 
             return $updatedLetter;
         } else {
-            if ($letter) {
-                $deleted = '1';
+            $args = ['deleted' => 1];
 
-                if ($type == 'patient') {
-                    $toPatient = 1;
-                    $removePatient = 0;
-                } elseif ($type == 'md') {
-                    $mdList = $recipientId;
-                    $mds = explode(",", $letter->md_list);
-                    $key = array_search($recipientId, $mds);
+            if ($type == 'patient') {
+                $args['topatient'] = 1;
 
-                    unset($mds[$key]);
+                $dataForUpdate = [
+                    'topatient'    => 0,
+                    'cc_topatient' => 0
+                ];
+            } elseif ($type == 'md') {
+                $args['md_list'] = $recipientId;
 
-                    $newMds = implode(",", $mds);
-                    $ccMds = explode(",", $letter->cc_md_list);
-                    $ccKey = array_search($recipientId, $ccMds);
+                $mds = array_diff(explode(',', $letter->md_list), [$recipientId]);
+                $ccMds = array_diff(explode(',', $letter->cc_md_list), [$recipientId]);
 
-                    unset($cc_mds[$cc_key]);
+                $dataForUpdate = [
+                    'md_list'    => implode(',', $mds),
+                    'cc_md_list' => implode(',', $ccMds)
+                ];
+            } elseif ($type == 'md_referral') {
+                $args['md_referral_list'] = $recipientId;
 
-                    $newCcMds = implode(",", $ccMds);
-                } elseif ($type == 'md_referral') {
-                    $mdReferralList = $recipientId;
-                    $mdReferrals = explode(",", $letter->md_referral_list);
-                    $key = array_search($recipientId, $mdReferrals);
+                $mdReferrals = array_diff(explode(',', $letter->md_referral_list), [$recipientId]);
+                $ccMdReferrals = array_diff(explode(',', $letter->cc_md_referral_list), [$recipientId]);
 
-                    unset($mdReferrals[$key]);
+                $dataForUpdate = [
+                    'md_referral_list'    => implode(',', $mdReferrals),
+                    'cc_md_referral_list' => implode(',', $ccMdReferrals)
+                ];
+            } elseif ($type == 'pat_referral') {
+                $args['pat_referral_list'] = $recipientId;
 
-                    $newMdReferrals = implode(",", $mdReferrals);
-                    $ccMdReferrals = explode(",", $letter->cc_md_referral_list);
-                    $ccKey = array_search($recipientId, $ccMdReferrals);
+                $patReferrals = array_diff(explode(',', $letter->pat_referral_list), [$recipientId]);
+                $ccPatReferrals = array_diff(explode(',', $letter->cc_pat_referral_list), [$recipientId]);
 
-                    unset($ccMdReferrals[$ccKey]);
-
-                    $newCcMdReferrals = implode(",", $ccMdReferrals);
-                } elseif ($type == 'pat_referral') {
-                    $patReferralList = $recipientId;
-                    $patReferrals = explode(",", $letter->pat_referral_list);
-                    $key = array_search($recipientId, $patReferrals);
-
-                    unset($patReferrals[$key]);
-
-                    $newPatReferrals = implode(",", $patReferrals);
-                    $ccPatReferrals = explode(",", $letter->cc_pat_referral_list);
-                    $ccKey = array_search($recipientId, $ccPatReferrals);
-
-                    unset($ccPatReferrals[$ccKey]);
-
-                    $newCcPatReferrals = implode(",", $ccPatReferrals);
-                }
-
-                $newLetterId = $this->createLetter($letter->templateid, $letter->patientid, $letter->info_id, $toPatient, $mdList, $mdReferralList, $patReferralList, $letterId, $template, $letter->send_method, '', $deleted, false);
+                $dataForUpdate = [
+                    'pat_referral_list'    => implode(',', $patReferrals),
+                    'cc_pat_referral_list' => implode(',', $ccPatReferrals)
+                ];
             }
 
-            if (is_numeric($newLetterId)) {
-                if ($type == 'patient') {
-                    $data = [
-                        'topatient'    => $removePatient,
-                        'cc_topatient' => $removePatient
-                    ];
-                } elseif ($type == 'md') {
-                    $data = [
-                        'md_list'    => $newMds,
-                        'cc_md_list' => $newCcMds
-                    ];
-                } elseif ($type == 'md_referral') {
-                    $data = [
-                        'md_referral_list'    => $newMdReferrals,
-                        'cc_md_referral_list' => $newCcMdReferrals
-                    ];
-                } elseif ($type == 'pat_referral') {
-                    $data = [
-                        'pat_referral_list'    => $newPatReferrals,
-                        'cc_pat_referral_list' => $newCcPatReferrals
-                    ];
-                }
+            $args = array_merge($args, [
+                'pid'             => $letter->patientid,
+                'info_id'         => $letter->info_id,
+                'parentid'        => $letterId,
+                'template'        => $template,
+                'send_method'     => $letter->send_method,
+                'status'          => '',
+                'check_recipient' => false
+            ]);
 
-                $updateLetter = $this->letter->updateLetterBy(['letterid' => $letterId], $data);
+            $newLetterId = $this->createLetter($letter->templateid, $args);
+
+            if ($newLetterId > 0) {
+                $updateLetter = $this->letter->updateLetterBy(['letterid' => $letterId], $dataForUpdate);
 
                 if (!$updateLetter) {
                     return false;

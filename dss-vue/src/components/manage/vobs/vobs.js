@@ -67,13 +67,11 @@ module.exports = {
         '$route.query.rid': function() {
             if (this.$route.query.rid > 0) {
                 this.$set('routeParameters.readId', this.$route.query.rid);
-                this.updateVob('viewed', 1, this.routeParameters.readId, this.routeParameters.patientId);
             }
         },
         '$route.query.urid': function() {
             if (this.$route.query.urid > 0) {
                 this.$set('routeParameters.unreadId', this.$route.query.urid);
-                this.updateVob('viewed', 0, this.routeParameters.unreadId, this.routeParameters.patientId);
             }
         },
         '$route.query.viewed': function() {
@@ -117,7 +115,6 @@ module.exports = {
                 this.routeParameters.viewed
             ).then(function(response) {
                 var data = response.data.data;
-
                 var totalCount = data.count[0].total;
                 var vobs   = data.results;
 
@@ -131,7 +128,7 @@ module.exports = {
             param,
             value,
             id,
-            parentId
+            patientId
         ) {
             this.alterVob(                
                 param,
@@ -139,7 +136,7 @@ module.exports = {
                 id,
                 patientId
             ).then(function(response) {
-                var data = response.data.data;
+                this.getVobs();
             }, function(response) {
                 this.handleErrors('alterVob', response);
             });

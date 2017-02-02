@@ -117,25 +117,13 @@
                         </a>
                         <br />
                         <a
-                            v-link="{
-                                name: $route.name,
-                                query: {
-                                    pid: vob.patient_id,
-                                    rid: vob.id
-                                }
-                            }"
+                            @click="updateVob('viewed', 0, vob.id, vob.patient_id)"
                             v-if="vob.viewed"
                         >
                             Mark Unread
                         </a>
                         <a
-                            v-link="{
-                                name: $route.name,
-                                query: {
-                                    pid: vob.patient_id,
-                                    urid: vob.id
-                                }
-                            }"
+                            @click="updateVob('viewed', 1, vob.id, vob.patient_id)"
                             v-else
                         >
                             Mark Read

@@ -1,28 +1,113 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  if($_GET['backoffice'] == '1') {
-    include 'admin/includes/top.htm';
-?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
+if ($_GET['backoffice'] == '1') {
+    include 'admin/includes/top.htm'; ?>
     <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
     <script src="admin/popup/popup.js" type="text/javascript"></script>
-
-<?php 
-  } else {
+<?php } else {
     include 'includes/top.htm';
     include 'admin/includes/invoice_functions.php';
+}
+
+$docId = intval($_SESSION['docid']);
+
+$margins = $db->getRow("SELECT
+    letter_margin_top AS 'top',
+    letter_margin_bottom AS 'bottom',
+    letter_margin_left AS 'left',
+    letter_margin_right AS 'right'
+  FROM dental_users
+  WHERE userid = '$docId'
+  ");
+
+$googleFonts = [
+    'dejavusans' => 'Open Sans',
+    'times' => 'Tinos',
+    'helvetica' => 'Roboto',
+    'courier' => 'Cutive',
+];
+$fontsInUse = [];
+
+?>
+<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
+<style>
+  div.preview-letter {
+    width: 215.9mm;
+    min-height: 279.4mm;
+    margin: 30px auto;
+    border: 1px solid #ccc;
+    -moz-box-shadow: 3px 3px 3px #999;
+    -webkit-box-shadow: 3px 3px 3px #999;
+    box-shadow: 3px 3px 3px #999;
   }
 
-  if(/*empty($_GET['lid']) || $_GET['lid'] == '0'*/0){
-?>
-    <h2>Unable to find letter.</h2>
-  <?php
-    trigger_error("Die called", E_USER_ERROR);
+  div.preview-letter,
+  div.preview-letter td {
+    font-size: 14pt;
   }
-?>
 
-  <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script> 
-  <script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
+  div.preview-letter div.preview-wrapper {
+    margin: <?= "{$margins['top']}mm {$margins['right']}mm {$margins['bottom']}mm {$margins['left']}mm" ?>;
+  }
 
+  div.preview-letter div.preview-inner-wrapper {
+    margin: 1mm;
+    -dss-width: <?= number_format(215.9 - 2 - $margins['left'] - $margins['right'], 1) ?>mm;
+    -dss-height: <?= number_format(279.4 - 2 - $margins['top'] - $margins['bottom'], 1) ?>mm;
+  }
+
+  div.preview-letter.preview-font-dejavusans,
+  div.preview-letter.preview-font-dejavusans td {
+    font-family: "DejaVu Sans", "Verdana", "Geneva", "Open Sans", sans-serif;
+  }
+
+  div.preview-letter.preview-font-times,
+  div.preview-letter.preview-font-times td {
+    font-family: "Times New Roman", "Times", "Liberation Serif", "Nimbus Roman No9 L", "Tinos", serif;
+  }
+
+  div.preview-letter.preview-font-helvetica,
+  div.preview-letter.preview-font-helvetica td {
+    font-family: "Helvetica", "Helvetica Neue", "HelveticaNeue", "TeX Gyre Heros", "TeXGyreHeros", "FreeSans", "Nimbus Sans L", "Liberation Sans", "Roboto", sans-serif;
+  }
+
+  div.preview-letter.preview-font-courier,
+  div.preview-letter.preview-font-courier td {
+    font-family: "Courier", "Courier 10 Pitch", "Consolas", "Courier New", "Nimbus Mono L", "Cutive", monospace;
+  }
+
+  div.preview-letter.preview-size-8,
+  div.preview-letter.preview-size-8 td{
+    font-size: 12pt;
+  }
+
+  div.preview-letter.preview-size-10,
+  div.preview-letter.preview-size-10 td{
+    font-size: 14pt;
+  }
+
+  div.preview-letter.preview-size-12,
+  div.preview-letter.preview-size-12 td{
+    font-size: 16pt;
+  }
+
+  div.preview-letter.preview-size-14,
+  div.preview-letter.preview-size-14 td{
+    font-size: 18pt;
+  }
+
+  div.preview-letter.preview-size-16,
+  div.preview-letter.preview-size-16 td{
+    font-size: 20pt;
+  }
+
+  div.preview-letter.preview-size-20,
+  div.preview-letter.preview-size-20 td {
+    font-size: 24pt;
+  }
+</style>
 <?php
   $status_sql = "SELECT status, docid FROM dental_letters
 		WHERE letterid='".mysqli_real_escape_string($con, (!empty($_GET['lid']) ? $_GET['lid'] : ''))."'";
@@ -133,32 +218,9 @@ foreach ($master_q as $master_r) {
   $edit_date = $row['edit_date'];
   $template_type = $row['template_type'];
   $font_size = $row['font_size'];
-
-  switch ($font_size) {
-    case '8':
-  		$show_font_size = '12';
-  		break;
-    case '10':
-      $show_font_size = '14';
-      break;
-    case '12':
-      $show_font_size = '16';
-      break;
-    case '14':
-      $show_font_size = '18';
-      break;
-    case '16':
-      $show_font_size = '20';
-      break;
-    case '20':
-      $show_font_size = '24';
-      break;
-    default:
-  		$show_font_size = '14';
-  		break;
-  }
-
   $font_family = $row['font_family'];
+
+  $fontsInUse[$font_family] = true;
 
   // Pending and Sent Contacts
   $othermd_query = "SELECT md_list, md_referral_list, cc_md_list, cc_md_referral_list, pat_referral_list, cc_pat_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
@@ -1793,7 +1855,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         }
     ?>
 
-	      <div style="margin: auto; width: 95%; border: 1px solid #ccc; padding: 3px;">
+	      <div style="margin: auto; width: 95%; padding: 3px;">
 		      <div align="left" style="width: 40%; padding: 3px; float: left">
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][id]" value="<?= $contact['id'] ?>" />
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][type]" value="<?= $contact['type'] ?>" />
@@ -1858,16 +1920,22 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
             <input type="submit" name="font_submit[<?php echo $cur_letter_num?>]" id="font_submit_<?php echo $cur_letter_num?>" style="display:none;" />
           <?php } ?>
-
-          <style type="text/css">
-            #letter<?php echo $cur_letter_num?> td{ font-size:<?php echo  $show_font_size;?>px;font-family:<?php echo  ($font_family=="dejavusans")?"Arial":$font_family; ?>;}
-          </style>
-
         	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
         		<tr>
         			<td valign="top">
-        				<div id="letter<?php echo $cur_letter_num?>" style="font-size:<?php echo  $show_font_size;?>px;font-family:<?php echo  ($font_family=="dejavusans")?"Arial":$font_family; ?>">		
-        				  <?php print html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8")), ENT_COMPAT | ENT_IGNORE,"UTF-8"); ?>
+        				<div id="letter<?= $cur_letter_num ?>"
+                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?>">
+        				  <div class="preview-wrapper">
+                            <div class="preview-inner-wrapper"><?= html_entity_decode(
+                                preg_replace(
+                                    '/(&Acirc;|&nbsp;)+/i',
+                                    '',
+                                    htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE, 'UTF-8')
+                                ),
+                                ENT_COMPAT | ENT_IGNORE,
+                                'UTF-8'
+                            ) ?></div>
+                          </div>
         				</div>
         				<input type="hidden" name="new_template[<?php echo $cur_letter_num?>]" value="<?php echo preg_replace('/(&Acirc;|&nbsp;)+/i', '',htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8"))?>" />
         			</td>
@@ -2089,7 +2157,9 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 </table>
 
 <!-- include footer -->
-
+<?php foreach ($fontsInUse as $fontName=>$dummy) { ?>
+  <link href="https://fonts.googleapis.com/css?family=<?= urlencode($googleFonts[$fontName]) ?>" rel="stylesheet">
+<?php } ?>
 <?php
   function is_physician($id) {
     $db = new Db();

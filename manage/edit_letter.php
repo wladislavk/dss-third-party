@@ -2035,7 +2035,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
         		<tr>
         			<td valign="top">
-        				<div class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?>">
+        				<div class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 8 ?>">
         				  <div class="preview-wrapper">
                             <div class="preview-inner-wrapper" id="letter<?= $cur_letter_num ?>">
                               <?= html_entity_decode(

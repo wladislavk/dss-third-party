@@ -9,7 +9,7 @@ function edit_letter (divid, size, family) {
         var textarea = $("<textarea />");
         textarea.val(html);
         textarea.attr('name', divid);
-        textarea.attr('style','width:100%;height:219.4mm;');
+        textarea.attr('style','width:100%;height:169.4mm;');
         $("#" + divid).replaceWith(textarea);
         setup_tinymce(size, family);
         textarea.focus();

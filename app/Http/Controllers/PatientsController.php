@@ -315,7 +315,7 @@ class PatientsController extends Controller
 
             // TODO: need to rewrite this logic from legacy code to the new Laravel structure
             if ($unchangedPatient->registration_status == 2 && $patientFormData['email'] != $unchangedPatient->email) {
-                // need to notify the user about changing his email
+                // notify the user about changing his email
                 $emailHelper->sendUpdatedEmail($patientId, $patientFormData['email'], $unchangedPatient->email, 'doc');
 
                 $responseData['mails'] = [

@@ -10,43 +10,44 @@ module.exports = {
     data: function() {
         return {
             headerInfo: {
-                unmailedLettersNumber    : 0,
-                pendingClaimsNumber      : 0,
-                pendingNodssClaimsNumber : 0,
-                unmailedClaimsNumber     : 0,
-                rejectedClaimsNumber     : 0,
-                preauthNumber            : 0,
-                rejectedPreAuthNumber    : 0,
-                alertsNumber             : 0,
-                hstNumber                : 0,
-                requestedHSTNumber       : 0,
-                rejectedHSTNumber        : 0,
-                patientContactsNumber    : 0,
-                patientInsurancesNumber  : 0,
-                patientChangesNumber     : 0,
-                pendingDuplicatesNumber  : 0,
-                emailBouncesNumber       : 0,
-                paymentReportsNumber     : 0,
-                unsignedNotesNumber      : 0,
-                faxAlertsNumber          : 0,
-                usePaymentReports        : false,
-                useLetters               : false,
-                pendingLetters           : [],
-                overdueTasks             : [],
-                todayTasks               : [],
-                tomorrowTasks            : [],
-                thisWeekTasks            : [],
-                nextWeekTasks            : [],
-                laterTasks               : [],
-                user                     : {},
-                docInfo                  : {},
-                courseStaff              : {
+                unmailedLettersNumber      : 0,
+                pendingClaimsNumber        : 0,
+                pendingNodssClaimsNumber   : 0,
+                unmailedClaimsNumber       : 0,
+                rejectedClaimsNumber       : 0,
+                preauthNumber              : 0,
+                rejectedPreAuthNumber      : 0,
+                alertsNumber               : 0,
+                hstNumber                  : 0,
+                requestedHSTNumber         : 0,
+                rejectedHSTNumber          : 0,
+                patientContactsNumber      : 0,
+                patientInsurancesNumber    : 0,
+                patientChangesNumber       : 0,
+                pendingDuplicatesNumber    : 0,
+                emailBouncesNumber         : 0,
+                paymentReportsNumber       : 0,
+                unsignedNotesNumber        : 0,
+                faxAlertsNumber            : 0,
+                usePaymentReports          : false,
+                useLetters                 : false,
+                pendingLetters             : [],
+                overdueTasks               : [],
+                todayTasks                 : [],
+                tomorrowTasks              : [],
+                thisWeekTasks              : [],
+                nextWeekTasks              : [],
+                laterTasks                 : [],
+                user                       : {},
+                docInfo                    : {},
+                courseStaff                : {
                     use_course       : 0,
                     use_course_staff : 0
                 },
-                tasksNumber              : 0,
-                patientTaskNumber        : 0,
-                patientName              : ''
+                tasksNumber                : 0,
+                patientTaskNumber          : 0,
+                patientName                : '',
+                patientHomeSleepTestStatus : ''
             },
             secondsPerDay                        : 86400,
             oldestLetter                         : 0,
@@ -678,6 +679,12 @@ module.exports = {
         },
         'headerInfo.docInfo.use_letters': function() {
             this.headerInfo.useLetters = (this.headerInfo.docInfo.use_letters == 1);
+        },
+        'uncompletedHomeSleepTests': function() {
+            var lastElement = this.uncompletedHomeSleepTests[this.uncompletedHomeSleepTests.length - 1];
+            var status = window.constants.dssHstStatusLabels[lastElement.status];
+
+            this.$set('headerInfo.patientHomeSleepTestStatus', status);
         }
     },
     events: {

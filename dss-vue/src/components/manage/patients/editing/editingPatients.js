@@ -6,8 +6,9 @@ module.exports = {
         return {
             consts: window.constants,
             headerInfo: {
-                docInfo     : {},
-                patientName : ''
+                docInfo                    : {},
+                patientName                : '',
+                patientHomeSleepTestStatus : ''
             },
             routeParameters: {
                 patientId : this.$route.query.pid > 0 ? this.$route.query.pid : null
@@ -106,6 +107,15 @@ module.exports = {
         },
         'patient.dob': function() {
             this.$set('patient.dob', this.date(this.patient.dob));
+        },
+        'patient.feet': function() {
+            this.calculateBmi();
+        },
+        'patient.inches': function() {
+            this.calculateBmi();
+        },
+        'patient.weight': function() {
+            this.calculateBmi();
         }
     },
     computed: {
@@ -271,6 +281,56 @@ module.exports = {
             });
     },
     methods: {
+        onClickCreateNewContact: function() {
+            // TODO: implement displaying the popup for creating a new contact
+            // loadPopupRefer('add_contact.php?addtopat={{ routeParameters.patientId }}&from=add_patient');
+        },
+        validateDate: function(el) {
+            if (!this.isValidDate(this.patient[el])) {
+                alert('Invalid Day, Month, or Year range detected. Please correct.');
+                this.$els[el].focus();
+            }
+        },
+        calculateBmi: function() {
+            if (this.patient.feet != 0 && this.patient.inches != -1 && this.patient.weight != 0) {
+                var inc = (this.patient.feet * 12) + this.patient.inches;
+                var incSqr = inc * inc;
+
+                var wei = this.patient.weight * 703;
+                var bmi = wei / incSqr;
+
+                this.$set('patient.bmi', bmi.toFixed(1));
+            } else {
+                this.$set('patient.bmi', '');
+            }
+        },
+        onClickAddImage: function() {
+            // TODO: implement it when certain popup is finished
+
+            // loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');
+        },
+        onClickOrderHst: function() {
+            alert('Patient has existing HST with status '
+                + this.headerInfo.patientHomeSleepTestStatus
+                + '. Only one HST can be requested at a time.'
+            );
+        },
+        searchItemById: function(data, id) {
+            id = id || 0;
+            var removeId = data.findIndex((el) => el.id == id);
+
+            return removeId >= 0 ? data[removeId] : null;
+        },
+        removeNotification: function(id) {
+            this.removeNotificationInDb(id)
+                .then(function(response) {
+                    this.patientNotifications.$remove(
+                        this.searchItemById(this.patientNotifications, id)
+                    );
+                }, function(response) {
+                    this.handleErrors('removeNotificationInDb', response);
+                });
+        },
         onClickCreatingNewInsuranceCompany: function(fromId) {
             // TODO: implement loading a popup for creating new insurance company
 
@@ -880,6 +940,12 @@ module.exports = {
             var data = { email: email || '', patient_id: patientId || 0 };
 
             return this.$http.post(window.config.API_PATH + 'patients/check-email', data);
+        },
+        removeNotificationInDb: function(id) {
+            id = id || 0;
+            var data = { status: 2 };
+
+            return this.$http.put(window.config.API_PATH + 'notifications/' + id, data);
         }
     }
 }

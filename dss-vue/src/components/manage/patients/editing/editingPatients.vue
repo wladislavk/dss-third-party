@@ -14,11 +14,11 @@
     <div
         v-for="notification in patientNotifications"
         id="not_{{ notification.id }}" class="warning {{ notification.notification_type }}">
-        <span>{{ notofication.notification }} {{ notification.notification_date }}</span>
+        <span>{{ notification.notification }} {{ notification.notification_date }}</span>
         <a
             href="#"
             class="close_but"
-            onclick="remove_notification('{{ notification.id }}');return false;"
+            v-on:click.prevent="removeNotification(notification.id)"
         >X</a>
     </div>
     <form name="patientfrm" id="patientfrm">
@@ -64,7 +64,7 @@
                         <a
                             v-if="uncompletedHomeSleepTests.length > 0"
                             href="#"
-                            onclick="alert('Patient has existing HST with status <?php echo $pat_hst_status; ?>. Only one HST can be requested at a time.'); return false;"
+                            v-on:click.prevent="onClickOrderHst"
                             class="button"
                         >Order HST</a>
                         <input
@@ -87,7 +87,7 @@
                                     <a
                                         v-if="!profilePhoto"
                                         href="#"
-                                        onclick="loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');return false;"
+                                        v-on:click.prevent="onClickAddImage"
                                     >
                                         <img src="assets/images/add_patient_photo.png" />
                                     </a>
@@ -429,7 +429,6 @@
                                         class="field text addr tbox"
                                         style="width:100px;"
                                         tabindex="5"
-                                        onchange="cal_bmi();"
                                     >
                                         <option value="0" selected disabled>Feet</option>
                                         <option
@@ -447,7 +446,6 @@
                                         class="field text addr tbox"
                                         style="width:100px;"
                                         tabindex="6"
-                                        onchange="cal_bmi();"
                                     >
                                         <option value="-1" selected disabled>Inches</option>
                                         <option
@@ -465,7 +463,6 @@
                                         class="field text addr tbox"
                                         style="width:100px;"
                                         tabindex="7"
-                                        onchange="cal_bmi();"
                                     >
                                         <option value="0" selected disabled>Weight</option>
                                         <option
@@ -649,13 +646,14 @@
                                 <div style="float:left;">
                                     <input
                                         v-model="patient.copyreqdate"
+                                        v-on:change="validateDate('copyreqdate')"
+                                        v-el:copyreqdate
                                         id="copyreqdate"
                                         name="copyreqdate"
                                         type="text"
                                         class="field text addr tbox calendar"
                                         style="width:100px;"
                                         maxlength="255"
-                                        onChange="validateDate('copyreqdate');"
                                     />
                                     <label>Date</label>
                                 </div>
@@ -713,7 +711,7 @@
                                             type="button"
                                             class="button"
                                             style="width:150px;"
-                                            onclick="loadPopupRefer('add_contact.php?addtopat={{ routeParameters.patientId }}&from=add_patient');"
+                                            v-on:click="onClickCreateNewContact"
                                             value="+ Create New Contact"
                                         />
                                         <br />
@@ -942,7 +940,6 @@
                                 <input
                                     v-model="patient.p_m_same_address"
                                     type="radio"
-                                    onclick="$('#p_m_address_fields').hide();"
                                     name="p_m_same_address"
                                     value="1"
                                     checked
@@ -950,7 +947,6 @@
                                 <input
                                     v-model="patient.p_m_same_address"
                                     type="radio"
-                                    onclick="$('#p_m_address_fields').show();"
                                     name="p_m_same_address"
                                     value="2"
                                 > No
@@ -1111,7 +1107,6 @@
                                         id="p_m_ins_type"
                                         name="p_m_ins_type"
                                         class="field text addr tbox"
-                                        onchange="update_insurance_type()"
                                         maxlength="255"
                                         style="width:200px;"
                                     >

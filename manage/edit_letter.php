@@ -21,6 +21,11 @@ $margins = $db->getRow("SELECT
   WHERE userid = '$docId'
   ");
 
+$pageSize = [
+    'width' => 215.9,
+    'height' => 279.4
+];
+
 $googleFonts = [
     'dejavusans' => 'Open Sans',
     'times' => 'Tinos',
@@ -31,81 +36,185 @@ $fontsInUse = [];
 
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
-<script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=20170203"></script>
 <style>
   div.preview-letter {
-    width: 215.9mm;
-    min-height: 279.4mm;
+    width: <?= number_format($pageSize['width'], 1, '.', '') ?>mm;
+    min-height: <?= number_format($pageSize['height'], 1, '.', '') ?>mm;
     margin: 30px auto;
     border: 1px solid #ccc;
     -moz-box-shadow: 3px 3px 3px #999;
     -webkit-box-shadow: 3px 3px 3px #999;
     box-shadow: 3px 3px 3px #999;
+    overflow: hidden;
+    position: relative;
+    line-height: 1.2em;
+  }
+
+  div.preview-letter div.preview-page-break {
+    position: absolute;
+    z-index: 1;
+    width: <?= $pageSize['width'] ?>mm;
+    top: <?= number_format($pageSize['height'] - $margins['bottom'], 1, '.', '') ?>mm;
+    border-top: 1px dashed #999;
+    color: #999;
+    font-family: "Arial", "Helvetica", sans-serif;
+    font-size: 11px;
+    cursor: default;
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+    -o-user-select: none;
+    user-select: none;
+  }
+
+  div.preview-letter div.preview-bottom-margin {
+    position: absolute;
+    z-index: 2;
+    width: <?= $pageSize['width'] ?>mm;
+    height: <?= $margins['bottom'] ?>mm;
+    bottom: 0;
+    background-color: #fff;
+  }
+
+  <?php for ($n=2; $n <=10; $n++) { ?>
+  div.preview-letter div.preview-page-break.break-<?= $n ?> {
+    top: <?= number_format(($pageSize['height'] - $margins['top'] - $margins['bottom'])*$n + $margins['top'], 1, '.', '') ?>mm;
+  }
+  <?php } ?>
+
+  div.preview-letter p {
+    margin-block-start: 1.1em;
+    margin-block-end: 1.1em;
+  }
+
+  div.preview-letter ul,
+  div.preview-letter ol {
+    width: auto;
+    padding-eft: 3em;
+  }
+
+  div.preview-letter li {
+    padding: 0;
+  }
+
+  div.preview-letter table {
+    border-spacing: 0;
+  }
+
+  div.preview-letter td {
+    padding: 0;
+  }
+
+  div.preview-letter.show-hidden p::after {
+    content: "\b6";
+    position: absolute;
+    color: #ccc;
+    cursor: default;
+  }
+
+  div.preview-letter.show-hidden span.br-marker {
+    position: absolute;
+    color: #ccc;
+    cursor: default;
+  }
+
+  div.preview-letter.show-hidden br::before,
+  div.preview-letter.show-hidden span.br-marker::before {
+    content: "\21b5";
+    position: absolute;
+    color #ccc;
+    cursor: default;
   }
 
   div.preview-letter,
-  div.preview-letter td {
+  div.preview-letter td,
+  div.preview-letter ul,
+  div.preview-letter ol {
     font-size: 14pt;
   }
 
   div.preview-letter div.preview-wrapper {
+    position: relative;
     margin: <?= "{$margins['top']}mm {$margins['right']}mm {$margins['bottom']}mm {$margins['left']}mm" ?>;
   }
 
   div.preview-letter div.preview-inner-wrapper {
+    position: relative;
     margin: 1mm;
-    -dss-width: <?= number_format(215.9 - 2 - $margins['left'] - $margins['right'], 1) ?>mm;
-    -dss-height: <?= number_format(279.4 - 2 - $margins['top'] - $margins['bottom'], 1) ?>mm;
+    margin-right: 3mm;
+    -dss-width: <?= number_format(215.9 - 2 - $margins['left'] - $margins['right'], 1, '.', '') ?>mm;
+    -dss-height: <?= number_format(279.4 - 2 - $margins['top'] - $margins['bottom'], 1, '.', '') ?>mm;
   }
 
   div.preview-letter.preview-font-dejavusans,
-  div.preview-letter.preview-font-dejavusans td {
-    font-family: "DejaVu Sans", "Verdana", "Geneva", "Open Sans", sans-serif;
+  div.preview-letter.preview-font-dejavusans td,
+  div.preview-letter.preview-font-dejavusans ul,
+  div.preview-letter.preview-font-dejavusans ol {
+    font-family: "DejaVu Sans", "Open Sans", "Verdana", "Geneva", sans-serif;
   }
 
   div.preview-letter.preview-font-times,
-  div.preview-letter.preview-font-times td {
-    font-family: "Times New Roman", "Times", "Liberation Serif", "Nimbus Roman No9 L", "Tinos", serif;
+  div.preview-letter.preview-font-times td,
+  div.preview-letter.preview-font-times ul,
+  div.preview-letter.preview-font-times ol {
+    font-family: "Times New Roman", "Tinos", "Times", "Liberation Serif", "Nimbus Roman No9 L", serif;
   }
 
   div.preview-letter.preview-font-helvetica,
-  div.preview-letter.preview-font-helvetica td {
-    font-family: "Helvetica", "Helvetica Neue", "HelveticaNeue", "TeX Gyre Heros", "TeXGyreHeros", "FreeSans", "Nimbus Sans L", "Liberation Sans", "Roboto", sans-serif;
+  div.preview-letter.preview-font-helvetica td,
+  div.preview-letter.preview-font-helvetica ul,
+  div.preview-letter.preview-font-helvetica ol {
+    font-family: "Helvetica", "Roboto", "Helvetica Neue", "HelveticaNeue", "TeX Gyre Heros", "TeXGyreHeros", "FreeSans", "Nimbus Sans L", "Liberation Sans", sans-serif;
   }
 
   div.preview-letter.preview-font-courier,
-  div.preview-letter.preview-font-courier td {
-    font-family: "Courier", "Courier 10 Pitch", "Consolas", "Courier New", "Nimbus Mono L", "Cutive", monospace;
+  div.preview-letter.preview-font-courier td,
+  div.preview-letter.preview-font-courier ul,
+  div.preview-letter.preview-font-courier ol {
+    font-family: "Courier", "Cutive", "Courier 10 Pitch", "Consolas", "Courier New", "Nimbus Mono L", monospace;
   }
 
   div.preview-letter.preview-size-8,
-  div.preview-letter.preview-size-8 td{
-    font-size: 12pt;
+  div.preview-letter.preview-size-8 td,
+  div.preview-letter.preview-size-8 ul,
+  div.preview-letter.preview-size-8 ol {
+    font-size: 8pt;
   }
 
   div.preview-letter.preview-size-10,
-  div.preview-letter.preview-size-10 td{
-    font-size: 14pt;
+  div.preview-letter.preview-size-10 td,
+  div.preview-letter.preview-size-10 ul,
+  div.preview-letter.preview-size-10 ol {
+    font-size: 10pt;
   }
 
   div.preview-letter.preview-size-12,
-  div.preview-letter.preview-size-12 td{
-    font-size: 16pt;
+  div.preview-letter.preview-size-12 td,
+  div.preview-letter.preview-size-12 ul,
+  div.preview-letter.preview-size-12 ol {
+    font-size: 12pt;
   }
 
   div.preview-letter.preview-size-14,
-  div.preview-letter.preview-size-14 td{
-    font-size: 18pt;
+  div.preview-letter.preview-size-14 td,
+  div.preview-letter.preview-size-14 ul,
+  div.preview-letter.preview-size-14 ol {
+    font-size: 14pt;
   }
 
   div.preview-letter.preview-size-16,
-  div.preview-letter.preview-size-16 td{
-    font-size: 20pt;
+  div.preview-letter.preview-size-16 td,
+  div.preview-letter.preview-size-16 ul,
+  div.preview-letter.preview-size-16 ol {
+    font-size: 16pt;
   }
 
   div.preview-letter.preview-size-20,
-  div.preview-letter.preview-size-20 td {
-    font-size: 24pt;
+  div.preview-letter.preview-size-20 td,
+  div.preview-letter.preview-size-20 ul,
+  div.preview-letter.preview-size-20 ol {
+    font-size: 20pt;
   }
 </style>
 <?php
@@ -1883,6 +1992,9 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 		      </div>
 
 		      <div align="right" style="width:30%; padding: 3px; float: right">
+                <button class="preview-toggle-hidden addButton" onclick="javascript:toggleHiddenChars();return false;"
+                title="Show/hide line breaks">&#xb6;</button>
+                &nbsp;&nbsp;
         		<button id="edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: edit_letter('letter<?php echo $cur_letter_num?>', '<?php echo $font_size;?>','<?php echo $font_family;?>');return false;" >
         			Edit Letter
         		</button>
@@ -1923,10 +2035,10 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
         		<tr>
         			<td valign="top">
-        				<div id="letter<?= $cur_letter_num ?>"
-                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?>">
+        				<div class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?>">
         				  <div class="preview-wrapper">
-                            <div class="preview-inner-wrapper"><?= html_entity_decode(
+                            <div class="preview-inner-wrapper" id="letter<?= $cur_letter_num ?>">
+                              <?= html_entity_decode(
                                 preg_replace(
                                     '/(&Acirc;|&nbsp;)+/i',
                                     '',
@@ -1934,8 +2046,11 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
                                 ),
                                 ENT_COMPAT | ENT_IGNORE,
                                 'UTF-8'
-                            ) ?></div>
+                              ) ?>
+                            </div>
                           </div>
+                          <?php for ($n=1; $n<=10; $n++) { ?><div class="preview-page-break break-<?= $n ?>">page <?= $n + 1 ?></div><?php } ?>
+                          <div class="preview-bottom-margin"></div>
         				</div>
         				<input type="hidden" name="new_template[<?php echo $cur_letter_num?>]" value="<?php echo preg_replace('/(&Acirc;|&nbsp;)+/i', '',htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8"))?>" />
         			</td>

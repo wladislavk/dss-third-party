@@ -1,21 +1,24 @@
 function edit_letter (divid, size, family) {
-    var html = $("#" + divid).html();
+    var source = $("#" + divid).clone(),
+         html = '';
+
+    $('.br-marker', source).remove();
+    html = source.html();
 
     if (html != '') {
         var textarea = $("<textarea />");
         textarea.val(html);
         textarea.attr('name', divid);
-        textarea.attr('style','width:940px;height:335px;');
+        textarea.attr('style','width:100%;height:219.4mm;');
         $("#" + divid).replaceWith(textarea);
         setup_tinymce(size, family);
         textarea.focus();
         $('.edit_'+divid).show();
         $('#edit_but_'+divid).hide();
         $('#cancel_edit_but_'+divid).show();
+        $('.preview-letter .preview-toggle-hidden').hide();
     }
 }
-
-
 
 function strip_tags (str, allowed_tags) {
     // Strips HTML and PHP tags from a string  
@@ -133,3 +136,20 @@ function setup_tinymce (size, family) {
         ].join(',')
     });
 }
+
+var toggleHiddenChars = function () {}
+
+$(document).ready(function(){
+    var $preview = $('div.preview-letter'),
+        $button = $('.preview-toggle-hidden');
+
+    toggleHiddenChars = function () {
+        $preview.toggleClass('show-hidden');
+
+        if ($preview.is('.show-hidden')) {
+            $preview.find('br').before('<span class="br-marker"></span>');
+        } else {
+            $preview.find('.br-marker').remove();
+        }
+    }
+});

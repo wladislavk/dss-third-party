@@ -55,21 +55,21 @@ RUN set -xe \
     # Instal composer using php 5.6
     && source /opt/rh/rh-php56/enable \
     && curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
+    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer \
+
+    # Customize php setup
+    && echo 'short_open_tag = On' > /etc/opt/rh/rh-php56/php.d/custom.ini
 
 ENV ETC_HTTPD=/opt/rh/httpd24/root/etc/httpd \
     DOCUMENT_ROOT=/opt/rh/httpd24/root/var/www/html \
     PHP_PATH=/opt/rh/rh-php56/root/bin/php
 
+# Create entrypoint script, make it executable
 RUN echo -e '#!/bin/bash\n\
 . /opt/rh/httpd24/enable\n\
 httpd -v\n\
 exec httpd -D FOREGROUND\n\
-' > /usr/sbin/docker-entrypoint.sh
-
-RUN set -x \
-    # Customize php setup
-    && echo 'short_open_tag = On' > /etc/opt/rh/rh-php56/php.d/custom.ini \
-    # Ensure entrypoint is executable
+' > /usr/sbin/docker-entrypoint.sh \
     && chmod +x /usr/sbin/docker-entrypoint.sh
+
 CMD /usr/sbin/docker-entrypoint.sh

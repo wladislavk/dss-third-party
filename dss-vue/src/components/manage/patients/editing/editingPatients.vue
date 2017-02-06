@@ -87,7 +87,7 @@
                                     <a
                                         v-if="!profilePhoto"
                                         href="#"
-                                        v-on:click.prevent="onClickAddImage"
+                                        v-on:click.prevent="onClickAddImage('profile')"
                                     >
                                         <img src="assets/images/add_patient_photo.png" />
                                     </a>
@@ -1142,16 +1142,16 @@
                                 <span style="float:right">
                                     <button
                                         v-if="!insuranceCardImage"
+                                        v-on:click="onClickAddImage('primary-insurance-card-image')"
                                         id="p_m_ins_card"
-                                        onclick="Javascript: loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');return false;"
                                         class="addButton"
                                     >
                                         + Add Insurance Card Image
                                     </button>
                                     <button
                                         v-else
+                                        v-on:click="onClickDisplayFile"
                                         id="p_m_ins_card"
-                                        onclick="window.open('display_file.php?f=<?= rawurlencode($image['image_file']) ?>','welcome','width=800,height=400,scrollbars=yes'); return false;"
                                         class="addButton"
                                     >
                                         View Insurance Card Image
@@ -1510,10 +1510,10 @@
                                 <span>
                                     <select
                                         v-model="patient.s_m_ins_type"
+                                        v-on:change="checkMedicare"
                                         v-el:s_m_ins_type
                                         id="s_m_ins_type"
                                         name="s_m_ins_type"
-                                        onchange="checkMedicare()" 
                                         class="field text addr tbox"
                                         maxlength="255"
                                         style="width:200px;"
@@ -1549,16 +1549,16 @@
                                 <span style="float:right">
                                     <button
                                         v-if="!insuranceCardImage"
+                                        v-on:click="onClickAddImage('secondary-insurance-card-image')"
                                         id="s_m_ins_card"
-                                        onclick="Javascript: loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');return false;"
                                         class="addButton"
                                     >
                                         + Add Insurance Card Image
                                     </button>
                                     <button
                                         v-else
+                                        v-on:click="onClickDisplayFile"
                                         id="s_m_ins_card"
-                                        onclick="window.open('display_file.php?f=<?= rawurlencode($image['image_file']) ?>','welcome','width=800,height=400,scrollbars=yes'); return false;"
                                         class="addButton"
                                     >
                                         View Insurance Card Image
@@ -1580,7 +1580,6 @@
                                         class="field text addr tbox"
                                         maxlength="255"
                                         style="width:200px;"
-                                        onchange="updateNumber2('s_m_ins_phone')"
                                     >
                                         <option value="" selected disabled>Select Insurance Company</option>
                                         <option
@@ -1665,10 +1664,10 @@
                                 <span style="padding-left:10px; float:left;">Add medical contacts so they can receive correspondence about this patient.</span>
                                 <span style="float:left; margin-left:20px;">
                                     <input
+                                        v-on:click="onClickCreateNewContact"
                                         type="button"
                                         class="button"
                                         style="float:left; width:150px;"
-                                        onclick="loadPopupRefer('add_contact.php?addtopat=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : ''); ?>&from=add_patient');"
                                         value="+ Create New Contact" 
                                     />
                                 </span>
@@ -1685,8 +1684,8 @@
                                                 style="width:300px;"
                                             >{{ formedFullNames.docpcp_name }}</span>
                                             <a
+                                                v-on:click.prevent="onClickQuickViewContact(patient.docpcp)"
                                                 href="#"
-                                                onclick="loadPopup('view_contact.php?ed=<?php echo $docpcp;?>');return false;"
                                                 class="addButton"
                                             >Quick View</a>
                                             <a
@@ -1740,13 +1739,13 @@
                                                 style="width:300px;"
                                             >{{ formedFullNames.docent_name }}</span>
                                             <a
+                                                v-on:click="onClickQuickViewContact(patient.docent)"
                                                 href="#"
-                                                onclick="loadPopup('view_contact.php?ed=<?php echo $docent;?>');return false;"
                                                 class="addButton"
                                             >Quick View</a>
                                             <a
-                                                href="#"
                                                 v-on:click.prevent="patient.docent = ''"
+                                                href="#"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
@@ -1795,13 +1794,13 @@
                                                 style="width:300px;"
                                             >{{ formedFullNames.docsleep_name }}</span>
                                             <a
+                                                v-on:click="onClickQuickViewContact(patient.docsleep)"
                                                 href="#"
-                                                onclick="loadPopup('view_contact.php?ed=<?php echo $docsleep;?>');return false;"
                                                 class="addButton"
                                             >Quick View</a>
                                             <a
-                                                href="#"
                                                 v-on:click.prevent="patient.docsleep = ''"
+                                                href="#"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
@@ -1850,13 +1849,13 @@
                                                 style="width:300px;"
                                             >{{ formedFullNames.docdentist_name }}</span>
                                             <a
+                                                v-on:click="onClickQuickViewContact(patient.docdentist)"
                                                 href="#"
-                                                onclick="loadPopup('view_contact.php?ed=<?php echo $docdentist;?>');return false;"
                                                 class="addButton"
                                             >Quick View</a>
                                             <a
-                                                href="#"
                                                 v-on:click.prevent="patient.docdentist = ''"
+                                                href="#"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
@@ -1906,13 +1905,13 @@
                                                 style="width:300px;"
                                             >{{ formedFullNames.docmdother_name }}</span>
                                             <a
+                                                v-on:click="onClickQuickViewContact(patient.docmdother)"
                                                 href="#"
-                                                onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother;?>');return false;"
                                                 class="addButton"
                                             >Quick View</a>
                                             <a
-                                                href="#"
                                                 v-on:click.prevent="patient.docmdother = ''"
+                                                href="#"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
@@ -1932,7 +1931,6 @@
                                             v-if="patient.docmdother2 == '' || patient.docmdother3 == ''"
                                             href="#"
                                             id="add_new_md"
-                                            onclick="add_md(); return false;"
                                             style="clear:both"
                                             class="addButton"
                                         >+ Add Additional MD</a>
@@ -1973,13 +1971,13 @@
                                                 style="width:300px;"
                                             >{{ formedFullNames.docmdother2_name }}</span>
                                             <a
+                                                v-on:click="onClickQuickViewContact(patient.docmdother2)"
                                                 href="#"
-                                                onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother2;?>');return false;"
                                                 class="addButton"
                                             >Quick View</a>
                                             <a
-                                                href="#"
                                                 v-on:click.prevent="patient.docmdother2 = ''"
+                                                href="#"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>
@@ -2031,13 +2029,13 @@
                                                 style="width:300px;"
                                             >{{ formedFullNames.docmdother3_name }}</span>
                                             <a
+                                                v-on:click="onClickQuickViewContact(patient.docmdother3)"
                                                 href="#"
-                                                onclick="loadPopup('view_contact.php?ed=<?php echo $docmdother3;?>');return false;"
                                                 class="addButton"
                                             >Quick View</a>
                                             <a
+                                                v-on:click.prevent="patient.docmdother3 = ''"s
                                                 href="#"
-                                                v-on:click.prevent="patient.docmdother3 = ''"
                                                 class="addButton"
                                             >Change Contact</a>
                                         </div>

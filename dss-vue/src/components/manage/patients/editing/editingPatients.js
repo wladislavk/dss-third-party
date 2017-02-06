@@ -281,6 +281,21 @@ module.exports = {
             });
     },
     methods: {
+        checkMedicare: function() {
+            if (this.patient.s_m_ins_type == 1) {
+                alert(
+                    'Warning! It is very rare that Medicare is listed as a patient’s \
+                    Secondary Insurance.  Please verify that Medicare is the secondary \
+                    payer for this patient before proceeding.'
+                );
+            }
+        },
+        onClickQuickViewContact: function(id) {
+            // loadPopup('view_contact.php?ed=' + id);
+        },
+        onClickDisplayFile: function() {
+            // window.open('display_file.php?f=<?= rawurlencode($image['image_file']) ?>','welcome','width=800,height=400,scrollbars=yes'); return false;
+        },
         onClickCreateNewContact: function() {
             // TODO: implement displaying the popup for creating a new contact
             // loadPopupRefer('add_contact.php?addtopat={{ routeParameters.patientId }}&from=add_patient');
@@ -304,10 +319,22 @@ module.exports = {
                 this.$set('patient.bmi', '');
             }
         },
-        onClickAddImage: function() {
+        onClickAddImage: function(type) {
             // TODO: implement it when certain popup is finished
 
-            // loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');
+            switch (type) {
+                case 'profile':
+                    // loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');
+                    break;
+                case 'primary-insurance-card-image';
+                    // loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');
+                    break;
+                case 'secondary-insurance-card-image':
+                    // loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=12&return=patinfo');
+                    break;
+                default:
+                    break;
+            }
         },
         onClickOrderHst: function() {
             alert('Patient has existing HST with status '
@@ -399,7 +426,7 @@ module.exports = {
                                 }, function(response) {
                                     this.parseFailedResponseOnEditingPatient(response.data.data)
 
-                                    this.handleErrors('getInsuranceContacts', response);
+                                    this.handleErrors('editPatient', response);
                                 });
                         }
                     }, function(response) {

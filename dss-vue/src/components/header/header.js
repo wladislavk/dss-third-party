@@ -681,8 +681,11 @@ module.exports = {
             this.headerInfo.useLetters = (this.headerInfo.docInfo.use_letters == 1);
         },
         'uncompletedHomeSleepTests': function() {
-            var lastElement = this.uncompletedHomeSleepTests[this.uncompletedHomeSleepTests.length - 1];
-            var status = window.constants.dssHstStatusLabels[lastElement.status];
+            var status = '';
+            if (this.uncompletedHomeSleepTests.length > 0) {
+                var lastElement = this.uncompletedHomeSleepTests[this.uncompletedHomeSleepTests.length - 1];
+                status = window.constants.dssHstStatusLabels[lastElement.status];
+            }
 
             this.$set('headerInfo.patientHomeSleepTestStatus', status);
         }

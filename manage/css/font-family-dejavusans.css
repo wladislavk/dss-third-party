@@ -1,0 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+body, body p, body span, body ul, body ol, body li, body table, body td {
+    font-family: "DejaVu Sans", "Open Sans", "Verdana", "Geneva", sans-serif;
+}

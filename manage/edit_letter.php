@@ -36,7 +36,11 @@ $fontsInUse = [];
 
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
-<script type="text/javascript" src="/manage/js/edit_letter.js?v=20170203"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=<?= time() ?>"></script>
+<script>
+  var pageSize = <?= json_encode($pageSize) ?>;
+  var pageMargins = <?= json_encode($margins) ?>;
+</script>
 <style>
   div.preview-letter {
     width: <?= number_format($pageSize['width'], 1, '.', '') ?>mm;
@@ -106,9 +110,16 @@ $fontsInUse = [];
     padding: 0;
   }
 
+  div.preview-letter p:first-child {
+    margin-top: 0;
+  }
+
+  div.preview-letter p:empty::after {
+    content: "\00A0";
+  }
+
   div.preview-letter.show-hidden p::after {
     content: "\b6";
-    position: absolute;
     color: #ccc;
     cursor: default;
   }
@@ -141,10 +152,7 @@ $fontsInUse = [];
 
   div.preview-letter div.preview-inner-wrapper {
     position: relative;
-    margin: 1mm;
-    margin-right: 3mm;
-    -dss-width: <?= number_format(215.9 - 2 - $margins['left'] - $margins['right'], 1, '.', '') ?>mm;
-    -dss-height: <?= number_format(279.4 - 2 - $margins['top'] - $margins['bottom'], 1, '.', '') ?>mm;
+    margin: 0;
   }
 
   div.preview-letter.preview-font-dejavusans,
@@ -1992,13 +2000,15 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 		      </div>
 
 		      <div align="right" style="width:30%; padding: 3px; float: right">
-                <button class="preview-toggle-hidden addButton" onclick="javascript:toggleHiddenChars();return false;"
-                title="Show/hide line breaks">&#xb6;</button>
+                <button id="toggle-hidden-letter<?= $cur_letter_num ?>" class="preview-toggle-hidden addButton"
+                        onclick="return false;" title="Show/hide line breaks">
+                  &#xb6;
+                </button>
                 &nbsp;&nbsp;
         		<button id="edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: edit_letter('letter<?php echo $cur_letter_num?>', '<?php echo $font_size;?>','<?php echo $font_family;?>');return false;" >
         			Edit Letter
         		</button>
-            <button style="display:none;" id="cancel_edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: window.location.reload();return false;" >
+            <button style="display:none;" id="cancel_edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: hide_edit_letter('letter<?= $cur_letter_num ?>');return false;" >
               Cancel Edits
             </button>
         		&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2015,16 +2025,16 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 		      </div>
 
           <?php if(isset($_SESSION['user_type']) && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
-            <select name="font_size[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="$('#font_submit_<?php echo $cur_letter_num?>').click()";>
+            <select name="font_size[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="javascript:return false;">
               <option <?php echo  ($font_size==8)?'selected="selected"':''; ?> value="8">8</option>
               <option <?php echo  ($font_size==10)?'selected="selected"':''; ?> value="10">10</option>
               <option <?php echo  ($font_size==12)?'selected="selected"':''; ?> value="12">12</option>
-              <option <?php echo  ($font_size==14)?'selected="selected"':''; ?> value="14">14</option>
+              <option <?php echo  ($font_size==14||empty($font_size))?'selected="selected"':''; ?> value="14">14</option>
               <option <?php echo  ($font_size==16)?'selected="selected"':''; ?> value="16">16</option>
               <option <?php echo  ($font_size==20)?'selected="selected"':''; ?> value="20">20</option>
             </select>
-            <select name="font_family[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="$('#font_submit_<?php echo $cur_letter_num?>').click()">
-              <option <?php echo  ($font_family=='dejavusans')?'selected="selected"':''; ?> value="dejavusans">Dejavu Sans</option>
+            <select name="font_family[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="javascript:return false;">
+              <option <?php echo  ($font_family=='dejavusans'||empty($font_family))?'selected="selected"':''; ?> value="dejavusans">Dejavu Sans</option>
               <option <?php echo  ($font_family=='times')?'selected="selected"':''; ?> value="times">Times New Roman</option>
               <option <?php echo  ($font_family=='courier')?'selected="selected"':''; ?> value="courier">Courier</option>
               <option <?php echo  ($font_family=='helvetica')?'selected="selected"':''; ?> value="helvetica">Helvetica</option>
@@ -2035,9 +2045,10 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
         		<tr>
         			<td valign="top">
-        				<div class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 8 ?>">
+        				<div id="letter<?= $cur_letter_num ?>"
+                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?>">
         				  <div class="preview-wrapper">
-                            <div class="preview-inner-wrapper" id="letter<?= $cur_letter_num ?>">
+                            <div class="preview-inner-wrapper">
                               <?= html_entity_decode(
                                 preg_replace(
                                     '/(&Acirc;|&nbsp;)+/i',

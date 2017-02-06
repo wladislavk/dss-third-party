@@ -1,0 +1,33 @@
+body, p, table, td {
+    line-height: 1.2em;
+}
+
+body > *:first-child {
+    margin-top: 0;
+}
+
+p {
+    margin-block-start: 1.1em;
+    margin-block-end: 1.1em;
+}
+
+p:empty::after {
+    content: "\00A0";
+}
+
+ul, ol {
+    width: auto;
+    padding-eft: 3em;
+}
+
+li {
+    padding: 0;
+}
+
+table {
+    border-spacing: 0;
+}
+
+td {
+    padding: 0;
+}

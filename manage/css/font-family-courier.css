@@ -1,0 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Cutive');
+
+body, body p, body span, body ul, body ol, body li, body table, body td {
+    font-family: "Courier", "Cutive", "Courier 10 Pitch", "Consolas", "Courier New", "Nimbus Mono L", monospace;
+}

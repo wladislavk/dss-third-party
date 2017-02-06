@@ -76,6 +76,16 @@ module.exports = {
                 return false;
             }
 
+            if (patient.p_m_ins_ass == 'No' || patient.s_m_ins_ass == 'No') {
+                return confirm(
+                    'Selecting "Payment to Patient" means NO payment will go to your \
+                    office (payment will be mailed to patient). Select "Accept Assignment \
+                    of Benefits" to have the insurance check go to your office instead. \
+                    "Accept Assignment" is recommended in nearly all cases, so make sure \
+                    you choose correctly.'
+                );
+            }
+
             if (patient.p_m_dss_file == 1) {
                 messages = {
                     p_m_partyfname : 'Insured Party First Name is a Required Field',
@@ -91,6 +101,16 @@ module.exports = {
 
                 if (!this.walkThroughMessages(messages, patient)) {
                     return false;
+                }
+
+                // if primary insurance - yes and secondary - not
+                if (patient.dss_file_radio == 2) {
+                    return confirm(
+                        'You indicated that ' + this.billingCompany.name +
+                        ' will file Primary insurance claims but NOT Secondary insurance claims. \
+                        Normally patients expect claims to be filed in both cases; please select \
+                        "Yes" for Secondary unless you are sure of your choice.'
+                    );
                 }
 
                 if (patient.p_m_ins_plan.trim() == '' && patient.p_m_ins_type.value != 1) {
@@ -131,6 +151,10 @@ module.exports = {
 
                     return false;
                 }
+            // if primary insurance - no, but secondary - yes
+            } else if (patient.p_m_dss_file == 2 && patient.dss_file_radio == 1) {
+                alert(this.billingCompany.name + ' must file Primary Insurance in order to file Secondary Insurance.');
+                return false;
             }
 
             if (patient.patientid > 0) {

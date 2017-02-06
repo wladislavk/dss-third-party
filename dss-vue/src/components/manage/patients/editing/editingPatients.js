@@ -326,7 +326,7 @@ module.exports = {
                 case 'profile':
                     // loadPopup('add_image.php?pid=<?= $patientId ?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=4&return=patinfo&return_field=profile');
                     break;
-                case 'primary-insurance-card-image';
+                case 'primary-insurance-card-image':
                     // loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:'';?>&it=10&return=patinfo');
                     break;
                 case 'secondary-insurance-card-image':

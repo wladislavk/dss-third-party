@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
+set_time_limit(0);
+
   include "includes/top.htm";
   include_once "admin/includes/form_updates.php";
 
@@ -227,7 +231,35 @@
 ?>
 
   <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<style>
+  hr {
+    margin: 2em auto;
+    width: 80%;
+    border: 1px solid #ccc;
+  }
+
+  .letter-template {
+    border:solid 2px #ccc;
+    cursor: pointer;
+  }
+
+  .letter-template.selected {
+    border-color: #000;
+  }
+</style>
   <script src="admin/popup/popup.js" type="text/javascript"></script>
+<script>
+  $(document).ready(function(){
+    var $templates = $('img.letter-template');
+
+    $templates.click(function(){
+      var $this = $(this);
+
+      $templates.removeClass('selected');
+      $this.addClass('selected');
+    });
+  });
+</script>
 
   <span class="admin_head">
     Manage Profile
@@ -533,6 +565,7 @@
 
   <?php if($practice['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
     <div style="width:98%; margin-left:1%">
+      <hr />
       <h3>Letter Margins</h3>
       All units in millimeters (mm).
       <form action="#" method="post">
@@ -568,22 +601,22 @@
           <p style="color:#933;">Warning!  Adjusting the letter margins will cause your letter template to no longer align with #9 envelope address fields.  Click “Reset” if you wish to restore the default margins.</p>
         </div>
       </form>
-
+      <hr />
       <div style="width:100%">
         <div id="num_nine" class="third letter_templates">
           <h4>#9 Envelope</h4>
-          <img style="border:solid 2px #000;" src="images/letter_template_number9-envelope.png" /><br /><br />
-          <input type="button" onclick="set_num_nine();return false;" value="select" />
+          <img class="letter-template <?= $user['use_letter_header'] && $user['indent_address'] && $user['header_space'] ? 'selected' : '' ?>"
+               onclick="set_num_nine();" src="images/letter_template_number9-envelope.png" />
         </div>
         <div id="num_nine" class="third letter_templates">
           <h4> No return address + Left-aligned + Single Spacing</h4>
-          <img style="border:solid 2px #000;" src="images/letter_template_NOreturn-left-single.png" /><br /><br />
-          <input type="button" onclick="set_ls();return false;" value="select" />
+          <img class="letter-template <?= !$user['use_letter_header'] && !$user['indent_address'] && !$user['header_space'] ? 'selected' : '' ?>"
+               onclick="set_ls();" src="images/letter_template_NOreturn-left-single.png" />
         </div>
         <div id="num_nine" class="third letter_templates">
           <h4>Return address + Left + Single Spacing</h4>
-          <img style="border:solid 2px #000;" src="images/letter_template_return-left-single.png" /><br /><br />
-          <input type="button" onclick="set_rls();return false;" value="select" />
+          <img class="letter-template <?= $user['use_letter_header'] && !$user['indent_address'] && !$user['header_space'] ? 'selected' : '' ?>"
+               onclick="set_rls();" src="images/letter_template_return-left-single.png" />
         </div>
       </div>
 
@@ -645,6 +678,7 @@
       $let_r = $db->getRow($let_sql);
       if($let_r['use_letters']) {
     ?>
+          <hr />
         <form action="#" method="post">
           <h3>Enable Auto-Generated Letters</h3>
           <input value="1" type="checkbox" name="tracker_letters" <?php echo  ($let_r['tracker_letters'])?'checked="checked"':''; ?> /> Allow software to automatically generate letters based on treatment steps from the TRACKER page. Unchecking this box means no letters will be generated unless you explicitly create them. Please leave this box CHECKED unless you know what you're doing!

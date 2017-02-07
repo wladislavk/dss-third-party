@@ -130,7 +130,7 @@ if($_POST["contactsub"] == 1)
                         <option value="Dr." <?= ($salutation == 'Dr.') ? 'selected' : '' ?>>Dr.</option>
                         <option value="Mr." <?= ($salutation == 'Mr.') ? 'selected' : '' ?>>Mr.</option>
                         <option value="Mrs." <?= ($salutation == 'Mrs.') ? 'selected' : '' ?>>Mrs.</option>
-                        <option value="Miss." <?= ($salutation == 'Miss.') ? 'selected' : '' ?>>Miss.</option>
+                        <option value="Ms." <?= ($salutation == 'Miss.'||$salutation == 'Ms.') ? 'selected' : '' ?>>Ms.</option>
                     </select>
                 </div>
             </div>

@@ -183,7 +183,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
                         <option value="Dr." <?php echo  ($salutation == 'Dr.') ? 'selected' : '' ?>>Dr.</option>
                         <option value="Mr." <?php echo  ($salutation == 'Mr.') ? 'selected' : '' ?>>Mr.</option>
                         <option value="Mrs." <?php echo  ($salutation == 'Mrs.') ? 'selected' : '' ?>>Mrs.</option>
-                        <option value="Miss." <?php echo  ($salutation == 'Miss.') ? 'selected' : '' ?>>Miss.</option>
+                        <option value="Ms." <?php echo  ($salutation == 'Miss.'||$salutation == 'Ms.') ? 'selected' : '' ?>>Ms.</option>
                     </select>
                 </div>
             </div>
@@ -239,7 +239,7 @@ if(!empty($_POST["contactsub"]) && $_POST["contactsub"] == 1)
             <div class="form-group">
                 <label for="state" class="col-md-3 control-label">State</label>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" name="state" id="state" placeholder="State" value="<?php echo  $state ?>">
+                    <input type="text" class="form-control" name="state" id="state" placeholder="State" autocomplete="off" value="<?php echo  $state ?>">
                 </div>
             </div>
             <div class="form-group">

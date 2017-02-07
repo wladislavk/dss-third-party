@@ -21,6 +21,9 @@ import Patients        from './components/manage/patients/patients.vue'
 import Contacts        from './components/manage/contacts/contacts.vue'
 import EditingPatients from './components/manage/patients/editing/editingPatients.vue'
 
+// service routes
+import PageNotFound from './components/services/pageNotFound.vue'
+
 // global variables
 window.config     = require('./modules/config.js');
 window.constants  = require('./modules/constants.js');
@@ -75,6 +78,9 @@ router.map({
         name      : 'edit-patient',
         component : EditingPatients,
         auth      : true
+    },
+    '*': {
+        component : PageNotFound
     }
 })
 

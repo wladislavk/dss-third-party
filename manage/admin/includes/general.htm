@@ -1445,6 +1445,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
     $pdf->SetHeaderImage($header);
     $pdf->SetFooterImage($footer);
   } else {
+    $pdf->SetHeaderText($header);
     $pdf->SetFooterText($footer);
   }
 

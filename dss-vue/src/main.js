@@ -15,10 +15,11 @@ import ManageTemplate from './components/header/header.vue'
 Vue.component('manage-template', ManageTemplate);
 
 // components for routing
-import Login    from './components/manage/login/login.vue'
-import Index    from './components/manage/dashboard/dashboard.vue'
-import Patients from './components/manage/patients/patients.vue'
-import Contacts from './components/manage/contacts/contacts.vue'
+import Login           from './components/manage/login/login.vue'
+import Index           from './components/manage/dashboard/dashboard.vue'
+import Patients        from './components/manage/patients/patients.vue'
+import Contacts        from './components/manage/contacts/contacts.vue'
+import EditingPatients from './components/manage/patients/editing/editingPatients.vue'
 
 // service routes
 import PageNotFound from './components/services/pageNotFound.vue'
@@ -55,18 +56,27 @@ var router = new VueRouter({
 */
 router.map({
     '/manage/index': {
+        name      : 'dashboard',
         component : Index,
         auth      : true
     },
     '/manage/patients': {
+        name      : 'patients',
         component : Patients,
         auth      : true
     },
     '/manage/login': {
+        name      : 'login',
         component : Login
     },
     '/manage/contacts': {
+        name      : 'contacts',
         component : Contacts,
+        auth      : true
+    },
+    '/manage/edit-patient': {
+        name      : 'edit-patient',
+        component : EditingPatients,
         auth      : true
     },
     '*': {

@@ -49,6 +49,11 @@ class Contact extends Model implements Resource, Repository
      */
     const CREATED_AT = 'adddate';
 
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
+
     public function find(
         $contactType     = 0,
         $status          = 0,
@@ -151,9 +156,9 @@ class Contact extends Model implements Resource, Repository
         ];
     }
 
-    public function getListContactsAndCompanies($docId, $partial, $names, $referredPhysician)
+    public function getListContactsAndCompanies($docId, $partial, $names, $referredPhysician, $searchForCompanies = true)
     {
-        return $this->select(
+        $query = $this->select(
                 'c.contactid',
                 'c.lastname',
                 'c.firstname',
@@ -163,7 +168,7 @@ class Contact extends Model implements Resource, Repository
                 'ct.contacttype'
             )->from(DB::raw('dental_contact c'))
             ->leftJoin(DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
-            ->where(function($query) use ($names, $partial) {
+            ->where(function($query) use ($names, $partial, $searchForCompanies) {
                 $query->where(function($query) use ($names, $partial) {
                     $query->where(function($query) use ($names) {
                         $query->where('lastname', 'like', $names[0] . '%')
@@ -176,11 +181,20 @@ class Contact extends Model implements Resource, Repository
                     $query->where('firstname', 'like', $names[0] . '%')
                         ->where('middlename', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
                         ->where('lastname', 'like', (!empty($names[2]) ? $names[2] : '') . '%');
-                })->orWhere('company', 'like', $partial . '%');
+                });
+
+                if ($searchForCompanies) {
+                    $query = $query->orWhere('company', 'like', $partial . '%');
+                }
             })->whereNull('merge_id')
             ->where('c.status', 1)
-            ->where('docid', $docId)
-            ->orderBy('lastname')
+            ->where('docid', $docId);
+
+        if (!$searchForCompanies) {
+            $query = $query->where('ct.physician', 1);
+        }
+
+        return $query->orderBy('lastname')
             ->get();
     }
 
@@ -191,5 +205,92 @@ class Contact extends Model implements Resource, Repository
             ->leftJoin(DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'c.contacttypeid')
             ->where('c.contactid', $contactId)
             ->first();
+    }
+
+    public function getMdContactIds($patientId = 0, $currentPatient, $active = true)
+    {
+        $requiredFields = [
+            'docsleep', 'docpcp', 'docdentist', 'docent',
+            'docmdother', 'docmdother2', 'docmdother3'
+        ];
+
+        $currentPatient = $currentPatient->toArray();
+        $contactIds = [];
+
+        foreach ($requiredFields as $field) {
+            if ($currentPatient[$field] != 'Not Set') {
+                $contacts = explode(',', $currentPatient[$field]);
+
+                foreach ($contacts as $contact) {
+                    if (!in_array($contact, $contactIds)) {
+                        if ($active) {
+                            $contactStatus = $this->select('status')
+                                ->where('contactid', $contact)
+                                ->first();
+
+                            if ($contactStatus && $contactStatus->status == 1) {
+                                $contactIds[] = $contact;
+                            }
+                        } else {
+                            $contactIds[] = $contact;
+                        }
+                    }
+                }
+            }
+        }
+
+        return implode(',', $contactIds);
+    }
+
+    public function getActiveContact($contactId = 0)
+    {
+        return $this->where('contactid', $contactId)
+            ->active()
+            ->first();
+    }
+
+    public function getDocShortInfo($contactId)
+    {
+        return $this->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
+            ->from(DB::raw('dental_contact dc'))
+            ->leftJoin(DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
+            ->where('contactid', $contactId)
+            ->first();
+    }
+
+    public function getInsuranceContacts($docId)
+    {
+        return $this->active()
+            ->whereNull('merge_id')
+            ->where('contacttypeid', 11)
+            ->where('docid', $docId)
+            ->orderBy('company')
+            ->get();
+    }
+
+    public function getContactInfo($letterId, $mdList)
+    {
+        return $this->select(
+                'dental_contact.contactid AS id',
+                'dental_contact.salutation',
+                'dental_contact.firstname',
+                'dental_contact.lastname',
+                'dental_contact.middlename',
+                'dental_contact.company',
+                'dental_contact.add1',
+                'dental_contact.add2',
+                'dental_contact.city',
+                'dental_contact.state',
+                'dental_contact.zip',
+                'dental_contact.email',
+                'dental_contact.fax',
+                'dental_contact.preferredcontact',
+                'dental_contacttype.contacttype',
+                'dental_contact.contacttypeid',
+                DB::raw($letterId . ' AS letterid'),
+                'dental_contact.status'
+            )->leftJoin('dental_contacttype', 'dental_contact.contacttypeid', '=', 'dental_contacttype.contacttypeid')
+            ->whereIn('dental_contact.contactid', $mdList)
+            ->get();
     }
 }

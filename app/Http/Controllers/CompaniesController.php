@@ -91,4 +91,22 @@ class CompaniesController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getHomeSleepTestCompanies(Companies $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getHomeSleepTestCompanies($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getBillingExclusiveCompany(Company $resource)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resource->getBillingExclusiveCompany($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

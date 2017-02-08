@@ -6,11 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as Repository;
+use Carbon\Carbon;
 use DB;
 
 class InsurancePreauth extends Model implements Resource, Repository
 {
     use WithoutCreatedTimestamp;
+
+    // Pre-authorization statuses (pre-auth)
+    const DSS_PREAUTH_PENDING = 0;
+    const DSS_PREAUTH_COMPLETE = 1;
+    const DSS_PREAUTH_PREAUTH_PENDING = 2;
+    const DSS_PREAUTH_REJECTED = 3;
 
     /**
      * Guarded attributes
@@ -80,6 +87,33 @@ class InsurancePreauth extends Model implements Resource, Repository
     {
         return $this->basedPreauth($docId)
             ->rejected()
+            ->first();
+    }
+
+    public function updateVob($newPatientId, $name)
+    {
+        $rejectReason = $name . ' altered patient insurance information requiring VOB resubmission on ' . Carbon::now()->format('m/d/Y h:i');
+
+        return $this->where('patient_id', $newPatientId)
+            ->where(function($query) {
+                $query->where('status', '=', self::DSS_PREAUTH_PENDING)
+                    ->orWhere('status', '=', self::DSS_PREAUTH_PREAUTH_PENDING);
+            })
+            ->update([
+                'status'        => self::DSS_PREAUTH_REJECTED,
+                'reject_reason' => $rejectReason,
+                'viewed'        => 1
+            ]);
+    }
+
+    public function getPendingVob($patientId)
+    {
+        return $this->where('patient_id', $patientId)
+            ->where(function($query) {
+                $query->where('status', '=', self::DSS_PREAUTH_PENDING)
+                    ->orWhere('status', '=', self::DSS_PREAUTH_PREAUTH_PENDING);
+            })
+            ->orderBy('front_office_request_date', 'desc')
             ->first();
     }
 }

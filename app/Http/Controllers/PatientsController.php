@@ -26,6 +26,8 @@ use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
+
 /**
  * API controller that handles single resource endpoints. It depends heavily
  * on the IoC dependency injection and routes model binding in that each
@@ -717,6 +719,33 @@ class PatientsController extends Controller
                 $message = 'The email address you entered is already associated with another patient. Please enter a different email address.',
                 $code = 417
             );
+        }
+    }
+
+    public function resetAccessCode($patientId, Patient $patientResource)
+    {
+        $accessCode = 0;
+        $accessCodeDate = null;
+
+        if ($patientId > 0) {
+            $accessCode = rand(100000, 999999);
+            $accessCodeDate = Carbon::now();
+            $patient = $this->patientResource->updatePatient($patientId, [
+                'access_code'      => $accessCode,
+                'access_code_date' => $accessCodeDate
+            ]);
+        }
+
+        return ApiResponse::responseOk('', ['access_code' => $accessCode, 'access_code_date' => $accessCodeDate]);
+    }
+
+    public function createTempPinDocument($patientId, EmailHelper $emailHelper, Patient $patientResource)
+    {
+        if ($patientId > 0) {
+            $patient = $patientResource->find($patientId);
+            $emailHelper->sendRegEmail($patientId, $patient->email, '', $patient->email, 2);
+
+            $filename = 'user_pin_' . $patientId . '.pdf';
         }
     }
 

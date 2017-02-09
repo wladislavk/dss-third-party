@@ -18,7 +18,7 @@ function edit_letter (divid, size, family) {
     if ($source.is('.preview-letter')) {
         $source.removeClass('show-hidden');
         $source.find('.preview-wrapper').hide().after(textarea);
-        $source.find('.preview-bottom-margin').hide();
+        $source.find('.preview-bottom-margin, .preview-page-break').hide();
         $(['#toggle-hidden-', divid].join('')).hide();
     } else {
         $("#" + divid).replaceWith(textarea);
@@ -46,7 +46,7 @@ function hide_edit_letter (divid) {
     var $source = $("#" + divid);
 
     $source.find(['textarea[name="', divid, '"], .mce-tinymce'].join('')).remove();
-    $source.find('.preview-wrapper, .preview-bottom-margin').show();
+    $source.find('.preview-wrapper, .preview-bottom-margin, .preview-page-break').show();
 
     $(['#toggle-hidden-', divid].join('')).show();
     $('.edit_'+divid).hide();

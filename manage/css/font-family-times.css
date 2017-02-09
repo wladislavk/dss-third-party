@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Tinos');
 
 body, body p, body span, body ul, body ol, body li, body table, body td {
-    font-family: "Times New Roman", "Tinos", "Times", "Liberation Serif", "Nimbus Roman No9 L", serif;
+    font-family: "-Times New Roman-", "Tinos", "-Times-", "-Liberation Serif-", "-Nimbus Roman No9 L-", "-serif-";
+    letter-spacing: -0.002em;
 }

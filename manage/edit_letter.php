@@ -30,7 +30,7 @@ $googleFonts = [
     'dejavusans' => 'Open Sans',
     'times' => 'Tinos',
     'helvetica' => 'Roboto',
-    'courier' => 'Cutive',
+    'courier' => 'Cutive Mono',
 ];
 $fontsInUse = [];
 
@@ -42,6 +42,7 @@ $fontsInUse = [];
   var pageMargins = <?= json_encode($margins) ?>;
 </script>
 <style>
+  /* Preview area display */
   div.preview-letter {
     width: <?= number_format($pageSize['width'], 1, '.', '') ?>mm;
     min-height: <?= number_format($pageSize['height'], 1, '.', '') ?>mm;
@@ -52,7 +53,16 @@ $fontsInUse = [];
     box-shadow: 3px 3px 3px #999;
     overflow: hidden;
     position: relative;
-    line-height: 1.25em;
+  }
+
+  div.preview-letter div.preview-wrapper {
+    position: relative;
+    margin: <?= "{$margins['top']}mm {$margins['right']}mm {$margins['bottom']}mm {$margins['left']}mm" ?>;
+  }
+
+  div.preview-letter div.preview-inner-wrapper {
+    position: relative;
+    margin: 0;
   }
 
   div.preview-letter div.preview-page-break {
@@ -86,10 +96,32 @@ $fontsInUse = [];
     top: <?= number_format(($pageSize['height'] - $margins['top'] - $margins['bottom'])*$n + $margins['top'], 1, '.', '') ?>mm;
   }
   <?php } ?>
+  /* Preview area display */
+
+  /* Default values */
+  div.preview-inner-wrapper,
+  div.preview-letter p,
+  div.preview-letter table,
+  div.preview-letter td {
+    line-height: 1.25em;
+  }
+
+  div.preview-inner-wrapper > *:first-child {
+    margin-top: 0;
+  }
 
   div.preview-letter p {
     margin-block-start: 1.25em;
     margin-block-end: 1.25em;
+  }
+
+  div.preview-letter p:empty {
+    line-height: 0;
+  }
+
+  div.preview-letter p:empty::after {
+    content: "\00A0";
+    line-height: 0;
   }
 
   div.preview-letter ul,
@@ -98,10 +130,16 @@ $fontsInUse = [];
     padding-left: 3em;
   }
 
-  div.preview-letter br + ul,
-  div.preview-letter br + ol,
-  div.preview-letter br + p {
-    margin-top: 1.1em;
+  div.preview-letter li + ul,
+  div.preview-letter li + ol,
+  div.preview-letter li + p {
+    margin-top: 1.25em;
+  }
+
+  div.preview-letter table + ul,
+  div.preview-letter table + ol,
+  div.preview-letter table + p {
+    margin-top: 0;
   }
 
   div.preview-letter li {
@@ -116,19 +154,15 @@ $fontsInUse = [];
     padding: 0;
   }
 
-  div.preview-letter p:first-child {
-    margin-top: 0;
+  div.preview-letter,
+  div.preview-letter td,
+  div.preview-letter ul,
+  div.preview-letter ol {
+    font-size: 14pt;
   }
+  /* Default values */
 
-  div.preview-letter p:empty {
-    line-height: 0;
-  }
-
-  div.preview-letter p:empty::after {
-    content: "\00A0";
-    line-height: 0;
-  }
-
+  /* Debug values */
   div.preview-letter.show-hidden p::after {
     content: "\b6";
     color: #ccc;
@@ -148,50 +182,44 @@ $fontsInUse = [];
     color #ccc;
     cursor: default;
   }
-
-  div.preview-letter,
-  div.preview-letter td,
-  div.preview-letter ul,
-  div.preview-letter ol {
-    font-size: 14pt;
-  }
-
-  div.preview-letter div.preview-wrapper {
-    position: relative;
-    margin: <?= "{$margins['top']}mm {$margins['right']}mm {$margins['bottom']}mm {$margins['left']}mm" ?>;
-  }
-
-  div.preview-letter div.preview-inner-wrapper {
-    position: relative;
-    margin: 0;
-  }
+  /* Debug values */
 
   div.preview-letter.preview-font-dejavusans,
   div.preview-letter.preview-font-dejavusans td,
   div.preview-letter.preview-font-dejavusans ul,
   div.preview-letter.preview-font-dejavusans ol {
-    font-family: "DejaVu Sans", "Open Sans", "Verdana", "Geneva", sans-serif;
+    font-family: "-DejaVu Sans-", "Open Sans", "-Verdana-", "-Geneva-", "-sans-serif-";
+    letter-spacing: 0.04em;
   }
 
   div.preview-letter.preview-font-times,
   div.preview-letter.preview-font-times td,
   div.preview-letter.preview-font-times ul,
   div.preview-letter.preview-font-times ol {
-    font-family: "Times New Roman", "Tinos", "Times", "Liberation Serif", "Nimbus Roman No9 L", serif;
+    font-family: "-Times New Roman-", "Tinos", "-Times-", "-Liberation Serif-", "-Nimbus Roman No9 L-", "-serif-";
+    letter-spacing: -0.002em;
   }
 
   div.preview-letter.preview-font-helvetica,
   div.preview-letter.preview-font-helvetica td,
   div.preview-letter.preview-font-helvetica ul,
   div.preview-letter.preview-font-helvetica ol {
-    font-family: "Helvetica", "Roboto", "Helvetica Neue", "HelveticaNeue", "TeX Gyre Heros", "TeXGyreHeros", "FreeSans", "Nimbus Sans L", "Liberation Sans", sans-serif;
+    font-family: "-Helvetica-", "Roboto", "-Helvetica Neue-", "-HelveticaNeue-", "-TeX Gyre Heros-", "-TeXGyreHeros-", "-FreeSans-", "-Nimbus Sans L-", "-Liberation Sans-", "-sans-serif-";
+    font-kerning: none;
+    letter-spacing: 0.002em;
+  }
+
+  div.preview-letter.preview-font-helvetica b,
+  div.preview-letter.preview-font-helvetica strong {
+    letter-spacing: 0.01em;
   }
 
   div.preview-letter.preview-font-courier,
   div.preview-letter.preview-font-courier td,
   div.preview-letter.preview-font-courier ul,
   div.preview-letter.preview-font-courier ol {
-    font-family: "Courier", "Cutive", "Courier 10 Pitch", "Consolas", "Courier New", "Nimbus Mono L", monospace;
+    font-family: "-Courier-", "Cutive Mono", "-Courier 10 Pitch-", "-Consolas-", "-Courier New-", "-Nimbus Mono L-", "-monospace-";
+    letter-spacing: -0.005em;
   }
 
   div.preview-letter.preview-size-8,

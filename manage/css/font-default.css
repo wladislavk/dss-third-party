@@ -1,5 +1,6 @@
 body, p, table, td {
     line-height: 1.25em;
+    letter-spacing: 0.04em;
 }
 
 body > *:first-child {
@@ -25,6 +26,18 @@ ul, ol {
     padding-left: 3em;
 }
 
+li + ul, li + ol, li + p {
+    margin-top: 1.25em;
+}
+
+table + ul, table + ol, table + p {
+    margin-top: 0;
+}
+
+table + p {
+    margin-top: 0;
+}
+
 li {
     padding: 0;
 }
@@ -35,4 +48,8 @@ table {
 
 td {
     padding: 0;
+}
+
+body, td, ul, ol {
+    font-size: 14pt;
 }

@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 body, body p, body span, body ul, body ol, body li, body table, body td {
-    font-family: "Helvetica", "Roboto", "Helvetica Neue", "HelveticaNeue", "TeX Gyre Heros", "TeXGyreHeros", "FreeSans", "Nimbus Sans L", "Liberation Sans", sans-serif;
+    font-family: "-Helvetica-", "Roboto", "-Helvetica Neue-", "-HelveticaNeue-", "-TeX Gyre Heros-", "-TeXGyreHeros-", "-FreeSans-", "-Nimbus Sans L-", "-Liberation Sans-", "-sans-serif-";
+    font-kerning: none;
+    letter-spacing: 0.002em;
+}
+
+b, strong {
+    letter-spacing: 0.01em;
 }

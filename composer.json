@@ -18,7 +18,9 @@
         "zircote/swagger-php": "*",
         "rmccue/requests": ">=1.0",
         "jlapp/swaggervel": "master-dev",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "dompdf/dompdf": "^0.7.0",
+        "barryvdh/laravel-dompdf": "^0.7.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

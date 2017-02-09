@@ -7,6 +7,7 @@ use DentalSleepSolutions\Helpers\LetterHelper;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use DentalSleepSolutions\Helpers\EmailHelper;
 use DentalSleepSolutions\Helpers\SimilarHelper;
+use DentalSleepSolutions\Helpers\PdfHelper;
 use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
 use DentalSleepSolutions\Http\Requests\PatientDestroy;
@@ -739,14 +740,33 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', ['access_code' => $accessCode, 'access_code_date' => $accessCodeDate]);
     }
 
-    public function createTempPinDocument($patientId, EmailHelper $emailHelper, Patient $patientResource)
-    {
+    public function createTempPinDocument(
+        $patientId = 0,
+        EmailHelper $emailHelper,
+        PdfHelper $pdfHelper,
+        Patient $patientResource
+    ) {
+        $url = '';
         if ($patientId > 0) {
-            $patient = $patientResource->find($patientId);
-            $emailHelper->sendRegEmail($patientId, $patient->email, '', $patient->email, 2);
+            $docId = $this->currentUser->docid ?: 0;
+            $mailerData = $emailHelper->retrieveMailerData($patientId, $docId);
+            $mailerData = array_merge($mailerData['patientData'], $mailerData['mailingData']);
 
-            $filename = 'user_pin_' . $patientId . '.pdf';
+            if (count($mailerData)) {
+                // $emailHelper->sendRegEmail($patientId, $mailerData['email'], '', $mailerData['email'], 2);
+
+                $filename = 'user_pin_' . $patientId . '.pdf';
+                $pdfHelper->setOptions([
+                    'title'   => 'User Temporary PIN',
+                    'subject' => 'User Temporary PIN',
+                    'doc_id'  => $docId
+                ]);
+
+                $url = $pdfHelper->create('pdf.patient.pinInstructions', $mailerData, $filename);
+            }
         }
+
+        return ApiResponse::responseOk('', ['url' => $url]);
     }
 
     private function getDocNameFromShortInfo($field, $shortInfo)

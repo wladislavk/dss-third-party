@@ -8,6 +8,8 @@ use DentalSleepSolutions\Eloquent\Dental\Contact;
 // this class contains some functions from general_functions.php
 class GeneralHelper
 {
+    const Q_FILE_FOLDER = '';
+
     private $patient;
     private $contact;
 

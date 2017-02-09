@@ -1323,13 +1323,6 @@ class DS3PDF extends \TCPDF {
         $this->SetFont($family, $style, $size);
         $this->setHeaderFont([$family, $style, $size]);
         $this->setFooterFont([$family, $style, $size]);
-
-        /*
-        throw new \Exception(json_encode([
-            'getCellPaddings' => $this->getCellPaddings(),
-            'getCellMargins' => $this->getCellMargins()
-        ]));
-        */
     }
 
     public function ConfigureMargins ($top, $right, $bottom, $left, $header=0, $footer=0) {

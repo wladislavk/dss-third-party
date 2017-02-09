@@ -435,32 +435,7 @@ foreach ($master_q as $master_r) {
 ?>
 
 <br />
-<span class="admin_head">
-	<?php print $title; ?>
-</span>
-<br />&nbsp;&nbsp;
-
-<?php 
-  if(!empty($_REQUEST['goto'])) {
-    if($_REQUEST['goto'] == 'flowsheet') {
-      $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
-    } elseif ($_REQUEST['goto'] == 'letter') {
-      $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
-    } elseif ($_REQUEST['goto'] == 'new_letter') {
-      $page = 'new_letter.php?pid='.$_GET['pid'];
-    } elseif ($_REQUEST['goto'] == 'faxes') {
-      $page = 'manage_faxes.php';
-    }
-?>
-  <a href="<?php echo $page; ?>" class="editlink" title="Pending Letters">
-<?php
-  } else {
-?>
-  <a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
-<?php } ?>
-
-<b>&lt;&lt;Back</b></a>
-<br /><br>
+<br />
 
 <?php
   if ($status == DSS_LETTER_PENDING) {
@@ -2004,15 +1979,37 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
 	      // Print Letter Body		
 
-        if($status == DSS_LETTER_SEND_FAILED){
-    ?>
-          <div style="width: 100%; text-align: center;">Sending of letter failed. Letter was attempted to be sent to <a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo  $contact['id']; ?>'); return false;"><?php echo  $contact['firstname'] . " " . $contact['lastname']; ?></a></div>
-    <?php
-        }
-    ?>
+        ?>
 
 	      <div style="margin: auto; width: 95%; padding: 3px;">
-		      <div align="left" style="width: 40%; padding: 3px; float: left">
+              <div style="float:left; text-align: left">
+              <span class="admin_head" style="float: none; display: inline-block; margin-top: -5px;">
+	<?php print $title; ?>
+</span>
+              &nbsp;&nbsp;
+
+              <?php
+              if(!empty($_REQUEST['goto'])) {
+              if($_REQUEST['goto'] == 'flowsheet') {
+                  $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
+              } elseif ($_REQUEST['goto'] == 'letter') {
+                  $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
+              } elseif ($_REQUEST['goto'] == 'new_letter') {
+                  $page = 'new_letter.php?pid='.$_GET['pid'];
+              } elseif ($_REQUEST['goto'] == 'faxes') {
+                  $page = 'manage_faxes.php';
+              }
+              ?>
+              <a href="<?php echo $page; ?>" class="editlink" title="Pending Letters">
+                  <?php
+                  } else {
+                  ?>
+                  <a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+                      <?php } ?>
+
+                      <b>&lt;&lt;Back</b></a>
+                  </div>
+		      <div style="float: right; text-align: right;">
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][id]" value="<?= $contact['id'] ?>" />
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][type]" value="<?= $contact['type'] ?>" />
 			      Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" id="change_method_<?php print $cur_letter_num; ?>" class="addButton"> Change </a>
@@ -2036,9 +2033,25 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
               <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline'); return false;" class="addButton" value="Cancel" />
             </div>
-		      </div>
+                  &nbsp;&nbsp;
+                  <?php if(isset($_SESSION['user_type']) && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
+                      <select name="font_size[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="javascript:return false;">
+                          <option <?php echo  ($font_size==8)?'selected="selected"':''; ?> value="8">8</option>
+                          <option <?php echo  ($font_size==10)?'selected="selected"':''; ?> value="10">10</option>
+                          <option <?php echo  ($font_size==12)?'selected="selected"':''; ?> value="12">12</option>
+                          <option <?php echo  ($font_size==14||empty($font_size))?'selected="selected"':''; ?> value="14">14</option>
+                          <option <?php echo  ($font_size==16)?'selected="selected"':''; ?> value="16">16</option>
+                          <option <?php echo  ($font_size==20)?'selected="selected"':''; ?> value="20">20</option>
+                      </select>
+                      <select name="font_family[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="javascript:return false;">
+                          <option <?php echo  ($font_family=='dejavusans'||empty($font_family))?'selected="selected"':''; ?> value="dejavusans">Dejavu Sans</option>
+                          <option <?php echo  ($font_family=='times')?'selected="selected"':''; ?> value="times">Times New Roman</option>
+                          <option <?php echo  ($font_family=='courier')?'selected="selected"':''; ?> value="courier">Courier</option>
+                          <option <?php echo  ($font_family=='helvetica')?'selected="selected"':''; ?> value="helvetica">Helvetica</option>
+                      </select>
 
-		      <div align="right" style="width:30%; padding: 3px; float: right">
+                      <input type="submit" name="font_submit[<?php echo $cur_letter_num?>]" id="font_submit_<?php echo $cur_letter_num?>" style="display:none;" />
+                  <?php } ?>
                 <button id="toggle-hidden-letter<?= $cur_letter_num ?>" class="preview-toggle-hidden addButton"
                         onclick="return false;" title="Show/hide line breaks">
                   &#xb6;
@@ -2050,8 +2063,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
             <button style="display:none;" id="cancel_edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: hide_edit_letter('letter<?= $cur_letter_num ?>');return false;" >
               Cancel Edits
             </button>
-        		&nbsp;&nbsp;&nbsp;&nbsp;
-        		&nbsp;&nbsp;&nbsp;&nbsp;
+        		&nbsp;&nbsp;
 
           	<?php if(($method ? $method : $contact['preferredcontact'])=='fax' && $franchisee_info['use_digital_fax']!=1 && $_GET['backoffice'] != '1'){ ?>
           		<input type="submit" name="send_letter[<?php echo $cur_letter_num?>]" class="addButton" onclick="return confirm('Warning! Digital fax is not enabled in your account. Click OK to send the letter via standard printing. To enable digital faxing for your account please contact the DSS corporate office.');" value="Send Letter" />
@@ -2060,27 +2072,15 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
             <?php } else { ?>
 		          <input type="submit" name="send_letter[<?php echo $cur_letter_num?>]" class="addButton" value="Send Letter" />
 	          <?php } ?>
-		        &nbsp;&nbsp;&nbsp;&nbsp;
+		        &nbsp;&nbsp;
 		      </div>
+              <div style="width: 100%; text-align: center; clear: both;">
+                <?php if ($status == DSS_LETTER_SEND_FAILED) { ?>
+                  Sending of letter failed. Letter was attempted to be sent to
+                  <a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo  $contact['id']; ?>'); return false;"><?php echo  $contact['firstname'] . " " . $contact['lastname']; ?></a>
+                <?php } ?>
+              </div>
 
-          <?php if(isset($_SESSION['user_type']) && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
-            <select name="font_size[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="javascript:return false;">
-              <option <?php echo  ($font_size==8)?'selected="selected"':''; ?> value="8">8</option>
-              <option <?php echo  ($font_size==10)?'selected="selected"':''; ?> value="10">10</option>
-              <option <?php echo  ($font_size==12)?'selected="selected"':''; ?> value="12">12</option>
-              <option <?php echo  ($font_size==14||empty($font_size))?'selected="selected"':''; ?> value="14">14</option>
-              <option <?php echo  ($font_size==16)?'selected="selected"':''; ?> value="16">16</option>
-              <option <?php echo  ($font_size==20)?'selected="selected"':''; ?> value="20">20</option>
-            </select>
-            <select name="font_family[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="javascript:return false;">
-              <option <?php echo  ($font_family=='dejavusans'||empty($font_family))?'selected="selected"':''; ?> value="dejavusans">Dejavu Sans</option>
-              <option <?php echo  ($font_family=='times')?'selected="selected"':''; ?> value="times">Times New Roman</option>
-              <option <?php echo  ($font_family=='courier')?'selected="selected"':''; ?> value="courier">Courier</option>
-              <option <?php echo  ($font_family=='helvetica')?'selected="selected"':''; ?> value="helvetica">Helvetica</option>
-            </select>
-
-            <input type="submit" name="font_submit[<?php echo $cur_letter_num?>]" id="font_submit_<?php echo $cur_letter_num?>" style="display:none;" />
-          <?php } ?>
         	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
         		<tr>
         			<td valign="top">

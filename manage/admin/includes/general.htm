@@ -1323,6 +1323,13 @@ class DS3PDF extends \TCPDF {
         $this->SetFont($family, $style, $size);
         $this->setHeaderFont([$family, $style, $size]);
         $this->setFooterFont([$family, $style, $size]);
+
+        /*
+        throw new \Exception(json_encode([
+            'getCellPaddings' => $this->getCellPaddings(),
+            'getCellMargins' => $this->getCellMargins()
+        ]));
+        */
     }
 
     public function ConfigureMargins ($top, $right, $bottom, $left, $header=0, $footer=0) {
@@ -1434,8 +1441,6 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
     }
   }
 
-  $margin_bottom = $margin_bottom > 0 ? $margin_bottom : 20;
-
   $pdf = new DS3PDF();
   $pdf->ConfigureMargins($margin_top, $margin_right, $margin_bottom, $margin_left, $margin_header, $margin_footer);
   $pdf->ConfigureFont($font_family, '', $font_size);
@@ -1470,6 +1475,8 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
    * Undoes CS-112
    */
   $html = preg_replace('@[\s\S]*?<head>([\s\S]*?)</head>[\s\S]*?<body>([\s\S]*?)</body>[\s\S]*@', '$1$2', $html);
+  //$html = '<style>body,p,table,td{line-height:1.2em;}body>*:first-child{margin-top:0;}p{margin-block-start:1.1em;margin-block-end:1.1em;}p:empty::after{content:"\00A0";}ul,ol{width:auto;padding-eft:3em;}li{padding:0;}table{border-spacing:0;}td{padding:0;}</style>' . $html;
+    error_log($html);
 
   // output the HTML content
   $pdf->writeHTML($html, true, false, true, false, '');

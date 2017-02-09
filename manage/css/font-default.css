@@ -1,5 +1,5 @@
 body, p, table, td {
-    line-height: 1.2em;
+    line-height: 1.25em;
 }
 
 body > *:first-child {
@@ -7,17 +7,22 @@ body > *:first-child {
 }
 
 p {
-    margin-block-start: 1.1em;
-    margin-block-end: 1.1em;
+    margin-block-start: 1.25em;
+    margin-block-end: 1.25em;
+}
+
+p:empty {
+    line-height: 0;
 }
 
 p:empty::after {
     content: "\00A0";
+    line-height: 0;
 }
 
 ul, ol {
     width: auto;
-    padding-eft: 3em;
+    padding-left: 3em;
 }
 
 li {

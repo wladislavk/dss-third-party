@@ -22,8 +22,8 @@ $margins = $db->getRow("SELECT
   ");
 
 $pageSize = [
-    'width' => 215.9,
-    'height' => 279.4
+    'width' => 216,
+    'height' => 279
 ];
 
 $googleFonts = [
@@ -52,7 +52,7 @@ $fontsInUse = [];
     box-shadow: 3px 3px 3px #999;
     overflow: hidden;
     position: relative;
-    line-height: 1.2em;
+    line-height: 1.25em;
   }
 
   div.preview-letter div.preview-page-break {
@@ -88,14 +88,20 @@ $fontsInUse = [];
   <?php } ?>
 
   div.preview-letter p {
-    margin-block-start: 1.1em;
-    margin-block-end: 1.1em;
+    margin-block-start: 1.25em;
+    margin-block-end: 1.25em;
   }
 
   div.preview-letter ul,
   div.preview-letter ol {
     width: auto;
-    padding-eft: 3em;
+    padding-left: 3em;
+  }
+
+  div.preview-letter br + ul,
+  div.preview-letter br + ol,
+  div.preview-letter br + p {
+    margin-top: 1.1em;
   }
 
   div.preview-letter li {
@@ -114,8 +120,13 @@ $fontsInUse = [];
     margin-top: 0;
   }
 
+  div.preview-letter p:empty {
+    line-height: 0;
+  }
+
   div.preview-letter p:empty::after {
     content: "\00A0";
+    line-height: 0;
   }
 
   div.preview-letter.show-hidden p::after {

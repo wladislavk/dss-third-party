@@ -756,13 +756,14 @@ class PatientsController extends Controller
                 // $emailHelper->sendRegEmail($patientId, $mailerData['email'], '', $mailerData['email'], 2);
 
                 $filename = 'user_pin_' . $patientId . '.pdf';
-                $pdfHelper->setOptions([
+                $pdfHelper->setHeaderInfo([
                     'title'   => 'User Temporary PIN',
-                    'subject' => 'User Temporary PIN',
-                    'doc_id'  => $docId
+                    'subject' => 'User Temporary PIN'
                 ]);
 
-                $url = $pdfHelper->create('pdf.patient.pinInstructions', $mailerData, $filename);
+                $args = ['doc_id' => $docId];
+
+                $url = $pdfHelper->create('pdf.patient.pinInstructions', $mailerData, $filename, $args);
             }
         }
 

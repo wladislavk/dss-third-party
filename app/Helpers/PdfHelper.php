@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Dental\Letter;
 use PDF;
 use URL;
 
@@ -9,18 +11,43 @@ class PdfHelper
 {
     const LETTER_PDF_FOLDER = 'letter_pdfs/';
 
-    private $letterPdfPath;
-    private $options;
+    private $user;
+    private $letter;
 
-    public function __construct()
+    private $letterPdfPath;
+    private $pdfData;
+    private $args;
+
+    public function __construct(User $user, Letter $letter)
     {
+        $this->user = $user;
+        $this->letter = $letter;
+
         $this->letterPdfPath = public_path() . '/' . self::LETTER_PDF_FOLDER;
 
-        $this->options = [
-            'title'     => 'Default Pdf Title',
-            'subject'   => 'Default Pdf Subject',
-            'keywords'  => 'DSS Correspondence',
-            'author'    => 'Dental Sleep Solutions',
+        $this->pdfData = [
+            'header_info' => [
+                'title'     => 'Default Pdf Title',
+                'subject'   => 'Default Pdf Subject',
+                'keywords'  => 'DSS Correspondence',
+                'author'    => 'Dental Sleep Solutions'
+            ],
+            'font' => [
+                'family' => 'Helvetica',
+                'size'   => 10
+            ],
+            'margins' => [
+                'top'    => 1,
+                'left'   => 1,
+                'right'  => 1,
+                'bottom' => 1,
+                'header' => 1,
+                'footer' => 1 
+            ],
+            'content' => []
+        ];
+
+        $this->args = [
             'fax'       => null,
             'header'    => '',
             'footer'    => '',
@@ -30,16 +57,48 @@ class PdfHelper
         ];
     }
 
-    public function setOptions($options)
+    public function setHeaderInfo($data)
     {
-        $this->options = array_merge($this->options, $options);
+        $this->pdfData['header_info'] = array_merge($this->pdfData['header_info'], $data);
     }
 
-    public function create($template, $data, $filename)
+    public function create($template, $content, $filename, $args = [])
     {
-        $data = array_merge($this->options, $data);
+        $this->args = array_merge($this->args, $args);
 
-        $pdf = PDF::loadView($template, $data)->save($this->letterPdfPath . $filename);
+        $margins = [];
+        $font = [];
+        if (!empty($this->args['doc_id'])) {
+            $doctor = $this->user->find($this->args['doc_id']);
+
+            if (!empty($doctor) && $doctor->user_type == 2) {
+                $margins = [
+                    'top'    => $doctor->letter_margin_top,
+                    'left'   => $doctor->letter_margin_left,
+                    'right'  => $doctor->letter_margin_right,
+                    'bottom' => $doctor->letter_margin_bottom,
+                    'header' => $doctor->letter_margin_header,
+                    'footer' => $doctor->letter_margin_footer
+                ];
+
+                if (!empty($this->args['letter_id'])) {
+                    $letter = $this->letter->find($this->args['letter_id']);
+
+                    if (!empty($letter)) {
+                        $font = [
+                            'family' => $letter->font_family,
+                            'size'   => $letter->font_size
+                        ];
+                    }
+                }
+            }
+        }
+
+        $this->pdfData['font'] = array_merge($this->pdfData['font'], $font);
+        $this->pdfData['margins'] = array_merge($this->pdfData['margins'], $margins);
+        $this->pdfData['content'] = array_merge($this->pdfData['content'], $content);
+
+        $pdf = PDF::loadView($template, $this->pdfData)->save($this->letterPdfPath . $filename);
 
         return URL::to(self::LETTER_PDF_FOLDER . $filename);
     }

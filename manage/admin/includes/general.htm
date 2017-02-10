@@ -434,7 +434,6 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   $columns .= ", generated_date, delivered, docid, userid";
   $values .= ", '$gen_date', '$delivered', '". $_SESSION['docid'] ."', '". $_SESSION['userid'] ."'";
   $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
-  error_log($letter_query);
   $letter_insert = $db->query($letter_query);
   if(!$letter_insert) {
     return ("MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting Letter to Database");
@@ -932,7 +931,6 @@ function deliver_created_letter($letterid){
     if($fax_send['status']){
       $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
       $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysqli_real_escape_string($GLOBALS['con'],$patientid)."',userid = '".mysqli_real_escape_string($GLOBALS['con'],$userid)."',docid = '".mysqli_real_escape_string($GLOBALS['con'],$docid)."',sent_date = NOW(),pages = '".mysqli_real_escape_string($GLOBALS['con'],count_pages('../letterpdfs/'.$filename))."',contactid = '".mysqli_real_escape_string($GLOBALS['con'],$contactid)."',filename = '".mysqli_real_escape_string($GLOBALS['con'],$filename)."',to_number = '".mysqli_real_escape_string($GLOBALS['con'],$fax)."',to_name = '".mysqli_real_escape_string($GLOBALS['con'],$to_name)."',letterid = '".mysqli_real_escape_string($GLOBALS['con'],$letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', letter_body = '".mysqli_real_escape_string($GLOBALS['con'],$template)."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-      error_log($fax_query);
       $fid = $db->getInsertId($fax_query);
       invoice_add_fax('1', $_SESSION['docid'], $fid);
     }else{
@@ -1468,8 +1466,6 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
    * Undoes CS-112
    */
   $html = preg_replace('@[\s\S]*?<head>([\s\S]*?)</head>[\s\S]*?<body>([\s\S]*?)</body>[\s\S]*@', '$1$2', $html);
-  //$html = '<style>body,p,table,td{line-height:1.2em;}body>*:first-child{margin-top:0;}p{margin-block-start:1.1em;margin-block-end:1.1em;}p:empty::after{content:"\00A0";}ul,ol{width:auto;padding-eft:3em;}li{padding:0;}table{border-spacing:0;}td{padding:0;}</style>' . $html;
-    error_log($html);
 
   // output the HTML content
   $pdf->writeHTML($html, true, false, true, false, '');

@@ -296,7 +296,7 @@ $fontsInUse = [];
   $master_sql = "SELECT * FROM dental_letters l
   		  WHERE (l.letterid='".mysqli_real_escape_string($con, $_GET['lid'])."'
   			OR l.parentid='".mysqli_real_escape_string($con, $_GET['lid'])."')
-  			AND status='".$parent_status."' AND deleted=0 ORDER BY edit_date DESC";
+  			AND status='".$parent_status."' AND deleted=0 ORDER BY l.letterid ASC";
 
   $master_c = $db->getResults($master_sql);
   $master_q = $db->getResults($master_sql);
@@ -439,7 +439,7 @@ foreach ($master_q as $master_r) {
 
 <?php
   if ($status == DSS_LETTER_PENDING) {
-    $f_sql = "SELECT * FROM dental_faxes WHERE letterid='".mysqli_real_escape_string($con, $letterid)."';";
+    $f_sql = "SELECT * FROM dental_faxes WHERE letterid='".mysqli_real_escape_string($con, $letterid)."' ORDER BY id ASC";
     
     $f_q = $db->getResults($f_sql);
     if ($f_q) foreach ($f_q as $f_r) {

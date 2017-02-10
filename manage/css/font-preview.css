@@ -1,0 +1,208 @@
+/* Preview area display */
+div.preview-letter {
+    margin: 30px auto;
+    border: 1px solid #ccc;
+    -moz-box-shadow: 3px 3px 3px #999;
+    -webkit-box-shadow: 3px 3px 3px #999;
+    box-shadow: 3px 3px 3px #999;
+    overflow: hidden;
+    position: relative;
+}
+
+div.preview-letter div.preview-wrapper {
+    position: relative;
+}
+
+div.preview-letter div.preview-inner-wrapper {
+    position: relative;
+    margin: 0;
+}
+
+div.preview-letter div.preview-page-break {
+    position: absolute;
+    z-index: 1;
+    border-top: 1px dashed #999;
+    color: #999;
+    font-family: "Arial", "Helvetica", sans-serif;
+    font-size: 11px;
+    cursor: default;
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+    -o-user-select: none;
+    user-select: none;
+}
+
+div.preview-letter div.preview-bottom-margin {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    background-color: #fff;
+}
+/* Preview area display */
+
+/* Default values */
+div.preview-inner-wrapper,
+div.preview-letter p,
+div.preview-letter table,
+div.preview-letter td {
+    line-height: 1.25em;
+}
+
+div.preview-inner-wrapper > *:first-child {
+    margin-top: 0;
+}
+
+div.preview-letter p {
+    margin-block-start: 1.25em;
+    margin-block-end: 1.25em;
+}
+
+div.preview-letter p:empty {
+    line-height: 0;
+}
+
+div.preview-letter p:empty::after {
+    content: "\00A0";
+    line-height: 0;
+}
+
+div.preview-letter ul,
+div.preview-letter ol {
+    width: auto;
+    padding-left: 3em;
+}
+
+div.preview-letter li + ul,
+div.preview-letter li + ol,
+div.preview-letter li + p {
+    margin-top: 1.25em;
+}
+
+div.preview-letter table + ul,
+div.preview-letter table + ol,
+div.preview-letter table + p {
+    margin-top: 0;
+}
+
+div.preview-letter li {
+    padding: 0;
+}
+
+div.preview-letter table {
+    border-spacing: 0;
+}
+
+div.preview-letter td {
+    padding: 0;
+}
+
+div.preview-letter,
+div.preview-letter td,
+div.preview-letter ul,
+div.preview-letter ol {
+    font-size: 14pt;
+}
+/* Default values */
+
+/* Debug values */
+div.preview-letter.show-hidden p::after {
+    content: "\b6";
+    color: #ccc;
+    cursor: default;
+}
+
+div.preview-letter.show-hidden span.br-marker {
+    position: absolute;
+    color: #ccc;
+    cursor: default;
+}
+
+div.preview-letter.show-hidden br::before,
+div.preview-letter.show-hidden span.br-marker::before {
+    content: "\21b5";
+    position: absolute;
+    color #ccc;
+    cursor: default;
+}
+/* Debug values */
+
+div.preview-letter.preview-font-dejavusans,
+div.preview-letter.preview-font-dejavusans td,
+div.preview-letter.preview-font-dejavusans ul,
+div.preview-letter.preview-font-dejavusans ol {
+    font-family: "-DejaVu Sans-", "Open Sans", "-Verdana-", "-Geneva-", "-sans-serif-";
+    letter-spacing: 0.04em;
+}
+
+div.preview-letter.preview-font-times,
+div.preview-letter.preview-font-times td,
+div.preview-letter.preview-font-times ul,
+div.preview-letter.preview-font-times ol {
+    font-family: "-Times New Roman-", "Tinos", "-Times-", "-Liberation Serif-", "-Nimbus Roman No9 L-", "-serif-";
+    letter-spacing: -0.002em;
+}
+
+div.preview-letter.preview-font-helvetica,
+div.preview-letter.preview-font-helvetica td,
+div.preview-letter.preview-font-helvetica ul,
+div.preview-letter.preview-font-helvetica ol {
+    font-family: "-Helvetica-", "Roboto", "-Helvetica Neue-", "-HelveticaNeue-", "-TeX Gyre Heros-", "-TeXGyreHeros-", "-FreeSans-", "-Nimbus Sans L-", "-Liberation Sans-", "-sans-serif-";
+    font-kerning: none;
+    letter-spacing: 0.002em;
+}
+
+div.preview-letter.preview-font-helvetica b,
+div.preview-letter.preview-font-helvetica strong {
+    letter-spacing: 0.01em;
+}
+
+div.preview-letter.preview-font-courier,
+div.preview-letter.preview-font-courier td,
+div.preview-letter.preview-font-courier ul,
+div.preview-letter.preview-font-courier ol {
+    font-family: "-Courier-", "Cutive Mono", "-Courier 10 Pitch-", "-Consolas-", "-Courier New-", "-Nimbus Mono L-", "-monospace-";
+    letter-spacing: -0.005em;
+}
+
+div.preview-letter.preview-size-8,
+div.preview-letter.preview-size-8 td,
+div.preview-letter.preview-size-8 ul,
+div.preview-letter.preview-size-8 ol {
+    font-size: 8pt;
+}
+
+div.preview-letter.preview-size-10,
+div.preview-letter.preview-size-10 td,
+div.preview-letter.preview-size-10 ul,
+div.preview-letter.preview-size-10 ol {
+    font-size: 10pt;
+}
+
+div.preview-letter.preview-size-12,
+div.preview-letter.preview-size-12 td,
+div.preview-letter.preview-size-12 ul,
+div.preview-letter.preview-size-12 ol {
+    font-size: 12pt;
+}
+
+div.preview-letter.preview-size-14,
+div.preview-letter.preview-size-14 td,
+div.preview-letter.preview-size-14 ul,
+div.preview-letter.preview-size-14 ol {
+    font-size: 14pt;
+}
+
+div.preview-letter.preview-size-16,
+div.preview-letter.preview-size-16 td,
+div.preview-letter.preview-size-16 ul,
+div.preview-letter.preview-size-16 ol {
+    font-size: 16pt;
+}
+
+div.preview-letter.preview-size-20,
+div.preview-letter.preview-size-20 td,
+div.preview-letter.preview-size-20 ul,
+div.preview-letter.preview-size-20 ol {
+    font-size: 20pt;
+}

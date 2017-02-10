@@ -34,6 +34,10 @@ $googleFonts = [
 ];
 $fontsInUse = [];
 
+function formatMm ($number) {
+  return number_format($number, 1, '.', '') . 'mm';
+}
+
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js?v=<?= time() ?>"></script>
@@ -41,228 +45,37 @@ $fontsInUse = [];
   var pageSize = <?= json_encode($pageSize) ?>;
   var pageMargins = <?= json_encode($margins) ?>;
 </script>
+<link type="text/css" rel="stylesheet" href="/manage/css/font-preview.css" />
 <style>
   /* Preview area display */
   div.preview-letter {
-    width: <?= number_format($pageSize['width'], 1, '.', '') ?>mm;
-    min-height: <?= number_format($pageSize['height'], 1, '.', '') ?>mm;
-    margin: 30px auto;
-    border: 1px solid #ccc;
-    -moz-box-shadow: 3px 3px 3px #999;
-    -webkit-box-shadow: 3px 3px 3px #999;
-    box-shadow: 3px 3px 3px #999;
-    overflow: hidden;
-    position: relative;
+    width: <?= formatMm($pageSize['width']) ?>;
+    min-height: <?= formatMm($pageSize['height']) ?>;
   }
 
   div.preview-letter div.preview-wrapper {
-    position: relative;
-    margin: <?= "{$margins['top']}mm {$margins['right']}mm {$margins['bottom']}mm {$margins['left']}mm" ?>;
-  }
-
-  div.preview-letter div.preview-inner-wrapper {
-    position: relative;
-    margin: 0;
+    margin-top: <?= formatMm($margins['top']) ?>;
+    margin-right: <?= formatMm($margins['right']) ?>;
+    margin-bottom: <?= formatMm($margins['bottom']) ?>;
+    margin-left: <?= formatMm($margins['left']) ?>;
   }
 
   div.preview-letter div.preview-page-break {
-    position: absolute;
-    z-index: 1;
-    width: <?= $pageSize['width'] ?>mm;
-    top: <?= number_format($pageSize['height'] - $margins['bottom'], 1, '.', '') ?>mm;
-    border-top: 1px dashed #999;
-    color: #999;
-    font-family: "Arial", "Helvetica", sans-serif;
-    font-size: 11px;
-    cursor: default;
-    -webkit-user-select: none; /* Chrome/Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+ */
-    -o-user-select: none;
-    user-select: none;
+    width: <?= formatMm($pageSize['width']) ?>;
+    top: <?= formatMm($pageSize['height'] - $margins['bottom']) ?>;
   }
 
   div.preview-letter div.preview-bottom-margin {
-    position: absolute;
-    z-index: 2;
-    width: <?= $pageSize['width'] ?>mm;
-    height: <?= $margins['bottom'] ?>mm;
-    bottom: 0;
-    background-color: #fff;
+    width: <?= formatMm($pageSize['width']) ?>;
+    height: <?= formatMm($margins['bottom']) ?>;
   }
 
   <?php for ($n=2; $n <=10; $n++) { ?>
   div.preview-letter div.preview-page-break.break-<?= $n ?> {
-    top: <?= number_format(($pageSize['height'] - $margins['top'] - $margins['bottom'])*$n + $margins['top'], 1, '.', '') ?>mm;
+    top: <?= formatMm(($pageSize['height'] - $margins['top'] - $margins['bottom'])*$n + $margins['top']) ?>;
   }
   <?php } ?>
   /* Preview area display */
-
-  /* Default values */
-  div.preview-inner-wrapper,
-  div.preview-letter p,
-  div.preview-letter table,
-  div.preview-letter td {
-    line-height: 1.25em;
-  }
-
-  div.preview-inner-wrapper > *:first-child {
-    margin-top: 0;
-  }
-
-  div.preview-letter p {
-    margin-block-start: 1.25em;
-    margin-block-end: 1.25em;
-  }
-
-  div.preview-letter p:empty {
-    line-height: 0;
-  }
-
-  div.preview-letter p:empty::after {
-    content: "\00A0";
-    line-height: 0;
-  }
-
-  div.preview-letter ul,
-  div.preview-letter ol {
-    width: auto;
-    padding-left: 3em;
-  }
-
-  div.preview-letter li + ul,
-  div.preview-letter li + ol,
-  div.preview-letter li + p {
-    margin-top: 1.25em;
-  }
-
-  div.preview-letter table + ul,
-  div.preview-letter table + ol,
-  div.preview-letter table + p {
-    margin-top: 0;
-  }
-
-  div.preview-letter li {
-    padding: 0;
-  }
-
-  div.preview-letter table {
-    border-spacing: 0;
-  }
-
-  div.preview-letter td {
-    padding: 0;
-  }
-
-  div.preview-letter,
-  div.preview-letter td,
-  div.preview-letter ul,
-  div.preview-letter ol {
-    font-size: 14pt;
-  }
-  /* Default values */
-
-  /* Debug values */
-  div.preview-letter.show-hidden p::after {
-    content: "\b6";
-    color: #ccc;
-    cursor: default;
-  }
-
-  div.preview-letter.show-hidden span.br-marker {
-    position: absolute;
-    color: #ccc;
-    cursor: default;
-  }
-
-  div.preview-letter.show-hidden br::before,
-  div.preview-letter.show-hidden span.br-marker::before {
-    content: "\21b5";
-    position: absolute;
-    color #ccc;
-    cursor: default;
-  }
-  /* Debug values */
-
-  div.preview-letter.preview-font-dejavusans,
-  div.preview-letter.preview-font-dejavusans td,
-  div.preview-letter.preview-font-dejavusans ul,
-  div.preview-letter.preview-font-dejavusans ol {
-    font-family: "-DejaVu Sans-", "Open Sans", "-Verdana-", "-Geneva-", "-sans-serif-";
-    letter-spacing: 0.04em;
-  }
-
-  div.preview-letter.preview-font-times,
-  div.preview-letter.preview-font-times td,
-  div.preview-letter.preview-font-times ul,
-  div.preview-letter.preview-font-times ol {
-    font-family: "-Times New Roman-", "Tinos", "-Times-", "-Liberation Serif-", "-Nimbus Roman No9 L-", "-serif-";
-    letter-spacing: -0.002em;
-  }
-
-  div.preview-letter.preview-font-helvetica,
-  div.preview-letter.preview-font-helvetica td,
-  div.preview-letter.preview-font-helvetica ul,
-  div.preview-letter.preview-font-helvetica ol {
-    font-family: "-Helvetica-", "Roboto", "-Helvetica Neue-", "-HelveticaNeue-", "-TeX Gyre Heros-", "-TeXGyreHeros-", "-FreeSans-", "-Nimbus Sans L-", "-Liberation Sans-", "-sans-serif-";
-    font-kerning: none;
-    letter-spacing: 0.002em;
-  }
-
-  div.preview-letter.preview-font-helvetica b,
-  div.preview-letter.preview-font-helvetica strong {
-    letter-spacing: 0.01em;
-  }
-
-  div.preview-letter.preview-font-courier,
-  div.preview-letter.preview-font-courier td,
-  div.preview-letter.preview-font-courier ul,
-  div.preview-letter.preview-font-courier ol {
-    font-family: "-Courier-", "Cutive Mono", "-Courier 10 Pitch-", "-Consolas-", "-Courier New-", "-Nimbus Mono L-", "-monospace-";
-    letter-spacing: -0.005em;
-  }
-
-  div.preview-letter.preview-size-8,
-  div.preview-letter.preview-size-8 td,
-  div.preview-letter.preview-size-8 ul,
-  div.preview-letter.preview-size-8 ol {
-    font-size: 8pt;
-  }
-
-  div.preview-letter.preview-size-10,
-  div.preview-letter.preview-size-10 td,
-  div.preview-letter.preview-size-10 ul,
-  div.preview-letter.preview-size-10 ol {
-    font-size: 10pt;
-  }
-
-  div.preview-letter.preview-size-12,
-  div.preview-letter.preview-size-12 td,
-  div.preview-letter.preview-size-12 ul,
-  div.preview-letter.preview-size-12 ol {
-    font-size: 12pt;
-  }
-
-  div.preview-letter.preview-size-14,
-  div.preview-letter.preview-size-14 td,
-  div.preview-letter.preview-size-14 ul,
-  div.preview-letter.preview-size-14 ol {
-    font-size: 14pt;
-  }
-
-  div.preview-letter.preview-size-16,
-  div.preview-letter.preview-size-16 td,
-  div.preview-letter.preview-size-16 ul,
-  div.preview-letter.preview-size-16 ol {
-    font-size: 16pt;
-  }
-
-  div.preview-letter.preview-size-20,
-  div.preview-letter.preview-size-20 td,
-  div.preview-letter.preview-size-20 ul,
-  div.preview-letter.preview-size-20 ol {
-    font-size: 20pt;
-  }
 </style>
 <?php
   $status_sql = "SELECT status, docid FROM dental_letters
@@ -2351,26 +2164,4 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 <?php
   } else {
 	  include 'includes/bottom.htm';
-  } 
-?>
-
-<!-- function remove_alert not used anywhere -->
-
-<script type="text/javascript">
-/*
-  function remove_alert(id){
-    $.ajax({
-      url: "includes/fax_remove_alert.php",
-      type: "post",
-      data: {id: id},
-      success: function(data){
-          var r = $.parseJSON(data);
-          if(r.error) {
-          } else {
-            $('#fax_alert_'+id).remove();
-          }
-      }
-    });
   }
-*/
-</script>

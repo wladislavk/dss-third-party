@@ -122,15 +122,21 @@ class ContactsController extends Controller
             $partial = '';
         }
 
+        if ($request->has('without_companies') && $request->input('without_companies')) {
+            $searchForCompanies = false;
+        } else {
+            $searchForCompanies = true;
+        }
+
         $names = explode(' ', $partial);
 
-        $contactsAndCompanies = $resources->getListContactsAndCompanies($docId, $partial, $names, self::DSS_REFERRED_PHYSICIAN);
+        $contactsAndCompanies = $resources->getListContactsAndCompanies($docId, $partial, $names, self::DSS_REFERRED_PHYSICIAN, $searchForCompanies);
 
         if (count($contactsAndCompanies)) {
             foreach ($contactsAndCompanies as $item) {
                 $response[] = [
                     'id'     => $item->contactid,
-                    'name'   => $item->company . ' - ' . $item->lastname . ', ' . $item->firstname . ' ' . $item->middlename . ' - ' . $item->contacttype,
+                    'name'   => ($searchForCompanies ? $item->company . ' - ' : '') . $item->lastname . ', ' . $item->firstname . ' ' . $item->middlename . ' - ' . $item->contacttype,
                     'source' => $item->referral_type
                 ];
             }
@@ -147,6 +153,14 @@ class ContactsController extends Controller
     {
         $contactId = $request->input('contact_id') ?: 0;
         $data = $resource->getWithContactType($contactId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getInsuranceContacts(Contacts $resource, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+        $data = $resource->getInsuranceContacts($docId);
 
         return ApiResponse::responseOk('', $data);
     }

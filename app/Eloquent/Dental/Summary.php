@@ -38,4 +38,27 @@ class Summary extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function getWithFilter($fields = [], $where = [])
+    {
+        $object = $this;
+
+        if (count($fields)) {
+            $object = $object->select($fields);
+        }
+
+        if (count($where)) {
+            foreach ($where as $key => $value) {
+                $object = $object->where($key, $value);
+            }
+        }
+
+        return $object->get();
+    }
+
+    public function updateForPatient($patientId = 0, $data = [])
+    {
+        $this->where('patientid', $patientId)
+            ->update($data);
+    }
 }

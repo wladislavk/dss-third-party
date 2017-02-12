@@ -114,4 +114,47 @@ class User extends Model implements Resource, Repository
             ->where('userid', $userId)
             ->first();
     }
+
+    public function getWithFilter($fields = [], $where = [])
+    {
+        $object = $this;
+
+        if (count($fields)) {
+            $object = $object->select($fields);
+        }
+
+        if (count($where)) {
+            foreach ($where as $key => $value) {
+                $object = $object->where($key, $value);
+            }
+        }
+
+        return $object->get();
+    }
+
+    public function getMailingData($docId, $patientId, $locationId = 0)
+    {
+        $query = $this->select(
+                'l.phone AS mailing_phone',
+                'u.user_type',
+                'u.logo',
+                'l.location AS mailing_practice',
+                'l.address AS mailing_address',
+                'l.city AS mailing_city',
+                'l.state AS mailing_state',
+                'l.zip AS mailing_zip'
+            )->from(DB::raw('dental_users u'))
+            ->join(DB::raw('dental_patients p'), 'u.userid', '=', 'p.docid')
+            ->leftJoin(DB::raw('dental_locations l'), 'l.docid', '=', 'u.userid');
+
+        if ($locationId) {
+            $query = $query->where('l.id', $locationId)
+                ->where('l.docid', $docId);
+        } else {
+            $query = $query->where('l.default_location', 1)
+                ->where('p.patientid', $patientId);
+        }
+
+        return $query->first();
+    }
 }

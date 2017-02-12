@@ -13,6 +13,8 @@ class Company extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
+    const DSS_COMPANY_TYPE_HST = 2;
+
     /**
      * The table associated with the model.
      *
@@ -66,6 +68,28 @@ class Company extends Model implements Resource, Repository
             ->select(DB::raw('c.logo'))
             ->join(DB::raw('dental_user_company uc'), 'uc.companyid', '=', 'c.id')
             ->where('uc.userid', $userId)
+            ->first();
+    }
+
+    public function getHomeSleepTestCompanies($docId = 0)
+    {
+        return $this->select('h.*', DB::raw('uhc.id as uhc_id'))
+            ->from(DB::raw('companies h'))
+            ->join(DB::raw('dental_user_hst_company uhc'), function($query) use ($docId) {
+                $query->on('uhc.companyid', '=', 'h.id')
+                    ->where('uhc.userid', '=', $docId);
+            })
+            ->where('h.company_type', self::DSS_COMPANY_TYPE_HST)
+            ->orderBY('name')
+            ->get();
+    }
+
+    public function getBillingExclusiveCompany($docId = 0)
+    {
+        return $this->select('c.name', 'c.exclusive')
+            ->from(DB::raw('companies c'))
+            ->join(DB::raw('dental_users u'), 'c.id', '=', 'u.billing_company_id')
+            ->where('u.userid', $docId)
             ->first();
     }
 }

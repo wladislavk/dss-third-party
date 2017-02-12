@@ -89,4 +89,13 @@ class LocationsController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getDoctorLocations(Locations $resources)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $data = $resources->getDoctorLocations($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

@@ -174,4 +174,20 @@ class UsersController extends Controller
             return ApiResponse::responseOk('', ['logout' => true]);
         }
     }
+
+    /**
+     * Get users by filter.
+     *
+     * @param  \DentalSleepSolutions\Contracts\Repositories\Users $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getWithFilter(Users $resources, Request $request)
+    {
+        $fields = $request->input('fields') ?: [];
+        $where  = $request->input('where') ?: [];
+
+        $patients = $resources->getWithFilter($fields, $where);
+
+        return ApiResponse::responseOk('', $patients);
+    }
 }

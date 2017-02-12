@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\PatientSummaryDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary;
 use DentalSleepSolutions\Contracts\Repositories\PatientSummaries;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -84,5 +85,16 @@ class PatientSummariesController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function updateTrackerNotes(PatientSummary $resource, PatientSummaryUpdate $request)
+    {
+        $notes = $request->input('tracker_notes') ?: '';
+        $patientId = $request->input('patient_id') ?: 0;
+        $docId = $this->currentUser->docid ?: 0;
+
+        $resource->updateTrackerNotes($patientId, $docId, $notes);
+
+        return ApiResponse::responseOk('Resource updated');
     }
 }

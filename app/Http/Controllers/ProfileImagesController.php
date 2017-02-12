@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\ProfileImageDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\ProfileImage;
 use DentalSleepSolutions\Contracts\Repositories\ProfileImages;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +89,23 @@ class ProfileImagesController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getProfilePhoto(ProfileImage $resource, Request $request)
+    {
+        $patientId = $request->input('patient_id') ?: 0;
+
+        $data = $resource->getProfilePhoto($patientId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getInsuranceCardImage(ProfileImage $resource, Request $request)
+    {
+        $patientId = $request->input('patient_id') ?: 0;
+
+        $data = $resource->getInsuranceCardImage($patientId);
+
+        return ApiResponse::responseOk('', $data);
     }
 }

@@ -124,6 +124,9 @@
                 } else {
                     return false;
                 }
+            },
+            updateParentData: function(data) {
+                this.$dispatch('getting-data-from-modal', data);
             }
         }
     }

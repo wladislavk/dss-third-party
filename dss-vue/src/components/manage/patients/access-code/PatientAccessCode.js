@@ -1,58 +1,72 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
+var handlerMixin = require('../../../../modules/handler/HandlerMixin.js');
 
 module.exports = {
     data: function() {
         return {
+            componentParams   : {
+                patientId : 0
+            },
             patient           : {},
-            isResetAccessCode : false,
-            reset             : false,
-            isSubmit          : false,
-            pathToPdf         : ''
+            isResetAccessCode : false
         }
     },
     mixins: [handlerMixin],
-    computed: {
-        isResetAccessCode: function() {
-            var accessCode = this.patient.hasOwnProperty('access_code') && this.patient.access_code.length > 0;
-            return accessCode || this.reset && !this.isSubmit;
-        }
-    },
-    watch: {
-        'isResetAccessCode': function() {
-            if (this.isResetAccessCode) {
-                this.resetPatientAccessCode()
-                    .then(function(response) {
-                        var data = response.data.data;
+    events: {
+        'setting-component-params': function(parameters) {
+            this.componentParams = parameters;
 
-                        if (data.hasOwnProperty('access_code') && data.access_code.length > 0) {
-                            this.$set('patient.access_code', data.access_code); 
+            this.getPatientById(this.componentParams.patientId)
+                .then(function(response) {
+                    var data = response.data.data;
+
+                    if (data) {
+                        this.$set('patient', data);
+
+                        var accessCode = data.hasOwnProperty('access_code') && data.access_code > 0;
+                        if (!accessCode) {
+                            this.resetPinCode(this.componentParams.patientId);
                         }
-                    }, function(response) {
-                        this.handleErrors('resetPatientAccessCode', response);
-                    });
-            }
-        }
-    },
-    created: function() {
-        this.getPatientById()
-            .then(function(response) {
-                var data = response.data.data;
+                    }
+                }, function(response) {
+                    this.handleErrors('getPatientById', response);
+                });
 
-                if (data) {
-                    this.$set('patient', data);
-                }
-            }, function(response) {
-                this.handleErrors('getPatientById', response);
-            });
+            // this popup doesn't have any input fields - then set the flag to false
+            this.$parent.popupEdit = false;
+        }
     },
     methods: {
+        resetPinCode: function(patientId) {
+            patientId = patientId || 0;
+
+            this.resetPatientAccessCode(patientId)
+                .then(function(response) {
+                    var data = response.data.data;
+
+                    if (data.hasOwnProperty('access_code') && data.access_code > 0) {
+                        this.$set('patient.access_code', data.access_code);
+                        this.$set('isResetAccessCode', true);
+                    }
+                }, function(response) {
+                    this.handleErrors('resetPatientAccessCode', response);
+                });
+        },
+        onClickReset: function() {
+            this.resetPinCode(this.componentParams.patientId);
+        },
         onSubmit: function() {
-            this.createTempPinDocument()
+            this.createTempPinDocument(this.componentParams.patientId)
                 .then(function(response) {
                     var data = response.data.data;
 
                     if (data.hasOwnProperty('path_to_pdf') && data.path_to_pdf.length > 0) {
-                        this.$set('pathToPdf', data.path_to_pdf);
+                        alert('Temporary PIN document created and email sent to patient.');
+                        window.open(data.path_to_pdf);
+
+                        // pass updated patient to parents
+                        this.$parent.updateParentData(this.patient);
+                        // close the popup
+                        this.$parent.disable();
                     }
                 }, function(response) {
                     this.handleErrors('createTempPinDocument', response);

@@ -1,6 +1,4 @@
-<link href="css/admin.css?v=20160404" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="/manage/admin/css/jquery-ui-1.8.22.custom.css" />
-<link rel="stylesheet" href="css/modal.css" />
+<style src="../../../../../assets/css/manage/admin.css" scoped></style>
 
 <template>
     <br />
@@ -21,7 +19,7 @@
         </form>
     </template>
     <template v-else>
-        A temporary PIN was created for this patient on {{ startDate }} and is valid until {{ expirationDate }}.
+        A temporary PIN was created for this patient on {{ patient.access_code_date | moment "MM/DD/YYYY" }} and is valid until {{ patient.access_code_date | moment "add" "5 days" "MM/DD/YYYY" }}.
         The temporary PIN is: {{ patient.access_code }}.
         <br /><br />
         <a
@@ -30,13 +28,6 @@
         >Generate New PIN</a>
     </template>
 </template>
-
-<script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
-<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
-<script type="text/javascript" src="/manage/admin/script/jquery-1.6.2.min.js"></script>
-<script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
-<script type="text/javascript" src="/manage/includes/modal.js"></script>
-<script type="text/javascript" src="script/validation.js"></script>
 
 <script>
     module.exports = require('./PatientAccessCode.js');

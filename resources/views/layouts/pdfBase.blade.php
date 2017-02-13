@@ -8,6 +8,7 @@
         body {
             font-family: {{ $font['family'] }};
             font-size: {{ $font['size'] }}pt;
+            margin: {{ $margins['top'] }} {{ $margins['right'] }} {{ $margins['bottom'] }} {{ $margins['left'] }};
         }
     </style>
 </head>

@@ -37,12 +37,12 @@ class PdfHelper
                 'size'   => 10
             ],
             'margins' => [
-                'top'    => 1,
-                'left'   => 1,
-                'right'  => 1,
-                'bottom' => 1,
-                'header' => 1,
-                'footer' => 1 
+                'top'    => 27,
+                'left'   => 15,
+                'right'  => 15,
+                'bottom' => 25,
+                'header' => 5,
+                'footer' => 10
             ],
             'content' => []
         ];

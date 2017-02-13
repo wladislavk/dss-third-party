@@ -465,8 +465,12 @@ class PatientsController extends Controller
                 }
             }
 
-            if ($pressedButtons && $pressedButtons['send_hst']) {
-                $responseData['redirect_to'] = 'hst_request_co.php?ed=' . $patientId;
+            if ($pressedButtons) {
+                if ($pressedButtons['send_hst']) {
+                    $responseData['redirect_to'] = 'hst_request_co.php?ed=' . $patientId;
+                } elseif ($pressedButtons['send_pin_code']) {
+                    $responseData['send_pin_code'] = true;
+                }
             }
 
             $responseData['status'] = 'Edited Successfully';
@@ -731,13 +735,13 @@ class PatientsController extends Controller
         if ($patientId > 0) {
             $accessCode = rand(100000, 999999);
             $accessCodeDate = Carbon::now();
-            $patient = $this->patientResource->updatePatient($patientId, [
+            $patient = $patientResource->updatePatient($patientId, [
                 'access_code'      => $accessCode,
                 'access_code_date' => $accessCodeDate
             ]);
         }
 
-        return ApiResponse::responseOk('', ['access_code' => $accessCode, 'access_code_date' => $accessCodeDate]);
+        return ApiResponse::responseOk('', ['access_code' => $accessCode, 'access_code_date' => $accessCodeDate->toDateTimeString()]);
     }
 
     public function createTempPinDocument(
@@ -753,7 +757,7 @@ class PatientsController extends Controller
             $mailerData = array_merge($mailerData['patientData'], $mailerData['mailingData']);
 
             if (count($mailerData)) {
-                // $emailHelper->sendRegEmail($patientId, $mailerData['email'], '', $mailerData['email'], 2);
+                $emailHelper->sendRegEmail($patientId, $mailerData['email'], '', $mailerData['email'], 2);
 
                 $filename = 'user_pin_' . $patientId . '.pdf';
                 $pdfHelper->setHeaderInfo([
@@ -767,7 +771,7 @@ class PatientsController extends Controller
             }
         }
 
-        return ApiResponse::responseOk('', ['url' => $url]);
+        return ApiResponse::responseOk('', ['path_to_pdf' => $url]);
     }
 
     private function getDocNameFromShortInfo($field, $shortInfo)

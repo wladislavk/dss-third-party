@@ -111,13 +111,13 @@ class InsurancePreauthController extends Controller
 
     public function find(InsPreauth $resources, Request $request)
     {
-        $docId           = $this->currentUser->docid ?: 0;
+        $docId = $this->currentUser->docid ?: 0;
 
-        $pageNumber      = $request->input('page') ?: 0;
-        $vobsPerPage     = $request->input('vobsPerPage') ?: 30;
-        $sortColumn      = $request->input('sortColumn') ?: 'status';
-        $sortDir         = $request->input('sortDir') ?: 'desc';
-        $viewed          = $request->input('viewed');
+        $pageNumber = $request->input('page');
+        $vobsPerPage = $request->input('vobsPerPage');
+        $sortColumn = $request->input('sortColumn');
+        $sortDir = $request->input('sortDir');
+        $viewed = $request->input('viewed');
 
         $data = $resources->getListVobs(
             $docId, 

@@ -85,13 +85,27 @@ class InsurancePreauth extends Model implements Resource, Repository
 
     public function getListVobs(
         $docId       = 0, 
-        $viewed      = 1, 
+        $viewed      = null, 
         $sortColumn  = 'status',
         $sortDir     = 'desc',
-        $vobsPerPage = 30,
+        $vobsPerPage = 20,
         $pageNumber  = 0
     ) {
         $offset = $vobsPerPage * $pageNumber;
+
+        switch ($sortColumn) {
+            case 'request_date':
+                $sortColumn = 'preauth.front_office_request_date';
+                break;
+            case 'patient_name':
+                $sortColumn = 'p.lastname';
+                break;
+            case 'status':
+                $sortColumn = 'preauth.status';
+                break;
+            default:
+                break;
+        }
 
         $query = $this->select(DB::raw('
                 preauth.id,
@@ -107,30 +121,24 @@ class InsurancePreauth extends Model implements Resource, Repository
             ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'preauth.patient_id')
             ->where('preauth.doc_id', '=', $docId);
 
-        if($viewed == 0) {
-            $query = $query->where('preauth.viewed', '=', 0)->orWhere('preauth.viewed', '=', 'NULL');
+        if (isset($viewed)) {
+            if ($viewed == 1) {
+                $query = $query->where('preauth.viewed', $viewed);
+            } else {
+                $query = $query->where(function($query) {
+                    $query->where('preauth.viewed', '=', 0)
+                        ->orWhereNull('preauth.viewed');
+                });
+            }
         }
 
-        $results = $query->orderBy($sortColumn, $sortDir)
-            ->skip($offset)
-            ->take($vobsPerPage)
-            ->get();
-
-        $countQuery = $this->select(DB::raw('
-                COUNT(preauth.id) AS total
-            '))
-            ->from(DB::raw('dental_insurance_preauth preauth'))
-            ->where('preauth.doc_id', '=', $docId);
-
-        if($viewed == 0) {
-            $countQuery = $countQuery->where('preauth.viewed', '=', 0)->orWhere('preauth.viewed', '=', 'NULL');
-        }
-
-        $countResult = $countQuery->get();
+        $query = $query->orderBy($sortColumn, $sortDir);
 
         return [
-            'results' => $results,
-            'count' => $countResult
+            'total'  => $query->get()->count(),
+            'result' => $query->skip($offset)
+                ->take($vobsPerPage)
+                ->get()
         ];
     }
 

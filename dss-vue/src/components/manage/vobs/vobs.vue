@@ -4,40 +4,27 @@
     <div id="vobs">
         <span class="admin_head">Manage Verification of Benefits</span>
         <a
-            v-if="routeParameters.viewed == 0"
             v-link="{
                 name: $route.name,
                 query: {
                     pid     : routeParameters.patientId,
                     sort    : routeParameters.sortColumn,
                     sortdir : routeParameters.sortDirection,
-                    viewed  : 1
+                    viewed  : routeParameters.viewed == 0 ? 1 : 0
                 }
             }"
             style="float:right; margin-right:10px;" 
             class="addButton"
         >
-            Show All
+            {{ routeParameters.viewed == 0 ? 'Show All' : 'Show Unread' }}
         </a>
-        <a
-            v-else
-            v-link="{
-                name: $route.name,
-                query: {
-                    pid     : routeParameters.patientId,
-                    sort    : routeParameters.sortColumn,
-                    sortdir : routeParameters.sortDirection,
-                    viewed  : 0
-                }
-            }"
-            style="float:right; margin-right:10px;" 
-            class="addButton"
-        >
-            Show Unread
-        </a>
+        <br /><br /><br />
+        <div align="center" class="red">
+            <b>{{ message }}</b>
+        </div>
         <form name="sortfrm" method="post">
             <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
-                <tr v-if="vobsTotalNumber > vobsPerPage" bgColor="#ffffff">
+                <tr v-if="totalVobs > vobsPerPage" bgColor="#ffffff">
                     <td align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages">
@@ -61,14 +48,13 @@
                 <tr class="tr_bg_h">
                     <td
                         v-for="(sort, label) in tableHeaders"
-                        class="col_head  {{ routeParameters.sortColumn == sort || 
-                        (routeParameters.sortColumn == 'p.lastname' && sort == 'patient_name') 
-                        ? 'arrow_' + routeParameters.sortDirection : '' }}"
+                        class="col_head 
+                        {{ routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '' }}"
                         valign="top"
-                        width="10%"
+                        width="{{ sort == 'comments' ? '40%' : '15%' }}"
                     >
                         <a
-                            v-if="label != 'Comments' || label != 'Action'"
+                            v-if="sort != 'comments' && sort != 'action'"
                             v-link="{
                                 name: $route.name,
                                 query: {
@@ -79,6 +65,7 @@
                         >
                             {{ label }}
                         </a>
+                        <template v-else>{{ label }}</template>
                     </td>
                 </tr>
                 <tr v-if="!vobs.length" class="tr_bg">
@@ -89,7 +76,7 @@
                 <tr
                     v-else
                     v-for="vob in vobs"
-                    class="{{ vob.viewed || vob.status == DSS_PREAUTH_PENDING ? '' : 'unviewed' }}"
+                    :class="{ unviewed: !(vob.viewed == 1 || vob.status == constants.DSS_PREAUTH_PENDING) }"
                 >
                     <td valign="top">
                         {{ vob.front_office_request_date }}
@@ -101,7 +88,7 @@
                         {{ constants.dssPreauthStatusLabels[vob.status] }}
                     </td>
                     <td valign="top">
-                        {{ vob.status == DSS_PREAUTH_REJECTED ? vob.reject.reason : '' }}
+                        {{ vob.status == constants.DSS_PREAUTH_REJECTED ? vob.reject_reason : '' }}
                     </td>
                     <td valign="top">
                         <a
@@ -117,16 +104,9 @@
                         </a>
                         <br />
                         <a
-                            @click="updateVob('viewed', 0, vob.id, vob.patient_id)"
-                            v-if="vob.viewed"
+                            v-on:click="updateVob('viewed', !vob.viewed, vob.id, vob.patient_id)"
                         >
-                            Mark Unread
-                        </a>
-                        <a
-                            @click="updateVob('viewed', 1, vob.id, vob.patient_id)"
-                            v-else
-                        >
-                            Mark Read
+                            {{ vob.viewed ? 'Mark Unread' : 'Mark Read' }}
                         </a>
                     </td>
                 </tr>

@@ -10,16 +10,17 @@ module.exports = {
                 readId            : null,
                 unreadId          : null,
                 currentPageNumber : 0,
-                sortDirection     : 'asc',
-                sortColumn        : 'status',
-                viewed            : 1
+                sortDirection     : '',
+                sortColumn        : '',
+                viewed            : null
             },
-            vobsTotalNumber : 0,
-            vobsPerPage     : 30,
+            totalVobs       : 0,
+            vobsPerPage     : 20,
             totalPages      : 0,
             vobs            : [],
+            message         : '',
             tableHeaders    : {
-                'front_office_request_date' : 'Requested',
+                'request_date' : 'Requested',
                 'patient_name' : 'Patient Name',
                 'status'       : 'Status',
                 'comments'     : 'Comments',
@@ -38,11 +39,7 @@ module.exports = {
         '$route.query.sort': function() {
             if (this.$route.query.sort) {
                 if (this.$route.query.sort in this.tableHeaders) {
-                    if (this.$route.query.sort == 'patient_name') {
-                        this.$set('routeParameters.sortColumn', 'p.lastname');
-                    } else {
-                        this.$set('routeParameters.sortColumn', this.$route.query.sort);
-                    }
+                    this.$set('routeParameters.sortColumn', this.$route.query.sort);
                 } else {
                     this.$set('routeParameters.sortColumn', null);
                 }
@@ -88,7 +85,7 @@ module.exports = {
     },
     computed: {
         totalPages: function() {
-            return this.vobsTotalNumber / this.vobsPerPage;
+            return this.totalVobs / this.vobsPerPage;
         }
     },
     created: function() {
@@ -103,9 +100,6 @@ module.exports = {
                 return sort === 'patient_name' ? 'asc' : 'desc';
             }
         },
-        getViewed: function() {
-            return this.$route.query.viewed === 1 ? this.routeParameters.viewed = 0 : this.routeParameters.viewed = 1;
-        },
         getVobs: function() {
             this.findVobs(                
                 this.vobsPerPage,
@@ -115,31 +109,22 @@ module.exports = {
                 this.routeParameters.viewed
             ).then(function(response) {
                 var data = response.data.data;
-                var totalCount = data.count[0].total;
-                var vobs   = data.results;
 
-                this.$set('vobsTotalNumber', totalCount);
-                this.$set('vobs', vobs);
+                if (data.result.length) {
+                    this.$set('vobs', data.result);
+                    this.$set('totalVobs', data.total);
+                }
             }, function(response) {
                 this.handleErrors('findVobs', response);
             });
         },
-        updateVob: function(
-            param,
-            value,
-            id,
-            patientId
-        ) {
-            this.alterVob(                
-                param,
-                value,
-                id,
-                patientId
-            ).then(function(response) {
-                this.getVobs();
-            }, function(response) {
-                this.handleErrors('alterVob', response);
-            });
+        updateVob: function(param, value, id, patientId) {
+            this.alterVob(param, value, id, patientId)
+                .then(function(response) {
+                    this.getVobs();
+                }, function(response) {
+                    this.handleErrors('alterVob', response);
+                });
         },
         findVobs: function(
             vobsPerPage,
@@ -150,20 +135,15 @@ module.exports = {
         ) {
             var data = {
                 page        : pageNumber || 0,
-                vobsPerPage : vobsPerPage || 0,
-                sortColumn  : sortColumn || '',
-                sortDir     : sortDir || '',
-                viewed      : viewed || 1
+                vobsPerPage : vobsPerPage,
+                sortColumn  : sortColumn || 'status',
+                sortDir     : sortDir || 'desc',
+                viewed      : viewed
             }
 
             return this.$http.post(window.config.API_PATH + 'insurance-preauthes/find', data);
         },
-        alterVob: function(
-            param,
-            value,
-            id,
-            patientId
-        ) {
+        alterVob: function(param, value, id, patientId) {
             var data = {
                 param     : param || '',
                 value     : value || 0,

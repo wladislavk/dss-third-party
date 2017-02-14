@@ -41,11 +41,12 @@ function formatMm ($number) {
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js?v=<?= time() ?>"></script>
+<script type="text/javascript" src="/manage/js/paginate-letter.js?v=<?= time() ?>"></script>
 <script>
   var pageSize = <?= json_encode($pageSize) ?>;
   var pageMargins = <?= json_encode($margins) ?>;
 </script>
-<link type="text/css" rel="stylesheet" href="/manage/css/font-preview.css" />
+<link type="text/css" rel="stylesheet" href="/manage/css/font-preview.css?v=<?= time() ?>" />
 <style>
   /* Preview area display */
   div.preview-letter {

@@ -41,6 +41,14 @@ div.preview-letter div.preview-bottom-margin {
 }
 /* Preview area display */
 
+/* Fix values */
+div.preview-letter span {
+    float: none;
+    margin: 0;
+    padding: 0;
+}
+/* Fix values */
+
 /* Default values */
 div.preview-inner-wrapper,
 div.preview-letter p,
@@ -122,8 +130,16 @@ div.preview-letter.show-hidden br::before,
 div.preview-letter.show-hidden span.br-marker::before {
     content: "\21b5";
     position: absolute;
-    color #ccc;
+    color: #ccc;
     cursor: default;
+}
+
+div.preview-letter .pagination-reference.page-odd-1 {
+    background-color: #ffd;
+}
+
+div.preview-letter .pagination-reference.page-odd-0 {
+    background-color: #fef;
 }
 /* Debug values */
 

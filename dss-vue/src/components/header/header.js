@@ -701,6 +701,9 @@ module.exports = {
             keys.forEach((el) => {
                 self.headerInfo[el] = headerInfo[el];
             });
+        },
+        'getting-data-from-modal': function(data) {
+            this.$broadcast('setting-data-from-modal', data);
         }
     },
     computed: {

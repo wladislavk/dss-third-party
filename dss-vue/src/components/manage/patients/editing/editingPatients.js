@@ -70,6 +70,9 @@ module.exports = {
         },
         'setting-component-params': function(parameters) {
             this.componentParams = parameters;
+        },
+        'setting-data-from-modal': function(data) {
+            this.$set('patient', data);
         }
     },
     watch: {
@@ -402,6 +405,11 @@ module.exports = {
                         alert(mails[el]);
                     }
                 });
+            }
+
+            if (data.send_pin_code) {
+                this.$parent.$refs.modal.display('patient-access-code');
+                this.$parent.$refs.modal.setComponentParameters({ patientId: this.routeParameters.patientId });
             }
 
             this.fillForm(this.routeParameters.patientId);

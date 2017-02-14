@@ -142,6 +142,7 @@ return [
          * 3rd party providers...
          */
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -203,6 +204,9 @@ return [
         //JWT Facades
         'JWTAuth'    => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+
+        // DomPdf
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
         'ApiResponse' => \DentalSleepSolutions\Helpers\ApiResponse::class,
 

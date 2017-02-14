@@ -134,6 +134,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('patients/referrers', 'PatientsController@getReferrers');
     Route::post('patients/edit/{patientId?}', 'PatientsController@editingPatient');
     Route::post('patients/check-email', 'PatientsController@checkEmail');
+    Route::post('patients/reset-access-code/{patientId}', 'PatientsController@resetAccessCode');
+    Route::post('patients/temp-pin-document/{patientId}', 'PatientsController@createTempPinDocument');
     Route::resource('payment-reports', 'PaymentReportsController', ['except' => ['create', 'edit']]);
     Route::post('payment-reports/number', 'PaymentReportsController@getNumber');
     Route::resource('place-services', 'PlaceServicesController', ['except' => ['create', 'edit']]);

@@ -116,6 +116,37 @@ class EmailHelper
     }
 
     /**
+     * Retrieve patient and mailing doctor details, for patient emails
+     *
+     * @param int $patientId
+     *
+     * @return array
+     */
+    public function retrieveMailerData($patientId, $docId = 0)
+    {
+        $patient = $this->patient->find($patientId);
+        $summaryInfo = $this->summary->getWithFilter('location', ['patientid' => $patientId]);
+        $location = count($summaryInfo) ? $summaryInfo[0]->location : 0;
+
+        $mailingData = $this->user->getMailingData($docId, $patientId, $location);
+
+        if ($mailingData->user_type == self::DSS_USER_TYPE_SOFTWARE &&
+            $this->generalHelper->isSharedFile($mailingData->logo)
+        ) {
+            $mailingData->logo = 'manage/display_file.php?f=' . $mailingData->logo;
+        } else {
+            $mailingData->logo = 'foreign_images/email/reg_logo.gif';
+        }
+
+        $mailingData->mailing_phone = $this->generalHelper->formatPhone($mailingData->mailing_phone);
+
+        return [
+            'patientData' => $patient->toArray(),
+            'mailingData' => $mailingData->toArray()
+        ];
+    }
+
+    /**
      * @param int    $patientId
      * @param string $patientEmail
      * @param bool   $isPasswordReset
@@ -179,36 +210,5 @@ class EmailHelper
                 ->to($headerInfo['to_email'], $headerInfo['to_name'])
                 ->subject($headerInfo['subject']);
         });
-    }
-
-    /**
-     * Retrieve patient and mailing doctor details, for patient emails
-     *
-     * @param int $patientId
-     *
-     * @return array
-     */
-    private function retrieveMailerData($patientId, $docId = 0)
-    {
-        $patient = $this->patient->find($patientId);
-        $summaryInfo = $this->summary->getWithFilter('location', ['patientid' => $patientId]);
-        $location = count($summaryInfo) ? $summaryInfo[0]->location : 0;
-
-        $mailingData = $this->user->getMailingData($docId, $patientId, $location);
-
-        if ($mailingData->user_type == self::DSS_USER_TYPE_SOFTWARE &&
-            $this->generalHelper->isSharedFile($mailingData->logo)
-        ) {
-            $mailingData->logo = 'manage/display_file.php?f=' . $mailingData->logo;
-        } else {
-            $mailingData->logo = 'foreign_images/email/reg_logo.gif';
-        }
-
-        $mailingData->mailing_phone = $this->generalHelper->formatPhone($mailingData->mailing_phone);
-
-        return [
-            'patientData' => $patient->toArray(),
-            'mailingData' => $mailingData->toArray()
-        ];
     }
 }

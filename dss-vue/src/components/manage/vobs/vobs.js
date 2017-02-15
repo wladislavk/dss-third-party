@@ -1,3 +1,5 @@
+var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
+
 module.exports = {
     el: function() {
         return '#vobs'
@@ -7,11 +9,9 @@ module.exports = {
             constants       : window.constants,
             routeParameters : {
                 patientId         : null,
-                readId            : null,
-                unreadId          : null,
                 currentPageNumber : 0,
-                sortDirection     : '',
-                sortColumn        : '',
+                sortDirection     : 'desc',
+                sortColumn        : 'status',
                 viewed            : null
             },
             totalVobs       : 0,
@@ -28,6 +28,7 @@ module.exports = {
             }
         }
     },
+    mixins: [handlerMixin],
     watch: {
         '$route.query.page': function() {
             if (this.$route.query.page) {
@@ -61,20 +62,8 @@ module.exports = {
                 this.$set('routeParameters.patientId', null);
             }
         },
-        '$route.query.rid': function() {
-            if (this.$route.query.rid > 0) {
-                this.$set('routeParameters.readId', this.$route.query.rid);
-            }
-        },
-        '$route.query.urid': function() {
-            if (this.$route.query.urid > 0) {
-                this.$set('routeParameters.unreadId', this.$route.query.urid);
-            }
-        },
         '$route.query.viewed': function() {
-            if (this.$route.query.viewed) {
-                this.$set('routeParameters.viewed', this.$route.query.viewed);
-            }
+            this.$set('routeParameters.viewed', this.$route.query.viewed);
         },
         'routeParameters': {
             handler: function() {
@@ -92,6 +81,24 @@ module.exports = {
         this.getVobs();
     },
     methods: {
+        setViewStatus: function(vob) {
+            var data = { viewed: vob.viewed == 0 ? 1 : 0 };
+
+            this.updateVob(vob.id, data)
+                .then(function(response) {
+                    this.$route.router.go({
+                        name: this.$route.name,
+                        query: {
+                            pid: vob.patient_id || 0
+                        }
+                    });
+
+                    // var foundVob = this.vobs.find(el => el.id == vob.id);
+                    // foundVob.viewed = data.viewed;
+                }, function(response) {
+                    this.handleErrors('updateVob', response);
+                });
+        },
         getCurrentDirection: function(sort) {
             if (this.routeParameters.sortColumn == sort || 
                 (this.routeParameters.sortColumn == 'p.lastname' && sort == 'patient_name')) {
@@ -118,14 +125,6 @@ module.exports = {
                 this.handleErrors('findVobs', response);
             });
         },
-        updateVob: function(param, value, id, patientId) {
-            this.alterVob(param, value, id, patientId)
-                .then(function(response) {
-                    this.getVobs();
-                }, function(response) {
-                    this.handleErrors('alterVob', response);
-                });
-        },
         findVobs: function(
             vobsPerPage,
             pageNumber,
@@ -141,17 +140,12 @@ module.exports = {
                 viewed      : viewed
             }
 
-            return this.$http.post(window.config.API_PATH + 'insurance-preauthes/find', data);
+            return this.$http.post(window.config.API_PATH + 'insurance-preauth/vobs/find', data);
         },
-        alterVob: function(param, value, id, patientId) {
-            var data = {
-                param     : param || '',
-                value     : value || 0,
-                id        : id || 0,
-                patientId : patientId || 0
-            }
+        updateVob: function(id, data) {
+            id = id || 0;
 
-            return this.$http.post(window.config.API_PATH + 'insurance-preauthes/update', data);
+            return this.$http.put(window.config.API_PATH + 'insurance-preauth/' + id, data);
         }
     }
 }

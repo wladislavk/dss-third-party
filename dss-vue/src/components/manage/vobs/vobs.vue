@@ -10,7 +10,7 @@
                     pid     : routeParameters.patientId,
                     sort    : routeParameters.sortColumn,
                     sortdir : routeParameters.sortDirection,
-                    viewed  : routeParameters.viewed == 0 ? 1 : 0
+                    viewed  : routeParameters.viewed == 0 ? null : 0
                 }
             }"
             style="float:right; margin-right:10px;" 
@@ -93,18 +93,23 @@
                     <td valign="top">
                         <a
                             v-link="{
-                                path: 'insurance',
+                                path: '/manage/insurance',
                                 query: {
-                                    pid: routeParameters.patientId,
-                                    vob_id: vob.id
+                                    pid    : routeParameters.patientId,
+                                    vob_id : vob.id
                                 }
                             }"
+                            class="editlink"
+                            title="EDIT"
                         >
                             View
                         </a>
                         <br />
                         <a
-                            v-on:click="updateVob('viewed', !vob.viewed, vob.id, vob.patient_id)"
+                            href="#"
+                            v-on:click.prevent="setViewStatus(vob)"
+                            class="editlink"
+                            title="EDIT"
                         >
                             {{ vob.viewed ? 'Mark Unread' : 'Mark Read' }}
                         </a>

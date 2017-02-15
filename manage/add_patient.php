@@ -1567,7 +1567,7 @@ if($themyarray['use_patient_portal']==1){
                 <br />
                 <input type="submit" name="sendPin" value="Patient can't receive text message?" class="button" />
 <?php if($themyarray['registration_status']==1){?>
-                PIN Code: <?php echo $themyarray['access_code']; ?> 
+                PIN Code: <b id="access-code"><?php echo $themyarray['access_code']; ?></b>
 <?php } ?>
               </div>           
             </div>

@@ -130,24 +130,4 @@ class InsurancePreauthController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
-
-    public function alter(InsPreauth $resources, Request $request)
-    {
-        $docId           = $this->currentUser->docid ?: 1;
-
-        $vobParam      = $request->input('param') ?: 'viewed';
-        $vobParamValue  = $request->input('value');
-        $vobId         = $request->input('id');
-        $patientId     = $request->input('patientId');
-
-        $data = $resources->alterVob(
-            $docId, 
-            $vobParam, 
-            $vobParamValue, 
-            $vobId,
-            $patientId
-        );
-
-        return ApiResponse::responseOk('updated');
-    }
 }

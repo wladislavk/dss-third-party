@@ -141,19 +141,4 @@ class InsurancePreauth extends Model implements Resource, Repository
                 ->get()
         ];
     }
-
-    public function alterVob(
-        $docId         = 1,
-        $vobParam      = 'viewed',
-        $vobParamValue,
-        $vobId,
-        $patientId
-    ) {
-        $query = $this
-        ->where('id', '=', $vobId)
-        ->where('patient_id', '=', $patientId)
-            ->update([$vobParam => $vobParamValue]);
-
-        return 'updated';
-    }
 }

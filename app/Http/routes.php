@@ -86,6 +86,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('insurance-files', 'InsuranceFilesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-histories', 'InsuranceHistoriesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-preauth', 'InsurancePreauthController', ['except' => ['create', 'edit']]);
+    Route::post('insurance-preauth/vobs/find', 'InsurancePreauthController@find');
     Route::post('insurance-preauth/{type}', 'InsurancePreauthController@getByType');
     Route::resource('intolerances', 'IntolerancesController', ['except' => ['create', 'edit']]);
     Route::resource('joints', 'JointsController', ['except' => ['create', 'edit']]);

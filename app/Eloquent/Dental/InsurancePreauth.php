@@ -90,6 +90,65 @@ class InsurancePreauth extends Model implements Resource, Repository
             ->first();
     }
 
+    public function getListVobs(
+        $docId       = 0, 
+        $viewed      = null, 
+        $sortColumn  = 'status',
+        $sortDir     = 'desc',
+        $vobsPerPage = 20,
+        $pageNumber  = 0
+    ) {
+        $offset = $vobsPerPage * $pageNumber;
+
+        switch ($sortColumn) {
+            case 'request_date':
+                $sortColumn = 'preauth.front_office_request_date';
+                break;
+            case 'patient_name':
+                $sortColumn = 'p.lastname';
+                break;
+            case 'status':
+                $sortColumn = 'preauth.status';
+                break;
+            default:
+                break;
+        }
+
+        $query = $this->select(DB::raw('
+                preauth.id,
+                p.firstname,
+                p.lastname,
+                preauth.viewed,
+                preauth.front_office_request_date,
+                preauth.patient_id,
+                preauth.status,
+                preauth.reject_reason
+            '))
+            ->from(DB::raw('dental_insurance_preauth preauth'))
+            ->join(DB::raw('dental_patients p'), 'p.patientid', '=', 'preauth.patient_id')
+            ->where('preauth.doc_id', '=', $docId);
+
+        if (isset($viewed)) {
+            if ($viewed == 1) {
+                $query = $query->where('preauth.viewed', $viewed);
+            } else {
+                $query = $query->where(function($query) {
+                    $query->where('preauth.viewed', '=', 0)
+                        ->orWhereNull('preauth.viewed');
+                });
+            }
+        }
+
+        $query = $query->orderBy($sortColumn, $sortDir);
+
+        return [
+            'total'  => $query->get()->count(),
+            'result' => $query->skip($offset)
+                ->take($vobsPerPage)
+                ->get()
+        ];
+    }
+
     public function updateVob($newPatientId, $name)
     {
         $rejectReason = $name . ' altered patient insurance information requiring VOB resubmission on ' . Carbon::now()->format('m/d/Y h:i');

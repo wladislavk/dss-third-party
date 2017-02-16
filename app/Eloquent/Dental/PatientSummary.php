@@ -31,7 +31,7 @@ class PatientSummary extends Model implements Resource, Repository
      *
      * @var string
      */
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'pid';
 
     /**
      * Indicates if the model should be timestamped.
@@ -39,4 +39,13 @@ class PatientSummary extends Model implements Resource, Repository
      * @var bool
      */
     public $timestamps = false;
+
+    public function updateTrackerNotes($patientId = 0, $docId = 0, $notes = '')
+    {
+        return $this->from(DB::raw('dental_patient_summary summary'))
+            ->leftJoin(DB::raw('dental_patients patient'), 'patient.patientid', '=', 'summary.pid')
+            ->where('summary.pid', $patientId)
+            ->where('patient.docid', $docId)
+            ->update(['summary.tracker_notes' => $notes]);
+    }
 }

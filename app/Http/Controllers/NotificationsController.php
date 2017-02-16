@@ -85,4 +85,20 @@ class NotificationsController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    /**
+     * Get notifications by filter.
+     *
+     * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getWithFilter(Patients $resources, Request $request)
+    {
+        $fields = $request->input('fields') ?: [];
+        $where  = $request->input('where') ?: [];
+
+        $patients = $resources->getWithFilter($fields, $where);
+
+        return ApiResponse::responseOk('', $patients);
+    }
 }

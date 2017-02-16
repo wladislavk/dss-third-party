@@ -54,6 +54,21 @@ class Letter extends Model implements Resource, Repository
      */
     const UPDATED_AT = 'edit_date';
 
+    public function scopeNonDeleted($query)
+    {
+        return $query->where('deleted', '0');
+    }
+
+    public function scopePatientTreatmentComplete($query)
+    {
+        return $query->where('templateid', 20);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 0);
+    }
+
     public function getPending($docId = 0)
     {
         return $this->select(DB::raw('UNIX_TIMESTAMP(dental_letters.generated_date) AS generated_date'))
@@ -82,5 +97,160 @@ class Letter extends Model implements Resource, Repository
             ->where('dental_letters.deleted', 0)
             ->where('dental_letters.docid', $docId)
             ->first();
+    }
+
+    public function getGeneratedDateOfIntroLetter($patientId = 0)
+    {
+        return $this->select('generated_date')
+            ->where('templateid', 3)
+            ->nonDeleted()
+            ->where('patientid', $patientId)
+            ->orderBy('generated_date')
+            ->first();
+    }
+
+    public function getPatientTreatmentComplete($patientId = 0, $patientReferralId)
+    {
+        return $this->select('letterid')
+            ->where('patientid', $patientId)
+            ->patientTreatmentComplete()
+            ->where('pat_referral_list', $patientReferralId)
+            ->get();
+    }
+
+    public function createLetter($data = [])
+    {
+        foreach ($data as $value) {
+            $value = $value ?: false;
+        }
+
+        if (isset($data['parentid']) && $data['status'] != 1) {
+            $newLetter['parentid'] = $data['parentid'];
+        } else if ($data['status'] == 1) {
+            $newLetter['parentid'] = '';
+        }
+
+        if (isset($data['topatient']) && !$data['cc_topatient']) {
+            $newLetter['cc_topatient'] = $data['topatient'];
+        } else {
+            $newLetter['cc_topatient'] = $data['cc_topatient'];
+        }
+
+        if (isset($data['md_list']) && !$data['cc_md_list']) {
+            $newLetter['cc_md_list'] = $data['md_list'];
+        } else {
+            $newLetter['cc_md_list'] = $data['cc_md_list'];
+        }
+
+        if (isset($data['md_referral_list']) && !$data['cc_md_referral_list']) {
+            $newLetter['cc_md_referral_list'] = $data['md_referral_list'];
+        } else {
+            $newLetter['cc_md_referral_list'] = $data['cc_md_referral_list'];
+        }
+
+        if (isset($data['pat_referral_list']) && !$data['cc_pat_referral_list']) {
+            $newLetter['cc_pat_referral_list'] = $data['pat_referral_list'];
+        } else {
+            $newLetter['cc_pat_referral_list'] = $data['cc_pat_referral_list'];
+        }
+
+        if ($data['template']) {
+            $template = html_entity_decode(preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE, "UTF-8");
+            $newLetter['template'] = $template;
+        }
+
+        $newLetter = [
+            'templateid'           => $data['templateid'],
+            'date_sent'            => $data['status'] == 1 ? Carbon::now() : '',
+            'patientid'            => $data['patientid'] > 0 ? $data['patientid'] : 0,
+            'info_id'              => $data['info_id'] > 0 ? $data['info_id'] : 0,
+            'topatient'            => $data['topatient'],
+            'md_list'              => $data['md_list'],
+            'cc_md_list'           => $data['cc_md_list'],
+            'md_referral_list'     => $data['md_referral_list'],
+            'cc_md_referral_list'  => $data['cc_md_referral_list'],
+            'pat_referral_list'    => $data['pat_referral_list'],
+            'send_method'          => $data['send_method'],
+            'status'               => $data['status'],
+            'deleted'              => $data['deleted'],
+            'deleted_by'           => $data['user_id'],
+            'deleted_on'           => Carbon::now(),
+            'template_type'        => $data['template_type'],
+            'font_size'            => $data['font_size'],
+            'font_family'          => $data['font_family'],
+            'generated_date'       => Carbon::now(),
+            'delivered'            => '0',
+            'docid'                => $data['doc_id'],
+            'userid'               => $data['user_id']
+        ];
+
+        return $this->create($newLetter);
+    }
+
+    public function getMdList($contactId, $letter1Id = 0, $letter2Id = 0)
+    {
+        return $this->select('md_list')
+            ->whereNotNull('md_list')
+            ->whereRaw("CONCAT(',', md_list, ',') LIKE ?", ['%,' . $contactId . ',%'])
+            ->whereIn('templateid', [$letter1Id, $letter2Id])
+            ->get();
+    }
+
+    public function updatePendingLettersToNewReferrer($oldReferredBy, $newReferredBy, $patientId, $type)
+    {
+        $letter = $this->pending()
+            ->where('patientid', $patientId);
+
+        switch ($type) {
+            case 'physician':
+                $field = 'md_referral_list';
+                break;
+
+            case 'patient':
+                $field = 'pat_referral_list';
+                break;
+
+            default:
+                break;
+        }
+
+        return $letter->where($field, $oldReferredBy)
+            ->update([
+                'template' => null,
+                $field     => $newReferredBy
+            ]);
+    }
+
+    public function getPhysicianOrPatientPendingLetters($referralList, $patientId, $type = 'physician')
+    {
+        switch ($type) {
+            case 'physician':
+                $field = 'md_referral_list';
+                break;
+
+            case 'patient':
+                $field = 'pat_referral_list';
+                break;
+
+            default:
+                $field = '';
+                break;
+        }
+
+        return $this->where($field, $referralList)
+            ->where('patientid', $patientId)
+            ->pending()
+            ->get();
+    }
+
+    public function updateLetterBy($where, $data)
+    {
+        $query = $this;
+
+        foreach ($where as $key => $value) {
+            $query = $query->where($key, $value);
+        }
+
+        return $query->update($data);
     }
 }

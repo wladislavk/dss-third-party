@@ -9,6 +9,10 @@ use DentalSleepSolutions\Http\Requests\LetterDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Repositories\Letters;
+use DentalSleepSolutions\Contracts\Repositories\Patients;
+use DentalSleepSolutions\Contracts\Resources\Contact;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -20,6 +24,9 @@ use DentalSleepSolutions\Contracts\Repositories\Letters;
  */
 class LettersController extends Controller
 {
+    const DSS_USER_TYPE_FRANCHISEE = 1;
+    const DSS_USER_TYPE_SOFTWARE = 2;
+
     /**
      * Display a listing of the resource.
      *
@@ -100,6 +107,15 @@ class LettersController extends Controller
         $docId = $this->currentUser->docid ?: 0;
 
         $data = $resources->getUnmailed($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getGeneratedDateOfIntroLetter(Letter $resource, Request $request)
+    {
+        $patientId = $request->input('patient_id') ?: 0;
+
+        $data = $resource->getGeneratedDateOfIntroLetter($patientId);
 
         return ApiResponse::responseOk('', $data);
     }

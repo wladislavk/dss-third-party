@@ -22,8 +22,9 @@
 </template>
 
 <script>
-    var deviceSelector = require('../manage/dashboard/device-selector/deviceSelector.vue');
-    var viewContact    = require('../manage/contacts/ViewContact.vue');
+    var deviceSelector    = require('../manage/dashboard/device-selector/deviceSelector.vue');
+    var viewContact       = require('../manage/contacts/ViewContact.vue');
+    var patientAccessCode = require('../manage/patients/access-code/PatientAccessCode.vue');
 
     module.exports = {
         data: function() {
@@ -40,9 +41,10 @@
             this.$off('keyup');
         },
         components: {
-            'empty'           : { template: '' },
-            'device-selector' : deviceSelector,
-            'view-contact'    : viewContact
+            'empty'               : { template: '' },
+            'device-selector'     : deviceSelector,
+            'view-contact'        : viewContact,
+            'patient-access-code' : patientAccessCode
         },
         methods: {
             setComponentParameters: function(parameters) {
@@ -122,6 +124,9 @@
                 } else {
                     return false;
                 }
+            },
+            updateParentData: function(data) {
+                this.$dispatch('getting-data-from-modal', data);
             }
         }
     }

@@ -10,42 +10,44 @@ module.exports = {
     data: function() {
         return {
             headerInfo: {
-                unmailedLettersNumber    : 0,
-                pendingClaimsNumber      : 0,
-                pendingNodssClaimsNumber : 0,
-                unmailedClaimsNumber     : 0,
-                rejectedClaimsNumber     : 0,
-                preauthNumber            : 0,
-                rejectedPreAuthNumber    : 0,
-                alertsNumber             : 0,
-                hstNumber                : 0,
-                requestedHSTNumber       : 0,
-                rejectedHSTNumber        : 0,
-                patientContactsNumber    : 0,
-                patientInsurancesNumber  : 0,
-                patientChangesNumber     : 0,
-                pendingDuplicatesNumber  : 0,
-                emailBouncesNumber       : 0,
-                paymentReportsNumber     : 0,
-                unsignedNotesNumber      : 0,
-                faxAlertsNumber          : 0,
-                usePaymentReports        : false,
-                useLetters               : false,
-                pendingLetters           : [],
-                overdueTasks             : [],
-                todayTasks               : [],
-                tomorrowTasks            : [],
-                thisWeekTasks            : [],
-                nextWeekTasks            : [],
-                laterTasks               : [],
-                user                     : {},
-                docInfo                  : {},
-                courseStaff              : {
+                unmailedLettersNumber      : 0,
+                pendingClaimsNumber        : 0,
+                pendingNodssClaimsNumber   : 0,
+                unmailedClaimsNumber       : 0,
+                rejectedClaimsNumber       : 0,
+                preauthNumber              : 0,
+                rejectedPreAuthNumber      : 0,
+                alertsNumber               : 0,
+                hstNumber                  : 0,
+                requestedHSTNumber         : 0,
+                rejectedHSTNumber          : 0,
+                patientContactsNumber      : 0,
+                patientInsurancesNumber    : 0,
+                patientChangesNumber       : 0,
+                pendingDuplicatesNumber    : 0,
+                emailBouncesNumber         : 0,
+                paymentReportsNumber       : 0,
+                unsignedNotesNumber        : 0,
+                faxAlertsNumber            : 0,
+                usePaymentReports          : false,
+                useLetters                 : false,
+                pendingLetters             : [],
+                overdueTasks               : [],
+                todayTasks                 : [],
+                tomorrowTasks              : [],
+                thisWeekTasks              : [],
+                nextWeekTasks              : [],
+                laterTasks                 : [],
+                user                       : {},
+                docInfo                    : {},
+                courseStaff                : {
                     use_course       : 0,
                     use_course_staff : 0
                 },
-                tasksNumber              : 0,
-                patientTaskNumber        : 0
+                tasksNumber                : 0,
+                patientTaskNumber          : 0,
+                patientName                : '',
+                patientHomeSleepTestStatus : ''
             },
             secondsPerDay                        : 86400,
             oldestLetter                         : 0,
@@ -57,7 +59,6 @@ module.exports = {
             alertText                            : '',
             displayAlert                         : false,
             alergen                              : 0,
-            patientName                          : '',
             patientTasks                         : [],
             notificationsNumber                  : 0,
             isUserDoctor                         : false,
@@ -77,7 +78,7 @@ module.exports = {
             showWarningAboutBouncedEmails        : false,
             rejectedClaimsForCurrentPatient      : [],
             uncompletedHomeSleepTests            : [],
-            showAllWarnings                      : false
+            showAllWarnings                      : true
         }
     },
     components: {
@@ -375,7 +376,7 @@ module.exports = {
                         .then(function(response) {
                             var data = response.data.data;
 
-                            if (data) {
+                            if (data.length) {
                                 this.premedCheck  = data[0].premedcheck;
                                 this.medicare     = (data[0].p_m_ins_type == 1);
                                 this.alertText    = data[0].alert_text;
@@ -385,7 +386,7 @@ module.exports = {
                                     this.title += 'Pre-medication: ' + data[0].premed + '\n';
                                 }
 
-                                this.patientName = data[0].firstname +  ' ' + data[0].lastname;
+                                this.$set('headerInfo.patientName', data[0].firstname + ' ' + data[0].lastname);
                             }
                         }, function(response) {
                             this.handleErrors('getPatientByIdAndDocId', response);
@@ -395,7 +396,7 @@ module.exports = {
                         .then(function(response) {
                             var data = response.data.data;
 
-                            if (data) {
+                            if (data.length) {
                                 this.alergen = data[0].allergenscheck;
 
                                 if (this.alergen) {
@@ -678,11 +679,31 @@ module.exports = {
         },
         'headerInfo.docInfo.use_letters': function() {
             this.headerInfo.useLetters = (this.headerInfo.docInfo.use_letters == 1);
+        },
+        'uncompletedHomeSleepTests': function() {
+            var status = '';
+            if (this.uncompletedHomeSleepTests.length > 0) {
+                var lastElement = this.uncompletedHomeSleepTests[this.uncompletedHomeSleepTests.length - 1];
+                status = window.constants.dssHstStatusLabels[lastElement.status];
+            }
+
+            this.$set('headerInfo.patientHomeSleepTestStatus', status);
         }
     },
     events: {
         'get-header-info': function() {
             this.$broadcast('update-header-info', this.headerInfo);
+        },
+        'update-from-child': function(headerInfo) {
+            var keys = Object.keys(headerInfo);
+
+            var self = this;
+            keys.forEach((el) => {
+                self.headerInfo[el] = headerInfo[el];
+            });
+        },
+        'getting-data-from-modal': function(data) {
+            this.$broadcast('setting-data-from-modal', data);
         }
     },
     computed: {
@@ -922,7 +943,8 @@ module.exports = {
             var data = {
                 fields: ['patientid'],
                 where: {
-                    patientId : patientId || 0
+                    email_bounce : 1,
+                    patientId    : patientId || 0
                 }
             };
 

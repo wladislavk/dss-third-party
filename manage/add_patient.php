@@ -593,6 +593,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       $salt = '';
       $password = '';
     }
+    $accessCode = rand(100000, 999999);
     $ins_sql = "insert 
                   into 
                   dental_patients 
@@ -723,6 +724,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
                   status = '".s_for($_POST["status"])."',
                   use_patient_portal = '".s_for($_POST["use_patient_portal"])."',
                   adddate=now(),
+                  access_code = '$accessCode', access_code_date = NOW(),
                   ip_address='".$_SERVER['REMOTE_ADDR']."',
                   preferredcontact='".s_for($_POST["preferredcontact"])."';";
 
@@ -737,7 +739,7 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
 
     if(isset($_POST['sendReg'])&& $doc_patient_portal && $_POST["use_patient_portal"]){
       if(trim($_POST['email'])!='' && trim($_POST['cell_phone'])!=''){
-        sendRegEmail($pid, $_POST['email'], $login);
+        sendRegEmail($pid, $_POST['email'], $login, '');
       }else{?>
         <script type="text/javascript">alert('Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.');</script>
 <?php
@@ -817,6 +819,16 @@ $pending_vob_status = $vob_myarray['status'];
 
 $thesql = "select * from dental_patients where patientid='".$request_ed."'";
 $themyarray = $db->getRow($thesql);
+
+if ($themyarray['registration_status'] == 1 && $themyarray['access_code'] == '') {
+  $patientId = intval($request_ed);
+  $accessCode = rand(100000, 999999);
+  $themyarray['access_code'] = $accessCode;
+
+  $db->query("UPDATE dental_patients
+    SET access_code = '$accessCode', access_code_date = NOW()
+    WHERE patientid = '$patientId'");
+}
 
 if(isset($msg) && $msg != ''){
   $firstname = $_POST['firstname'];
@@ -1619,7 +1631,7 @@ if($themyarray['use_patient_portal']==1){
                 <label for="city">City</label>
               </span>
               <span>
-                <input id="state" name="state" type="text" class="field text addr tbox" value="<?php echo $state?>" style="width:25px;" maxlength="2" />
+                <input id="state" name="state" type="text" autocomplete="off" class="field text addr tbox" value="<?php echo $state?>" style="width:25px;" maxlength="2" />
                 <label for="state">State</label>
               </span>
               <span>
@@ -1890,7 +1902,7 @@ for($i=80;$i<=500;$i++){?>
                 <label for="emp_city">City</label>
               </span>
               <span>
-                <input id="emp_state" name="emp_state" type="text" class="field text addr tbox" value="<?php echo $emp_state?>"  style="width:80px;" maxlength="255" />
+                <input id="emp_state" name="emp_state" type="text" autocomplete="off" class="field text addr tbox" value="<?php echo $emp_state?>"  style="width:80px;" maxlength="255" />
                 <label for="emp_state">State</label>
               </span>
               <span>
@@ -1992,7 +2004,7 @@ if($exclusive_billing){
                 <label for="p_m_city">Insured City</label>
               </span>
               <span>
-                <input id="p_m_state" name="p_m_state" type="text" class="field text addr tbox" value="<?php echo $p_m_state?>"  style="width:80px;" maxlength="2" />
+                <input id="p_m_state" name="p_m_state" type="text" autocomplete="off" class="field text addr tbox" value="<?php echo $p_m_state?>"  style="width:80px;" maxlength="2" />
                 <label for="p_m_state">Insured State</label>
               </span>
               <span>
@@ -2108,7 +2120,7 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
               <span>
                 <label style="display:inline;">Does patient have secondary insurance?</label>
                 <input type="radio" value="Yes" <?php echo ($has_s_m_ins == "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').show();" /> Yes
-                <input type="radio" value="No" <?php echo ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide(); clearInfo();" /> No
+                <input type="radio" value="No" <?php echo ($has_s_m_ins != "Yes")?'checked="checked"':''; ?> name="s_m_ins" onclick="$('.s_m_ins_div').hide(); $('#s_m_address_fields').hide();" /> No
               </span>
             </div>
           </li>
@@ -2195,7 +2207,7 @@ if($api_r['use_eligible_api']==1){
                 <label for="s_m_city">Insured City</label>
               </span>
               <span>
-                <input id="s_m_state" name="s_m_state" type="text" class="field text addr tbox" value="<?php echo $s_m_state?>"  style="width:80px;" maxlength="2" />
+                <input id="s_m_state" name="s_m_state" type="text" autocomplete="off" class="field text addr tbox" value="<?php echo $s_m_state?>"  style="width:80px;" maxlength="2" />
                 <label for="s_m_state">Insured State</label>
               </span>
               <span>
@@ -2249,7 +2261,7 @@ if(!$image){ ?>
         </ul>
         <ul>
           <li id="foli8" class="complex"> 
-            <div class="s_m_ins_div" <?php echo ($has_s_m_ins != "Yes")?'style="display:none;"':''; ?>>
+            <div class="s_m_ins_div" style="position:relative;<?= $has_s_m_ins != 'Yes' ? 'display:none;' : '' ?>">
               <span>
                 <select id="s_m_ins_co" name="s_m_ins_co" class="field text addr tbox" maxlength="255" style="width:200px;" onchange="updateNumber2('s_m_ins_phone')" />
                   <option value="">Select Insurance Company</option>
@@ -2284,6 +2296,10 @@ if ($ins_contact_qry_run) foreach ($ins_contact_qry_run as $ins_contact_res) {?>
                 <textarea id="s_m_ins_phone" name="s_m_ins_phone" type="text" class="field text addr tbox" disabled="disabled" style="width:190px;height:60px;background:#ccc;"></textarea>
                 <label for="s_m_ins_phone">Address</label>
               </span>
+              <button id="clear-secondary-insurance" class="button" style="position:absolute;bottom:5px;right:5px;"
+                onclick="javascript:if(confirm('Empty all fields in Secondary Insurance?')){clearInfo();}return false;">
+                &mdash; Clear All Values
+              </button>
             </div>
             <div>          
             </div>

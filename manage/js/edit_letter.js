@@ -4,7 +4,7 @@ function edit_letter (divid, size, family) {
         html = '';
 
     $clone.find('.br-marker').remove();
-    $clone.find('.preview-page-break').remove();
+    $clone.find('.preview-page-break, .preview-bottom-margin').remove();
     $clone.find('.preview-inner-wrapper').find(':first').unwrap().unwrap();
     html = $clone.html();
     $clone.remove();
@@ -14,6 +14,7 @@ function edit_letter (divid, size, family) {
     }
 
     var textarea = $("<textarea />");
+    textarea.attr('id', [divid, 'textarea'].join('-'));
 
     if ($source.is('.preview-letter')) {
         $source.removeClass('show-hidden');
@@ -178,6 +179,13 @@ function setup_tinymce (size, family, $reference) {
         size = $reference.find('[name^=font_size]').val();
         family = $reference.find('[name^=font_family]').val();
 
+        init.mode = 'exact';
+        init.elements = $reference.find('textarea').attr('id');
+        init.table_appearance_options = false;
+
+        init.valid_elements = ['@[style|border]', init.valid_elements].join(',');
+        delete init.valid_styles;
+
         init.content_css = [
             "css/font-default.css?" + now,
             "css/font-size-" + size + ".css?" + now,
@@ -194,15 +202,11 @@ $(document).ready(function(){
         $fontFamily = $('[name^=font_family]');
 
     function replaceClass ($this, match, replacement) {
-        console.info(match, replacement);
-
         var classes = $this.attr('class');
         $this.attr('class', classes.replace(match, replacement));
     }
 
     function replaceLink ($reference, match, replacement) {
-        console.info(match, replacement);
-
         $reference.find('iframe').contents().find('link').each(function(){
             var $this = $(this),
                 $clone, href;

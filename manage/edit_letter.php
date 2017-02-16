@@ -41,7 +41,6 @@ function formatMm ($number) {
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js?v=<?= time() ?>"></script>
-<script type="text/javascript" src="/manage/js/paginate-letter.js?v=<?= time() ?>"></script>
 <script>
   var pageSize = <?= json_encode($pageSize) ?>;
   var pageMargins = <?= json_encode($margins) ?>;
@@ -71,7 +70,7 @@ function formatMm ($number) {
     height: <?= formatMm($margins['bottom']) ?>;
   }
 
-  <?php for ($n=2; $n <=10; $n++) { ?>
+  <?php for ($n=2; $n <=0; $n++) { ?>
   div.preview-letter div.preview-page-break.break-<?= $n ?> {
     top: <?= formatMm(($pageSize['height'] - $margins['top'] - $margins['bottom'])*$n + $margins['top']) ?>;
   }
@@ -1913,7 +1912,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
                               ) ?>
                             </div>
                           </div>
-                          <?php for ($n=1; $n<=10; $n++) { ?><div class="preview-page-break break-<?= $n ?>">page <?= $n + 1 ?></div><?php } ?>
+                          <?php for ($n=1; $n<=0; $n++) { ?><div class="preview-page-break break-<?= $n ?>">page <?= $n + 1 ?></div><?php } ?>
                           <div class="preview-bottom-margin"></div>
         				</div>
         				<input type="hidden" name="new_template[<?php echo $cur_letter_num?>]" value="<?php echo preg_replace('/(&Acirc;|&nbsp;)+/i', '',htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8"))?>" />

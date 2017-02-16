@@ -104,6 +104,7 @@ div.preview-letter table {
 
 div.preview-letter td {
     padding: 0;
+    vertical-align: top;
 }
 
 div.preview-letter,

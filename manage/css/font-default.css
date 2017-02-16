@@ -49,6 +49,7 @@ table {
 
 td {
     padding: 0;
+    vertical-align: top;
 }
 
 body, td, ul, ol {

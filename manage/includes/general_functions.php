@@ -419,14 +419,12 @@ function sendRegistrationRelatedEmail ($patientId, $patientEmail, $isPasswordRes
 
     if ($isPasswordReset) {
         if ($patientData['recover_hash'] == '' || $patientEmail != $oldEmail) {
-            $accessCode = rand(100000, 999999);
             $recoverHash = hash('sha256', $patientData['patientid'] . $patientData['email'] . rand());
 
             $db->query("UPDATE dental_patients SET
                     text_num = 0,
                     access_type = $accessType,
                     registration_status = 1,
-                    access_code = '$accessCode',
                     recover_hash = '$recoverHash',
                     text_date = NOW(),
                     recover_time = NOW(),
@@ -1036,10 +1034,11 @@ function logRequestData () {
     $logData = $db->escapeAssignmentList([
         'patientid' => intval($_SESSION['patientid']),
         'userid' => intval($_SESSION['userid']),
-        'adminid' => intval($_SESSION['adminid']),
+        'adminid' => intval($_SESSION['adminuserid']),
         'script' => $_SERVER['SCRIPT_NAME'],
         'referer' => $_SERVER['HTTP_REFERER'],
         'request_time' => $_SERVER['REQUEST_TIME_FLOAT'],
+        'ip_address' => $_SERVER['REMOTE_ADDR'],
         'get_data' => json_encode($_GET),
         'post_data' => json_encode($postData),
         'files_data' => json_encode($_FILES)

@@ -1625,6 +1625,20 @@ class ClaimFormData
             $claimData['amount_paid'] = self::amountPaidForClaim($primaryClaimId);
         }
 
+        /**
+         * If there is no secondary insurance selected, blank out fields associated to it
+         */
+        if (!$claimData['another_plan']) {
+            unset($claimData['other_insured_lastname']);
+            unset($claimData['other_insured_firstname']);
+            unset($claimData['other_insured_middle']);
+            unset($claimData['other_insured_policy_group_feca']);
+            unset($claimData['patient_relation_other_insured']);
+            unset($claimData['other_insured_insurance_plan']);
+            unset($claimData['other_insured_insurance_type']);
+            unset($claimData['responsibility_sequence']);
+        }
+
         $claimData['resubmission_code_fill'] = 1;
         $claimData['billing_provider_taxonomy_code'] = '332B00000X';
 

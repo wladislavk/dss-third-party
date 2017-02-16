@@ -27,9 +27,10 @@
 </template>
 
 <script>
-    var deviceSelector = require('../manage/dashboard/device-selector/deviceSelector.vue');
-    var viewContact    = require('../manage/contacts/ViewContact.vue');
-    var editContact    = require('../manage/contacts/EditContact.vue');
+    var deviceSelector    = require('../manage/dashboard/device-selector/deviceSelector.vue');
+    var viewContact       = require('../manage/contacts/ViewContact.vue');
+    var patientAccessCode = require('../manage/patients/access-code/PatientAccessCode.vue');
+    var editContact       = require('../manage/contacts/EditContact.vue');
 
     module.exports = {
         data: function() {
@@ -46,10 +47,11 @@
             this.$off('keyup');
         },
         components: {
-            'empty'           : { template: '' },
-            'device-selector' : deviceSelector,
-            'view-contact'    : viewContact,
-            'edit-contact'    : editContact
+            'empty'               : { template: '' },
+            'device-selector'     : deviceSelector,
+            'view-contact'        : viewContact,
+            'patient-access-code' : patientAccessCode,
+            'edit-contact'        : editContact
         },
         methods: {
             isEditedPopup: function(status) {
@@ -136,6 +138,9 @@
                 } else {
                     return false;
                 }
+            },
+            updateParentData: function(data) {
+                this.$dispatch('getting-data-from-modal', data);
             }
         }
     }

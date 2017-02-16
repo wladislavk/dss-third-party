@@ -111,7 +111,7 @@
                             class="editlink"
                             title="EDIT"
                         >
-                            {{ vob.viewed ? 'Mark Unread' : 'Mark Read' }}
+                            {{ vob.viewed == 1 ? 'Mark Unread' : 'Mark Read' }}
                         </a>
                     </td>
                 </tr>

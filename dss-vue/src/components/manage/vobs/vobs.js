@@ -93,18 +93,17 @@ module.exports = {
                         }
                     });
 
-                    // var foundVob = this.vobs.find(el => el.id == vob.id);
-                    // foundVob.viewed = data.viewed;
+                    var foundVob = this.vobs.find(el => el.id == vob.id);
+                    foundVob.viewed = data.viewed;
                 }, function(response) {
                     this.handleErrors('updateVob', response);
                 });
         },
         getCurrentDirection: function(sort) {
-            if (this.routeParameters.sortColumn == sort || 
-                (this.routeParameters.sortColumn == 'p.lastname' && sort == 'patient_name')) {
+            if (this.routeParameters.sortColumn == sort) {
                 return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc';
             } else {
-                return sort === 'patient_name' ? 'asc' : 'desc';
+                return 'asc';
             }
         },
         getVobs: function() {

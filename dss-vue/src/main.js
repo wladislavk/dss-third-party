@@ -20,6 +20,7 @@ import Index           from './components/manage/dashboard/dashboard.vue'
 import Patients        from './components/manage/patients/patients.vue'
 import Contacts        from './components/manage/contacts/contacts.vue'
 import EditingPatients from './components/manage/patients/editing/editingPatients.vue'
+import Vobs            from './components/manage/vobs/vobs.vue'
 
 // service routes
 import PageNotFound from './components/services/pageNotFound.vue'
@@ -72,6 +73,10 @@ router.map({
     '/manage/contacts': {
         name      : 'contacts',
         component : Contacts,
+        auth      : true
+    },
+    '/manage/vobs': {
+        component : Vobs,
         auth      : true
     },
     '/manage/edit-patient': {

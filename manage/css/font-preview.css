@@ -99,6 +99,7 @@ div.preview-letter li {
 
 div.preview-letter table {
     border-spacing: 0;
+    width: 100%;
 }
 
 div.preview-letter td {

@@ -731,14 +731,6 @@ Aliquam aliquam eleifend vestibulum. Curabitur vitae feugiat dui. Vivamus interd
       <form action="#" method="post">
         <div class="two-column">
           <div class="detail">
-            <label>Header:</label>
-            <input class="value" name="letter_margin_header" value="<?php echo  $practice['letter_margin_header']; ?>" />
-          </div>
-          <div class="detail">
-            <label>Footer:</label>
-            <input class="value" name="letter_margin_footer" value="<?php echo  $practice['letter_margin_footer']; ?>" />
-          </div>
-          <div class="detail">
             <label>Top:</label>
             <input class="value" name="letter_margin_top" value="<?php echo  $practice['letter_margin_top']; ?>" />
           </div>
@@ -753,6 +745,17 @@ Aliquam aliquam eleifend vestibulum. Curabitur vitae feugiat dui. Vivamus interd
           <div class="detail">
             <label>Right:</label>
             <input class="value" name="letter_margin_right" value="<?php echo  $practice['letter_margin_right']; ?>" />
+          </div>
+          <div class="detail">
+            <label><strong>Fax only</strong></label>
+          </div>
+          <div class="detail">
+            <label>Header:</label>
+            <input class="value" name="letter_margin_header" value="<?php echo  $practice['letter_margin_header']; ?>" />
+          </div>
+          <div class="detail">
+            <label>Footer:</label>
+            <input class="value" name="letter_margin_footer" value="<?php echo  $practice['letter_margin_footer']; ?>" />
           </div>
         </div>
         <div class="two-column">

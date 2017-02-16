@@ -38,6 +38,40 @@ function formatMm ($number) {
   return number_format($number, 1, '.', '') . 'mm';
 }
 
+function contactType ($patientId, $contactId, $contactType) {
+  static $contactTypeList = [];
+
+  if (!$contactTypeList) {
+    $db = new Db();
+    $patientId = intval($patientId);
+
+    $contactTypeList = $db->getRow("SELECT
+        docsleep AS 'Sleep MD',
+        docpcp AS 'Primary Care MD',
+        docdentist AS 'Dentist',
+        docent AS 'ENT'
+    FROM dental_patients
+    WHERE patientid = '$patientId'");
+
+    $contactTypeList = $contactTypeList ?: [];
+  }
+
+  switch ($contactType) {
+    case 'patient':
+      $type = 'Patient';
+      break;
+    case 'md':
+      $find = array_search($contactId, $contactTypeList);
+      $type = $find ?: 'Other MD';
+      break;
+    case 'md_referral':
+    default:
+      $type = 'Other MD';
+  }
+
+  return $type;
+}
+
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
 <script type="text/javascript" src="/manage/js/edit_letter.js?v=<?= time() ?>"></script>
@@ -1794,59 +1828,64 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
         ?>
 
-	      <div style="margin: auto; width: 95%; padding: 3px;">
-              <div style="float:left; text-align: left">
+	      <div style="margin: auto; width: 95%; padding: 3px;" class="single-letter">
+            <div>
               <span class="admin_head" style="float: none; display: inline-block; margin-top: -5px;">
-	<?php print $title; ?>
-</span>
+                <?= e($title) ?>
+              </span>
               &nbsp;&nbsp;
-
-              <?php
-              if(!empty($_REQUEST['goto'])) {
-              if($_REQUEST['goto'] == 'flowsheet') {
+              <?php if(!empty($_REQUEST['goto'])) {
+                if($_REQUEST['goto'] == 'flowsheet') {
                   $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
-              } elseif ($_REQUEST['goto'] == 'letter') {
+                } elseif ($_REQUEST['goto'] == 'letter') {
                   $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
-              } elseif ($_REQUEST['goto'] == 'new_letter') {
+                } elseif ($_REQUEST['goto'] == 'new_letter') {
                   $page = 'new_letter.php?pid='.$_GET['pid'];
-              } elseif ($_REQUEST['goto'] == 'faxes') {
+                } elseif ($_REQUEST['goto'] == 'faxes') {
                   $page = 'manage_faxes.php';
-              }
-              ?>
-              <a href="<?php echo $page; ?>" class="editlink" title="Pending Letters">
-                  <?php
-                  } else {
-                  ?>
-                  <a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
-                      <?php } ?>
-
-                      <b>&lt;&lt;Back</b></a>
-                  </div>
-		      <div style="float: right; text-align: right;">
+                } ?>
+                <a href="<?php echo $page; ?>" class="editlink" title="Pending Letters">
+              <?php } else { ?>
+                <a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+              <?php } ?>
+              <b>&lt;&lt;Back</b></a>
+            </div>
+              <div style="float:left; text-align: left">
+                &nbsp;&nbsp;
+                Letter <strong><?= $cur_letter_num + 1 ?></strong> of <strong><?= $master_num ?></strong>.
+                To <?= contactType($patientid, $contact['id'], $contact['type']) ?>:
+                <?= e("{$contact['salutation']} {$contact['firstname']} {$contact['lastname']}") ?>
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][id]" value="<?= $contact['id'] ?>" />
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][type]" value="<?= $contact['type'] ?>" />
-			      Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" id="change_method_<?php print $cur_letter_num; ?>" class="addButton"> Change </a>
-            
-            <div id="del_meth_<?php print $cur_letter_num; ?>" style="display:none;">
-              <?php $send_meth = $method ? $method : $contact['preferredcontact']; ?>
-              
-              <?php if($send_meth == 'fax') { ?>
-                <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline');return false;" class="addButton" value="Fax" />
-              <?php } elseif ($contact['fax']!='') { ?>
-                <input type="submit" name="fax_letter[<?php echo $cur_letter_num?>]" class="addButton" value="Fax" />
-              <?php } else { ?>
-                <input type="button" name="fax_letter[<?php echo $cur_letter_num?>]" onclick="alert('No fax number is available for this contact. Set a fax number for this contact via the \'Contacts\' page in your software.');return false;" class="addButton grayButton" value="Fax" />
-              <?php } ?>
+              </div>
+		      <div style="float: right; text-align: right;">
+                Delivery Method: <?= $method ?: e($contact['preferredcontact']) ?>
+                <a href="#" onclick="$('#del_meth_<?= $cur_letter_num ?>').css('display','inline');$(this).hide();return false;"
+                   id="change_method_<?= $cur_letter_num ?>" class="addButton"> Change </a>
+                <div id="del_meth_<?= $cur_letter_num ?>" style="display:none;">
+                  <?php $send_meth = $method ?: $contact['preferredcontact']; ?>
 
-              <?php if($send_meth == 'paper') { ?>
-                <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline');return false;" class="addButton" value="Paper"  />
-              <?php } else { ?>
-                <input type="submit" name="paper_letter[<?php echo $cur_letter_num?>]" class="addButton" value="Paper" />
-              <?php } ?>
+                  <?php if($send_meth == 'fax') { ?>
+                    <input type="button" class="addButton" value="Fax"
+                           onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline');return false;" />
+                  <?php } elseif ($contact['fax']!='') { ?>
+                    <input type="submit" name="fax_letter[<?= $cur_letter_num ?>]" class="addButton" value="Fax" />
+                  <?php } else { ?>
+                    <input type="button" name="fax_letter[<?= $cur_letter_num ?>]" class="addButton grayButton" value="Fax"
+                           onclick="alert('No fax number is available for this contact. Set a fax number for this contact via the \'Contacts\' page in your software.');return false;" />
+                  <?php } ?>
 
-              <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline'); return false;" class="addButton" value="Cancel" />
-            </div>
-                  &nbsp;&nbsp;
+                  <?php if($send_meth == 'paper') { ?>
+                    <input type="button" class="addButton" value="Paper"
+                           onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline');return false;" />
+                  <?php } else { ?>
+                    <input type="submit" name="paper_letter[<?= $cur_letter_num ?>]" class="addButton" value="Paper" />
+                  <?php } ?>
+
+                  <input type="button" class="addButton" value="Cancel"
+                         onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline'); return false;" />
+                </div>
+                &nbsp;&nbsp;
                   <?php if(isset($_SESSION['user_type']) && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
                       <select name="font_size[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="javascript:return false;">
                           <option <?php echo  ($font_size==8)?'selected="selected"':''; ?> value="8">8</option>

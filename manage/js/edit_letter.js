@@ -34,7 +34,7 @@ function edit_letter (divid, size, family) {
         textarea.attr('style', ['width:100%;height:', pageSize.height, 'mm;width:', pageSize.width, 'mm;'].join(''));
     }
 
-    setup_tinymce(size, family, $source.closest('form'));
+    setup_tinymce(size, family, $source.closest('.single-letter'));
 
     textarea.focus();
 
@@ -181,7 +181,8 @@ function setup_tinymce (size, family, $reference) {
 
         init.mode = 'exact';
         init.elements = $reference.find('textarea').attr('id');
-        init.table_appearance_options = false;
+        init.plugins = init.plugins.replace(/table/, 'table_modified');
+        init.table_alignment_option = false;
 
         init.valid_elements = ['@[style|border]', init.valid_elements].join(',');
         delete init.valid_styles;
@@ -228,7 +229,7 @@ $(document).ready(function(){
     $toggle.removeAttr('onclick');
     $toggle.click(function (e) {
         var $this = $(this),
-            $preview = $this.closest('form').find('.preview-letter');
+            $preview = $this.closest('.single-letter').find('.preview-letter');
 
         e.preventDefault();
         $preview.toggleClass('show-hidden');
@@ -245,9 +246,9 @@ $(document).ready(function(){
     $fontSize.removeAttr('onchange');
     $fontSize.change(function(){
         var $this = $(this),
-            $form = $this.closest('form'),
-            $preview = $form.find('.preview-letter'),
-            $mce = $form.find('.mce-tinymce.mce-container');
+            $container = $this.closest('.single-letter'),
+            $preview = $container.find('.preview-letter'),
+            $mce = $container.find('.mce-tinymce.mce-container');
 
         replaceClass($preview, /preview-size-[^\s]*/g, ['preview-size', $this.val()].join('-'));
         replaceLink($mce, /font-size-[^\.]*/g, ['font-size', $this.val()].join('-'));
@@ -256,9 +257,9 @@ $(document).ready(function(){
     $fontFamily.removeAttr('onchange');
     $fontFamily.change(function(){
         var $this = $(this),
-            $form = $this.closest('form'),
-            $preview = $form.find('.preview-letter'),
-            $mce = $form.find('.mce-tinymce.mce-container');
+            $container = $this.closest('.single-letter'),
+            $preview = $container.find('.preview-letter'),
+            $mce = $container.find('.mce-tinymce.mce-container');
 
         replaceClass($preview, /preview-font-[^\s]*/g, ['preview-font', $this.val()].join('-'));
         replaceLink($mce, /font-family-[^\.]*/g, ['font-family', $this.val()].join('-'));

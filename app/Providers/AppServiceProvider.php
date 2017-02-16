@@ -130,8 +130,9 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Task::class => [Repositories\Tasks::class, Resources\Task::class],
             Eloquent\Dental\HomeSleepTest::class => [Repositories\HomeSleepTests::class, Resources\HomeSleepTest::class],
             Eloquent\Dental\SupportTicket::class => [Repositories\SupportTickets::class, Resources\SupportTicket::class],
+            Eloquent\Dental\Notification::class => [Repositories\Notifications::class, Resources\Notification::class],
+            Eloquent\Dental\Summary::class => [Repositories\Summaries::class, Resources\Summary::class],
         ];
-
 
         $this->app->bind(
             'DentalSleepSolutions\\Contracts\\Repositories\\Complaints',

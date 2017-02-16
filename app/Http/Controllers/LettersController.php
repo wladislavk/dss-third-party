@@ -11,7 +11,10 @@ use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Repositories\Letters;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Contracts\Resources\ContactType;
+use DentalSleepSolutions\Contracts\Repositories\Patients;
+use DentalSleepSolutions\Contracts\Resources\Contact;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -23,6 +26,7 @@ use Illuminate\Http\Request;
  */
 class LettersController extends Controller
 {
+    const DSS_USER_TYPE_FRANCHISEE = 1;
     const DSS_USER_TYPE_SOFTWARE = 2;
 
     /**
@@ -156,6 +160,15 @@ class LettersController extends Controller
         } else {
             $data = [];
         }
+      
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getGeneratedDateOfIntroLetter(Letter $resource, Request $request)
+    {
+        $patientId = $request->input('patient_id') ?: 0;
+
+        $data = $resource->getGeneratedDateOfIntroLetter($patientId);
 
         return ApiResponse::responseOk('', $data);
     }

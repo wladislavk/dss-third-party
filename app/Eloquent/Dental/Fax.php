@@ -60,4 +60,10 @@ class Fax extends Model implements Resource, Repository
             ->where('sfax_status', 2)
             ->first();
     }
+
+    public function updateByLetterId($letterId, $data)
+    {
+        return $this->where('letterid', $letterId)
+            ->update($data);
+    }
 }

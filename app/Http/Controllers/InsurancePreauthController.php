@@ -113,6 +113,28 @@ class InsurancePreauthController extends Controller
     {
         $contactId = $request->input('contact_id') ?: 0;
         $data = $resource->getPendingVOBByContactId($contactId);
+      
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function find(InsPreauth $resources, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $pageNumber = $request->input('page');
+        $vobsPerPage = $request->input('vobsPerPage');
+        $sortColumn = $request->input('sortColumn');
+        $sortDir = $request->input('sortDir');
+        $viewed = $request->input('viewed');
+
+        $data = $resources->getListVobs(
+            $docId, 
+            $viewed, 
+            $sortColumn,
+            $sortDir,
+            $vobsPerPage,
+            $pageNumber
+        );
 
         return ApiResponse::responseOk('', $data);
     }

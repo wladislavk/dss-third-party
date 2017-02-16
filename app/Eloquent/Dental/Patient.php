@@ -12,6 +12,9 @@ class Patient extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
+    const DSS_REFERRED_PATIENT = 1;
+    const DSS_REFERRED_PHYSICIAN = 2;
+
     /**
      * Guarded attributes
      *
@@ -198,7 +201,7 @@ class Patient extends Model implements Resource, Repository
         return $query->where('p.status', 2);
     }
 
-    public function find(
+    public function findBy(
             $docId           = 0,
             $userType        = 0,
             $patientId       = 0,
@@ -550,6 +553,280 @@ class Patient extends Model implements Resource, Repository
                     ->orWhere('docmdother', '=', $contactId)
                     ->orWhere('docmdother2', '=', $contactId)
                     ->orWhere('docmdother3', '=', $contactId);
+            })->get();
+    }
+
+    public function getPatientReferralIds($patientId = 0, $patientReferredSource = null)
+    {
+        if (!empty($patientReferredSource) && $patientReferredSource->referred_source == 1) {
+            $contactQuery = $this->select(DB::raw('GROUP_CONCAT(distinct pr.patientid) as ids'))
+                ->from(DB::raw('dental_patients pr'))
+                ->join(DB::raw('dental_patients p'), 'p.referred_by', '=', 'pr.patientid')
+                ->where('p.patientid', $patientId)
+                ->groupBy('p.referred_by')
+                ->orderBy('pr.patientid');
+        } elseif (!empty($patientReferredSource) && $patientReferredSource->referred_source == 2) {
+            $contactQuery = $this->select(DB::raw('GROUP_CONCAT(distinct dental_contact.contactid) as ids'))
+                ->join('dental_patients', 'dental_patients.referred_by', '=', 'dental_contact.contactid')
+                ->join(DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'dental_contact.contacttypeid')
+                ->where('dental_patients.patientid', $patientId)
+                ->where('ct.physician', '!=', 1)
+                ->groupBy('dental_patients.referred_by')
+                ->orderBy('dental_contact.contactid');
+        }
+
+        $contactidList = '';
+
+        if (!empty($contactQuery)) {
+            $contacts = $contactQuery->get();
+
+            if (count($contacts)) {
+                $contactidList = $contacts[0]->ids;
+            }
+        }
+
+        return $contactidList;
+    }
+
+    public function updateChildrenPatients($parentPatientId = 0, $data = [])
+    {
+        $this->where('parent_patientid', $parentPatientId)
+            ->update($data);
+    }
+
+    /**
+     * Search for similar logins (it need for creation of an unique login)
+     */
+    public function getSimilarPatientLogin($login = '')
+    {
+        return $this->select('login')
+            ->where('login', 'like', $login . '%')
+            ->orderBy('login', 'desc')
+            ->first();
+    }
+
+    public function updatePatient($patientId = 0, $data = [])
+    {
+        return $this->where('patientid', $patientId)
+            ->update($data);
+    }
+
+    public function getReferrers($docId, $names)
+    {
+        $contacts = DB::table(DB::raw('dental_contact c'))
+            ->select(
+                'c.contactid',
+                'c.lastname',
+                'c.firstname',
+                'c.middlename',
+                DB::raw(self::DSS_REFERRED_PHYSICIAN),
+                'ct.contacttype'
+            )->leftJoin(DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
+            ->where(function($query) use ($names) {
+                $query->where(function($query) use ($names) {
+                    $query->where('lastname', 'like', $names[0] . '%')
+                        ->orWhere('firstname', 'like', $names[0] . '%');
+                })->where(function($query) {
+                    $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
+                        ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
+                });
+            })->whereNull('merge_id')
+            ->where('docid', $docId);
+
+        return $this->select(
+                'p.patientid',
+                'p.lastname',
+                'p.firstname',
+                'p.middlename',
+                DB::raw(self::DSS_REFERRED_PATIENT . ' AS referral_type'),
+                DB::raw("'Patient' as label")
+            )->from(DB::raw('dental_patients p'))
+            ->leftJoin(DB::raw('dental_patient_summary s'), 'p.patientid', '=', 's.pid')
+            ->leftJoin(DB::raw('dental_device d'), 's.appliance', '=', 'd.deviceid')
+            ->where(function($query) use ($names) {
+                $query->where(function($query) use ($names) {
+                    $query->where('lastname', 'like', $names[0] . '%')
+                        ->orWhere('firstname', 'like', $names[0] . '%');
+                })->where(function($query) {
+                    $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
+                        ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
+                });
+            })->where('docid', $docId)
+            ->union($contacts)
+            ->orderBy('lastname')
+            ->get();
+    }
+
+    public function getDentalDeviceTransactionCode($patientId)
+    {
+        return $this->select('tc.*')
+            ->from(DB::raw('dental_patients p'))
+            ->join(DB::raw('dental_transaction_code tc'), function($query) {
+                $query->on('p.docid', '=', 'tc.docid')
+                    ->where('tc.transaction_code', '=', 'E0486');
+            })->where('p.patientid', $patientId)
+            ->first();
+    }
+
+    public function getUserInfo($patientId)
+    {
+        return $this->select('u.*')
+            ->from(DB::raw('dental_patients p'))
+            ->join(DB::raw('dental_users u'), 'p.docid', '=', 'u.userid')
+            ->where('p.patientid', $patientId)
+            ->where('u.npi', '!=', '')
+            ->whereNotNull('u.npi')
+            ->where('u.tax_id_or_ssn', '!=', '')
+            ->whereNotNull('u.tax_id_or_ssn')
+            ->where(function($query) {
+                $query->where('u.ssn', '=', 1)
+                    ->orWhere('u.ein', '=', 1);
+            })->first();
+    }
+
+    public function getInsurancePreauthInfo($patinetId)
+    {
+        return $this->select(
+                'i.company as ins_co',
+                "'primary' as ins_rank",
+                'i.phone1 as ins_phone',
+                'p.p_m_ins_grp as patient_ins_group_id',
+                'p.p_m_ins_id as patient_ins_id',
+                'p.firstname as patient_firstname',
+                'p.lastname as patient_lastname',
+                'p.add1 as patient_add1',
+                'p.add2 as patient_add2',
+                'p.city as patient_city',
+                'p.state as patient_state',
+                'p.zip as patient_zip',
+                'p.dob as patient_dob',
+                'p.p_m_partyfname as insured_first_name',
+                'p.p_m_partylname as insured_last_name',
+                'p.ins_dob as insured_dob',
+                'd.npi as doc_npi',
+                'r.national_provider_id as referring_doc_npi',
+                'd.medicare_npi as doc_medicare_npi',
+                'd.tax_id_or_ssn as doc_tax_id_or_ssn',
+                "CONCAT(d.first_name, ' ', d.last_name) as doc_name",
+                "CONCAT(d.address, ', ', d.city, ', ',d.state,' ',d.zip) as doc_address",
+                'd.practice as doc_practice',
+                'd.phone as doc_phone',
+                'tc.amount as trxn_code_amount',
+                'q2.confirmed_diagnosis as diagnosis_code',
+                'd.userid as doc_id',
+                'p.home_phone as patient_phone'
+            )->from(DB::raw('dental_patients p'))
+            ->leftJoin(DB::raw('dental_contact r'), 'p.referred_by', '=', 'r.contactid')
+            ->join(DB::raw('dental_contact i'), 'p.p_m_ins_co', '=', 'i.contactid')
+            ->join(DB::raw('dental_users d'), 'p.docid', '=', 'd.userid')
+            ->join(DB::raw('dental_transaction_code tc'), function($query) {
+                $query->on('p.docid', '=', 'tc.docid')
+                    ->where('tc.transaction_code', '=', 'E0486');
+            })->leftJoin(DB::raw('dental_q_page2 q2'), 'p.patientid', '=', 'q2.patientid')
+            ->where('p.patientid', $patinetId)
+            ->first();
+    }
+
+    public function getContactInfo($letterId, $patient)
+    {
+        return $this->select(
+                'patientid AS id',
+                'salutation',
+                'firstname',
+                'lastname',
+                'add1',
+                'add2',
+                'city',
+                'state',
+                'zip',
+                'email',
+                'preferredcontact',
+                DB::raw($letterId . ' AS letterid')
+            )->whereIn('patientid', $patient)
+            ->get();
+    }
+
+    public function getReferralList($letterId, $patReferralList)
+    {
+        return $this->select(
+                'p.patientid AS id',
+                'p.salutation',
+                'p.lastname',
+                'p.middlename',
+                'p.firstname',
+                DB::raw("'' as company"),
+                'p.add1',
+                'p.add2',
+                'p.city',
+                'p.state',
+                'p.zip',
+                'p.email',
+                DB::raw("'' as fax"),
+                'p.preferredcontact',
+                DB::raw("'' as contacttypeid"),
+                DB::raw($letterId . ' AS letterid'),
+                'p.status'
+            )->from(DB::raw('dental_patients p'))
+            ->whereIn('p.patientid', $patReferralList)
+            ->get();
+    }
+
+    public function getSameEmails($email, $patientId)
+    {
+        return $this->select('patientid')
+            ->where('email', $email)
+            ->where(function($query) use ($patientId) {
+                $query->where(function($query) use ($patientId) {
+                    $query->where('patientid', '!=', $patientId)
+                        ->where('parent_patientid', '!=', $patientId);
+                })->orWhere(function($query) use ($patientId) {
+                    $query->where('patientid', '!=', $patientId)
+                        ->whereNull('parent_patientid');
+                });
+            })->count();
+    }
+
+    public function getPatientInfoWithDocInfo($patientId)
+    {
+        return $this->select('dp.*', 'du.use_patient_portal AS doc_use_patient_portal')
+            ->from(DB::raw('dental_patients dp'))
+            ->join(DB::raw('dental_users du'), 'du.userid', '=', 'dp.docid')
+            ->where('dp.patientid', $patientId)
+            ->first();
+    }
+
+    public function getSimilarPatients($docId, $patientInfo)
+    {
+        $defaultPatientInfo = [
+            'patient_id' => 0,
+            'firstname'  => '',
+            'lastname'   => '',
+            'add1'       => '',
+            'city'       => '',
+            'state'      => '',
+            'zip'        => ''
+        ];
+
+        $patientInfo = array_merge($defaultPatientInfo, $patientInfo);
+
+        return $this->from(DB::raw('dental_patients p'))
+            ->where('patientid', '!=', $patientInfo['patient_id'])
+            ->where('docid', $docId)
+            ->active()
+            ->where(function($query) use ($patientInfo) {
+                $query->where(function($query) use ($patientInfo) {
+                    $query->where('firstname', '=', $patientInfo['firstname'])
+                        ->where('lastname', '=', $patientInfo['lastname']);
+                })->orWhere(function($query) use ($patientInfo) {
+                    $query->where('add1', '=', $patientInfo['add1'])
+                        ->where('add1', '!=', '')
+                        ->where('city', '=', $patientInfo['city'])
+                        ->where('city', '!=', '')
+                        ->where('state', '=', $patientInfo['state'])
+                        ->where('state', '!=', '')
+                        ->where('zip', '=', $patientInfo['zip'])
+                        ->where('zip', '!=', '');
+                });
             })->get();
     }
 }

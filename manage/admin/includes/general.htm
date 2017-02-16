@@ -1448,7 +1448,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   if ($cover != '') {
     $cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);
     $pdf->AddPage();
-    $pdf->writeHTML($cover, true, false, true, false, '');
+    $pdf->writeHTML($cover, false, false, true, false, '');
   }
 
   // add a page
@@ -1468,7 +1468,7 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   $html = preg_replace('@[\s\S]*?<head>([\s\S]*?)</head>[\s\S]*?<body>([\s\S]*?)</body>[\s\S]*@', '$1$2', $html);
 
   // output the HTML content
-  $pdf->writeHTML($html, true, false, true, false, '');
+  $pdf->writeHTML($html, false, false, true, false, 'R');
   $pdf->lastPage();
 
   //Close and output PDF document

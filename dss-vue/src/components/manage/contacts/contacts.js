@@ -104,7 +104,7 @@ module.exports = {
         }
     },
     events: {
-        'transfer-data-from-modal': function(data) {
+        'setting-data-from-modal': function(data) {
             this.$set('message', data.message);
             this.$nextTick(function() {
                 var self = this;

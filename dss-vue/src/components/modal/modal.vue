@@ -54,12 +54,6 @@
             'edit-contact'        : editContact
         },
         methods: {
-            isEditedPopup: function(status) {
-                this.popupEdit = status;
-            },
-            passDataToComponents: function(data) {
-                this.$dispatch('getting-data-from-modal', data);
-            },
             setComponentParameters: function(parameters) {
                 this.$nextTick(function() {
                     this.$broadcast('setting-component-params', parameters);
@@ -90,10 +84,8 @@
                 if (this.hasComponent(component)) {
                     this.centering();
 
-                    // this.popupEdit = false;
-
                     this.currentView = component;
-                    this.popupEdit   = false;
+                    this.popupEdit   = true;
 
                     //loads popup only if it is disabled
                     if (this.popupStatus == 0) {

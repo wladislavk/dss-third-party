@@ -212,7 +212,6 @@
                     <td colspan="2" valign="top">
                         <strong>REFERRED</strong><br />
                         <a
-                            v-if="contact.referrers > 0"
                             v-for="referrer in contact.referrers_data"
                             href="add_patient.php?pid={{ referrer.patientid }}&ed={{ referrer.patientid }}"
                         >{{ referrer.firstname }} {{ referrer.lastname }}<br />
@@ -220,7 +219,6 @@
                     <td colspan="4" valign="top">
                         <strong>PATIENTS</strong><br />
                         <a
-                            v-if="contact.patients > 0"
                             v-for="patient in contact.patients_data"
                             href="add_patient.php?pid={{ patient.patientid }}&ed={{ patient.patientid }}"
                         >{{ patient.firstname }} {{ patient.lastname }}<br />

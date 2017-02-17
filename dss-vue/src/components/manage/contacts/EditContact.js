@@ -95,7 +95,7 @@ module.exports = {
         'contact': {
             handler: function() {
                 if (this.wasContactDataReceived) {
-                    this.$parent.$parent.$refs.modal.isEditedPopup(true);
+                    this.$parent.$parent.$refs.modal.popupEdit = true;
                 }
             },
             deep: true
@@ -176,8 +176,8 @@ module.exports = {
                 this.updateContact(this.contact)
                     .then(function(response) {
                         // pass message to parent component
-                        this.$parent.passDataToComponents({ message: 'Edited Successfully' });
-                        this.$parent.$parent.$refs.modal.isEditedPopup(false);
+                        this.$parent.updateParentData({ message: 'Edited Successfully' });
+                        this.$parent.$parent.$refs.modal.popupEdit = false;
                         this.$parent.$parent.$refs.modal.disable();
                         this.$route.router.go('/manage/contacts');
                     }, function(response) {
@@ -223,7 +223,8 @@ module.exports = {
                                 this.$route.router.go('/manage/contacts');
                             }
 
-                            this.$parent.$parent.$refs.modal.isEditedPopup(false);
+                            // this popup doesn't have any input fields - then set the flag to false
+                            this.$parent.$parent.$refs.modal.popupEdit = false;
                             this.$parent.$parent.$refs.modal.disable();
                         }
                     }, function(response) {

@@ -494,7 +494,7 @@ if ($patient_info) {
     } else {
       $alert = null;
     }
-		print "<tr><td>$userid</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>$method</td><td>$generated</td><td>$delivered</td>";
+		print "<tr><td>$userid</td><td><a href=\"$url\">$subject</a></td><td>$sentto</td><td>".letterSendMethod($method, '')."</td><td>$generated</td><td>$delivered</td>";
     if($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
           <td><input type="checkbox" class="mailed_chk" value="<?php echo $id; ?>" <?php echo ($mailed !='')?'checked="checked"':''; ?> /></td>
     <?php }else{ ?>

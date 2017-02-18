@@ -828,71 +828,91 @@ function create_letter_pdf($letterid){
 }
 
 function deliver_created_letter($letterid){
-
   $db = new Db();
   $send_success = true;
+  $preferredcontact = '';
 
-  $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
-  $result = $db->getResults($sql);
-  if (!$result) {
-    return mysqli_error($con);
-  } else {
-    foreach ($result as $row) {
-      if ($row['topatient']) {
-        $id = $row['patientid'];
-        $sql = "SELECT firstname, lastname, email FROM dental_patients WHERE patientid = '".$id."';";
-        $myinfo = $db->getRow($sql);
-        $firstname = $myinfo['firstname'];
-        $lastname = $myinfo['lastname'];
-        $to_email = $myinfo['email'];
-        $preferredcontact = "";
-        $pid = $id;
-        $contactid = '';
-      } elseif ($row['md_list']) {
-        $id = $row['md_list'];
-        $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
-        $myinfo = $db->getRow($sql);
-        $firstname = $myinfo['firstname'];
-        $lastname = $myinfo['lastname'];
-        $to_email = $myinfo['email'];
-        $fax = $myinfo['fax'];
-        $company = $myinfo['company'];
-        $phone = $myinfo['phone1'];
-        $preferredcontact = $myinfo['preferredcontact'];
-        $pid = '';
-        $contactid = $id;
-      } elseif ($row['md_referral_list']) {
-        $id = $row['md_referral_list'];
-        $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
-        $myinfo = $db->getRow($sql);
-        $firstname = $myinfo['firstname'];
-        $lastname = $myinfo['lastname'];
-        $to_email = $myinfo['email'];
-        $fax = $myinfo['fax'];
-        $company = $myinfo['company'];
-        $phone = $myinfo['phone1'];
-        $preferredcontact = $myinfo['preferredcontact'];
-        $pid = '';
-        $contactid = $id;
-      }
-      $to_name = $firstname . " " . $lastname;
-      $send_method = $row['send_method'];
-      $patientid = $row['patientid'];
-      $docid = $row['docid'];
-      $userid = $row['userid'];
-      $templateid = $row['templateid'];
-      $filename = $row['pdf_path'];
-      $template = $row['template'];
-    }
+  $letterid = intval($letterid);
+
+  /**
+   * Retrieve contact IDs from letter
+   */
+  $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid, template
+    FROM dental_letters
+    WHERE letterid = '$letterid'";
+  $row = $db->getRow($sql);
+
+  if (!$row) {
+    return false;
   }
 
-  if($send_method=="" && $preferredcontact!=""){
-    $send_method = $preferredcontact;
+  /**
+   * Retrieve corresponding contact details
+   */
+  if ($row['topatient']) {
+    $sql = "SELECT firstname, lastname, email
+        FROM dental_patients
+        WHERE patientid = '{$row['patientid']}'";
+    $myinfo = $db->getRow($sql);
+
+    $firstname = $myinfo['firstname'];
+    $lastname = $myinfo['lastname'];
+    $to_email = $myinfo['email'];
+    $preferredcontact = "";
+    $contactid = '';
+  } elseif ($row['md_list']) {
+    $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact
+        FROM dental_contact
+        WHERE contactid = '{$row['md_list']}'";
+    $myinfo = $db->getRow($sql);
+
+    $firstname = $myinfo['firstname'];
+    $lastname = $myinfo['lastname'];
+    $to_email = $myinfo['email'];
+    $fax = $myinfo['fax'];
+    $company = $myinfo['company'];
+    $phone = $myinfo['phone1'];
+    $preferredcontact = $myinfo['preferredcontact'];
+    $pid = '';
+    $contactid = $row['md_list'];
+  } elseif ($row['md_referral_list']) {
+    $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact
+        FROM dental_contact
+        WHERE contactid = '{$row['md_referral_list']}'";
+    $myinfo = $db->getRow($sql);
+
+    $firstname = $myinfo['firstname'];
+    $lastname = $myinfo['lastname'];
+    $to_email = $myinfo['email'];
+    $fax = $myinfo['fax'];
+    $company = $myinfo['company'];
+    $phone = $myinfo['phone1'];
+    $preferredcontact = $myinfo['preferredcontact'];
+    $pid = '';
+    $contactid = $row['md_referral_list'];
   }
+
+  $to_name = $firstname . " " . $lastname;
+  $send_method = $row['send_method'];
+  $patientid = $row['patientid'];
+  $docid = $row['docid'];
+  $userid = $row['userid'];
+  $templateid = $row['templateid'];
+  $filename = $row['pdf_path'];
+  $template = $row['template'];
+
+  /**
+   * Retrieve send method, with fallback strategy
+   */
+  $send_method = letterSendMethod($send_method, $preferredcontact);
 
   // Get Doctor's Name and Email
-  $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid FROM dental_users u LEFT JOIN dental_user_company c ON c.userid=u.userid WHERE u.userid = '".$docid."';";
+  $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid
+    FROM dental_users u
+        LEFT JOIN dental_user_company c ON c.userid = u.userid
+    WHERE u.userid = '$docid'";
   $result = $db->getRow($sql);
+
   $doc_name = $result['name'];
   $doc_email = $result['email'];
   $doc_phone = $result['phone'];
@@ -902,57 +922,109 @@ function deliver_created_letter($letterid){
   $user_type = $result['user_type'];
   $doc_company = $result['companyid'];
 
-  $db->query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".$letterid."'");
+  $db->query("UPDATE dental_faxes
+    SET viewed = '1'
+    WHERE letterid = '$letterid'");
 
-  $fax_send = false;
-  // Send Fax
+  $digitalFax = false;
+
+  /**
+   * Send digital fax
+   */
   if ($send_method == 'fax' && $use_digital_fax) {
     $subject = "Dental Sleep Solutions";
     include 'class.fax.php';
     $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
     $fileType = "pdf";
     $fts = new \FTSSamples($doc_company);
-    $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
-    if($fax_send["status"] !== true){
-      ?>
+    $digitalFax = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
+
+    $send_success = $digitalFax['status'] === true;
+
+    if (!$send_success) { ?>
         <script type="text/javascript">
           alert('Unable to send fax.');
         </script>
       <?php
-      if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
-        $send_success = false;
-      }else{
-        $send_success = false;
-      }
     }
-    //$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid);
   }
-  if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
-    if($fax_send['status']){
-      $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
-      $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysqli_real_escape_string($GLOBALS['con'],$patientid)."',userid = '".mysqli_real_escape_string($GLOBALS['con'],$userid)."',docid = '".mysqli_real_escape_string($GLOBALS['con'],$docid)."',sent_date = NOW(),pages = '".mysqli_real_escape_string($GLOBALS['con'],count_pages('../letterpdfs/'.$filename))."',contactid = '".mysqli_real_escape_string($GLOBALS['con'],$contactid)."',filename = '".mysqli_real_escape_string($GLOBALS['con'],$filename)."',to_number = '".mysqli_real_escape_string($GLOBALS['con'],$fax)."',to_name = '".mysqli_real_escape_string($GLOBALS['con'],$to_name)."',letterid = '".mysqli_real_escape_string($GLOBALS['con'],$letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', letter_body = '".mysqli_real_escape_string($GLOBALS['con'],$template)."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-      $fid = $db->getInsertId($fax_query);
-      invoice_add_fax('1', $_SESSION['docid'], $fid);
-    }else{
-      $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
-    }
-    $letter_result = $db->query($letter_query);
-    $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
-    $letter_result = $db->query($letter_query);
-    if (!$letter_result) {
-      return mysqli_error($con);
-    }
-    if ($send_method == 'paper') {
-      return "paper";
-    }
-    return true;
-  }else{
-    $letter_query = "UPDATE dental_letters SET status='2', parentid=null WHERE letterid='".s_for($letterid)."';";
-    $letter_result = $db->query($letter_query);
-    $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
-    $letter_result = $db->query($letter_query);
+
+  /**
+   * Delivery failed. The only automatic delivery is the fax option
+   */
+  if (!$send_success) {
+    $letter_query = "UPDATE dental_letters SET
+        status = 2,
+        parentid = NULL,
+        send_method = '$send_method'
+      WHERE letterid = '$letterid'";
+    $db->query($letter_query);
+
+    $letter_query = "UPDATE dental_letters SET
+        parentid = NULL
+      WHERE parentid = '$letterid'";
+    $db->query($letter_query);
+
     return "Letter could not be sent.";
   }
+
+  /**
+   * Delivery success, determine if it was a fax or a regular letter
+   */
+  if ($digitalFax) {
+    $assignmentList = $db->escapeAssignmentList([
+      'patientid' => $patientid,
+      'userid' => $userid,
+      'docid' => $docid,
+      'pages' => count_pages('../letterpdfs/'.$filename),
+      'contactid' => $contactid,
+      'filename' => $filename,
+      'to_number' => $fax,
+      'to_name' => $to_name,
+      'sfax_transmission_id' => $digitalFax['transmission_id'],
+      'letter_body' => $template,
+      'ip_address' => $_SERVER['REMOTE_ADDR']
+    ]);
+
+    $fax_query = "INSERT INTO dental_faxes SET
+      $assignmentList,
+      letterid = '$letterid',
+      status = 0,
+      adddate = NOW(),
+      sent_date = NOW()";
+    $fid = $db->getInsertId($fax_query);
+    invoice_add_fax('1', $_SESSION['docid'], $fid);
+
+    $letter_query = "UPDATE dental_letters SET
+        status = 1,
+        delivered = 1,
+        parentid = NULL,
+        mailed_once = 1,
+        send_method = 'fax',
+        mailed_date = NOW(),
+        delivery_date = NOW()
+    WHERE letterid = '$letterid'";
+  } else {
+    $letter_query = "UPDATE dental_letters SET
+        status = 1,
+        delivered = 1,
+        parentid = NULL,
+        send_method = '$send_method',
+        delivery_date = NOW()
+      WHERE letterid = '$letterid'";
+  }
+
+  /**
+   * Update sent letter with delivery details, and remove parent ID references
+   */
+  $db->query($letter_query);
+
+  $letter_query = "UPDATE dental_letters SET
+      parentid = NULL
+    WHERE parentid = '$letterid'";
+  $letter_result = $db->query($letter_query);
+
+  return $letter_result ? true : false;
 }
 
 // Actually Sends The Letter, returns send_method on success, false on failure.
@@ -1845,4 +1917,18 @@ function tidyHtml ($html) {
     }
 
     return $cleanHtml;
+}
+
+function letterSendMethod ($letterMethod, $contactMethod) {
+    $methodList = ['paper', 'email', 'fax'];
+
+    if (in_array($letterMethod, $methodList)) {
+        return $letterMethod;
+    }
+
+    if (in_array($contactMethod, $methodList)) {
+        return $contactMethod;
+    }
+
+    return 'paper';
 }

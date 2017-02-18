@@ -1859,7 +1859,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][type]" value="<?= $contact['type'] ?>" />
               </div>
 		      <div style="float: right; text-align: right;">
-                Delivery Method: <?= $method ?: e($contact['preferredcontact']) ?>
+                Delivery Method: <?= letterSendMethod($method, $contact['preferredcontact']) ?>
                 <a href="#" onclick="$('#del_meth_<?= $cur_letter_num ?>').css('display','inline');$(this).hide();return false;"
                    id="change_method_<?= $cur_letter_num ?>" class="addButton"> Change </a>
                 <div id="del_meth_<?= $cur_letter_num ?>" style="display:none;">

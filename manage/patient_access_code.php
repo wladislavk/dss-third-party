@@ -67,6 +67,23 @@ $expirationDate = date('m/d/Y', strtotime(date('Y-m-d', strtotime($patientData['
         <script type="text/javascript" src="/manage/admin/script/jquery-ui-1.8.22.custom.min.js"></script>
         <script type="text/javascript" src="/manage/includes/modal.js"></script>
         <script type="text/javascript" src="script/validation.js"></script>
+        <?php if ($isResetAccessCode) { ?>
+            <script>
+                var patientId = <?= json_encode($patientId) ?>;
+
+                try {
+                    parent.$('#access-code').text(<?= json_encode($accessCode) ?>);
+                } catch (e) {
+                    /**
+                     * @see DSS-513
+                     *
+                     * It is not possible to reload the page immediately, otherwise the "mail patient" option
+                     * won't be shown to the user
+                     */
+                    // parent.location.search = ['?ed=', patientId, '&addtopat=1&pid=', patientId, '&sendPin=1'].join('');
+                }
+            </script>
+        <?php } ?>
         <link rel="stylesheet" href="/manage/admin/css/jquery-ui-1.8.22.custom.css" />
         <link rel="stylesheet" href="css/modal.css" />
     </head>

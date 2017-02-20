@@ -103,6 +103,18 @@ module.exports = {
             deep: true
         }
     },
+    events: {
+        'setting-data-from-modal': function(data) {
+            this.$set('message', data.message);
+            this.$nextTick(function() {
+                var self = this;
+
+                setTimeout(function() {
+                    self.$set('message', '');
+                }, 3000);
+            });
+        }
+    },
     computed: {
         totalPages: function() {
             return this.contactsTotalNumber / this.contactsPerPage;
@@ -158,8 +170,15 @@ module.exports = {
         onClickPatients: function(contactId) {
             $('#ref_pat_' + contactId).toggle();
         },
+        onClickAddNewContact: function() {
+            this.$parent.$refs.modal.display('edit-contact');
+        },
         onClickQuickView: function (contactId) {
             this.$parent.$refs.modal.display('view-contact');
+            this.$parent.$refs.modal.setComponentParameters({ contactId: contactId });
+        },
+        onClickEditContact: function(contactId) {
+            this.$parent.$refs.modal.display('edit-contact');
             this.$parent.$refs.modal.setComponentParameters({ contactId: contactId });
         },
         onClickInActive: function() {

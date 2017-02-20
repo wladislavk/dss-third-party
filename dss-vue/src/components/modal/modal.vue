@@ -1,6 +1,11 @@
 <style src="../../../assets/css/manage/popup.css" scoped></style>
 <style scoped>
     #modal-content {
+        background: url(assets/images/tall.jpg);
+        background-repeat: repeat-x;
+        background-color: rgb(191, 207, 220);
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
         width: 100%;
         height: 100%;
         overflow: auto;
@@ -25,6 +30,7 @@
     var deviceSelector    = require('../manage/dashboard/device-selector/deviceSelector.vue');
     var viewContact       = require('../manage/contacts/ViewContact.vue');
     var patientAccessCode = require('../manage/patients/access-code/PatientAccessCode.vue');
+    var editContact       = require('../manage/contacts/EditContact.vue');
 
     module.exports = {
         data: function() {
@@ -44,7 +50,8 @@
             'empty'               : { template: '' },
             'device-selector'     : deviceSelector,
             'view-contact'        : viewContact,
-            'patient-access-code' : patientAccessCode
+            'patient-access-code' : patientAccessCode,
+            'edit-contact'        : editContact
         },
         methods: {
             setComponentParameters: function(parameters) {
@@ -77,8 +84,6 @@
                 if (this.hasComponent(component)) {
                     this.centering();
 
-                    // this.popupEdit = false;
-
                     this.currentView = component;
                     this.popupEdit   = true;
 
@@ -107,6 +112,7 @@
                         $("#backgroundPopup").fadeOut("slow");
                         $("#popupContact").fadeOut("slow");
                         this.popupStatus = 0;
+                        this.popupEdit = false;
                         this.currentView = 'empty';
                     }
                 }

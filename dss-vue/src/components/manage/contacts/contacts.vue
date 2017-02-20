@@ -47,9 +47,11 @@
                 >{{ contact.name }}</li>
             </ul>
         </div>
-        <button style="margin-right:10px; float:right;" onclick="loadPopup('add_contact.php')" class="addButton">
-            Add New Contact
-        </button>
+        <button
+            style="margin-right:10px; float:right;"
+            v-on:click.prevent="onClickAddNewContact"
+            class="addButton"
+        >Add New Contact</button>
         &nbsp;&nbsp;
     </div>
     <br />
@@ -195,7 +197,7 @@
                             >Quick View</a> |
                             <a
                                 href="#"
-                                onclick="loadPopup('add_contact.php?ed={{ contact.contactid }}')"
+                                v-on:click.prevent="onClickEditContact(contact.contactid)"
                                 class="editlink"
                                 title="EDIT"
                             >Edit</a>
@@ -210,7 +212,6 @@
                     <td colspan="2" valign="top">
                         <strong>REFERRED</strong><br />
                         <a
-                            v-if="contact.referrers > 0"
                             v-for="referrer in contact.referrers_data"
                             href="add_patient.php?pid={{ referrer.patientid }}&ed={{ referrer.patientid }}"
                         >{{ referrer.firstname }} {{ referrer.lastname }}<br />
@@ -218,7 +219,6 @@
                     <td colspan="4" valign="top">
                         <strong>PATIENTS</strong><br />
                         <a
-                            v-if="contact.patients > 0"
                             v-for="patient in contact.patients_data"
                             href="add_patient.php?pid={{ patient.patientid }}&ed={{ patient.patientid }}"
                         >{{ patient.firstname }} {{ patient.lastname }}<br />

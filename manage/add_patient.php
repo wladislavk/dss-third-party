@@ -1155,6 +1155,12 @@ if(isset($msg) && $msg != ''){
 
   $but_text = "Add ";
 }
+
+$salutationDefault = '';
+
+if ($salutation === '') {
+  $salutationDefault = $gender === 'Female' ? 'Ms.' : 'Mr.';
+}
   
 if($themyarray["userid"] != ''){
   $but_text = "Save/Update ";
@@ -1475,9 +1481,9 @@ if($num_face==0){ ?>
             <div style="float:left; clear:left;">
               <span>
                 <select name="salutation" style="width:80px;" >
-                  <option value="Mr." <?php if($salutation == "Mr."){echo "selected='selected'";} ?>>Mr.</option>
+                  <option value="Mr." <?php if($salutation == "Mr." || $salutationDefault == 'Mr.'){echo "selected='selected'";} ?>>Mr.</option>
                   <option value="Mrs." <?php if($salutation == "Mrs."){echo "selected='selected'";} ?>>Mrs.</option>
-                  <option value="Ms." <?php if($salutation == "Ms."){echo "selected='selected'";} ?>>Ms.</option>
+                  <option value="Ms." <?php if($salutation == "Ms." || $salutationDefault == 'Ms.'){echo "selected='selected'";} ?>>Ms.</option>
                   <option value="Dr." <?php if($salutation == "Dr."){echo "selected='selected'";} ?>>Dr.</option>
                 </select>
                 <label for="salutation">Salutation</label>

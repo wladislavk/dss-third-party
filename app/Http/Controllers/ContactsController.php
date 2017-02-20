@@ -49,8 +49,11 @@ class ContactsController extends Controller
      */
     public function store(Contacts $resources, ContactStore $request)
     {
+        $docId = $this->currentUser->docid ?: 0;
+
         $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
+            'ip_address' => $request->ip(),
+            'docid'      => $docId
         ]);
 
         $resource = $resources->create($data);

@@ -89,4 +89,11 @@ class QualifiersController extends Controller
 
         return ApiResponse::responseOk('Resource deleted');
     }
+
+    public function getActive(Qualifier $resource)
+    {
+        $data = $resource->getActive();
+
+        return ApiResponse::responseOk('', $data);
+    }
 }

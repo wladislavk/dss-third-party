@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
+use Illuminate\Support\Arr;
+
 class ContactStore extends Request
 {
     /**
@@ -12,7 +14,7 @@ class ContactStore extends Request
     public function rules()
     {
         return [
-            'docid'                => 'required|integer',
+            'docid'                => 'integer',
             'salutation'           => 'string',
             'lastname'             => 'required|string',
             'firstname'            => 'required|string',
@@ -43,5 +45,19 @@ class ContactStore extends Request
             'corporate'            => 'integer',
             'dea_number'           => 'string'
         ];
+    }
+
+    public function all()
+    {
+        $data = parent::all();
+
+        $phoneFields = ['phone1', 'phone2', 'fax'];
+        foreach ($phoneFields as $field) {
+            if (Arr::has($data, $field)) {
+                $data[$field] = preg_replace('/[^0-9]/', '', $data[$field]);
+            }
+        }
+
+        return $data;
     }
 }

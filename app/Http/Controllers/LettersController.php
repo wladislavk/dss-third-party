@@ -9,6 +9,8 @@ use DentalSleepSolutions\Http\Requests\LetterDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Repositories\Letters;
+use DentalSleepSolutions\Contracts\Resources\User;
+use DentalSleepSolutions\Contracts\Resources\ContactType;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Contracts\Resources\Contact;
 use Illuminate\Http\Request;
@@ -108,6 +110,57 @@ class LettersController extends Controller
 
         $data = $resources->getUnmailed($docId);
 
+        return ApiResponse::responseOk('', $data);
+    }
+
+    // gets letters that were delivered for contact
+    public function getContactSentLetters(Letters $resources, Request $request)
+    {
+        $contactId = $request->input('contact_id') ?: 0;
+        $data = $resources->getContactSentLetters($contactId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    // gets letters that were not delivered for contact
+    public function getContactPendingLetters(Letters $resources, Request $request)
+    {
+        $contactId = $request->input('contact_id') ?: 0;
+        $data = $resources->getContactPendingLetters($contactId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function createWelcomeLetter(
+        User $userResource,
+        Letter $resource,
+        ContactType $contactTypeResource,
+        Request $request
+    ) {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $letterInfo = $userResource->getLetterInfo($docId);
+
+        $templateId = $request->input('template_id') ?: 0;
+        $contactTypeId = $request->input('contact_type_id') ?: 0;
+
+        if ($letterInfo && $letterInfo->use_letters && $letterInfo->intro_letters) {
+            $contactType = $contactTypeResource->find($contactTypeId);
+
+            if ($contactType && $contactType->physician == 1) {
+                if ($this->currentUser->user_type != self::DSS_USER_TYPE_SOFTWARE) {
+                    $resource->createWelcomeLetter(1, $templateId, $docId);
+                }
+                $resource->createWelcomeLetter(2, $templateId, $docId);
+
+                $data = [
+                    'message' => 'This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.'
+                ];
+            }
+        } else {
+            $data = [];
+        }
+      
         return ApiResponse::responseOk('', $data);
     }
 

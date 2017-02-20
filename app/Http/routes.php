@@ -43,6 +43,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('users/check', 'UsersController@check');
     Route::post('users/payment-reports', 'UsersController@getPaymentReports');
     Route::post('users/check-logout', 'UsersController@checkLogout');
+    Route::post('users/letter-info', 'UsersController@getLetterInfo');
     Route::resource('tasks', 'TasksController', ['except' => ['create', 'edit']]);
     Route::post('tasks/{type}', 'TasksController@getType');
     Route::post('tasks/{type}/pid/{patientId}', 'TasksController@getTypeForPatient');
@@ -88,6 +89,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('insurance-preauth', 'InsurancePreauthController', ['except' => ['create', 'edit']]);
     Route::post('insurance-preauth/vobs/find', 'InsurancePreauthController@find');
     Route::post('insurance-preauth/{type}', 'InsurancePreauthController@getByType');
+    Route::post('insurance-preauth/pending-VOB', 'InsurancePreauthController@getPendingVOBByContactId');
     Route::resource('intolerances', 'IntolerancesController', ['except' => ['create', 'edit']]);
     Route::resource('joints', 'JointsController', ['except' => ['create', 'edit']]);
     Route::resource('joint-exams', 'JointExamsController', ['except' => ['create', 'edit']]);
@@ -101,6 +103,9 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('letters', 'LettersController', ['except' => ['create', 'edit']]);
     Route::post('letters/pending', 'LettersController@getPending');
     Route::post('letters/unmailed', 'LettersController@getUnmailed');
+    Route::post('letters/delivered-for-contact', 'LettersController@getContactSentLetters');
+    Route::post('letters/not-delivered-for-contact', 'LettersController@getContactPendingLetters');
+    Route::post('letters/create-welcome-letter', 'LettersController@createWelcomeLetter');
     Route::post('letters/gen-date-of-intro', 'LettersController@getGeneratedDateOfIntroLetter');
     Route::resource('locations', 'LocationsController', ['except' => ['create', 'edit']]);
     Route::post('locations/by-doctor', 'LocationsController@getDoctorLocations');
@@ -152,6 +157,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('recipients', 'RecipientsController', ['except' => ['create', 'edit']]);
     Route::resource('sleep-tests', 'SleepTestsController', ['except' => ['create', 'edit']]);
     Route::resource('qualifiers', 'QualifiersController', ['except' => ['create', 'edit']]);
+    Route::post('qualifiers/active', 'QualifiersController@getActive');
     Route::resource('refunds', 'RefundsController', ['except' => ['create', 'edit']]);
     Route::resource('chairs', 'ChairsController', ['except' => ['create', 'edit']]);
     Route::resource('screeners', 'ScreenersController', ['except' => ['create', 'edit']]);
@@ -165,6 +171,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('contact-types', 'ContactTypesController', ['except' => ['create', 'edit']]);
     Route::post('contact-types/active-non-corporate', 'ContactTypesController@getActiveNonCorporate');
     Route::post('contact-types/physician', 'ContactTypesController@getPhysician');
+    Route::post('contact-types/with-filter', 'ContactTypesController@getWithFilter');
     Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
     Route::post('contacts/find', 'ContactsController@find');
     Route::post('contacts/list-contacts-and-companies', 'ContactsController@getListContactsAndCompanies');

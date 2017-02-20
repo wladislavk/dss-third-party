@@ -109,6 +109,14 @@ class InsurancePreauthController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
+    public function getPendingVOBByContactId(InsurancePreauth $resource, Request $request)
+    {
+        $contactId = $request->input('contact_id') ?: 0;
+        $data = $resource->getPendingVOBByContactId($contactId);
+      
+        return ApiResponse::responseOk('', $data);
+    }
+
     public function find(InsPreauth $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;

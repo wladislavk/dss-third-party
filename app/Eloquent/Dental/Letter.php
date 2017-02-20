@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resources\Letter as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Letters as Repository;
+use Carbon\Carbon;
 use DB;
 
 class Letter extends Model implements Resource, Repository
@@ -54,6 +55,16 @@ class Letter extends Model implements Resource, Repository
      */
     const UPDATED_AT = 'edit_date';
 
+    public function scopeDelivered($query)
+    {
+        return $query->where('delivered', 1);
+    }
+
+    public function scopeNonDelivered($query)
+    {
+        return $query->where('delivered', 0);
+    }
+  
     public function scopeNonDeleted($query)
     {
         return $query->where('deleted', '0');
@@ -99,6 +110,58 @@ class Letter extends Model implements Resource, Repository
             ->first();
     }
 
+    public function getContactSentLetters($contactId = 0)
+    {
+        return $this->delivered()
+            ->where(function($query) {
+                $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
+                    ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
+            })->get();
+    }
+
+    public function getContactPendingLetters($contactId = 0)
+    {
+        return $this->nonDelivered()
+            ->where(function($query) {
+                $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
+                    ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
+            })->get();
+    }
+
+    public function createWelcomeLetter($docId, $templateId, $mdList)
+    {
+        $status = '0';
+        $delivered = '0';
+        $deleted = '0';
+
+        $data = [
+            'templateid'     => $templateId,
+            'generated_date' => Carbon::now(),
+            'delivered'      => $delivered,
+            'docid'          => $docId,
+            'userid'         => $docId
+        ];
+
+        if ($status == 1) {
+            $data['date_sent'] = Carbon::now();
+        }
+
+        if (isset($md_list)) {
+            $data['md_list'] = $mdList;
+            $data['cc_md_list'] = $mdList;
+        }
+
+        if (isset($status)) {
+            $data['status'] = $status;
+        }
+
+        if (isset($deleted)) {
+            $data['deleted'] = $deleted;
+        }
+
+        return $this->create($data);
+    }
+  
     public function getGeneratedDateOfIntroLetter($patientId = 0)
     {
         return $this->select('generated_date')

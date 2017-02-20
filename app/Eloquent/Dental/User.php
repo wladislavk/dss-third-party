@@ -115,6 +115,13 @@ class User extends Model implements Resource, Repository
             ->first();
     }
 
+    public function getLetterInfo($docId = 0)
+    {
+        return $this->select('use_letters', 'intro_letters')
+            ->where('userid', $docId)
+            ->first();
+    }
+  
     public function getWithFilter($fields = [], $where = [])
     {
         $object = $this;

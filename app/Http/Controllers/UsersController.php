@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\UserDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Contracts\Repositories\Users;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 /**
@@ -173,6 +174,14 @@ class UsersController extends Controller
         } else {
             return ApiResponse::responseOk('', ['logout' => true]);
         }
+    }
+
+    public function getLetterInfo(User $resource, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+        $data = $resource->getLetterInfo($docId);
+
+        return ApiResponse::responseOk('', $data);
     }
 
     /**

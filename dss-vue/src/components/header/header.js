@@ -47,17 +47,17 @@ module.exports = {
                 tasksNumber                : 0,
                 patientTaskNumber          : 0,
                 patientName                : '',
-                patientHomeSleepTestStatus : ''
+                patientHomeSleepTestStatus : '',
+                medicare                   : 0,
+                premedCheck                : 0,
+                title                      : '',
+                alertText                  : '',
+                displayAlert               : false
             },
             secondsPerDay                        : 86400,
             oldestLetter                         : 0,
             pendingPreauthNumber                 : 0,
             supportTicketsNumber                 : 0,
-            title                                : '',
-            premedCheck                          : 0,
-            medicare                             : 0,
-            alertText                            : '',
-            displayAlert                         : false,
             alergen                              : 0,
             patientTasks                         : [],
             notificationsNumber                  : 0,
@@ -377,13 +377,13 @@ module.exports = {
                             var data = response.data.data;
 
                             if (data.length) {
-                                this.premedCheck  = data[0].premedcheck;
-                                this.medicare     = (data[0].p_m_ins_type == 1);
-                                this.alertText    = data[0].alert_text;
-                                this.displayAlert = data[0].display_alert;
+                                this.$set('headerInfo.medicare', (data[0].p_m_ins_type == 1));
+                                this.$set('headerInfo.premedCheck', data[0].premedcheck);
+                                this.$set('headerInfo.alertText', data[0].alert_text);
+                                this.$set('headerInfo.displayAlert', data[0].display_alert);
 
-                                if (this.premedCheck) {
-                                    this.title += 'Pre-medication: ' + data[0].premed + '\n';
+                                if (this.headerInfo.premedCheck) {
+                                    this.headerInfo.title += 'Pre-medication: ' + data[0].premed + '\n';
                                 }
 
                                 this.$set('headerInfo.patientName', data[0].firstname + ' ' + data[0].lastname);
@@ -400,7 +400,7 @@ module.exports = {
                                 this.alergen = data[0].allergenscheck;
 
                                 if (this.alergen) {
-                                    this.title += 'Allergens: ' + data[0].other_allergens;
+                                    this.headerInfo.title += 'Allergens: ' + data[0].other_allergens;
                                 }
                             }
                         }, function(response) {

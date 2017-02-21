@@ -256,11 +256,11 @@
                             :style="headerInfo.patientName.length > 20 ? 'font-size:14px' : ''"
                         >
                             <div id="patient_name_inner">
-                                <img v-if="medicare" src="assets/images/medicare_logo_small.png" /> 
-                                <span :class="{ 'medicare_name': medicare, 'name': !medicare }">
+                                <img v-if="headerInfo.medicare" src="assets/images/medicare_logo_small.png" /> 
+                                <span :class="{ 'medicare_name': headerInfo.medicare, 'name': !headerInfo.medicare }">
                                     {{ headerInfo.patientName }}
-                                    <a v-if="displayAlert && alertText.length > 0" href="#" title="{{ 'Notes: ' + alertText }}" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>
-                                    <a v-if="premedCheck == 1 || alergen == 1" href="q_page3.php?pid={{ $route.query.pid || 0 }}" title="{{ title }}" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
+                                    <a v-if="headerInfo.displayAlert && headerInfo.alertText.length > 0" href="#" title="{{ 'Notes: ' + headerInfo.alertText }}" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>
+                                    <a v-if="headerInfo.premedCheck == 1 || alergen == 1" href="q_page3.php?pid={{ $route.query.pid || 0 }}" title="{{ headerInfo.title }}" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
                                 </span>
                             </div>
                         </div>

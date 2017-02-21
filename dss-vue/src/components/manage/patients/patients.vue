@@ -105,11 +105,8 @@
                     <td valign="top">
                         <a
                             v-link="{
-                                path: '/manage/add-patient',
-                                query: {
-                                    pid: patient.patientid,
-                                    ed: patient.patientid
-                                }
+                                path: '/manage/edit-patient',
+                                query: { pid: patient.patientid }
                             }"
                         >
                             {{ patient.lastname }},&nbsp;

@@ -1,28 +1,116 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  if($_GET['backoffice'] == '1') {
-    include 'admin/includes/top.htm';
-?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
+if ($_GET['backoffice'] == '1') {
+    include 'admin/includes/top.htm'; ?>
     <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
     <script src="admin/popup/popup.js" type="text/javascript"></script>
-
-<?php 
-  } else {
+<?php } else {
     include 'includes/top.htm';
     include 'admin/includes/invoice_functions.php';
+}
+
+$docId = intval($_SESSION['docid']);
+
+$margins = $db->getRow("SELECT
+    letter_margin_top AS 'top',
+    letter_margin_bottom AS 'bottom',
+    letter_margin_left AS 'left',
+    letter_margin_right AS 'right'
+  FROM dental_users
+  WHERE userid = '$docId'
+  ");
+
+$pageSize = [
+    'width' => 216,
+    'height' => 279
+];
+
+$googleFonts = [
+    'dejavusans' => 'Open Sans',
+    'times' => 'Tinos',
+    'helvetica' => 'Roboto',
+    'courier' => 'Cutive Mono',
+];
+$fontsInUse = [];
+
+function formatMm ($number) {
+  return number_format($number, 1, '.', '') . 'mm';
+}
+
+function contactType ($patientId, $contactId, $contactType) {
+  static $contactTypeList = [];
+
+  if (!$contactTypeList) {
+    $db = new Db();
+    $patientId = intval($patientId);
+
+    $contactTypeList = $db->getRow("SELECT
+        docsleep AS 'Sleep MD',
+        docpcp AS 'Primary Care MD',
+        docdentist AS 'Dentist',
+        docent AS 'ENT'
+    FROM dental_patients
+    WHERE patientid = '$patientId'");
+
+    $contactTypeList = $contactTypeList ?: [];
   }
 
-  if(/*empty($_GET['lid']) || $_GET['lid'] == '0'*/0){
-?>
-    <h2>Unable to find letter.</h2>
-  <?php
-    trigger_error("Die called", E_USER_ERROR);
+  switch ($contactType) {
+    case 'patient':
+      $type = 'Patient';
+      break;
+    case 'md':
+      $find = array_search($contactId, $contactTypeList);
+      $type = $find ?: 'Other MD';
+      break;
+    case 'md_referral':
+    default:
+      $type = 'Other MD';
   }
+
+  return $type;
+}
+
 ?>
+<script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=<?= time() ?>"></script>
+<script>
+  var pageSize = <?= json_encode($pageSize) ?>;
+  var pageMargins = <?= json_encode($margins) ?>;
+</script>
+<link type="text/css" rel="stylesheet" href="/manage/css/font-preview.css?v=<?= time() ?>" />
+<style>
+  /* Preview area display */
+  div.preview-letter {
+    width: <?= formatMm($pageSize['width']) ?>;
+    min-height: <?= formatMm($pageSize['height']) ?>;
+  }
 
-  <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script> 
-  <script type="text/javascript" src="/manage/js/edit_letter.js?v=20160404"></script>
+  div.preview-letter div.preview-wrapper {
+    margin-top: <?= formatMm($margins['top']) ?>;
+    margin-right: <?= formatMm($margins['right']) ?>;
+    margin-bottom: <?= formatMm($margins['bottom']) ?>;
+    margin-left: <?= formatMm($margins['left']) ?>;
+  }
 
+  div.preview-letter div.preview-page-break {
+    width: <?= formatMm($pageSize['width']) ?>;
+    top: <?= formatMm($pageSize['height'] - $margins['bottom']) ?>;
+  }
+
+  div.preview-letter div.preview-bottom-margin {
+    width: <?= formatMm($pageSize['width']) ?>;
+    height: <?= formatMm($margins['bottom']) ?>;
+  }
+
+  <?php for ($n=2; $n <=0; $n++) { ?>
+  div.preview-letter div.preview-page-break.break-<?= $n ?> {
+    top: <?= formatMm(($pageSize['height'] - $margins['top'] - $margins['bottom'])*$n + $margins['top']) ?>;
+  }
+  <?php } ?>
+  /* Preview area display */
+</style>
 <?php
   $status_sql = "SELECT status, docid FROM dental_letters
 		WHERE letterid='".mysqli_real_escape_string($con, (!empty($_GET['lid']) ? $_GET['lid'] : ''))."'";
@@ -133,32 +221,9 @@ foreach ($master_q as $master_r) {
   $edit_date = $row['edit_date'];
   $template_type = $row['template_type'];
   $font_size = $row['font_size'];
-
-  switch ($font_size) {
-    case '8':
-  		$show_font_size = '12';
-  		break;
-    case '10':
-      $show_font_size = '14';
-      break;
-    case '12':
-      $show_font_size = '16';
-      break;
-    case '14':
-      $show_font_size = '18';
-      break;
-    case '16':
-      $show_font_size = '20';
-      break;
-    case '20':
-      $show_font_size = '24';
-      break;
-    default:
-  		$show_font_size = '14';
-  		break;
-  }
-
   $font_family = $row['font_family'];
+
+  $fontsInUse[$font_family] = true;
 
   // Pending and Sent Contacts
   $othermd_query = "SELECT md_list, md_referral_list, cc_md_list, cc_md_referral_list, pat_referral_list, cc_pat_referral_list FROM dental_letters where letterid = '".$letterid."' ORDER BY letterid ASC;";
@@ -217,32 +282,7 @@ foreach ($master_q as $master_r) {
 ?>
 
 <br />
-<span class="admin_head">
-	<?php print $title; ?>
-</span>
-<br />&nbsp;&nbsp;
-
-<?php 
-  if(!empty($_REQUEST['goto'])) {
-    if($_REQUEST['goto'] == 'flowsheet') {
-      $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
-    } elseif ($_REQUEST['goto'] == 'letter') {
-      $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
-    } elseif ($_REQUEST['goto'] == 'new_letter') {
-      $page = 'new_letter.php?pid='.$_GET['pid'];
-    } elseif ($_REQUEST['goto'] == 'faxes') {
-      $page = 'manage_faxes.php';
-    }
-?>
-  <a href="<?php echo $page; ?>" class="editlink" title="Pending Letters">
-<?php
-  } else {
-?>
-  <a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
-<?php } ?>
-
-<b>&lt;&lt;Back</b></a>
-<br /><br>
+<br />
 
 <?php
   if ($status == DSS_LETTER_PENDING) {
@@ -302,7 +342,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
     $referral_fullname = '';
   }
 
-  $pt_referral = get_ptreferralids($_GET['pid']);
+  $pt_referral = get_ptreferralids($_GET['pid'], true);
   $ptref_info = get_contact_info('', '', $pt_referral, $source);
 
   $letter_contacts = array();
@@ -1786,49 +1826,96 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
 	      // Print Letter Body		
 
-        if($status == DSS_LETTER_SEND_FAILED){
-    ?>
-          <div style="width: 100%; text-align: center;">Sending of letter failed. Letter was attempted to be sent to <a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo  $contact['id']; ?>'); return false;"><?php echo  $contact['firstname'] . " " . $contact['lastname']; ?></a></div>
-    <?php
-        }
-    ?>
+        ?>
 
-	      <div style="margin: auto; width: 95%; border: 1px solid #ccc; padding: 3px;">
-		      <div align="left" style="width: 40%; padding: 3px; float: left">
+	      <div style="margin: auto; width: 95%; padding: 3px;" class="single-letter">
+            <div>
+              <span class="admin_head" style="float: none; display: inline-block; margin-top: -5px;">
+                <?= e($title) ?>
+              </span>
+              &nbsp;&nbsp;
+              <?php if(!empty($_REQUEST['goto'])) {
+                if($_REQUEST['goto'] == 'flowsheet') {
+                  $page = 'manage_flowsheet3.php?pid='.$_GET['pid'].'&addtopat=1';
+                } elseif ($_REQUEST['goto'] == 'letter') {
+                  $page = 'dss_summ.php?sect=letters&pid='.$_GET['pid'].'&addtopat=1';
+                } elseif ($_REQUEST['goto'] == 'new_letter') {
+                  $page = 'new_letter.php?pid='.$_GET['pid'];
+                } elseif ($_REQUEST['goto'] == 'faxes') {
+                  $page = 'manage_faxes.php';
+                } ?>
+                <a href="<?php echo $page; ?>" class="editlink" title="Pending Letters">
+              <?php } else { ?>
+                <a href="<?php print (!empty($_GET['backoffice']) && $_GET['backoffice'] == '1' ? "/manage/admin/manage_letters.php?status=pending&backoffice=1" : "/manage/letters.php?status=pending"); ?>" class="editlink" title="Pending Letters">
+              <?php } ?>
+              <b>&lt;&lt;Back</b></a>
+            </div>
+              <div style="float:left; text-align: left">
+                &nbsp;&nbsp;
+                Letter <strong><?= $cur_letter_num + 1 ?></strong> of <strong><?= $master_num ?></strong>.
+                To <?= contactType($patientid, $contact['id'], $contact['type']) ?>:
+                <?= e("{$contact['salutation']} {$contact['firstname']} {$contact['lastname']}") ?>
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][id]" value="<?= $contact['id'] ?>" />
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][type]" value="<?= $contact['type'] ?>" />
-			      Letter <?php print $cur_letter_num+1; ?> of <?php print $master_num; ?>.&nbsp;  Delivery Method: <?php print ($method ? $method : $contact['preferredcontact']); ?> <a href="#" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').css('display','inline');$(this).hide();return false;" id="change_method_<?php print $cur_letter_num; ?>" class="addButton"> Change </a>
-            
-            <div id="del_meth_<?php print $cur_letter_num; ?>" style="display:none;">
-              <?php $send_meth = $method ? $method : $contact['preferredcontact']; ?>
-              
-              <?php if($send_meth == 'fax') { ?>
-                <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline');return false;" class="addButton" value="Fax" />
-              <?php } elseif ($contact['fax']!='') { ?>
-                <input type="submit" name="fax_letter[<?php echo $cur_letter_num?>]" class="addButton" value="Fax" />
-              <?php } else { ?>
-                <input type="button" name="fax_letter[<?php echo $cur_letter_num?>]" onclick="alert('No fax number is available for this contact. Set a fax number for this contact via the \'Contacts\' page in your software.');return false;" class="addButton grayButton" value="Fax" />
-              <?php } ?>
+              </div>
+		      <div style="float: right; text-align: right;">
+                Delivery Method: <?= letterSendMethod($method, $contact['preferredcontact']) ?>
+                <a href="#" onclick="$('#del_meth_<?= $cur_letter_num ?>').css('display','inline');$(this).hide();return false;"
+                   id="change_method_<?= $cur_letter_num ?>" class="addButton"> Change </a>
+                <div id="del_meth_<?= $cur_letter_num ?>" style="display:none;">
+                  <?php $send_meth = $method ?: $contact['preferredcontact']; ?>
 
-              <?php if($send_meth == 'paper') { ?>
-                <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline');return false;" class="addButton" value="Paper"  />
-              <?php } else { ?>
-                <input type="submit" name="paper_letter[<?php echo $cur_letter_num?>]" class="addButton" value="Paper" />
-              <?php } ?>
+                  <?php if($send_meth == 'fax') { ?>
+                    <input type="button" class="addButton" value="Fax"
+                           onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline');return false;" />
+                  <?php } elseif ($contact['fax']!='') { ?>
+                    <input type="submit" name="fax_letter[<?= $cur_letter_num ?>]" class="addButton" value="Fax" />
+                  <?php } else { ?>
+                    <input type="button" name="fax_letter[<?= $cur_letter_num ?>]" class="addButton grayButton" value="Fax"
+                           onclick="alert('No fax number is available for this contact. Set a fax number for this contact via the \'Contacts\' page in your software.');return false;" />
+                  <?php } ?>
 
-              <input type="button" onclick="$('#del_meth_<?php print $cur_letter_num; ?>').hide();$('#change_method_<?php print $cur_letter_num; ?>').css('display','inline'); return false;" class="addButton" value="Cancel" />
-            </div>
-		      </div>
+                  <?php if($send_meth == 'paper') { ?>
+                    <input type="button" class="addButton" value="Paper"
+                           onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline');return false;" />
+                  <?php } else { ?>
+                    <input type="submit" name="paper_letter[<?= $cur_letter_num ?>]" class="addButton" value="Paper" />
+                  <?php } ?>
 
-		      <div align="right" style="width:30%; padding: 3px; float: right">
+                  <input type="button" class="addButton" value="Cancel"
+                         onclick="$('#del_meth_<?= $cur_letter_num ?>').hide();$('#change_method_<?= $cur_letter_num ?>').css('display','inline'); return false;" />
+                </div>
+                &nbsp;&nbsp;
+                  <?php if(isset($_SESSION['user_type']) && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
+                      <select name="font_size[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="javascript:return false;">
+                          <option <?php echo  ($font_size==8)?'selected="selected"':''; ?> value="8">8</option>
+                          <option <?php echo  ($font_size==10)?'selected="selected"':''; ?> value="10">10</option>
+                          <option <?php echo  ($font_size==12)?'selected="selected"':''; ?> value="12">12</option>
+                          <option <?php echo  ($font_size==14||empty($font_size))?'selected="selected"':''; ?> value="14">14</option>
+                          <option <?php echo  ($font_size==16)?'selected="selected"':''; ?> value="16">16</option>
+                          <option <?php echo  ($font_size==20)?'selected="selected"':''; ?> value="20">20</option>
+                      </select>
+                      <select name="font_family[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="javascript:return false;">
+                          <option <?php echo  ($font_family=='dejavusans'||empty($font_family))?'selected="selected"':''; ?> value="dejavusans">Dejavu Sans</option>
+                          <option <?php echo  ($font_family=='times')?'selected="selected"':''; ?> value="times">Times New Roman</option>
+                          <option <?php echo  ($font_family=='courier')?'selected="selected"':''; ?> value="courier">Courier</option>
+                          <option <?php echo  ($font_family=='helvetica')?'selected="selected"':''; ?> value="helvetica">Helvetica</option>
+                      </select>
+
+                      <input type="submit" name="font_submit[<?php echo $cur_letter_num?>]" id="font_submit_<?php echo $cur_letter_num?>" style="display:none;" />
+                  <?php } ?>
+                <button id="toggle-hidden-letter<?= $cur_letter_num ?>" class="preview-toggle-hidden addButton"
+                        onclick="return false;" title="Show/hide line breaks">
+                  &#xb6;
+                </button>
+                &nbsp;&nbsp;
         		<button id="edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: edit_letter('letter<?php echo $cur_letter_num?>', '<?php echo $font_size;?>','<?php echo $font_family;?>');return false;" >
         			Edit Letter
         		</button>
-            <button style="display:none;" id="cancel_edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: window.location.reload();return false;" >
+            <button style="display:none;" id="cancel_edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: hide_edit_letter('letter<?= $cur_letter_num ?>');return false;" >
               Cancel Edits
             </button>
-        		&nbsp;&nbsp;&nbsp;&nbsp;
-        		&nbsp;&nbsp;&nbsp;&nbsp;
+        		&nbsp;&nbsp;
 
           	<?php if(($method ? $method : $contact['preferredcontact'])=='fax' && $franchisee_info['use_digital_fax']!=1 && $_GET['backoffice'] != '1'){ ?>
           		<input type="submit" name="send_letter[<?php echo $cur_letter_num?>]" class="addButton" onclick="return confirm('Warning! Digital fax is not enabled in your account. Click OK to send the letter via standard printing. To enable digital faxing for your account please contact the DSS corporate office.');" value="Send Letter" />
@@ -1837,37 +1924,35 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
             <?php } else { ?>
 		          <input type="submit" name="send_letter[<?php echo $cur_letter_num?>]" class="addButton" value="Send Letter" />
 	          <?php } ?>
-		        &nbsp;&nbsp;&nbsp;&nbsp;
+		        &nbsp;&nbsp;
 		      </div>
-
-          <?php if(isset($_SESSION['user_type']) && $_SESSION['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
-            <select name="font_size[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="$('#font_submit_<?php echo $cur_letter_num?>').click()";>
-              <option <?php echo  ($font_size==8)?'selected="selected"':''; ?> value="8">8</option>
-              <option <?php echo  ($font_size==10)?'selected="selected"':''; ?> value="10">10</option>
-              <option <?php echo  ($font_size==12)?'selected="selected"':''; ?> value="12">12</option>
-              <option <?php echo  ($font_size==14)?'selected="selected"':''; ?> value="14">14</option>
-              <option <?php echo  ($font_size==16)?'selected="selected"':''; ?> value="16">16</option>
-              <option <?php echo  ($font_size==20)?'selected="selected"':''; ?> value="20">20</option>
-            </select>
-            <select name="font_family[<?php echo $cur_letter_num?>]" style="display:none;" class="edit_letter<?php echo $cur_letter_num?>" onchange="$('#font_submit_<?php echo $cur_letter_num?>').click()">
-              <option <?php echo  ($font_family=='dejavusans')?'selected="selected"':''; ?> value="dejavusans">Dejavu Sans</option>
-              <option <?php echo  ($font_family=='times')?'selected="selected"':''; ?> value="times">Times New Roman</option>
-              <option <?php echo  ($font_family=='courier')?'selected="selected"':''; ?> value="courier">Courier</option>
-              <option <?php echo  ($font_family=='helvetica')?'selected="selected"':''; ?> value="helvetica">Helvetica</option>
-            </select>
-
-            <input type="submit" name="font_submit[<?php echo $cur_letter_num?>]" id="font_submit_<?php echo $cur_letter_num?>" style="display:none;" />
-          <?php } ?>
-
-          <style type="text/css">
-            #letter<?php echo $cur_letter_num?> td{ font-size:<?php echo  $show_font_size;?>px;font-family:<?php echo  ($font_family=="dejavusans")?"Arial":$font_family; ?>;}
-          </style>
+              <div style="width: 100%; text-align: center; clear: both;">
+                <?php if ($status == DSS_LETTER_SEND_FAILED) { ?>
+                  Sending of letter failed. Letter was attempted to be sent to
+                  <a href="#" onclick="loadPopup('add_contact.php?ed=<?php echo  $contact['id']; ?>'); return false;"><?php echo  $contact['firstname'] . " " . $contact['lastname']; ?></a>
+                <?php } ?>
+              </div>
 
         	<table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
         		<tr>
         			<td valign="top">
-        				<div id="letter<?php echo $cur_letter_num?>" style="font-size:<?php echo  $show_font_size;?>px;font-family:<?php echo  ($font_family=="dejavusans")?"Arial":$font_family; ?>">		
-        				  <?php print html_entity_decode( preg_replace('/(&Acirc;|&nbsp;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8")), ENT_COMPAT | ENT_IGNORE,"UTF-8"); ?>
+        				<div id="letter<?= $cur_letter_num ?>"
+                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?>">
+        				  <div class="preview-wrapper">
+                            <div class="preview-inner-wrapper">
+                              <?= html_entity_decode(
+                                preg_replace(
+                                    '/(&Acirc;|&nbsp;)+/i',
+                                    '',
+                                    htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE, 'UTF-8')
+                                ),
+                                ENT_COMPAT | ENT_IGNORE,
+                                'UTF-8'
+                              ) ?>
+                            </div>
+                          </div>
+                          <?php for ($n=1; $n<=0; $n++) { ?><div class="preview-page-break break-<?= $n ?>">page <?= $n + 1 ?></div><?php } ?>
+                          <div class="preview-bottom-margin"></div>
         				</div>
         				<input type="hidden" name="new_template[<?php echo $cur_letter_num?>]" value="<?php echo preg_replace('/(&Acirc;|&nbsp;)+/i', '',htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE,"UTF-8"))?>" />
         			</td>
@@ -2089,7 +2174,9 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 </table>
 
 <!-- include footer -->
-
+<?php foreach ($googleFonts as $localName=>$remoteName) { ?>
+  <link href="https://fonts.googleapis.com/css?family=<?= urlencode($remoteName) ?>" rel="stylesheet">
+<?php } ?>
 <?php
   function is_physician($id) {
     $db = new Db();
@@ -2116,26 +2203,4 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 <?php
   } else {
 	  include 'includes/bottom.htm';
-  } 
-?>
-
-<!-- function remove_alert not used anywhere -->
-
-<script type="text/javascript">
-/*
-  function remove_alert(id){
-    $.ajax({
-      url: "includes/fax_remove_alert.php",
-      type: "post",
-      data: {id: id},
-      success: function(data){
-          var r = $.parseJSON(data);
-          if(r.error) {
-          } else {
-            $('#fax_alert_'+id).remove();
-          }
-      }
-    });
   }
-*/
-</script>

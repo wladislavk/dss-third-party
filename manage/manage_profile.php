@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
+<?php
+namespace Ds3\Libraries\Legacy;
+
+set_time_limit(0);
+
   include "includes/top.htm";
   include_once "admin/includes/form_updates.php";
 
@@ -155,6 +159,7 @@
     if(isset($_POST['margins_test'])){
       $title = "Test Letter";
       $filename = "test_margins_".$docid.".pdf";
+
       $html = "
         <p>name<br />
           practice<br />
@@ -176,6 +181,7 @@
         <p>&nbsp;</p>
         <p>Dear Mr. Smith:</p>
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        {%long-content%}
         <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
         <p>Sincerely,
         <br />
@@ -185,11 +191,159 @@
         <br />
         </p>
       ";
+
+      $header = '';
+      $footer = '';
+      $cover = '';
+      $overflow = '';
+
+      if (!empty($_POST['margin_test']['cover'])) {
+        // Get Doctor's Name and Email
+        $sql = "SELECT name, email, phone, use_digital_fax, fax, logo, user_type
+            FROM dental_users
+            WHERE userid = '$docid'";
+        $result = $db->getRow($sql);
+        $doc_name = $result['name'];
+        $doc_phone = $result['phone'];
+        $doc_fax = $result['fax'];
+        $logo = $result['logo'];
+        $user_type = $result['user_type'];
+
+        if ($user_type == DSS_USER_TYPE_SOFTWARE){
+          if ($logo != ''){
+            $cover_image = "<img src=\"../../../shared/q_file/$logo\" />";
+          } else {
+            $cover_image = "";
+          }
+        }else{
+          $cover_image = "<img src=\"/manage/images/logo.gif\" />";
+        }
+
+        $cover = "
+  <table>
+  <tr>
+  <td>$cover_image</td>
+  <td><center>
+  <b>CONFIDENTAL HEALTH INFORMATION<br />
+  FAX COVER SHEET</b>
+  </center>
+  </td>
+  </tr>
+  </table>
+  <br /><br /><br />
+  <b>DATE:</b> ".date('m/d/Y')."<br />
+  <br />
+  <b>TO:</b><br />
+  NAME: John Smith<br />
+  PHONE: ".format_phone('01234567890')."<br />
+  FAX: ".format_phone('1234567890')."
+  <br /><br />
+  <b>FROM:</b><br />
+  NAME: ".$doc_name."<br />
+  PHONE: ".format_phone($doc_phone)."<br />
+  FAX: ".format_phone($doc_fax)."<br /><br />
+
+  TOTAL NUMBER OF PAGES:  %NUM_PAGES%
+  <br /><br />
+  <b>IF YOU RECEIVE THIS FAX IN ERROR, PLEASE CONTACT THE SENDER IMMEDIATELY AND THEN DESTROY THE FAXED MATERIALS.
+  <br /><br />
+  CONFIDENTIALITY NOTICE:</b><br />
+  The documents accompanying this transmission contain legally privileged health information. This information is intended only for the use of the individual or entity named above. The authorized recipient of this information is prohibited from disclosing this information to any other party unless required to do so by law or regulation and is required to destroy the information after its stated need has been fulfilled.
+  <br /><br />
+  If you are not the intended recipient, you are hereby notified that any disclosure, copying, distribution, or action taken in reliance on the contents of these documents is strictly prohibited. If you have received this information in error, please notify the sender and the privacy officer immediately and arrange for the return or destruction of these documents.
+  ";
+      }
+
+      if (!empty($_POST['margin_test']['header'])) {
+        $header = date('F j, Y, g:i a') . ' - Header';
+      }
+
+      if (!empty($_POST['margin_test']['footer'])) {
+        $franchisee_query = "SELECT
+            u.user_type,
+            l.name,
+            mailing_name,
+            l.location mailing_practice,
+            l.address mailing_address,
+            l.city mailing_city,
+            l.state mailing_state,
+            l.zip mailing_zip,
+            u.email
+          FROM dental_users u
+            LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location = 1
+          WHERE u.userid = '$docid'";
+        $franchisee_result = $db->getResults($franchisee_query);
+
+        if ($franchisee_result) {
+          foreach ($franchisee_result as $row) {
+            $fi = $row;
+          }
+        }
+
+        if (!empty($fi) && $fi['user_type'] == DSS_USER_TYPE_FRANCHISEE) {
+          $footer = "{$fi['mailing_name']} {$fi['mailing_practice']} {$fi['mailing_address']} {$fi['mailing_city']} {$fi['mailing_state']} {$fi['mailing_zip']}";
+        } else {
+          $footer = 'Dr Name DSS Practice 742 Evergreen Terrace Springfield WA 00000';
+        }
+      }
+
+      if (!empty($_POST['margin_test']['overflow'])) {
+        $overflow = '<ul>
+<li>
+  No nec vero assueverit sadipscing. Oblique epicurei electram ut sit.
+  <ul>
+    <li>Dicta omittantur ei ius. Nam ei causae qualisque. Ne nam omittam intellegat.</li>
+  </ul>
+</li>
+<li>
+  Sed in nihil facilis quaestio, eu eam lorem vitae. Vel at natum idque aliquam, tation dissentias ex cum. Vis an possim interesset, eu autem veniam platonem mei.
+  <ul>
+    <li>Id eum libris accumsan dissentias. Saepe mediocritatem usu at, diam vitae expetenda vel ei, idque adipisci mnesarchum ne ius.</li>
+    <li>An mei labores appareat, eu qui augue altera civibus.</li>
+  </ul>
+</li>
+<li>
+  Eu nibh quaerendum qui, pro cibo viris ex, vix consul nostrud electram id. In eum postea percipitur assueverit, laoreet accusamus neglegentur id mel.
+  <ul>
+    <li>Epicuri persecuti scribentur ei eos, quo ludus altera an. Tollit aliquando at vim, apeirian iudicabit tincidunt nec ne.</li>
+    <li>An tamquam eligendi eum, duo dicit vituperatoribus ei, ut alia vocent efficiantur sea.</li>
+  </ul>
+</li>
+<li>
+  In vidit officiis interpretaris ius. Ei deserunt inciderint sea, esse inani delectus ad mel. Id per oporteat laboramus, duo quaeque alterum delectus eu. Quis perfecto adipiscing eum in, habeo persecuti no his.</li>
+<li>
+  Sit nullam assueverit intellegebat ut. An tota nemore instructior est. Alii mazim senserit duo ne.
+  <ul>
+    <li>Ferri ubique imperdiet vel an.</li>
+    <li>Eos mandamus philosophia eu, legimus scaevola no his.</li>
+    <li>Amet splendide in sed.</li>
+  </ul>
+</li>
+</ul>
+<p>
+Etiam sit amet suscipit leo, sit amet sagittis urna. Nunc vitae odio dolor. Sed porttitor velit vitae sapien volutpat, ac facilisis ligula porta. Sed ac lorem nec ligula vehicula commodo. Ut ut eleifend velit. Aenean massa diam, imperdiet vitae posuere non, pharetra a arcu. Nulla et est diam. Mauris vitae augue a neque condimentum fermentum non id tortor. Duis sit amet est eget est aliquam lobortis. Nulla eleifend suscipit consequat. Morbi rhoncus, arcu eleifend efficitur bibendum, justo quam viverra ipsum, ut scelerisque ex quam ut velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis aliquam nunc. Sed vel tortor a elit volutpat euismod ac vitae eros.
+</p>
+<p>
+Duis ex nisi, dictum in pellentesque in, sagittis in leo. Mauris tortor elit, placerat vitae sem a, sodales pharetra quam. Pellentesque maximus at massa id egestas. Phasellus dolor erat, faucibus quis efficitur sed, ultrices at nulla. Nam aliquet, nunc a posuere vehicula, odio metus tincidunt lectus, et ultrices enim velit sit amet orci. Vivamus at pharetra nisi. In faucibus viverra lectus, vel rutrum mi dapibus ac. Ut id mi dolor. Nullam eget mi pellentesque, hendrerit lorem in, iaculis lorem.
+</p>
+<p>
+Maecenas tempus mollis mauris, nec suscipit libero dapibus id. Suspendisse tortor lacus, blandit at sodales ac, vestibulum eget felis. Vivamus elit odio, accumsan sit amet elementum a, mattis sed ipsum. Quisque faucibus neque nec orci convallis vehicula. Vivamus in est ante. Vestibulum a tortor ac odio auctor eleifend eget at velit. Ut fermentum mattis hendrerit. Integer id dolor sed nunc viverra rhoncus et ut elit. Nunc eleifend sodales lorem. Donec at ornare eros. Nullam pretium lacinia egestas. Morbi risus massa, bibendum sit amet nisi molestie, dapibus egestas turpis. Sed accumsan neque tincidunt diam ullamcorper, id condimentum magna aliquet. Aliquam erat volutpat. Nunc consequat lacus nec tortor fermentum sollicitudin. Phasellus fermentum aliquet rutrum.
+</p>
+<p>
+Donec risus elit, condimentum eget eros at, finibus posuere eros. Sed nibh nunc, rutrum vel aliquet quis, tristique eu risus. Proin fermentum leo in elementum consequat. Etiam egestas massa hendrerit leo molestie, non lacinia ante mollis. Donec nec tellus sit amet dolor blandit lacinia. Aliquam porttitor pharetra lacus, tincidunt ultrices arcu sollicitudin ut. Maecenas tellus orci, fringilla in lorem vitae, suscipit ultrices lectus. Donec ut justo magna.
+</p>
+<p>
+Aliquam aliquam eleifend vestibulum. Curabitur vitae feugiat dui. Vivamus interdum ex erat, ac viverra sem imperdiet sit amet. Cras vulputate molestie leo nec mollis. Suspendisse potenti. Pellentesque mollis ultricies justo sit amet consequat. Nam imperdiet arcu et ligula consequat faucibus et eu mi. Duis ac elit eu arcu pretium pretium vel vitae dui. In hac habitasse platea dictumst. Duis vitae nisi aliquam, porttitor orci vitae, sagittis elit.
+</p>';
+      }
+
+      $html = str_replace('{%long-content%}', $overflow, $html, $replacements);
+
       //CREATE LETTER HERE
-      create_pdf($title, $filename, $html, null, '', '', '', $_SESSION['docid'] ); 
+      create_pdf($title, $filename, $html, null, $header, $footer, $cover, $_SESSION['docid'] );
 ?>
       <script type="text/javascript">
-        window.open('letterpdfs/<?php echo  $filename; ?>');
+        window.open('letterpdfs/<?php echo  $filename; ?>?t=<?= time() ?>');
       </script>
 <?php
     }
@@ -227,7 +381,45 @@
 ?>
 
   <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
+<style>
+  hr {
+    margin: 2em auto;
+    width: 80%;
+    border: 1px solid #ccc;
+    clear: both;
+  }
+
+  .detail label.inline {
+    text-align: left;
+  }
+
+  .two-column {
+    float: left;
+    width: 49%;
+  }
+
+  .letter-template {
+    border:solid 2px #ccc;
+    cursor: pointer;
+  }
+
+  .letter-template.selected {
+    border-color: #000;
+  }
+</style>
   <script src="admin/popup/popup.js" type="text/javascript"></script>
+<script>
+  $(document).ready(function(){
+    var $templates = $('img.letter-template');
+
+    $templates.click(function(){
+      var $this = $(this);
+
+      $templates.removeClass('selected');
+      $this.addClass('selected');
+    });
+  });
+</script>
 
   <span class="admin_head">
     Manage Profile
@@ -533,57 +725,90 @@
 
   <?php if($practice['user_type'] == DSS_USER_TYPE_SOFTWARE) { ?>
     <div style="width:98%; margin-left:1%">
+      <hr />
       <h3>Letter Margins</h3>
       All units in millimeters (mm).
       <form action="#" method="post">
-        <div class="detail">
-          <label>Header:</label>
-          <input class="value" name="letter_margin_header" value="<?php echo  $practice['letter_margin_header']; ?>" />
+        <div class="two-column">
+          <div class="detail">
+            <label>Top:</label>
+            <input class="value" name="letter_margin_top" value="<?php echo  $practice['letter_margin_top']; ?>" />
+          </div>
+          <div class="detail">
+            <label>Bottom:</label>
+            <input class="value" name="letter_margin_bottom" value="<?php echo  $practice['letter_margin_bottom']; ?>" />
+          </div>
+          <div class="detail">
+            <label>Left:</label>
+            <input class="value" name="letter_margin_left" value="<?php echo  $practice['letter_margin_left']; ?>" />
+          </div>
+          <div class="detail">
+            <label>Right:</label>
+            <input class="value" name="letter_margin_right" value="<?php echo  $practice['letter_margin_right']; ?>" />
+          </div>
+          <div class="detail">
+            <label><strong>Fax only</strong></label>
+          </div>
+          <div class="detail">
+            <label>Header:</label>
+            <input class="value" name="letter_margin_header" value="<?php echo  $practice['letter_margin_header']; ?>" />
+          </div>
+          <div class="detail">
+            <label>Footer:</label>
+            <input class="value" name="letter_margin_footer" value="<?php echo  $practice['letter_margin_footer']; ?>" />
+          </div>
         </div>
-        <div class="detail">
-          <label>Footer:</label>
-          <input class="value" name="letter_margin_footer" value="<?php echo  $practice['letter_margin_footer']; ?>" />
+        <div class="two-column">
+          <div class="detail">
+            <input type="submit" name="margins_submit" value="Update Margins" />
+            <input type="submit" name="margins_reset" value="Reset Margins" />
+          </div>
+          <p>&nbsp;</p>
+          <div class="detail">
+            <div class="third">
+              <input type="submit" name="margins_test" value="Print Test Letter" />
+            </div>
+            <div class="third">
+              <label class="inline" title="Include a header in the test print">
+                <input type="checkbox" name="margin_test[header]" value="1" />
+                Header
+              </label>
+              <label class="inline" title="Include a footer in the test print">
+                <input type="checkbox" name="margin_test[footer]" value="1" />
+                Footer
+              </label>
+            </div>
+            <div class="third">
+              <label class="inline"  title="Include a cover page in the test print">
+                <input type="checkbox" name="margin_test[cover]" value="1" />
+                Cover page
+              </label>
+              <label class="inline" title="Make the test contents long enough to generate two pages">
+                <input type="checkbox" name="margin_test[overflow]" value="1" />
+                Two pages
+              </label>
+            </div>
+          </div>
         </div>
-        <div class="detail">
-          <label>Top:</label>
-          <input class="value" name="letter_margin_top" value="<?php echo  $practice['letter_margin_top']; ?>" />
-        </div>
-        <div class="detail">
-          <label>Bottom:</label>
-          <input class="value" name="letter_margin_bottom" value="<?php echo  $practice['letter_margin_bottom']; ?>" />
-        </div>
-        <div class="detail">
-          <label>Left:</label>
-          <input class="value" name="letter_margin_left" value="<?php echo  $practice['letter_margin_left']; ?>" />
-        </div>
-        <div class="detail">
-          <label>Right:</label>
-          <input class="value" name="letter_margin_right" value="<?php echo  $practice['letter_margin_right']; ?>" />
-        </div>
-        <div class="detail">
-          <label>&nbsp;</label>
-          <input type="submit" name="margins_submit" value="Update Margins" />
-          <input type="submit" name="margins_reset" value="Reset Margins" />
-          <input type="submit" name="margins_test" value="Print Test Letter" />
-          <p style="color:#933;">Warning!  Adjusting the letter margins will cause your letter template to no longer align with #9 envelope address fields.  Click “Reset” if you wish to restore the default margins.</p>
-        </div>
+        <div class="clear"></div>
+        <p style="color:#933;text-align:center;">Warning!  Adjusting the letter margins will cause your letter template to no longer align with #9 envelope address fields.  Click “Reset” if you wish to restore the default margins.</p>
       </form>
-
+      <hr />
       <div style="width:100%">
         <div id="num_nine" class="third letter_templates">
           <h4>#9 Envelope</h4>
-          <img style="border:solid 2px #000;" src="images/letter_template_number9-envelope.png" /><br /><br />
-          <input type="button" onclick="set_num_nine();return false;" value="select" />
+          <img class="letter-template <?= $user['use_letter_header'] && $user['indent_address'] && $user['header_space'] ? 'selected' : '' ?>"
+               onclick="set_num_nine();" src="images/letter_template_number9-envelope.png" />
         </div>
         <div id="num_nine" class="third letter_templates">
           <h4> No return address + Left-aligned + Single Spacing</h4>
-          <img style="border:solid 2px #000;" src="images/letter_template_NOreturn-left-single.png" /><br /><br />
-          <input type="button" onclick="set_ls();return false;" value="select" />
+          <img class="letter-template <?= !$user['use_letter_header'] && !$user['indent_address'] && !$user['header_space'] ? 'selected' : '' ?>"
+               onclick="set_ls();" src="images/letter_template_NOreturn-left-single.png" />
         </div>
         <div id="num_nine" class="third letter_templates">
           <h4>Return address + Left + Single Spacing</h4>
-          <img style="border:solid 2px #000;" src="images/letter_template_return-left-single.png" /><br /><br />
-          <input type="button" onclick="set_rls();return false;" value="select" />
+          <img class="letter-template <?= $user['use_letter_header'] && !$user['indent_address'] && !$user['header_space'] ? 'selected' : '' ?>"
+               onclick="set_rls();" src="images/letter_template_return-left-single.png" />
         </div>
       </div>
 
@@ -645,6 +870,7 @@
       $let_r = $db->getRow($let_sql);
       if($let_r['use_letters']) {
     ?>
+          <hr />
         <form action="#" method="post">
           <h3>Enable Auto-Generated Letters</h3>
           <input value="1" type="checkbox" name="tracker_letters" <?php echo  ($let_r['tracker_letters'])?'checked="checked"':''; ?> /> Allow software to automatically generate letters based on treatment steps from the TRACKER page. Unchecking this box means no letters will be generated unless you explicitly create them. Please leave this box CHECKED unless you know what you're doing!
@@ -657,6 +883,7 @@
   </div>
 
   <div class="fullwidth">
+    <hr />
     <?php include 'stripe_card_info.php'; ?>
   </div>
 

@@ -1,21 +1,59 @@
 function edit_letter (divid, size, family) {
-    var html = $("#" + divid).html();
+    var $source = $("#" + divid),
+        $clone = $source.clone(),
+        html = '';
 
-    if (html != '') {
-        var textarea = $("<textarea />");
-        textarea.val(html);
-        textarea.attr('name', divid);
-        textarea.attr('style','width:940px;height:335px;');
-        $("#" + divid).replaceWith(textarea);
-        setup_tinymce(size, family);
-        textarea.focus();
-        $('.edit_'+divid).show();
-        $('#edit_but_'+divid).hide();
-        $('#cancel_edit_but_'+divid).show();
+    $clone.find('.br-marker').remove();
+    $clone.find('.preview-page-break, .preview-bottom-margin').remove();
+    $clone.find('.preview-inner-wrapper').find(':first').unwrap().unwrap();
+    html = $clone.html();
+    $clone.remove();
+
+    if (html == '') {
+        return;
     }
+
+    var textarea = $("<textarea />");
+    textarea.attr('id', [divid, 'textarea'].join('-'));
+
+    if ($source.is('.preview-letter')) {
+        $source.removeClass('show-hidden');
+        $source.find('.preview-wrapper').hide().after(textarea);
+        $source.find('.preview-bottom-margin, .preview-page-break').hide();
+        $(['#toggle-hidden-', divid].join('')).hide();
+    } else {
+        $("#" + divid).replaceWith(textarea);
+    }
+
+    textarea.val(html);
+    textarea.attr('name', divid);
+
+    if (typeof pageSize === 'undefined') {
+        textarea.attr('style','width:940px;height:335px;');
+    } else {
+        textarea.attr('style', ['width:100%;height:', pageSize.height, 'mm;width:', pageSize.width, 'mm;'].join(''));
+    }
+
+    setup_tinymce(size, family, $source.closest('.single-letter'));
+
+    textarea.focus();
+
+    $('.edit_'+divid).show();
+    $('#edit_but_'+divid).hide();
+    $('#cancel_edit_but_'+divid).show();
 }
 
+function hide_edit_letter (divid) {
+    var $source = $("#" + divid);
 
+    $source.find(['textarea[name="', divid, '"], .mce-tinymce'].join('')).remove();
+    $source.find('.preview-wrapper, .preview-bottom-margin, .preview-page-break').show();
+
+    $(['#toggle-hidden-', divid].join('')).show();
+    $('.edit_'+divid).hide();
+    $('#edit_but_'+divid).show();
+    $('#cancel_edit_but_'+divid).hide();
+}
 
 function strip_tags (str, allowed_tags) {
     // Strips HTML and PHP tags from a string  
@@ -96,14 +134,14 @@ function strip_tags (str, allowed_tags) {
     return str;
 }
 
-function setup_tinymce (size, family) {
+function setup_tinymce (size, family, $reference) {
     var now = (new Date()).getTime();
 
-    tinyMCE.init({
+    var init = {
         mode: "textareas",
         theme: "modern",
         menubar: false,
-        toolbar1: "undo redo | italic | bullist numlist outdent indent | table",
+        toolbar1: "undo redo | italic bold | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table",
         gecko_spellcheck : true,
         plugins: "paste, save, table",
         valid_elements: "table,tbody,thead,tr,td[width|colspan|style],img[src|width|height|align],th,b,strong,i,em,p,br,ul,li,ol",
@@ -131,5 +169,99 @@ function setup_tinymce (size, family) {
             "css/font" + size + ".css?" + now,
             "css/font" + family + ".css?" + now
         ].join(',')
-    });
+    };
+
+    if (typeof pageMargins !== 'undefined') {
+        init.content_style = ['body { margin: 0 ', pageMargins.right, 'mm 0 ', pageMargins.left, 'mm; }'].join('');
+    }
+
+    if (typeof $reference === 'object') {
+        size = $reference.find('[name^=font_size]').val();
+        family = $reference.find('[name^=font_family]').val();
+
+        init.mode = 'exact';
+        init.elements = $reference.find('textarea').attr('id');
+        init.plugins = init.plugins.replace(/table/, 'table_modified');
+        init.table_alignment_option = false;
+
+        init.valid_elements = ['@[style|border]', init.valid_elements].join(',');
+        delete init.valid_styles;
+
+        init.content_css = [
+            "css/font-default.css?" + now,
+            "css/font-size-" + size + ".css?" + now,
+            "css/font-family-" + family + ".css?" + now
+        ].join(',');
+    }
+
+    tinyMCE.init(init);
 }
+
+$(document).ready(function(){
+    var $toggle = $('.preview-toggle-hidden'),
+        $fontSize = $('[name^=font_size]'),
+        $fontFamily = $('[name^=font_family]');
+
+    function replaceClass ($this, match, replacement) {
+        var classes = $this.attr('class');
+        $this.attr('class', classes.replace(match, replacement));
+    }
+
+    function replaceLink ($reference, match, replacement) {
+        $reference.find('iframe').contents().find('link').each(function(){
+            var $this = $(this),
+                $clone, href;
+
+            if (!$this.attr('href').match(match)) {
+                return;
+            }
+
+            $clone = $this.clone();
+            href = $clone.attr('href');
+
+            $clone.attr('href', href.replace(match, replacement));
+
+            $clone.insertAfter($this);
+            $this.remove();
+        });
+    }
+
+    $toggle.removeAttr('onclick');
+    $toggle.click(function (e) {
+        var $this = $(this),
+            $preview = $this.closest('.single-letter').find('.preview-letter');
+
+        e.preventDefault();
+        $preview.toggleClass('show-hidden');
+
+        if ($preview.is('.show-hidden')) {
+            $preview.find('br').before('<span class="br-marker"></span>');
+        } else {
+            $preview.find('.br-marker').remove();
+        }
+
+        return false;
+    });
+
+    $fontSize.removeAttr('onchange');
+    $fontSize.change(function(){
+        var $this = $(this),
+            $container = $this.closest('.single-letter'),
+            $preview = $container.find('.preview-letter'),
+            $mce = $container.find('.mce-tinymce.mce-container');
+
+        replaceClass($preview, /preview-size-[^\s]*/g, ['preview-size', $this.val()].join('-'));
+        replaceLink($mce, /font-size-[^\.]*/g, ['font-size', $this.val()].join('-'));
+    });
+
+    $fontFamily.removeAttr('onchange');
+    $fontFamily.change(function(){
+        var $this = $(this),
+            $container = $this.closest('.single-letter'),
+            $preview = $container.find('.preview-letter'),
+            $mce = $container.find('.mce-tinymce.mce-container');
+
+        replaceClass($preview, /preview-font-[^\s]*/g, ['preview-font', $this.val()].join('-'));
+        replaceLink($mce, /font-family-[^\.]*/g, ['font-family', $this.val()].join('-'));
+    });
+});

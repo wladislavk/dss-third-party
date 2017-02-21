@@ -130,9 +130,11 @@ function get_mdreferralids ($pid, $active = true) {
     return $contactid_list;
 }
 
-function get_ptreferralids ($pid) {
+function get_ptreferralids ($pid, $includePhysicians=false) {
     $db = new Db();
     $pid = intval($pid);
+
+    $andPhysicianConditional = $includePhysicians ? '' : 'AND ct.physician != 1';
 
     if ($pid) {
         $pt_sql = "SELECT referred_source
@@ -154,7 +156,7 @@ function get_ptreferralids ($pid) {
                 JOIN dental_patients ON  dental_patients.referred_by = dental_contact.contactid
                 JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
             WHERE dental_patients.patientid = '$pid'
-                AND ct.physician != 1
+                $andPhysicianConditional
             ORDER BY dental_contact.contactid";
     }
 
@@ -434,7 +436,6 @@ function create_letter ($templateid, $pid = null, $info_id = null, $topatient = 
   $columns .= ", generated_date, delivered, docid, userid";
   $values .= ", '$gen_date', '$delivered', '". $_SESSION['docid'] ."', '". $_SESSION['userid'] ."'";
   $letter_query = "INSERT INTO dental_letters ($columns) VALUES ($values);";
-  error_log($letter_query);
   $letter_insert = $db->query($letter_query);
   if(!$letter_insert) {
     return ("MYSQL ERROR:".mysqli_errno($con).": ".mysqli_error($con)."<br/>"."Error inserting Letter to Database");
@@ -829,71 +830,91 @@ function create_letter_pdf($letterid){
 }
 
 function deliver_created_letter($letterid){
-
   $db = new Db();
   $send_success = true;
+  $preferredcontact = '';
 
-  $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid, template FROM dental_letters where letterid = '".$letterid."';";
-  $result = $db->getResults($sql);
-  if (!$result) {
-    return mysqli_error($con);
-  } else {
-    foreach ($result as $row) {
-      if ($row['topatient']) {
-        $id = $row['patientid'];
-        $sql = "SELECT firstname, lastname, email FROM dental_patients WHERE patientid = '".$id."';";
-        $myinfo = $db->getRow($sql);
-        $firstname = $myinfo['firstname'];
-        $lastname = $myinfo['lastname'];
-        $to_email = $myinfo['email'];
-        $preferredcontact = "";
-        $pid = $id;
-        $contactid = '';
-      } elseif ($row['md_list']) {
-        $id = $row['md_list'];
-        $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
-        $myinfo = $db->getRow($sql);
-        $firstname = $myinfo['firstname'];
-        $lastname = $myinfo['lastname'];
-        $to_email = $myinfo['email'];
-        $fax = $myinfo['fax'];
-        $company = $myinfo['company'];
-        $phone = $myinfo['phone1'];
-        $preferredcontact = $myinfo['preferredcontact'];
-        $pid = '';
-        $contactid = $id;
-      } elseif ($row['md_referral_list']) {
-        $id = $row['md_referral_list'];
-        $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact FROM dental_contact WHERE contactid = '".$id."';";
-        $myinfo = $db->getRow($sql);
-        $firstname = $myinfo['firstname'];
-        $lastname = $myinfo['lastname'];
-        $to_email = $myinfo['email'];
-        $fax = $myinfo['fax'];
-        $company = $myinfo['company'];
-        $phone = $myinfo['phone1'];
-        $preferredcontact = $myinfo['preferredcontact'];
-        $pid = '';
-        $contactid = $id;
-      }
-      $to_name = $firstname . " " . $lastname;
-      $send_method = $row['send_method'];
-      $patientid = $row['patientid'];
-      $docid = $row['docid'];
-      $userid = $row['userid'];
-      $templateid = $row['templateid'];
-      $filename = $row['pdf_path'];
-      $template = $row['template'];
-    }
+  $letterid = intval($letterid);
+
+  /**
+   * Retrieve contact IDs from letter
+   */
+  $sql = "SELECT patientid, topatient, pdf_path, md_list, md_referral_list, send_method, docid, userid, templateid, template
+    FROM dental_letters
+    WHERE letterid = '$letterid'";
+  $row = $db->getRow($sql);
+
+  if (!$row) {
+    return false;
   }
 
-  if($send_method=="" && $preferredcontact!=""){
-    $send_method = $preferredcontact;
+  /**
+   * Retrieve corresponding contact details
+   */
+  if ($row['topatient']) {
+    $sql = "SELECT firstname, lastname, email
+        FROM dental_patients
+        WHERE patientid = '{$row['patientid']}'";
+    $myinfo = $db->getRow($sql);
+
+    $firstname = $myinfo['firstname'];
+    $lastname = $myinfo['lastname'];
+    $to_email = $myinfo['email'];
+    $preferredcontact = "";
+    $contactid = '';
+  } elseif ($row['md_list']) {
+    $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact
+        FROM dental_contact
+        WHERE contactid = '{$row['md_list']}'";
+    $myinfo = $db->getRow($sql);
+
+    $firstname = $myinfo['firstname'];
+    $lastname = $myinfo['lastname'];
+    $to_email = $myinfo['email'];
+    $fax = $myinfo['fax'];
+    $company = $myinfo['company'];
+    $phone = $myinfo['phone1'];
+    $preferredcontact = $myinfo['preferredcontact'];
+    $pid = '';
+    $contactid = $row['md_list'];
+  } elseif ($row['md_referral_list']) {
+    $sql = "SELECT firstname, lastname, email, fax, company, phone1, preferredcontact
+        FROM dental_contact
+        WHERE contactid = '{$row['md_referral_list']}'";
+    $myinfo = $db->getRow($sql);
+
+    $firstname = $myinfo['firstname'];
+    $lastname = $myinfo['lastname'];
+    $to_email = $myinfo['email'];
+    $fax = $myinfo['fax'];
+    $company = $myinfo['company'];
+    $phone = $myinfo['phone1'];
+    $preferredcontact = $myinfo['preferredcontact'];
+    $pid = '';
+    $contactid = $row['md_referral_list'];
   }
+
+  $to_name = $firstname . " " . $lastname;
+  $send_method = $row['send_method'];
+  $patientid = $row['patientid'];
+  $docid = $row['docid'];
+  $userid = $row['userid'];
+  $templateid = $row['templateid'];
+  $filename = $row['pdf_path'];
+  $template = $row['template'];
+
+  /**
+   * Retrieve send method, with fallback strategy
+   */
+  $send_method = letterSendMethod($send_method, $preferredcontact);
 
   // Get Doctor's Name and Email
-  $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid FROM dental_users u LEFT JOIN dental_user_company c ON c.userid=u.userid WHERE u.userid = '".$docid."';";
+  $sql = "SELECT u.name, u.email, u.phone, u.use_digital_fax, u.fax, u.logo, u.user_type, c.companyid
+    FROM dental_users u
+        LEFT JOIN dental_user_company c ON c.userid = u.userid
+    WHERE u.userid = '$docid'";
   $result = $db->getRow($sql);
+
   $doc_name = $result['name'];
   $doc_email = $result['email'];
   $doc_phone = $result['phone'];
@@ -903,58 +924,109 @@ function deliver_created_letter($letterid){
   $user_type = $result['user_type'];
   $doc_company = $result['companyid'];
 
-  $db->query("UPDATE dental_faxes SET viewed='1' WHERE letterid='".$letterid."'");
+  $db->query("UPDATE dental_faxes
+    SET viewed = '1'
+    WHERE letterid = '$letterid'");
 
-  $fax_send = false;
-  // Send Fax
+  $digitalFax = false;
+
+  /**
+   * Send digital fax
+   */
   if ($send_method == 'fax' && $use_digital_fax) {
     $subject = "Dental Sleep Solutions";
     include 'class.fax.php';
     $filePath = $_SERVER['DOCUMENT_ROOT']."/manage/letterpdfs/".$filename;
     $fileType = "pdf";
     $fts = new \FTSSamples($doc_company);
-    $fax_send = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
-    if($fax_send["status"] !== true){
-      ?>
+    $digitalFax = $fts->OutboundFaxCreate('1'.$fax, $filename, $filePath, $fileType);
+
+    $send_success = $digitalFax['status'] === true;
+
+    if (!$send_success) { ?>
         <script type="text/javascript">
           alert('Unable to send fax.');
         </script>
       <?php
-      if($fax_send["XwsErrorInfo"] == 'FaxNumberNotAllowed'){
-        $send_success = false;
-      }else{
-        $send_success = false;
-      }
     }
-    //$fax_success = send_fax($fax, $phone, $to_email, $to_name, $company, $subject, $doc_name, $filename, $message, $docid);
   }
-  if ($send_success){ //($email_success || $fax_success || $send_method == 'paper') {
-    if($fax_send['status']){
-      $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1', mailed_date = NOW(), mailed_once=1 WHERE letterid='".s_for($letterid)."';";
-      $fax_query = "INSERT INTO dental_faxes SET patientid = '".mysqli_real_escape_string($GLOBALS['con'],$patientid)."',userid = '".mysqli_real_escape_string($GLOBALS['con'],$userid)."',docid = '".mysqli_real_escape_string($GLOBALS['con'],$docid)."',sent_date = NOW(),pages = '".mysqli_real_escape_string($GLOBALS['con'],count_pages('../letterpdfs/'.$filename))."',contactid = '".mysqli_real_escape_string($GLOBALS['con'],$contactid)."',filename = '".mysqli_real_escape_string($GLOBALS['con'],$filename)."',to_number = '".mysqli_real_escape_string($GLOBALS['con'],$fax)."',to_name = '".mysqli_real_escape_string($GLOBALS['con'],$to_name)."',letterid = '".mysqli_real_escape_string($GLOBALS['con'],$letterid)."',status = '0', sfax_transmission_id = '".$fax_send['transmission_id']."', letter_body = '".mysqli_real_escape_string($GLOBALS['con'],$template)."', adddate = NOW(),ip_address = '".$_SERVER['REMOTE_ADDR']."'";
-      error_log($fax_query);
-      $fid = $db->getInsertId($fax_query);
-      invoice_add_fax('1', $_SESSION['docid'], $fid);
-    }else{
-      $letter_query = "UPDATE dental_letters SET status=1, parentid=null, delivery_date = NOW(), delivered='1' WHERE letterid='".s_for($letterid)."';";
-    }
-    $letter_result = $db->query($letter_query);
-    $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
-    $letter_result = $db->query($letter_query);
-    if (!$letter_result) {
-      return mysqli_error($con);
-    }
-    if ($send_method == 'paper') {
-      return "paper";
-    }
-    return true;
-  }else{
-    $letter_query = "UPDATE dental_letters SET status='2', parentid=null WHERE letterid='".s_for($letterid)."';";
-    $letter_result = $db->query($letter_query);
-    $letter_query = "UPDATE dental_letters SET parentid=null WHERE parentid='".s_for($letterid)."';";
-    $letter_result = $db->query($letter_query);
+
+  /**
+   * Delivery failed. The only automatic delivery is the fax option
+   */
+  if (!$send_success) {
+    $letter_query = "UPDATE dental_letters SET
+        status = 2,
+        parentid = NULL,
+        send_method = '$send_method'
+      WHERE letterid = '$letterid'";
+    $db->query($letter_query);
+
+    $letter_query = "UPDATE dental_letters SET
+        parentid = NULL
+      WHERE parentid = '$letterid'";
+    $db->query($letter_query);
+
     return "Letter could not be sent.";
   }
+
+  /**
+   * Delivery success, determine if it was a fax or a regular letter
+   */
+  if ($digitalFax) {
+    $assignmentList = $db->escapeAssignmentList([
+      'patientid' => $patientid,
+      'userid' => $userid,
+      'docid' => $docid,
+      'pages' => count_pages('../letterpdfs/'.$filename),
+      'contactid' => $contactid,
+      'filename' => $filename,
+      'to_number' => $fax,
+      'to_name' => $to_name,
+      'sfax_transmission_id' => $digitalFax['transmission_id'],
+      'letter_body' => $template,
+      'ip_address' => $_SERVER['REMOTE_ADDR']
+    ]);
+
+    $fax_query = "INSERT INTO dental_faxes SET
+      $assignmentList,
+      letterid = '$letterid',
+      status = 0,
+      adddate = NOW(),
+      sent_date = NOW()";
+    $fid = $db->getInsertId($fax_query);
+    invoice_add_fax('1', $_SESSION['docid'], $fid);
+
+    $letter_query = "UPDATE dental_letters SET
+        status = 1,
+        delivered = 1,
+        parentid = NULL,
+        mailed_once = 1,
+        send_method = 'fax',
+        mailed_date = NOW(),
+        delivery_date = NOW()
+    WHERE letterid = '$letterid'";
+  } else {
+    $letter_query = "UPDATE dental_letters SET
+        status = 1,
+        delivered = 1,
+        parentid = NULL,
+        send_method = '$send_method',
+        delivery_date = NOW()
+      WHERE letterid = '$letterid'";
+  }
+
+  /**
+   * Update sent letter with delivery details, and remove parent ID references
+   */
+  $db->query($letter_query);
+
+  $letter_query = "UPDATE dental_letters SET
+      parentid = NULL
+    WHERE parentid = '$letterid'";
+  $letter_result = $db->query($letter_query);
+
+  return $letter_result ? true : false;
 }
 
 // Actually Sends The Letter, returns send_method on success, false on failure.
@@ -1300,140 +1372,177 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/config/lang/eng
 require_once($_SERVER['DOCUMENT_ROOT'] . '/manage/3rdParty/tcpdf/tcpdf.php');
 
 // Extend the TCPDF class to create custom Header and Footer
-class MYPDF extends \TCPDF {
+class DS3PDF extends \TCPDF {
+    protected $footerText = '';
+    protected $footerImage = '';
 
-  public $footerText = '';
-  //Page header
-  public function Header() {
-    // Logo
-    $image_file = K_PATH_IMAGES.'dss_print_header.jpg';
-    //$this->Image($image_file, 0, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-  }
-  // Page footer
-  public function Footer() {
-    // Position at 26 mm from bottom
-    $this->SetY(-17);
-    $this->Cell(0, 10, html_entity_decode($this->footerText), 0, false, 'C', 0, '', 0, false, 'T', 'M');
-  }
-  public function AcceptPageBreak() {
-    if ($this->num_columns > 1) {
-      // multi column mode
-      if ($this->current_column < ($this->num_columns - 1)) {
-        // go to next column
-        $this->selectColumn($this->current_column + 1);
-      } else {
-        // add a new page
-        $this->AddPage();
-        // set first column
-        $this->selectColumn(0);
-      }
-      // avoid page breaking from checkPageBreak()
-      return false;
+    public function __construct () {
+        parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        $this->SetCreator(PDF_CREATOR);
+        $this->SetAuthor('Dental Sleep Solutions');
+        $this->SetKeywords('DSS Correspondence');
+        $this->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $this->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
     }
-    $this->setMargins(18,40,18);
-    return $this->AutoPageBreak;
-  }
+
+    public function SetTitle ($title) {
+        parent::SetTitle($title);
+        $this->SetSubject($title);
+    }
+
+    public function ConfigureFont ($family, $style, $size) {
+        $this->SetFont($family, $style, $size);
+        $this->setHeaderFont([$family, $style, $size]);
+        $this->setFooterFont([$family, $style, $size]);
+    }
+
+    public function ConfigureMargins ($top, $right, $bottom, $left, $header=0, $footer=0) {
+        $this->SetMargins($left, $top, $right, true);
+        $this->SetAutoPageBreak(true, $bottom);
+        $this->setHeaderMargin($header);
+        $this->setFooterMargin($footer);
+    }
+
+    public function SetHeaderImage ($image) {
+        $this->header_logo = $image;
+    }
+
+    public function SetHeaderTitle ($text) {
+        $this->header_title = $text;
+    }
+
+    public function SetHeaderText ($text) {
+        $this->header_string = $text;
+    }
+
+    public function SetFooterText ($text) {
+        $this->footerText = $text;
+    }
+
+    public function SetFooterImage ($image) {
+        $this->footerImage = $image;
+    }
+
+    public function Header () {
+        if ($this->header_logo) {
+            $this->Image(
+                $this->header_logo,
+                $this->lMargin,
+                $this->header_margin,
+                $this->w - $this->lMargin - $this->rMargin,
+                0,
+                'JPG',
+                '',
+                'M',
+                true
+            );
+        }
+
+        if ($this->header_string) {
+            $this->SetXY($this->lMargin, $this->header_margin);
+            $this->Cell(0, 0, html_entity_decode($this->header_string), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        }
+    }
+
+    public function Footer () {
+        if ($this->footerImage) {
+            $this->Image(
+                $this->footerImage,
+                $this->lMargin,
+                $this->h - $this->footer_margin,
+                $this->w - $this->lMargin - $this->rMargin,
+                0,
+                'JPG',
+                '',
+                'M',
+                true
+            );
+        }
+
+        if ($this->footerText) {
+            $this->SetXY($this->lMargin, -$this->footer_margin);
+            $this->Cell(0, 0, html_entity_decode($this->footerText), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        }
+    }
+
+    public function AcceptPageBreak () {
+        if ($this->num_columns <= 1) {
+            return $this->AutoPageBreak;
+        }
+
+        // multi column mode
+        if ($this->current_column < ($this->num_columns - 1)) {
+            $this->selectColumn($this->current_column + 1);
+        } else {
+            $this->AddPage();
+            $this->selectColumn(0);
+        }
+
+        // avoid page breaking from checkPageBreak()
+        return false;
+    }
 }
 
-function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '', $docid = null, $letterid = null) {	
-	// create new PDF document
-  if ($fax) {
-    global $pdf_header, $pdf_footer;
-    $pdf_header = $header;
-    $pdf_footer = $footer;
-    // Extend the TCPDF class to create custom Header and Footer
-    class FAXPDF extends \TCPDF {
-      //Page header
-      public function Header() {
-        // Logo
-        global $pdf_header;
-        if ($pdf_header) {
-          $this->Image($pdf_header, 24, 0, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-        }
-      }
+function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $cover = '', $docid = null, $letterid = null) {
+  $db = new Db();
 
-      // Page footer
-      public function Footer() {
-        // Position at 26 mm from bottom
-        $this->SetY(-26);
-        global $pdf_footer;
-        if ($pdf_footer) {
-          $this->Image($pdf_footer, 24, 281, '', '', 'JPG', '', 'M', false, 300, '', false, false, 0, false, false, false);
-        }
-      }
-    }
-    $pdf = new FAXPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-  } else {
-    $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-    $pdf->footerText = $footer;
-  }
+  // Default values
+  $margin_top = PDF_MARGIN_TOP;
+  $margin_left = PDF_MARGIN_LEFT;
+  $margin_right = PDF_MARGIN_RIGHT;
+  $margin_bottom = PDF_MARGIN_BOTTOM;
+  $margin_header = PDF_MARGIN_HEADER;
+  $margin_footer = PDF_MARGIN_FOOTER;
 
-  // set document information
-  $pdf->SetCreator(PDF_CREATOR);
-  $pdf->SetAuthor('Dental Sleep Solutions');
-  $pdf->SetTitle($title);
-  $pdf->SetSubject($title);
-  $pdf->SetKeywords('DSS Correspondence');
-
-  // set default monospaced font
-  $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
   $font_size = 10;
   $font_family = "dejavusans";
-  $db = new Db();
-  if($docid){
-    $m_sql = "SELECT * from dental_users where userid='".mysqli_real_escape_string($GLOBALS['con'],$docid)."'";
-    $m_r = $db->getRow($m_sql);
-    if($m_r['user_type']==2){
+
+  if ($docid) {
+    $docid = intval($docid);
+    $m_r = $db->getRow("SELECT user_type,
+        letter_margin_top, letter_margin_bottom,
+        letter_margin_left, letter_margin_right,
+        letter_margin_header, letter_margin_footer
+      FROM dental_users
+      WHERE userid = '$docid'");
+
+    if ($m_r['user_type'] == 2) {
       $margin_top = $m_r['letter_margin_top'];
       $margin_left = $m_r['letter_margin_left'];
       $margin_right = $m_r['letter_margin_right'];
       $margin_bottom = $m_r['letter_margin_bottom'];
-      $margin_header = $m_r['letter_margin_header']; 
+      $margin_header = $m_r['letter_margin_header'];
       $margin_footer = $m_r['letter_margin_footer'];
-      if($letterid){
-        $l_sql = "SELECT * FROM dental_letters where letterid='".mysqli_real_escape_string($GLOBALS['con'],$letterid)."'";
-        $l_r = $db->getRow($l_sql);
+
+      if ($letterid) {
+        $letterid = intval($letterid);
+        $l_r = $db->getRow("SELECT font_size, font_family
+          FROM dental_letters
+          WHERE letterid = '$letterid'");
         $font_size = $l_r['font_size'];
         $font_family = $l_r['font_family'];
       }
-    }else{
-      $margin_top = PDF_MARGIN_TOP;
-      $margin_left = PDF_MARGIN_LEFT;
-      $margin_right = PDF_MARGIN_RIGHT;
-      $margin_bottom = PDF_MARGIN_BOTTOM;
-      $margin_header = PDF_MARGIN_HEADER; 
-      $margin_footer = PDF_MARGIN_FOOTER;
     }
-  }else{
-    $margin_top = PDF_MARGIN_TOP;
-    $margin_left = PDF_MARGIN_LEFT;
-    $margin_right = PDF_MARGIN_RIGHT;
-    $margin_bottom = PDF_MARGIN_BOTTOM;
-    $margin_header = PDF_MARGIN_HEADER;
-    $margin_footer = PDF_MARGIN_FOOTER;
   }
 
-  //set margins
-  $pdf->SetMargins($margin_left, $margin_top, $margin_right);
-  $pdf->SetHeaderMargin($margin_header);
-  $pdf->SetFooterMargin($margin_footer);
+  $pdf = new DS3PDF();
+  $pdf->ConfigureMargins($margin_top, $margin_right, $margin_bottom, $margin_left, $margin_header, $margin_footer);
+  $pdf->ConfigureFont($font_family, '', $font_size);
+  $pdf->SetTitle($title);
 
-  //set auto page breaks
-  $pdf->SetAutoPageBreak(TRUE, /*$margin_bottom*/20);
+  if ($fax) {
+    $pdf->SetHeaderImage($header);
+    $pdf->SetFooterImage($footer);
+  } else {
+    $pdf->SetHeaderText($header);
+    $pdf->SetFooterText($footer);
+  }
 
-  //set image scale factor
-  $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-  //set some language-dependent strings
-  //$pdf->setLanguageArray($l);
-
-  // set font
-  $pdf->SetFont($font_family, '', $font_size);
-
-  if($cover != ''){
+  if ($cover != '') {
     $cover = str_replace('%NUM_PAGES%', $pdf->getAliasNbPages(), $cover);
     $pdf->AddPage();
-    $pdf->writeHTML($cover, true, false, true, false, '');
+    $pdf->writeHTML($cover, false, false, true, false, '');
   }
 
   // add a page
@@ -1444,20 +1553,21 @@ function create_pdf($title, $filename, $html, $fax = null, $header, $footer, $co
   $html = tidyHtml($html);
 
   /**
+   * @see DSS-506
    * @see CS-112
-   * Most letters don't add margin space between the patient details table and the doctor greeting paragraph
-   * These changes were done by trial and error, as the inline styles don't work as expected
+   *
+   * Refactored HTML adds a full document, remove the HEAD and BODY tags, to avoid any extra space.
+   * Undoes CS-112
    */
-  $html = preg_replace('@(</table>[\s\r\t\n]*<p>)(Dear)@', '$1&nbsp;<br />$2', $html);
+  $html = preg_replace('@[\s\S]*?<head>([\s\S]*?)</head>[\s\S]*?<body>([\s\S]*?)</body>[\s\S]*@', '$1$2', $html);
 
   // output the HTML content
-  $pdf->writeHTML($html, true, false, true, false, '');
-  //Close and output PDF document
-  //WORK AROUND FOR MASS LETTER CREATION
-  //$pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs2/' . $filename, 'F');
+  $pdf->writeHTML($html, false, false, true, false, '');
+  $pdf->lastPage();
+
   //Close and output PDF document
   $file = $_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename;
-  $pdf->Output($_SERVER['DOCUMENT_ROOT'] . '/manage/letterpdfs/' . $filename, 'F');
+  $pdf->Output($file, 'F');
 }
 
 
@@ -1804,6 +1914,7 @@ function tidyHtml ($html) {
         'clean' => false,
         'preserve-entities' => true,
         'drop-proprietary-attributes' => true,
+        'drop-empty-paras' => false,
         'output-xhtml' => true,
         'show-body-only' => false,
         'wrap' => '0',
@@ -1828,4 +1939,18 @@ function tidyHtml ($html) {
     }
 
     return $cleanHtml;
+}
+
+function letterSendMethod ($letterMethod, $contactMethod) {
+    $methodList = ['paper', 'email', 'fax'];
+
+    if (in_array($letterMethod, $methodList)) {
+        return $letterMethod;
+    }
+
+    if (in_array($contactMethod, $methodList)) {
+        return $contactMethod;
+    }
+
+    return 'paper';
 }

@@ -536,7 +536,7 @@ $mailed = (isset($_GET['mailed']) && $_GET['mailed'] != '')?$_GET['mailed']:'';
             } ?>
           </td>
           <td>
-            <?php echo  $method; ?>
+            <?= letterSendMethod($method, '') ?>
           </td>
           <td>
             <?php echo  $generated; ?>

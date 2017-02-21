@@ -342,7 +342,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
     $referral_fullname = '';
   }
 
-  $pt_referral = get_ptreferralids($_GET['pid']);
+  $pt_referral = get_ptreferralids($_GET['pid'], true);
   $ptref_info = get_contact_info('', '', $pt_referral, $source);
 
   $letter_contacts = array();

@@ -130,9 +130,11 @@ function get_mdreferralids ($pid, $active = true) {
     return $contactid_list;
 }
 
-function get_ptreferralids ($pid) {
+function get_ptreferralids ($pid, $includePhysicians=false) {
     $db = new Db();
     $pid = intval($pid);
+
+    $andPhysicianConditional = $includePhysicians ? '' : 'AND ct.physician != 1';
 
     if ($pid) {
         $pt_sql = "SELECT referred_source
@@ -154,7 +156,7 @@ function get_ptreferralids ($pid) {
                 JOIN dental_patients ON  dental_patients.referred_by = dental_contact.contactid
                 JOIN dental_contacttype ct ON ct.contacttypeid = dental_contact.contacttypeid
             WHERE dental_patients.patientid = '$pid'
-                AND ct.physician != 1
+                $andPhysicianConditional
             ORDER BY dental_contact.contactid";
     }
 
@@ -1424,7 +1426,17 @@ class DS3PDF extends \TCPDF {
 
     public function Header () {
         if ($this->header_logo) {
-            $this->Image($this->header_logo, $this->lMargin, $this->header_margin, 20, 0, 'JPG', '', 'M');
+            $this->Image(
+                $this->header_logo,
+                $this->lMargin,
+                $this->header_margin,
+                $this->w - $this->lMargin - $this->rMargin,
+                0,
+                'JPG',
+                '',
+                'M',
+                true
+            );
         }
 
         if ($this->header_string) {
@@ -1435,7 +1447,17 @@ class DS3PDF extends \TCPDF {
 
     public function Footer () {
         if ($this->footerImage) {
-            $this->Image($this->footerImage, $this->lMargin, $this->h - $this->footer_margin, 20, 0, 'JPG', '', 'M');
+            $this->Image(
+                $this->footerImage,
+                $this->lMargin,
+                $this->h - $this->footer_margin,
+                $this->w - $this->lMargin - $this->rMargin,
+                0,
+                'JPG',
+                '',
+                'M',
+                true
+            );
         }
 
         if ($this->footerText) {

@@ -745,7 +745,14 @@ module.exports = {
             this.$set('patientLocation', '');
 
             // update patient name in the header
-            this.$dispatch('update-from-child', { patientName: '' });
+            this.$dispatch('update-from-child', {
+                patientName  : '',
+                medicare     : 0,
+                premedCheck  : 0,
+                title        : '',
+                alertText    : '',
+                displayAlert : false
+            });
         },
         fillForm: function(patientId) {
             this.getDataForFillingPatientForm(patientId)
@@ -769,7 +776,12 @@ module.exports = {
 
                         // update patient name in the header
                         this.$dispatch('update-from-child', {
-                            patientName: data.patient.firstname + ' ' + data.patient.lastname
+                            patientName  : data.patient.firstname + ' ' + data.patient.lastname,
+                            medicare     : (data.patient.p_m_ins_type == 1),
+                            premedCheck  : data.patient.premedcheck,
+                            title        : 'Pre-medication: ' + data.patient.premed + '\n',
+                            alertText    : data.patient.alert_text,
+                            displayAlert : data.patient.display_alert
                         });
                     }
                 }, function(response) {

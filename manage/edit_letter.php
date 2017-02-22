@@ -952,9 +952,19 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       			$replace[] = (!empty($pcp['zip']) ? $pcp['zip'] : '');
       		}
 
+      		$ptreferral_fullname = $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'];
+
       		$search[] = '%ptreferral_fullname%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'];
+                if ($contact['type'] == 'md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id']) {
+                    $replace[] = "you";
+                } else {
+                    if(trim($referral_fullname)!=''){
+                        $replace[] = $ptreferral_fullname;
+                    } else {
+                        $replace[] = '';
+                    }
+                }
       		} else {
             $replace[] = "";
           }
@@ -1456,9 +1466,19 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       		$replace[] = (!empty($pcp['zip']) ? $pcp['zip'] : '');
       	}
 
+		  $ptreferral_fullname = $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'].json_encode([$contact, $ref_info]);
+
 		    $search[] = '%ptreferral_fullname%';
         if (!empty($ptref_info['md_referrals'])) {
-		      $replace[] = $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'];
+            if ($contact['type'] == 'md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id']) {
+                $replace[] = "you";
+            } else {
+                if(trim($referral_fullname)!=''){
+                    $replace[] = $ptreferral_fullname;
+                } else {
+                    $replace[] = '';
+                }
+            }
 	      } else {
           $replace[] = "";
         }

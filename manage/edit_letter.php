@@ -74,7 +74,7 @@ function contactType ($patientId, $contactId, $contactType) {
 
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
-<script type="text/javascript" src="/manage/js/edit_letter.js?v=<?= time() ?>"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=20170221"></script>
 <script>
   var pageSize = <?= json_encode($pageSize) ?>;
   var pageMargins = <?= json_encode($margins) ?>;
@@ -315,13 +315,13 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
     $ref_info = get_contact_info('', '', $md_referral_list, $source);
     	if (!empty($ref_info['md_referrals'])) {                        
     		if (is_physician($ref_info['md_referrals'][0]['contacttypeid'])) {
-    			$referral_fullname = "<strong>" . $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+    			$referral_fullname = $ref_info['md_referrals'][0]['salutation'] . " " . $ref_info['md_referrals'][0]['firstname'] . " " . $ref_info['md_referrals'][0]['lastname'];
     		} else {
     			$referral_fullname = '';
     		}
       } elseif(!empty($pcp)) {
     		if (is_physician($ref_info['pcp']['contacttypeid'])) {
-    	    $referral_fullname = "<strong>" . $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'] . "</strong>";
+    	    $referral_fullname = $pcp['salutation'] . " " . $pcp['firstname'] . " " . $pcp['lastname'];
   		  } else {
   		 	  $referral_fullname = '';
   		  }
@@ -329,15 +329,15 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
   		  $referral_fullname = '';
   	  }
   } elseif ($source == DSS_REFERRED_PATIENT) {
-  	$referral_fullname = '<strong>a patient</strong>';
+  	$referral_fullname = 'a patient';
   } elseif ($source == DSS_REFERRED_MEDIA ) {
-    $referral_fullname = '<strong>a media source</strong>';
+    $referral_fullname = 'a media source';
   } elseif ($source == DSS_REFERRED_FRANCHISE ) {
-    $referral_fullname = '<strong>an internal source</strong>';
+    $referral_fullname = 'an internal source';
   } elseif ($source == DSS_REFERRED_DSSOFFICE ) {
-    $referral_fullname = "<strong>Dental Sleep Solutions' referral network</strong>";
+    $referral_fullname = "Dental Sleep Solutions' referral network";
   } elseif ($source == DSS_REFERRED_OTHER ) {
-    $referral_fullname = '<strong>an unspecified source</strong>';
+    $referral_fullname = 'an unspecified source';
   } else {
     $referral_fullname = '';
   }
@@ -857,44 +857,44 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       		$search = array();
       		$replace = array();
       		$search[] = '%todays_date%';
-      		$replace[] = "<strong>" . $todays_date . "</strong>";
+      		$replace[] = $todays_date;
       		$search[] = '%contact_salutation%';
-          $replace[] = "<strong>" . $contact['salutation'] . "</strong>";
+          $replace[] = $contact['salutation'];
       		$search[] = '%contact_fullname%';
-      		$replace[] = "<strong>" . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'] . "</strong>";
+      		$replace[] = $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
       		$search[] = '%contact_firstname%';
-      		$replace[] = "<strong>" . $contact['firstname'] . "</strong>";
+      		$replace[] = $contact['firstname'];
       		$search[] = '%contact_lastname%';
-      		$replace[] = "<strong>" . $contact['lastname'] . "</strong>";
+      		$replace[] = $contact['lastname'];
       		$search[] = "%salutation%";
-      		$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
+      		$replace[] = $letter_contacts[$key]['salutation'];
       		$search[] = '%practice%';
-      		$replace[] = ($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "";	
+      		$replace[] = ($letter_contacts[$key]['company']) ? $letter_contacts[$key]['company'] . "<br />" : "";	
       		$search[] = '%contact_email%';
-      		$replace[] = "<strong>" . $letter_contacts[$key]['email'] . "</strong>";
+      		$replace[] = $letter_contacts[$key]['email'];
       		$search[] = '%addr1%';
-      		$replace[] = "<strong>" . $contact['add1'] . "</strong>";
+      		$replace[] = $contact['add1'];
       		$search[] = '%addr2%';
-      		$replace[] = ($contact['add2']) ? ", <strong>" . $contact['add2'] . "</strong>" : "";
+      		$replace[] = ($contact['add2']) ? ", " . $contact['add2'] : "";
       		$search[] = '%insurance_id%';
-      		$replace[] = "<strong>" . (!empty($patient_info['p_m_ins_id']) ? $patient_info['p_m_ins_id'] : '') . "</strong>";
+      		$replace[] = (!empty($patient_info['p_m_ins_id']) ? $patient_info['p_m_ins_id'] : '');
       		$search[] = '%city%';
-      		$replace[] = "<strong>" . $contact['city'] . "</strong>";
+      		$replace[] = $contact['city'];
       		$search[] = '%state%';
-      		$replace[] = "<strong>" . $contact['state'] . "</strong>";
+      		$replace[] = $contact['state'];
       		$search[] = '%zip%';
-      		$replace[] = "<strong>" . $contact['zip'] . "</strong>";
+      		$replace[] = $contact['zip'];
       		$search[] = '%referral_fullname%';
           
           if ($contact['type'] == 'md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id']) {
-            $replace[] = "<strong>you</strong>";
+            $replace[] = "you";
           } else {
             $replace[] = $referral_fullname;
           }
 
           $search[] = '%by_referral_fullname%';     
           if ($contact['type'] == 'md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id']) {
-            $replace[] = "by <strong>you</strong>";
+            $replace[] = "by you";
           } else {
             if(trim($referral_fullname)!=''){
               $replace[] = "by ".$referral_fullname;
@@ -905,164 +905,164 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
       		$search[] = '%referral_lastname%';
       		if (!empty($ref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+      			$replace[] = $ref_info['md_referrals'][0]['lastname'];
       		} else {
-      			$replace[] = "<strong>" . (!empty($pcp['lastname']) ? $pcp['lastname'] : '') . "</strong>";
+      			$replace[] = (!empty($pcp['lastname']) ? $pcp['lastname'] : '');
       		}
 
       		$search[] = '%referral_practice%';
       		if (!empty($ref_info['md_referrals'])) {
-      			$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
+      			$replace[] = ($ref_info['md_referrals'][0]['company']) ? $ref_info['md_referrals'][0]['company'] . "<br />" : "";	
       		} else {
-      			$replace[] = !empty($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "";	
+      			$replace[] = !empty($pcp['company']) ? $pcp['company'] . "<br />" : "";	
       		}
 
       		$search[] = '%ref_addr1%';
       		if (!empty($ref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
+      			$replace[] = $ref_info['md_referrals'][0]['add1'];
       		} else {
-      			$replace[] = "<strong>" . (!empty($pcp['add1']) ? $pcp['add1'] : '') . "</strong>";
+      			$replace[] = (!empty($pcp['add1']) ? $pcp['add1'] : '');
       		}
 
       		$search[] = '%ref_addr2%';
       		if (!empty($ref_info['md_referrals'])) {
-      			$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "";
+      			$replace[] = ($ref_info['md_referrals'][0]['add2']) ? $ref_info['md_referrals'][0]['add2'] : "";
       		} else {
-      			$replace[] = !empty($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "";
+      			$replace[] = !empty($pcp['add2']) ? $pcp['add2'] : "";
       		}
 
       		$search[] = '%ref_city%';
       		if (!empty($ref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
+      			$replace[] = $ref_info['md_referrals'][0]['city'];
       		} else {
-      			$replace[] = "<strong>" . (!empty($pcp['city']) ? $pcp['city'] : '') . "</strong>";
+      			$replace[] = (!empty($pcp['city']) ? $pcp['city'] : '');
       		}
 
       		$search[] = '%ref_state%';
       		if (!empty($ref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
+      			$replace[] = $ref_info['md_referrals'][0]['state'];
       		} else {
-      			$replace[] = "<strong>" . (!empty($pcp['state']) ? $pcp['state'] : '') . "</strong>";
+      			$replace[] = (!empty($pcp['state']) ? $pcp['state'] : '');
       		}
 
       		$search[] = '%ref_zip%';
       		if (!empty($ref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
+      			$replace[] = $ref_info['md_referrals'][0]['zip'];
       		} else {
-      			$replace[] = "<strong>" . (!empty($pcp['zip']) ? $pcp['zip'] : '') . "</strong>";
+      			$replace[] = (!empty($pcp['zip']) ? $pcp['zip'] : '');
       		}
 
       		$search[] = '%ptreferral_fullname%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
+      			$replace[] = $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'];
       		} else {
             $replace[] = "";
           }
 
       		$search[] = '%ptreferral_firstname%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['firstname'] . "</strong>";
+      			$replace[] = $ptref_info['md_referrals'][0]['firstname'];
       		} else {
             $replace[] = "";
           }
 
       		$search[] = '%ptreferral_lastname%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
+      			$replace[] = $ptref_info['md_referrals'][0]['lastname'];
       		} else {
             $replace[] = "";
           }
 
       		$search[] = '%ptreferral_practice%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = ($ptref_info['md_referrals'][0]['company']) ? "<strong>" . $ptref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
+      			$replace[] = ($ptref_info['md_referrals'][0]['company']) ? $ptref_info['md_referrals'][0]['company'] . "<br />" : "";	
       		} else {
             $replace[] = "";
           }
 
       		$search[] = '%ptref_addr1%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['add1'] . "</strong>";
+      			$replace[] = $ptref_info['md_referrals'][0]['add1'];
       		} else {
             $replace[] = "";
           }
 
       		$search[] = '%ptref_addr2%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong>" : "";
+      			$replace[] = ($ptref_info['md_referrals'][0]['add2']) ? $ptref_info['md_referrals'][0]['add2'] : "";
       		} else {
             $replace[] = "";
           } 
 
       		$search[] = '%ptref_city%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['city'] . "</strong>";
+      			$replace[] = $ptref_info['md_referrals'][0]['city'];
       		} else {
             $replace[] = "";
           } 
 
       		$search[] = '%ptref_state%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['state'] . "</strong>";
+      			$replace[] = $ptref_info['md_referrals'][0]['state'];
       		} else {
             $replace[] = "";
           }
 
       		$search[] = '%ptref_zip%';
       		if (!empty($ptref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $ptref_info['md_referrals'][0]['zip'] . "</strong>";
+      			$replace[] = $ptref_info['md_referrals'][0]['zip'];
       		} else {
             $replace[] = "";
           }
 
           $search[] = "%company%";
-          $replace[] = "<strong>" . $company_info['name'] . "</strong>";
+          $replace[] = $company_info['name'];
           $search[] = "%company_addr%";
-          $replace[] = "<strong>" . nl2br($company_info['add1']." ".$company_info['add2']) . "<br />" . $company_info['city'] . ", " . $company_info['state'] . " " . $company_info['zip'] . "</strong>";
+          $replace[] = nl2br($company_info['add1']." ".$company_info['add2']) . "<br />" . $company_info['city'] . ", " . $company_info['state'] . " " . $company_info['zip'];
       		$search[] = "%franchisee_fullname%";
-      		$replace[] = "<strong>" . $location_info['name'] . "</strong>";
+      		$replace[] = $location_info['name'];
           $search[] = "%doctor_fullname%";
-          $replace[] = "<strong>" . $location_info['name'] . "</strong>";
+          $replace[] = $location_info['name'];
       		$search[] = "%franchisee_lastname%";
-      		$replace[] = "<strong>" . array_pop((explode(" ", $location_info['name']))) . "</strong>";
+      		$replace[] = array_pop((explode(" ", $location_info['name'])));
           $search[] = "%doctor_lastname%";
-          $replace[] = "<strong>" . array_pop((explode(" ", $location_info['name']))) . "</strong>";
+          $replace[] = array_pop((explode(" ", $location_info['name'])));
       		$search[] = "%franchisee_practice%";
-      		$replace[] = "<strong>" . $location_info['location'] . "</strong>";
+      		$replace[] = $location_info['location'];
           $search[] = "%doctor_practice%";
-          $replace[] = "<strong>" . $location_info['location'] . "</strong>";
+          $replace[] = $location_info['location'];
       		$search[] = "%franchisee_phone%";
-      		$replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
+      		$replace[] = format_phone($location_info['phone']);
           $search[] = "%doctor_phone%";
-          $replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
+          $replace[] = format_phone($location_info['phone']);
       		$search[] = "%franchisee_addr%";
-      		$replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
+      		$replace[] = nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'];
           $search[] = "%doctor_addr%";
-          $replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
+          $replace[] = nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'];
           $search[] = "%signature_image%";
           $replace[] = "<img src=\"display_file.php?f=".$signature_file."\" />";
       		$search[] = "%patient_fullname%";
-      		$replace[] = "<strong>" . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
+      		$replace[] = (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '');
           $search[] = "%patient_titlefullname%";
-          $replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
+          $replace[] = (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '');
       		$search[] = "%patient_lastname%";
-      		$replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
+      		$replace[] = (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '');
       		$search[] = "%ccpatient_fullname%";
 
       		if ($topatient && $contact['type']!='patient') {
-      		  $replace[] = "<strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong>";
+      		  $replace[] = $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'];
       		} else {
       		  $replace[] = "";
       		}
 
       		$search[] = "%patient_dob%";
-      		$replace[] = "<strong>" . (!empty($patient_info['dob']) ? $patient_info['dob'] : '') . "</strong>";
+      		$replace[] = (!empty($patient_info['dob']) ? $patient_info['dob'] : '');
       		$search[] = "%patient_firstname%";
-      		$replace[] = "<strong>" . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . "</strong>";
+      		$replace[] = (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '');
       		$search[] = "%patient_age%";
-      		$replace[] = "<strong>" . (!empty($patient_info['age']) ? $patient_info['age'] : '') . "</strong>";
+      		$replace[] = (!empty($patient_info['age']) ? $patient_info['age'] : '');
       		$search[] = "%patient_gender%";
-      		$replace[] = "<strong>" . strtolower(!empty($patient_info['gender']) ? $patient_info['gender'] : '') . "</strong>";
+      		$replace[] = strtolower(!empty($patient_info['gender']) ? $patient_info['gender'] : '');
       		$search[] = "%patient_photo%";
 
       		if($patient_photo!='') {
@@ -1072,109 +1072,109 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       		}
 
       		$search[] = "%His/Her%";
-      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
+      		$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her");
       		$search[] = "%his/her%";
-      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "his" : "her") . "</strong>";
+      		$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "his" : "her");
       		$search[] = "%he/she%";
-      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
+      		$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "he" : "she");
       		$search[] = "%him/her%";
-      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "him" : "her") . "</strong>";
+      		$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "him" : "her");
       		$search[] = "%He/She%";
-      		$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
+      		$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "He" : "She");
       		$search[] = "%history%";
-      		$replace[] = "<strong>" . $history_disp . "</strong>";
+      		$replace[] = $history_disp;
           $search[] = "%historysentence%";
 
       		if($history_disp != '') {
-            $replace[] = " with a PMH that includes <strong>" . $history_disp . "</strong>";
+            $replace[] = " with a PMH that includes " . $history_disp;
       		} else {
       			$replace[] = '';
       		}
 
       		$search[] = "%medications%";
-      		$replace[] = "<strong>" . $medications_disp . "</strong>";
+      		$replace[] = $medications_disp;
 	        $search[] = "%medicationssentence%";
 
         	if ($medications_disp!='') {
-            $replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> medications include <strong>" . $medications_disp . "</strong>.";
+            $replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . " medications include " . $medications_disp . ".";
         	} else {
             $replace[] = "";
         	}
 
       		$search[] = "%1st_sleeplab_name%";
-      		$replace[] = "<strong>" . $first_sleeplab_name . "</strong>";
+      		$replace[] = $first_sleeplab_name;
       		$search[] = "%2nd_sleeplab_name%";
-      		$replace[] = "<strong>" . $sleeplab_name . "</strong>";
+      		$replace[] = $sleeplab_name;
       		$search[] = "%type_study%";
-      		$replace[] = "<strong>" . $first_type_study . "</strong>";
+      		$replace[] = $first_type_study;
       		$search[] = "%ahi%";
-      		$replace[] = "<strong>" . $first_ahi . "</strong>";
+      		$replace[] = $first_ahi;
       		$search[] = "%diagnosis%";
-      		$replace[] = "<strong>" . $first_diagnosis . "</strong>";
+      		$replace[] = $first_diagnosis;
       		$search[] = "%1ststudy_date%";
-      		$replace[] = "<strong>" . $first_study_date . "</strong>";
+      		$replace[] = $first_study_date;
           $search[] = "%completed_sleeplab_name%";
-          $replace[] = "<strong>" . $completed_sleeplab_name . "</strong>";
+          $replace[] = $completed_sleeplab_name;
           $search[] = "%completed_type_study%";
-          $replace[] = "<strong>" . $completed_type_study . "</strong>";
+          $replace[] = $completed_type_study;
           $search[] = "%completed_ahi%";
-          $replace[] = "<strong>" . $completed_ahi . "</strong>";
+          $replace[] = $completed_ahi;
           $search[] = "%completed_diagnosis%";
-          $replace[] = "<strong>" . $completed_diagnosis . "</strong>";
+          $replace[] = $completed_diagnosis;
           $search[] = "%completed_study_date%";
-          $replace[] = "<strong>" . $completed_study_date . "</strong>";
+          $replace[] = $completed_study_date;
       		$search[] = "%1stRDI%";
-      		$replace[] = "<strong>" . $first_rdi . "</strong>";
+      		$replace[] = $first_rdi;
       		$search[] = "%1stRDI/AHI%";		
-      		$replace[] = "<strong>" . $first_rdi . "/" . $first_ahi . "</strong>";
+      		$replace[] = $first_rdi . "/" . $first_ahi;
       		$search[] = "%1stLowO2%";
-      		$replace[] = "<strong>" . $first_o2nadir . "</strong>";
+      		$replace[] = $first_o2nadir;
       		$search[] = "%1stTO290%";
-      		$replace[] = "<strong>" . $first_o2sat90 . "</strong>";
+      		$replace[] = $first_o2sat90;
       		$search[] = "%2ndtype_study%";
-      		$replace[] = "<strong>" . $second_type_study . "</strong>";
+      		$replace[] = $second_type_study;
       		$search[] = "%2ndahi%";
-      		$replace[] = "<strong>" . $second_ahi . "</strong>";
+      		$replace[] = $second_ahi;
       		$search[] = "%2ndahisupine%";
-      		$replace[] = "<strong>" . $second_ahisupine . "</strong>";
+      		$replace[] = $second_ahisupine;
       		$search[] = "%2ndrdi%";
-      		$replace[] = "<strong>" . $second_rdi . "</strong>";
+      		$replace[] = $second_rdi;
       		$search[] = "%2ndO2Sat90%";
-      		$replace[] = "<strong>" . $second_o2sat90 . "</strong>";
+      		$replace[] = $second_o2sat90;
       		$search[] = "%2ndstudy_date%";
-      		$replace[] = "<strong>" . $second_study_date . "</strong>";
+      		$replace[] = $second_study_date;
       		$search[] = "%2ndRDI/AHI%";
-      		$replace[] = "<strong>" . $second_rdi . "/" . $second_ahi . "</strong>";
+      		$replace[] = $second_rdi . "/" . $second_ahi;
       		$search[] = "%2ndLowO2%";
-      		$replace[] = "<strong>" . $second_o2nadir . "</strong>";
+      		$replace[] = $second_o2nadir;
       		$search[] = "%2ndTO290%";
-      		$replace[] = "<strong>" . $second_o2sat90 . "</strong>";
+      		$replace[] = $second_o2sat90;
       		$search[] = "%2nddiagnosis%";
-      		$replace[] = "<strong>" . $second_diagnosis . "</strong>";
+      		$replace[] = $second_diagnosis;
       		$search[] = "%delivery_date%";
-      		$replace[] = "<strong>" . $delivery_date . "</strong>";
+      		$replace[] = $delivery_date;
       		$search[] = "%dental_device%";
-      		$replace[] = "<strong>" . $dentaldevice . "</strong>";
+      		$replace[] = $dentaldevice;
       		$search[] = "%1stESS%";
-      		$replace[] = "<strong>" . $subj1['ep_eadd'] . "</strong>";
+      		$replace[] = $subj1['ep_eadd'];
       		$search[] = "%1stSnoring%";
-      		$replace[] = "<strong>" . $subj1['ep_sadd'] . "</strong>";
+      		$replace[] = $subj1['ep_sadd'];
       		$search[] = "%1stEnergy%";
-      		$replace[] = "<strong>" . $subj1['ep_eladd'] . "</strong>";
+      		$replace[] = $subj1['ep_eladd'];
       		$search[] = "%1stQuality%";
-      		$replace[] = "<strong>" . $subj1['sleep_qualadd'] . "</strong>";
+      		$replace[] = $subj1['sleep_qualadd'];
       		$search[] = "%2ndESS%";
-      		$replace[] = "<strong>" . (!empty($subj2['ep_eadd']) ? $subj2['ep_eadd'] : '') . "</strong>";
+      		$replace[] = (!empty($subj2['ep_eadd']) ? $subj2['ep_eadd'] : '');
       		$search[] = "%2ndSnoring%";
-      		$replace[] = "<strong>" . (!empty($subj2['ep_sadd']) ? $subj2['ep_sadd'] : '') . "</strong>";
+      		$replace[] = (!empty($subj2['ep_sadd']) ? $subj2['ep_sadd'] : '');
       		$search[] = "%2ndEnergy%";
-      		$replace[] = "<strong>" . (!empty($subj2['ep_eladd']) ? $subj2['ep_eladd'] : '') . "</strong>";
+      		$replace[] = (!empty($subj2['ep_eladd']) ? $subj2['ep_eladd'] : '');
       		$search[] = "%2ndQuality%";
-      		$replace[] = "<strong>" . (!empty($subj2['sleep_qualadd']) ? $subj2['sleep_qualadd'] : '') . "</strong>";
+      		$replace[] = (!empty($subj2['sleep_qualadd']) ? $subj2['sleep_qualadd'] : '');
       		$search[] = "%bmi%";
-      		$replace[] = "<strong>" . $bmi . "</strong>";
+      		$replace[] = $bmi;
       		$search[] = "%reason_seeking_tx%";
-      		$replace[] = "<strong>" . $reason_seeking_tx . "</strong>";
+      		$replace[] = $reason_seeking_tx;
         	$search[] = "%patprogress%";
 
         	if ($contact['type']=='patient') {
@@ -1186,82 +1186,82 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 		      $search[] = "%tyreferred%";
 
       		if ($contact['type']=='md_referral') {
-            $replace[] = "Thank you for referring <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong> to our office for treatment with a dental sleep device.";
+            $replace[] = "Thank you for referring " . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . " to our office for treatment with a dental sleep device.";
       		} else {
-      			$replace[] = "Our mutual patient, <strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>, was referred to our office for treatment with a dental sleep device.";
+      			$replace[] = "Our mutual patient, " . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . ", was referred to our office for treatment with a dental sleep device.";
       		}
 
       		$search[] = "%symptoms%";
-      		$replace[] = "<strong>" . $symptom_list . "</strong>";
+      		$replace[] = $symptom_list;
       		$search[] = "%nightsperweek%";
-      		$replace[] = "<strong>" . (!empty($followup['nightsperweek']) ? $followup['nightsperweek'] : '') . "</strong>";
+      		$replace[] = (!empty($followup['nightsperweek']) ? $followup['nightsperweek'] : '');
       		$search[] = "%esstssupdate%";
 
         	if (!empty($followup['ep_eadd']) || !empty($followup['ep_tsadd'])) {
-            $replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> Epworth Sleepiness Scale / Thornton Snoring Scale has changed from <strong>" . $initess . "/" . $inittss . "</strong> to <strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>.";
+            $replace[] = ($patient_info['gender'] == "Male" ? "His" : "Her") . " Epworth Sleepiness Scale / Thornton Snoring Scale has changed from " . $initess . "/" . $inittss . " to " . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . ".";
         	} else {
             $replace[] = '';
         	}
 
       		$search[] = "%currESS/TSS%";
-      		$replace[] = "<strong>" . (!empty($followup['ep_eadd']) ? $followup['ep_eadd'] : '') . "/" . (!empty($followup['ep_tsadd']) ? $followup['ep_tsadd'] : '') . "</strong>";
+      		$replace[] = (!empty($followup['ep_eadd']) ? $followup['ep_eadd'] : '') . "/" . (!empty($followup['ep_tsadd']) ? $followup['ep_tsadd'] : '');
       		$search[] = "%initESS/TSS%";
-      		$replace[] = "<strong>" . $initess . "/" . $inittss . "</strong>";
+      		$replace[] = $initess . "/" . $inittss;
       		$search[] = "%patient_email%";
-      		$replace[] = "<strong>" . (!empty($patient_info['email']) ? $patient_info['email'] : '') . "</strong>";
+      		$replace[] = (!empty($patient_info['email']) ? $patient_info['email'] : '');
       		$search[] = "%consult_date%";
-      		$replace[] = "<strong>" . $consult_date . "</strong>";
+      		$replace[] = $consult_date;
       		$search[] = "%impressions_date%";
-      		$replace[] = "<strong>" . $impressions_date . "</strong>";
+      		$replace[] = $impressions_date;
           $search[] = "%sleeplab_name%";
-          $replace[] = "<strong>" . $sleeplab_name . "</strong>";
+          $replace[] = $sleeplab_name;
 		      $search[] = "%delay_reason%";
 
       		switch ($delay['reason']) {
       			case 'insurance':
-      				$replace[] = "<strong>insurance problems or issues</strong>";
+      				$replace[] = "insurance problems or issues";
       				break;
       			case 'dental work':
-      				$replace[] = "<strong>additional pending dental work</strong>";
+      				$replace[] = "additional pending dental work";
       				break;
       			case 'deciding':
-      				$replace[] = "<strong>personal decision</strong>";
+      				$replace[] = "personal decision";
       				break;
       			case 'sleep study':
-      				$replace[] = "<strong>a pending sleep study</strong>";
+      				$replace[] = "a pending sleep study";
       				break;
       			case 'other':
       				if ($delay['description'] == '') {
-      					$replace[] = "<strong>(warning: other was selected, but no info provided)</strong>";
+      					$replace[] = "(warning: other was selected, but no info provided)";
       				} else {
-      					$replace[] = "<strong>" . $delay['description'] . "</strong>";
+      					$replace[] = $delay['description'];
       				}
       				break;
       			default:
-      				$replace[] = "<strong>(warning: no reason has been selected)</strong>";
+      				$replace[] = "(warning: no reason has been selected)";
       		}
 
 		      $search[] = "%noncomp_reason%";
 
       		switch ($noncomp['reason']) {
       			case 'pain/discomfort':
-      				$replace[] = "<strong>pain and/or discomfort</strong>";
+      				$replace[] = "pain and/or discomfort";
       				break;
       			case 'lost device':
-      				$replace[] = "<strong>the device being lost and not replaced</strong>";
+      				$replace[] = "the device being lost and not replaced";
       				break;
       			case 'device not working':
-      				$replace[] = "<strong>patient claims that the device is not working properly or adequately</strong>";
+      				$replace[] = "patient claims that the device is not working properly or adequately";
       				break;
       			case 'other':
       				if ($noncomp['description'] == '') {
-      					$replace[] = "<strong>(warning: other was selected, but no info provided)</strong>";
+      					$replace[] = "(warning: other was selected, but no info provided)";
       				} else {
-      					$replace[] = "<strong>" . $noncomp['description'] . "</strong>";
+      					$replace[] = $noncomp['description'];
       				}
       				break;
       			default:
-      				$replace[] = "<strong>(warning: no reason has been selected)</strong>";
+      				$replace[] = "(warning: no reason has been selected)";
       		}
 
       		$search[] = "%other_mds%";
@@ -1284,7 +1284,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
       		$other_mds = rtrim($other_mds, ",<br /> ");
       		$other_mds .= "PAT,<br />";
-      		$replace[] = "<strong>" . $other_mds . "</strong>";
+      		$replace[] = $other_mds;
       		$search[] = "%nonpcp_mds%";
       		$nonpcp_mds = "";
       		$count = 1;
@@ -1305,16 +1305,16 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 		      $nonpcp_mds = rtrim($nonpcp_mds, ",<br /> ");
 
       		if (empty($ref_info['md_referrals'])) {
-      			$replace[] = "<strong>" . $nonpcp_mds . "</strong>";
+      			$replace[] = $nonpcp_mds;
       		} else {
-      			$replace[] = "<strong>" . $other_mds . "</strong>";
+      			$replace[] = $other_mds;
       		}
 
           /**
 
           */
 
-          $new_template[$cur_template_num] = str_replace($replace, $search, $_POST['letter' . $cur_template_num]);
+          $new_template[$cur_template_num] = parseLetterTemplate($replace, $search, $_POST['letter' . $cur_template_num]);
 
        		if ($new_template[$cur_template_num] == null && !empty($_POST['new_template'][$cur_template_num])) {
               $new_template[$cur_template_num] = html_entity_decode($_POST['new_template'][$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
@@ -1361,44 +1361,44 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
       	$search = array();
       	$replace = array();
       	$search[] = '%todays_date%';
-      	$replace[] = "<strong>" . $todays_date . "</strong>";
+      	$replace[] = $todays_date;
       	$search[] = '%contact_salutation%';
-        $replace[] = "<strong>" . $contact['salutation'] . "</strong>";
+        $replace[] = $contact['salutation'];
       	$search[] = '%contact_fullname%';
-      	$replace[] = "<strong>" . $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'] . "</strong>";
+      	$replace[] = $contact['salutation'] . " " . $contact['firstname'] . " " . $contact['lastname'];
       	$search[] = '%contact_firstname%';
-      	$replace[] = "<strong>" . $contact['firstname'] . "</strong>";
+      	$replace[] = $contact['firstname'];
       	$search[] = '%contact_lastname%';
-      	$replace[] = "<strong>" . $contact['lastname'] . "</strong>";
+      	$replace[] = $contact['lastname'];
       	$search[] = "%salutation%";
-      	$replace[] = "<strong>" . $letter_contacts[$key]['salutation'] . "</strong>";
+      	$replace[] = $letter_contacts[$key]['salutation'];
       	$search[] = '%practice%';
-      	$replace[] = !empty($letter_contacts[$key]['company']) ? "<strong>" . $letter_contacts[$key]['company'] . "</strong><br />" : "";	
+      	$replace[] = !empty($letter_contacts[$key]['company']) ? $letter_contacts[$key]['company'] . "<br />" : "";	
         $search[] = '%insurance_id%';
-        $replace[] = "<strong>" . (!empty($patient_info['p_m_ins_id']) ? $patient_info['p_m_ins_id'] : '') . "</strong>";
+        $replace[] = (!empty($patient_info['p_m_ins_id']) ? $patient_info['p_m_ins_id'] : '');
       	$search[] = '%contact_email%';
-      	$replace[] = "<strong>" . $letter_contacts[$key]['email'] . "</strong>";
+      	$replace[] = $letter_contacts[$key]['email'];
       	$search[] = '%addr1%';
-      	$replace[] = "<strong>" . $contact['add1'] . "</strong>";
+      	$replace[] = $contact['add1'];
         $search[] = '%addr2%';
-      	$replace[] = ($contact['add2']) ? ", <strong>" . $contact['add2'] . "</strong>" : "";
+      	$replace[] = ($contact['add2']) ? ", " . $contact['add2'] : "";
         $search[] = '%city%';
-      	$replace[] = "<strong>" . $contact['city'] . "</strong>";
+      	$replace[] = $contact['city'];
         $search[] = '%state%';
-      	$replace[] = "<strong>" . $contact['state'] . "</strong>";
+      	$replace[] = $contact['state'];
         $search[] = '%zip%';
-      	$replace[] = "<strong>" . $contact['zip'] . "</strong>";
+      	$replace[] = $contact['zip'];
       	$search[] = '%referral_fullname%';
 
         if ($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
-          $replace[] = "<strong>you</strong>";
+          $replace[] = "you";
         } else {
           $replace[] = $referral_fullname;
         }
 
         $search[] = '%by_referral_fullname%';
         if ($contact['type']=='md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id'] ){
-          $replace[] = "by <strong>you</strong>";
+          $replace[] = "by you";
         } else {
     			if(trim($referral_fullname)!=''){
                             	$replace[] = "by ".$referral_fullname;
@@ -1409,164 +1409,164 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
 	      $search[] = '%referral_lastname%';
       	if (!empty($ref_info['md_referrals'])) {
-      		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['lastname'] . "</strong>";
+      		$replace[] = $ref_info['md_referrals'][0]['lastname'];
       	} else {
-      		$replace[] = "<strong>" . (!empty($pcp['lastname']) ? $pcp['lastname'] : '') . "</strong>";
+      		$replace[] = (!empty($pcp['lastname']) ? $pcp['lastname'] : '');
       	}
 
       	$search[] = '%referral_practice%';
       	if (!empty($ref_info['md_referrals'])) {
-      		$replace[] = ($ref_info['md_referrals'][0]['company']) ? "<strong>" . $ref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
+      		$replace[] = ($ref_info['md_referrals'][0]['company']) ? $ref_info['md_referrals'][0]['company'] . "<br />" : "";	
       	} else {
-      		$replace[] = !empty($pcp['company']) ? "<strong>" . $pcp['company'] . "</strong><br />" : "";	
+      		$replace[] = !empty($pcp['company']) ? $pcp['company'] . "<br />" : "";	
       	}
 
       	$search[] = '%ref_addr1%';
       	if (!empty($ref_info['md_referrals'])) {
-      		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['add1'] . "</strong>";
+      		$replace[] = $ref_info['md_referrals'][0]['add1'];
       	} else {
-      		$replace[] = "<strong>" . (!empty($pcp['add1']) ? $pcp['add1'] : '') . "</strong>";
+      		$replace[] = (!empty($pcp['add1']) ? $pcp['add1'] : '');
       	}
 
       	$search[] = '%ref_addr2%';
       	if (!empty($ref_info['md_referrals'])) {
-      		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? "<strong>" . $ref_info['md_referrals'][0]['add2'] . "</strong>" : "";
+      		$replace[] = ($ref_info['md_referrals'][0]['add2']) ? $ref_info['md_referrals'][0]['add2'] : "";
       	} else {
-      		$replace[] = !empty($pcp['add2']) ? "<strong>" . $pcp['add2'] . "</strong>" : "";
+      		$replace[] = !empty($pcp['add2']) ? $pcp['add2'] : "";
       	}
 
       	$search[] = '%ref_city%';
       	if (!empty($ref_info['md_referrals'])) {
-      		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['city'] . "</strong>";
+      		$replace[] = $ref_info['md_referrals'][0]['city'];
       	} else {
-      		$replace[] = "<strong>" . (!empty($pcp['city']) ? $pcp['city'] : '') . "</strong>";
+      		$replace[] = (!empty($pcp['city']) ? $pcp['city'] : '');
       	}
 
       	$search[] = '%ref_state%';
       	if (!empty($ref_info['md_referrals'])) {
-      		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['state'] . "</strong>";
+      		$replace[] = $ref_info['md_referrals'][0]['state'];
       	} else {
-      		$replace[] = "<strong>" . (!empty($pcp['state']) ? $pcp['state'] : '') . "</strong>";
+      		$replace[] = (!empty($pcp['state']) ? $pcp['state'] : '');
       	}
 
       	$search[] = '%ref_zip%';
       	if (!empty($ref_info['md_referrals'])) {
-      		$replace[] = "<strong>" . $ref_info['md_referrals'][0]['zip'] . "</strong>";
+      		$replace[] = $ref_info['md_referrals'][0]['zip'];
       	} else {
-      		$replace[] = "<strong>" . (!empty($pcp['zip']) ? $pcp['zip'] : '') . "</strong>";
+      		$replace[] = (!empty($pcp['zip']) ? $pcp['zip'] : '');
       	}
 
 		    $search[] = '%ptreferral_fullname%';
         if (!empty($ptref_info['md_referrals'])) {
-		      $replace[] = "<strong>" . $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
+		      $replace[] = $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'];
 	      } else {
           $replace[] = "";
         }
 
     		$search[] = '%ptreferral_firstname%';
         if (!empty($ptref_info['md_referrals'])) {
-    		  $replace[] = "<strong>" . $ptref_info['md_referrals'][0]['firstname'] . "</strong>";
+    		  $replace[] = $ptref_info['md_referrals'][0]['firstname'];
     	  } else {
           $replace[] = "";
         }
 
     		$search[] = '%ptreferral_lastname%';
         if (!empty($ptref_info['md_referrals'])) {
-    		  $replace[] = "<strong>" . $ptref_info['md_referrals'][0]['lastname'] . "</strong>";
+    		  $replace[] = $ptref_info['md_referrals'][0]['lastname'];
     	  } else {
           $replace[] = "";
         }
 
 		    $search[] = '%ptreferral_practice%';
         if (!empty($ptref_info['md_referrals'])) {
-		      $replace[] = ($ptref_info['md_referrals'][0]['company']) ? "<strong>" . $ptref_info['md_referrals'][0]['company'] . "</strong><br />" : "";	
+		      $replace[] = ($ptref_info['md_referrals'][0]['company']) ? $ptref_info['md_referrals'][0]['company'] . "<br />" : "";	
 	      } else {
           $replace[] = "";
         }
 
 		    $search[] = '%ptref_addr1%';
         if (!empty($ptref_info['md_referrals'])) {
-		      $replace[] = "<strong>" . $ptref_info['md_referrals'][0]['add1'] . "</strong>";
+		      $replace[] = $ptref_info['md_referrals'][0]['add1'];
 	      } else {
           $replace[] = "";
         }
 
     		$search[] = '%ptref_addr2%';
         if (!empty($ptref_info['md_referrals'])) {
-    		  $replace[] = ($ptref_info['md_referrals'][0]['add2']) ? "<strong>" . $ptref_info['md_referrals'][0]['add2'] . "</strong>" : "";
+    		  $replace[] = ($ptref_info['md_referrals'][0]['add2']) ? $ptref_info['md_referrals'][0]['add2'] : "";
     	  } else {
           $replace[] = "";
         } 
 
     		$search[] = '%ptref_city%';
         if (!empty($ptref_info['md_referrals'])) {
-    		  $replace[] = "<strong>" . $ptref_info['md_referrals'][0]['city'] . "</strong>";
+    		  $replace[] = $ptref_info['md_referrals'][0]['city'];
     	  }else{
           $replace[] = "";
         }
 
     		$search[] = '%ptref_state%';
         if (!empty($ptref_info['md_referrals'])) {
-    		  $replace[] = "<strong>" . $ptref_info['md_referrals'][0]['state'] . "</strong>";
+    		  $replace[] = $ptref_info['md_referrals'][0]['state'];
     	  }else{
           $replace[] = "";
         }
 
     		$search[] = '%ptref_zip%';
         if (!empty($ptref_info['md_referrals'])) {
-    		  $replace[] = "<strong>" . $ptref_info['md_referrals'][0]['zip'] . "</strong>";
+    		  $replace[] = $ptref_info['md_referrals'][0]['zip'];
     	  }else{
     		  $replace[] = "";
     	  } 
 
         $search[] = "%company%";
-        $replace[] = "<strong>" . $company_info['name'] . "</strong>";
+        $replace[] = $company_info['name'];
         $search[] = "%company_addr%";
-        $replace[] = "<strong>" . nl2br($company_info['add1']." ".$company_info['add2']) . "<br />" . $company_info['city'] . ", " . $company_info['state'] . " " . $company_info['zip'] . "</strong>";
+        $replace[] = nl2br($company_info['add1']." ".$company_info['add2']) . "<br />" . $company_info['city'] . ", " . $company_info['state'] . " " . $company_info['zip'];
       	$search[] = "%franchisee_fullname%";
-      	$replace[] = "<strong>" . $location_info['name'] . "</strong>";
+      	$replace[] = $location_info['name'];
         $search[] = "%doctor_fullname%";
-        $replace[] = "<strong>" . $location_info['name'] . "</strong>";
+        $replace[] = $location_info['name'];
       	$search[] = "%franchisee_lastname%";
-      	$replace[] = "<strong>" . array_pop((explode(" ", $location_info['name']))) . "</strong>";
+      	$replace[] = array_pop((explode(" ", $location_info['name'])));
         $search[] = "%doctor_lastname%";
-        $replace[] = "<strong>" . array_pop((explode(" ", $location_info['name']))) . "</strong>";
+        $replace[] = array_pop((explode(" ", $location_info['name'])));
       	$search[] = "%franchisee_practice%";
-      	$replace[] = "<strong>" . $location_info['location'] . "</strong>";
+      	$replace[] = $location_info['location'];
         $search[] = "%doctor_practice%";
-        $replace[] = "<strong>" . $location_info['location'] . "</strong>";
+        $replace[] = $location_info['location'];
       	$search[] = "%franchisee_phone%";
-      	$replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
+      	$replace[] = format_phone($location_info['phone']);
         $search[] = "%doctor_phone%";
-        $replace[] = "<strong>" . format_phone($location_info['phone']) . "</strong>";
+        $replace[] = format_phone($location_info['phone']);
         $search[] = "%signature_image%";
         $replace[] = "<img src=\"display_file.php?f=".$signature_file."\" />";
       	$search[] = "%franchisee_addr%";
-      	$replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
+      	$replace[] = nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'];
         $search[] = "%doctor_addr%";
-        $replace[] = "<strong>" . nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'] . "</strong>";
+        $replace[] = nl2br($location_info['address']) . "<br />" . $location_info['city'] . ", " . $location_info['state'] . " " . $location_info['zip'];
       	$search[] = "%patient_fullname%";
-      	$replace[] = "<strong>" . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
+      	$replace[] = (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '');
         $search[] = "%patient_titlefullname%";
-        $replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
+        $replace[] = (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '');
       	$search[] = "%patient_lastname%";
-      	$replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
+      	$replace[] = (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '');
       	$search[] = "%ccpatient_fullname%";
 
         if($topatient && $contact['type']!='patient'){
-          $replace[] = "<strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>";
+          $replace[] = (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '');
         } else {
           $replace[] = "";
         }
 
       	$search[] = "%patient_dob%";
-      	$replace[] = "<strong>" . (!empty($patient_info['dob']) ? $patient_info['dob'] : '') . "</strong>";
+      	$replace[] = (!empty($patient_info['dob']) ? $patient_info['dob'] : '');
       	$search[] = "%patient_firstname%";
-      	$replace[] = "<strong>" . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . "</strong>";
+      	$replace[] = (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '');
       	$search[] = "%patient_age%";
-      	$replace[] = "<strong>" . (!empty($patient_info['age']) ? $patient_info['age'] : '') . "</strong>";
+      	$replace[] = (!empty($patient_info['age']) ? $patient_info['age'] : '');
       	$search[] = "%patient_gender%";
-      	$replace[] = "<strong>" . strtolower((!empty($patient_info['gender'])) ? $patient_info['gender'] : '') . "</strong>";
+      	$replace[] = strtolower((!empty($patient_info['gender'])) ? $patient_info['gender'] : '');
       	$search[] = "%patient_photo%";
 
         if($patient_photo!=''){
@@ -1576,111 +1576,111 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         }
 
       	$search[] = "%His/Her%";
-      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . "</strong>";
+      	$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her");
       	$search[] = "%his/her%";
-      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "his" : "her") . "</strong>";
+      	$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "his" : "her");
       	$search[] = "%he/she%";
-      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "he" : "she") . "</strong>";
+      	$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "he" : "she");
       	$search[] = "%him/her%";
-      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "him" : "her") . "</strong>";
+      	$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "him" : "her");
       	$search[] = "%He/She%";
-      	$replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "He" : "She") . "</strong>";
+      	$replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "He" : "She");
       	$search[] = "%history%";
-      	$replace[] = "<strong>" . $history_disp . "</strong>";
+      	$replace[] = $history_disp;
         $search[] = "%historysentence%";
 
         if($history_disp != ''){
-          $replace[] = " with a PMH that includes <strong>" . $history_disp . "</strong>";
+          $replace[] = " with a PMH that includes " . $history_disp;
         } else {
           $replace[] = '';
         }
 
       	$search[] = "%medications%";
-      	$replace[] = "<strong>" . $medications_disp . "</strong>";
+      	$replace[] = $medications_disp;
         $search[] = "%medicationssentence%";
 
       	if($medications_disp!=''){
-          $replace[] = "<strong>" . (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> medications include <strong>" . $medications_disp . "</strong>.";
+          $replace[] = (!empty($patient_info['gender']) && $patient_info['gender'] == "Male" ? "His" : "Her") . " medications include " . $medications_disp . ".";
       	} else {
       		$replace[] = "";
       	}
 
         $search[] = "%sleeplab_name%";
-        $replace[] = "<strong>" . $sleeplab_name . "</strong>";
+        $replace[] = $sleeplab_name;
       	$search[] = "%1st_sleeplab_name%";
-      	$replace[] = "<strong>" . $first_sleeplab_name . "</strong>";
+      	$replace[] = $first_sleeplab_name;
       	$search[] = "%2nd_sleeplab_name%";
-      	$replace[] = "<strong>" . $sleeplab_name . "</strong>";
+      	$replace[] = $sleeplab_name;
       	$search[] = "%type_study%";
-      	$replace[] = "<strong>" . $first_type_study . "</strong>";
+      	$replace[] = $first_type_study;
       	$search[] = "%ahi%";
-      	$replace[] = "<strong>" . $first_ahi . "</strong>";
+      	$replace[] = $first_ahi;
       	$search[] = "%diagnosis%";
-      	$replace[] = "<strong>" . $first_diagnosis . "</strong>";
+      	$replace[] = $first_diagnosis;
       	$search[] = "%1ststudy_date%";
-      	$replace[] = "<strong>" . $first_study_date . "</strong>";
+      	$replace[] = $first_study_date;
         $search[] = "%completed_sleeplab_name%";
-        $replace[] = "<strong>" . $completed_sleeplab_name . "</strong>";
+        $replace[] = $completed_sleeplab_name;
         $search[] = "%completed_type_study%";
-        $replace[] = "<strong>" . $completed_type_study . "</strong>";
+        $replace[] = $completed_type_study;
         $search[] = "%completed_ahi%";
-        $replace[] = "<strong>" . $completed_ahi . "</strong>";
+        $replace[] = $completed_ahi;
         $search[] = "%completed_diagnosis%";
-        $replace[] = "<strong>" . $completed_diagnosis . "</strong>";
+        $replace[] = $completed_diagnosis;
         $search[] = "%completed_study_date%";
-        $replace[] = "<strong>" . $completed_study_date . "</strong>";
+        $replace[] = $completed_study_date;
       	$search[] = "%1stRDI%";
-      	$replace[] = "<strong>" . $first_rdi . "</strong>";
+      	$replace[] = $first_rdi;
       	$search[] = "%1stRDI/AHI%";
-      	$replace[] = "<strong>" . $first_rdi . "/" . $first_ahi . "</strong>";
+      	$replace[] = $first_rdi . "/" . $first_ahi;
       	$search[] = "%1stLowO2%";
-      	$replace[] = "<strong>" . $first_o2nadir . "</strong>";
+      	$replace[] = $first_o2nadir;
       	$search[] = "%1stTO290%";
-      	$replace[] = "<strong>" . $first_o2sat90 . "</strong>";
+      	$replace[] = $first_o2sat90;
       	$search[] = "%2ndtype_study%";
-      	$replace[] = "<strong>" . $second_type_study . "</strong>";
+      	$replace[] = $second_type_study;
       	$search[] = "%2ndahi%";
-      	$replace[] = "<strong>" . $second_ahi . "</strong>";
+      	$replace[] = $second_ahi;
       	$search[] = "%2ndahisupine%";
-      	$replace[] = "<strong>" . $second_ahisupine . "</strong>";
+      	$replace[] = $second_ahisupine;
       	$search[] = "%2ndrdi%";
-      	$replace[] = "<strong>" . $second_rdi . "</strong>";
+      	$replace[] = $second_rdi;
       	$search[] = "%2ndO2Sat90%";
-      	$replace[] = "<strong>" . $second_o2sat90 . "</strong>";
+      	$replace[] = $second_o2sat90;
       	$search[] = "%2ndstudy_date%";
-      	$replace[] = "<strong>" . $second_study_date . "</strong>";
+      	$replace[] = $second_study_date;
       	$search[] = "%2ndRDI/AHI%";
-      	$replace[] = "<strong>" . $second_rdi . "/" . $second_ahi . "</strong>";
+      	$replace[] = $second_rdi . "/" . $second_ahi;
       	$search[] = "%2ndLowO2%";
-      	$replace[] = "<strong>" . $second_o2nadir . "</strong>";
+      	$replace[] = $second_o2nadir;
       	$search[] = "%2ndTO290%";
-      	$replace[] = "<strong>" . $second_o2sat90 . "</strong>";
+      	$replace[] = $second_o2sat90;
       	$search[] = "%2nddiagnosis%";
-      	$replace[] = "<strong>" . $second_diagnosis . "</strong>";
+      	$replace[] = $second_diagnosis;
       	$search[] = "%delivery_date%";
-      	$replace[] = "<strong>" . $delivery_date . "</strong>";
+      	$replace[] = $delivery_date;
       	$search[] = "%dental_device%";
-      	$replace[] = "<strong>" . $dentaldevice . "</strong>";
+      	$replace[] = $dentaldevice;
       	$search[] = "%1stESS%";
-      	$replace[] = "<strong>" . $subj1['ep_eadd'] . "</strong>";
+      	$replace[] = $subj1['ep_eadd'];
       	$search[] = "%1stSnoring%";
-      	$replace[] = "<strong>" . $subj1['ep_sadd'] . "</strong>";
+      	$replace[] = $subj1['ep_sadd'];
       	$search[] = "%1stEnergy%";
-      	$replace[] = "<strong>" . $subj1['ep_eladd'] . "</strong>";
+      	$replace[] = $subj1['ep_eladd'];
       	$search[] = "%1stQuality%";
-      	$replace[] = "<strong>" . $subj1['sleep_qualadd'] . "</strong>";
+      	$replace[] = $subj1['sleep_qualadd'];
       	$search[] = "%2ndESS%";
-      	$replace[] = "<strong>" . (!empty($subj2['ep_eadd']) ? $subj2['ep_eadd'] : '') . "</strong>";
+      	$replace[] = (!empty($subj2['ep_eadd']) ? $subj2['ep_eadd'] : '');
       	$search[] = "%2ndSnoring%";
-      	$replace[] = "<strong>" . (!empty($subj2['ep_sadd']) ? $subj2['ep_sadd'] : '') . "</strong>";
+      	$replace[] = (!empty($subj2['ep_sadd']) ? $subj2['ep_sadd'] : '');
       	$search[] = "%2ndEnergy%";
-      	$replace[] = "<strong>" . (!empty($subj2['ep_eladd']) ? $subj2['ep_eladd'] : '') . "</strong>";
+      	$replace[] = (!empty($subj2['ep_eladd']) ? $subj2['ep_eladd'] : '');
       	$search[] = "%2ndQuality%";
-      	$replace[] = "<strong>" . (!empty($subj2['sleep_qualadd']) ? $subj2['sleep_qualadd'] : '') . "</strong>";
+      	$replace[] = (!empty($subj2['sleep_qualadd']) ? $subj2['sleep_qualadd'] : '');
       	$search[] = "%bmi%";
-      	$replace[] = "<strong>" . $bmi . "</strong>";
+      	$replace[] = $bmi;
       	$search[] = "%reason_seeking_tx%";
-      	$replace[] = "<strong>" . $reason_seeking_tx . "</strong>";
+      	$replace[] = $reason_seeking_tx;
       	$search[] = "%patprogress%";
 
       	if($contact['type']=='patient'){
@@ -1691,79 +1691,79 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
         $search[] = "%tyreferred%";
         if($contact['type']=='md_referral'){
-          $replace[] = "Thank you for referring <strong>" . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . "</strong> to our office for treatment with a dental sleep device.";
+          $replace[] = "Thank you for referring " . $patient_info['salutation'] . " " . $patient_info['firstname'] . " " . $patient_info['lastname'] . " to our office for treatment with a dental sleep device.";
         } else {
-          $replace[] = "Our mutual patient, <strong>" . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . "</strong>, was referred to our office for treatment with a dental sleep device.";
+          $replace[] = "Our mutual patient, " . (!empty($patient_info['salutation']) ? $patient_info['salutation'] : '') . " " . (!empty($patient_info['firstname']) ? $patient_info['firstname'] : '') . " " . (!empty($patient_info['lastname']) ? $patient_info['lastname'] : '') . ", was referred to our office for treatment with a dental sleep device.";
         }
 
       	$search[] = "%symptoms%";
-      	$replace[] = "<strong>" . $symptom_list . "</strong>";
+      	$replace[] = $symptom_list;
       	$search[] = "%nightsperweek%";
-      	$replace[] = "<strong>" . (!empty($followup['nightsperweek']) ? $followup['nightsperweek'] : '') . "</strong>";
+      	$replace[] = (!empty($followup['nightsperweek']) ? $followup['nightsperweek'] : '');
         $search[] = "%esstssupdate%";
 
       	if(!empty($followup['ep_eadd']) || !empty($followup['ep_tsadd'])){	
-          $replace[] = "<strong>" . ($patient_info['gender'] == "Male" ? "His" : "Her") . "</strong> Epworth Sleepiness Scale / Thornton Snoring Scale has changed from <strong>" . $initess . "/" . $inittss . "</strong> to <strong>" . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . "</strong>.";
+          $replace[] = ($patient_info['gender'] == "Male" ? "His" : "Her") . " Epworth Sleepiness Scale / Thornton Snoring Scale has changed from " . $initess . "/" . $inittss . " to " . $followup['ep_eadd'] . "/" . $followup['ep_tsadd'] . ".";
       	} else {
       		$replace[] = '';
       	}
 
       	$search[] = "%currESS/TSS%";
-      	$replace[] = "<strong>" . (!empty($followup['ep_eadd']) ? $followup['ep_eadd'] : '') . "/" . (!empty($followup['ep_tsadd']) ? $followup['ep_tsadd'] : '') . "</strong>";
+      	$replace[] = (!empty($followup['ep_eadd']) ? $followup['ep_eadd'] : '') . "/" . (!empty($followup['ep_tsadd']) ? $followup['ep_tsadd'] : '');
       	$search[] = "%initESS/TSS%";
-      	$replace[] = "<strong>" . $initess . "/" . $inittss . "</strong>";
+      	$replace[] = $initess . "/" . $inittss;
       	$search[] = "%patient_email%";
-      	$replace[] = "<strong>" . (!empty($patient_info['email']) ? $patient_info['email'] : '') . "</strong>";
+      	$replace[] = (!empty($patient_info['email']) ? $patient_info['email'] : '');
       	$search[] = "%consult_date%";
-      	$replace[] = "<strong>" . $consult_date . "</strong>";
+      	$replace[] = $consult_date;
       	$search[] = "%impressions_date%";
-      	$replace[] = "<strong>" . $impressions_date . "</strong>";
+      	$replace[] = $impressions_date;
       	$search[] = "%delay_reason%";
 
       	switch ($delay['reason']) {
       		case 'insurance':
-      			$replace[] = "<strong>insurance problems or issues</strong>";
+      			$replace[] = "insurance problems or issues";
       			break;
       		case 'dental work':
-      			$replace[] = "<strong>additional pending dental work</strong>";
+      			$replace[] = "additional pending dental work";
       			break;
       		case 'deciding':
-      			$replace[] = "<strong>personal decision</strong>";
+      			$replace[] = "personal decision";
       			break;
       		case 'sleep study':
-      			$replace[] = "<strong>a pending sleep study</strong>";
+      			$replace[] = "a pending sleep study";
       			break;
       		case 'other':
       			if ($delay['description'] == '') {
-      				$replace[] = "<strong>(warning: other was selected, but no info provided)</strong>";
+      				$replace[] = "(warning: other was selected, but no info provided)";
       			} else {
-      				$replace[] = "<strong>" . $delay['description'] . "</strong>";
+      				$replace[] = $delay['description'];
       			}
       			break;
       		default:
-      			$replace[] = "<strong>(warning: no reason has been selected)</strong>";
+      			$replace[] = "(warning: no reason has been selected)";
       	}
 
       	$search[] = "%noncomp_reason%";
       	switch ($noncomp['reason']) {
       		case 'pain/discomfort':
-      			$replace[] = "<strong>pain and/or discomfort</strong>";
+      			$replace[] = "pain and/or discomfort";
       			break;
       		case 'lost device':
-      			$replace[] = "<strong>the device being lost and not replaced</strong>";
+      			$replace[] = "the device being lost and not replaced";
       			break;
       		case 'device not working':
-      			$replace[] = "<strong>patient claims that the device is not working properly or adequately</strong>";
+      			$replace[] = "patient claims that the device is not working properly or adequately";
       			break;
       		case 'other':
       			if ($noncomp['description'] == '') {
-      				$replace[] = "<strong>(warning: other was selected, but no info provided)</strong>";
+      				$replace[] = "(warning: other was selected, but no info provided)";
       			} else {
-      				$replace[] = "<strong>" . $noncomp['description'] . "</strong>";
+      				$replace[] = $noncomp['description'];
       			}
       			break;
       		default:
-      			$replace[] = "<strong>(warning: no reason has been selected)</strong>";
+      			$replace[] = "(warning: no reason has been selected)";
       	}
 
       	$search[] = "%other_mds%";
@@ -1792,7 +1792,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
         */
 
-      	$replace[] = "<strong>" . $other_mds . "</strong>";
+      	$replace[] = $other_mds;
       	$search[] = "%nonpcp_mds%";
       	$nonpcp_mds = "";
       	$count = 1;
@@ -1812,17 +1812,17 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
       	$nonpcp_mds = rtrim($nonpcp_mds, ",<br /> ");
         if (empty($ref_info['md_referrals'])) {
-      		$replace[] = "<strong>" . $nonpcp_mds . "</strong>";
+      		$replace[] = $nonpcp_mds;
       	} else {
-      		$replace[] = "<strong>" . $other_mds . "</strong>";
+      		$replace[] = $other_mds;
       	}
        	if (!empty($new_template[$cur_letter_num])) {
-      	  $letter[$cur_letter_num] = str_replace($search, $replace, $new_template[$cur_letter_num]);
+      	  $letter[$cur_letter_num] = parseLetterTemplate($search, $replace, $new_template[$cur_letter_num]);
       	} else {
-      	  $letter[$cur_letter_num] = str_replace($search, $replace, $template);
+      	  $letter[$cur_letter_num] = parseLetterTemplate($search, $replace, $template);
        	}
 
-	      $new_template[$cur_letter_num] = str_replace($search, $replace, (!empty($new_template[$cur_letter_num]) ? $new_template[$cur_letter_num] : ''));
+	      $new_template[$cur_letter_num] = parseLetterTemplate($search, $replace, (!empty($new_template[$cur_letter_num]) ? $new_template[$cur_letter_num] : ''));
 
 	      // Print Letter Body		
 
@@ -1852,7 +1852,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
             </div>
               <div style="float:left; text-align: left">
                 &nbsp;&nbsp;
-                Letter <strong><?= $cur_letter_num + 1 ?></strong> of <strong><?= $master_num ?></strong>.
+                Letter <strong ><?= $cur_letter_num + 1 ?></strong > of <strong ><?= $master_num ?></strong >.
                 To <?= contactType($patientid, $contact['id'], $contact['type']) ?>:
                 <?= e("{$contact['salutation']} {$contact['firstname']} {$contact['lastname']}") ?>
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][id]" value="<?= $contact['id'] ?>" />
@@ -1904,10 +1904,17 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
                       <input type="submit" name="font_submit[<?php echo $cur_letter_num?>]" id="font_submit_<?php echo $cur_letter_num?>" style="display:none;" />
                   <?php } ?>
-                <button id="toggle-hidden-letter<?= $cur_letter_num ?>" class="preview-toggle-hidden addButton"
-                        onclick="return false;" title="Show/hide line breaks">
-                  &#xb6;
-                </button>
+                  <span id="preview-tools-letter<?= $cur_letter_num ?>" class="preview-tools">
+                    <button id="toggle-hidden-letter<?= $cur_letter_num ?>" class="preview-toggle-hidden addButton"
+                            onclick="return false;" title="Show/hide line breaks">
+                      &#xb6;
+                    </button>
+                    &nbsp;&nbsp;
+                    <button id="toggle-placeholders-letter<?= $cur_letter_num ?>" class="preview-toggle-placeholders addButton"
+                            onclick="return false;" title="Show/hide placeholder hints">
+                      %
+                    </button>
+                  </span>
                 &nbsp;&nbsp;
         		<button id="edit_but_letter<?php echo $cur_letter_num;?>" class="addButton" onclick="Javascript: edit_letter('letter<?php echo $cur_letter_num?>', '<?php echo $font_size;?>','<?php echo $font_family;?>');return false;" >
         			Edit Letter
@@ -1937,7 +1944,8 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         		<tr>
         			<td valign="top">
         				<div id="letter<?= $cur_letter_num ?>"
-                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?>">
+                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?>"
+                             data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?>">
         				  <div class="preview-wrapper">
                             <div class="preview-inner-wrapper">
                               <?= html_entity_decode(
@@ -1999,7 +2007,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         		$recipientid = $contact['id'];
   		      if ($_GET['backoffice'] == '1' || $_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE) {
         			$message = $letter[$cur_letter_num];
-        			$search= array("<strong>","</strong>");
+        			$search= array("<mark>","</mark>");
         			$message = str_replace($search, "", $message);	
   			      echo create_letter_pdf($letterid);
           ?>
@@ -2040,7 +2048,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
               $recipientid = !empty($_POST['contacts'][$cur_letter_num]['id']) ?
                   $_POST['contacts'][$cur_letter_num]['id'] : $contact['id'];
         		  $message = $new_template[$cur_letter_num];
-              $search= array("<strong>","</strong>");
+              $search= array("","");
               $message = str_replace($search, "", $message);
 
           		if(isset($_POST['font_size'][$cur_letter_num])){
@@ -2204,3 +2212,123 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
   } else {
 	  include 'includes/bottom.htm';
   }
+
+
+/**
+ * Clean up replacements that contain HTML
+ *
+ * @param array $replacements
+ * @return array
+ */
+function preProcessReplacements ($replacements) {
+    array_walk($replacements, function (&$each) {
+        if (is_array($each)) {
+            return;
+        }
+
+        $paragraph = false;
+
+        switch (true) {
+            case substr($each, 0, 4) === '<img':
+                preg_match_all(
+                    '@(?:src="(?P<src>.*?)"|width="(?P<width>.*?)"|height="(?P<height>.*?)")+@ix',
+                    $each,
+                    $matches
+                );
+                $each = [
+                    'image' => true,
+                    'src' => array_get($matches, 'src'),
+                    'width' => array_get($matches, 'src'),
+                    'height' => array_get($matches, 'src'),
+                ];
+                break;
+            /** @noinspection PhpMissingBreakStatementInspection */
+            case substr($each, 0, 3) === '<p>':
+                $each = preg_replace('@^ *<p>([\s\S]*)</p> *$@i', '$1', $each);
+                $paragraph = true;
+                // fallthrough
+            default:
+                $each = preg_split('@<br */?>@i', $each);
+
+                if ($paragraph) {
+                    $each['paragraph'] = true;
+                }
+        }
+    });
+
+    return $replacements;
+}
+
+/**
+ * Generate desired HTML from arrays. Adds an HTML invalid placeholder, to signal where to set the title
+ *
+ * @param array $replacements
+ * @return array
+ */
+function processReplacements ($replacements) {
+    $class = 'preview-placeholder';
+
+    array_walk($replacements, function (&$each, $placeholder) use ($class) {
+        if (!is_array($each)) {
+            $each = e($each);
+            return;
+        }
+
+        $placeholder = e($placeholder);
+        $attributes = "class=\"$class\" title=\"$placeholder\"";
+
+        if (!empty($each['image'])) {
+            $replacement = [];
+            unset($each['image']);
+
+            array_walk($each, function ($value, $attribute) use (&$replacement) {
+                $replacement []= $attribute . '="' . e($value) . '"';
+            });
+
+            $each = "<img $attributes " . join($replacement, ' ') . ' />';
+            return;
+        }
+
+        $paragraph = false;
+
+        if (!empty($each['paragraph'])) {
+            $paragraph = true;
+            unset($each['paragraph']);
+        }
+
+        $replacement = array_map(e, $each);
+        $replacement = join('<br />', $replacement);
+
+        if ($paragraph) {
+            $each = "<p $attributes>$replacement</p>";
+        } else {
+            $each = "<mark $attributes>$replacement</mark>";
+        }
+    });
+
+    return $replacements;
+}
+
+/**
+ * Allow special rules for replacements
+ *
+ * @param array  $placeholders
+ * @param array  $replacements
+ * @param string $template
+ * @return string
+ */
+function parseLetterTemplate ($placeholders, $replacements, $template) {
+    /**
+     * Assume the placeholders can contain the following:
+     *
+     * - some br tags
+     * - enclosed in p tag
+     */
+    $replacements = array_combine($placeholders, $replacements);
+    $replacements = preProcessReplacements($replacements);
+    $replacements = processReplacements($replacements);
+
+    $parsed = str_replace($placeholders, $replacements, $template);
+
+    return $parsed;
+}

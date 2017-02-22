@@ -143,6 +143,27 @@ div.preview-letter .pagination-reference.page-odd-1 {
 div.preview-letter .pagination-reference.page-odd-0 {
     background-color: #fef;
 }
+
+div.preview-letter mark {
+    color: inherit;
+    background: transparent;
+}
+
+div.preview-letter.show-placeholders .preview-placeholder {
+    cursor: default;
+    color: #00c;
+    background: transparent;
+}
+
+div.preview-letter.show-placeholders .preview-placeholder:hover {
+    background: #fffacd;
+}
+
+div.preview-letter.show-placeholders .preview-placeholder:empty::after {
+    content: "<empty>";
+    font-style: italic;
+    color: #ccf;
+}
 /* Debug values */
 
 div.preview-letter.preview-font-dejavusans,

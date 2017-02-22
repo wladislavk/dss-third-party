@@ -6,6 +6,10 @@ function edit_letter (divid, size, family) {
     $clone.find('.br-marker').remove();
     $clone.find('.preview-page-break, .preview-bottom-margin').remove();
     $clone.find('.preview-inner-wrapper').find(':first').unwrap().unwrap();
+
+    $clone.find('mark').contents().unwrap();
+    $clone.find('.preview-placeholder').removeAttr('class').removeAttr('title');
+
     html = $clone.html();
     $clone.remove();
 
@@ -17,10 +21,10 @@ function edit_letter (divid, size, family) {
     textarea.attr('id', [divid, 'textarea'].join('-'));
 
     if ($source.is('.preview-letter')) {
-        $source.removeClass('show-hidden');
+        $source.removeClass('show-hidden show-placeholders');
         $source.find('.preview-wrapper').hide().after(textarea);
         $source.find('.preview-bottom-margin, .preview-page-break').hide();
-        $(['#toggle-hidden-', divid].join('')).hide();
+        $(['#preview-tools-', divid].join('')).hide();
     } else {
         $("#" + divid).replaceWith(textarea);
     }
@@ -46,10 +50,11 @@ function edit_letter (divid, size, family) {
 function hide_edit_letter (divid) {
     var $source = $("#" + divid);
 
+    $source.attr('class', $source.data('initial-class'));
     $source.find(['textarea[name="', divid, '"], .mce-tinymce'].join('')).remove();
     $source.find('.preview-wrapper, .preview-bottom-margin, .preview-page-break').show();
 
-    $(['#toggle-hidden-', divid].join('')).show();
+    $(['#preview-tools-', divid].join('')).show();
     $('.edit_'+divid).hide();
     $('#edit_but_'+divid).show();
     $('#cancel_edit_but_'+divid).hide();
@@ -176,8 +181,13 @@ function setup_tinymce (size, family, $reference) {
     }
 
     if (typeof $reference === 'object') {
-        size = $reference.find('[name^=font_size]').val();
-        family = $reference.find('[name^=font_family]').val();
+        /**
+         * Reset font properties each time the edition window is opened
+         *
+         * @see DSS-527
+         */
+        // size = $reference.find('[name^=font_size]').val();
+        // family = $reference.find('[name^=font_family]').val();
 
         init.mode = 'exact';
         init.elements = $reference.find('textarea').attr('id');
@@ -198,7 +208,8 @@ function setup_tinymce (size, family, $reference) {
 }
 
 $(document).ready(function(){
-    var $toggle = $('.preview-toggle-hidden'),
+    var $hidden = $('.preview-toggle-hidden'),
+        $placeholders = $('.preview-toggle-placeholders'),
         $fontSize = $('[name^=font_size]'),
         $fontFamily = $('[name^=font_family]');
 
@@ -226,8 +237,8 @@ $(document).ready(function(){
         });
     }
 
-    $toggle.removeAttr('onclick');
-    $toggle.click(function (e) {
+    $hidden.removeAttr('onclick');
+    $hidden.click(function (e) {
         var $this = $(this),
             $preview = $this.closest('.single-letter').find('.preview-letter');
 
@@ -238,6 +249,26 @@ $(document).ready(function(){
             $preview.find('br').before('<span class="br-marker"></span>');
         } else {
             $preview.find('.br-marker').remove();
+        }
+
+        return false;
+    });
+
+    $placeholders.removeAttr('onclick');
+    $placeholders.click(function (e) {
+        var $this = $(this),
+            $preview = $this.closest('.single-letter').find('.preview-letter');
+
+        e.preventDefault();
+        $preview.toggleClass('show-placeholders');
+
+        if ($preview.is('.show-placeholders')) {
+            $preview.find('.preview-placeholders').each(function(){
+                var $each = $(this);
+                $this.attr('title', $this.data('title'));
+            });
+        } else {
+            $preview.find('.preview-placeholders').removeAttr('title');
         }
 
         return false;

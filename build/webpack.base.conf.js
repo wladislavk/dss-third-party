@@ -67,7 +67,14 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      }
+      },
+      {
+        test: /\.(cur|ani)$/,
+        loader: 'file-loader',
+        options: {
+            name: utils.assetsPath('cursors/[name].[hash:7].[ext]')
+        }
+      },
     ]
   }
 }

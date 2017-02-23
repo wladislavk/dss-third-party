@@ -29,9 +29,9 @@
 <script>
 
 var $ = require('jquery/dist/jquery.min.js')
-// var jQuery = $
+window.jQuery = $
 
-import '../../static/third-party/thomasjbradley-signature-pad/build/jquery.signaturepad.min.js'
+require('../../static/third-party/thomasjbradley-signature-pad/build/jquery.signaturepad.min.js')
 import '../../static/third-party/thomasjbradley-signature-pad/build/json2.min.js'
 
 import '../../static/third-party/thomasjbradley-signature-pad/build/jquery.signaturepad.css'

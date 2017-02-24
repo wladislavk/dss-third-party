@@ -44,9 +44,7 @@ export default {
     }
   },
   mounted () {
-    console.log(process.env.API_PATH)
-
-    // $('.sigPad').signaturePad({drawOnly: true})
+    $('.sigPad').signaturePad({drawOnly: true})
   },
   methods: {
     test () {

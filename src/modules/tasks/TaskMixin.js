@@ -26,7 +26,7 @@ module.exports = {
       }
 
       this.updateTaskToActive(id)
-        .then(function (response) {
+        .then(function () {
           this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
         }, function (response) {
           console.error('updateTaskToActive [status]: ', response.status)
@@ -50,7 +50,7 @@ module.exports = {
         id = id || 0
 
         this.deleteTask(id)
-          .then(function (response) {
+          .then(function () {
             this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
           }, function (response) {
             console.error('deleteTask [status]: ', response.status)

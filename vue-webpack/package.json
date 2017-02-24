@@ -1,8 +1,8 @@
 {
   "name": "dentalsleepsolutions",
   "version": "1.0.0",
-  "description": "dss frontoffice vue app",
-  "author": "Sergey Geraschenko",
+  "description": "Vue implementation of Dental Sleep Solutions (FO)",
+  "author": "Sergey Gerashchenko",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
@@ -10,7 +10,11 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "accounting": "^0.4.1",
     "jquery": "^3.1.1",
+    "mint-ui": "^2.1.1",
+    "moment": "^2.17.1",
+    "sweetalert": "^1.1.3",
     "vue": "^2.1.10",
     "vue-router": "^2.2.0"
   },

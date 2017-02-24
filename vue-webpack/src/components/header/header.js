@@ -6,7 +6,7 @@ var logoutMixin = require('../../modules/logout/LogoutMixin.js')
 var handlerMixin = require('../../modules/handler/HandlerMixin.js')
 var logoutTimerMixin = require('../../modules/logout/LogoutTimerMixin.js')
 
-module.exports = {
+export default {
   data () {
     return {
       headerInfo: {
@@ -97,7 +97,7 @@ module.exports = {
         }
       }, function (response) {
         this.handleErrors('getCurrentUser', response)
-      }).then(function (response) {
+      }).then(function () {
         this.getUser(this.headerInfo.user.docid) // get doc info
           .then(function (response) {
             var data = response.data.data
@@ -108,14 +108,14 @@ module.exports = {
             }
           }, function (response) {
             this.handleErrors('getUser', response)
-          }).then(function (response) {
+          }).then(function () {
             if (this.headerInfo.docInfo.homepage !== '1') {
               // include_once 'includes/top2.htm'
             } else {
               if (this.headerInfo.user.loginid) {
                 var currentPage = this.$route.query
                 this.setLoginDetails(currentPage)
-                  .then(function (response) {
+                  .then(function () {
                     // if success
                   }, function (response) {
                     this.handleErrors('setLoginDetails', response)
@@ -129,7 +129,7 @@ module.exports = {
                   }
                 }, function (response) {
                   this.handleErrors('getPendingLetters', response)
-                }).then(function (response) {
+                }).then(function () {
                   if (this.headerInfo.pendingLetters[0].generated_date === 0) {
                     this.oldestLetter = 0
                   } else {
@@ -283,7 +283,7 @@ module.exports = {
                   }
                 }, function (response) {
                   this.handleErrors('getUsingPaymentReports', response)
-                }).then(function (response) {
+                }).then(function () {
                   if (this.headerInfo.usePaymentReports) {
                     this.getPaymentReportsNumber()
                       .then(function (response) {
@@ -325,7 +325,7 @@ module.exports = {
                 })
             }
           })
-      }).then(function (response) {
+      }).then(function () {
         if (this.$route.query.pid) {
           this.getPatientByIdAndDocId(this.headerInfo.user.docid, this.$route.query.pid)
             .then(function (response) {
@@ -356,7 +356,7 @@ module.exports = {
               this.handleErrors('getHealthHistoryByPatientId', response)
             })
         }
-      }).then(function (response) {
+      }).then(function () {
         this.getTasks()
           .then(function (response) {
             var data = response.data.data
@@ -423,7 +423,7 @@ module.exports = {
           }, function (response) {
             this.handleErrors('getLaterTasks', response)
           })
-      }).then(function (response) {
+      }).then(function () {
         this.getUserById(this.headerInfo.user.id)
           .then(function (response) {
             var data = response.data.data
@@ -443,7 +443,7 @@ module.exports = {
           }, function (response) {
             this.handleErrors('getCourseStaff', response)
           })
-      }).then(function (response) {
+      }).then(function () {
         this.getCompanyLogo()
           .then(function (response) {
             var data = response.data.data
@@ -459,7 +459,7 @@ module.exports = {
           }, function (response) {
             this.handleErrors('getCompanyLogo', response)
           })
-      }).then(function (response) {
+      }).then(function () {
         if (this.$route.query.pid) {
           this.getPatientTasks(this.$route.query.pid)
             .then(function (response) {
@@ -469,7 +469,7 @@ module.exports = {
               }
             }, function (response) {
               this.handleErrors('getPatientTasks', response)
-            }).then(function (response) {
+            }).then(function () {
               if (this.headerInfo.patientTaskNumber > 0) {
                 this.getPatientOverdueTasks(this.$route.query.pid)
                   .then(function (response) {
@@ -510,7 +510,7 @@ module.exports = {
               }
             })
         }
-      }).then(function (response) {
+      }).then(function () {
         if (this.$route.query.pid) {
           this.getPatientsByParentId(this.$route.query.pid)
             .then(function (response) {
@@ -569,7 +569,7 @@ module.exports = {
               this.handleErrors('getRejectedClaimsForCurrentPatient', response)
             })
         }
-      }).then(function (response) {
+      }).then(function () {
         this.getUncompletedHomeSleepTests()
           .then(function (response) {
             var data = response.data.data
@@ -627,8 +627,7 @@ module.exports = {
         +this.headerInfo.unsignedNotesNumber +
         +this.headerInfo.pendingDuplicatesNumber
       if (this.headerInfo.user.user_type === window.constants.DSS_USER_TYPE_SOFTWARE) {
-        notificationsNumber += +this.headerInfo.unmailedClaimsNumber
-          + +this.headerInfo.pendingNodssClaimsNumber
+        notificationsNumber += +this.headerInfo.unmailedClaimsNumber + +this.headerInfo.pendingNodssClaimsNumber
       } else {
         notificationsNumber += +this.headerInfo.pendingClaimsNumber
       }
@@ -650,10 +649,7 @@ module.exports = {
       return ((this.childrenPatients.length + this.totalContacts + this.totalInsurances) > 0)
     },
     showWarningAboutQuestionnaireChanges: function () {
-      return (this.questionnaireStatuses.symptoms_status === 2
-        || this.questionnaireStatuses.treatments_status === 2
-        || this.questionnaireStatuses.history_status === 2
-      )
+      return (this.questionnaireStatuses.symptoms_status === 2 || this.questionnaireStatuses.treatments_status === 2 || this.questionnaireStatuses.history_status === 2)
     },
     showWarningAboutBouncedEmails: function () {
       return this.bouncedEmailsNumberForCurrentPatient

@@ -2,7 +2,7 @@ module.exports = {
   methods: {
     logout () {
       this.invalidateToken()
-        .then(function (response) {
+        .then(function () {
           var vm = this
 
           window.swal({

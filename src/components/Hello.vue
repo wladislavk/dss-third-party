@@ -44,10 +44,12 @@ export default {
     }
   },
   mounted () {
-    $('.sigPad').signaturePad({drawOnly: true})
+    console.log(process.env.API_PATH)
+
+    // $('.sigPad').signaturePad({drawOnly: true})
   },
   methods: {
-    test: function () {
+    test () {
       console.log($('.sigPad'))
     }
   }

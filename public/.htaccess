@@ -4,9 +4,14 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteBase /
 
     # Redirect Trailing Slashes...
     RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Redirect PDFs to /manage/display_file.php
+    RewriteCond %{REQUEST_URI} ^/manage/letterpdfs/[a-zA-Z0-9\-\_]+\.pdf$
+    RewriteRule ^manage/letterpdfs/(.+)$ manage/display_file.php?f=$1&type=letter&%{QUERY_STRING} [L,R=301]
 
     # Handle Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d

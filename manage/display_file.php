@@ -2,6 +2,7 @@
 namespace Ds3\Libraries\Legacy;
 
 $filename = !empty($_GET['f']) ? $_GET['f'] : '';
+$isLetter = array_get($_GET, 'type') === 'letter';
 
 /**
  * @see DSS-337
@@ -12,7 +13,11 @@ if (!preg_match('/^user_logo_\d+\.(gif|jpg|jpeg|png)$/', $filename)) {
     require_once __DIR__ . '/includes/sescheck.php';
 }
 
-$basepath = __DIR__ . '/../../../shared/q_file';
+if ($isLetter) {
+    $basepath = __DIR__ . '/letterpdfs';
+} else {
+    $basepath = __DIR__ . '/../../../shared/q_file';
+}
 
 $filetype = '';
 $exists = file_exists($basepath . '/' . $filename);
@@ -46,10 +51,10 @@ switch ($filetype) {
     default:
         if ($exists) {
             header('Content-type: '.$filetype);
-            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Content-Disposition: ' . ($isLetter ? 'inline' : 'attachment') . '; filename="' . $filename . '"');
             readfile($basepath . '/' . $filename);
         } else {
             header('HTTP/1.0 404 Not Found');
         }
         break;
-}?>
+}

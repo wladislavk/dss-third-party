@@ -957,11 +957,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
                 if ($contact['type'] == 'md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id']) {
                     $replace[] = "you";
                 } else {
-                    if(trim($referral_fullname)!=''){
-                        $replace[] = $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'];
-                    } else {
-                        $replace[] = '';
-                    }
+                    $replace[] = trim($ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname']);
                 }
       		} else {
             $replace[] = "";
@@ -1322,7 +1318,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 
           */
 
-          $new_template[$cur_template_num] = parseLetterTemplate($replace, $search, $_POST['letter' . $cur_template_num]);
+          $new_template[$cur_template_num] = restorePlaceholders($_POST['letter' . $cur_template_num]);
 
        		if ($new_template[$cur_template_num] == null && !empty($_POST['new_template'][$cur_template_num])) {
               $new_template[$cur_template_num] = html_entity_decode($_POST['new_template'][$cur_template_num], ENT_COMPAT | ENT_QUOTES, "UTF-8");
@@ -1469,11 +1465,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
             if ($contact['type'] == 'md_referral' && $contact['id'] == $ref_info['md_referrals'][0]['id']) {
                 $replace[] = "you";
             } else {
-                if(trim($referral_fullname)!=''){
-                    $replace[] = $ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname'];
-                } else {
-                    $replace[] = '';
-                }
+                $replace[] = trim($ptref_info['md_referrals'][0]['salutation'] . " " . $ptref_info['md_referrals'][0]['firstname'] . " " . $ptref_info['md_referrals'][0]['lastname']);
             }
 	      } else {
           $replace[] = "";
@@ -1868,7 +1860,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
             </div>
               <div style="float:left; text-align: left">
                 &nbsp;&nbsp;
-                Letter <strong ><?= $cur_letter_num + 1 ?></strong > of <strong ><?= $master_num ?></strong >.
+                Letter <strong><?= $cur_letter_num + 1 ?></strong> of <strong><?= $master_num ?></strong>.
                 To <?= contactType($patientid, $contact['id'], $contact['type']) ?>:
                 <?= e("{$contact['salutation']} {$contact['firstname']} {$contact['lastname']}") ?>
                 <input type="hidden" name="contacts[<?= $cur_letter_num ?>][id]" value="<?= $contact['id'] ?>" />
@@ -2064,8 +2056,6 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
               $recipientid = !empty($_POST['contacts'][$cur_letter_num]['id']) ?
                   $_POST['contacts'][$cur_letter_num]['id'] : $contact['id'];
         		  $message = $new_template[$cur_letter_num];
-              $search= array("","");
-              $message = str_replace($search, "", $message);
 
           		if(isset($_POST['font_size'][$cur_letter_num])){
           		  $font_size = $_POST['font_size'][$cur_letter_num];
@@ -2290,15 +2280,22 @@ function processReplacements ($replacements) {
             return;
         }
 
-        $placeholder = e($placeholder);
-        $attributes = "class=\"$class\" title=\"$placeholder\"";
+        $attributes = str_replace(
+            ['$class', '$title'],
+            [$class, templateEscape($placeholder)],
+            'class="$class" title="$title"'
+        );
 
         if (!empty($each['image'])) {
             $replacement = [];
             unset($each['image']);
 
             array_walk($each, function ($value, $attribute) use (&$replacement) {
-                $replacement []= $attribute . '="' . e($value) . '"';
+                if ($attribute === 'title') {
+                    $replacement []= $attribute . '="' . templateEscape($value) . '"';
+                } else {
+                    $replacement [] = $attribute . '="' . e($value) . '"';
+                }
             });
 
             $each = "<img $attributes " . join($replacement, ' ') . ' />';
@@ -2334,6 +2331,10 @@ function processReplacements ($replacements) {
  * @return string
  */
 function parseLetterTemplate ($placeholders, $replacements, $template) {
+    if (!trim($template)) {
+        return $template;
+    }
+
     /**
      * Assume the placeholders can contain the following:
      *
@@ -2344,7 +2345,66 @@ function parseLetterTemplate ($placeholders, $replacements, $template) {
     $replacements = preProcessReplacements($replacements);
     $replacements = processReplacements($replacements);
 
-    $parsed = str_replace($placeholders, $replacements, $template);
+    $restoredTemplate = restorePlaceholders($template);
+    $parsedTemplate = str_replace($placeholders, $replacements, $restoredTemplate);
 
-    return $parsed;
+    return $parsedTemplate;
+}
+
+/**
+ * Escape placeholder delimiters
+ *
+ * @param string $string
+ * @return string
+ */
+function templateEscape ($string) {
+    return str_replace('%', '&#37;', e($string));
+}
+
+/**
+ * Restore placeholders, knowing certain HTML attributes signal attributes
+ *
+ * @param string $processedTemplate
+ * @return string
+ */
+function restorePlaceholders ($processedTemplate) {
+    /**
+     * The following modifiers did not work reliably:
+     *
+     * - m: multiline
+     * - x: extended match
+     */
+    $regex = '@
+            <(?P<tag> p|mark )
+                \s
+                [^>]*?
+                title="(&#37;|%) (?P<placeholder> [^">&]*? ) \2"
+                [^>]*?
+            >
+                (?P<contents> [\s\S]*? )
+            </\1>
+        @Si';
+    $regex = preg_replace('@\s+@', '', $regex);
+
+    $template = preg_replace_callback($regex, function ($match) {
+        // Assume the placeholder is already escaped
+        $contents = $match['contents'];
+        $placeholder = "%{$match['placeholder']}%";
+
+        switch (true) {
+            case preg_match('@<(strong|b)>[\s\S]*?<(em|i)>@S', $contents) > 0:
+                return "<strong><em>$placeholder</em></strong>";
+                break;
+            case preg_match('@<(strong|b)>@S', $contents) > 0:
+                return "<strong>$placeholder</strong>";
+                break;
+            case preg_match('@<(em|i)>@S', $contents) > 0:
+                return "<em>$placeholder</em>";
+                break;
+            default:
+                return $placeholder;
+        }
+    }, $processedTemplate);
+
+    return $template;
 }

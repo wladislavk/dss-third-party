@@ -7,8 +7,7 @@ function edit_letter (divid, size, family) {
     $clone.find('.preview-page-break, .preview-bottom-margin').remove();
     $clone.find('.preview-inner-wrapper').find(':first').unwrap().unwrap();
 
-    $clone.find('mark').contents().unwrap();
-    $clone.find('.preview-placeholder').removeAttr('class').removeAttr('title');
+    $clone.find('.preview-placeholder').attr('contenteditable', false);
 
     html = $clone.html();
     $clone.remove();
@@ -194,7 +193,7 @@ function setup_tinymce (size, family, $reference) {
         init.plugins = init.plugins.replace(/table/, 'table_modified');
         init.table_alignment_option = false;
 
-        init.valid_elements = ['@[style|border]', init.valid_elements].join(',');
+        init.valid_elements = ['@[style|border|class|title|contenteditable],mark', init.valid_elements].join(',');
         delete init.valid_styles;
 
         init.content_css = [
@@ -202,6 +201,23 @@ function setup_tinymce (size, family, $reference) {
             "css/font-size-" + size + ".css?" + now,
             "css/font-family-" + family + ".css?" + now
         ].join(',');
+
+        /**
+         * Enable styles in non editable elements
+         */
+        init.setup = function (editor) {
+            editor.on('BeforeExecCommand', function (e) {
+                if (e.command !== 'mceToggleFormat') {
+                    console.info('BeforeExecCommand', e.command);
+                }
+
+                var $nonEditable = $reference.find('iframe')
+                    .contents().find('body [contenteditable], body .non-editable');
+
+                $nonEditable.addClass('non-editable').attr('contenteditable', 'true');
+                setTimeout(function(){ $nonEditable.attr('contenteditable', 'false'); }, 500);
+            });
+        };
     }
 
     tinyMCE.init(init);

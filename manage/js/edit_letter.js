@@ -53,6 +53,14 @@ function hide_edit_letter (divid) {
     $source.find(['textarea[name="', divid, '"], .mce-tinymce'].join('')).remove();
     $source.find('.preview-wrapper, .preview-bottom-margin, .preview-page-break').show();
 
+    var $placeholders = $source.closest('.single-letter').find('.preview-toggle-placeholders');
+
+    if ($source.is('.show-placeholders')) {
+        $placeholders.text('Hide placeholders');
+    } else {
+        $placeholders.text('Show placeholders');
+    }
+
     $(['#preview-tools-', divid].join('')).show();
     $('.edit_'+divid).hide();
     $('#edit_but_'+divid).show();
@@ -279,12 +287,9 @@ $(document).ready(function(){
         $preview.toggleClass('show-placeholders');
 
         if ($preview.is('.show-placeholders')) {
-            $preview.find('.preview-placeholders').each(function(){
-                var $each = $(this);
-                $this.attr('title', $this.data('title'));
-            });
+            $this.text('Hide placeholders');
         } else {
-            $preview.find('.preview-placeholders').removeAttr('title');
+            $this.text('Show placeholders');
         }
 
         return false;

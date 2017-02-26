@@ -71,7 +71,8 @@ mark {
     background: #fffacd;
 }
 
-.show-placeholders .preview-placeholder:empty::after {
+.show-placeholders .preview-placeholder:empty::after,
+.show-placeholders img.preview-placeholder[src=""]::after {
     content: "<empty>";
     font-style: italic;
     color: #ccf;

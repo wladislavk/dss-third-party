@@ -200,6 +200,7 @@ foreach ($master_q as $master_r) {
   	 where l.letterid = ".$letterid;
   	
   $row = $db->getRow($letter_query);
+    $letterRow = $row;
 
   $templateid = $row['templateid'];
   $patientid = $row['patientid'];
@@ -1920,7 +1921,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
                     &nbsp;&nbsp;
                     <button id="toggle-placeholders-letter<?= $cur_letter_num ?>" class="preview-toggle-placeholders addButton"
                             onclick="return false;" title="Show/hide placeholder hints">
-                      %
+                      <?= $letterRow['edit_date'] ? 'Show' : 'Hide' ?> placeholders
                     </button>
                   </span>
                 &nbsp;&nbsp;
@@ -1952,8 +1953,8 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         		<tr>
         			<td valign="top">
         				<div id="letter<?= $cur_letter_num ?>"
-                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?>"
-                             data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?>">
+                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> <?= $letterRow['edit_date'] ? '' : 'show-placeholders' ?>"
+                             data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> <?= $letterRow['edit_date'] ? '' : 'show-placeholders' ?>">
         				  <div class="preview-wrapper">
                             <div class="preview-inner-wrapper">
                               <?= html_entity_decode(
@@ -2233,7 +2234,7 @@ function preProcessReplacements ($replacements) {
 
         switch (true) {
             case substr($each, 0, 4) === '<img':
-                preg_match_all(
+                preg_match(
                     '@(?:src="(?P<src>.*?)"|width="(?P<width>.*?)"|height="(?P<height>.*?)")+@ix',
                     $each,
                     $matches
@@ -2241,8 +2242,8 @@ function preProcessReplacements ($replacements) {
                 $each = [
                     'image' => true,
                     'src' => array_get($matches, 'src'),
-                    'width' => array_get($matches, 'src'),
-                    'height' => array_get($matches, 'src'),
+                    'width' => array_get($matches, 'width'),
+                    'height' => array_get($matches, 'height'),
                 ];
                 break;
             /** @noinspection PhpMissingBreakStatementInspection */
@@ -2286,6 +2287,8 @@ function processReplacements ($replacements) {
         if (!empty($each['image'])) {
             $replacement = [];
             unset($each['image']);
+
+            $each['alt'] = empty($each['alt']) ? '' : $each['alt'];
 
             array_walk($each, function ($value, $attribute) use (&$replacement) {
                 if ($attribute === 'title') {

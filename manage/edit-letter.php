@@ -570,6 +570,7 @@ foreach ($master_c as $master_r) {
     <?php } ?>
     /* Preview area display */
 </style>
+<p>&nbsp;</p>
 <?php
 
 /**

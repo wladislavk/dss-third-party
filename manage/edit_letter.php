@@ -2180,11 +2180,6 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
 <?php
   } // END MASTER LOOP
 ?>
-			</div>
-		</td>
-	</tr>
-</table>
-
 <!-- include footer -->
 <?php foreach ($googleFonts as $localName=>$remoteName) { ?>
   <link href="https://fonts.googleapis.com/css?family=<?= urlencode($remoteName) ?>" rel="stylesheet">

@@ -2220,7 +2220,16 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
  * @return array
  */
 function preProcessReplacements ($replacements) {
-    array_walk($replacements, function (&$each) {
+    $imgRegex = '@
+            src="(?P<src> .*? )"
+            | width="(?P<width> .*? )"
+            | height="(?P<height> .*? )"
+            | align="(?P<align> .*? )"
+            | style="(?P<style> .*? )"
+        @Si';
+    $imgRegex = preg_replace('@[\s\r\t\n]+@', '', $imgRegex);
+
+    array_walk($replacements, function (&$each) use ($imgRegex) {
         if (is_array($each)) {
             return;
         }
@@ -2229,23 +2238,21 @@ function preProcessReplacements ($replacements) {
 
         switch (true) {
             case substr($each, 0, 4) === '<img':
-                preg_match(
-                    '@(?:src="(?P<src>.*?)"|width="(?P<width>.*?)"|height="(?P<height>.*?)")+@ix',
-                    $each,
-                    $matches
-                );
+                preg_match_all($imgRegex, $each, $matches);
                 $each = [
                     'image' => true,
-                    'src' => array_get($matches, 'src'),
-                    'width' => array_get($matches, 'width'),
-                    'height' => array_get($matches, 'height'),
+                    'src' => current(array_filter(array_get($matches, 'src'))),
+                    'width' => current(array_filter(array_get($matches, 'width'))),
+                    'height' => current(array_filter(array_get($matches, 'height'))),
+                    'style' => current(array_filter(array_get($matches, 'style'))),
+                    'align' => current(array_filter(array_get($matches, 'align'))),
                 ];
                 break;
             /** @noinspection PhpMissingBreakStatementInspection */
             case substr($each, 0, 3) === '<p>':
                 $each = preg_replace('@^ *<p>([\s\S]*)</p> *$@i', '$1', $each);
                 $paragraph = true;
-                // fallthrough
+            // fallthrough
             default:
                 $each = preg_split('@<br */?>@i', $each);
 
@@ -2266,10 +2273,12 @@ function preProcessReplacements ($replacements) {
  */
 function processReplacements ($replacements) {
     $class = 'preview-placeholder';
+    $requiredImgAttributes = ['src', 'alt'];
 
-    array_walk($replacements, function (&$each, $placeholder) use ($class) {
+    array_walk($replacements, function (&$each, $placeholder) use ($class, $requiredImgAttributes) {
         if (!is_array($each)) {
             $each = e($each);
+
             return;
         }
 
@@ -2283,13 +2292,18 @@ function processReplacements ($replacements) {
             $replacement = [];
             unset($each['image']);
 
-            $each['alt'] = empty($each['alt']) ? '' : $each['alt'];
+            /**
+             * Required img attributes
+             */
+            array_walk($requiredImgAttributes, function ($attribute) use (&$each) {
+                $each[$attribute] = array_get($each, $attribute);
+            });
 
-            array_walk($each, function ($value, $attribute) use (&$replacement) {
+            array_walk($each, function ($value, $attribute) use (&$replacement, $requiredImgAttributes) {
                 if ($attribute === 'title') {
                     $replacement []= $attribute . '="' . templateEscape($value) . '"';
-                } else {
-                    $replacement [] = $attribute . '="' . e($value) . '"';
+                } elseif (in_array($attribute, $requiredImgAttributes) || strlen($value)) {
+                    $replacement []= $attribute . '="' . e($value) . '"';
                 }
             });
 

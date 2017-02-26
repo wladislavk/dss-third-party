@@ -95,7 +95,7 @@ $patient_info = $db->getRow("SELECT salutation, firstname, middlename, lastname,
     FROM dental_patients
     WHERE patientid = '$patientId'");
 
-$patient_info['age'] = floor(time() - strtotime($patient_info['dob'])/31556926);
+$patient_info['age'] = floor((time() - strtotime($patient_info['dob']))/31556926);
 $source = $patient_info['referred_source'];
 
 $consult_date = $db->getColumn("SELECT date_completed

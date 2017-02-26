@@ -2014,9 +2014,6 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
          		$type = $contact['type'];
         		$recipientid = $contact['id'];
   		      if ($_GET['backoffice'] == '1' || $_SESSION['user_type']==DSS_USER_TYPE_SOFTWARE) {
-        			$message = $letter[$cur_letter_num];
-        			$search= array("<mark>","</mark>");
-        			$message = str_replace($search, "", $message);	
   			      echo create_letter_pdf($letterid);
           ?>
               <script type="text/javascript">
@@ -2374,19 +2371,14 @@ function restorePlaceholders ($processedTemplate) {
      * - m: multiline
      * - x: extended match
      */
-    $regex = '@
-            <(?P<tag> p|mark )
-                \s
-                [^>]*?
-                title="(&#37;|%) (?P<placeholder> [^">&]*? ) \2"
-                [^>]*?
-            >
-                (?P<contents> [\s\S]*? )
-            </\1>
-        @Si';
-    $regex = preg_replace('@\s+@', '', $regex);
+    $titleRegex = '\s [^>]*? title="(&#37;|%) (?P<placeholder> [^">&]*? ) \2" [^>]*?';
+    $textRegex = "@<(?P<tag> p|mark ) $titleRegex>(?P<contents> [\\s\\S]*? )</\\1>@Si";
+    $imageRegex = "@<(?P<tag> img ) $titleRegex /?>@Si";
 
-    $template = preg_replace_callback($regex, function ($match) {
+    $textRegex = preg_replace('@\s+@', '', $textRegex);
+    $imageRegex = preg_replace('@\s+@', '', $imageRegex);
+
+    $template = preg_replace_callback($textRegex, function ($match) {
         // Assume the placeholder is already escaped
         $contents = $match['contents'];
         $placeholder = "%{$match['placeholder']}%";
@@ -2405,6 +2397,11 @@ function restorePlaceholders ($processedTemplate) {
                 return $placeholder;
         }
     }, $processedTemplate);
+
+    $template = preg_replace_callback($imageRegex, function ($match) {
+        // Assume the placeholder is already escaped
+        return "%{$match['placeholder']}%";
+    }, $template);
 
     return $template;
 }

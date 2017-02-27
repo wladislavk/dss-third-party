@@ -1,5 +1,3 @@
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-
 <template>
     <div id="vobs">
         <span class="admin_head">Manage Verification of Benefits</span>
@@ -48,10 +46,9 @@
                 <tr class="tr_bg_h">
                     <td
                         v-for="(sort, label) in tableHeaders"
-                        class="col_head 
-                        {{ routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '' }}"
+                        :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
-                        width="{{ sort == 'comments' ? '40%' : '15%' }}"
+                        :width="sort == 'comments' ? '40%' : '15%'"
                     >
                         <a
                             v-if="sort != 'comments' && sort != 'action'"
@@ -84,7 +81,7 @@
                     <td valign="top">
                         {{ vob.firstname }} {{ vob.lastname }}
                     </td>
-                    <td valign="top" class="status_{{ vob.status }}">
+                    <td valign="top" :class="'status_' + vob.status">
                         {{ constants.dssPreauthStatusLabels[vob.status] }}
                     </td>
                     <td valign="top">
@@ -120,6 +117,6 @@
     </div>
 </template>
 
-<script>
-    module.exports = require('./vobs.js');
-</script>
+<script src="./vobs.js"></script>
+
+<style src="../../../assets/css/manage/admin.css" scoped></style>

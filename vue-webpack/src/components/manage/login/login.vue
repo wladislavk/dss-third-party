@@ -1,5 +1,3 @@
-<style src="../../../../assets/css/manage/login.css" scoped></style>
-
 <template>
     <div>
         <div id="login_container">
@@ -21,7 +19,7 @@
                             <input
                                 type="text"
                                 v-model="credentials.username"
-                                v-el:username
+                                ref="username"
                                 autofocus
                             >
                         </td>
@@ -32,7 +30,7 @@
                             <input
                                 type="password"
                                 v-model="credentials.password"
-                                v-el:password
+                                ref="password"
                             >
                         </td>
                     </tr>
@@ -59,11 +57,13 @@
     </div>
 </template>
 
+<!-- TODO: remove unnecessary scripts -->
 <script src="../../../../assets/js/tracekit/tracekit.js"></script>
 <script src="../../../../assets/js/tracekit/tracekit.handler.js"></script>
 <script src="../../../../assets/js/jquery-1.6.2.min.js"></script>
 <script src="../../../../assets/js/manage/validation.js"></script>
 
-<script>
-    module.exports = require('./login.js');
-</script>
+<script src="./login.js"></script>
+
+<style src="../../../assets/css/manage/main.css"></style>
+<style src="../../../assets/css/manage/login.css" scoped></style>

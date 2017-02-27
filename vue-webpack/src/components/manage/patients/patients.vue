@@ -1,6 +1,3 @@
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../../assets/css/manage/manage_patient.css" scoped></style>
-
 <template>
     <div id="patients">
         <div style="clear: both">
@@ -18,17 +15,17 @@
                 </select>
             </span>
             <div class="letter_select">
-                <a
+                <router-link
                     v-for="letter in letters"
                     v-bind:class="{ 'selected_letter': letter == routeParameters.currentLetter }"
-                    v-link="{ name: $route.name, query: { letter: letter, sh: routeParameters.selectedPatientType }}"
+                    :to="{ name: $route.name, query: { letter: letter, sh: routeParameters.selectedPatientType }}"
                     class="letters"
-                >{{ letter }}</a>
+                >{{ letter }}</router-link>
 
-                <a
+                <router-link
                     v-if="routeParameters.currentLetter"
-                    v-link="{ name: $route.name, query: { sh: routeParameters.selectedPatientType }}"
-                >View All</a>
+                    :to="{ name: $route.name, query: { sh: routeParameters.selectedPatientType }}"
+                >View All</router-link>
             </div>
             </br>
             <div v-if="message" align="center" class="red">
@@ -62,7 +59,7 @@
                 <tr class="tr_bg_h">
                     <td
                         v-for="(sort, label) in tableHeaders"
-                        class="col_head  {{ routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '' }}"
+                        :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
                         width="10%"
                     >
@@ -100,7 +97,7 @@
                 <tr
                     v-else
                     v-for="patient in patients"
-                    class="{{ patient.status == 1 ? 'tr_active' : 'tr_inactive' }} initial_list"
+                    :class="(patient.status == 1 ? 'tr_active' : 'tr_inactive') + 'initial_list'"
                 >
                     <td valign="top">
                         <a
@@ -151,15 +148,15 @@
                                 <template v-else>
                                     <template v-if="isNegativeTime(patient.date_scheduled)">
                                         <span class="red">
-                                            {{ patient.date_scheduled | moment "from" }}
+                                            {{ patient.date_scheduled | moment("from") }}
                                         </span>
                                     </template>
                                     <template v-else>
                                         <span
                                             v-if="checkIfThisWeek(patient.date_scheduled)"
                                             class="green"
-                                        >{{ patient.date_scheduled | moment "from" }}</span>
-                                        <span v-else>{{ patient.date_scheduled | moment "from" }}</span>
+                                        >{{ patient.date_scheduled | moment("from") }}</span>
+                                        <span v-else>{{ patient.date_scheduled | moment("from") }}</span>
                                     </template>
                                 </template>
                             </a>
@@ -184,11 +181,11 @@
                                               !isNegativeTime(patient.date_completed)"
                                     >
                                         <span class="green">
-                                            {{ patient.date_completed | moment "from" }}
+                                            {{ patient.date_completed | moment("from") }}
                                         </span>
                                     </template>
                                     <template v-else>
-                                        <span>{{ patient.date_completed | moment "from" }}</span>
+                                        <span>{{ patient.date_completed | moment("from") }}</span>
                                     </template>
                                 </template>
                             </a>
@@ -233,11 +230,11 @@
                                               !isNegativeTime(patient.dentaldevice_date)"
                                     >
                                         <span class="green">
-                                            {{ patient.dentaldevice_date | moment "from" }}
+                                            {{ patient.dentaldevice_date | moment("from") }}
                                         </span>
                                     </template>
                                     <template v-else>
-                                        <span>{{ patient.dentaldevice_date | moment "from" }}</span>
+                                        <span>{{ patient.dentaldevice_date | moment("from") }}</span>
                                     </template>
                                 </template>
                             </a>
@@ -297,6 +294,7 @@
     </div>
 </template>
 
-<script>
-    module.exports = require('./patients.js');
-</script>
+<script src="./patients.js"></script>
+
+<style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/manage_patient.css" scoped></style>

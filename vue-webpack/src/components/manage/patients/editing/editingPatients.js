@@ -1,7 +1,7 @@
 var handlerMixin = require('../../../../modules/handler/HandlerMixin.js');
 var patientValidator = require('../../../../modules/validators/PatientMixin.js');
 
-module.exports = {
+export default {
     data: function() {
         return {
             consts: window.constants,
@@ -28,7 +28,28 @@ module.exports = {
             componentParams            : {},
             patientNotifications       : [],
             homeSleepTestCompanies     : [],
-            patient                    : {},
+            patient                    : {
+                salutation: 'Mr.',
+                best_time: 'default',
+                best_number: 'default',
+                preferredcontact: 'paper',
+                gender: 'default',
+                feet: '0',
+                inches: '-1',
+                weight: '0',
+                marital_status: 'default',
+                display_alert: '0',
+                p_m_same_address: '1',
+                p_m_relation: 'default',
+                p_m_gender: 'default',
+                p_m_ins_type: 'default',
+                p_m_ins_co: 'default',
+                has_s_m_ins: 'No',
+                s_m_relation: 'default',
+                s_m_gender: 'default',
+                s_m_ins_type: 'default',
+                s_m_ins_co: 'default'
+            },
             profilePhoto               : null,
             insuranceCardImage         : {},
             docLocations               : [],
@@ -37,7 +58,7 @@ module.exports = {
             uncompletedHomeSleepTests  : [],
             formedFullNames            : {},
             pendingVob                 : {},
-            patientLocation            : '',
+            patientLocation            : 'default',
             message                    : '',
             eligiblePayerId            : 0,
             eligiblePayerName          : '',
@@ -78,7 +99,7 @@ module.exports = {
     watch: {
         '$route.query.pid': function() {
             if (this.$route.query.pid > 0) {
-                this.$set('routeParameters.patientId', this.$route.query.pid);
+                this.$set(this.routeParameters, 'patientId', this.$route.query.pid);
 
                 // if patient data need to be updated - check local storage, it may contain status message about created patient
                 var message = window.storage.get('message');
@@ -89,27 +110,27 @@ module.exports = {
 
                 this.fillForm(this.$route.query.pid);
             } else {
-                this.$set('routeParameters.patientId', null);
+                this.$set(this.routeParameters, 'patientId', null);
                 this.cleanPatientData();
             }
         },
         'patient.home_phone': function() {
-            this.$set('patient.home_phone', this.phone(this.patient.home_phone));
+            this.$set(this.patient, 'home_phone', this.phone(this.patient.home_phone));
         },
         'patient.cell_phone': function() {
-            this.$set('patient.cell_phone', this.phone(this.patient.cell_phone));
+            this.$set(this.patient, 'cell_phone', this.phone(this.patient.cell_phone));
         },
         'patient.work_phone': function() {
-            this.$set('patient.work_phone', this.phone(this.patient.work_phone));
+            this.$set(this.patient, 'work_phone', this.phone(this.patient.work_phone));
         },
         'patient.emergency_number': function() {
-            this.$set('patient.emergency_number', this.phone(this.patient.emergency_number));
+            this.$set(this.patient, 'emergency_number', this.phone(this.patient.emergency_number));
         },
         'patient.ssn': function() {
-            this.$set('patient.ssn', this.ssn(this.patient.ssn));
+            this.$set(this.patient, 'ssn', this.ssn(this.patient.ssn));
         },
         'patient.dob': function() {
-            this.$set('patient.dob', this.date(this.patient.dob));
+            this.$set(this.patient, 'dob', this.date(this.patient.dob));
         },
         'patient.feet': function() {
             this.calculateBmi();
@@ -211,7 +232,7 @@ module.exports = {
         }
     },
     created: function() {
-        this.$dispatch('get-header-info');
+        this.$emit('get-header-info');
 
         this.fillForm(this.routeParameters.patientId);
 
@@ -306,7 +327,7 @@ module.exports = {
         validateDate: function(el) {
             if (!this.isValidDate(this.patient[el])) {
                 alert('Invalid Day, Month, or Year range detected. Please correct.');
-                this.$els[el].focus();
+                this.$refs[el].focus();
             }
         },
         calculateBmi: function() {
@@ -317,9 +338,9 @@ module.exports = {
                 var wei = this.patient.weight * 703;
                 var bmi = wei / incSqr;
 
-                this.$set('patient.bmi', bmi.toFixed(1));
+                this.$set(this.patient, 'bmi', bmi.toFixed(1));
             } else {
-                this.$set('patient.bmi', '');
+                this.$set(this.patient, 'bmi', '');
             }
         },
         onClickAddImage: function(type) {
@@ -663,7 +684,7 @@ module.exports = {
                             self.$set(arrName, foundPayers);
                         } else {
                             self.$set(arrName, []);
-                            self.$els[elementName].focus();
+                            self.$refs[elementName].focus();
 
                             alert('Error: No match found for this criteria.');
                         }
@@ -678,8 +699,8 @@ module.exports = {
                 this.isReferredByChanged = true;
             }
 
-            this.$set('patient.referred_by', id);
-            this.$set('patient.referred_source', referredType);
+            this.$set(this.patient, 'referred_by', id);
+            this.$set(this.patient, 'referred_source', referredType);
         },
         onKeyUpSearchReferrers: function(event) {
             clearTimeout(this.typingTimer);
@@ -716,7 +737,7 @@ module.exports = {
                 this.$set('showReferredNotes', true);
                 this.$set('showReferredPerson', false);
             }
-            this.$set('patient.referred_source', referredSource);
+            this.$set(this.patient, 'referred_source', referredSource);
         },
         getBillingCompany: function() {
             return this.$http.post(window.config.API_PATH + 'companies/billing-exclusive-company');
@@ -824,13 +845,13 @@ module.exports = {
             if (this.patient.preferredcontact == 'email' && this.patient.email.length == 0) {
                 alert("You must enter an email address to use email as the preferred contact method.");
 
-                this.$set('patient.preferredcontact', '');
-                this.$els.email.focus();
+                this.$set(this.patient, 'preferredcontact', '');
+                this.$refs.email.focus();
             } else if (this.patient.preferredcontact == 'fax' && this.patient.fax.length == 0) {
                 alert("You must enter a fax number to use email as the preferred contact method.");
 
-                this.$set('patient.preferredcontact', '');
-                this.$els.fax.focus();
+                this.$set(this.patient, 'preferredcontact', '');
+                this.$refs.fax.focus();
             }
         },
         filterPhoneFields: function(patient) {

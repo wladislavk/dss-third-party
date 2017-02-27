@@ -10,7 +10,7 @@
 }
 
 #login_container{
-  background: url(assets/images/login_box.png) no-repeat 0 0;
+  background: url(~assets/images/login_box.png) no-repeat 0 0;
   width: 625px;
   height: 162px;
   margin: 80px auto 0 auto;

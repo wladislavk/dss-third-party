@@ -1,9 +1,6 @@
 var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
 
-module.exports = {
-    el: function() {
-        return '#vobs'
-    },
+export default {
     data: function() {
         return {
             constants       : window.constants,
@@ -33,37 +30,37 @@ module.exports = {
         '$route.query.page': function() {
             if (this.$route.query.page) {
                 if (this.$route.query.page <= this.totalPages) {
-                    this.$set('routeParameters.currentPageNumber', this.$route.query.page);
+                    this.$set(this.routeParameters, 'currentPageNumber', this.$route.query.page);
                 }
             }
         },
         '$route.query.sort': function() {
             if (this.$route.query.sort) {
                 if (this.$route.query.sort in this.tableHeaders) {
-                    this.$set('routeParameters.sortColumn', this.$route.query.sort);
+                    this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort);
                 } else {
-                    this.$set('routeParameters.sortColumn', null);
+                    this.$set(this.routeParameters, 'sortColumn', null);
                 }
             }
         },
         '$route.query.sortdir': function() {
             if (this.$route.query.sortdir) {
                 if (this.$route.query.sortdir.toLowerCase() == 'desc') {
-                    this.$set('routeParameters.sortDirection', this.$route.query.sortdir.toLowerCase());
+                    this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase());
                 } else {
-                    this.$set('routeParameters.sortDirection', 'asc');
+                    this.$set(this.routeParameters, 'sortDirection', 'asc');
                 }
             }
         },
         '$route.query.pid': function() {
             if (this.$route.query.pid > 0) {
-                this.$set('routeParameters.patientId', this.$route.query.pid);
+                this.$set(this.routeParameters, 'patientId', this.$route.query.pid);
             } else {
-                this.$set('routeParameters.patientId', null);
+                this.$set(this.routeParameters, 'patientId', null);
             }
         },
         '$route.query.viewed': function() {
-            this.$set('routeParameters.viewed', this.$route.query.viewed);
+            this.$set(this.routeParameters, 'viewed', this.$route.query.viewed);
         },
         'routeParameters': {
             handler: function() {
@@ -86,7 +83,7 @@ module.exports = {
 
             this.updateVob(vob.id, data)
                 .then(function(response) {
-                    this.$route.router.go({
+                    this.$route.router.push({
                         name: this.$route.name,
                         query: {
                             pid: vob.patient_id || 0

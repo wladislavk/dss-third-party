@@ -1,10 +1,7 @@
 var taskMixin    = require('../../../modules/tasks/TaskMixin.js');
 var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
 
-module.exports = {
-    el: function() {
-        return '#dashboard'
-    },
+export default {
     data: function() {
         return {
             // need to change logic for global values
@@ -80,7 +77,7 @@ module.exports = {
         }
     },
     created: function() {
-        this.$dispatch('get-header-info');
+        this.$emit('get-header-info');
 
         this.getDocumentCategories()
             .then(function(response) {
@@ -140,7 +137,7 @@ module.exports = {
     methods: {
         redirectToIndex2: function() {
             if (this.headerInfo.docInfo.homepage != 1) {
-                this.$route.router.go('/manage/index2');
+                this.$route.router.push('/manage/index2');
             }
         },
         getManageStaffOfCurrentUser: function(userId) {

@@ -1,9 +1,6 @@
 var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
 
-module.exports = {
-    el: function() {
-        return ''
-    },
+export default {
     data: function() {
         return {
             contactTypes        : [],
@@ -42,48 +39,48 @@ module.exports = {
                 );
 
                 if (foundOption) {
-                    this.$set('routeParameters.selectedContactType', this.$route.query.contacttype);
+                    this.$set(this.routeParameters, 'selectedContactType', this.$route.query.contacttype);
                 } else {
-                    this.$set('routeParameters.selectedContactType', 0);
+                    this.$set(this.routeParameters, 'selectedContactType', 0);
                 }
             } else {
-                this.$set('routeParameters.selectedContactType', 0);
+                this.$set(this.routeParameters, 'selectedContactType', 0);
             }
         },
         '$route.query.page': function() {
             if (this.$route.query.page) {
                 if (this.$route.query.page <= this.totalPages) {
-                    this.$set('routeParameters.currentPageNumber', this.$route.query.page);
+                    this.$set(this.routeParameters, 'currentPageNumber', this.$route.query.page);
                 }
             }
         },
         '$route.query.sort': function() {
             if (this.$route.query.sort) {
                 if (this.$route.query.sort in this.tableHeaders) {
-                    this.$set('routeParameters.sortColumn', this.$route.query.sort);
+                    this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort);
                 } else {
-                    this.$set('routeParameters.sortColumn', null);
+                    this.$set(this.routeParameters, 'sortColumn', null);
                 }
             } else {
-                this.$set('routeParameters.sortColumn', 'name');
+                this.$set(this.routeParameters, 'sortColumn', 'name');
             }
         },
         '$route.query.sortdir': function() {
             if (this.$route.query.sortdir) {
                 if (this.$route.query.sortdir.toLowerCase() == 'desc') {
-                    this.$set('routeParameters.sortDirection', this.$route.query.sortdir.toLowerCase());
+                    this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase());
                 } else {
-                    this.$set('routeParameters.sortDirection', 'asc');
+                    this.$set(this.routeParameters, 'sortDirection', 'asc');
                 }
             } else {
-                this.$set('routeParameters.sortDirection', 'asc');
+                this.$set(this.routeParameters, 'sortDirection', 'asc');
             }
         },
         '$route.query.letter': function() {
             if (this.letters.indexOf(this.$route.query.letter) > -1) {
-                this.$set('routeParameters.currentLetter', this.$route.query.letter);
+                this.$set(this.routeParameters, 'currentLetter', this.$route.query.letter);
             } else {
-                this.$set('routeParameters.currentLetter', null);
+                this.$set(this.routeParameters, 'currentLetter', null);
             }
         },
         '$route.query.delid': function() {
@@ -134,7 +131,7 @@ module.exports = {
 
         this.getContacts();
     },
-    ready: function() {
+    mounted: function() {
         this.$set('showActions', true);
     },
     methods: {
@@ -182,7 +179,7 @@ module.exports = {
             this.$parent.$refs.modal.setComponentParameters({ contactId: contactId });
         },
         onClickInActive: function() {
-            this.$route.router.go({
+            this.$route.router.push({
                 name  : this.$route.name,
                 query : {
                     status: 2
@@ -190,7 +187,7 @@ module.exports = {
             });
         },
         onChangeContactType: function() {
-            this.$route.router.go({
+            this.$route.router.push({
                 name  : this.$route.name,
                 query : {
                     contacttype: this.routeParameters.selectedContactType
@@ -230,7 +227,7 @@ module.exports = {
                                         referrers_data: data
                                     }, this.contacts[index]);
 
-                                    this.contacts.$set(index, updatedContact);
+                                    this.$set(this.contacts, index, updatedContact);
                                 }
                             }, function(response) {
                                 this.handleErrors('findReferrersByContactId', response);
@@ -249,7 +246,7 @@ module.exports = {
                                         patients_data: data
                                     }, this.contacts[index]);
 
-                                    this.contacts.$set(index, updatedContact);
+                                    this.$set(this.contacts, index, updatedContact);
                                 }
                             }, function(response) {
                                 this.handleErrors('findPatientsByContactId', response);

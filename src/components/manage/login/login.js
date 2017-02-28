@@ -21,7 +21,7 @@ export default {
 
       this.setLoginDetails(data)
 
-      this.$route.router.push('/manage/index')
+      this.$router.push('/manage/index')
     }
 
     this.$nextTick(() => {
@@ -66,7 +66,7 @@ export default {
               if (data.type.toLowerCase() === 'suspended') {
                 this.message = 'This account has been suspended.'
               } else {
-                this.$route.router.push('/manage/index')
+                this.$router.push('/manage/index')
               }
             }, function (response) {
               this.handleErrors('getAccountStatus', response)
@@ -79,7 +79,6 @@ export default {
           }
         })
     },
-
     getToken (data) {
       return this.$http.post(process.env.API_ROOT + 'auth', data)
     },

@@ -60,9 +60,6 @@ export default {
       supportTicketsNumber: 0,
       alergen: 0,
       patientTasks: [],
-      notificationsNumber: 0,
-      isUserDoctor: false,
-      showOnlineCEAndSnoozleHelp: false,
       companyLogo: '',
       overdueTasks: [],
       todayTasks: [],
@@ -71,11 +68,8 @@ export default {
       childrenPatients: [],
       totalContacts: 0,
       totalInsurances: 0,
-      showWarningAboutPatientChanges: false,
       questionnaireStatuses: [],
-      showWarningAboutQuestionnaireChanges: false,
       bouncedEmailsNumberForCurrentPatient: 0,
-      showWarningAboutBouncedEmails: false,
       rejectedClaimsForCurrentPatient: [],
       uncompletedHomeSleepTests: [],
       showAllWarnings: true
@@ -92,7 +86,7 @@ export default {
         var data = response.data.data
         if (data) {
           for (var field in data) {
-            this.$set('headerInfo.user.' + field, data[field])
+            this.$set(this.headerInfo.user, field, data[field])
           }
         }
       }, function (response) {
@@ -103,7 +97,7 @@ export default {
             var data = response.data.data
             if (data) {
               for (var field in data) {
-                this.$set('headerInfo.docInfo.' + field, data[field])
+                this.$set(this.headerInfo.docInfo, field, data[field])
               }
             }
           }, function (response) {
@@ -451,7 +445,7 @@ export default {
               this.getFileForDisplaying(data.logo)
                 .then(function (response) {
                   var data = response.data.data
-                  this.$set('companyLogo', data.image)
+                  this.$set(this, 'companyLogo', data.image)
                 }, function (response) {
                   this.handleErrors('getFileForDisplaying', response)
                 })
@@ -563,7 +557,7 @@ export default {
             .then(function (response) {
               var data = response.data.data
               if (data) {
-                this.$set('rejectedClaimsForCurrentPatient', data)
+                this.$set(this, 'rejectedClaimsForCurrentPatient', data)
               }
             }, function (response) {
               this.handleErrors('getRejectedClaimsForCurrentPatient', response)
@@ -574,7 +568,7 @@ export default {
           .then(function (response) {
             var data = response.data.data
             if (data) {
-              this.$set('uncompletedHomeSleepTests', data)
+              this.$set(this, 'uncompletedHomeSleepTests', data)
             }
           }, function (response) {
             this.handleErrors('getUncompletedHomeSleepTests', response)
@@ -657,11 +651,11 @@ export default {
   },
   methods: {
     getCurrentUser: function () {
-      return this.$http.post(window.config.API_PATH + 'users/current')
+      return this.$http.post(process.env.API_PATH + 'users/current')
     },
     getUser: function (userId) {
       userId = userId || 0
-      return this.$http.get(window.config.API_PATH + 'users/' + userId)
+      return this.$http.get(process.env.API_PATH + 'users/' + userId)
     },
     setLoginDetails: function (currentPage) {
       var data = {
@@ -669,70 +663,70 @@ export default {
         userid: this.headerInfo.user.id || 0,
         cur_page: currentPage || ''
       }
-      return this.$http.post(window.config.API_PATH + 'login-details', data)
+      return this.$http.post(process.env.API_PATH + 'login-details', data)
     },
     getPendingLetters: function () {
-      return this.$http.post(window.config.API_PATH + 'letters/pending')
+      return this.$http.post(process.env.API_PATH + 'letters/pending')
     },
     getUnmailedLettersNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'letters/unmailed')
+      return this.$http.post(process.env.API_PATH + 'letters/unmailed')
     },
     getPendingClaimsNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'insurances/pending-claims')
+      return this.$http.post(process.env.API_PATH + 'insurances/pending-claims')
     },
     getUnmailedClaimsNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'insurances/unmailed-claims')
+      return this.$http.post(process.env.API_PATH + 'insurances/unmailed-claims')
     },
     getRejectedClaimsNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'insurances/rejected-claims')
+      return this.$http.post(process.env.API_PATH + 'insurances/rejected-claims')
     },
     getPreauthNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'insurance-preauth/completed')
+      return this.$http.post(process.env.API_PATH + 'insurance-preauth/completed')
     },
     getPendingPreauthNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'insurance-preauth/pending')
+      return this.$http.post(process.env.API_PATH + 'insurance-preauth/pending')
     },
     getRejectedPreauthNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'insurance-preauth/rejected')
+      return this.$http.post(process.env.API_PATH + 'insurance-preauth/rejected')
     },
     getHSTNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'home-sleep-tests/completed')
+      return this.$http.post(process.env.API_PATH + 'home-sleep-tests/completed')
     },
     getRequestedHSTNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'home-sleep-tests/requested')
+      return this.$http.post(process.env.API_PATH + 'home-sleep-tests/requested')
     },
     getRejectedHSTNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'home-sleep-tests/rejected')
+      return this.$http.post(process.env.API_PATH + 'home-sleep-tests/rejected')
     },
     getPatientContactsNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'patient-contacts/number')
+      return this.$http.post(process.env.API_PATH + 'patient-contacts/number')
     },
     getPatientInsurancesNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'patient-insurances/number')
+      return this.$http.post(process.env.API_PATH + 'patient-insurances/number')
     },
     getPatientChangesNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'patients/number')
+      return this.$http.post(process.env.API_PATH + 'patients/number')
     },
     getPendingDuplicatesNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'patients/duplicates')
+      return this.$http.post(process.env.API_PATH + 'patients/duplicates')
     },
     getBouncesNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'patients/bounces')
+      return this.$http.post(process.env.API_PATH + 'patients/bounces')
     },
     getUsingPaymentReports: function () {
-      return this.$http.post(window.config.API_PATH + 'users/payment-reports')
+      return this.$http.post(process.env.API_PATH + 'users/payment-reports')
     },
     getPaymentReportsNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'payment-reports/number')
+      return this.$http.post(process.env.API_PATH + 'payment-reports/number')
     },
     getUnsignedNotesNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'notes/unsigned')
+      return this.$http.post(process.env.API_PATH + 'notes/unsigned')
     },
     getFaxAlertsNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'faxes/alerts')
+      return this.$http.post(process.env.API_PATH + 'faxes/alerts')
     },
     getSupportTicketsNumber: function () {
-      return this.$http.post(window.config.API_PATH + 'support-tickets/number')
+      return this.$http.post(process.env.API_PATH + 'support-tickets/number')
     },
     getPatientByIdAndDocId: function (docId, patientId) {
       var data = {
@@ -741,88 +735,88 @@ export default {
           patientid: patientId || 0
         }
       }
-      return this.$http.post(window.config.API_PATH + 'patients/with-filter', data)
+      return this.$http.post(process.env.API_PATH + 'patients/with-filter', data)
     },
     getHealthHistoryByPatientId: function (patientId) {
       var data = {
         fields: ['other_allergens', 'allergenscheck'],
         where: { patientid: patientId || 0 }
       }
-      return this.$http.post(window.config.API_PATH + 'health-histories/with-filter', data)
+      return this.$http.post(process.env.API_PATH + 'health-histories/with-filter', data)
     },
     getTasks: function () {
-      return this.$http.post(window.config.API_PATH + 'tasks/all')
+      return this.$http.post(process.env.API_PATH + 'tasks/all')
     },
     getOverdueTasks: function () {
-      return this.$http.post(window.config.API_PATH + 'tasks/overdue')
+      return this.$http.post(process.env.API_PATH + 'tasks/overdue')
     },
     getTodayTasks: function () {
-      return this.$http.post(window.config.API_PATH + 'tasks/today')
+      return this.$http.post(process.env.API_PATH + 'tasks/today')
     },
     getTomorrowTasks: function () {
-      return this.$http.post(window.config.API_PATH + 'tasks/tomorrow')
+      return this.$http.post(process.env.API_PATH + 'tasks/tomorrow')
     },
     getThisWeekTasks: function () {
-      return this.$http.post(window.config.API_PATH + 'tasks/this-week')
+      return this.$http.post(process.env.API_PATH + 'tasks/this-week')
     },
     getNextWeekTasks: function () {
-      return this.$http.post(window.config.API_PATH + 'tasks/next-week')
+      return this.$http.post(process.env.API_PATH + 'tasks/next-week')
     },
     getLaterTasks: function () {
-      return this.$http.post(window.config.API_PATH + 'tasks/later')
+      return this.$http.post(process.env.API_PATH + 'tasks/later')
     },
     getPatientTasks: function (patientId) {
       patientId = patientId || 0
-      return this.$http.post(window.config.API_PATH + 'tasks/all/pid/' + patientId)
+      return this.$http.post(process.env.API_PATH + 'tasks/all/pid/' + patientId)
     },
     getPatientOverdueTasks: function (patientId) {
       patientId = patientId || 0
-      return this.$http.post(window.config.API_PATH + 'tasks/overdue/pid/' + patientId)
+      return this.$http.post(process.env.API_PATH + 'tasks/overdue/pid/' + patientId)
     },
     getPatientTodayTasks: function (patientId) {
       patientId = patientId || 0
-      return this.$http.post(window.config.API_PATH + 'tasks/today/pid/' + patientId)
+      return this.$http.post(process.env.API_PATH + 'tasks/today/pid/' + patientId)
     },
     getPatientTomorrowTasks: function (patientId) {
       patientId = patientId || 0
-      return this.$http.post(window.config.API_PATH + 'tasks/tomorrow/pid/' + patientId)
+      return this.$http.post(process.env.API_PATH + 'tasks/tomorrow/pid/' + patientId)
     },
     getPatientFutureTasks: function (patientId) {
       patientId = patientId || 0
 
-      return this.$http.post(window.config.API_PATH + 'tasks/future/pid/' + patientId)
+      return this.$http.post(process.env.API_PATH + 'tasks/future/pid/' + patientId)
     },
     getUserById: function (userId) {
       userId = userId || 0
 
-      return this.$http.get(window.config.API_PATH + 'users/' + userId)
+      return this.$http.get(process.env.API_PATH + 'users/' + userId)
     },
     getCourseStaff: function () {
-      return this.$http.post(window.config.API_PATH + 'users/course-staff')
+      return this.$http.post(process.env.API_PATH + 'users/course-staff')
     },
     getCompanyLogo: function () {
-      return this.$http.post(window.config.API_PATH + 'companies/company-logo')
+      return this.$http.post(process.env.API_PATH + 'companies/company-logo')
     },
     getPatientsByParentId: function (parentPatientId) {
       var data = {
         where: { parent_patientid: parentPatientId || 0 }
       }
 
-      return this.$http.post(window.config.API_PATH + 'patients/with-filter', data)
+      return this.$http.post(process.env.API_PATH + 'patients/with-filter', data)
     },
     getCurrentPatientContacts: function (patientId) {
       var data = {
         patientId: patientId || 0
       }
 
-      return this.$http.post(window.config.API_PATH + 'patient-contacts/current', data)
+      return this.$http.post(process.env.API_PATH + 'patient-contacts/current', data)
     },
     getCurrentPatientInsurances: function (patientId) {
       var data = {
         patientId: patientId || 0
       }
 
-      return this.$http.post(window.config.API_PATH + 'patient-insurances/current', data)
+      return this.$http.post(process.env.API_PATH + 'patient-insurances/current', data)
     },
     getQuestionnaireStatuses: function (patientId) {
       var data = {
@@ -832,7 +826,7 @@ export default {
         }
       }
 
-      return this.$http.post(window.config.API_PATH + 'patients/with-filter', data)
+      return this.$http.post(process.env.API_PATH + 'patients/with-filter', data)
     },
     getBouncedEmailsNumberForCurrentPatient: function (patientId) {
       var data = {
@@ -843,32 +837,32 @@ export default {
         }
       }
 
-      return this.$http.post(window.config.API_PATH + 'patients/with-filter', data)
+      return this.$http.post(process.env.API_PATH + 'patients/with-filter', data)
     },
     getRejectedClaimsForCurrentPatient: function (patientId) {
       var data = {
         patientId: patientId || 0
       }
 
-      return this.$http.post(window.config.API_PATH + 'insurances/rejected', data)
+      return this.$http.post(process.env.API_PATH + 'insurances/rejected', data)
     },
     getUncompletedHomeSleepTests: function (patientId) {
       var data = {
         patientId: patientId || 0
       }
 
-      return this.$http.post(window.config.API_PATH + 'home-sleep-tests/uncompleted', data)
+      return this.$http.post(process.env.API_PATH + 'home-sleep-tests/uncompleted', data)
     },
     getFileForDisplaying: function (filename) {
       filename = filename || ''
 
-      return this.$http.get(window.config.API_PATH + 'display-file/' + filename)
+      return this.$http.get(process.env.API_PATH + 'display-file/' + filename)
     },
     showWarnings: function () {
-      this.$set('showAllWarnings', true)
+      this.$set(this, 'showAllWarnings', true)
     },
     hideWarnings: function () {
-      this.$set('showAllWarnings', false)
+      this.$set(this, 'showAllWarnings', false)
     },
     onMouseOverPatientTaskHeader: function (event) {
       event.target.parentElement.children['pat_task_list'].style.display = 'block'

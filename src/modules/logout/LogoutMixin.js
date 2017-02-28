@@ -11,7 +11,7 @@ module.exports = {
             type: 'success'
           }, function () {
             window.storage.remove('token')
-            vm.$route.router.go('/manage/login')
+            vm.$router.push('/manage/login')
           })
         }, function (response) {
           console.error('invalidateToken [status]: ', response.status)

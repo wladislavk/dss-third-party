@@ -57,12 +57,6 @@
     </div>
 </template>
 
-<!-- TODO: remove unnecessary scripts -->
-<script src="../../../../assets/js/tracekit/tracekit.js"></script>
-<script src="../../../../assets/js/tracekit/tracekit.handler.js"></script>
-<script src="../../../../assets/js/jquery-1.6.2.min.js"></script>
-<script src="../../../../assets/js/manage/validation.js"></script>
-
 <script src="./login.js"></script>
 
 <style src="../../../assets/css/manage/main.css"></style>

@@ -24,9 +24,9 @@ module.exports = {
     this.logoutWait = 1 * this.hours
     this.ticker = 1 * this.seconds - 1
   },
-  ready () {
-    this.modalWindow = window.$(this.$els.warningLogout)
-    this.timerDisplay = window.$(this.$els.logoutTimer)
+  mounted () {
+    this.modalWindow = window.$(this.$refs.warningLogout)
+    this.timerDisplay = window.$(this.$refs.logoutTimer)
   },
   beforeDestroy () {
     window.removeEventListener('keydown', this.catchUserMoving)

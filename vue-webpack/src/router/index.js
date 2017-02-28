@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import VueResource from 'vue-resource'
 
 // include the manage main template
-// import ManageTemplate from 'components/header/header'
-// Vue.component('manage-template', ManageTemplate)
+import ManageTemplate from 'components/header/header.vue'
+Vue.component('manage-template', ManageTemplate)
 
 // components for routing
 import Login from 'components/manage/login/login.vue'
@@ -17,8 +18,9 @@ import Vobs from 'components/manage/vobs/vobs.vue'
 import PageNotFound from 'components/services/pageNotFound.vue'
 
 Vue.use(Router)
+Vue.use(VueResource)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/manage/login',
@@ -29,31 +31,41 @@ export default new Router({
       path: '/manage/index',
       name: 'dashboard',
       component: Index,
-      auth: true
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/manage/patients',
       name: 'patients',
       component: Patients,
-      auth: true
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/manage/contacts',
       name: 'contacts',
       component: Contacts,
-      auth: true
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/manage/edit-patient',
       name: 'edit-patient',
       component: EditingPatients,
-      auth: true
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/manage/vobs',
       name: 'vobs',
       component: Vobs,
-      auth: true
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '*',
@@ -61,3 +73,15 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth) && !window.storage.get('token')) {
+    next({ name: 'login' })
+  } else {
+    Vue.http.headers.common['Authorization'] = 'Bearer ' + window.storage.get('token')
+
+    next()
+  }
+})
+
+export { router as default }

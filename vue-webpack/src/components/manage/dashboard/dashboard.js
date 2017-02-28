@@ -43,16 +43,7 @@ export default {
                 },
             },
             documentCategories: [],
-            memos: [],
-            notificationsNumber              : 0,
-            isUserDoctor                     : false,
-            showInvoices                     : false,
-            showTransactionCode              : false,
-            showEnrollments                  : false,
-            showDSSFranchiseOperationsManual : false,
-            showGetCE                        : false,
-            showUnmailedLettersNumber        : false,
-            showUnmailedClaims               : false
+            memos: []
         }
     },
     mixins: [taskMixin, handlerMixin],
@@ -83,7 +74,7 @@ export default {
             .then(function(response) {
                 var data = response.data.data;
 
-                this.$set('documentCategories', data);
+                this.$set(this, 'documentCategories', data);
             }, function(response) {
                 this.handleErrors('getDocumentCategories', response);
             });
@@ -92,7 +83,7 @@ export default {
             .then(function(response) {
                 var data = response.data.data;
 
-                this.$set('memos', data);
+                this.$set(this, 'memos', data);
             }, function(response) {
                 this.handleErrors('getCurrentMemos', response);
             });
@@ -143,13 +134,13 @@ export default {
         getManageStaffOfCurrentUser: function(userId) {
             userId = userId || 0;
 
-            return this.$http.get(window.config.API_PATH + 'users/' + userId);
+            return this.$http.get(process.env.API_PATH + 'users/' + userId);
         },
         getDocumentCategories: function() {
-            return this.$http.post(window.config.API_PATH + 'document-categories/active');
+            return this.$http.post(process.env.API_PATH + 'document-categories/active');
         },
         getCurrentMemos: function() {
-            return this.$http.post(window.config.API_PATH + 'memos/current');
+            return this.$http.post(process.env.API_PATH + 'memos/current');
         },
         onClickExportMD: function() {
             swal({

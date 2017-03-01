@@ -39,9 +39,9 @@
                         Pages:
                         <span v-for="index in totalPages">
                             <strong v-if="routeParameters.currentPageNumber == index">{{ index + 1 }}</strong>
-                            <a
+                            <router-link
                                 v-else
-                                v-link="{
+                                :to="{
                                     name: $route.name,
                                     query: {
                                         page    : index,
@@ -52,19 +52,19 @@
                                     }
                                 }"
                                 class="fp"
-                            >{{ index + 1 }}</a>
+                            >{{ index + 1 }}</router-link>
                         </span>
                     </td>
                 </tr>
                 <tr class="tr_bg_h">
                     <td
-                        v-for="(sort, label) in tableHeaders"
+                        v-for="(label, sort) in tableHeaders"
                         :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
                         width="10%"
                     >
-                        <a
-                            v-link="{
+                        <router-link
+                            :to="{
                                 name: $route.name,
                                 query: {
                                     pid: routeParameters.patientId,
@@ -74,7 +74,7 @@
                                     sortdir: getCurrentDirection(sort)
                                 }
                             }"
-                        >{{ label }}</a>
+                        >{{ label }}</router-link>
                     </td>
                 </tr>
                 <tr class="template" style="display:none;">
@@ -89,7 +89,7 @@
                     <td class="rxlomn">N/A</td>
                     <td class="ledger">($435.75)</td>
                 </tr>
-                <tr v-if="!patients.length" class="tr_bg">
+                <tr v-if="patients.length == 0" class="tr_bg">
                     <td valign="top" class="col_head" colspan="10" align="center">
                         No Records
                     </td>
@@ -100,8 +100,8 @@
                     :class="(patient.status == 1 ? 'tr_active' : 'tr_inactive') + 'initial_list'"
                 >
                     <td valign="top">
-                        <a
-                            v-link="{
+                        <router-link
+                            :to="{
                                 path: '/manage/edit-patient',
                                 query: { pid: patient.patientid }
                             }"
@@ -109,7 +109,7 @@
                             {{ patient.lastname }},&nbsp;
                             {{ patient.firstname }}&nbsp;
                             {{ patient.middlename }}
-                        </a>
+                        </router-link>
                         <span v-if="patient.premedcheck == 1 || patient.allergenscheck == 1">
                             &nbsp;&nbsp;&nbsp;<span style="font-weight:bold; color:#ff0000;">*Med</span>
                         </span>
@@ -119,8 +119,8 @@
                     </template>
                     <template v-else>
                         <td valign="top">
-                            <a
-                                v-link="{
+                            <router-link
+                                :to="{
                                     path: 'flowsheet3',
                                     query: {
                                         pid: patient.patientId
@@ -129,11 +129,11 @@
                             >
                                 <span v-if="readyForTx(patient.insurance_no_error, patient.numsleepstudy)">Yes</span>
                                 <span v-else class="red">No</span>
-                            </a>
+                            </router-link>
                         </td>
                         <td valign="top">
-                            <a
-                                v-link="{
+                            <router-link
+                                :to="{
                                     path: 'flowsheet3',
                                     query: {
                                         pid: patient.patientId
@@ -159,11 +159,11 @@
                                         <span v-else>{{ patient.date_scheduled | moment("from") }}</span>
                                     </template>
                                 </template>
-                            </a>
+                            </router-link>
                         </td>
                         <td valign="top">
-                            <a
-                                v-link="{
+                            <router-link
+                                :to="{
                                     path: 'flowsheet3',
                                     query: {
                                         pid: patient.patientId
@@ -188,31 +188,31 @@
                                         <span>{{ patient.date_completed | moment("from") }}</span>
                                     </template>
                                 </template>
-                            </a>
+                            </router-link>
                         </td>
                         <td valign="top">
-                            <a
-                                v-link="{
+                            <router-link
+                                :to="{
                                     path: 'flowsheet3',
                                     query: {
                                         pid: patient.patientId
                                     }
                                 }"
-                            >{{ !patient.segmentid ? 'N/A' : segments[patient.segmentid] }}</a>
+                            >{{ !patient.segmentid ? 'N/A' : segments[patient.segmentid] }}</router-link>
                         </td>
                         <td valign="top">
-                            <a
-                                v-link="{
+                            <router-link
+                                :to="{
                                     path: 'dss_summ',
                                     query: {
                                         pid: patient.patientId
                                     }
                                 }"
-                            >{{ patient.device }}</a>
+                            >{{ patient.device }}</router-link>
                         </td>
                         <td valign="top">
-                            <a
-                                v-link="{
+                            <router-link
+                                :to="{
                                     path: 'flowsheet3',
                                     query: {
                                         pid: patient.patientId
@@ -237,11 +237,11 @@
                                         <span>{{ patient.dentaldevice_date | moment("from") }}</span>
                                     </template>
                                 </template>
-                            </a>
+                            </router-link>
                         </td>
                         <td valign="top">
-                            <a
-                                v-link="{
+                            <router-link
+                                :to="{
                                     path: 'insurance',
                                     query: {
                                         pid: patient.patientId
@@ -255,11 +255,11 @@
                                     <span v-if="patient.vob == 1">Yes</span>
                                     <span v-else="">{{ constants.dssPreauthStatusLabels[patient.vob] }}</span>
                                 </template>
-                            </a>
+                            </router-link>
                         </td>
                         <td valign="top">
-                            <a
-                                v-link="{
+                            <router-link
+                                :to="{
                                     path: 'insurance',
                                     query: {
                                         pid: patient.patientId
@@ -267,11 +267,11 @@
                                 }"
                             >
                                 {{ this.getRxLomn(patient.rx_lomn) }}
-                            </a>
+                            </router-link>
                         </td>
                         <td valign="top">
-                            <a
-                                v-link="{
+                            <router-link
+                                :to="{
                                     path: 'ledger',
                                     query: {
                                         pid: patient.patientId
@@ -285,7 +285,7 @@
                                     </span>
                                     <span v-else class="green">{{ formatLedger(patient.total) }}</span>
                                 </template>
-                            </a>
+                            </router-link>
                         </td>
                     </template>
                 </tr>

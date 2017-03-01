@@ -133,7 +133,7 @@
                             </ul>
                         </div>
 
-                        <a v-if="headerInfo.useLetters" href="letters.php?status=pending" :class="'count_' + headerInfo.pendingLetters.length + ' notification ' + headerInfo.pendingLetters.length == 0 ? 'good_count' : 'bad_count'">
+                        <a v-if="headerInfo.useLetters" href="letters.php?status=pending" :class="'count_' + headerInfo.pendingLetters.length + ' notification ' + (headerInfo.pendingLetters.length == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.pendingLetters.length }}</span><span class="label">Letters</span>
                         </a>
 
@@ -142,7 +142,7 @@
                             <span class="label">Unmailed Letters</span>
                         </a>
 
-                        <router-link :to="'manage_vobs.php?status=' + constants.DSS_PREAUTH_COMPLETE + '&viewed=0'" :class="'count_' + headerInfo.preauthNumber + ' notification ' + headerInfo.preauthNumber == 0 ? 'good_count' : 'great_count'">
+                        <router-link :to="'manage_vobs.php?status=' + constants.DSS_PREAUTH_COMPLETE + '&viewed=0'" :class="'count_' + headerInfo.preauthNumber + ' notification ' + (headerInfo.preauthNumber == 0 ? 'good_count' : 'great_count')">
                             <span class="count">{{ headerInfo.preauthNumber }}</span>
                             <span class="label">VOBs</span>
                         </router-link>
@@ -152,31 +152,31 @@
                             <span class="label">Rejected VOBs</span>
                         </router-link>
 
-                        <router-link :to="'manage_hst.php?status=' + constants.DSS_HST_COMPLETE + '&viewed=0'" :class="'count_' + headerInfo.hstNumber + ' notification ' + headerInfo.hstNumber == 0 ? 'good_count' : 'great_count'">
+                        <router-link :to="'manage_hst.php?status=' + constants.DSS_HST_COMPLETE + '&viewed=0'" :class="'count_' + headerInfo.hstNumber + ' notification ' + (headerInfo.hstNumber == 0 ? 'good_count' : 'great_count')">
                             <span class="count">{{ headerInfo.hstNumber }}</span>
                             <span class="label">HSTs</span>
                         </router-link>
-                        <router-link :to="'manage_hst.php?status=' + constants.DSS_HST_REJECTED + '&viewed=0'" :class="'count_' + headerInfo.rejectedHSTNumber + ' notification ' + headerInfo.rejectedHSTNumber == 0 ? 'good_count' : 'bad_count'">
+                        <router-link :to="'manage_hst.php?status=' + constants.DSS_HST_REJECTED + '&viewed=0'" :class="'count_' + headerInfo.rejectedHSTNumber + ' notification ' + (headerInfo.rejectedHSTNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.rejectedHSTNumber }}</span>
                             <span class="label">Rejected HSTs</span>
                         </router-link>
-                        <router-link :to="'manage_hst.php?status=' + constants.DSS_HST_REQUESTED + '&viewed=0'" :class="'count_' + headerInfo.requestedHSTNumber + ' notification ' + headerInfo.requestedHSTNumber == 0 ? 'good_count' : 'bad_count'">
+                        <router-link :to="'manage_hst.php?status=' + constants.DSS_HST_REQUESTED + '&viewed=0'" :class="'count_' + headerInfo.requestedHSTNumber + ' notification ' + (headerInfo.requestedHSTNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.requestedHSTNumber }}</span>
                             <span class="label">Unsent HSTs</span>
                         </router-link>
-                        <a href="manage_claims.php" :class="'notification  count_' + headerInfo.pendingNodssClaimsNumber + headerInfo.pendingNodssClaimsNumber == 0 ? 'good_count' : 'bad_count'">
+                        <a href="manage_claims.php" :class="'notification  count_' + headerInfo.pendingNodssClaimsNumber + ' ' + (headerInfo.pendingNodssClaimsNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.pendingNodssClaimsNumber }}</span><span class="label">Pending Claims</span>
                         </a>
 
-                        <a v-if="showUnmailedClaims" href="manage_claims.php?unmailed=1" :class="'count_' + headerInfo.unmailedClaimsNumber + ' notification ' + headerInfo.unmailedClaimsNumber == 0 ? 'good_count' : 'bad_count'">
+                        <a v-if="showUnmailedClaims" href="manage_claims.php?unmailed=1" :class="'count_' + headerInfo.unmailedClaimsNumber + ' notification ' + (headerInfo.unmailedClaimsNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.unmailedClaimsNumber }}</span><span class="label">Unmailed Claims</span>
                         </a>
 
-                        <a href="manage_rejected_claims.php" :class="'count_' + headerInfo.rejectedClaimsNumber + ' notification ' + headerInfo.rejectedClaimsNumber == 0 ? 'good_count' : 'bad_count'">
+                        <a href="manage_rejected_claims.php" :class="'count_' + headerInfo.rejectedClaimsNumber + ' notification ' + (headerInfo.rejectedClaimsNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.rejectedClaimsNumber }}</span>
                             <span class="label">Rejected Claims</span>
                         </a>
-                        <a href="manage_unsigned_notes.php" :class="'count_' + headerInfo.unsignedNotesNumber + ' notification ' + headerInfo.unsignedNotesNumber == 0 ? 'good_count' : 'bad_count'">
+                        <a href="manage_unsigned_notes.php" :class="'count_' + headerInfo.unsignedNotesNumber + ' notification ' + (headerInfo.unsignedNotesNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.unsignedNotesNumber }}</span>
                             <span class="label">Unsigned Notes</span>
                         </a>
@@ -184,20 +184,20 @@
                             <span class="count">{{ headerInfo.alertsNumber }}</span>
                             <span class="label">Alerts</span>
                         </router-link>
-                        <a href="manage_faxes.php" :class="'notification  count_' + headerInfo.faxAlertsNumber + headerInfo.faxAlertsNumber == 0 ? 'good_count' : 'bad_count'">
+                        <a href="manage_faxes.php" :class="'notification  count_' + headerInfo.faxAlertsNumber + ' ' + (headerInfo.faxAlertsNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.faxAlertsNumber }}</span>
                             <span class="label">Failed Faxes</span>
                         </a>
-                        <a href="pending_patient.php" :class="'notification  count_' + headerInfo.pendingDuplicatesNumber + headerInfo.pendingDuplicatesNumber == 0 ? 'good_count' : 'bad_count'">
+                        <a href="pending_patient.php" :class="'notification  count_' + headerInfo.pendingDuplicatesNumber + ' ' + (headerInfo.pendingDuplicatesNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.pendingDuplicatesNumber }}</span>
                             <span class="label">Pending Duplicates</span>
                         </a>
-                        <a href="manage_email_bounces.php" :class="'notification count_' + headerInfo.emailBouncesNumber + headerInfo.emailBouncesNumber == 0 ? 'good_count' : 'bad_count'">
+                        <a href="manage_email_bounces.php" :class="'notification count_' + headerInfo.emailBouncesNumber + ' ' + (headerInfo.emailBouncesNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.emailBouncesNumber }}</span>
                             <span class="label">Email Bounces</span>
                         </a>
 
-                        <a v-if="headerInfo.usePaymentReports" href="payment_reports_list.php?unviewed=1" :class="'notification count_' + headerInfo.paymentReportsNumber + headerInfo.paymentReportsNumber == 0 ? 'good_count' : 'bad_count'">
+                        <a v-if="headerInfo.usePaymentReports" href="payment_reports_list.php?unviewed=1" :class="'notification count_' + headerInfo.paymentReportsNumber + ' ' + (headerInfo.paymentReportsNumber == 0 ? 'good_count' : 'bad_count')">
                             <span class="count">{{ headerInfo.paymentReportsNumber }}</span>
                             <span class="label">Payment Reports</span>
                         </a>

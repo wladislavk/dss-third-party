@@ -1,7 +1,3 @@
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../../assets/css/manage/form.css" scoped></style>
-<style src="../../../../assets/css/manage/device_guide.css" scoped></style>
-
 <template>
   <div>
     <div style="margin-left: 30px;">
@@ -91,6 +87,8 @@
   </div>
 </template>
 
-<script>
-  module.exports = require('./deviceSelector.js')
-</script>
+<script src="./deviceSelector.js"></script>
+
+<style src="../../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../../assets/css/manage/form.css" scoped></style>
+<style src="../../../../assets/css/manage/device_guide.css" scoped></style>

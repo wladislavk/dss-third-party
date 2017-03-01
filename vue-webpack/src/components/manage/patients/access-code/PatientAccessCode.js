@@ -1,6 +1,6 @@
 var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
-module.exports = {
+export default {
   data () {
     return {
       componentParams: {

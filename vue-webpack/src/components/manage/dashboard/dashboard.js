@@ -62,13 +62,9 @@ export default {
                 });
         }
     },
-    events: {
-        'update-header-info': function(headerInfo) {
-            this.headerInfo = headerInfo;
-        }
-    },
-    created: function() {
-        this.$emit('get-header-info');
+    created () {
+        eventHub.$on('update-header-info', this.onUpdateHeaderInfo)
+        eventHub.$emit('get-header-info')
 
         this.getDocumentCategories()
             .then(function(response) {
@@ -87,6 +83,9 @@ export default {
             }, function(response) {
                 this.handleErrors('getCurrentMemos', response);
             });
+    },
+    beforeDestroy () {
+        eventHub.$off('update-header-info', this.onUpdateHeaderInfo)
     },
     computed: {
         notificationsNumber: function() {
@@ -126,6 +125,9 @@ export default {
         }
     },
     methods: {
+        onUpdateHeaderInfo (headerInfo) {
+            this.headerInfo = headerInfo
+        },
         redirectToIndex2: function() {
             if (this.headerInfo.docInfo.homepage != 1) {
                 this.$route.router.push('/manage/index2');

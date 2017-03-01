@@ -33,7 +33,7 @@
       this.$off('keyup')
     },
     components: {
-      'empty': { template: '' },
+      'empty': { name: 'empty-template', template: '<p></p>' },
       'device-selector': deviceSelector,
       'view-contact': viewContact,
       'patient-access-code': patientAccessCode,

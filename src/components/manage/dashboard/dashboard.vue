@@ -403,8 +403,6 @@
     </div>
 </template>
 
-<script src="../../../../assets/js/manage/sucker_tree_home.js"></script>
-
 <script src="./dashboard.js"></script>
 
 <style src="../../../assets/css/manage/index.css" scoped></style>

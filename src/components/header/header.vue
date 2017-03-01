@@ -22,10 +22,14 @@
                     </div>
 
                     <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
-                        <span id="task_header">
+                        <span
+                            v-on:mouseover="showTaskList = true"
+                            v-on:mouseleave="showTaskList = false"
+                            id="task_header"
+                        >
                             My Tasks (<span id="task_count">{{ headerInfo.tasksNumber }}</span>)
                         </span>
-                        <div id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
+                        <div v-show="showTaskList" id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
                             <h4 v-if="overdueTasks.length > 0" id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
                             <ul v-if="overdueTasks.length > 0" id="task_od_list">
                                 <li
@@ -509,15 +513,8 @@
     </div>
 </template>
 
-<script src="../../assets/js/manage/ddlevelsmenu.js"></script>
-<script src="../../assets/js/manage/validation.js"></script>
-<script src="../../assets/js/manage/top.js"></script>
-<script src="../../assets/js/manage/hideshow.js"></script>
-<script src="../../assets/js/manage/file-upload-check.js"></script>
-
-<script>
-    // task_function();
-</script>
+<!-- TODO: rewrite legacy scripts to the new structure -->
+<!-- <script src="../../assets/js/manage/top.js"></script> -->
 
 <script src="./header.js"></script>
 

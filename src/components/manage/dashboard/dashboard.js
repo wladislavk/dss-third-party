@@ -1,3 +1,6 @@
+// include static libs
+require('../../../../static/third-party/sucker-tree-horizontal-menu/sucker_tree_home.js')
+
 var taskMixin    = require('../../../modules/tasks/TaskMixin.js');
 var handlerMixin = require('../../../modules/handler/HandlerMixin.js');
 

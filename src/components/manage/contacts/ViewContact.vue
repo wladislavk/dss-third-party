@@ -1,7 +1,3 @@
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/quick_view.css" scoped></style>
-<style src="../../../assets/css/manage/form.css" scoped></style>
-
 <template>
   <div id="view-contact">
     <div style="padding-top: 10px; background: #fff; width: 98%; height: 380px; margin-left: 1%;">
@@ -86,6 +82,8 @@
   </div>
 </template>
 
-<script>
-  module.exports = require('./ViewContact.js')
-</script>
+<script src="./ViewContact.js"></script>
+
+<style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/quick_view.css" scoped></style>
+<style src="../../../assets/css/manage/form.css" scoped></style>

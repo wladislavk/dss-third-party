@@ -1,6 +1,6 @@
 var moment = require('moment')
 
-var modal = require('../modal/modal')
+var modal = require('../modal/modal.vue')
 var taskMixin = require('../../modules/tasks/TaskMixin.js')
 var logoutMixin = require('../../modules/logout/LogoutMixin.js')
 var handlerMixin = require('../../modules/handler/HandlerMixin.js')
@@ -80,6 +80,8 @@ export default {
   },
   mixins: [taskMixin, logoutMixin, handlerMixin, logoutTimerMixin],
   created () {
+    eventHub.$on('get-header-info', this.onGetHeaderInfo)
+
     this.setLogoutTimer()
     this.getCurrentUser() // get current user info
       .then(function (response) {
@@ -119,12 +121,12 @@ export default {
                 .then(function (response) {
                   var data = response.data.data
                   if (data) {
-                    this.headerInfo.pendingLetters = data
+                    this.$set(this.headerInfo, 'pendingLetters', data)
                   }
                 }, function (response) {
                   this.handleErrors('getPendingLetters', response)
                 }).then(function () {
-                  if (this.headerInfo.pendingLetters[0].generated_date === 0) {
+                  if (this.headerInfo.pendingLetters[0].generated_date.length === 0) {
                     this.oldestLetter = 0
                   } else {
                     this.oldestLetter = Math.floor(
@@ -325,7 +327,7 @@ export default {
             .then(function (response) {
               var data = response.data.data
               if (data.length) {
-                this.$set(this.headerInfo, 'medicare', (data[0].p_m_ins_type === 1))
+                this.$set(this.headerInfo, 'medicare', (parseInt(data[0].p_m_ins_type) === 1))
                 this.$set(this.headerInfo, 'premedCheck', data[0].premedcheck)
                 this.$set(this.headerInfo, 'alertText', data[0].alert_text)
                 this.$set(this.headerInfo, 'displayAlert', data[0].display_alert)
@@ -575,15 +577,18 @@ export default {
           })
       })
   },
+  beforeDestroy () {
+    eventHub.$off('get-header-info', this.onGetHeaderInfo)
+  },
   watch: {
     'headerInfo': {
       handler: function () {
-        this.$emit('update-header-info', this.headerInfo)
+        eventHub.$emit('update-header-info', this.headerInfo)
       },
       deep: true
     },
     'headerInfo.docInfo.use_letters': function () {
-      this.headerInfo.useLetters = (this.headerInfo.docInfo.use_letters === 1)
+      this.$set(this.headerInfo, 'useLetters', (parseInt(this.headerInfo.docInfo.use_letters) === 1))
     },
     'uncompletedHomeSleepTests': function () {
       var status = ''
@@ -595,9 +600,6 @@ export default {
     }
   },
   events: {
-    'get-header-info': function () {
-      this.$emit('update-header-info', this.headerInfo)
-    },
     'update-from-child': function (headerInfo) {
       var keys = Object.keys(headerInfo)
       var self = this
@@ -620,7 +622,7 @@ export default {
         +this.headerInfo.emailBouncesNumber +
         +this.headerInfo.unsignedNotesNumber +
         +this.headerInfo.pendingDuplicatesNumber
-      if (this.headerInfo.user.user_type === window.constants.DSS_USER_TYPE_SOFTWARE) {
+      if (parseInt(this.headerInfo.user.user_type) === window.constants.DSS_USER_TYPE_SOFTWARE) {
         notificationsNumber += +this.headerInfo.unmailedClaimsNumber + +this.headerInfo.pendingNodssClaimsNumber
       } else {
         notificationsNumber += +this.headerInfo.pendingClaimsNumber
@@ -632,10 +634,10 @@ export default {
     },
     showOnlineCEAndSnoozleHelp: function () {
       return (
-        (this.isUserDoctor && this.headerInfo.user.use_course === 1) ||
+        (this.isUserDoctor && parseInt(this.headerInfo.user.use_course) === 1) ||
         (
           !this.isUserDoctor &&
-          this.headerInfo.courseStaff.use_course === 1 && this.headerInfo.courseStaff.use_course_staff === 1
+          parseInt(this.headerInfo.courseStaff.use_course) === 1 && parseInt(this.headerInfo.courseStaff.use_course_staff) === 1
         )
       )
     },
@@ -643,13 +645,16 @@ export default {
       return ((this.childrenPatients.length + this.totalContacts + this.totalInsurances) > 0)
     },
     showWarningAboutQuestionnaireChanges: function () {
-      return (this.questionnaireStatuses.symptoms_status === 2 || this.questionnaireStatuses.treatments_status === 2 || this.questionnaireStatuses.history_status === 2)
+      return (parseInt(this.questionnaireStatuses.symptoms_status) === 2 || parseInt(this.questionnaireStatuses.treatments_status) === 2 || parseInt(this.questionnaireStatuses.history_status) === 2)
     },
     showWarningAboutBouncedEmails: function () {
       return this.bouncedEmailsNumberForCurrentPatient
     }
   },
   methods: {
+    onGetHeaderInfo () {
+      eventHub.$emit('update-header-info', this.headerInfo)  
+    },
     getCurrentUser: function () {
       return this.$http.post(process.env.API_PATH + 'users/current')
     },

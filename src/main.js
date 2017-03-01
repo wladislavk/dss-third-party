@@ -11,6 +11,9 @@ window.$ = require('jquery/dist/jquery.min.js')
 window.swal = require('sweetalert')
 window.moment = require('moment')
 
+// centralized event hub
+window.eventHub = new Vue()
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

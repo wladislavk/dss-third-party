@@ -1,7 +1,3 @@
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/form.css" scoped></style>
-<style src="../../../assets/css/manage/edit_contact.css" scoped></style>
-
 <template>
   <div id="edit-contact">
     <div v-if="message" align="center" class="red">
@@ -489,6 +485,8 @@
   </div>
 </template>
 
-<script>
-  module.exports = require('./EditContact.js')
-</script>
+<script src="./EditContact.js"></script>
+
+<style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/form.css" scoped></style>
+<style src="../../../assets/css/manage/edit_contact.css" scoped></style>

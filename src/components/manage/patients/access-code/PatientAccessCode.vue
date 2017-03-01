@@ -1,5 +1,3 @@
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-
 <template>
   <div>
     <br />
@@ -31,6 +29,6 @@
   </div>
 </template>
 
-<script>
-  module.exports = require('./PatientAccessCode.js')
-</script>
+<script src="./PatientAccessCode.js"></script>
+
+<style src="../../../../assets/css/manage/admin.css" scoped></style>

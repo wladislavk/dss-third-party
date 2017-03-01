@@ -482,7 +482,7 @@
                         </div>
 
                         <!-- Router content -->
-                        <!-- <router-view></router-view> -->
+                        <router-view></router-view>
                     </div>
                     <div class="footer-image">
                     </div>

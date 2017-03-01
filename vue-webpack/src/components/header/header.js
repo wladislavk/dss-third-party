@@ -1,3 +1,6 @@
+// include static libs
+require('../../../static/third-party/dynamic-drive-dhtml/ddlevelsmenu.js')
+
 var moment = require('moment')
 
 var modal = require('../modal/modal.vue')
@@ -72,7 +75,8 @@ export default {
       bouncedEmailsNumberForCurrentPatient: 0,
       rejectedClaimsForCurrentPatient: [],
       uncompletedHomeSleepTests: [],
-      showAllWarnings: true
+      showAllWarnings: true,
+      showTaskList: false
     }
   },
   components: {

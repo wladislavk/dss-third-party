@@ -55,10 +55,10 @@
                 <tr bgColor="#ffffff">
                     <td colspan="2">
                         <div class="letter_select">
-                            <a
+                            <router-link
                                 v-for="letter in letters"
-                                v-bind:class="{ 'selected_letter': letter == routeParameters.currentLetter }"
-                                v-link="{ name: $route.name,
+                                :class="{ 'selected_letter': letter == routeParameters.currentLetter }"
+                                :to="{ name: $route.name,
                                     query: {
                                         letter      : letter,
                                         status      : routeParameters.status,
@@ -68,10 +68,10 @@
                                     }
                                 }"
                                 class="letters"
-                            >{{ letter }}</a>
-                            <a
+                            >{{ letter }}</router-link>
+                            <router-link
                                 v-if="routeParameters.currentLetter"
-                                v-link="{ name: $route.name,
+                                :to="{ name: $route.name,
                                     query: {
                                         status      : routeParameters.status,
                                         sort        : routeParameters.sortColumn,
@@ -79,7 +79,7 @@
                                         contacttype : routeParameters.selectedContactType
                                     }
                                 }"
-                            >Show All</a>
+                            >Show All</router-link>
                         </div>
                     </td>
                     <td
@@ -89,14 +89,14 @@
                         class="bp"
                     >
                         Pages:
-                        <span v-for="index in totalPages">
-                            <strong v-if="routeParameters.currentPageNumber == index">{{ index + 1 }}</strong>
-                            <a
+                        <span v-for="index in totalPages" class="page_numbers">
+                            <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
+                            <router-link
                                 v-else
-                                v-link="{
+                                :to="{
                                     name: $route.name,
                                     query: {
-                                        page        : index,
+                                        page        : index - 1,
                                         letter      : routeParameters.currentLetter,
                                         sort        : routeParameters.sortColumn,
                                         sortdir     : routeParameters.sortDirection,
@@ -104,18 +104,18 @@
                                     }
                                 }"
                                 class="fp"
-                            >{{ index + 1 }}</a>
+                            >{{ index }}</router-link>
                         </span>
                     </td>
                 </tr>
                 <tr class="tr_bg_h">
                     <td
-                        v-for="(sort, label) in tableHeaders"
-                        :class="'col_head ' +(routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '') + ' ' + sort"
+                        v-for="(label, sort) in tableHeaders"
+                        :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '') + ' ' + sort"
                         valign="top"
                     >
-                        <a
-                            v-link="{
+                        <router-link
+                            :to="{
                                 name: $route.name,
                                 query: {
                                     letter: routeParameters.currentLetter,
@@ -123,7 +123,7 @@
                                     sortdir: getCurrentDirection(sort)
                                 }
                             }"
-                        >{{ label }}</a>
+                        >{{ label }}</router-link>
                     </td>
                     <td valign="top" class="col_head" width="10%">
                         Referrer

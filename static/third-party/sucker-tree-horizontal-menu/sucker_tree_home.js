@@ -5,7 +5,13 @@ var menuids=["homemenu", "notmenu"];
 
 function buildsubmenus_horizontal(){
     for (var i=0; i<menuids.length; i++) {
-        var ultags = document.getElementById(menuids[i]).getElementsByTagName("ul");
+        var el = document.getElementById(menuids[i]);
+
+        if (!el) {
+            continue;
+        }
+
+        var ultags = el.getElementsByTagName("ul");
 
         for (var t=0; t<ultags.length; t++) {
             // First level submenu

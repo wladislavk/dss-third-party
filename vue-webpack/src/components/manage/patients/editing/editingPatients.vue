@@ -81,7 +81,7 @@
                                             href="#"
                                             v-on:click.prevent="onClickAddImage('profile')"
                                         >
-                                            <img src="assets/images/add_patient_photo.png" />
+                                            <img src="~assets/images/add_patient_photo.png" />
                                         </a>
                                         <img
                                             v-else

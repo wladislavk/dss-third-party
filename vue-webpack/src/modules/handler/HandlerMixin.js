@@ -4,7 +4,7 @@ module.exports = {
       // token expired
       if (response.status === 401) {
         window.storage.remove('token')
-        this.$route.router.go('/manage/login')
+        this.$router.go('/manage/login')
       } else {
         // if dev environment
         if (process.env.NODE_ENV === 'development') {

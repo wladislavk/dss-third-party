@@ -17,9 +17,8 @@
             <div class="letter_select">
                 <router-link
                     v-for="letter in letters"
-                    v-bind:class="{ 'selected_letter': letter == routeParameters.currentLetter }"
+                    :class="'letters ' + (letter == routeParameters.currentLetter ? 'selected_letter' : '')"
                     :to="{ name: $route.name, query: { letter: letter, sh: routeParameters.selectedPatientType }}"
-                    class="letters"
                 >{{ letter }}</router-link>
 
                 <router-link
@@ -37,14 +36,14 @@
                 <tr v-if="patientsTotalNumber > patientsPerPage" bgColor="#ffffff">
                     <td  align="right" colspan="15" class="bp">
                         Pages:
-                        <span v-for="index in totalPages">
-                            <strong v-if="routeParameters.currentPageNumber == index">{{ index + 1 }}</strong>
+                        <span v-for="index in totalPages" class="page_numbers">
+                            <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
                             <router-link
                                 v-else
                                 :to="{
                                     name: $route.name,
                                     query: {
-                                        page    : index,
+                                        page    : index - 1,
                                         letter  : routeParameters.currentLetter,
                                         sort    : routeParameters.sortColumn,
                                         sortdir : routeParameters.sortDirection,
@@ -52,7 +51,7 @@
                                     }
                                 }"
                                 class="fp"
-                            >{{ index + 1 }}</router-link>
+                            >{{ index }}</router-link>
                         </span>
                     </td>
                 </tr>
@@ -97,7 +96,7 @@
                 <tr
                     v-else
                     v-for="patient in patients"
-                    :class="(patient.status == 1 ? 'tr_active' : 'tr_inactive') + 'initial_list'"
+                    :class="(patient.status == 1 ? 'tr_active' : 'tr_inactive') + ' initial_list'"
                 >
                     <td valign="top">
                         <router-link
@@ -266,7 +265,7 @@
                                     }
                                 }"
                             >
-                                {{ this.getRxLomn(patient.rx_lomn) }}
+                                {{ getRxLomn(patient.rx_lomn) }}
                             </router-link>
                         </td>
                         <td valign="top">

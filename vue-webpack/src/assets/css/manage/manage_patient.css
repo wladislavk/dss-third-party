@@ -10,6 +10,6 @@
     background-color: rgb(0, 39, 94);
 }
 
-.letters {
+.letters, .page_numbers {
     margin-right: 4px
 }

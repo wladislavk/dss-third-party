@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueResource from 'vue-resource'
+import VueMoment from 'vue-moment'
 
 // include the manage main template
 import ManageTemplate from 'components/header/header.vue'
@@ -19,6 +20,7 @@ import PageNotFound from 'components/services/pageNotFound.vue'
 
 Vue.use(Router)
 Vue.use(VueResource)
+Vue.use(VueMoment)
 
 const router = new Router({
   routes: [

@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     totalPages () {
-      return Math.round(this.patientsTotalNumber / this.patientsPerPage)
+      return Math.ceil(this.patientsTotalNumber / this.patientsPerPage)
     }
   },
   created () {

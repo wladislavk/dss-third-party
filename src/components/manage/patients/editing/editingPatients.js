@@ -412,12 +412,12 @@ export default {
     },
     parseSuccessfulResponseOnEditingPatient: function(data) {
       if (data.hasOwnProperty('redirect_to') && data.redirect_to.length > 0) {
-        this.$route.router.go(data.redirect_to)
+        this.$router.push(data.redirect_to)
       }
 
       if (data.hasOwnProperty('created_patient_id') && data.created_patient_id > 0) {
         window.storage.save('message', data.status)
-        this.$route.router.go(this.$route.path + '?pid=' + data.created_patient_id)
+        this.$router.push(this.$route.path + '?pid=' + data.created_patient_id)
       }
 
       if (data.hasOwnProperty('status') && data.status.length > 0) {

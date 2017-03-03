@@ -1,8 +1,8 @@
 <template>
     <div id="vobs">
         <span class="admin_head">Manage Verification of Benefits</span>
-        <a
-            v-link="{
+        <router-link
+            :to="{
                 name: $route.name,
                 query: {
                     pid     : routeParameters.patientId,
@@ -15,7 +15,7 @@
             class="addButton"
         >
             {{ routeParameters.viewed == 0 ? 'Show All' : 'Show Unread' }}
-        </a>
+        </router-link>
         <br /><br /><br />
         <div align="center" class="red">
             <b>{{ message }}</b>
@@ -25,34 +25,34 @@
                 <tr v-if="totalVobs > vobsPerPage" bgColor="#ffffff">
                     <td align="right" colspan="15" class="bp">
                         Pages:
-                        <span v-for="index in totalPages">
-                            <strong v-if="routeParameters.currentPageNumber == index">{{ index + 1 }}</strong>
-                            <a
+                        <span v-for="index in totalPages" class="page_numbers">
+                            <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
+                            <router-link
                                 v-else
-                                v-link="{
+                                :to="{
                                     name: $route.name,
                                     query: {
-                                        page    : index,
+                                        page    : index - 1,
                                         sort    : routeParameters.sortColumn,
                                         sortdir : routeParameters.sortDirection,
                                         viewed  : routeParameters.viewed
                                     }
                                 }"
                                 class="fp"
-                            >{{ index + 1 }}</a>
+                            >{{ index }}</router-link>
                         </span>
                     </td>
                 </tr>
                 <tr class="tr_bg_h">
                     <td
-                        v-for="(sort, label) in tableHeaders"
+                        v-for="(label, sort) in tableHeaders"
                         :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
                         :width="sort == 'comments' ? '40%' : '15%'"
                     >
-                        <a
+                        <router-link
                             v-if="sort != 'comments' && sort != 'action'"
-                            v-link="{
+                            :to="{
                                 name: $route.name,
                                 query: {
                                     sort: sort,
@@ -61,7 +61,7 @@
                             }"
                         >
                             {{ label }}
-                        </a>
+                        </router-link>
                         <template v-else>{{ label }}</template>
                     </td>
                 </tr>
@@ -88,8 +88,8 @@
                         {{ vob.status == constants.DSS_PREAUTH_REJECTED ? vob.reject_reason : '' }}
                     </td>
                     <td valign="top">
-                        <a
-                            v-link="{
+                        <router-link
+                            :to="{
                                 path: '/manage/insurance',
                                 query: {
                                     pid    : routeParameters.patientId,
@@ -100,7 +100,7 @@
                             title="EDIT"
                         >
                             View
-                        </a>
+                        </router-link>
                         <br />
                         <a
                             href="#"
@@ -120,3 +120,4 @@
 <script src="./vobs.js"></script>
 
 <style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/manage.css" scoped></style>

@@ -15,30 +15,32 @@ export default {
   watch: {
     '$route.query.id': function () {
       if (this.$route.query.id) {
-        this.$set('id', this.$route.query.id)
+        this.$set(this, 'id', this.$route.query.id)
       } else {
-        this.$set('id', 0)
+        this.$set(this, 'id', 0)
       }
     },
     '$route.query.pid': function () {
       if (this.$route.query.pid) {
-        this.$set('patientId', this.$route.query.pid)
+        this.$set(this, 'patientId', this.$route.query.pid)
       } else {
-        this.$set('patientId', 0)
+        this.$set(this, 'patientId', 0)
       }
     }
   },
   created () {
-    this.getPatientById()
-      .then(function (response) {
-        var data = response.data.data
+    if (this.patientId > 0) {
+      this.getPatientById(this.patientId)
+        .then(function (response) {
+          var data = response.data.data
 
-        if (data) {
-          this.$set('currentPatient', data)
-        }
-      }, function (response) {
-        this.handleErrors('getPatientById', response)
-      })
+          if (data) {
+            this.$set(this, 'currentPatient', data)
+          }
+        }, function (response) {
+          this.handleErrors('getPatientById', response)
+        })
+    }
 
     this.getDeviceGuideSettingOptions()
       .then(function (response) {
@@ -49,14 +51,14 @@ export default {
             element.labels = element.labels.split(',')
             element.checkedOption = 0
 
-            if (element.setting_type === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+            if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
               element.checkedImp = 0
             } else {
               element.checked = 0
             }
           })
 
-          this.$set('deviceGuideSettingOptions', data)
+          this.$set(this, 'deviceGuideSettingOptions', data)
         }
       }, function (response) {
         this.handleErrors('getDeviceGuideSettingOptions', response)
@@ -80,7 +82,7 @@ export default {
       this.deviceGuideSettingOptions.forEach(function (element) {
         var settingObj = {}
 
-        if (element.setting_type === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+        if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
           settingObj['checked'] = element.checkedOption + 1
         } else {
           settingObj['checked'] = element.checked
@@ -98,7 +100,7 @@ export default {
           var data = response.data.data
 
           if (data) {
-            this.$set('deviceGuideResults', data)
+            this.$set(this, 'deviceGuideResults', data)
           }
         }, function (response) {
           this.handleErrors('getDeviceGuideResults', response)
@@ -135,25 +137,25 @@ export default {
       this.deviceGuideSettingOptions.forEach((element) => {
         element.checkedOption = 0
 
-        if (element.setting_type === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+        if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
           element.checkedImp = 0
         } else {
           element.checked = 0
         }
       })
 
-      this.$set('deviceGuideResults', [])
+      this.$set(this, 'deviceGuideResults', [])
     },
     getPatientById (patientId) {
       patientId = patientId || 0
 
-      return this.$http.get(window.config.API_PATH + 'patients/' + patientId)
+      return this.$http.get(process.env.API_PATH + 'patients/' + patientId)
     },
     getDeviceGuideSettingOptions () {
-      return this.$http.post(window.config.API_PATH + 'guide-setting-options/settingIds')
+      return this.$http.post(process.env.API_PATH + 'guide-setting-options/settingIds')
     },
     getDeviceGuideResults (data) {
-      return this.$http.post(window.config.API_PATH + 'guide-devices/with-images', data)
+      return this.$http.post(process.env.API_PATH + 'guide-devices/with-images', data)
     },
     updateFlowDevice (device) {
       var data = {
@@ -162,7 +164,7 @@ export default {
         pid: this.patientId
       }
 
-      return this.$http.post(window.config.API_PATH + '', data)
+      return this.$http.post(process.env.API_PATH + '', data)
     }
   }
 }

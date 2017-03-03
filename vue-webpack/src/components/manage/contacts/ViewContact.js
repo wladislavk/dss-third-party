@@ -21,33 +21,37 @@ export default {
       return this.contact
     }
   },
-  events: {
-    'setting-component-params': function (parameters) {
+  created () {
+    eventHub.$on('setting-component-params', this.onSettingComponentParams)
+  },
+  beforeDestroy () {
+    eventHub.$off('setting-component-params', this.onSettingComponentParams)
+  },
+  methods: {
+    onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
       this.setCurrentContact(this.componentParams.contactId)
-    }
-  },
-  methods: {
+    },
     setCurrentContact (contactId) {
       this.getContactById(contactId)
         .then(function (response) {
           var data = response.data.data
 
           if (data) {
-            this.$set('contact', data)
+            this.$set(this, 'contact', data)
           }
         }, function (response) {
           this.handleErrors('getContactById', response)
         })
     },
     getPhysicianContactTypes () {
-      return this.$http.post(window.config.API_PATH + 'contact-types/physician')
+      return this.$http.post(process.env.API_PATH + 'contact-types/physician')
     },
     getContactById (contactId) {
       var data = { contact_id: contactId }
 
-      return this.$http.post(window.config.API_PATH + 'contacts/with-contact-type', data)
+      return this.$http.post(process.env.API_PATH + 'contacts/with-contact-type', data)
     }
   }
 }

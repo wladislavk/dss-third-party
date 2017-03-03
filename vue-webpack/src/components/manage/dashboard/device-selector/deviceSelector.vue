@@ -1,9 +1,9 @@
 <template>
   <div>
     <div style="margin-left: 30px;">
-      <a v-on:click.prevent="onClickInstructions" id="ins_show">Instructions</a>
+      <a href="#" v-on:click.prevent="onClickInstructions" id="ins_show">Instructions</a>
       <div id="instructions" style="display:none;">
-        <strong>Instructions</strong> <a v-on:click.prevent="onClickHide">hide</a>
+        <strong>Instructions</strong> <a href="#" v-on:click.prevent="onClickHide">hide</a>
         <ol>
           <li>Evaluate pt for each category using sliding bar</li>
           <li>Choose the three most important categories (if needed)</li>
@@ -29,7 +29,7 @@
         <strong style="padding: 5px 0;display:block;">{{ deviceGuideSetting.name }}</strong>
         <template v-if="deviceGuideSetting.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE">
           <mt-range
-            :value="deviceGuideSetting.checkedOption"
+            v-model="deviceGuideSetting.checkedOption"
             :min="0"
             :max="deviceGuideSetting.number - 1"
             class="slider"
@@ -91,4 +91,4 @@
 
 <style src="../../../../assets/css/manage/admin.css" scoped></style>
 <style src="../../../../assets/css/manage/form.css" scoped></style>
-<style src="../../../../assets/css/manage/device_guide.css" scoped></style>
+<style src="../../../../assets/css/manage/device_guide.css"></style>

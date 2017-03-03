@@ -18,7 +18,7 @@
   var patientAccessCode = require('../manage/patients/access-code/PatientAccessCode.vue')
   var editContact = require('../manage/contacts/EditContact.vue')
 
-  module.exports = {
+  export default {
     data () {
       return {
         popupStatus: 0, // 0 - disabled, 1 - enabled
@@ -42,7 +42,7 @@
     methods: {
       setComponentParameters (parameters) {
         this.$nextTick(function () {
-          this.$emit('setting-component-params', parameters)
+          window.eventHub.$emit('setting-component-params', parameters)
         })
       },
       centering () {
@@ -110,9 +110,7 @@
         }
       },
       hasComponent (component) {
-        // TODO: __proto__ is deprecated - must be updated
-        // var existedComponents = Object.keys(this.$options.components.__proto__)
-        var existedComponents = []
+        var existedComponents = Object.keys(this.$options.components)
 
         if (existedComponents.indexOf(component) > -1) {
           return true
@@ -121,7 +119,7 @@
         }
       },
       updateParentData (data) {
-        this.$emit('getting-data-from-modal', data)
+        window.eventHub.$emit('setting-data-from-modal', data)
       }
     }
   }
@@ -130,7 +128,7 @@
 <style src="../../assets/css/manage/popup.css" scoped></style>
 <style scoped>
   #modal-content {
-    background: url(/assets/images/tall.jpg);
+    background: url(~assets/images/tall.jpg);
     background-repeat: repeat-x;
     background-color: rgb(191, 207, 220);
     font-family: Arial, Helvetica, sans-serif;

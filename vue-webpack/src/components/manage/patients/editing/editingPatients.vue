@@ -54,7 +54,7 @@
                         </template>
                         <template v-if="homeSleepTestCompanies.length > 0">
                             <a
-                                v-if="homeSleepTestCompanies.length > 0"
+                                v-if="uncompletedHomeSleepTests.length > 0"
                                 href="#"
                                 v-on:click.prevent="onClickOrderHst"
                                 class="button"
@@ -354,11 +354,11 @@
                                             <option value="default" disabled>Select</option>
                                             <option
                                                 v-for="location in docLocations"
-                                                {{ (patientLocation == location.id || (location.default_location == 1 && !routeParameters.patientId)) ? 'selected="selected"' : '' }}
+                                                :selected="location.default_location == 1 && !routeParameters.patientId"
                                                 :value="location.id"
                                             >{{ location.location }}</option>
                                         </select>
-                                        <label for"location">Office Site</label>
+                                        <label for="location">Office Site</label>
                                     </span>
                                 </div>
                             </li>
@@ -1197,12 +1197,12 @@
                                         <input
                                             v-model="patient.p_m_ins_grp"
                                             v-on:change="handleChangingInsuranceInfo"
+                                            :readonly="patient.p_m_ins_type == '1'"
                                             ref="p_m_ins_grp"
                                             id="p_m_ins_grp"
                                             name="p_m_ins_grp"
                                             type="text"
                                             class="field text addr tbox"
-                                            {{ (patient.p_m_ins_type == '1') ? 'value="NONE" readonly="readonly"' : '' }}
                                             maxlength="255"
                                             style="width:100px;"
                                         />
@@ -1212,12 +1212,12 @@
                                         <input
                                             v-model="patient.p_m_ins_plan"
                                             v-on:change="handleChangingInsuranceInfo"
+                                            :readonly="patient.p_m_ins_type == '1'"
                                             ref="p_m_ins_plan"
                                             id="p_m_ins_plan"
                                             name="p_m_ins_plan"
                                             type="text"
                                             class="field text addr tbox"
-                                            {{ (patient.p_m_ins_type == '1') ? 'readonly="readonly"' : '' }}
                                             maxlength="255"
                                             style="width:200px;"
                                         />
@@ -2133,8 +2133,6 @@
         </form>
     </div>
 </template>
-
-<!-- <script type="text/javascript" src="js/add_patient.js?v=<?= time() ?>"></script> -->
 
 <script src="./editingPatients.js"></script>
 

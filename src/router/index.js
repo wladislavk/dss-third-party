@@ -2,8 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueResource from 'vue-resource'
 import VueMoment from 'vue-moment'
+import MintUI from 'mint-ui'
 
-// include the manage main template
+Vue.use(Router)
+Vue.use(VueResource)
+Vue.use(VueMoment)
+Vue.use(MintUI)
+
+// include the main template
 import ManageTemplate from 'components/header/header.vue'
 Vue.component('manage-template', ManageTemplate)
 
@@ -17,10 +23,6 @@ import Vobs from 'components/manage/vobs/vobs.vue'
 
 // service routes
 import PageNotFound from 'components/services/pageNotFound.vue'
-
-Vue.use(Router)
-Vue.use(VueResource)
-Vue.use(VueMoment)
 
 const router = new Router({
   routes: [

@@ -69,11 +69,11 @@
       </div>
 
       <router-link
-        v-if="corporate"
+        v-if="filteredContact.corporate == '1'"
         :to="'view_fcontact.php?ed=' + componentParams.contactId"
         style="margin-right:10px;float:right;"
       >View Full</router-link>
-      <route-link
+      <router-link
         v-else
         :to="'add_contact.php?ed=' + componentParams.contactId"
         style="margin-right:10px;float:right;"

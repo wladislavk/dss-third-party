@@ -86,7 +86,7 @@ export default {
         )
       }
 
-      if (patient.p_m_dss_file === 1) {
+      if (parseInt(patient.p_m_dss_file) === 1) {
         messages = {
           p_m_partyfname: 'Insured Party First Name is a Required Field',
           p_m_partylname: 'Insured Party Last Name is a Required Field',
@@ -104,7 +104,7 @@ export default {
         }
 
         // if primary insurance - yes and secondary - not
-        if (patient.dss_file_radio === 2) {
+        if (parseInt(patient.dss_file_radio) === 2) {
           return confirm(
             'You indicated that ' + this.billingCompany.name +
             ' will file Primary insurance claims but NOT Secondary insurance claims. ' +
@@ -113,14 +113,14 @@ export default {
           )
         }
 
-        if (patient.p_m_ins_plan.trim() === '' && patient.p_m_ins_type.value !== 1) {
+        if (patient.p_m_ins_plan.trim() === '' && parseInt(patient.p_m_ins_type.value) !== 1) {
           alert('Plan Name is a Required Field')
           this.$refs.p_m_ins_plan.focus()
 
           return false
         }
 
-        if (patient.has_s_m_ins === 'Yes' && patient.s_m_dss_file === 1) {
+        if (patient.has_s_m_ins === 'Yes' && parseInt(patient.s_m_dss_file) === 1) {
           messages = {
             s_m_partyfname: 'Secondary Insured Party First Name is a Required Field',
             s_m_partylname: 'Secondary Insured Party Last Name is a Required Field',
@@ -137,7 +137,7 @@ export default {
             return false
           }
 
-          if (patient.s_m_ins_plan.trim() === '' && patient.p_m_ins_type.value !== 1) {
+          if (patient.s_m_ins_plan.trim() === '' && parseInt(patient.p_m_ins_type.value) !== 1) {
             alert('Secondary Plan Name is a Required Field')
             this.$refs.s_m_ins_plan.focus()
 
@@ -152,7 +152,7 @@ export default {
           return false
         }
       // if primary insurance - no, but secondary - yes
-      } else if (patient.p_m_dss_file === 2 && patient.dss_file_radio === 1) {
+      } else if (parseInt(patient.p_m_dss_file) === 2 && parseInt(patient.dss_file_radio) === 1) {
         alert(this.billingCompany.name + ' must file Primary Insurance in order to file Secondary Insurance.')
         return false
       }
@@ -194,7 +194,7 @@ export default {
 
       // if pending VOB make sure insurance hasn't changed
       if (this.pendingVob && this.isInsuranceInfoChanged) {
-        if (this.pendingVob.status === window.constants.DSS_PREAUTH_PREAUTH_PENDING) {
+        if (parseInt(this.pendingVob.status) === window.constants.DSS_PREAUTH_PREAUTH_PENDING) {
           if (!confirm("Warning! This patient has a Verification of Benefits (VOB) that is currently awaiting pre-authorization from the insurance company. You have changed the patient's insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?")) {
             //
           }
@@ -227,13 +227,13 @@ export default {
         return false
       }
 
-      if (patient.s_m_dss_file === 1 && patient.p_m_dss_file !== 1) {
+      if (parseInt(patient.s_m_dss_file) === 1 && parseInt(patient.p_m_dss_file) !== 1) {
         alert(this.billingCompany.name + ' must file Primary Insurance in order to file Secondary Insurance.')
 
         return false
       }
 
-      if (patient.s_m_ins_type === 1) {
+      if (parseInt(patient.s_m_ins_type) === 1) {
         alert('Warning! It is very rare that Medicare is listed as a patient’s Secondary Insurance.  Please verify that Medicare is the secondary payer for this patient before proceeding.')
       }
 

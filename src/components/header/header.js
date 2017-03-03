@@ -85,6 +85,7 @@ export default {
   mixins: [taskMixin, logoutMixin, handlerMixin, logoutTimerMixin],
   created () {
     eventHub.$on('get-header-info', this.onGetHeaderInfo)
+    eventHub.$on('update-from-child', this.onUpdateFromChild)
 
     this.setLogoutTimer()
     this.getCurrentUser() // get current user info
@@ -583,6 +584,7 @@ export default {
   },
   beforeDestroy () {
     eventHub.$off('get-header-info', this.onGetHeaderInfo)
+    eventHub.$off('update-from-child', this.onUpdateFromChild)
   },
   watch: {
     'headerInfo': {
@@ -601,18 +603,6 @@ export default {
         status = window.constants.dssHstStatusLabels[lastElement.status]
       }
       this.$set(this.headerInfo, 'patientHomeSleepTestStatus', status)
-    }
-  },
-  events: {
-    'update-from-child': function (headerInfo) {
-      var keys = Object.keys(headerInfo)
-      var self = this
-      keys.forEach((el) => {
-        self.headerInfo[el] = headerInfo[el]
-      })
-    },
-    'getting-data-from-modal': function (data) {
-      this.$emit('setting-data-from-modal', data)
     }
   },
   computed: {
@@ -656,6 +646,13 @@ export default {
     }
   },
   methods: {
+    onUpdateFromChild (headerInfo) {
+      var keys = Object.keys(headerInfo)
+      var self = this
+      keys.forEach((el) => {
+        self.headerInfo[el] = headerInfo[el]
+      })
+    },
     onGetHeaderInfo () {
       eventHub.$emit('update-header-info', this.headerInfo)  
     },

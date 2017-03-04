@@ -153,7 +153,7 @@ function setup_tinymce (size, family, $reference) {
         mode: "textareas",
         theme: "modern",
         menubar: false,
-        toolbar1: "undo redo | italic bold | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table",
+        toolbar1: "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table",
         gecko_spellcheck : true,
         plugins: "paste, save, table",
         valid_elements: "table,tbody,thead,tr,td[width|colspan|style],img[src|width|height|align],th,b,strong,i,em,p,br,ul,li,ol",
@@ -201,7 +201,7 @@ function setup_tinymce (size, family, $reference) {
         init.plugins = init.plugins.replace(/table/, 'table_modified');
         init.table_alignment_option = false;
 
-        init.valid_elements = ['@[style|border|class|title|contenteditable],mark', init.valid_elements].join(',');
+        init.valid_elements = ['@[style|border|class|title|contenteditable],mark,u', init.valid_elements].join(',');
         delete init.valid_styles;
 
         init.content_css = [
@@ -287,9 +287,9 @@ $(document).ready(function(){
         $preview.toggleClass('show-placeholders');
 
         if ($preview.is('.show-placeholders')) {
-            $this.text('Hide placeholders');
+            $this.text('Hide variables');
         } else {
-            $this.text('Show placeholders');
+            $this.text('Show variables');
         }
 
         return false;

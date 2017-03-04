@@ -1921,7 +1921,7 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
                     &nbsp;&nbsp;
                     <button id="toggle-placeholders-letter<?= $cur_letter_num ?>" class="preview-toggle-placeholders addButton"
                             onclick="return false;" title="Show/hide placeholder hints">
-                      <?= $letterRow['edit_date'] ? 'Show' : 'Hide' ?> placeholders
+                      Hide variables
                     </button>
                   </span>
                 &nbsp;&nbsp;
@@ -1953,8 +1953,8 @@ $s = "SELECT referred_source FROM dental_patients WHERE patientid='".mysqli_real
         		<tr>
         			<td valign="top">
         				<div id="letter<?= $cur_letter_num ?>"
-                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> <?= $letterRow['edit_date'] ? '' : 'show-placeholders' ?>"
-                             data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> <?= $letterRow['edit_date'] ? '' : 'show-placeholders' ?>">
+                             class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders"
+                             data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders">
         				  <div class="preview-wrapper">
                             <div class="preview-inner-wrapper">
                               <?= html_entity_decode(

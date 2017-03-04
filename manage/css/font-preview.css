@@ -163,7 +163,7 @@ div.preview-letter.show-placeholders .preview-placeholder:empty::after,
 div.preview-letter.show-placeholders img.preview-placeholder[src=""]::after {
     content: "<empty>";
     font-style: italic;
-    color: #ccf;
+    color: #90c;
 }
 /* Debug values */
 

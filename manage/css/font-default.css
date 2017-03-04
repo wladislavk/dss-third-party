@@ -75,5 +75,5 @@ mark {
 .show-placeholders img.preview-placeholder[src=""]::after {
     content: "<empty>";
     font-style: italic;
-    color: #ccf;
+    color: #90c;
 }

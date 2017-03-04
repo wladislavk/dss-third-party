@@ -56,9 +56,9 @@ function hide_edit_letter (divid) {
     var $placeholders = $source.closest('.single-letter').find('.preview-toggle-placeholders');
 
     if ($source.is('.show-placeholders')) {
-        $placeholders.text('Hide placeholders');
+        $placeholders.text('Hide variables');
     } else {
-        $placeholders.text('Show placeholders');
+        $placeholders.text('Show variables');
     }
 
     $(['#preview-tools-', divid].join('')).show();
@@ -227,10 +227,6 @@ function setup_tinymce (size, family, $reference) {
          */
         init.setup = function (editor) {
             editor.on('BeforeExecCommand', function (e) {
-                if (e.command !== 'mceToggleFormat') {
-                    console.info('BeforeExecCommand', e.command);
-                }
-
                 var $nonEditable = $reference.find('iframe')
                     .contents().find('body [contenteditable], body .non-editable');
 

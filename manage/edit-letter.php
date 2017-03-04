@@ -2460,27 +2460,28 @@ function restorePlaceholders($processedTemplate)
     $textRegex = "@<(?P<tag> p|mark ) $titleRegex>(?P<contents> [\\s\\S]*? )</\\1>@Si";
     $imageRegex = "@<(?P<tag> img ) $titleRegex /?>@Si";
 
+    $styleTags = [
+        'u' => 'u',
+        'del' => 'del',
+        'em' => 'em|i',
+        'strong' => 'strong|b',
+    ];
+
     $textRegex = preg_replace('@\s+@', '', $textRegex);
     $imageRegex = preg_replace('@\s+@', '', $imageRegex);
 
-    $template = preg_replace_callback($textRegex, function ($match) {
+    $template = preg_replace_callback($textRegex, function ($match) use ($styleTags) {
         // Assume the placeholder is already escaped
         $contents = $match['contents'];
         $placeholder = "%{$match['placeholder']}%";
 
-        switch (true) {
-            case preg_match('@<(strong|b)>[\s\S]*?<(em|i)>@S', $contents) > 0:
-                return "<strong><em>$placeholder</em></strong>";
-                break;
-            case preg_match('@<(strong|b)>@S', $contents) > 0:
-                return "<strong>$placeholder</strong>";
-                break;
-            case preg_match('@<(em|i)>@S', $contents) > 0:
-                return "<em>$placeholder</em>";
-                break;
-            default:
-                return $placeholder;
+        foreach ($styleTags as $tag=>$regex) {
+            if (preg_match("@<($regex)>@S", $contents)) {
+                $placeholder = "<$tag>$placeholder</$tag>";
+            }
         }
+
+        return $placeholder;
     }, $processedTemplate);
 
     $template = preg_replace_callback($imageRegex, function ($match) {

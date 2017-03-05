@@ -1842,12 +1842,17 @@ foreach ($master_q as $master_r) {
             }
 
             // Catch Post Send Submit Button and Send letters Here
-            if ((!empty($_POST['send_letter'][$cur_letter_num]) || !empty($_POST['save_letter'][$cur_letter_num])
-                || !empty($_POST['fax_letter'][$cur_letter_num])
-                || !empty($_POST['paper_letter'][$cur_letter_num])
-                || !empty($_POST['email_letter'][$cur_letter_num])
-                || !empty($_POST['font_submit'][$cur_letter_num])
-            ) && $numletters == $_POST['numletters']) {
+            if (
+                $numletters == $_POST['numletters']
+                && (
+                    !empty($_POST['send_letter'][$cur_letter_num]) ||
+                    !empty($_POST['save_letter'][$cur_letter_num]) ||
+                    !empty($_POST['fax_letter'][$cur_letter_num]) ||
+                    !empty($_POST['paper_letter'][$cur_letter_num]) ||
+                    !empty($_POST['email_letter'][$cur_letter_num]) ||
+                    !empty($_POST['font_submit'][$cur_letter_num])
+                )
+            ) {
                 if (count($letter_contacts) == 1) {
                     $parent = true;
                 } else {
@@ -1945,7 +1950,7 @@ foreach ($master_q as $master_r) {
                 continue;
             }
 
-            if (!empty($parent) && $parent && !$letter_approve) {
+            if (!empty($parent) && !$letter_approve) {
                 if (isset($_REQUEST['goto']) && $_REQUEST['goto'] != '') {
                     if ($_REQUEST['goto'] == 'flowsheet') {
                         $page = 'manage_flowsheet3.php?pid=' . $_GET['pid'] . '&addtopat=1';

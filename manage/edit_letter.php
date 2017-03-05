@@ -2083,7 +2083,7 @@ foreach ($master_q as $master_r) {
                         <button id="toggle-placeholders-letter<?= $cur_letter_num ?>"
                                 class="preview-toggle-placeholders addButton"
                                 onclick="return false;" title="Show/hide placeholder hints">
-                          <?= $letterRow['edit_date'] ? 'Show' : 'Hide' ?> placeholders
+                          <?= $letterRow['edit_date'] ? 'Show' : 'Hide' ?> variables
                         </button>
                     </span>
                     &nbsp;&nbsp;

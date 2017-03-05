@@ -6,6 +6,9 @@ function edit_letter (divid, size, family) {
     $clone.find('.br-marker').remove();
     $clone.find('.preview-page-break, .preview-bottom-margin').remove();
     $clone.find('.preview-inner-wrapper').find(':first').unwrap().unwrap();
+
+    $clone.find('.preview-placeholder').attr('contenteditable', false);
+
     html = $clone.html();
     $clone.remove();
 
@@ -17,10 +20,10 @@ function edit_letter (divid, size, family) {
     textarea.attr('id', [divid, 'textarea'].join('-'));
 
     if ($source.is('.preview-letter')) {
-        $source.removeClass('show-hidden');
+        $source.removeClass('show-hidden show-placeholders');
         $source.find('.preview-wrapper').hide().after(textarea);
         $source.find('.preview-bottom-margin, .preview-page-break').hide();
-        $(['#toggle-hidden-', divid].join('')).hide();
+        $(['#preview-tools-', divid].join('')).hide();
     } else {
         $("#" + divid).replaceWith(textarea);
     }
@@ -46,10 +49,19 @@ function edit_letter (divid, size, family) {
 function hide_edit_letter (divid) {
     var $source = $("#" + divid);
 
+    $source.attr('class', $source.data('initial-class'));
     $source.find(['textarea[name="', divid, '"], .mce-tinymce'].join('')).remove();
     $source.find('.preview-wrapper, .preview-bottom-margin, .preview-page-break').show();
 
-    $(['#toggle-hidden-', divid].join('')).show();
+    var $placeholders = $source.closest('.single-letter').find('.preview-toggle-placeholders');
+
+    if ($source.is('.show-placeholders')) {
+        $placeholders.text('Hide variables');
+    } else {
+        $placeholders.text('Show variables');
+    }
+
+    $(['#preview-tools-', divid].join('')).show();
     $('.edit_'+divid).hide();
     $('#edit_but_'+divid).show();
     $('#cancel_edit_but_'+divid).hide();
@@ -135,13 +147,16 @@ function strip_tags (str, allowed_tags) {
 }
 
 function setup_tinymce (size, family, $reference) {
-    var now = (new Date()).getTime();
+    /**
+     * Avoid invalidating cache with new dates. Use a hardcoded value
+     */
+    var now = 'v=20170305';
 
     var init = {
         mode: "textareas",
         theme: "modern",
         menubar: false,
-        toolbar1: "undo redo | italic bold | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table",
+        toolbar1: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table",
         gecko_spellcheck : true,
         plugins: "paste, save, table",
         valid_elements: "table,tbody,thead,tr,td[width|colspan|style],img[src|width|height|align],th,b,strong,i,em,p,br,ul,li,ol",
@@ -176,15 +191,21 @@ function setup_tinymce (size, family, $reference) {
     }
 
     if (typeof $reference === 'object') {
-        size = $reference.find('[name^=font_size]').val();
-        family = $reference.find('[name^=font_family]').val();
+        /**
+         * Reset font properties each time the edition window is opened
+         *
+         * @see DSS-527
+         */
+        // size = $reference.find('[name^=font_size]').val();
+        // family = $reference.find('[name^=font_family]').val();
 
         init.mode = 'exact';
         init.elements = $reference.find('textarea').attr('id');
         init.plugins = init.plugins.replace(/table/, 'table_modified');
+        init.toolbar1 = init.toolbar1.replace(/italic +\|/, 'italic underline strikethrough |');
         init.table_alignment_option = false;
 
-        init.valid_elements = ['@[style|border]', init.valid_elements].join(',');
+        init.valid_elements = ['@[style|border|class|title|contenteditable],mark,u,del', init.valid_elements].join(',');
         delete init.valid_styles;
 
         init.content_css = [
@@ -192,13 +213,38 @@ function setup_tinymce (size, family, $reference) {
             "css/font-size-" + size + ".css?" + now,
             "css/font-family-" + family + ".css?" + now
         ].join(',');
+        /**
+         * Enable use of <u> for underlined elements
+         * http://stackoverflow.com/a/21308684/208067
+         *
+         * @see DSS-527
+         */
+        init.inline_styles = false;
+        init.formats = {
+            underline: { inline: 'u', exact: true },
+            strikethrough: { inline: 'del' }
+        };
+
+        /**
+         * Enable styles in non editable elements
+         */
+        init.setup = function (editor) {
+            editor.on('BeforeExecCommand', function (e) {
+                var $nonEditable = $reference.find('iframe')
+                    .contents().find('body [contenteditable], body .non-editable');
+
+                $nonEditable.addClass('non-editable').attr('contenteditable', 'true');
+                setTimeout(function(){ $nonEditable.attr('contenteditable', 'false'); }, 500);
+            });
+        };
     }
 
     tinyMCE.init(init);
 }
 
 $(document).ready(function(){
-    var $toggle = $('.preview-toggle-hidden'),
+    var $hidden = $('.preview-toggle-hidden'),
+        $placeholders = $('.preview-toggle-placeholders'),
         $fontSize = $('[name^=font_size]'),
         $fontFamily = $('[name^=font_family]');
 
@@ -226,8 +272,8 @@ $(document).ready(function(){
         });
     }
 
-    $toggle.removeAttr('onclick');
-    $toggle.click(function (e) {
+    $hidden.removeAttr('onclick');
+    $hidden.click(function (e) {
         var $this = $(this),
             $preview = $this.closest('.single-letter').find('.preview-letter');
 
@@ -238,6 +284,23 @@ $(document).ready(function(){
             $preview.find('br').before('<span class="br-marker"></span>');
         } else {
             $preview.find('.br-marker').remove();
+        }
+
+        return false;
+    });
+
+    $placeholders.removeAttr('onclick');
+    $placeholders.click(function (e) {
+        var $this = $(this),
+            $preview = $this.closest('.single-letter').find('.preview-letter');
+
+        e.preventDefault();
+        $preview.toggleClass('show-placeholders');
+
+        if ($preview.is('.show-placeholders')) {
+            $this.text('Hide variables');
+        } else {
+            $this.text('Show variables');
         }
 
         return false;

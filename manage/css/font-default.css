@@ -55,3 +55,25 @@ td {
 body, td, ul, ol {
     font-size: 14pt;
 }
+
+mark {
+    color: inherit;
+    background: transparent;
+}
+
+.preview-placeholder {
+    cursor: default;
+    color: #00c;
+    background: transparent;
+}
+
+.preview-placeholder:hover {
+    background: #fffacd;
+}
+
+.show-placeholders .preview-placeholder:empty::after,
+.show-placeholders img.preview-placeholder[src=""]::after {
+    content: "<empty>";
+    font-style: italic;
+    color: #90c;
+}

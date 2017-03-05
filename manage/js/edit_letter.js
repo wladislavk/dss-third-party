@@ -147,7 +147,10 @@ function strip_tags (str, allowed_tags) {
 }
 
 function setup_tinymce (size, family, $reference) {
-    var now = (new Date()).getTime();
+    /**
+     * Avoid invalidating cache with new dates. Use a hardcoded value
+     */
+    var now = 'v=20170305';
 
     var init = {
         mode: "textareas",

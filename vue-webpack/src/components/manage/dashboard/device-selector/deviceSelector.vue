@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="device-selector">
     <div style="margin-left: 30px;">
       <a href="#" v-on:click.prevent="onClickInstructions" id="ins_show">Instructions</a>
       <div id="instructions" style="display:none;">
@@ -84,6 +84,7 @@
       </ul>
       <a class="addButton" v-on:click.prevent="onClickReset">Reset</a>
     </div>
+    <div style="clear: both;"></div>
   </div>
 </template>
 

@@ -31,7 +31,7 @@
                       <option
                         v-for="type in activeNonCorporateContactTypes"
                         :value="type.contacttypeid"
-                        {{ (type.contacttypeid == componentParams.type) ? 'selected' : '' }}
+                        :selected="type.contacttypeid == componentParams.type"
                       >{{ type.contacttype }}</option>
                     </select>
                     <label for="contacttype">Contact Type</label>

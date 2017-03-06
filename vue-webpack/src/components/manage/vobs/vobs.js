@@ -113,8 +113,8 @@ export default {
         var data = response.data.data
 
         if (data.result.length) {
-          this.$set(this, 'vobs', data.result)
-          this.$set(this, 'totalVobs', data.total)
+          this.vobs = data.result
+          this.totalVobs = data.total
         }
       }, function(response) {
         this.handleErrors('findVobs', response)

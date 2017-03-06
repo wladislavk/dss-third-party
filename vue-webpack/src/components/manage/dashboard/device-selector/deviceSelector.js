@@ -15,16 +15,16 @@ export default {
   watch: {
     '$route.query.id': function () {
       if (this.$route.query.id) {
-        this.$set(this, 'id', this.$route.query.id)
+        this.id = this.$route.query.id
       } else {
-        this.$set(this, 'id', 0)
+        this.id = 0
       }
     },
     '$route.query.pid': function () {
       if (this.$route.query.pid) {
-        this.$set(this, 'patientId', this.$route.query.pid)
+        this.patientId = this.$route.query.pid
       } else {
-        this.$set(this, 'patientId', 0)
+        this.patientId = 0
       }
     }
   },
@@ -35,7 +35,7 @@ export default {
           var data = response.data.data
 
           if (data) {
-            this.$set(this, 'currentPatient', data)
+            this.currentPatient = data
           }
         }, function (response) {
           this.handleErrors('getPatientById', response)
@@ -58,7 +58,7 @@ export default {
             }
           })
 
-          this.$set(this, 'deviceGuideSettingOptions', data)
+          this.deviceGuideSettingOptions = data
         }
       }, function (response) {
         this.handleErrors('getDeviceGuideSettingOptions', response)
@@ -100,7 +100,7 @@ export default {
           var data = response.data.data
 
           if (data) {
-            this.$set(this, 'deviceGuideResults', data)
+            this.deviceGuideResults = data
           }
         }, function (response) {
           this.handleErrors('getDeviceGuideResults', response)
@@ -144,7 +144,7 @@ export default {
         }
       })
 
-      this.$set(this, 'deviceGuideResults', [])
+      this.deviceGuideResults = []
     },
     getPatientById (patientId) {
       patientId = patientId || 0

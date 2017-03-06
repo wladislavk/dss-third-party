@@ -18,7 +18,7 @@ module.exports = {
         })
     },
     invalidateToken () {
-      return this.$http.post(window.config.API_PATH + 'logout')
+      return this.$http.post(process.env.API_PATH + 'logout')
     }
   }
 }

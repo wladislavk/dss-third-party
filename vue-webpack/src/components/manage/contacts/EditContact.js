@@ -52,7 +52,7 @@ export default {
             var data = response.data.data
 
             if (data.length) {
-              this.$set(this, 'contactSentLetters', data)
+              this.contactSentLetters = data
             }
           }, function (response) {
             this.handleErrors('getContactSentLetters', response)
@@ -63,7 +63,7 @@ export default {
             var data = response.data.data
 
             if (data.length) {
-              this.$set(this, 'contactPendingLetters', data)
+              this.contactPendingLetters = data
             }
           }, function (response) {
             this.handleErrors('getContactPendingLetters', response)
@@ -73,16 +73,16 @@ export default {
     'contact.contacttypeid': function () {
       if (this.contactTypesOfPhysician.indexOf(this.contact.contacttypeid) > -1) {
         this.$set(this.contact, 'salutation', 'Dr.')
-        this.$set(this, 'showName', true)
-        this.$set(this, 'showNationalProviderId', true)
+        this.showName = true
+        this.showNationalProviderId = true
       } else if (this.contact.contacttypeid === 11) {
         this.$set(this.contact, 'firstname', '')
         this.$set(this.contact, 'lastname', '')
-        this.$set(this, 'showName', false)
-        this.$set(this, 'showNationalProviderId', false)
+        this.showName = false
+        this.showNationalProviderId = false
       } else if (this.contact.contacttypeid > 0) {
-        this.$set(this, 'showName', true)
-        this.$set(this, 'showNationalProviderId', false)
+        this.showName = true
+        this.showNationalProviderId = false
       }
     },
     'contact.phone1': function () {
@@ -126,7 +126,7 @@ export default {
         var data = response.data.data
 
         if (data.length) {
-          this.$set(this, 'activeNonCorporateContactTypes', data)
+          this.activeNonCorporateContactTypes = data
         }
       }, function (response) {
         this.handleErrors('getActiveNonCorporateContactTypes', response)
@@ -137,7 +137,7 @@ export default {
         var data = response.data.data
 
         if (data.length) {
-          this.$set(this, 'activeQualifiers', data)
+          this.activeQualifiers = data
         }
       }, function (response) {
         this.handleErrors('getActiveQualifiers', response)
@@ -153,7 +153,7 @@ export default {
             var data = response.data.data
 
             if (data) {
-              this.$set(this, 'contact', data)
+              this.contact = data
 
               this.$nextTick(function () {
                 this.wasContactDataReceived = true
@@ -168,7 +168,7 @@ export default {
             var data = response.data.data
 
             if (data.length) {
-              this.$set(this, 'pendingVOB', data)
+              this.pendingVOB = data
             }
           }, function (response) {
             this.handleErrors('getPendingVOBsByContactId', response)
@@ -176,7 +176,7 @@ export default {
       }
     },
     onClickSubmit () {
-      this.$set(this, 'message', '')
+      this.message = ''
 
       if (this.componentParams.contactId > 0) {
         this.updateContact(this.contact)

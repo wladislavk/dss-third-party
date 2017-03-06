@@ -39,7 +39,7 @@ export default {
           var data = response.data.data
 
           if (data) {
-            this.$set(this, 'contact', data)
+            this.contact = data
           }
         }, function (response) {
           this.handleErrors('getContactById', response)

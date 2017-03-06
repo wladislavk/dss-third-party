@@ -122,7 +122,7 @@ module.exports = {
       return n + ' ' + (n === 1 ? text : text + 's')
     },
     checkLogout () {
-      return this.$http.post(window.config.API_PATH + 'users/check-logout')
+      return this.$http.post(process.env.API_PATH + 'users/check-logout')
     }
   }
 }

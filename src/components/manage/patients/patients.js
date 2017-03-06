@@ -128,7 +128,7 @@ export default {
     onDeletePatient (patientId) {
       this.deletePatient(patientId)
         .then(function (response) {
-          this.$set(this, 'message', 'Deleted Successfully')
+          this.message = 'Deleted Successfully'
         }, function (response) {
           this.handleErrors('deletePatient', response)
         })
@@ -194,8 +194,8 @@ export default {
           var totalCount = data.count[0].total
           var patients   = data.results
 
-          this.$set(this, 'patientsTotalNumber', totalCount)
-          this.$set(this, 'patients', patients)
+          this.patientsTotalNumber = totalCount
+          this.patients = patients
         }, function (response) {
           this.handleErrors('findPatients', response)
         })

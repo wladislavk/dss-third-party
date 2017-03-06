@@ -452,7 +452,7 @@ export default {
               this.getFileForDisplaying(data.logo)
                 .then(function (response) {
                   var data = response.data.data
-                  this.$set(this, 'companyLogo', data.image)
+                  this.companyLogo = data.image
                 }, function (response) {
                   this.handleErrors('getFileForDisplaying', response)
                 })
@@ -564,7 +564,7 @@ export default {
             .then(function (response) {
               var data = response.data.data
               if (data) {
-                this.$set(this, 'rejectedClaimsForCurrentPatient', data)
+                this.rejectedClaimsForCurrentPatient = data
               }
             }, function (response) {
               this.handleErrors('getRejectedClaimsForCurrentPatient', response)
@@ -575,7 +575,7 @@ export default {
           .then(function (response) {
             var data = response.data.data
             if (data) {
-              this.$set(this, 'uncompletedHomeSleepTests', data)
+              this.uncompletedHomeSleepTests = data
             }
           }, function (response) {
             this.handleErrors('getUncompletedHomeSleepTests', response)
@@ -865,10 +865,10 @@ export default {
       return this.$http.get(process.env.API_PATH + 'display-file/' + filename)
     },
     showWarnings: function () {
-      this.$set(this, 'showAllWarnings', true)
+      this.showAllWarnings = true
     },
     hideWarnings: function () {
-      this.$set(this, 'showAllWarnings', false)
+      this.showAllWarnings = false
     },
     onMouseOverPatientTaskHeader: function (event) {
       event.target.parentElement.children['pat_task_list'].style.display = 'block'

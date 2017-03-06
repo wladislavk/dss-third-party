@@ -73,7 +73,7 @@ export default {
             .then(function(response) {
                 var data = response.data.data;
 
-                this.$set(this, 'documentCategories', data);
+                this.documentCategories = data
             }, function(response) {
                 this.handleErrors('getDocumentCategories', response);
             });
@@ -82,7 +82,7 @@ export default {
             .then(function(response) {
                 var data = response.data.data;
 
-                this.$set(this, 'memos', data);
+                this.memos = data
             }, function(response) {
                 this.handleErrors('getCurrentMemos', response);
             });

@@ -64,12 +64,12 @@ module.exports = {
         status: 1
       }
 
-      return this.$http.put(window.config.API_PATH + 'tasks/' + id, data)
+      return this.$http.put(process.env.API_PATH + 'tasks/' + id, data)
     },
     deleteTask (id) {
       id = id || 0
 
-      return this.$http.delete(window.config.API_PATH + 'tasks/' + id)
+      return this.$http.delete(process.env.API_PATH + 'tasks/' + id)
     },
     removeItemFromTaskList (type, id, isDashboardTaskList) {
       var patientTask = false
@@ -167,9 +167,9 @@ module.exports = {
       }
 
       if (!patientTask) {
-        this.$set('headerInfo.tasksNumber', --this.headerInfo.tasksNumber)
+        this.$set(this.headerInfo, 'tasksNumber', --this.headerInfo.tasksNumber)
       } else {
-        this.$set('headerInfo.patientTaskNumber', --this.headerInfo.patientTaskNumber)
+        this.$set(this.headerInfo, 'patientTaskNumber', --this.headerInfo.patientTaskNumber)
       }
     },
     searchItemById (data, id) {

@@ -26,7 +26,7 @@ export default {
           var data = response.data.data
 
           if (data) {
-            this.$set(this ,'patient', data)
+            this.patient = data
 
             var accessCode = data.hasOwnProperty('access_code') && data.access_code > 0
             if (!accessCode) {
@@ -49,7 +49,7 @@ export default {
 
           if (data.hasOwnProperty('access_code') && data.access_code > 0) {
             this.$set(this.patient, 'access_code', data.access_code)
-            this.$set(this, 'isResetAccessCode', true)
+            this.isResetAccessCode = true
           }
         }, function (response) {
           this.handleErrors('resetPatientAccessCode', response)

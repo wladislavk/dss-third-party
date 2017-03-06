@@ -99,30 +99,20 @@ export default {
       deep: true
     }
   },
-  events: {
-    'setting-data-from-modal': function(data) {
-      this.$set(this, 'message', data.message)
-      this.$nextTick(function() {
-        var self = this
-
-        setTimeout(function() {
-          self.$set(self, 'message', '')
-        }, 3000)
-      })
-    }
-  },
   computed: {
     totalPages: function() {
       return Math.ceil(this.contactsTotalNumber / this.contactsPerPage)
     }
   },
   created () {
+    eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
+
     this.getActiveNonCorporateContactTypes()
       .then(function(response) {
         var data = response.data.data
 
         if (data) {
-          this.$set(this, 'contactTypes', data)
+          this.contactTypes = data
         }
       }, function(response) {
         this.handleErrors('getActiveNonCorporateContactTypes', response)
@@ -131,9 +121,22 @@ export default {
     this.getContacts()
   },
   mounted () {
-    this.$set(this, 'showActions', true)
+    this.showActions = true
+  },
+  beforeDestroy () {
+    eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
   },
   methods: {
+    onSettingDataFromModal () {
+      this.message = data.message
+      this.$nextTick(function() {
+        var self = this
+
+        setTimeout(function() {
+          self.message = ''
+        }, 3000)
+      })
+    },
     onKeyUpSearchContacts (event) {
       clearTimeout(this.typingTimer)
 
@@ -148,10 +151,10 @@ export default {
                 var data = response.data.data
 
                 if (data.length) {
-                  self.$set(self, 'foundContactsByName', data)
+                  self.foundContactsByName = data
                   $('#contact_hints').show()
                 } else if (data.error) {
-                  self.$set(self, 'foundContactsByName', [])
+                  self.foundContactsByName = []
                   alert(data.error)
                 }
               }, function(response) {
@@ -161,7 +164,7 @@ export default {
             $('#contact_hints').hide()
           }
         } else {
-            self.$set(self, 'foundContactsByName', [])
+            self.foundContactsByName = []
         }
       }, this.doneTypingInterval)
     },
@@ -208,8 +211,8 @@ export default {
         var data = response.data.data
 
         if (data) {
-          this.$set(this, 'contactsTotalNumber', data.totalCount)
-          this.$set(this, 'contacts', data.result)
+          this.contactsTotalNumber = data.totalCount
+          this.contacts = data.result
         }
       }, function(response) {
         this.handleErrors('findContacts', response)

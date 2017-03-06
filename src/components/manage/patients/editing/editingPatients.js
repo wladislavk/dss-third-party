@@ -92,7 +92,7 @@ export default {
         // if patient data need to be updated - check local storage, it may contain status message about created patient
         var message = window.storage.get('message')
         if (message && message.length > 0) {
-          this.$set(this, 'message', message)
+          this.message = message
           window.storage.remove('message')
         }
 
@@ -233,7 +233,7 @@ export default {
         var data = response.data.data
 
         if (data) {
-          this.$set(this, 'homeSleepTestCompanies', data)
+          this.homeSleepTestCompanies = data
         }
       }, function(response) {
         this.handleErrors('getHomeSleepTestCompanies', response)
@@ -244,7 +244,7 @@ export default {
         var data = response.data.data
 
         if (data) {
-          this.$set(this, 'docLocations', data)
+          this.docLocations = data
         }
       }, function(response) {
         this.handleErrors('getDocLocations', response)
@@ -255,7 +255,7 @@ export default {
         var data = response.data.data
 
         if (data) {
-          this.$set(this, 'billingCompany', data)
+          this.billingCompany = data
         }
       }, function(response) {
         this.handleErrors('getBillingCompany', response)
@@ -267,7 +267,7 @@ export default {
 
         if (data.length) {
           data = this.populateEligiblePayerSource(data)
-          this.$set(this, 'eligiblePayerSource', data)
+          this.eligiblePayerSource = data
         }
       }, function(response) {
         this.handleErrors('getEligiblePayerSource', response)
@@ -278,7 +278,7 @@ export default {
 
             if (data.length) {
               data = this.populateEligiblePayerSource(data)
-              this.$set(this, 'eligiblePayerSource', data)
+              this.eligiblePayerSource = data
             }
           }, function(response) {
             this.handleErrors('getStaticEligiblePayerSource', response)
@@ -290,7 +290,7 @@ export default {
         var data = response.data.data
 
         if (data.length) {
-          this.$set(this, 'insuranceContacts', data)
+          this.insuranceContacts = data
         }
       }, function(response) {
         this.handleErrors('getInsuranceContacts', response)
@@ -303,7 +303,7 @@ export default {
   },
   methods: {
     onSettingDataFromModal (data) {
-      this.$set(this, 'patient', data)
+      this.patient = data
     },
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
@@ -421,7 +421,7 @@ export default {
       }
 
       if (data.hasOwnProperty('status') && data.status.length > 0) {
-        this.$set(this, 'message', data.status)
+        this.message = data.status
       }
 
       if (data.hasOwnProperty('mails')) {
@@ -584,9 +584,9 @@ export default {
                 var data = response.data.data
 
                 if (data.length) {
-                  self.$set(self, arrName, data)
+                  self.arrName = data
                 } else if (data.error) {
-                  self.$set(self, arrName, [])
+                  self.arrName = []
                   alert(data.error)
                 }
               }, function(response) {
@@ -594,7 +594,7 @@ export default {
               })
           }
         } else {
-          self.$set(self, arrName, [])
+          self.arrName = []
         }
       }, this.doneTypingInterval)
     },
@@ -687,16 +687,16 @@ export default {
             var foundPayers = self.searchEligiblePayersByName(insPayerName)
 
             if (foundPayers.length > 0) {
-              self.$set(self, arrName, foundPayers)
+              self.arrName = foundPayers
             } else {
-              self.$set(self, arrName, [])
+              self.arrName = []
               self.$refs[elementName].focus()
 
               alert('Error: No match found for this criteria.')
             }
           }
         } else {
-          self.$set(self, arrName, [])
+          self.arrName = []
         }
       }, this.doneTypingInterval)
     },
@@ -720,28 +720,28 @@ export default {
                 var data = response.data.data
 
                 if (data.length) {
-                  self.$set(self, 'foundReferrersByName', data)
-                  self.$set(self, 'showReferredbyHints', true)
+                  self.foundReferrersByName = data
+                  self.showReferredbyHints = true
                 } else if (data.error) {
-                  self.$set(self, 'foundReferrersByName', [])
+                  self.foundReferrersByName = []
                   alert(data.error)
                 }
               }, function(response) {
                 self.handleErrors('getReferrers', response)
               })
           } else {
-            self.$set(self, 'showReferredbyHints', false)
+            self.showReferredbyHints = false
           }
         }
       }, this.doneTypingInterval)
     },
     showReferredBy: function(type, referredSource) {
       if (type == 'person') {
-        this.$set(this, 'showReferredNotes', false)
-        this.$set(this, 'showReferredPerson', true)
+        this.showReferredNotes = false
+        this.showReferredPerson = true
       } else {
-        this.$set(this, 'showReferredNotes', true)
-        this.$set(this, 'showReferredPerson', false)
+        this.showReferredNotes = true
+        this.showReferredPerson = false
       }
       this.$set(this.patient, 'referred_source', referredSource)
     },
@@ -761,15 +761,15 @@ export default {
 
       this.setDefaultValues(patient)
 
-      this.$set(this, 'patient', patient)
-      this.$set(this, 'profilePhoto', null)
-      this.$set(this, 'introLetter', {})
-      this.$set(this, 'insuranceCardImage', {})
-      this.$set(this, 'uncompletedHomeSleepTests', [])
-      this.$set(this, 'patientNotifications', [])
-      this.$set(this, 'formedFullNames', {})
-      this.$set(this, 'pendingVob', {})
-      this.$set(this, 'patientLocation', '')
+      this.patient = patient
+      this.profilePhoto = null
+      this.introLetter = {}
+      this.insuranceCardImage = {}
+      this.uncompletedHomeSleepTests = []
+      this.patientNotifications = []
+      this.formedFullNames = {}
+      this.pendingVob = {}
+      this.patientLocation = ''
 
       // update patient name in the header
       eventHub.$emit('update-from-child', {
@@ -791,15 +791,15 @@ export default {
             this.filterSsnField(data.patient)
             this.setDefaultValues(data.patient)
 
-            this.$set(this, 'patient', data.patient)
-            this.$set(this, 'profilePhoto', data.profile_photo)
-            this.$set(this, 'introLetter', data.intro_letter)
-            this.$set(this, 'insuranceCardImage', data.insurance_card_image)
-            this.$set(this, 'uncompletedHomeSleepTests', data.uncompleted_home_sleep_test)
-            this.$set(this, 'patientNotifications', data.patient_notification)
-            this.$set(this, 'formedFullNames', data.formed_full_names)
-            this.$set(this, 'pendingVob', data.pending_vob)
-            this.$set(this, 'patientLocation', data.patient_location)
+            this.patient = data.patient
+            this.profilePhoto = data.profile_photo
+            this.introLetter = data.intro_letter
+            this.insuranceCardImage = data.insurance_card_image
+            this.uncompletedHomeSleepTests = data.uncompleted_home_sleep_test
+            this.patientNotifications = data.patient_notification
+            this.formedFullNames = data.formed_full_names
+            this.pendingVob = data.pending_vob
+            this.patientLocation = data.patient_location
 
             // update patient name in the header
             eventHub.$emit('update-from-child', {

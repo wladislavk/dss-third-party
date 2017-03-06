@@ -21,7 +21,7 @@ class GeneralHelper
 
     public function isSharedFile($name)
     {
-        return strlen($name) && is_file(Q_FILE_FOLDER . $name);
+        return strlen($name) && is_file(self::Q_FILE_FOLDER . $name);
     }
 
     public function formatPhone($data)

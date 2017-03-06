@@ -11,8 +11,14 @@ export default {
     }
   },
   mixins: [handlerMixin],
-  events: {
-    'setting-component-params': function (parameters) {
+  created () {
+    eventHub.$on('setting-component-params', this.onSettingComponentParams)
+  },
+  beforeDestroy () {
+    eventHub.$off('setting-component-params', this.onSettingComponentParams)
+  },
+  methods: {
+    onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
       this.getPatientById(this.componentParams.patientId)
@@ -20,7 +26,7 @@ export default {
           var data = response.data.data
 
           if (data) {
-            this.$set('patient', data)
+            this.$set(this ,'patient', data)
 
             var accessCode = data.hasOwnProperty('access_code') && data.access_code > 0
             if (!accessCode) {
@@ -31,11 +37,9 @@ export default {
           this.handleErrors('getPatientById', response)
         })
 
-      // this popup doesn't have any input fields - then set the flag to false
+      // this popup doesn't have any input fields - set the flag to false
       this.$parent.popupEdit = false
-    }
-  },
-  methods: {
+    },
     resetPinCode (patientId) {
       patientId = patientId || 0
 
@@ -45,7 +49,7 @@ export default {
 
           if (data.hasOwnProperty('access_code') && data.access_code > 0) {
             this.$set(this.patient, 'access_code', data.access_code)
-            this.$set('isResetAccessCode', true)
+            this.$set(this, 'isResetAccessCode', true)
           }
         }, function (response) {
           this.handleErrors('resetPatientAccessCode', response)
@@ -75,17 +79,17 @@ export default {
     getPatientById (patientId) {
       patientId = patientId || 0
 
-      return this.$http.get(window.config.API_PATH + 'patients/' + patientId)
+      return this.$http.get(process.env.API_PATH + 'patients/' + patientId)
     },
     resetPatientAccessCode (patientId) {
       patientId = patientId || 0
 
-      return this.$http.post(window.config.API_PATH + 'patients/reset-access-code/' + patientId)
+      return this.$http.post(process.env.API_PATH + 'patients/reset-access-code/' + patientId)
     },
     createTempPinDocument (patientId) {
       patientId = patientId || 0
 
-      return this.$http.post(window.config.API_PATH + 'patients/temp-pin-document/' + patientId)
+      return this.$http.post(process.env.API_PATH + 'patients/temp-pin-document/' + patientId)
     }
   }
 }

@@ -52,7 +52,7 @@ export default {
             var data = response.data.data
 
             if (data.length) {
-              this.$set('contactSentLetters', data)
+              this.$set(this, 'contactSentLetters', data)
             }
           }, function (response) {
             this.handleErrors('getContactSentLetters', response)
@@ -63,7 +63,7 @@ export default {
             var data = response.data.data
 
             if (data.length) {
-              this.$set('contactPendingLetters', data)
+              this.$set(this, 'contactPendingLetters', data)
             }
           }, function (response) {
             this.handleErrors('getContactPendingLetters', response)
@@ -73,26 +73,26 @@ export default {
     'contact.contacttypeid': function () {
       if (this.contactTypesOfPhysician.indexOf(this.contact.contacttypeid) > -1) {
         this.$set(this.contact, 'salutation', 'Dr.')
-        this.$set('showName', true)
-        this.$set('showNationalProviderId', true)
+        this.$set(this, 'showName', true)
+        this.$set(this, 'showNationalProviderId', true)
       } else if (this.contact.contacttypeid === 11) {
         this.$set(this.contact, 'firstname', '')
         this.$set(this.contact, 'lastname', '')
-        this.$set('showName', false)
-        this.$set('showNationalProviderId', false)
+        this.$set(this, 'showName', false)
+        this.$set(this, 'showNationalProviderId', false)
       } else if (this.contact.contacttypeid > 0) {
-        this.$set('showName', true)
-        this.$set('showNationalProviderId', false)
+        this.$set(this, 'showName', true)
+        this.$set(this, 'showNationalProviderId', false)
       }
     },
     'contact.phone1': function () {
-      this.$set('contact.phone1', this.contact.phone1.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'))
+      this.$set(this.contact, 'phone1', this.contact.phone1.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'))
     },
     'contact.phone2': function () {
-      this.$set('contact.phone2', this.contact.phone2.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'))
+      this.$set(this.contact, 'phone2', this.contact.phone2.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'))
     },
     'contact.fax': function () {
-      this.$set('contact.fax', this.contact.fax.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'))
+      this.$set(this.contact, 'fax', this.contact.fax.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'))
     },
     'contact': {
       handler: function () {
@@ -103,8 +103,48 @@ export default {
       deep: true
     }
   },
-  events: {
-    'setting-component-params': function (parameters) {
+  created () {
+    eventHub.$on('setting-component-params', this.onSettingComponentParams)
+  },
+  beforeDestroy () {
+    eventHub.$off('setting-component-params', this.onSettingComponentParams)
+  },
+  mounted () {
+    this.getContactTypesOfPhysician()
+      .then(function (response) {
+        var data = response.data.data
+
+        if (data.physician_types) {
+          this.$set(this, 'contactTypesOfPhysician', data.physician_types.split(','))
+        }
+      }, function (response) {
+        this.handleErrors('getContactTypesOfPhysician', response)
+      })
+
+    this.getActiveNonCorporateContactTypes()
+      .then(function (response) {
+        var data = response.data.data
+
+        if (data.length) {
+          this.$set(this, 'activeNonCorporateContactTypes', data)
+        }
+      }, function (response) {
+        this.handleErrors('getActiveNonCorporateContactTypes', response)
+      })
+
+    this.getActiveQualifiers()
+      .then(function (response) {
+        var data = response.data.data
+
+        if (data.length) {
+          this.$set(this, 'activeQualifiers', data)
+        }
+      }, function (response) {
+        this.handleErrors('getActiveQualifiers', response)
+      })
+  },
+  methods: {
+    onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
       if (this.componentParams.contactId > 0) {
@@ -113,7 +153,7 @@ export default {
             var data = response.data.data
 
             if (data) {
-              this.$set('contact', data)
+              this.$set(this, 'contact', data)
 
               this.$nextTick(function () {
                 this.wasContactDataReceived = true
@@ -128,51 +168,15 @@ export default {
             var data = response.data.data
 
             if (data.length) {
-              this.$set('pendingVOB', data)
+              this.$set(this, 'pendingVOB', data)
             }
           }, function (response) {
             this.handleErrors('getPendingVOBsByContactId', response)
           })
       }
-    }
-  },
-  mounted () {
-    this.getContactTypesOfPhysician()
-      .then(function (response) {
-        var data = response.data.data
-
-        if (data.physician_types) {
-          this.$set('contactTypesOfPhysician', data.physician_types.split(','))
-        }
-      }, function (response) {
-        this.handleErrors('getContactTypesOfPhysician', response)
-      })
-
-    this.getActiveNonCorporateContactTypes()
-      .then(function (response) {
-        var data = response.data.data
-
-        if (data.length) {
-          this.$set('activeNonCorporateContactTypes', data)
-        }
-      }, function (response) {
-        this.handleErrors('getActiveNonCorporateContactTypes', response)
-      })
-
-    this.getActiveQualifiers()
-      .then(function (response) {
-        var data = response.data.data
-
-        if (data.length) {
-          this.$set('activeQualifiers', data)
-        }
-      }, function (response) {
-        this.handleErrors('getActiveQualifiers', response)
-      })
-  },
-  methods: {
+    },
     onClickSubmit () {
-      this.$set('message', '')
+      this.$set(this, 'message', '')
 
       if (this.componentParams.contactId > 0) {
         this.updateContact(this.contact)
@@ -181,7 +185,7 @@ export default {
             this.$parent.updateParentData({ message: 'Edited Successfully' })
             this.$parent.$parent.$refs.modal.popupEdit = false
             this.$parent.$parent.$refs.modal.disable()
-            this.$route.router.push('/manage/contacts')
+            this.$router.push('/manage/contacts')
           }, function (response) {
             if (response.status === 422) {
               this.displayErrorResponseFromAPI(response.data.data)
@@ -211,7 +215,7 @@ export default {
                 })
 
               if (this.componentParams.activePat) {
-                this.$route.router.push({
+                this.$router.push({
                   path: '/add/patient',
                   query: {
                     ed: this.componentParams.activePat,
@@ -222,7 +226,7 @@ export default {
                 })
               } else {
                 this.$parent.passDataToComponents({ message: 'Added Successfully' })
-                this.$route.router.push('/manage/contacts')
+                this.$router.push('/manage/contacts')
               }
 
               // this popup doesn't have any input fields - then set the flag to false
@@ -281,7 +285,7 @@ export default {
       }
 
       if (confirm(message)) {
-        this.$route.router.push({
+        this.$router.push({
           path: '/manage/contacts',
           query: query
         })
@@ -304,13 +308,13 @@ export default {
       // gets letters that were not delivered for contact
       var data = { contact_id: contactId }
 
-      return this.$http.post(window.config.API_PATH + 'letters/not-delivered-for-contact', data)
+      return this.$http.post(process.env.API_PATH + 'letters/not-delivered-for-contact', data)
     },
     getContactSentLetters (contactId) {
       // gets letters that were delivered for contact
       var data = { contact_id: contactId }
 
-      return this.$http.post(window.config.API_PATH + 'letters/delivered-for-contact', data)
+      return this.$http.post(process.env.API_PATH + 'letters/delivered-for-contact', data)
     },
     getFullName (contact) {
       var middlename = contact.middlename ? contact.middlename + ' ' : ''
@@ -327,7 +331,7 @@ export default {
         }
       })
 
-      return this.$http.put(window.config.API_PATH + 'contacts/' + contact.contactid, contact)
+      return this.$http.put(process.env.API_PATH + 'contacts/' + contact.contactid, contact)
     },
     insertContact (contact) {
       var phoneFields = ['phone1', 'phone2', 'fax']
@@ -338,30 +342,30 @@ export default {
         }
       })
 
-      return this.$http.post(window.config.API_PATH + 'contacts', contact)
+      return this.$http.post(process.env.API_PATH + 'contacts', contact)
     },
     getLetterInfoByDocId () {
-      return this.$http.post(window.config.API_PATH + 'users/letter-info')
+      return this.$http.post(process.env.API_PATH + 'users/letter-info')
     },
     getContactType (contactTypeId) {
-      return this.$http.get(window.config.API_PATH + 'contact-types/' + contactTypeId)
+      return this.$http.get(process.env.API_PATH + 'contact-types/' + contactTypeId)
     },
     getContactTypesOfPhysician () {
-      return this.$http.post(window.config.API_PATH + 'contact-types/physician')
+      return this.$http.post(process.env.API_PATH + 'contact-types/physician')
     },
     getContact (contactId) {
-      return this.$http.get(window.config.API_PATH + 'contacts/' + contactId)
+      return this.$http.get(process.env.API_PATH + 'contacts/' + contactId)
     },
     getActiveNonCorporateContactTypes () {
-      return this.$http.post(window.config.API_PATH + 'contact-types/active-non-corporate')
+      return this.$http.post(process.env.API_PATH + 'contact-types/active-non-corporate')
     },
     getActiveQualifiers () {
-      return this.$http.post(window.config.API_PATH + 'qualifiers/active')
+      return this.$http.post(process.env.API_PATH + 'qualifiers/active')
     },
     getPendingVOBsByContactId (contactId) {
       var data = { contact_id: contactId }
 
-      return this.$http.post(window.config.API_PATH + 'insurance-preauth/pending-VOB', data)
+      return this.$http.post(process.env.API_PATH + 'insurance-preauth/pending-VOB', data)
     },
     createWelcomeLetter (templateId, contactTypeId) {
       var data = {
@@ -369,7 +373,7 @@ export default {
         contact_type_id: contactTypeId
       }
 
-      return this.$http.post(window.config.API_PATH + 'letters/create-welcome-letter', data)
+      return this.$http.post(process.env.API_PATH + 'letters/create-welcome-letter', data)
     }
   }
 }

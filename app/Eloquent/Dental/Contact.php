@@ -12,6 +12,9 @@ class Contact extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
+    const DSS_REFERRED_PATIENT = 1;
+    const DSS_REFERRED_PHYSICIAN = 2;
+
     /**
      * Mass assignable attributes
      *
@@ -292,5 +295,70 @@ class Contact extends Model implements Resource, Repository
             )->leftJoin('dental_contacttype', 'dental_contact.contacttypeid', '=', 'dental_contacttype.contacttypeid')
             ->whereIn('dental_contact.contactid', $mdList)
             ->get();
+    }
+
+    public function getReferredByContacts($docId, $sort, $sortDir = 'asc')
+    {
+        $physicianContacts = $this->select(
+                'dc.contactid',
+                'dc.salutation',
+                'dc.firstname',
+                'dc.middlename',
+                'dc.lastname',
+                'p.referred_source',
+                'dc.referredby_notes',
+                DB::raw('COUNT(p.patientid) AS num_ref'),
+                DB::raw("GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list"),
+                DB::raw(self::DSS_REFERRED_PHYSICIAN . ' as referral_type'),
+                'ct.contacttype'
+            )->from(DB::raw('dental_contact dc'))
+            ->join(DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'dc.contacttypeid')
+            ->join(DB::raw('dental_patients p'), 'dc.contactid', '=', 'p.referred_by')
+            ->where('dc.docid', $docId)
+            ->where('p.referred_source', self::DSS_REFERRED_PHYSICIAN)
+            ->groupBy('dc.contactid');
+
+        $patientContacts = $this->select(
+                'dp.patientid',
+                'dp.salutation',
+                'dp.firstname',
+                'dp.middlename',
+                'dp.lastname',
+                'p.referred_source',
+                "''",
+                DB::raw('COUNT(p.patientid)'),
+                DB::raw("GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list"),
+                self::DSS_REFERRED_PATIENT,
+                'Patient'
+            )->from(DB::raw('dental_patients dp'))
+            ->join(DB::raw('dental_patients p'), 'dp.patientid', '=', 'p.referred_by')
+            ->where('p.docid', $docId)
+            ->where('p.referred_source', self::DSS_REFERRED_PATIENT)
+            ->groupBy('dp.patientid')
+
+        $resultSql = $physicianContacts->union($patientContacts);
+
+        switch ($sort) {
+            case 'type':
+                $resultSql = $resultSql->orderBy('referral_type', $sortDir);
+                break;
+
+            case 'total':
+                $resultSql = $resultSql->orderBy('num_ref', $sortDir);
+                break;
+
+            case 'thirty':
+            case 'sixty':
+            case 'ninty':
+            case 'nintyplus':
+                break;
+
+            default:
+                $resultSql = $resultSql->orderBy('lastname', $sortDir)
+                    ->orderBy('firstname', $sortDir);
+                break;
+        }
+
+        return $resultSql->get();
     }
 }

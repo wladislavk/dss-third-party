@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\ContactDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Contact;
 use DentalSleepSolutions\Contracts\Repositories\Contacts;
+use DentalSleepSolutions\Contracts\Repositories\Patients;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -166,5 +167,67 @@ class ContactsController extends Controller
         $data = $resource->getInsuranceContacts($docId);
 
         return ApiResponse::responseOk('', $data);
+    }
+
+    public function getReferredByContacts(Contacts $resource, Patients $patients, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $sort = $request->input('sort');
+        $sortDir = $request->input('sortdir');
+        $contactsPerPage = $request->input('contacts-per-page') ?: 10;
+
+        $referredByContacts = $resource->getReferredByContacts($docId, $sort, $sortDir);
+
+        if (count($referredByContacts) > 0) {
+            $referredByContacts = $referredByContacts->toArray();
+        } else {
+            $referredByContacts = [];
+        }
+
+        for ($index = 0; $index < count($referredByContacts) && $index < $contactsPerPage; $index++) {
+            $counters = $this->getReferralCountersForContact(
+                $patients,
+                $referredByContacts[$index]['contactid'],
+                $referredByContacts[$index]['referral_type']
+            );
+
+            $referredByContacts[$index] += $counters;
+        }
+
+        return ApiResponse::responseOk('', $referredByContacts);
+    }
+
+    private function getReferralCountersForContact(Patients $patients, $contactId, $contactType)
+    {
+        $counters = [];
+        $ranges = [
+            [0, 30],
+            [30, 60],
+            [60, 90],
+            [90, 0]
+        ];
+
+        foreach ($ranges as $range) {
+            if ($range[1]) {
+                $key = "num_ref{$range[1]}";
+                $dateConditional = "BETWEEN DATE_SUB(CURDATE(), INTERVAL {$range[1]} DAY) AND " .
+                    ($range[0] ? "DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)" : 'CURDATE()');
+            } else {
+                $key = "num_ref{$range[0]}plus";
+                $dateConditional = "< DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)";
+            }
+
+            $count = $patients->select('p.patientid')
+                ->from(DB::raw('dental_patients p'))
+                ->where('p.referred_by', $contactId)
+                ->where('p.referred_source', $contactType)
+                ->whereRaw("STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') $dateConditional")
+                ->count();
+
+            $counters[$key] = $count;
+        }
+
+        return $counters;
     }
 }

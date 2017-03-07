@@ -20,6 +20,7 @@ import Patients from 'components/manage/patients/patients.vue'
 import Contacts from 'components/manage/contacts/contacts.vue'
 import EditingPatients from 'components/manage/patients/editing/editingPatients.vue'
 import Vobs from 'components/manage/vobs/vobs.vue'
+import ReferredBy from 'components/manage/referredby/referredby.vue'
 
 // service routes
 import PageNotFound from 'components/services/pageNotFound.vue'
@@ -67,6 +68,14 @@ const router = new Router({
       path: '/manage/vobs',
       name: 'vobs',
       component: Vobs,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/manage/referredby',
+      name: 'referredby',
+      component: ReferredBy,
       meta: {
         requiresAuth: true
       }

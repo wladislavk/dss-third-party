@@ -325,38 +325,40 @@ class Contact extends Model implements Resource, Repository
                 'dp.middlename',
                 'dp.lastname',
                 'p.referred_source',
-                "''",
+                DB::raw("''"),
                 DB::raw('COUNT(p.patientid)'),
                 DB::raw("GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list"),
-                self::DSS_REFERRED_PATIENT,
-                'Patient'
+                DB::raw(self::DSS_REFERRED_PATIENT),
+                DB::raw("'Patient'")
             )->from(DB::raw('dental_patients dp'))
             ->join(DB::raw('dental_patients p'), 'dp.patientid', '=', 'p.referred_by')
             ->where('p.docid', $docId)
             ->where('p.referred_source', self::DSS_REFERRED_PATIENT)
-            ->groupBy('dp.patientid')
+            ->groupBy('dp.patientid');
 
         $resultSql = $physicianContacts->union($patientContacts);
 
-        switch ($sort) {
-            case 'type':
-                $resultSql = $resultSql->orderBy('referral_type', $sortDir);
-                break;
+        if (!empty($sort)) {
+            switch ($sort) {
+                case 'type':
+                    $resultSql = $resultSql->orderBy('referral_type', $sortDir);
+                    break;
 
-            case 'total':
-                $resultSql = $resultSql->orderBy('num_ref', $sortDir);
-                break;
+                case 'total':
+                    $resultSql = $resultSql->orderBy('num_ref', $sortDir);
+                    break;
 
-            case 'thirty':
-            case 'sixty':
-            case 'ninty':
-            case 'nintyplus':
-                break;
+                case 'thirty':
+                case 'sixty':
+                case 'ninty':
+                case 'nintyplus':
+                    break;
 
-            default:
-                $resultSql = $resultSql->orderBy('lastname', $sortDir)
-                    ->orderBy('firstname', $sortDir);
-                break;
+                default:
+                    $resultSql = $resultSql->orderBy('lastname', $sortDir)
+                        ->orderBy('firstname', $sortDir);
+                    break;
+            }
         }
 
         return $resultSql->get();

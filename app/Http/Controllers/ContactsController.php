@@ -175,7 +175,7 @@ class ContactsController extends Controller
 
         $sort = $request->input('sort');
         $sortDir = $request->input('sortdir');
-        $contactsPerPage = $request->input('contacts-per-page') ?: 10;
+        $contactsPerPage = $request->input('contacts_per_page') ?: 10;
 
         $referredByContacts = $resource->getReferredByContacts($docId, $sort, $sortDir);
 
@@ -192,10 +192,60 @@ class ContactsController extends Controller
                 $referredByContacts[$index]['referral_type']
             );
 
+            $name = ($referredByContacts[$index]['salutation'] ?: '')
+                . (!empty($referredByContacts[$index]['firstname']) ? ' ' . $referredByContacts[$index]['firstname'] : '')
+                . (!empty($referredByContacts[$index]['middlename']) ? ' ' . $referredByContacts[$index]['middlename'] : '')
+                . (!empty($referredByContacts[$index]['lastname']) ? ' ' . $referredByContacts[$index]['lastname'] : '');
+
             $referredByContacts[$index] += $counters;
+            $referredByContacts[$index]['name'] = $name;
         }
 
-        return ApiResponse::responseOk('', $referredByContacts);
+        $referredByContactsCollection = collect($referredByContacts);
+
+        $sortColumn = '';
+        $sortDirectionDesc = false;
+        if (!empty($sort)) {
+            $sortDirectionDesc = strtolower($sortDir) == 'desc';
+
+            switch ($sort) {
+                case 'thirty':
+                    $sortColumn = 'num_ref30';
+                    break;
+
+                case 'sixty':
+                    $sortColumn = 'num_ref60';
+                    break;
+
+                case 'ninty':
+                    $sortColumn = 'num_ref90';
+                    break;
+
+                case 'nintyplus':
+                    $sortColumn = 'num_ref90plus';
+                    break;
+
+                default:
+                    $sortColumn = '';
+                    break;
+            }
+
+            $referredByContactsCollection = $referredByContactsCollection->sort(
+                function ($first, $second) use ($sortColumn, $sortDirectionDesc) {
+                    if ($first->$sortColumn == $second->$sortColumn) {
+                        return 0;
+                    }
+
+                    if ($sortDirectionDesc) {
+                        return ($first < $second) ? -1 : 1;
+                    }
+
+                    return ($first > $second) ? -1 : 1;
+                }
+            );
+        }
+
+        return ApiResponse::responseOk('', $referredByContactsCollection);
     }
 
     private function getReferralCountersForContact(Patients $patients, $contactId, $contactType)
@@ -218,14 +268,11 @@ class ContactsController extends Controller
                 $dateConditional = "< DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)";
             }
 
-            $count = $patients->select('p.patientid')
-                ->from(DB::raw('dental_patients p'))
-                ->where('p.referred_by', $contactId)
-                ->where('p.referred_source', $contactType)
-                ->whereRaw("STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') $dateConditional")
-                ->count();
-
-            $counters[$key] = $count;
+            $counters[$key] = $patients->getReferralCountersForContact(
+                $contactId,
+                $contactType,
+                $dateConditional
+            );
         }
 
         return $counters;

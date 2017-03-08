@@ -6,7 +6,7 @@
         <br /><br />&nbsp;
 
         <div align="right">
-            <button onclick="Javascript: loadPopup('add_referredby.php');" class="addButton">
+            <button v-on:click="loadPopup('add_referredby.php')" class="addButton">
                 Add New Referred By
             </button>
             &nbsp;&nbsp;
@@ -56,8 +56,8 @@
                     <td valign="top" width="20%">
                         <a
                             v-if="contact.referred_source == constants.DSS_REFERRED_PHYSICIAN"
+                            v-on:click="loadPopup('view_contact.php?ed=' + contact.contactid)"
                             href="#"
-                            onclick="loadPopup('view_contact.php?ed=<?php echo  $myarray['contactid'];?>');return false;"
                         >{{ contact.name }}</a>
                         <template v-else>{{ contact.name }}</template>
                     </td>
@@ -65,61 +65,61 @@
                         {{ contact.contacttype }}
                     </td>
                     <td valign="top" width="10%">
-                        <a
-                            href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>"
+                        <router-link
+                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
-                        >{{ contact.num_ref }}</a>
+                        >{{ contact.num_ref }}</router-link>
                     </td>
                     <td valign="top" width="10%">
-                        <a
-                            href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>"
+                        <router-link
+                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
                         >
                             <span class="num_ref30">{{ contact.num_ref30 }}</span>
-                        </a>
+                        </router-link>
                     </td>
                     <td valign="top" width="10%">
-                        <a
-                            href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>"
+                        <router-link
+                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
                         >
                             <span class="num_ref60">{{ contact.num_ref60 }}</span>
-                        </a>
+                        </router-link>
                     </td>
                     <td valign="top" width="10%">
-                        <a
-                            href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>"
+                        <router-link
+                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
                         >
                             <span class="num_ref90">{{ contact.num_ref90 }}</span>
-                        </a>
+                        </router-link>
                     </td>
                     <td valign="top" width="10%">
-                        <a
-                            href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>"
+                        <router-link
+                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
                         >
                             <span class="num_ref90plus">{{ contact.num_ref90plus }}</span>
-                        </a>
+                        </router-link>
                     </td>
                     <td valign="top" width="10%">
                         <a
                             href="#"
-                            onclick="loadPopup('add_referredby_notes.php?rid=<?php echo $myarray["contactid"];?>')"
+                            v-on:click="loadPopup('add_referredby_notes.php?rid=' + contact.contactid)"
                             class="editlink"
-                            title="<?php echo ($myarray['referredby_notes'])?$myarray['referredby_notes']:'No Notes'; ?>"
+                            :title="contact.referredby_notes ? contact.referredby_notes : 'No Notes'"
                         >
                             View
                         </a>
                     </td>
                     <td valign="top"> 
-                        <a
-                            href="referredby_patient.php?rid=<?php echo $myarray["contactid"];?>&rsource=<?php echo $myarray["referral_type"];?>"
+                        <router-link
+                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
-                            title="<?php echo $myarray['patients_list']; ?>"
+                            :title="contact.patients_list"
                         >
                             List
-                        </a>
+                        </router-link>
                     </td>
                 </tr>
             </table>

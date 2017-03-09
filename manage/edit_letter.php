@@ -276,11 +276,9 @@ $sleeplab_name = $db->getColumn("SELECT company
         AND sleeplabid = '" . $db->escape($sleep_center_name) . "'", 'company');
 
 // Oldest Subjective results
-$subj1 = $db->getRow("SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd
-    FROM dentalsummfu
-    WHERE patientid = '$patientId'
-    ORDER BY ep_dateadd ASC
-    LIMIT 1");
+$subj1 = $db->getRow("SELECT ess AS ep_eadd, snoring_sound AS ep_sadd, energy_level AS ep_eladd, sleep_qual AS sleep_qualadd
+    FROM dental_q_page1
+    WHERE patientid = '$patientId'");
 
 // Newest Subjective Results
 $subj2 = $db->getRow("SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd
@@ -2088,7 +2086,7 @@ foreach ($master_q as $master_r) {
                         <button id="toggle-placeholders-letter<?= $cur_letter_num ?>"
                                 class="preview-toggle-placeholders addButton"
                                 onclick="return false;" title="Show/hide placeholder hints">
-                          <?= $letterRow['edit_date'] ? 'Show' : 'Hide' ?> variables
+                          Hide variables
                         </button>
                     </span>
                     &nbsp;&nbsp;
@@ -2129,19 +2127,21 @@ foreach ($master_q as $master_r) {
                     <tr>
                         <td valign="top">
                             <div id="letter<?= $cur_letter_num ?>"
-                                 class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> <?= $letterRow['edit_date'] ? '' : 'show-placeholders' ?>"
-                                 data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> <?= $letterRow['edit_date'] ? '' : 'show-placeholders' ?>">
+                                 class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders"
+                                 data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders">
                                 <div class="preview-wrapper">
                                     <div class="preview-inner-wrapper">
                                         <?= html_entity_decode(
                                             preg_replace(
                                                 '/(&Acirc;|&nbsp;)+/i',
-                                                '',
+                                                ' ',
                                                 htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE, 'UTF-8')
                                             ),
                                             ENT_COMPAT | ENT_IGNORE,
                                             'UTF-8'
-                                        ) ?>
+                                        )
+
+                                        ?>
                                     </div>
                                 </div>
                                 <?php for ($n = 1; $n <= 0; $n++) { ?>
@@ -2324,7 +2324,7 @@ function preProcessReplacements($replacements)
                 break;
             /** @noinspection PhpMissingBreakStatementInspection */
             case substr($each, 0, 3) === '<p>':
-                $each = preg_replace('@^ *<p>([\s\S]*)</p> *$@i', '$1', $each);
+                $each = preg_replace('@^<p>([\s\S]*)</p>$@i', '$1', $each);
                 $paragraph = true;
             // fallthrough
             default:

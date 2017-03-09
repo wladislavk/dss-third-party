@@ -237,21 +237,18 @@ function setup_tinymce (size, family, $reference) {
                 setTimeout(function(){ $nonEditable.attr('contenteditable', 'false'); }, 500);
             });
 
-            editor.on('click', function (e) {
+            editor.on('dblclick', function (e) {
                 var element = e.target;
-                console.info(editor);
 
-                if (!element.getAttribute('contenteditable')) {
+                if (!element.getAttribute('contenteditable') || !element.getAttribute('title')) {
                     return;
                 }
 
-                if (confirm('Edit the contents of this variable? It will no longer update with fresh information.')) {
-                    editor.undoManager.beforeChange();
+                editor.undoManager.beforeChange();
 
-                    element.removeAttribute('contenteditable');
-                    element.removeAttribute('title');
-                    element.removeAttribute('class');
-                }
+                element.removeAttribute('contenteditable');
+                element.removeAttribute('title');
+                element.removeAttribute('class');
             });
         };
     }

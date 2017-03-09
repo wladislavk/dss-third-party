@@ -19,28 +19,49 @@
             <b>{{ message }}</b>
         </div>
 
-        <div id="pager" class="pager">
-            <form>
-                <img src="~assets/images/first.png" class="first">
-                <img src="~assets/images/prev.png" class="prev">
-                <input class="pagedisplay" style="width:75px;" type="text">
-                <img src="~assets/images/next.png" class="next">
-                <img src="~assets/images/last.png" class="last">
-            </form>
-        </div>
-
         <form name="sortfrm">
             <table id="sort_table" width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
+                <tr v-if="contactsTotalNumber > contactsPerPage" bgColor="#ffffff">
+                    <td  align="right" colspan="15" class="bp">
+                        Pages:
+                        <span v-for="index in totalPages" class="page_numbers">
+                            <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
+                            <router-link
+                                v-else
+                                :to="{
+                                    name: $route.name,
+                                    query: {
+                                        page: index - 1,
+                                        sort: routeParameters.sortColumn,
+                                        sortdir: routeParameters.sortDirection
+                                    }
+                                }"
+                                class="fp"
+                            >{{ index }}</router-link>
+                        </span>
+                    </td>
+                </tr>
                 <tr class="tr_bg_h">
-                    <th valign="top" class="col_head" width="20%">Name</th>
-                    <th valign="top" class="col_head" width="20%">Physician Type</th>
-                    <th valign="top" class="col_head" width="20%">Total Referrals</th>
-                    <th valign="top" class="col_head">30 Days</th>
-                    <th valign="top" class="col_head">60 Days</th>
-                    <th valign="top" class="col_head">90 Days</th>
-                    <th valign="top" class="col_head">90+ Days</th>
-                    <th valign="top" class="col_head">Notes</th>
-                    <th valign="top" class="col_head">Expand</th>
+                    <th
+                        v-for="(label, sort) in tableHeaders"
+                        :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
+                        valign="top"
+                        :width="label.type == 'link' ? '20%' : ''"
+                    >
+                        <router-link
+                            v-if="label.type == 'link'"
+                            :to="{
+                                name: $route.name,
+                                query: {
+                                    sort: sort,
+                                    sortdir: getCurrentDirection(sort)
+                                }
+                            }"
+                        >
+                            {{ label.title }}
+                        </router-link>
+                        <template v-else>{{ label }}</template>
+                    </th>
                 </tr>
                 <tr v-if="contacts.length == 0" class="tr_bg">
                     <td valign="top" class="col_head" colspan="10" align="center">

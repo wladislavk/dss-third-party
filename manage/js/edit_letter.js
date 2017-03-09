@@ -244,11 +244,10 @@ function setup_tinymce (size, family, $reference) {
                     return;
                 }
 
-                editor.undoManager.beforeChange();
-
                 element.removeAttribute('contenteditable');
                 element.removeAttribute('title');
                 element.removeAttribute('class');
+                editor.undoManager.add();
             });
         };
     }

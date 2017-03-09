@@ -535,7 +535,7 @@ foreach ($master_c as $master_r) {
     var pageSize = <?= json_encode($pageSize) ?>;
     var pageMargins = <?= json_encode($margins) ?>;
 </script>
-<link type="text/css" rel="stylesheet" href="/manage/css/font-preview.css?v=20170305"/>
+<link type="text/css" rel="stylesheet" href="/manage/css/font-preview.css?v=<?= time() ?>"/>
 <style>
     /* Preview area display */
     div.preview-letter {
@@ -2126,6 +2126,13 @@ foreach ($master_q as $master_r) {
                 <table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
                     <tr>
                         <td valign="top">
+                            <span style="margin: 30px; margin-bottom: 10px; display: inline-block;">
+                                Variables in <mark class="preview-letter preview-placeholder">blue text</mark>
+                                (preview only, final letter renders black text automatically).
+                                <span class="edit_letter<?= $cur_letter_num ?>" style="display: none;">
+                                    Double-click <mark class="preview-letter preview-placeholder hover">variables</mark> to edit
+                                </span>
+                            </span>
                             <div id="letter<?= $cur_letter_num ?>"
                                  class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders"
                                  data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders">

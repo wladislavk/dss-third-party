@@ -340,21 +340,15 @@ class Contact extends Model implements Resource, Repository
 
         if (!empty($sort)) {
             switch ($sort) {
-                case 'type':
-                    $resultSql = $resultSql->orderBy('referral_type', $sortDir);
+                case 'contacttype':
+                    $resultSql = $resultSql->orderBy('contacttype', $sortDir);
                     break;
 
-                case 'total':
+                case 'num_ref':
                     $resultSql = $resultSql->orderBy('num_ref', $sortDir);
                     break;
 
-                case 'thirty':
-                case 'sixty':
-                case 'ninty':
-                case 'nintyplus':
-                    break;
-
-                default:
+                case 'name':
                     $resultSql = $resultSql->orderBy('lastname', $sortDir)
                         ->orderBy('firstname', $sortDir);
                     break;

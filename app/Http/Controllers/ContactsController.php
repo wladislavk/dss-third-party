@@ -173,11 +173,12 @@ class ContactsController extends Controller
     {
         $docId = $this->currentUser->docid ?: 0;
 
+        $page = $request->input('page') ?: 0;
         $sort = $request->input('sort');
         $sortDir = $request->input('sortdir');
         $contactsPerPage = $request->input('contacts_per_page') ?: 10;
 
-        $referredByContacts = $resource->getReferredByContacts($docId, $sort, $sortDir);
+        $referredByContacts = $resource->getReferredByContacts($docId, $sort, $sortDir, $page);
 
         if (count($referredByContacts) > 0) {
             $referredByContacts = $referredByContacts->toArray();
@@ -185,7 +186,10 @@ class ContactsController extends Controller
             $referredByContacts = [];
         }
 
-        for ($index = 0; $index < count($referredByContacts) && $index < $contactsPerPage; $index++) {
+        $referredByContactsTotalNumber = count($referredByContacts);
+        $referredByContacts = array_slice($referredByContacts, $page * $contactsPerPage, $contactsPerPage);
+
+        for ($index = 0; $index < count($referredByContacts); $index++) {
             $counters = $this->getReferralCountersForContact(
                 $patients,
                 $referredByContacts[$index]['contactid'],
@@ -205,7 +209,7 @@ class ContactsController extends Controller
 
         $sortColumn = '';
         $sortDirectionDesc = false;
-        if (!empty($sort)) {
+        /*if (!empty($sort)) {
             $sortDirectionDesc = strtolower($sortDir) == 'desc';
 
             switch ($sort) {
@@ -232,7 +236,7 @@ class ContactsController extends Controller
 
             $referredByContactsCollection = $referredByContactsCollection->sort(
                 function ($first, $second) use ($sortColumn, $sortDirectionDesc) {
-                    if ($first->$sortColumn == $second->$sortColumn) {
+                    if ($first[$sortColumn] == $second[$sortColumn]) {
                         return 0;
                     }
 
@@ -243,9 +247,14 @@ class ContactsController extends Controller
                     return ($first > $second) ? -1 : 1;
                 }
             );
-        }
+        }*/
 
-        return ApiResponse::responseOk('', $referredByContactsCollection);
+        $response = [
+            'total'    => $referredByContactsTotalNumber,
+            'contacts' => $referredByContactsCollection
+        ];
+
+        return ApiResponse::responseOk('', $response);
     }
 
     private function getReferralCountersForContact(Patients $patients, $contactId, $contactType)

@@ -1,6 +1,7 @@
 /* Preview area display */
 div.preview-letter {
     margin: 30px auto;
+    margin-top: 0;
     border: 1px solid #ccc;
     -moz-box-shadow: 3px 3px 3px #999;
     -webkit-box-shadow: 3px 3px 3px #999;
@@ -144,18 +145,21 @@ div.preview-letter .pagination-reference.page-odd-0 {
     background-color: #fef;
 }
 
-div.preview-letter mark {
+div.preview-letter mark,
+mark.preview-letter {
     color: inherit;
     background: transparent;
 }
 
-div.preview-letter.show-placeholders .preview-placeholder {
+div.preview-letter.show-placeholders .preview-placeholder,
+mark.preview-letter.preview-placeholder {
     cursor: default;
     color: #00c;
     background: transparent;
 }
 
-div.preview-letter.show-placeholders .preview-placeholder:hover {
+div.preview-letter.show-placeholders .preview-placeholder:hover,
+mark.preview-letter.preview-placeholder.hover {
     background: #fffacd;
 }
 

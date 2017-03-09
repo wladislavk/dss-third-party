@@ -276,11 +276,9 @@ $sleeplab_name = $db->getColumn("SELECT company
         AND sleeplabid = '" . $db->escape($sleep_center_name) . "'", 'company');
 
 // Oldest Subjective results
-$subj1 = $db->getRow("SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd
-    FROM dentalsummfu
-    WHERE patientid = '$patientId'
-    ORDER BY ep_dateadd ASC
-    LIMIT 1");
+$subj1 = $db->getRow("SELECT ess AS ep_eadd, snoring_sound AS ep_sadd, energy_level AS ep_eladd, sleep_qual AS sleep_qualadd
+    FROM dental_q_page1
+    WHERE patientid = '$patientId'");
 
 // Newest Subjective Results
 $subj2 = $db->getRow("SELECT ep_eadd, ep_sadd, ep_eladd, sleep_qualadd
@@ -532,12 +530,12 @@ foreach ($master_c as $master_r) {
 
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
-<script type="text/javascript" src="/manage/js/edit_letter.js?v=20170305"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=20170309"></script>
 <script>
     var pageSize = <?= json_encode($pageSize) ?>;
     var pageMargins = <?= json_encode($margins) ?>;
 </script>
-<link type="text/css" rel="stylesheet" href="/manage/css/font-preview.css?v=20170305"/>
+<link type="text/css" rel="stylesheet" href="/manage/css/font-preview.css?v=20170309"/>
 <style>
     /* Preview area display */
     div.preview-letter {
@@ -2088,7 +2086,7 @@ foreach ($master_q as $master_r) {
                         <button id="toggle-placeholders-letter<?= $cur_letter_num ?>"
                                 class="preview-toggle-placeholders addButton"
                                 onclick="return false;" title="Show/hide placeholder hints">
-                          <?= $letterRow['edit_date'] ? 'Show' : 'Hide' ?> variables
+                          Hide variables
                         </button>
                     </span>
                     &nbsp;&nbsp;
@@ -2128,14 +2126,21 @@ foreach ($master_q as $master_r) {
                 <table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
                     <tr>
                         <td valign="top">
+                            <span style="margin: 30px; margin-bottom: 10px; display: inline-block;">
+                                Variables in <mark class="preview-letter preview-placeholder">blue text</mark>
+                                (preview only, final letter renders black text automatically).
+                                <span class="edit_letter<?= $cur_letter_num ?>" style="display: none;">
+                                    Double-click <mark class="preview-letter preview-placeholder hover">variables</mark> to edit
+                                </span>
+                            </span>
                             <div id="letter<?= $cur_letter_num ?>"
-                                 class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> <?= $letterRow['edit_date'] ? '' : 'show-placeholders' ?>"
-                                 data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> <?= $letterRow['edit_date'] ? '' : 'show-placeholders' ?>">
+                                 class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders"
+                                 data-initial-class="preview-letter preview-font-<?= $font_family ?> preview-size-<?= $font_size ?: 14 ?> show-placeholders">
                                 <div class="preview-wrapper">
                                     <div class="preview-inner-wrapper">
                                         <?= html_entity_decode(
                                             preg_replace(
-                                                '/(&Acirc;|&nbsp;)+/i',
+                                                '/(&Acirc;)+/i',
                                                 '',
                                                 htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE, 'UTF-8')
                                             ),
@@ -2324,7 +2329,7 @@ function preProcessReplacements($replacements)
                 break;
             /** @noinspection PhpMissingBreakStatementInspection */
             case substr($each, 0, 3) === '<p>':
-                $each = preg_replace('@^ *<p>([\s\S]*)</p> *$@i', '$1', $each);
+                $each = preg_replace('@^<p>([\s\S]*)</p>$@i', '$1', $each);
                 $paragraph = true;
             // fallthrough
             default:

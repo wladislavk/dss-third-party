@@ -236,6 +236,23 @@ function setup_tinymce (size, family, $reference) {
                 $nonEditable.addClass('non-editable').attr('contenteditable', 'true');
                 setTimeout(function(){ $nonEditable.attr('contenteditable', 'false'); }, 500);
             });
+
+            editor.on('click', function (e) {
+                var element = e.target;
+                console.info(editor);
+
+                if (!element.getAttribute('contenteditable')) {
+                    return;
+                }
+
+                if (confirm('Edit the contents of this variable? It will no longer update with fresh information.')) {
+                    editor.undoManager.beforeChange();
+
+                    element.removeAttribute('contenteditable');
+                    element.removeAttribute('title');
+                    element.removeAttribute('class');
+                }
+            });
         };
     }
 

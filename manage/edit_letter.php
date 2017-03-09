@@ -530,7 +530,7 @@ foreach ($master_c as $master_r) {
 
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
-<script type="text/javascript" src="/manage/js/edit_letter.js?v=20170305"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=<?= time() ?>"></script>
 <script>
     var pageSize = <?= json_encode($pageSize) ?>;
     var pageMargins = <?= json_encode($margins) ?>;
@@ -2133,15 +2133,13 @@ foreach ($master_q as $master_r) {
                                     <div class="preview-inner-wrapper">
                                         <?= html_entity_decode(
                                             preg_replace(
-                                                '/(&Acirc;|&nbsp;)+/i',
-                                                ' ',
+                                                '/(&Acirc;)+/i',
+                                                '',
                                                 htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE, 'UTF-8')
                                             ),
                                             ENT_COMPAT | ENT_IGNORE,
                                             'UTF-8'
-                                        )
-
-                                        ?>
+                                        ) ?>
                                     </div>
                                 </div>
                                 <?php for ($n = 1; $n <= 0; $n++) { ?>

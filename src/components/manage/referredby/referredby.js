@@ -77,6 +77,14 @@ export default {
     this.getContacts()
   },
   methods: {
+    removeContact (id) {
+      this.deleteReferredByContact(id)
+        .then(function () {
+          this.message = 'Deleted Successfull';
+        }, function (response) {
+          this.handleErrors('deleteReferredByContact', response)
+        })
+    },
     getContacts () {
       this.getReferredByContacts(
         this.routeParameters.sortColumn,
@@ -110,6 +118,9 @@ export default {
       }
 
       return this.$http.post(process.env.API_PATH + 'contacts/referred-by', data)
+    },
+    deleteReferredByContact (id) {
+      return this.$http.delete(process.env.API_PATH + 'referred-by/' + id)
     }
   }
 }

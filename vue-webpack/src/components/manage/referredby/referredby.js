@@ -16,21 +16,21 @@ export default {
       contactsPerPage: 10,
       tableHeaders: {
         'name': {
-          type: 'link',
+          type: 'general',
           title: 'Name'
         },
         'contacttype': {
-          type: 'link',
+          type: 'general',
           title: 'Physician Type'
         },
-        'num_ref': {
-          type: 'link',
+        'total': {
+          type: 'general',
           title: 'Total Referrals'
         },
-        'num_ref30': '30 Days',
-        'num_ref60': '60 Days',
-        'num_ref90': '90 Days',
-        'num_ref90plus': '90+ Days',
+        'thirty': '30 Days',
+        'sixty': '60 Days',
+        'ninty': '90 Days',
+        'nintyplus': '90+ Days',
         'notes': 'Notes',
         'expand': 'Expand'
       }
@@ -98,7 +98,7 @@ export default {
       if (this.routeParameters.sortColumn == sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
       } else {
-        return sort === 'name' ? 'asc': 'desc'
+        return 'asc'
       }
     },
     getReferredByContacts (sort, pageNumber, sortDir, contactsPerPage) {

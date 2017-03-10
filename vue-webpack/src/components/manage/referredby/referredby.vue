@@ -46,10 +46,10 @@
                         v-for="(label, sort) in tableHeaders"
                         :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
-                        :width="label.type == 'link' ? '20%' : ''"
+                        :width="label.type == 'general' ? '20%' : ''"
                     >
                         <router-link
-                            v-if="label.type == 'link'"
+                            v-if="sort != 'notes' && sort != 'expand'"
                             :to="{
                                 name: $route.name,
                                 query: {
@@ -58,7 +58,7 @@
                                 }
                             }"
                         >
-                            {{ label.title }}
+                            {{ label.title || label }}
                         </router-link>
                         <template v-else>{{ label }}</template>
                     </th>

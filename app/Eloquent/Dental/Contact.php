@@ -344,7 +344,7 @@ class Contact extends Model implements Resource, Repository
                     $resultSql = $resultSql->orderBy('contacttype', $sortDir);
                     break;
 
-                case 'num_ref':
+                case 'total':
                     $resultSql = $resultSql->orderBy('num_ref', $sortDir);
                     break;
 

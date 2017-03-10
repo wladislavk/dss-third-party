@@ -180,78 +180,73 @@ class ContactsController extends Controller
 
         $referredByContacts = $resource->getReferredByContacts($docId, $sort, $sortDir, $page);
 
-        if (count($referredByContacts) > 0) {
-            $referredByContacts = $referredByContacts->toArray();
-        } else {
-            $referredByContacts = [];
-        }
-
         $referredByContactsTotalNumber = count($referredByContacts);
-        $referredByContacts = array_slice($referredByContacts, $page * $contactsPerPage, $contactsPerPage);
+        $referredByContacts = $referredByContactsTotalNumber > 0
+            ? $referredByContacts->slice($page * $contactsPerPage, $contactsPerPage)
+            : [];
 
-        for ($index = 0; $index < count($referredByContacts); $index++) {
+        $referredByContacts->map(function ($contact) use ($patients) {
             $counters = $this->getReferralCountersForContact(
                 $patients,
-                $referredByContacts[$index]['contactid'],
-                $referredByContacts[$index]['referral_type']
+                $contact->contactid,
+                $contact->referral_type
             );
 
-            $name = ($referredByContacts[$index]['salutation'] ?: '')
-                . (!empty($referredByContacts[$index]['firstname']) ? ' ' . $referredByContacts[$index]['firstname'] : '')
-                . (!empty($referredByContacts[$index]['middlename']) ? ' ' . $referredByContacts[$index]['middlename'] : '')
-                . (!empty($referredByContacts[$index]['lastname']) ? ' ' . $referredByContacts[$index]['lastname'] : '');
-
-            $referredByContacts[$index] += $counters;
-            $referredByContacts[$index]['name'] = $name;
-        }
-
-        $referredByContactsCollection = collect($referredByContacts);
-
-        $sortColumn = '';
-        $sortDirectionDesc = false;
-        /*if (!empty($sort)) {
-            $sortDirectionDesc = strtolower($sortDir) == 'desc';
-
-            switch ($sort) {
-                case 'thirty':
-                    $sortColumn = 'num_ref30';
-                    break;
-
-                case 'sixty':
-                    $sortColumn = 'num_ref60';
-                    break;
-
-                case 'ninty':
-                    $sortColumn = 'num_ref90';
-                    break;
-
-                case 'nintyplus':
-                    $sortColumn = 'num_ref90plus';
-                    break;
-
-                default:
-                    $sortColumn = '';
-                    break;
+            foreach ($counters as $field => $value) {
+                $contact[$field] = $value;
             }
 
-            $referredByContactsCollection = $referredByContactsCollection->sort(
-                function ($first, $second) use ($sortColumn, $sortDirectionDesc) {
-                    if ($first[$sortColumn] == $second[$sortColumn]) {
+            $name = ($contact->salutation ?: '')
+                . (!empty($contact->firstname) ? ' ' . $contact->firstname : '')
+                . (!empty($contact->middlename) ? ' ' . $contact->middlename : '')
+                . (!empty($contact->lastname) ? ' ' . $contact->lastname : '');
+
+            $contact['name'] = $name;
+
+            return $contact;
+        });
+
+        switch ($sort) {
+            case 'thirty':
+                $sortColumn = 'num_ref30';
+                break;
+
+            case 'sixty':
+                $sortColumn = 'num_ref60';
+                break;
+
+            case 'ninty':
+                $sortColumn = 'num_ref90';
+                break;
+
+            case 'nintyplus':
+                $sortColumn = 'num_ref90plus';
+                break;
+
+            default:
+                $sortColumn = '';
+                break;
+        }
+
+        if (!empty($sortColumn)) {
+            $referredByContacts = $referredByContacts->sort(
+                function ($first, $second) use ($sortColumn, $sortDir) {
+                    if ($first->$sortColumn == $second->$sortColumn) {
                         return 0;
                     }
 
-                    if ($sortDirectionDesc) {
-                        return ($first < $second) ? -1 : 1;
+                    if (strtolower($sortDir) === 'desc') {
+                        return ($first->$sortColumn < $second->$sortColumn) ? -1 : 1;
                     }
 
-                    return ($first > $second) ? -1 : 1;
+                    return ($first->$sortColumn > $second->$sortColumn) ? -1 : 1;
                 }
             );
-        }*/
+        }
 
         $response = [
             'total'    => $referredByContactsTotalNumber,
-            'contacts' => $referredByContactsCollection
+            'contacts' => $referredByContacts->values()->all()
         ];
 
         return ApiResponse::responseOk('', $response);

@@ -117,6 +117,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\HealthHistory::class => [Repositories\HealthHistories::class, Resources\HealthHistory::class],
             Eloquent\Dental\SocialHistory::class => [Repositories\SocialHistories::class, Resources\SocialHistory::class],
             Eloquent\Dental\Recipient::class => [Repositories\Recipients::class, Resources\Recipient::class],
+            Eloquent\Dental\ReferredByContact::class => [Repositories\ReferredByContacts::class, Resources\ReferredByContact::class],
             Eloquent\Dental\SleepTest::class => [Repositories\SleepTests::class, Resources\SleepTest::class],
             Eloquent\Dental\Qualifier::class => [Repositories\Qualifiers::class, Resources\Qualifier::class],
             Eloquent\Dental\Refund::class => [Repositories\Refunds::class, Resources\Refund::class],

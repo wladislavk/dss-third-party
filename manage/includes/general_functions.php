@@ -844,10 +844,11 @@ function dateFormat ($data, $defaultsNow=true) {
  */
 function parsePhoneNumber ($areaCodeOrFullNumber, $phoneNumber='') {
     $fullNumber = preg_replace('/\D+/', '', "{$areaCodeOrFullNumber}{$phoneNumber}");
+    preg_match('/(?P<area>\d{3})(?P<number>\d{7})(?P<ext>\d*)/', $fullNumber, $matches);
 
     return [
-        substr($fullNumber, 0, 3), // area code
-        substr($fullNumber, 3) // local number
+        $matches['area'],
+        $matches['number'] . ($matches['ext'] ? ' x' . $matches['ext'] : '')
     ];
 }
 

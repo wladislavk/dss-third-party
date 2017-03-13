@@ -6,11 +6,14 @@
         <br /><br />&nbsp;
 
         <div align="right">
-            <button v-on:click="loadPopup('add_referredby.php')" class="addButton">
+            <button v-on:click="onClickAddNewReferredBy" class="addButton">
                 Add New Referred By
             </button>
             &nbsp;&nbsp;
-            <a href="manage_referredby_print.php" class="button">Print List</a>
+            <router-link
+                :to="{ name: /*'print-referred-by-contact'*/'referredby' }"
+                class="button"
+            >Print List</router-link>
             &nbsp;&nbsp;
         </div>
 
@@ -77,7 +80,7 @@
                     <td valign="top" width="20%">
                         <a
                             v-if="contact.referred_source == constants.DSS_REFERRED_PHYSICIAN"
-                            v-on:click="loadPopup('view_contact.php?ed=' + contact.contactid)"
+                            v-on:click.prevent="onClickViewContact(contact.contactid)"
                             href="#"
                         >{{ contact.name }}</a>
                         <template v-else>{{ contact.name }}</template>
@@ -126,7 +129,7 @@
                     <td valign="top" width="10%">
                         <a
                             href="#"
-                            v-on:click="loadPopup('add_referredby_notes.php?rid=' + contact.contactid)"
+                            v-on:click.prevent="onClickEditReferredByNotes(contact.contactid)"
                             class="editlink"
                             :title="contact.referredby_notes ? contact.referredby_notes : 'No Notes'"
                         >

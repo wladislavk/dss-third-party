@@ -11,7 +11,7 @@
                                     <a v-on:click.prevent>Directory</a>
                                     <ul>
                                         <li><router-link to="/manage/contacts">Contacts</router-link></li>
-                                        <li><a href="manage_referredby.php">Referral List</a></li>
+                                        <li><router-link :to="{ name: 'referredby' }">Referral List</a></li>
                                         <li><a href="manage_sleeplab.php">Sleep Labs</a></li>
                                         <li><a href="manage_fcontact.php">Corporate Contacts</a></li>
                                     </ul>

@@ -61,6 +61,11 @@ export default {
         }
       }
     },
+    '$route.query.delid': function () {
+      if (this.$route.query.delid > 0) {
+        this.removeContact(this.$route.query.delid)
+      }
+    },
     'routeParameters': {
       handler: function () {
         this.getContacts()
@@ -77,6 +82,17 @@ export default {
     this.getContacts()
   },
   methods: {
+    onClickEditReferredByNotes (id) {
+      this.$parent.$refs.modal.display('edit-referred-by-note')
+      this.$parent.$refs.modal.setComponentParameters({ noteId: id })
+    },
+    onClickViewContact (id) {
+      this.$parent.$refs.modal.display('view-contact')
+      this.$parent.$refs.modal.setComponentParameters({ contactId: id })
+    },
+    onClickAddNewReferredBy () {
+      this.$parent.$refs.modal.display('edit-referred-by-contact')
+    },
     removeContact (id) {
       this.deleteReferredByContact(id)
         .then(function () {
@@ -120,7 +136,7 @@ export default {
       return this.$http.post(process.env.API_PATH + 'contacts/referred-by', data)
     },
     deleteReferredByContact (id) {
-      return this.$http.delete(process.env.API_PATH + 'referred-by/' + id)
+      return this.$http.delete(process.env.API_PATH + 'referred-by-contacts/' + id)
     }
   }
 }

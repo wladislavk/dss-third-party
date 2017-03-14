@@ -32,6 +32,9 @@ export default {
       this.componentParams = parameters
 
       this.setCurrentContact(this.componentParams.contactId)
+
+      // this popup doesn't have any input fields - set the flag to false
+      this.$parent.popupEdit = false
     },
     setCurrentContact (contactId) {
       this.getContactById(contactId)

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main-template">
         <div id="login_container">
             <form name="loginfrm" id="loginForm" v-on:submit.prevent="submitForm">
                 <table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
@@ -59,5 +59,5 @@
 
 <script src="./login.js"></script>
 
-<style src="../../../assets/css/manage/main.css"></style>
+<style src="../../../assets/css/manage/main.css" scoped></style>
 <style src="../../../assets/css/manage/login.css" scoped></style>

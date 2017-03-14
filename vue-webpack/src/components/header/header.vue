@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main-template">
         <table width="980" border="0" cellpadding="0" cellspacing="0" align="center">
         <!-- Header and nav goes here -->
             <tr>
@@ -518,7 +518,12 @@
 
 <script src="./header.js"></script>
 
-<style src="../../assets/css/manage/main.css"></style>
+<style>
+    body {
+        margin: 0px;
+    }
+</style>
+<style src="../../assets/css/manage/main.css" scoped></style>
 <style src="../../assets/css/manage/admin.css" scoped></style>
 <style src="../../assets/css/manage/task.css" scoped></style>
 <style src="../../assets/css/manage/notifications.css" scoped></style>

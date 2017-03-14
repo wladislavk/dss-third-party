@@ -10,7 +10,18 @@ $isLetter = array_get($_GET, 'type') === 'letter';
  * Don't check for session info if the file is a logo
  */
 if (!preg_match('/^user_logo_\d+\.(gif|jpg|jpeg|png)$/', $filename)) {
-    require_once __DIR__ . '/includes/sescheck.php';
+    /**
+     * @see DSS-534
+     *
+     * Letters should allow BO users to access this script
+     */
+    session_start();
+
+    if ($isLetter && isset($_SESSION['adminuserid'])) {
+        require_once __DIR__ . '/admin/includes/sescheck.php';
+    } else {
+        require_once __DIR__ . '/includes/sescheck.php';
+    }
 }
 
 if ($isLetter) {

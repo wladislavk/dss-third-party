@@ -24,6 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var array
      */
     protected $resourceBindings = [
+        'referred-by-contacts' => \DentalSleepSolutions\Eloquent\Dental\ReferredByContact::class,
         'users' => \DentalSleepSolutions\Eloquent\Dental\User::class,
         'tasks' => \DentalSleepSolutions\Eloquent\Dental\Task::class,
         'home-sleep-tests' => \DentalSleepSolutions\Eloquent\Dental\HomeSleepTest::class,

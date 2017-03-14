@@ -37,6 +37,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
         Route::get('payers', 'Eligible\EligibleController@getPayers');
     });
 
+    Route::resource('referred-by-contacts', 'ReferredByContactsController', ['except' => ['create', 'edit']]);
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
     Route::post('users/current', 'UsersController@getCurrentUserInfo');
     Route::post('users/course-staff', 'UsersController@getCourseStaff');
@@ -177,6 +178,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('contacts/list-contacts-and-companies', 'ContactsController@getListContactsAndCompanies');
     Route::post('contacts/with-contact-type', 'ContactsController@getWithContactType');
     Route::post('contacts/insurance', 'ContactsController@getInsuranceContacts');
+    Route::post('contacts/referred-by', 'ContactsController@getReferredByContacts');
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
     Route::get('display-file/{filename}', 'DisplayingFileController@getFile');
 

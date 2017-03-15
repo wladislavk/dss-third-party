@@ -2154,7 +2154,7 @@ foreach ($master_q as $master_r) {
                                 <div class="preview-bottom-margin"></div>
                             </div>
                             <input type="hidden" name="new_template[<?php echo $cur_letter_num ?>]"
-                                   value="<?php echo preg_replace('/(&Acirc;|&nbsp;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE, "UTF-8")) ?>"/>
+                                   value="<?php echo preg_replace('/(&Acirc;)+/i', '', htmlentities($letter[$cur_letter_num], ENT_COMPAT | ENT_IGNORE, "UTF-8")) ?>"/>
                         </td>
                     </tr>
                 </table>

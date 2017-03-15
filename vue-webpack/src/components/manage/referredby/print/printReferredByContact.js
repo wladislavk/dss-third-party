@@ -44,6 +44,9 @@ export default {
     }
   },
   mixins: [handlerMixin],
+  created () {
+    $('body').removeClass('main-template')
+  },
   mounted () {
 
   },

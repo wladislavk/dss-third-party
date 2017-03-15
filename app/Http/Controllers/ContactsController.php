@@ -176,14 +176,16 @@ class ContactsController extends Controller
         $page = $request->input('page') ?: 0;
         $sort = $request->input('sort');
         $sortDir = $request->input('sortdir');
-        $contactsPerPage = $request->input('contacts_per_page') ?: 10;
+        $contactsPerPage = $request->input('contacts_per_page') ?: 0;
 
         $referredByContacts = $resource->getReferredByContacts($docId, $sort, $sortDir, $page);
 
         $referredByContactsTotalNumber = count($referredByContacts);
-        $referredByContacts = $referredByContactsTotalNumber > 0
-            ? $referredByContacts->slice($page * $contactsPerPage, $contactsPerPage)
-            : [];
+        if ($contactsPerPage > 0) {
+            $referredByContacts = $referredByContactsTotalNumber > 0
+                ? $referredByContacts->slice($page * $contactsPerPage, $contactsPerPage)
+                : [];
+        }
 
         $referredByContacts->map(function ($contact) use ($patients) {
             $counters = $this->getReferralCountersForContact(

@@ -201,9 +201,11 @@ function setup_tinymce (size, family, $reference) {
 
         init.mode = 'exact';
         init.elements = $reference.find('textarea').attr('id');
-        init.plugins = init.plugins.replace(/table/, 'table_modified');
+        init.plugins = init.plugins.replace(/table/, 'table_modified').replace(/paste/, 'powerpaste');
         init.toolbar1 = init.toolbar1.replace(/italic +\|/, 'italic underline strikethrough |');
         init.table_alignment_option = false;
+        init.powerpaste_word_import = 'clean';
+        init.powerpaste_html_import = 'clean';
 
         init.valid_elements = ['@[style|border|class|title|contenteditable],mark,u,del', init.valid_elements].join(',');
         delete init.valid_styles;

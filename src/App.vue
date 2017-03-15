@@ -7,6 +7,12 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  created () {
+    // add main template style
+    window.$('body').addClass('main-template')
+  }
 }
 </script>
+
+<style src="assets/css/manage/main.css"></style>

@@ -16,7 +16,7 @@ export default {
           width: 15,
           title: 'Name'
         },
-        'type': {
+        'contacttype': {
           width: 15,
           title: 'Physician Type'
         },
@@ -36,7 +36,7 @@ export default {
           width: 15,
           title: '90 Days'
         },
-        'ninty-plus': {
+        'nintyplus': {
           width: 15,
           title: '90+ Days'
         }
@@ -48,9 +48,30 @@ export default {
     $('body').removeClass('main-template')
   },
   mounted () {
-
+    this.getContacts()
   },
   methods: {
+    getContacts () {
+      this.getReferredByContacts(
+        this.routeParameters.sortColumn,
+        this.routeParameters.sortDirection
+      ).then(function (response) {
+        var data = response.data.data
 
+        if (data.total > 0) {
+          this.contacts = data.contacts
+        }
+      }, function (response) {
+        this.handleErrors('getReferredByContacts', response)
+      })
+    },
+    getReferredByContacts (sort, sortDir) {
+      var data = {
+        sort: sort,
+        sortdir: sortDir
+      }
+
+      return this.$http.post(process.env.API_PATH + 'contacts/referred-by', data)
+    }
   }
 }

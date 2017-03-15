@@ -38,7 +38,7 @@
                         {{ contact.num_ref }}
                     </td>
                     <td valign="top">
-                        <br />
+                        
                     </td>
                     <td valign="top">
                     </td>

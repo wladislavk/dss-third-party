@@ -21,6 +21,7 @@ import Contacts from 'components/manage/contacts/contacts.vue'
 import EditingPatients from 'components/manage/patients/editing/editingPatients.vue'
 import Vobs from 'components/manage/vobs/vobs.vue'
 import ReferredBy from 'components/manage/referredby/referredby.vue'
+import PrintReferredByContact from 'components/manage/referredby/print/printReferredByContact.vue'
 
 // service routes
 import PageNotFound from 'components/services/pageNotFound.vue'
@@ -37,7 +38,8 @@ const router = new Router({
       name: 'dashboard',
       component: Index,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresManageTemplate: true
       }
     },
     {
@@ -45,7 +47,8 @@ const router = new Router({
       name: 'patients',
       component: Patients,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresManageTemplate: true
       }
     },
     {
@@ -53,7 +56,8 @@ const router = new Router({
       name: 'contacts',
       component: Contacts,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresManageTemplate: true
       }
     },
     {
@@ -61,7 +65,8 @@ const router = new Router({
       name: 'edit-patient',
       component: EditingPatients,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresManageTemplate: true
       }
     },
     {
@@ -69,13 +74,23 @@ const router = new Router({
       name: 'vobs',
       component: Vobs,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresManageTemplate: true
       }
     },
     {
       path: '/manage/referredby',
       name: 'referredby',
       component: ReferredBy,
+      meta: {
+        requiresAuth: true,
+        requiresManageTemplate: true
+      }
+    },
+    {
+      path: '/manage/print-referred-by-contact',
+      name: 'print-referred-by-contact',
+      component: PrintReferredByContact,
       meta: {
         requiresAuth: true
       }

@@ -11,7 +11,7 @@
             </button>
             &nbsp;&nbsp;
             <router-link
-                :to="{ name: /*'print-referred-by-contact'*/'referredby' }"
+                :to="{ name: 'print-referred-by-contact' }"
                 class="button"
             >Print List</router-link>
             &nbsp;&nbsp;

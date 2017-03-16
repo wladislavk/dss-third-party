@@ -59,5 +59,4 @@
 
 <script src="./login.js"></script>
 
-<style src="../../../assets/css/manage/main.css"></style>
 <style src="../../../assets/css/manage/login.css" scoped></style>

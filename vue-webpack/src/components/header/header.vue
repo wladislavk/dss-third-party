@@ -518,7 +518,6 @@
 
 <script src="./header.js"></script>
 
-<style src="../../assets/css/manage/main.css"></style>
 <style src="../../assets/css/manage/admin.css" scoped></style>
 <style src="../../assets/css/manage/task.css" scoped></style>
 <style src="../../assets/css/manage/notifications.css" scoped></style>

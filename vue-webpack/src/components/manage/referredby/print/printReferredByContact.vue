@@ -3,10 +3,6 @@
         <span class="admin_head">{{ title }}</span>
         <br /><br /><br />
 
-        <div v-if="message" align="center" class="red">
-            <b>{{ message }}</b>
-        </div>
-
         <form name="sortfrm">
             <table width="98%" cellpadding="5" cellspacing="0" border="1" bgcolor="#FFFFFF" align="center" >
                 <tr class="tr_bg_h">
@@ -38,13 +34,24 @@
                         {{ contact.num_ref }}
                     </td>
                     <td valign="top">
-                        
+                        <template v-for="contact30 in contact.num_ref30">
+                            {{ contact30.firstname }} {{ contact30.lastname + (contact30.copyreqdate ? ' - ' : '') }}{{ contact30.copyreqdate | moment("MM/DD/YYYY") }}<br>
+                        </template>
                     </td>
                     <td valign="top">
+                        <template v-for="contact60 in contact.num_ref60">
+                            {{ contact60.firstname }} {{ contact60.lastname + (contact60.copyreqdate ? ' - ' : '') }}{{ contact60.copyreqdate | moment("MM/DD/YYYY") }}<br>
+                        </template>
                     </td>
                     <td valign="top">
+                        <template v-for="contact90 in contact.num_ref90">
+                            {{ contact90.firstname }} {{ contact90.lastname + (contact90.copyreqdate ? ' - ' : '') }}{{ contact90.copyreqdate | moment("MM/DD/YYYY") }}<br>
+                        </template>
                     </td>
                     <td valign="top">
+                        <template v-for="contact90plus in contact.num_ref90plus">
+                            {{ contact90plus.firstname }} {{ contact90plus.lastname + (contact90plus.copyreqdate ? ' - ' : '') }}{{ contact90plus.copyreqdate | moment("MM/DD/YYYY") }}<br>
+                        </template>
                     </td>
                 </tr>
             </table>

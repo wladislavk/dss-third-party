@@ -5,7 +5,6 @@ export default {
   data () {
     return {
       title: 'Referral Source Printout - ' + moment().format('MM/DD/YYYY'),
-      message: '',
       contacts: [],
       routeParameters: {
         sortColumn: '',
@@ -44,11 +43,40 @@ export default {
     }
   },
   mixins: [handlerMixin],
+  watch: {
+    '$route.query.sort': function () {
+      if (this.$route.query.sort) {
+        if (this.$route.query.sort in this.tableHeaders) {
+          this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort)
+        } else {
+          this.$set(this.routeParameters, 'sortColumn', null)
+        }
+      }
+    },
+    '$route.query.sortdir': function () {
+      if (this.$route.query.sortdir) {
+        if (this.$route.query.sortdir.toLowerCase() == 'desc') {
+          this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
+        } else {
+          this.$set(this.routeParameters, 'sortDirection', 'asc')
+        }
+      }
+    },
+    'routeParameters': {
+      handler: function () {
+        this.getContacts()
+      },
+      deep: true
+    }
+  },
   created () {
     $('body').removeClass('main-template')
   },
   mounted () {
     this.getContacts()
+  },
+  beforeDestroy () {
+    $('body').addClass('main-template')
   },
   methods: {
     getContacts () {
@@ -68,7 +96,8 @@ export default {
     getReferredByContacts (sort, sortDir) {
       var data = {
         sort: sort,
-        sortdir: sortDir
+        sortdir: sortDir,
+        detailed: true
       }
 
       return this.$http.post(process.env.API_PATH + 'contacts/referred-by', data)

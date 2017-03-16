@@ -1,5 +1,5 @@
 <template>
-    <div class="main-template">
+    <div>
         <div id="login_container">
             <form name="loginfrm" id="loginForm" v-on:submit.prevent="submitForm">
                 <table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">

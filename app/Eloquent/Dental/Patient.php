@@ -830,13 +830,23 @@ class Patient extends Model implements Resource, Repository
             })->get();
     }
 
-    public function getReferralCountersForContact($contactId, $contactType, $dateConditional)
+    public function getReferralCountersForContact($contactId, $contactType, $dateConditional, $isDetailed = false)
     {
-        return $this->select('p.patientid')
-            ->from(DB::raw('dental_patients p'))
+        if ($isDetailed) {
+            $query = $this->select('p.firstname', 'p.lastname', 'p.copyreqdate');
+        } else {
+            $query = $this->select('p.patientid');
+        }
+
+        $query = $query->from(DB::raw('dental_patients p'))
             ->where('p.referred_by', $contactId)
             ->where('p.referred_source', $contactType)
-            ->whereRaw("STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') $dateConditional")
-            ->count();
+            ->whereRaw("STR_TO_DATE(p.copyreqdate, '%m/%d/%Y') $dateConditional");
+
+        if ($isDetailed) {
+            return $query->get();
+        } else {
+            return $query->count();
+        }
     }
 }

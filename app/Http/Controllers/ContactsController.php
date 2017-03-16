@@ -176,20 +176,24 @@ class ContactsController extends Controller
         $page = $request->input('page') ?: 0;
         $sort = $request->input('sort');
         $sortDir = $request->input('sortdir');
-        $contactsPerPage = $request->input('contacts_per_page') ?: 10;
+        $contactsPerPage = $request->input('contacts_per_page') ?: 0;
+        $isDetailed = $request->input('detailed') ?: false;
 
         $referredByContacts = $resource->getReferredByContacts($docId, $sort, $sortDir, $page);
 
         $referredByContactsTotalNumber = count($referredByContacts);
-        $referredByContacts = $referredByContactsTotalNumber > 0
-            ? $referredByContacts->slice($page * $contactsPerPage, $contactsPerPage)
-            : [];
+        if ($contactsPerPage > 0) {
+            $referredByContacts = $referredByContactsTotalNumber > 0
+                ? $referredByContacts->slice($page * $contactsPerPage, $contactsPerPage)
+                : [];
+        }
 
-        $referredByContacts->map(function ($contact) use ($patients) {
+        $referredByContacts->map(function ($contact) use ($patients, $isDetailed) {
             $counters = $this->getReferralCountersForContact(
                 $patients,
                 $contact->contactid,
-                $contact->referral_type
+                $contact->referral_type,
+                $isDetailed
             );
 
             foreach ($counters as $field => $value) {
@@ -252,7 +256,7 @@ class ContactsController extends Controller
         return ApiResponse::responseOk('', $response);
     }
 
-    private function getReferralCountersForContact(Patients $patients, $contactId, $contactType)
+    private function getReferralCountersForContact(Patients $patients, $contactId, $contactType, $isDetailed)
     {
         $counters = [];
         $ranges = [
@@ -275,7 +279,8 @@ class ContactsController extends Controller
             $counters[$key] = $patients->getReferralCountersForContact(
                 $contactId,
                 $contactType,
-                $dateConditional
+                $dateConditional,
+                $isDetailed
             );
         }
 

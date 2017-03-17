@@ -1,14 +1,14 @@
 <template>
     <div>
+        <br />
         <div v-if="message" align="center" class="red">
             {{ message }}
         </div>
-
         <form name="referredbyfrm" onSubmit="return referredbyabc(this)">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
-                        {{ buttonText }} Referred By {{ contact.name ? ('"' + contact.name + '"') : '' }}
+                        {{ buttonText }} Referred By{{ contact.name ? (' "' + contact.name + '"') : '' }}
                     </td>
                 </tr>
                 <tr>
@@ -29,7 +29,7 @@
                                             tabindex="1"
                                             style="width:80px;"
                                         >
-                                            <option value="default"></option>
+                                            <option value="default" disabled></option>
                                             <option value="Dr.">Dr.</option>
                                             <option value="Mr.">Mr.</option>
                                             <option value="Mrs.">Mrs.</option>
@@ -78,7 +78,7 @@
                                         />
                                         <label for="middlename">Middle <br />Init</label>
                                     </span>
-                               </div>   
+                               </div>
                             </li>
                         </ul>
                     </td>
@@ -308,7 +308,7 @@
                                     <div>
                                         <span>
                                             <select id="qualifier" name="qualifier" class="field text addr tbox" tabindex="16">
-                                                <option value="0"></option>
+                                                <option value="0" disabled></option>
                                                 <option
                                                     v-for="qualifier in qualifiers"
                                                     :value="qualifier.qualifierid"

@@ -13,10 +13,11 @@
 </template>
 
 <script>
-  var deviceSelector = require('../manage/dashboard/device-selector/deviceSelector.vue')
-  var viewContact = require('../manage/contacts/ViewContact.vue')
-  var patientAccessCode = require('../manage/patients/access-code/PatientAccessCode.vue')
-  var editContact = require('../manage/contacts/EditContact.vue')
+  const deviceSelector = require('../manage/dashboard/device-selector/deviceSelector.vue')
+  const viewContact = require('../manage/contacts/ViewContact.vue')
+  const patientAccessCode = require('../manage/patients/access-code/PatientAccessCode.vue')
+  const editContact = require('../manage/contacts/EditContact.vue')
+  const editReferredByContact = require('../manage/referredby/edit/editReferredByContacts.vue')
 
   export default {
     data () {
@@ -37,7 +38,8 @@
       'device-selector': deviceSelector,
       'view-contact': viewContact,
       'patient-access-code': patientAccessCode,
-      'edit-contact': editContact
+      'edit-contact': editContact,
+      'edit-referred-by-contact': editReferredByContact
     },
     methods: {
       setComponentParameters (parameters) {

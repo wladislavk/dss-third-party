@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     });
 
     Route::resource('referred-by-contacts', 'ReferredByContactsController', ['except' => ['create', 'edit']]);
+    Route::post('referred-by-contacts/edit/{contactId?}', 'ReferredByContactsController@editingContact');
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
     Route::post('users/current', 'UsersController@getCurrentUserInfo');
     Route::post('users/course-staff', 'UsersController@getCourseStaff');

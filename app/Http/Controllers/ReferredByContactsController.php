@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\ReferredByContactDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\ReferredByContact;
 use DentalSleepSolutions\Contracts\Repositories\ReferredByContacts;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -84,5 +85,35 @@ class ReferredByContactsController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function editingContact(Request $request, $contactId = null)
+    {
+        $contactFormData = $request->input('contact_form_data') ?: [];
+
+        if ($contactId) {
+            $validator = $this->getValidationFactory()->make(
+                $contactFormData, (new ReferredByContactUpdate())->rules()
+            );
+        } else {
+            $validator = $this->getValidationFactory()->make(
+                $contactFormData, (new ReferredByContactStore())->rules()
+            );
+        }
+
+        if ($validator->fails()) {
+            return ApiResponse::responseError('', 422, $validator->messages());
+        } elseif (count($contactFormData) == 0) {
+            return ApiResponse::responseError('Contact data is empty.', 422);
+        }
+
+        $responseData = [];
+        if ($contactId) {
+            $responseData['status'] = 'Edited Successfully';
+        } else { // contactId = 0 -> creating a new contact
+            $responseData['status'] = '';
+        }
+
+        return ApiResponse::responseOk('', $responseData);
     }
 }

@@ -74,4 +74,21 @@ class ContactType extends Model implements Resource, Repository
             ->groupBy('physician')
             ->first();
     }
+
+    public function getWithFilter($fields = [], $where = [])
+    {
+        $object = $this;
+
+        if (count($fields)) {
+            $object = $object->select($fields);
+        }
+
+        if (count($where)) {
+            foreach ($where as $key => $value) {
+                $object = $object->where($key, $value);
+            }
+        }
+
+        return $object->get();
+    }
 }

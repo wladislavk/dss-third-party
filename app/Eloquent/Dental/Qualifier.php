@@ -38,4 +38,16 @@ class Qualifier extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
+
+    public function getActive()
+    {
+        return $this->active()
+            ->orderBy('sortby')
+            ->get();
+    }
 }

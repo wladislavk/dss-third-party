@@ -8,6 +8,8 @@ use DentalSleepSolutions\Eloquent\Dental\Contact;
 // this class contains some functions from general_functions.php
 class GeneralHelper
 {
+    const Q_FILE_FOLDER = '';
+
     private $patient;
     private $contact;
 
@@ -19,7 +21,7 @@ class GeneralHelper
 
     public function isSharedFile($name)
     {
-        return strlen($name) && is_file(Q_FILE_FOLDER . $name);
+        return strlen($name) && is_file(self::Q_FILE_FOLDER . $name);
     }
 
     public function formatPhone($data)

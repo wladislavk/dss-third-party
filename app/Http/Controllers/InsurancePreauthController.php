@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\InsurancePreauthDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as InsPreauth;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -104,6 +105,36 @@ class InsurancePreauthController extends Controller
                 $data = [];
                 break;
         }
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function getPendingVOBByContactId(InsurancePreauth $resource, Request $request)
+    {
+        $contactId = $request->input('contact_id') ?: 0;
+        $data = $resource->getPendingVOBByContactId($contactId);
+      
+        return ApiResponse::responseOk('', $data);
+    }
+
+    public function find(InsPreauth $resources, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $pageNumber = $request->input('page');
+        $vobsPerPage = $request->input('vobsPerPage');
+        $sortColumn = $request->input('sortColumn');
+        $sortDir = $request->input('sortDir');
+        $viewed = $request->input('viewed');
+
+        $data = $resources->getListVobs(
+            $docId, 
+            $viewed, 
+            $sortColumn,
+            $sortDir,
+            $vobsPerPage,
+            $pageNumber
+        );
 
         return ApiResponse::responseOk('', $data);
     }

@@ -7,6 +7,7 @@ use DentalSleepSolutions\Helpers\LetterHelper;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use DentalSleepSolutions\Helpers\EmailHelper;
 use DentalSleepSolutions\Helpers\SimilarHelper;
+use DentalSleepSolutions\Helpers\PdfHelper;
 use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
 use DentalSleepSolutions\Http\Requests\PatientDestroy;
@@ -25,6 +26,8 @@ use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Libraries\Password;
 use Illuminate\Http\Request;
+
+use Carbon\Carbon;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -462,8 +465,12 @@ class PatientsController extends Controller
                 }
             }
 
-            if ($pressedButtons && $pressedButtons['send_hst']) {
-                $responseData['redirect_to'] = 'hst_request_co.php?ed=' . $patientId;
+            if ($pressedButtons) {
+                if ($pressedButtons['send_hst']) {
+                    $responseData['redirect_to'] = 'hst_request_co.php?ed=' . $patientId;
+                } elseif ($pressedButtons['send_pin_code']) {
+                    $responseData['send_pin_code'] = true;
+                }
             }
 
             $responseData['status'] = 'Edited Successfully';
@@ -718,6 +725,53 @@ class PatientsController extends Controller
                 $code = 417
             );
         }
+    }
+
+    public function resetAccessCode($patientId, Patient $patientResource)
+    {
+        $accessCode = 0;
+        $accessCodeDate = null;
+
+        if ($patientId > 0) {
+            $accessCode = rand(100000, 999999);
+            $accessCodeDate = Carbon::now();
+            $patient = $patientResource->updatePatient($patientId, [
+                'access_code'      => $accessCode,
+                'access_code_date' => $accessCodeDate
+            ]);
+        }
+
+        return ApiResponse::responseOk('', ['access_code' => $accessCode, 'access_code_date' => $accessCodeDate->toDateTimeString()]);
+    }
+
+    public function createTempPinDocument(
+        $patientId = 0,
+        EmailHelper $emailHelper,
+        PdfHelper $pdfHelper,
+        Patient $patientResource
+    ) {
+        $url = '';
+        if ($patientId > 0) {
+            $docId = $this->currentUser->docid ?: 0;
+            $mailerData = $emailHelper->retrieveMailerData($patientId, $docId);
+            $mailerData = array_merge($mailerData['patientData'], $mailerData['mailingData']);
+
+            if (count($mailerData)) {
+                $emailHelper->sendRegEmail($patientId, $mailerData['email'], '', $mailerData['email'], 2);
+
+                $filename = 'user_pin_' . $patientId . '.pdf';
+                $pdfHelper->setHeaderInfo([
+                    'title'   => 'User Temporary PIN',
+                    'subject' => 'User Temporary PIN'
+                ]);
+
+                $args = ['doc_id' => $docId];
+
+                $url = $pdfHelper->create('pdf.patient.pinInstructions', $mailerData, $filename, $args);
+            }
+        }
+
+        return ApiResponse::responseOk('', ['path_to_pdf' => $url]);
     }
 
     private function getDocNameFromShortInfo($field, $shortInfo)

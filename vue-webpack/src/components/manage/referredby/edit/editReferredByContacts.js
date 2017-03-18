@@ -66,6 +66,15 @@ export default {
     },
     getActiveQualifiers () {
       return this.$http.post(process.env.API_PATH + 'qualifiers/active')
+    },
+    editContact (contactId, contactFormData) {
+      contactId = contactId || 0;
+
+      var data = {
+        contact_form_data: contactFormData
+      }
+
+      return this.$http.post(process.env.API_PATH + 'referred-by-contacts/edit/' + contactId, data)
     }
   }
 }

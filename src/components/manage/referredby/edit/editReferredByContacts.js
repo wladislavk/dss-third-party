@@ -5,7 +5,11 @@ export default {
   data () {
     return {
       message: '',
-      componentParams: {},
+      componentParams: {
+        contactId: 0,
+        addToPatient: 0,
+        from: ''
+      },
       contact: {
         salutation: 'default'
       },
@@ -59,7 +63,44 @@ export default {
         })
     },
     onSubmit () {
+      // add validation
 
+      this.editContact(this.componentParams.contactId, this.contact)
+        .then(function (response) {
+          var data = response.data.data;
+
+          if (data.status) {
+            alert(data.status);
+          }
+
+          if (this.componentParams.addToPatient) {
+            // redirect to 'add_patient.php?ed=<?php echo $addedtopat;?>'
+          } else {
+            // redirect to 'manage_referredby.php?msg=<?php echo $msg;?>'
+          }
+
+          if (this.componentParams.from == 'flowsheet3') {
+            // redirect to "/manage/manage_flowsheet3.php?pid=<?php echo $addedtopat; ?>&refid=<?php echo $rid; ?>"
+          }
+        }, function (response) {
+          this.parseFailedResponseOnEditingContact(response.data.data)
+
+          this.handleErrors('editContact', response)
+        });
+    },
+    parseFailedResponseOnEditingContact (data) {
+      var errors = data.errors.shift()
+
+      if (errors != undefined) {
+        var objKeys = Object.keys(errors)
+
+        var arrOfMessages = objKeys.map((el) => {
+          return el + ':' + errors[el].join('|').toLowerCase()
+        })
+
+        // TODO: create more readable format
+        alert(arrOfMessages.join("\n"))
+      }
     },
     getReferredByContact (id) {
       return this.$http.get(process.env.API_PATH + 'referred-by-contacts/' + id)

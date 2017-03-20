@@ -4,7 +4,7 @@
         <div v-if="message" align="center" class="red">
             {{ message }}
         </div>
-        <form name="referredbyfrm" onSubmit="return referredbyabc(this)">
+        <form name="referredbyfrm">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">

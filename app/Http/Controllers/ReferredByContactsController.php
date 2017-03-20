@@ -87,8 +87,11 @@ class ReferredByContactsController extends Controller
         return ApiResponse::responseOk('Resource deleted');
     }
 
-    public function editingContact(Request $request, $contactId = null)
-    {
+    public function editingContact(
+        ReferredByContact $referredByContactResource,
+        Request $request,
+        $contactId = null
+    ) {
         $contactFormData = $request->input('contact_form_data') ?: [];
 
         if ($contactId) {
@@ -107,11 +110,19 @@ class ReferredByContactsController extends Controller
             return ApiResponse::responseError('Contact data is empty.', 422);
         }
 
+        // add1 + city + state + zip = not empty fields
+        // we have checked them during the validation above
+        $contactFormData['referredby_info'] = 1;
+
         $responseData = [];
         if ($contactId) {
+            $referredByContactResource->updateContact($contactId, $contactFormData);
+
             $responseData['status'] = 'Edited Successfully';
         } else { // contactId = 0 -> creating a new contact
-            $responseData['status'] = '';
+            $referredByContactResource->create($contactFormData);
+
+            $responseData['status'] = 'Added Successfully';
         }
 
         return ApiResponse::responseOk('', $responseData);

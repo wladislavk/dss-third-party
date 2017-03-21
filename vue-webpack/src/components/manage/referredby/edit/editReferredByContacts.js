@@ -1,5 +1,7 @@
 var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
+import referredByContactValidatorMixin from '../../../../modules/validators/ReferredByContactMixin.js'
+
 export default {
   name: 'edit-referred-by-contacts',
   data () {
@@ -11,12 +13,15 @@ export default {
         from: ''
       },
       contact: {
-        salutation: 'default'
+        salutation: '',
+        preferredcontact: 'paper',
+        qualifier: 0,
+        status: 1
       },
       qualifiers: []
     }
   },
-  mixins: [handlerMixin],
+  mixins: [handlerMixin, referredByContactValidatorMixin],
   watch: {
     'contact': {
       handler: function () {
@@ -63,30 +68,32 @@ export default {
         })
     },
     onSubmit () {
-      // add validation
+      if (this.validateContactData(this.contact)) {
+        this.editContact(this.componentParams.contactId, this.contact)
+          .then(function (response) {
+            var data = response.data.data;
 
-      this.editContact(this.componentParams.contactId, this.contact)
-        .then(function (response) {
-          var data = response.data.data;
+            if (this.componentParams.addToPatient) {
+              this.$router.push({
+                name: 'edit-patient',
+                query: { pid: this.componentParams.addToPatient }
+              })
+            } else {
+              if (data.status) {
+                this.$parent.updateParentData({ message: data.status })
+                this.$parent.disable()
+              }
+            }
 
-          if (data.status) {
-            alert(data.status);
-          }
+            if (this.componentParams.from == 'flowsheet3') {
+              // redirect to "/manage/manage_flowsheet3.php?pid=<?php echo $addedtopat; ?>&refid=<?php echo $rid; ?>"
+            }
+          }, function (response) {
+            this.parseFailedResponseOnEditingContact(response.data.data)
 
-          if (this.componentParams.addToPatient) {
-            // redirect to 'add_patient.php?ed=<?php echo $addedtopat;?>'
-          } else {
-            // redirect to 'manage_referredby.php?msg=<?php echo $msg;?>'
-          }
-
-          if (this.componentParams.from == 'flowsheet3') {
-            // redirect to "/manage/manage_flowsheet3.php?pid=<?php echo $addedtopat; ?>&refid=<?php echo $rid; ?>"
-          }
-        }, function (response) {
-          this.parseFailedResponseOnEditingContact(response.data.data)
-
-          this.handleErrors('editContact', response)
-        });
+            this.handleErrors('editContact', response)
+          });
+      }
     },
     parseFailedResponseOnEditingContact (data) {
       var errors = data.errors.shift()

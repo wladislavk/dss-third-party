@@ -29,7 +29,7 @@
                                             tabindex="1"
                                             style="width:80px;"
                                         >
-                                            <option value="default" disabled></option>
+                                            <option value="" disabled></option>
                                             <option value="Dr.">Dr.</option>
                                             <option value="Mr.">Mr.</option>
                                             <option value="Mrs.">Mrs.</option>
@@ -41,6 +41,7 @@
                                     <span>
                                         <input
                                             v-model="contact.firstname"
+                                            ref="firstname"
                                             id="firstname"
                                             name="firstname"
                                             type="text"
@@ -54,6 +55,7 @@
                                     <span>
                                         <input
                                             v-model="contact.lastname"
+                                            ref="lastname"
                                             id="lastname"
                                             name="lastname"
                                             type="text"
@@ -244,6 +246,7 @@
                                     <span>
                                         <input
                                             v-model="contact.email"
+                                            ref="email"
                                             id="email"
                                             name="email"
                                             type="text"
@@ -307,7 +310,13 @@
                                     </label>
                                     <div>
                                         <span>
-                                            <select id="qualifier" name="qualifier" class="field text addr tbox" tabindex="16">
+                                            <select
+                                                v-model="contact.qualifier"
+                                                id="qualifier"
+                                                name="qualifier"
+                                                class="field text addr tbox"
+                                                tabindex="16"
+                                            >
                                                 <option value="0" disabled></option>
                                                 <option
                                                     v-for="qualifier in qualifiers"

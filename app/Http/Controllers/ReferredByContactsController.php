@@ -92,6 +92,8 @@ class ReferredByContactsController extends Controller
         Request $request,
         $contactId = null
     ) {
+        $docId = $this->currentUser->docid ?: 0;
+
         $contactFormData = $request->input('contact_form_data') ?: [];
 
         if ($contactId) {
@@ -111,8 +113,12 @@ class ReferredByContactsController extends Controller
         }
 
         // add1 + city + state + zip = not empty fields
-        // we have checked them during the validation above
-        $contactFormData['referredby_info'] = 1;
+        // we have checked them during the validation above, so referredby_info -> 1
+        $contactFormData = array_merge($contactFormData, [
+            'referredby_info' => 1,
+            'docid'           => $docId,
+            'ip_address'      => $request->ip()
+        ]);
 
         $responseData = [];
         if ($contactId) {

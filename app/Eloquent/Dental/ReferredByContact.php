@@ -46,4 +46,10 @@ class ReferredByContact extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function updateContact($contactId = 0, $data = [])
+    {
+        return $this->where('referredbyid', $contactId)
+            ->update($data);
+    }
 }

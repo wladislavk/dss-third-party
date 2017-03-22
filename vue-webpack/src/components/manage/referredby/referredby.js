@@ -78,10 +78,27 @@ export default {
       return Math.ceil(this.contactsTotalNumber / this.contactsPerPage)
     }
   },
+  created () {
+    eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
+  },
   mounted () {
     this.getContacts()
   },
+  beforeDestroy () {
+    eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
+  },
   methods: {
+    onSettingDataFromModal (data) {
+      this.message = data.message;
+
+      this.$nextTick(() => {
+        var self = this
+
+        setTimeout(() => {
+          self.message = ''
+        }, 3000)
+      })
+    },
     onClickEditReferredByNotes (id) {
       this.$parent.$refs.modal.display('edit-referred-by-note')
       this.$parent.$refs.modal.setComponentParameters({ noteId: id })

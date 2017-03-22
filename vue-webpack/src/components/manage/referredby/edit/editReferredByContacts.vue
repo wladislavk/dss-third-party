@@ -8,7 +8,7 @@
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
-                        {{ buttonText }} Referred By{{ contact.name ? (' "' + contact.name + '"') : '' }}
+                        {{ buttonText }} Referred By{{ contactFullName ? (' "' + contactFullName + '"') : '' }}
                     </td>
                 </tr>
                 <tr>

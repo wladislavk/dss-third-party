@@ -18,15 +18,26 @@ export default {
         qualifier: 0,
         status: 1
       },
-      qualifiers: []
+      contactFullName: '',
+      qualifiers: [],
+      isContactDataFetched: false
     }
   },
   mixins: [handlerMixin, referredByContactValidatorMixin],
   watch: {
     'contact': {
       handler: function () {
-        // some field was changed
-        this.$parent.popupEdit = true
+        // we are editing some contact and current contact data has already fetched
+        if (this.componentParams.contactId > 0 && this.isContactDataFetched) {
+          this.isContactDataFetched = false
+          this.$parent.popupEdit = true
+        } else if (this.componentParams.contactId === 0) { // we are creating a new contact
+          this.$parent.popupEdit = true
+        }
+
+        if (!this.isContactDataFetched) {
+          this.isContactDataFetched = true
+        }
       },
       deep: true
     }
@@ -62,7 +73,15 @@ export default {
 
       this.getReferredByContact(this.componentParams.contactId)
         .then(function (response) {
-          this.contact = response.data.data
+          var data = response.data.data;
+
+          if (data) {
+            this.contactFullName = (data.firstname ? data.firstname + ' ' : '')
+              + (data.middlename ? data.middlename + ' ' : '')
+              + (data.lastname || '')
+
+            this.contact = response.data.data
+          }
         }, function (response) {
           this.handleErrors('getReferredByContact', response)
         })
@@ -72,6 +91,8 @@ export default {
         this.editContact(this.componentParams.contactId, this.contact)
           .then(function (response) {
             var data = response.data.data;
+
+            this.$parent.popupEdit = false
 
             if (this.componentParams.addToPatient) {
               this.$router.push({

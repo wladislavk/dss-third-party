@@ -22,6 +22,7 @@ import EditingPatients from 'components/manage/patients/editing/editingPatients.
 import Vobs from 'components/manage/vobs/vobs.vue'
 import ReferredBy from 'components/manage/referredby/referredby.vue'
 import PrintReferredByContact from 'components/manage/referredby/print/printReferredByContact.vue'
+import Sleeplabs from 'components/manage/sleeplabs/sleeplabs.vue'
 
 // service routes
 import PageNotFound from 'components/services/pageNotFound.vue'
@@ -82,6 +83,15 @@ const router = new Router({
       path: '/manage/referredby',
       name: 'referredby',
       component: ReferredBy,
+      meta: {
+        requiresAuth: true,
+        requiresManageTemplate: true
+      }
+    },
+    {
+      path: '/manage/sleeplabs',
+      name: 'sleeplabs',
+      component: Sleeplabs,
       meta: {
         requiresAuth: true,
         requiresManageTemplate: true

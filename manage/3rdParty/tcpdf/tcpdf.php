@@ -19087,11 +19087,23 @@ class TCPDF {
 									$dom[$key]['line-height'] = $dom[0]['line-height'];
 									break;
 								}
+								case 'inherit': {
+									$dom[$key]['line-height'] = $dom[$parentkey]['line-height'];
+								}
 								default: {
 									if (is_numeric($lineheight)) {
-										$lineheight = $lineheight * 100;
+										// convert to percentage of font height
+										$lineheight = ($lineheight * 100).'%';
 									}
 									$dom[$key]['line-height'] = $this->getHTMLUnitToUnits($lineheight, 1, '%', true);
+									if (substr($lineheight, -1) !== '%') {
+										if ($dom[$key]['fontsize'] <= 0) {
+											$dom[$key]['line-height'] = 1;
+										} else {
+											$dom[$key]['line-height'] = (($dom[$key]['line-height'] - $this->cell_padding['T'] - $this->cell_padding['B']) / $dom[$key]['fontsize']);
+										}
+									}
+									break;
 								}
 							}
 						}

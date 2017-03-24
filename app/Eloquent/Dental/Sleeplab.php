@@ -68,6 +68,6 @@ class Sleeplab extends Model implements Resource, Repository
         return [
             'total'  => $query->count(),
             'result' => $resultQuery->get()
-        ]
+        ];
     }
 }

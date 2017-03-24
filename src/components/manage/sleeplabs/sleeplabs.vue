@@ -4,12 +4,12 @@
             Manage Sleep Lab
         </span>
         <br /><br />
-        <div align="right">
+        <div align="right" style="padding-right: 12px">
             <button v-on:click="loadPopup('add_sleeplab.php')" class="addButton">
                 Add New Sleep Lab
             </button>
         </div>
-        <div class="letter_select">
+        <div class="letter_select" style="padding-left: 12px">
             <router-link
                 v-for="letter in letters"
                 :class="'letters ' + (letter == routeParameters.currentLetter ? 'selected_letter' : '')"
@@ -40,7 +40,7 @@
                                     name: $route.name,
                                     query: {
                                         page    : index - 1,
-                                        letter  : routeParameters.currentLetter,
+                                        letter  : routeParameters.currentLetter || undefined,
                                         sort    : routeParameters.sortColumn,
                                         sortdir : routeParameters.sortDirection,
                                     }
@@ -85,27 +85,35 @@
                         </td>
                         <td valign="top">
                             <a
+                                v-if="sleeplab.patients.length > 0"
                                 href="#"
-                                onclick="$('#pat_<?php echo $myarray["sleeplabid"];?>').toggle();return false;"
-                            >{{ sleeplab.pat_num }}</a>
+                                v-on:click.prevent="sleeplab.show_patients ?
+                                    sleeplab.show_patients = false :
+                                    sleeplab.show_patients = true
+                                "
+                            >{{ sleeplab.patients.length }}</a>
+                            <span v-else>{{ sleeplab.patients.length }}</span>
                         </td>
                         <td valign="top">
                             <a
                                 href="#"
-                                onclick="loadPopup('view_sleeplab.php?ed=<?php echo $myarray["sleeplabid"];?>')"
+                                v-on:click.prevent="loadPopup('view_sleeplab.php?ed=' + sleeplab.sleeplabid)"
                                 class="editlink"
                                 title="EDIT"
                             >Quick View</a>
                             |
                             <a
-                                href="Javascript:;"
-                                onclick="Javascript: loadPopup('add_sleeplab.php?ed=<?php echo $myarray["sleeplabid"];?>');"
+                                href="#"
+                                v-on:click.prevent="loadPopup('add_sleeplab.php?ed=' + sleeplab.sleeplabid)"
                                 class="editlink"
                                 title="EDIT"
                             >Edit</a>
                         </td>
                     </tr>
-                    <tr :id="'pat_' + sleeplab.sleeplabid" style="display:none;">
+                    <tr
+                        v-if="sleeplab.patients.length > 0"
+                        v-show="sleeplab.show_patients"
+                    >
                         <td colspan="4">
                             <h3>Patients</h3>
                             <template v-for="patient in sleeplab.patients">
@@ -125,3 +133,4 @@
 <script src="./sleeplabs.js"></script>
 
 <style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/manage.css" scoped></style>

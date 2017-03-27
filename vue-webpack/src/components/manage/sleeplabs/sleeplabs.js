@@ -86,6 +86,10 @@ export default {
     this.getListOfSleeplabs()
   },
   methods: {
+    onClickQuickView (id) {
+      this.$parent.$refs.modal.display('view-sleeplab')
+      this.$parent.$refs.modal.setComponentParameters({ sleeplabId: id })
+    },
     removeSleeplab (id) {
       this.deleteSleeplab(id)
         .then(function () {

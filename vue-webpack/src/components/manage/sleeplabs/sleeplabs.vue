@@ -97,7 +97,7 @@
                         <td valign="top">
                             <a
                                 href="#"
-                                v-on:click.prevent="loadPopup('view_sleeplab.php?ed=' + sleeplab.sleeplabid)"
+                                v-on:click.prevent="onClickQuickView(sleeplab.sleeplabid)"
                                 class="editlink"
                                 title="EDIT"
                             >Quick View</a>

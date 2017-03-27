@@ -18,6 +18,7 @@
   const patientAccessCode = require('../manage/patients/access-code/PatientAccessCode.vue')
   const editContact = require('../manage/contacts/EditContact.vue')
   const editReferredByContact = require('../manage/referredby/edit/editReferredByContacts.vue')
+  const viewSleeplab = require('../manage/sleeplabs/view/viewSleeplab.vue')
 
   export default {
     data () {
@@ -39,7 +40,8 @@
       'view-contact': viewContact,
       'patient-access-code': patientAccessCode,
       'edit-contact': editContact,
-      'edit-referred-by-contact': editReferredByContact
+      'edit-referred-by-contact': editReferredByContact,
+      'view-sleeplab': viewSleeplab
     },
     methods: {
       setComponentParameters (parameters) {

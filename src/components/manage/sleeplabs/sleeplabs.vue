@@ -42,7 +42,7 @@
                                         page    : index - 1,
                                         letter  : routeParameters.currentLetter || undefined,
                                         sort    : routeParameters.sortColumn,
-                                        sortdir : routeParameters.sortDirection,
+                                        sortdir : routeParameters.sortDirection
                                     }
                                 }"
                                 class="fp"

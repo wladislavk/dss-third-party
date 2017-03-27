@@ -13,7 +13,7 @@ export default {
       letters: 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(','),
       message: '',
       sleeplabsTotalNumber: 0,
-      sleeplabsPerPage: 2,
+      sleeplabsPerPage: 20,
       sleeplabs: [],
       tableHeaders: {
         'lab': {
@@ -41,7 +41,7 @@ export default {
   watch: {
     '$route.query.page': function () {
       if (this.$route.query.page != undefined && this.$route.query.page <= this.totalPages) {
-        this.$set(this.routeParameters, 'currentPageNumber', this.$route.query.page)
+        this.$set(this.routeParameters, 'currentPageNumber', +this.$route.query.page)
       }
     },
     '$route.query.sort': function () {
@@ -52,7 +52,7 @@ export default {
       }
     },
     '$route.query.sortdir': function () {
-      if (this.$route.query.sortdir.toLowerCase() == 'desc') {
+      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() == 'desc') {
         this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
       } else {
         this.$set(this.routeParameters, 'sortDirection', 'asc')
@@ -67,7 +67,7 @@ export default {
     },
     '$route.query.delid': function () {
       if (this.$route.query.delid > 0) {
-        // TODO: set fucntion on this event
+        this.removeSleeplab(this.$route.query.delid)
       }
     },
     'routeParameters': {
@@ -86,6 +86,22 @@ export default {
     this.getListOfSleeplabs()
   },
   methods: {
+    removeSleeplab (id) {
+      this.deleteSleeplab(id)
+        .then(function () {
+          this.message = 'Deleted Successfully';
+
+          this.$nextTick(() => {
+            var self = this
+
+            setTimeout(() => {
+              self.message = ''
+            }, 3000)
+          })
+        }, function (response) {
+          this.handleErrors('deleteSleeplab', response)
+        })
+    },
     getListOfSleeplabs () {
       this.getSleeplabs(
         this.routeParameters.currentPageNumber,
@@ -96,27 +112,29 @@ export default {
       ).then(function (response) {
           var data = response.data.data;
 
-          if (data.total) {
-            data.result = data.result.map((value) => {
-              value['name'] = (value.salutation ? value.salutation + ' ' : '')
-                + (value.firstname ? value.firstname + ' ' : '')
-                + (value.middlename ? value.middlename + ' ' : '')
-                + (value.lastname || '')
+          data.result = data.result.map((value) => {
+            value['name'] = (value.salutation ? value.salutation + ' ' : '')
+              + (value.firstname ? value.firstname + ' ' : '')
+              + (value.middlename ? value.middlename + ' ' : '')
+              + (value.lastname || '')
 
-              value['show_patients'] = false
+            value['show_patients'] = false
 
-              return value
-            })
+            return value
+          })
 
-            this.sleeplabs = data.result
-            this.sleeplabsTotalNumber = data.total
-          }
+          this.sleeplabs = data.result
+          this.sleeplabsTotalNumber = data.total
         }, function (response) {
           this.handleErrors('getSleeplabs', response)
         })
     },
     getCurrentDirection (sort) {
-      return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
+      if (this.routeParameters.sortColumn == sort) {
+        return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
+      } else {
+        return 'asc'
+      }
     },
     getSleeplabs (pageNumber, rowsPerPage, sort, sortDir, letter) {
       var data = {
@@ -128,6 +146,11 @@ export default {
       }
 
       return this.$http.post(process.env.API_PATH + 'sleeplabs/list', data)
+    },
+    deleteSleeplab (id) {
+      id = id || 0
+
+      return this.$http.delete(process.env.API_PATH + 'sleeplabs/' + id)
     }
   }
 }

@@ -61,12 +61,14 @@ class Sleeplab extends Model implements Resource, Repository
             $query = $query->where('company', 'like', $letter . '%');
         }
 
+        $totalNumber = $query->count();
+
         $resultQuery = $query->orderBy($sortColumn, $sortDir)
             ->skip($page * $rowsPerPage)
             ->take($rowsPerPage);
 
         return [
-            'total'  => $query->count(),
+            'total'  => $totalNumber,
             'result' => $resultQuery->get()
         ];
     }

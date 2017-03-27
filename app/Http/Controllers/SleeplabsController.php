@@ -9,6 +9,8 @@ use DentalSleepSolutions\Http\Requests\SleeplabDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Sleeplab;
 use DentalSleepSolutions\Contracts\Repositories\Sleeplabs;
+use DentalSleepSolutions\Contracts\Repositories\Patients;
+use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -88,5 +90,31 @@ class SleeplabsController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getListOfSleeplabs(
+        Sleeplabs $resources,
+        Patients $patientResource,
+        Request $request
+    ) {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $page = $request->input('page') ?: 0;
+        $rowsPerPage = $request->input('rows_per_page') ?: 20;
+        $sort = $request->input('sort');
+        $sortDir = $request->input('sort_dir') ?: 'asc';
+        $letter = $request->input('letter');
+
+        $sleeplabs = $resources->getList($docId, $page, $rowsPerPage, $sort, $sortDir, $letter);
+
+        if ($sleeplabs['total'] > 0) {
+            $sleeplabs['result']->map(function ($sleeplab) use ($patientResource) { 
+                $sleeplab['patients'] = $patientResource->getRelatedToSleeplab($sleeplab->sleeplabid);
+            
+                return $sleeplab;
+            });
+        }
+
+        return ApiResponse::responseOk('', $sleeplabs);
     }
 }

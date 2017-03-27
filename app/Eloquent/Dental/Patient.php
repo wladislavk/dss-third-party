@@ -849,4 +849,14 @@ class Patient extends Model implements Resource, Repository
             return $query->count();
         }
     }
+
+    public function getRelatedToSleeplab($sleeplabId)
+    {
+        return $this->select('p.patientid', 'p.firstname', 'p.lastname')
+            ->from(DB::raw('dental_patients p'))
+            ->join(DB::raw('dental_summ_sleeplab s'), 's.patiendid', '=', 'p.patientid')
+            ->where('s.place', $sleeplabId)
+            ->groupBy('p.patientid')
+            ->get();
+    }
 }

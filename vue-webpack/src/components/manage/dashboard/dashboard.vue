@@ -12,7 +12,7 @@
                                     <ul>
                                         <li><router-link to="/manage/contacts">Contacts</router-link></li>
                                         <li><router-link :to="{ name: 'referredby' }">Referral List</a></li>
-                                        <li><a href="manage_sleeplab.php">Sleep Labs</a></li>
+                                        <li><router-link :to="{ name: 'sleeplabs' }">Sleep Labs</router-link></li>
                                         <li><a href="manage_fcontact.php">Corporate Contacts</a></li>
                                     </ul>
                                 </li>

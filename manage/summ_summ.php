@@ -1,14 +1,18 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-$sql = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+<?php
+namespace Ds3\Libraries\Legacy;
+
+$pid = intval(!empty($_GET['pid']) ? $_GET['pid'] : '');
+$did = intval($_SESSION['docid']);
+
+$sql = "SELECT * FROM dental_patients where patientid='$pid' AND docid='$did'";
 $r = $db->getRow($sql);
 
-$pid = (!empty($_GET['pid']) ? $_GET['pid'] : '');
-$itype_sql = "select * from dental_q_image where imagetypeid=4 AND patientid=".$pid." ORDER BY adddate DESC LIMIT 1";
+$itype_sql = "select * from dental_q_image where imagetypeid='4' AND patientid='$pid' ORDER BY adddate DESC LIMIT 1";
 $itype_my = $db->getResults($itype_sql);
 $num_face = count($itype_my);
 
 if($num_face==0){ ?>
-    <a href="#" style="float:right;" onclick="loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '');?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : '');?>&it=4&return=patinfo&return_field=profile');return false;" >
+    <a href="#" style="float:right;" onclick="loadPopup('add_image.php?pid=<?= $pid ?>&sh=<?php echo (!empty($_GET['sh']) ? $_GET['sh'] : '');?>&it=4&return=patinfo&return_field=profile');return false;" >
         <img src="images/add_patient_photo.png" />
     </a>
 <?php 
@@ -18,7 +22,7 @@ if($num_face==0){ ?>
     }
 }
 
-$sql = "select * from dental_q_page1 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_q_page1 where patientid='$pid'";
 $myarray = $db->getRow($sql);
 
 $q_page1id = st($myarray['q_page1id']);
@@ -44,7 +48,7 @@ $main_reason_other = st($myarray['main_reason_other']);
 $sleep_qual = st($myarray['sleep_qual']);
 
 if(isset($_POST['device_submit'])){
-    $sql = "select * from dental_ex_page5 where patientid='".$_GET['pid']."'";
+    $sql = "select * from dental_ex_page5 where patientid='$pid'";
     $row = $db->getRow($sql);
     if($_POST['ir_max'] !='' && $_POST['ir_min'] != ''){
         $ir_range = abs($_POST['ir_max'] - $_POST['ir_min']);
@@ -53,58 +57,58 @@ if(isset($_POST['device_submit'])){
     }
     if($row){
         $ex_ed_sql = " update dental_ex_page5 set 
-                        protrusion_from = '".s_for($_POST['ir_min'])."',
-                        protrusion_to = '".s_for($_POST['ir_max'])."',
-                        protrusion_equal = '".s_for($ir_range)."',
-                        i_opening_from = '".s_for($_POST['i_opening_from'])."',
-                        l_lateral_from = '".s_for($_POST['l_lateral_from'])."',
-                        r_lateral_from = '".s_for($_POST['r_lateral_from'])."'
+                        protrusion_from = '".$db->escape($_POST['ir_min'])."',
+                        protrusion_to = '".$db->escape($_POST['ir_max'])."',
+                        protrusion_equal = '".$db->escape($ir_range)."',
+                        i_opening_from = '".$db->escape($_POST['i_opening_from'])."',
+                        l_lateral_from = '".$db->escape($_POST['l_lateral_from'])."',
+                        r_lateral_from = '".$db->escape($_POST['r_lateral_from'])."'
                       where ex_page5id = '".$row['ex_page5id']."'";
         $db->query($ex_ed_sql);
     }else{
         $ex_ins_sql = " insert dental_ex_page5 set 
-                          patientid = '".s_for($_GET['pid'])."',
-                          protrusion_from = '".s_for($_POST['ir_min'])."',
-                          protrusion_to = '".s_for($_POST['ir_max'])."',
-                          protrusion_equal = '".s_for($ir_range)."',
-                          i_opening_from = '".s_for($_POST['i_opening_from'])."',
-                          l_lateral_from = '".s_for($_POST['l_lateral_from'])."',
-                          r_lateral_from = '".s_for($_POST['r_lateral_from'])."',
-                          userid = '".s_for($_SESSION['userid'])."',
-                          docid = '".s_for($_SESSION['docid'])."',
+                          patientid = '".$db->escape($_GET['pid'])."',
+                          protrusion_from = '".$db->escape($_POST['ir_min'])."',
+                          protrusion_to = '".$db->escape($_POST['ir_max'])."',
+                          protrusion_equal = '".$db->escape($ir_range)."',
+                          i_opening_from = '".$db->escape($_POST['i_opening_from'])."',
+                          l_lateral_from = '".$db->escape($_POST['l_lateral_from'])."',
+                          r_lateral_from = '".$db->escape($_POST['r_lateral_from'])."',
+                          userid = '".$db->escape($_SESSION['userid'])."',
+                          docid = '".$db->escape($_SESSION['docid'])."',
                           adddate = now(),
-                          ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+                          ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
 
         $db->query($ex_ins_sql) or trigger_error($ex_ins_sql." | ".mysqli_error($con), E_USER_ERROR);
     }
-    $sql = "select * from dental_summary where patientid='".$_GET['pid']."'";
+    $sql = "select * from dental_summary where patientid='$pid'";
     $row = $db->getRow($sql);
     if(!$row){
         $ins_sql = " insert into dental_summary set 
-                      patientid = '".s_for($_GET['pid'])."',
-                      initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
-                      initial_device_titration_equal_h = '".s_for($_POST['initial_device_titration_equal_h'])."',
-                      initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
-                      optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
-                      optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."',
-                      userid = '".s_for($_SESSION['userid'])."',
-                      docid = '".s_for($_SESSION['docid'])."',
+                      patientid = '".$db->escape($_GET['pid'])."',
+                      initial_device_titration_1 = '".$db->escape($_POST['initial_device_titration_1'])."',
+                      initial_device_titration_equal_h = '".$db->escape($_POST['initial_device_titration_equal_h'])."',
+                      initial_device_titration_equal_v = '".$db->escape($_POST['initial_device_titration_equal_v'])."',
+                      optimum_echovision_ver = '".$db->escape($_POST['optimum_echovision_ver'])."',
+                      optimum_echovision_hor = '".$db->escape($_POST['optimum_echovision_hor'])."',
+                      userid = '".$db->escape($_SESSION['userid'])."',
+                      docid = '".$db->escape($_SESSION['docid'])."',
                       adddate = now(),
-                      ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+                      ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
     		$db->query($ins_sql);
   	}else{
     		$ed_sql = "update dental_summary set 
-                    initial_device_titration_1 = '".s_for($_POST['initial_device_titration_1'])."',
-                    initial_device_titration_equal_h = '".s_for($_POST['initial_device_titration_equal_h'])."',
-                    initial_device_titration_equal_v = '".s_for($_POST['initial_device_titration_equal_v'])."',
-                    optimum_echovision_ver = '".s_for($_POST['optimum_echovision_ver'])."',
-                    optimum_echovision_hor = '".s_for($_POST['optimum_echovision_hor'])."'
-              		 where patientid = '".s_for($_GET['pid'])."'";
+                    initial_device_titration_1 = '".$db->escape($_POST['initial_device_titration_1'])."',
+                    initial_device_titration_equal_h = '".$db->escape($_POST['initial_device_titration_equal_h'])."',
+                    initial_device_titration_equal_v = '".$db->escape($_POST['initial_device_titration_equal_v'])."',
+                    optimum_echovision_ver = '".$db->escape($_POST['optimum_echovision_ver'])."',
+                    optimum_echovision_hor = '".$db->escape($_POST['optimum_echovision_hor'])."'
+              		 where patientid = '".$db->escape($_GET['pid'])."'";
     		$db->query($ed_sql);
   	}
 }
 
-$sqlex = "select * from dental_ex_page5 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sqlex = "select * from dental_ex_page5 where patientid='$pid'";
 $myarrayex = $db->getRow($sqlex);
 
 $i_opening_from = st($myarrayex['i_opening_from']);
@@ -114,7 +118,7 @@ $protrusion_equal = st($myarrayex['protrusion_equal']);
 $r_lateral_from = st($myarrayex['r_lateral_from']);
 $l_lateral_from = st($myarrayex['l_lateral_from']);
 
-$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='$pid' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
 $imp_r = $db->getRow($imp_s);
 if($imp_r){
     $dentaldevice = st($imp_r['device_id']);
@@ -124,7 +128,7 @@ if($imp_r){
     $dentaldevice_date = st(($myarrayex['dentaldevice_date']!='')?date('m/d/Y', strtotime($myarrayex['dentaldevice_date'])):'');
 }
 
-$sqls = "select * from dental_summary where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sqls = "select * from dental_summary where patientid='$pid'";
 $myarrays = $db->getRow($sqls);
 $initial_device_titration_1 = $myarrays['initial_device_titration_1'];
 $initial_device_titration_equal_h = $myarrays['initial_device_titration_equal_h'];
@@ -157,7 +161,7 @@ echo $years ." years old";
 <?php } ?>
     </select>
 <?php
-$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,$pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+$imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='$pid' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
 $imp_r = $db->getRow($imp_s);
 if($imp_r['segmentid']=='4'){ ?> 
     Not delivered. Impressions taken <?php echo ($imp_r['date_completed'])?date('m/d/Y',strtotime($imp_r['date_completed'])):''; ?>
@@ -175,8 +179,8 @@ if($imp_r['segmentid']=='4'){ ?>
 }?>
 <br />
 <?php
-    $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
-    $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY date_completed DESC, id DESC;";
+    $last_sql = "SELECT last_visit, last_treatment FROM dental_patient_summary WHERE pid='$pid'";
+    $last_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=1 AND patientid = '$pid' ORDER BY date_completed DESC, id DESC;";
     $last_r = $db->getRow($last_sql);
 ?>
 <div class="half">
@@ -193,7 +197,7 @@ if($imp_r['segmentid']=='4'){ ?>
 <div class="box">
     <strong>Reason for seeking tx:</strong>
 <?php
-$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$c_sql = "SELECT chief_complaint_text from dental_q_page1 WHERE patientid='$pid'";
 $c_r = $db->getRow($c_sql);
 echo $c_r['chief_complaint_text'];
 if($complaintid <> '')
@@ -301,7 +305,7 @@ if($last_r['date_completed']!=''){ ?>
 } ?>
     <strong>For:</strong> 
     <?php echo (!empty($last_r['segmentid']))?$segments[$last_r['segmentid']]:''; 
-$next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."' ORDER BY date_scheduled DESC";
+$next_sql = "SELECT date_scheduled, segmentid FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='$pid' ORDER BY date_scheduled DESC";
 $next_r = $db->getRow($next_sql);
 ?>
     <br />
@@ -315,14 +319,14 @@ $rs = $r['referred_source'];
 if($rs == DSS_REFERRED_PHYSICIAN){
     $referredby_sql = "SELECT dc.lastname, dc.firstname, dct.contacttype FROM dental_contact dc
                         LEFT JOIN dental_contacttype dct ON dct.contacttypeid = dc.contacttypeid
-                        WHERE dc.status=1 AND contactid='".st($r['referred_by'])."'";
+                        WHERE dc.status=1 AND contactid='".$db->escape($r['referred_by'])."'";
     $referredby_myarray = $db->getRow($referredby_sql);
 
     $referredbythis = st((!empty($referredby_myarray['salutation']) ? $referredby_myarray['salutation'] : ''))." ".st((!empty($referredby_myarray['firstname']) ? $referredby_myarray['firstname'] : ''))." ".st((!empty($referredby_myarray['middlename']) ? $referredby_myarray['middlename'] : ''))." ".st($referredby_myarray['lastname']);
     $referredbythis .= " - ". $referredby_myarray['contacttype'];
     echo $referredbythis;
 }elseif($rs == DSS_REFERRED_PATIENT){
-    $referredby_sql = "select * from dental_patients where patientid='".st($pat_myarray['referred_by'])."'";
+    $referredby_sql = "select * from dental_patients where patientid='".intval($pat_myarray['referred_by'])."'";
     $referredby_myarray = $db->getRow($referredby_sql);
 
     $referredbythis = st($referredby_myarray['salutation'])." ".st($referredby_myarray['firstname'])." ".st($referredby_myarray['middlename'])." ".st($referredby_myarray['lastname']);
@@ -351,7 +355,7 @@ $baseline_sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
         AND COALESCE(ss.diagnosis, '') != ''
         AND ss.filename IS NOT NULL
         AND ss.sleeptesttype IN ('PSG Baseline', 'HST Baseline')
-        AND ss.patiendid = '" . intval($_GET['pid']) . "'
+        AND ss.patiendid = '$pid'
     ORDER BY COALESCE(
         STR_TO_DATE(ss.date, '%m/%d/%Y'),
         STR_TO_DATE(ss.date, '%m/%d/%y'),
@@ -371,7 +375,7 @@ if($baseline_sleepstudy){
             WHERE 
                     (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL AND ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL AND ss.diagnosising_npi != ''))) AND (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND ss.filename IS NOT NULL AND 
                     (ss.sleeptesttype='PSG' OR ss.sleeptesttype='HST') AND
-                    ss.patiendid = '".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY ss.id ASC;";
+                    ss.patiendid = '$pid' ORDER BY ss.id ASC;";
     $baseline_sleepstudy = $db->getRow($sleepstudies);
 }?>
     <strong>Baseline Sleep Test?</strong> 
@@ -419,7 +423,7 @@ $sleepstudies = "SELECT ss.*, d.ins_diagnosis, d.description
         AND COALESCE(ss.diagnosis, '') != ''
         AND ss.filename IS NOT NULL
         AND ss.sleeptesttype NOT IN ('PSG', 'HST', 'PSG Baseline', 'HST Baseline')
-        AND ss.patiendid = '" . intval($_GET['pid']) . "'
+        AND ss.patiendid = '$pid'
     ORDER BY COALESCE(
         STR_TO_DATE(ss.date, '%m/%d/%Y'),
         STR_TO_DATE(ss.date, '%m/%d/%y'),
@@ -466,7 +470,7 @@ if($sleepstudy['date']!=''){ ?>
 <h4>CPAP</h4>
 <div class="box">
 <?php
-$pat_sql = "select cpap from dental_q_page2 where patientid='".s_for((!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
+$pat_sql = "select cpap from dental_q_page2 where patientid='$pid'";
 $pat_myarray = $db->getRow($pat_sql);
 if($pat_myarray['cpap']=="No"){ ?>
     Patient has not previously attempted CPAP therapy.
@@ -482,7 +486,7 @@ if($pat_myarray['cpap']=="No"){ ?>
 <?php 
 } 
 
-$sql = "select * from dental_q_page2 where patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
+$sql = "select * from dental_q_page2 where patientid='$pid'";
 $myarray = $db->getRow($sql);
 
 $q_page2id = st($myarray['q_page2id']);

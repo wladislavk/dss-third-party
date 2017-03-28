@@ -1,22 +1,25 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-  include_once '../admin/includes/main_include.php';
-  include_once 'letter_triggers.php';
+<?php
+namespace Ds3\Libraries\Legacy;
 
-  $id = (!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
-  $pid = (!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
-  $numsteps = null;
-  $impression = true;
-  $letterid = array();
-  $create = true;
+include_once __DIR__ . '/../admin/includes/main_include.php';
+include_once __DIR__ . '/letter_triggers.php';
+
+$id = intval(!empty($_REQUEST['id']) ? $_REQUEST['id'] : '');
+$pid = intval(!empty($_REQUEST['pid']) ? $_REQUEST['pid'] : '');
+$docId = intval($_SESSION['docid']);
+$numsteps = null;
+$impression = true;
+$letterid = array();
+$create = true;
 
 
-  $let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+$let_sql = "SELECT use_letters, tracker_letters FROM dental_users WHERE userid='$docId'";
 
-  $let_r = $db->getRow($let_sql);
-  $create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
+$let_r = $db->getRow($let_sql);
+$create_letters = ($let_r['use_letters'] && $let_r['tracker_letters']);
   if($id == "7" || $id == "4"){  //device deliver - check if impressions are done
 
-    $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='".mysqli_real_escape_string($con,$pid)."' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
+    $imp_s = "SELECT * from dental_flow_pg2_info WHERE (segmentid='7' OR segmentid='4') AND patientid='$pid' AND appointment_type=1 ORDER BY date_completed DESC, id DESC";
     $imp_q = $db->getResults($imp_s);
     $imp_n = count($imp_q);
     if($imp_n == 0){
@@ -28,18 +31,18 @@
   }
 
   if($id == "7"){
-    $sql = "SELECT * FROM dental_ex_page5 where patientid='".$pid."'";
+    $sql = "SELECT * FROM dental_ex_page5 where patientid='$pid'";
     if($db->getNumberRows($sql)==0){
       $sqlex = "INSERT INTO dental_ex_page5 set 
                   dentaldevice_date=CURDATE(), 
-                  patientid='".$pid."',
+                  patientid='$pid',
                   userid = '".s_for($_SESSION['userid'])."',
                   docid = '".s_for($_SESSION['docid'])."',
                   adddate = now(),
                   ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
     }else{
    
-      $sqlex = "update dental_ex_page5 set dentaldevice_date=CURDATE() where patientid='".$pid."'";
+      $sqlex = "update dental_ex_page5 set dentaldevice_date=CURDATE() where patientid='$pid'";
     }
     $qex = $db->query($sqlex);
 
@@ -47,8 +50,8 @@
 
 if(!empty($create)){
   $s = "INSERT INTO dental_flow_pg2_info SET
-        patientid= ".$pid.",
-        segmentid = ".$id.",
+        patientid= '$pid',
+        segmentid = '$id',
 		    appointment_type = 1,";
 
   if(!empty($impression)){
@@ -59,12 +62,12 @@ if(!empty($create)){
   $insert_id = $db->getInsertId($s);
 
 	if($insert_id){
-	  $db->query("DELETE FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='".mysqli_real_escape_string($con,$pid)."'");
+	  $db->query("DELETE FROM dental_flow_pg2_info WHERE appointment_type=0 AND patientid='$pid'");
 	}
 
   if(!empty($create_letters)){
     if ($id == "8") { // Follow-Up/Check
-      $trigger_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2_info.patientid = '".$pid."';";
+      $trigger_query = "SELECT dental_flow_pg2_info.patientid, dental_flow_pg2_info.date_completed FROM dental_flow_pg2_info WHERE dental_flow_pg2_info.segmentid = '7' AND dental_flow_pg2_info.date_completed != '0000-00-00' AND dental_flow_pg2_info.patientid = '$pid'";
 
       $numrows = ($db->getNumberRows($trigger_query));
       $letterid = array();
@@ -83,7 +86,7 @@ if(!empty($create)){
     }
   }
 
-  $consult_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '".$pid."' LIMIT 1;";
+  $consult_query = "SELECT date_completed FROM dental_flow_pg2_info WHERE segmentid = '2' and patientid = '$pid' LIMIT 1";
   
   $consult_result = $db->getResults($consult_query);
 	$consulted = false;
@@ -176,7 +179,7 @@ if(!empty($create)){
   $next = "<option value=''>SELECT NEXT STEP</option>";
   $next_sql = "SELECT steps.* FROM dental_flowsheet_steps steps
           JOIN dental_flowsheet_steps_next next ON steps.id = next.child_id
-          WHERE next.parent_id='".mysqli_real_escape_string($con,$id)."'
+          WHERE next.parent_id='$id'
           ORDER BY next.sort_by ASC";
 
   $next_q = $db->getResults($next_sql);

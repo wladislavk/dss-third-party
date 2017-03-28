@@ -95,7 +95,14 @@ foreach ($details->payee->additional_ids as $additional_id) {
     $payee_additional_ids .= $additional_id->value . ' ' . $additional_id->type_code . ' ' . $additional_id->type_label . '<br/>';
 }
 $claim_status = implode(' ', $details->claim->status);
-$claim_rendering_provider_ids = implode(' ', $details->claim->rendering_provider_ids);
+
+try {
+    $claim_rendering_provider_ids = implode(' ', $details->claim->rendering_provider_ids);
+} catch (\Exception $e) {
+    error_log('Rendering provider is not an array: ' . json_encode($details->claim->rendering_provider_ids));
+    $claim_rendering_provider_ids = '';
+}
+
 $claim_moa_codes = implode(' ', $details->claim->moa_codes);
 
 $payer_contacts = '';

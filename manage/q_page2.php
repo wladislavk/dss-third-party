@@ -1,21 +1,41 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "includes/top.htm";
-	require_once('includes/patient_info.php');
+<?php
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/includes/top.htm';
+require_once __DIR__ . '/includes/patient_info.php';
+
+$patientId = intval($_GET['pid']);
+$docId = intval($_SESSION['docid']);
+
 	if ($patient_info) {
 		if($_GET['own']==1){
-			$c_sql = "SELECT patientid FROM dental_patients WHERE (symptoms_status=1 || sleep_status=1 || treatments_status=1 || history_status=1) AND patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$c_sql = "SELECT patientid
+				FROM dental_patients
+				WHERE (
+						symptoms_status = 1 ||
+						sleep_status = 1 ||
+						treatments_status = 1 ||
+						history_status = 1
+					)
+					AND patientid = '$patientId'
+					AND docid = '$docId'";
 			
 			$changed = $db->getNumberRows($c_sql);
-			$own_sql = "UPDATE dental_patients SET symptoms_status=2, sleep_status=2, treatments_status=2, history_status=2 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
+			$own_sql = "UPDATE dental_patients
+				SET symptoms_status = 2, sleep_status = 2, treatments_status = 2, history_status = 2
+				WHERE patientid = '$patientId'
+					AND docid = '$docId'";
 			$db->query($own_sql);
 			if($_GET['own_completed']==1){
-				$q1_sql = "SELECT q_page1id from dental_q_page1 WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+				$q1_sql = "SELECT q_page1id
+					FROM dental_q_page1
+					WHERE patientid = '$patientId'";
 
 				if($db->getNumberRows($q1_sql) == 0){
-					$ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='".$_GET['pid']."'";
+					$ed_sql = "INSERT INTO dental_q_page1 SET exam_date=now(), patientid='$patientId'";
 					$db->query($ed_sql);
 				}else{
-					$ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE patientid='".$_GET['pid']."'";
+					$ed_sql = "UPDATE dental_q_page1 SET exam_date=now() WHERE patientid='$patientId'";
 					$db->query($ed_sql);
 				}
 			}
@@ -24,7 +44,7 @@
 				<?php if($changed>0){ ?>
 					alert("Warning! Patient has made changes to the Questionnaire. Please review the patient's ENTIRE questionnaire for changes.");
 				<?php } ?>
-                window.location = 'q_page2.php?pid=<?php echo $_GET['pid']?>&addtopat=1';
+                window.location = 'q_page2.php?pid=<?= $patientId ?>&addtopat=1';
             </script>
 <?php
             trigger_error("Die called", E_USER_ERROR);
@@ -89,98 +109,98 @@
 	
 		if($_POST['ed'] == '') {
 			$ins_sql = " insert into dental_q_page2 set 
-			patientid = '".s_for($_GET['pid'])."',
-			polysomnographic = '".s_for($polysomnographic)."',
-			sleep_center_name_text = '".s_for($sleep_center_name_text)."',
-			sleep_study_on = '".s_for($sleep_study_on)."',
-			confirmed_diagnosis = '".s_for($confirmed_diagnosis)."',
-			rdi = '".s_for($rdi)."',
-			ahi = '".s_for($ahi)."',
-			cpap = '".s_for($cpap)."',
-			cur_cpap = '".s_for($cur_cpap)."',
-			intolerance = '".s_for($int_arr)."',
-			other_intolerance = '".s_for($other_intolerance)."',
-			other_therapy = '".s_for($other_therapy)."',
-			other = '".s_for($other_arr)."',
-			affidavit = '".s_for($affidavit)."',
-			type_study = '".s_for($type_study)."',
-			nights_wear_cpap = '".s_for($nights_wear_cpap)."',
-			percent_night_cpap = '".s_for($percent_night_cpap)."',
-			custom_diagnosis = '".s_for($custom_diagnosis)."',
-			sleep_study_by = '".s_for($sleep_study_by)."',
-			triedquittried = '".s_for($triedquittried)."',
-			timesovertime = '".s_for($timesovertime)."',
-			dd_wearing = '".s_for($dd_wearing)."',
-			dd_prev = '".s_for($dd_prev)."',
-			dd_otc = '".s_for($dd_otc)."',
-			dd_fab = '".s_for($dd_fab)."',
-			dd_who = '".s_for($dd_who)."',
-			dd_experience = '".s_for($dd_experience)."',
-			surgery = '".s_for($surgery)."',
-			userid = '".s_for($_SESSION['userid'])."',
-			docid = '".s_for($_SESSION['docid'])."',
+			patientid = '".$db->escape($_GET['pid'])."',
+			polysomnographic = '".$db->escape($polysomnographic)."',
+			sleep_center_name_text = '".$db->escape($sleep_center_name_text)."',
+			sleep_study_on = '".$db->escape($sleep_study_on)."',
+			confirmed_diagnosis = '".$db->escape($confirmed_diagnosis)."',
+			rdi = '".$db->escape($rdi)."',
+			ahi = '".$db->escape($ahi)."',
+			cpap = '".$db->escape($cpap)."',
+			cur_cpap = '".$db->escape($cur_cpap)."',
+			intolerance = '".$db->escape($int_arr)."',
+			other_intolerance = '".$db->escape($other_intolerance)."',
+			other_therapy = '".$db->escape($other_therapy)."',
+			other = '".$db->escape($other_arr)."',
+			affidavit = '".$db->escape($affidavit)."',
+			type_study = '".$db->escape($type_study)."',
+			nights_wear_cpap = '".$db->escape($nights_wear_cpap)."',
+			percent_night_cpap = '".$db->escape($percent_night_cpap)."',
+			custom_diagnosis = '".$db->escape($custom_diagnosis)."',
+			sleep_study_by = '".$db->escape($sleep_study_by)."',
+			triedquittried = '".$db->escape($triedquittried)."',
+			timesovertime = '".$db->escape($timesovertime)."',
+			dd_wearing = '".$db->escape($dd_wearing)."',
+			dd_prev = '".$db->escape($dd_prev)."',
+			dd_otc = '".$db->escape($dd_otc)."',
+			dd_fab = '".$db->escape($dd_fab)."',
+			dd_who = '".$db->escape($dd_who)."',
+			dd_experience = '".$db->escape($dd_experience)."',
+			surgery = '".$db->escape($surgery)."',
+			userid = '".$db->escape($_SESSION['userid'])."',
+			docid = '".$db->escape($_SESSION['docid'])."',
 			adddate = now(),
-			ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+			ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
 			
 			$db->query($ins_sql);
 			$msg = "Added Successfully";
             if(isset($_POST['q_pagebtn_proceed'])){
 ?>
                 <script type="text/javascript">
-                    window.location='q_page3.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
+                    window.location='q_page3.php?pid=<?= $patientId ?>&msg=<?php echo $msg;?>';
                 </script>
 <?php
             } else {
 ?>
 				<script type="text/javascript">
-					window.location='<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
+					window.location='<?php echo $_POST['goto_p']?>.php?pid=<?= $patientId ?>&msg=<?php echo $msg;?>';
 				</script>
 <?php
 			}
 			trigger_error("Die called", E_USER_ERROR);
 		} else {
 			$ed_sql = " update dental_q_page2 set 
-			polysomnographic = '".s_for($polysomnographic)."',
-			sleep_center_name_text = '".s_for($sleep_center_name_text)."',
-			sleep_study_on = '".s_for($sleep_study_on)."',
-			confirmed_diagnosis = '".s_for($confirmed_diagnosis)."',
-			rdi = '".s_for($rdi)."',
-			ahi = '".s_for($ahi)."',
-			cpap = '".s_for($cpap)."',
-	                cur_cpap = '".s_for($cur_cpap)."',
-			intolerance = '".s_for($int_arr)."',
-			other_intolerance = '".s_for($other_intolerance)."',
-			other_therapy = '".s_for($other_therapy)."',
-			other = '".s_for($other_arr)."',
-			affidavit = '".s_for($affidavit)."',
-			type_study = '".s_for($type_study)."',
-			nights_wear_cpap = '".s_for($nights_wear_cpap)."',
-			percent_night_cpap = '".s_for($percent_night_cpap)."',
-			custom_diagnosis = '".s_for($custom_diagnosis)."',
-			sleep_study_by = '".s_for($sleep_study_by)."',
-			triedquittried = '".s_for($triedquittried)."',
-			timesovertime = '".s_for($timesovertime)."',
-	                dd_wearing = '".s_for($dd_wearing)."',
-	                dd_prev = '".s_for($dd_prev)."',
-	                dd_otc = '".s_for($dd_otc)."',
-	                dd_fab = '".s_for($dd_fab)."',
-	                dd_who = '".s_for($dd_who)."',
-	                dd_experience = '".s_for($dd_experience)."',
-			surgery = '".s_for($surgery)."'
-			where q_page2id = '".s_for($_POST['ed'])."'";
+			polysomnographic = '".$db->escape($polysomnographic)."',
+			sleep_center_name_text = '".$db->escape($sleep_center_name_text)."',
+			sleep_study_on = '".$db->escape($sleep_study_on)."',
+			confirmed_diagnosis = '".$db->escape($confirmed_diagnosis)."',
+			rdi = '".$db->escape($rdi)."',
+			ahi = '".$db->escape($ahi)."',
+			cpap = '".$db->escape($cpap)."',
+	                cur_cpap = '".$db->escape($cur_cpap)."',
+			intolerance = '".$db->escape($int_arr)."',
+			other_intolerance = '".$db->escape($other_intolerance)."',
+			other_therapy = '".$db->escape($other_therapy)."',
+			other = '".$db->escape($other_arr)."',
+			affidavit = '".$db->escape($affidavit)."',
+			type_study = '".$db->escape($type_study)."',
+			nights_wear_cpap = '".$db->escape($nights_wear_cpap)."',
+			percent_night_cpap = '".$db->escape($percent_night_cpap)."',
+			custom_diagnosis = '".$db->escape($custom_diagnosis)."',
+			sleep_study_by = '".$db->escape($sleep_study_by)."',
+			triedquittried = '".$db->escape($triedquittried)."',
+			timesovertime = '".$db->escape($timesovertime)."',
+	                dd_wearing = '".$db->escape($dd_wearing)."',
+	                dd_prev = '".$db->escape($dd_prev)."',
+	                dd_otc = '".$db->escape($dd_otc)."',
+	                dd_fab = '".$db->escape($dd_fab)."',
+	                dd_who = '".$db->escape($dd_who)."',
+	                dd_experience = '".$db->escape($dd_experience)."',
+			surgery = '".$db->escape($surgery)."'
+			where q_page2id = '".$db->escape($_POST['ed'])."'";
 		
 			$db->query($ed_sql);
 
 			for ($i=0; $i<$num_surgery; $i++) {
 				if($_POST['surgery_id_'.$i]==0) {
 					if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-						$s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$_REQUEST['pid']."', '".$_POST['surgery_date_'.$i]."','".$_POST['surgery_'.$i]."','".$_POST['surgeon_'.$i]."')";
+						$s = "INSERT INTO dental_q_page2_surgery (patientid, surgery_date, surgery, surgeon) VALUES ('".$db->escape($_REQUEST['pid'])."', '".$db->escape($_POST['surgery_date_'.$i])."','".$db->escape($_POST['surgery_'.$i])."','".$db->escape($_POST['surgeon_'.$i])."')";
 					}
 				} else {
 					if(trim($_POST['surgery_date_'.$i])!=''||trim($_POST['surgery_'.$i])!=''||trim($_POST['surgeon_'.$i])!=''){
-						$s = "UPDATE dental_q_page2_surgery SET surgery_date='".$_POST['surgery_date_'.$i]."', surgery='".$_POST['surgery_'.$i]."', surgeon='".$_POST['surgeon_'.$i]."' WHERE id='".$_POST['surgery_id_'.$i]."'"; 
+						$s = "UPDATE dental_q_page2_surgery SET surgery_date='".$db->escape($_POST['surgery_date_'.$i])."', surgery='".$db->escape($_POST['surgery_'.$i])."', surgeon='".$db->escape($_POST['surgeon_'.$i])."' WHERE id='".$db->escape($_POST['surgery_id_'.$i])."'";
 					} else {
-						$s = "DELETE FROM dental_q_page2_surgery WHERE id='".$_POST['surgery_id_'.$i]."'";
+						$s = "DELETE FROM dental_q_page2_surgery WHERE id='".$db->escape($_POST['surgery_id_'.$i])."'";
 					}
 				}	
 				$db->query($s);
@@ -189,13 +209,13 @@
             if(isset($_POST['q_pagebtn_proceed'])){
 ?>
                 <script type="text/javascript">
-                    window.location = 'q_page3.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
+                    window.location = 'q_page3.php?pid=<?= $patientId ?>&msg=<?php echo $msg;?>';
                 </script>
 <?php
 			} else {
 ?>
 				<script type="text/javascript">
-					window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?php echo $_GET['pid']?>&msg=<?php echo $msg;?>';
+					window.location = '<?php echo $_POST['goto_p']?>.php?pid=<?= $patientId ?>&msg=<?php echo $msg;?>';
 				</script>
 <?php
 			}
@@ -203,7 +223,7 @@
 		}
 	}	
 
-	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	$pat_sql = "select * from dental_patients where patientid='$patientId'";
 
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename']).", ".st($pat_myarray['firstname']);
@@ -215,31 +235,31 @@
 <?php
 		trigger_error("Die called", E_USER_ERROR);
 	}
-    $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+    $exist_sql = "SELECT symptoms_status, sleep_status, treatments_status, history_status FROM dental_patients WHERE patientid='$patientId'";
     
     $exist_row = $db->getRow($exist_sql);
     if($exist_row['symptoms_status'] == 0 && $exist_row['sleep_status'] == 0 && $exist_row['treatments_status'] == 0 && $exist_row['history_status'] == 0)
     {
 ?>
         <div style="width:700px; margin:30px auto 0 auto;">This section can be edited by the patient via the Patient Portal. It has not been edited by the patient. You will be notified when the patient completes this section. If you would like to take ownership of this section and prohibit the patient from making any new changes, please
-            <a href="q_page2.php?pid=<?php echo  $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.
+            <a href="q_page2.php?pid=<?= $patientId ?>&own=1&addtopat=1">click here</a>.
         </div>
 <?php
     } elseif($exist_row['symptoms_status'] != 2 && $exist_row['sleep_status'] != 2 && $exist_row['treatments_status'] != 2 && $exist_row['history_status'] != 2 &&
             $exist_row['symptoms_status'] != 3 && $exist_row['sleep_status'] != 3 && $exist_row['treatments_status'] != 3 && $exist_row['history_status'] != 3) {
 ?>
                 <div style="width:700px; margin:30px auto 0 auto;">This section can be edited by the patient via the Patient Portal. It is currently being edited by the patient. You will be notified when the patient completes this section. If you would like to take ownership of this section and prohibit the patient from making any new changes, please
-                    <a href="q_page2.php?pid=<?php echo  $_GET['pid']; ?>&own=1&addtopat=1">click here</a>.
+                    <a href="q_page2.php?pid=<?= $patientId ?>&own=1&addtopat=1">click here</a>.
                 </div>
 <?php } else {
 		if($exist_row['history_status'] == 2 || $exist_row['sleep_status'] == 2 || $exist_row['history_status'] == 2 || $exist_row['history_status'] == 2){
 ?>          
 			<div style="width:500px; margin:30px auto 0 auto;">This section has been edited by the patient. All patient changes are visible below. Review each page of the Questionnaire then
-                <a href="q_page1.php?pid=<?php echo  $_GET['pid']; ?>&own=1&own_completed=1&addtopat=1" onclick="return confirm('I certify that I have reviewed the entire Questionnaire for accuracy.')">CLICK HERE</a> to accept the changes.
+                <a href="q_page1.php?pid=<?= $patientId ?>&own=1&own_completed=1&addtopat=1" onclick="return confirm('I certify that I have reviewed the entire Questionnaire for accuracy.')">CLICK HERE</a> to accept the changes.
             </div>
 <?php
 		}
-		$sql = "select * from dental_q_page2 where patientid='".$_GET['pid']."'";
+		$sql = "select * from dental_q_page2 where patientid='$patientId'";
 		
 		$myarray = $db->getRow($sql);
 		$q_page2id = st($myarray['q_page2id']);
@@ -292,7 +312,7 @@
 		<b><?php echo $_GET['msg'];?></b>
 	</div>
 
-	<form id="q_page2frm" class="q_form" name="q_page2frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?php echo $_GET['pid']?>" method="post" onsubmit="return q_page2abc(this)">
+	<form id="q_page2frm" class="q_form" name="q_page2frm" action="<?php echo $_SERVER['PHP_SELF'];?>?pid=<?= $patientId ?>" method="post" onsubmit="return q_page2abc(this)">
 		<input type="hidden" name="q_page2sub" value="1" />
 		<input type="hidden" name="ed" value="<?php echo $q_page2id;?>" />
 		<input type="hidden" name="goto_p" value="<?php echo $cur_page?>" />
@@ -307,7 +327,7 @@
 		<div style="clear:both;"></div>
 
 		<?php
-	        $patient_sql = "SELECT * FROM dental_q_page2 WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+	        $patient_sql = "SELECT * FROM dental_q_page2 WHERE parent_patientid='$patientId'";
 	        
 	        $pat_row = $db->getRow($patient_sql);
 	        if($db->getNumberRows($patient_sql) == 0){
@@ -563,7 +583,7 @@
 										</tr>
 
 										<?php
-											$s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".mysqli_real_escape_string($con, $_REQUEST['pid'])."'";
+											$s_sql = "SELECT * FROM dental_q_page2_surgery WHERE patientid='".intval($_REQUEST['pid'])."'";
 											  
 											$s_q = $db->getResults($s_sql);
 											$s_count = 0;

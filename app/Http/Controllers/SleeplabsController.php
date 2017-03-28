@@ -117,4 +117,48 @@ class SleeplabsController extends Controller
 
         return ApiResponse::responseOk('', $sleeplabs);
     }
+
+    public function editSleeplab(
+        Sleeplab $sleeplabResource,
+        Request $request,
+        $sleeplabId = null
+    ) {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $sleeplabFormData = $request->input('sleeplab_form_data') ?: [];
+
+        if ($sleeplabId) {
+            $validator = $this->getValidationFactory()->make(
+                $sleeplabFormData, (new SleeplabUpdate())->rules()
+            );
+        } else {
+            $validator = $this->getValidationFactory()->make(
+                $sleeplabFormData, (new SleeplabStore())->rules()
+            );
+        }
+
+        if ($validator->fails()) {
+            return ApiResponse::responseError('', 422, $validator->messages());
+        } elseif (count($sleeplabFormData) == 0) {
+            return ApiResponse::responseError('Sleeplab data is empty.', 422);
+        }
+
+        $sleeplabFormData = array_merge($sleeplabFormData, [
+            'docid' => $docId,
+            'ip_address' => $request->ip()
+        ]);
+
+        $responseData = [];
+        if ($sleeplabId) {
+            $sleeplabResource->updateSleeplab($sleeplabId, $sleeplabFormData);
+
+            $responseData['status'] = 'Edited Successfully';
+        } else { // sleeplabId = 0 -> creating a new sleeplab
+            $sleeplabResource->create($sleeplabFormData);
+
+            $responseData['status'] = 'Added Successfully';
+        }
+
+        return ApiResponse::responseOk('', $responseData);
+    }
 }

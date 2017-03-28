@@ -82,10 +82,31 @@ export default {
       return Math.ceil(this.sleeplabsTotalNumber / this.sleeplabsPerPage)
     }
   },
+  created () {
+    eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
+  },
   mounted () {
     this.getListOfSleeplabs()
   },
+  beforeDestroy () {
+    eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
+  },
   methods: {
+    onSettingDataFromModal (data) {
+      this.message = data.message;
+
+      this.$nextTick(() => {
+        var self = this
+
+        setTimeout(() => {
+          self.message = ''
+        }, 3000)
+      })
+    },
+    onClickEdit (id) {
+      this.$parent.$refs.modal.display('edit-sleeplab')
+      this.$parent.$refs.modal.setComponentParameters({ sleeplabId: id })
+    },
     onClickQuickView (id) {
       this.$parent.$refs.modal.display('view-sleeplab')
       this.$parent.$refs.modal.setComponentParameters({ sleeplabId: id })

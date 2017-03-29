@@ -19,6 +19,10 @@ export default {
     eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   methods: {
+    onClickEditSleeplab () {
+      this.$parent.display('edit-sleeplab')
+      this.$parent.setComponentParameters({ sleeplabId: this.componentParams.sleeplabId || 0 })
+    },
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
 

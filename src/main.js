@@ -8,9 +8,12 @@ import router from './router'
 window.constants = require('./modules/constants.js')
 window.storage = require('./modules/storage.js')
 window.$ = require('jquery/dist/jquery.min.js')
+window.jQuery = window.$
 window.swal = require('sweetalert')
 window.moment = require('moment')
 window.accounting = require('accounting')
+
+require('../static/third-party/jquery-masked-input/jquery.maskedinput-1.3.1.min.js')
 
 // centralized event hub
 window.eventHub = new Vue()

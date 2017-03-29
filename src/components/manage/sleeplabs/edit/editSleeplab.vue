@@ -195,7 +195,7 @@
                                             id="phone1"
                                             name="phone1"
                                             type="text"
-                                            class="extphonemask field text addr tbox"
+                                            class="phonemask field text addr tbox"
                                             tabindex="11"
                                             maxlength="255"
                                             style="width:200px;"
@@ -208,7 +208,7 @@
                                             id="phone2"
                                             name="phone2"
                                             type="text"
-                                            class="extphonemask field text addr tbox"
+                                            class="phonemask field text addr tbox"
                                             tabindex="12"
                                             maxlength="255"
                                             style="width:200px;"
@@ -221,7 +221,7 @@
                                             id="fax"
                                             name="fax"
                                             type="text"
-                                            class="extphonemask field text addr tbox"
+                                            class="phonemask field text addr tbox"
                                             tabindex="13"
                                             maxlength="255"
                                             style="width:200px;"
@@ -293,11 +293,17 @@
                         <span class="red">
                             * Required Fields
                         </span><br />
-                        <a href="#" id="google_link" target="_blank" style="float:left;" />
+                        <a
+                            v-on:click.prevent="onClickGoogleLink"
+                            href="#"
+                            id="google_link"
+                            target="_blank"
+                            style="float:left;"
+                        >
                             Google
                         </a>
                         <input type="submit" :value="buttonText + ' Sleep Lab'" class="button" />
-                        <route-link
+                        <router-link
                             style="float:right;"
                             :to="{
                                 name: 'sleeplabs',
@@ -309,7 +315,7 @@
                             class="dellink"
                             target="_parent"
                             title="DELETE"
-                        >Delete</route-link>
+                        >Delete</router-link>
                     </td>
                 </tr>
             </table>

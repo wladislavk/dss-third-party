@@ -772,14 +772,17 @@ return $matches[2];
 }
 
 function format_phone($data){
-if(  preg_match( '/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data,  $matches ) )
-{
-    $result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
-    if($matches[4]!=''){
-      $result .= ' x'.$matches[4];
+    if (!preg_match('/^\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$/', $data, $matches)) {
+        return '';
     }
+
+    $result = '(' . $matches[1] . ') ' .$matches[2] . '-' . $matches[3];
+
+    if ($matches[4] != '') {
+        $result .= ' ext'.$matches[4];
+    }
+
     return $result;
-}
 }
 
 function split_phone($num, $a){
@@ -844,10 +847,11 @@ function dateFormat ($data, $defaultsNow=true) {
  */
 function parsePhoneNumber ($areaCodeOrFullNumber, $phoneNumber='') {
     $fullNumber = preg_replace('/\D+/', '', "{$areaCodeOrFullNumber}{$phoneNumber}");
+    preg_match('/(?P<area>\d{3})(?P<number>\d{7})(?P<ext>\d*)/', $fullNumber, $matches);
 
     return [
-        substr($fullNumber, 0, 3), // area code
-        substr($fullNumber, 3) // local number
+        $matches['area'],
+        $matches['number'] . ($matches['ext'] ? ' ext' . $matches['ext'] : '')
     ];
 }
 

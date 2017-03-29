@@ -146,7 +146,7 @@ function loadPopup(fa){
 	//centering with css
 	centerPopup();
 	
-	document.getElementById("aj_pop").src = fa; 
+	document.getElementById("aj_pop_memo").src = fa;
 	
 	//loads popup only if it is disabled
 	if(popupStatus==0){
@@ -164,7 +164,7 @@ function loadPopup1(fa){
 	//centering with css
 	centerPopup1();
 	
-	document.getElementById("aj_pop").src = fa; 
+	document.getElementById("aj_pop_memo").src = fa;
 	
 	//loads popup only if it is disabled
 	if(popupStatus==0){

@@ -11,7 +11,7 @@
                                     <a v-on:click.prevent>Directory</a>
                                     <ul>
                                         <li><router-link to="/manage/contacts">Contacts</router-link></li>
-                                        <li><router-link :to="{ name: 'referredby' }">Referral List</a></li>
+                                        <li><router-link :to="{ name: 'referredby' }">Referral List</router-link></li>
                                         <li><router-link :to="{ name: 'sleeplabs' }">Sleep Labs</router-link></li>
                                         <li><a href="manage_fcontact.php">Corporate Contacts</a></li>
                                     </ul>
@@ -64,7 +64,7 @@
                                             <a v-on:click.prevent>DSS Files</a>
                                             <ul>
                                                 <li v-for="documentCategory in documentCategories">
-                                                    <router-link class="submenu_item" :to="'view_documents.php?cat=' + documentCategory.categoryid">{{ documentCategory.name }}</a>
+                                                    <router-link class="submenu_item" :to="'view_documents.php?cat=' + documentCategory.categoryid">{{ documentCategory.name }}</router-link>
                                                 </li>
                                             </ul>
                                         </li>

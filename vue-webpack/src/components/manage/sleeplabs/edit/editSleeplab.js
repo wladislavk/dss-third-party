@@ -1,5 +1,7 @@
 var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
+import maskMixin from '../../../../modules/masks/MaskMixin.js'
+
 export default {
   name: 'edit-sleeplab',
   data () {
@@ -15,7 +17,7 @@ export default {
       isContactDataFetched: false
     }
   },
-  mixins: [handlerMixin],
+  mixins: [handlerMixin, maskMixin],
   watch: {
     'sleeplab': {
       handler: function () {
@@ -48,6 +50,9 @@ export default {
     eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   methods: {
+    onClickGoogleLink () {
+      // TODO
+    },
     onSubmit () {
       if (this.validateSleeplabData(this.sleeplab)) {
         this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab)
@@ -92,6 +97,10 @@ export default {
           var data = response.data.data
 
           if (data) {
+            this.fullName = (data.firstname ? data.firstname + ' ' : '')
+              + (data.middlename ? data.middlename + ' ' : '')
+              + (data.lastname || '')
+
             this.sleeplab = data
           }
         }, function (response) {

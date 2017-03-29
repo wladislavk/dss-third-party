@@ -40,10 +40,11 @@
             <label>Notes:</label>
             <span class="value">{{ sleeplab.notes }}</span>
         </div>
-        <router-link
-            :to="'add_sleeplab.php?ed=' + componentParam.sleeplabId"
+        <a
+            v-on:click.prevent="onClickEditSleeplab"
+            href="#"
             style="margin-right:10px;float:right;"
-        >Edit</router-link>
+        >Edit</a>
     </div>
 </template>
 

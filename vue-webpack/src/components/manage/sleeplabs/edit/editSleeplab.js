@@ -1,6 +1,7 @@
 var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
 import maskMixin from '../../../../modules/masks/MaskMixin.js'
+import phoneFilter from '../../../../modules/filters/phoneMixin.js'
 
 export default {
   name: 'edit-sleeplab',
@@ -14,10 +15,11 @@ export default {
       },
       message: '',
       fullName: '',
-      isContactDataFetched: false
+      isContactDataFetched: false,
+      phoneFields: ['phone1', 'phone2', 'fax']
     }
   },
-  mixins: [handlerMixin, maskMixin],
+  mixins: [handlerMixin, maskMixin, phoneFilter],
   watch: {
     'sleeplab': {
       handler: function () {
@@ -101,6 +103,12 @@ export default {
               + (data.middlename ? data.middlename + ' ' : '')
               + (data.lastname || '')
 
+            this.phoneFields.forEach(el => {
+              if (data.hasOwnProperty(el)) {
+                data[el] = this.phoneForDisplaying(data[el])
+              }
+            })
+
             this.sleeplab = data
           }
         }, function (response) {
@@ -113,6 +121,14 @@ export default {
       return this.$http.get(process.env.API_PATH + 'sleeplabs/' + id)
     },
     editSleeplab (sleeplabId, sleeplabFormData) {
+      // convert phone fields before storing
+      var self = this
+      this.phoneFields.forEach(el => {
+        if (sleeplabFormData.hasOwnProperty(el)) {
+          sleeplabFormData[el] = self.phoneForStoring(sleeplabFormData[el])
+        }
+      })
+
       var data = {
         sleeplab_form_data: sleeplabFormData
       }

@@ -79,7 +79,7 @@
           </div>
           <a v-on:click.prevent="updateDevice(deviceResult.id, deviceResult.name)">
             {{ deviceResult.name }} ({{ deviceResult.value }})
-          <a>
+          </a>
         </li>
       </ul>
       <a class="addButton" v-on:click.prevent="onClickReset">Reset</a>

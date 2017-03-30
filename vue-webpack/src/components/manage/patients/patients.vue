@@ -17,6 +17,7 @@
             <div class="letter_select">
                 <router-link
                     v-for="letter in letters"
+                    :key="letter.id"
                     :class="'letters ' + (letter == routeParameters.currentLetter ? 'selected_letter' : '')"
                     :to="{ name: $route.name, query: { letter: letter, sh: routeParameters.selectedPatientType }}"
                 >{{ letter }}</router-link>

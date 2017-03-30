@@ -441,7 +441,7 @@
                       v-on:click.prevent="onClickConfirm('inactive', contact.contactid)"
                       class="dellink"
                       title="DELETE"
-                    >
+                    ></a>
                     <input
                       v-on:click.prevent="onClickSubmit"
                       type="submit"

@@ -68,7 +68,7 @@
 ?>
 
 		<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
-		<script src="admin/popup/popup2.js" type="text/javascript"></script>
+		<script src="admin/popup/popup2.js?v=20170326" type="text/javascript"></script>
 
 		<link rel="stylesheet" href="css/form.css" type="text/css" />
 
@@ -115,7 +115,7 @@
 		    <a id="popupContactClose">
 		    	<button>X</button>
 		    </a>
-		    <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
+		    <iframe id="aj_pop_memo" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 		</div>
 		<div id="backgroundPopup"></div>
 

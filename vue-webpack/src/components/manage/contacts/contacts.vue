@@ -57,6 +57,7 @@
                         <div class="letter_select">
                             <router-link
                                 v-for="letter in letters"
+                                :key="letter.id"
                                 :class="{ 'selected_letter': letter == routeParameters.currentLetter }"
                                 :to="{ name: $route.name,
                                     query: {
@@ -203,17 +204,23 @@
                     >
                         <td colspan="2" valign="top">
                             <strong>REFERRED</strong><br />
-                            <router-link
+                            <template
                                 v-for="referrer in contact.referrers_data"
-                                :to="'add_patient.php?pid=' + referrer.patientid + '&ed=' + referrer.patientid"
-                            >{{ referrer.firstname }} {{ referrer.lastname }}</router-link><br />
+                            >
+                                <router-link
+                                    :to="'add_patient.php?pid=' + referrer.patientid + '&ed=' + referrer.patientid"
+                                >{{ referrer.firstname }} {{ referrer.lastname }}</router-link><br />
+                            </template>
                         </td>
                         <td colspan="4" valign="top">
                             <strong>PATIENTS</strong><br />
-                            <router-link
+                            <template
                                 v-for="patient in contact.patients_data"
-                                :to="'add_patient.php?pid=' + patient.patientid  + '&ed=' + patient.patientid"
-                            >{{ patient.firstname }} {{ patient.lastname }}</router-link><br />
+                            >
+                                <router-link
+                                    :to="'add_patient.php?pid=' + patient.patientid  + '&ed=' + patient.patientid"
+                                >{{ patient.firstname }} {{ patient.lastname }}</router-link><br />
+                            </template>
                         </td>
                     </tr>
                 </tbody>

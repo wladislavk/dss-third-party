@@ -302,7 +302,12 @@
                         >
                             Google
                         </a>
-                        <input type="submit" :value="buttonText + ' Sleep Lab'" class="button" />
+                        <input
+                            v-on:click.prevent="onSubmit"
+                            type="submit"
+                            :value="buttonText + ' Sleep Lab'"
+                            class="button"
+                        >
                         <router-link
                             style="float:right;"
                             :to="{

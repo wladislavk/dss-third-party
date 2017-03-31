@@ -21,6 +21,7 @@
                                         <span id="req_0" class="req">*</span>
                                         <input
                                             v-model="sleeplab.company"
+                                            ref="company"
                                             id="company"
                                             name="company"
                                             type="text"
@@ -64,6 +65,7 @@
                                     <span>
                                         <input
                                             v-model="sleeplab.firstname"
+                                            ref="firstname"
                                             id="firstname"
                                             name="firstname"
                                             type="text"
@@ -76,6 +78,7 @@
                                     <span>
                                         <input
                                             v-model="sleeplab.lastname"
+                                            ref="lastname"
                                             id="lastname"
                                             name="lastname"
                                             type="text"
@@ -115,6 +118,7 @@
                                     <span>
                                         <input
                                             v-model="sleeplab.add1"
+                                            ref="add1"
                                             id="add1"
                                             name="add1"
                                             type="text"
@@ -143,6 +147,7 @@
                                     <span>
                                         <input
                                             v-model="sleeplab.city"
+                                            ref="city"
                                             id="city"
                                             name="city"
                                             type="text"
@@ -156,6 +161,7 @@
                                     <span>
                                         <input
                                             v-model="sleeplab.state"
+                                            ref="state"
                                             id="state"
                                             name="state"
                                             type="text"
@@ -169,6 +175,7 @@
                                     <span>
                                         <input
                                             v-model="sleeplab.zip"
+                                            ref="zip"
                                             id="zip"
                                             name="zip"
                                             type="text"
@@ -190,34 +197,37 @@
                             <li id="foli8" class="complex"> 
                                 <div>
                                     <span>
-                                        <input
+                                        <masked-input
                                             v-model="sleeplab.phone1"
+                                            :mask="phoneMask()"
                                             id="phone1"
                                             name="phone1"
                                             type="text"
-                                            class="phonemask field text addr tbox"
+                                            class="field text addr tbox"
                                             tabindex="11"
                                             maxlength="255"
                                             style="width:200px;"
-                                        >
+                                        />
                                         <label for="phone1">Phone 1</label>
                                     </span>
                                     <span>
-                                        <input
+                                        <masked-input
                                             v-model="sleeplab.phone2"
+                                            :mask="phoneMask()"
                                             id="phone2"
                                             name="phone2"
                                             type="text"
-                                            class="phonemask field text addr tbox"
+                                            class="field text addr tbox"
                                             tabindex="12"
                                             maxlength="255"
                                             style="width:200px;"
-                                        >
+                                        />
                                         <label for="phone2">Phone 2</label>
                                     </span>
                                     <span>
-                                        <input
+                                        <masked-input
                                             v-model="sleeplab.fax"
+                                            :mask="phoneMask()"
                                             id="fax"
                                             name="fax"
                                             type="text"
@@ -225,7 +235,7 @@
                                             tabindex="13"
                                             maxlength="255"
                                             style="width:200px;"
-                                        >
+                                        />
                                         <label for="fax">Fax</label>
                                     </span>
                                 </div>
@@ -233,6 +243,7 @@
                                     <span>
                                         <input
                                             v-model="sleeplab.email"
+                                            ref="email"
                                             id="email"
                                             name="email"
                                             type="text"
@@ -294,33 +305,25 @@
                             * Required Fields
                         </span><br />
                         <a
-                            v-on:click.prevent="onClickGoogleLink"
-                            href="#"
+                            :href="googleLink ? googleLink : '#'"
                             id="google_link"
                             target="_blank"
                             style="float:left;"
-                        >
-                            Google
-                        </a>
+                        >Google</a>
                         <input
                             v-on:click.prevent="onSubmit"
                             type="submit"
                             :value="buttonText + ' Sleep Lab'"
                             class="button"
                         >
-                        <router-link
+                        <a
+                            href="#"
+                            v-on:click.prevent="onClickDeleteSleeplab(sleeplab.sleeplabid)"
                             style="float:right;"
-                            :to="{
-                                name: 'sleeplabs',
-                                query: {
-                                    delid: sleeplab.sleeplabid
-                                }
-                            }"
-                            v-on:click="confirm('Do Your Really want to Delete?.')"
                             class="dellink"
                             target="_parent"
                             title="DELETE"
-                        >Delete</router-link>
+                        >Delete</a>
                     </td>
                 </tr>
             </table>

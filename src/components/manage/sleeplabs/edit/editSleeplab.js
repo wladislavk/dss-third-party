@@ -1,17 +1,19 @@
 var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
-import maskMixin from '../../../../modules/masks/MaskMixin.js'
-import phoneFilter from '../../../../modules/filters/phoneMixin.js'
+import phoneMasks from '../../../../modules/masks/PhoneMixin.js'
+import phoneFilters from '../../../../modules/filters/PhoneMixin.js'
+import sleeplabValidator from '../../../../modules/validators/SleeplabMixin.js'
 
 export default {
   name: 'edit-sleeplab',
   data () {
     return {
-      componentParam: {
+      componentParams: {
         sleeplabId: 0
       },
       sleeplab: {
-        salutation: ''
+        salutation: '',
+        status: 1
       },
       message: '',
       fullName: '',
@@ -19,7 +21,7 @@ export default {
       phoneFields: ['phone1', 'phone2', 'fax']
     }
   },
-  mixins: [handlerMixin, maskMixin, phoneFilter],
+  mixins: [handlerMixin, phoneMasks, phoneFilters, sleeplabValidator],
   watch: {
     'sleeplab': {
       handler: function () {
@@ -41,6 +43,23 @@ export default {
   computed: {
     buttonText () {
       return this.sleeplab.sleeplabid > 0 ? 'Edit' : 'Add'
+    },
+    googleLink () {
+      var link = 'http://google.com/search?q='
+      var requiredFields = [
+        'firstname', 'lastname', 'company',
+        'add1', 'city', 'state', 'zip'
+      ]
+
+      var notEmptyRequiredFields = []
+      var self = this
+      requiredFields.forEach(function (el) {
+        if (self.sleeplab[el]) {
+          notEmptyRequiredFields.push(self.sleeplab[el])
+        }
+      })
+
+      return link + notEmptyRequiredFields.join('+')
     }
   },
   created () {
@@ -52,6 +71,18 @@ export default {
     eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   methods: {
+    onClickDeleteSleeplab (sleeplabId) {
+      if (confirm('Do Your Really want to Delete?')) {
+        this.$parent.disable()
+
+        this.$router.push({
+          name: 'sleeplabs',
+          query: {
+            delid: sleeplabId
+          }
+        })
+      }
+    },
     onClickGoogleLink () {
       // TODO
     },

@@ -5,7 +5,7 @@
         </span>
         <br /><br />
         <div align="right" style="padding-right: 12px">
-            <button v-on:click="loadPopup('add_sleeplab.php')" class="addButton">
+            <button v-on:click="$parent.$refs.modal.display('edit-sleeplab')" class="addButton">
                 Add New Sleep Lab
             </button>
         </div>
@@ -105,7 +105,7 @@
                             |
                             <a
                                 href="#"
-                                v-on:click.prevent="loadPopup('add_sleeplab.php?ed=' + sleeplab.sleeplabid)"
+                                v-on:click.prevent="onClickEdit(sleeplab.sleeplabid)"
                                 class="editlink"
                                 title="EDIT"
                             >Edit</a>

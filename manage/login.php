@@ -88,7 +88,7 @@ if(isset($_POST["loginsub"]))
 	}
 	else
 	{
-		$msg='Wrong username or password';
+		$msg='Username or password not found. This account may be inactive.';
 	}
 }
 
@@ -103,7 +103,7 @@ if(!empty($_GET['msg']))
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
     <title><?php echo $sitename;?></title>
-    <link href="css/login.css" rel="stylesheet" type="text/css" />
+    <link href="css/login.css?v=20170331" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
 	<script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
 	<script type="text/javascript" src="admin/script/jquery-1.6.2.min.js"></script>
@@ -119,56 +119,59 @@ if(!empty($_GET['msg']))
 
 
 <div id="login_container">
-	<FORM NAME="loginfrm" id="loginForm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)">
-		<table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
-		    <tr bgcolor="#FFFFFF">
-		        <td colspan="2" class="t_head">
-			       Please Enter Your Login Information
-		        </td>
-		    </tr>
-			<?php
-			if(!empty($msg)){
-		    ?>
-		        <tr bgcolor="#FFFFFF">
-		            <td colspan="2" >
-		                <span class="red">
-							<?php echo $msg;?>
-		                </span>
-		            </td>
-		        </tr>
-		    <?php
-			}
-			?>
-		    <tr bgcolor="#FFFFFF">
-		        <td class="t_data">
-		        	User name
-		        </td>
-		        <td class="t_data">
-		        	<input type="text" name="username" value="<?php echo (isset($_POST['username']))?$_POST['username']:''; ?>">
-		        </td>
-		    </tr>
-		    <tr bgcolor="#FFFFFF">
-		        <td class="t_data">
-		        	Password
-		        </td>
-		        <td class="t_data">
-		        	<input type="password" name="password">
-		        </td>
-			</tr>
-		    <tr bgcolor="#FFFFFF">
-		        <td colspan="2" align="center" >
-		            <input type="hidden" name="loginsub" value="1">
-		            <input type="submit" name="btnsubmit" value=" Login " class="addButton">
-				<span style="float:right;">
-		            <a href="/manage/register/new.php">Register</a>
-				|
-		            <a href="forgot_password.php">Forgot Password</a>
-				</span>
-		        </td>
-		    </tr>
-		</table>
-		<span style="float:right; margin-top:4px;" class="screener">Looking for the screener? <a href="../screener">Click Here</a></span>
-	</FORM>
+	<div id="form-container">
+		<FORM NAME="loginfrm" id="loginForm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)">
+			<table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C">
+				<tr bgcolor="#FFFFFF">
+					<td colspan="2" class="t_head">
+					   Please Enter Your Login Information
+					</td>
+				</tr>
+				<?php
+				if(!empty($msg)){
+				?>
+					<tr bgcolor="#FFFFFF">
+						<td colspan="2" >
+							<span class="red">
+								<?= e($msg) ?>
+							</span>
+						</td>
+					</tr>
+				<?php
+				}
+				?>
+				<tr bgcolor="#FFFFFF">
+					<td class="t_data">
+						User name
+					</td>
+					<td class="t_data">
+						<input type="text" name="username" value="<?php echo (isset($_POST['username']))?$_POST['username']:''; ?>">
+					</td>
+				</tr>
+				<tr bgcolor="#FFFFFF">
+					<td class="t_data">
+						Password
+					</td>
+					<td class="t_data">
+						<input type="password" name="password">
+					</td>
+				</tr>
+				<tr bgcolor="#FFFFFF">
+					<td colspan="2" align="center" >
+						<input type="hidden" name="loginsub" value="1">
+						<input type="submit" name="btnsubmit" value=" Login " class="addButton">
+					<span style="float:right;">
+						<a href="/manage/register/new.php">Register</a>
+					|
+						<a href="forgot_password.php">Forgot Password</a>
+					</span>
+					</td>
+				</tr>
+			</table>
+			<span style="float:right; margin-top:4px;" class="screener">Looking for the screener? <a href="../screener">Click Here</a></span>
+			<span class="clear"></span>
+		</FORM>
+	</div>
 </div>
 <span style="clear:both;" id="siteseal">
 	<script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>

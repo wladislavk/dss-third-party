@@ -20,14 +20,21 @@ body{
   margin: 80px auto 0 auto;
   }
 
+#login_container #form-container {
+  margin: 0 0 0 182px;
+  position: relative;
+  background: #fff;
+  width: 443px;
+  border-top: 1px solid transparent;
+  border-radius: 20px;
+}
 
 #login_container form{
-  padding: 20px 0 0 200px;
-  width: 400px;
+  margin: 14px 20px 0 20px;
   }
 
 #login_container table{
-  width: 400px;
+  width: 100%;
   }
 
 #login_container .t_head{
@@ -58,3 +65,11 @@ body{
   margin-right: 10px;
   display: block;
   }
+
+.clear {
+  clear: both;
+}
+
+span.clear {
+  display: block;
+}

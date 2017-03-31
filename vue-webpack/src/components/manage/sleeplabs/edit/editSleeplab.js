@@ -83,9 +83,6 @@ export default {
         })
       }
     },
-    onClickGoogleLink () {
-      // TODO
-    },
     onSubmit () {
       if (this.validateSleeplabData(this.sleeplab)) {
         this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab)

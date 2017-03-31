@@ -72,4 +72,10 @@ class Sleeplab extends Model implements Resource, Repository
             'result' => $resultQuery->get()
         ];
     }
+
+    public function updateSleeplab($sleeplabId, $data = [])
+    {
+        return $this->where('sleeplabid', $sleeplabId)
+            ->update($data);
+    }
 }

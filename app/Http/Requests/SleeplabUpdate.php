@@ -12,17 +12,17 @@ class SleeplabUpdate extends Request
     public function rules()
     {
         return [
-            'docid'      => 'sometimes|required|integer',
+            'docid'      => 'integer',
             'salutation' => 'string',
             'lastname'   => 'sometimes|required|string',
             'firstname'  => 'sometimes|required|string',
             'middlename' => 'string',
-            'company'    => 'string',
+            'company'    => 'sometimes|required|string',
             'add1'       => 'sometimes|required|string',
             'add2'       => 'string',
-            'city'       => 'string',
-            'state'      => 'string',
-            'zip'        => 'regex:/^[0-9]{5}$/',
+            'city'       => 'sometimes|required|string',
+            'state'      => 'sometimes|required|string',
+            'zip'        => 'sometimes|required|regex:/^[0-9]{5}$/',
             'phone1'     => 'regex:/^[0-9]{10}$/',
             'phone2'     => 'regex:/^[0-9]{10}$/',
             'fax'        => 'regex:/^[0-9]{10}$/',

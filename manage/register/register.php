@@ -438,7 +438,7 @@
                                         <div>
                                             <div class="form_errors" style="display:none"></div>
                                             <div class="sepH_b">
-                                                <label class="lbl_a"><strong>1.</strong> Username:</label><input class="inpt_a validate" id="username" name="username" type="text" value="<?php echo (!empty($p['username']) ? $p['username'] : '')?>" maxlength="255" />
+                                                <label class="lbl_a"><strong>1.</strong> Username:</label><input class="inpt_a validate" id="username" name="username" type="text" value="<?= e(trim($p['username'])) ?>" maxlength="255" />
                                             </div>
                                             <div class="sepH_b">
                                                 <label class="lbl_a"><strong>2.</strong> Password:</label><input class="inpt_a validate" id="password" name="password" type="password" onkeyup="checkPass()" maxlength="255" />

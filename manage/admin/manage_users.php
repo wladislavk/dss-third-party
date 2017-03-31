@@ -316,7 +316,11 @@ if ($showPerPage != $countDefault) {
 			            <input type="hidden" name="loginsub" value="1">
 			            <input type="submit" name="btnsubmit" value=" Login " class="btn btn-success">			
 					</form>
-					<?php } ?>
+					<?php } else { ?>
+                        <span title="User is In-Active">
+                            <button class="btn btn-default disabled" disabled title="User is In-Active"> Login </button>
+                        </span>
+                    <?php } ?>
 				</td>
 				<?php } ?>
 			           <td valign="top" align="center">

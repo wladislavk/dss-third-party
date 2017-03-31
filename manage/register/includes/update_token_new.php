@@ -81,7 +81,7 @@ $recover_hash = hash('sha256', $id.$email.rand());
 $sql = "UPDATE dental_users SET
         cc_id = '" . $db->escape($customer->id) . "',
         status = 2,
-        recover_hash = '" . $recover_hash . "',
+        recover_hash = '" . $db->escape($recover_hash) . "',
         recover_time = NOW()
     WHERE userid = '" . $db->escape($id) . "'";
 $db->query($sql);

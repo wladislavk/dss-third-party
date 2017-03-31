@@ -166,6 +166,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('screener-epworth', 'ScreenerEpworthController', ['except' => ['create', 'edit']]);
     Route::resource('sleeplabs', 'SleeplabsController', ['except' => ['create', 'edit']]);
     Route::post('sleeplabs/list', 'SleeplabsController@getListOfSleeplabs');
+    Route::post('sleeplabs/edit/{sleeplabId?}', 'SleeplabsController@editSleeplab');
     Route::resource('sleep-studies', 'SleepStudiesController', ['except' => ['create', 'edit']]);
     Route::resource('soft-palates', 'SoftPalatesController', ['except' => ['create', 'edit']]);
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);

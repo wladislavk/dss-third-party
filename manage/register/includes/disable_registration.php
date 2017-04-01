@@ -6,6 +6,6 @@
 
 linkRequestData('dental_users', $id);
 
-	$sql = "UPDATE dental_users SET status=1, recover_hash='', recover_time='' WHERE userid='".mysqli_real_escape_string($con, $id)."'";
+	$sql = "UPDATE dental_users SET status=1, recover_hash='', recover_time='' WHERE userid='".$db->escape($id)."'";
 	$db->query($sql);
 ?>

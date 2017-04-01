@@ -15,13 +15,13 @@ linkRequestData('dental_users', $_POST['userid']);
 	
         if($_POST['userid']==''){
                 $sql = "INSERT INTO dental_users set
-                        first_name = '".mysqli_real_escape_string($con, $_POST['first_name'])."',
-                        last_name = '".mysqli_real_escape_string($con, $_POST['last_name'])."',
-                        name = '".s_for(trim($_POST["first_name"] . ' ' . $_POST["last_name"]))."',
-                        email= '".mysqli_real_escape_string($con, $_POST['email'])."',
-                        phone = '".mysqli_real_escape_string($con, num($_POST['cell_phone']))."',
-        		access_code_id = '".mysqli_real_escape_string($con, $access_code_id)."',
-        		plan_id = '".mysqli_real_escape_string($con, $plan_id)."',
+                        first_name = '".$db->escape($_POST['first_name'])."',
+                        last_name = '".$db->escape($_POST['last_name'])."',
+                        name = '".$db->escape(trim($_POST["first_name"] . ' ' . $_POST["last_name"]))."',
+                        email= '".$db->escape($_POST['email'])."',
+                        phone = '".$db->escape(num($_POST['cell_phone']))."',
+        		access_code_id = '".$db->escape($access_code_id)."',
+        		plan_id = '".$db->escape($plan_id)."',
         		user_access=".DSS_USER_ACCESS_DOCTOR.",
         		use_patient_portal = '1',
         		use_payment_reports = '0',
@@ -33,12 +33,14 @@ linkRequestData('dental_users', $_POST['userid']);
         		homepage = '1',
                         user_type = '".DSS_USER_TYPE_SOFTWARE."',
         		adddate = now(),
-        		ip_address = '".mysqli_real_escape_string($con, $_SERVER['REMOTE_ADDR'])."'
+        		ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'
                         ";
 
                 $userid = $db->getInsertId($sql);
+
+            $userid = intval($userid);
 		
-                $db->query("INSERT INTO dental_user_company SET userid='".mysqli_real_escape_string($con, $userid)."', companyid='".mysqli_real_escape_string($con, $_POST["companyid"])."'");
+                $db->query("INSERT INTO dental_user_company SET userid='".$db->escape($userid)."', companyid='".$db->escape($_POST["companyid"])."'");
                 $db->query("INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('General', 'FFF9CF', 'general', ".$userid.")");
                 $db->query("INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Follow-up', 'D6CFFF', 'follow-up', ".$userid.")");
                 $db->query("INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Sleep Test', 'CFF5FF', 'sleep_test', ".$userid.")");
@@ -55,13 +57,13 @@ linkRequestData('dental_users', $_POST['userid']);
 
         } else {
                 $sql = "UPDATE dental_users set
-                        first_name = '".mysqli_real_escape_string($con, $_POST['first_name'])."',
-                        last_name = '".mysqli_real_escape_string($con, $_POST['last_name'])."',
-                        email= '".mysqli_real_escape_string($con, $_POST['email'])."',
-        		access_code_id = '".mysqli_real_escape_string($con, $access_code_id)."',
-        		plan_id = '".mysqli_real_escape_string($con, $plan_id)."',
-                        phone = '".mysqli_real_escape_string($con, num($_POST['cell_phone']))."'
-        		WHERE userid='".mysqli_real_escape_string($con, $_POST['userid'])."'
+                        first_name = '".$db->escape($_POST['first_name'])."',
+                        last_name = '".$db->escape($_POST['last_name'])."',
+                        email= '".$db->escape($_POST['email'])."',
+        		access_code_id = '".$db->escape($access_code_id)."',
+        		plan_id = '".$db->escape($plan_id)."',
+                        phone = '".$db->escape(num($_POST['cell_phone']))."'
+        		WHERE userid='".$db->escape($_POST['userid'])."'
                         ";
 
         	$q = $db->query($sql);

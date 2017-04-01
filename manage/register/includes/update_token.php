@@ -21,7 +21,7 @@ linkRequestData('dental_users', $id);
   $cvc = (!empty($_REQUEST['cvc']) ? $_REQUEST['cvc'] : '');
   $zip = (!empty($_REQUEST['zip']) ? $_REQUEST['zip'] : '');
 
-  $key_sql = "SELECT stripe_secret_key FROM companies WHERE id='".mysqli_real_escape_string($con,$companyid)."'";
+  $key_sql = "SELECT stripe_secret_key FROM companies WHERE id='".$db->escape($companyid)."'";
   $key_r= $db->getRow($key_sql);
 
   \Stripe::setApiKey($key_r['stripe_secret_key']);
@@ -74,11 +74,11 @@ linkRequestData('dental_users', $id);
   //  "currency" => "usd",
   //  "customer" => $customer->id)
   //);
-  $sql = "UPDATE dental_users SET cc_id='".mysqli_real_escape_string($con,$customer->id)."', 
+  $sql = "UPDATE dental_users SET cc_id='".$db->escape($customer->id)."', 
       		status=1,
       		recover_hash='',
       		recover_time=''
-      	 	WHERE userid='".mysqli_real_escape_string($con,$id)."'";
+      	 	WHERE userid='".$db->escape($id)."'";
 
   $db->query($sql);
 

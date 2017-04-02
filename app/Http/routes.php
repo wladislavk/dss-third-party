@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     });
 
     Route::resource('referred-by-contacts', 'ReferredByContactsController', ['except' => ['create', 'edit']]);
+    Route::post('referred-by-contacts/edit/{contactId?}', 'ReferredByContactsController@editingContact');
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
     Route::post('users/current', 'UsersController@getCurrentUserInfo');
     Route::post('users/course-staff', 'UsersController@getCourseStaff');
@@ -164,6 +165,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('screeners', 'ScreenersController', ['except' => ['create', 'edit']]);
     Route::resource('screener-epworth', 'ScreenerEpworthController', ['except' => ['create', 'edit']]);
     Route::resource('sleeplabs', 'SleeplabsController', ['except' => ['create', 'edit']]);
+    Route::post('sleeplabs/list', 'SleeplabsController@getListOfSleeplabs');
+    Route::post('sleeplabs/edit/{sleeplabId?}', 'SleeplabsController@editSleeplab');
     Route::resource('sleep-studies', 'SleepStudiesController', ['except' => ['create', 'edit']]);
     Route::resource('soft-palates', 'SoftPalatesController', ['except' => ['create', 'edit']]);
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);

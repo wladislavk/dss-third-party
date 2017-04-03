@@ -37,6 +37,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
         Route::get('payers', 'Eligible\EligibleController@getPayers');
     });
 
+    Route::resource('corporate-contacts', 'CorporateContactsController', ['except' => ['create', 'edit']]);
     Route::resource('referred-by-contacts', 'ReferredByContactsController', ['except' => ['create', 'edit']]);
     Route::post('referred-by-contacts/edit/{contactId?}', 'ReferredByContactsController@editingContact');
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);

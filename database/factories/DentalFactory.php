@@ -386,6 +386,32 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Contact::class, function (
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Dental\CorporateContact::class, function ($faker) {
+    return [
+        'docid'                => $faker->randomDigit,
+        'salutation'           => $faker->title($gender = 'male'|'female'),
+        'lastname'             => $faker->lastName,
+        'firstname'            => $faker->firstName($gender = 'male'|'female'),
+        'middlename'           => $faker->word,
+        'company'              => $faker->company,
+        'add1'                 => $faker->address,
+        'add2'                 => $faker->address,
+        'city'                 => $faker->city,
+        'state'                => $faker->state,
+        'zip'                  => $faker->postcode,
+        'phone1'               => $faker->regexify('^1[0-9]{9}$'),
+        'phone2'               => $faker->regexify('^1[0-9]{9}$'),
+        'fax'                  => $faker->regexify('^1[0-9]{9}$'),
+        'email'                => $faker->email,
+        'greeting'             => $faker->title($gender = 'male'|'female'),
+        'sincerely'            => $faker->title($gender = 'male'|'female'),
+        'contacttypeid'        => $faker->randomDigit,
+        'notes'                => $faker->sentence($nbWords = 6),
+        'adddate'              => $faker->dateTime(),
+        'ip_address'           => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Dental\Device::class, function ($faker) {
     return [
         'device'      => $faker->sentence($nbWords = 3),

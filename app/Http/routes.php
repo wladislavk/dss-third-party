@@ -183,6 +183,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('contacts/with-contact-type', 'ContactsController@getWithContactType');
     Route::post('contacts/insurance', 'ContactsController@getInsuranceContacts');
     Route::post('contacts/referred-by', 'ContactsController@getReferredByContacts');
+    Route::post('contacts/corporate', 'ContactsController@getCorporateContacts');
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
     Route::get('display-file/{filename}', 'DisplayingFileController@getFile');
 

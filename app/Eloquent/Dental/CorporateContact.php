@@ -12,6 +12,13 @@ class CorporateContact extends Model implements Resource, Repository
     use WithoutUpdatedTimestamp;
 
     /**
+     * Guarded attributes
+     *
+     * @var array
+     */
+    protected $guarded = ['contactid'];
+
+    /**
      * The database table used by the model.
      *
      * @var string

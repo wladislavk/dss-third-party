@@ -1,6 +1,5 @@
 var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
-
 export default {
   name: 'corporate-contacts',
   data () {
@@ -48,7 +47,7 @@ export default {
       if (this.$route.query.sort in this.tableHeaders) {
         this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort)
       } else {
-        this.$set(this.routeParameters, 'sortColumn', 'lab')
+        this.$set(this.routeParameters, 'sortColumn', '')
       }
     },
     '$route.query.sortdir': function () {
@@ -60,12 +59,12 @@ export default {
     },
     '$route.query.delid': function () {
       if (this.$route.query.delid > 0) {
-        // TODO
+        this.removeContact(this.$route.query.delid)
       }
     },
     'routeParameters': {
       handler: function () {
-        // TODO
+        this.getListOfContacts()
       },
       deep: true
     }
@@ -79,6 +78,14 @@ export default {
     this.getListOfContacts()
   },
   methods: {
+    onClickViewFull (contactId) {
+      // this.$parent.$refs.modal.display('view-contact')
+      // this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
+    },
+    onClickQuickView (contactId) {
+      this.$parent.$refs.modal.display('view-contact')
+      this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
+    },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn == sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
@@ -86,14 +93,41 @@ export default {
         return 'asc'
       }
     },
+    removeContact (id) {
+      this.deleteContact(id)
+        .then(function () {
+          this.message = 'Deleted Successfully';
+
+          this.$nextTick(() => {
+            var self = this
+
+            setTimeout(() => {
+              self.message = ''
+            }, 3000)
+          })
+        }, function (response) {
+          this.handleErrors('deleteContact', response)
+        })
+    },
     getListOfContacts () {
       this.getCorporateContacts(
         this.routeParameters.currentPageNumber,
         this.contactsPerPage,
         this.routeParameters.sortColumn,
-        this.routeParameters.sortDirection,
+        this.routeParameters.sortDirection
       ).then(function (response) {
           var data = response.data.data
+
+          data.result = data.result.map((value) => {
+            value['name'] = (value.lastname ? value.lastname + (!value.middlename ? ', ' : ' ') : '')
+              + (value.middlename ? value.middlename + ', ' : '')
+              + (value.firstname || '')
+
+            return value
+          })
+
+          this.contacts = data.result
+          this.contactsTotalNumber = data.total
         }, function (response) {
           this.handleErrors('getCorporateContacts', response)
         })
@@ -106,7 +140,12 @@ export default {
         sort_dir: sortDir
       }
 
-      return this.$http.post(process.env.API_PATH + 'corporate-contacts/list', data)
+      return this.$http.post(process.env.API_PATH + 'contacts/corporate', data)
+    },
+    deleteContact (id) {
+      id = id || 0
+
+      return this.$http.delete(process.env.API_PATH + 'corporate-contacts/' + id)
     }
   }
 }

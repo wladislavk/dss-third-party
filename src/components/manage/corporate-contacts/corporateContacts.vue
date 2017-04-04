@@ -20,7 +20,7 @@
                                     name: $route.name,
                                     query: {
                                         page    : index - 1,
-                                        sort    : routeParameters.sortColumn,
+                                        sort    : routeParameters.sortColumn || undefined,
                                         sortdir : routeParameters.sortDirection
                                     }
                                 }"
@@ -49,12 +49,13 @@
                         <template v-else>{{ settings.title }}</template>
                     </td>
                 </tr>
-                <tr class="tr_bg">
+                <tr v-if="contacts.length == 0" class="tr_bg">
                     <td valign="top" class="col_head" colspan="10" align="center">
                         No Records
                     </td>
                 </tr>
                 <tr
+                    v-else
                     v-for="contact in contacts"
                     :class="contact.status == 1 ? 'tr_active' : 'tr_inactive'"
                 >
@@ -70,13 +71,13 @@
                     <td valign="top">
                         <a
                             href="#"
-                            v-on:click="loadPopup('view_contact.php?ed=' + contact.contactid + '&corp=1')"
+                            v-on:click.prevent="onClickQuickView(contact.contactid)"
                             class="editlink"
                             title="Edit"
                         >Quick View</a> |
                         <a
                             href="#"
-                            v-on:click="loadPopup('view_fcontact.php?ed=' + contact.contactid)"
+                            v-on:click.prevent="onClickViewFull(contact.contactid)"
                             class="editlink"
                             title="Edit"
                         >View Full</a>

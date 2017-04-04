@@ -357,4 +357,39 @@ class Contact extends Model implements Resource, Repository
 
         return $resultSql->get();
     }
+
+    public function getCorporate($page, $rowsPerPage, $sort, $sortDir = 'asc')
+    {
+        $query = $this->select('c.*', 'ct.contacttype')
+            ->from(DB::raw('dental_contact c'))
+            ->leftJoin(DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'c.contacttypeid')
+            ->where('c.corporate', 1);
+
+        $totalNumber = $query->count();
+
+        if (!empty($sort)) {
+            switch ($sort) {
+                case 'company':
+                    $query = $query->orderBy('company');
+                    break;
+
+                case 'type':
+                    $query = $query->orderBy('ct.contacttype', $sortDir);
+                    break;
+
+                default:
+                    $query = $query->orderBy('lastname', $sortDir)
+                        ->orderBy('firstname', $sortDir);
+                    break;
+            }
+        }
+
+        $resultQuery = $query->skip($page * $rowsPerPage)
+            ->take($rowsPerPage);
+
+        return [
+            'total'  => $totalNumber,
+            'result' => $resultQuery->get()
+        ];
+    }
 }

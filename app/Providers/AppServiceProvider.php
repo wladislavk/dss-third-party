@@ -133,6 +133,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\SupportTicket::class => [Repositories\SupportTickets::class, Resources\SupportTicket::class],
             Eloquent\Dental\Notification::class => [Repositories\Notifications::class, Resources\Notification::class],
             Eloquent\Dental\Summary::class => [Repositories\Summaries::class, Resources\Summary::class],
+            Eloquent\Dental\CorporateContact::class => [Repositories\CorporateContacts::class, Resources\CorporateContact::class],
         ];
 
         $this->app->bind(

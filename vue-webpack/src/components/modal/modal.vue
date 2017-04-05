@@ -20,6 +20,7 @@
   const editReferredByContact = require('../manage/referredby/edit/editReferredByContacts.vue')
   const viewSleeplab = require('../manage/sleeplabs/view/viewSleeplab.vue')
   const editSleeplab = require('../manage/sleeplabs/edit/editSleeplab.vue')
+  const viewCorporateContact = require('../manage/corporate-contacts/view/viewCorporateContact.vue')
 
   export default {
     data () {
@@ -43,7 +44,8 @@
       'edit-contact': editContact,
       'edit-referred-by-contact': editReferredByContact,
       'view-sleeplab': viewSleeplab,
-      'edit-sleeplab': editSleeplab
+      'edit-sleeplab': editSleeplab,
+      'view-corporate-contact': viewCorporateContact
     },
     methods: {
       setComponentParameters (parameters) {

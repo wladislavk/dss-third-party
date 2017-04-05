@@ -79,8 +79,8 @@ export default {
   },
   methods: {
     onClickViewFull (contactId) {
-      // this.$parent.$refs.modal.display('view-contact')
-      // this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
+      this.$parent.$refs.modal.display('view-corporate-contact')
+      this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
     },
     onClickQuickView (contactId) {
       this.$parent.$refs.modal.display('view-contact')

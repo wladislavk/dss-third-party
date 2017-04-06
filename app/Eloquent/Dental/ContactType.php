@@ -91,4 +91,10 @@ class ContactType extends Model implements Resource, Repository
 
         return $object->get();
     }
+
+    public function getSorted()
+    {
+        return $this->orderBy('sortby')
+            ->get();
+    }
 }

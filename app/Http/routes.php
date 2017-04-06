@@ -177,6 +177,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('contact-types/active-non-corporate', 'ContactTypesController@getActiveNonCorporate');
     Route::post('contact-types/physician', 'ContactTypesController@getPhysician');
     Route::post('contact-types/with-filter', 'ContactTypesController@getWithFilter');
+    Route::post('contact-types/sorted', 'ContactTypesController@getSortedContactTypes');
     Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
     Route::post('contacts/find', 'ContactsController@find');
     Route::post('contacts/list-contacts-and-companies', 'ContactsController@getListContactsAndCompanies');

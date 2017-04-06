@@ -8,7 +8,7 @@
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
-                       {{ buttonText + ' Contact' + (name ? ' "' + name + '"': '') }}
+                       {{ 'Contact' + (contact.name ? ' "' + contact.name + '"': '') }}
                     </td>
                 </tr>
                 <tr>
@@ -279,7 +279,7 @@
                                         ></textarea>
                                         <label for="sincerely">Sincerely</label>
                                     </span>
-                                    <span>        
+                                    <span>
                                         <select
                                             v-model="contact.contacttypeid"
                                             id="contacttypeid"
@@ -288,8 +288,11 @@
                                             tabindex="20"
                                         >
                                             <option value="0"></option>
-                                            <option value="<?php echo st($ctype_myarray['contacttypeid']);?>">
-                                                <?php echo st($ctype_myarray['contacttype']);?>
+                                            <option
+                                                v-for="type in contactTypes"
+                                                :value="type.contacttypeid"
+                                            >
+                                                {{ type.contacttype }}
                                             </option>
                                         </select>
                                         <label for="contacttype">Contact Type</label>
@@ -326,8 +329,6 @@
                         <span class="red">
                             * Required Fields
                         </span><br />
-                        <input type="hidden" name="contactsub" value="1" />
-                        <input type="hidden" name="ed" value="<?php echo $themyarray["contactid"]?>" />
                     </td>
                 </tr>
             </table>

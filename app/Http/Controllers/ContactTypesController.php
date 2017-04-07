@@ -98,13 +98,20 @@ class ContactTypesController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getWithFilter(Patients $resources, Request $request)
+    public function getWithFilter(ContactTypes $resources, Request $request)
     {
         $fields = $request->input('fields') ?: [];
         $where  = $request->input('where') ?: [];
 
-        $patients = $resources->getWithFilter($fields, $where);
+        $contactTypes = $resources->getWithFilter($fields, $where);
 
-        return ApiResponse::responseOk('', $patients);
+        return ApiResponse::responseOk('', $contactTypes);
+    }
+
+    public function getSortedContactTypes(ContactTypes $resources)
+    {
+        $contactTypes = $resources->getSorted();
+
+        return ApiResponse::responseOk('', $contactTypes);
     }
 }

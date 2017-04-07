@@ -19,7 +19,7 @@
                                 <li>
                                     <a v-on:click.prevent>Reports</a>
                                     <ul>
-                                        <li><a href="ledger_reportfull.php">Ledger</a></li>
+                                        <li><router-link :to="{ name: 'ledger-report-full' }">Ledger</router-link></li>
                                         <li><a href="manage_claims.php">Claims ({{ headerInfo.pendingClaimsNumber }})</a></li>
                                         <li><a href="performance.php">Performance</a></li>
                                         <li><a href="manage_screeners.php?contacted=0">Pt. Screener</a></li>

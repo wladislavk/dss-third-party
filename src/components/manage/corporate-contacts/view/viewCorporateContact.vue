@@ -1,6 +1,6 @@
 <template>
     <div>
-        <br /><br />
+        <br />
         <div v-if="message" align="center" class="red">
             {{ message }}
         </div>

@@ -85,6 +85,17 @@ export default {
 
   },
   methods: {
+    getLedgerData () {
+      this.getLedgerRows()
+        .then(function () {
+          var data = response.data.data
+
+          this.ledgerRowsTotalNumber = data.total
+          this.ledgerRows = data.result
+        }, function (response) {
+          this.handleErrors('getLedgerRows', response)
+        })
+    },
     formatLedger (value) {
       return accounting.formatMoney(value, '$')
     },
@@ -94,6 +105,13 @@ export default {
       } else {
         return 'asc'
       }
+    },
+    getLedgerRows () {
+      var data = {
+        
+      }
+
+      return this.$http.post(process.env.API_PATH + 'ledgers/list', data)
     }
   }
 }

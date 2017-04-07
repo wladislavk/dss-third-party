@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resources\Ledger as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers as Repository;
+use Carbon\Carbon;
 
 class Ledger extends Model implements Resource, Repository
 {
@@ -56,5 +57,97 @@ class Ledger extends Model implements Resource, Repository
             ->where('dental_transaction_code.type', $type)
             ->orderBy('dental_ledger.service_date', 'ASC')
             ->get();
+    }
+
+    public function getTodayList($docId)
+    {
+        $queryJoinedWithTransactionCode = $this->select(
+            DB::raw("'ledger_paid' AS ledger",)
+            'dl.ledgerid AS ledgerid',
+            'dl.service_date AS service_date',
+            'dl.entry_date AS entry_date',
+            'dl.amount AS amount',
+            'dl.paid_amount AS paid_amount',
+            'dl.status AS status',
+            'dl.description AS description',
+            DB::raw("CONCAT(p.first_name, ' ', p.last_name) AS name",)
+            'pat.patientid AS patientid',
+            'pat.firstname AS firstname',
+            'pat.lastname AS lastname',
+            'tc.type AS payer',
+            DB::raw("'' AS payment_type")
+        )->from(DB::raw('dental_ledger dl'))
+        ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
+        ->leftJoin(DB::raw('dental_users AS p'), 'dl.producerid', '=', 'p.userid')
+        ->leftJoin(DB::raw('dental_transaction_code tc'), function ($query) use ($docId) {
+            $query->on('tc.transaction_code', '=', 'dl.transaction_code')
+                ->where('tc.docid', $docId);
+        })->where('dl.docid', $docId)
+        ->where(function ($query) {
+            $query->whereNotNull('dl.paid_amount')
+                ->where('dl.paid_amount', '!=', 0);
+        })->where('dl.service_date', Carbon::now());
+
+        $queryJoinedWithLedgerPayment = $this->select(
+            DB::raw("'ledger_payment' AS ledger"),
+            'dlp.id AS ledgerid',
+            'dlp.payment_date AS service_date',
+            'dlp.entry_date AS entry_date',
+            DB::raw("'' AS amount"),
+            'dlp.amount AS paid_amount',
+            DB::raw("'' AS status"),
+            DB::raw("'' AS description"),
+            DB::raw("CONCAT(p.first_name ,' ', p.last_name) AS name"),
+            'pat.patientid AS patientid',
+            'pat.firstname AS firstname',
+            'pat.lastname AS lastname',
+            'dlp.payer AS payer',
+            'dlp.payment_type AS payment_type'
+        )->from(DB::raw('dental_ledger dl'))
+        ->join(DB::raw('dental_patients pat'), 'dl.patientid', '=', 'pat.patientid')
+        ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
+        ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
+        ->where('dl.docid', $docId)
+        ->where('dlp.amount', '!=', 0)
+        ->where('dlp.payment_date', Carbon::now());
+
+        $query = $this->select(
+            DB::raw("'ledger' AS ledger"),
+            'dl.ledgerid AS ledgerid',
+            'dl.service_date AS service_date',
+            'dl.entry_date AS entry_date',
+            'dl.amount AS amount',
+            'dl.paid_amount AS paid_amount',
+            'dl.status AS status',
+            'dl.description AS description',
+            DB::raw("CONCAT(p.first_name, ' ', p.last_name) AS name"),
+            'pat.patientid AS patientid',
+            'pat.firstname AS firstname',
+            'pat.lastname AS lastname',
+            DB::raw("'' AS payer"),
+            DB::raw("'' AS payment_type")
+        )->from(DB::raw('dental_ledger dl'))
+        ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
+        ->leftJoin(DB::raw('dental_users AS p'), 'dl.producerid', '=', 'p.userid')
+        ->where('dl.docid', $docId)
+        ->where('dl.service_date', Carbon::now())
+        ->where(function ($query) {
+            $query->whereNull('dl.paid_amount')
+                ->orWhere('dl.paid_amount', 0);
+        })->groupBy('dl.ledgerid')
+        ->union($queryJoinedWithTransactionCode)
+        ->union($queryJoinedWithLedgerPayment);
+
+        return $query->get();
+    }
+
+    public function getFullList($docId)
+    {
+        $query = $this->select('dl.*', 'p.name')
+            ->from(DB::raw('dental_ledger dl'))
+            ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
+            ->where('dl.docid', $docId);
+
+        return $query->get();
     }
 }

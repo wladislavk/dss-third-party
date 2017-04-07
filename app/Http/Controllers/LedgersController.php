@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\LedgerDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers;
+use Illuminate\Http\Request;
 
 use Carbon\Carbon;
 
@@ -95,5 +96,18 @@ class LedgersController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getListOfLedgerRows(Ledgers $resources, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $reportType = $request->input('report_type') ?: 'today';
+
+        if ($reportType === 'today') {
+            $ledgerRows = $request->getTodayList($docId);
+        } else {
+            $ledgerRows = $request->getFullList($docId);
+        }
     }
 }

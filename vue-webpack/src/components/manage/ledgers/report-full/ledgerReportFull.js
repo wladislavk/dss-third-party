@@ -10,6 +10,7 @@ export default {
         sortColumn: 'service_date',
         sortDirection: 'desc'
       },
+      reportType: 'today', // other posible values: daily, monthly
       name: '',
       message: '',
       ledgerRowsTotalNumber: 0,
@@ -64,6 +65,33 @@ export default {
     }
   },
   mixins: [handlerMixin],
+  watch: {
+    '$route.query.page': function () {
+      if (this.$route.query.page != undefined && this.$route.query.page <= this.totalPages) {
+        this.$set(this.routeParameters, 'currentPageNumber', +this.$route.query.page)
+      }
+    },
+    '$route.query.sort': function () {
+      if (this.$route.query.sort in this.tableHeaders) {
+        this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort)
+      } else {
+        this.$set(this.routeParameters, 'sortColumn', 'service_date')
+      }
+    },
+    '$route.query.sortdir': function () {
+      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() == 'desc') {
+        this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
+      } else {
+        this.$set(this.routeParameters, 'sortDirection', 'desc')
+      }
+    },
+    'routeParameters': {
+      handler: function () {
+        this.getLedgerData()
+      },
+      deep: true
+    }
+  },
   computed: {
     currentDate () {
       return new Date()
@@ -82,12 +110,17 @@ export default {
 
   },
   mounted () {
-
+    this.getLedgerData()
   },
   methods: {
     getLedgerData () {
-      this.getLedgerRows()
-        .then(function () {
+      this.getLedgerRows(
+        this.reportType,
+        this.routeParameters.currentPageNumber,
+        this.ledgerRowsPerPage,
+        this.routeParameters.sortColumn,
+        this.routeParameters.sortDirection
+      ).then(function (response) {
           var data = response.data.data
 
           this.ledgerRowsTotalNumber = data.total
@@ -106,9 +139,13 @@ export default {
         return 'asc'
       }
     },
-    getLedgerRows () {
+    getLedgerRows (reportType, pageNumber, rowsPerPage, sortColumn, sortDir) {
       var data = {
-        
+        report_type: reportType,
+        page: pageNumber,
+        rows_per_page: rowsPerPage,
+        sort: sortColumn,
+        sort_dir: sortDir
       }
 
       return this.$http.post(process.env.API_PATH + 'ledgers/list', data)

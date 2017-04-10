@@ -103,11 +103,17 @@ class LedgersController extends Controller
         $docId = $this->currentUser->docid ?: 0;
 
         $reportType = $request->input('report_type') ?: 'today';
+        $page = $request->input('page') ?: 0;
+        $rowsPerPage = $request->input('rows_per_page') ?: 20;
+        $sort = $request->input('sort');
+        $sortDir = $request->input('sort_dir') ?: 'asc';
 
         if ($reportType === 'today') {
-            $ledgerRows = $request->getTodayList($docId);
+            $ledgerRows = $resources->getTodayList($docId, $page, $rowsPerPage, $sort, $sortDir = 'desc');
         } else {
-            $ledgerRows = $request->getFullList($docId);
+            $ledgerRows = $resources->getFullList($docId, $page, $rowsPerPage, $sort, $sortDir = 'desc');
         }
+
+        return ApiResponse::responseOk('', $ledgerRows);
     }
 }

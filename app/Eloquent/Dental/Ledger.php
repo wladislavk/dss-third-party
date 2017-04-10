@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resources\Ledger as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers as Repository;
 use Carbon\Carbon;
+use DB;
 
 class Ledger extends Model implements Resource, Repository
 {
@@ -59,10 +60,10 @@ class Ledger extends Model implements Resource, Repository
             ->get();
     }
 
-    public function getTodayList($docId)
+    public function getTodayList($docId, $page, $rowsPerPage, $sort, $sortDir = 'desc')
     {
         $queryJoinedWithTransactionCode = $this->select(
-            DB::raw("'ledger_paid' AS ledger",)
+            DB::raw("'ledger_paid' AS ledger"),
             'dl.ledgerid AS ledgerid',
             'dl.service_date AS service_date',
             'dl.entry_date AS entry_date',
@@ -70,7 +71,7 @@ class Ledger extends Model implements Resource, Repository
             'dl.paid_amount AS paid_amount',
             'dl.status AS status',
             'dl.description AS description',
-            DB::raw("CONCAT(p.first_name, ' ', p.last_name) AS name",)
+            DB::raw("CONCAT(p.first_name, ' ', p.last_name) AS name"),
             'pat.patientid AS patientid',
             'pat.firstname AS firstname',
             'pat.lastname AS lastname',
@@ -81,7 +82,7 @@ class Ledger extends Model implements Resource, Repository
         ->leftJoin(DB::raw('dental_users AS p'), 'dl.producerid', '=', 'p.userid')
         ->leftJoin(DB::raw('dental_transaction_code tc'), function ($query) use ($docId) {
             $query->on('tc.transaction_code', '=', 'dl.transaction_code')
-                ->where('tc.docid', $docId);
+                ->where('tc.docid', '=', $docId);
         })->where('dl.docid', $docId)
         ->where(function ($query) {
             $query->whereNotNull('dl.paid_amount')
@@ -136,18 +137,59 @@ class Ledger extends Model implements Resource, Repository
                 ->orWhere('dl.paid_amount', 0);
         })->groupBy('dl.ledgerid')
         ->union($queryJoinedWithTransactionCode)
-        ->union($queryJoinedWithLedgerPayment);
+        ->union($queryJoinedWithLedgerPayment)
+        ->orderBy($this->getSortColumnForList($sort), $sortDir);
 
-        return $query->get();
+        $list = $query->get();
+        $resultList = $list->splice($page * $rowsPerPage, $rowsPerPage);
+
+        return [
+            'total'  => count($list),
+            'result' => $resultList
+        ];
     }
 
-    public function getFullList($docId)
+    public function getFullList($docId, $page, $rowsPerPage, $sort, $sortDir = 'desc')
     {
         $query = $this->select('dl.*', 'p.name')
             ->from(DB::raw('dental_ledger dl'))
             ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
             ->where('dl.docid', $docId);
 
-        return $query->get();
+        $totalNumber = $query->count();
+
+        $resultQuery = $query->orderBy($this->getSortColumnForList($sort), $sortDir)
+            ->skip($page * $rowsPerPage)
+            ->take($rowsPerPage);
+
+        return [
+            'total'  => $totalNumber,
+            'result' => $resultQuery->get()
+        ];
+    }
+
+    private function getSortColumnForList($sort)
+    {
+        $sortColumn = '';
+
+        switch ($sort) {
+            case 'producer':
+                $sortColumn = 'name';
+                break;
+
+            case 'patient':
+                $sortColumn = 'lastname';
+                break;
+
+            case 'paid_amount':
+                $sortColumn = 'paid_amount';
+                break;
+
+            default:
+                $sortColumn = 'service_date';
+                break;
+        }
+
+        return $sortColumn;
     }
 }

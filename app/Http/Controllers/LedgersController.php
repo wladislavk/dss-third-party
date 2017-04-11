@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Requests\LedgerDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers;
+use DentalSleepSolutions\Contracts\Resources\Patient;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
@@ -98,8 +99,11 @@ class LedgersController extends Controller
         return ApiResponse::responseOk('Resource deleted');
     }
 
-    public function getListOfLedgerRows(Ledgers $resources, Request $request)
-    {
+    public function getListOfLedgerRows(
+        Ledgers $resources,
+        Patient $patientResource,
+        Request $request
+    ) {
         $docId = $this->currentUser->docid ?: 0;
 
         $reportType = $request->input('report_type') ?: 'today';
@@ -112,6 +116,16 @@ class LedgersController extends Controller
             $ledgerRows = $resources->getTodayList($docId, $page, $rowsPerPage, $sort, $sortDir = 'desc');
         } else {
             $ledgerRows = $resources->getFullList($docId, $page, $rowsPerPage, $sort, $sortDir = 'desc');
+        }
+
+        if ($ledgerRows['total'] > 0) {
+            $ledgerRows['result']->map(function ($row) use ($patientResource) {
+                $row['patient_info'] = $patientResource->getWithFilter(['firstname', 'lastname'], [
+                    'patientid' => $row->patientid
+                ]);
+
+                return $row;
+            })
         }
 
         return ApiResponse::responseOk('', $ledgerRows);

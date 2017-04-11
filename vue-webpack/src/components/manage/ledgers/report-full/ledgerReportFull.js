@@ -97,13 +97,35 @@ export default {
       return new Date()
     },
     totalCharges () {
-      return 0
+      var total = this.ledgerRows.reduce((sum, currentRow) => {
+        return sum + (currentRow.ledger === 'ledger' && currentRow.amount > 0 ? currentRow.amount : 0)
+      }, 0)
+
+      return total
     },
     totalCredits () {
-      return 0
+      var total = this.ledgerRows.reduce((sum, currentRow) => {
+        return sum + (currentRow.ledger === 'ledger_paid'
+          && currentRow.payer === constants.DSS_TRXN_TYPE_ADJ
+          && currentRow.paid_amount > 0
+            ? currentRow.paid_amount
+            : 0
+        )
+      }, 0)
+
+      return total
     },
     totalAdjustments () {
-      return 0
+      var total = this.ledgerRows.reduce((sum, currentRow) => {
+        return sum + (currentRow.ledger === 'ledger_paid'
+          && currentRow.payer === constants.DSS_TRXN_TYPE_ADJ
+          && currentRow.paid_amount > 0
+            ? currentRow.paid_amount
+            : 0
+        )
+      }, 0)
+
+      return total
     }
   },
   created () {
@@ -113,6 +135,24 @@ export default {
     this.getLedgerData()
   },
   methods: {
+    getDescription (ledgerRow) {
+      var description;
+
+      switch (ledgerRow.ledger) {
+        case 'ledger_payment':
+          description = contants.dssTransactionPayerLabels(ledgerRow.payer) + ' Payment - '
+            + contants.dssTransactionPaymentTypeLabels(ledgerRow.payment_type) + ' '
+          break
+
+        default:
+          description = ''
+          break
+      }
+
+      description += ledgerRow.description
+
+      return description
+    },
     getLedgerData () {
       this.getLedgerRows(
         this.reportType,

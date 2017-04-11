@@ -45,5 +45,53 @@ module.exports = {
   DSS_REFERRED_DSSOFFICE: 5,
   DSS_REFERRED_OTHER: 6,
 
-  dssReferredLabels: ['', 'Patient', 'Physician', 'Media', 'Internal', 'DSS Office', 'Other']
+  dssReferredLabels: ['', 'Patient', 'Physician', 'Media', 'Internal', 'DSS Office', 'Other'],
+
+  //Transaction Payers (ledger)
+  DSS_TRXN_PAYER_PRIMARY: 0,
+  DSS_TRXN_PAYER_SECONDARY: 1,
+  DSS_TRXN_PAYER_PATIENT: 2,
+  DSS_TRXN_PAYER_WRITEOFF: 3,
+  DSS_TRXN_PAYER_DISCOUNT: 4,
+
+  // A convenience array to get trxn payment labels
+  dssTransactionPayerLabels (status) {
+    var propertyNameTemplate = 'DSS_TRXN_PAYER_'
+    var labels = [
+      'Primary Insurance', 'Secondary Insurance', 'Patient',
+      'Write Off', 'Professional Discount'
+    ]
+
+    return this.getTitle(propertyNameTemplate, labels, status)
+  },
+
+  //Transaction Payment Types (ledger)
+  DSS_TRXN_PYMT_CREDIT: 0,
+  DSS_TRXN_PYMT_DEBIT: 1,
+  DSS_TRXN_PYMT_CHECK: 2,
+  DSS_TRXN_PYMT_CASH: 3,
+  DSS_TRXN_PYMT_WRITEOFF: 4,
+  DSS_TRXN_PYMT_EFT: 5,
+
+  // A convenience array to get trxn payment type labels
+  dssTransactionPaymentTypeLabels (status) {
+    var propertyNameTemplate = 'DSS_TRXN_PYMT_'
+    var labels = [
+      'Credit Card', 'Debit', 'Check',
+      'Cash', 'Write Off', 'E-Funds Transfer (EFT)'
+    ]
+
+    return this.getTitle(propertyNameTemplate, labels, status)
+  },
+
+  getTitle (propertyNameTemplate, labels, status) {
+    // get certain integer contants (the object properties) and find a requered status
+    var foundIndex = Object.getOwnPropertyNames(this).filter((property) => {
+      return property.indexOf(propertyNameTemplate) === 0
+    }).map((property) => {
+      return this[property]
+    }).findIndex((el) => el === status)
+
+    return foundIndex >= 0 ? labels[foundIndex] : null
+  }
 }

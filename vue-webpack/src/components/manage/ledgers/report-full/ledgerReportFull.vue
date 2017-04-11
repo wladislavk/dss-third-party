@@ -116,21 +116,25 @@
                                pid: row.patientid
                             }
                         }"
-                    ></router-link>
+                    >{{ row.patient_info.lastname }}, {{ row.patient_info.firstname }}</router-link>
                 </td>
                 <td valign="top" width="10%">
                     {{ row.name }}
                 </td>
                 <td valign="top" width="30%">
+                    {{ getDescription(row) }}
                 </td>
                 <td valign="top" align="right" width="10%">
+                    <template v-if="row.ledger == 'ledger'">
+                        {{ formatLedger(row.amount) }}
+                    </template>
                 </td>
-                <td>
+                <td v-if="row.ledger == 'ledger_paid' && row.payer === constants.DSS_TRXN_TYPE_ADJ">
                 </td>
                 <td valign="top" align="right" width="10%">
                     {{ formatLedger(row.paid_amount) }}
                 </td>
-                <td v-if="row.ledger == 'ledger_paid' && row.payer == 12"></td>
+                <td v-if="row.ledger == 'ledger_paid' && row.payer === constants.DSS_TRXN_TYPE_ADJ"></td>
                 <td valign="top" width="5%">
                     {{ row.status == 1 ? 'Sent' : (row.status == 2 ? 'Filed' : 'Pend') }}
                 </td>

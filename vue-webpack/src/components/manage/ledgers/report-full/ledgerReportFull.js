@@ -16,7 +16,6 @@ export default {
       ledgerRowsTotalNumber: 0,
       ledgerRowsPerPage: 20,
       ledgerRows: [],
-      charge: {},
       tableHeaders: {
         'service_date': {
           title: 'Svc Date',
@@ -127,12 +126,6 @@ export default {
       }, 0)
 
       return total
-    },
-    currentBalance () {
-      // TODO: need to check if this logic is required
-      var charge = this.charge && this.charge.amount > 0 ? this.charge.amount : 0
-
-      return charge
     }
   },
   created () {
@@ -162,7 +155,6 @@ export default {
     },
     getLedgerData () {
       this.getLedgerRows(
-        this.patientId,
         this.reportType,
         this.routeParameters.currentPageNumber,
         this.ledgerRowsPerPage,
@@ -173,7 +165,6 @@ export default {
 
           this.ledgerRowsTotalNumber = data.total
           this.ledgerRows = data.result
-          this.charge = data.charge
         }, function (response) {
           this.handleErrors('getLedgerRows', response)
         })
@@ -188,9 +179,8 @@ export default {
         return 'asc'
       }
     },
-    getLedgerRows (patientId, reportType, pageNumber, rowsPerPage, sortColumn, sortDir) {
+    getLedgerRows (reportType, pageNumber, rowsPerPage, sortColumn, sortDir) {
       var data = {
-        patient_id: patientId,
         report_type: reportType,
         page: pageNumber,
         rows_per_page: rowsPerPage,

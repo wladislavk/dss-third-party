@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   DSS_USER_TYPE_FRANCHISEE: 1,
   DSS_USER_TYPE_SOFTWARE: 2,
 
@@ -47,7 +47,7 @@ module.exports = {
 
   dssReferredLabels: ['', 'Patient', 'Physician', 'Media', 'Internal', 'DSS Office', 'Other'],
 
-  //Transaction Payers (ledger)
+  // Transaction Payers (ledger)
   DSS_TRXN_PAYER_PRIMARY: 0,
   DSS_TRXN_PAYER_SECONDARY: 1,
   DSS_TRXN_PAYER_PATIENT: 2,
@@ -65,7 +65,7 @@ module.exports = {
     return this.getTitle(propertyNameTemplate, labels, status)
   },
 
-  //Transaction Payment Types (ledger)
+  // Transaction Payment Types (ledger)
   DSS_TRXN_PYMT_CREDIT: 0,
   DSS_TRXN_PYMT_DEBIT: 1,
   DSS_TRXN_PYMT_CHECK: 2,

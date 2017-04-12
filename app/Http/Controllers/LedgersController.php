@@ -106,6 +106,7 @@ class LedgersController extends Controller
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
+        $patientId = $request->input('patient_id') ?: 0;
         $reportType = $request->input('report_type') ?: 'today';
         $page = $request->input('page') ?: 0;
         $rowsPerPage = $request->input('rows_per_page') ?: 20;
@@ -128,6 +129,27 @@ class LedgersController extends Controller
             })
         }
 
-        return ApiResponse::responseOk('', $ledgerRows);
+        if ($patientId > 0) {
+            $where = ['patientid' => $patientId];
+        } else {
+            $where = ['docid' => $docId];
+        }
+
+        $charges = $resources->getWithFilter(['amount'], array_merge($where, [
+            'transaction_type' => 'Charge'
+        ]));
+        /*$credits = $resources->getWithFilter(['paid_amount'], array_merge($where, [
+            'transaction_type' => 'Credit'
+        ]));*/
+
+        $chargeTransactionInfo = count($charges) > 0 ? $charges[0] : null;
+        // $creditTransactionInfo = count($credits) > 0 ? $credits[0] : null;
+
+        $responseData = array_merge($ledgerRows, [
+            'charge' => $chargeTransactionInfo// ,
+            /*'credit' => $creditTransactionInfo*/
+        ]);
+
+        return ApiResponse::responseOk('', $responseData);
     }
 }

@@ -120,9 +120,11 @@ class LedgersController extends Controller
 
         if ($ledgerRows['total'] > 0) {
             $ledgerRows['result']->map(function ($row) use ($patientResource) {
-                $row['patient_info'] = $patientResource->getWithFilter(['firstname', 'lastname'], [
+                $patients = $patientResource->getWithFilter(['firstname', 'lastname'], [
                     'patientid' => $row->patientid
                 ]);
+
+                $row['patient_info'] = count($patients) > 0 ? $patients[0] : null;
 
                 return $row;
             });

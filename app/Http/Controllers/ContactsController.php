@@ -256,6 +256,18 @@ class ContactsController extends Controller
         return ApiResponse::responseOk('', $response);
     }
 
+    public function getCorporateContacts(Contacts $resource, Request $request)
+    {
+        $page = $request->input('page') ?: 0;
+        $rowsPerPage = $request->input('rows_per_page') ?: 10;
+        $sort = $request->input('sort');
+        $sortDir = $request->input('sort_dir') ?: 'asc';
+
+        $contacts = $resource->getCorporate($page, $rowsPerPage, $sort, $sortDir);
+
+        return ApiResponse::responseOk('', $contacts);
+    }
+
     private function getReferralCountersForContact(Patients $patients, $contactId, $contactType, $isDetailed)
     {
         $counters = [];

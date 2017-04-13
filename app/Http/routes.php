@@ -37,6 +37,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
         Route::get('payers', 'Eligible\EligibleController@getPayers');
     });
 
+    Route::resource('corporate-contacts', 'CorporateContactsController', ['except' => ['create', 'edit']]);
     Route::resource('referred-by-contacts', 'ReferredByContactsController', ['except' => ['create', 'edit']]);
     Route::post('referred-by-contacts/edit/{contactId?}', 'ReferredByContactsController@editingContact');
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
@@ -176,12 +177,14 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('contact-types/active-non-corporate', 'ContactTypesController@getActiveNonCorporate');
     Route::post('contact-types/physician', 'ContactTypesController@getPhysician');
     Route::post('contact-types/with-filter', 'ContactTypesController@getWithFilter');
+    Route::post('contact-types/sorted', 'ContactTypesController@getSortedContactTypes');
     Route::resource('contacts', 'ContactsController', ['except' => ['create', 'edit']]);
     Route::post('contacts/find', 'ContactsController@find');
     Route::post('contacts/list-contacts-and-companies', 'ContactsController@getListContactsAndCompanies');
     Route::post('contacts/with-contact-type', 'ContactsController@getWithContactType');
     Route::post('contacts/insurance', 'ContactsController@getInsuranceContacts');
     Route::post('contacts/referred-by', 'ContactsController@getReferredByContacts');
+    Route::post('contacts/corporate', 'ContactsController@getCorporateContacts');
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
     Route::get('display-file/{filename}', 'DisplayingFileController@getFile');
 

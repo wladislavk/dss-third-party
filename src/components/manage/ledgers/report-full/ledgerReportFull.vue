@@ -100,10 +100,10 @@
             <tr
                 v-else
                 v-for="row in ledgerRows"
-                :class="row.status == 1 ? 'tr_active' : 'tr_inactive'"
+                :class="/*row.status == 1 ? 'tr_active' : 'tr_inactive'*/'tr_active'"
             >
                 <td valign="top" width="10%">
-                    {{ row.tr_inactive | moment("MM-DD-YYYY") }}
+                    {{ row.service_date | moment("MM-DD-YYYY") }}
                 </td>
                 <td valign="top" width="10%">
                     {{ row.entry_date | moment("MM-DD-YYYY") }}
@@ -116,25 +116,19 @@
                                pid: row.patientid
                             }
                         }"
-                    >{{ row.patient_info.lastname }}, {{ row.patient_info.firstname }}</router-link>
+                    >{{ getPatientFullName(row.patient_info) }}</router-link>
                 </td>
                 <td valign="top" width="10%">
                     {{ row.name }}
                 </td>
-                <td valign="top" width="30%">
-                    {{ getDescription(row) }}
+                <td valign="top" width="30%" v-html="getDescription(row)"></td>
+                <td valign="top" align="right" width="10%">
+                    {{ row.amount > 0 ? formatLedger(row.amount) : '' }}
                 </td>
                 <td valign="top" align="right" width="10%">
-                    <template v-if="row.ledger == 'ledger'">
-                        {{ formatLedger(row.amount) }}
-                    </template>
+                    {{ row.paid_amount > 0 ? formatLedger(row.paid_amount) : '' }}
                 </td>
-                <td v-if="row.ledger == 'ledger_paid' && row.payer === constants.DSS_TRXN_TYPE_ADJ">
-                </td>
-                <td valign="top" align="right" width="10%">
-                    {{ formatLedger(row.paid_amount) }}
-                </td>
-                <td v-if="row.ledger == 'ledger_paid' && row.payer === constants.DSS_TRXN_TYPE_ADJ"></td>
+                <td></td>
                 <td valign="top" width="5%">
                     {{ row.status == 1 ? 'Sent' : (row.status == 2 ? 'Filed' : 'Pend') }}
                 </td>

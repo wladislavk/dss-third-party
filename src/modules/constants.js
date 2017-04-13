@@ -84,6 +84,24 @@ export default {
     return this.getTitle(propertyNameTemplate, labels, status)
   },
 
+  // Transaction types (ledger)
+  DSS_TRXN_TYPE_MED: 1,
+  DSS_TRXN_TYPE_PATIENT: 2,
+  DSS_TRXN_TYPE_INS: 3,
+  DSS_TRXN_TYPE_DIAG: 4,
+  DSS_TRXN_TYPE_ADJ: 6,
+
+  // A convenience array to get trxn type labels
+  dssTransactionTypeLabels (status) {
+    var propertyNameTemplate = 'DSS_TRXN_TYPE_'
+    var labels = [
+      'Medical Code', 'Patient Payment Code', 'Insurance Payment Code',
+      'Dianostic Code', 'Adjustment Code'
+    ]
+
+    return this.getTitle(propertyNameTemplate, labels, status)
+  },
+
   getTitle (propertyNameTemplate, labels, status) {
     // get certain integer contants (the object properties) and find a requered status
     var foundIndex = Object.getOwnPropertyNames(this).filter((property) => {

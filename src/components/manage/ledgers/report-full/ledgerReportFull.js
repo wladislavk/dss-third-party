@@ -10,11 +10,11 @@ export default {
         sortColumn: 'service_date',
         sortDirection: 'desc'
       },
-      reportType: 'today', // other posible values: daily, monthly
+      reportType: 'daily', // other posible values: daily, monthly
       name: '',
       message: '',
       ledgerRowsTotalNumber: 0,
-      ledgerRowsPerPage: 20,
+      ledgerRowsPerPage: 30,
       ledgerRows: [],
       tableHeaders: {
         'service_date': {
@@ -97,44 +97,51 @@ export default {
       return new Date()
     },
     totalCharges () {
+      var isLedger = this.reportType === 'today' ? currentRow.ledger === 'ledger' : true
+
       var total = this.ledgerRows.reduce((sum, currentRow) => {
-        return sum + (currentRow.ledger === 'ledger' && currentRow.amount > 0 ? currentRow.amount : 0)
+        return sum + (isLedger && currentRow.amount > 0 ? currentRow.amount : 0)
       }, 0)
 
       return total
     },
     totalCredits () {
+      var isLedgerPaidAndAdjustment = this.reportType === 'today'
+        ? currentRow.ledger === 'ledger_paid' && currentRow.payer === constants.DSS_TRXN_TYPE_ADJ
+        : true
+
       var total = this.ledgerRows.reduce((sum, currentRow) => {
-        return sum + (currentRow.ledger === 'ledger_paid'
-          && currentRow.payer === constants.DSS_TRXN_TYPE_ADJ
-          && currentRow.paid_amount > 0
-            ? currentRow.paid_amount
-            : 0
-        )
+        return sum + (isLedgerPaidAndAdjustment && currentRow.paid_amount > 0 ? currentRow.paid_amount : 0)
       }, 0)
 
       return total
     },
     totalAdjustments () {
+      var isLedgerPaidAndAdjustment = this.reportType === 'today'
+        ? currentRow.ledger === 'ledger_paid' && currentRow.payer === constants.DSS_TRXN_TYPE_ADJ
+        : true
+
       var total = this.ledgerRows.reduce((sum, currentRow) => {
-        return sum + (currentRow.ledger === 'ledger_paid'
-          && currentRow.payer === constants.DSS_TRXN_TYPE_ADJ
-          && currentRow.paid_amount > 0
-            ? currentRow.paid_amount
-            : 0
-        )
+        return sum + (isLedgerPaidAndAdjustment && currentRow.paid_amount > 0 ? currentRow.paid_amount : 0)
       }, 0)
 
       return total
+    },
+    totalPages () {
+      return Math.ceil(this.ledgerRowsTotalNumber / this.ledgerRowsPerPage)
     }
-  },
-  created () {
-
   },
   mounted () {
     this.getLedgerData()
   },
   methods: {
+    getPatientFullName(patientInfo) {
+      if (patientInfo) {
+        return patientInfo.lastname + ', ' + patientInfo.firstname
+      } else {
+        return ''
+      }
+    },
     getDescription (ledgerRow) {
       var description;
 

@@ -5,7 +5,9 @@ import App from './App'
 import router from './router'
 
 // global variables
-window.constants = require('./modules/constants.js')
+import constants from './modules/constants.js'
+
+window.constants = constants
 window.storage = require('./modules/storage.js')
 window.$ = require('jquery/dist/jquery.min.js')
 window.jQuery = window.$

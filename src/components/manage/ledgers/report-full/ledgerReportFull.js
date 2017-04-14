@@ -14,8 +14,11 @@ export default {
       name: '',
       message: '',
       ledgerRowsTotalNumber: 0,
-      ledgerRowsPerPage: 30,
+      ledgerRowsPerPage: 20,
       ledgerRows: [],
+      totalCharges: 0,
+      totalCredits: 0,
+      totalAdjustments: 0,
       tableHeaders: {
         'service_date': {
           title: 'Svc Date',
@@ -96,33 +99,30 @@ export default {
     currentDate () {
       return new Date()
     },
-    totalCharges () {
-      var isLedger = this.reportType === 'today' ? currentRow.ledger === 'ledger' : true
-
+    totalPageCharges () {
       var total = this.ledgerRows.reduce((sum, currentRow) => {
-        return sum + (isLedger && currentRow.amount > 0 ? currentRow.amount : 0)
+        return sum + (currentRow.ledger === 'ledger' && currentRow.amount > 0 ? +currentRow.amount : 0)
       }, 0)
 
       return total
     },
-    totalCredits () {
-      var isLedgerPaidAndAdjustment = this.reportType === 'today'
-        ? currentRow.ledger === 'ledger_paid' && currentRow.payer === constants.DSS_TRXN_TYPE_ADJ
-        : true
-
+    totalPageCredits () {
       var total = this.ledgerRows.reduce((sum, currentRow) => {
-        return sum + (isLedgerPaidAndAdjustment && currentRow.paid_amount > 0 ? currentRow.paid_amount : 0)
+        var isNotLedgerPaidAndAdjustment = !(currentRow.ledger === 'ledger_paid' && currentRow.payer == constants.DSS_TRXN_TYPE_ADJ)
+
+        return sum + (
+          isNotLedgerPaidAndAdjustment && currentRow.ledger != 'claim' && currentRow.paid_amount > 0
+          ? +currentRow.paid_amount : 0
+        )
       }, 0)
 
       return total
     },
-    totalAdjustments () {
-      var isLedgerPaidAndAdjustment = this.reportType === 'today'
-        ? currentRow.ledger === 'ledger_paid' && currentRow.payer === constants.DSS_TRXN_TYPE_ADJ
-        : true
-
+    totalPageAdjustments () {
       var total = this.ledgerRows.reduce((sum, currentRow) => {
-        return sum + (isLedgerPaidAndAdjustment && currentRow.paid_amount > 0 ? currentRow.paid_amount : 0)
+        var isLedgerPaidAndAdjustment = (currentRow.ledger === 'ledger_paid' && currentRow.payer == constants.DSS_TRXN_TYPE_ADJ)
+
+        return sum + (isLedgerPaidAndAdjustment && currentRow.paid_amount > 0 ? +currentRow.paid_amount : 0)
       }, 0)
 
       return total
@@ -133,14 +133,24 @@ export default {
   },
   mounted () {
     this.getLedgerData()
+
+    this.formReportTotals()
   },
   methods: {
+    formReportTotals () {
+      this.getLedgerTotals(this.reportType)
+        .then(function (response) {
+          var data = response.data.data
+
+          this.totalCharges = data.charges
+          this.totalCredits = data.credits
+          this.totalAdjustments = data.adjustments
+        }, function (response) {
+          this.handleErrors('getLedgerTotals', response)
+        })
+    },
     getPatientFullName(patientInfo) {
-      if (patientInfo) {
-        return patientInfo.lastname + ', ' + patientInfo.firstname
-      } else {
-        return ''
-      }
+        return patientInfo ? (patientInfo.lastname + ', ' + patientInfo.firstname) : ''
     },
     getDescription (ledgerRow) {
       var description;
@@ -196,6 +206,11 @@ export default {
       }
 
       return this.$http.post(process.env.API_PATH + 'ledgers/list', data)
+    },
+    getLedgerTotals (reportType) {
+      var data = { report_type: reportType }
+
+      return this.$http.post(process.env.API_PATH + 'ledgers/totals', data)
     }
   }
 }

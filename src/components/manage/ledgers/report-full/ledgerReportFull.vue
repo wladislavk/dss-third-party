@@ -10,7 +10,7 @@
             </template>
         </span>
         <br>
-        <div align="right">
+        <div align="right" style="margin-right: 15px">
             <router-link
                 :to="{ path: 'report-claim-aging' }"
                 class="addButton"
@@ -44,7 +44,7 @@
         <div v-if="message" align="center" class="red">
             <b>{{ message }}</b>
         </div>
-        <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
+        <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
             <tr
                 v-if="ledgerRowsTotalNumber > ledgerRowsPerPage"
                 bgColor="#ffffff"
@@ -123,7 +123,7 @@
                 </td>
                 <td valign="top" width="30%" v-html="getDescription(row)"></td>
                 <td valign="top" align="right" width="10%">
-                    {{ row.amount > 0 ? formatLedger(row.amount) : '' }}
+                    {{ row.ledger === 'ledger' && row.amount > 0 ? formatLedger(row.amount) : '' }}
                 </td>
                 <td valign="top" align="right" width="10%">
                     {{ row.paid_amount > 0 ? formatLedger(row.paid_amount) : '' }}
@@ -132,6 +132,43 @@
                 <td valign="top" width="5%">
                     {{ row.status == 1 ? 'Sent' : (row.status == 2 ? 'Filed' : 'Pend') }}
                 </td>
+            </tr>
+            <tr>
+                <td valign="top" colspan="5" align="right">
+                    <b>Page Totals</b>
+                </td>
+                <td valign="top" align="right">
+                    <b>
+                        {{ formatLedger(totalPageCharges) }}
+                    </b>
+                </td>
+                <td valign="top" align="right">
+                    <b>
+                        {{ formatLedger(totalPageCredits) }}
+                    </b>
+                </td>
+                <td valign="top" align="right">
+                    <b>
+                        {{ formatLedger(totalPageAdjustments) }}
+                    </b>
+                </td>
+                <td valign="top"></td>
+            </tr>
+            <tr>
+                <td valign="top" colspan="5" align="right">
+                    <b>Page Balance</b>
+                </td>
+                <td align="right">
+                    <b>
+                        {{ formatLedger(totalPageCharges - totalPageCredits - totalPageAdjustments) }}
+                    </b>
+                </td>
+                <td colspan="2">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4"></td>
+                <td colspan="5"><hr style="border-top: thin dashed;"></td>
             </tr>
             <tr>
                 <td valign="top" colspan="5" align="right">

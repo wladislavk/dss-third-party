@@ -132,4 +132,19 @@ class LedgersController extends Controller
 
         return ApiResponse::responseOk('', $ledgerRows);
     }
+
+    public function getReportTotals(Ledgers $resources, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $reportType = $request->input('report_type') ?: 'today';
+
+        $totals = [
+            'charges'     => $resources->getTotalCharges($docId, $reportType),
+            'credits'     => $resources->getTotalCredits($docId, $reportType),
+            'adjustments' => $resources->getTotalAdjustments($docId, $reportType)
+        ];
+
+        return ApiResponse::responseOk('', $totals);
+    }
 }

@@ -204,6 +204,12 @@
                 </td>
             </tr>
         </table>
+
+        <!-- <ledger-summary-report-full
+            :charges="charges"
+            :credits="credits"
+            :adjustments="adjustments"
+        ></ledger-summary-report-full> -->
     </div>
 </template>
 

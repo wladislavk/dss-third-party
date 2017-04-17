@@ -1,4 +1,5 @@
 var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+var ledgerSummaryReportFull = require('../summary-report-full/ledgerSummaryReportFull.vue')
 
 export default {
   name: 'ledger-report-full',
@@ -10,7 +11,7 @@ export default {
         sortColumn: 'service_date',
         sortDirection: 'desc'
       },
-      reportType: 'daily', // other posible values: daily, monthly
+      reportType: 'today', // other posible values: daily, monthly
       name: '',
       message: '',
       ledgerRowsTotalNumber: 0,
@@ -43,7 +44,7 @@ export default {
         'description': {
           title: 'Description',
           with_link: true,
-          width: 10
+          width: 30
         },
         'amount': {
           title: 'Charges',
@@ -66,6 +67,9 @@ export default {
         }
       }
     }
+  },
+  components: {
+    'ledger-summary-report-full': ledgerSummaryReportFull
   },
   mixins: [handlerMixin],
   watch: {
@@ -142,9 +146,9 @@ export default {
         .then(function (response) {
           var data = response.data.data
 
-          this.totalCharges = data.charges
-          this.totalCredits = data.credits
-          this.totalAdjustments = data.adjustments
+          this.totalCharges = +data.charges
+          this.totalCredits = +data.credits
+          this.totalAdjustments = +data.adjustments
         }, function (response) {
           this.handleErrors('getLedgerTotals', response)
         })
@@ -157,8 +161,8 @@ export default {
 
       switch (ledgerRow.ledger) {
         case 'ledger_payment':
-          description = contants.dssTransactionPayerLabels(ledgerRow.payer) + ' Payment - '
-            + contants.dssTransactionPaymentTypeLabels(ledgerRow.payment_type) + ' '
+          description = constants.dssTransactionPayerLabels(ledgerRow.payer) + ' Payment - '
+            + constants.dssTransactionPaymentTypeLabels(ledgerRow.payment_type) + ' '
           break
 
         default:

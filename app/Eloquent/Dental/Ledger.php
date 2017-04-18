@@ -89,7 +89,7 @@ class Ledger extends Model implements Resource, Repository
         ->where(function ($query) {
             $query->whereNotNull('dl.paid_amount')
                 ->where('dl.paid_amount', '!=', 0);
-        })->where('dl.service_date', Carbon::now());
+        }); // ->where('dl.service_date', Carbon::now());
 
         $queryJoinedWithLedgerPayment = $this->select(
             DB::raw("'ledger_payment' AS ledger"),
@@ -111,8 +111,8 @@ class Ledger extends Model implements Resource, Repository
         ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
         ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
         ->where('dl.docid', $docId)
-        ->where('dlp.amount', '!=', 0)
-        ->where('dlp.payment_date', Carbon::now());
+        ->where('dlp.amount', '!=', 0);
+        // ->where('dlp.payment_date', Carbon::now());
 
         $query = $this->select(
             DB::raw("'ledger' AS ledger"),
@@ -133,7 +133,7 @@ class Ledger extends Model implements Resource, Repository
         ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
         ->leftJoin(DB::raw('dental_users AS p'), 'dl.producerid', '=', 'p.userid')
         ->where('dl.docid', $docId)
-        ->where('dl.service_date', Carbon::now())
+        // ->where('dl.service_date', Carbon::now())
         ->where(function ($query) {
             $query->whereNull('dl.paid_amount')
                 ->orWhere('dl.paid_amount', 0);
@@ -177,11 +177,9 @@ class Ledger extends Model implements Resource, Repository
                 ->from(DB::raw('dental_ledger dl'))
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
                 ->where('dl.docid', $docId)
-                ->where('dl.service_date', Carbon::now())
-                ->where(function ($query) {
-                    $query->whereNull('dl.paid_amount')
-                        ->orWhere('dl.paid_amount', 0);
-                })->first();
+                // ->where('dl.service_date', Carbon::now())
+                ->whereRaw('COALESCE(dl.paid_amount, 0) = 0')
+                ->first();
 
             return !empty($total) ? $total->total : 0;
         } else {
@@ -192,36 +190,60 @@ class Ledger extends Model implements Resource, Repository
     public function getTotalCredits($docId, $type = 'today')
     {
         if ($type == 'today') {
-            /*$total = $this->select(DB::raw('COALESCE(sum(dlp.amount), 0) AS total'))
+            $totalCreditsType = $this->select(DB::raw('COALESCE(sum(dlp.amount), 0) AS total'))
                 ->from(DB::raw('dental_ledger dl'))
                 ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
                 ->where('dl.docid', $docId)
                 ->where('dlp.amount', '!=', 0)
-                ->where('dlp.payer', '!=', self::DSS_TRXN_TYPE_ADJ)
                 // ->where('dlp.payment_date', Carbon::now())
-                ->first();*/
+                ->first();
 
-            $total = $this->select('dl.description', DB::raw('sum(dl.paid_amount) amount'))
+            $totalCreditsNamed = $this->select('dl.ledgerid'/*DB::raw('COALESCE(sum(dl.paid_amount), 0) AS total')*/)
                 ->from(DB::raw('dental_ledger dl'))
-                ->join(DB::raw('dental_transaction_code tc'), function ($query) use ($docId) {
+                ->leftJoin(DB::raw('dental_transaction_code tc'), function ($query) use ($docId) {
                     $query->on('tc.transaction_code', '=', 'dl.transaction_code')
                         ->where('tc.docid', '=', $docId);
-                })->where('paid_amount', '!=', "''")
+                })->where('dl.docid', $docId)
+                ->where(function($query) {
+                    $query->whereNotNull('dl.paid_amount')
+                        ->where('dl.paid_amount', '!=', 0);
+                })->whereRaw("COALESCE(tc.type, '') != ?", [self::DSS_TRXN_TYPE_ADJ])
                 // ->where('dl.service_date', Carbon::now())
-                ->where('tc.type', '!=', self::DSS_TRXN_TYPE_ADJ)
-                ->groupBy('dl.description')
                 ->get();
+
+            /*$str = '335,334,283,320,186';
+
+            $ids = explode(',', $str);
+            $ids2 = [];
+
+            foreach ($totalCreditsNamed as $row) {
+                $ids2[] = $row->ledgerid;
+            }
+
+            dd($ids2);
+
+            $result = [];
+            foreach ($ids as $id) {
+                if (!in_array($id, $ids2)) {
+                    $result[] = $id;
+                } else {
+                    unset($ids2[array_search($id, $ids2)]);
+                }
+            }
+
+            dd(count($ids), $result, $ids2);*/
+
+            return (!empty($totalCreditsType) ? $totalCreditsType->total : 0)
+                + (!empty($totalCreditsNamed) ? $totalCreditsNamed->total : 0);
         } else {
             $total = $this->select(DB::raw('SUM(dl.paid_amount) AS total'))
                 ->from(DB::raw('dental_ledger dl'))
                 ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
                 ->where('dl.docid', $docId)
                 ->first();
+
+            return !empty($total) ? $total->total : 0;
         }
-
-        dd($total);
-
-        return !empty($total) ? $total->total : 0;
     }
 
     public function getTotalAdjustments($docId, $type = 'today')

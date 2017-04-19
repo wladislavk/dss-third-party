@@ -138,11 +138,12 @@ class LedgersController extends Controller
         $docId = $this->currentUser->docid ?: 0;
 
         $reportType = $request->input('report_type') ?: 'today';
+        $patientId = $request->input('patient_id') ?: 0;
 
         $totals = [
-            'charges'     => $resources->getTotalCharges($docId, $reportType),
-            'credits'     => $resources->getTotalCredits($docId, $reportType),
-            'adjustments' => $resources->getTotalAdjustments($docId, $reportType)
+            'charges'     => $resources->getTotalCharges($docId, $reportType, $patientId),
+            'credits'     => $resources->getTotalCredits($docId, $reportType, $patientId),
+            'adjustments' => $resources->getTotalAdjustments($docId, $reportType, $patientId)
         ];
 
         return ApiResponse::responseOk('', $totals);

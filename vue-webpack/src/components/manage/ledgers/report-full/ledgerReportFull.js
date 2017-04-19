@@ -135,23 +135,20 @@ export default {
       return Math.ceil(this.ledgerRowsTotalNumber / this.ledgerRowsPerPage)
     }
   },
+  created () {
+    eventHub.$on('setting-totals-from-summary-block', this.onSetTotalsFromSummaryBlock)
+  },
   mounted () {
     this.getLedgerData()
-
-    this.formReportTotals()
+  },
+  beforeDestroy () {
+    eventHub.$off('setting-totals-from-summary-block', this.onSetTotalsFromSummaryBlock)
   },
   methods: {
-    formReportTotals () {
-      this.getLedgerTotals(this.reportType)
-        .then(function (response) {
-          var data = response.data.data
-
-          this.totalCharges = +data.charges
-          this.totalCredits = +data.credits
-          this.totalAdjustments = +data.adjustments
-        }, function (response) {
-          this.handleErrors('getLedgerTotals', response)
-        })
+    onSetTotalsFromSummaryBlock (totals) {
+      this.totalCharges = totals.charges
+      this.totalCredits = totals.credits
+      this.totalAdjustments = totals.adjustments
     },
     getPatientFullName(patientInfo) {
         return patientInfo ? (patientInfo.lastname + ', ' + patientInfo.firstname) : ''
@@ -210,11 +207,6 @@ export default {
       }
 
       return this.$http.post(process.env.API_PATH + 'ledgers/list', data)
-    },
-    getLedgerTotals (reportType) {
-      var data = { report_type: reportType }
-
-      return this.$http.post(process.env.API_PATH + 'ledgers/totals', data)
     }
   }
 }

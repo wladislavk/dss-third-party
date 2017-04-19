@@ -6,7 +6,7 @@
                 <label>{{ charge.description }}</label> {{ formatLedger(charge.amount) }}
             </li>
             <li>
-                <label>Charges Total</label> {{ formatLedger(totalCharges) }}
+                <label>Charges Total</label> {{ formatLedger(totals.charges) }}
             </li>
         </ul>
         <h3>Credit</h3>
@@ -15,7 +15,7 @@
                 <label>{{ credit.description }}</label> {{ formatLedger(credit.amount) }}
             </li>
             <li>
-                <label>Credits Total</label> {{ formatLedger(totalCredits) }}
+                <label>Credits Total</label> {{ formatLedger(totals.credits) }}
             </li>
         </ul>
         <h3>Adjustments</h3>
@@ -24,7 +24,7 @@
                 <label>{{ adjustment.description }}</label> {{ formatLedger(adjustment.amount) }}
             </li>
             <li>
-                <label>Adjust. Total</label> {{ formatLedger(totalAdjustments) }}
+                <label>Adjust. Total</label> {{ formatLedger(totals.adjustments) }}
             </li>
         </ul>
     </div>

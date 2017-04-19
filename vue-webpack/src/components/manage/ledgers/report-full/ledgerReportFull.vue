@@ -205,11 +205,9 @@
             </tr>
         </table>
 
-        <!-- <ledger-summary-report-full
-            :charges="charges"
-            :credits="credits"
-            :adjustments="adjustments"
-        ></ledger-summary-report-full> -->
+        <ledger-summary-report-full
+            :report-type="reportType"
+        ></ledger-summary-report-full>
     </div>
 </template>
 

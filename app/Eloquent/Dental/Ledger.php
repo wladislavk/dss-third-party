@@ -192,14 +192,16 @@ class Ledger extends Model implements Resource, Repository
         if ($type == 'today') {
             $totalCreditsType = $this->select(DB::raw('COALESCE(sum(dlp.amount), 0) AS total'))
                 ->from(DB::raw('dental_ledger dl'))
+                ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
                 ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
                 ->where('dl.docid', $docId)
                 ->where('dlp.amount', '!=', 0)
                 // ->where('dlp.payment_date', Carbon::now())
                 ->first();
 
-            $totalCreditsNamed = $this->select('dl.ledgerid'/*DB::raw('COALESCE(sum(dl.paid_amount), 0) AS total')*/)
+            $totalCreditsNamed = $this->select(DB::raw('COALESCE(sum(dl.paid_amount), 0) AS total'))
                 ->from(DB::raw('dental_ledger dl'))
+                ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
                 ->leftJoin(DB::raw('dental_transaction_code tc'), function ($query) use ($docId) {
                     $query->on('tc.transaction_code', '=', 'dl.transaction_code')
                         ->where('tc.docid', '=', $docId);
@@ -209,29 +211,7 @@ class Ledger extends Model implements Resource, Repository
                         ->where('dl.paid_amount', '!=', 0);
                 })->whereRaw("COALESCE(tc.type, '') != ?", [self::DSS_TRXN_TYPE_ADJ])
                 // ->where('dl.service_date', Carbon::now())
-                ->get();
-
-            /*$str = '335,334,283,320,186';
-
-            $ids = explode(',', $str);
-            $ids2 = [];
-
-            foreach ($totalCreditsNamed as $row) {
-                $ids2[] = $row->ledgerid;
-            }
-
-            dd($ids2);
-
-            $result = [];
-            foreach ($ids as $id) {
-                if (!in_array($id, $ids2)) {
-                    $result[] = $id;
-                } else {
-                    unset($ids2[array_search($id, $ids2)]);
-                }
-            }
-
-            dd(count($ids), $result, $ids2);*/
+                ->first();
 
             return (!empty($totalCreditsType) ? $totalCreditsType->total : 0)
                 + (!empty($totalCreditsNamed) ? $totalCreditsNamed->total : 0);
@@ -252,7 +232,6 @@ class Ledger extends Model implements Resource, Repository
             $total = $this->select(DB::raw('COALESCE(sum(dl.paid_amount), 0) AS total'))
                 ->from(DB::raw('dental_ledger dl'))
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
-                ->leftJoin(DB::raw('dental_users AS p'), 'dl.producerid', '=', 'p.userid')
                 ->leftJoin(DB::raw('dental_transaction_code tc'), function ($query) use ($docId) {
                     $query->on('tc.transaction_code', '=', 'dl.transaction_code')
                         ->where('tc.docid', '=', $docId);
@@ -260,7 +239,8 @@ class Ledger extends Model implements Resource, Repository
                 ->where(function ($query) {
                     $query->whereNotNull('dl.paid_amount')
                         ->where('dl.paid_amount', '!=', 0);
-                })->where('dl.service_date', Carbon::now())
+                })->where('tc.type', self::DSS_TRXN_TYPE_ADJ)
+                // ->where('dl.service_date', Carbon::now())
                 ->first();
 
             return !empty($total) ? $total->total : 0;

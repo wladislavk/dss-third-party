@@ -218,7 +218,6 @@ class Ledger extends Model implements Resource, Repository
         } else {
             $total = $this->select(DB::raw('SUM(dl.paid_amount) AS total'))
                 ->from(DB::raw('dental_ledger dl'))
-                ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
                 ->where('dl.docid', $docId)
                 ->first();
 

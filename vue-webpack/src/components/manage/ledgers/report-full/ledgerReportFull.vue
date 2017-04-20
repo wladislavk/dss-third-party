@@ -121,14 +121,16 @@
                 <td valign="top" width="10%">
                     {{ row.name }}
                 </td>
-                <td valign="top" width="30%" v-html="getDescription(row)"></td>
+                <td valign="top" width="25%" v-html="getDescription(row)"></td>
                 <td valign="top" align="right" width="10%">
                     {{ row.ledger === 'ledger' && row.amount > 0 ? formatLedger(row.amount) : '' }}
                 </td>
                 <td valign="top" align="right" width="10%">
-                    {{ row.paid_amount > 0 ? formatLedger(row.paid_amount) : '' }}
+                    {{ row.paid_amount > 0 && isCredit(row) ? formatLedger(row.paid_amount) : '' }}
                 </td>
-                <td></td>
+                <td valign="top" align="right" width="10%">
+                    {{ row.paid_amount > 0 && isAdjustment(row) ? formatLedger(row.paid_amount) : '' }}
+                </td>
                 <td valign="top" width="5%">
                     {{ row.status == 1 ? 'Sent' : (row.status == 2 ? 'Filed' : 'Pend') }}
                 </td>

@@ -57,7 +57,7 @@ export default {
           var data = response.data.data
 
           this.charges = data.charges
-          this.credits = typeof data.credits === 'object' ? data.credits['type'].concat(data.credits['named']) : data.credits 
+          this.credits = data.credits.hasOwnProperty('type') ? data.credits['type'].concat(data.credits['named']) : data.credits 
           this.adjustments = data.adjustments
         }, function (response) {
           this.handleErrors('getLedgerTotals', response)

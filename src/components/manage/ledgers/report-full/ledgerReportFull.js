@@ -145,6 +145,12 @@ export default {
     eventHub.$off('setting-totals-from-summary-block', this.onSetTotalsFromSummaryBlock)
   },
   methods: {
+    isCredit(row) {
+      return (!(row.ledger == 'ledger_paid' && row.payer == constants.DSS_TRXN_TYPE_ADJ))
+    },
+    isAdjustment (row) {
+      return (row.ledger == 'ledger_paid' && row.payer == constants.DSS_TRXN_TYPE_ADJ)
+    },
     onSetTotalsFromSummaryBlock (totals) {
       this.totalCharges = totals.charges
       this.totalCredits = totals.credits
@@ -158,8 +164,8 @@ export default {
 
       switch (ledgerRow.ledger) {
         case 'ledger_payment':
-          description = constants.dssTransactionPayerLabels(ledgerRow.payer) + ' Payment - '
-            + constants.dssTransactionPaymentTypeLabels(ledgerRow.payment_type) + ' '
+          description = constants.dssTransactionPayerLabels(+ledgerRow.payer) + ' Payment - '
+            + constants.dssTransactionPaymentTypeLabels(+ledgerRow.payment_type) + ' '
           break
 
         default:

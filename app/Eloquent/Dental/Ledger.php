@@ -143,11 +143,10 @@ class Ledger extends Model implements Resource, Repository
         ->orderBy($this->getSortColumnForList($sort), $sortDir);
 
         $list = $query->get();
-        $resultList = $list->splice($page * $rowsPerPage, $rowsPerPage);
 
         return [
             'total'  => count($list),
-            'result' => $resultList
+            'result' => $list->splice($page * $rowsPerPage, $rowsPerPage)
         ];
     }
 
@@ -240,12 +239,15 @@ class Ledger extends Model implements Resource, Repository
                 'named' => $totalCreditsNamed
             ];
         } else {
-            $total = $this->select(DB::raw('SUM(dl.paid_amount) AS total'))
-                ->from(DB::raw('dental_ledger dl'))
+            $query = $this->select(
+                    DB::raw("COALESCE(dl.description, '') AS description"),
+                    DB::raw('SUM(dl.paid_amount) AS amount')
+                )->from(DB::raw('dental_ledger dl'))
                 ->where('dl.docid', $docId)
-                ->first();
+                ->where('dl.paid_amount', '!=', 0)
+                ->groupBy('description');
 
-            return !empty($total) ? $total->total : 0;
+            return $query->get();
         }
     }
 
@@ -273,7 +275,7 @@ class Ledger extends Model implements Resource, Repository
 
             return $query->groupBy('description')->get();
         } else {
-            return 0;
+            return [];
         }
     }
 

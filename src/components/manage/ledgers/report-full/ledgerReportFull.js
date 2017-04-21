@@ -89,7 +89,7 @@ export default {
       if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() == 'desc') {
         this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
       } else {
-        this.$set(this.routeParameters, 'sortDirection', 'desc')
+        this.$set(this.routeParameters, 'sortDirection', 'asc')
       }
     },
     'routeParameters': {

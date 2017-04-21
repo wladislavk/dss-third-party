@@ -58,10 +58,11 @@ On Mac/Linux use command below.
 sudo echo 127.0.0.1 loader.docker.localhost api.docker.localhost >> /etc/hosts
 ```
 
-### Start Containers
-After the images are built, run docker-compose (within ds3-private04-Docker) to initialize the containers.
+### Start/Stop Containers
+After the images are built, run docker-compose up (within ds3-private04-Docker) to initialize the containers, and docker-compose down to halt.
 ```bash
 docker-compose up -d
+docker-compose down
 ```
 
 ### Test Containers

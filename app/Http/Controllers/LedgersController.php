@@ -9,6 +9,8 @@ use DentalSleepSolutions\Http\Requests\LedgerDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers;
+use DentalSleepSolutions\Contracts\Resources\Patient;
+use Illuminate\Http\Request;
 
 use Carbon\Carbon;
 
@@ -95,5 +97,55 @@ class LedgersController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getListOfLedgerRows(
+        Ledgers $resources,
+        Patient $patientResource,
+        Request $request
+    ) {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $reportType = $request->input('report_type') ?: 'today';
+        $page = $request->input('page') ?: 0;
+        $rowsPerPage = $request->input('rows_per_page') ?: 20;
+        $sort = $request->input('sort');
+        $sortDir = $request->input('sort_dir') ?: 'asc';
+
+        if ($reportType === 'today') {
+            $ledgerRows = $resources->getTodayList($docId, $page, $rowsPerPage, $sort, $sortDir);
+        } else {
+            $ledgerRows = $resources->getFullList($docId, $page, $rowsPerPage, $sort, $sortDir);
+        }
+
+        if ($ledgerRows['total'] > 0) {
+            $ledgerRows['result']->map(function ($row) use ($patientResource) {
+                $patients = $patientResource->getWithFilter(['firstname', 'lastname'], [
+                    'patientid' => $row->patientid
+                ]);
+
+                $row['patient_info'] = count($patients) > 0 ? $patients[0] : null;
+
+                return $row;
+            });
+        }
+
+        return ApiResponse::responseOk('', $ledgerRows);
+    }
+
+    public function getReportTotals(Ledgers $resources, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $reportType = $request->input('report_type') ?: 'today';
+        $patientId = $request->input('patient_id') ?: 0;
+
+        $totals = [
+            'charges'     => $resources->getTotalCharges($docId, $reportType, $patientId),
+            'credits'     => $resources->getTotalCredits($docId, $reportType, $patientId),
+            'adjustments' => $resources->getTotalAdjustments($docId, $reportType, $patientId)
+        ];
+
+        return ApiResponse::responseOk('', $totals);
     }
 }

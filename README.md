@@ -3,8 +3,21 @@
 This repositry contains base docker image for *DS3* project development. It also contains scripts to run all DS3-Docker projects as a group of linked containers.
 
 ## Quickstart
+After your images are built (see "Initial Setup") you can run start Docker from the -04 repo
+```bash
+cd ds3-private04-Docker
+docker-compose up -d
+```
+Navigate to https://loader.docker.localhost (Loader / UI endpoint) and https://api.docker.localhost (API endpoint).
 
-To build and run all containers you should clone all repos into one directory
+To stop your containers
+```bash
+docker-compose down
+```
+
+## Initial Setup
+
+To build and run all containers, first clone ds3 repos 01-04 into one directory:
 
 ```
 $ ls -l
@@ -14,48 +27,49 @@ drwxr-xr-x  ds3-private03
 drwxr-xr-x  ds3-private04-Docker
 ```
 
-#### REQUIRED DOCKER FIX for Windows
-If you run Docker in Windows you **must** change the end-of-line encoding for a particular Docker file BEFORE you 'make' the images or the containers will fail. Docker expects Linux-style end-of-line encoding, but for some reason Windows *automatically* reads the Docker text file with Windows-style encoding.  
+### Build Images
+Navigate to ```ds3-private04-Docker``` repo, then build and run all containers. Note that ```docker-compose``` file contains all necessary build scripts (```make``` is not required). (See 'Troubleshooting' below if these commands generate weird errors in Windows.)
 
-With MS Visual Studio code, open this file:  
-> ds3-private04-Docker/docker-entrypoint.sh
 
-In VS code on the bottom left pane, change the "CRLF" option to "LF".  Save the file.  That's it.  For a screenshot see the bottom section "The Simple Fix - VS Code Rocks" on [this page](https://blogs.msdn.microsoft.com/stevelasker/2016/09/22/running-scripts-in-a-docker-container-from-windows-cr-or-crlf/).
-
-If you see something like this when starting containers on your Windows machine, this means you failed to save the file correctly.
-```bash
-/bin/sh: /usr/sbin/docker-entrypoint.sh: /bin/bash^M: bad interpreter: No such file or directory
-```
-###Build Images
-Navigate to the Docker repo, then build and run all containers with two commands. (Make sure you apply the 'Windows fix' above if using W10 before doing this.)
-
-**Note:** These images take a *long time* to build initially (40 min+). Go do something else.
-
+#### Build BaseImage (do this ONCE - only needed for first time run)
 ```bash
 cd ds3-private04-Docker
-make all
+docker-compose build baseimage
+```
+**Note:** These images take a *long time* to build initially (25 min+). Go do something else.
+
+#### Build Images (do this EVERY time you UPDATE your derived images)
+```bash
+cd ds3-private04-Docker
+docker-compose build
 ```
 
+### Patch Hosts
+Patch your DNS hosts file.  On Windows, Hosts file is located at `c:\windows\system32\drivers\etc\hosts`.
 
+Add the following lines:
+```
+127.0.0.1 loader.docker.localhost
+127.0.0.1 api.docker.localhost
+```
+On Mac/Linux use command below.  
 
-###Start Containers
+```bash
+sudo echo 127.0.0.1 loader.docker.localhost api.docker.localhost >> /etc/hosts
+```
+
+### Start Containers
 After the images are built, run docker-compose (within ds3-private04-Docker) to initialize the containers.
 ```bash
 docker-compose up -d
 ```
-###Patch Hosts
-Patch your DNS hosts file.  On Windows, Hosts file is located at {c:\windows\system32\drivers\etc\hosts}.
 
-On Mac/Linux use command below.  
+### Test Containers
+Go to a browser and verify access to https://loader.docker.localhost/manage
 
-```bash
-sudo echo 127.0.0.1 loader.ds3soft.dev api.ds3soft.dev >> /etc/hosts
-```
-###Test Containers
-Go to a browser and verify access to https://loader.ds3soft.dev
-
-Verify the images are connected by navigating to https://loader.ds3soft.dev:9443/manage
 Login with Username: doc1f Password: cr3at1vItY.  If you can login then all containers run correctly.
+
+**Windows Issue** If you cannot access the HTTPS ports, you may need to alter your ```docker-compose.yml``` file.  See "Troubleshooting" below.
 
 ## Base Image
 
@@ -96,15 +110,16 @@ rh-php56-runtime.x86_64             2.0-6.el6                  @centos-sclo-rh
 ```
 
 It has a entrypoint script which is going to:
-- Create self-signes SSL sertificates for a domain specified by `HTTPD_SERVER_NAME` environment variable
+- Create self-signed SSL sertificates for a domain specified by `HTTPD_SERVER_NAME` environment variable
 - Run `httpd` in foreground
 
 ## Make
 
-Makefile provides shortcuts to build images:
+**DEPRECATED - Use updated docker-compose.yml** <strike>Makefile provides shortcuts to build images:
 
 - `make base` to build base image
 - `make all` to build everything required to start a cluster
+</strike>
 
 ## Compose
 
@@ -130,5 +145,38 @@ Delete all Docker images
 ```bash
 docker rmi $(docker images -q)
 ```
+
 ## Kitematic
 If you use Windows, you can use the Docker addon "Kitematic" as a GUI to manage your containers.  It is just a GUI wrapper for the command line, but it is useful for debugging and viewing container info.  It is included with Docker for Windows.  https://kitematic.com/
+
+### Troubleshooting - DOCKER FIXES for Windows
+
+#### HTTPS Connection Issue
+Windows 10 (possibly W7 also) can have issues related to secure port allocation. If you see connection errors like ```ERR_CONNECTION_REFUSED``` or ```SSL_LENGTH_VIOLATION``` this is likely a Windows-specific port / firewall issue.
+
+**Skype** It is known that Skype BLOCKS access to port 443!  Kill the Skype application, then restart your containers.  If the containers work, the issue was related to Skype blocking access to port 443.
+
+If you still see errors (or you don't use Skype) you should CHANGE the secure port assignment for Traefik.  Open ```docker-compose.yml``` and CHANGE the port 443 assignment.  For example, instead of default 443:443, use 4433:443 (or similar):
+
+```
+  balancer:
+    image: traefik:v1.2.3-alpine
+    command: --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    ports:
+      - 80:80
+      - 4433:443
+      # CHANGE the 443:443 to 4433:443 or something else to use alternate secure port
+```
+
+#### End of File Issue
+If you see something like this when starting containers on your Windows machine, this means you need to fix an end-of-line encoding issue with Windows vs. Docker parsing. This ALWAYS happened on older versions of Docker, newer versions do not seem to have this problem.
+```bash
+/bin/sh: /usr/sbin/docker-entrypoint.sh: /bin/bash^M: bad interpreter: No such file or directory
+```
+**FIX**
+In Windows, the end-of-line encoding for ```docker-entrypoint.sh``` must be changed BEFORE you ```make``` images, or the containers will fail. Docker expects Linux-style end-of-line encoding, but for some reason Windows *automatically* reads the Docker text file with Windows-style encoding.  
+
+With MS Visual Studio code, open this file:  
+> ds3-private04-Docker/docker-entrypoint.sh
+
+In VS code on the bottom left pane, change the "CRLF" option to "LF".  Save the file.  That's it.  For a screenshot see the bottom section "The Simple Fix - VS Code Rocks" on [this page](https://blogs.msdn.microsoft.com/stevelasker/2016/09/22/running-scripts-in-a-docker-container-from-windows-cr-or-crlf/).

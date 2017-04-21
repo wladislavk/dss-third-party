@@ -89,7 +89,7 @@ class Ledger extends Model implements Resource, Repository
         ->where(function ($query) {
             $query->whereNotNull('dl.paid_amount')
                 ->where('dl.paid_amount', '!=', 0);
-        }); // ->where('dl.service_date', Carbon::now());
+        })->where('dl.service_date', Carbon::now());
 
         $queryJoinedWithLedgerPayment = $this->select(
             DB::raw("'ledger_payment' AS ledger"),
@@ -111,8 +111,8 @@ class Ledger extends Model implements Resource, Repository
         ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
         ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
         ->where('dl.docid', $docId)
-        ->where('dlp.amount', '!=', 0);
-        // ->where('dlp.payment_date', Carbon::now());
+        ->where('dlp.amount', '!=', 0)
+        ->where('dlp.payment_date', Carbon::now());
 
         $query = $this->select(
             DB::raw("'ledger' AS ledger"),
@@ -133,7 +133,7 @@ class Ledger extends Model implements Resource, Repository
         ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
         ->leftJoin(DB::raw('dental_users AS p'), 'dl.producerid', '=', 'p.userid')
         ->where('dl.docid', $docId)
-        // ->where('dl.service_date', Carbon::now())
+        ->where('dl.service_date', Carbon::now())
         ->where(function ($query) {
             $query->whereNull('dl.paid_amount')
                 ->orWhere('dl.paid_amount', 0);
@@ -178,7 +178,7 @@ class Ledger extends Model implements Resource, Repository
                 )->from(DB::raw('dental_ledger dl'))
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
                 ->where('dl.docid', $docId)
-                // ->where('dl.service_date', Carbon::now())
+                ->where('dl.service_date', Carbon::now())
                 ->whereRaw('COALESCE(dl.paid_amount, 0) = 0')
                 ->where('dl.amount', '!=', 0);
 
@@ -204,8 +204,8 @@ class Ledger extends Model implements Resource, Repository
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
                 ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
                 ->where('dl.docid', $docId)
-                ->where('dlp.amount', '!=', 0);
-                // ->where('dlp.payment_date', Carbon::now())
+                ->where('dlp.amount', '!=', 0)
+                ->where('dlp.payment_date', Carbon::now());
 
             if ($patientId > 0) {
                 $totalCreditsType = $totalCreditsType->where('dl.patientid', $patientId);
@@ -225,8 +225,8 @@ class Ledger extends Model implements Resource, Repository
                 ->where(function($query) {
                     $query->whereNotNull('dl.paid_amount')
                         ->where('dl.paid_amount', '!=', 0);
-                })->whereRaw("COALESCE(tc.type, '') != ?", [self::DSS_TRXN_TYPE_ADJ]);
-                // ->where('dl.service_date', Carbon::now())
+                })->whereRaw("COALESCE(tc.type, '') != ?", [self::DSS_TRXN_TYPE_ADJ])
+                ->where('dl.service_date', Carbon::now());
 
             if ($patientId > 0) {
                 $totalCreditsNamed = $totalCreditsNamed->where('dl.patientid', $patientId);
@@ -266,8 +266,8 @@ class Ledger extends Model implements Resource, Repository
                 ->where(function ($query) {
                     $query->whereNotNull('dl.paid_amount')
                         ->where('dl.paid_amount', '!=', 0);
-                })->where('tc.type', self::DSS_TRXN_TYPE_ADJ);
-                // ->where('dl.service_date', Carbon::now())
+                })->where('tc.type', self::DSS_TRXN_TYPE_ADJ)
+                ->where('dl.service_date', Carbon::now());
 
             if ($patientId > 0) {
                 $query = $query->where('dl.patientid', $patientId);
@@ -298,24 +298,20 @@ class Ledger extends Model implements Resource, Repository
 
     private function getSortColumnForList($sort)
     {
-        $sortColumn = '';
+        $sortColumns = [
+            'entry_date'  => 'entry_date',
+            'producer'    => 'name',
+            'patient'     => 'lastname',
+            'description' => 'description',
+            'amount'      => 'amount',
+            'paid_amount' => 'paid_amount',
+            'status'      => 'status'
+        ];
 
-        switch ($sort) {
-            case 'producer':
-                $sortColumn = 'name';
-                break;
-
-            case 'patient':
-                $sortColumn = 'lastname';
-                break;
-
-            case 'paid_amount':
-                $sortColumn = 'paid_amount';
-                break;
-
-            default:
-                $sortColumn = 'service_date';
-                break;
+        if (array_key_exists($sort, $sortColumns)) {
+            $sortColumn = $sortColumns[$sort];
+        } else {
+            $sortColumn = 'service_date';
         }
 
         return $sortColumn;

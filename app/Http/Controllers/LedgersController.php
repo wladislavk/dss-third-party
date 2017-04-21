@@ -113,9 +113,9 @@ class LedgersController extends Controller
         $sortDir = $request->input('sort_dir') ?: 'asc';
 
         if ($reportType === 'today') {
-            $ledgerRows = $resources->getTodayList($docId, $page, $rowsPerPage, $sort, $sortDir = 'desc');
+            $ledgerRows = $resources->getTodayList($docId, $page, $rowsPerPage, $sort, $sortDir);
         } else {
-            $ledgerRows = $resources->getFullList($docId, $page, $rowsPerPage, $sort, $sortDir = 'desc');
+            $ledgerRows = $resources->getFullList($docId, $page, $rowsPerPage, $sort, $sortDir);
         }
 
         if ($ledgerRows['total'] > 0) {

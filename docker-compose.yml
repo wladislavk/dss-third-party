@@ -66,11 +66,13 @@ services:
       - "traefik.frontend.rule=HostRegexp:{host:api.docker.localhost}"
  
   balancer:
-    image: traefik:v1.1.2-alpine
-    command: --docker --docker.domain=docker.localhost
+    image: traefik:v1.2.3-alpine
+    command: --docker --docker.domain=docker.localhost --logLevel=DEBUG
     ports:
       - 80:80
       - 443:443
+      # NOTE: On Windows10, Skype CONFLICTS with 443 port.
+      # Either change to other port (e.g. 4433:443), or kill Skype before starting container.
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik.toml:/etc/traefik/traefik.toml

@@ -1,4 +1,8 @@
 <?php
+/**
+ * API server health check
+ */
+Route::get('health-check', 'Api\HealthCheckController@index');
 
 /*
 |--------------------------------------------------------------------------

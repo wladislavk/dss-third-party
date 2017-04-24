@@ -8,3 +8,5 @@ manage/letterpdfs/*
 manage/admin/letterhead/*
 manage/edx_scripts
 manage/edx_scripts/*
+.idea
+.idea/*

@@ -31,8 +31,8 @@ services:
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/loader
     env_file: ../ds3-private02/.env.example
     environment:
-      APP_URL: https://loader.docker.localhost:8000/
-      API_URL: https://api.docker.localhost:8000/
+      APP_URL: https://loader.docker.localhost/
+      API_URL: https://api.docker.localhost/
       LEGACY_PATH: /opt/rh/httpd24/root/var/www/html/legacy
       API_PATH: /opt/rh/httpd24/root/var/www/html/api
       PHP_PATH: /opt/rh/rh-php56/root/bin/php

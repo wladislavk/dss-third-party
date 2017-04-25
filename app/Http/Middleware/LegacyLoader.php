@@ -38,6 +38,12 @@ class LegacyLoader implements Middleware
             }
 
             /**
+             * Ignore the protocol to handle requests from the load balancer
+             */
+            $baseUrl = preg_replace('/^https?/', '', $baseUrl);
+            $url = preg_replace('/^https?/', '', $url);
+
+            /**
              * The current url could not match the base url if
              * the request is the root and there is no trailing slash
              */

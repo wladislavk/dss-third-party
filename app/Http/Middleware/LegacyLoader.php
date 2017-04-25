@@ -26,8 +26,7 @@ class LegacyLoader implements Middleware
     {
         try {
             $legacyPath = $this->config->get('app.legacy_path');
-            $baseUrl = $this->config->get('app.url');
-            $url = $request->url();
+            $legacyFile = $request->path();
 
             $queryString = null;
             $requestUri = $request->getRequestUri();
@@ -35,16 +34,6 @@ class LegacyLoader implements Middleware
             if (strpos($requestUri, '?') !== false) {
                 $queryString = strstr($requestUri, '?');
                 $queryString = substr($queryString, 1);
-            }
-
-            /**
-             * The current url could not match the base url if
-             * the request is the root and there is no trailing slash
-             */
-            if (strpos($url, $baseUrl) === false) {
-                $legacyFile = '';
-            } else {
-                $legacyFile = preg_replace('@^' . preg_quote($baseUrl) . '@', '', $url);
             }
 
             // Set transaction name before modifying the URI

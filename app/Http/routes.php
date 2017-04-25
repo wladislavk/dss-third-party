@@ -100,6 +100,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('ledgers', 'LedgersController', ['except' => ['create', 'edit']]);
     Route::post('ledgers/list', 'LedgersController@getListOfLedgerRows');
     Route::post('ledgers/totals', 'LedgersController@getReportTotals');
+    Route::post('ledgers/update-patient-summary', 'LedgersController@updatePatientSummary');
     Route::resource('ledger-histories', 'LedgerHistoriesController', ['except' => ['create', 'edit']]);
     Route::resource('ledger-payments', 'LedgerPaymentsController', ['except' => ['create', 'edit']]);
     Route::resource('ledger-records', 'LedgerRecordsController', ['except' => ['create', 'edit']]);

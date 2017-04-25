@@ -279,6 +279,17 @@ class Ledger extends Model implements Resource, Repository
         }
     }
 
+    public function getRowsForCountingLedgerBalance($docId, $patientId)
+    {
+        return $this->select('dl.amount', DB::raw('sum(pay.amount) as paid_amount'))
+            ->from(DB::raw('dental_ledger dl'))
+            ->leftJoin(DB::raw('dental_ledger_payment pay'), 'pay.ledgerid', '=', 'dl.ledgerid')
+            ->where('dl.docid', $docId)
+            ->where('dl.patientid', $patientId)
+            ->groupBy('dl.ledgerid')
+            ->get();
+    }
+
     public function getWithFilter($fields = [], $where = [])
     {
         $object = $this;

@@ -10,6 +10,7 @@ use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers;
 use DentalSleepSolutions\Contracts\Resources\Patient;
+use DentalSleepSolutions\Contracts\Resources\PatientSummary;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
@@ -147,5 +148,45 @@ class LedgersController extends Controller
         ];
 
         return ApiResponse::responseOk('', $totals);
+    }
+
+    public function updatePatientSummary(
+        Request $request,
+        PatientSummary $patientSummary,
+        Ledgers $ledger
+    ) {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $patientId = $request->input('patient_id') ?: 0;
+
+        $patientSummary = $patient->getPatientInfo($patientId);
+
+        $ifPatientSummaryExists = false;
+        if (!empty($patientSummary)) {
+            $rowsForCountingLedgerBalance = $ledger->getRowsForCountingLedgerBalance($docId, $patientId);
+
+            $ledgerBalance = 0;
+
+            if (count($rowsForCountingLedgerBalance) > 0) {
+                foreach ($rowsForCountingLedgerBalance as $row) {
+                    $ledgerBalance -= !empty($row->amount) ? $row->amount : 0;
+                    $ledgerBalance += !empty($row->paid_amount) ? $row->paid_amount : 0;
+                }
+            }
+
+            $patientSummary->updatePatientSummary($patientId, ['ledger' => $ledgerBalance]);
+            $ifPatientSummaryExists = true;
+        } else {
+            $patientSummary->create([
+                'pid'    => $patientId,
+                'ledger' => $ledgerBalance
+            ]);
+        }
+
+        $response = $ifPatientSummaryExists ?
+            'Patient Summary was successfully updated.' :
+            'Patient Summary was successfully inserted.';
+
+        return ApiResponse::responseOk($response);
     }
 }

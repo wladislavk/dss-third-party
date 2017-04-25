@@ -1,6 +1,5 @@
 FROM centos:6.7
 
-ENV ETC_HTTPD=/opt/rh/httpd24/root/etc/httpd
 RUN set -xe \
     yum update -y \
 
@@ -12,7 +11,6 @@ RUN set -xe \
     # Install php 5.6 and httpd 2.4 using SCL repo.
     && yum --enablerepo=centos-sclo-rh install -y \
         httpd24 \
-        httpd24-mod_ssl \
         rh-php56 \
         rh-php56-php \
         rh-php56-php-bcmath \
@@ -28,7 +26,7 @@ RUN set -xe \
         rh-php56-php-xml \
 
     # Install mcrypt from php56more by Remi Collet, because CentsOS-SCL doesn't
-    # heve this library in their repo. Here is answer why this happened:
+    # have this library in their repo. Here is answer why this happened:
     # http://stackoverflow.com/a/34824192/456517
     && rpm -Uvh https://www.softwarecollections.org/en/scls/remi/php56more/epel-6-x86_64/download/remi-php56more-epel-6-x86_64.noarch.rpm \
     && yum --enablerepo=epel,remi-php56more-epel-6-x86_64 install -y \
@@ -57,13 +55,21 @@ RUN set -xe \
     # Instal composer using php 5.6
     && source /opt/rh/rh-php56/enable \
     && curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
+    && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer \
 
-ENV DOCUMENT_ROOT=/opt/rh/httpd24/root/var/www/html
-COPY docker-entrypoint.sh /usr/sbin/
-RUN set -x \
     # Customize php setup
-    && echo 'short_open_tag = On' > /etc/opt/rh/rh-php56/php.d/custom.ini \
-    # Ensure entrypoint is executable
+    && echo 'short_open_tag = On' > /etc/opt/rh/rh-php56/php.d/custom.ini
+
+ENV ETC_HTTPD=/opt/rh/httpd24/root/etc/httpd \
+    DOCUMENT_ROOT=/opt/rh/httpd24/root/var/www/html \
+    PHP_PATH=/opt/rh/rh-php56/root/bin/php
+
+# Create entrypoint script, make it executable
+RUN echo -e '#!/bin/bash\n\
+. /opt/rh/httpd24/enable\n\
+httpd -v\n\
+exec httpd -D FOREGROUND\n\
+' > /usr/sbin/docker-entrypoint.sh \
     && chmod +x /usr/sbin/docker-entrypoint.sh
+
 CMD /usr/sbin/docker-entrypoint.sh

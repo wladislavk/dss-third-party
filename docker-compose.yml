@@ -2,49 +2,80 @@ version: "2"
 
 services:
   db:
-    build: ../ds3-private01
+    build: 
+      context: ../ds3-private01
+      dockerfile: Dockerfile.mysql
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
       MYSQL_DATABASE: homestead
       MYSQL_USER: homestead
       MYSQL_PASSWORD: secret
+    labels:
+      - "traefik.enable=false"
+
+  baseimage:
+    build: .
+    image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/baseimage
+    command: bash -c 'yum list installed | grep -e php56 -e mcrypt -e pdf -e httpd24'
+    labels:
+      - "traefik.enable=false"
 
   loader:
     build:
       context: ..
-      dockerfile: ds3-private02/Dockerfile
+      dockerfile: ds3-private01/Dockerfile
       args:
         LEGACY_DIR: ds3-private01
         LOADER_DIR: ds3-private02
         API_DIR: ds3-private03
+    image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/loader
     env_file: ../ds3-private02/.env.example
     environment:
-      APP_URL: https://loader.ds3soft.dev:9443/
-      API_URL: https://api.ds3soft.dev:8443/
+      APP_URL: https://loader.docker.localhost:8000/
+      API_URL: https://api.docker.localhost:8000/
+      LEGACY_PATH: /opt/rh/httpd24/root/var/www/html/legacy
+      API_PATH: /opt/rh/httpd24/root/var/www/html/api
       PHP_PATH: /opt/rh/rh-php56/root/bin/php
-      HTTPD_SERVER_NAME: loader.ds3soft.dev
       DB_HOST: db
       DB_DATABASE: homestead
       DB_USERNAME: homestead
       DB_PASSWORD: secret
-    ports:
-      - "9443:443"
-    volumes:
-      - "../ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
-      - "../ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
-      - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+    # volumes:
+    #   - "../ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
+    #   - "../ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
+    #   - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=loader"
+      - "traefik.frontend.rule=HostRegexp:{host:loader.docker.localhost}"
 
   api:
     build: ../ds3-private03
+    image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/api
     env_file: ../ds3-private03/.env.example
     environment:
-      HTTPD_SERVER_NAME: api.ds3soft.dev
       DB_HOST: db
       DB_DATABASE: homestead
       DB_USERNAME: homestead
       DB_PASSWORD: secret
-    volumes:
-      - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
-
+    # volumes:
+    #   - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=api"
+      - "traefik.frontend.rule=HostRegexp:{host:api.docker.localhost}"
+ 
+  balancer:
+    image: traefik:v1.2.3-alpine
+    command: --docker --docker.domain=docker.localhost --logLevel=DEBUG
     ports:
-      - "8443:443"
+      - 80:80
+      - 443:443
+      # NOTE: On Windows10, Skype CONFLICTS with 443 port.
+      # Either change to other port (e.g. 4433:443), or kill Skype before starting container.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.toml:/etc/traefik/traefik.toml
+      - ./ssl/:/etc/ssl/
+    labels:
+      - "traefik.enable=false"

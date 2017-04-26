@@ -171,4 +171,37 @@ class Insurance extends Model implements Resource, Repository
             ->whereIn('claim.status', ClaimFormData::statusListByName('rejected'))
             ->first();
     }
+
+    public function getOpenClaims($patientId)
+    {
+        return $this->select(
+                'i.patientid',
+                'i.docid',
+                DB::raw("'claim'"),
+                'i.insuranceid AS ledgerid',
+                'i.adddate AS service_date',
+                'i.adddate AS entry_date',
+                DB::raw("'Claim' AS name"),
+                DB::raw("'Insurance Claim' AS description"),
+                DB::raw('(
+                            SELECT SUM(dl2.amount)
+                            FROM dental_ledger dl2
+                                INNER JOIN dental_insurance i2 ON dl2.primary_claim_id = i2.insuranceid
+                            WHERE i2.insuranceid = i.insuranceid
+                        ) AS amount'),
+                DB::raw('SUM(pay.amount) AS paid_amount'),
+                'i.status',
+                'i.insuranceid AS primary_claim_id',
+                'i.mailed_date',
+                DB::raw($this->filedByBackOfficeConditional($claimAlias = 'i'))
+            )->from(DB::raw('dental_insurance i'))
+            ->leftJoin(DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
+            ->leftJoin(DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
+            ->where('i.patientid', $patientId)
+            ->whereNotIn('i.status', [
+                $this->claimStatuses['DSS_CLAIM_PAID_INSURANCE'],
+                $this->claimStatuses['DSS_CLAIM_PAID_SEC_INSURANCE'],
+                $this->claimStatuses['DSS_CLAIM_PAID_PATIENT']
+            ])->groupBy('i.insuranceid');
+    }
 }

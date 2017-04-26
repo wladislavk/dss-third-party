@@ -11,6 +11,7 @@ use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers;
 use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary;
+use DentalSleepSolutions\Contracts\Repositories\Insurances;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
@@ -188,5 +189,26 @@ class LedgersController extends Controller
             'Patient Summary was successfully inserted.';
 
         return ApiResponse::responseOk($response);
+    }
+
+    public function getReportData(
+        Request $request,
+        Insurances $insurance
+    ) {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $page = $request->input('page') ?: 0;
+        $rowsPerPage = $request->input('rows_per_page') ?: 20;
+        $sort = $request->input('sort');
+        $sortDir = $request->input('sort_dir') ?: 'asc';
+        $openClaims = $request->input('open_claims') ?: false;
+
+        if ($openClaims) {
+            $data = $insurance->getOpenClaims()
+        } else {
+            $data = [];
+        }
+
+        return ApiResponse::responseOk('', $data);
     }
 }

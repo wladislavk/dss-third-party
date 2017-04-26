@@ -4,7 +4,7 @@
             Ledger Card
         </span>
         <div>
-            <span>{{ name }}</span>
+            <span>{{ patient.name }}</span>
             <span>{{ patient.add1 }}</span>
             <span>{{ patient.add2 }}</span>
             <span>{{ patient.city }} {{ patient.state }} {{ patient.zip }}</span>

@@ -79,6 +79,7 @@ export default {
     'routeParameters.patientId': function () {
       if (this.routeParameters.patientId > 0) {
         this.updatePatientSummary(this.routeParameters.patientId)
+        this.getPatientInfo()
       }
     },
     '$route.query.page': function () {
@@ -119,12 +120,26 @@ export default {
 
   },
   methods: {
+    getPatientInfo () {
+      this.getPatient(this.routeParameters.patientId)
+        .then(function (response) {
+          var data = response.data.data
+
+          this.patient = data
+          this.patient.name = (this.patient['lastname'] ? this.patient['lastname'] + ' ' : '')
+            + (this.patient['middlename'] ? this.patient['middlename'] + ' ' : '')
+            + (this.patient['firstname'] || '')
+        }, function (response) {
+          this.handleErrors('getPatient', response)
+        })
+    },
     getLedgerData () {
       this.getLedgerRows(
         this.routeParameters.currentPageNumber,
         this.ledgerRowsPerPage,
         this.routeParameters.sortColumn,
-        this.routeParameters.sortDirection
+        this.routeParameters.sortDirection,
+        this.routeParameters.openclaims
       ).then(function (response) {
         var data = response.data.data
 
@@ -146,15 +161,19 @@ export default {
 
       return this.$http.post(process.env.API_PATH + 'ledgers/update-patient-summary', data)
     },
-    getLedgerRows (pageNumber, rowsPerPage, sortColumn, sortDir) {
+    getLedgerRows (pageNumber, rowsPerPage, sortColumn, sortDir, openClaims) {
       var data = {
         page: pageNumber,
         rows_per_page: rowsPerPage,
         sort: sortColumn,
-        sort_dir: sortDir
+        sort_dir: sortDir,
+        open_claims: openClaims
       }
 
       return this.$http.post(process.env.API_PATH + 'ledgers/list', data)
+    },
+    getPatient (patientId) {
+      return this.$http.get(process.env.API_PATH + 'patients/' + patientId)
     }
   }
 }

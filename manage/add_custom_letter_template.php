@@ -73,6 +73,7 @@ function formatMm($number)
     <link rel="stylesheet" href="3rdParty/spry/SpryTabbedPanels.css" />
     <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
     <script language="javascript" type="text/javascript" src="script/validation.js"></script>
+    <script type="text/javascript" src="js/edit_letter.js?v=20170428"></script>
 <script>
     var pageSize = <?= json_encode($pageSize) ?>;
     var pageMargins = <?= json_encode($margins) ?>;

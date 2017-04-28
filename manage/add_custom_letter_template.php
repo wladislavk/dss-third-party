@@ -1,6 +1,29 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
     include "includes/top.htm";
 
+$pageSize = [
+    'width' => 216,
+    'height' => 279/3,
+];
+
+$margins = [
+    'top' => 4,
+    'bottom' => 4,
+    'left' => 4,
+    'right' => 4
+];
+
+/**
+ * Format number for valid CSS values
+ *
+ * @param int|float $number
+ * @return string
+ */
+function formatMm($number)
+{
+    return number_format($number, 1, '.', '') . 'mm';
+}
+
     if(isset($_POST['update_btn'])){
         if(!empty($_GET['ed'])){
             $s = "UPDATE dental_letter_templates_custom SET
@@ -50,8 +73,36 @@
     <link rel="stylesheet" href="3rdParty/spry/SpryTabbedPanels.css" />
     <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
     <script language="javascript" type="text/javascript" src="script/validation.js"></script>
-    <script type="text/javascript" src="js/edit_letter.js?v=20160404"></script>
+<script>
+    var pageSize = <?= json_encode($pageSize) ?>;
+    var pageMargins = <?= json_encode($margins) ?>;
+</script>
+<link type="text/css" rel="stylesheet" href="/manage/css/font-preview.css?v=20170309"/>
+<style>
+    /* Preview area display */
+    div.preview-letter {
+        width: <?= formatMm($pageSize['width']) ?>;
+        min-height: <?= formatMm($pageSize['height']) ?>;
+    }
 
+    div.preview-letter div.preview-wrapper {
+        margin-top: <?= formatMm($margins['top']) ?>;
+        margin-right: <?= formatMm($margins['right']) ?>;
+        margin-bottom: <?= formatMm($margins['bottom']) ?>;
+        margin-left: <?= formatMm($margins['left']) ?>;
+    }
+
+    div.preview-letter div.preview-page-break {
+        width: <?= formatMm($pageSize['width']) ?>;
+        top: <?= formatMm($pageSize['height'] - $margins['bottom']) ?>;
+    }
+
+    div.preview-letter div.preview-bottom-margin {
+        width: <?= formatMm($pageSize['width']) ?>;
+        height: <?= formatMm($margins['bottom']) ?>;
+    }
+    /* Preview area display */
+</style>
     <span class="admin_head">
     	Manage Custom Letter Templates 
     </span>
@@ -77,7 +128,28 @@
             <div style="margin-left:20px;width:930px;">
                 Name: <input type="text" id="name" name="name" value="<?php echo  $r['name']; ?>" />
                 <br /><br />
-                <textarea id="body" name="body" style="width:920px; height:500px;"><?php echo  $body; ?></textarea>
+                <div style="margin: auto; width: 95%; padding: 3px;" class="single-letter">
+                    <table width="95%" cellpadding="3" cellspacing="1" border="0" align="center">
+                        <tr>
+                            <td valign="top">
+                                <div id="letter0"
+                                     class="preview-letter preview-font-helvetica preview-size-14 show-placeholders"
+                                     data-initial-class="preview-letter preview-font-helvetica preview-size-4 show-placeholders">
+                                    <textarea id="body" name="body"
+                                              style="width:100%;height:<?= formatMm($pageSize['height']) ?>;width:<?= formatMm($pageSize['width']) ?>"><?= html_entity_decode(
+                                            preg_replace(
+                                                '/(&Acirc;)+/i',
+                                                '',
+                                                htmlentities($body, ENT_COMPAT | ENT_IGNORE, 'UTF-8')
+                                            ),
+                                            ENT_COMPAT | ENT_IGNORE,
+                                            'UTF-8'
+                                        ) ?></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
                 <input type="submit" name="update_btn" value="Save" class="addButton" />
                 <?php if(isset($_GET['ed']) && $_GET['ed']!='') { ?>
                     <a class="addButton" style="float:right;" href="manage_custom_letters.php?delid=<?php echo  $_GET['ed']; ?>" onclick="return confirm('Warning, you are attempting to delete a letter template. Any letters already using this template will not be affected, but you will not be able to create new letters with the template after it is deleted. Proceed?');">Delete Letter</a>
@@ -94,4 +166,4 @@
         <br /><br />	
         <?php include "includes/bottom.htm";?>
 
-<script type="text/javascript" src="js/add_custom_letter_template.js"></script>
+<script type="text/javascript" src="js/add_custom_letter_template.js?v=20170427<?= time() ?>"></script>

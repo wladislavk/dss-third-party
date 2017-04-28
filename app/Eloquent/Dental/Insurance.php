@@ -204,4 +204,45 @@ class Insurance extends Model implements Resource, Repository
                 $this->claimStatuses['DSS_CLAIM_PAID_PATIENT']
             ])->groupBy('i.insuranceid');
     }
+
+    public function getLedgerDetailsQuery($patientId)
+    {
+        return $this->select(
+            'i.patientid',
+            'i.docid',
+            DB::raw("'claim'"),
+            'i.insuranceid',
+            'i.adddate',
+            'i.adddate',
+            DB::raw("'Claim'"),
+            DB::raw("'Insurance Claim'"),
+            DB::raw('(
+                SELECT SUM(dl2.amount)
+                FROM dental_ledger dl2
+                    INNER JOIN dental_insurance i2 ON dl2.primary_claim_id = i2.insuranceid
+                WHERE i2.insuranceid = i.insuranceid)'),
+            DB::raw('SUM(pay.amount)'),
+            'i.status',
+            'i.primary_claim_id',
+            'i.mailed_date',
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw('(
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = i.insuranceid)'),
+            DB::raw("(
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = i.insuranceid
+                    AND create_type = '1')"),
+            DB::raw($this->filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
+        )->from(DB::raw('dental_insurance i'))
+        ->leftJoin(DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
+        ->leftJoin(DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
+        ->where('i.patientid', $patientId)
+        ->groupBy('i.insuranceid');
+    }
 }

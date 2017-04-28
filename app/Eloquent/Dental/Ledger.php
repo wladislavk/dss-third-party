@@ -290,6 +290,134 @@ class Ledger extends Model implements Resource, Repository
             ->get();
     }
 
+    public function getReportData(
+        $ledgerNoteModel,
+        $ledgerStatementModel,
+        $insurance,
+        $docId,
+        $patientId,
+        $page,
+        $rowsPerPage,
+        $sort,
+        $sortDir = 'desc'
+    ) {
+        $queryJoinedWithLedgerPayment = $this->select(
+            'dl.patientid',
+            'dl.docid',
+            DB::raw("'ledger'"),
+            'dl.ledgerid',
+            'dl.service_date',
+            'dl.entry_date',
+            DB::raw("CONCAT(p.first_name, ' ', p.last_name) AS name"),
+            'dl.description',
+            'dl.amount',
+            DB::raw('0.0 AS paid_amount'),
+            'di.status',
+            'dl.primary_claim_id',
+            'di.mailed_date',
+            DB::raw("'' AS payer"),
+            DB::raw("'' AS payment_type"),
+            'di.status AS claim_status',
+            DB::raw("'' AS filename"),
+            DB::raw("'' AS num_notes"),
+            DB::raw("'' AS num_fo_notes"),
+            DB::raw('0 AS filed_by_bo')
+        )->from(DB::raw('dental_ledger dl'))
+        ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
+        ->leftJoin(DB::raw('dental_ledger_payment pay'), 'pay.ledgerid', '=', 'dl.ledgerid')
+        ->leftJoin(DB::raw('dental_insurance di'), 'di.insuranceid', '=', 'dl.primary_claim_id')
+        ->where('dl.docid', $docId)
+        ->where(function ($query) {
+            $query->whereNull('dl.paid_amount')
+                ->orWhere('dl.paid_amount', 0);
+        });
+
+        $queryJoinedWithLedgerPayment1 = $this->select(
+            'dl.patientid',
+            'dl.docid',
+            DB::raw("'ledger_payment'"),
+            'dlp.id',
+            'dlp.payment_date',
+            'dlp.entry_date',
+            DB::raw("CONCAT(p.first_name, ' ', p.last_name)"),
+            DB::raw("''"),
+            DB::raw('0.0'),
+            'dlp.amount',
+            DB::raw("''"),
+            DB::raw('IF(dl.secondary_claim_id && dlp.is_secondary, dl.secondary_claim_id, dl.primary_claim_id)'),
+            DB::raw('IF(dl.primary_claim_id, di.mailed_date, dl.service_date)'),
+            'dlp.payer',
+            'dlp.payment_type',
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw('0 AS filed_by_bo')
+        )->from(DB::raw('dental_ledger dl'))
+        ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
+        ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
+        ->leftJoin(DB::raw('dental_insurance di'), 'di.insuranceid', '=', 'dl.primary_claim_id')
+        ->where('dl.docid', $docId)
+        ->where('dlp.amount', '!=', 0);
+
+        $query = $this->select(
+            'dl.patientid',
+            'dl.docid',
+            DB::raw("'ledger_paid'"),
+            'dl.ledgerid',
+            'dl.service_date',
+            'dl.entry_date',
+            DB::raw("CONCAT(p.first_name, ' ', p.last_name)"),
+            'dl.description',
+            'dl.amount',
+            'dl.paid_amount',
+            'dl.status',
+            'dl.primary_claim_id',
+            DB::raw('IF(dl.primary_claim_id, di.mailed_date, dl.service_date)'),
+            'tc.type',
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw('0 AS filed_by_bo')
+        )->from(DB::raw('dental_ledger dl'))
+        ->leftJoin(DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
+        ->leftJoin(DB::raw('dental_ledger_payment pay'), 'pay.ledgerid', '=', 'dl.ledgerid')
+        ->leftJoin(DB::raw('dental_insurance di'), 'di.insuranceid', '=', 'dl.primary_claim_id')
+        ->leftJoin(DB::raw('dental_transaction_code tc'), function ($query) use ($docId) {
+            $query->on('tc.transaction_code', '=', 'dl.transaction_code')
+                ->where('tc.docid', $docId);
+        })->where('dl.docid', $docId)
+        ->where(function ($query) {
+            $query->whereNotNull('dl.paid_amount')
+                ->where('dl.paid_amount', '!=', 0);
+        });
+
+        if ($patientId) {
+            $queryJoinedWithLedgerPayment = $queryJoinedWithLedgerPayment->where('dl.patientid', $patientId);
+            $queryJoinedWithLedgerPayment1 = $queryJoinedWithLedgerPayment1->where('dl.patientid', $patientId);
+            $query = $query->where('dl.patientid', $patientId);
+        }
+
+        $queryJoinedWithLedgerPayment = $queryJoinedWithLedgerPayment->groupBy('dl.ledgerid');
+
+        $ledgerNotesQuery = $ledgerNoteModel->getLedgerDetailsQuery($patientId);
+        $ledgerStatementsQuery = $ledgerStatementModel->getLedgerDetailsQuery($docId, $patientId);
+        $insuranceQuery = $insurance->getLedgerDetailsQuery($patientId);
+
+        $resultQuery = $query->union($queryJoinedWithLedgerPayment)
+            ->union($queryJoinedWithLedgerPayment1)
+            ->union($ledgerNotesQuery)
+            ->union($ledgerStatementsQuery)
+            ->union($insuranceQuery)
+            ->orderBy($this->getSortColumnForList($sort), $sortDir)
+            ->skip($page * $rowsPerPage)
+            ->take($rowsPerPage);
+
+        return $resultQuery->get();
+    }
+
     public function getWithFilter($fields = [], $where = [])
     {
         $object = $this;

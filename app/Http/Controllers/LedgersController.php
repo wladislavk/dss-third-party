@@ -12,6 +12,8 @@ use DentalSleepSolutions\Contracts\Repositories\Ledgers;
 use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary;
 use DentalSleepSolutions\Contracts\Repositories\Insurances;
+use DentalSleepSolutions\Contracts\Repositories\LedgerNotes;
+use DentalSleepSolutions\Contracts\Repositories\LedgerStatements;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
@@ -193,7 +195,10 @@ class LedgersController extends Controller
 
     public function getReportData(
         Request $request,
-        Insurances $insurance
+        Insurances $insurance,
+        Ledgers $ledger,
+        LedgerNotes $ledgerNote,
+        LedgerStatements $ledgerStatement
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -206,7 +211,17 @@ class LedgersController extends Controller
         if ($openClaims) {
             $data = $insurance->getOpenClaims()
         } else {
-            $data = [];
+            $data = $ledger->getReportData(
+                $ledgerNoteModel,
+                $ledgerStatementModel,
+                $insurance,
+                $docId,
+                $patientId,
+                $page,
+                $rowsPerPage,
+                $sort,
+                $sortDir
+            );
         }
 
         return ApiResponse::responseOk('', $data);

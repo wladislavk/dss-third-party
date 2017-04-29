@@ -9,36 +9,28 @@ include "includes/similar.php";
 <?php
 
 //SQL to search for possible duplicates
-
 $docId = intval($_SESSION['docid']);
-$simsql = "(
-    SELECT COUNT(dp.patientid)
-    FROM dental_patients dp
-    WHERE dp.docid = '$docId'
-        AND dp.status = 1
-		AND (
-            (
-                (
-                    COALESCE(dp.firstname, '') != ''
-                    OR COALESCE(dp.lastname, '') != ''
-                )
-                AND COALESCE(dp.firstname, '') = COALESCE(p.firstname, '')
-                AND COALESCE(dp.lastname, '') = COALESCE(p.lastname, '')
-            )
-            OR (
-                (
-                    COALESCE(dp.add1, '') != ''
-                    OR COALESCE(dp.city, '') != ''
-                    OR COALESCE(dp.state, '') != ''
-                    OR COALESCE(dp.zip, '') != ''
-                )
-                AND COALESCE(dp.add1, '') = COALESCE(p.add1)
-                AND COALESCE(dp.city, '') = COALESCE(p.city)
-                AND COALESCE(dp.state, '') = COALESCE(p.state)
-                AND COALESCE(dp.zip, '') = COALESCE(p.zip)
-            )
-        )
-	)";
+$simsql = '';
+$leftJoinDuplicates = "LEFT JOIN (
+        SELECT COUNT(patientid) AS total, firstname, lastname
+        FROM dental_patients
+        WHERE docid = '$docId'
+            AND status = 1
+        GROUP BY firstname, lastname
+    ) by_name
+    ON by_name.firstname = p.firstname
+        AND by_name.lastname = p.lastname
+    LEFT JOIN (
+        SELECT COUNT(patientid) AS total, add1, city, state, zip
+        FROM dental_patients
+        WHERE docid = '$docId'
+            AND status = 1
+        GROUP BY add1, city, state, zip
+    ) by_address
+    ON by_address.add1 = p.add1
+        AND by_address.city = p.city
+        AND by_address.state = p.state
+        AND by_address.zip = p.zip";
 
 
 if(isset($_REQUEST['deleteid'])){
@@ -59,22 +51,36 @@ if(isset($_REQUEST['deleteid'])){
 }elseif(isset($_REQUEST['createtype'])){
 	//createtype for duplicates or not
 	if($_REQUEST['createtype']=='yes'){
-        $sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
-        $sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
+        $sql3 = "SELECT p.patientid
+            FROM dental_patients p
+                $leftJoinDuplicates
+            WHERE p.docid = '$docId'
+                AND p.status = '3'
+                AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0";
+        $sql4 = "SELECT p.patientid
+            FROM dental_patients p
+                $leftJoinDuplicates
+            WHERE p.docid = '$docId'
+                AND p.status = '4'
+                AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0";
 	}elseif($_REQUEST['createtype']=='no'){
-        $sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
-        $sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
+        $sql3 = "SELECT p.patientid
+            FROM dental_patients p
+                $leftJoinDuplicates
+            WHERE p.docid = '$docId'
+                AND p.status = '3'
+                AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) = 0";
+        $sql4 = "SELECT p.patientid
+            FROM dental_patients p
+                $leftJoinDuplicates
+            WHERE p.docid = '$docId'
+                AND p.status = '4'
+                AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) = 0";
 	}
     $q3 = $db->getResults($sql3);
-	$ids3 = array();
-    foreach ($q3 as $r3) {
-		array_push($ids3, $r3['patientid']);
-	}
+    $ids3 = array_pluck($q3, 'patientid');
     $q4 = $db->getResults($sql4);
-    $ids4 = array();
-    foreach ($q4 as $r4) {
-        array_push($ids4, $r4['patientid']);
-    }
+    $ids4 = array_pluck($q4, 'patientid');
 	$s = "UPDATE dental_patients SET status=1 WHERE patientid IN('" . implode($ids3, "', '") . "')";
 	$db->query($s);
 	$s = "UPDATE dental_patients SET status=2 WHERE patientid IN('" . implode($ids4, "', '") . "')";
@@ -87,15 +93,22 @@ if(isset($_REQUEST['deleteid'])){
 
 }elseif(isset($_REQUEST['deletetype'])){
         if($_REQUEST['deletetype']=='yes'){
-            $sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
+            $sql = "SELECT p.patientid
+                FROM dental_patients p
+                    $leftJoinDuplicates
+                WHERE p.docid = '$docId'
+                    AND p.status IN (3, 4)
+                    AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0";
         }elseif($_REQUEST['deletetype']=='no'){
-            $sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
+            $sql = "SELECT p.patientid
+                FROM dental_patients p
+                    $leftJoinDuplicates
+                WHERE p.docid = '$docId'
+                    AND p.status IN (3, 4)
+                    AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) = 0";
         }
         $q = $db->getResults($sql);
-        $ids = array();
-        foreach ($q as $r) {
-            array_push($ids, $r['patientid']);
-        }
+        $ids = array_pluck($q, 'patientid');
         $s = "DELETE FROM dental_patients WHERE patientid IN('" . implode($ids, "', '") . "')";
         $db->query($s);
 ?>  
@@ -104,8 +117,13 @@ if(isset($_REQUEST['deleteid'])){
 </script>
 <?php
 }
-$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0 ";
-$sql .= "ORDER BY p.lastname ASC"; 
+$sql = "SELECT p.*
+    FROM dental_patients p
+        $leftJoinDuplicates
+    WHERE p.docid = '$docId'
+        AND p.status = '3'
+        AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0
+    ORDER BY p.lastname ASC";
 $my = $db->getResults($sql);
 ?>
 
@@ -215,8 +233,13 @@ $my = $db->getResults($sql);
 </table>
 
 <?php
-$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0 ";
-$sql .= "ORDER BY p.lastname ASC";
+$sql = "SELECT p.*
+    FROM dental_patients p
+        $leftJoinDuplicates
+    WHERE p.docid = '$docId'
+        AND p.status = '3'
+        AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) = 0
+    ORDER BY p.lastname ASC";
 $my = $db->getResults($sql);
 ?>
 <span class="admin_head">

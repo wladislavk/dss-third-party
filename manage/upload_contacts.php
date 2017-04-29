@@ -226,6 +226,7 @@ function insertContactList ($filename, $docId, $ignoreExtension=false) {
             }
 
             $data['notes'] = join(' ', $notes);
+            unset($data['specialty']);
             $batch[] = $data;
 
             if (count($batch) >= $batchSize) {

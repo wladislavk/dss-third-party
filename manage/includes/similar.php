@@ -3,22 +3,43 @@ include_once('/../admin/includes/main_include.php');
 
 function similar_doctors($id){
     $db = new Db();
-    $con = $GLOBALS['con'];
-    $id = intval($id);
 
-    $s = "SELECT * from dental_patient_contacts WHERE id='".$id."'";
+    $id = intval($id);
+    $docId = intval($_SESSION['docid']);
+
+    $s = "SELECT * from dental_patient_contacts WHERE id='$id'";
     $r = $db->getRow($s);
 
-    $s2 = "SELECT * FROM dental_contact WHERE " .
-          "contacttypeid != '11' AND " .
-          "((firstname = '".mysqli_real_escape_string($con, $r['firstname'])."' AND " .
-          "lastname = '".mysqli_real_escape_string($con, $r['lastname'])."') " .
-          " OR " .
-          "(add1 = '".mysqli_real_escape_string($con, $r['address1'])."' AND add1!='' AND " .
-          "city = '".mysqli_real_escape_string($con, $r['city'])."' AND city!='' AND " .
-          "state = '".mysqli_real_escape_string($con, $r['state'])."' AND state!='' AND " .
-          "zip = '".mysqli_real_escape_string($con, $r['zip'])."' AND zip!='')) 
-          AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+    array_walk($r, function (&$each) use ($db) {
+        $each = $db->escape($each);
+    });
+
+    $s2 = "SELECT firstname, lastname, add1, city, state, zip
+        FROM dental_contact
+        WHERE docid = '$docId'
+            AND contacttypeid != '11'
+            AND (
+                (
+                    (
+                        COALESCE(firstname, '') != ''
+                        OR COALESCE(lastname, '') != ''
+                    )
+                    AND COALESCE(firstname, '') = '{$r['firstname']}'
+                    AND COALESCE(lastname, '') = '{$r['lastname']}'
+                )
+                OR (
+                    (
+                        COALESCE(add1, '') != ''
+                        OR COALESCE(city, '') != ''
+                        OR COALESCE(state, '') != ''
+                        OR COALESCE(zip, '') != ''
+                    )
+                    AND COALESCE(add1, '') = '{$r['add1']}'
+                    AND COALESCE(city, '') = '{$r['city']}'
+                    AND COALESCE(state, '') = '{$r['state']}'
+                    AND COALESCE(zip, '') = '{$r['zip']}'
+                )
+            )";
 
     $q2 = $db->getResults($s2);
     $docs = array();
@@ -37,21 +58,50 @@ function similar_doctors($id){
 
 function similar_contacts($id){
     $db = new Db();
-    $con = $GLOBALS['con'];
-    $id = intval($id);
 
-    $s = "SELECT * from dental_contact WHERE contactid='".$id."'";
+    $id = intval($id);
+    $docId = intval($_SESSION['docid']);
+
+    $s = "SELECT firstname, lastname, company, add1, city, state, zip
+        FROM dental_contact
+        WHERE contactid = '$id'";
     $r = $db->getRow($s);
 
-    $s2 = "SELECT * FROM dental_contact WHERE status IN (1,2) AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND " .
-          "((firstname = '".mysqli_real_escape_string($con, $r['firstname'])."' AND " .
-          "lastname = '".mysqli_real_escape_string($con, $r['lastname'])."') " .
-          " OR " .
-          "(add1 = '".mysqli_real_escape_string($con, $r['add1'])."' AND add1!='' AND " .
-          "city = '".mysqli_real_escape_string($con, $r['city'])."' AND city!='' AND " .
-          "state = '".mysqli_real_escape_string($con, $r['state'])."' AND state!='' AND " .
-          "zip = '".mysqli_real_escape_string($con, $r['zip'])."' AND zip!='')) 
-          AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+    array_walk($r, function (&$each) use ($db) {
+        $each = $db->escape($each);
+    });
+
+    $s2 = "SELECT firstname, lastname, company, add1, city, state, zip, phone1
+        FROM dental_contact
+        WHERE docid = '$docId'
+            AND status IN (1, 2)
+            AND contactid != '$id'
+            AND (
+                (
+                    COALESCE(company, '') != ''
+                    AND COALESCE(company, '') = '{$r['company']}'
+                )
+                OR (
+                    (
+                        COALESCE(firstname, '') != ''
+                        OR COALESCE(lastname, '') != ''
+                    )
+                    AND COALESCE(firstname, '') = '{$r['firstname']}'
+                    AND COALESCE(lastname, '') = '{$r['lastname']}'
+                )
+                OR (
+                    (
+                        COALESCE(add1, '') != ''
+                        OR COALESCE(city, '') != ''
+                        OR COALESCE(state, '') != ''
+                        OR COALESCE(zip, '') != ''
+                    )
+                    AND COALESCE(add1, '') = '{$r['add1']}'
+                    AND COALESCE(city, '') = '{$r['city']}'
+                    AND COALESCE(state, '') = '{$r['state']}'
+                    AND COALESCE(zip, '') = '{$r['zip']}'
+                )
+            )";
 
     $q2 = $db->getResults($s2);
     $docs = array();
@@ -60,6 +110,7 @@ function similar_contacts($id){
     foreach ($q2 as $r2) {
         $docs[$c]['id'] = $r2['contactid'];
         $docs[$c]['name'] = $r2['firstname']. " " .$r2['lastname'];
+        $docs[$c]['company'] = $r2['company'];
         $docs[$c]['address'] = $r2['add1']. " " . $r2['add2']. " " . $r2['city']. " " . $r2['state']. " " . $r2['zip'];
         $docs[$c]['phone1'] = $r2['phone1'];
         $c++;
@@ -71,34 +122,56 @@ function similar_contacts($id){
 
 function similar_patients($id){
     $db = new Db();
-    $con = $GLOBALS['con'];
+
     $id = intval($id);
+    $docId = intval($_SESSION['docid']);
 
-    $s = "SELECT * from dental_patients WHERE patientid='".$id."'";
+    $s = "SELECT firstname, lastname, add1, city, state, zip
+        FROM dental_patients
+        WHERE patientid = '$id'";
     $r = $db->getRow($s);
-    $simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND 
-              ((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
-              (dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
-               )
-              AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
 
-    $s2 = "SELECT * FROM dental_patients WHERE " .
-    		"patientid != '".$id."' AND " .
-    		"status='1' AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."' AND " .
-    		"((firstname = '".mysqli_real_escape_string($con, $r['firstname'])."' AND " .
-    	        "lastname = '".mysqli_real_escape_string($con, $r['lastname'])."') OR " .
-    		"(add1 = '".mysqli_real_escape_string($con, $r['add1'])."' AND add1!= '' AND city = '".mysqli_real_escape_string($con, $r['city'])."' AND city!='' AND state = '".mysqli_real_escape_string($con, $r['state'])."' AND state!='' AND zip = '".mysqli_real_escape_string($con, $r['zip'])."' AND zip!=''))
-                    AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
-    		 
+    array_walk($r, function (&$each) use ($db) {
+        $each = $db->escape($each);
+    });
+
+    $s2 = "SELECT patientid, firstname, lastname, add1, add2, city, state, zip, home_phone
+        FROM dental_patients
+        WHERE docid = '$docId'
+            AND status IN (1)
+            AND patientid != '$id'
+            AND (
+                (
+                    (
+                        COALESCE(firstname, '') != ''
+                        OR COALESCE(lastname, '') != ''
+                    )
+                    AND COALESCE(firstname, '') = '{$r['firstname']}'
+                    AND COALESCE(lastname, '') = '{$r['lastname']}'
+                )
+                OR (
+                    (
+                        COALESCE(add1, '') != ''
+                        OR COALESCE(city, '') != ''
+                        OR COALESCE(state, '') != ''
+                        OR COALESCE(zip, '') != ''
+                    )
+                    AND COALESCE(add1, '') = '{$r['add1']}'
+                    AND COALESCE(city, '') = '{$r['city']}'
+                    AND COALESCE(state, '') = '{$r['state']}'
+                    AND COALESCE(zip, '') = '{$r['zip']}'
+                )
+            )";
+
     $q2 = $db->getResults($s2);
     $docs = array();
     $c = 0;
 
-    foreach($q2 as $r2){
+    foreach ($q2 as $r2) {
         $docs[$c]['id'] = $r2['patientid'];
         $docs[$c]['name'] = $r2['firstname']. " " .$r2['lastname'];
         $docs[$c]['address'] = $r2['add1']. " " . $r2['add2']. " " . $r2['city']. " " . $r2['state']. " " . $r2['zip'];
-        $docs[$c]['phone'] = (!empty($r2['phone1']) ? $r2['phone1'] : '');
+        $docs[$c]['phone'] = $r2['home_phone'];
         $c++;
     }
 
@@ -107,21 +180,41 @@ function similar_patients($id){
 
 function similar_insurance($id){
     $db = new Db();
-    $con = $GLOBALS['con'];
-    $id = intval($id);
 
-    $s = "SELECT * from dental_patient_insurance WHERE id='".$id."'";
+    $id = intval($id);
+    $docId = intval($_SESSION['docid']);
+
+    $s = "SELECT company, add1, city, state, zip
+        FROM dental_patient_insurance
+        WHERE id = '$id'";
     $r = $db->getRow($s);
 
-    $s2 = "SELECT * FROM dental_contact WHERE " .
-          "contacttypeid =  '11' AND " .
-          "(company LIKE '%".mysqli_real_escape_string($con, $r['company'])."%' " .
-          " OR " .
-          "(add1 = '".mysqli_real_escape_string($con, $r['address1'])."' AND add1!='' AND " .
-          "city = '".mysqli_real_escape_string($con, $r['city'])."' AND city!='' AND " .
-          "state = '".mysqli_real_escape_string($con, $r['state'])."' AND state!='' AND " .
-          "zip = '".mysqli_real_escape_string($con, $r['zip'])."' AND zip!='')) 
-          AND docid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+    array_walk($r, function (&$each) use ($db) {
+        $each = $db->escape($each);
+    });
+
+    $s2 = "SELECT contactid, company, add1, add2, city, state, zip, phone1
+        FROM dental_contact
+        WHERE docid = '$docId'
+            AND contacttypeid =  '11'
+            AND (
+                (
+                    COALESCE(company, '') != ''
+                    AND company LIKE '%{$r['company']}%'
+                )
+                OR (
+                    (
+                        COALESCE(add1, '') != ''
+                        OR COALESCE(city, '') != ''
+                        OR COALESCE(state, '') != ''
+                        OR COALESCE(zip, '') != ''
+                    )
+                    AND COALESCE(add1, '') = '{$r['add1']}'
+                    AND COALESCE(city, '') = '{$r['city']}'
+                    AND COALESCE(state, '') = '{$r['state']}'
+                    AND COALESCE(zip, '') = '{$r['zip']}'
+                )
+            )";
 
     $q2 = $db->getResults($s2);
     $docs = array();
@@ -135,7 +228,6 @@ function similar_insurance($id){
             $c++;
         }
     }
-
 
     return $docs;
 }

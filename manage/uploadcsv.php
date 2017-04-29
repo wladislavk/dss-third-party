@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
+set_time_limit(0);
+
 include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');
@@ -42,7 +46,7 @@ if(isset($_POST['submitbut'])){
                 $fields[] = "";
                 $fields[] = "status";
                 $fields[] = "gender"; //gender
-                $fields[] = "marital_status"; 
+                $fields[] = "marital_status";
                 $fields[] = ""; //responsible party status
                 $fields[] = "dob";
         	    $fields[] = "";
@@ -101,8 +105,15 @@ if(isset($_POST['submitbut'])){
                                     break;
                                 case 'dob':
                                     if($data[$id]!=''){
-                                        $d = date('m/d/Y', strtotime($data[$id]));
-                                        $s .= $field . " = '" .$d."', ";	
+                                        $timestamp = strtotime($data[$id]);
+
+                                        if (!$timestamp) {
+                                            $timestamp = str_replace('/', '-', $data[$id]);
+                                            $timestamp = strtotime($timestamp);
+                                        }
+
+                                        $d = $timestamp ? date('m/d/Y', $timestamp) : $data[$id];
+                                        $s .= $field . " = '" .$d."', ";
                                     }
                                     break;
                                 case 'copyreqdate':
@@ -140,7 +151,7 @@ if(isset($_POST['submitbut'])){
                                 break;
                             }
                 		}
-            			$s .= " docid = '".$_SESSION[docid]."'";
+            			$s .= " docid = '".$_SESSION[docid]."', adddate = NOW(), ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
             			//echo $s;
             			$pid = $db->getInsertId($s);
             			if($copyreqdate=='' && $last_visit!=''){

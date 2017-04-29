@@ -7,12 +7,38 @@ include "includes/similar.php";
 <link rel="stylesheet" href="css/pending.css" type="text/css" media="screen" />
 
 <?php
- 
+
 //SQL to search for possible duplicates
-$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND 
-		((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
-		(dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
-		)";
+
+$docId = intval($_SESSION['docid']);
+$simsql = "(
+    SELECT COUNT(dp.patientid)
+    FROM dental_patients dp
+    WHERE dp.docid = '$docId'
+        AND dp.status = 1
+		AND (
+            (
+                (
+                    COALESCE(dp.firstname, '') != ''
+                    OR COALESCE(dp.lastname, '') != ''
+                )
+                AND COALESCE(dp.firstname, '') = COALESCE(p.firstname, '')
+                AND COALESCE(dp.lastname, '') = COALESCE(p.lastname, '')
+            )
+            OR (
+                (
+                    COALESCE(dp.add1, '') != ''
+                    OR COALESCE(dp.city, '') != ''
+                    OR COALESCE(dp.state, '') != ''
+                    OR COALESCE(dp.zip, '') != ''
+                )
+                AND COALESCE(dp.add1, '') = COALESCE(p.add1)
+                AND COALESCE(dp.city, '') = COALESCE(p.city)
+                AND COALESCE(dp.state, '') = COALESCE(p.state)
+                AND COALESCE(dp.zip, '') = COALESCE(p.zip)
+            )
+        )
+	)";
 
 
 if(isset($_REQUEST['deleteid'])){

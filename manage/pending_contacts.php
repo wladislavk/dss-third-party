@@ -8,15 +8,45 @@ include "includes/similar.php";
 
 <?php
 //SQL to search for possible duplicates
-$simsql = "(select count(*) FROM dental_contact dc WHERE dc.status=1 AND dc.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND 
-		((dc.firstname=c.firstname AND dc.lastname=c.lastname) OR
-		(dc.add1=c.add1 AND dc.city=c.city AND dc.state=c.state AND dc.zip=c.zip))
-		)";
+
+$docId = intval($_SESSION['docid']);
+$simsql = "(
+        SELECT COUNT(dc.contactid)
+        FROM dental_contact dc
+        WHERE dc.docid = '$docId'
+            AND dc.status = 1
+            AND (
+                (
+                    COALESCE(dc.company, '') != ''
+                    AND dc.company = c.company
+                )
+                OR (
+                    (
+                        COALESCE(dc.firstname, '') != ''
+                        OR COALESCE(dc.lastname, '') != ''
+                    )
+                    AND COALESCE(dc.firstname, '') = COALESCE(c.firstname, '')
+                    AND COALESCE(dc.lastname, '') = COALESCE(c.lastname, '')
+                )
+                OR (
+                    (
+                        COALESCE(dc.add1, '') != ''
+                        OR COALESCE(dc.city, '') != ''
+                        OR COALESCE(dc.state, '') != ''
+                        OR COALESCE(dc.zip, '') != ''
+                    )
+                    AND COALESCE(dc.add1, '') = COALESCE(c.add1)
+                    AND COALESCE(dc.city, '') = COALESCE(c.city)
+                    AND COALESCE(dc.state, '') = COALESCE(c.state)
+                    AND COALESCE(dc.zip, '') = COALESCE(c.zip)
+                )
+            )
+    )";
 
 if(isset($_REQUEST['deleteid'])){
     $dsql = "DELETE FROM dental_contact WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND contactid='".mysqli_real_escape_string($con, $_REQUEST['deleteid'])."'";
     $db->query($dsql);
-?>  
+?>
 <script type="text/javascript">
     window.location = "pending_contacts.php";
 </script>
@@ -24,7 +54,7 @@ if(isset($_REQUEST['deleteid'])){
 }elseif(isset($_REQUEST['createid'])){
     $sql = "UPDATE dental_contact SET status= CASE status WHEN 4 THEN 2 ELSE 1 END WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND contactid='".mysqli_real_escape_string($con, $_REQUEST['createid'])."'";
     $db->query($sql);
-?>  
+?>
 <script type="text/javascript">
     window.location = "pending_contacts.php";
 </script>
@@ -56,7 +86,7 @@ if(isset($_REQUEST['deleteid'])){
         $s = "UPDATE dental_contact SET status=2 WHERE contactid IN('".implode($ids4, "','")."')";
         $db->query($s);
     }
-?>  
+?>
 <script type="text/javascript">
     window.location = "pending_contacts.php";
 </script>
@@ -74,21 +104,21 @@ if(isset($_REQUEST['deleteid'])){
     }
     $s = "DELETE FROM dental_contact WHERE contactid IN(".implode($ids, ',').")";
     $db->query($s);
-?>  
+?>
 <script type="text/javascript">
     window.location = "pending_contacts.php";
 </script>
 <?php
 }
 $sql = "SELECT c.* FROM dental_contact c WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0 ";
-$sql .= "ORDER BY c.lastname ASC"; 
+$sql .= "ORDER BY c.lastname ASC";
 $my = $db->getResults($sql);
 ?>
 
 <script src="js/pending.js" type="text/javascript"></script>
 
 <button style="float:right;margin-right:20px;" onclick="return redirect('upload_contacts.php');" class="addButton">
-    Upload 
+    Upload
 </button>
 <br />
 <span class="admin_head">
@@ -105,17 +135,20 @@ $my = $db->getResults($sql);
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
-		<td valign="top" class="col_head" width="25%">
+		<td valign="top" class="col_head" width="15%">
 			Contact Name
 		</td>
-		<td valign="top" class="col_head" width="45%">
+		<td valign="top" class="col_head" width="15%">
+			Company
+		</td>
+		<td valign="top" class="col_head" width="40%">
 			Address
 		</td>
         <td valign="top" class="col_head" width="15%">
             Phone
         </td>
         <td valign="top" class="col_head" width="45%">
-            Similar Contacts 
+            Similar Contacts
         </td>
 		<td valign="top" class="col_head" width="15%">
 			Action
@@ -123,7 +156,7 @@ $my = $db->getResults($sql);
 	</tr>
 	<?php if(count($my) == 0){ ?>
 	<tr class="tr_bg">
-		<td valign="top" class="col_head" colspan="5" align="center">
+		<td valign="top" class="col_head" colspan="6" align="center">
 			No Records
 		</td>
 	</tr>
@@ -132,11 +165,14 @@ $my = $db->getResults($sql);
 	else
 	{
         foreach ($my as $myarray) {
-			$sim = similar_contacts($myarray['contactid']);?>
+			$sim = similarContacts($myarray['contactid']);?>
     <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
         <td valign="top">
             <?php echo st($myarray["firstname"]);?>&nbsp;
-            <?php echo st($myarray["lastname"]);?> 
+            <?php echo st($myarray["lastname"]);?>
+        </td>
+        <td valign="top">
+            <?php echo st($myarray["company"]);?>
         </td>
         <td valign="top">
             <?php echo st($myarray["add1"]); ?>
@@ -154,21 +190,24 @@ $my = $db->getResults($sql);
         <td valign="top">
             <a href="pending_contacts.php?createid=<?php echo $myarray["contactid"]; ?>" class="editlink" title="EDIT">
                 Create
-            </a> 
+            </a>
             <a href="pending_contacts.php?deleteid=<?php echo $myarray["contactid"]; ?>" onclick="return confirm('Are you sure you want to delete <?php echo $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
-                Delete 
+                Delete
             </a>
             <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"]; ?>');return false;" class="editlink" title="EDIT">
                 View
             </a>
         </td>
     </tr>
-    		<?php 
-    		if(count($sim) > 0){ 
+    		<?php
+    		if(count($sim) > 0){
     		    foreach($sim as $s){ ?>
     <tr class="similar sim_<?php echo $myarray['contactid']; ?>">
         <td valign="top">
             <?php echo st($s["name"]);?>
+        </td>
+        <td valign="top">
+            <?php echo st($s["company"]);?>
         </td>
         <td valign="top">
             <?php echo st($s["address"]); ?>
@@ -207,10 +246,13 @@ $my = $db->getResults($sql);
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
     <tr class="tr_bg_h">
-        <td valign="top" class="col_head" width="25%">
+        <td valign="top" class="col_head" width="15%">
             Name
         </td>
-        <td valign="top" class="col_head" width="45%">
+        <td valign="top" class="col_head" width="15%">
+            Company
+        </td>
+        <td valign="top" class="col_head" width="40%">
             Address
         </td>
         <td valign="top" class="col_head" width="15%">
@@ -222,7 +264,7 @@ $my = $db->getResults($sql);
     </tr>
         <?php if(count($my) == 0){ ?>
     <tr class="tr_bg">
-        <td valign="top" class="col_head" colspan="4" align="center">
+        <td valign="top" class="col_head" colspan="5" align="center">
             No Records
         </td>
     </tr>
@@ -231,11 +273,14 @@ $my = $db->getResults($sql);
         else
         {
             foreach ($my as $myarray) {
-                $sim = similar_contacts($myarray['contactid']);?>
+                $sim = similarContacts($myarray['contactid']);?>
     <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
         <td valign="top">
             <?php echo st($myarray["firstname"]);?>&nbsp;
             <?php echo st($myarray["lastname"]);?>
+        </td>
+        <td valign="top">
+            <?php echo st($myarray["company"]);?>
         </td>
         <td valign="top">
             <?php echo st($myarray["add1"]); ?>
@@ -252,7 +297,7 @@ $my = $db->getResults($sql);
                 Create
             </a>
             <a href="pending_contacts.php?deleteid=<?php echo $myarray["contactid"]; ?>" onclick="return confirm('Are you sure you want to delete <?php echo $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
-                Delete 
+                Delete
             </a>
             <a href="#" onclick="loadPopup('view_contact.php?ed=<?php echo $myarray["contactid"]; ?>');return false;" class="editlink" title="EDIT">
                 View
@@ -262,6 +307,70 @@ $my = $db->getResults($sql);
         <?php }
         }?>
 </table>
+<?php
+
+include "includes/bottom.htm";
 
 
-<?php include "includes/bottom.htm";?>
+function similarContacts ($id) {
+    $db = new Db();
+
+    $id = intval($id);
+    $docId = intval($_SESSION['docid']);
+
+    $s = "SELECT firstname, lastname, company, add1, city, state, zip
+        FROM dental_contact
+        WHERE contactid='$id'";
+    $r = $db->getRow($s);
+
+    array_walk($r, function (&$each) use ($db) {
+        $each = $db->escape($each);
+    });
+
+    $s2 = "SELECT firstname, lastname, company, add1, city, state, zip, phone1
+        FROM dental_contact
+        WHERE docid = '$docId'
+            AND status IN (1, 2)
+            AND contactid != '$id'
+            AND (
+                (
+                    COALESCE(company, '') != ''
+                    AND COALESCE(company, '') = '{$r['company']}'
+                )
+                OR (
+                    (
+                        COALESCE(firstname, '') != ''
+                        OR COALESCE(lastname, '') != ''
+                    )
+                    AND COALESCE(firstname, '') = '{$r['firstname']}'
+                    AND COALESCE(lastname, '') = '{$r['lastname']}'
+                )
+                OR (
+                    (
+                        COALESCE(add1, '') != ''
+                        OR COALESCE(city, '') != ''
+                        OR COALESCE(state, '') != ''
+                        OR COALESCE(zip, '') != ''
+                    )
+                    AND COALESCE(add1, '') = '{$r['add1']}'
+                    AND COALESCE(city, '') = '{$r['city']}'
+                    AND COALESCE(state, '') = '{$r['state']}'
+                    AND COALESCE(zip, '') = '{$r['zip']}'
+                )
+            )";
+
+    $q2 = $db->getResults($s2);
+    $docs = array();
+    $c = 0;
+
+    foreach ($q2 as $r2) {
+        $docs[$c]['id'] = $r2['contactid'];
+        $docs[$c]['name'] = $r2['firstname']. " " .$r2['lastname'];
+        $docs[$c]['company'] = $r2['company'];
+        $docs[$c]['address'] = $r2['add1']. " " . $r2['add2']. " " . $r2['city']. " " . $r2['state']. " " . $r2['zip'];
+        $docs[$c]['phone1'] = $r2['phone1'];
+        $c++;
+    }
+
+    return $docs;
+}

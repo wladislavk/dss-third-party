@@ -62,6 +62,8 @@ function insertContactList ($filename, $docId, $ignoreExtension=false) {
     $batchSize = 50;
     $fields = [];
 
+    $contactTypeList = getContactTypeList();
+
     do {
         $batch = [];
 
@@ -97,6 +99,7 @@ function insertContactList ($filename, $docId, $ignoreExtension=false) {
                     'notes',
                     'contacttypeid' => 'contacttype',
                     'specialty',
+                    'status' => 'active',
                 ];
 
                 foreach ($row as $index=>$column) {
@@ -132,9 +135,12 @@ function insertContactList ($filename, $docId, $ignoreExtension=false) {
                     return $return;
                 }
 
-                foreach (['notes', 'docid', 'ip_address'] as $each) {
+                /**
+                 * Signal special fields with negative indexes
+                 */
+                foreach (['preferredcontact', 'notes', 'docid', 'ip_address'] as $index=>$each) {
                     if (!in_array($each, $fields)) {
-                        $fields[] = $each;
+                        $fields[-1 - $index] = $each;
                     }
                 }
 
@@ -145,8 +151,36 @@ function insertContactList ($filename, $docId, $ignoreExtension=false) {
 
             foreach ($fields as $index=>$column) {
                 switch ($column) {
-                    case 'notes':
-                        $data[$column] = '';
+                    case 'contacttypeid':
+                        switch (strtolower(trim($row[$index]))) {
+                            case 'insurance':
+                                $type = 'Insurance';
+                                break;
+                            case 'ent':
+                                $type = 'ENT Physician';
+                                break;
+                            case 'dental physician':
+                            case 'orthodontist':
+                                $type = 'Dentist';
+                                break;
+                            case 'primary care physician':
+                                $type = 'Primary Care Physician';
+                                break;
+                            case 'sleep disorder specialist':
+                                $type = 'Sleep Physician';
+                                break;
+                            case 'pulmonologist':
+                                $type = 'Pulmonologist';
+                                break;
+                            default:
+                                $type = 'Other Physician';
+                                break;
+                        }
+
+                        $data[$column] = isset($contactTypeList[$type]) ? intval($contactTypeList[$type]) : '';
+                        break;
+                    case 'status':
+                        $data[$column] = trim($row[$index]) == 'true' || trim($row[$index]) == 3 ? 3 : 4;
                         break;
                     case 'docid':
                         $data[$column] = $docId;
@@ -167,6 +201,31 @@ function insertContactList ($filename, $docId, $ignoreExtension=false) {
                 continue;
             }
 
+            /**
+             * Preferred method of contact
+             */
+            if (!empty($data['fax'])) {
+                $data['preferredcontact'] = 'fax';
+            }
+
+            /**
+             * Process notes
+             */
+            $notes = [];
+            $noteSections = [
+                'qualifierid' => 'OtherID - $1',
+                'qualifier' => 'OtherIDQualifier - $1',
+                'specialty' => 'Specialty - $1',
+                'notes' => '$1'
+            ];
+
+            foreach ($noteSections as $column=>$replacement) {
+                if (strlen($data[$column])) {
+                    $notes[] = str_replace('$1', $data[$column], $replacement);
+                }
+            }
+
+            $data['notes'] = join(' ', $notes);
             $batch[] = $data;
 
             if (count($batch) >= $batchSize) {

@@ -194,12 +194,8 @@ function insertContactList ($filename, $docId, $ignoreExtension=false) {
             }
 
             /**
-             * Exclude rows that have no names
+             * No rows are excluded ever in this approach
              */
-            if (empty($data['firstname']) && empty($data['lastname'])) {
-                $return['excluded']++;
-                continue;
-            }
 
             /**
              * Preferred method of contact

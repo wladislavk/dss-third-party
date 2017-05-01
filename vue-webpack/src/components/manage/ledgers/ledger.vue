@@ -99,18 +99,28 @@
                         No Records
                     </td>
                 </tr>
-                <tr>
+                <tr
+                    v-else
+                    v-for="row in ledgerRows"
+                >
                     <td valign="top">
+                        {{ row.service_date | moment("MM-DD-YYYY") }}
                     </td>
                     <td valign="top">
+                        {{ row.entry_date | moment("MM-DD-YYYY") }}
                     </td>
                     <td valign="top">
+                        {{ row.name }}
                     </td>
                     <td valign="top">
+                        {{ getDescription(row) }}
                     </td>
                     <td valign="top" align="right">
+                        {{ row.ledger != 'claim' && row.amount != 0 ? formatLedger(row.amount) : '' }}
                     </td>
-                    <td></td>
+                    <td>
+                        
+                    </td>
                     <td valign="top" align="right">
                     </td>
                     <td></td>

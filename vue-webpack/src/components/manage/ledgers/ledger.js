@@ -116,10 +116,42 @@ export default {
       return ''
     }
   },
-  created () {
-
+  mounted () {
+    this.getLedgerData()
   },
   methods: {
+    getDescription (row) {
+      var ledgerNote = row.ledger === 'note' && row.status === 1 ? '(P) ' : ''
+      var ledgerPaid = row.ledger === 'ledger_paid' && row.payer > 0 ? constants.dssTransactionTypeLabels(row.payer) + ' - ' : ''
+      var filedByBo = row.filed_by_bo ? '*' : ''
+      var ledgerPayment = ''
+      var claim = ''
+      var ledger = ''
+
+      if (row.ledger === 'ledger_payment') {
+        ledgerPayment = constants.dssTransactionPayerLabels(row.payer)
+          + ' Payment - '
+          + constants.dssTransactionPaymentTypeLabels(row.payment_type) + ' '
+
+        ledgerPayment += row.primary_claim_id > 0 ? '(' + row.primary_claim_id + ') ' : ''
+      } else if (row.ledger === 'ledger') {
+        if (row.primary_claim_id > 0) {
+          ledger = '(' + row.primary_claim_id + ') '
+        } else if (!row.primary_claim_id && row.status === constants.DSS_TRXN_PENDING) {
+          ledger = ' (Click to file)'
+        }
+      } else if (row.ledger === 'claim') {
+        if (row.ledgerid > 0) {
+          claim = '(' + row.ledgerid + ') '
+        } else if (row.primary_claim_id > 0) {
+          claim = 'Secondary to (' + row.primary_claim_id + ') '
+        } else if (row.num_notes > 0) {
+          claim = ' - Notes (' + row.num_notes + ') '
+        }
+      }
+
+      return ledgerNote + ledgerPaid + row.description + ledger + claim + filedByBo + ledgerPayment
+    },
     getPatientInfo () {
       this.getPatient(this.routeParameters.patientId)
         .then(function (response) {
@@ -135,6 +167,7 @@ export default {
     },
     getLedgerData () {
       this.getLedgerRows(
+        this.routeParameters.patientId,
         this.routeParameters.currentPageNumber,
         this.ledgerRowsPerPage,
         this.routeParameters.sortColumn,
@@ -143,8 +176,8 @@ export default {
       ).then(function (response) {
         var data = response.data.data
 
-        this.ledgerRowsTotalNumber = data.total
-        this.ledgerRows = data.result
+        // this.ledgerRowsTotalNumber = data.total
+        this.ledgerRows = data
       }, function (response) {
         this.handleErrors('getLedgerRows', response)
       })
@@ -156,13 +189,17 @@ export default {
         return 'asc'
       }
     },
+    formatLedger (value) {
+      return accounting.formatMoney(value, '$')
+    },
     updatePatientSummary (patientId) {
       var data = { patient_id: patientId }
 
       return this.$http.post(process.env.API_PATH + 'ledgers/update-patient-summary', data)
     },
-    getLedgerRows (pageNumber, rowsPerPage, sortColumn, sortDir, openClaims) {
+    getLedgerRows (patientId, pageNumber, rowsPerPage, sortColumn, sortDir, openClaims) {
       var data = {
+        patient_id: patientId,
         page: pageNumber,
         rows_per_page: rowsPerPage,
         sort: sortColumn,
@@ -170,7 +207,7 @@ export default {
         open_claims: openClaims
       }
 
-      return this.$http.post(process.env.API_PATH + 'ledgers/list', data)
+      return this.$http.post(process.env.API_PATH + 'ledgers/report-data', data)
     },
     getPatient (patientId) {
       return this.$http.get(process.env.API_PATH + 'patients/' + patientId)

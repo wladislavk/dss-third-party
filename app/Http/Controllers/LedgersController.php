@@ -202,6 +202,7 @@ class LedgersController extends Controller
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
+        $patientId = $request->input('patient_id') ?: 0;
         $page = $request->input('page') ?: 0;
         $rowsPerPage = $request->input('rows_per_page') ?: 20;
         $sort = $request->input('sort');
@@ -209,19 +210,16 @@ class LedgersController extends Controller
         $openClaims = $request->input('open_claims') ?: false;
 
         if ($openClaims) {
-            $data = $insurance->getOpenClaims()
+            $data = $insurance->getOpenClaims();
         } else {
-            $data = $ledger->getReportData(
-                $ledgerNoteModel,
-                $ledgerStatementModel,
-                $insurance,
-                $docId,
-                $patientId,
-                $page,
-                $rowsPerPage,
-                $sort,
-                $sortDir
-            );
+            $data = $ledger->getReportData($ledgerNote, $ledgerStatement, $insurance, [
+                'doc_id'        => $docId,
+                'patient_id'    => $patientId,
+                'page'          => $page,
+                'rows_per_page' => $rowsPerPage,
+                'sort'          => $sort,
+                'sort_dir'      => $sortDir,
+            ]);
         }
 
         return ApiResponse::responseOk('', $data);

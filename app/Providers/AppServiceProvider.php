@@ -93,6 +93,7 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\LedgerHistory::class => [Repositories\LedgerHistories::class, Resources\LedgerHistory::class],
             Eloquent\Dental\LedgerPayment::class => [Repositories\LedgerPayments::class, Resources\LedgerPayment::class],
             Eloquent\Dental\LedgerRecord::class => [Repositories\LedgerRecords::class, Resources\LedgerRecord::class],
+            Eloquent\Dental\LedgerStatement::class => [Repositories\LedgerStatements::class, Resources\LedgerStatement::class],
             Eloquent\Dental\LetterTemplate::class => [Repositories\LetterTemplates::class, Resources\LetterTemplate::class],
             Eloquent\Dental\CustomLetterTemplate::class => [Repositories\CustomLetterTemplates::class, Resources\CustomLetterTemplate::class],
             Eloquent\Dental\Letter::class => [Repositories\Letters::class, Resources\Letter::class],

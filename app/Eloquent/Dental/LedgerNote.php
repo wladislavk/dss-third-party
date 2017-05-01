@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LedgerNote as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerNotes as Repository;
+use DB;
 
 class LedgerNote extends Model implements Resource, Repository
 {
@@ -102,6 +103,9 @@ class LedgerNote extends Model implements Resource, Repository
         ->join(DB::raw('admin p'), 'n.admin_producerid', '=', 'p.adminid')
         ->where('n.patientid', $patientId);
 
-        return $userQuery->union($adminQuery);
+        return [
+            'users'  => $userQuery,
+            'admins' => $adminQuery
+        ];
     }
 }

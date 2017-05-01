@@ -17,6 +17,47 @@ Route::post('auth', function () {
     return ['status' => 'Authenticated', 'token' => $token];
 });
 
+/**
+ * Repeat logic from GenerateJwtToken, with adaptations
+ */
+Route::post('lan-auth', function (Illuminate\Http\Request $request) {
+    $loaderDomain = parse_url(env('LOADER_HOST'), PHP_URL_HOST);
+    $loaderIp = gethostbyname($loaderDomain);
+
+    if ($loaderIp !== $request->ip()) {
+        return Response::json(['status' => 'Not found'], 404);
+    }
+
+    $sharedSecret = env('SHARED_SECRET');
+
+    if (!strlen($sharedSecret) || $sharedSecret !== $request->input('secret')) {
+        return Response::json(['status' => 'Invalid credentials'], 422);
+    }
+
+    /**
+     * DSS can log a single user (FO/BO) or two users (BO "logged in as" FO).
+     * This method can return more than one result, if the given ID has a separator "|"
+     */
+    $userData = DentalSleepSolutions\Eloquent\User::findByIdOrEmail($request->input('id'));
+
+    if (!$userData) {
+        return Response::json(['status' => 'Invalid credentials'], 422);
+    }
+
+    /**
+     * JWTAuth relies on user ID (with the default configuration) but it is not possible to generate a payload
+     * with a combined approach. As a workaround, the ID of a single model will be altered to pass along the
+     * list of IDs needed for "logged in as".
+     */
+    $userModel = $userData[0];
+
+    if (isset($userData[1])) {
+        $userModel->id = "{$userData[0]->id}|{$userData[1]->id}";
+    }
+
+    return ['status' => 'Authenticated', 'token' => JWTAuth::fromUser($userModel)];
+});
+
 
 /*
 |--------------------------------------------------------------------------

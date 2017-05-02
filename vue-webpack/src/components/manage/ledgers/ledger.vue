@@ -99,63 +99,83 @@
                         No Records
                     </td>
                 </tr>
-                <tr
+                <template
                     v-else
                     v-for="row in ledgerRows"
                 >
-                    <td valign="top">
-                        {{ row.service_date | moment("MM-DD-YYYY") }}
-                    </td>
-                    <td valign="top">
-                        {{ row.entry_date | moment("MM-DD-YYYY") }}
-                    </td>
-                    <td valign="top">
-                        {{ row.name }}
-                    </td>
-                    <td valign="top">
-                        {{ getDescription(row) }}
-                    </td>
-                    <td valign="top" align="right">
-                        {{ row.ledger != 'claim' && row.amount != 0 ? formatLedger(row.amount) : '' }}
-                    </td>
-                    <td>
-                        
-                    </td>
-                    <td valign="top" align="right">
-                    </td>
-                    <td></td>
-                    <td valign="top" align="right">
-                    </td>
-                    <td valign="top">
-                    </td>
-                    <td valign="top">
-                    </td>
-                    <td valign="top">
-                    </td>
-                </tr>
-                <tr class="history_<?php echo $myarray['ledgerid']; ?>" style="display:none;">
-                    <td>Updated At</td>
-                    <td>Service Date</td>
-                    <td>Producer</td>
-                    <td>Description</td>
-                    <td>Charges</td>
-                    <td>Credits</td>
-                    <td>Update By</td>
-                </tr>  
-                <tr class="history_<?php echo $myarray['ledgerid']; ?>" style="display:none;">
-                    <td><?php echo $h_r['updated_at']; ?></td>
-                    <td><?php echo $h_r['service_date']; ?></td>
-                    <td><?php echo $h_r['name']; ?></td>
-                    <td><?php echo $h_r['description']; ?></td>
-                    <td><?php echo $h_r['amount']; ?></td>
-                    <td><?php echo $h_r['paid_amount']; ?></td>
-                    <td><?php if($h_r['updated_admin']!=''){
-                            echo $h_r['updated_admin'];
-                            }elseif($h_r['updated_user']!=''){
-                            echo $h_r['updated_user'];
-                            } ?>
-                    </td>
-                </tr>
+                    <tr>
+                        <td valign="top">
+                            {{ row.service_date | moment("MM-DD-YYYY") }}
+                        </td>
+                        <td valign="top">
+                            {{ row.entry_date | moment("MM-DD-YYYY") }}
+                        </td>
+                        <td valign="top">
+                            {{ row.name }}
+                        </td>
+                        <td valign="top">
+                            {{ getDescription(row) }}
+                        </td>
+                        <td valign="top" align="right">
+                            {{ row.ledger != 'claim' && row.amount != 0 ? formatLedger(row.amount) : '' }}
+                        </td>
+                        <td>
+                            {{ row.ledger != 'claim' && row.paid_amount != 0 ? formatLedger(row.paid_amount) : '' }}
+                        </td>
+                        <td valign="top" align="right">
+                            {{ formatLedger(balanceForDisplaying) }}
+                        </td>
+                        <td>
+                            {{ getStatus(row) }}
+                        </td>
+                        <td valign="top" align="right">
+                            <a
+                                v-if="row.ledger === 'ledger' || ledger === 'ledger_payment'"
+                                v-on:click="showHistory(row)"
+                                href="#"
+                            >View</a>
+                        </td>
+                        <td valign="top">
+                            <a
+                                href="#"
+                            >Edit</a>
+                            <a
+                                v-if="true"
+                                href="#"
+                            >Pay</a>
+                        </td>
+                    </tr>
+                    <template
+                        v-if="ledgerHistories.hasOwnProperty(row.ledgerid) && ledgerHistories[row.ledgerid].length"
+                        v-show="row.show_history"
+                    >
+                        <tr>
+                            <td>Updated At</td>
+                            <td>Service Date</td>
+                            <td>Producer</td>
+                            <td>Description</td>
+                            <td>Charges</td>
+                            <td>Credits</td>
+                            <td>Update By</td>
+                        </tr>
+                        <tr v-for="history in ledgerHistories[row.ledgerid]">
+                            <td>{{ history.updated_at }}</td>
+                            <td>{{ history.service_date }}</td>
+                            <td>{{ history.name }}</td>
+                            <td>{{ history.description }}</td>
+                            <td>{{ history.amount }}</td>
+                            <td>{{ history.paid_amount }}</td>
+                            <td>
+                                {{ history.updated_admin
+                                    ? history.updated_admin
+                                    : (history.updated_user
+                                        ? history.updated_user
+                                        : ''
+                                    ) }}
+                            </td>
+                        </tr>
+                    </template>
+                </template>
                 <tr class="tr_bg_h" style="color:#fff; font-weight: bold">
                     <td></td>
                     <td></td>
@@ -174,11 +194,11 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td style="color:#fff;"><?php echo (!empty($cur_cha) ? $cur_cha : '') ? number_format(st($cur_cha),2) : '0'; ?></td>
-                    <td style="color:#fff;"><?php echo (!empty($cur_pay) ? $cur_pay : '') ? number_format(st($cur_pay),2) : '0'; ?></td>
-                    <td style="color:#fff;"><?php echo (!empty($cur_adj) ? $cur_adj : '') ? number_format(st($cur_adj),2) : '0'; ?></td>
-                    <td style="color:#fff;"><?php echo (!empty($orig_bal) ? $orig_bal : '') ? number_format(st($orig_bal),2) : '0'; ?></td>
-                    <td style="color:#fff;"><?php echo (!empty($cur_bal) ? $cur_bal : '') ? number_format(st($cur_bal),2) : '0'; ?></td>
+                    <td style="color:#fff;">{{ formatLedger(totalCharges) }}</td>
+                    <td style="color:#fff;">{{ formatLedger(totalCredits) }}</td>
+                    <td style="color:#fff;">{{ formatLedger(totalAdjustments) }}</td>
+                    <td style="color:#fff;">{{ formatLedger(originalBalance) }}</td>
+                    <td style="color:#fff;">{{ formatLedger(balanceForDisplaying) }}</td>
                     <td></td>
                     <td></td>
                     <td></td>

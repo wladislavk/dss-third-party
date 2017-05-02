@@ -3,6 +3,7 @@ var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 export default {
   data () {
     return {
+      constants: window.constants,
       message: '',
       routeParameters: {
         patientId: 0,
@@ -16,6 +17,10 @@ export default {
       ledgerRowsTotalNumber: 0,
       ledgerRowsPerPage: 20,
       ledgerRows: [],
+      ledgerHistories: {},
+      totalCharges: 0,
+      totalCredits: 0,
+      totalAdjustments: 0,
       tableHeaders: {
         'service_date': {
           title: 'Svc Date',
@@ -114,12 +119,48 @@ export default {
     },
     name () {
       return ''
+    },
+    totalPageCharges () {
+      return 0
+    },
+    totalPageCredits () {
+      return 0
+    },
+    totalPageAdjustments () {
+      return 0
+    },
+    balanceForDisplaying () {
+      return 0
+    },
+    originalBalance () {
+      return 0
     }
   },
   mounted () {
     this.getLedgerData()
   },
   methods: {
+    showHistory (row) {
+      if (!this.ledgerHistories.hasOwnProperty(row.ledgerid)) {
+        this.getLedgerHistories(this.routeParameters.patientId, row.ledgerid, row.ledger)
+        .then(function (response) {
+          var data = response.data.data
+
+          this.ledgerHistories[row.ledgerid] = data
+        }, function (response) {
+          this.handleErrors('getPatient', getLedgerHistories)
+        })
+      }
+
+      row.show_history = true
+    },
+    getStatus (row) {
+      if (row.ledger === 'ledger_paid') {
+        return constants.dssTransactionStatusLabels(row.status)
+      } else if (row.ledger === 'claim' || row.ledger === 'ledger') {
+        return constants.dssClaimStatusLabels(row.status)
+      }
+    },
     getDescription (row) {
       var ledgerNote = row.ledger === 'note' && row.status === 1 ? '(P) ' : ''
       var ledgerPaid = row.ledger === 'ledger_paid' && row.payer > 0 ? constants.dssTransactionTypeLabels(row.payer) + ' - ' : ''
@@ -176,6 +217,13 @@ export default {
       ).then(function (response) {
         var data = response.data.data
 
+        data = data.map((value) => {
+          // TODO: check it. some ledger row doesn't have this functional
+          value['show_history'] = false
+
+          return value
+        })
+
         // this.ledgerRowsTotalNumber = data.total
         this.ledgerRows = data
       }, function (response) {
@@ -211,6 +259,15 @@ export default {
     },
     getPatient (patientId) {
       return this.$http.get(process.env.API_PATH + 'patients/' + patientId)
+    },
+    getLedgerHistories (patientId, ledgerId, type) {
+      var data = {
+        patient_id: patientId,
+        ledger_id: ledgerId,
+        type: type
+      }
+
+      return this.$http.post(process.env.API_PATH + 'ledger-histories/ledger-report', data)
     }
   }
 }

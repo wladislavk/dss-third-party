@@ -162,7 +162,7 @@ class LedgersController extends Controller
 
         $patientId = $request->input('patient_id') ?: 0;
 
-        $patientSummary = $patient->getPatientInfo($patientId);
+        $patientSummary = $patientSummary->getPatientInfo($patientId);
 
         $ifPatientSummaryExists = false;
         if (!empty($patientSummary)) {

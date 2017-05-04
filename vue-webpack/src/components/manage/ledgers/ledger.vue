@@ -2,41 +2,62 @@
     <div>
         <span class="admin_head">
             Ledger Card
-        </span>
-        <div>
-            <span>{{ patient.name }}</span>
-            <span>{{ patient.add1 }}</span>
-            <span>{{ patient.add2 }}</span>
-            <span>{{ patient.city }} {{ patient.state }} {{ patient.zip }}</span>
-            <span>D: {{ patient.work_phone }} H: {{ patient.home_phone }}</span>
-            <span>W1: {{ patient.cell_phone }}</span>
-        </div>
-        <div align="right">
+        </span><br><br>
+        <template v-if="patient.hasOwnProperty('patientid') && patient.patientid > 0">
+            <span
+                v-if=""
+                style="clear:both; margin-left: 10px"
+            >
+                <a
+                    v-if="!showPatientSummary"
+                    v-on:click.prevent="showPatientSummary = true"
+                    href="#"
+                >Show Patient Summary</a>
+                <a
+                    v-else
+                    v-on:click.prevent="showPatientSummary = false"
+                    href="#"
+                >Hide Patient Summary</a>
+            </span>
+            <br>
+            <div
+                v-show="showPatientSummary"
+                style="margin: 10px"
+            >
+                <span>{{ patient.name }}</span><br>
+                <span>{{ patient.add1 }}</span><br>
+                <span>{{ patient.add2 }}</span><br>
+                <span>{{ patient.city }} {{ patient.state }} {{ patient.zip }}</span><br>
+                <span>D: {{ patient.work_phone }} H: {{ patient.home_phone }}</span><br>
+                <span>W1: {{ patient.cell_phone }}</span>
+            </div>
+        </template>
+        <div align="right" style="margin-right: 10px">
             <button
                 v-if="routeParameters.openclaims == 1"
                 onclick="Javascript: window.location='manage_ledger.php?<?php echo 'pid='.$_GET['pid'];?>';"
-                class="addButton"
+                class="addButton control-buttons"
             >View All</button>
             <button
                 v-else
                 onclick="Javascript: window.location='manage_ledger.php?openclaims=1&<?php echo 'pid='.$_GET['pid'];?>';"
-                class="addButton"
+                class="addButton control-buttons"
             >Claims Outstanding</button>
             <button
                 onclick="Javascript: window.open('print_ledger_report.php?<?php echo (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>')"
-                class="addButton"
+                class="addButton control-buttons"
             >Print Ledger</button>
             <button
                 onclick="Javascript: loadPopup('add_ledger_entry.php?pid=<?php echo $_GET['pid'];?>');"
-                class="addButton"
+                class="addButton control-buttons"
             >Add New Transaction</button>
             <button
                 onclick="Javascript: window.location='manage_ledger.php?pid=<?php echo $_GET['pid'];?>&inspay=1'"
-                class="addButton"
+                class="addButton control-buttons"
             >Add Ins. Payment</button>
             <button
                 onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?php echo $_GET['pid'];?>');"
-                class="addButton"
+                class="addButton control-buttons"
             >Add Note</button>
             <button
                 onclick="Javascript: window.open('ledger_statement.php?pid=<?php echo $_GET['pid'];?>')"
@@ -103,7 +124,9 @@
                     v-else
                     v-for="row in ledgerRows"
                 >
-                    <tr>
+                    <tr
+                        :class="'tr_active ' + getLedgerRowStatus(row)"
+                    >
                         <td valign="top">
                             {{ row.service_date | moment("MM-DD-YYYY") }}
                         </td>
@@ -119,18 +142,19 @@
                         <td valign="top" align="right">
                             {{ row.ledger != 'claim' && row.amount != 0 ? formatLedger(row.amount) : '' }}
                         </td>
-                        <td>
+                        <td valign="top" align="right">
                             {{ row.ledger != 'claim' && row.paid_amount != 0 ? formatLedger(row.paid_amount) : '' }}
                         </td>
+                        <td></td>
                         <td valign="top" align="right">
-                            {{ formatLedger(balanceForDisplaying) }}
+                            {{ formatLedger(getCurrentBalance(row)) }}
                         </td>
-                        <td>
+                        <td valign="top">
                             {{ getStatus(row) }}
                         </td>
-                        <td valign="top" align="right">
+                        <td valign="top">
                             <a
-                                v-if="row.ledger === 'ledger' || ledger === 'ledger_payment'"
+                                v-if="row.ledger === 'ledger' || row.ledger === 'ledger_payment'"
                                 v-on:click="showHistory(row)"
                                 href="#"
                             >View</a>
@@ -197,8 +221,14 @@
                     <td style="color:#fff;">{{ formatLedger(totalCharges) }}</td>
                     <td style="color:#fff;">{{ formatLedger(totalCredits) }}</td>
                     <td style="color:#fff;">{{ formatLedger(totalAdjustments) }}</td>
-                    <td style="color:#fff;">{{ formatLedger(originalBalance) }}</td>
-                    <td style="color:#fff;">{{ formatLedger(balanceForDisplaying) }}</td>
+                    <td
+                        v-if="true"
+                        style="color:#fff;"
+                    >{{ formatLedger(originalBalance) }}</td>
+                    <td
+                        v-else
+                        style="color:#fff;"
+                    >{{ formatLedger(currentBalance) }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -219,3 +249,7 @@
 </template>
 
 <script src="./ledger.js"></script>
+
+<style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/manage.css" scoped></style>
+<style src="../../../assets/css/manage/ledger.css" scoped></style>

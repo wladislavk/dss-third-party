@@ -6,7 +6,7 @@ export default {
       constants: window.constants,
       message: '',
       routeParameters: {
-        patientId: 0,
+        patientId: 16,
         openclaims: 0,
         inspay: 0,
         currentPageNumber: 0,
@@ -14,13 +14,11 @@ export default {
         sortDirection: 'desc'
       },
       patient: {},
+      showPatientSummary: false,
       ledgerRowsTotalNumber: 0,
       ledgerRowsPerPage: 20,
       ledgerRows: [],
       ledgerHistories: {},
-      totalCharges: 0,
-      totalCredits: 0,
-      totalAdjustments: 0,
       tableHeaders: {
         'service_date': {
           title: 'Svc Date',
@@ -85,6 +83,15 @@ export default {
       if (this.routeParameters.patientId > 0) {
         this.updatePatientSummary(this.routeParameters.patientId)
         this.getPatientInfo()
+      } else {
+        this.patient = {}
+      }
+    },
+    '$route.query.pid': function () {
+      if (this.$route.query.pid > 0) {
+        this.$set(this.routeParameters, 'patientId', this.$route.query.pid)
+      } else {
+        this.$set(this.routeParameters, 'patientId', null)
       }
     },
     '$route.query.page': function () {
@@ -120,26 +127,101 @@ export default {
     name () {
       return ''
     },
-    totalPageCharges () {
-      return 0
+    totalCharges () {
+      var total = this.ledgerRows.reduce((sum, currentRow) => {
+        return sum + (currentRow.ledger != 'claim' ? +currentRow.amount : 0)
+      }, 0)
+
+      return total
     },
-    totalPageCredits () {
-      return 0
+    totalCredits () {
+      var total = this.ledgerRows.reduce((sum, currentRow) => {
+        var isLedgerNotPaidAndNotAdjustment = !(currentRow.ledger === 'ledger_paid' && currentRow.payer == constants.DSS_TRXN_TYPE_ADJ)
+
+        return sum + (isLedgerNotPaidAndNotAdjustment && currentRow.ledger != 'claim' ? +currentRow.paid_amount : 0)
+      }, 0)
+
+      return total
     },
-    totalPageAdjustments () {
-      return 0
+    totalAdjustments () {
+      var total = this.ledgerRows.reduce((sum, currentRow) => {
+        var isLedgerPaidAndAdjustment = (currentRow.ledger === 'ledger_paid' && currentRow.payer == constants.DSS_TRXN_TYPE_ADJ)
+
+        return sum + (isLedgerPaidAndAdjustment ? +currentRow.paid_amount : 0)
+      }, 0)
+
+      return total
     },
-    balanceForDisplaying () {
-      return 0
+    currentBalance () {
+      var total = 0
+
+      if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
+        total = this.ledgerRows.reduce((sum, currentRow) => {
+          return sum + (currentRow.ledger != 'claim' ? +currentRow.amount - +currentRow.paid_amount : 0)
+        }, 0)
+      }
+
+      return total
     },
     originalBalance () {
-      return 0
+      return this.currentBalance
     }
   },
   mounted () {
     this.getLedgerData()
   },
   methods: {
+    getCurrentBalance (row) {
+      var isAdjustment = row.ledger == 'ledger_paid' && row.payer == constants.DSS_TRXN_TYPE_ADJ
+      var isCredit = !(row.ledger == 'ledger_paid' && row.payer == constants.DSS_TRXN_TYPE_ADJ)
+
+      if (row.ledger != 'claim') {
+        if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
+          this.currentBalance -= +row.amount
+        } else {
+          this.currentBalance += +row.amount
+        }
+      }
+
+      if (isAdjustment) {
+        if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
+          this.currentBalance += +row.paid_amount
+        } else {
+          this.currentBalance -= +row.paid_amount
+        }
+      }
+
+      if (isCredit && row.ledger != 'claim') {
+        if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
+          this.currentBalance += +row.paid_amount
+        } else {
+          this.currentBalance -= +row.paid_amount
+        }
+      }
+
+      return this.currentBalance
+    },
+    getLedgerRowStatus (row) {
+      var status = ''
+
+      if (row.ledger == 'claim') {
+        status = 'clickable_row status_' + row.status
+      } else if (row.ledger == 'ledger') {
+        if (row.primary_claim_id > 0) {
+          status = 'claimed'
+        } else if (row.status == window.constants.DSS_TRXN_PENDING) {
+          status = 'claimless clickable_row'
+        }
+      } else if (row.ledger == 'statement' && row.filename != '') {
+        status = 'statement clickable_row'
+      }
+
+      if ([3, 5, 9].includes(row.status)) {
+        status += ' completed'
+      }
+
+      return status
+    },
     showHistory (row) {
       if (!this.ledgerHistories.hasOwnProperty(row.ledgerid)) {
         this.getLedgerHistories(this.routeParameters.patientId, row.ledgerid, row.ledger)
@@ -155,16 +237,16 @@ export default {
       row.show_history = true
     },
     getStatus (row) {
-      if (row.ledger === 'ledger_paid') {
-        return constants.dssTransactionStatusLabels(row.status)
-      } else if (row.ledger === 'claim' || row.ledger === 'ledger') {
-        return constants.dssClaimStatusLabels(row.status)
+      if (row.ledger == 'ledger_paid') {
+        return window.constants.dssTransactionStatusLabels(+row.status)
+      } else if (row.ledger == 'claim' || row.ledger == 'ledger') {
+        return window.constants.dssClaimStatusLabels(+row.status)
       }
     },
     getDescription (row) {
       var ledgerNote = row.ledger === 'note' && row.status === 1 ? '(P) ' : ''
       var ledgerPaid = row.ledger === 'ledger_paid' && row.payer > 0 ? constants.dssTransactionTypeLabels(row.payer) + ' - ' : ''
-      var filedByBo = row.filed_by_bo ? '*' : ''
+      var filedByBo = +row.filed_by_bo ? '*' : ''
       var ledgerPayment = ''
       var claim = ''
       var ledger = ''

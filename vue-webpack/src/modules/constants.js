@@ -141,8 +141,8 @@ export default {
   dssClaimStatusLabels (status) {
     var propertyNameTemplate = 'DSS_CLAIM_'
     var labels = [
-      'Pending', 'Sent', 'Disputed', 'Paid', 'Paid to Patient',
-      'Rejected', 'Secondary Pending', 'Secondary Sent', 'Secondary Disputed',
+      'Pending', 'Sent', 'Disputed', 'Paid', 'Rejected', 'Paid to Patient',
+      'Secondary Pending', 'Secondary Sent', 'Secondary Disputed',
       'Secondary Paid', 'Disputed', 'Secondary Paid to Patient', 'Secondary Disputed',
       'Secondary Rejected', 'Efile Accepted', 'Secondary Efile Accepted'
     ]

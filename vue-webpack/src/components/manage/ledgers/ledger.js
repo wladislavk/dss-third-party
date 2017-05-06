@@ -19,6 +19,7 @@ export default {
       ledgerRowsPerPage: 20,
       ledgerRows: [],
       ledgerHistories: {},
+      currentBalance: 0,
       tableHeaders: {
         'service_date': {
           title: 'Svc Date',
@@ -152,52 +153,55 @@ export default {
 
       return total
     },
-    currentBalance () {
-      var total = 0
-
-      if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
-        total = this.ledgerRows.reduce((sum, currentRow) => {
-          return sum + (currentRow.ledger != 'claim' ? +currentRow.amount - +currentRow.paid_amount : 0)
-        }, 0)
-      }
-
-      return total
-    },
     originalBalance () {
-      return this.currentBalance
+      return 0
     }
   },
   mounted () {
     this.getLedgerData()
   },
   methods: {
+    countInitialBalance(ledgerRows) {
+      var total = 0
+
+      if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
+        total = ledgerRows.reduce((sum, currentRow) => {
+          return sum + (currentRow.ledger != 'claim' ? +currentRow.amount - +currentRow.paid_amount : 0)
+        }, 0)
+      }
+
+      return total
+    },
     getCurrentBalance (row) {
       var isAdjustment = row.ledger == 'ledger_paid' && row.payer == constants.DSS_TRXN_TYPE_ADJ
       var isCredit = !(row.ledger == 'ledger_paid' && row.payer == constants.DSS_TRXN_TYPE_ADJ)
+      var bufBalance = 0
 
       if (row.ledger != 'claim') {
         if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
-          this.currentBalance -= +row.amount
+          bufBalance -= +row.amount
         } else {
-          this.currentBalance += +row.amount
+          bufBalance += +row.amount
         }
       }
 
       if (isAdjustment) {
         if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
-          this.currentBalance += +row.paid_amount
+          bufBalance += +row.paid_amount
         } else {
-          this.currentBalance -= +row.paid_amount
+          bufBalance -= +row.paid_amount
         }
       }
 
       if (isCredit && row.ledger != 'claim') {
         if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
-          this.currentBalance += +row.paid_amount
+          bufBalance += +row.paid_amount
         } else {
-          this.currentBalance -= +row.paid_amount
+          bufBalance -= +row.paid_amount
         }
       }
+
+      this.currentBalance += bufBalance
 
       return this.currentBalance
     },
@@ -299,15 +303,20 @@ export default {
       ).then(function (response) {
         var data = response.data.data
 
-        data = data.map((value) => {
-          // TODO: check it. some ledger row doesn't have this functional
-          value['show_history'] = false
+        this.currentBalance = this.countInitialBalance(data)
 
-          return value
+        this.$nextTick(() => {
+          data = data.map((value) => {
+            // TODO: check it. some ledger row doesn't have this functional
+            value['show_history'] = false
+            value['balance'] = this.getCurrentBalance(value)
+
+            return value
+          })
+
+          // this.ledgerRowsTotalNumber = data.total
+          this.ledgerRows = data
         })
-
-        // this.ledgerRowsTotalNumber = data.total
-        this.ledgerRows = data
       }, function (response) {
         this.handleErrors('getLedgerRows', response)
       })

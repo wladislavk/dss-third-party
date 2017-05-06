@@ -116,7 +116,7 @@
                     </td>
                 </tr>
                 <tr v-if="ledgerRows.length == 0" class="tr_bg">
-                    <td valign="top" class="col_head" colspan="10" align="center">
+                    <td valign="top" class="col_head" colspan="11" align="center">
                         No Records
                     </td>
                 </tr>
@@ -147,7 +147,7 @@
                         </td>
                         <td></td>
                         <td valign="top" align="right">
-                            {{ formatLedger(getCurrentBalance(row)) }}
+                            {{ formatLedger(row.balance) }}
                         </td>
                         <td valign="top">
                             {{ getStatus(row) }}

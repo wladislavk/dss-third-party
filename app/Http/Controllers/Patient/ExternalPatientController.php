@@ -38,8 +38,6 @@ class ExternalPatientController extends BaseController
         $transformer = new Transformer;
         $data = $transformer->fromTransform($request->all());
 
-        error_log(__METHOD__ . ': ' . json_encode($data));
-
         $externalPatient = $resources
             ->where('software', array_get($data, 'external_patient.software'))
             ->where('external_id', array_get($data, 'external_patient.external_id'))

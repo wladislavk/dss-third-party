@@ -146,6 +146,16 @@ Delete all Docker images
 ```bash
 docker rmi $(docker images -q)
 ```
+Delete Volumes associated with Images (this should be run regularly, as it can free up a LOT of space)
+
+```bash
+docker image prune
+```
+Prune the entire system
+
+```bash
+docker system prune
+```
 
 ## Kitematic
 If you use Windows, you can use the Docker addon "Kitematic" as a GUI to manage your containers.  It is just a GUI wrapper for the command line, but it is useful for debugging and viewing container info.  It is included with Docker for Windows.  https://kitematic.com/

@@ -20,6 +20,8 @@ export default {
       ledgerRows: [],
       ledgerHistories: {},
       currentBalance: 0,
+      lastServiceDate: null,
+      lastEntryDate: null,
       tableHeaders: {
         'service_date': {
           title: 'Svc Date',
@@ -161,6 +163,28 @@ export default {
     this.getLedgerData()
   },
   methods: {
+    getEntryDate (currentEntryDate) {
+      // convert to unix timestamp
+      var parsedCurrentEntryDate = moment(currentEntryDate).format('x')
+
+      if (this.lastEntryDate != parsedCurrentEntryDate) {
+        this.lastEntryDate = parsedCurrentEntryDate
+        return moment(currentEntryDate).format('MM-DD-YYYY')
+      } else {
+        return ''
+      }
+    },
+    getServiceDate (currentServiceDate) {
+      // convert to unix timestamp
+      var parsedCurrentServiceDate = moment(currentServiceDate).format('x')
+
+      if (this.lastServiceDate != parsedCurrentServiceDate) {
+        this.lastServiceDate = parsedCurrentServiceDate
+        return moment(currentServiceDate).format('MM-DD-YYYY')
+      } else {
+        return ''
+      }
+    },
     countInitialBalance(ledgerRows) {
       var total = 0
 
@@ -310,6 +334,8 @@ export default {
             // TODO: check it. some ledger row doesn't have this functional
             value['show_history'] = false
             value['balance'] = this.getCurrentBalance(value)
+            value['service_date'] = this.getServiceDate(value['service_date'])
+            value['entry_date'] = this.getEntryDate(value['entry_date'])
 
             return value
           })

@@ -128,10 +128,10 @@
                         :class="'tr_active ' + getLedgerRowStatus(row)"
                     >
                         <td valign="top">
-                            {{ row.service_date | moment("MM-DD-YYYY") }}
+                            {{ row.service_date }}
                         </td>
                         <td valign="top">
-                            {{ row.entry_date | moment("MM-DD-YYYY") }}
+                            {{ row.entry_date }}
                         </td>
                         <td valign="top">
                             {{ row.name }}
@@ -160,13 +160,71 @@
                             >View</a>
                         </td>
                         <td valign="top">
-                            <a
-                                href="#"
-                            >Edit</a>
-                            <a
-                                v-if="true"
-                                href="#"
-                            >Pay</a>
+                            <template v-if="
+                                (row.ledger == 'ledger' &&
+                                row.claim_status != constants.DSS_CLAIM_SENT &&
+                                row.claim_status != constants.DSS_CLAIM_SEC_SENT) ||
+                                row.ledger == 'ledger_paid'
+                            ">
+                                <a
+                                    v-on:click.prevent="loadPopup('add_ledger.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)"
+                                    href="#"
+                                    class="editlink" title="EDIT"
+                                >Edit</a>
+                                <a
+                                    v-if="row.primary_claim_id != 0 && row.primary_claim_id != ''"
+                                    v-on:click.prevent="'view_claim.php?claimid=' + row.primary_claim_id + '&pid=' + routeParameters.patientId"
+                                    href="#"
+                                    class="editlink" title="PAYMENT"
+                                >Pay</a>
+                                <a
+                                    v-else
+                                    v-on:click.prevent="loadPopup('add_ledger_payment.php?ed=' + row.primary_claim_id + '&pid=' + routeParameters.patientId)"
+                                    href="#"
+                                    class="editlink" title="PAYMENT"
+                                >Pay</a>
+                            </template>
+                            <template v-if="row.ledger == 'note'">
+                                <a
+                                    v-on:click.prevent="loadPopup('edit_ledger_note.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)"
+                                    href="#"
+                                    class="editlink" title="EDIT"
+                                >Edit</a>
+                            </template>
+                            <template v-if="row.ledger == 'claim'">
+                                <a
+                                    v-if="
+                                        row.status != constants.DSS_CLAIM_SENT &&
+                                        row.status != constants.DSS_CLAIM_SEC_SENT &&
+                                        row.status != constants.DSS_CLAIM_PAID_INSURANCE &&
+                                        row.status != constants.DSS_CLAIM_PAID_PATIENT &&
+                                        row.status != constants.DSS_CLAIM_PAID_SEC_INSURANCE
+                                    "
+                                    v-on:click.prevent="'insurance_v2.php?insid=' + row.ledgerid + '&pid=' + routeParameters.patientId"
+                                    href="#"
+                                    class="editlink" title="EDIT"
+                                >Edit</a>
+                                <a
+                                    v-if="row.status == constants.DSS_CLAIM_PENDING"
+                                    v-on:click.prevent="'this route?delclaimid=' + row.ledgerid + '&pid=' + routeParameters.patientId + confirm('Do Your Really want to Delete?.')"
+                                    href="#"
+                                    class="dellink" title="DELETE"
+                                >Delete</a>
+                            </template>
+                            <template v-if="row.ledger == 'ledger_payment'">
+                                <a
+                                    v-on:click.prevent="loadPopup('edit_ledger_payment.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)"
+                                    href="#"
+                                    class="editlink" title="PAYMENT"
+                                >Edit</a>
+                            </template>
+                            <template v-if="row.ledger == 'statement'">
+                                <a
+                                    v-on:click.prevent="'this route?delstatementid=' + row.ledgerid + '&pid=' + routeParameters.patientId + confirm('Do Your Really want to Delete?.')"
+                                    href="#"
+                                    class="dellink" title="DELETE"
+                                >Delete</a>
+                            </template>
                         </td>
                     </tr>
                     <template

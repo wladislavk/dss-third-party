@@ -163,6 +163,31 @@ export default {
     this.getLedgerData()
   },
   methods: {
+    onClickEntryDate (row) {
+      if (row.ledger == 'ledger' && !row.primary_claim_id && row.status == constants.DSS_TRXN_PENDING) {
+        return 'manage_insurance.php?pid=' + this.routeParameters.patientId + '&addtopat=1'
+      } else {
+        return false
+      }
+    },
+    onClickServiceDate (row) {
+      if (row.ledger == 'ledger' && !row.primary_claim_id && row.status == constants.DSS_TRXN_PENDING) {
+        return 'manage_insurance.php?pid=' + this.routeParameters.patientId + '&addtopat=1'
+      } else {
+        return false
+      }
+    },
+    onClickLedgerRow (row) {
+      if (row.ledger == 'claim') {
+        if (this.routeParameters.inspay == 1) {
+          return 'view_claim.php?inspay=1&claimid=' + row.ledgerid + '&pid=' + this.routeParameters.patientId
+        } else {
+          return 'view_claim.php?claimid=' + row.ledgerid + '&pid=' + this.routeParameters.patientId
+        }
+      } else if (row.filename && row.filename.length > 0) {
+        return row.filename
+      }
+    },
     getEntryDate (currentEntryDate) {
       // convert to unix timestamp
       var parsedCurrentEntryDate = moment(currentEntryDate).format('x')
@@ -244,11 +269,11 @@ export default {
         status = 'statement clickable_row'
       }
 
-      if ([3, 5, 9].includes(row.status)) {
+      if ([3, 5, 9].includes(+row.status)) {
         status += ' completed'
       }
 
-      return status
+      return status + ' ' + row.ledger
     },
     showHistory (row) {
       if (!this.ledgerHistories.hasOwnProperty(row.ledgerid)) {
@@ -272,17 +297,17 @@ export default {
       }
     },
     getDescription (row) {
-      var ledgerNote = row.ledger === 'note' && row.status === 1 ? '(P) ' : ''
-      var ledgerPaid = row.ledger === 'ledger_paid' && row.payer > 0 ? constants.dssTransactionTypeLabels(row.payer) + ' - ' : ''
+      var ledgerNote = row.ledger === 'note' && row.status == 1 ? '(P) ' : ''
+      var ledgerPaid = row.ledger === 'ledger_paid' && row.payer > 0 ? constants.dssTransactionTypeLabels(+row.payer) + ' - ' : ''
       var filedByBo = +row.filed_by_bo ? '*' : ''
       var ledgerPayment = ''
       var claim = ''
       var ledger = ''
 
       if (row.ledger === 'ledger_payment') {
-        ledgerPayment = constants.dssTransactionPayerLabels(row.payer)
+        ledgerPayment = constants.dssTransactionPayerLabels(+row.payer)
           + ' Payment - '
-          + constants.dssTransactionPaymentTypeLabels(row.payment_type) + ' '
+          + constants.dssTransactionPaymentTypeLabels(+row.payment_type) + ' '
 
         ledgerPayment += row.primary_claim_id > 0 ? '(' + row.primary_claim_id + ') ' : ''
       } else if (row.ledger === 'ledger') {
@@ -333,9 +358,21 @@ export default {
           data = data.map((value) => {
             // TODO: check it. some ledger row doesn't have this functional
             value['show_history'] = false
-            value['balance'] = this.getCurrentBalance(value)
+
             value['service_date'] = this.getServiceDate(value['service_date'])
             value['entry_date'] = this.getEntryDate(value['entry_date'])
+
+            var balanceForDisplaying = ''
+
+            if (['ledger', 'ledger_paid', 'ledger_payment'].includes(value.ledger)) {
+              if (['service_date', 'entry_date'].includes(this.routeParameters.sortColumn)) {
+                balanceForDisplaying = this.formatLedger(this.getCurrentBalance(value))
+              } else {
+                balanceForDisplaying = 'N/A'
+              }
+            }
+
+            value['balance'] = balanceForDisplaying
 
             return value
           })

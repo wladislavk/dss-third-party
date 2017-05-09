@@ -125,12 +125,20 @@
                     v-for="row in ledgerRows"
                 >
                     <tr
+                        v-on:click="onClickLedgerRow(row)"
                         :class="'tr_active ' + getLedgerRowStatus(row)"
+                        :title="row.filed_by_bo == 1 ? '3rd party Billing is responsible for this claim' : ''"
                     >
-                        <td valign="top">
+                        <td
+                            v-on:click="onClickServiceDate(row)"
+                            valign="top"
+                        >
                             {{ row.service_date }}
                         </td>
-                        <td valign="top">
+                        <td
+                            v-on:click="onClickEntryDate(row)"
+                            valign="top"
+                        >
                             {{ row.entry_date }}
                         </td>
                         <td valign="top">
@@ -147,7 +155,7 @@
                         </td>
                         <td></td>
                         <td valign="top" align="right">
-                            {{ formatLedger(row.balance) }}
+                            {{ row.balance }}
                         </td>
                         <td valign="top">
                             {{ getStatus(row) }}

@@ -49,4 +49,33 @@ class Legacy extends IlluminateAuthAdapter
 
         return false;
     }
+
+    /**
+     * Check user ID. DSS can use a composite ID, to log in an admin AND some user, "login as" behavior
+     *
+     * @param mixed $id
+     * @return mixed
+     */
+    public function byId ($id)
+    {
+        /**
+         * Single ID
+         */
+        if (strpos($id, '|') === false) {
+            return parent::byId($id);
+        }
+
+        /**
+         * Wrong ID structure
+         */
+        if (!preg_match('/^a_\d+\|u_\d+$/', $id)) {
+            return false;
+        }
+
+        list($adminId, $userId) = explode('|', $id, 2);
+        $admin = parent::byId($adminId);
+        $user = parent::byId($userId);
+
+        return $admin && $user ? [$admin, $user] : false;
+    }
 }

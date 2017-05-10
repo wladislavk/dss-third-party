@@ -12,34 +12,62 @@ abstract class Controller extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
 
+    protected $currentAdmin;
     protected $currentUser;
     protected $auth;
 
     public function __construct(JWTAuth $auth, User $userModel)
     {
-        // TODO: see how it is possible to generate JWT token while testing
-        if (env('APP_ENV') != 'testing') {
-            $this->currentUser = $this->getUserInfo($auth, $userModel);
-            $this->auth        = $auth;
-        }
+        /**
+         * @ToDo: generate tokens with $auth->fromUser($userModel)
+         */
+        $this->auth = $auth;
+        $userInfo = $this->getUserInfo($auth, $userModel);
+
+        $this->currentAdmin = $userInfo['admin'];
+        $this->currentUser = $userInfo['user'];
     }
 
     private function getUserInfo(JWTAuth $auth, User $userModel)
     {
-        $user = $auth->toUser();
+        $token = $auth->getToken();
 
-        $user->id = preg_replace('/(?:u_|a_)/', '', $user->id);
-
-        $docId = $userModel->getDocId($user->id)->docid;
-
-        if ($docId) {
-            $user->docid = $docId;
-        } else {
-            $user->docid = $user->userid;
+        if (!$token) {
+            return false;
         }
 
-        $user->user_type = $userModel->getUserType($user->docid)->user_type ?: 0;
+        $userData = $auth->toUser();
 
-        return $user;
+        if (!is_array($userData)) {
+            $userData = [
+                'admin' => strpos($userData->id, 'a_') === 0 ? $userData : false,
+                'user' => strpos($userData->id, 'u_') === 0 ? $userData : false,
+            ];
+        } else {
+            $tmpUserData = [
+                'admin' => false,
+                'user' => false
+            ];
+
+            foreach ($userData as $each) {
+                $isAdmin = strpos($each->id, 'a_') === 0;
+                $each->id = preg_replace('/\D+/', '', $each->id);
+
+                if ($isAdmin) {
+                    $tmpUserData['admin'] = $each;
+                } else {
+                    $tmpUserData['user'] = $each;
+                }
+            }
+
+            $userData = $tmpUserData;
+        }
+
+        if ($userData['user']) {
+            $userData['user']->docid = $userModel->getDocId($userData['user']->id)->docid;
+            $userData['user']->user_type = $userModel->getUserType($userData['user']->docid)->user_type ?: 0;
+        }
+
+        return $userData;
     }
 }

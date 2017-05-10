@@ -1,5 +1,12 @@
 version: "2"
 
+# WINDOWS: Windows REQUIRES explicit path for volumes, Linux/Mac can use relative.
+  # Windows example cmd for startup: 
+  # ROOT_PATH='c:/Users/MyName/Github/DS3' docker-compose up -d
+# LINUX / MAC: Uncomment Volumes below to switch to Linux-style volumes
+  # Linux cmd for startup: 
+  # docker-compose up -d
+
 services:
   db:
     build: 
@@ -40,10 +47,15 @@ services:
       DB_DATABASE: homestead
       DB_USERNAME: homestead
       DB_PASSWORD: secret
-    # volumes:
-    #   - "../ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
-    #   - "../ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
-    #   - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+    volumes:
+      # WINDOWS: uncomment for Docker on Windows
+      - "${ROOT_PATH}/ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
+      - "${ROOT_PATH}/ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
+      - "${ROOT_PATH}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+      # LINUX: Uncomment for Docker on Linux/Mac
+      # - "../ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
+      # - "../ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
+      # - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
     labels:
       - "traefik.port=80"
       - "traefik.backend=loader"
@@ -58,8 +70,11 @@ services:
       DB_DATABASE: homestead
       DB_USERNAME: homestead
       DB_PASSWORD: secret
-    # volumes:
-    #   - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+    volumes:
+      # WINDOWS: uncomment for Docker on Windows
+      - "${ROOT_PATH}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+      # LINUX: Uncomment for Docker on Linux/Mac
+      # - "../ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
     labels:
       - "traefik.port=80"
       - "traefik.backend=api"

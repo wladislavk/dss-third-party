@@ -171,19 +171,22 @@ class Ledger extends Model implements Resource, Repository
 
     public function getTotalCharges($docId, $type = 'today', $patientId = 0)
     {
-        if ($type == 'today') {
+        if ($type == 'today' || $type == 'full') {
             $query = $this->select(
                     DB::raw("COALESCE(dl.description, '') as description"),
                     DB::raw('SUM(dl.amount) AS amount')
                 )->from(DB::raw('dental_ledger dl'))
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
                 ->where('dl.docid', $docId)
-                ->where('dl.service_date', Carbon::now())
                 ->whereRaw('COALESCE(dl.paid_amount, 0) = 0')
                 ->where('dl.amount', '!=', 0);
 
             if ($patientId > 0) {
                 $query = $query->where('dl.patientid', $patientId);
+            }
+
+            if ($type == 'today') {
+                $query = $query->where('dl.service_date', Carbon::now());
             }
 
             $query = $query->groupBy('description');
@@ -196,7 +199,7 @@ class Ledger extends Model implements Resource, Repository
 
     public function getTotalCredits($docId, $type = 'today', $patientId = 0)
     {
-        if ($type == 'today') {
+        if ($type == 'today' || $type == 'full') {
             $totalCreditsType = $this->select(
                     DB::raw("COALESCE(dlp.payment_type, '0') AS description"),
                     DB::raw('COALESCE(sum(dlp.amount), 0) AS amount')
@@ -204,11 +207,14 @@ class Ledger extends Model implements Resource, Repository
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
                 ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
                 ->where('dl.docid', $docId)
-                ->where('dlp.amount', '!=', 0)
-                ->where('dlp.payment_date', Carbon::now());
+                ->where('dlp.amount', '!=', 0);
 
             if ($patientId > 0) {
                 $totalCreditsType = $totalCreditsType->where('dl.patientid', $patientId);
+            }
+
+            if ($type == 'today') {
+                $totalCreditsType = $totalCreditsType->where('dlp.payment_date', Carbon::now());
             }
 
             $totalCreditsType = $totalCreditsType->groupBy('description')->get();
@@ -225,11 +231,14 @@ class Ledger extends Model implements Resource, Repository
                 ->where(function($query) {
                     $query->whereNotNull('dl.paid_amount')
                         ->where('dl.paid_amount', '!=', 0);
-                })->whereRaw("COALESCE(tc.type, '') != ?", [self::DSS_TRXN_TYPE_ADJ])
-                ->where('dl.service_date', Carbon::now());
+                })->whereRaw("COALESCE(tc.type, '') != ?", [self::DSS_TRXN_TYPE_ADJ]);
 
             if ($patientId > 0) {
                 $totalCreditsNamed = $totalCreditsNamed->where('dl.patientid', $patientId);
+            }
+
+            if ($type == 'today') {
+                $totalCreditsNamed = $totalCreditsNamed->where('dl.service_date', Carbon::now());
             }
 
             $totalCreditsNamed = $totalCreditsNamed->groupBy('description')->get();

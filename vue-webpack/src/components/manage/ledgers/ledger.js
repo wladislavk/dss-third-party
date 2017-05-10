@@ -1,4 +1,5 @@
 var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+var ledgerSummaryReportFull = require('./summary-report-full/ledgerSummaryReportFull.vue')
 
 export default {
   data () {
@@ -76,6 +77,9 @@ export default {
         }
       }
     }
+  },
+  components: {
+    'ledger-summary-report-full': ledgerSummaryReportFull
   },
   mixins: [handlerMixin],
   watch: {
@@ -163,20 +167,6 @@ export default {
     this.getLedgerData()
   },
   methods: {
-    onClickEntryDate (row) {
-      if (row.ledger == 'ledger' && !row.primary_claim_id && row.status == constants.DSS_TRXN_PENDING) {
-        return 'manage_insurance.php?pid=' + this.routeParameters.patientId + '&addtopat=1'
-      } else {
-        return false
-      }
-    },
-    onClickServiceDate (row) {
-      if (row.ledger == 'ledger' && !row.primary_claim_id && row.status == constants.DSS_TRXN_PENDING) {
-        return 'manage_insurance.php?pid=' + this.routeParameters.patientId + '&addtopat=1'
-      } else {
-        return false
-      }
-    },
     onClickLedgerRow (row) {
       if (row.ledger == 'claim') {
         if (this.routeParameters.inspay == 1) {

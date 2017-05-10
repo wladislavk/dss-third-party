@@ -129,16 +129,10 @@
                         :class="'tr_active ' + getLedgerRowStatus(row)"
                         :title="row.filed_by_bo == 1 ? '3rd party Billing is responsible for this claim' : ''"
                     >
-                        <td
-                            v-on:click="onClickServiceDate(row)"
-                            valign="top"
-                        >
+                        <td valign="top">
                             {{ row.service_date }}
                         </td>
-                        <td
-                            v-on:click="onClickEntryDate(row)"
-                            valign="top"
-                        >
+                        <td valign="top">
                             {{ row.entry_date }}
                         </td>
                         <td valign="top">
@@ -311,6 +305,11 @@
                 </tr>
             </table>
         </form>
+
+        <ledger-summary-report-full
+            :report-type="'full'"
+            :patientId="routeParameters.patientId"
+        ></ledger-summary-report-full>
     </div>
 </template>
 

@@ -4,6 +4,10 @@ export default {
     reportType: {
       type: String,
       required: true
+    },
+    patientId: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -52,7 +56,7 @@ export default {
   },
   methods: {
     formReportTotals () {
-      this.getLedgerTotals(this.reportType)
+      this.getLedgerTotals(this.reportType, this.patientId)
         .then(function (response) {
           var data = response.data.data
 
@@ -63,8 +67,11 @@ export default {
           this.handleErrors('getLedgerTotals', response)
         })
     },
-    getLedgerTotals (reportType) {
-      var data = { report_type: reportType }
+    getLedgerTotals (reportType, patientId) {
+      var data = {
+        report_type: reportType,
+        patient_id: patientId
+      }
 
       return this.$http.post(process.env.API_PATH + 'ledgers/totals', data)
     },

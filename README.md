@@ -161,17 +161,18 @@ Delete all Docker containers
 # Must be run first because images are attached to containers
 docker rm $(docker ps -a -q)
 ```
-Delete all Docker images
+### Delete all Docker images
 
 ```bash
 docker rmi $(docker images -q)
 ```
+### Docker Garbage Collection
 Delete Volumes associated with Images (this should be run regularly, as it can free up a LOT of space)
 
 ```bash
 docker image prune
 ```
-Prune the entire system
+Prune the entire *system* (see full description of ```prune``` here [LINK](https://docs.docker.com/engine/reference/commandline/system_prune/).  This is the new tool to manage dangling images/volumes/networks.
 
 ```bash
 docker system prune

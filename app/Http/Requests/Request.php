@@ -8,6 +8,16 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 abstract class Request extends FormRequest
 {
     /**
+     * Force JSON responses for all requests
+     *
+     * @return bool
+     */
+    public function wantsJson()
+    {
+        return true;
+    }
+
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return boolean

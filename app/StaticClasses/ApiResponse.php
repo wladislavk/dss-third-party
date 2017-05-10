@@ -47,7 +47,7 @@ class ApiResponse
      * @param  integer $code
      * @param  array   $headers
      * @param  integer $options
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public static function responseOk($message = '', $data = null, $code = 200, $headers = [], $options = 0)
     {
@@ -61,9 +61,9 @@ class ApiResponse
      * @param  integer $code
      * @param  array   $data
      * @param  boolean $create_errors_array
-     * @param array $headers
-     * @param int $options
-     * @return JsonResponse
+     * @param  array   $headers
+     * @param  int     $options
+     * @return \Illuminate\Http\JsonResponse
      */
     public static function responseError(
         $message = '',
@@ -75,7 +75,7 @@ class ApiResponse
     ) {
         if (!is_array($data) && $create_errors_array) {
             $data = [
-                'errors' => [$data ? $data : $message]
+                'errors' => [$data ?: $message]
             ];
         }
 
@@ -105,12 +105,13 @@ class ApiResponse
      * @param  integer $code
      * @param  array   $headers
      * @param  integer $options
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     private static function createResponse($message, $data, $code, $headers, $options)
     {
         $json = [
             'status'  => self::getStatusName($code),
+            'code'    => $code,
             'message' => $message,
             'data'    => self::transform($data),
         ];
@@ -169,9 +170,15 @@ class ApiResponse
      */
     private static function hasTransformer($resource)
     {
-        return class_exists($transformer = self::$namespace.class_basename($resource))
+        try {
+            $hasTransformer = class_exists($transformer = self::$namespace . class_basename($resource))
                 ? $transformer
                 : false;
+        } catch (\ErrorException $e) {
+            $hasTransformer = false;
+        }
+
+        return $hasTransformer;
     }
 
     /**

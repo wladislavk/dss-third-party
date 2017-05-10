@@ -8,6 +8,11 @@ After your images are built (see "Initial Setup") you can run start Docker from 
 cd ds3-private04-Docker
 docker-compose up -d
 ```
+In Windows, you must specify ROOT_PATH for compose file
+```bash
+cd ds3-private04-Docker
+ROOT_PATH='c:/Users/MyName/Github/DS3' docker-compose up -d
+```
 Navigate to https://loader.docker.localhost (Loader / UI endpoint) and https://api.docker.localhost (API endpoint).
 
 To stop your containers
@@ -26,6 +31,16 @@ drwxr-xr-x  ds3-private02
 drwxr-xr-x  ds3-private03
 drwxr-xr-x  ds3-private04-Docker
 ```
+
+### Docker-Compose WINDOWS vs LINUX
+YOU MUST CONFIGURE ```docker-compose.yml``` FOR WINDOWS *DIFFERENTLY* THAN LINUX. This is because Docker-Windows has permission and file-sharing issues when sharing Volumes with Docker containers.
+
+WINDOWS TROUBLESHOOTING: If you have trouble with Docker-Windows and Volumes, check troubleshooting [HERE](https://docs.docker.com/docker-for-windows/#shared-drives) and [HERE](https://docs.docker.com/docker-for-windows/troubleshoot/#verify-domain-user-has-permissions-for-shared-drives-volumes) and (if nothing else works) [HERE](https://forums.docker.com/t/volume-mounts-in-windows-does-not-work/10693/).
+
+#### Edit docker-compose.yml
+WINDOWS: Edit ```docker-compose.yml``` file so that all ```volumes:``` sections are uncommented for WINDOWS.
+
+LINUX/MAC: Edit ```docker-compose.yml``` file so that all ```volumes:``` sections are uncommented for LINUX.
 
 ### Build Images
 Navigate to ```ds3-private04-Docker``` repo, then build and run all containers. Note that ```docker-compose``` file contains all necessary build scripts (```make``` is not required). (See 'Troubleshooting' below if these commands generate weird errors in Windows.)
@@ -63,6 +78,11 @@ After the images are built, run docker-compose up (within ds3-private04-Docker) 
 ```bash
 docker-compose up -d
 docker-compose down
+```
+In Windows, you must specify ROOT_PATH for compose file to use Volumes (shared drive).
+```bash
+cd ds3-private04-Docker
+ROOT_PATH='c:/Users/MyName/Github/DS3' docker-compose up -d
 ```
 
 ### Test Containers
@@ -116,7 +136,7 @@ It has a entrypoint script which is going to:
 
 ## Make
 
-**DEPRECATED - Use updated docker-compose.yml** <strike>Makefile provides shortcuts to build images:
+<strike>**DEPRECATED - Use updated docker-compose.yml** Makefile provides shortcuts to build images:
 
 - `make base` to build base image
 - `make all` to build everything required to start a cluster

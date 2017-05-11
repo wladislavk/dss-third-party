@@ -173,7 +173,7 @@ class Ledger extends Model implements Resource, Repository
     {
         if ($type == 'today' || $type == 'full') {
             $query = $this->select(
-                    DB::raw("COALESCE(dl.description, '') as description"),
+                    DB::raw("COALESCE(dl.description, '') as payment_description"),
                     DB::raw('SUM(dl.amount) AS amount')
                 )->from(DB::raw('dental_ledger dl'))
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
@@ -189,7 +189,7 @@ class Ledger extends Model implements Resource, Repository
                 $query = $query->where('dl.service_date', Carbon::now());
             }
 
-            $query = $query->groupBy('description');
+            $query = $query->groupBy('payment_description');
 
             return $query->get();
         } else {
@@ -200,29 +200,37 @@ class Ledger extends Model implements Resource, Repository
     public function getTotalCredits($docId, $type = 'today', $patientId = 0)
     {
         if ($type == 'today' || $type == 'full') {
-            $totalCreditsType = $this->select(
-                    DB::raw("COALESCE(dlp.payment_type, '0') AS description"),
+            if ($type == 'today') {
+                $totalCreditsType = $this->select(
+                    DB::raw("COALESCE(dlp.payment_type, '0') AS payment_description"),
                     DB::raw('COALESCE(sum(dlp.amount), 0) AS amount')
-                )->from(DB::raw('dental_ledger dl'))
+                );
+
+                $totalCreditsNamed = $this->select(
+                    DB::raw("COALESCE(dl.description, '') AS payment_description"),
+                    DB::raw('COALESCE(sum(dl.paid_amount), 0) AS amount')
+                );
+            } else {
+                $totalCreditsType = $this->select(
+                    DB::raw("COALESCE(dlp.payment_type, '0') AS payment_description"),
+                    DB::raw('COALESCE(sum(dlp.amount), 0) AS amount'),
+                    DB::raw("COALESCE(dlp.payer, '') AS payment_payer")
+                );
+
+                $totalCreditsNamed = $this->select(
+                    DB::raw("COALESCE(dl.description, '') AS payment_description"),
+                    DB::raw('COALESCE(sum(dl.paid_amount), 0) AS amount'),
+                    'tc.type AS payment_type'
+                );
+            }
+
+            $totalCreditsType = $totalCreditsType->from(DB::raw('dental_ledger dl'))
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
                 ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
                 ->where('dl.docid', $docId)
                 ->where('dlp.amount', '!=', 0);
 
-            if ($patientId > 0) {
-                $totalCreditsType = $totalCreditsType->where('dl.patientid', $patientId);
-            }
-
-            if ($type == 'today') {
-                $totalCreditsType = $totalCreditsType->where('dlp.payment_date', Carbon::now());
-            }
-
-            $totalCreditsType = $totalCreditsType->groupBy('description')->get();
-
-            $totalCreditsNamed = $this->select(
-                    DB::raw("COALESCE(dl.description, '') AS description"),
-                    DB::raw('COALESCE(sum(dl.paid_amount), 0) AS amount')
-                )->from(DB::raw('dental_ledger dl'))
+            $totalCreditsNamed = $totalCreditsNamed->from(DB::raw('dental_ledger dl'))
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
                 ->leftJoin(DB::raw('dental_transaction_code tc'), function ($query) use ($docId) {
                     $query->on('tc.transaction_code', '=', 'dl.transaction_code')
@@ -234,14 +242,30 @@ class Ledger extends Model implements Resource, Repository
                 })->whereRaw("COALESCE(tc.type, '') != ?", [self::DSS_TRXN_TYPE_ADJ]);
 
             if ($patientId > 0) {
+                $totalCreditsType = $totalCreditsType->where('dl.patientid', $patientId);
+
                 $totalCreditsNamed = $totalCreditsNamed->where('dl.patientid', $patientId);
             }
 
             if ($type == 'today') {
+                $totalCreditsType = $totalCreditsType->where('dlp.payment_date', Carbon::now());
+
                 $totalCreditsNamed = $totalCreditsNamed->where('dl.service_date', Carbon::now());
             }
 
-            $totalCreditsNamed = $totalCreditsNamed->groupBy('description')->get();
+            $totalCreditsType = $totalCreditsType->groupBy('payment_description');
+
+            if ($type == 'full') {
+                $totalCreditsType = $totalCreditsType->groupBy('payment_payer');
+
+                $totalCreditsNamed = $totalCreditsNamed->groupBy('payment_type');
+            }
+
+            $totalCreditsNamed = $totalCreditsNamed->groupBy('payment_description');
+
+            $totalCreditsType = $totalCreditsType->get();
+
+            $totalCreditsNamed = $totalCreditsNamed->get();
 
             return [
                 'type'  => $totalCreditsType,
@@ -249,12 +273,12 @@ class Ledger extends Model implements Resource, Repository
             ];
         } else {
             $query = $this->select(
-                    DB::raw("COALESCE(dl.description, '') AS description"),
+                    DB::raw("COALESCE(dl.description, '') AS payment_description"),
                     DB::raw('SUM(dl.paid_amount) AS amount')
                 )->from(DB::raw('dental_ledger dl'))
                 ->where('dl.docid', $docId)
                 ->where('dl.paid_amount', '!=', 0)
-                ->groupBy('description');
+                ->groupBy('payment_description');
 
             return $query->get();
         }
@@ -262,9 +286,9 @@ class Ledger extends Model implements Resource, Repository
 
     public function getTotalAdjustments($docId, $type = 'today', $patientId = 0)
     {
-        if ($type == 'today') {
+        if ($type == 'today' || $type == 'full') {
             $query = $this->select(
-                    DB::raw("COALESCE(dl.description, '') AS description"),
+                    DB::raw("COALESCE(dl.description, '') AS payment_description"),
                     DB::raw('COALESCE(sum(dl.paid_amount), 0) AS amount')
                 )->from(DB::raw('dental_ledger dl'))
                 ->join(DB::raw('dental_patients AS pat'), 'dl.patientid', '=', 'pat.patientid')
@@ -275,14 +299,17 @@ class Ledger extends Model implements Resource, Repository
                 ->where(function ($query) {
                     $query->whereNotNull('dl.paid_amount')
                         ->where('dl.paid_amount', '!=', 0);
-                })->where('tc.type', self::DSS_TRXN_TYPE_ADJ)
-                ->where('dl.service_date', Carbon::now());
+                })->where('tc.type', self::DSS_TRXN_TYPE_ADJ);
+            
+            if ($type == 'today') {
+                $query = $query->where('dl.service_date', Carbon::now());
+            }
 
             if ($patientId > 0) {
                 $query = $query->where('dl.patientid', $patientId);
             }
 
-            return $query->groupBy('description')->get();
+            return $query->groupBy('payment_description')->get();
         } else {
             return [];
         }

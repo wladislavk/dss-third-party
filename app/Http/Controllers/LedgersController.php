@@ -28,6 +28,44 @@ use Carbon\Carbon;
  */
 class LedgersController extends Controller
 {
+    // Transaction types (ledger)
+    const DSS_TRXN_TYPE_MED = 1;
+    const DSS_TRXN_TYPE_PATIENT = 2;
+    const DSS_TRXN_TYPE_INS = 3;
+    const DSS_TRXN_TYPE_DIAG = 4;
+    const DSS_TRXN_TYPE_ADJ = 6;
+
+    // Transaction Payment Types (ledger)
+    const DSS_TRXN_PYMT_CREDIT = 0;
+    const DSS_TRXN_PYMT_DEBIT = 1;
+    const DSS_TRXN_PYMT_CHECK = 2;
+    const DSS_TRXN_PYMT_CASH = 3;
+    const DSS_TRXN_PYMT_WRITEOFF = 4;
+    const DSS_TRXN_PYMT_EFT = 5;
+
+    // Transaction Payers (ledger)
+    const DSS_TRXN_PAYER_PRIMARY = 0;
+    const DSS_TRXN_PAYER_SECONDARY = 1;
+    const DSS_TRXN_PAYER_PATIENT = 2;
+    const DSS_TRXN_PAYER_WRITEOFF = 3;
+    const DSS_TRXN_PAYER_DISCOUNT = 4;
+
+    private $dssTransactionPaymentTypeLabels = [
+        self::DSS_TRXN_PYMT_CREDIT   => "Credit Card",
+        self::DSS_TRXN_PYMT_DEBIT    => "Debit",
+        self::DSS_TRXN_PYMT_CHECK    => "Check",
+        self::DSS_TRXN_PYMT_CASH     => "Cash",
+        self::DSS_TRXN_PYMT_WRITEOFF => "Write Off",
+        self::DSS_TRXN_PYMT_EFT      => "E-Funds Transfer (EFT)"
+    ];
+    private $dssTransactionPayerLabels = [
+        self::DSS_TRXN_PAYER_PRIMARY   => "Primary Insurance",
+        self::DSS_TRXN_PAYER_SECONDARY => "Secondary Insurance",
+        self::DSS_TRXN_PAYER_PATIENT   => "Patient",
+        self::DSS_TRXN_PAYER_WRITEOFF  => "Write Off",
+        self::DSS_TRXN_PAYER_DISCOUNT  => "Professional Discount"
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -149,6 +187,52 @@ class LedgersController extends Controller
             'credits'     => $resources->getTotalCredits($docId, $reportType, $patientId),
             'adjustments' => $resources->getTotalAdjustments($docId, $reportType, $patientId)
         ];
+
+        if ($reportType == 'full') {
+            $totals['credits']['type']->map(function ($row) {
+                $description = $this->dssTransactionPaymentTypeLabels[$row['payment_description']];
+
+                $description = preg_match('/^checks?$/i', $description) ? 'Checks' : $description;
+
+                switch ($row['payment_payer']) {
+                    case self::DSS_TRXN_PAYER_PRIMARY:
+                    case self::DSS_TRXN_PAYER_SECONDARY:
+                        $description = 'Ins. ' . $description;
+                        break;
+
+                    case self::DSS_TRXN_PAYER_PATIENT:
+                        $description = 'Pt. ' . $description;
+                        break;
+
+                    case self::DSS_TRXN_PAYER_WRITEOFF:
+                        $description = $this->dssTransactionPayerLabels[self::DSS_TRXN_PAYER_WRITEOFF];
+                        break;
+                }
+
+                $row['payment_description'] = $description;
+
+                return $row;
+            });
+
+            $totals['credits']['named']->map(function ($row) {
+                $description = strlen(trim($row['payment_description'])) ? trim($row['payment_description']) : 'Unlabelled transaction type';
+
+                $description = preg_match('/^checks?$/i', $description) ? 'Checks' : $description;
+
+                switch ($row['payment_type']) {
+                    case self::DSS_TRXN_TYPE_INS:
+                        $description = 'Ins. ' . $description;
+                        break;
+                    case self::DSS_TRXN_TYPE_PATIENT:
+                        $description = 'Pt. ' . $description;
+                        break;
+                }
+
+                $row['payment_description'] = $description;
+
+                return $row;
+            });
+        }
 
         return ApiResponse::responseOk('', $totals);
     }

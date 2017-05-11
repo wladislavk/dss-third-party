@@ -55,6 +55,6 @@ class User extends Model implements AuthenticatableContract
             } else {
                 $q->where('email', $id)->orWhere('id', $id);
             }
-        })->all();
+        })->get();
     }
 }

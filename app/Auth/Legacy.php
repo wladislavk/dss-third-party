@@ -68,7 +68,7 @@ class Legacy extends IlluminateAuthAdapter
         /**
          * Wrong ID structure
          */
-        if (!preg_match('/^a_\d+\|u_\d+$/', $id)) {
+        if (!preg_match('/^(a_\d+[|]u_\d+|u_\d+[|]a_\d+)$/', $id)) {
             return false;
         }
 

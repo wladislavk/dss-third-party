@@ -63,9 +63,9 @@ class ApiAuthController extends ApiBaseController
 
         if (isset($userData[1])) {
             /**
-             * Ensure only admins can access "Login As" functionality
+             * Ensure only admins can access "Login As" functionality, and one of the users is the current admin
              */
-            if (!$this->currentAdmin) {
+            if (!$this->currentAdmin || !in_array($this->currentAdmin->id, [$userData[0]->id, $userData[1]->id])) {
                 return Response::json(['status' => 'Unauthorized'], 401);
             }
 

@@ -93,48 +93,4 @@ class ApiAuthController extends ApiBaseController
 
         return ['status' => 'Authenticated', 'token' => $token];
     }
-
-    public function lanGenerateToken(Request $request)
-    {
-        $errorResponse = $this->processRequestFromLoader($request);
-
-        if ($errorResponse !== false) {
-            return $errorResponse;
-        }
-
-        return $this->generateToken($request);
-    }
-
-    public function lanRefreshToken(Request $request)
-    {
-        $errorResponse = $this->processRequestFromLoader($request);
-
-        if ($errorResponse !== false) {
-            return $errorResponse;
-        }
-
-        return $this->refreshToken($request);
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @return Response|bool
-     */
-    protected function processRequestFromLoader($request)
-    {
-        $loaderDomain = parse_url(env('LOADER_HOST'), PHP_URL_HOST);
-        $loaderIp = gethostbyname($loaderDomain);
-
-        if ($loaderIp !== $request->ip()) {
-            return Response::json(['status' => 'Not found'], 404);
-        }
-
-        $sharedSecret = env('SHARED_SECRET');
-
-        if (!strlen($sharedSecret) || $sharedSecret !== $request->input('secret')) {
-            return Response::json(['status' => 'Invalid credentials'], 422);
-        }
-
-        return false;
-    }
 }

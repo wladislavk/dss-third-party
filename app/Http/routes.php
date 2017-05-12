@@ -17,12 +17,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('refresh-token', 'Api\ApiAuthController@refreshToken');
 });
 
-Route::group(['prefix' => 'lan', 'middleware' => 'lan.loader'], function () {
-    Route::post('generate-token', 'Api\ApiAuthController@lanGenerateToken');
-    Route::post('refresh-token', 'Api\ApiAuthController@lanRefreshToken');
-});
-
-
 /*
 |--------------------------------------------------------------------------
 | Eligible webhooks

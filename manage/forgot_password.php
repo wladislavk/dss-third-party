@@ -84,7 +84,7 @@ if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1){
 	    <tr bgcolor="#FFFFFF">
 	        <td colspan="2" align="center">
 	            <input type="hidden" name="emailsub" value="1">
-	            <input type="submit" name="btnsubmit" value="Recover Password" class="addButton">
+	            <input type="submit" name="btnsubmit" value="Reset Password" class="addButton">
 	        </td>
 	    </tr>
 	</table>

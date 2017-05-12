@@ -38,12 +38,17 @@ if (isset($_POST['recoversub']) && $_POST['recoversub'] == 1) {
     $check_myarray = $db->getRow($check_sql);
 
     if (empty($check_myarray['valid'])) {
+        $msg = ['This password reset link'];
+
         if ($check_myarray) {
-            $msg = 'Reset link expired' .
-                ($check_myarray['expiration_date'] ? ' on ' . $check_myarray['expiration_date'] : '');
+            $msg[] = $check_myarray['expiration_date'] ?
+                'expired on ' . $check_myarray['expiration_date'] : 'has expired';
         } else {
-            $msg = 'Unable to find user with a matching recovery hash';
+            $msg[] = 'has already been used or has expired';
         }
+
+        $msg[] = 'and is no longer valid. Please click Reset Password if you still need to change your password.';
+        $msg = join(' ', $msg);
 
         ?>
         <script type="text/javascript">

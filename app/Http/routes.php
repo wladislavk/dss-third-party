@@ -13,7 +13,7 @@ Route::post('auth', 'Api\ApiAuthController@auth');
 Route::get('auth-health', 'Api\ApiAuthController@authHealth');
 
 Route::group(['middleware' => 'jwt.auth'], function () {
-    Route::post('auth-as', 'Api\ApiAuthController@generateToken');
+    Route::post('auth-as', 'Api\ApiAuthController@authAs');
     Route::post('refresh-token', 'Api\ApiAuthController@refreshToken');
 });
 

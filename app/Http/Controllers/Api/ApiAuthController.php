@@ -42,15 +42,22 @@ class ApiAuthController extends ApiBaseController
         return ['status' => 'Health', 'data' => ['user' => $this->currentUser, 'admin' => $this->currentAdmin]];
     }
 
-    public function generateToken(Request $request)
+    public function authAs(Request $request)
     {
+        /**
+         * Only admins can access this endpoint. This needs to be a middleware somehow
+         */
+        if (!$this->currentAdmin) {
+            return Response::json(['status' => 'Unauthorized'], 401);
+        }
+
         /**
          * DSS can log a single user (FO/BO) or two users (BO "logged in as" FO).
          * This method can return more than one result, if the given ID has a separator "|"
          */
-        $userData = User::findByIdOrEmail($request->input('id'));
+        $userModel = User::where('username', $request->input('username'))->where('admin', 0)->first();
 
-        if (!$userData) {
+        if (!$userModel) {
             return Response::json(['status' => 'Invalid credentials'], 422);
         }
 
@@ -59,18 +66,7 @@ class ApiAuthController extends ApiBaseController
          * with a combined approach. As a workaround, the ID of a single model will be altered to pass along the
          * list of IDs needed for "logged in as".
          */
-        $userModel = $userData[0];
-
-        if (isset($userData[1])) {
-            /**
-             * Ensure only admins can access "Login As" functionality, and one of the users is the current admin
-             */
-            if (!$this->currentAdmin || !in_array($this->currentAdmin->id, [$userData[0]->id, $userData[1]->id])) {
-                return Response::json(['status' => 'Unauthorized'], 401);
-            }
-
-            $userModel->id = "{$userData[0]->id}|{$userData[1]->id}";
-        }
+        $userModel->id = "a_{$this->currentAdmin->id}|{$userModel->id}";
 
         return ['status' => 'Authenticated', 'token' => $this->auth->fromUser($userModel)];
     }

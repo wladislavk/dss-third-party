@@ -1,7 +1,7 @@
 # A custom mysql server image to provide a database with a preloaded data
 FROM mysql:5.6
 
-COPY ds3-2017-04-23.sql.gz /docker-entrypoint-initdb.d/0000-dump.sql.gz
+COPY ds3-2017-05-01.sql.gz /docker-entrypoint-initdb.d/0000-dump.sql.gz
 # COPY sql_updates/ /docker-entrypoint-initdb.d/
 
 RUN set -x \

@@ -1,9 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 include('admin/includes/main_include.php');
 include('admin/includes/password.php');
-//$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
-//$page_my = mysqli_query($con, $page_sql);
-//$page_myarray = mysqli_fetch_array($page_my);
+
+$queryString = http_build_query($_GET);
 
 if(!empty($_SESSION['loginid']))
 {
@@ -82,7 +81,18 @@ if(isset($_POST["loginsub"]))
 
 			$_SESSION['loginid']=$ins_id;
 
-			header('Location: index.php');
+			if (isset($_GET['goto']) && !empty($_POST['redirect'])) {
+                $goTo = $_GET['goto'];
+
+                if ($goTo[0] !== '/') {
+                    $goTo = "/$goTo";
+                }
+
+                $goTo = preg_replace('@/\.\./@', '/', $goTo);
+			    header("Location: $goTo");
+            } else {
+                header('Location: /manage/');
+            }
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -120,8 +130,12 @@ if(!empty($_GET['msg']))
 
 <div id="login_container">
 	<div id="form-container">
-		<FORM NAME="loginfrm" id="loginForm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)">
+		<FORM NAME="loginfrm" id="loginForm" METHOD="POST" ACTION="/manage/login.php<?= $queryString ? "?$queryString" : '' ?>" onSubmit="return loginabc(this)">
 			<table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C">
+                <colgroup>
+                    <col width="30%" />
+                    <col width="70%" />
+                </colgroup>
 				<tr bgcolor="#FFFFFF">
 					<td colspan="2" class="t_head">
 					   Please Enter Your Login Information
@@ -156,6 +170,17 @@ if(!empty($_GET['msg']))
 						<input type="password" name="password">
 					</td>
 				</tr>
+                <?php if (!empty($_GET['goto'])) { ?>
+                    <tr bgcolor="#fff">
+                        <td colspan="2">
+                            <input id="allow-redirect" type="checkbox" name="redirect" checked />
+                            <label for="allow-redirect">
+                                After login redirect to
+                                <a style="font-size:unset;"><code><?= e($_GET['goto']) ?></code></a>
+                            </label>
+                        </td>
+                    </tr>
+                <?php } ?>
 				<tr bgcolor="#FFFFFF">
 					<td colspan="2" align="center" >
 						<input type="hidden" name="loginsub" value="1">

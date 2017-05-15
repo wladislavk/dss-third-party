@@ -75,6 +75,7 @@ if (!empty($_GET['msg'])) {
 </head>
 <body>
 <div id="login_container">
+    <div id="form-container">
     <FORM name="loginfrm" method="post">
         <input type="hidden" name="recoversub" value="1">
         <input type="hidden" name="hash" value="<?= e($_GET['rh']) ?>" />
@@ -120,4 +121,5 @@ if (!empty($_GET['msg'])) {
             </tr>
         </table>
     </FORM>
+    </div>
 </div>

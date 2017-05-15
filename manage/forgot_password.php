@@ -63,6 +63,7 @@ if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1){
 }
 ?>
 <div id="login_container">
+    <div id="form-container">
 <FORM NAME="loginfrm" METHOD="POST" ACTION="<?php echo $_SERVER['PHP_SELF']?>">
 	<table border="0" align="center" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
 		<tr bgcolor="#FFFFFF">
@@ -96,5 +97,6 @@ if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1){
 	    </tr>
 	</table>
 </FORM>
+    </div>
 </div>
 

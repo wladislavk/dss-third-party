@@ -158,9 +158,6 @@ export default {
       }, 0)
 
       return total
-    },
-    originalBalance () {
-      return 0
     }
   },
   mounted () {
@@ -217,27 +214,27 @@ export default {
       var bufBalance = 0
 
       if (row.ledger != 'claim') {
-        if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
-          bufBalance -= +row.amount
-        } else {
+        // if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
+        //   bufBalance -= +row.amount
+        // } else {
           bufBalance += +row.amount
-        }
+        // }
       }
 
       if (isAdjustment) {
-        if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
-          bufBalance += +row.paid_amount
-        } else {
+        // if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
+        //   bufBalance += +row.paid_amount
+        // } else {
           bufBalance -= +row.paid_amount
-        }
+        // }
       }
 
       if (isCredit && row.ledger != 'claim') {
-        if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
-          bufBalance += +row.paid_amount
-        } else {
+        // if (this.routeParameters.sortDirection.toLowerCase() === 'desc') {
+        //   bufBalance += +row.paid_amount
+        // } else {
           bufBalance -= +row.paid_amount
-        }
+        // }
       }
 
       this.currentBalance += bufBalance
@@ -342,7 +339,7 @@ export default {
       ).then(function (response) {
         var data = response.data.data
 
-        this.currentBalance = this.countInitialBalance(data)
+        // this.currentBalance = this.countInitialBalance(data)
 
         this.$nextTick(() => {
           data = data.map((value) => {

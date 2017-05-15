@@ -281,14 +281,7 @@
                     <td style="color:#fff;">{{ formatLedger(totalCharges) }}</td>
                     <td style="color:#fff;">{{ formatLedger(totalCredits) }}</td>
                     <td style="color:#fff;">{{ formatLedger(totalAdjustments) }}</td>
-                    <td
-                        v-if="true"
-                        style="color:#fff;"
-                    >{{ formatLedger(originalBalance) }}</td>
-                    <td
-                        v-else
-                        style="color:#fff;"
-                    >{{ formatLedger(currentBalance) }}</td>
+                    <td style="color:#fff;">{{ formatLedger(currentBalance) }}</td>
                     <td></td>
                     <td></td>
                     <td></td>

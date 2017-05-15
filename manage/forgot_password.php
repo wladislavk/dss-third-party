@@ -19,23 +19,30 @@ include_once('includes/constants.inc');
 <?php
 
 if(!empty($_POST["emailsub"]) && $_POST["emailsub"] == 1){
-	$check_sql = "SELECT userid, username, email, first_name, last_name
+    $validInterval = 'DATE_ADD(recover_time, INTERVAL 1 HOUR)';
+    $check_sql = "SELECT
+            userid, username, email,
+            first_name, last_name,
+            recover_hash,
+            NOW() <= $validInterval AS valid
 		FROM dental_users
 		WHERE email = '" . $db->escape($_POST['email']) . "'";
 	$check_myarray = $db->getRow($check_sql);
 	
 	if($check_myarray) {
-		$recover_hash = hash('sha256', $check_myarray['userid'].$_POST['email'].rand());
-		$db->query("UPDATE dental_users
-			SET recover_hash = '$recover_hash', recover_time = NOW()
-			WHERE userid = '" . intval($check_myarray['userid']) . "'");
+        if (!$check_myarray['valid']) {
+            $recover_hash = hash('sha256', $check_myarray['userid'] . $_POST['email'] . rand());
+            $check_myarray['recover_hash'] = $recover_hash;
+            $db->query("UPDATE dental_users
+                SET recover_hash = '$recover_hash', recover_time = NOW()
+                WHERE userid = '" . intval($check_myarray['userid']) . "'");
+        }
 
 		$from = 'Dental Sleep Solutions <patient@dentalsleepsolutions.com>';
 		$to = "{$check_myarray['first_name']} {$check_myarray['last_name']} <{$check_myarray['email']}>";
 		$subject = 'Dental Sleep Solutions Password Reset';
-		$template = getTemplate('patient/recover-password');
+		$template = getTemplate('user/reset-password');
 
-		$check_myarray['recover_hash'] = $recover_hash;
 		sendEmail($from, $to, $subject, $template, $check_myarray);
 		
 		?>

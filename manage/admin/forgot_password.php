@@ -18,11 +18,8 @@ if($_POST["emailsub"] == 1)
                 $ins_sql = "UPDATE admin set recover_hash='".$recover_hash."', recover_time=NOW() WHERE adminid='".$check_myarray['adminid']."'";
                 mysqli_query($con, $ins_sql);
 
-                $headers = 'From: SWsupport@dentalsleepsolutions.com' . "\r\n" .
-			'Content-type: text/html' ."\r\n" .
-                    'Reply-To: SWsupport@dentalsleepsolutions.com' . "\r\n" .
-                     'X-Mailer: PHP/' . phpversion();
-
+                $from = 'Dental Sleep Solutions Support <SWsupport@dentalsleepsolutions.com>';
+                $to = $check_myarray['email'];
                 $subject = "Dental Sleep Solutions Password Reset";
                 $message = "Please use this link to reset your password.
 <br /><br />
@@ -31,8 +28,11 @@ http://".$_SERVER['HTTP_HOST']."/manage/admin/recover_password.php?un=".$check_m
 </a>";
 $message .= "<br /><br />";
 $message .= DSS_EMAIL_FOOTER;
-                //$ins_id = mysqli_insert_id($con);
-                $msg = mail($check_myarray['email'], $subject, $message, $headers);
+
+                /**
+                 * Use a central email function, to log activity
+                 */
+                sendEmail($from, $to, $subject, $message);
 
                 ?>
                 <script type="text/javascript">

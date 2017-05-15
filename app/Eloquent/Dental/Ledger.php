@@ -461,6 +461,57 @@ class Ledger extends Model implements Resource, Repository
         return $query->get();
     }
 
+    public function getReportRowsNumber(
+        $ledgerNoteModel,
+        $ledgerStatementModel,
+        $insuranceModel,
+        $docId,
+        $patientId
+    ) {
+        $queryJoinedWithLedgerPayment = $this->select(
+                DB::raw('COUNT(dl.ledgerid) as number')
+            )->from(DB::raw('dental_ledger dl'))
+            ->where('dl.docid', $docId)
+            ->where(function ($query) {
+                $query->whereNull('dl.paid_amount')
+                    ->orWhere('dl.paid_amount', 0);
+            })->where('dl.patientid', $patientId)
+            ->first();
+
+        $queryJoinedWithLedgerPayment1 = $this->select(
+                DB::raw('COUNT(dl.ledgerid) as number')
+            )->from(DB::raw('dental_ledger dl'))
+            ->leftJoin(DB::raw('dental_ledger_payment dlp'), 'dlp.ledgerid', '=', 'dl.ledgerid')
+            ->where('dl.docid', $docId)
+            ->where('dlp.amount', '!=', 0)
+            ->where('dl.patientid', $patientId)
+            ->first();
+
+        $query = $this->select(
+                DB::raw('COUNT(dl.ledgerid) as number')
+            )->from(DB::raw('dental_ledger dl'))
+            ->where('dl.docid', $docId)
+            ->where(function ($query) {
+                $query->whereNotNull('dl.paid_amount')
+                    ->where('dl.paid_amount', '!=', 0);
+            })->where('dl.patientid', $patientId)
+            ->first();
+
+        $ledgerNotesQuery = $ledgerNoteModel->getLedgerDetailsQuery($patientId);
+
+        // $ledgerNotesQuery['users']
+        // $ledgerNotesQuery['admins']
+
+        $ledgerStatementsQuery = $ledgerStatementModel->getLedgerDetailsQuery($docId, $patientId);
+        $insuranceQuery = $insuranceModel->getLedgerDetailsQuery($patientId);
+
+        $totalNumber = (!empty($queryJoinedWithLedgerPayment) ? $queryJoinedWithLedgerPayment->number : 0)
+            + (!empty($queryJoinedWithLedgerPayment1) ? $queryJoinedWithLedgerPayment1->number : 0)
+            + (!empty($query) ? $query->number : 0);
+
+        return $totalNumber;
+    }
+
     public function getWithFilter($fields = [], $where = [])
     {
         $object = $this;

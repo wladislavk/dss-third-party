@@ -308,4 +308,20 @@ class LedgersController extends Controller
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getReportRowsNumber(
+        Request $request,
+        Ledgers $ledger,
+        Insurances $insurance,
+        LedgerNotes $ledgerNote,
+        LedgerStatements $ledgerStatement
+    ) {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $patientId = $request->input('patient_id') ?: 0;
+
+        $number = $ledger->getReportRowsNumber($ledgerNote, $ledgerStatement, $insurance, $docId, $patientId);
+
+        return ApiResponse::responseOk('', ['number' => $number]);
+    }
 }

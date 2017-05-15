@@ -108,4 +108,43 @@ class LedgerNote extends Model implements Resource, Repository
             'admins' => $adminQuery
         ];
     }
+
+    public function getLedgerDetailsRowsNumber()
+    {
+        $userQuery = $this->select(
+            DB::raw('COUNT()')
+        )->from(DB::raw('dental_ledger_note n'))
+        ->join(DB::raw('dental_users p'), 'n.producerid', '=', 'p.userid')
+        ->where('n.patientid', $patientId);
+
+        $adminQuery = $this->select(
+            'n.patientid',
+            'n.docid',
+            DB::raw("'note'"),
+            'n.id',
+            'n.service_date',
+            'n.entry_date',
+            DB::raw("CONCAT('Note - Backoffice ID - ', p.adminid)"),
+            'n.note',
+            DB::raw('0.0'),
+            DB::raw('0.0'),
+            'n.private',
+            DB::raw('0'),
+            DB::raw('NULL'),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("0 AS filed_by_bo")
+        )->from(DB::raw('dental_ledger_note n'))
+        ->join(DB::raw('admin p'), 'n.admin_producerid', '=', 'p.adminid')
+        ->where('n.patientid', $patientId);
+
+        return [
+            'users'  => $userQuery,
+            'admins' => $adminQuery
+        ];
+    }
 }

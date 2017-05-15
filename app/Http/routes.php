@@ -102,6 +102,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('ledgers/totals', 'LedgersController@getReportTotals');
     Route::post('ledgers/update-patient-summary', 'LedgersController@updatePatientSummary');
     Route::post('ledgers/report-data', 'LedgersController@getReportData');
+    Route::post('ledgers/report-rows-number', 'LedgersController@getReportRowsNumber');
     Route::resource('ledger-histories', 'LedgerHistoriesController', ['except' => ['create', 'edit']]);
     Route::post('ledger-histories/ledger-report', 'LedgerHistoriesController@getHistoriesForLedgerReport');
     Route::resource('ledger-payments', 'LedgerPaymentsController', ['except' => ['create', 'edit']]);

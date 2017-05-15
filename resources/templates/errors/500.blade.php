@@ -8,16 +8,18 @@
 </head>
 <body>
 <div id="login_container">
-    <form>
-        <h3>Code problem detected</h3>
-        <p>The server has found a problem when trying to display this page.</p>
-        <p>Try going back and repeating your previous request.</p>
-    </form>
+    <div id="form-container">
+        <form>
+            <h3>Code problem detected</h3>
+            <p>The server has found a problem when trying to display this page.</p>
+            <p>Try going back and repeating your previous request.</p>
+        </form>
+    </div>
 </div>
-    <span style="clear:both;" id="siteseal">
-        <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
-        <br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a>
-    </span>
+<span style="clear:both;" id="siteseal">
+    <script type="text/javascript" src="https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf"></script>
+    <br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a>
+</span>
 <div style="clear:both;"></div>
 </body>
 </html>

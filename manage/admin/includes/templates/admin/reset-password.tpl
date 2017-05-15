@@ -6,8 +6,8 @@
         </colgroup>
         <tr>
             <td colspan="2">
-                <img alt="A message from your healthcare provider"
-                     src="{{baseUrl}}/reg/images/email/email_header_fo.png" />
+                <img alt="A message from Dental Sleep Solutions&reg;"
+                     src="{{baseUrl}}/reg/images/email/email_header.png" />
             </td>
         </tr>
         <tr>
@@ -15,8 +15,8 @@
                 <h2>Password Recovery</h2>
                 <p>Please use this link to reset your password.</p>
                 <p>
-                    <a href="{{baseUrl}}/manage/recover_password.php?un={%username%}&amp;rh={%recover_hash%}">
-                        {{baseUrl}}/manage/recover_password.php?un={{username}}&rh={{recover_hash}}
+                    <a href="{{baseUrl}}/manage/admin/recover_password.php?un={%username%}&amp;rh={%recover_hash%}">
+                        {{baseUrl}}/manage/admin/recover_password.php?un={{username}}&rh={{recover_hash}}
                     </a>
                 </p>
             </td>
@@ -24,13 +24,13 @@
         <tr>
             <td colspan="2">
                 <img alt="Powered by Dental Sleep Solutions&reg;"
-                     src="{{baseUrl}}/reg/images/email/email_footer_fo.png" />
+                     src="{{baseUrl}}/reg/images/email/email_footer.png" />
             </td>
         </tr>
     </table>
 </center>
 <span style="font-size:12px;">
-    This email was sent by Dental Sleep Solutions&reg; on behalf of {{mailing_practice}}.<br>
+    This email was sent by Dental Sleep Solutions&reg;.<br>
     <i>Dental Sleep Solutions will never ask you for passwords or payment information via email.</i><br>
     The contents of this message, together with any attachments, are intended only for the use of the individual or entity
     to which they are addressed and may contain information that is legally privileged, confidential and exempt from disclosure.

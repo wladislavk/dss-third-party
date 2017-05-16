@@ -137,6 +137,10 @@ class AppServiceProvider extends ServiceProvider
             Eloquent\Dental\Summary::class => [Repositories\Summaries::class, Resources\Summary::class],
             Eloquent\Dental\CorporateContact::class => [Repositories\CorporateContacts::class, Resources\CorporateContact::class],
             Eloquent\Dental\LedgerStatement::class => [Repositories\LedgerStatements::class, Resources\LedgerStatement::class]
+            Eloquent\Dental\ExternalCompany::class => [Repositories\ExternalCompanies::class, Resources\ExternalCompany::class],
+            Eloquent\Dental\ExternalUser::class => [Repositories\ExternalUsers::class, Resources\ExternalUser::class],
+            Eloquent\Dental\ExternalPatient::class => [Repositories\ExternalPatients::class, Resources\ExternalPatient::class],
+            Eloquent\Dental\ExternalCompanyUser::class => [Repositories\ExternalCompanyUsers::class, Resources\ExternalCompanyUser::class],
         ];
 
         $this->app->bind(

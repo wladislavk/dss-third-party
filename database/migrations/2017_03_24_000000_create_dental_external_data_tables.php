@@ -38,11 +38,36 @@ class CreateDentalExternalDataTables extends Migration
             $table->timestamps();
         });
 
+        // Indexes
         Schema::table('dental_external_companies', function (Blueprint $table) {
             $table->unique('software');
             $table->index('api_key');
             $table->index('created_by');
             $table->index('updated_by');
+        });
+
+        /**
+         * User details when they are allowed to use external software
+         */
+        Schema::create('dental_external_users', function (Blueprint $table) {
+            $table->increments('id');
+
+            // Fields equivalent to username/password
+            $table->integer('user_id');
+            $table->string('api_key');
+            $table->timestamp('valid_from');
+            $table->timestamp('valid_to');
+
+            $table->integer('created_by');
+            $table->integer('created_at');
+        });
+
+        // Indexes
+        Schema::table('dental_external_users', function (Blueprint $table) {
+            $table->unique('user_id');
+            $table->index('api_key');
+            $table->index('created_by');
+            $table->index('created_at');
         });
 
         /**
@@ -73,6 +98,7 @@ class CreateDentalExternalDataTables extends Migration
             $table->timestamps();
         });
 
+        // Indexes
         Schema::table('dental_external_patients', function (Blueprint $table) {
             $table->index('software');
             $table->index('external_id');
@@ -92,6 +118,7 @@ class CreateDentalExternalDataTables extends Migration
             $table->timestamp('created_at');
         });
 
+        // Indexes
         Schema::table('dental_external_company_user', function (Blueprint $table) {
             $table->unique(['user_id', 'company_id']);
             $table->index('created_by');

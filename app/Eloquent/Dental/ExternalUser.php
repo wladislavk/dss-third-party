@@ -3,11 +3,11 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Contracts\Resources\ExternalPatient as Resource;
-use DentalSleepSolutions\Contracts\Repositories\ExternalPatients as Repository;
+use DentalSleepSolutions\Contracts\Resources\ExternalUser as Resource;
+use DentalSleepSolutions\Contracts\Repositories\ExternalUsers as Repository;
 use DB;
 
-class ExternalCompany extends Model implements Resource, Repository
+class ExternalUser extends Model implements Resource, Repository
 {
     /**
      * Guarded attributes
@@ -21,7 +21,7 @@ class ExternalCompany extends Model implements Resource, Repository
      *
      * @var string
      */
-    protected $table = 'dental_external_companies';
+    protected $table = 'dental_external_users';
 
     /**
      * The primary key for the model.
@@ -33,8 +33,12 @@ class ExternalCompany extends Model implements Resource, Repository
     /**
      * RELATIONS
      */
-    public function users () {
-        return $this->hasManyThrough(User::class, ExternalCompanyUser::class, 'user_id', 'userid');
+    public function user () {
+        return $this->belongsTo(User::class, 'user_id', 'userid');
+    }
+
+    public function company () {
+        return $this->belongsTo(ExternalCompany::class, 'company_id', 'id');
     }
 
     public function getWithFilter($fields = [], $where = [])

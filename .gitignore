@@ -3,16 +3,4 @@
 Homestead.yaml
 .env
 
-.idea/ds3-private03.iml
-
-.idea/.name
-
-.idea/blade.xml
-
-.idea/misc.xml
-
-.idea/modules.xml
-.idea/vcs.xml
-.idea/workspace.xml
-.idea/laravel-plugin.xml
-.idea/php.xml
+/.idea/

@@ -2,9 +2,13 @@
 include "includes/top.htm";
 include_once 'includes/constants.inc';
 include "includes/similar.php";
+
+$isSelectPatient = !empty($_GET['pid']);
+$selectedPatient = intval($_GET['pid']);
+
 ?>
 
-<link rel="stylesheet" href="css/pending.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/pending.css?v=20170516<?= time() ?>" type="text/css" media="screen" />
 
 <?php
  
@@ -79,7 +83,14 @@ if(isset($_REQUEST['deleteid'])){
 <?php
 }
 $sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0 ";
-$sql .= "ORDER BY p.lastname ASC"; 
+
+if ($isSelectPatient) {
+    $sql .= " ORDER BY IF(p.patientid = '$selectedPatient', 1, 0) DESC, p.lastname ASC, p.firstname ASC";
+} else {
+    $sql .= "ORDER BY p.lastname ASC";
+}
+
+
 $my = $db->getResults($sql);
 ?>
 
@@ -136,8 +147,8 @@ $my = $db->getResults($sql);
 	{
         foreach ($my as $myarray) {
 			$sim = similar_patients($myarray['patientid']); ?>
-	<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
-		<td valign="top">
+	<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?> <?= $selectedPatient == $myarray['patientid'] ? 'selected' : '' ?>">
+		<td valign="top" <?= $isSelectPatient ? 'id="external-patient"' : '' ?>>
             <?php echo st($myarray["firstname"]);?>&nbsp;
             <?php echo st($myarray["lastname"]);?> 
 		</td>
@@ -190,7 +201,12 @@ $my = $db->getResults($sql);
 
 <?php
 $sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0 ";
-$sql .= "ORDER BY p.lastname ASC";
+
+if ($isSelectPatient) {
+    $sql .= " ORDER BY IF(p.patientid = '$selectedPatient', 1, 0) DESC, p.lastname, p.firstname";
+} else {
+    $sql .= "ORDER BY p.lastname ASC";
+}
 $my = $db->getResults($sql);
 ?>
 <span class="admin_head">
@@ -229,8 +245,8 @@ $my = $db->getResults($sql);
         {
             foreach ($my as $myarray) {
                 $sim = similar_doctors($myarray['patientid']); ?>
-    <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
-        <td valign="top">
+    <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?> <?= $selectedPatient == $myarray['patientid'] ? 'selected' : '' ?>">
+        <td valign="top" <?= $isSelectPatient ? 'id="external-patient"' : '' ?>>
             <?php echo st($myarray["firstname"]);?>&nbsp;
             <?php echo st($myarray["lastname"]);?>
         </td>

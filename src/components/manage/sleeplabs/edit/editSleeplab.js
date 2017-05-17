@@ -1,6 +1,6 @@
 var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
-import phoneMasks from '../../../../modules/masks/phoneMixin.js'
+import phoneMasks from '../../../../modules/masks/PhoneMixin.js'
 import phoneFilters from '../../../../modules/filters/phoneMixin.js'
 import sleeplabValidator from '../../../../modules/validators/SleeplabMixin.js'
 

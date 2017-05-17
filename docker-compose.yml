@@ -79,6 +79,22 @@ services:
       - "traefik.port=80"
       - "traefik.backend=api"
       - "traefik.frontend.rule=HostRegexp:{host:api.docker.localhost}"
+
+  vue:
+    build: ../ds3-private06-Vue
+    image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/vue
+    environment:
+      NODE_ENV: development
+      PORT: 80
+    volumes:
+      # WINDOWS: uncomment for Docker on Windows
+      - "${ROOT_PATH}/ds3-private06-Vue/src:/opt/app/src"
+      # LINUX: Uncomment for Docker on Linux/Mac
+      # - "../ds3-private06-Vue/src:/opt/app/src"
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=vue"
+      - "traefik.frontend.rule=HostRegexp:{host:vue.docker.localhost}"
  
   balancer:
     image: traefik:v1.2.3-alpine

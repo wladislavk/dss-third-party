@@ -3,14 +3,12 @@
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
 use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\Http\Controllers\ExternalBaseController;
 use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
 use DentalSleepSolutions\Contracts\Repositories\ExternalPatients;
 use EventHomes\Api\FractalHelper;
 use DentalSleepSolutions\Http\Transformers\ExternalPatient as Transformer;
-
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Carbon\Carbon;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily
@@ -20,9 +18,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
  * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
  * @link http://laravel.com/docs/5.1/routing#route-model-binding
  */
-class ExternalPatientController extends BaseController
+class ExternalPatientController extends ExternalBaseController
 {
-    use DispatchesJobs, ValidatesRequests;
     use FractalHelper;
 
     /**
@@ -33,20 +30,54 @@ class ExternalPatientController extends BaseController
      * @return \Illuminate\Http\JsonResponse
      */
     public function store (ExternalPatients $resources, ExternalPatientStore $request) {
-        $created = false;
-        
         $transformer = new Transformer;
         $data = $transformer->fromTransform($request->all());
 
+        $created = false;
+
+        $externalPatientData = array_get($data, 'external_patient');
+        $patientData = array_get($data, 'patient');
+        $externalCompanyId = array_get($externalPatientData, 'software');
+        $externalPatientId = array_get($externalPatientData, 'external_id');
+
         $externalPatient = $resources
-            ->where('software', array_get($data, 'external_patient.software'))
-            ->where('external_id', array_get($data, 'external_patient.external_id'))
+            ->where('software', $externalCompanyId)
+            ->where('external_id', $externalPatientId)
             ->first();
 
         if (!$externalPatient) {
+            $externalPatient = $resources->create($externalPatientData);
+        } else {
+            $externalPatient->update($externalPatientData);
+        }
+
+        $patient = $externalPatient->patient()->first();
+
+        if (!$patient) {
+            $patient = $externalPatient->patient()->create($patientData);
+        } else {
+            $patient->update($patientData);
+        }
+
+        if ($externalPatient->wasRecentlyCreated) {
+            $externalPatient->update([
+                'software' => $externalCompanyId,
+                'external_id' => $externalPatientId,
+                'patient_id' => $patient->getKey(),
+            ]);
+
             $created = true;
-            $externalPatient = $resources->create(array_get($data, 'external_patient'));
-            $externalPatient->save();
+        }
+
+        if ($patient->wasRecentlyCreated) {
+            $patient->update([
+                'docid' => $this->currentUser->docid,
+                'status' => 3, // Pending Active
+                'ip_address' => $request->ip(),
+                'adddate' => Carbon::now(),
+            ]);
+
+            $created = true;
         }
 
         $redirectUrl = env('FRONTEND_URL') . 'manage/external-patient.php?' .
@@ -55,6 +86,10 @@ class ExternalPatientController extends BaseController
                 'id' => array_get($data, 'external_patient.external_id'),
             ]);
 
-        return ApiResponse::responseOk('', ['redirect_url' => $redirectUrl], $created ? 201 : 200);
+        return ApiResponse::responseOk(
+            '',
+            ['redirect_url' => $redirectUrl],
+            $created ? 201 : 200
+        );
     }
 }

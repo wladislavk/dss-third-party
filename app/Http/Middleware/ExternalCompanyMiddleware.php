@@ -8,24 +8,38 @@ use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
 
 class ExternalCompanyMiddleware
 {
+    protected $externalCompaniesRepository;
+    protected $externalUsersRepository;
+
+    public function __construct (ExternalCompanies $externalCompanies, ExternalUsers $externalUsers) {
+        $this->externalCompaniesRepository = $externalCompanies;
+        $this->externalUsersRepository = $externalUsers;
+    }
+
     public function handle($request, Closure $next)
     {
-        $companyKey = $request->input('api_company_key');
-        $userKey = $request->input('api_user_key');
+        $companyKey = $request->input('api_key_company');
+        $userKey = $request->input('api_key_user');
 
         if (!strlen($companyKey)) {
-            return ApiResponse::json(['error' => 'api_company_key_not_provided', 400]);
+            return ApiResponse::responseError(['error' => 'api_key_company_not_provided'], 400);
         }
 
         if (!strlen($userKey)) {
-            return ApiResponse::json(['error' => 'api_user_key_not_provided', 400]);
+            return ApiResponse::responseError(['error' => 'api_key_user_not_provided'], 400);
         }
 
-        $companyResource = app()->make(ExternalCompanies::class);
-        $companyResource->where('api_key', $companyKey)->firstOrFail();
+        $externalCompany = $this->externalCompaniesRepository->where('api_key', $companyKey)->first();
 
-        $userResource = app()->make(ExternalUsers::class);
-        $userResource->where('api_key', $userKey)->user()->firstOrFail();
+        if (!$externalCompany) {
+            return ApiResponse::responseError(['error' => 'api_key_company_invalid'], 422);
+        }
+
+        $externalUser = $this->externalUsersRepository->where('api_key', $userKey)->first();
+
+        if (!$externalUser || !$externalUser->user() || !count($externalUser->user())) {
+            return ApiResponse::responseError(['error' => 'api_key_user_invalid'], 422);
+        }
 
         return $next($request);
     }

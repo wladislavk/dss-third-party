@@ -12,7 +12,7 @@ Homestead.yaml
 .idea/misc.xml
 
 .idea/modules.xml
-
 .idea/vcs.xml
-
 .idea/workspace.xml
+.idea/laravel-plugin.xml
+.idea/php.xml

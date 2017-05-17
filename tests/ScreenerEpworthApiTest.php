@@ -20,7 +20,8 @@ class ScreenerEpworthApiTest extends TestCase
 
         $data['screener_id'] = 100;
 
-        $this->post('/api/v1/screener-epworth', $data)
+        $this->post('/api/v1/screener-epworth', $data);
+        $this
             ->seeInDatabase('dental_screener_epworth', ['screener_id' => 100])
             ->assertResponseOk();
     }

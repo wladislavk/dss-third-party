@@ -32,14 +32,12 @@ CustomLog "/dev/stdout" common\n\
 </VirtualHost>\n\
 ' > ${ETC_HTTPD}/conf.d/app.conf
 
-# Install wget
-RUN \
-    yum update && \
-    yum install -y \
-    wget
-
 # Install phpunit
-RUN cd /usr/local/bin/ && \
-    wget https://phar.phpunit.de/phpunit-6.1.phar && \
-    mv phpunit-6.1.phar phpunit && \
-    chmod 0755 phpunit
+RUN mv phpunit-4.8.35.phar /usr/local/bin/phpunit && \
+    chmod 0755 /usr/local/bin/phpunit
+
+RUN \
+    rm -f /usr/bin/php && \
+    ln -s /opt/rh/rh-php56/root/usr/bin/php /usr/bin/php
+
+RUN { echo "memory_limit=-1"; } | tee -a /etc/opt/rh/rh-php56/php.ini

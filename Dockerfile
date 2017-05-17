@@ -31,3 +31,15 @@ CustomLog "/dev/stdout" common\n\
     </Directory>\n\
 </VirtualHost>\n\
 ' > ${ETC_HTTPD}/conf.d/app.conf
+
+# Install wget
+RUN \
+    yum update && \
+    yum install -y \
+    wget
+
+# Install phpunit
+RUN cd /usr/local/bin/ && \
+    wget https://phar.phpunit.de/phpunit-6.1.phar && \
+    mv phpunit-6.1.phar phpunit && \
+    chmod 0755 phpunit

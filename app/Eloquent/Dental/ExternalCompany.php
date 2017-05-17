@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Contracts\Resources\ExternalPatient as Resource;
-use DentalSleepSolutions\Contracts\Repositories\ExternalPatients as Repository;
+use DentalSleepSolutions\Contracts\Resources\ExternalCompany as Resource;
+use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies as Repository;
 use DB;
 
 class ExternalCompany extends Model implements Resource, Repository

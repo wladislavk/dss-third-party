@@ -46,14 +46,14 @@ class ExternalPatient extends TransformerAbstract
         'patient.insurance_primary.payer_info.phone'    => 'external_patient.payer_phone',
         'patient.insurance_primary.payer_info.fax'      => 'external_patient.payer_fax',
 
-        'patient.insurance_primary.insured_info.relationship_to_insured' => 'patient.insurance_primary.insured_info.relationship_to_insured',
+        'patient.insurance_primary.insured_info.relationship_to_insured' => 'patient.p_m_relation',
 
         'patient.insurance_primary.insured_info.subscriber.id'          => 'patient.p_m_ins_id',
         'patient.insurance_primary.insured_info.subscriber.first_name'  => 'patient.p_m_partyfname',
         'patient.insurance_primary.insured_info.subscriber.last_name'   => 'patient.p_m_partylname',
         'patient.insurance_primary.insured_info.subscriber.middle_name' => 'patient.p_m_partymname',
         'patient.insurance_primary.insured_info.subscriber.address1'    => 'patient.p_m_address',
-        'patient.insurance_primary.insured_info.subscriber.address2'    => 'patient.p_m_address2',
+        'patient.insurance_primary.insured_info.subscriber.address2'    => 'missing.p_m_address2', // No space for address 2
         'patient.insurance_primary.insured_info.subscriber.city'        => 'patient.p_m_city',
         'patient.insurance_primary.insured_info.subscriber.state'       => 'patient.p_m_state',
         'patient.insurance_primary.insured_info.subscriber.zip'         => 'patient.p_m_zip',
@@ -68,7 +68,7 @@ class ExternalPatient extends TransformerAbstract
         'patient.insurance_primary.insured_info.dependent.last_name'   => 'patient.s_m_partylname',
         'patient.insurance_primary.insured_info.dependent.middle_name' => 'patient.s_m_partymname',
         'patient.insurance_primary.insured_info.dependent.address1'    => 'patient.s_m_address',
-        'patient.insurance_primary.insured_info.dependent.address2'    => 'patient.s_m_address2',
+        'patient.insurance_primary.insured_info.dependent.address2'    => 'missing.s_m_address2',
         'patient.insurance_primary.insured_info.dependent.city'        => 'patient.s_m_city',
         'patient.insurance_primary.insured_info.dependent.state'       => 'patient.s_m_state',
         'patient.insurance_primary.insured_info.dependent.zip'         => 'patient.s_m_zip',

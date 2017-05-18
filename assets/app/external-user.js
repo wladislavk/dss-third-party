@@ -1,7 +1,7 @@
 Vue.http.headers.common['Authorization'] = 'Bearer ' + document.getElementById('dom-api-token').value;
 
 var userId = $('[name=ed]').val();
-var apiPath = apiRoot + 'api/v1/external-user/' + userId;
+var apiPath = apiRoot + 'api/v1/external-user/';
 
 var user = new Vue({
     el: '#add-user-form',
@@ -24,8 +24,9 @@ var user = new Vue({
             }
 
             var method = this.fields.id ? 'put' : 'post';
+            var id = this.fields.id ? userId : '';
 
-            this.$http[method](apiPath, this.fields, function() {
+            this.$http[method](apiPath + id, this.fields, function() {
                 this.$el.submit();
             }).error(function () {
                 this.$el.submit();
@@ -38,7 +39,7 @@ var user = new Vue({
                 return;
             }
 
-            this.$http.delete(apiPath, function () {
+            this.$http.delete(apiPath + userId, function () {
                 this.enabled = false;
 
                 if (e.target && e.target.href) {
@@ -66,7 +67,7 @@ var user = new Vue({
         onReady: function() {
             this.enabled = this.id && this.fields.user_id;
 
-            this.$http.get(apiPath, function (data) {
+            this.$http.get(apiPath + userId, function (data) {
                 this.$set('fields', data.data);
                 this.enabled = this.id && this.fields.user_id;
             });

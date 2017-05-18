@@ -59,7 +59,9 @@ class CreateDentalExternalDataTables extends Migration
             $table->timestamp('valid_to');
 
             $table->integer('created_by');
-            $table->integer('created_at');
+            $table->integer('updated_by');
+
+            $table->timestamps();
         });
 
         // Indexes
@@ -67,7 +69,7 @@ class CreateDentalExternalDataTables extends Migration
             $table->unique('user_id');
             $table->index('api_key');
             $table->index('created_by');
-            $table->index('created_at');
+            $table->index('updated_by');
         });
 
         /**

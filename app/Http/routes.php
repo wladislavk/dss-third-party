@@ -218,6 +218,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('memo', 'Api\ApiAdminMemoController');
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
     Route::resource('external-companies', 'ExternalCompaniesController');
+    Route::resource('external-user', 'ExternalUsersController');
 
     Route::group(['prefix' => 'enrollments'], function () {
         Route::post('create', [

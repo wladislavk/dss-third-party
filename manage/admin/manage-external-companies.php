@@ -51,7 +51,10 @@ require_once __DIR__ . '/../includes/constants.inc';
                     {{ company.name }}
                 </td>
                 <td valign="top">
-                    {{ company.status == 1 ? 'Active' : 'Inactive' }}
+                    {{ company.status == 1 ? 'Active' : '' }}
+                    {{ company.status == 2 ? 'Inactive' : '' }}
+                    {{ company.status == 3 ? 'Suspended' : '' }}
+                    {{ company.status < 1 || company.status > 3 ? 'Not set' : '' }}
                 </td>
                 <td valign="top">
                     {{ company.api_key }}
@@ -63,7 +66,7 @@ require_once __DIR__ . '/../includes/constants.inc';
                     {{ company.updated_at }}
                 </td>
                 <td valign="top">
-                    <a data-toggle="modal" title="" class="btn btn-primary btn-sm" data-original-title="Edit Company" v-on="click: editCompany(company)">
+                    <a data-toggle="modal" title="" class="btn btn-primary btn-sm" data-original-title="Edit Company" v-on="click: editCompany(company, $index)">
                         Edit
                         <span class="glyphicon glyphicon-pencil"></span></a>
                     <button class="btn btn-danger btn-sm"  v-on="click: deleteCompany(company)">Delete</button>
@@ -110,9 +113,17 @@ require_once __DIR__ . '/../includes/constants.inc';
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
+                                    <label for="company-software" class="col-md-3 control-label" title="Name of the software that access the DS3 API">Software</label>
+                                    <div class="input-group col-md-9">
+                                        <input type="text" class="form-control" id="company-software" name="company.software" v-model="fields.software">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
                                     <label for="company-api_key" class="col-md-3 control-label">API key</label>
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control" id="company-api_key" name="company.api_key" v-model="fields.api_key"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="company-api_key" name="company.api_key" v-model="fields.api_key" readonly><span class="input-group-addon" v-on="click: generateApiKey(fields)"><i class="glyphicon glyphicon-refresh"></i></span>
                                     </div>
                                 </div>
                             </div>

@@ -7,6 +7,7 @@ var companies = new Vue({
     data: {
         fields: {
             id: 0,
+            software: '',
             name: '',
             short_name: '',
             api_key: '',
@@ -16,11 +17,14 @@ var companies = new Vue({
             description: '',
             status: 0,
             reason: ''
-        }
+        },
+        editKey: null,
+        companies: {}
     },
     methods: {
         newCompany: function () {
             this.fields.id = 0;
+            this.fields.software = '';
             this.fields.name = '';
             this.fields.short_name = '';
             this.fields.api_key = '';
@@ -33,8 +37,11 @@ var companies = new Vue({
 
             showModal();
         },
-        editCompany: function (company, e) {
+        editCompany: function (company, $index) {
+            this.editKey = $index;
+
             this.fields.id = company.id;
+            this.fields.software = company.software;
             this.fields.name = company.name;
             this.fields.short_name = company.short_name;
             this.fields.api_key = company.api_key;
@@ -51,42 +58,71 @@ var companies = new Vue({
             e.preventDefault();
             this.showBusy('Saving changes please wait...');
 
-            if (this.fields.id != 0) {
+            if (this.fields.id) {
                 this.$http.put(apiPath + this.fields.id, this.fields, function(data, status, request) {
-                    this.$set('companies', data.data);
                     this.notifyAction('Company updated.');
                     hideModal();
+
+                    if (this.editKey) {
+                        this.$set(['companies[', this.editKey, ']'].join(''), this.fields);
+                    }
+
+                    this.editKey = null;
+
                 }).error(function (data, status, request) {
-                    var message = JSON.parse(data.message);
-                    this.$set('errors', message);
+                    try {
+                        var message = JSON.parse(data.message);
+                        this.$set('errors', message);
+                    } catch (e) { /* No error messages */ }
                 });
             } else {
+                this.editKey = null;
+
                 this.$http.post(apiPath, this.fields, function(data, status, request) {
-                    this.$set('companies', data.data);
                     this.notifyAction('Company created.');
                     hideModal();
+                    this.onReady();
                 }).error(function (data, status, request) {
-                    var message = JSON.parse(data.message);
-                    this.$set('errors', message);
+                    try {
+                        var message = JSON.parse(data.message);
+                        this.$set('errors', message);
+                    } catch (e) { /* No error messages */ }
                 });
             }
 
             $.unblockUI();
         },
         deleteCompany: function (company, e) {
-            if (confirm('Delete this company - Are you sure?')) {
-                this.showBusy('Deleting company please wait...');
-
-                this.$http.delete(apiPath + company.id, function (data, status, request) {
-                    this.$set('companies', data.data);
-                    this.notifyAction('Company deleted.');
-                }).error(function (data, status, request) {
-                    var message = JSON.parse(data.message);
-                    this.notifyAction(message);
-                });
+            if (!confirm('Delete this company - Are you sure?')) {
+                return;
             }
 
+            this.showBusy('Deleting company please wait...');
+
+            this.$http.delete(apiPath + company.id, function (data, status, request) {
+                this.notifyAction('Company deleted.');
+                this.onReady();
+            }).error(function (data, status, request) {
+                try {
+                    var message = JSON.parse(data.message);
+                    this.notifyAction(message);
+                } catch (e) { /* No error messages */ }
+            });
+
             $.unblockUI();
+        },
+        generateApiKey: function (fields) {
+            function guid () {
+                function s4 () {
+                    return Math.floor((1 + Math.random()) * 0x10000)
+                        .toString(16)
+                        .substring(1);
+                }
+
+                return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+                    s4() + '-' + s4() + s4() + s4();
+            }
+            fields.api_key = guid();
         },
         showBusy: function (message) {
             this.blockUI({
@@ -115,16 +151,19 @@ var companies = new Vue({
                 extendedOptions = $.extend({}, baseOptions, options);
 
             $.blockUI(extendedOptions);
-        }
+        },
 
+        onReady: function() {
+            // GET request
+            this.$http.get(apiPath, function (data, status, request) {
+                this.$set('companies', data.data);
+            }).error(function (data, status, request) {
+                // handle error
+            });
+        }
     },
     ready: function() {
-        // GET request
-        this.$http.get(apiPath, function (data, status, request) {
-            this.$set('companies', data.data);
-        }).error(function (data, status, request) {
-            // handle error
-        });
+        this.onReady();
     }
 
 })

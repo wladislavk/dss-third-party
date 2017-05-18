@@ -1012,6 +1012,13 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 								</span>
 							</a>
 							<ul class="sub-menu">
+                                <?php if (is_super($_SESSION['admin_access'])) { ?>
+                                    <li>
+                                        <a href="/manage/admin/manage-external-companies.php">
+                                            <i class="fa fa-rocket"></i> Dentrix API
+                                        </a>
+                                    </li>
+                                <?php } ?>
 								<li>
 									<a href="/manage/admin/manage_ins_type.php">
 										<i class="fa fa-user"></i> Insurance Type

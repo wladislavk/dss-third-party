@@ -987,6 +987,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 </div>
             </div>
 
+            <?php if (is_super($_SESSION['admin_access'])) { ?>
             <div class="page-header" v-cloak v-show="enabled">
                 <strong>Dentrix API Details</strong>
             </div>
@@ -1015,7 +1016,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 </div>
             </div>
 
-            <?php if (is_super($_SESSION['admin_access'])) { ?>
             <div class="page-header">
                 <strong>Administration Details</strong>
             </div>
@@ -1243,6 +1243,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
   }
   check_service_npi();  
 </script>
+<?php if (is_super($_SESSION['admin_access'])) { ?>
 <script>
     var apiRoot = <?= json_encode(config('app.apiUrl')) ?>;
 </script>
@@ -1250,5 +1251,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 <script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
 <script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
 <script src="/assets/app/external-user.js?v=20170517<?= time() ?>" type="text/javascript"></script>
+<?php } ?>
 </body>
 </html>

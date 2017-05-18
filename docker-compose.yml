@@ -78,12 +78,27 @@ services:
       - "traefik.backend=api"
       - "traefik.frontend.rule=HostRegexp:{host:api.docker.localhost}"
 
+  vue:
+    build: ../ds3-private06-Vue
+    image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/vue
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      PORT: ${HTTP_PORT}
+    volumes:
+      - "${ROOT_PATH}/ds3-private06-Vue/src:/opt/app/src"
+    labels:
+      - "traefik.port=${HTTP_PORT}"
+      - "traefik.backend=vue"
+      - "traefik.frontend.rule=HostRegexp:{host:vue.docker.localhost}"
+ 
   balancer:
     image: traefik:v1.2.3-alpine
     command: --docker --docker.domain=docker.localhost --logLevel=DEBUG
     ports:
       - "${HTTP_PORT}:80"
-      - "${SKYPE_PORT}:443"
+      - "${HTTPS_PORT}:443"
       - "${MYSQL_PORT}:3306"
       # NOTE: On Windows10, Skype CONFLICTS with 443 port.
       # Either change to other port (e.g. 4433:443), or kill Skype before starting container.

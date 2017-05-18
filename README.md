@@ -85,6 +85,15 @@ cd ds3-private04-Docker
 ROOT_PATH='c:/Users/MyName/Github/DS3' docker-compose up -d
 ```
 
+## Run Migrations
+The dev DB contains all of the changes to `master` up to May 1st, 2017, **except** for API migrations. To have the site fully working, these API migrations need to be executed.
+
+```bash
+source /opt/rh/rh-php56
+cd /opt/rh/httpd24/root/var/www/html/api
+php artisan migrate
+```
+
 ### Test Containers
 Go to a browser and verify access to https://loader.docker.localhost/manage
 

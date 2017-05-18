@@ -6,7 +6,6 @@ use DentalSleepSolutions\Helpers\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ExternalCompanyStore;
 use DentalSleepSolutions\Http\Requests\ExternalCompanyUpdate;
 use DentalSleepSolutions\Http\Requests\ExternalCompanyDestroy;
-use DentalSleepSolutions\Contracts\Resources\ExternalCompany;
 use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
 
 /**
@@ -22,7 +21,7 @@ class ExternalCompaniesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Chairs $resources
+     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(ExternalCompanies $resources)
@@ -35,24 +34,29 @@ class ExternalCompaniesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Chair $resource
+     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(ExternalCompany $resource)
+    public function show(ExternalCompanies $resources, $id)
     {
+        $resource = $resources-findOrFail($id);
         return ApiResponse::responseOk('', $resource);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Chairs $resources
-     * @param  \DentalSleepSolutions\Http\Requests\ChairStore $request
+     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
+     * @param  \DentalSleepSolutions\Http\Requests\ExternalCompanyStore $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(ExternalCompanies $resources, ExternalCompanyStore $request)
     {
-        $resource = $resources->create($request->all());
+        $data = $request->all();
+        $data['created_by'] = $this->currentAdmin->id;
+
+        $resource = $resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -60,13 +64,19 @@ class ExternalCompaniesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Chair $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ChairUpdate $request
+     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
+     * @param int $id
+     * @param  \DentalSleepSolutions\Http\Requests\ExternalCompanyUpdate $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(ExternalCompany $resource, ExternalCompanyUpdate $request)
+    public function update(ExternalCompanies $resources, $id, ExternalCompanyUpdate $request)
     {
-        $resource->update($request->all());
+        $resource = $resources->findOrFail($id);
+
+        $data = $request->all();
+        $data['updated_by'] = $this->currentAdmin->id;
+
+        $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');
     }
@@ -74,12 +84,14 @@ class ExternalCompaniesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Chair $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ChairDestroy $request
+     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
+     * @param  int $id
+     * @param  \DentalSleepSolutions\Http\Requests\ExternalCompanyDestroy $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(ExternalCompany $resource, ExternalCompanyDestroy $request)
+    public function destroy(ExternalCompanies $resources, $id, ExternalCompanyDestroy $request)
     {
+        $resource = $resources->findOrFail($id);
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');

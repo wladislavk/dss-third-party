@@ -992,20 +992,26 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             </div>
             <div class="form-group" v-cloak v-show="enabled">
                 <label for="user-api_key" class="col-md-3 control-label">API key</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="user-api_key" v-model="fields.api_key" readonly><span class="input-group-addon" v-on="click: generateApiKey(fields)"><i class="glyphicon glyphicon-refresh"></i></span>
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="user-api_key" v-model="fields.api_key" readonly><span class="input-group-addon" v-on="click: generateApiKey(fields)"><i class="glyphicon glyphicon-refresh"></i></span>
+                    </div>
                 </div>
             </div>
             <div class="form-group" v-cloak v-show="enabled">
                 <label for="user-valid_from" class="col-md-3 control-label">Valid from</label>
-                <div class="input-group date">
-                    <input type="text" class="form-control" id="user-valid_from" v-model="fields.valid_from"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                <div class="col-md-9">
+                    <div class="input-group date-with-format">
+                        <input type="text" class="form-control" id="user-valid_from" v-model="fields.valid_from"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                    </div>
                 </div>
             </div>
             <div class="form-group" v-cloak v-show="enabled">
                 <label for="user-valid_to" class="col-md-3 control-label">Valid to</label>
-                <div class="input-group date">
-                    <input type="text" class="form-control" id="user-valid_to" v-model="fields.valid_to"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                <div class="col-md-9">
+                    <div class="input-group date-with-format">
+                        <input type="text" class="form-control" id="user-valid_to" v-model="fields.valid_to"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                    </div>
                 </div>
             </div>
 

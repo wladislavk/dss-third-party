@@ -69,11 +69,25 @@ var companies = new Vue({
 
                     this.editKey = null;
 
-                }).error(function (data, status, request) {
-                    try {
-                        var message = JSON.parse(data.message);
-                        this.$set('errors', message);
-                    } catch (e) { /* No error messages */ }
+                }).error(function (response) {
+                    if (!response || !response.data || !response.data.errors) {
+                        return;
+                    }
+
+                    var errors = response.data.errors,
+                        message = [], field, n;
+
+                    for (field in errors) {
+                        if (!errors.hasOwnProperty(field)) {
+                            continue;
+                        }
+
+                        for (n=0; n<errors[field].length; n++) {
+                            message.push(errors[field][n]);
+                        }
+                    }
+
+                    this.notifyAction(message.join(' '));
                 });
             } else {
                 this.editKey = null;
@@ -82,11 +96,25 @@ var companies = new Vue({
                     this.notifyAction('Company created.');
                     hideModal();
                     this.onReady();
-                }).error(function (data, status, request) {
-                    try {
-                        var message = JSON.parse(data.message);
-                        this.$set('errors', message);
-                    } catch (e) { /* No error messages */ }
+                }).error(function (response) {
+                    if (!response || !response.data || !response.data.errors) {
+                        return;
+                    }
+
+                    var errors = response.data.errors,
+                        message = [], field, n;
+
+                    for (field in errors) {
+                        if (!errors.hasOwnProperty(field)) {
+                            continue;
+                        }
+
+                        for (n=0; n<errors[field].length; n++) {
+                            message.push(errors[field][n]);
+                        }
+                    }
+
+                    this.notifyAction(message.join(' '));
                 });
             }
 
@@ -102,11 +130,25 @@ var companies = new Vue({
             this.$http.delete(apiPath + company.id, function (data, status, request) {
                 this.notifyAction('Company deleted.');
                 this.onReady();
-            }).error(function (data, status, request) {
-                try {
-                    var message = JSON.parse(data.message);
-                    this.notifyAction(message);
-                } catch (e) { /* No error messages */ }
+            }).error(function (response) {
+                if (!response || !response.data || !response.data.errors) {
+                    return;
+                }
+
+                var errors = response.data.errors,
+                    message = [], field, n;
+
+                for (field in errors) {
+                    if (!errors.hasOwnProperty(field)) {
+                        continue;
+                    }
+
+                    for (n=0; n<errors[field].length; n++) {
+                        message.push(errors[field][n]);
+                    }
+                }
+
+                this.notifyAction(message.join(' '));
             });
 
             $.unblockUI();
@@ -146,7 +188,7 @@ var companies = new Vue({
                         opacity: .5,
                         color: '#fff'
                     },
-                    baseZ: 10000
+                    baseZ: 10100
                 },
                 extendedOptions = $.extend({}, baseOptions, options);
 
@@ -157,16 +199,32 @@ var companies = new Vue({
             // GET request
             this.$http.get(apiPath, function (data, status, request) {
                 this.$set('companies', data.data);
-            }).error(function (data, status, request) {
-                // handle error
+            }).error(function (response) {
+                if (!response || !response.data || !response.data.errors) {
+                    return;
+                }
+
+                var errors = response.data.errors,
+                    message = [], field, n;
+
+                for (field in errors) {
+                    if (!errors.hasOwnProperty(field)) {
+                        continue;
+                    }
+
+                    for (n=0; n<errors[field].length; n++) {
+                        message.push(errors[field][n]);
+                    }
+                }
+
+                this.notifyAction(message.join(' '));
             });
         }
     },
     ready: function() {
         this.onReady();
     }
-
-})
+});
 
 function showModal () {
     $("#responsive").modal({backdrop: true});

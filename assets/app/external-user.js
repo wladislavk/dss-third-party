@@ -77,9 +77,3 @@ var user = new Vue({
         this.onReady();
     }
 });
-
-$(function(){
-    $('.input-group.date').datepicker({
-        format:'yyyy-mm-dd'
-    });
-});

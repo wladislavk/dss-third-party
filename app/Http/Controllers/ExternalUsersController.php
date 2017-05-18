@@ -40,7 +40,7 @@ class ExternalUsersController extends Controller
      */
     public function show(ExternalUsers $resources, $id)
     {
-        $resource = $resources->where(['user_id' => $id])->firstOrFail();
+        $resource = $resources->where('user_id', $id)->firstOrFail();
         return ApiResponse::responseOk('', $resource);
     }
 
@@ -71,7 +71,7 @@ class ExternalUsersController extends Controller
      */
     public function update(ExternalUsers $resources, $id, ExternalUserUpdate $request)
     {
-        $resource = $resources->where(['user_id' => $id])->firstOrFail();
+        $resource = $resources->where('user_id', $id)->firstOrFail();
 
         $data = $request->all();
         $data['updated_by'] = $this->currentAdmin->id;
@@ -91,7 +91,7 @@ class ExternalUsersController extends Controller
      */
     public function destroy(ExternalUsers $resources, $id, ExternalUserDestroy $request)
     {
-        $resource = $resources->where(['user_id' => $id])->firstOrFail();
+        $resource = $resources->where('user_id', $id)->firstOrFail();
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');

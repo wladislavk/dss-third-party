@@ -72,8 +72,8 @@ ENV \
 
     # Environment variable to use in derived images to find exact paths
     ETC_HTTPD=${_RH_HTTPD}/root/etc/httpd \
-    DOCUMENT_ROOT=/opt/rh/httpd24/root/var/www/html \
-    PHP_PATH=/opt/rh/rh-php56/root/bin/php
+    DOCUMENT_ROOT=${_RH_HTTPD}/root/var/www/html \
+    PHP_PATH=${_RH_PHP}/root/bin/php
 
 # Create entrypoint script, make it executable
 RUN echo -e "#!/bin/bash\n\

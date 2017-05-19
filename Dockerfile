@@ -44,7 +44,7 @@ RUN set -xe \
     # is based on default php shipped with os. It would be better to install it
     # using Composer.
     && echo "include_path = '.:${_RH_PHP}/root/usr/share/pear:${_RH_PHP}/root/usr/share/php:/usr/share/pear:/usr/share/php'" \
-        > "/etc/${_RH_PHP}/includepath.ini" \
+        > /etc/${_RH_PHP}/includepath.ini \
     # Install PDFtk from PDF Labs repos. It requires libgcj to be installed.
     && yum install -y libgcj \
     && rpm -Uvh https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-1.el6.x86_64.rpm \

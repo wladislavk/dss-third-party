@@ -51,6 +51,7 @@ class ExternalPatientController extends ExternalBaseController
             $externalPatient->update($externalPatientData);
         }
 
+        $externalPatient->update($patientData);
         $patient = $externalPatient->patient()->first();
 
         if (!$patient) {
@@ -67,6 +68,8 @@ class ExternalPatientController extends ExternalBaseController
             ]);
 
             $created = true;
+        } else {
+            $externalPatient->update(['dirty' => 1]);
         }
 
         if ($patient->wasRecentlyCreated) {

@@ -84,6 +84,9 @@ class CreateDentalExternalDataTables extends Migration
             // Foreign key
             $table->integer('patient_id');
 
+            // Flag to determine if the data was updated via the API
+            $table->boolean('dirty')->default(0);
+
             // Payer fields not present in patient table
             $table->string('payer_name');
             $table->string('payer_address1');
@@ -97,6 +100,50 @@ class CreateDentalExternalDataTables extends Migration
             // Extra fields not present in patient table
             $table->string('subscriber_phone');
             $table->string('dependent_phone');
+
+            // Fields duplicated from patient table
+            $table->string('lastname');
+            $table->string('middlename');
+            $table->string('firstname');
+            $table->string('salutation');
+            $table->string('dob');
+            $table->string('ssn');
+            $table->string('gender');
+            $table->string('marital_status');
+            $table->string('feet');
+            $table->string('inches');
+            $table->string('weight');
+            $table->string('add1');
+            $table->string('add2');
+            $table->string('city');
+            $table->string('state');
+            $table->string('zip');
+            $table->string('home_phone');
+            $table->string('work_phone');
+            $table->string('cell_phone');
+            $table->string('p_m_relation');
+            $table->string('p_m_ins_id');
+            $table->string('p_m_partyfname');
+            $table->string('p_m_partylname');
+            $table->string('p_m_partymname');
+            $table->string('p_m_address');
+            $table->string('p_m_city');
+            $table->string('p_m_state');
+            $table->string('p_m_zip');
+            $table->string('ins_dob');
+            $table->string('p_m_gender');
+            $table->string('p_m_ins_id');
+            $table->string('p_m_ins_grp');
+            $table->string('s_m_ins_id');
+            $table->string('s_m_partyfname');
+            $table->string('s_m_partylname');
+            $table->string('s_m_partymname');
+            $table->string('s_m_address');
+            $table->string('s_m_city');
+            $table->string('s_m_state');
+            $table->string('s_m_zip');
+            $table->string('ins2_dob');
+            $table->string('s_m_gender');
 
             $table->timestamps();
         });

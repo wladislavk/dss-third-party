@@ -57,6 +57,7 @@ class CreateDentalExternalDataTables extends Migration
             $table->string('api_key');
             $table->timestamp('valid_from');
             $table->timestamp('valid_to');
+            $table->tinyInteger('enabled');
 
             $table->integer('created_by');
             $table->integer('updated_by');

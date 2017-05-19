@@ -11,9 +11,9 @@ var user = new Vue({
             user_id: userId,
             api_key: '',
             valid_from: '',
-            valid_to: ''
-        },
-        enabled: null
+            valid_to: '',
+            enabled: false
+        }
     },
     methods: {
         saveUser: function (e) {
@@ -65,11 +65,8 @@ var user = new Vue({
             fields.api_key = guid();
         },
         onReady: function() {
-            this.enabled = this.id && this.fields.user_id;
-
             this.$http.get(apiPath + userId, function (data) {
                 this.$set('fields', data.data);
-                this.enabled = this.id && this.fields.user_id;
             });
         }
     },

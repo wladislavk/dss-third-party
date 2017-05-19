@@ -953,10 +953,12 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <input type="checkbox" name="use_payment_reports" value="1" <?php if($use_payment_reports == 1) echo " checked='checked'";?>>
                         Payment Reports
                     </label>
-                    <label class="col-md-4" v-cloak v-if="fields.user_id">
-                        <input type="checkbox" value="1" v-model="enabled">
+                    <?php if (is_super($_SESSION['admin_access'])) { ?>
+                    <label class="col-md-4" v-cloak>
+                        <input type="checkbox" v-model="fields.enabled">
                         Dentrix API
                     </label>
+                    <?php } ?>
                 </div>
             </div>
 
@@ -988,7 +990,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
             </div>
 
             <?php if (is_super($_SESSION['admin_access'])) { ?>
-            <div class="page-header" v-cloak v-show="enabled">
+            <div class="page-header" v-cloak v-show="fields.enabled">
                 <strong>Dentrix API Details</strong>
             </div>
             <div class="form-group" v-cloak v-show="enabled">

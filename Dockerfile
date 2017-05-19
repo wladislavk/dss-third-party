@@ -33,11 +33,7 @@ CustomLog "/dev/stdout" common\n\
 ' > ${ETC_HTTPD}/conf.d/app.conf
 
 # Install phpunit
-RUN mv phpunit-4.8.35.phar /usr/local/bin/phpunit && \
-    chmod 0755 /usr/local/bin/phpunit
-
-RUN \
-    rm -f /usr/bin/php && \
-    ln -s /opt/rh/rh-php56/root/usr/bin/php /usr/bin/php
+#RUN mv phpunit-5.7.19.phar /usr/local/bin/phpunit && \
+#    chmod 0755 /usr/local/bin/phpunit
 
 RUN { echo "memory_limit=-1"; } | tee -a /etc/opt/rh/rh-php56/php.ini

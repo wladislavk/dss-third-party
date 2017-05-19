@@ -10,13 +10,26 @@
          stopOnFailure="false"
          syntaxCheck="false">
     <testsuites>
-        <testsuite name="Application Test Suite">
+        <testsuite name="all">
             <directory>./tests/</directory>
+        </testsuite>
+        <testsuite name="api">
+            <directory>./tests/Api/</directory>
+        </testsuite>
+        <testsuite name="functional">
+            <directory>./tests/Functional/</directory>
+        </testsuite>
+        <testsuite name="unit">
+            <directory>./tests/Unit/</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">app/</directory>
+            <directory>./tests</directory>
+            <exclude>
+                <directory>./tests/file</directory>
+                <directory>./tests/TestCases</directory>
+            </exclude>
         </whitelist>
     </filter>
     <php>

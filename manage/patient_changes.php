@@ -1,15 +1,28 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-include "includes/top.htm";
-?>
-
 <?php
-$num_changes = 0;
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/includes/top.htm';
+
+$patientId = intval($_GET['pid']);
+$fromExternal = !empty($_GET['external']);
 
 $psql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
 $p = $db->getRow($psql);
 
-$csql = "SELECT * FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
-$c = $db->getRow($csql);
+if ($fromExternal) {
+    $sql = "SELECT *
+        FROM dental_external_patients
+        WHERE patient_id = '$patientId'
+            AND dirty = 1
+        LIMIT 1
+    ";
+} else {
+    $sql = "SELECT *
+        FROM dental_patients
+        WHERE parent_patientid = '$patientId'";
+}
+
+$c = $db->getRow($sql);
 
 $fields = array();
 $fields['firstname'] = "First Name";
@@ -76,255 +89,275 @@ $fields['docent'] = "ENT";
 $fields['docmdother'] = "Other MD";
 $doc_fields = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother');
 
+$validKeys = array_intersect_key($p, $c, $fields);
+$fields = array_only($fields, $validKeys);
+
+$num_changes = count(array_diff_assoc($p, $c));
+
 /**************************************
 ** SUBMITTING
 ***************************************/
 if(isset($_POST['submit'])){
     linkRequestData('dental_patients', $_POST['patientid']);
 
-    $docchange = $patchange = false;
+    $patientId = $_POST['patientid'];
+
+    $doctorFields = [];
+    $patientFields = [];
     $completed = true;
-    $docsql = $patsql = "UPDATE dental_patients SET ";
-    foreach($fields as $field => $label){
-        if($_POST['accepted_'.$field]=='doc'){
-            if($docchange){ 
-                $docsql .= ", "; 
-            }
-            if($field=='home_phone' || $field=='cell_phone' || $field=='work_phone' || $field=='emp_phone' || $field=='emergency_number' || $field=='emp_fax' ){
-                $docsql .= $field . " = '" . mysqli_real_escape_string($con, num($_POST['value_'.$field]))."'";
-            }elseif($field=='ssn'){
-                $docsql .= $field . " = '" . mysqli_real_escape_string($con, num($_POST['value_'.$field], false))."'";
-            }else{
-                $docsql .= $field . " = '" . mysqli_real_escape_string($con, $_POST['value_'.$field])."'";
-            }
-            $docchange = true;
-        }elseif($_POST['accepted_'.$field]=='pat'){
-            if($field == "email"){ 
-                sendUpdatedEmail($_POST['patientid'], $_POST['pat_email'], $_POST['doc_email']); 
-            }
-            if($patchange){ 
-                $patsql .= ", "; 
-            }
-            if($field=='home_phone' || $field=='cell_phone' || $field=='work_phone' || $field=='emp_phone' || $field=='emergency_number' || $field=='emp_fax' ){
-                $patsql .= $field . " = '" . mysqli_real_escape_string($con, num($_POST['value_'.$field]))."'";
-            }elseif($field=='ssn'){
-                $patsql .= $field . " = '" . mysqli_real_escape_string($con, num($_POST['value_'.$field], false))."'";
-            }else{
-                $patsql .= $field . " = '" . mysqli_real_escape_string($con, $_POST['value_'.$field])."'";
-            }
-            $patchange = true;
-        }elseif($_POST['accepted_'.$field]!='none'){
+
+    foreach ($fields as $field => $label) {
+        $value = $_POST["value_$field"];
+
+        switch ($field) {
+            case 'home_phone':
+            case 'cell_phone':
+            case 'work_phone':
+            case 'emp_phone':
+            case 'emergency_number':
+            case 'emp_fax':
+                $value = num($value);
+                break;
+            case 'ssn':
+                $value = num($value, false);
+                break;
+        }
+
+        if ($_POST['accepted_' . $field] == 'doc') {
+            $doctorFields[$field] = $value;
+        } elseif ($_POST['accepted_' . $field] == 'pat') {
+            $patientFields[$field] = $value;
+        } elseif ($_POST['accepted_' . $field] != 'none') {
             $completed = false;
         }
     }
 
-    $docsql .= " WHERE parent_patientid='".mysqli_real_escape_string($con, $_POST['patientid'])."'";
-    $patsql .= " WHERE patientid='".mysqli_real_escape_string($con, $_POST['patientid'])."'";
-    if($docchange){ 
-        $db->query($docsql); 
+    $doctorFields = array_only($doctorFields, $validKeys);
+    $patientFields = array_only($patientFields, $validKeys);
+
+    /**
+     * Accept doctor changes, copy regular patient data into child profile, or external profile
+     */
+    if ($doctorFields) {
+        $doctorFields = $db->escapeAssignmentList($doctorFields);
+
+        if ($fromExternal) {
+            $db->query("UPDATE dental_external_patients
+                SET $doctorFields
+                WHERE patient_id = '$patientId'");
+        } else {
+            $db->query("UPDATE dental_patients
+            SET $doctorFields
+            WHERE parent_patientid = '$patientId'");
+        }
     }
-    if($patchange){ 
-        $db->query($patsql); 
+
+    if ($patientFields) {
+        $patientFields = $db->escapeAssignmentList($patientFields);
+        $db->query("UPDATE dental_patients
+            SET $patientFields
+            WHERE patientid = '$patientId'");
     }
-    if($completed){ 
-        $db->query("DELETE FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_POST['patientid'])."'"); 
+
+    if ($completed) {
+        if ($fromExternal) {
+            $db->query("UPDATE dental_external_patients
+                SET dirty = FALSE
+                WHERE patient_id = '$patientId'");
+        } else {
+            $db->query("DELETE FROM dental_patients
+            WHERE parent_patientid = '$patientId'");
+        }
     }
-?>
-<script type="text/javascript">
-    parent.window.location = parent.window.location;
-</script>
-<?php }
-?>
+
+    ?>
+    <script type="text/javascript">
+        parent.window.location = parent.window.location;
+    </script>
+<?php } ?>
 <link rel="stylesheet" type="text/css" href="css/patient_changes.css">
 <?php
 if($c){
 ?>
-<form action="patient_changes.php?pid=<?= $_GET['pid']; ?>" method="post">
+<form action="patient_changes.php?pid=<?= $patientId ?><?= $fromExternal ? '&amp;external=1' : '' ?>" method="post">
 <table>
   <tr>
     <th style>Field</th>
     <th><input type="button" value="Select All" onclick="updateAll('doc');return false;" /><br />Your Data</th>
     <th></th>
-    <th><input type="button" value="Select All" onclick="updateAll('pat');return false;" /><br />Patient Data</th>
+    <th><input type="button" value="Select All" onclick="updateAll('pat');return false;" /><br /><?= $fromExternal ? 'External' : 'Patient' ?> Data</th>
   </tr>
 </table>
 <div> 
 <table >
-<?php
-    foreach($fields as $field => $label){
-        if(trim($p[$field])==trim($c[$field])){ ?>
-    <tr class="duplicate">
-        <input type="hidden" id="accepted_<?= $field; ?>" name="accepted_<?= $field; ?>" value="none" />
-        <input type="hidden" id="value_<?= $field; ?>" name="value_<?= $field; ?>" />
-    <?php }else{ ?>
-    <tr class="change_row">
-        <input type="hidden" class="accepted" id="accepted_<?= $field; ?>"  name="accepted_<?= $field; ?>" />
-        <input type="hidden" class="value" id="value_<?= $field; ?>"  name="value_<?= $field; ?>" />
-<?php
-            $num_changes++;
-        }
+<?php foreach ($fields as $field => $label) {
+    $isSame = trim($p[$field]) == trim($c[$field]);
+    ?>
+    <tr class="<?= $isSame ? 'duplicate' : 'change_row' ?>">
+        <input type="hidden" id="accepted_<?= $field ?>" name="accepted_<?= $field ?>" <?= $isSame ? 'value="none"' : 'class="accepted"' ?> />
+        <input type="hidden" id="value_<?= $field ?>" name="value_<?= $field ?>" <?= $isSame ? '' : 'class="value"' ?> />
+        <?php if (in_array($field, $doc_fields)) { ?>
+            <td>
+                <?= $label ?>:
+            </td>
+            <?php
+                $docsql = "SELECT firstname, lastname from dental_contact WHERE contactid='".$p[$field]."'";
+                $docr = $db->getRow($docsql);
+            ?>
+            <td>
+                <input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
+                <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
+            </td>
+            <td>
+                <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
+                <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+            </td>
+            <?php
+                $docsql = "SELECT firstname, lastname from dental_contact WHERE contactid='".$c[$field]."'";
+                $docr = $db->getRow($docsql);
+            ?>
+            <td>
+                <input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
+                <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
+            </td>
+        <?php } elseif ($field == 'p_m_ins_co' || $field == 's_m_ins_co') { ?>
+            <td>
+                <?= $label; ?>:</td>
+            <?php
+                $docsql = "SELECT company from dental_contact WHERE contactid='".$p[$field]."'";
+                $docr = $db->getRow($docsql);
+            ?>
+            <td><input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
+                <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
+            </td>
+            <td><input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
+                <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+            </td>
+            <?php
+                $docsql = "SELECT company from dental_contact WHERE contactid='".$c[$field]."'";
+                $docr = $db->getRow($docsql);
+            ?>
+            <td>
+                <input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
+                <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
+            </td>
+        <?php } elseif ($field == 'p_m_ins_type' || $field == 's_m_ins_type') { ?>
+            <td>
+                <?= $label; ?>:
+            </td>
+            <?php
+                switch($p[$field]){
+                    case 1:
+                        $val = 'Medicare';
+                        break;
+                    case 2:
+                        $val = 'Medicaid';
+                        break;
+                    case 3:
+                        $val = 'Tricare Champus';
+                        break;
+                    case 4:
+                        $val = 'Champ VA';
+                        break;
+                    case 5:
+                        $val = 'Group Health Plan';
+                        break;
+                    case 6:
+                        $val = 'FECA BLKLUNG';
+                        break;
+                    case 7:
+                        $val = 'Other';
+                        break;
+                    default:
+                        $val = '';
+                        break;
+                }
+            ?>
+            <td>
+                <input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $val; ?>" />
+                <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
+            </td>
 
-        if(in_array($field, $doc_fields)){ ?>
-        <td>
-            <?= $label; ?>:
-        </td>
-        <?php 
-            $docsql = "SELECT firstname, lastname from dental_contact WHERE contactid='".$p[$field]."'";
-            $docr = $db->getRow($docsql);
-        ?>
-        <td>
-            <input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
-            <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
-        </td>
-        <td>
-            <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-            <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
-        </td>
-        <?php 
-            $docsql = "SELECT firstname, lastname from dental_contact WHERE contactid='".$c[$field]."'";
-            $docr = $db->getRow($docsql);
-        ?>
-        <td>
-            <input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
-            <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
-        </td>
-        <?php
-        }elseif($field == 'p_m_ins_co' || $field == 's_m_ins_co'){ ?>
-        <td>
-            <?= $label; ?>:</td>
-        <?php
-            $docsql = "SELECT company from dental_contact WHERE contactid='".$p[$field]."'";
-            $docr = $db->getRow($docsql);
-        ?>
-        <td><input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
-            <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
-        </td>
-        <td><input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-            <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
-        </td>
-        <?php
-            $docsql = "SELECT company from dental_contact WHERE contactid='".$c[$field]."'";
-            $docr = $db->getRow($docsql);
-        ?>
-        <td>
-            <input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
-            <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
-        </td>
-        <?php
-        }elseif($field == 'p_m_ins_type' || $field == 's_m_ins_type'){ ?>
-        <td>
-            <?= $label; ?>:
-        </td>
-        <?php
-            switch($p[$field]){
-                case 1:
-                    $val = 'Medicare';
-                    break;
-                case 2:
-                    $val = 'Medicaid';
-                    break;
-                case 3:
-                    $val = 'Tricare Champus';
-                    break;
-                case 4:
-                    $val = 'Champ VA';
-                    break;
-                case 5:
-                    $val = 'Group Health Plan';
-                    break;
-                case 6:
-                    $val = 'FECA BLKLUNG';
-                    break;
-                case 7:
-                    $val = 'Other';
-                    break;
-                default:
-                    $val = '';
-                    break;
-            }
-        ?>
-        <td>
-            <input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $val; ?>" />
-            <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
-        </td>
-
-        <td>
-            <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-            <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
-        </td>
-        <?php
-            switch($c[$field]){
-                case 1:
-                    $val = 'Medicare';
-                    break;
-                case 2:
-                    $val = 'Medicaid';
-                    break;
-                case 3:
-                    $val = 'Tricare Champus';
-                    break;
-                case 4:
-                    $val = 'Champ VA';
-                    break;
-                case 5:
-                    $val = 'Group Health Plan';
-                    break;
-                case 6:
-                    $val = 'FECA BLKLUNG';
-                    break;
-                case 7:
-                    $val = 'Other';
-                    break;
-                default:
-                    $val = '';
-                    break;
-            }
-        ?>
-        <td>
-            <input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $val; ?>" />
-            <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
-        </td>
-        <?php
-        }else{
-        ?>
-        <td><?= $label; ?>:</td>
-        <td>
-            <input type="text" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
-        </td>
-        <td>
-            <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-            <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
-        </td>
-        <td>
-            <input type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
-        </td>
+            <td>
+                <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
+                <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+            </td>
+            <?php
+                switch($c[$field]){
+                    case 1:
+                        $val = 'Medicare';
+                        break;
+                    case 2:
+                        $val = 'Medicaid';
+                        break;
+                    case 3:
+                        $val = 'Tricare Champus';
+                        break;
+                    case 4:
+                        $val = 'Champ VA';
+                        break;
+                    case 5:
+                        $val = 'Group Health Plan';
+                        break;
+                    case 6:
+                        $val = 'FECA BLKLUNG';
+                        break;
+                    case 7:
+                        $val = 'Other';
+                        break;
+                    default:
+                        $val = '';
+                        break;
+                }
+            ?>
+            <td>
+                <input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $val; ?>" />
+                <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
+            </td>
+        <?php } else { ?>
+            <td><?= $label; ?>:</td>
+            <td>
+                <input type="text" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
+            </td>
+            <td>
+                <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
+                <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+            </td>
+            <td>
+                <input type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
+            </td>
         <?php } ?>
     </tr>
-<?php  } ?>
+<?php } ?>
 </table>
 </div>
 <input type="submit" name="submit"  style="float:right; margin-right:30px;" value="Submit" />
-<input type="hidden" name="patientid" value="<?= $_GET['pid']; ?>" />
+<input type="hidden" name="patientid" value="<?= $patientId ?>" />
 </form>
 <?php } ?>
 <br /><br />
-
 <script src="js/patient_changes.js" type="text/javascript"></script>
-
-<?php include 'patient_contacts.php'; ?>
-<?php include 'patient_insurance.php'; ?>
-
 <?php
-if($num_changes == 0){
-    //DELETE EXTRA ROW
-    $db->query("DELETE FROM dental_patients WHERE parent_patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'");
-  ?>
-<script type="text/javascript">
-  alert("Patient Portal data is synced with your data");
-  window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
-</script>
-<?php
+
+require_once __DIR__ . '/patient_contacts.php';
+require_once __DIR__ . '/patient_insurance.php';
+
+if ($num_changes == 0) {
+    if ($fromExternal) {
+        $db->query("UPDATE dental_external_patients
+            SET dirty = FALSE
+            WHERE patient_id = '$patientId'");
+    } else {
+        $db->query("DELETE FROM dental_patients
+            WHERE parent_patientid = '$patientId'");
+    }
+
+    ?>
+    <script type="text/javascript">
+      alert("Patient Portal data is synced with your data");
+      window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
+    </script>
+    <?php
 }
-?>
 
-<?php include 'includes/bottom.htm'; ?>
+require_once __DIR__ . '/includes/bottom.htm';

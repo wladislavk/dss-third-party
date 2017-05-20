@@ -49,6 +49,7 @@ class ExternalPatientController extends ExternalBaseController
             $externalPatient = $resources->create($externalPatientData);
         } else {
             $externalPatient->update($externalPatientData);
+            $externalPatient->update(['dirty' => 1]);
         }
 
         $externalPatient->update($patientData);
@@ -56,8 +57,14 @@ class ExternalPatientController extends ExternalBaseController
 
         if (!$patient) {
             $patient = $externalPatient->patient()->create($patientData);
-        } else {
-            $patient->update($patientData);
+            $patient->update([
+                'docid' => $this->currentUser->docid,
+                'status' => 3, // Pending Active
+                'ip_address' => $request->ip(),
+                'adddate' => Carbon::now(),
+            ]);
+
+            $created = true;
         }
 
         if ($externalPatient->wasRecentlyCreated) {
@@ -65,19 +72,6 @@ class ExternalPatientController extends ExternalBaseController
                 'software' => $externalCompanyId,
                 'external_id' => $externalPatientId,
                 'patient_id' => $patient->getKey(),
-            ]);
-
-            $created = true;
-        } else {
-            $externalPatient->update(['dirty' => 1]);
-        }
-
-        if ($patient->wasRecentlyCreated) {
-            $patient->update([
-                'docid' => $this->currentUser->docid,
-                'status' => 3, // Pending Active
-                'ip_address' => $request->ip(),
-                'adddate' => Carbon::now(),
             ]);
 
             $created = true;

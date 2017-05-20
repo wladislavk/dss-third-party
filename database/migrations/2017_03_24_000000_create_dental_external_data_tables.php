@@ -132,7 +132,6 @@ class CreateDentalExternalDataTables extends Migration
             $table->string('p_m_zip');
             $table->string('ins_dob');
             $table->string('p_m_gender');
-            $table->string('p_m_ins_id');
             $table->string('p_m_ins_grp');
             $table->string('s_m_ins_id');
             $table->string('s_m_partyfname');

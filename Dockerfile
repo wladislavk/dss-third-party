@@ -31,9 +31,3 @@ CustomLog "/dev/stdout" common\n\
     </Directory>\n\
 </VirtualHost>\n\
 ' > ${ETC_HTTPD}/conf.d/app.conf
-
-# Install phpunit
-#RUN mv phpunit-5.7.19.phar /usr/local/bin/phpunit && \
-#    chmod 0755 /usr/local/bin/phpunit
-
-RUN { echo "memory_limit=-1"; } | tee -a /etc/opt/rh/rh-php56/php.ini

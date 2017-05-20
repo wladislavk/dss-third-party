@@ -24,6 +24,10 @@ class GeneralHelper
         return strlen($name) && is_file(self::Q_FILE_FOLDER . $name);
     }
 
+    /**
+     * @param string $data
+     * @return null|string
+     */
     public function formatPhone($data)
     {
         if (preg_match('/.*(\d{3}).*(\d{3}).*(\d{4}).*(\d*)$/', $data, $matches)) {
@@ -34,10 +38,20 @@ class GeneralHelper
 
             return $result;
         }
+        return null;
     }
 
-    // Retrieve Names Salutation and more from Database
-    // Returns an array of the form [patient, mds, or md_referrals][id]['fieldname']
+    /**
+     * Retrieve Names Salutation and more from Database
+     * Returns an array of the form [patient, mds, or md_referrals][id]['fieldname']
+     *
+     * @param $patient
+     * @param $mdList
+     * @param $mdReferralList
+     * @param null $patReferralList
+     * @param int $letterId
+     * @return array
+     */
     public function getContactInfo($patient, $mdList, $mdReferralList, $patReferralList = null, $letterId = 0)
     {
         $contactInfo = [
@@ -95,6 +109,10 @@ class GeneralHelper
         return $contactInfo;
     }
 
+    /**
+     * @param string|null $stringList
+     * @return string|null
+     */
     public function clearIdList($stringList)
     {
         if (!isset($stringList)) {

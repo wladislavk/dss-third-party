@@ -7,9 +7,6 @@ use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Eloquent\Dental\Fax;
-
-use DentalSleepSolutions\Helpers\GeneralHelper;
-
 use Carbon\Carbon;
 
 class LetterHelper
@@ -53,6 +50,12 @@ class LetterHelper
         $this->userId = $userId;
     }
 
+    /**
+     * @param int $docId
+     * @param int $patientId
+     * @param int $userType
+     * @param int $userId
+     */
     public function setIdentificators($docId, $patientId, $userType, $userId)
     {
         $this->docId = $docId;
@@ -61,6 +64,9 @@ class LetterHelper
         $this->userId = $userId;
     }
 
+    /**
+     * @return bool|int|mixed
+     */
     public function triggerPatientTreatmentComplete()
     {
         if ($this->patientId) {
@@ -76,21 +82,20 @@ class LetterHelper
         $patientReferralIds = $this->patient->getPatientReferralIds($this->patientId, $currentPatient);
 
         $letterId = 0;
-
         if ($patientReferralIds) {
             $letters = $this->letter->getPatientTreatmentComplete($this->patientId, $patientReferralIds);
-
             if (!count($letters)) {
-                // this logic exists in the legacy code, but is not used anywhere
-                // $contactIds = $this->contact->getMdContactIds($this->patientId, $currentPatient);
-
                 $letterId = $this->createLetter($id = 20, ['pid' => $this->patientId, 'pat_referral_list' => $patientReferralIds]);
             }
         }
-
         return $letterId;
     }
 
+    /**
+     * @param int $patientId
+     * @param array $mdContacts
+     * @return array|null
+     */
     public function triggerIntroLettersOf12Types($patientId, $mdContacts = [])
     {
         // trigger intro letter to MD from DSSFLLC and intro letter to MD from Franchisee
@@ -157,6 +162,14 @@ class LetterHelper
         return $letterId;
     }
 
+    /**
+     * @param int $letterId
+     * @param null $parent
+     * @param $type
+     * @param int $recipientId
+     * @param null $template
+     * @return bool|int|mixed
+     */
     public function deleteLetter($letterId, $parent = null, $type, $recipientId, $template = null)
     {
         if ($letterId <= 0) {
@@ -176,7 +189,15 @@ class LetterHelper
             $letter->pat_referral_list
         );
 
-        $totalContacts = count($contacts['patient']) + count($contacts['mds']) + count($contacts['md_referrals']) + count($contacts['pat_referrals']);
+        $totalContacts =
+            count($contacts['patient'])
+            +
+            count($contacts['mds'])
+            +
+            count($contacts['md_referrals'])
+            +
+            count($contacts['pat_referrals'])
+        ;
 
         if ($totalContacts == 1) {
             $data = [
@@ -261,6 +282,11 @@ class LetterHelper
         }
     }
 
+    /**
+     * @param int $templateId
+     * @param array $args
+     * @return bool|int|mixed
+     */
     private function createLetter($templateId, $args = []) {
         $defaultArgs = [
             'pid'                  => null,

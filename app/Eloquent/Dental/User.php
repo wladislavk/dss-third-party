@@ -139,6 +139,12 @@ class User extends Model implements Resource, Repository
         return $object->get();
     }
 
+    /**
+     * @param $docId
+     * @param $patientId
+     * @param int $locationId
+     * @return User|null
+     */
     public function getMailingData($docId, $patientId, $locationId = 0)
     {
         $query = $this->select(

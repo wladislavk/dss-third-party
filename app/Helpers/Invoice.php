@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use Exception;
 use DentalSleepSolutions\Eloquent\Dental\PercaseInvoice;
 use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
 use DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice;
@@ -43,7 +42,7 @@ class Invoice
             $column = 'companyid';
             $invoice_type = self::DSS_INVOICE_TYPE_SU_BC;
         } else {
-            throw new Exception('Invoice::find error');
+            throw new \Exception('Invoice::find error');
         }
 
         $inv_id = PercaseInvoice::getInvoiceId($column, $user_id, $invoice_type, self::DSS_INVOICE_PENDING);
@@ -77,7 +76,7 @@ class Invoice
         } elseif ($user_type == '2') {
             $column = 'docid';
         } else {
-            throw new Exception('Invoice::addEnrollment error');
+            throw new \Exception('Invoice::addEnrollment error');
         }
 
         $invoice_id = PercaseInvoice::getInvoiceIdWithEnrollmentInvoice(

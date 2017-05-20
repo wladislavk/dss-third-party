@@ -20,7 +20,10 @@
         "jlapp/swaggervel": "master-dev",
         "guzzlehttp/guzzle": "~6.0",
         "dompdf/dompdf": "^0.7.0",
-        "barryvdh/laravel-dompdf": "^0.7.1"
+        "barryvdh/laravel-dompdf": "^0.7.1",
+        "vkr/signature-to-image": "^1.2",
+        "barryvdh/laravel-ide-helper": "^2.3",
+        "doctrine/dbal": "~2.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

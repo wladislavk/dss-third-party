@@ -9,9 +9,8 @@ use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Contracts\Resource;
+use DentalSleepSolutions\Contracts\Resources\Resource;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Contracts\Support\JsonableInterface;
 
 /**
  * Response helper class providing consistent structure of the json content
@@ -48,7 +47,7 @@ class ApiResponse
      * @param  integer $code
      * @param  array   $headers
      * @param  integer $options
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public static function responseOk($message = '', $data = null, $code = 200, $headers = [], $options = 0)
     {
@@ -62,7 +61,9 @@ class ApiResponse
      * @param  integer $code
      * @param  array   $data
      * @param  boolean $create_errors_array
-     * @return \Illuminate\Http\JsonResponse
+     * @param array $headers
+     * @param int $options
+     * @return JsonResponse
      */
     public static function responseError(
         $message = '',
@@ -104,7 +105,7 @@ class ApiResponse
      * @param  integer $code
      * @param  array   $headers
      * @param  integer $options
-     * @return string
+     * @return JsonResponse
      */
     private static function createResponse($message, $data, $code, $headers, $options)
     {
@@ -123,10 +124,17 @@ class ApiResponse
      * @param  array  $data
      * @param  string $message_success
      * @param  string $message_error
+     * @param array $headers
+     * @param int $options
      * @return \Illuminate\Http\JsonResponse
      */
-    public static function response($data, $message_success, $message_error, $headers = [], $options = 0)
-    {
+    public static function response(
+        $data,
+        $message_success,
+        $message_error,
+        $headers = [],
+        $options = 0
+    ) {
         if ($data['success']) {
             return self::responseOk($message_success, $data['data'], 200, $headers, $options);
         }
@@ -155,6 +163,10 @@ class ApiResponse
         return Arr::get($data, 'data', $data);
     }
 
+    /**
+     * @param string|object $resource
+     * @return bool|string
+     */
     private static function hasTransformer($resource)
     {
         return class_exists($transformer = self::$namespace.class_basename($resource))
@@ -162,11 +174,19 @@ class ApiResponse
                 : false;
     }
 
+    /**
+     * @param mixed $data
+     * @return bool
+     */
     private static function isResource($data)
     {
         return $data instanceof Resource || $data instanceof Model;
     }
 
+    /**
+     * @param mixed $data
+     * @return bool
+     */
     private static function isCollection($data)
     {
         return (is_array($data) || $data instanceof Traversable) && isset($data[0]);

@@ -4,9 +4,9 @@ namespace Tests\Api;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Dental\CustomText;
-use Tests\TestCases\TestCase;
+use Tests\TestCases\ApiTestCase;
 
-class CustomsApiTest extends TestCase
+class CustomsApiApiTest extends ApiTestCase
 {
     use WithoutMiddleware, DatabaseTransactions;
 

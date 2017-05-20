@@ -4,10 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\LedgerPaymentHistory as Resource;
-use DentalSleepSolutions\Contracts\Repositories\LedgerPaymentHistories as Repository;
 
-class LedgerPaymentHistory extends Model implements Resource, Repository
+class LedgerPaymentHistory extends Model
 {
     use WithoutCreatedTimestamp;
 

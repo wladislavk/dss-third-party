@@ -20,6 +20,8 @@ use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
 use DentalSleepSolutions\Interfaces\EnrollmentInterface;
 use DentalSleepSolutions\Interfaces\UserSignaturesInterface;
 use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
+use Tymon\JWTAuth\JWTAuth;
+use DentalSleepSolutions\Eloquent\Dental\User;
 
 class ApiEnrollmentsController extends ApiBaseController
 {
@@ -115,8 +117,7 @@ class ApiEnrollmentsController extends ApiBaseController
             if ($request->input('signature', '') != '') {
                 $signature_id = UserSignature::addUpdate($provider_id, $signature, $ip);
 
-                $signature = new SignatureToImage();
-                $img = $signature->sigJsonToImage($request->input('signature', ''));
+                $img = \sigJsonToImage($request->input('signature', ''));
 
                 $file = "signature_" . $provider_id . "_" . $signature_id . ".png";
                 $path = env('SHARED_PATH', '').'/q_file/'.$file;
@@ -224,15 +225,20 @@ class ApiEnrollmentsController extends ApiBaseController
     protected $transcationType = 0;
 
     /**
+     * @param JWTAuth $auth
+     * @param User $userModel
      * @param EnrollmentInterface $enrollments
      * @param EnrollmentPayersInterface $payers
      * @param UserSignaturesInterface $signatures
      */
     public function __construct(
+        JWTAuth $auth,
+        User $userModel,
         EnrollmentInterface $enrollments,
         EnrollmentPayersInterface $payers,
         UserSignaturesInterface $signatures
     ) {
+        parent::__construct($auth, $userModel);
         $this->enrollments = $enrollments;
         $this->payers = $payers;
         $this->signatures = $signatures;
@@ -413,7 +419,7 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
-     * @param integer $user_id
+     * @param int $userId
      * @return mixed
      */
     public function getDentalUserCompanyApiKey($userId)

@@ -5,9 +5,9 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use DentalSleepSolutions\Eloquent\Dental\Allergen;
-use Tests\TestCases\TestCase;
+use Tests\TestCases\ApiTestCase;
 
-class AllergenApiTest extends TestCase
+class AllergenApiApiTest extends ApiTestCase
 {
     use WithoutMiddleware, DatabaseTransactions;
 

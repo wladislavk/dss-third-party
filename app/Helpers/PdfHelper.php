@@ -4,8 +4,7 @@ namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Eloquent\Dental\Letter;
-use PDF;
-use URL;
+use Illuminate\Support\Facades\URL;
 
 class PdfHelper
 {
@@ -98,7 +97,7 @@ class PdfHelper
         $this->pdfData['margins'] = array_merge($this->pdfData['margins'], $margins);
         $this->pdfData['content'] = array_merge($this->pdfData['content'], $content);
 
-        $pdf = PDF::loadView($template, $this->pdfData)->save($this->letterPdfPath . $filename);
+        $pdf = \PDF::loadView($template, $this->pdfData)->save($this->letterPdfPath . $filename);
 
         return URL::to(self::LETTER_PDF_FOLDER . $filename);
     }

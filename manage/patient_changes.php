@@ -89,7 +89,7 @@ $fields['docent'] = "ENT";
 $fields['docmdother'] = "Other MD";
 $doc_fields = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother');
 
-$validKeys = array_intersect_key($p, $c, $fields);
+$validKeys = array_keys(array_intersect_key($p, $c, $fields));
 $fields = array_only($fields, $validKeys);
 
 $num_changes = count(array_diff_assoc($p, $c));
@@ -354,7 +354,7 @@ if ($num_changes == 0) {
 
     ?>
     <script type="text/javascript">
-      alert("Patient Portal data is synced with your data");
+      alert("<?= $fromExternal ? 'External' : 'Patient Portal'?> data is synced with your data");
       window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
     </script>
     <?php

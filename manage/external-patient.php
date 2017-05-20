@@ -16,8 +16,8 @@ $sql = "SELECT p.patientid, p.status
 $externalPatient = $db->getRow($sql);
 
 if ($externalPatient) {
-    if (in_array([1, 2, '1', '2'], $externalPatient['status'])) {
-        header("Location: /manage/add_patient.php?pid={$externalPatient['patientid']}");
+    if (in_array($externalPatient['status'], [1, 2, '1', '2'])) {
+        header("Location: /manage/patient_changes.php?pid={$externalPatient['patientid']}&external=1");
     } else {
         header("Location: /manage/pending_patient.php?pid={$externalPatient['patientid']}#external-patient");
     }

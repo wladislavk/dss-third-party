@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\Summary;
 use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Exceptions\EmailHandlerException;
 
 class MailerDataRetriever
 {
@@ -46,11 +47,15 @@ class MailerDataRetriever
      * @param int $docId
      *
      * @return array
+     * @throws EmailHandlerException
      */
     public function retrieveMailerData($patientId, $docId = 0)
     {
         /** @var Patient|null $patient */
         $patient = $this->patientModel->find($patientId);
+        if (!$patient) {
+            throw new EmailHandlerException("Patient with ID $patientId not found");
+        }
         $summaryInfo = $this->summaryModel->getWithFilter('location', ['patientid' => $patientId]);
         $location = 0;
         if (isset($summaryInfo[0])) {
@@ -58,6 +63,9 @@ class MailerDataRetriever
         }
 
         $mailingData = $this->userModel->getMailingData($docId, $patientId, $location);
+        if (!$mailingData) {
+            throw new EmailHandlerException("Mailing data for patient with ID $patientId not found");
+        }
         $mailingData = $this->setMailingDataLogo($mailingData);
         $mailingData->mailing_phone = $this->generalHelper->formatPhone($mailingData->mailing_phone);
 
@@ -73,14 +81,15 @@ class MailerDataRetriever
      */
     private function setMailingDataLogo(User $mailingData)
     {
-        $mailingData->logo = self::LOGO;
+        $logo = self::LOGO;
         if (
             $mailingData->user_type == self::DSS_USER_TYPE_SOFTWARE
             &&
             $this->generalHelper->isSharedFile($mailingData->logo)
         ) {
-            $mailingData->logo = self::DISPLAY_FILE_PAGE . '?f=' . $mailingData->logo;
+            $logo = self::DISPLAY_FILE_PAGE . '?f=' . $mailingData->logo;
         }
+        $mailingData->logo = $logo;
         return $mailingData;
     }
 }

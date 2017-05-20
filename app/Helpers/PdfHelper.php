@@ -97,7 +97,7 @@ class PdfHelper
         $this->pdfData['margins'] = array_merge($this->pdfData['margins'], $margins);
         $this->pdfData['content'] = array_merge($this->pdfData['content'], $content);
 
-        $pdf = \PDF::loadView($template, $this->pdfData)->save($this->letterPdfPath . $filename);
+        \PDF::loadView($template, $this->pdfData)->save($this->letterPdfPath . $filename);
 
         return URL::to(self::LETTER_PDF_FOLDER . $filename);
     }

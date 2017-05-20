@@ -16,6 +16,9 @@ class PasswordResetDataSetter
      */
     public function setPasswordResetData($patientId, $email, $accessType, $hash, $isEmailChanged)
     {
+        // TODO: this setting needs to be set in php.ini
+        date_default_timezone_set('UTC');
+
         $newPatientData = [
             'access_type' => $accessType,
             'registration_status' => 1,

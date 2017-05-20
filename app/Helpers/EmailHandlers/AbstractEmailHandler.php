@@ -32,13 +32,13 @@ abstract class AbstractEmailHandler
         if (!$this->shouldBeSent($newEmail, $oldEmail)) {
             return;
         }
+        $patientId = intval($patientId);
         $contactData = $this->mailerDataRetriever->retrieveMailerData($patientId);
         $this->verifyContactData($contactData);
 
         $patientData = $contactData['patientData'];
         $mailingData = $contactData['mailingData'];
 
-        $patientId = intval($patientId);
         $newPatientData = $this->extendPatientData($patientId, $newEmail, $oldEmail, $patientData);
         $mailingData = $this->modifyMailingData(
             $mailingData, $patientId, $newEmail, $oldEmail, $newPatientData

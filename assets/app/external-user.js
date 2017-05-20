@@ -64,19 +64,19 @@ var user = new Vue({
             }
             fields.api_key = guid();
         },
+        onSuccess: function () {
+            if (this.fields.enabled) {
+                $('#dentrix-api-checkbox :checkbox').closest('span').addClass('checked');
+            }
+        },
         onReady: function() {
             this.$http.get(apiPath + userId, function (data) {
                 this.$set('fields', data.data);
+                this.onSuccess();
             });
         }
     },
     ready: function() {
         this.onReady();
     }
-});
-
-$(function(){
-    $('.input-group.date').datepicker({
-        format:'yyyy-mm-dd'
-    });
 });

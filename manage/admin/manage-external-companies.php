@@ -130,7 +130,7 @@ require_once __DIR__ . '/../includes/constants.inc';
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="company-valid_from" class="col-md-3 control-label">Valid from</label>
-                                    <div class="input-group date">
+                                    <div class="input-group date" data-date-format="yyyy-mm-dd">
                                         <input type="text" class="form-control" id="company-valid_from" name="company.valid_from" v-model="fields.valid_from"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>
                                 </div>
@@ -138,7 +138,7 @@ require_once __DIR__ . '/../includes/constants.inc';
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="company-valid_to" class="col-md-3 control-label">Valid to</label>
-                                    <div class="input-group date">
+                                    <div class="input-group date" data-date-format="yyyy-mm-dd">
                                         <input type="text" class="form-control" id="company-valid_to" name="company.valid_to" v-model="fields.valid_to"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                                     </div>
                                 </div>

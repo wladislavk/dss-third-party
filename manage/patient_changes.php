@@ -6,7 +6,9 @@ require_once __DIR__ . '/includes/top.htm';
 $patientId = intval($_GET['pid']);
 $fromExternal = !empty($_GET['external']);
 
-$psql = "SELECT * FROM dental_patients WHERE patientid='".mysqli_real_escape_string($con, $_GET['pid'])."'";
+$psql = "SELECT *
+    FROM dental_patients
+    WHERE patientid = '$patientId'";
 $p = $db->getRow($psql);
 
 if ($fromExternal) {
@@ -92,6 +94,23 @@ $doc_fields = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother');
 $validKeys = array_keys(array_intersect_key($p, $c, $fields));
 $fields = array_only($fields, $validKeys);
 
+/**
+ * Normalize dates, external data uses Y-m-d H-i-s, internal data uses m/d/Y
+ */
+foreach (['p', 'c'] as $which) {
+    foreach (['dob', 'ins_dob', 'ins2_dob'] as $field) {
+        if (!isset(${$which}[$field])) {
+            continue;
+        }
+
+        $dateTime = strtotime(${$which}[$field]);
+
+        if ($dateTime) {
+            ${$which}[$field] = date('m/d/Y', $dateTime);
+        }
+    }
+}
+
 $num_changes = count(array_diff_assoc($p, $c));
 
 /**************************************
@@ -121,6 +140,17 @@ if(isset($_POST['submit'])){
             case 'ssn':
                 $value = num($value, false);
                 break;
+            case 'dob':
+            case 'ins_dob':
+            case 'ins2_dob':
+                /**
+                 * Normalize dates, external data uses Y-m-d H-i-s, internal data uses m/d/Y
+                 */
+                $dateTime = strtotime($value);
+
+                if ($dateTime) {
+                    $value = date('m/d/Y', $dateTime);
+                }
         }
 
         if ($_POST['accepted_' . $field] == 'doc') {
@@ -176,9 +206,16 @@ if(isset($_POST['submit'])){
     </script>
 <?php } ?>
 <link rel="stylesheet" type="text/css" href="css/patient_changes.css">
-<?php
-if($c){
-?>
+<?php if ($fromExternal) { ?>
+    <div style="margin: 0 11px;">
+        <h2>External Data Sync</h2>
+        <p>
+            Select the data you wish to accept and update (External Data), or keep unchanged (Your Data).
+            You do not need to select all values.  When finished, click Submit to save your changes.
+        </p>
+    </div>
+<?php } ?>
+<?php if ($c) { ?>
 <form action="patient_changes.php?pid=<?= $patientId ?><?= $fromExternal ? '&amp;external=1' : '' ?>" method="post">
 <table>
   <tr>
@@ -205,7 +242,7 @@ if($c){
                 $docr = $db->getRow($docsql);
             ?>
             <td>
-                <input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
+                <input readonly type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
                 <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
             </td>
             <td>
@@ -217,7 +254,7 @@ if($c){
                 $docr = $db->getRow($docsql);
             ?>
             <td>
-                <input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
+                <input readonly type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
                 <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
             </td>
         <?php } elseif ($field == 'p_m_ins_co' || $field == 's_m_ins_co') { ?>
@@ -227,7 +264,7 @@ if($c){
                 $docsql = "SELECT company from dental_contact WHERE contactid='".$p[$field]."'";
                 $docr = $db->getRow($docsql);
             ?>
-            <td><input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
+            <td><input readonly type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
                 <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
             </td>
             <td><input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
@@ -238,7 +275,7 @@ if($c){
                 $docr = $db->getRow($docsql);
             ?>
             <td>
-                <input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
+                <input readonly type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
                 <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
             </td>
         <?php } elseif ($field == 'p_m_ins_type' || $field == 's_m_ins_type') { ?>
@@ -274,7 +311,7 @@ if($c){
                 }
             ?>
             <td>
-                <input type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $val; ?>" />
+                <input readonly type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $val; ?>" />
                 <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
             </td>
 
@@ -311,20 +348,20 @@ if($c){
                 }
             ?>
             <td>
-                <input type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $val; ?>" />
+                <input readonly type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $val; ?>" />
                 <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
             </td>
         <?php } else { ?>
             <td><?= $label; ?>:</td>
             <td>
-                <input type="text" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
+                <input readonly type="text" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
             </td>
             <td>
                 <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
                 <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
             </td>
             <td>
-                <input type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
+                <input readonly type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
             </td>
         <?php } ?>
     </tr>

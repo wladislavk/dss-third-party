@@ -70,4 +70,16 @@ class LedgerStatement extends Model implements Resource, Repository
         ->join(DB::raw('dental_users p'), 's.producerid', '=', 'p.userid')
         ->where('s.patientid', $patientId);
     }
+
+    public function getLedgerDetailsRowsNumber($patientId)
+    {
+        $query = $this->select(
+                DB::raw('COUNT(s.id) as number')
+            )->from(DB::raw('dental_ledger_statement s'))
+            ->join(DB::raw('dental_users p'), 's.producerid', '=', 'p.userid')
+            ->where('s.patientid', $patientId)
+            ->first();
+
+        return !empty($query) ? $query->number : 0;
+    }
 }

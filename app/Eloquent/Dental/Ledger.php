@@ -468,14 +468,18 @@ class Ledger extends Model implements Resource, Repository
         $docId,
         $patientId
     ) {
-        $queryJoinedWithLedgerPayment = $this->select(
-                DB::raw('COUNT(dl.ledgerid) as number')
-            )->from(DB::raw('dental_ledger dl'))
+        $subQueryJoinedWithLedgerPayment = $this->select('dl.ledgerid')
+            ->from(DB::raw('dental_ledger dl'))
             ->where('dl.docid', $docId)
             ->where(function ($query) {
                 $query->whereNull('dl.paid_amount')
                     ->orWhere('dl.paid_amount', 0);
             })->where('dl.patientid', $patientId)
+            ->groupBy('dl.ledgerid');
+
+        $queryJoinedWithLedgerPayment = $this->select(DB::raw('COUNT(ledgerid) as number'))
+            ->from(DB::raw("({$subQueryJoinedWithLedgerPayment->toSql()}) as test"))
+            ->mergeBindings($subQueryJoinedWithLedgerPayment->getQuery())
             ->first();
 
         $queryJoinedWithLedgerPayment1 = $this->select(
@@ -497,17 +501,15 @@ class Ledger extends Model implements Resource, Repository
             })->where('dl.patientid', $patientId)
             ->first();
 
-        $ledgerNotesQuery = $ledgerNoteModel->getLedgerDetailsQuery($patientId);
-
-        // $ledgerNotesQuery['users']
-        // $ledgerNotesQuery['admins']
-
-        $ledgerStatementsQuery = $ledgerStatementModel->getLedgerDetailsQuery($docId, $patientId);
-        $insuranceQuery = $insuranceModel->getLedgerDetailsQuery($patientId);
-
+        $ledgerNotesRowsNumber = $ledgerNoteModel->getLedgerDetailsRowsNumber($patientId);
+        $ledgerStatementsRowsNumber = $ledgerStatementModel->getLedgerDetailsRowsNumber($patientId);
+        $insuranceRowsNumber = $insuranceModel->getLedgerDetailsRowsNumber($patientId);
         $totalNumber = (!empty($queryJoinedWithLedgerPayment) ? $queryJoinedWithLedgerPayment->number : 0)
             + (!empty($queryJoinedWithLedgerPayment1) ? $queryJoinedWithLedgerPayment1->number : 0)
-            + (!empty($query) ? $query->number : 0);
+            + (!empty($query) ? $query->number : 0)
+            + $ledgerNotesRowsNumber
+            + $ledgerStatementsRowsNumber
+            + $insuranceRowsNumber;
 
         return $totalNumber;
     }

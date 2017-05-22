@@ -245,4 +245,23 @@ class Insurance extends Model implements Resource, Repository
         ->where('i.patientid', $patientId)
         ->groupBy('i.insuranceid');
     }
+
+    public function getLedgerDetailsRowsNumber($patientId)
+    {
+        $subQuery = $this->select('i.insuranceid')
+            ->from(DB::raw('dental_insurance i'))
+            ->leftJoin(DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
+            ->leftJoin(DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
+            ->whereRaw('i.patientid = ?', [$patientId])
+            ->groupBy('i.insuranceid');
+
+        $subQueryString = $subQuery->toSql();
+
+        $query = $this->select(DB::raw('COUNT(insuranceid) as number'))
+            ->from(DB::raw("($subQueryString) as test"))
+            ->mergeBindings($subQuery->getQuery())
+            ->first();
+
+        return !empty($query) ? $query->number : 0;
+    }
 }

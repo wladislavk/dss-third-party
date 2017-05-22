@@ -2,10 +2,10 @@
 include_once('includes/constants.inc');
 include_once('admin/includes/main_include.php');
 
-$s = "SELECT primary_fdf FROM dental_insurance i WHERE i.insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
+$s = "SELECT primary_fdf, secondary_fdf FROM dental_insurance i WHERE i.insuranceid='".mysqli_real_escape_string($con, $_GET['insid'])."'";
 
 $r = $db->getRow($s);
-$file = $r['primary_fdf'];
+$file = $r['primary_fdf'] ?: $r['secondary_fdf'];
 
 $fdf_file_path = '../../../shared/q_file/'.$file;
 $pdf_template_path = $path . 'claim_v2.pdf';

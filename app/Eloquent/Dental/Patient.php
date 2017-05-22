@@ -823,7 +823,12 @@ class Patient extends Model implements Resource, Repository
             ->first();
     }
 
-    public function getSimilarPatients($docId, $patientInfo)
+    /**
+     * @param int $docId
+     * @param array $patientInfo
+     * @return Patient[]
+     */
+    public function getSimilarPatients($docId, array $patientInfo)
     {
         $defaultPatientInfo = [
             'patient_id' => 0,
@@ -837,7 +842,8 @@ class Patient extends Model implements Resource, Repository
 
         $patientInfo = array_merge($defaultPatientInfo, $patientInfo);
 
-        return $this->from(DB::raw('dental_patients p'))
+        /** @var Patient[] $patients */
+        $patients = $this->from(DB::raw('dental_patients p'))
             ->where('patientid', '!=', $patientInfo['patient_id'])
             ->where('docid', $docId)
             ->active()
@@ -856,6 +862,7 @@ class Patient extends Model implements Resource, Repository
                         ->where('zip', '!=', '');
                 });
             })->get();
+        return $patients;
     }
 
     public function getReferralCountersForContact($contactId, $contactType, $dateConditional, $isDetailed = false)

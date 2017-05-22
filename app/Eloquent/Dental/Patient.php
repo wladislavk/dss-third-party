@@ -657,20 +657,31 @@ class Patient extends Model implements Resource, Repository
             ->get();
     }
 
+    /**
+     * @param int $patientId
+     * @return Patient|null
+     */
     public function getDentalDeviceTransactionCode($patientId)
     {
-        return $this->select('tc.*')
+        /** @var Patient|null $transactionCode */
+        $transactionCode = $this->select('tc.*')
             ->from(DB::raw('dental_patients p'))
             ->join(DB::raw('dental_transaction_code tc'), function($query) {
                 $query->on('p.docid', '=', 'tc.docid')
                     ->where('tc.transaction_code', '=', 'E0486');
             })->where('p.patientid', $patientId)
             ->first();
+        return $transactionCode;
     }
 
+    /**
+     * @param int $patientId
+     * @return User|null
+     */
     public function getUserInfo($patientId)
     {
-        return $this->select('u.*')
+        /** @var User|null $user */
+        $user = $this->select('u.*')
             ->from(DB::raw('dental_patients p'))
             ->join(DB::raw('dental_users u'), 'p.docid', '=', 'u.userid')
             ->where('p.patientid', $patientId)
@@ -682,11 +693,17 @@ class Patient extends Model implements Resource, Repository
                 $query->where('u.ssn', '=', 1)
                     ->orWhere('u.ein', '=', 1);
             })->first();
+        return $user;
     }
 
-    public function getInsurancePreauthInfo($patinetId)
+    /**
+     * @param int $patientId
+     * @return Patient|null
+     */
+    public function getInsurancePreauthInfo($patientId)
     {
-        return $this->select(
+        /** @var Patient|null $preauthInfo */
+        $preauthInfo = $this->select(
                 'i.company as ins_co',
                 "'primary' as ins_rank",
                 'i.phone1 as ins_phone',
@@ -723,8 +740,9 @@ class Patient extends Model implements Resource, Repository
                 $query->on('p.docid', '=', 'tc.docid')
                     ->where('tc.transaction_code', '=', 'E0486');
             })->leftJoin(DB::raw('dental_q_page2 q2'), 'p.patientid', '=', 'q2.patientid')
-            ->where('p.patientid', $patinetId)
+            ->where('p.patientid', $patientId)
             ->first();
+        return $preauthInfo;
     }
 
     /**

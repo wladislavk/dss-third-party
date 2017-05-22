@@ -394,7 +394,10 @@ class PatientsController extends Controller
                 }
                 $updatedVob = $insurancePreauthResource->updateVob($patientId, $userName);
                 if ($updatedVob) {
-                    $preauthHelper->createVob($patientId);
+                    $insurancePreauth = $preauthHelper->createVob($patientId, $userId);
+                    if ($insurancePreauth) {
+                        $insurancePreauth->save();
+                    }
                 }
             }
 

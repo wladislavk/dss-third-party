@@ -162,8 +162,19 @@ export default {
   },
   mounted () {
     this.getLedgerData()
+    this.getLedgerRowsTotalNumber()
   },
   methods: {
+    getLedgerRowsTotalNumber () {
+      this.getTotalNumber(this.routeParameters.patientId)
+        .then(function (response) {
+          var data = response.data.data
+
+          this.ledgerRowsTotalNumber = data.number
+        }, function (response) {
+          this.handleErrors('getTotalNumber', response)
+        })
+    },
     onClickLedgerRow (row) {
       if (row.ledger == 'claim') {
         if (this.routeParameters.inspay == 1) {
@@ -270,7 +281,7 @@ export default {
 
           this.ledgerHistories[row.ledgerid] = data
         }, function (response) {
-          this.handleErrors('getPatient', getLedgerHistories)
+          this.handleErrors('getPatient', response)
         })
       }
 
@@ -409,6 +420,11 @@ export default {
       }
 
       return this.$http.post(process.env.API_PATH + 'ledger-histories/ledger-report', data)
+    },
+    getTotalNumber (patientId) {
+      var data = { patient_id: patientId}
+
+      return this.$http.post(process.env.API_PATH + 'ledgers/report-rows-number', data)
     }
   }
 }

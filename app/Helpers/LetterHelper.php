@@ -135,7 +135,7 @@ class LetterHelper
                 $createdLetter2Id = $this->createLetter($letter2Id, ['pid' => $this->patientId, 'md_list' => $recipientsList]);
 
                 //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
-                if ($this->userType == self::DSS_USER_TYPE_SOFTWARE) {
+                if ($this->userType == MailerDataRetriever::DSS_USER_TYPE_SOFTWARE) {
                     $createdLetter1Id = $this->createLetter($letter1Id, ['pid' => $this->patientId, 'md_list' => $recipientsList]);
                 }
             }
@@ -176,27 +176,32 @@ class LetterHelper
             return false;
         }
 
+        /** @var Letter $letter */
         $letter = $this->letter->find($letterId);
 
         if (empty($letter)) {
             return false;
         }
 
+        $patientId = 0;
+        if ($letter->topatient == "1") {
+            $patientId = $letter->patientid;
+        }
         $contacts = $this->generalHelper->getContactInfo(
-            (($letter->topatient == "1") ? $letter->patientid : ''),
+            $patientId,
             $letter->md_list,
             $letter->md_referral_list,
             $letter->pat_referral_list
         );
 
         $totalContacts =
-            count($contacts['patient'])
+            count($contacts->getPatients())
             +
-            count($contacts['mds'])
+            count($contacts->getMds())
             +
-            count($contacts['md_referrals'])
+            count($contacts->getMdReferrals())
             +
-            count($contacts['pat_referrals'])
+            count($contacts->getPatientReferrals())
         ;
 
         if ($totalContacts == 1) {

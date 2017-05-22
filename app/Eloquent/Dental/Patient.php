@@ -727,6 +727,11 @@ class Patient extends Model implements Resource, Repository
             ->first();
     }
 
+    /**
+     * @param $letterId
+     * @param $patient
+     * @return \Illuminate\Database\Eloquent\Collection|Patient[]
+     */
     public function getContactInfo($letterId, $patient)
     {
         return $this->select(
@@ -746,6 +751,11 @@ class Patient extends Model implements Resource, Repository
             ->get();
     }
 
+    /**
+     * @param $letterId
+     * @param $patReferralList
+     * @return \Illuminate\Database\Eloquent\Collection|Patient[]
+     */
     public function getReferralList($letterId, $patReferralList)
     {
         return $this->select(

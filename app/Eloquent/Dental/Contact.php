@@ -271,6 +271,11 @@ class Contact extends Model implements Resource, Repository
             ->get();
     }
 
+    /**
+     * @param $letterId
+     * @param $mdList
+     * @return array|\Illuminate\Database\Eloquent\Collection|Contact[]
+     */
     public function getContactInfo($letterId, $mdList)
     {
         return $this->select(

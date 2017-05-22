@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Exceptions;
 
-class EmailHandlerException extends GeneralException
+class GeneralException extends \Exception
 {
 
 }

@@ -68,6 +68,7 @@ class PdfHelper
         $margins = [];
         $font = [];
         if (!empty($this->args['doc_id'])) {
+            /** @var User $doctor */
             $doctor = $this->user->find($this->args['doc_id']);
 
             if (!empty($doctor) && $doctor->user_type == 2) {
@@ -81,6 +82,7 @@ class PdfHelper
                 ];
 
                 if (!empty($this->args['letter_id'])) {
+                    /** @var Letter $letter */
                     $letter = $this->letter->find($this->args['letter_id']);
 
                     if (!empty($letter)) {

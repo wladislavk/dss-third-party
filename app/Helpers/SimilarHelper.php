@@ -16,6 +16,7 @@ class SimilarHelper
 
     public function getSimilarPatients($patientId, $docId)
     {
+        /** @var Patient $foundPatient */
         $foundPatient = $this->patient->find($patientId);
 
         if (!empty($foundPatient)) {

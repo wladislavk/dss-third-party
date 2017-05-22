@@ -5,9 +5,8 @@ namespace DentalSleepSolutions\Http\Controllers\Api;
 use Exception;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eligible\Client;
-use DentalSleepSolutions\Helpers\Invoice;
+use DentalSleepSolutions\Helpers\InvoiceHelper;
 use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Helpers\SignatureToImage;
 use DentalSleepSolutions\Eloquent\UserSignature;
 use DentalSleepSolutions\Http\Requests\Enrollments\Create;
 use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
@@ -54,9 +53,10 @@ class ApiEnrollmentsController extends ApiBaseController
      * create enrollment
      *
      * @param  \DentalSleepSolutions\Http\Requests\Enrollments\Create $request
+     * @param InvoiceHelper $invoiceHelper
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Create $request)
+    public function store(Create $request, InvoiceHelper $invoiceHelper)
     {
         $user_id = $request->input('user_id');
         $provider_id = $request->input('provider_id');
@@ -112,7 +112,8 @@ class ApiEnrollmentsController extends ApiBaseController
             $ref_id = $response->getObject()->enrollment_npi->id;
 
             $enrollment_id = Enrollment::add($inputs, $user_id, $payer_id, $payer_name, $ref_id, $result, $ip);
-            Invoice::addEnrollment('1', $user_id, $enrollment_id);
+            $enrollment = $invoiceHelper->addEnrollment(1, $user_id, $enrollment_id);
+            $enrollment->save();
 
             if ($request->input('signature', '') != '') {
                 $signature_id = UserSignature::addUpdate($provider_id, $signature, $ip);

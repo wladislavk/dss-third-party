@@ -295,8 +295,7 @@ class PatientsController extends Controller
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
-        $letterHelper->setIdentificators($docId, $patientId, $userType, $userId);
-        $letterHelper->triggerPatientTreatmentComplete();
+        $letterHelper->triggerPatientTreatmentComplete($patientId, $docId, $userId);
 
         // need to add logic for logging actions
         // linkRequestData
@@ -308,7 +307,8 @@ class PatientsController extends Controller
 
         if ($similarPatientLogin) {
             $number = str_replace($uniqueLogin, '', $similarPatientLogin->login);
-            $uniqueLogin = $uniqueLogin . ++$number;
+            $number = $number + 1;
+            $uniqueLogin = $uniqueLogin . $number;
         }
 
         $responseData = [];
@@ -395,7 +395,7 @@ class PatientsController extends Controller
                 }
                 $updatedVob = $insurancePreauthResource->updateVob($patientId, $userName);
                 if ($updatedVob) {
-                    $insurancePreauth = $preauthHelper->createVob($patientId, $userId);
+                    $insurancePreauth = $preauthHelper->createVerificationOfBenefits($patientId, $userId);
                     if ($insurancePreauth) {
                         $insurancePreauth->save();
                     }
@@ -466,7 +466,9 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($letter->letterid, $parent = null, $type = 'md_referral', $recipientId = $unchangedPatient->referred_by);
+                            $type = 'md_referral';
+                            $recipientId = $unchangedPatient->referred_by;
+                            $letterHelper->deleteLetter($letter->letterid, $type, $recipientId, $docId, $userId);
                         }
                     }
                 } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] != 1) {
@@ -480,7 +482,9 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($letter->letterid, $parent = null, $type = 'pat_referral', $recipientId = $unchangedPatient->referred_by);
+                            $type = 'pat_referral';
+                            $recipientId = $unchangedPatient->referred_by;
+                            $letterHelper->deleteLetter($letter->letterid, $type, $recipientId, $docId, $userId);
                         }
                     }
                 }
@@ -556,14 +560,17 @@ class PatientsController extends Controller
             $mdContacts[] = !empty($patientFormData[$field]) ? $patientFormData[$field] : 0;
         }
 
-        $letterHelper->triggerIntroLettersOf12Types($patientId, $mdContacts);
+        $letterHelper->triggerIntroLettersToMDFromDSSAndFranchisee($mdContacts, $docId, $userType, $patientId, $userId);
 
         if (!empty($patientFormData['introletter']) && $patientFormData['introletter'] == 1) {
-            $letterHelper->triggerIntroLetterOf3Type($patientId);
+            $letterHelper->triggerIntroLetterToPatient($patientId, $docId, $userId);
         }
 
         if (
-            $emailTypesForSending && !empty($emailTypesForSending['registration']) &&
+            $emailTypesForSending
+            &&
+            !empty($emailTypesForSending['registration'])
+            &&
             $docPatientPortal && $usePatientPortal
         ) {
             $message = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';

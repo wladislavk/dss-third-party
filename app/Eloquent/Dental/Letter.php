@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
+use DentalSleepSolutions\Structs\LetterData;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resources\Letter as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Letters as Repository;
@@ -181,70 +182,87 @@ class Letter extends Model implements Resource, Repository
             ->get();
     }
 
-    public function createLetter($data = [])
+    /**
+     * @param LetterData $letterData
+     * @return static
+     */
+    public function createLetter(LetterData $letterData)
     {
-        foreach ($data as $value) {
-            $value = $value ?: false;
-        }
-
-        if (isset($data['parentid']) && $data['status'] != 1) {
-            $newLetter['parentid'] = $data['parentid'];
-        } else if ($data['status'] == 1) {
+        if (isset($letterData->parentId) && $letterData->status != true) {
+            $newLetter['parentid'] = $letterData->parentId;
+        } elseif ($letterData->status == true) {
             $newLetter['parentid'] = '';
         }
 
-        if (isset($data['topatient']) && !$data['cc_topatient']) {
-            $newLetter['cc_topatient'] = $data['topatient'];
+        if ($letterData->toPatient !== null && !$letterData->ccToPatient) {
+            $newLetter['cc_topatient'] = $letterData->toPatient;
         } else {
-            $newLetter['cc_topatient'] = $data['cc_topatient'];
+            $newLetter['cc_topatient'] = $letterData->ccToPatient;
         }
 
-        if (isset($data['md_list']) && !$data['cc_md_list']) {
-            $newLetter['cc_md_list'] = $data['md_list'];
+        if ($letterData->mdList !== null && !$letterData->ccMdList) {
+            $newLetter['cc_md_list'] = $letterData->mdList;
         } else {
-            $newLetter['cc_md_list'] = $data['cc_md_list'];
+            $newLetter['cc_md_list'] = $letterData->ccMdList;
         }
 
-        if (isset($data['md_referral_list']) && !$data['cc_md_referral_list']) {
-            $newLetter['cc_md_referral_list'] = $data['md_referral_list'];
+        if ($letterData->mdReferralList !== null && !$letterData->ccMdReferralList) {
+            $newLetter['cc_md_referral_list'] = $letterData->mdReferralList;
         } else {
-            $newLetter['cc_md_referral_list'] = $data['cc_md_referral_list'];
+            $newLetter['cc_md_referral_list'] = $letterData->ccMdReferralList;
         }
 
-        if (isset($data['pat_referral_list']) && !$data['cc_pat_referral_list']) {
-            $newLetter['cc_pat_referral_list'] = $data['pat_referral_list'];
+        if ($letterData->patientReferralList !== null && !$letterData->ccPatientReferralList) {
+            $newLetter['cc_pat_referral_list'] = $letterData->patientReferralList;
         } else {
-            $newLetter['cc_pat_referral_list'] = $data['cc_pat_referral_list'];
+            $newLetter['cc_pat_referral_list'] = $letterData->ccPatientReferralList;
         }
 
-        if ($data['template']) {
-            $template = html_entity_decode(preg_replace('/(&Acirc;|&acirc;|&nbsp;)+/i', '', $template), ENT_COMPAT | ENT_IGNORE, "UTF-8");
+        if ($letterData->template) {
+            $regExp = '/(&Acirc;|&acirc;|&nbsp;)+/i';
+            $template = html_entity_decode(
+                preg_replace($regExp, '', $letterData->template),
+                ENT_COMPAT | ENT_IGNORE,
+                "UTF-8"
+            );
             $newLetter['template'] = $template;
         }
 
+        $dateSent = '';
+        if ($letterData->status == true) {
+            $dateSent = Carbon::now();
+        }
+        $patientId = 0;
+        if ($letterData->patientId > 0) {
+            $patientId = $letterData->patientId;
+        }
+        $infoId = 0;
+        if ($letterData->infoId > 0) {
+            $infoId = $letterData->infoId;
+        }
         $newLetter = [
-            'templateid'           => $data['templateid'],
-            'date_sent'            => $data['status'] == 1 ? Carbon::now() : '',
-            'patientid'            => $data['patientid'] > 0 ? $data['patientid'] : 0,
-            'info_id'              => $data['info_id'] > 0 ? $data['info_id'] : 0,
-            'topatient'            => $data['topatient'],
-            'md_list'              => $data['md_list'],
-            'cc_md_list'           => $data['cc_md_list'],
-            'md_referral_list'     => $data['md_referral_list'],
-            'cc_md_referral_list'  => $data['cc_md_referral_list'],
-            'pat_referral_list'    => $data['pat_referral_list'],
-            'send_method'          => $data['send_method'],
-            'status'               => $data['status'],
-            'deleted'              => $data['deleted'],
-            'deleted_by'           => $data['user_id'],
+            'templateid'           => $letterData->templateId,
+            'date_sent'            => $dateSent,
+            'patientid'            => $patientId,
+            'info_id'              => $infoId,
+            'topatient'            => $letterData->toPatient,
+            'md_list'              => $letterData->mdList,
+            'cc_md_list'           => $letterData->ccMdList,
+            'md_referral_list'     => $letterData->mdReferralList,
+            'cc_md_referral_list'  => $letterData->ccMdReferralList,
+            'pat_referral_list'    => $letterData->patientReferralList,
+            'send_method'          => $letterData->sendMethod,
+            'status'               => $letterData->status,
+            'deleted'              => $letterData->deleted,
+            'deleted_by'           => $letterData->userId,
             'deleted_on'           => Carbon::now(),
-            'template_type'        => $data['template_type'],
-            'font_size'            => $data['font_size'],
-            'font_family'          => $data['font_family'],
+            'template_type'        => $letterData->templateType,
+            'font_size'            => $letterData->fontSize,
+            'font_family'          => $letterData->fontFamily,
             'generated_date'       => Carbon::now(),
             'delivered'            => '0',
-            'docid'                => $data['doc_id'],
-            'userid'               => $data['user_id']
+            'docid'                => $letterData->docId,
+            'userid'               => $letterData->userId,
         ];
 
         return $this->create($newLetter);
@@ -306,7 +324,13 @@ class Letter extends Model implements Resource, Repository
             ->get();
     }
 
-    public function updateLetterBy($where, $data)
+    /**
+     * @param array $where
+     * @param LetterData $data
+     * @param array $fields
+     * @return bool|int
+     */
+    public function updateLetterBy(array $where, LetterData $data, array $fields)
     {
         $query = $this;
 
@@ -314,6 +338,13 @@ class Letter extends Model implements Resource, Repository
             $query = $query->where($key, $value);
         }
 
-        return $query->update($data);
+        $dataArray = $data->toArray();
+        $updated = [];
+        foreach ($fields as $field) {
+            if (isset($dataArray[$field])) {
+                $updated[$field] = $dataArray[$field];
+            }
+        }
+        return $query->update($updated);
     }
 }

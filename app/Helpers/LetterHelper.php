@@ -2,127 +2,132 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Eloquent\Dental\Fax;
-use Carbon\Carbon;
+use DentalSleepSolutions\Structs\LetterData;
 
 class LetterHelper
 {
-    private $letter;
-    private $patient;
-    private $contact;
-    private $user;
-    private $fax;
-
+    /** @var GeneralHelper */
     private $generalHelper;
 
-    private $docId;
-    private $patientId;
-    private $userType;
-    private $userId;
+    /** @var Letter */
+    private $letterModel;
+
+    /** @var Patient */
+    private $patientModel;
+
+    /** @var Contact */
+    private $contactModel;
+
+    /** @var User */
+    private $userModel;
+
+    /** @var Fax */
+    private $faxModel;
 
     public function __construct(
+        GeneralHelper $generalHelper,
         Letter $letter,
         Patient $patient,
         Contact $contact,
         User $user,
-        Fax $fax,
-        GeneralHelper $generalHelper,
-        $docId = 0,
-        $patientId = 0,
-        $userType = 0,
-        $userId = 0
+        Fax $fax
     ) {
-        $this->letter = $letter;
-        $this->patient = $patient;
-        $this->contact = $contact;
-        $this->user = $user;
-        $this->fax = $fax;
-
         $this->generalHelper = $generalHelper;
-
-        $this->docId = $docId;
-        $this->patientId = $patientId;
-        $this->userType = $userType;
-        $this->userId = $userId;
+        $this->letterModel = $letter;
+        $this->patientModel = $patient;
+        $this->contactModel = $contact;
+        $this->userModel = $user;
+        $this->faxModel = $fax;
     }
 
     /**
-     * @param int $docId
      * @param int $patientId
-     * @param int $userType
+     * @param int $docId
      * @param int $userId
-     */
-    public function setIdentificators($docId, $patientId, $userType, $userId)
-    {
-        $this->docId = $docId;
-        $this->patientId = $patientId;
-        $this->userType = $userType;
-        $this->userId = $userId;
-    }
-
-    /**
      * @return bool|int|mixed
      */
-    public function triggerPatientTreatmentComplete()
+    public function triggerPatientTreatmentComplete($patientId, $docId, $userId)
     {
-        if ($this->patientId) {
-            $foundPatients = $this->patient->getWithFilter([
-                'referred_source', 'docsleep', 'docpcp', 'docdentist',
-                'docent', 'docmdother', 'docmdother2', 'docmdother3'
-            ], [
-                'patientid' => $this->patientId
-            ]);
+        if ($patientId) {
+            $fields = [
+                'referred_source',
+                'docsleep',
+                'docpcp',
+                'docdentist',
+                'docent',
+                'docmdother',
+                'docmdother2',
+                'docmdother3',
+            ];
+            $where = ['patientid' => $patientId];
+            $foundPatients = $this->patientModel->getWithFilter($fields, $where);
         }
 
-        $currentPatient = !empty($foundPatients) ? $foundPatients[0] : null;
-        $patientReferralIds = $this->patient->getPatientReferralIds($this->patientId, $currentPatient);
+        $currentPatient = null;
+        if (isset($foundPatients[0])) {
+            $currentPatient = $foundPatients[0];
+        }
+        $patientReferralIds = $this->patientModel->getPatientReferralIds($patientId, $currentPatient);
 
         $letterId = 0;
         if ($patientReferralIds) {
-            $letters = $this->letter->getPatientTreatmentComplete($this->patientId, $patientReferralIds);
+            $letters = $this->letterModel->getPatientTreatmentComplete($patientId, $patientReferralIds);
             if (!count($letters)) {
-                $letterId = $this->createLetter($id = 20, ['pid' => $this->patientId, 'pat_referral_list' => $patientReferralIds]);
+                $letterData = new LetterData();
+                $letterData->patientId = $patientId;
+                $letterData->patientReferralList = $patientReferralIds;
+                $templateId = 20;
+                $letterId = $this->createLetter($templateId, $letterData, $docId, $userId);
             }
         }
         return $letterId;
     }
 
     /**
-     * @param int $patientId
      * @param array $mdContacts
+     * @param int $docId
+     * @param int $userType
+     * @param int $patientId
+     * @param int $userId
      * @return array|null
      */
-    public function triggerIntroLettersOf12Types($patientId, $mdContacts = [])
+    public function triggerIntroLettersToMDFromDSSAndFranchisee(array $mdContacts, $docId, $userType, $patientId, $userId)
     {
-        // trigger intro letter to MD from DSSFLLC and intro letter to MD from Franchisee
-        $userLetterInfo = $this->user->getWithFilter(['use_letters', 'intro_letters'], [
-            'userid' => $this->docId
-        ]);
+        $baseUserLetterInfo = $this->userModel->getWithFilter(
+            ['use_letters', 'intro_letters'],
+            ['userid' => $docId]
+        );
 
-        $userLetterInfo = count($userLetterInfo) ? $userLetterInfo[0] : null;
+        $userLetterInfo = null;
+        if (isset($baseUserLetterInfo[0])) {
+            $userLetterInfo = $baseUserLetterInfo[0];
+        }
 
+        $data = null;
         if (!empty($userLetterInfo) && $userLetterInfo->use_letters && $userLetterInfo->intro_letters) {
             $letter1Id = 1;
             $letter2Id = 2;
 
             $recipients = [];
-            if (count($mdContacts)) {
-                foreach ($mdContacts as $contact) {
-                    if ($contact > 0) {
-                        $mdLists = $this->letter->getMdList($contact, $letter1Id, $letter2Id);
+            foreach ($mdContacts as $contact) {
+                if ($contact <= 0) {
+                    continue;
+                }
+                $mdLists = $this->letterModel->getMdList($contact, $letter1Id, $letter2Id);
 
-                        if (count($mdLists)) {
-                            $foundContact = $this->contact->getActiveContact($contact);
+                if (!count($mdLists)) {
+                    continue;
+                }
+                $foundContact = $this->contactModel->getActiveContact($contact);
 
-                            if (!empty($foundContact)) {
-                                $recipients[] = $contact;
-                            }
-                        }
-                    }
+                if (!empty($foundContact)) {
+                    $recipients[] = $contact;
                 }
             }
 
@@ -132,11 +137,14 @@ class LetterHelper
             if (count($recipients)) {
                 $recipientsList = implode(',', $recipients);
 
-                $createdLetter2Id = $this->createLetter($letter2Id, ['pid' => $this->patientId, 'md_list' => $recipientsList]);
+                $letterData = new LetterData();
+                $letterData->patientId = $patientId;
+                $letterData->mdList = $recipientsList;
+                $createdLetter2Id = $this->createLetter($letter2Id, $letterData, $docId, $userId);
 
                 //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
-                if ($this->userType == MailerDataRetriever::DSS_USER_TYPE_SOFTWARE) {
-                    $createdLetter1Id = $this->createLetter($letter1Id, ['pid' => $this->patientId, 'md_list' => $recipientsList]);
+                if ($userType == MailerDataRetriever::DSS_USER_TYPE_SOFTWARE) {
+                    $createdLetter1Id = $this->createLetter($letter1Id, $letterData, $docId, $userId);
                 }
             }
 
@@ -144,47 +152,55 @@ class LetterHelper
                 'letter_1_id' => $createdLetter1Id,
                 'letter_2_id' => $createdLetter2Id
             ];
-        } else {
-            $data = null;
         }
 
         return $data;
     }
 
-    public function triggerIntroLetterOf3Type()
+    /**
+     * @param int $patientId
+     * @param int $docId
+     * @param int $userId
+     * @return bool|int|mixed
+     */
+    public function triggerIntroLetterToPatient($patientId, $docId, $userId)
     {
-        // trigger intro letter to DSS Patient of Record
         $letterId = 3;
-        $toPatient = 1;
 
-        $letterId = $this->createLetter($letterId, ['pid' => $this->patientId, 'topatient' => $toPatient]);
+        $letterData = new LetterData();
+        $letterData->patientId = $patientId;
+        $letterData->toPatient = true;
+        $letterId = $this->createLetter($letterId, $letterData, $docId, $userId);
 
         return $letterId;
     }
 
     /**
+     * TODO: check why we need the last argument
+     *
      * @param int $letterId
-     * @param null $parent
      * @param $type
      * @param int $recipientId
+     * @param int $docId
+     * @param int $userId
      * @param null $template
      * @return bool|int|mixed
      */
-    public function deleteLetter($letterId, $parent = null, $type, $recipientId, $template = null)
+    public function deleteLetter($letterId, $type, $recipientId, $docId, $userId, $template = null)
     {
         if ($letterId <= 0) {
             return false;
         }
 
-        /** @var Letter $letter */
-        $letter = $this->letter->find($letterId);
+        /** @var Letter|null $letter */
+        $letter = $this->letterModel->find($letterId);
 
-        if (empty($letter)) {
+        if (!$letter) {
             return false;
         }
 
         $patientId = 0;
-        if ($letter->topatient == "1") {
+        if ($letter->topatient) {
             $patientId = $letter->patientid;
         }
         $contacts = $this->generalHelper->getContactInfo(
@@ -205,154 +221,141 @@ class LetterHelper
         ;
 
         if ($totalContacts == 1) {
-            $data = [
-                'parentid'   => null,
-                'deleted'    => 1,
-                'deleted_by' => $this->userId,
-                'deleted_on' => Carbon::now()
-            ];
+            $where = ['letterid' => $letterId];
+            $updatedFields = ['parentid', 'deleted', 'deleted_by', 'deleted_on'];
+            $data = new LetterData();
+            $data->deleted = true;
+            $data->deletedBy = $userId;
+            $data->deletedOn = Carbon::now();
 
-            $updatedLetter = $this->letter->updateLetterBy(['letterid' => $letterId], $data);
+            $updatedLetter = $this->letterModel->updateLetterBy($where, $data, $updatedFields);
 
             $data = ['viewed' => 1];
-            $this->fax->updateByLetterId($letterId, $data);
+            $this->faxModel->updateByLetterId($letterId, $data);
 
-            $data = ['parentid' => null];
-            $this->letter->updateLetterBy(['parentid' => $letterId], $data);
+            $where = ['parentid' => $letterId];
+            $updatedFields = ['parentid'];
+            $data = new LetterData();
+            $this->letterModel->updateLetterBy($where, $data, $updatedFields);
 
             return $updatedLetter;
-        } else {
-            $args = ['deleted' => 1];
+        }
+        $newLetterData = new LetterData();
+        $newLetterData->deleted = true;
 
-            if ($type == 'patient') {
-                $args['topatient'] = 1;
+        $dataForUpdate = new LetterData();
+        $updatedFields = [];
+        switch ($type) {
+            // TODO: first two types are never used, check if needed
+            case 'patient':
+                $newLetterData->toPatient = true;
 
-                $dataForUpdate = [
-                    'topatient'    => 0,
-                    'cc_topatient' => 0
-                ];
-            } elseif ($type == 'md') {
-                $args['md_list'] = $recipientId;
+                $dataForUpdate->toPatient = false;
+                $dataForUpdate->ccToPatient = false;
+                $updatedFields = ['topatient', 'cc_topatient'];
+                break;
+            case 'md':
+                $newLetterData->mdList = $recipientId;
 
                 $mds = array_diff(explode(',', $letter->md_list), [$recipientId]);
                 $ccMds = array_diff(explode(',', $letter->cc_md_list), [$recipientId]);
 
-                $dataForUpdate = [
-                    'md_list'    => implode(',', $mds),
-                    'cc_md_list' => implode(',', $ccMds)
-                ];
-            } elseif ($type == 'md_referral') {
-                $args['md_referral_list'] = $recipientId;
+                $updatedFields = ['md_list', 'cc_md_list'];
+                $dataForUpdate->mdList = implode(',', $mds);
+                $dataForUpdate->ccMdList = implode(',', $ccMds);
+                break;
+            case 'md_referral':
+                $newLetterData->mdReferralList = $recipientId;
 
                 $mdReferrals = array_diff(explode(',', $letter->md_referral_list), [$recipientId]);
                 $ccMdReferrals = array_diff(explode(',', $letter->cc_md_referral_list), [$recipientId]);
 
-                $dataForUpdate = [
-                    'md_referral_list'    => implode(',', $mdReferrals),
-                    'cc_md_referral_list' => implode(',', $ccMdReferrals)
-                ];
-            } elseif ($type == 'pat_referral') {
-                $args['pat_referral_list'] = $recipientId;
+                $updatedFields = ['md_referral_list', 'cc_md_referral_list'];
+                $dataForUpdate->mdReferralList = implode(',', $mdReferrals);
+                $dataForUpdate->ccMdReferralList = implode(',', $ccMdReferrals);
+                break;
+            case 'pat_referral':
+                $newLetterData->patientReferralList = $recipientId;
 
                 $patReferrals = array_diff(explode(',', $letter->pat_referral_list), [$recipientId]);
                 $ccPatReferrals = array_diff(explode(',', $letter->cc_pat_referral_list), [$recipientId]);
 
-                $dataForUpdate = [
-                    'pat_referral_list'    => implode(',', $patReferrals),
-                    'cc_pat_referral_list' => implode(',', $ccPatReferrals)
-                ];
-            }
-
-            $args = array_merge($args, [
-                'pid'             => $letter->patientid,
-                'info_id'         => $letter->info_id,
-                'parentid'        => $letterId,
-                'template'        => $template,
-                'send_method'     => $letter->send_method,
-                'status'          => '',
-                'check_recipient' => false
-            ]);
-
-            $newLetterId = $this->createLetter($letter->templateid, $args);
-
-            if ($newLetterId > 0) {
-                $updateLetter = $this->letter->updateLetterBy(['letterid' => $letterId], $dataForUpdate);
-
-                if (!$updateLetter) {
-                    return false;
-                } else {
-                    return $newLetterId;
-                }
-            }
+                $updatedFields = ['pat_referral_list', 'cc_pat_referral_list'];
+                $dataForUpdate->patientReferralList = implode(',', $patReferrals);
+                $dataForUpdate->ccPatientReferralList = implode(',', $ccPatReferrals);
+                break;
         }
+
+        $newLetterData->patientId = $letter->patientid;
+        $newLetterData->infoId = $letter->info_id;
+        $newLetterData->parentId = $letterId;
+        $newLetterData->template = $template;
+        $newLetterData->sendMethod = $letter->send_method;
+        $newLetterData->status = false;
+        $newLetterData->checkRecipient = false;
+
+        $newLetterId = $this->createLetter($letter->templateid, $newLetterData, $docId, $userId);
+
+        if ($newLetterId > 0) {
+            $where = ['letterid' => $letterId];
+            $updateLetter = $this->letterModel->updateLetterBy($where, $dataForUpdate, $updatedFields);
+
+            if (!$updateLetter) {
+                return false;
+            }
+            return $newLetterId;
+        }
+        return false;
     }
 
     /**
      * @param int $templateId
-     * @param array $args
-     * @return bool|int|mixed
+     * @param LetterData $letterData
+     * @param int $docId
+     * @param int $userId
+     * @return bool
      */
-    private function createLetter($templateId, $args = []) {
-        $defaultArgs = [
-            'pid'                  => null,
-            'info_id'              => null,
-            'topatient'            => null,
-            'md_list'              => null,
-            'md_referral_list'     => null,
-            'pat_referral_list'    => null,
-            'parentid'             => null,
-            'template'             => null,
-            'send_method'          => null,
-            'status'               => null,
-            'deleted'              => null,
-            'check_recipient'      => true,
-            'template_type'        => null,
-            'cc_topatient'         => null,
-            'cc_md_list'           => null,
-            'cc_md_referral_list'  => null,
-            'cc_pat_referral_list' => null,
-            'font_size'            => null,
-            'font_family'          => null
-        ];
+    private function createLetter($templateId, LetterData $letterData, $docId, $userId) {
+        if ($docId > 0) {
+            $foundUsers = $this->userModel->getWithFilter(
+                ['use_letters'],
+                ['userid' => $docId]
+            );
 
-        $args = array_merge($defaultArgs, $args);
-
-        if ($this->docId > 0) {
-            $foundUsers = $this->user->getWithFilter(['use_letters'], [
-                'userid' => $this->docId
-            ]);
-
-            $doctor = count($foundUsers) ? $foundUsers[0] : null;
+            $doctor = null;
+            if (isset($foundUsers[0])) {
+                $doctor = $foundUsers[0];
+            }
 
             if (!empty($doctor) && $doctor->use_letters != 1) {
                 return -1;
             }
         }
 
-        if ((empty($args['topatient']) && empty($args['md_referral_list']) && empty($args['md_list']) && empty($args['patient_referral_list']) ||
-            ($args['check_recipient'] && empty($args['md_referral_list']) && empty($args['md_list']) &&
-            ($templateId == 16 || $templateId == 19)))
+        if (
+            empty($letterData->toPatient) && empty($letterData->mdReferralList) && empty($letterData->mdList) && empty($letterData->patientReferralList)
+                ||
+            ($letterData->checkRecipient && empty($letterData->mdReferralList) && empty($letterData->mdList) && ($templateId == 16 || $templateId == 19))
         ) {
-            return false;
+            return 0;
         }
 
         //To remove referral source from md list if exists
-        $mdArray = explode(',', $args['md_list']);
+        $mdArray = explode(',', $letterData->mdList);
 
-        if(($key = array_search($args['md_referral_list'], $mdArray)) !== false) {
+        if (($key = array_search($letterData->mdReferralList, $mdArray)) !== false) {
             unset($mdArray[$key]);
         }
 
-        $args['md_list'] = implode(',', $mdArray);
-        $args['user_id'] = $this->userId;
-        $args['doc_id'] = $this->docId;
+        $letterData->mdList = implode(',', $mdArray);
+        $letterData->userId = $userId;
+        $letterData->docId = $docId;
 
-        $createdLetter = $this->letter->createLetter($args);
+        $createdLetter = $this->letterModel->createLetter($letterData);
 
         if ($createdLetter) {
             return $createdLetter->letterid;
-        } else {
-            return 0;
         }
+        return 0;
     }
 }

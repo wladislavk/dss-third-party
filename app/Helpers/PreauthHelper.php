@@ -26,13 +26,11 @@ class PreauthHelper
     }
 
     /**
-     * TODO: what does "Vob" mean?
-     *
      * @param int $patientId
      * @param int $userId
      * @return InsurancePreauth|null
      */
-    public function createVob($patientId, $userId)
+    public function createVerificationOfBenefits($patientId, $userId)
     {
         $transactionCode = $this->patientModel->getDentalDeviceTransactionCode($patientId);
         $userInfo = $this->patientModel->getUserInfo($patientId);

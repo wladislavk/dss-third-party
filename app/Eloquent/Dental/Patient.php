@@ -82,6 +82,11 @@ class Patient extends Model implements Resource, Repository
         return $this->hasOne(TmjClinicalExam::class, 'patientid', 'patientid');
     }
 
+    /**
+     * @param array $fields
+     * @param array $where
+     * @return \Illuminate\Database\Eloquent\Collection|Patient[]
+     */
     public function getWithFilter($fields = [], $where = [])
     {
         $object = $this;

@@ -27,7 +27,7 @@ class PreauthHelperTest extends UnitTestCase
     {
         $patientId = 1;
         $userId = 1;
-        $newInsurancePreauth = $this->preauthHelper->createVob($patientId, $userId);
+        $newInsurancePreauth = $this->preauthHelper->createVerificationOfBenefits($patientId, $userId);
         $this->assertInstanceOf(InsurancePreauth::class, $newInsurancePreauth);
         $this->assertEquals(1, $newInsurancePreauth->patient_id);
         $this->assertEquals('foo', $newInsurancePreauth->diagnosis_code);
@@ -41,7 +41,7 @@ class PreauthHelperTest extends UnitTestCase
     {
         $patientId = 2;
         $userId = 1;
-        $newInsurancePreauth = $this->preauthHelper->createVob($patientId, $userId);
+        $newInsurancePreauth = $this->preauthHelper->createVerificationOfBenefits($patientId, $userId);
         $this->assertInstanceOf(InsurancePreauth::class, $newInsurancePreauth);
         $this->assertEquals('', $newInsurancePreauth->diagnosis_code);
     }
@@ -50,7 +50,7 @@ class PreauthHelperTest extends UnitTestCase
     {
         $patientId = 3;
         $userId = 1;
-        $newInsurancePreauth = $this->preauthHelper->createVob($patientId, $userId);
+        $newInsurancePreauth = $this->preauthHelper->createVerificationOfBenefits($patientId, $userId);
         $this->assertNull($newInsurancePreauth);
     }
 
@@ -58,7 +58,7 @@ class PreauthHelperTest extends UnitTestCase
     {
         $patientId = 4;
         $userId = 1;
-        $newInsurancePreauth = $this->preauthHelper->createVob($patientId, $userId);
+        $newInsurancePreauth = $this->preauthHelper->createVerificationOfBenefits($patientId, $userId);
         $this->assertNull($newInsurancePreauth);
     }
 
@@ -66,7 +66,7 @@ class PreauthHelperTest extends UnitTestCase
     {
         $patientId = 5;
         $userId = 1;
-        $newInsurancePreauth = $this->preauthHelper->createVob($patientId, $userId);
+        $newInsurancePreauth = $this->preauthHelper->createVerificationOfBenefits($patientId, $userId);
         $this->assertNull($newInsurancePreauth);
     }
 

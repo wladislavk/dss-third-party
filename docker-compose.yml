@@ -1,4 +1,4 @@
-version: "2"
+version: "2.1"
 
 # WINDOWS: Windows REQUIRES explicit path for volumes, Linux/Mac can use relative.
   # Windows example cmd for startup: 
@@ -100,8 +100,8 @@ services:
     image: traefik:v1.2.3-alpine
     command: --docker --docker.domain=docker.localhost --logLevel=DEBUG
     ports:
-      - 80:80
-      - 443:443
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
       # NOTE: On Windows10, Skype CONFLICTS with 443 port.
       # Either change to other port (e.g. 4433:443), or kill Skype before starting container.
     volumes:

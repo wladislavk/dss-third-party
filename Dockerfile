@@ -41,7 +41,7 @@ RUN set -x \
     && chown -R apache ${SHARED_PATH}
 
 # Custom apache configs for the project
-# NOTE puted this config here to do not create extra files in the legacy codebase
+# NOTE this config is here so as not create extra files in the legacy codebase
 RUN echo -e '\
 ErrorLog "/dev/stdout"\n\
 CustomLog "/dev/stdout" common\n\

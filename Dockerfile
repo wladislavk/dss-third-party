@@ -70,7 +70,7 @@ RUN set -xe \
     && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys D8406D0D82947747293778314AA394086372C20A \
     && gpg --fingerprint D8406D0D82947747293778314AA394086372C20A \
     # Download phpunit and its signature
-    && export PHPUNIT_VERSION=4.7 \
+    && export PHPUNIT_VERSION=5.7 \
     && curl -sSLo phpunit.phar https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar \
     && curl -sSLo phpunit.phar.asc https://phar.phpunit.de/phpunit-${PHPUNIT_VERSION}.phar.asc \
     && ls -la \

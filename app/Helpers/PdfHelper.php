@@ -2,105 +2,100 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use Barryvdh\DomPDF\PDF;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Eloquent\Dental\Letter;
-use Illuminate\Support\Facades\URL;
+use DentalSleepSolutions\Structs\PdfData;
+use DentalSleepSolutions\Structs\PdfHeaderData;
+use DentalSleepSolutions\Wrappers\FileWrapper;
+use Illuminate\Routing\UrlGenerator;
 
 class PdfHelper
 {
     const LETTER_PDF_FOLDER = 'letter_pdfs/';
 
-    private $user;
-    private $letter;
+    /** @var PDF */
+    private $domPdfWrapper;
 
-    private $letterPdfPath;
-    private $pdfData;
-    private $args;
+    /** @var UrlGenerator */
+    private $urlGenerator;
 
-    public function __construct(User $user, Letter $letter)
-    {
-        $this->user = $user;
-        $this->letter = $letter;
+    /** @var FileWrapper */
+    private $fileWrapper;
 
-        $this->letterPdfPath = public_path() . '/' . self::LETTER_PDF_FOLDER;
+    /** @var User */
+    private $userModel;
 
-        $this->pdfData = [
-            'header_info' => [
-                'title'     => 'Default Pdf Title',
-                'subject'   => 'Default Pdf Subject',
-                'keywords'  => 'DSS Correspondence',
-                'author'    => 'Dental Sleep Solutions'
-            ],
-            'font' => [
-                'family' => 'Helvetica',
-                'size'   => 10
-            ],
-            'margins' => [
-                'top'    => 27,
-                'left'   => 15,
-                'right'  => 15,
-                'bottom' => 25,
-                'header' => 5,
-                'footer' => 10
-            ],
-            'content' => []
-        ];
+    /** @var Letter */
+    private $letterModel;
 
-        $this->args = [
-            'fax'       => null,
-            'header'    => '',
-            'footer'    => '',
-            'cover'     => '',
-            'doc_id'    => null,
-            'letter_id' => null
-        ];
+    public function __construct(
+        PDF $domPdfWrapper,
+        UrlGenerator $urlGenerator,
+        FileWrapper $fileWrapper,
+        User $userModel,
+        Letter $letterModel
+    ) {
+        $this->domPdfWrapper = $domPdfWrapper;
+        $this->urlGenerator = $urlGenerator;
+        $this->fileWrapper = $fileWrapper;
+        $this->userModel = $userModel;
+        $this->letterModel = $letterModel;
     }
 
-    public function setHeaderInfo($data)
+    /**
+     * TODO: the last argument is never used
+     *
+     * @param string $template
+     * @param array $content
+     * @param string $filename
+     * @param PdfHeaderData|null $headerInfo
+     * @param int $docId
+     * @param int $letterId
+     * @return string
+     */
+    public function create($template, array $content, $filename, PdfHeaderData $headerInfo = null, $docId = 0, $letterId = 0)
     {
-        $this->pdfData['header_info'] = array_merge($this->pdfData['header_info'], $data);
-    }
-
-    public function create($template, $content, $filename, $args = [])
-    {
-        $this->args = array_merge($this->args, $args);
-
-        $margins = [];
-        $font = [];
-        if (!empty($this->args['doc_id'])) {
-            /** @var User $doctor */
-            $doctor = $this->user->find($this->args['doc_id']);
-
-            if (!empty($doctor) && $doctor->user_type == 2) {
-                $margins = [
-                    'top'    => $doctor->letter_margin_top,
-                    'left'   => $doctor->letter_margin_left,
-                    'right'  => $doctor->letter_margin_right,
-                    'bottom' => $doctor->letter_margin_bottom,
-                    'header' => $doctor->letter_margin_header,
-                    'footer' => $doctor->letter_margin_footer
-                ];
-
-                if (!empty($this->args['letter_id'])) {
-                    /** @var Letter $letter */
-                    $letter = $this->letter->find($this->args['letter_id']);
-
-                    if (!empty($letter)) {
-                        $font = [
-                            'family' => $letter->font_family,
-                            'size'   => $letter->font_size
-                        ];
-                    }
-                }
-            }
+        $pdfData = new PdfData();
+        $pdfData->content = $content;
+        if ($headerInfo) {
+            $pdfData->headerData = $headerInfo;
         }
 
-        $this->pdfData['font'] = array_merge($this->pdfData['font'], $font);
-        $this->pdfData['margins'] = array_merge($this->pdfData['margins'], $margins);
-        $this->pdfData['content'] = array_merge($this->pdfData['content'], $content);
+        $letterPdfPath = $this->fileWrapper->getPublicPath() . '/' . self::LETTER_PDF_FOLDER;
+        $letterPdfFilename = $letterPdfPath . $filename;
 
-        \PDF::loadView($template, $this->pdfData)->save($this->letterPdfPath . $filename);
+        if ($docId) {
+            $this->addDoctorData($docId, $letterId, $pdfData);
+        }
+        $this->domPdfWrapper->loadView($template, $pdfData->toArray());
+        $this->domPdfWrapper->save($letterPdfFilename);
 
-        return URL::to(self::LETTER_PDF_FOLDER . $filename);
+        return $this->urlGenerator->to(self::LETTER_PDF_FOLDER . $filename);
+    }
+
+    private function addDoctorData($docId, $letterId, PdfData $pdfData)
+    {
+        /** @var User|null $doctor */
+        $doctor = $this->userModel->find($docId);
+        // TODO: what is 2?
+        if (!$doctor || $doctor->user_type != 2) {
+            return;
+        }
+        $pdfData->marginData->top = $doctor->letter_margin_top;
+        $pdfData->marginData->left = $doctor->letter_margin_left;
+        $pdfData->marginData->right = $doctor->letter_margin_right;
+        $pdfData->marginData->bottom = $doctor->letter_margin_bottom;
+        $pdfData->marginData->header = $doctor->letter_margin_header;
+        $pdfData->marginData->footer = $doctor->letter_margin_footer;
+        if (!$letterId) {
+            return;
+        }
+        /** @var Letter|null $letter */
+        $letter = $this->letterModel->find($letterId);
+        if ($letter) {
+            $pdfData->fontData->family = $letter->font_family;
+            $pdfData->fontData->size = $letter->font_size;
+        }
     }
 }

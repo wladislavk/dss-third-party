@@ -27,6 +27,7 @@ use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Libraries\Password;
+use DentalSleepSolutions\Structs\PdfHeaderData;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -792,14 +793,11 @@ class PatientsController extends Controller
                 $registrationEmailHandler->handleEmail($patientId, $mailerData['email'], $mailerData['email']);
 
                 $filename = 'user_pin_' . $patientId . '.pdf';
-                $pdfHelper->setHeaderInfo([
-                    'title'   => 'User Temporary PIN',
-                    'subject' => 'User Temporary PIN'
-                ]);
+                $headerInfo = new PdfHeaderData();
+                $headerInfo->title = 'User Temporary PIN';
+                $headerInfo->subject = 'User Temporary PIN';
 
-                $args = ['doc_id' => $docId];
-
-                $url = $pdfHelper->create('pdf.patient.pinInstructions', $mailerData, $filename, $args);
+                $url = $pdfHelper->create('pdf.patient.pinInstructions', $mailerData, $filename, $headerInfo, $docId);
             }
         }
 

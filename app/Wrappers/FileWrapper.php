@@ -12,4 +12,12 @@ class FileWrapper
     {
         return is_file($filename);
     }
+
+    /**
+     * @return string
+     */
+    public function getPublicPath()
+    {
+        return public_path();
+    }
 }

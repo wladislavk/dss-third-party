@@ -35,34 +35,14 @@ class LetterCreator
      * @return int
      */
     public function createLetter($templateId, LetterData $letterData, $docId, $userId) {
-        if ($docId > 0) {
-            $foundUsers = $this->userModel->getWithFilter(
-                ['use_letters'],
-                ['userid' => $docId]
-            );
-
-            $doctor = null;
-            if (isset($foundUsers[0])) {
-                $doctor = $foundUsers[0];
-            }
-
-            if (!empty($doctor) && $doctor->use_letters != 1) {
-                return 0;
-            }
-        }
-
         if (!$this->letterCreationEvaluator->shouldLetterBeCreated($letterData, $templateId)) {
             return 0;
         }
-
-        //To remove referral source from md list if exists
-        $mdArray = explode(',', $letterData->mdList);
-
-        if (($key = array_search($letterData->mdReferralList, $mdArray)) !== false) {
-            unset($mdArray[$key]);
+        if ($docId > 0 && !$this->checkUseLetters($docId)) {
+            return 0;
         }
 
-        $letterData->mdList = implode(',', $mdArray);
+        $this->removeReferralSourceFromMDList($letterData);
         $letterData->userId = $userId;
         $letterData->docId = $docId;
 
@@ -72,5 +52,37 @@ class LetterCreator
             return $createdLetter->letterid;
         }
         return 0;
+    }
+
+    /**
+     * @param int $docId
+     * @return bool
+     */
+    private function checkUseLetters($docId)
+    {
+        $foundUsers = $this->userModel->getWithFilter(
+            ['use_letters'],
+            ['userid' => $docId]
+        );
+        // TODO: this is strange, why do we need only the first one?
+        // TODO: perhaps refactor to utilize first() on the model
+        if (isset($foundUsers[0]) && !$foundUsers[0]->use_letters) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param LetterData $letterData
+     */
+    private function removeReferralSourceFromMDList(LetterData $letterData)
+    {
+        $mdArray = explode(',', $letterData->mdList);
+        // TODO: this logic rests on assumption that there can be no more than one referral in the list
+        // TODO: we need to check this assumption
+        if (($key = array_search($letterData->mdReferralList, $mdArray)) !== false) {
+            unset($mdArray[$key]);
+        }
+        $letterData->mdList = implode(',', $mdArray);
     }
 }

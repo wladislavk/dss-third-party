@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ImageTypeStore;
 use DentalSleepSolutions\Http\Requests\ImageTypeUpdate;
 use DentalSleepSolutions\Http\Requests\ImageTypeDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\ImageType;
 use DentalSleepSolutions\Contracts\Repositories\ImageTypes;
 

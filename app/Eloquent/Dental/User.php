@@ -121,8 +121,13 @@ class User extends Model implements Resource, Repository
             ->where('userid', $docId)
             ->first();
     }
-  
-    public function getWithFilter($fields = [], $where = [])
+
+    /**
+     * @param array $fields
+     * @param array $where
+     * @return \Illuminate\Database\Eloquent\Collection|User[]
+     */
+    public function getWithFilter(array $fields = [], array $where = [])
     {
         $object = $this;
 

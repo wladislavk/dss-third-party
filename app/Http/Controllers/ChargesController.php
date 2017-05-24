@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ChargeStore;
 use DentalSleepSolutions\Http\Requests\ChargeUpdate;
 use DentalSleepSolutions\Http\Requests\ChargeDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Charge;
 use DentalSleepSolutions\Contracts\Repositories\Charges;
-use Carbon\Carbon;
 
 class ChargesController extends Controller
 {

@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\NotificationStore;
 use DentalSleepSolutions\Http\Requests\NotificationUpdate;
 use DentalSleepSolutions\Http\Requests\NotificationDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Notification;
 use DentalSleepSolutions\Contracts\Repositories\Notifications;
 

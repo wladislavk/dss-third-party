@@ -3,12 +3,11 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\PayerStore;
 use DentalSleepSolutions\Contracts\Resources\Payer;
 use DentalSleepSolutions\Http\Requests\PayerUpdate;
 use DentalSleepSolutions\Http\Requests\PayerDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Repositories\Payers;
 
 /**

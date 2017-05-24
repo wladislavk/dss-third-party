@@ -48,7 +48,7 @@ class LetterDeleter
      * @param int $recipientId
      * @param int $docId
      * @param int $userId
-     * @param null $template
+     * @param string|null $template
      */
     public function deleteLetter($letterId, $type, $recipientId, $docId, $userId, $template = null)
     {
@@ -60,10 +60,7 @@ class LetterDeleter
         if (!$letter) {
             return;
         }
-        $patientId = 0;
-        if ($letter->topatient) {
-            $patientId = $letter->patientid;
-        }
+        $patientId = $this->setPatientId($letter);
         $contactData = $this->generalHelper->getContactInfo(
             $patientId,
             $letter->md_list,
@@ -71,35 +68,30 @@ class LetterDeleter
             $letter->pat_referral_list
         );
         $totalContacts = $this->getTotalContacts($contactData);
+        // TODO: check what happens if totalContacts == 0
         if ($totalContacts == 1) {
             $this->deleteLetterWithSingleContact($letterId, $userId);
             return;
         }
-        $newLetterData = new LetterData();
-        $newLetterData->deleted = true;
-
-        $dataForUpdate = new LetterData();
-        $letterUpdater = $this->letterUpdaterFactory->getLetterUpdater($type);
-        $letterUpdater->updateDataBeforeDeleting($letter, $recipientId, $newLetterData, $dataForUpdate);
-        $updatedFields = $letterUpdater->getUpdatedFields();
-
-        $newLetterData->patientId = $letter->patientid;
-        $newLetterData->infoId = $letter->info_id;
-        $newLetterData->parentId = $letterId;
-        $newLetterData->template = $template;
-        $newLetterData->sendMethod = $letter->send_method;
-        $newLetterData->status = false;
-        $newLetterData->checkRecipient = false;
-
-        $newLetterId = $this->letterCreator->createLetter(
-            $letter->templateid, $newLetterData, $docId, $userId
+        $this->deleteLetterWithMultipleContacts(
+            $letter, $type, $recipientId, $docId, $userId, $template
         );
-
-        if ($newLetterId > 0) {
-            $where = ['letterid' => $letterId];
-            $this->letterModel->updateLetterBy($where, $dataForUpdate, $updatedFields);
-        }
     }
+
+    /**
+     * @param Letter $letter
+     * @return int
+     */
+    private function setPatientId(Letter $letter)
+    {
+        $patientId = 0;
+        if ($letter->topatient) {
+            $patientId = $letter->patientid;
+        }
+        return $patientId;
+    }
+
+    // TODO: the following two methods highly differ in implementation. could they be simplified?
 
     /**
      * @param int $letterId
@@ -129,6 +121,35 @@ class LetterDeleter
     }
 
     /**
+     * @param Letter $letter
+     * @param string $type
+     * @param int $recipientId
+     * @param int $docId
+     * @param int $userId
+     * @param string|null $template
+     */
+    private function deleteLetterWithMultipleContacts(Letter $letter, $type, $recipientId, $docId, $userId, $template)
+    {
+        $newLetterData = new LetterData();
+        $dataForUpdate = new LetterData();
+
+        $letterUpdater = $this->letterUpdaterFactory->getLetterUpdater($type);
+        $letterUpdater->updateDataBeforeDeleting($letter, $recipientId, $newLetterData, $dataForUpdate);
+        $updatedFields = $letterUpdater->getUpdatedFields();
+
+        $this->setNewLetterData($newLetterData, $letter, $template);
+
+        $newLetterId = $this->letterCreator->createLetter(
+            $letter->templateid, $newLetterData, $docId, $userId
+        );
+
+        if ($newLetterId > 0) {
+            $where = ['letterid' => $letter->letterid];
+            $this->letterModel->updateLetterBy($where, $dataForUpdate, $updatedFields);
+        }
+    }
+
+    /**
      * @param ContactData $contactData
      * @return int
      */
@@ -144,5 +165,22 @@ class LetterDeleter
             count($contactData->getPatientReferrals())
         ;
         return $totalContacts;
+    }
+
+    /**
+     * @param LetterData $newLetterData
+     * @param Letter $letter
+     * @param string $template
+     */
+    private function setNewLetterData(LetterData $newLetterData, Letter $letter, $template)
+    {
+        $newLetterData->patientId = $letter->patientid;
+        $newLetterData->infoId = $letter->info_id;
+        $newLetterData->parentId = $letter->letterid;
+        $newLetterData->template = $template;
+        $newLetterData->sendMethod = $letter->send_method;
+        $newLetterData->status = false;
+        $newLetterData->deleted = true;
+        $newLetterData->checkRecipient = false;
     }
 }

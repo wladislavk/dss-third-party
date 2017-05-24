@@ -2,16 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\LedgerStore;
 use DentalSleepSolutions\Http\Requests\LedgerUpdate;
 use DentalSleepSolutions\Http\Requests\LedgerDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers;
 use DentalSleepSolutions\Contracts\Resources\Patient;
 use Illuminate\Http\Request;
-
 use Carbon\Carbon;
 
 /**

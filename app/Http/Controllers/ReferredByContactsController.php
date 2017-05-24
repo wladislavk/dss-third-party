@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ReferredByContactStore;
 use DentalSleepSolutions\Http\Requests\ReferredByContactUpdate;
 use DentalSleepSolutions\Http\Requests\ReferredByContactDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\ReferredByContact;
 use DentalSleepSolutions\Contracts\Repositories\ReferredByContacts;
 use Illuminate\Http\Request;

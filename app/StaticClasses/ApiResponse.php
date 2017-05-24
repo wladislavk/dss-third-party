@@ -1,6 +1,6 @@
 <?php
 
-namespace DentalSleepSolutions\Helpers;
+namespace DentalSleepSolutions\StaticClasses;
 
 use Traversable;
 use League\Fractal\Manager;

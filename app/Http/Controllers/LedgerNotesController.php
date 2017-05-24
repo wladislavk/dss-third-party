@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\LedgerNoteStore;
 use DentalSleepSolutions\Http\Requests\LedgerNoteUpdate;
 use DentalSleepSolutions\Http\Requests\LedgerNoteDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\LedgerNote;
 use DentalSleepSolutions\Contracts\Repositories\LedgerNotes;
 

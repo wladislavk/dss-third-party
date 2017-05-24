@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\FaxStore;
 use DentalSleepSolutions\Http\Requests\FaxUpdate;
 use DentalSleepSolutions\Http\Requests\FaxDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Fax;
 use DentalSleepSolutions\Contracts\Repositories\Faxes;
-
 use Carbon\Carbon;
 
 /**

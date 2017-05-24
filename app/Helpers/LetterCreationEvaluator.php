@@ -18,9 +18,7 @@ class LetterCreationEvaluator
      */
     public function shouldLetterBeCreated(LetterData $letterData, $templateId)
     {
-        $condition1 = $this->evaluateFirstCondition($letterData);
-        $condition2 = $this->evaluateSecondCondition($letterData, $templateId);
-        if ($condition1 || $condition2) {
+        if ($this->evaluateFirstCondition($letterData, $templateId)) {
             return false;
         }
         return true;
@@ -28,9 +26,10 @@ class LetterCreationEvaluator
 
     /**
      * @param LetterData $letterData
+     * @param int $templateId
      * @return bool
      */
-    private function evaluateFirstCondition(LetterData $letterData)
+    private function evaluateFirstCondition(LetterData $letterData, $templateId)
     {
         if ($letterData->toPatient) {
             return false;
@@ -41,7 +40,7 @@ class LetterCreationEvaluator
         if ($letterData->mdList) {
             return false;
         }
-        if ($letterData->patientReferralList) {
+        if (!$this->evaluateSecondCondition($letterData, $templateId)) {
             return false;
         }
         return true;
@@ -54,13 +53,10 @@ class LetterCreationEvaluator
      */
     private function evaluateSecondCondition(LetterData $letterData, $templateId)
     {
+        if (!$letterData->patientReferralList) {
+            return true;
+        }
         if (!$letterData->checkRecipient) {
-            return false;
-        }
-        if ($letterData->mdReferralList) {
-            return false;
-        }
-        if ($letterData->mdList) {
             return false;
         }
         if (!in_array($templateId, self::SPECIAL_TEMPLATE_IDS)) {

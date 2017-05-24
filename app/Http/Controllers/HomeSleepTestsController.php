@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\HomeSleepTestStore;
 use DentalSleepSolutions\Http\Requests\HomeSleepTestUpdate;
 use DentalSleepSolutions\Http\Requests\HomeSleepTestDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\HomeSleepTest;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use Illuminate\Http\Request;

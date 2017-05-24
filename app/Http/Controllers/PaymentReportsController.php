@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\PaymentReportStore;
 use DentalSleepSolutions\Http\Requests\PaymentReportUpdate;
 use DentalSleepSolutions\Http\Requests\PaymentReportDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\PaymentReport;
 use DentalSleepSolutions\Contracts\Repositories\PaymentReports;
 

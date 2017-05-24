@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ComplaintStore;
 use DentalSleepSolutions\Http\Requests\ComplaintUpdate;
 use DentalSleepSolutions\Http\Requests\ComplaintDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Complaint;
 use DentalSleepSolutions\Contracts\Repositories\Complaints;
-use Carbon\Carbon;
 
 class ComplaintsController extends Controller
 {

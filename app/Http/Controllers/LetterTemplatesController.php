@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\LetterTemplateStore;
 use DentalSleepSolutions\Http\Requests\LetterTemplateUpdate;
 use DentalSleepSolutions\Http\Requests\LetterTemplateDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\LetterTemplate;
 use DentalSleepSolutions\Contracts\Repositories\LetterTemplates;
 

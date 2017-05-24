@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\AirwayEvaluationStore;
 use DentalSleepSolutions\Http\Requests\AirwayEvaluationUpdate;
 use DentalSleepSolutions\Http\Requests\AirwayEvaluationDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\AirwayEvaluation;
 use DentalSleepSolutions\Contracts\Repositories\AirwayEvaluations;
 

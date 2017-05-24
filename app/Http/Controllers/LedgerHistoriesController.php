@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\LedgerHistoryStore;
 use DentalSleepSolutions\Http\Requests\LedgerHistoryUpdate;
 use DentalSleepSolutions\Http\Requests\LedgerHistoryDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\LedgerHistory;
 use DentalSleepSolutions\Contracts\Repositories\LedgerHistories;
 

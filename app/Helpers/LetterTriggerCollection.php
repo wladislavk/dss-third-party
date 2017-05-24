@@ -95,14 +95,20 @@ class LetterTriggerCollection
      * @param int $patientId
      * @param int $userId
      */
-    public function triggerIntroLettersToMDFromDSSAndFranchisee(array $mdContacts, $docId, $userType, $patientId, $userId)
-    {
+    public function triggerIntroLettersToMDFromDSSAndFranchisee(
+        array $mdContacts,
+        $docId,
+        $userType,
+        $patientId,
+        $userId
+    ) {
         $baseUserLetterInfo = $this->userModel->getWithFilter(
             ['use_letters', 'intro_letters'],
             ['userid' => $docId]
         );
 
         $userLetterInfo = null;
+        // TODO: why is only first entry used? perhaps better to use first() on the model
         if (isset($baseUserLetterInfo[0])) {
             $userLetterInfo = $baseUserLetterInfo[0];
         }
@@ -133,19 +139,20 @@ class LetterTriggerCollection
             }
         }
 
-        if (count($recipients)) {
-            $recipientsList = implode(',', $recipients);
+        if (!count($recipients)) {
+            return;
+        }
+        $recipientsList = implode(',', $recipients);
 
-            $letterData = new LetterData();
-            $letterData->patientId = $patientId;
-            $letterData->mdList = $recipientsList;
-            $this->letterCreator->createLetter(self::LETTER_TO_MD_FROM_FRANCHISEE, $letterData, $docId, $userId);
+        $letterData = new LetterData();
+        $letterData->patientId = $patientId;
+        $letterData->mdList = $recipientsList;
+        $this->letterCreator->createLetter(self::LETTER_TO_MD_FROM_FRANCHISEE, $letterData, $docId, $userId);
 
-            // TODO: the comment below looks misleading
-            //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
-            if ($userType == MailerDataRetriever::DSS_USER_TYPE_SOFTWARE) {
-                $this->letterCreator->createLetter(self::LETTER_TO_MD_FROM_DSS, $letterData, $docId, $userId);
-            }
+        // TODO: the comment below looks misleading
+        //DO NOT SENT LETTER 1 (FROM DSS) TO SOFTWARE USER
+        if ($userType == MailerDataRetriever::DSS_USER_TYPE_SOFTWARE) {
+            $this->letterCreator->createLetter(self::LETTER_TO_MD_FROM_DSS, $letterData, $docId, $userId);
         }
     }
 

@@ -52,9 +52,6 @@ class LetterDeleter
      */
     public function deleteLetter($letterId, $type, $recipientId, $docId, $userId, $template = null)
     {
-        if ($letterId <= 0) {
-            return;
-        }
         /** @var Letter|null $letter */
         $letter = $this->letterModel->find($letterId);
         if (!$letter) {
@@ -68,7 +65,7 @@ class LetterDeleter
             $letter->pat_referral_list
         );
         $totalContacts = $this->getTotalContacts($contactData);
-        // TODO: check what happens if totalContacts == 0
+        // TODO: check what should happen if totalContacts == 0
         if ($totalContacts == 1) {
             $this->deleteLetterWithSingleContact($letterId, $userId);
             return;
@@ -96,7 +93,6 @@ class LetterDeleter
     /**
      * @param int $letterId
      * @param int $userId
-     * @return bool|int
      */
     private function deleteLetterWithSingleContact($letterId, $userId)
     {
@@ -107,7 +103,7 @@ class LetterDeleter
         $data->deletedBy = $userId;
         $data->deletedOn = Carbon::now();
 
-        $updatedLetter = $this->letterModel->updateLetterBy($where, $data, $updatedFields);
+        $this->letterModel->updateLetterBy($where, $data, $updatedFields);
 
         $data = ['viewed' => 1];
         $this->faxModel->updateByLetterId($letterId, $data);
@@ -116,8 +112,6 @@ class LetterDeleter
         $updatedFields = ['parentid'];
         $data = new LetterData();
         $this->letterModel->updateLetterBy($where, $data, $updatedFields);
-
-        return $updatedLetter;
     }
 
     /**
@@ -135,7 +129,6 @@ class LetterDeleter
 
         $letterUpdater = $this->letterUpdaterFactory->getLetterUpdater($type);
         $letterUpdater->updateDataBeforeDeleting($letter, $recipientId, $newLetterData, $dataForUpdate);
-        $updatedFields = $letterUpdater->getUpdatedFields();
 
         $this->setNewLetterData($newLetterData, $letter, $template);
 
@@ -145,6 +138,7 @@ class LetterDeleter
 
         if ($newLetterId > 0) {
             $where = ['letterid' => $letter->letterid];
+            $updatedFields = $letterUpdater->getUpdatedFields();
             $this->letterModel->updateLetterBy($where, $dataForUpdate, $updatedFields);
         }
     }

@@ -1,4 +1,6 @@
-<?php namespace DentalSleepSolutions\Interfaces;
+<?php
+
+namespace DentalSleepSolutions\Interfaces;
 
 interface EnrollmentInterface
 {

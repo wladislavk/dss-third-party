@@ -245,6 +245,10 @@ class Contact extends Model implements Resource, Repository
         return implode(',', $contactIds);
     }
 
+    /**
+     * @param int $contactId
+     * @return Contact|null
+     */
     public function getActiveContact($contactId = 0)
     {
         return $this->where('contactid', $contactId)

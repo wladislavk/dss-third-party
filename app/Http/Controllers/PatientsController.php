@@ -6,7 +6,8 @@ use DentalSleepSolutions\Helpers\ApiResponse;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\RememberEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\UpdateEmailHandler;
-use DentalSleepSolutions\Helpers\LetterHelper;
+use DentalSleepSolutions\Helpers\LetterDeleter;
+use DentalSleepSolutions\Helpers\LetterTriggerCollection;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use DentalSleepSolutions\Helpers\SimilarHelper;
@@ -233,7 +234,8 @@ class PatientsController extends Controller
     }
 
     public function editingPatient(
-        LetterHelper $letterHelper,
+        LetterTriggerCollection $letterTriggerCollection,
+        LetterDeleter $letterDeleter,
         UpdateEmailHandler $updateEmailHandler,
         RememberEmailHandler $rememberEmailHandler,
         RegistrationEmailHandler $registrationEmailHandler,
@@ -295,7 +297,7 @@ class PatientsController extends Controller
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
-        $letterHelper->triggerPatientTreatmentComplete($patientId, $docId, $userId);
+        $letterTriggerCollection->triggerPatientTreatmentComplete($patientId, $docId, $userId);
 
         // need to add logic for logging actions
         // linkRequestData
@@ -468,7 +470,7 @@ class PatientsController extends Controller
                         foreach ($letters as $letter) {
                             $type = 'md_referral';
                             $recipientId = $unchangedPatient->referred_by;
-                            $letterHelper->deleteLetter($letter->letterid, $type, $recipientId, $docId, $userId);
+                            $letterDeleter->deleteLetter($letter->letterid, $type, $recipientId, $docId, $userId);
                         }
                     }
                 } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] != 1) {
@@ -484,7 +486,7 @@ class PatientsController extends Controller
                         foreach ($letters as $letter) {
                             $type = 'pat_referral';
                             $recipientId = $unchangedPatient->referred_by;
-                            $letterHelper->deleteLetter($letter->letterid, $type, $recipientId, $docId, $userId);
+                            $letterDeleter->deleteLetter($letter->letterid, $type, $recipientId, $docId, $userId);
                         }
                     }
                 }
@@ -560,10 +562,10 @@ class PatientsController extends Controller
             $mdContacts[] = !empty($patientFormData[$field]) ? $patientFormData[$field] : 0;
         }
 
-        $letterHelper->triggerIntroLettersToMDFromDSSAndFranchisee($mdContacts, $docId, $userType, $patientId, $userId);
+        $letterTriggerCollection->triggerIntroLettersToMDFromDSSAndFranchisee($mdContacts, $docId, $userType, $patientId, $userId);
 
         if (!empty($patientFormData['introletter']) && $patientFormData['introletter'] == 1) {
-            $letterHelper->triggerIntroLetterToPatient($patientId, $docId, $userId);
+            $letterTriggerCollection->triggerIntroLetterToPatient($patientId, $docId, $userId);
         }
 
         if (

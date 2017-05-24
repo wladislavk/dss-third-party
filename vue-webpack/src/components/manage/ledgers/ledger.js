@@ -165,6 +165,87 @@ export default {
     this.getLedgerRowsTotalNumber()
   },
   methods: {
+    onClickViewLedgerRecords () {
+      // loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>')
+    },
+    onClickStatementLedgerRow (ledgerId) {
+      if (confirm('Do Your Really want to Delete?.')) {
+        this.$router.push({
+          name  : this.$route.name,
+          query : {
+            delstatementid: ledgerId,
+            pid: this.routeParameters.patientId
+          }
+        })
+      }
+    },
+    onClickEditLedgerPayment () {
+      // loadPopup('edit_ledger_payment.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)
+    },
+    onClickDeleteClaimLedgerRow (ledgerId) {
+      if (confirm('Do Your Really want to Delete?.')) {
+        this.$router.push({
+          name  : this.$route.name,
+          query : {
+            delclaimid: ledgerId,
+            pid: this.routeParameters.patientId
+          }
+        })
+      }
+    },
+    onClickEditInsurance () {
+      // 'insurance_v2.php?insid=' + row.ledgerid + '&pid=' + routeParameters.patientId
+    },
+    onClickEditLedgerNote () {
+      // loadPopup('edit_ledger_note.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)
+    },
+    onClickAddLedgerPayment () {
+      // loadPopup('add_ledger_payment.php?ed=' + row.primary_claim_id + '&pid=' + routeParameters.patientId)
+    },
+    onClickViewClaim () {
+      // 'view_claim.php?claimid=' + row.primary_claim_id + '&pid=' + routeParameters.patientId
+    },
+    onClickEditLedger () {
+      // loadPopup('add_ledger.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)
+    },
+    onClickCreateStatement () {
+      // window.open('ledger_statement.php?pid=<?php echo $_GET['pid'];?>')
+    },
+    onClickAddNote () {
+      // loadPopup('add_ledger_note.php?pid=<?php echo $_GET['pid'];?>');
+    },
+    onClickAddInsurancePayment () {
+      this.$router.push({
+        name  : this.$route.name,
+        query : {
+          inspay: 1,
+          pid: this.routeParameters.patientId
+        }
+      })
+    },
+    onClickAddNewTransaction () {
+      // loadPopup('add_ledger_entry.php?pid=<?php echo $_GET['pid'];?>');
+    },
+    onClickPrintLedger () {
+      // window.open('print_ledger_report.php?<?php echo (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>')
+    },
+    onClickClaimsOutstanding () {
+      this.$router.push({
+        name  : this.$route.name,
+        query : {
+          openclaims: 1,
+          pid: this.routeParameters.patientId
+        }
+      })
+    },
+    onClickViewAll () {
+      this.$router.push({
+        name  : this.$route.name,
+        query : {
+          pid: this.routeParameters.patientId
+        }
+      })
+    },
     getLedgerRowsTotalNumber () {
       this.getTotalNumber(this.routeParameters.patientId)
         .then(function (response) {
@@ -289,9 +370,9 @@ export default {
     },
     getStatus (row) {
       if (row.ledger == 'ledger_paid') {
-        return window.constants.dssTransactionStatusLabels(+row.status)
+        return window.constants.dssTransactionStatusLabels(row.status ? +row.status : null)
       } else if (row.ledger == 'claim' || row.ledger == 'ledger') {
-        return window.constants.dssClaimStatusLabels(+row.status)
+        return window.constants.dssClaimStatusLabels(row.status ? +row.status : null)
       }
     },
     getDescription (row) {
@@ -351,6 +432,7 @@ export default {
         var data = response.data.data
 
         // this.currentBalance = this.countInitialBalance(data)
+        this.currentBalance = 0
 
         this.$nextTick(() => {
           data = data.map((value) => {
@@ -375,7 +457,6 @@ export default {
             return value
           })
 
-          // this.ledgerRowsTotalNumber = data.total
           this.ledgerRows = data
         })
       }, function (response) {

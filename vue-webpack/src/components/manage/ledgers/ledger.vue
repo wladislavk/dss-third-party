@@ -35,32 +35,32 @@
         <div align="right" style="margin-right: 10px">
             <button
                 v-if="routeParameters.openclaims == 1"
-                onclick="Javascript: window.location='manage_ledger.php?<?php echo 'pid='.$_GET['pid'];?>';"
+                v-on:click="onClickViewAll"
                 class="addButton control-buttons"
             >View All</button>
             <button
                 v-else
-                onclick="Javascript: window.location='manage_ledger.php?openclaims=1&<?php echo 'pid='.$_GET['pid'];?>';"
+                v-on:click="onClickClaimsOutstanding"
                 class="addButton control-buttons"
             >Claims Outstanding</button>
             <button
-                onclick="Javascript: window.open('print_ledger_report.php?<?php echo (isset($_GET['pid']))?'pid='.$_GET['pid']:'';?>')"
+                v-on:click="onClickPrintLedger"
                 class="addButton control-buttons"
             >Print Ledger</button>
             <button
-                onclick="Javascript: loadPopup('add_ledger_entry.php?pid=<?php echo $_GET['pid'];?>');"
+                v-on:click="onClickAddNewTransaction"
                 class="addButton control-buttons"
             >Add New Transaction</button>
             <button
-                onclick="Javascript: window.location='manage_ledger.php?pid=<?php echo $_GET['pid'];?>&inspay=1'"
+                v-on:click="onClickAddInsurancePayment"
                 class="addButton control-buttons"
             >Add Ins. Payment</button>
             <button
-                onclick="Javascript: loadPopup('add_ledger_note.php?pid=<?php echo $_GET['pid'];?>');"
+                v-on:click="onClickAddNote"
                 class="addButton control-buttons"
             >Add Note</button>
             <button
-                onclick="Javascript: window.open('ledger_statement.php?pid=<?php echo $_GET['pid'];?>')"
+                v-on:click="onClickCreateStatement"
                 class="addButton"
             >Create Statement</button>
         </div>
@@ -85,9 +85,10 @@
                                 :to="{
                                     name: $route.name,
                                     query: {
-                                        page    : index - 1,
-                                        sort    : routeParameters.sortColumn,
-                                        sortdir : routeParameters.sortDirection
+                                        pid: routeParameters.patientId,
+                                        page: index - 1,
+                                        sort: routeParameters.sortColumn,
+                                        sortdir: routeParameters.sortDirection
                                     }
                                 }"
                                 class="fp"
@@ -107,6 +108,7 @@
                             :to="{
                                 name: $route.name,
                                 query: {
+                                    pid: routeParameters.patientId,
                                     sort: sort,
                                     sortdir: getCurrentDirection(sort)
                                 }
@@ -169,26 +171,26 @@
                                 row.ledger == 'ledger_paid'
                             ">
                                 <a
-                                    v-on:click.prevent="loadPopup('add_ledger.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)"
+                                    v-on:click.prevent="onClickEditLedger"
                                     href="#"
                                     class="editlink" title="EDIT"
                                 >Edit</a>
                                 <a
                                     v-if="row.primary_claim_id != 0 && row.primary_claim_id != ''"
-                                    v-on:click.prevent="'view_claim.php?claimid=' + row.primary_claim_id + '&pid=' + routeParameters.patientId"
+                                    v-on:click.prevent="onClickViewClaim"
                                     href="#"
                                     class="editlink" title="PAYMENT"
                                 >Pay</a>
                                 <a
                                     v-else
-                                    v-on:click.prevent="loadPopup('add_ledger_payment.php?ed=' + row.primary_claim_id + '&pid=' + routeParameters.patientId)"
+                                    v-on:click.prevent="onClickAddLedgerPayment"
                                     href="#"
                                     class="editlink" title="PAYMENT"
                                 >Pay</a>
                             </template>
                             <template v-if="row.ledger == 'note'">
                                 <a
-                                    v-on:click.prevent="loadPopup('edit_ledger_note.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)"
+                                    v-on:click.prevent="onClickEditLedgerNote"
                                     href="#"
                                     class="editlink" title="EDIT"
                                 >Edit</a>
@@ -202,27 +204,27 @@
                                         row.status != constants.DSS_CLAIM_PAID_PATIENT &&
                                         row.status != constants.DSS_CLAIM_PAID_SEC_INSURANCE
                                     "
-                                    v-on:click.prevent="'insurance_v2.php?insid=' + row.ledgerid + '&pid=' + routeParameters.patientId"
+                                    v-on:click.prevent="onClickEditInsurance"
                                     href="#"
                                     class="editlink" title="EDIT"
                                 >Edit</a>
                                 <a
                                     v-if="row.status == constants.DSS_CLAIM_PENDING"
-                                    v-on:click.prevent="'this route?delclaimid=' + row.ledgerid + '&pid=' + routeParameters.patientId + confirm('Do Your Really want to Delete?.')"
+                                    v-on:click.prevent="onClickDeleteClaimLedgerRow(row.ledgerid)"
                                     href="#"
                                     class="dellink" title="DELETE"
                                 >Delete</a>
                             </template>
                             <template v-if="row.ledger == 'ledger_payment'">
                                 <a
-                                    v-on:click.prevent="loadPopup('edit_ledger_payment.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)"
+                                    v-on:click.prevent="onClickEditLedgerPayment"
                                     href="#"
                                     class="editlink" title="PAYMENT"
                                 >Edit</a>
                             </template>
                             <template v-if="row.ledger == 'statement'">
                                 <a
-                                    v-on:click.prevent="'this route?delstatementid=' + row.ledgerid + '&pid=' + routeParameters.patientId + confirm('Do Your Really want to Delete?.')"
+                                    v-on:click.prevent="onClickStatementLedgerRow(row.ledgerid)"
                                     href="#"
                                     class="dellink" title="DELETE"
                                 >Delete</a>
@@ -250,12 +252,15 @@
                             <td>{{ history.amount }}</td>
                             <td>{{ history.paid_amount }}</td>
                             <td>
-                                {{ history.updated_admin
-                                    ? history.updated_admin
-                                    : (history.updated_user
-                                        ? history.updated_user
-                                        : ''
-                                    ) }}
+                                {{
+                                    history.updated_admin
+                                        ? history.updated_admin
+                                        : (
+                                            history.updated_user
+                                                ? history.updated_user
+                                                : ''
+                                          )
+                                }}
                             </td>
                         </tr>
                     </template>
@@ -291,7 +296,7 @@
                         <center>
                             <button
                                 class="addButton"
-                                onclick="Javascript: loadPopup('view_ledger_record.php?pid=<?php echo $_GET['pid']; ?>');return false;"
+                                v-on:click="onClickViewLedgerRecords"
                             >View Ledger Records</button>
                         </center>
                     </td>

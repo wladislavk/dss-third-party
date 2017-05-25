@@ -62,7 +62,8 @@ $reportData = $db->getRow("SELECT
         report.reference_id,
         report.response,
         report.adddate,
-        report.ip_address
+        report.ip_address,
+        claim.patientid
     FROM dental_payment_reports report
         LEFT JOIN dental_insurance claim ON claim.insuranceid = report.claimid
             $orNpiConditional
@@ -129,7 +130,7 @@ $payee_title = $details->payee->name;
 
 ?>
 <div class="<?= $header_class ?>">
-    <?php if (empty($multipleViews)) { ?>
+    <?php if (empty($multipleViews) && !empty($is_back_office)) { ?>
         <h1>Payment Report ID <code><?= e($reportData['payment_id']) ?></code></h1>
     <?php } else { ?>
         Payment Report ID <code><?= e($reportData['payment_id']) ?></code>
@@ -145,14 +146,23 @@ $payee_title = $details->payee->name;
         Payee: <?=$payee_title?>
     <?php } ?>
 </div>
-<br />
 <?php if ($errorMessages) { ?>
     <div class="<?= $header_class ?>">
         Errors: <?= join('<br>', $errorMessages) ?>
     </div>
 <?php } ?>
-
+<?php if (empty($is_back_office)) { ?>
+    <a class="button" style="float:right;margin-right:14px;"
+       href="/manage/view_claim.php?claimid=<?= $reportData['claimid'] ?>&amp;pid=<?= $reportData['patientid'] ?>">
+        View Claim
+    </a>
+<?php } ?>
 <table <?= $table_style ?>>
+    <colgroup>
+        <col />
+        <col />
+        <col style="min-width:60%;" />
+    </colgroup>
     <tr>
         <th rowspan="2" class="tr_bg_h col_head" valign="top"></th>
         <th class="tr_bg_h col_head" valign="top">Claim Reference ID</th>

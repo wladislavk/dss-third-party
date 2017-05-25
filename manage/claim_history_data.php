@@ -60,12 +60,14 @@ jQuery(function($){
     });
 });
 </script>
-<span class="admin_head">
-    Claim History
-</span>
-
-<br />
-
+<?php if (empty($is_back_office)) { ?>
+    <span class="admin_head">
+        Claim History
+    </span>
+    <br />
+<?php } else { ?>
+    <h2>Claim History</h2>
+<?php } ?>
 <?php if ($my) foreach ($my as $r) { ?>
   <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
     <?php
@@ -83,10 +85,16 @@ jQuery(function($){
                 continue;
             }
 
+            $eventType = ucwords(str_replace('_', ' ', $w_r['event_type']));
+
             ?>
           <h3>
-            <?= ucwords(str_replace('_', ' ', $w_r['event_type'])) ?> on
-            <?= $w_r['adddate'] ?>
+              <?php if (empty($is_back_office) && $eventType === 'Payment Report') { ?>
+                  <a href="/manage/payment_reports_list.php"><?= e($eventType) ?></a>
+              <?php } else { ?>
+                  <?= e($eventType) ?>
+              <?php } ?>
+              on <?= $w_r['adddate'] ?>
           </h3>
           <p>
               <strong>Reference ID:</strong> <?= strlen($w_r['reference_id']) ? e($w_r['reference_id']) : '<i>Not set</i>' ?>
@@ -146,11 +154,14 @@ jQuery(function($){
 <?php
   }
 ?>
-
-<span class="admin_head">
-  Claim Version History
-</span>
-<table class="fullwidth" cellpadding="0" cellspacing="0">
+<?php if (empty($is_back_office)) { ?>
+    <span class="admin_head">
+        Claim Version History
+    </span>
+<?php } else { ?>
+    <h2>Claim Version History</h2>
+<?php } ?>
+<table class="fullwidth table" cellpadding="0" cellspacing="0">
     <colgroup>
         <col width="12%">
         <col width="12%">
@@ -182,11 +193,11 @@ jQuery(function($){
                 BO: <?= $r['adminid'] ? e($r['admin_first'] . ' ' . $r['admin_last']) : 'none' ?>
             </td>
             <td>
-                <a class="button expand" href="#">Raw data</a>
-                <a class="button"
+                <a class="button expand btn btn-xs btn-success" href="#">Raw data</a>
+                <a class="button btn-xs btn btn-primary"
                     href="claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=paper">
                     Paper</a>
-                <a class="button"
+                <a class="button btn btn-xs btn-primary"
                     href="claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=efile">
                     E-File</a>
             </td>

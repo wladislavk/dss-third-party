@@ -2,6 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
+use DentalSleepSolutions\Helpers\LetterTriggers\LetterToPatientTrigger;
+use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\RememberEmailHandler;
@@ -234,7 +237,9 @@ class PatientsController extends Controller
     }
 
     public function editingPatient(
-        LetterTriggerCollection $letterTriggerCollection,
+        TreatmentCompleteTrigger $treatmentCompleteTrigger,
+        LettersToMDTrigger $lettersToMDTrigger,
+        LetterToPatientTrigger $letterToPatientTrigger,
         LetterDeleter $letterDeleter,
         UpdateEmailHandler $updateEmailHandler,
         RememberEmailHandler $rememberEmailHandler,
@@ -297,7 +302,7 @@ class PatientsController extends Controller
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
-        $letterTriggerCollection->triggerPatientTreatmentComplete($patientId, $docId, $userId);
+        $treatmentCompleteTrigger->trigger($patientId, $docId, $userId);
 
         // need to add logic for logging actions
         // linkRequestData
@@ -562,10 +567,13 @@ class PatientsController extends Controller
             $mdContacts[] = !empty($patientFormData[$field]) ? $patientFormData[$field] : 0;
         }
 
-        $letterTriggerCollection->triggerIntroLettersToMDFromDSSAndFranchisee($mdContacts, $docId, $userType, $patientId, $userId);
+        $params = [
+            LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts,
+        ];
+        $lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
 
         if (!empty($patientFormData['introletter']) && $patientFormData['introletter'] == 1) {
-            $letterTriggerCollection->triggerIntroLetterToPatient($patientId, $docId, $userId);
+            $letterToPatientTrigger->trigger($patientId, $docId, $userId);
         }
 
         if (

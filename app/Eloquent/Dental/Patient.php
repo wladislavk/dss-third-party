@@ -561,7 +561,12 @@ class Patient extends Model implements Resource, Repository
             })->get();
     }
 
-    public function getPatientReferralIds($patientId = 0, $patientReferredSource = null)
+    /**
+     * @param int $patientId
+     * @param Patient|null $patientReferredSource
+     * @return string
+     */
+    public function getPatientReferralIds($patientId = 0, Patient $patientReferredSource = null)
     {
         if (!empty($patientReferredSource) && $patientReferredSource->referred_source == 1) {
             $contactQuery = $this->select(DB::raw('GROUP_CONCAT(distinct pr.patientid) as ids'))

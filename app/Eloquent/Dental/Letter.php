@@ -173,12 +173,17 @@ class Letter extends Model implements Resource, Repository
             ->first();
     }
 
-    public function getPatientTreatmentComplete($patientId = 0, $patientReferralId)
+    /**
+     * @param int $patientId
+     * @param string $patientReferralIds
+     * @return array|\Illuminate\Database\Eloquent\Collection|Letter[]
+     */
+    public function getPatientTreatmentComplete($patientId = 0, $patientReferralIds = '')
     {
         return $this->select('letterid')
             ->where('patientid', $patientId)
             ->patientTreatmentComplete()
-            ->where('pat_referral_list', $patientReferralId)
+            ->where('pat_referral_list', $patientReferralIds)
             ->get();
     }
 

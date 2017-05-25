@@ -1,5 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php $file = basename($_SERVER['PHP_SELF']) ?>
-    <?
+    <?php
     $thesql = "select * from dental_patients where patientid='".(!empty($_GET["pid"]) ? $_GET["pid"] : '')."'";
 
         $themyarray = $db->getRow($thesql);

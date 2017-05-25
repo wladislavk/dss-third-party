@@ -162,24 +162,24 @@ $unviewed_url = "unviewed=$is_unviewed&fid=$franchiseeId&sort=$sort_by";
 </div>
 <br />
 <br />
-<? if($errors_message): ?>
+<?php if($errors_message): ?>
     <div class="<?=$header_class?>">
         Errors: <?=$errors_message?>
     </div>
-<? endif; ?>
+<?php endif; ?>
 <table <?=$table_style?>>
-    <? if($total > $page_count): ?>
+    <?php if($total > $page_count): ?>
         <tr bgColor="#ffffff">
             <td  align="right" colspan="15" class="bp">
                 Pages:
                 <?= paging($pages_quantity, $page, "$unviewed_url&sortdir=$sort_direction"); ?>
             </td>
         </tr>
-    <? endif; ?>
+    <?php endif; ?>
     <tr class="tr_bg_h">
-        <? if ($back_office): ?>
+        <?php if ($back_office): ?>
             <th valign="top" class="col_head">Account</th>
-        <? endif; ?>
+        <?php endif; ?>
         <th valign="top" class="col_head">Claim ID</th>
         <th valign="top" class="col_head <?=($sort_by == 'date') ? 'arrow_' . $sort_direction : '';?>">
             <a href="?<?= $unviewed_url ?>&amp;sortdir=<?= $sort_by == 'date' && $sort_direction == 'asc' ? 'desc' : 'asc' ?>">Generation Date (YYYY-MM-DD)</a>
@@ -195,8 +195,8 @@ $unviewed_url = "unviewed=$is_unviewed&fid=$franchiseeId&sort=$sort_by";
         <th valign="top" class="col_head">Amount Billed</th>
         <th valign="top" class="col_head">Amount Paid</th>
     </tr>
-    <? foreach ($reports_res as $report_data): ?>
-        <?
+    <?php foreach ($reports_res as $report_data): ?>
+        <?php
         $report = json_decode($report_data['response']);
         $details = $report->details;
 
@@ -208,19 +208,19 @@ $unviewed_url = "unviewed=$is_unviewed&fid=$franchiseeId&sort=$sort_by";
         }
         ?>
         <tr class="tr_active">
-            <? if ($back_office): ?>
+            <?php if ($back_office): ?>
                 <td valign="top"><?=$report_data['name'];?></td>
-            <? endif; ?>
+            <?php endif; ?>
             <td valign="top"><a href="<?=$claim_url?>"><?=$report_data['reference_id'] ?: '<i>Not Set</i>' ?></a></td>
-            <? if (isset($report->success) && !$report->success): ?>
-                <?
+            <?php if (isset($report->success) && !$report->success): ?>
+                <?php
                 $errors_message = '';
                 foreach ($report->errors as $error) {
                     $errors_message .= $error->message . '<br/>';
                 }
                 ?>
                 <td colspan="11" class="clickable_row" data-report="<?=$report_data['payment_id'];?>">Errors: <?=$errors_message?></td>
-            <? else: ?>
+            <?php else: ?>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->effective_date;?></td>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->payer->name;?></td>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>">
@@ -243,9 +243,9 @@ $unviewed_url = "unviewed=$is_unviewed&fid=$franchiseeId&sort=$sort_by";
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=implode(' ', $details->claim->status);?></td>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->claim->amount->billed;?></td>
                 <td valign="top" class="clickable_row" data-report="<?=$report_data['payment_id'];?>"><?=$details->claim->amount->paid;?></td>
-            <? endif; ?>
+            <?php endif; ?>
         </tr>
-    <? endforeach; ?>
+    <?php endforeach; ?>
 </table>
 <script type="text/javascript">
     $( document ).ready(function() {

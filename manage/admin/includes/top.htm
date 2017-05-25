@@ -313,33 +313,16 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 			<!-- add "navbar-no-scroll" class to disable the scrolling of the sidebar menu -->
 			<!-- BEGIN SIDEBAR MENU -->
 			<ul data-slide-speed="200" data-auto-scroll="true" class="page-sidebar-menu">
-				<!---<li class="sidebar-search-wrapper">
-					<!-- BEGIN RESPONSIVE QUICK SEARCH FORM 
-					<form method="POST" action="extra_search.html" class="sidebar-search">
-						<div class="form-container">
-							<div class="input-box">
-								<a class="remove" href="javascript:;">
-								</a>
-								<input type="text" placeholder="Search...">
-								<input type="button" value=" " class="submit">
-							</div>
-						</div>
-					</form>
-					<!-- END RESPONSIVE QUICK SEARCH FORM 
-				</li>---->
 				<li class="sidebar-search-wrapper hidden-xs">
 					<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
 					<!-- DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box -->
 					<!-- DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box -->
-					<form class="sidebar-search" action="extra_search.html" method="POST">
+					<form class="sidebar-search" action="/manage/admin/manage_users.php" method="get">
 						<a href="javascript:;" class="remove">
 						<i class="icon-close"></i>
 						</a>
 						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Search...">
-							<span class="input-group-btn">
-							<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>
-							</span>
+							<input type="text" class="form-control" name="search" disabled style="cursor:default;">
 						</div>
 					</form>
 					<!-- END RESPONSIVE QUICK SEARCH FORM -->
@@ -400,6 +383,35 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 						<span class="selected">
 						</span>
 					</a>
+                    <!-- Include hidden submenu, to display proper breadcrumb path -->
+                    <ul class="hidden">
+                        <li>
+                            <a>
+                                <i class="fa fa-file"></i>
+                                Claim
+                            </a>
+                            <ul class="hidden">
+                                <li>
+                                    <a href="/manage/admin/view_payment_reports.php">
+                                        <i class="fa fa-book"></i>
+                                        Payment Reports
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/manage/admin/payment_report.php">
+                                        <i class="fa fa-book"></i>
+                                        Payment Report
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/manage/admin/view_claim_history.php">
+                                        <i class="fa fa-book"></i>
+                                        Claim History
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
 				</li>
 				<?php } ?>
 				<?php if (is_admin($_SESSION['admin_access'])) { ?>

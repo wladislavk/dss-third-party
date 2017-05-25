@@ -384,13 +384,13 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 						</span>
 					</a>
                     <!-- Include hidden submenu, to display proper breadcrumb path -->
-                    <ul class="sub-menu hidden">
+                    <ul class="hidden">
                         <li>
                             <a>
                                 <i class="fa fa-file"></i>
                                 Claim
                             </a>
-                            <ul class="sub-menu hidden">
+                            <ul class="hidden">
                                 <li>
                                     <a href="/manage/admin/view_payment_reports.php">
                                         <i class="fa fa-book"></i>
@@ -401,6 +401,12 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
                                     <a href="/manage/admin/payment_report.php">
                                         <i class="fa fa-book"></i>
                                         Payment Report
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/manage/admin/view_claim_history.php">
+                                        <i class="fa fa-book"></i>
+                                        Claim History
                                     </a>
                                 </li>
                             </ul>

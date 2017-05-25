@@ -610,6 +610,10 @@ $statusDropdown = [
                     <?php } elseif (!$statusOverriden && $validEResponse) { ?>
                         <?= $eResponse['data']['event_type'] ?> - <?= $eResponse['data']['adddate'] ?>
                     <?php } ?>
+                    <a class="pull-right text-danger"
+                       href="/manage/admin/view_claim_history.php?id=<?= intval($myarray['insuranceid']) ?>">
+                        <small>History</small>
+                    </a>
                 </td>
 				<td valign="top">
 					<a href="view_patient.php?pid=<?php echo $myarray['patientid'];?>"><?php echo st($myarray["lastname"]);?>, <?php echo st($myarray["firstname"]);?> (View Chart)</a>

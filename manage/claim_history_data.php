@@ -1,12 +1,18 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-$sql = "SELECT * FROM dental_claim_electronic WHERE claimid='".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''))."' ORDER BY adddate DESC";
+$claimId = isset($claimId) ? $claimId : intval($_GET['cid']);
+
+$sql = "SELECT *
+    FROM dental_claim_electronic
+    WHERE claimid = '$claimId'
+    ORDER BY adddate DESC";
 $my = $db->getResults($sql);
 $total_rec = count($my);
-$num_users = $total_rec;
 
-$csql = "SELECT * FROM dental_insurance i WHERE i.insuranceid = ".mysqli_real_escape_string($con,(!empty($_GET['cid']) ? $_GET['cid'] : ''));
+$csql = "SELECT *
+    FROM dental_insurance
+    WHERE insuranceid = '$claimId'";
 $claim = $db->getRow($csql);
 
 $claimHistory = $db->getResults("SELECT history.*,
@@ -15,7 +21,7 @@ $claimHistory = $db->getResults("SELECT history.*,
     FROM dental_insurance_history history
         LEFT JOIN dental_users user ON user.userid = history.updated_by_user
         LEFT JOIN admin ON admin.adminid = history.updated_by_admin
-    WHERE insuranceid = '" . intval($_GET['cid']) . "'
+    WHERE insuranceid = '$claimId'
     ORDER BY id DESC");
 
 ?>
@@ -64,7 +70,7 @@ jQuery(function($){
   <div style="margin-left:20px; border:solid 1px #99c; width:80%; margin-top:20px; padding:0 20px;">
     <?php
 		  if($r['reference_id']!='') {
-        $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id='".mysqli_real_escape_string($con,$r['reference_id'])."' ORDER BY adddate DESC";
+        $w_sql = "SELECT * FROM dental_eligible_response WHERE reference_id = '" . $db->escape($r['reference_id']) . "' ORDER BY adddate DESC";
         $w_q = $db->getResults($w_sql);
 
         /**
@@ -178,10 +184,10 @@ jQuery(function($){
             <td>
                 <a class="button expand" href="#">Raw data</a>
                 <a class="button"
-                    href="/manage/claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=paper">
+                    href="claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=paper">
                     Paper</a>
                 <a class="button"
-                    href="/manage/claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=efile">
+                    href="claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=efile">
                     E-File</a>
             </td>
         </tr>

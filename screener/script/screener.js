@@ -220,7 +220,7 @@ function submit_screener(){
                 img = 'images/screener-high_risk.png';
                 $('#risk_high').show();
                 $('#finish_ok').attr('href', 'register.php?id=' + screener_id);
-            } else if (survey > 7 || ep > 9 || sect3 > 1) {
+            } else if (survey > 7 || ep > 9 || sect3 > 0) {
                 img = 'images/screener-moderate_risk.png';
                 $('#risk_moderate').show();
             } else {

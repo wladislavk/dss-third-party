@@ -166,16 +166,10 @@
 				 	   where ledgerid='".$_POST["ed"]."'";
 					
 			$db->query($up_sql);
-			// ledger_history_update($_POST['ed'], $_SESSION['docid'], '');
-			if(($claim_r['primary_claim_id']!='' && $claim_r['primary_claim_id']!=0) && $status==DSS_TRXN_NA){
-			  $c_sql = "SELECT COUNT(*) as num_trxn FROM dental_ledger where primary_claim_id='".mysqli_real_escape_string($con,$claim_r['primary_claim_id'])."'";
-			  
-			  $c_r = $db->getRow($c_sql);
-			  if($c_r['num_trxn'] == 0) {
-				$del_sql = "DELETE FROM dental_insurance where insuranceid='".mysqli_real_escape_string($con,$claim_r['primary_claim_id'])."'";
-				$db->query($del_sql);
-			  }
-			}
+
+            /**
+             * Code removed: delete claim when no trxn are associated to it
+             */
 
 			$msg = "Edited Successfully";
 ?>

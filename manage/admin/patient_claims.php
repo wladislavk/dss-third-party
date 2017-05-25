@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 
 include 'includes/patient_nav.php';
@@ -83,7 +83,7 @@ if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
 		//alert("Deleted Successfully");
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&fid=<?=$_REQUEST['fid']?>&pid=<?=$_REQUEST['pid']?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -318,22 +318,22 @@ $my = $db->getResults($sql);
 if(isset($_GET['msg'])){
 ?>
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 <?php } ?>
 
 <form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php
 				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir'] . ($specialFilter ? "&filed_by=$specialFilter" : ''));
 			?>
 		</TD>
 	</TR>
-	<? }?>
+	<?php }?>
 	<?php
     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
              . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s" .
@@ -602,7 +602,7 @@ if(isset($_GET['msg'])){
 ?>
 /></td>
       </tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 </form>

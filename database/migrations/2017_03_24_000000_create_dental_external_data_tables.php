@@ -121,6 +121,7 @@ class CreateDentalExternalDataTables extends Migration
             $table->string('home_phone');
             $table->string('work_phone');
             $table->string('cell_phone');
+            $table->string('email');
             $table->string('p_m_relation');
             $table->string('p_m_ins_id');
             $table->string('p_m_partyfname');

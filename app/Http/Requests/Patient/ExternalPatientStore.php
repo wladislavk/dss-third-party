@@ -37,6 +37,7 @@ class ExternalPatientStore extends Request
             'patient.home_phone'      => ['sometimes', 'numeric', 'regex:/^(|\d{7}|\d{10})$/'],
             'patient.work_phone'      => ['sometimes', 'numeric', 'regex:/^(|\d{7}|\d{10})$/'],
             'patient.cell_phone'      => ['sometimes', 'numeric', 'regex:/^(|\d{7}|\d{10})$/'],
+            'patient.email'           => 'sometimes|email',
 
             'patient.origin_record.origin_software'   => 'required|string',
             'patient.origin_record.origin_patient_Id' => 'required|string',

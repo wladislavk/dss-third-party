@@ -33,6 +33,7 @@ class ExternalPatient extends TransformerAbstract
         'patient.home_phone'      => 'patient.home_phone',
         'patient.work_phone'      => 'patient.work_phone',
         'patient.cell_phone'      => 'patient.cell_phone',
+        'patient.email'           => 'patient.email',
 
         'patient.origin_record.origin_software'   => 'external_patient.software',
         'patient.origin_record.origin_patient_Id' => 'external_patient.external_id',

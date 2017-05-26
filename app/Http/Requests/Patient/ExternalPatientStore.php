@@ -22,7 +22,7 @@ class ExternalPatientStore extends Request
             'patient.preferred_name'  => 'sometimes|string',
             'patient.dob'             => 'sometimes|string',
             'patient.ssn'             => 'sometimes|numeric',
-            'patient.gender'          => 'sometimes|string',
+            'patient.gender'          => 'sometimes|string|in:m,f,M,F',
             'patient.marital_status'  => 'sometimes|between:1,4',
 
             'patient.height_feet'     => 'sometimes|integer',
@@ -50,7 +50,11 @@ class ExternalPatientStore extends Request
             'patient.insurance_primary.payer_info.phone'    => ['sometimes', 'numeric', 'regex:/^(|\d{7}|\d{10})$/'],
             'patient.insurance_primary.payer_info.fax'      => ['sometimes', 'numeric', 'regex:/^(|\d{7}|\d{10})$/'],
 
-            'patient.insurance_primary.insured_info.relationship_to_insured' => 'present_with:patient.insurance_primary.insured_info|string|in:self,spouse,child,other',
+            'patient.insurance_primary.insured_info.relationship_to_insured' => [
+                'present_with:patient.insurance_primary.insured_info',
+                'string',
+                'regex:/^(|self|spouse|child|other)$/i'
+            ],
 
             'patient.insurance_primary.insured_info.subscriber.id'          => 'present_with:patient.insurance_primary.insured_info.subscriber|string',
             'patient.insurance_primary.insured_info.subscriber.first_name'  => 'present_with:patient.insurance_primary.insured_info.subscriber|string',
@@ -63,7 +67,7 @@ class ExternalPatientStore extends Request
             'patient.insurance_primary.insured_info.subscriber.zip'         => ['sometimes', 'numeric', 'regex:/^(|\d{5}|\d{9})$/'],
             'patient.insurance_primary.insured_info.subscriber.phone'       => ['sometimes', 'numeric', 'regex:/^(|\d{7}|\d{10})$/'],
             'patient.insurance_primary.insured_info.subscriber.dob'         => 'present_with:patient.insurance_primary.insured_info.subscriber|date_format:Y-m-d',
-            'patient.insurance_primary.insured_info.subscriber.gender'      => 'sometimes|alpha|in:M,F',
+            'patient.insurance_primary.insured_info.subscriber.gender'      => 'sometimes|alpha|in:m,f,M,F',
             'patient.insurance_primary.insured_info.subscriber.group_id'    => 'sometimes|string',
             'patient.insurance_primary.insured_info.subscriber.group_name'  => 'sometimes|string',
 
@@ -78,7 +82,7 @@ class ExternalPatientStore extends Request
             'patient.insurance_primary.insured_info.dependent.zip'         => ['sometimes', 'numeric', 'regex:/^(|\d{5}|\d{9})$/'],
             'patient.insurance_primary.insured_info.dependent.phone'       => ['sometimes', 'numeric', 'regex:/^(|\d{7}|\d{10})$/'],
             'patient.insurance_primary.insured_info.dependent.dob'         => 'present_with:patient.insurance_primary.insured_info.dependent|date_format:Y-m-d',
-            'patient.insurance_primary.insured_info.dependent.gender'      => 'sometimes|alpha|in:M,F',
+            'patient.insurance_primary.insured_info.dependent.gender'      => 'sometimes|alpha|in:m,f,M,F',
         ];
     }
 }

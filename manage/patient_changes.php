@@ -1,6 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+use function in_array;
+
 require_once __DIR__ . '/includes/top.htm';
 
 $patientId = intval($_GET['pid']);
@@ -93,11 +95,23 @@ $doc_fields = array('docsleep', 'docpcp', 'docdentist', 'docent', 'docmdother');
 
 $validKeys = array_keys(array_intersect_key($p, $c, $fields));
 $fields = array_only($fields, $validKeys);
+$p = array_only($p, $validKeys);
+$c = array_only($c, $validKeys);
+
+$emailsToUpdate = [];
 
 /**
  * Normalize dates, external data uses Y-m-d H-i-s, internal data uses m/d/Y
  */
 foreach (['p', 'c'] as $which) {
+    if (isset(${$which}['email'])) {
+        $email = trim(${$which}['email']);
+
+        if (strlen($email)) {
+            $emailsToUpdate[] = $email;
+        }
+    }
+
     foreach (['dob', 'ins_dob', 'ins2_dob'] as $field) {
         if (!isset(${$which}[$field])) {
             continue;
@@ -109,7 +123,37 @@ foreach (['p', 'c'] as $which) {
             ${$which}[$field] = date('m/d/Y', $dateTime);
         }
     }
+
+    foreach (['gender', 'p_m_gender', 's_m_gender'] as $field) {
+        if (!isset(${$which}[$field])) {
+            continue;
+        }
+
+        $gender = strtolower(${$which}[$field]);
+
+        switch ($gender) {
+            case 'm':
+            case 'male':
+                $gender = 'Male';
+                break;
+            case 'f':
+            case 'female':
+                $gender = 'Female';
+                break;
+            default:
+                $gender = '';
+        }
+
+        ${$which}[$field] = $gender;
+    }
 }
+
+$escapedEmails = $db->escapeList($emailsToUpdate);
+$emailsInUse = $db->getResults("SELECT email
+    FROM dental_patients
+    WHERE patientid != '$patientId'
+        AND email IN ($escapedEmails)");
+$emailsInUse = array_pluck($emailsInUse, 'email');
 
 $num_changes = count(array_diff_assoc($p, $c));
 
@@ -127,6 +171,13 @@ if(isset($_POST['submit'])){
 
     foreach ($fields as $field => $label) {
         $value = $_POST["value_$field"];
+
+        /**
+         * Email is in use, don't update it
+         */
+        if ($field === 'email' && in_array(trim($value), $emailsInUse)) {
+            continue;
+        }
 
         switch ($field) {
             case 'home_phone':
@@ -350,6 +401,34 @@ if(isset($_POST['submit'])){
             <td>
                 <input readonly type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $val; ?>" />
                 <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
+            </td>
+        <?php } else if ($field === 'email') { ?>
+            <td><?= $label; ?>:</td>
+            <td>
+                <?php if (in_array(trim($p[$field]), $emailsInUse)) { ?>
+                    <input readonly type="text" class="doc_field" value="<?= $p[$field]; ?>" disabled title="This email is already taken by another patient" />
+                <?php } else { ?>
+                    <input readonly type="text" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
+                <?php } ?>
+            </td>
+            <td>
+                <?php if (in_array(trim($p[$field]), $emailsInUse)) { ?>
+                    <input type="button" class="button1" value="&laquo;" onclick="return false;" disabled title="This email is already taken by another patient" />
+                <?php } else { ?>
+                    <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
+                <?php } ?>
+                <?php if (in_array(trim($c[$field]), $emailsInUse)) { ?>
+                    <input type="button" class="button1" value="&laquo;" onclick="return false;" disabled title="This email is already taken by another patient" />
+                <?php } else { ?>
+                    <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+                <?php } ?>
+            </td>
+            <td>
+                <?php if (in_array(trim($c[$field]), $emailsInUse)) { ?>
+                    <input readonly type="text" class="pat_field" value="<?= $c[$field]; ?>" disabled title="This email is already taken by another patient" />
+                <?php } else { ?>
+                    <input readonly type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
+                <?php } ?>
             </td>
         <?php } else { ?>
             <td><?= $label; ?>:</td>

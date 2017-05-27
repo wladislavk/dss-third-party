@@ -3,8 +3,7 @@ include "includes/top.htm";
 
 if($_REQUEST["delid"] != "")
 {
-	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
-	mysqli_query($con, $del_sql);
+    deleteClaim($_REQUEST['delid']);
 	
 	$msg= "Deleted Successfully";
 	?>

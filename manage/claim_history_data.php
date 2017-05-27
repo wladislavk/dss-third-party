@@ -178,13 +178,15 @@ jQuery(function($){
         </tr>
     </thead>
     <tbody>
-    <?php foreach ($claimHistory as $r) { ?>
+    <?php foreach ($claimHistory as $r) {
+        $deleted = $r['docid'] < 0 && $r['patientid'] < 0;
+        ?>
         <tr>
             <td>
                 <?= date('m/d/Y h:i', strtotime($r['updated_at'])) ?>
             </td>
             <td>
-                <?= $dss_claim_status_labels[$r['status']] ?>
+                <?= $deleted ? 'Deleted' : $dss_claim_status_labels[$r['status']] ?>
             </td>
             <td>
                 FO: <?= $r['userid'] ? e($r['user_first'] . ' ' . $r['user_last']) : 'none' ?>
@@ -193,18 +195,22 @@ jQuery(function($){
                 BO: <?= $r['adminid'] ? e($r['admin_first'] . ' ' . $r['admin_last']) : 'none' ?>
             </td>
             <td>
-                <a class="button expand btn btn-xs btn-success" href="#">Raw data</a>
-                <a class="button btn-xs btn btn-primary"
-                    href="claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=paper">
-                    Paper</a>
-                <a class="button btn btn-xs btn-primary"
-                    href="claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=efile">
-                    E-File</a>
+                <?php if (!$deleted) { ?>
+                    <a class="button expand btn btn-xs btn-success" href="#">Raw data</a>
+                    <a class="button btn-xs btn btn-primary"
+                        href="claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=paper">
+                        Paper</a>
+                    <a class="button btn btn-xs btn-primary"
+                        href="claim_history_versions_view.php?insid=<?= $r['insuranceid'] ?>&amp;pid=<?= $r['patientid'] ?>&amp;history_id=<?= $r['id'] ?>&amp;view=efile">
+                        E-File</a>
+                <?php } ?>
             </td>
         </tr>
         <tr class="expand" style="display:none">
             <td colspan="5">
-                <pre class="yaml"><?php foreach ($r as $key=>$value) { echo e("$key: $value") . '<br>'; } ?></pre>
+                <?php if (!$deleted) { ?>
+                    <pre class="yaml"><?php foreach ($r as $key=>$value) { echo e("$key: $value") . '<br>'; } ?></pre>
+                <?php } ?>
             </td>
         </tr>
     <?php } ?>

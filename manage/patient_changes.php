@@ -418,9 +418,9 @@ if(isset($_POST['submit'])){
                     <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
                 <?php } ?>
                 <?php if (in_array(trim($c[$field]), $emailsInUse)) { ?>
-                    <input type="button" class="button1" value="&laquo;" onclick="return false;" disabled title="This email is already taken by another patient" />
+                    <input type="button" class="button1" value="&raquo;" onclick="return false;" disabled title="This email is already taken by another patient" />
                 <?php } else { ?>
-                    <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+                    <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
                 <?php } ?>
             </td>
             <td>

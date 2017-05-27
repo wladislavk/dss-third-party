@@ -406,7 +406,7 @@ if(isset($_POST['submit'])){
             <td><?= $label; ?>:</td>
             <td>
                 <?php if (in_array(trim($p[$field]), $emailsInUse)) { ?>
-                    <input readonly type="text" class="doc_field" value="<?= $p[$field]; ?>" disabled title="This email is already taken by another patient" />
+                    <input readonly type="text" value="<?= $p[$field]; ?>" disabled title="This email is already taken by another patient" />
                 <?php } else { ?>
                     <input readonly type="text" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
                 <?php } ?>
@@ -425,7 +425,7 @@ if(isset($_POST['submit'])){
             </td>
             <td>
                 <?php if (in_array(trim($c[$field]), $emailsInUse)) { ?>
-                    <input readonly type="text" class="pat_field" value="<?= $c[$field]; ?>" disabled title="This email is already taken by another patient" />
+                    <input readonly type="text" value="<?= $c[$field]; ?>" disabled title="This email is already taken by another patient" />
                 <?php } else { ?>
                     <input readonly type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
                 <?php } ?>

@@ -82,4 +82,11 @@ class LedgerStatement extends Model implements Resource, Repository
 
         return !empty($query) ? $query->number : 0;
     }
+
+    public function removeByIdAndPatientId($id, $patientId)
+    {
+        return $this->where('id', $id)
+            ->where('patientid', $patientId)
+            ->delete();
+    }
 }

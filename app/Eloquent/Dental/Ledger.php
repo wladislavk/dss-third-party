@@ -551,4 +551,10 @@ class Ledger extends Model implements Resource, Repository
 
         return $sortColumn;
     }
+
+    public function updateWherePrimaryClaimId($primaryClaimId, $data = [])
+    {
+        return $this->where('primary_claim_id', $primaryClaimId)
+            ->update($data);
+    }
 }

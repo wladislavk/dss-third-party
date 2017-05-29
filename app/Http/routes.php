@@ -87,6 +87,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('insurances', 'InsurancesController', ['except' => ['create', 'edit']]);
     Route::post('insurances/rejected', 'InsurancesController@getRejected');
     Route::post('insurances/{type}', 'InsurancesController@getFrontOfficeClaims');
+    Route::post('insurances/remove-claim', 'InsurancesController@removeClaim');
     Route::resource('insurance-files', 'InsuranceFilesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-histories', 'InsuranceHistoriesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-preauth', 'InsurancePreauthController', ['except' => ['create', 'edit']]);
@@ -107,6 +108,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('ledger-histories/ledger-report', 'LedgerHistoriesController@getHistoriesForLedgerReport');
     Route::resource('ledger-payments', 'LedgerPaymentsController', ['except' => ['create', 'edit']]);
     Route::resource('ledger-records', 'LedgerRecordsController', ['except' => ['create', 'edit']]);
+    Route::resource('ledger-statements', 'LedgerStatementsController', ['except' => ['create', 'edit']]);
+    Route::post('ledger-statements/remove', 'LedgerStatementsController@removeByIdAndPatientId');
     Route::resource('letter-templates', 'LetterTemplatesController', ['except' => ['create', 'edit']]);
     Route::resource('custom-letter-templates', 'CustomLetterTemplatesController', ['except' => ['create', 'edit']]);
     Route::resource('letters', 'LettersController', ['except' => ['create', 'edit']]);

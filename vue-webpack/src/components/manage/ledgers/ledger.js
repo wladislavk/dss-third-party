@@ -120,6 +120,20 @@ export default {
         this.$set(this.routeParameters, 'sortDirection', 'asc')
       }
     },
+    '$route.query.inspay': function () {
+      if (this.$route.query.inspay) {
+        this.$set(this.routeParameters, 'inspay', 1)
+      } else {
+        this.$set(this.routeParameters, 'inspay', 0)
+      }
+    },
+    '$route.query.openclaims': function () {
+      if (this.$route.query.openclaims) {
+        this.$set(this.routeParameters, 'openclaims', 1)
+      } else {
+        this.$set(this.routeParameters, 'openclaims', 0)
+      }
+    },
     'routeParameters': {
       handler: function () {
         this.getLedgerData()
@@ -170,27 +184,25 @@ export default {
     },
     onClickStatementLedgerRow (ledgerId) {
       if (confirm('Do Your Really want to Delete?.')) {
-        this.$router.push({
-          name  : this.$route.name,
-          query : {
-            delstatementid: ledgerId,
-            pid: this.routeParameters.patientId
-          }
-        })
+        this.deleteLedgerStatement(ledgerId, this.routeParameters.patientId)
+          .then(response => {
+            this.message = 'Deleted Successfully'
+          }, response => {
+            this.handleErrors('deleteLedgerStatement', response)
+          })
       }
     },
     onClickEditLedgerPayment () {
       // loadPopup('edit_ledger_payment.php?ed=' + row.ledgerid + '&pid=' + routeParameters.patientId)
     },
-    onClickDeleteClaimLedgerRow (ledgerId) {
+    onClickdeleteClaimLedgerRow (ledgerId) {
       if (confirm('Do Your Really want to Delete?.')) {
-        this.$router.push({
-          name  : this.$route.name,
-          query : {
-            delclaimid: ledgerId,
-            pid: this.routeParameters.patientId
-          }
-        })
+        this.deleteClaim(ledgerId, this.routeParameters.patientId)
+          .then(response => {
+            this.message = response.data.message
+          }, response => {
+            this.handleErrors('deleteClaim', response)
+          })
       }
     },
     onClickEditInsurance () {
@@ -506,6 +518,16 @@ export default {
       var data = { patient_id: patientId}
 
       return this.$http.post(process.env.API_PATH + 'ledgers/report-rows-number', data)
+    },
+    deleteLedgerStatement (id, patientId) {
+      var data = { id: id, patient_id: patientId }
+
+      return this.$http.post(process.env.API_PATH + 'ledger-statements/remove', data)
+    },
+    deleteClaim (claimId) {
+      var data = { claim_id: claimId }
+
+      return this.$http.post(process.env.API_PATH + 'insurances/remove-claim', data)
     }
   }
 }

@@ -127,6 +127,7 @@
                     v-for="row in ledgerRows"
                 >
                     <tr
+                        v-if="routeParameters.inspay != 1 || row.ledger == 'claim'"
                         v-on:click="onClickLedgerRow(row)"
                         :class="'tr_active ' + getLedgerRowStatus(row)"
                         :title="row.filed_by_bo == 1 ? '3rd party Billing is responsible for this claim' : ''"
@@ -144,10 +145,10 @@
                             {{ getDescription(row) }}
                         </td>
                         <td valign="top" align="right">
-                            {{ row.ledger != 'claim' && row.amount != 0 ? formatLedger(row.amount) : '' }}
+                            {{ row.ledger && row.ledger != 'claim' && row.amount != 0 ? formatLedger(row.amount) : '' }}
                         </td>
                         <td valign="top" align="right">
-                            {{ row.ledger != 'claim' && row.paid_amount != 0 ? formatLedger(row.paid_amount) : '' }}
+                            {{ row.ledger && row.ledger != 'claim' && row.paid_amount != 0 ? formatLedger(row.paid_amount) : '' }}
                         </td>
                         <td></td>
                         <td valign="top" align="right">

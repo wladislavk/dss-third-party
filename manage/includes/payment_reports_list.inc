@@ -72,9 +72,9 @@ if ($npiList) {
         $each = 'pr.response LIKE \'%"npi":"' . $db->escape($each) . '"%\'';
     });
     $npiList = join(' OR ', $npiList);
-    $npiConditional = "OR ($npiList)";
+    $npiConditional = "($npiList)";
 } else {
-    $npiConditional = '1 = 1';
+    $npiConditional = '1 = 0';
 }
 
 $sql_count = "SELECT COUNT(payment_id) AS total

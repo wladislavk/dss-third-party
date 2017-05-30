@@ -99,6 +99,7 @@ $p = array_only($p, $validKeys);
 $c = array_only($c, $validKeys);
 
 $emailsToUpdate = [];
+$emailsInUse = [];
 
 /**
  * Normalize dates, external data uses Y-m-d H-i-s, internal data uses m/d/Y
@@ -148,12 +149,14 @@ foreach (['p', 'c'] as $which) {
     }
 }
 
-$escapedEmails = $db->escapeList($emailsToUpdate);
-$emailsInUse = $db->getResults("SELECT email
+if (count($emailsToUpdate)) {
+    $escapedEmails = $db->escapeList($emailsToUpdate);
+    $emailsInUse = $db->getResults("SELECT email
     FROM dental_patients
     WHERE patientid != '$patientId'
         AND email IN ($escapedEmails)");
-$emailsInUse = array_pluck($emailsInUse, 'email');
+    $emailsInUse = array_pluck($emailsInUse, 'email');
+}
 
 $num_changes = count(array_diff_assoc($p, $c));
 

@@ -19,15 +19,15 @@ if (!empty($_GET['forced'])) {
 		$editor_initials = $_POST['editor_initials'];
 		if($_POST['ed'] == '') {
 			$ins_sql = "insert into dental_notes set 
-						patientid = '".s_for($_GET['pid'])."',
+						patientid = '".$db->escape($_GET['pid'])."',
 						status = 1,
-						notes = '".s_for($notes)."',
-						editor_initials = '".s_for($editor_initials)."',
-						procedure_date = '".s_for($procedure_date)."',
-						userid = '".s_for($_SESSION['userid'])."',
-						docid = '".s_for($_SESSION['docid'])."',";
+						notes = '".$db->escape($notes)."',
+						editor_initials = '".$db->escape($editor_initials)."',
+						procedure_date = '".$db->escape($procedure_date)."',
+						userid = '".$db->escape($_SESSION['userid'])."',
+						docid = '".$db->escape($_SESSION['docid'])."',";
 			if(isset($_POST['sign']) && ($_SESSION['docid']==$_SESSION['userid'] || $user_sign==1)) {
-			  	$ins_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(),";
+			  	$ins_sql .= " signed_id='".$db->escape($_SESSION['userid'])."', signed_on=now(),";
 			}elseif(isset($_POST['signstaff'])) {
 		        $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."'";
         		$salt_row = $db->getRow($salt_sql);
@@ -37,7 +37,7 @@ if (!empty($_GET['forced'])) {
         		$check_my = $db->getResults($check_sql);
         		if(count($check_my) == 1) {
 					$check_myarray = $check_my[0];
-					$ins_sql .= " signed_id='".s_for($check_myarray['userid'])."', signed_on=now(),";
+					$ins_sql .= " signed_id='".$db->escape($check_myarray['userid'])."', signed_on=now(),";
 ?>
                     <script type="text/javascript">
                         alert("Progress Note SIGNED and saved successfully.");
@@ -52,7 +52,7 @@ if (!empty($_GET['forced'])) {
 				}
 			}
 
-			$ins_sql .= " adddate = now(), ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+			$ins_sql .= " adddate = now(), ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
 			
 		 	$id = $db->getInsertId($ins_sql);
 			$db->query("UPDATE dental_notes SET parentid='".$id."' WHERE notesid='".$id."'");	
@@ -86,15 +86,15 @@ if (!empty($_GET['forced'])) {
             }
 
 			$ins_sql .= "
-			            patientid = '".s_for($_GET['pid'])."',
+			            patientid = '".$db->escape($_GET['pid'])."',
 		                status = 1,
-		                notes = '".s_for($notes)."',
-		                editor_initials = '".s_for($editor_initials)."',
-		                procedure_date = '".s_for($procedure_date)."',
-		                userid = '".s_for($_SESSION['userid'])."',
-		                docid = '".s_for($_SESSION['docid'])."',";
+		                notes = '".$db->escape($notes)."',
+		                editor_initials = '".$db->escape($editor_initials)."',
+		                procedure_date = '".$db->escape($procedure_date)."',
+		                userid = '".$db->escape($_SESSION['userid'])."',
+		                docid = '".$db->escape($_SESSION['docid'])."',";
             if(isset($_POST['sign']) && ($_SESSION['docid']==$_SESSION['userid'] || $user_sign==1)) {
-              	$ins_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(), ";
+              	$ins_sql .= " signed_id='".$db->escape($_SESSION['userid'])."', signed_on=now(), ";
             } elseif(isset($_POST['signstaff'])) {
 	            $salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con,$_POST['username'])."'";
 
@@ -106,7 +106,7 @@ if (!empty($_GET['forced'])) {
                 if(count($check_my) == 1)
                 {
                     $check_myarray = $check_my[0];
-                    $ins_sql .= " signed_id='".s_for($check_myarray['userid'])."', signed_on=now(), ";
+                    $ins_sql .= " signed_id='".$db->escape($check_myarray['userid'])."', signed_on=now(), ";
                 } else {
 ?>
                     <script type="text/javascript">
@@ -116,20 +116,20 @@ if (!empty($_GET['forced'])) {
                 }
             }
 
-            $ins_sql .= " parentid='".$parentid."', adddate = now(), ip_address = '".s_for($_SERVER['REMOTE_ADDR'])."'";
+            $ins_sql .= " parentid='".$parentid."', adddate = now(), ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
 
 			$up_sql = "update dental_notes set 
-						patientid = '".s_for($_GET['pid'])."',
+						patientid = '".$db->escape($_GET['pid'])."',
 						status = 1,
-						notes = '".s_for($notes)."',
-						editor_initials = '".s_for($editor_initials)."',
-						procedure_date = '".s_for($procedure_date)."',
+						notes = '".$db->escape($notes)."',
+						editor_initials = '".$db->escape($editor_initials)."',
+						procedure_date = '".$db->escape($procedure_date)."',
 						edited = 1,";
             if(isset($_POST['sign']) && $_SESSION['docid']==$_SESSION['userid']){
-              	$up_sql .= " signed_id='".s_for($_SESSION['userid'])."', signed_on=now(), ";
+              	$up_sql .= " signed_id='".$db->escape($_SESSION['userid'])."', signed_on=now(), ";
             }
             
-            $up_sql .= " userid = '".s_for($_SESSION['userid'])."' where notesid='$noteId'";
+            $up_sql .= " userid = '".$db->escape($_SESSION['userid'])."' where notesid='$noteId'";
 
             if ($isDraft) {
                 $ins_sql .= " WHERE notesid = '$noteId'";
@@ -154,7 +154,7 @@ if (!empty($_GET['forced'])) {
 	$sql = "select * from dental_custom where docid='".$_SESSION['docid']."' order by Title";
 	
 	$total_rec = $db->getNumberRows($sql);
-	$pat_sql = "select * from dental_patients where patientid='".s_for($_GET['pid'])."'";
+	$pat_sql = "select * from dental_patients where patientid='".$db->escape($_GET['pid'])."'";
 
 	$pat_myarray = $db->getRow($pat_sql);
 	$name = st($pat_myarray['lastname'])." ".st($pat_myarray['middlename'])." ".st($pat_myarray['firstname']);
@@ -219,8 +219,8 @@ if (!empty($_GET['forced'])) {
 					LEFT JOIN dental_users u on u.userid=n.userid
 					where notesid='".(!empty($_REQUEST["ed"]) ? $_REQUEST["ed"] : '')."'";
 			$themyarray = $db->getRow($thesql);
-			$notes = is_null($currentNote) ? st($themyarray['notes']) : st($customNotes[$currentNote]['description']);
-			$editor_initials = st($themyarray['editor_initials']);
+			$notes = is_null($currentNote) ? e($themyarray['notes']) : e($customNotes[$currentNote]['description']);
+			$editor_initials = e($themyarray['editor_initials']);
 			$procedure_date = ($themyarray['procedure_date']!='')?date('m/d/Y', strtotime($themyarray['procedure_date'])):'';
 			$but_unsigned_text = "Save and keep UNSIGNED";
 			$but_signed_text = "Save Progress Note and SIGN";

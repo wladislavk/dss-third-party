@@ -530,7 +530,7 @@ foreach ($master_c as $master_r) {
 
 ?>
 <script language="javascript" type="text/javascript" src="/manage/3rdParty/tinymce4/tinymce.min.js"></script>
-<script type="text/javascript" src="/manage/js/edit_letter.js?v=20170309"></script>
+<script type="text/javascript" src="/manage/js/edit_letter.js?v=20170428"></script>
 <script>
     var pageSize = <?= json_encode($pageSize) ?>;
     var pageMargins = <?= json_encode($margins) ?>;
@@ -559,13 +559,6 @@ foreach ($master_c as $master_r) {
         width: <?= formatMm($pageSize['width']) ?>;
         height: <?= formatMm($margins['bottom']) ?>;
     }
-
-    <?php for ($n=2; $n <=0; $n++) { ?>
-    div.preview-letter div.preview-page-break.break-<?= $n ?> {
-        top: <?= formatMm(($pageSize['height'] - $margins['top'] - $margins['bottom'])*$n + $margins['top']) ?>;
-    }
-
-    <?php } ?>
     /* Preview area display */
 </style>
 <p>&nbsp;</p>

@@ -164,22 +164,6 @@ function setup_tinymce (size, family, $reference) {
             "*": "",
         },
         entities: "194,Acirc,34,quot,162,cent,8364,euro,163,pound,165,yen,169,copy,174,reg,8482,trade",
-        setup : function(ed) {
-            ed.on('keyDown', function(e) {
-                if(e.shiftKey && e.keyCode==188){
-                    e.preventDefault();
-                    ed.execCommand('mceInsertContent', false, "≤");
-                }
-                if(e.shiftKey && e.keyCode==190){
-                    e.preventDefault();
-                    ed.execCommand('mceInsertContent', false, "≥");
-                }
-            });
-        },
-        paste_preprocess: function(pl, o) {
-            o.content = o.content.replace(/&lt;/g, "≤");
-            o.content = o.content.replace(/&gt;/g, "≥");
-        },
         content_css: [
             "css/font" + size + ".css?" + now,
             "css/font" + family + ".css?" + now

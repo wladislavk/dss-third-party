@@ -72,39 +72,67 @@ if ($npiList) {
         $each = 'pr.response LIKE \'%"npi":"' . $db->escape($each) . '"%\'';
     });
     $npiList = join(' OR ', $npiList);
-    $orNpiConditional = "OR ($npiList)";
+    $npiConditional = "OR ($npiList)";
 } else {
-    $orNpiConditional = '';
+    $npiConditional = '1 = 1';
 }
 
 $sql_count = "SELECT COUNT(payment_id) AS total
-    FROM dental_payment_reports AS pr
-        INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
-        $sql_join_section
-    WHERE ($sql_user_filter $orNpiConditional)
-        $sql_where
+    FROM (
+        SELECT payment_id
+        FROM dental_payment_reports AS pr
+            INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
+            $sql_join_section
+        WHERE $sql_user_filter
+        
+        UNION
+        
+        SELECT payment_id
+        FROM dental_payment_reports AS pr
+        WHERE $npiConditional
+    ) reports
+    WHERE 1 = 1 $sql_where
     ";
 
 $total = $db->getColumn($sql_count, 'total', 0);
 
 $pages_quantity = $total/$page_count;
 
-$reports_query = "SELECT
-        pr.payment_id,
-        pr.claimid,
-        pr.reference_id,
-        pr.response,
-        pr.adddate,
-        pr.ip_address,
-        i.patientid,
-        i.docid,
-        u.name,
-        $sql_user_filter AS doc_matches
-    FROM dental_payment_reports AS pr
-        INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
-        $sql_join_section
-    WHERE ($sql_user_filter $orNpiConditional)
-        $sql_where
+$reports_query = "SELECT *
+    FROM (
+        SELECT
+            pr.payment_id,
+            pr.claimid,
+            pr.reference_id,
+            pr.response,
+            pr.adddate,
+            pr.ip_address,
+            i.patientid,
+            i.docid,
+            u.name,
+            $sql_user_filter AS doc_matches
+        FROM dental_payment_reports AS pr
+            INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
+            $sql_join_section
+        WHERE $sql_user_filter
+        
+        UNION
+        
+        SELECT
+            pr.payment_id,
+            pr.claimid,
+            pr.reference_id,
+            pr.response,
+            pr.adddate,
+            pr.ip_address,
+            0,
+            $docId,
+            '',
+            0
+        FROM dental_payment_reports AS pr
+        WHERE $npiConditional
+    ) reports
+    WHERE 1 =1 $sql_where
     ORDER BY $sort_by_sql
     LIMIT $from, $page_count";
 $reports_res = $db->getResults($reports_query);

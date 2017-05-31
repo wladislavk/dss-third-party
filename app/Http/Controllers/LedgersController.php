@@ -294,7 +294,7 @@ class LedgersController extends Controller
         $openClaims = $request->input('open_claims') ?: false;
 
         if ($openClaims) {
-            $data = $insurance->getOpenClaims($patientId);
+            $data = $insurance->getOpenClaims($patientId, $page, $rowsPerPage, $sort, $sortDir);
         } else {
             $data = $ledger->getReportData($ledgerNote, $ledgerStatement, $insurance, [
                 'doc_id'        => $docId,

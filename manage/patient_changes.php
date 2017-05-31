@@ -5,21 +5,35 @@ use function in_array;
 
 require_once __DIR__ . '/includes/top.htm';
 
+$docId = intval($_SESSION['docid']);
 $patientId = intval($_GET['pid']);
+$mergeId = isset($_GET['merge_id']) ? intval($_GET['merge_id']) : 0;
 $fromExternal = !empty($_GET['external']);
+
+/**
+ * @ToDo: logic to NOT allow merge profile to receive updates
+ */
 
 $psql = "SELECT *
     FROM dental_patients
-    WHERE patientid = '$patientId'";
+    WHERE patientid = '$patientId'
+        ANd docid = '$docId'";
 $p = $db->getRow($psql);
 
 if ($fromExternal) {
-    $sql = "SELECT *
-        FROM dental_external_patients
-        WHERE patient_id = '$patientId'
-            AND dirty = 1
+    $sql = "SELECT ep.*
+        FROM dental_external_patients ep
+            JOIN dental_patients p ON p.patientid = ep.patient_id
+        WHERE ep.patient_id = '$patientId'
+            AND ep.dirty = 1
+            AND p.docid = '$docId'
         LIMIT 1
     ";
+} else if ($mergeId) {
+    $sql = "SELECT *
+        FROM dental_patients
+        WHERE patientid = '$mergeId'
+            AND docid = '$docId'";
 } else {
     $sql = "SELECT *
         FROM dental_patients
@@ -151,10 +165,14 @@ foreach (['p', 'c'] as $which) {
 
 if (count($emailsToUpdate)) {
     $escapedEmails = $db->escapeList($emailsToUpdate);
+    $andExcludeMergeId = $mergeId ? "AND patientid != '$mergeId'" : '';
+
     $emailsInUse = $db->getResults("SELECT email
-    FROM dental_patients
-    WHERE patientid != '$patientId'
-        AND email IN ($escapedEmails)");
+        FROM dental_patients
+        WHERE patientid != '$patientId'
+            AND parent_patientid != '$patientId'
+            $andExcludeMergeId
+            AND email IN ($escapedEmails)");
     $emailsInUse = array_pluck($emailsInUse, 'email');
 }
 
@@ -167,6 +185,38 @@ if(isset($_POST['submit'])){
     linkRequestData('dental_patients', $_POST['patientid']);
 
     $patientId = $_POST['patientid'];
+    $mergeId = isset($_POST['merge_id']) ? intval($_POST['merge_id']) : 0;
+
+    $validMerge = true;
+
+    if ($fromExternal) {
+        $verification = $db->getRow("SELECT COUNT(p.patientid)
+            FROM dental_patients p
+                LEFT JOIN dental_external_patients ep ON ep.patient_id = p.patientid
+            WHERE (
+                    p.patientid = '$patientId'
+                    OR ep.patient_id = '$patientId'
+                )
+                AND p.docid = '$docId'", 'total');
+        $validMerge = $verification > 1;
+    } else if ($mergeId) {
+        $verification = $db->getRow("SELECT COUNT(p.patientid)
+            FROM dental_patients p
+            WHERE p.patientid IN ('$patientId', '$mergeId')
+                AND p.docid = '$docId'", 'total');
+        $validMerge = $verification > 1;
+    }
+
+    if (!$validMerge) { ?>
+        <script>
+            <?php if ($fromExternal) { ?>
+                alert('There is no external data to merge with this patient profile.');
+            <?php } else { ?>
+                alert('At least one of the two patient profiles does not belong to the Doctor account and the merge cannot be processed.');
+            <?php } ?>
+            window.location = window.location;
+        </script>
+    <?php }
 
     $doctorFields = [];
     $patientFields = [];
@@ -229,10 +279,14 @@ if(isset($_POST['submit'])){
             $db->query("UPDATE dental_external_patients
                 SET $doctorFields
                 WHERE patient_id = '$patientId'");
+        } else if ($mergeId) {
+            /**
+             * Merge profiles: updating profile to be merged should not be allowed
+             */
         } else {
             $db->query("UPDATE dental_patients
-            SET $doctorFields
-            WHERE parent_patientid = '$patientId'");
+                SET $doctorFields
+                WHERE parent_patientid = '$patientId'");
         }
     }
 
@@ -249,8 +303,13 @@ if(isset($_POST['submit'])){
                 SET dirty = FALSE
                 WHERE patient_id = '$patientId'");
         } else {
-            $db->query("DELETE FROM dental_patients
-            WHERE parent_patientid = '$patientId'");
+            if ($mergeId) {
+                $db->query("DELETE FROM dental_patients
+                    WHERE patientid = '$mergeId'");
+            } else {
+                $db->query("DELETE FROM dental_patients
+                    WHERE parent_patientid = '$patientId'");
+            }
         }
     }
 

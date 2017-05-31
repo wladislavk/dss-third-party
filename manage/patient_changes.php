@@ -525,44 +525,32 @@ require_once __DIR__ . '/patient_insurance.php';
 
 if ($num_changes == 0) {
     if ($mergeId) {
-        if (empty($_GET['delete_merge'])) {
-            ?>
-            <script type="text/javascript">
-                if (confirm("Both patient profiles have the same data. Do you want to delete the patient profile to be merged?")) {
-                    window.location = window.location + '&delete_merge=1';
-                } else {
-                    window.location = "add_patient.php?ed=<?= $patientId ?>&preview=1&addtopat=1&pid=<?= $patientId ?>";
-                }
-            </script>
-            <?php
-        } else {
-            $db->query("DELETE FROM dental_patients
-                WHERE patientid = '$mergeId'");
+        $db->query("UPDATE dental_external_patients
+            SET patient_id = '$patientId'
+            WHERE patient_id = '$mergeId'");
+        $db->query("DELETE FROM dental_patients
+            WHERE patientid = '$mergeId'");
 
-            ?>
-            <script type="text/javascript">
-                alert("Patient data is synced, and the merged patient profile has been deleted");
-                window.location = "add_patient.php?ed=<?= $patientId ?>&preview=1&addtopat=1&pid=<?= $patientId ?>";
-            </script>
-            <?php
-        }
-    } else {
-        if ($fromExternal) {
-            $db->query("UPDATE dental_external_patients
+        $message = 'Patient profiles have been merged';
+    } else if ($fromExternal) {
+        $db->query("UPDATE dental_external_patients
             SET dirty = FALSE
             WHERE patient_id = '$patientId'");
-        } else {
-            $db->query("DELETE FROM dental_patients
-            WHERE parent_patientid = '$patientId'");
-        }
 
-        ?>
-        <script type="text/javascript">
-            alert("<?= $fromExternal ? 'External' : 'Patient Portal'?> data is synced with your data");
-            window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
-        </script>
-        <?php
+        $message = 'External data is synced with your data';
+    } else {
+        $db->query("DELETE FROM dental_patients
+            WHERE parent_patientid = '$patientId'");
+
+        $message = 'Patient Portal data is synced with your data';
     }
+
+    ?>
+    <script type="text/javascript">
+        alert(<?= json_encode($message) ?>);
+        window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
+    </script>
+    <?php
 }
 
 require_once __DIR__ . '/includes/bottom.htm';

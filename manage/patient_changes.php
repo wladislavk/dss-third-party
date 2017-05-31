@@ -10,10 +10,6 @@ $patientId = intval($_GET['pid']);
 $mergeId = isset($_GET['merge_id']) ? intval($_GET['merge_id']) : 0;
 $fromExternal = !empty($_GET['external']);
 
-/**
- * @ToDo: logic to NOT allow merge profile to receive updates
- */
-
 $psql = "SELECT *
     FROM dental_patients
     WHERE patientid = '$patientId'
@@ -216,7 +212,9 @@ if(isset($_POST['submit'])){
             <?php } ?>
             window.location = window.location;
         </script>
-    <?php }
+        <?php
+        trigger_error('Die called', E_USER_ERROR);
+    }
 
     $doctorFields = [];
     $patientFields = [];
@@ -329,65 +327,76 @@ if(isset($_POST['submit'])){
     </div>
 <?php } ?>
 <?php if ($c) { ?>
-<form action="patient_changes.php?pid=<?= $patientId ?><?= $fromExternal ? '&amp;external=1' : '' ?>" method="post">
+<form action="patient_changes.php?pid=<?= $patientId ?><?= $mergeId ? "&amp;merge_id=$mergeId" : '' ?><?= $fromExternal ? '&amp;external=1' : '' ?>" method="post">
 <table>
   <tr>
     <th style>Field</th>
-    <th><input type="button" value="Select All" onclick="updateAll('doc');return false;" /><br />Your Data</th>
+    <th>
+        <input type="button" value="Select All" onclick="updateAll('doc');return false;" />
+        <br />
+        <?= $mergeId ? 'Patient to keep' : 'Your Data' ?>
+    </th>
     <th></th>
-    <th><input type="button" value="Select All" onclick="updateAll('pat');return false;" /><br /><?= $fromExternal ? 'External' : 'Patient' ?> Data</th>
+    <th>
+        <input type="button" value="Select All" onclick="updateAll('pat');return false;" />
+        <br />
+        <?= $mergeId ? 'Patient to merge' : ($fromExternal ? 'External Data' : 'Patient Data') ?>
+    </th>
   </tr>
 </table>
-<div> 
-<table >
+<div>
+<table>
 <?php foreach ($fields as $field => $label) {
     $isSame = trim($p[$field]) == trim($c[$field]);
     ?>
     <tr class="<?= $isSame ? 'duplicate' : 'change_row' ?>">
-        <input type="hidden" id="accepted_<?= $field ?>" name="accepted_<?= $field ?>" <?= $isSame ? 'value="none"' : 'class="accepted"' ?> />
-        <input type="hidden" id="value_<?= $field ?>" name="value_<?= $field ?>" <?= $isSame ? '' : 'class="value"' ?> />
+        <td style="display:none;">
+            <input type="hidden" id="accepted_<?= $field ?>" name="accepted_<?= $field ?>" <?= $isSame ? 'value="none"' : 'class="accepted"' ?> />
+            <input type="hidden" id="value_<?= $field ?>" name="value_<?= $field ?>" <?= $isSame ? '' : 'class="value"' ?> />
+        </td>
         <?php if (in_array($field, $doc_fields)) { ?>
             <td>
                 <?= $label ?>:
             </td>
-            <?php
+            <td>
+                <?php
                 $docsql = "SELECT firstname, lastname from dental_contact WHERE contactid='".$p[$field]."'";
                 $docr = $db->getRow($docsql);
-            ?>
-            <td>
+                ?>
                 <input readonly type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
                 <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
             </td>
             <td>
-                <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-                <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+                <?php printSelectionButtons($field, !!$mergeId) ?>
             </td>
-            <?php
+            <td>
+                <?php
                 $docsql = "SELECT firstname, lastname from dental_contact WHERE contactid='".$c[$field]."'";
                 $docr = $db->getRow($docsql);
-            ?>
-            <td>
+                ?>
                 <input readonly type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['firstname']." " .$docr['lastname']; ?>" />
                 <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
             </td>
         <?php } elseif ($field == 'p_m_ins_co' || $field == 's_m_ins_co') { ?>
             <td>
-                <?= $label; ?>:</td>
-            <?php
+                <?= $label; ?>:
+            </td>
+            <td>
+                <?php
                 $docsql = "SELECT company from dental_contact WHERE contactid='".$p[$field]."'";
                 $docr = $db->getRow($docsql);
-            ?>
-            <td><input readonly type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
+                ?>
+                <input readonly type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
                 <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
             </td>
-            <td><input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-                <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+            <td>
+                <?php printSelectionButtons($field, !!$mergeId) ?>
             </td>
-            <?php
+            <td>
+                <?php
                 $docsql = "SELECT company from dental_contact WHERE contactid='".$c[$field]."'";
                 $docr = $db->getRow($docsql);
-            ?>
-            <td>
+                ?>
                 <input readonly type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $docr['company']; ?>" />
                 <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
             </td>
@@ -427,12 +436,11 @@ if(isset($_POST['submit'])){
                 <input readonly type="text" class="doc_field_extra" id="doc_<?= $field; ?>_extra" name="doc_<?= $field; ?>_extra" value="<?= $val; ?>" />
                 <input type="hidden" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
             </td>
-
             <td>
-                <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-                <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+                <?php printSelectionButtons($field, !!$mergeId) ?>
             </td>
-            <?php
+            <td>
+                <?php
                 switch($c[$field]){
                     case 1:
                         $val = 'Medicare';
@@ -459,8 +467,7 @@ if(isset($_POST['submit'])){
                         $val = '';
                         break;
                 }
-            ?>
-            <td>
+                ?>
                 <input readonly type="text" class="pat_field_extra" id="pat_<?= $field; ?>_extra" name="pat_<?= $field; ?>_extra" value="<?= $val; ?>" />
                 <input type="hidden" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
             </td>
@@ -474,16 +481,9 @@ if(isset($_POST['submit'])){
                 <?php } ?>
             </td>
             <td>
-                <?php if (in_array(trim($p[$field]), $emailsInUse)) { ?>
-                    <input type="button" class="button1" value="&laquo;" onclick="return false;" disabled title="This email is already taken by another patient" />
-                <?php } else { ?>
-                    <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-                <?php } ?>
-                <?php if (in_array(trim($c[$field]), $emailsInUse)) { ?>
-                    <input type="button" class="button1" value="&raquo;" onclick="return false;" disabled title="This email is already taken by another patient" />
-                <?php } else { ?>
-                    <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
-                <?php } ?>
+                <?php printSelectionButtons(
+                    $field, in_array(trim($p[$field]), $emailsInUse), in_array(trim($c[$field]), $emailsInUse)
+                ) ?>
             </td>
             <td>
                 <?php if (in_array(trim($c[$field]), $emailsInUse)) { ?>
@@ -498,8 +498,7 @@ if(isset($_POST['submit'])){
                 <input readonly type="text" class="doc_field" id="doc_<?= $field; ?>" name="doc_<?= $field; ?>" value="<?= $p[$field]; ?>" />
             </td>
             <td>
-                <input type="button" class="button1" value="&laquo;" onclick="updateField('<?= $field; ?>', 'doc');return false;" />
-                <input type="button" class="button1" value="&raquo;" onclick="updateField('<?= $field; ?>', 'pat');return false;" />
+                <?php printSelectionButtons($field) ?>
             </td>
             <td>
                 <input readonly type="text" class="pat_field" id="pat_<?= $field; ?>" name="pat_<?= $field; ?>" value="<?= $c[$field]; ?>" />
@@ -521,21 +520,54 @@ require_once __DIR__ . '/patient_contacts.php';
 require_once __DIR__ . '/patient_insurance.php';
 
 if ($num_changes == 0) {
-    if ($fromExternal) {
-        $db->query("UPDATE dental_external_patients
+    if ($mergeId) {
+        if (empty($_GET['delete_merge'])) {
+            ?>
+            <script type="text/javascript">
+                if (confirm("Both patient profiles have the same data. Do you want to delete the patient profile to be merged?")) {
+                    window.location = window.location + '&delete_merge=1';
+                } else {
+                    window.location = "add_patient.php?ed=<?= $patientId ?>&preview=1&addtopat=1&pid=<?= $patientId ?>";
+                }
+            </script>
+            <?php
+        } else {
+            $db->query("DELETE FROM dental_patients
+                WHERE patientid = '$mergeId'");
+
+            ?>
+            <script type="text/javascript">
+                alert("Patient data is synced, and the merged patient profile has been deleted");
+                window.location = "add_patient.php?ed=<?= $patientId ?>&preview=1&addtopat=1&pid=<?= $patientId ?>";
+            </script>
+            <?php
+        }
+    } else {
+        if ($fromExternal) {
+            $db->query("UPDATE dental_external_patients
             SET dirty = FALSE
             WHERE patient_id = '$patientId'");
-    } else {
-        $db->query("DELETE FROM dental_patients
+        } else {
+            $db->query("DELETE FROM dental_patients
             WHERE parent_patientid = '$patientId'");
-    }
+        }
 
-    ?>
-    <script type="text/javascript">
-      alert("<?= $fromExternal ? 'External' : 'Patient Portal'?> data is synced with your data");
-      window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
-    </script>
-    <?php
+        ?>
+        <script type="text/javascript">
+            alert("<?= $fromExternal ? 'External' : 'Patient Portal'?> data is synced with your data");
+            window.location = "add_patient.php?ed=<?= $_GET['pid']; ?>&preview=1&addtopat=1&pid=<?= $_GET['pid']; ?>";
+        </script>
+        <?php
+    }
 }
 
 require_once __DIR__ . '/includes/bottom.htm';
+
+function printSelectionButtons ($field, $disableLeftSide=false, $disableRightSide=false) {
+    foreach (['l' => 'doc', 'r' => 'pat'] as $side=>$target) {
+        $disabled = ($side === 'l' && $disableLeftSide) || ($side === 'r' && $disableRightSide);
+        ?>
+        <input type="button" class="button1" value="&<?= $side ?>aquo;" <?= $disabled ? 'disabled' : '' ?>
+               onclick="updateField(<?= e(json_encode($field)) ?>, '<?= $target ?>');return false;" />
+    <?php }
+}

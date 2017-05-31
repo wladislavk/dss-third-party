@@ -13,6 +13,9 @@ class Insurance extends Model implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
+    // Claim statuses (insurance)
+    const DSS_CLAIM_PENDING = 0;
+
     /**
      * Guarded attributes
      *
@@ -138,6 +141,11 @@ class Insurance extends Model implements Resource, Repository
             ->where('claim.docid', $docId);
     }
 
+    public function scopePending($query)
+    {
+        return $query->where('status', self::DSS_CLAIM_PENDING);
+    }
+
     public function getRejected($patientId = 0)
     {
         return $this->rejected()
@@ -170,5 +178,131 @@ class Insurance extends Model implements Resource, Repository
         return $this->countFrontOfficeClaims($docId)
             ->whereIn('claim.status', ClaimFormData::statusListByName('rejected'))
             ->first();
+    }
+
+    public function getOpenClaims($patientId, $page, $rowsPerPage, $sort, $sortDir)
+    {
+        $query = $this->select(
+                'i.patientid',
+                'i.docid',
+                DB::raw("'claim'"),
+                'i.insuranceid AS ledgerid',
+                'i.adddate AS service_date',
+                'i.adddate AS entry_date',
+                DB::raw("'Claim' AS name"),
+                DB::raw("'Insurance Claim' AS description"),
+                DB::raw('(
+                            SELECT SUM(dl2.amount)
+                            FROM dental_ledger dl2
+                                INNER JOIN dental_insurance i2 ON dl2.primary_claim_id = i2.insuranceid
+                            WHERE i2.insuranceid = i.insuranceid
+                        ) AS amount'),
+                DB::raw('SUM(pay.amount) AS paid_amount'),
+                'i.status',
+                'i.insuranceid AS primary_claim_id',
+                'i.mailed_date',
+                DB::raw($this->filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
+            )->from(DB::raw('dental_insurance i'))
+            ->leftJoin(DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
+            ->leftJoin(DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
+            ->where('i.patientid', $patientId)
+            ->whereNotIn('i.status', [
+                $this->claimStatuses['DSS_CLAIM_PAID_INSURANCE'],
+                $this->claimStatuses['DSS_CLAIM_PAID_SEC_INSURANCE'],
+                $this->claimStatuses['DSS_CLAIM_PAID_PATIENT']
+            ])->groupBy('i.insuranceid')
+            ->orderBy($this->getSortColumnForList($sort), $sortDir)
+            ->skip($page * $rowsPerPage)
+            ->take($rowsPerPage);
+
+        return $query->get();
+    }
+
+    public function getLedgerDetailsQuery($patientId)
+    {
+        return $this->select(
+            'i.patientid',
+            'i.docid',
+            DB::raw("'claim'"),
+            'i.insuranceid',
+            'i.adddate',
+            'i.adddate',
+            DB::raw("'Claim'"),
+            DB::raw("'Insurance Claim'"),
+            DB::raw('(
+                SELECT SUM(dl2.amount)
+                FROM dental_ledger dl2
+                    INNER JOIN dental_insurance i2 ON dl2.primary_claim_id = i2.insuranceid
+                WHERE i2.insuranceid = i.insuranceid)'),
+            DB::raw('SUM(pay.amount)'),
+            'i.status',
+            'i.primary_claim_id',
+            'i.mailed_date',
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw("''"),
+            DB::raw('(
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = i.insuranceid)'),
+            DB::raw("(
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = i.insuranceid
+                    AND create_type = '1')"),
+            DB::raw($this->filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
+        )->from(DB::raw('dental_insurance i'))
+        ->leftJoin(DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
+        ->leftJoin(DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
+        ->where('i.patientid', $patientId)
+        ->groupBy('i.insuranceid');
+    }
+
+    public function getLedgerDetailsRowsNumber($patientId)
+    {
+        $subQuery = $this->select('i.insuranceid')
+            ->from(DB::raw('dental_insurance i'))
+            ->leftJoin(DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
+            ->leftJoin(DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
+            ->whereRaw('i.patientid = ?', [$patientId])
+            ->groupBy('i.insuranceid');
+
+        $subQueryString = $subQuery->toSql();
+
+        $query = $this->select(DB::raw('COUNT(insuranceid) as number'))
+            ->from(DB::raw("($subQueryString) as test"))
+            ->mergeBindings($subQuery->getQuery())
+            ->first();
+
+        return !empty($query) ? $query->number : 0;
+    }
+
+    public function removePendingClaim($claimId)
+    {
+        return $this->where('insuranceid', $claimId)
+            ->pending()
+            ->delete();
+    }
+
+    private function getSortColumnForList($sort)
+    {
+        $sortColumns = [
+            'entry_date'  => 'entry_date',
+            'producer'    => 'name',
+            'patient'     => 'lastname',
+            'description' => 'description',
+            'amount'      => 'amount',
+            'paid_amount' => 'paid_amount',
+            'status'      => 'status'
+        ];
+
+        if (array_key_exists($sort, $sortColumns)) {
+            $sortColumn = $sortColumns[$sort];
+        } else {
+            $sortColumn = 'service_date';
+        }
+
+        return $sortColumn;
     }
 }

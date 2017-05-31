@@ -8,6 +8,7 @@ use DentalSleepSolutions\Http\Requests\InsuranceUpdate;
 use DentalSleepSolutions\Http\Requests\InsuranceDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Insurance;
+use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Insurances;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,9 @@ class InsurancesController extends Controller
 {
     const DSS_USER_TYPE_FRANCHISEE = 1;
     const DSS_USER_TYPE_SOFTWARE   = 2;
+
+    // Transaction statuses (ledger)
+    const DSS_TRXN_NA = 0; // trxn created/updated, but not filed.
 
     /**
      * Display a listing of the resource.
@@ -125,5 +129,23 @@ class InsurancesController extends Controller
         }
 
         return ApiResponse::responseOk('', $data);
+    }
+
+    public function removeClaim(Insurance $resource, Ledger $ledgerResource, Request $request)
+    {
+        $claimId = $request->input('claim_id') ?: 0;
+
+        $isSuccess = $resource->removePendingClaim($claimId);
+
+        if ($isSuccess) {
+            $ledgerResource->updateWherePrimaryClaimId($claimId, [
+                'primary_claim_id' => null,
+                'status'           => self::DSS_TRXN_NA
+            ]);
+
+            return ApiResponse::responseOk('Deleted Successfully');
+        } else {
+            return ApiResponse::responseError('Error deleting');
+        }
     }
 }

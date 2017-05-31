@@ -29,7 +29,8 @@ if ($fromExternal) {
     $sql = "SELECT *
         FROM dental_patients
         WHERE patientid = '$mergeId'
-            AND docid = '$docId'";
+            AND docid = '$docId'
+            AND status NOT IN (1, 2)";
 } else {
     $sql = "SELECT *
         FROM dental_patients
@@ -199,7 +200,10 @@ if(isset($_POST['submit'])){
         $verification = $db->getRow("SELECT COUNT(p.patientid)
             FROM dental_patients p
             WHERE p.patientid IN ('$patientId', '$mergeId')
-                AND p.docid = '$docId'", 'total');
+                AND p.docid = '$docId'
+                AND IF(p.patientid = '$patientId', p.status IN (1, 2), TRUE)
+                AND IF(p.patientid = '$mergeId', p.status NOT IN (1, 2), TRUE)
+                ", 'total');
         $validMerge = $verification > 1;
     }
 

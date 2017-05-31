@@ -30,7 +30,7 @@ $logs = $db->getResults('SELECT *
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
 <script>
     jQuery(function($){
-        $('pre.on-demand').each(function () {
+        $('code.on-demand').each(function () {
             hljs.highlightBlock(this);
         });
     });
@@ -54,7 +54,7 @@ $logs = $db->getResults('SELECT *
                 <tr>
                     <td><?= e($log['method']) ?></td>
                     <td><?= e($log['route']) ?></td>
-                    <td><pre class="on-demand"><?= e($log['payload']) ?></pre></td>
+                    <td><code class="on-demand"><?= e($log['payload']) ?></code></td>
                     <td><?= e($log['created_at']) ?></td>
                 </tr>
             <?php } ?>

@@ -150,7 +150,7 @@ export default {
     },
     totalCharges () {
       var total = this.ledgerRows.reduce((sum, currentRow) => {
-        return sum + (currentRow.ledger != 'claim' ? +currentRow.amount : 0)
+        return sum + (currentRow.ledger && currentRow.ledger != 'claim' ? +currentRow.amount : 0)
       }, 0)
 
       return total
@@ -159,7 +159,7 @@ export default {
       var total = this.ledgerRows.reduce((sum, currentRow) => {
         var isLedgerNotPaidAndNotAdjustment = !(currentRow.ledger === 'ledger_paid' && currentRow.payer == constants.DSS_TRXN_TYPE_ADJ)
 
-        return sum + (isLedgerNotPaidAndNotAdjustment && currentRow.ledger != 'claim' ? +currentRow.paid_amount : 0)
+        return sum + (isLedgerNotPaidAndNotAdjustment && currentRow.ledger && currentRow.ledger != 'claim' ? +currentRow.paid_amount : 0)
       }, 0)
 
       return total

@@ -166,7 +166,10 @@ $my = $db->getResults($sql);
 			<a href="#" onclick="$('.sim_<?php echo $myarray['patientid']; ?>').toggle();return false;"><?php echo count($sim); ?></a>
 		</td>
 		<td valign="top">
-			<a href="pending_patient.php?createid=<?php echo $myarray["patientid"]; ?>" class="editlink" title="EDIT">
+            <a href="#" onclick="$('.sim_<?php echo $myarray['patientid']; ?>').toggle();return false;">
+                Merge
+            </a>
+            <a href="pending_patient.php?createid=<?php echo $myarray["patientid"]; ?>" class="editlink" title="EDIT">
 			        Create
 			</a> 
             <a href="pending_patient.php?deleteid=<?php echo $myarray["patientid"]; ?>" onclick="return confirm('Are you sure you want to delete <?php echo $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
@@ -188,6 +191,7 @@ $my = $db->getResults($sql);
             <?php echo st($s["phone"]); ?>
         </td>
         <td>
+            <a href="/manage/patient_changes.php?pid=<?= intval($s['id']) ?>&amp;merge_id=<?= intval($myarray['patientid']) ?>">Merge</a>
         </td>
         <td valign="top">
         </td>

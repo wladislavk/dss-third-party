@@ -12,7 +12,9 @@ abstract class Controller extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
 
+    /** @var User|mixed */
     protected $currentUser;
+
     protected $auth;
 
     public function __construct(JWTAuth $auth, User $userModel)
@@ -24,6 +26,11 @@ abstract class Controller extends BaseController
         }
     }
 
+    /**
+     * @param JWTAuth $auth
+     * @param User $userModel
+     * @return mixed
+     */
     private function getUserInfo(JWTAuth $auth, User $userModel)
     {
         $user = $auth->toUser();

@@ -27,6 +27,7 @@ import PrintReferredByContact from 'components/manage/referredby/print/printRefe
 import Sleeplabs from 'components/manage/sleeplabs/sleeplabs.vue'
 import CorporateContacts from 'components/manage/corporate-contacts/corporateContacts.vue'
 import LedgerReportFull from 'components/manage/ledgers/report-full/ledgerReportFull.vue'
+import Ledger from 'components/manage/ledgers/ledger.vue'
 
 // service routes
 import PageNotFound from 'components/services/pageNotFound.vue'
@@ -114,6 +115,15 @@ const router = new Router({
       path: '/manage/ledger-report-full',
       name: 'ledger-report-full',
       component: LedgerReportFull,
+      meta: {
+        requiresAuth: true,
+        requiresManageTemplate: true
+      }
+    },
+    {
+      path: '/manage/ledger',
+      name: 'ledger',
+      component: Ledger,
       meta: {
         requiresAuth: true,
         requiresManageTemplate: true

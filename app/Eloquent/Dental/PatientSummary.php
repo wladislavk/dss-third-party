@@ -48,4 +48,17 @@ class PatientSummary extends Model implements Resource, Repository
             ->where('patient.docid', $docId)
             ->update(['summary.tracker_notes' => $notes]);
     }
+
+    public function getPatientInfo($patientId)
+    {
+        return $this->select('patient_info')
+            ->where('pid', $patientId)
+            ->first();
+    }
+
+    public function updatePatientSummary($patientId = 0, $data = [])
+    {
+        return $this->where('pid', $patientId)
+            ->update($data);
+    }
 }

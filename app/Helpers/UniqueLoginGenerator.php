@@ -14,19 +14,46 @@ class UniqueLoginGenerator
         $this->patientModel = $patientModel;
     }
 
-    public function generateUniquePatientLogin(array $patientFormData)
+    /**
+     * @param string $firstName
+     * @param string $lastName
+     * @return string
+     */
+    public function generateUniquePatientLogin($firstName, $lastName)
     {
-        $uniqueLogin = strtolower(
-            substr($patientFormData["firstname"], 0, 1) . $patientFormData["lastname"]
-        );
-
+        $initial = $this->getInitial($firstName);
+        $uniqueLogin = strtolower($initial . $lastName);
         $similarPatientLogin = $this->patientModel->getSimilarPatientLogin($uniqueLogin);
 
         if ($similarPatientLogin) {
-            $number = str_replace($uniqueLogin, '', $similarPatientLogin->login);
+            $number = $this->getLoginNumber($similarPatientLogin->login, $uniqueLogin);
             $number = $number + 1;
             $uniqueLogin = $uniqueLogin . $number;
         }
         return $uniqueLogin;
+    }
+
+    /**
+     * @param string $firstName
+     * @return string
+     */
+    private function getInitial($firstName)
+    {
+        if (!$firstName) {
+            return '';
+        }
+        return substr($firstName, 0, 1);
+    }
+
+    /**
+     * TODO: this logic does not make sense because it relies too much on how logins are formed
+     *
+     * @param string $compositeLogin
+     * @param string $stringPart
+     * @return int
+     */
+    private function getLoginNumber($compositeLogin, $stringPart)
+    {
+        return intval(str_replace($stringPart, '', $compositeLogin));
     }
 }

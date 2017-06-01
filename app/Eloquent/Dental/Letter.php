@@ -307,6 +307,12 @@ class Letter extends Model implements Resource, Repository
             ]);
     }
 
+    /**
+     * @param $referralList
+     * @param $patientId
+     * @param string $type
+     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function getPhysicianOrPatientPendingLetters($referralList, $patientId, $type = 'physician')
     {
         switch ($type) {

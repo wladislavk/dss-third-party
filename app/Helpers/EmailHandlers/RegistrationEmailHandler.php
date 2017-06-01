@@ -10,6 +10,7 @@ use DentalSleepSolutions\Helpers\PasswordResetDataSetter;
 
 class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
 {
+    const MESSAGE = 'Your email address was updated and not registered. The registration mail was successfully sent.';
     const HEAR_FROM_YOU_LEGEND = '<p>We hope to hear from you soon!</p>';
 
     // TODO: do these pages still exist? if so, all references to them should have their own namespace
@@ -97,10 +98,32 @@ class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
     }
 
     /**
+     * @param string $newEmail
+     * @param string $oldEmail
+     * @param bool $hasPatientPortal
+     * @return bool
+     */
+    protected function shouldBeSent($newEmail, $oldEmail, $hasPatientPortal)
+    {
+        if ($hasPatientPortal) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @param int $accessType
      */
     public function setAccessType($accessType)
     {
         $this->accessType = $accessType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return self::MESSAGE;
     }
 }

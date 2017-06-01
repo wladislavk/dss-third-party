@@ -24,12 +24,12 @@ abstract class AbstractEmailHandler
      * @param int $patientId
      * @param string $newEmail
      * @param string $oldEmail
-     *
+     * @param bool $hasPatientPortal
      * @return void
      */
-    public function handleEmail($patientId, $newEmail, $oldEmail = '')
+    public function handleEmail($patientId, $newEmail, $oldEmail = '', $hasPatientPortal = false)
     {
-        if (!$this->shouldBeSent($newEmail, $oldEmail)) {
+        if (!$this->shouldBeSent($newEmail, $oldEmail, $hasPatientPortal)) {
             return;
         }
         $patientId = intval($patientId);
@@ -109,6 +109,11 @@ abstract class AbstractEmailHandler
     }
 
     /**
+     * @return string
+     */
+    abstract public function getMessage();
+
+    /**
      * @param int $patientId
      * @param array $newPatientData
      * @return void
@@ -128,9 +133,10 @@ abstract class AbstractEmailHandler
     /**
      * @param string $newEmail
      * @param string $oldEmail
+     * @param bool $hasPatientPortal
      * @return bool
      */
-    abstract protected function shouldBeSent($newEmail, $oldEmail);
+    abstract protected function shouldBeSent($newEmail, $oldEmail, $hasPatientPortal);
 
     /**
      * @return string|null

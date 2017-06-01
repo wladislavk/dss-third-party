@@ -4,6 +4,8 @@ namespace DentalSleepSolutions\Helpers\EmailHandlers;
 
 class UpdateEmailHandler extends AbstractEmailHandler
 {
+    const MESSAGE = 'The mail about changing patient email was successfully sent.';
+
     const EMAIL_SUBJECT = 'Online Patient Portal Email Update';
     const EMAIL_VIEW = 'emails.update';
 
@@ -28,9 +30,10 @@ class UpdateEmailHandler extends AbstractEmailHandler
     /**
      * @param string $newEmail
      * @param string $oldEmail
+     * @param bool $hasPatientPortal
      * @return bool
      */
-    protected function shouldBeSent($newEmail, $oldEmail)
+    protected function shouldBeSent($newEmail, $oldEmail, $hasPatientPortal)
     {
         if (strtolower(trim($oldEmail)) === strtolower(trim($newEmail))) {
             return false;
@@ -86,5 +89,13 @@ class UpdateEmailHandler extends AbstractEmailHandler
     protected function updateModels($patientId, array $newPatientData)
     {
         // do nothing
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return self::MESSAGE;
     }
 }

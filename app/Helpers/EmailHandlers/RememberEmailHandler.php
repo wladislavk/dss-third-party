@@ -4,6 +4,8 @@ namespace DentalSleepSolutions\Helpers\EmailHandlers;
 
 class RememberEmailHandler extends AbstractRegistrationRelatedEmailHandler
 {
+    const MESSAGE = 'The reminding mail was successfully sent.';
+
     // TODO: do these pages still exist? if so, all references to them should have their own namespace
     const LOGIN_PAGE = 'reg/login.php';
 
@@ -45,5 +47,24 @@ class RememberEmailHandler extends AbstractRegistrationRelatedEmailHandler
     protected function extendPatientData($patientId, $newEmail, $oldEmail, array $patientData)
     {
         return [];
+    }
+
+    /**
+     * @param string $newEmail
+     * @param string $oldEmail
+     * @param bool $hasPatientPortal
+     * @return bool
+     */
+    protected function shouldBeSent($newEmail, $oldEmail, $hasPatientPortal)
+    {
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return self::MESSAGE;
     }
 }

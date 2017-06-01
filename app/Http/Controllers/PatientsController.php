@@ -16,12 +16,12 @@ use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\Summaries;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Resources\Contact;
-use DentalSleepSolutions\Contracts\Resources\PatientSummary;
 use DentalSleepSolutions\Contracts\Resources\ProfileImage;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Structs\PdfHeaderData;
+use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -235,20 +235,22 @@ class PatientsController extends Controller
         Request $request,
         $patientId = null
     ) {
-        $docId = 0;
-        if ($this->currentUser->docid) {
-            $docId = $this->currentUser->docid;
-        }
+        $docId = $this->currentUser->getDocIdOrZero();
         // check if the request contains tracker notes
         if ($request->has('tracker_notes')) {
+            $trackerNotes = $request->input('tracker_notes');
             $this->validate($request, (new PatientSummaryUpdate())->rules());
-            $patientSummaryResource->updateTrackerNotes($patientId, $docId, $request->input('tracker_notes'));
+            $patientSummaryResource->updateTrackerNotes($patientId, $docId, $trackerNotes);
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
-        $emailTypesForSending = $request->input('requested_emails', false);
-        $pressedButtons = $request->input('pressed_buttons', false);
+        $emailTypesForSending = $request->input('requested_emails', []);
+        $pressedButtons = $request->input('pressed_buttons', []);
+
         $patientFormData = $request->input('patient_form_data', []);
+        if (!count($patientFormData)) {
+            return ApiResponse::responseError('Patient data is empty.', 422);
+        }
 
         $patientLocation = 0;
         if (!empty($patientFormData['location'])) {
@@ -256,7 +258,6 @@ class PatientsController extends Controller
         }
         unset($patientFormData['location']);
 
-        // validate input patient form data
         if ($patientId) {
             $validator = $this->getValidationFactory()->make($patientFormData, (new PatientUpdate())->rules());
         } else {
@@ -264,16 +265,19 @@ class PatientsController extends Controller
         }
 
         if ($validator->fails()) {
-            return ApiResponse::responseError('', 422, $validator->messages());
-        }
-        if (count($patientFormData) == 0) {
-            return ApiResponse::responseError('Patient data is empty.', 422);
+            return ApiResponse::responseError('', 422, $validator->getMessageBag()->all());
         }
 
         $responseData = $patientEditor->editPatient(
-            $this->currentUser, $emailTypesForSending, $pressedButtons, $patientFormData, $request->ip(), $patientLocation, $patientId
+            $this->currentUser,
+            $emailTypesForSending,
+            $pressedButtons,
+            $patientFormData,
+            $request->ip(),
+            $patientLocation,
+            $patientId
         );
-        return ApiResponse::responseOk('', $responseData);
+        return ApiResponse::responseOk('', $responseData->toArray());
     }
 
     public function getDataForFillingPatientForm(

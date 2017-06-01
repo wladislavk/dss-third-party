@@ -9,7 +9,7 @@ use DentalSleepSolutions\Http\Requests\LedgerHistoryDestroy;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\LedgerHistory;
 use DentalSleepSolutions\Contracts\Repositories\LedgerHistories;
-
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 /**
@@ -91,5 +91,18 @@ class LedgerHistoriesController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    public function getHistoriesForLedgerReport(LedgerHistories $resource, Request $request)
+    {
+        $docId = $this->currentUser->docid ?: 0;
+
+        $patientId = $request->input('patient_id') ?: 0;
+        $ledgerId = $request->input('ledger_id') ?: 0;
+        $type = $request->input('type');
+
+        $data = $resource->getHistoriesForLedgerReport($docId, $patientId, $ledgerId, $type);
+
+        return ApiResponse::responseOk('', $data);
     }
 }

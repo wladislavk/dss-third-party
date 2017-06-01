@@ -38,27 +38,13 @@ class LetterTriggerLauncher
     ) {
         $this->treatmentCompleteTrigger->trigger($patientId, $docId, $userId);
 
-        $mdContactsArray = $this->formMdContacts($mdContacts);
         $params = [
-            LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContactsArray,
+            LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts,
         ];
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
 
         if ($shouldSendIntro) {
             $this->letterToPatientTrigger->trigger($patientId, $docId, $userId);
         }
-    }
-
-    private function formMdContacts(MDContacts $mdContacts)
-    {
-        $mdContacts = [];
-        foreach (self::DOC_FIELDS as $field) {
-            $newMdContact = 0;
-            if (!empty($patientFormData[$field])) {
-                $newMdContact = $patientFormData[$field];
-            }
-            $mdContacts[] = $newMdContact;
-        }
-        return $mdContacts;
     }
 }

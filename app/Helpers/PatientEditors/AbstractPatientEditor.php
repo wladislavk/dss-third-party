@@ -1,26 +1,22 @@
 <?php
 
-namespace DentalSleepSolutions\Helpers;
+namespace DentalSleepSolutions\Helpers\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Factories\EmailHandlerFactory;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
+use DentalSleepSolutions\Helpers\LetterTriggerLauncher;
+use DentalSleepSolutions\Helpers\PatientFormDataChecker;
+use DentalSleepSolutions\Helpers\PatientPortalRetriever;
+use DentalSleepSolutions\Helpers\PatientSummaryManager;
 use DentalSleepSolutions\Structs\EditPatientMail;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
-use DentalSleepSolutions\Structs\MDContacts;
-use DentalSleepSolutions\Structs\PatientName;
-use DentalSleepSolutions\Structs\PressedButtons;
+use DentalSleepSolutions\Structs\NewPatientFormData;
 use DentalSleepSolutions\Structs\RequestedEmails;
 
-class PatientEditor
+abstract class AbstractPatientEditor
 {
-    /** @var PatientCreator */
-    private $patientCreator;
-
-    /** @var PatientUpdater */
-    private $patientUpdater;
-
     /** @var RegistrationEmailHandler */
     private $registrationEmailHandler;
 
@@ -37,11 +33,9 @@ class PatientEditor
     private $letterTriggerLauncher;
 
     /** @var Patient */
-    private $patientModel;
+    protected $patientModel;
 
     public function __construct(
-        PatientCreator $patientCreator,
-        PatientUpdater $patientUpdater,
         RegistrationEmailHandler $registrationEmailHandler,
         PatientFormDataChecker $patientFormDataChecker,
         PatientSummaryManager $patientSummaryManager,
@@ -49,8 +43,6 @@ class PatientEditor
         LetterTriggerLauncher $letterTriggerLauncher,
         Patient $patientModel
     ) {
-        $this->patientCreator = $patientCreator;
-        $this->patientUpdater = $patientUpdater;
         $this->registrationEmailHandler = $registrationEmailHandler;
         $this->patientFormDataChecker = $patientFormDataChecker;
         $this->patientSummaryManager = $patientSummaryManager;
@@ -59,88 +51,23 @@ class PatientEditor
         $this->patientModel = $patientModel;
     }
 
-    public function editPatient(
-        User $currentUser,
-        RequestedEmails $emailTypesForSending,
-        PressedButtons $pressedButtons,
-        array $patientFormData,
-        $patientLocation,
-        $hasPatientPortal,
-        $shouldSendIntroLetter,
-        PatientName $patientName,
-        MDContacts $mdContacts,
-        Patient $unchangedPatient = null
-    ) {
+    public function doActionsAfterDBUpdate()
+    {
         $docId = $currentUser->getDocIdOrZero();
         $userType = $currentUser->getUserTypeOrZero();
         $userId = $currentUser->getUserIdOrZero();
-
-        // TODO: need to add logic for logging actions
-
-        $responseData = new EditPatientResponseData();
-        $this->populateResponseData(
-            $responseData,
-            $patientFormData,
-            $currentUser,
-            $hasPatientPortal,
-            $patientLocation,
-            $emailTypesForSending,
-            $pressedButtons,
-            $patientName,
-            $unchangedPatient
-        );
-        $patientId = $unchangedPatient->patientid;
-        if ($responseData->createdPatientId) {
-            $patientId = $responseData->createdPatientId;
-        }
-
         $this->letterTriggerLauncher->triggerLetters(
             $patientId, $docId, $userId, $userType, $shouldSendIntroLetter, $mdContacts
         );
+    }
 
+    public function modifyResponseData(EditPatientResponseData $responseData)
+    {
         if ($this->shouldSendRegistrationEmail($hasPatientPortal, $emailTypesForSending)) {
             $this->sendRegistrationEmail(
                 $responseData, $patientFormData, $unchangedPatient, $patientId
             );
         }
-
-        $isInfoComplete = $this->patientFormDataChecker->isInfoComplete($patientFormData);
-
-        $this->patientSummaryManager->updatePatientSummary($patientId, $isInfoComplete);
-        return $responseData;
-    }
-
-    private function populateResponseData(
-        EditPatientResponseData $responseData,
-        array $patientFormData,
-        User $currentUser,
-        $hasPatientPortal,
-        $patientLocation,
-        RequestedEmails $emailTypesForSending,
-        PressedButtons $pressedButtons,
-        PatientName $patientName,
-        Patient $unchangedPatient = null
-    ) {
-        if ($unchangedPatient) {
-            $this->patientUpdater->updatePatient(
-                $responseData,
-                $unchangedPatient,
-                $patientFormData,
-                $currentUser,
-                $emailTypesForSending,
-                $pressedButtons,
-                $hasPatientPortal,
-                $patientLocation
-            );
-            return;
-        }
-        $this->patientCreator->createPatient(
-            $responseData,
-            $patientFormData,
-            $currentUser,
-            $patientLocation,
-            $patientName
-        );
     }
 
     private function shouldSendRegistrationEmail($hasPatientPortal, RequestedEmails $emailTypesForSending)
@@ -172,4 +99,20 @@ class PatientEditor
         $mail->message = $message;
         $responseData->mails = $mail;
     }
+
+    public function updateDB(array $formData)
+    {
+        $newFormData = $this->getNewFormData();
+        $updatedFormData = array_merge($formData, $newFormData->toArray());
+        $entity = $this->launchDBUpdatingMethods($updatedFormData);
+        return $entity;
+    }
+
+    /**
+     * @return NewPatientFormData
+     */
+    abstract protected function getNewFormData();
+
+    abstract protected function launchDBUpdatingMethods(array $formData);
+
 }

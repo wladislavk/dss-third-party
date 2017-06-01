@@ -29,12 +29,16 @@ class PatientFormDataUpdater
     /** @var UniqueLoginGenerator */
     private $uniqueLoginGenerator;
 
+    private $patientFormDataChecker;
+
     public function __construct(
         PatientPortalRetriever $patientPortalRetriever,
-        UniqueLoginGenerator $uniqueLoginGenerator
+        UniqueLoginGenerator $uniqueLoginGenerator,
+        PatientFormDataChecker $patientFormDataChecker
     ) {
         $this->patientPortalRetriever = $patientPortalRetriever;
         $this->uniqueLoginGenerator = $uniqueLoginGenerator;
+        $this->patientFormDataChecker = $patientFormDataChecker;
     }
 
     /**
@@ -135,5 +139,32 @@ class PatientFormDataUpdater
             }
         }
         return $contacts;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInfoComplete()
+    {
+        return $this->patientFormDataChecker->isInfoComplete($this->patientFormData);
+    }
+
+    /**
+     * @return int
+     */
+    public function getSSN()
+    {
+        if (isset($this->patientFormData['ssn'])) {
+            return $this->patientFormData['ssn'];
+        }
+        return 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNewEmail()
+    {
+        return $this->patientFormData['email'];
     }
 }

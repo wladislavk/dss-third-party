@@ -1,16 +1,18 @@
 <?php
 
-namespace DentalSleepSolutions\Helpers;
+namespace DentalSleepSolutions\Helpers\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\User;
-use DentalSleepSolutions\Libraries\Password;
+use DentalSleepSolutions\Helpers\PasswordGenerator;
+use DentalSleepSolutions\Helpers\PatientSummaryManager;
+use DentalSleepSolutions\Helpers\SimilarHelper;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\NewPatientFormData;
 use DentalSleepSolutions\Structs\PatientName;
 use Illuminate\Http\Request;
 
-class PatientCreator
+class PatientCreator extends AbstractPatientEditor
 {
     // TODO: it is highly likely that this URL is no longer relevant
     const DUPLICATE_URL = 'duplicate_patients.php?pid=';
@@ -23,9 +25,6 @@ class PatientCreator
 
     /** @var PasswordGenerator */
     private $passwordGenerator;
-
-    /** @var Patient */
-    private $patientModel;
 
     /** @var string */
     private $ip;
@@ -44,54 +43,43 @@ class PatientCreator
         $this->ip = $request->ip();
     }
 
-    public function createPatient(
-        EditPatientResponseData $responseData,
-        array $patientFormData,
-        User $currentUser,
-        $patientLocation,
-        PatientName $patientName
-    ) {
+    public function createPatient($ssn, User $currentUser, PatientName $patientName)
+    {
+    }
+
+    protected function getNewFormData()
+    {
         $newPatientFormData = new NewPatientFormData();
-        if (isset($patientFormData['ssn']) && $patientFormData['ssn']) {
-            $this->passwordGenerator->generatePassword($patientFormData['ssn'], $newPatientFormData);
+        if ($ssn) {
+            $this->passwordGenerator->generatePassword($ssn, $newPatientFormData);
         }
         $newPatientFormData->userId = $currentUser->getUserIdOrZero();
         $newPatientFormData->docId = $currentUser->getDocIdOrZero();
         $newPatientFormData->ipAddress = $this->ip;
         $newPatientFormData->patientName = $patientName;
-        // TODO: divide this method so that it is possible to return $newPatientFormData
-        /*$patientFormData = array_merge($patientFormData, [
-            'password'   => $password,
-            'salt'       => $salt,
-            'userid'     => $currentUser->getUserIdOrZero(),
-            'docid'      => $currentUser->getDocIdOrZero(),
-            'ip_address' => $this->ip,
-            'firstname'  => ucfirst($patientName->firstName),
-            'lastname'   => ucfirst($patientName->lastName),
-            'middlename' => ucfirst($patientName->middleName),
-        ]);*/
+        return $newPatientFormData;
+    }
 
-        $createdPatient = $this->patientModel->create($patientFormData);
-        $createdPatientId = $createdPatient->patientid;
-        $responseData->createdPatientId = $createdPatient;
+    protected function launchDBUpdatingMethods(array $formData)
+    {
+//        $newPatientFormData = $patientCreator->createPatient($ssn, $this->currentUser, $patientName);
+        $createdPatient = $this->patientModel->create($formData);
+        return $createdPatient->patientid;
+    }
+
+    public function modifyResponseData(EditPatientResponseData $responseData)
+    {
+        parent::modifyResponseData($responseData);
 
         $this->patientSummaryManager->createSummary($createdPatientId, $patientLocation);
 
         $similarPatients = $this->similarHelper
             ->getSimilarPatients($createdPatientId, $currentUser->getDocIdOrZero());
 
+        $responseData->createdPatientId = $createdPatientId;
         $fullName = $patientName->firstName . ' ' . $patientName->lastName;
-        $this->modifyResponseData($responseData, $similarPatients, $fullName, $createdPatientId);
-    }
-
-    private function modifyResponseData(
-        EditPatientResponseData $responseData,
-        array $similarPatients,
-        $fullName,
-        $patientId
-    ) {
         if (count($similarPatients)) {
-            $responseData->redirectTo = self::DUPLICATE_URL . $patientId;
+            $responseData->redirectTo = self::DUPLICATE_URL . $createdPatientId;
             return;
         }
         $responseData->status = sprintf(EditPatientResponseData::PATIENT_ADDED_STATUS, $fullName);

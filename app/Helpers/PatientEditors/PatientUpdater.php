@@ -1,15 +1,16 @@
 <?php
 
-namespace DentalSleepSolutions\Helpers;
+namespace DentalSleepSolutions\Helpers\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Dental\InsurancePreauth;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
+use DentalSleepSolutions\Structs\NewPatientFormData;
 use DentalSleepSolutions\Structs\PressedButtons;
 use DentalSleepSolutions\Structs\RequestedEmails;
 
-class PatientUpdater
+class PatientUpdater extends AbstractPatientEditor
 {
     // TODO: it is highly likely that this URL is no longer relevant
     const REDIRECT_URL = 'hst_request_co.php?ed=';
@@ -38,9 +39,6 @@ class PatientUpdater
     /** @var PatientSummaryManager */
     private $patientSummaryManager;
 
-    /** @var Patient */
-    private $patientModel;
-
     /** @var InsurancePreauth */
     private $insurancePreauthModel;
 
@@ -49,33 +47,24 @@ class PatientUpdater
         PreauthHelper $preauthHelper,
         LetterManager $letterManager,
         PatientSummaryManager $patientSummaryManager,
-        Patient $patientModel,
         InsurancePreauth $insurancePreauthModel
     ) {
         $this->patientUpdateMailer = $patientUpdateMailer;
         $this->preauthHelper = $preauthHelper;
         $this->letterManager = $letterManager;
         $this->patientSummaryManager = $patientSummaryManager;
-        $this->patientModel = $patientModel;
         $this->insurancePreauthModel = $insurancePreauthModel;
     }
 
-    public function updatePatient(
-        EditPatientResponseData $responseData,
-        Patient $unchangedPatient,
-        array $patientFormData,
-        User $currentUser,
-        RequestedEmails $emailTypesForSending,
-        PressedButtons $pressedButtons,
-        $hasPatientPortal,
-        $patientLocation
-    ) {
-        $responseData->mails = $this->patientUpdateMailer->handleEmails(
-            $unchangedPatient, $patientFormData['email'], $emailTypesForSending, $hasPatientPortal
-        );
+    protected function getNewFormData()
+    {
+        return new NewPatientFormData();
+    }
 
+    protected function launchDBUpdatingMethods(array $formData)
+    {
         $hasInsuranceInfoChanged = $this->checkIfInsuranceInfoWasChanged(
-            $patientFormData, $unchangedPatient
+            $formData, $unchangedPatient
         );
         if ($hasInsuranceInfoChanged) {
             $this->removePendingVerificationOfBenefits($currentUser, $unchangedPatient->patientid, $currentUser->getUserIdOrZero());
@@ -83,21 +72,26 @@ class PatientUpdater
 
         $this->patientSummaryManager->updateSummaryWithLocation($unchangedPatient->patientid, $patientLocation);
 
-        $this->patientModel->updatePatient($unchangedPatient->patientid, $patientFormData);
-        $this->patientModel->updateChildrenPatients($unchangedPatient->patientid, ['email' => $patientFormData['email']]);
-
         // TODO: if it is required, need to rewrite it to the new Laravel structure
         // $this->setDateCompleted();
 
-        if ($this->wasReferrerChanged($unchangedPatient, $patientFormData)) {
+        if ($this->wasReferrerChanged($unchangedPatient, $formData)) {
             $this->letterManager->manageLetters(
                 $currentUser->getDocIdOrZero(),
                 $currentUser->getUserIdOrZero(),
                 $unchangedPatient,
-                $patientFormData['referred_source'],
-                $patientFormData['referred_by']
+                $formData['referred_source'],
+                $formData['referred_by']
             );
         }
+    }
+
+    public function modifyResponseData(EditPatientResponseData $responseData)
+    {
+        parent::modifyResponseData($responseData);
+        $responseData->mails = $this->patientUpdateMailer->handleEmails(
+            $unchangedPatient, $patientFormData['email'], $emailTypesForSending, $hasPatientPortal
+        );
         if ($pressedButtons) {
             $this->handlePressedButtons($responseData, $pressedButtons, $unchangedPatient->patientid);
         }

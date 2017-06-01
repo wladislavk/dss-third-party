@@ -2,8 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Factories\PatientEditorFactory;
+use DentalSleepSolutions\Helpers\PatientCreator;
 use DentalSleepSolutions\Helpers\PatientEditor;
 use DentalSleepSolutions\Helpers\PatientFormDataUpdater;
+use DentalSleepSolutions\Helpers\PatientSummaryManager;
+use DentalSleepSolutions\Helpers\PatientUpdater;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -20,6 +24,7 @@ use DentalSleepSolutions\Contracts\Resources\ProfileImage;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
+use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\PdfHeaderData;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
@@ -226,8 +231,9 @@ class PatientsController extends Controller
     }
 
     /**
-     * @param PatientEditor $patientEditor
+     * @param PatientEditorFactory $patientEditorFactory
      * @param PatientFormDataUpdater $patientFormDataUpdater
+     * @param PatientSummaryManager $patientSummaryManager,
      * @param Patient $patientModel
      * @param PatientSummary $patientSummaryModel
      * @param Request $request
@@ -235,8 +241,9 @@ class PatientsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function editingPatient(
-        PatientEditor $patientEditor,
+        PatientEditorFactory $patientEditorFactory,
         PatientFormDataUpdater $patientFormDataUpdater,
+        PatientSummaryManager $patientSummaryManager,
         Patient $patientModel,
         PatientSummary $patientSummaryModel,
         Request $request,
@@ -284,20 +291,21 @@ class PatientsController extends Controller
         $shouldSendIntroLetter = $patientFormDataUpdater->shouldSendIntroLetter();
         $patientName = $patientFormDataUpdater->getPatientName();
         $mdContacts = $patientFormDataUpdater->setMDContacts();
+        $ssn = $patientFormDataUpdater->getSSN();
+        $newEmail = $patientFormDataUpdater->getNewEmail();
 
-        $newFormData = $patientFormDataUpdater->getPatientFormData();
-        $responseData = $patientEditor->editPatient(
-            $this->currentUser,
-            $emailTypesForSending,
-            $pressedButtons,
-            $newFormData,
-            $patientLocation,
-            $hasPatientPortal,
-            $shouldSendIntroLetter,
-            $patientName,
-            $mdContacts,
-            $unchangedPatient
-        );
+        $patientEditor = $patientEditorFactory->getPatientEditor($patientId);
+        $patientEditor->updateDB($patientFormDataUpdater->getPatientFormData());
+        $patientEditor->doActionsAfterDBUpdate();
+        $responseData = new EditPatientResponseData();
+        $patientEditor->modifyResponseData($responseData);
+
+        $isInfoComplete = $patientFormDataUpdater->isInfoComplete();
+        if ($responseData->createdPatientId) {
+            $patientId = $responseData->createdPatientId;
+        }
+        $patientSummaryManager->updatePatientSummary($patientId, $isInfoComplete);
+
         return ApiResponse::responseOk('', $responseData->toArray());
     }
 

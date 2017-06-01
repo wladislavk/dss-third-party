@@ -9,6 +9,7 @@ use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
 use DentalSleepSolutions\Structs\LetterData;
+use DentalSleepSolutions\Structs\MDContacts;
 
 class LettersToMDTrigger extends AbstractLetterTrigger
 {
@@ -67,13 +68,7 @@ class LettersToMDTrigger extends AbstractLetterTrigger
         ) {
             return false;
         }
-        $recipients = [];
-        foreach ($params[self::MD_CONTACTS_PARAM] as $contactId) {
-            $foundContact = $this->findContact($contactId);
-            if ($foundContact) {
-                $recipients[] = $contactId;
-            }
-        }
+        $recipients = $this->getRecipientsList($params[self::MD_CONTACTS_PARAM]);
         if (!count($recipients)) {
             return false;
         }
@@ -83,14 +78,30 @@ class LettersToMDTrigger extends AbstractLetterTrigger
     }
 
     /**
+     * @param MDContacts $mdContacts
+     * @return array
+     */
+    private function getRecipientsList(MDContacts $mdContacts)
+    {
+        $recipients = [];
+        foreach ($mdContacts as $contactId) {
+            $foundContact = $this->findContact($contactId);
+            if ($foundContact) {
+                $recipients[] = $contactId;
+            }
+        }
+        return array_unique($recipients);
+    }
+
+    /**
      * @param array $params
      * @throws GeneralException
      */
     protected function checkParams(array $params)
     {
-        if (!isset($params[self::MD_CONTACTS_PARAM]) || !is_array($params[self::MD_CONTACTS_PARAM])) {
+        if (!isset($params[self::MD_CONTACTS_PARAM]) || !$params[self::MD_CONTACTS_PARAM] instanceof MDContacts) {
             throw new GeneralException(
-                self::MD_CONTACTS_PARAM . ' key must be present in $params and contain an array'
+                self::MD_CONTACTS_PARAM . ' key must be present in $params and contain an instance of ' . MDContacts::class
             );
         }
     }

@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Helpers\PatientEditor;
+use DentalSleepSolutions\Helpers\PatientFormDataUpdater;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -10,7 +11,6 @@ use DentalSleepSolutions\Helpers\PdfHelper;
 use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
 use DentalSleepSolutions\Http\Requests\PatientDestroy;
-use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\Summaries;
@@ -21,7 +21,10 @@ use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Structs\PdfHeaderData;
+use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
+use DentalSleepSolutions\Structs\PressedButtons;
+use DentalSleepSolutions\Structs\RequestedEmails;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -101,7 +104,7 @@ class PatientsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Patient $resource
+     * @param  Patient $resource
      * @param  \DentalSleepSolutions\Http\Requests\PatientDestroy $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -223,59 +226,77 @@ class PatientsController extends Controller
     }
 
     /**
-     * @param PatientSummary $patientSummaryResource
      * @param PatientEditor $patientEditor
+     * @param PatientFormDataUpdater $patientFormDataUpdater
+     * @param Patient $patientModel
+     * @param PatientSummary $patientSummaryModel
      * @param Request $request
      * @param int|null $patientId
      * @return \Illuminate\Http\JsonResponse
      */
     public function editingPatient(
-        PatientSummary $patientSummaryResource,
         PatientEditor $patientEditor,
+        PatientFormDataUpdater $patientFormDataUpdater,
+        Patient $patientModel,
+        PatientSummary $patientSummaryModel,
         Request $request,
         $patientId = null
     ) {
         $docId = $this->currentUser->getDocIdOrZero();
-        // check if the request contains tracker notes
+        // TODO: this block should be decoupled into a different controller action
         if ($request->has('tracker_notes')) {
             $trackerNotes = $request->input('tracker_notes');
             $this->validate($request, (new PatientSummaryUpdate())->rules());
-            $patientSummaryResource->updateTrackerNotes($patientId, $docId, $trackerNotes);
+            $patientSummaryModel->updateTrackerNotes($patientId, $docId, $trackerNotes);
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
-
-        $emailTypesForSending = $request->input('requested_emails', []);
-        $pressedButtons = $request->input('pressed_buttons', []);
+        $emailTypesForSending = new RequestedEmails($request->input('requested_emails', []));
+        $pressedButtons = new PressedButtons($request->input('pressed_buttons', []));
 
         $patientFormData = $request->input('patient_form_data', []);
         if (!count($patientFormData)) {
             return ApiResponse::responseError('Patient data is empty.', 422);
         }
-
-        $patientLocation = 0;
-        if (!empty($patientFormData['location'])) {
-            $patientLocation = $patientFormData['location'];
-        }
-        unset($patientFormData['location']);
+        $patientFormDataUpdater->setPatientFormData($patientFormData);
+        $patientLocation = $patientFormDataUpdater->getPatientLocation();
 
         if ($patientId) {
-            $validator = $this->getValidationFactory()->make($patientFormData, (new PatientUpdate())->rules());
+            $rules = (new PatientUpdate())->rules();
         } else {
-            $validator = $this->getValidationFactory()->make($patientFormData, (new PatientStore())->rules());
+            $rules = (new PatientStore())->rules();
         }
-
+        $validator = $this->getValidationFactory()->make($patientFormData, $rules);
         if ($validator->fails()) {
             return ApiResponse::responseError('', 422, $validator->getMessageBag()->all());
         }
 
+        /** @var Patient|null $unchangedPatient */
+        $unchangedPatient = null;
+        if ($patientId) {
+            $unchangedPatient = $patientModel->find($patientId);
+            if (!$unchangedPatient) {
+                return ApiResponse::responseError("Patient with ID $patientId not found", 422);
+            }
+            $patientFormDataUpdater->setEmailBounce($unchangedPatient);
+            $patientFormDataUpdater->modifyLogin($unchangedPatient->login);
+        }
+        $hasPatientPortal = $patientFormDataUpdater->getHasPatientPortal($docId);
+        $shouldSendIntroLetter = $patientFormDataUpdater->shouldSendIntroLetter();
+        $patientName = $patientFormDataUpdater->getPatientName();
+        $mdContacts = $patientFormDataUpdater->setMDContacts();
+
+        $newFormData = $patientFormDataUpdater->getPatientFormData();
         $responseData = $patientEditor->editPatient(
             $this->currentUser,
             $emailTypesForSending,
             $pressedButtons,
-            $patientFormData,
-            $request->ip(),
+            $newFormData,
             $patientLocation,
-            $patientId
+            $hasPatientPortal,
+            $shouldSendIntroLetter,
+            $patientName,
+            $mdContacts,
+            $unchangedPatient
         );
         return ApiResponse::responseOk('', $responseData->toArray());
     }

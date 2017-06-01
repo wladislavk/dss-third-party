@@ -6,6 +6,9 @@ use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Libraries\Password;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
+use DentalSleepSolutions\Structs\NewPatientFormData;
+use DentalSleepSolutions\Structs\PatientName;
+use Illuminate\Http\Request;
 
 class PatientCreator
 {
@@ -18,51 +21,55 @@ class PatientCreator
     /** @var PatientSummaryManager */
     private $patientSummaryManager;
 
+    /** @var PasswordGenerator */
+    private $passwordGenerator;
+
     /** @var Patient */
     private $patientModel;
+
+    /** @var string */
+    private $ip;
 
     public function __construct(
         SimilarHelper $similarHelper,
         PatientSummaryManager $patientSummaryManager,
-        Patient $patientModel
+        PasswordGenerator $passwordGenerator,
+        Patient $patientModel,
+        Request $request
     ) {
         $this->similarHelper = $similarHelper;
         $this->patientSummaryManager = $patientSummaryManager;
+        $this->passwordGenerator = $passwordGenerator;
         $this->patientModel = $patientModel;
+        $this->ip = $request->ip();
     }
 
     public function createPatient(
         EditPatientResponseData $responseData,
         array $patientFormData,
         User $currentUser,
-        $ip,
-        $uniqueLogin,
-        $patientLocation
+        $patientLocation,
+        PatientName $patientName
     ) {
-        $salt = '';
-        $password = '';
-        if ($patientFormData['ssn']) {
-            $salt = Password::createSalt();
-            $password = preg_replace('/\D/', '', $patientFormData['ssn']);
-            $password = Password::genPassword($password, $salt);
+        $newPatientFormData = new NewPatientFormData();
+        if (isset($patientFormData['ssn']) && $patientFormData['ssn']) {
+            $this->passwordGenerator->generatePassword($patientFormData['ssn'], $newPatientFormData);
         }
-
-        $middleName = '';
-        if (!empty($patientFormData['middlename'])) {
-            $middleName = ucfirst($patientFormData['middlename']);
-        }
-        $patientFormData = array_merge($patientFormData, [
-            'login'      => $uniqueLogin,
+        $newPatientFormData->userId = $currentUser->getUserIdOrZero();
+        $newPatientFormData->docId = $currentUser->getDocIdOrZero();
+        $newPatientFormData->ipAddress = $this->ip;
+        $newPatientFormData->patientName = $patientName;
+        // TODO: divide this method so that it is possible to return $newPatientFormData
+        /*$patientFormData = array_merge($patientFormData, [
             'password'   => $password,
             'salt'       => $salt,
             'userid'     => $currentUser->getUserIdOrZero(),
             'docid'      => $currentUser->getDocIdOrZero(),
-            'ip_address' => $ip,
-            // set filters
-            'firstname'  => ucfirst($patientFormData['firstname']),
-            'lastname'   => ucfirst($patientFormData['lastname']),
-            'middlename' => $middleName,
-        ]);
+            'ip_address' => $this->ip,
+            'firstname'  => ucfirst($patientName->firstName),
+            'lastname'   => ucfirst($patientName->lastName),
+            'middlename' => ucfirst($patientName->middleName),
+        ]);*/
 
         $createdPatient = $this->patientModel->create($patientFormData);
         $createdPatientId = $createdPatient->patientid;
@@ -73,7 +80,7 @@ class PatientCreator
         $similarPatients = $this->similarHelper
             ->getSimilarPatients($createdPatientId, $currentUser->getDocIdOrZero());
 
-        $fullName = $patientFormData['firstname'] . ' ' . $patientFormData['lastname'];
+        $fullName = $patientName->firstName . ' ' . $patientName->lastName;
         $this->modifyResponseData($responseData, $similarPatients, $fullName, $createdPatientId);
     }
 

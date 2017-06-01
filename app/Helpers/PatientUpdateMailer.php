@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Factories\EmailHandlerFactory;
 use DentalSleepSolutions\Helpers\EmailHandlers\UpdateEmailHandler;
 use DentalSleepSolutions\Structs\EditPatientMail;
+use DentalSleepSolutions\Structs\RequestedEmails;
 
 class PatientUpdateMailer
 {
@@ -24,16 +25,14 @@ class PatientUpdateMailer
     /**
      * @param Patient $unchangedPatient
      * @param string $newEmail
-     * @param int $patientId
-     * @param array $emailTypesForSending
+     * @param RequestedEmails $emailTypesForSending
      * @param bool $hasPatientPortal
      * @return EditPatientMail
      */
     public function handleEmails(
         Patient $unchangedPatient,
         $newEmail,
-        $patientId,
-        array $emailTypesForSending,
+        RequestedEmails $emailTypesForSending,
         $hasPatientPortal
     ) {
         $editPatientMail = new EditPatientMail();
@@ -45,7 +44,7 @@ class PatientUpdateMailer
             return $editPatientMail;
         }
         $handler = $this->emailHandlerFactory->getEmailHandler($mailType);
-        $handler->handleEmail($patientId, $newEmail, $oldEmail, $hasPatientPortal);
+        $handler->handleEmail($unchangedPatient->patientid, $newEmail, $oldEmail, $hasPatientPortal);
         $message = $handler->getMessage();
         $editPatientMail->mailType = $mailType;
         $editPatientMail->message = $message;
@@ -53,13 +52,13 @@ class PatientUpdateMailer
     }
 
     /**
-     * @param array $emailTypesForSending
+     * @param RequestedEmails $emailTypesForSending
      * @param int $registrationStatus
      * @param string $newEmail
      * @param string $oldEmail
      * @return null|string
      */
-    private function getMailType(array $emailTypesForSending, $registrationStatus, $newEmail, $oldEmail)
+    private function getMailType(RequestedEmails $emailTypesForSending, $registrationStatus, $newEmail, $oldEmail)
     {
         if ($this->isUpdate($registrationStatus, $newEmail, $oldEmail)) {
             return EmailHandlerFactory::UPDATED_MAIL;
@@ -91,27 +90,27 @@ class PatientUpdateMailer
     }
 
     /**
-     * @param array $emailTypesForSending
+     * @param RequestedEmails $emailTypesForSending
      * @return bool
      */
-    private function isReminder(array $emailTypesForSending)
+    private function isReminder(RequestedEmails $emailTypesForSending)
     {
-        if (!empty($emailTypesForSending['reminder'])) {
+        if ($emailTypesForSending->reminder) {
             return true;
         }
         return false;
     }
 
     /**
-     * @param array $emailTypesForSending
+     * @param RequestedEmails $emailTypesForSending
      * @param int $registrationStatus
      * @param string $newEmail
      * @param string $oldEmail
      * @return bool
      */
-    private function isRegistration(array $emailTypesForSending, $registrationStatus, $newEmail, $oldEmail)
+    private function isRegistration(RequestedEmails $emailTypesForSending, $registrationStatus, $newEmail, $oldEmail)
     {
-        if (!empty($emailTypesForSending['registration'])) {
+        if ($emailTypesForSending->registration) {
             return false;
         }
         if ($registrationStatus != self::REGISTRATION_EMAILED_STATUS) {

@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Libraries;
 
+// TODO: IMPORTANT! these functions might not be cryptographically secure!
+// TODO: it is highly advisable to switch to native Laravel security methods
 class Password
 {
     public static function createSalt()

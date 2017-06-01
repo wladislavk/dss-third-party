@@ -39,7 +39,6 @@ class LetterManager
     }
 
     /**
-     * @param int $patientId
      * @param int $docId
      * @param int $userId
      * @param Patient $unchangedPatient
@@ -47,7 +46,6 @@ class LetterManager
      * @param string $referredBy
      */
     public function manageLetters(
-        $patientId,
         $docId,
         $userId,
         Patient $unchangedPatient,
@@ -66,14 +64,14 @@ class LetterManager
             $this->letterModel->updatePendingLettersToNewReferrer(
                 $unchangedPatient->referred_by,
                 $referredBy,
-                $patientId,
+                $unchangedPatient->patientid,
                 self::UPDATE_TYPES[$unchangedPatient->referred_source]
             );
             return;
         }
         $letters = $this->letterModel->getPhysicianOrPatientPendingLetters(
             $unchangedPatient->referred_by,
-            $patientId,
+            $unchangedPatient->patientid,
             self::UPDATE_TYPES[$unchangedPatient->referred_source]
         );
         foreach ($letters as $letter) {

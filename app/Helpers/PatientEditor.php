@@ -4,47 +4,25 @@ namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\User;
-use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Factories\EmailHandlerFactory;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
-use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
-use DentalSleepSolutions\Helpers\LetterTriggers\LetterToPatientTrigger;
-use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
 use DentalSleepSolutions\Structs\EditPatientMail;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
+use DentalSleepSolutions\Structs\MDContacts;
+use DentalSleepSolutions\Structs\PatientName;
+use DentalSleepSolutions\Structs\PressedButtons;
+use DentalSleepSolutions\Structs\RequestedEmails;
 
 class PatientEditor
 {
-    const DOC_FIELDS = [
-        'docsleep',
-        'docpcp',
-        'docdentist',
-        'docent',
-        'docmdother',
-        'docmdother2',
-        'docmdother3',
-    ];
-
     /** @var PatientCreator */
     private $patientCreator;
 
     /** @var PatientUpdater */
     private $patientUpdater;
 
-    /** @var TreatmentCompleteTrigger */
-    private $treatmentCompleteTrigger;
-
-    /** @var LettersToMDTrigger */
-    private $lettersToMDTrigger;
-
-    /** @var LetterToPatientTrigger */
-    private $letterToPatientTrigger;
-
     /** @var RegistrationEmailHandler */
     private $registrationEmailHandler;
-
-    /** @var UniqueLoginGenerator */
-    private $uniqueLoginGenerator;
 
     /** @var PatientFormDataChecker */
     private $patientFormDataChecker;
@@ -55,101 +33,70 @@ class PatientEditor
     /** @var PatientPortalRetriever */
     private $patientPortalRetriever;
 
+    /** @var LetterTriggerLauncher */
+    private $letterTriggerLauncher;
+
     /** @var Patient */
     private $patientModel;
 
     public function __construct(
         PatientCreator $patientCreator,
         PatientUpdater $patientUpdater,
-        TreatmentCompleteTrigger $treatmentCompleteTrigger,
-        LettersToMDTrigger $lettersToMDTrigger,
-        LetterToPatientTrigger $letterToPatientTrigger,
         RegistrationEmailHandler $registrationEmailHandler,
-        UniqueLoginGenerator $uniqueLoginGenerator,
         PatientFormDataChecker $patientFormDataChecker,
         PatientSummaryManager $patientSummaryManager,
         PatientPortalRetriever $patientPortalRetriever,
+        LetterTriggerLauncher $letterTriggerLauncher,
         Patient $patientModel
     ) {
         $this->patientCreator = $patientCreator;
         $this->patientUpdater = $patientUpdater;
-        $this->treatmentCompleteTrigger = $treatmentCompleteTrigger;
-        $this->lettersToMDTrigger = $lettersToMDTrigger;
-        $this->letterToPatientTrigger = $letterToPatientTrigger;
         $this->registrationEmailHandler = $registrationEmailHandler;
-        $this->uniqueLoginGenerator = $uniqueLoginGenerator;
         $this->patientFormDataChecker = $patientFormDataChecker;
         $this->patientSummaryManager = $patientSummaryManager;
         $this->patientPortalRetriever = $patientPortalRetriever;
+        $this->letterTriggerLauncher = $letterTriggerLauncher;
         $this->patientModel = $patientModel;
     }
 
     public function editPatient(
         User $currentUser,
-        array $emailTypesForSending,
-        array $pressedButtons,
+        RequestedEmails $emailTypesForSending,
+        PressedButtons $pressedButtons,
         array $patientFormData,
-        $ip,
         $patientLocation,
-        $patientId = null
+        $hasPatientPortal,
+        $shouldSendIntroLetter,
+        PatientName $patientName,
+        MDContacts $mdContacts,
+        Patient $unchangedPatient = null
     ) {
         $docId = $currentUser->getDocIdOrZero();
         $userType = $currentUser->getUserTypeOrZero();
         $userId = $currentUser->getUserIdOrZero();
 
-        $hasPatientPortal = false;
-        if (isset($patientFormData['use_patient_portal'])) {
-            $hasPatientPortal = $this->patientPortalRetriever
-                ->hasPatientPortal($docId, $patientFormData['use_patient_portal']);
-        }
-
-        $this->treatmentCompleteTrigger->trigger($patientId, $docId, $userId);
-
         // TODO: need to add logic for logging actions
-
-        $uniqueLogin = $this->uniqueLoginGenerator->generateUniquePatientLogin(
-            $patientFormData['firstname'], $patientFormData['lastname']
-        );
-
-        /** @var Patient|null $unchangedPatient */
-        $unchangedPatient = null;
-        if ($patientId) {
-            $unchangedPatient = $this->patientModel->find($patientId);
-            if (!$unchangedPatient) {
-                throw new GeneralException("Patient with ID $patientId not found");
-            }
-            if ($patientFormData['email'] != $unchangedPatient->email) {
-                $patientFormData['email_bounce'] = 0;
-            }
-        }
 
         $responseData = new EditPatientResponseData();
         $this->populateResponseData(
             $responseData,
-            $patientId,
             $patientFormData,
-            $ip,
-            $uniqueLogin,
             $currentUser,
             $hasPatientPortal,
             $patientLocation,
             $emailTypesForSending,
             $pressedButtons,
+            $patientName,
             $unchangedPatient
         );
+        $patientId = $unchangedPatient->patientid;
         if ($responseData->createdPatientId) {
             $patientId = $responseData->createdPatientId;
         }
 
-        $mdContacts = $this->formMdContacts($patientFormData);
-        $params = [
-            LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts,
-        ];
-        $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
-
-        if (!empty($patientFormData['introletter']) && $patientFormData['introletter'] == 1) {
-            $this->letterToPatientTrigger->trigger($patientId, $docId, $userId);
-        }
+        $this->letterTriggerLauncher->triggerLetters(
+            $patientId, $docId, $userId, $userType, $shouldSendIntroLetter, $mdContacts
+        );
 
         if ($this->shouldSendRegistrationEmail($hasPatientPortal, $emailTypesForSending)) {
             $this->sendRegistrationEmail(
@@ -165,50 +112,40 @@ class PatientEditor
 
     private function populateResponseData(
         EditPatientResponseData $responseData,
-        $patientId,
         array $patientFormData,
-        $ip,
-        $uniqueLogin,
         User $currentUser,
         $hasPatientPortal,
         $patientLocation,
-        array $emailTypesForSending,
-        $pressedButtons,
+        RequestedEmails $emailTypesForSending,
+        PressedButtons $pressedButtons,
+        PatientName $patientName,
         Patient $unchangedPatient = null
     ) {
-        if ($patientId) {
+        if ($unchangedPatient) {
             $this->patientUpdater->updatePatient(
-                $responseData, $unchangedPatient, $patientFormData, $currentUser, $patientId, $emailTypesForSending, $pressedButtons, $uniqueLogin, $hasPatientPortal, $patientLocation
+                $responseData,
+                $unchangedPatient,
+                $patientFormData,
+                $currentUser,
+                $emailTypesForSending,
+                $pressedButtons,
+                $hasPatientPortal,
+                $patientLocation
             );
             return;
         }
         $this->patientCreator->createPatient(
-            $responseData, $patientFormData, $currentUser, $ip, $uniqueLogin, $patientLocation
+            $responseData,
+            $patientFormData,
+            $currentUser,
+            $patientLocation,
+            $patientName
         );
     }
 
-    private function formMdContacts(array $patientFormData)
+    private function shouldSendRegistrationEmail($hasPatientPortal, RequestedEmails $emailTypesForSending)
     {
-        $mdContacts = [];
-        foreach (self::DOC_FIELDS as $field) {
-            $newMdContact = 0;
-            if (!empty($patientFormData[$field])) {
-                $newMdContact = $patientFormData[$field];
-            }
-            $mdContacts[] = $newMdContact;
-        }
-        return $mdContacts;
-    }
-
-    private function shouldSendRegistrationEmail($hasPatientPortal, array $emailTypesForSending)
-    {
-        if (
-            $emailTypesForSending
-            &&
-            !empty($emailTypesForSending['registration'])
-            &&
-            $hasPatientPortal
-        ) {
+        if ($emailTypesForSending->registration && $hasPatientPortal) {
             return true;
         }
         return false;

@@ -6,6 +6,8 @@ use DentalSleepSolutions\Eloquent\Dental\InsurancePreauth;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
+use DentalSleepSolutions\Structs\PressedButtons;
+use DentalSleepSolutions\Structs\RequestedEmails;
 
 class PatientUpdater
 {
@@ -63,38 +65,32 @@ class PatientUpdater
         Patient $unchangedPatient,
         array $patientFormData,
         User $currentUser,
-        $patientId,
-        array $emailTypesForSending,
-        array $pressedButtons,
-        $uniqueLogin,
+        RequestedEmails $emailTypesForSending,
+        PressedButtons $pressedButtons,
         $hasPatientPortal,
         $patientLocation
     ) {
         $responseData->mails = $this->patientUpdateMailer->handleEmails(
-            $unchangedPatient, $patientFormData['email'], $patientId, $emailTypesForSending, $hasPatientPortal
+            $unchangedPatient, $patientFormData['email'], $emailTypesForSending, $hasPatientPortal
         );
-
-        $this->patientModel->updatePatient($patientId, $patientFormData);
-        $this->patientModel->updateChildrenPatients($patientId, ['email' => $patientFormData['email']]);
 
         $hasInsuranceInfoChanged = $this->checkIfInsuranceInfoWasChanged(
             $patientFormData, $unchangedPatient
         );
         if ($hasInsuranceInfoChanged) {
-            $this->removePendingVerificationOfBenefits($currentUser, $patientId, $currentUser->getUserIdOrZero());
+            $this->removePendingVerificationOfBenefits($currentUser, $unchangedPatient->patientid, $currentUser->getUserIdOrZero());
         }
 
-        $this->patientSummaryManager->updateSummaryWithLocation($patientId, $patientLocation);
-        if ($unchangedPatient->login == '') {
-            $this->patientModel->updatePatient($patientId, ['login' => $uniqueLogin]);
-        }
+        $this->patientSummaryManager->updateSummaryWithLocation($unchangedPatient->patientid, $patientLocation);
 
-        // TODO: if it is required need to rewrite it to the new Laravel structure:
+        $this->patientModel->updatePatient($unchangedPatient->patientid, $patientFormData);
+        $this->patientModel->updateChildrenPatients($unchangedPatient->patientid, ['email' => $patientFormData['email']]);
+
+        // TODO: if it is required, need to rewrite it to the new Laravel structure
         // $this->setDateCompleted();
 
         if ($this->wasReferrerChanged($unchangedPatient, $patientFormData)) {
             $this->letterManager->manageLetters(
-                $patientId,
                 $currentUser->getDocIdOrZero(),
                 $currentUser->getUserIdOrZero(),
                 $unchangedPatient,
@@ -103,7 +99,7 @@ class PatientUpdater
             );
         }
         if ($pressedButtons) {
-            $this->handlePressedButtons($responseData, $pressedButtons, $patientId);
+            $this->handlePressedButtons($responseData, $pressedButtons, $unchangedPatient->patientid);
         }
         $responseData->status = EditPatientResponseData::PATIENT_EDITED_STATUS;
     }
@@ -126,14 +122,14 @@ class PatientUpdater
 
     private function handlePressedButtons(
         EditPatientResponseData $responseData,
-        array $pressedButtons,
+        PressedButtons $pressedButtons,
         $patientId
     ) {
-        if ($pressedButtons['send_hst']) {
+        if ($pressedButtons->sendHst) {
             $responseData->redirectTo = self::REDIRECT_URL . $patientId;
             return;
         }
-        if ($pressedButtons['send_pin_code']) {
+        if ($pressedButtons->sendPinCode) {
             $responseData->sendPinCode = true;
         }
     }

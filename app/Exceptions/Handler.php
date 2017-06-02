@@ -3,8 +3,7 @@
 namespace DentalSleepSolutions\Exceptions;
 
 use Exception;
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Exceptions\ResourceNotFoundException;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;

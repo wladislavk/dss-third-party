@@ -171,14 +171,17 @@ class ApiResponse
     private static function hasTransformer($resource)
     {
         try {
-            $hasTransformer = class_exists($transformer = self::$namespace . class_basename($resource))
-                ? $transformer
-                : false;
+            if (class_exists($transformer = self::$namespace . class_basename($resource))) {
+                return true;
+            }
         } catch (\ErrorException $e) {
-            $hasTransformer = false;
+            /**
+             * Autoloader will fail if the class doesn't exist
+             */
+            return false;
         }
 
-        return $hasTransformer;
+        return false;
     }
 
     /**

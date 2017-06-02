@@ -24,7 +24,11 @@ class ApiAuthController extends ApiBaseController
         $credentials = $request->all();
 
         $credentials = array_only($credentials, ['username', 'password', 'admin']);
-        $credentials['admin'] = empty($credentials['admin']) ? 0 : 1;
+        $credentials['admin'] = 0;
+
+        if (!empty($credentials['admin'])) {
+            $credentials['admin'] = 1;
+        }
 
         try {
             $token = $this->auth->attempt($credentials);

@@ -48,13 +48,11 @@ class User extends Model implements AuthenticatableContract
 
     public static function findByIdOrEmail($id)
     {
+        $id = explode('|', $id);
+
         return self::where(function ($q) use ($id) {
-            if (strpos($id, '|') !== false) {
-                $id = explode('|', $id);
-                $q->whereIn('email', $id)->orWhereIn('id', $id);
-            } else {
-                $q->where('email', $id)->orWhere('id', $id);
-            }
+            $q->whereIn('email', $id)->orWhereIn('id', $id);
+            $q->where('email', $id)->orWhere('id', $id);
         })->get();
     }
 }

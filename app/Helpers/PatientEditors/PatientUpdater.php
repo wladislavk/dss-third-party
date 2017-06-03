@@ -8,7 +8,6 @@ use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\NewPatientFormData;
 use DentalSleepSolutions\Structs\PressedButtons;
-use DentalSleepSolutions\Structs\RequestedEmails;
 
 class PatientUpdater extends AbstractPatientEditor
 {

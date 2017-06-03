@@ -3,13 +3,11 @@
 namespace DentalSleepSolutions\Helpers\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Helpers\PasswordGenerator;
 use DentalSleepSolutions\Helpers\PatientSummaryManager;
 use DentalSleepSolutions\Helpers\SimilarHelper;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\NewPatientFormData;
-use DentalSleepSolutions\Structs\PatientName;
 use Illuminate\Http\Request;
 
 class PatientCreator extends AbstractPatientEditor
@@ -41,10 +39,6 @@ class PatientCreator extends AbstractPatientEditor
         $this->passwordGenerator = $passwordGenerator;
         $this->patientModel = $patientModel;
         $this->ip = $request->ip();
-    }
-
-    public function createPatient($ssn, User $currentUser, PatientName $patientName)
-    {
     }
 
     protected function getNewFormData()

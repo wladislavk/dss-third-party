@@ -7,6 +7,7 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Structs\MDContacts;
 use DentalSleepSolutions\Structs\PatientName;
+use DentalSleepSolutions\Structs\PatientReferrer;
 
 class PatientFormDataUpdater
 {
@@ -18,6 +19,18 @@ class PatientFormDataUpdater
         'docmdother',
         'docmdother2',
         'docmdother3',
+    ];
+
+    const INSURANCE_INFO_FIELDS = [
+        'p_m_relation',
+        'p_m_partyfname',
+        'p_m_partylname',
+        'ins_dob',
+        'p_m_ins_type',
+        'p_m_ins_ass',
+        'p_m_ins_id',
+        'p_m_ins_grp',
+        'p_m_ins_plan',
     ];
 
     /** @var array */
@@ -78,20 +91,6 @@ class PatientFormDataUpdater
     }
 
     /**
-     * @param int $docId
-     * @return bool
-     */
-    public function getHasPatientPortal($docId)
-    {
-        if (!isset($this->patientFormData['use_patient_portal'])) {
-            return false;
-        }
-        $hasPatientPortal = $this->patientPortalRetriever
-            ->hasPatientPortal($docId, $this->patientFormData['use_patient_portal']);
-        return $hasPatientPortal;
-    }
-
-    /**
      * @param string $existingLogin
      */
     public function modifyLogin($existingLogin)
@@ -103,6 +102,20 @@ class PatientFormDataUpdater
             $this->patientFormData['firstname'], $this->patientFormData['lastname']
         );
         $this->patientFormData['login'] = $uniqueLogin;
+    }
+
+    /**
+     * @param int $docId
+     * @return bool
+     */
+    public function getHasPatientPortal($docId)
+    {
+        if (!isset($this->patientFormData['use_patient_portal'])) {
+            return false;
+        }
+        $hasPatientPortal = $this->patientPortalRetriever
+            ->hasPatientPortal($docId, $this->patientFormData['use_patient_portal']);
+        return $hasPatientPortal;
     }
 
     /**
@@ -166,5 +179,29 @@ class PatientFormDataUpdater
     public function getNewEmail()
     {
         return $this->patientFormData['email'];
+    }
+
+    public function getCellphone()
+    {
+        return $this->patientFormData['cell_phone'];
+    }
+
+    public function setReferrer()
+    {
+        $referrer = new PatientReferrer();
+        $referrer->referredBy = $this->patientFormData['referred_by'];
+        $referrer->source = $this->patientFormData['referred_source'];
+        return $referrer;
+    }
+
+    public function setInsuranceInfo()
+    {
+        $insuranceInfo = [];
+        foreach (self::INSURANCE_INFO_FIELDS as $field) {
+            if (isset($this->patientFormData[$field])) {
+                $insuranceInfo[$field] = $this->patientFormData[$field];
+            }
+        }
+        return $insuranceInfo;
     }
 }

@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Factories\EmailHandlerFactory;
 use DentalSleepSolutions\Helpers\EmailHandlers\UpdateEmailHandler;
 use DentalSleepSolutions\Structs\EditPatientMail;
+use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\RequestedEmails;
 
 class PatientUpdateMailer
@@ -24,27 +25,33 @@ class PatientUpdateMailer
 
     /**
      * @param Patient $unchangedPatient
-     * @param string $newEmail
-     * @param RequestedEmails $emailTypesForSending
-     * @param bool $hasPatientPortal
+     * @param EditPatientRequestData $requestData
      * @return EditPatientMail
      */
     public function handleEmails(
         Patient $unchangedPatient,
-        $newEmail,
-        RequestedEmails $emailTypesForSending,
-        $hasPatientPortal
+        EditPatientRequestData $requestData
     ) {
         $editPatientMail = new EditPatientMail();
         $oldEmail = $unchangedPatient->email;
         $registrationStatus = $unchangedPatient->registration_status;
-        $mailType = $this->getMailType($emailTypesForSending, $registrationStatus, $newEmail, $oldEmail);
+        $mailType = $this->getMailType(
+            $requestData->requestedEmails,
+            $registrationStatus,
+            $requestData->newEmail,
+            $oldEmail
+        );
         if (!$mailType) {
             // TODO: check if exception should be thrown
             return $editPatientMail;
         }
         $handler = $this->emailHandlerFactory->getEmailHandler($mailType);
-        $handler->handleEmail($unchangedPatient->patientid, $newEmail, $oldEmail, $hasPatientPortal);
+        $handler->handleEmail(
+            $unchangedPatient->patientid,
+            $requestData->newEmail,
+            $oldEmail,
+            $requestData->hasPatientPortal
+        );
         $message = $handler->getMessage();
         $editPatientMail->mailType = $mailType;
         $editPatientMail->message = $message;

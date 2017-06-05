@@ -4,115 +4,169 @@ namespace DentalSleepSolutions\Helpers\PatientEditors;
 
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\User;
-use DentalSleepSolutions\Factories\EmailHandlerFactory;
-use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\LetterTriggerLauncher;
-use DentalSleepSolutions\Helpers\PatientFormDataChecker;
-use DentalSleepSolutions\Helpers\PatientPortalRetriever;
 use DentalSleepSolutions\Helpers\PatientSummaryManager;
-use DentalSleepSolutions\Structs\EditPatientMail;
+use DentalSleepSolutions\Helpers\RegistrationEmailSender;
+use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\NewPatientFormData;
-use DentalSleepSolutions\Structs\RequestedEmails;
 
 abstract class AbstractPatientEditor
 {
-    /** @var RegistrationEmailHandler */
-    private $registrationEmailHandler;
-
-    /** @var PatientFormDataChecker */
-    private $patientFormDataChecker;
-
-    /** @var PatientSummaryManager */
-    private $patientSummaryManager;
-
-    /** @var PatientPortalRetriever */
-    private $patientPortalRetriever;
+    /** @var RegistrationEmailSender */
+    private $registrationEmailSender;
 
     /** @var LetterTriggerLauncher */
     private $letterTriggerLauncher;
 
-    /** @var Patient */
-    protected $patientModel;
+    /** @var PatientSummaryManager */
+    protected $patientSummaryManager;
 
     public function __construct(
-        RegistrationEmailHandler $registrationEmailHandler,
-        PatientFormDataChecker $patientFormDataChecker,
-        PatientSummaryManager $patientSummaryManager,
-        PatientPortalRetriever $patientPortalRetriever,
+        RegistrationEmailSender $registrationEmailSender,
         LetterTriggerLauncher $letterTriggerLauncher,
-        Patient $patientModel
+        PatientSummaryManager $patientSummaryManager
     ) {
-        $this->registrationEmailHandler = $registrationEmailHandler;
-        $this->patientFormDataChecker = $patientFormDataChecker;
-        $this->patientSummaryManager = $patientSummaryManager;
-        $this->patientPortalRetriever = $patientPortalRetriever;
+        $this->registrationEmailSender = $registrationEmailSender;
         $this->letterTriggerLauncher = $letterTriggerLauncher;
-        $this->patientModel = $patientModel;
+        $this->patientSummaryManager = $patientSummaryManager;
     }
 
-    public function doActionsAfterDBUpdate()
-    {
+    /**
+     * @param array $formData
+     * @param User $currentUser
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     * @return EditPatientResponseData
+     */
+    public function editPatient(
+        array $formData,
+        User $currentUser,
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
+    ) {
+        $responseData = new EditPatientResponseData();
+        if ($unchangedPatient) {
+            $responseData->currentPatientId = $unchangedPatient->patientid;
+        }
+        $this->updateDB($formData, $currentUser, $responseData, $requestData, $unchangedPatient);
+        $this->doActionsAfterDBUpdate($currentUser, $requestData, $unchangedPatient);
+        $this->getResponseData($currentUser, $responseData, $requestData, $unchangedPatient);
+        return $responseData;
+    }
+
+    /**
+     * @param array $formData
+     * @param User $currentUser
+     * @param EditPatientResponseData $responseData
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     */
+    private function updateDB(
+        array $formData,
+        User $currentUser,
+        EditPatientResponseData $responseData,
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
+    ) {
+        $newFormData = $this->getNewFormData($currentUser, $requestData);
+        $updatedFormData = array_merge($formData, $newFormData->toArray());
+        $this->launchDBUpdatingMethods(
+            $updatedFormData, $currentUser, $responseData, $requestData, $unchangedPatient
+        );
+        $this->patientSummaryManager->updatePatientSummary(
+            $responseData->currentPatientId, $requestData->isInfoComplete
+        );
+    }
+
+    /**
+     * @param User $currentUser
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     */
+    private function doActionsAfterDBUpdate(
+        User $currentUser,
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
+    ) {
         $docId = $currentUser->getDocIdOrZero();
         $userType = $currentUser->getUserTypeOrZero();
         $userId = $currentUser->getUserIdOrZero();
         $this->letterTriggerLauncher->triggerLetters(
-            $patientId, $docId, $userId, $userType, $shouldSendIntroLetter, $mdContacts
+            $unchangedPatient->patientid, $docId, $userId, $userType, $requestData
         );
     }
 
-    public function modifyResponseData(EditPatientResponseData $responseData)
-    {
-        if ($this->shouldSendRegistrationEmail($hasPatientPortal, $emailTypesForSending)) {
-            $this->sendRegistrationEmail(
-                $responseData, $patientFormData, $unchangedPatient, $patientId
+    /**
+     * @param User $currentUser
+     * @param EditPatientResponseData $responseData
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     */
+    private function getResponseData(
+        User $currentUser,
+        EditPatientResponseData $responseData,
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
+    ) {
+        if ($this->shouldSendRegistrationEmail($requestData)) {
+            $this->registrationEmailSender->sendRegistrationEmail(
+                $responseData, $requestData, $unchangedPatient
             );
         }
-    }
-
-    private function shouldSendRegistrationEmail($hasPatientPortal, RequestedEmails $emailTypesForSending)
-    {
-        if ($emailTypesForSending->registration && $hasPatientPortal) {
-            return true;
-        }
-        return false;
-    }
-
-    private function sendRegistrationEmail(
-        EditPatientResponseData $responseData,
-        array $patientFormData,
-        Patient $unchangedPatient,
-        $patientId
-    ) {
-        // TODO: this logic needs to be checked. emails are not sent by phone
-        $message = 'Unable to send registration email because no cellphone number is set. Please enter a cellphone number and try again.';
-        if ($patientFormData['email'] && $patientFormData['cell_phone']) {
-            $oldEmail = '';
-            if ($unchangedPatient) {
-                $oldEmail = $unchangedPatient->email;
-            }
-            $this->registrationEmailHandler->handleEmail($patientId, $patientFormData['email'], $oldEmail, true);
-            $message = 'The registration mail was successfully sent.';
-        }
-        $mail = new EditPatientMail();
-        $mail->mailType = EmailHandlerFactory::REGISTRATION_MAIL;
-        $mail->message = $message;
-        $responseData->mails = $mail;
-    }
-
-    public function updateDB(array $formData)
-    {
-        $newFormData = $this->getNewFormData();
-        $updatedFormData = array_merge($formData, $newFormData->toArray());
-        $entity = $this->launchDBUpdatingMethods($updatedFormData);
-        return $entity;
+        $this->setResponseData($currentUser, $responseData, $requestData, $unchangedPatient);
     }
 
     /**
+     * @param EditPatientRequestData $requestData
+     * @return bool
+     */
+    private function shouldSendRegistrationEmail(EditPatientRequestData $requestData)
+    {
+        if (!$requestData->requestedEmails->registration) {
+            return false;
+        }
+        if (!$requestData->hasPatientPortal) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param User $currentUser
+     * @param EditPatientRequestData $requestData
      * @return NewPatientFormData
      */
-    abstract protected function getNewFormData();
+    abstract protected function getNewFormData(
+        User $currentUser,
+        EditPatientRequestData $requestData
+    );
 
-    abstract protected function launchDBUpdatingMethods(array $formData);
+    /**
+     * @param array $formData
+     * @param User $currentUser
+     * @param EditPatientResponseData $responseData
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     */
+    abstract protected function launchDBUpdatingMethods(
+        array $formData,
+        User $currentUser,
+        EditPatientResponseData $responseData,
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
+    );
 
+    /**
+     * @param User $currentUser
+     * @param EditPatientResponseData $responseData
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     */
+    abstract protected function setResponseData(
+        User $currentUser,
+        EditPatientResponseData $responseData,
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
+    );
 }

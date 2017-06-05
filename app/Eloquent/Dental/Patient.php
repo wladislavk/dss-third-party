@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
+use DentalSleepSolutions\Exceptions\GeneralException;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Patient as Resource;
@@ -903,5 +904,23 @@ class Patient extends Model implements Resource, Repository
             ->where('s.place', $sleeplabId)
             ->groupBy('p.patientid')
             ->get();
+    }
+
+    /**
+     * @param int $patientId
+     * @return Patient|null
+     * @throws GeneralException
+     */
+    public function getUnchangedPatient($patientId)
+    {
+        if (!$patientId) {
+            return null;
+        }
+        /** @var Patient|null $unchangedPatient */
+        $unchangedPatient = $this->find($patientId);
+        if (!$unchangedPatient) {
+            throw new GeneralException("Patient with ID $patientId not found");
+        }
+        return $unchangedPatient;
     }
 }

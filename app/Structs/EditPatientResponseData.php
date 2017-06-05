@@ -22,12 +22,12 @@ class EditPatientResponseData implements Arrayable
     public $sendPinCode;
 
     /** @var int */
-    public $createdPatientId;
+    public $currentPatientId = 0;
 
     public function toArray()
     {
         return [
-            'created_patient_id' => $this->createdPatientId,
+            'created_patient_id' => $this->currentPatientId,
             'redirect_to' => $this->redirectTo,
             'status' => $this->status,
             'send_pin_code' => $this->sendPinCode,

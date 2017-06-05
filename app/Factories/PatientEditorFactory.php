@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\App;
 
 class PatientEditorFactory
 {
+    const CREATE_TYPE = 'create';
+    const UPDATE_TYPE = 'update';
+
     const PATIENT_EDITORS = [
-        'create' => PatientCreator::class,
-        'update' => PatientUpdater::class,
+        self::CREATE_TYPE => PatientCreator::class,
+        self::UPDATE_TYPE => PatientUpdater::class,
     ];
 
     /**
@@ -20,9 +23,9 @@ class PatientEditorFactory
      */
     public function getPatientEditor($patientId)
     {
-        $type = 'create';
+        $type = self::CREATE_TYPE;
         if ($patientId) {
-            $type = 'update';
+            $type = self::UPDATE_TYPE;
         }
         return App::make(self::PATIENT_EDITORS[$type]);
     }

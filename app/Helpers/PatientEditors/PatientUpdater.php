@@ -2,124 +2,128 @@
 
 namespace DentalSleepSolutions\Helpers\PatientEditors;
 
-use DentalSleepSolutions\Eloquent\Dental\InsurancePreauth;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Helpers\LetterManager;
+use DentalSleepSolutions\Helpers\LetterTriggerLauncher;
+use DentalSleepSolutions\Helpers\PatientSummaryManager;
+use DentalSleepSolutions\Helpers\PatientUpdateMailer;
+use DentalSleepSolutions\Helpers\PendingVOBRemover;
+use DentalSleepSolutions\Helpers\RegistrationEmailSender;
+use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\NewPatientFormData;
 use DentalSleepSolutions\Structs\PressedButtons;
 
 class PatientUpdater extends AbstractPatientEditor
 {
-    // TODO: it is highly likely that this URL is no longer relevant
+    // TODO: it is likely that this URL is no longer relevant
     const REDIRECT_URL = 'hst_request_co.php?ed=';
-
-    const INSURANCE_INFO_FIELDS = [
-        'p_m_relation',
-        'p_m_partyfname',
-        'p_m_partylname',
-        'ins_dob',
-        'p_m_ins_type',
-        'p_m_ins_ass',
-        'p_m_ins_id',
-        'p_m_ins_grp',
-        'p_m_ins_plan',
-    ];
 
     /** @var PatientUpdateMailer */
     private $patientUpdateMailer;
 
-    /** @var PreauthHelper */
-    private $preauthHelper;
-
     /** @var LetterManager */
     private $letterManager;
 
-    /** @var PatientSummaryManager */
-    private $patientSummaryManager;
-
-    /** @var InsurancePreauth */
-    private $insurancePreauthModel;
+    /** @var PendingVOBRemover */
+    private $pendingVOBRemover;
 
     public function __construct(
-        PatientUpdateMailer $patientUpdateMailer,
-        PreauthHelper $preauthHelper,
-        LetterManager $letterManager,
+        RegistrationEmailSender $registrationEmailSender,
+        LetterTriggerLauncher $letterTriggerLauncher,
         PatientSummaryManager $patientSummaryManager,
-        InsurancePreauth $insurancePreauthModel
+        PatientUpdateMailer $patientUpdateMailer,
+        LetterManager $letterManager,
+        PendingVOBRemover $pendingVOBRemover
     ) {
+        parent::__construct(
+            $registrationEmailSender, $letterTriggerLauncher, $patientSummaryManager
+        );
         $this->patientUpdateMailer = $patientUpdateMailer;
-        $this->preauthHelper = $preauthHelper;
         $this->letterManager = $letterManager;
-        $this->patientSummaryManager = $patientSummaryManager;
-        $this->insurancePreauthModel = $insurancePreauthModel;
+        $this->pendingVOBRemover = $pendingVOBRemover;
     }
 
-    protected function getNewFormData()
-    {
+    /**
+     * @param User $currentUser
+     * @param EditPatientRequestData $requestData
+     * @return NewPatientFormData
+     */
+    protected function getNewFormData(
+        User $currentUser,
+        EditPatientRequestData $requestData
+    ) {
         return new NewPatientFormData();
     }
 
-    protected function launchDBUpdatingMethods(array $formData)
-    {
-        $hasInsuranceInfoChanged = $this->checkIfInsuranceInfoWasChanged(
-            $formData, $unchangedPatient
-        );
-        if ($hasInsuranceInfoChanged) {
-            $this->removePendingVerificationOfBenefits($currentUser, $unchangedPatient->patientid, $currentUser->getUserIdOrZero());
-        }
+    /**
+     * @param array $formData
+     * @param User $currentUser
+     * @param EditPatientResponseData $responseData
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     */
+    protected function launchDBUpdatingMethods(
+        array $formData,
+        User $currentUser,
+        EditPatientResponseData $responseData,
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
+    ) {
+        $docId = $currentUser->getDocIdOrZero();
+        $userId = $currentUser->getUserIdOrZero();
 
-        $this->patientSummaryManager->updateSummaryWithLocation($unchangedPatient->patientid, $patientLocation);
+        if ($this->wasInsuranceInfoChanged($requestData, $unchangedPatient)) {
+            $this->pendingVOBRemover->removePendingVerificationOfBenefits(
+                $currentUser, $unchangedPatient->patientid, $userId
+            );
+        }
+        $this->patientSummaryManager->updateSummaryWithLocation(
+            $unchangedPatient->patientid, $requestData->patientLocation
+        );
 
         // TODO: if it is required, need to rewrite it to the new Laravel structure
         // $this->setDateCompleted();
 
-        if ($this->wasReferrerChanged($unchangedPatient, $formData)) {
+        if ($this->wasReferrerChanged($requestData, $unchangedPatient)) {
             $this->letterManager->manageLetters(
-                $currentUser->getDocIdOrZero(),
-                $currentUser->getUserIdOrZero(),
-                $unchangedPatient,
-                $formData['referred_source'],
-                $formData['referred_by']
+                $docId, $userId, $unchangedPatient, $requestData->referrer
             );
         }
     }
 
-    public function modifyResponseData(EditPatientResponseData $responseData)
-    {
-        parent::modifyResponseData($responseData);
-        $responseData->mails = $this->patientUpdateMailer->handleEmails(
-            $unchangedPatient, $patientFormData['email'], $emailTypesForSending, $hasPatientPortal
-        );
-        if ($pressedButtons) {
-            $this->handlePressedButtons($responseData, $pressedButtons, $unchangedPatient->patientid);
+    /**
+     * @param User $currentUser
+     * @param EditPatientResponseData $responseData
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     */
+    protected function setResponseData(
+        User $currentUser,
+        EditPatientResponseData $responseData,
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
+    ) {
+        $responseData->mails = $this->patientUpdateMailer->handleEmails($unchangedPatient, $requestData);
+        if ($requestData->pressedButtons) {
+            $this->handlePressedButtons($responseData, $requestData->pressedButtons, $unchangedPatient);
         }
         $responseData->status = EditPatientResponseData::PATIENT_EDITED_STATUS;
     }
 
-    private function removePendingVerificationOfBenefits(User $currentUser, $patientId, $userId)
-    {
-        $userName = '';
-        if ($currentUser->name) {
-            $userName = $currentUser->name;
-        }
-        $updatedVerificationOfBenefits = $this->insurancePreauthModel->updateVob($patientId, $userName);
-        if ($updatedVerificationOfBenefits) {
-            $insurancePreauth = $this->preauthHelper
-                ->createVerificationOfBenefits($patientId, $userId);
-            if ($insurancePreauth) {
-                $insurancePreauth->save();
-            }
-        }
-    }
-
+    /**
+     * @param EditPatientResponseData $responseData
+     * @param PressedButtons $pressedButtons
+     * @param Patient $unchangedPatient
+     */
     private function handlePressedButtons(
         EditPatientResponseData $responseData,
         PressedButtons $pressedButtons,
-        $patientId
+        Patient $unchangedPatient
     ) {
         if ($pressedButtons->sendHst) {
-            $responseData->redirectTo = self::REDIRECT_URL . $patientId;
+            $responseData->redirectTo = self::REDIRECT_URL . $unchangedPatient->patientid;
             return;
         }
         if ($pressedButtons->sendPinCode) {
@@ -127,17 +131,19 @@ class PatientUpdater extends AbstractPatientEditor
         }
     }
 
-    private function checkIfInsuranceInfoWasChanged(
-        array $patientFormData,
-        Patient $unchangedPatient
+    /**
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     * @return bool
+     */
+    private function wasInsuranceInfoChanged(
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
     ) {
-        foreach (self::INSURANCE_INFO_FIELDS as $field) {
-            if (
-                property_exists($unchangedPatient, $field)
+        foreach ($requestData->insuranceInfo as $field => $value) {
+            if (property_exists($unchangedPatient, $field)
                 &&
-                isset($patientFormData[$field])
-                &&
-                $unchangedPatient->$field != $patientFormData[$field]
+                $unchangedPatient->$field != $value
             ) {
                 return true;
             }
@@ -145,12 +151,19 @@ class PatientUpdater extends AbstractPatientEditor
         return false;
     }
 
-    private function wasReferrerChanged(Patient $unchangedPatient, array $patientFormData)
-    {
-        if ($unchangedPatient->referred_by != $patientFormData['referred_by']
-            ||
-            $unchangedPatient->referred_source != $patientFormData['referred_source']
-        ) {
+    /**
+     * @param EditPatientRequestData $requestData
+     * @param Patient|null $unchangedPatient
+     * @return bool
+     */
+    private function wasReferrerChanged(
+        EditPatientRequestData $requestData,
+        Patient $unchangedPatient = null
+    ) {
+        if ($unchangedPatient->referred_by != $requestData->referrer->referredBy) {
+            return true;
+        }
+        if ($unchangedPatient->referred_source != $requestData->referrer->source) {
             return true;
         }
         return false;

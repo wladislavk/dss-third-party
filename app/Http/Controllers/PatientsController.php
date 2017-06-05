@@ -2,12 +2,11 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Factories\PatientEditorFactory;
-use DentalSleepSolutions\Helpers\PatientCreator;
-use DentalSleepSolutions\Helpers\PatientEditor;
 use DentalSleepSolutions\Helpers\PatientFormDataUpdater;
+use DentalSleepSolutions\Helpers\PatientRuleRetriever;
 use DentalSleepSolutions\Helpers\PatientSummaryManager;
-use DentalSleepSolutions\Helpers\PatientUpdater;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -24,12 +23,14 @@ use DentalSleepSolutions\Contracts\Resources\ProfileImage;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
+use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\PdfHeaderData;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
 use DentalSleepSolutions\Structs\PressedButtons;
 use DentalSleepSolutions\Structs\RequestedEmails;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -232,22 +233,22 @@ class PatientsController extends Controller
 
     /**
      * @param PatientEditorFactory $patientEditorFactory
+     * @param PatientRuleRetriever $patientRuleRetriever
      * @param PatientFormDataUpdater $patientFormDataUpdater
-     * @param PatientSummaryManager $patientSummaryManager,
      * @param Patient $patientModel
      * @param PatientSummary $patientSummaryModel
      * @param Request $request
-     * @param int|null $patientId
-     * @return \Illuminate\Http\JsonResponse
+     * @param int $patientId
+     * @return JsonResponse
      */
     public function editingPatient(
         PatientEditorFactory $patientEditorFactory,
+        PatientRuleRetriever $patientRuleRetriever,
         PatientFormDataUpdater $patientFormDataUpdater,
-        PatientSummaryManager $patientSummaryManager,
         Patient $patientModel,
         PatientSummary $patientSummaryModel,
         Request $request,
-        $patientId = null
+        $patientId = 0
     ) {
         $docId = $this->currentUser->getDocIdOrZero();
         // TODO: this block should be decoupled into a different controller action
@@ -257,54 +258,51 @@ class PatientsController extends Controller
             $patientSummaryModel->updateTrackerNotes($patientId, $docId, $trackerNotes);
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
-        $emailTypesForSending = new RequestedEmails($request->input('requested_emails', []));
-        $pressedButtons = new PressedButtons($request->input('pressed_buttons', []));
 
-        $patientFormData = $request->input('patient_form_data', []);
-        if (!count($patientFormData)) {
+        if (!$request->has('patient_form_data')) {
             return ApiResponse::responseError('Patient data is empty.', 422);
         }
+        $patientFormData = $request->input('patient_form_data', []);
         $patientFormDataUpdater->setPatientFormData($patientFormData);
-        $patientLocation = $patientFormDataUpdater->getPatientLocation();
 
-        if ($patientId) {
-            $rules = (new PatientUpdate())->rules();
-        } else {
-            $rules = (new PatientStore())->rules();
-        }
+        $requestData = new EditPatientRequestData();
+        $requestData->requestedEmails = new RequestedEmails($request->input('requested_emails', []));
+        $requestData->pressedButtons = new PressedButtons($request->input('pressed_buttons', []));
+        $requestData->patientLocation = $patientFormDataUpdater->getPatientLocation();
+
+        $patientEditor = $patientEditorFactory->getPatientEditor($patientId);
+        $rules = $patientRuleRetriever->getValidationRules($patientId);
         $validator = $this->getValidationFactory()->make($patientFormData, $rules);
         if ($validator->fails()) {
             return ApiResponse::responseError('', 422, $validator->getMessageBag()->all());
         }
 
-        /** @var Patient|null $unchangedPatient */
         $unchangedPatient = null;
-        if ($patientId) {
-            $unchangedPatient = $patientModel->find($patientId);
-            if (!$unchangedPatient) {
-                return ApiResponse::responseError("Patient with ID $patientId not found", 422);
-            }
+        try {
+            $unchangedPatient = $patientModel->getUnchangedPatient($patientId);
+        } catch (GeneralException $e) {
+            return ApiResponse::responseError($e->getMessage(), 422);
+        }
+        if ($unchangedPatient) {
             $patientFormDataUpdater->setEmailBounce($unchangedPatient);
             $patientFormDataUpdater->modifyLogin($unchangedPatient->login);
         }
-        $hasPatientPortal = $patientFormDataUpdater->getHasPatientPortal($docId);
-        $shouldSendIntroLetter = $patientFormDataUpdater->shouldSendIntroLetter();
-        $patientName = $patientFormDataUpdater->getPatientName();
-        $mdContacts = $patientFormDataUpdater->setMDContacts();
-        $ssn = $patientFormDataUpdater->getSSN();
-        $newEmail = $patientFormDataUpdater->getNewEmail();
+        $requestData->hasPatientPortal = $patientFormDataUpdater->getHasPatientPortal($docId);
+        $requestData->shouldSendIntroLetter = $patientFormDataUpdater->shouldSendIntroLetter();
+        $requestData->patientName = $patientFormDataUpdater->getPatientName();
+        $requestData->mdContacts = $patientFormDataUpdater->setMDContacts();
+        $requestData->ssn = $patientFormDataUpdater->getSSN();
+        $requestData->newEmail = $patientFormDataUpdater->getNewEmail();
+        $requestData->cellphone = $patientFormDataUpdater->getCellphone();
+        $requestData->referrer = $patientFormDataUpdater->setReferrer();
+        $requestData->isInfoComplete = $patientFormDataUpdater->isInfoComplete();
+        $requestData->insuranceInfo = $patientFormDataUpdater->setInsuranceInfo();
+        $requestData->ip = $request->ip();
 
-        $patientEditor = $patientEditorFactory->getPatientEditor($patientId);
-        $patientEditor->updateDB($patientFormDataUpdater->getPatientFormData());
-        $patientEditor->doActionsAfterDBUpdate();
-        $responseData = new EditPatientResponseData();
-        $patientEditor->modifyResponseData($responseData);
-
-        $isInfoComplete = $patientFormDataUpdater->isInfoComplete();
-        if ($responseData->createdPatientId) {
-            $patientId = $responseData->createdPatientId;
-        }
-        $patientSummaryManager->updatePatientSummary($patientId, $isInfoComplete);
+        $updatedFormData = $patientFormDataUpdater->getPatientFormData();
+        $responseData = $patientEditor->editPatient(
+            $updatedFormData, $this->currentUser, $requestData, $unchangedPatient
+        );
 
         return ApiResponse::responseOk('', $responseData->toArray());
     }

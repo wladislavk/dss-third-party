@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\LetterToPatientTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
+use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\MDContacts;
 
 class LetterTriggerLauncher
@@ -33,17 +34,16 @@ class LetterTriggerLauncher
         $docId,
         $userId,
         $userType,
-        $shouldSendIntro,
-        MDContacts $mdContacts
+        EditPatientRequestData $requestData
     ) {
         $this->treatmentCompleteTrigger->trigger($patientId, $docId, $userId);
 
         $params = [
-            LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts,
+            LettersToMDTrigger::MD_CONTACTS_PARAM => $requestData->mdContacts,
         ];
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
 
-        if ($shouldSendIntro) {
+        if ($requestData->shouldSendIntroLetter) {
             $this->letterToPatientTrigger->trigger($patientId, $docId, $userId);
         }
     }

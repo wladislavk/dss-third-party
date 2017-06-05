@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Structs\PatientReferrer;
 
 class LetterManager
 {
@@ -42,15 +43,13 @@ class LetterManager
      * @param int $docId
      * @param int $userId
      * @param Patient $unchangedPatient
-     * @param string $referredSource
-     * @param string $referredBy
+     * @param PatientReferrer $referrer
      */
     public function manageLetters(
         $docId,
         $userId,
         Patient $unchangedPatient,
-        $referredSource,
-        $referredBy
+        PatientReferrer $referrer
     ) {
         if (
             !isset(self::UPDATE_TYPES[$unchangedPatient->referred_source])
@@ -60,10 +59,10 @@ class LetterManager
             // TODO: perhaps an exception is needed
             return;
         }
-        if ($unchangedPatient->referred_source == $referredSource) {
+        if ($unchangedPatient->referred_source == $referrer->source) {
             $this->letterModel->updatePendingLettersToNewReferrer(
                 $unchangedPatient->referred_by,
-                $referredBy,
+                $referrer->referredBy,
                 $unchangedPatient->patientid,
                 self::UPDATE_TYPES[$unchangedPatient->referred_source]
             );

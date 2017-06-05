@@ -1,5 +1,8 @@
 ## DS3 Software
 
+[THIS PAGE SHOULD BE MIGRATED TO REPO -03 FOR API WORK]
+REPO -02 IS LEGACY AND DEPRECATED
+
 #### 1 Master branch is PRODUCTION code
 #### 2 Develop branch is STAGING code, where Unit Tests and final QA are performed
 #### 3 'Feature' branches used to develop each component
@@ -35,3 +38,4 @@ NOTE: The first time you do this, if you get an error, you should run ```compose
 
 7 Open terminal and run php artisan db:seed
 
+NEW: Configuring your IDE to interpret Laravel can be setup [here](https://www.dunebook.com/5-best-ide-laravel-ide-with-laravel-ide-helper/) and Laracast tutorial [here](https://laracasts.com/series/how-to-be-awesome-in-phpstorm/episodes/15) and Github link [here](https://github.com/barryvdh/laravel-ide-helper).

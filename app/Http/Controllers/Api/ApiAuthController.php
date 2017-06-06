@@ -8,6 +8,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Illuminate\Support\Facades\Response;
 use DentalSleepSolutions\Http\Controllers\Controller as ApiBaseController;
+use Illuminate\Support\Arr;
 
 class ApiAuthController extends ApiBaseController
 {
@@ -23,12 +24,8 @@ class ApiAuthController extends ApiBaseController
         $token = false;
         $credentials = $request->all();
 
-        $credentials = array_only($credentials, ['username', 'password', 'admin']);
-        $credentials['admin'] = 0;
-
-        if (!empty($credentials['admin'])) {
-            $credentials['admin'] = 1;
-        }
+        $credentials = Arr::only($credentials, ['username', 'password', 'admin']);
+        $credentials['admin'] = Arr::get($credentials, 'admin', 0);
 
         try {
             $token = $this->auth->attempt($credentials);

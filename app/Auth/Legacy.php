@@ -2,9 +2,7 @@
 
 namespace DentalSleepSolutions\Auth;
 
-use Exception;
 use Illuminate\Support\Arr;
-use Illuminate\Auth\AuthManager;
 use DentalSleepSolutions\Eloquent\User;
 use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
 

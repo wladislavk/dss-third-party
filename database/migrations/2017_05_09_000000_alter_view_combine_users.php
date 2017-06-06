@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AlterViewCombineUsers extends Migration
@@ -18,6 +17,8 @@ class AlterViewCombineUsers extends Migration
                 SELECT
                     CONCAT('u_', u.userid) COLLATE utf8_unicode_ci AS id,
                     0 AS admin,
+                    docid,
+                    user_type,
                     email,
                     IF(name IS NULL, CONCAT(first_name,' ', last_name), name) AS name,
                     first_name,
@@ -42,6 +43,8 @@ class AlterViewCombineUsers extends Migration
                 SELECT
                     CONCAT('a_', a.adminid) COLLATE utf8_unicode_ci AS id,
                     1 AS admin,
+                    0 AS docid,
+                    0 AS user_type,
                     email,
                     IF(name IS NULL, CONCAT(first_name,' ', last_name), name) AS name,
                     first_name,

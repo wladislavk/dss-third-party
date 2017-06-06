@@ -52,7 +52,6 @@ class User extends Model implements AuthenticatableContract
 
         return self::where(function ($q) use ($id) {
             $q->whereIn('email', $id)->orWhereIn('id', $id);
-            $q->where('email', $id)->orWhere('id', $id);
         })->get();
     }
 }

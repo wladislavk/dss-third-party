@@ -97,9 +97,11 @@ services:
     labels:
       - "traefik.enable=false"
 
+  # Available at localhost:8080 with UN/PW from DB container above
+  # Consider removing this after final deploy pipeline is setup
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
-      - "${PHPMYADMIN_PORT}:80"
+      - "${PHPMYADMIN_PORT:-8080}:80"
     links:
       - db

@@ -66,6 +66,7 @@ Add the following lines:
 ```
 127.0.0.1 loader.docker.localhost
 127.0.0.1 api.docker.localhost
+127.0.0.1 vue.docker.localhost
 ```
 On Mac/Linux use command below.  
 
@@ -82,7 +83,7 @@ docker-compose down
 In Windows, you must specify ROOT_PATH for compose file to use Volumes (shared drive).
 ```bash
 cd ds3-private04-Docker
-ROOT_PATH='c:/Users/MyName/Github/DS3' docker-compose up -d
+ROOT_PATH='c:/Users/MyName/Documents/Github/DS3' docker-compose up -d
 ```
 
 ## Run Migrations

@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Helpers;
 
 use function array_reduce;
 use Tymon\JWTAuth\JWTAuth;
-use DentalSleepSolutions\Eloquent\Dental\User as UserModel;
 use DentalSleepSolutions\Eloquent\User;
 
 class AuthTokenParser
@@ -15,20 +14,13 @@ class AuthTokenParser
     protected $auth;
 
     /**
-     * @var UserModel
-     */
-    protected $model;
-
-    /**
      * Controller constructor
      *
      * @param JWTAuth $auth
-     * @param UserModel $model
      */
-    public function __construct(JWTAuth $auth, UserModel $model)
+    public function __construct(JWTAuth $auth)
     {
         $this->auth = $auth;
-        $this->model = $model;
     }
 
     /**
@@ -38,20 +30,7 @@ class AuthTokenParser
      */
     public function getAdminData()
     {
-        if (!$this->auth->getToken()) {
-            return false;
-        }
-
-        /**
-         * User model can return two user instances, for "Login as" functionality: admin + user
-         */
-        $userModelData = $this->auth->toUser();
-
-        if (is_array($userModelData)) {
-            return $this->getAdminFromModelArray($userModelData);
-        }
-
-        return $this->getAdminFromModelData($userModelData);
+        return $this->getAgnosticData([$this, 'getAdminFromModelArray'], [$this, 'getAdminFromModelData']);
     }
 
     /**
@@ -61,6 +40,17 @@ class AuthTokenParser
      */
     public function getUserData()
     {
+        return $this->getAgnosticData([$this, 'getUserFromModelArray'], [$this, 'getUserFromModelData']);
+    }
+
+    /**
+     * Model data extraction
+     *
+     * @param callable $getDataFromModelArray
+     * @param callable $getDataFromModelData
+     * @return User|bool
+     */
+    private function getAgnosticData (callable $getDataFromModelArray, callable $getDataFromModelData) {
         if (!$this->auth->getToken()) {
             return false;
         }
@@ -71,10 +61,10 @@ class AuthTokenParser
         $userModelData = $this->auth->toUser();
 
         if (is_array($userModelData)) {
-            return $this->getUserFromModelArray($userModelData);
+            return $getDataFromModelArray($userModelData);
         }
 
-        return $this->getUserFromModelData($userModelData);
+        return $getDataFromModelData($userModelData);
     }
 
     /**
@@ -85,16 +75,7 @@ class AuthTokenParser
      */
     private function getAdminFromModelArray (Array $modelArray)
     {
-        $modelData = array_reduce($modelArray, function ($previousData, $currentData) {
-            if ($previousData) {
-                return $previousData;
-            }
-
-            $adminData = $this->getAdminFromModelData($currentData);
-            return $adminData;
-        }, false);
-
-        return $modelData;
+        return $this->getAgnosticDataFromModelArray($modelArray, [$this, 'reduceAdminFromModelArray']);
     }
 
     /**
@@ -105,16 +86,51 @@ class AuthTokenParser
      */
     private function getUserFromModelArray (Array $modelArray)
     {
-        $modelData = array_reduce($modelArray, function ($previousData, $currentData) {
-            if ($previousData) {
-                return $previousData;
-            }
+        return $this->getAgnosticDataFromModelArray($modelArray, [$this, 'reduceUserFromModelArray']);
+    }
 
-            $userData = $this->getUserFromModelData($currentData);
-            return $userData;
-        }, false);
-
+    /**
+     * Reduce model array to first model data match
+     *
+     * @param array    $modelArray
+     * @param callable $reduceDataFromModelArray
+     * @return mixed
+     */
+    private function getAgnosticDataFromModelArray (Array $modelArray, callable $reduceDataFromModelArray) {
+        $modelData = array_reduce($modelArray, $reduceDataFromModelArray, false);
         return $modelData;
+    }
+
+    /**
+     * Auxiliary method to return first Admin instance from model array
+     *
+     * @param User|bool $previousData
+     * @param User|bool$currentData
+     * @return User|bool
+     */
+    private function reduceAdminFromModelArray ($previousData, $currentData) {
+        if ($previousData) {
+            return $previousData;
+        }
+
+        $userData = $this->getAdminFromModelData($currentData);
+        return $userData;
+    }
+
+    /**
+     * Auxiliary method to return first User instance from model array
+     *
+     * @param User|bool $previousData
+     * @param User|bool$currentData
+     * @return User|bool
+     */
+    private function reduceUserFromModelArray ($previousData, $currentData) {
+        if ($previousData) {
+            return $previousData;
+        }
+
+        $userData = $this->getUserFromModelData($currentData);
+        return $userData;
     }
 
     /**
@@ -125,18 +141,7 @@ class AuthTokenParser
      */
     private function getAdminFromModelData (User $modelData)
     {
-        /**
-         * IDs come from v_users view, that follows the convention:
-         *
-         * * a_\d: Admin
-         * * u_\d: User
-         */
-        if (!preg_match('/^a_(?P<id>\d+)$/', $modelData->id, $match)) {
-            return false;
-        }
-
-        $modelData->id = $match['id'];
-        return $modelData;
+        return $this->getAgnosticDataFromModelData($modelData, 'u');
     }
 
     /**
@@ -147,13 +152,26 @@ class AuthTokenParser
      */
     private function getUserFromModelData (User $modelData)
     {
+        return $this->getAgnosticDataFromModelData($modelData, 'u');
+    }
+
+    /**
+     * Return model data if it belongs to the model type
+     *
+     * @param User   $modelData
+     * @param string $modelTypeFlag
+     * @return User|bool
+     */
+    private function getAgnosticDataFromModelData (User $modelData, $modelTypeFlag) {
+        $modelTypeFlag = preg_quote($modelTypeFlag);
+
         /**
          * IDs come from v_users view, that follows the convention:
          *
          * * a_\d: Admin
          * * u_\d: User
          */
-        if (!preg_match('/^u_(?P<id>\d+)$/', $modelData->id, $match)) {
+        if (!preg_match("/^{$modelTypeFlag}_(?P<id>\d+)$/", $modelData->id, $match)) {
             return false;
         }
 

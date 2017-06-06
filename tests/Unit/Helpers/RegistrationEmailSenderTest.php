@@ -8,6 +8,7 @@ use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\RegistrationEmailSender;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
+use DentalSleepSolutions\Structs\RequestedEmails;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
@@ -31,6 +32,8 @@ class RegistrationEmailSenderTest extends UnitTestCase
         $requestData = new EditPatientRequestData();
         $requestData->newEmail = 'new@email.com';
         $requestData->cellphone = '223322';
+        $requestData->hasPatientPortal = true;
+        $requestData->requestedEmails = new RequestedEmails(['registration' => true]);
         $patient = new Patient();
         $patient->patientid = 1;
         $patient->email = 'old@email.com';
@@ -52,6 +55,8 @@ class RegistrationEmailSenderTest extends UnitTestCase
         $requestData = new EditPatientRequestData();
         $requestData->newEmail = 'new@email.com';
         $requestData->cellphone = '223322';
+        $requestData->hasPatientPortal = true;
+        $requestData->requestedEmails = new RequestedEmails(['registration' => true]);
         $this->registrationEmailSender->sendRegistrationEmail($responseData, $requestData);
         $expected = [
             'patientId' => 0,
@@ -68,10 +73,34 @@ class RegistrationEmailSenderTest extends UnitTestCase
     {
         $responseData = new EditPatientResponseData();
         $requestData = new EditPatientRequestData();
+        $requestData->hasPatientPortal = true;
+        $requestData->requestedEmails = new RequestedEmails(['registration' => true]);
         $this->registrationEmailSender->sendRegistrationEmail($responseData, $requestData);
         $this->assertEquals([], $this->handledEmail);
         $this->assertEquals(EmailHandlerFactory::REGISTRATION_MAIL, $responseData->mails->mailType);
         $this->assertEquals(RegistrationEmailSender::FAILURE_MESSAGE, $responseData->mails->message);
+    }
+
+    public function testSendWithBadRequestedEmails()
+    {
+        $responseData = new EditPatientResponseData();
+        $requestData = new EditPatientRequestData();
+        $requestData->hasPatientPortal = true;
+        $requestData->requestedEmails = new RequestedEmails([]);
+        $this->registrationEmailSender->sendRegistrationEmail($responseData, $requestData);
+        $this->assertEquals([], $this->handledEmail);
+        $this->assertNull($responseData->mails);
+    }
+
+    public function testSendWithoutPatientPortal()
+    {
+        $responseData = new EditPatientResponseData();
+        $requestData = new EditPatientRequestData();
+        $requestData->hasPatientPortal = false;
+        $requestData->requestedEmails = new RequestedEmails(['registration' => true]);
+        $this->registrationEmailSender->sendRegistrationEmail($responseData, $requestData);
+        $this->assertEquals([], $this->handledEmail);
+        $this->assertNull($responseData->mails);
     }
 
     private function mockRegistrationEmailHandler()

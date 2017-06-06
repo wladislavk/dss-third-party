@@ -11,6 +11,9 @@ use DentalSleepSolutions\Structs\NewPatientFormData;
 
 class DummyPatientEditor extends AbstractPatientEditor
 {
+    /** @var array */
+    public $modifiedFormData = [];
+
     /**
      * @param User $currentUser
      * @param EditPatientRequestData $requestData
@@ -37,7 +40,7 @@ class DummyPatientEditor extends AbstractPatientEditor
         EditPatientRequestData $requestData,
         Patient $unchangedPatient = null
     ) {
-        // do nothing
+        $this->modifiedFormData = $formData;
     }
 
     /**

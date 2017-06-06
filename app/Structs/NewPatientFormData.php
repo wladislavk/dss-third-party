@@ -24,6 +24,11 @@ class NewPatientFormData implements Arrayable
     /** @var PatientName */
     public $patientName;
 
+    public function __construct()
+    {
+        $this->patientName = new PatientName();
+    }
+
     public function toArray()
     {
         return [

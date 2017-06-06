@@ -38,7 +38,7 @@ class EditPatientRequestData
     public $referrer;
 
     /** @var bool */
-    public $isInfoComplete;
+    public $isInfoComplete = false;
 
     /** @var string */
     public $ip;

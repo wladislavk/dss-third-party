@@ -607,6 +607,9 @@ class Patient extends Model implements Resource, Repository
 
     /**
      * Search for similar logins (it need for creation of an unique login)
+     *
+     * @param string $login
+     * @return Patient|null
      */
     public function getSimilarPatientLogin($login = '')
     {

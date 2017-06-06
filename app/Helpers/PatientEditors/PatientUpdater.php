@@ -141,7 +141,8 @@ class PatientUpdater extends AbstractPatientEditor
         Patient $unchangedPatient = null
     ) {
         foreach ($requestData->insuranceInfo as $field => $value) {
-            if (property_exists($unchangedPatient, $field)
+            if (
+                isset($unchangedPatient->$field)
                 &&
                 $unchangedPatient->$field != $value
             ) {

@@ -50,7 +50,7 @@ abstract class AbstractPatientEditor
             $responseData->currentPatientId = $unchangedPatient->patientid;
         }
         $this->updateDB($formData, $currentUser, $responseData, $requestData, $unchangedPatient);
-        $this->doActionsAfterDBUpdate($currentUser, $requestData, $unchangedPatient);
+        $this->doActionsAfterDBUpdate($currentUser, $requestData, $responseData->currentPatientId);
         $this->getResponseData($currentUser, $responseData, $requestData, $unchangedPatient);
         return $responseData;
     }
@@ -82,18 +82,18 @@ abstract class AbstractPatientEditor
     /**
      * @param User $currentUser
      * @param EditPatientRequestData $requestData
-     * @param Patient|null $unchangedPatient
+     * @param int $patientId
      */
     private function doActionsAfterDBUpdate(
         User $currentUser,
         EditPatientRequestData $requestData,
-        Patient $unchangedPatient = null
+        $patientId
     ) {
         $docId = $currentUser->getDocIdOrZero();
         $userType = $currentUser->getUserTypeOrZero();
         $userId = $currentUser->getUserIdOrZero();
         $this->letterTriggerLauncher->triggerLetters(
-            $unchangedPatient->patientid, $docId, $userId, $userType, $requestData
+            $patientId, $docId, $userId, $userType, $requestData
         );
     }
 
@@ -109,27 +109,10 @@ abstract class AbstractPatientEditor
         EditPatientRequestData $requestData,
         Patient $unchangedPatient = null
     ) {
-        if ($this->shouldSendRegistrationEmail($requestData)) {
-            $this->registrationEmailSender->sendRegistrationEmail(
-                $responseData, $requestData, $unchangedPatient
-            );
-        }
+        $this->registrationEmailSender->sendRegistrationEmail(
+            $responseData, $requestData, $unchangedPatient
+        );
         $this->setResponseData($currentUser, $responseData, $requestData, $unchangedPatient);
-    }
-
-    /**
-     * @param EditPatientRequestData $requestData
-     * @return bool
-     */
-    private function shouldSendRegistrationEmail(EditPatientRequestData $requestData)
-    {
-        if (!$requestData->requestedEmails->registration) {
-            return false;
-        }
-        if (!$requestData->hasPatientPortal) {
-            return false;
-        }
-        return true;
     }
 
     /**

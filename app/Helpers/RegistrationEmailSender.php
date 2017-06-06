@@ -33,6 +33,9 @@ class RegistrationEmailSender
         Patient $unchangedPatient = null
     ) {
         // TODO: this logic needs to be checked. emails are not sent by phone
+        if (!$this->shouldSend($requestData)) {
+            return;
+        }
         $message = self::FAILURE_MESSAGE;
         if ($requestData->newEmail && $requestData->cellphone) {
             $oldEmail = $this->getOldEmail($unchangedPatient);
@@ -46,6 +49,21 @@ class RegistrationEmailSender
         $mail->mailType = EmailHandlerFactory::REGISTRATION_MAIL;
         $mail->message = $message;
         $responseData->mails = $mail;
+    }
+
+    /**
+     * @param EditPatientRequestData $requestData
+     * @return bool
+     */
+    private function shouldSend(EditPatientRequestData $requestData)
+    {
+        if (!$requestData->requestedEmails->registration) {
+            return false;
+        }
+        if (!$requestData->hasPatientPortal) {
+            return false;
+        }
+        return true;
     }
 
     /**

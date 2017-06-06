@@ -21,9 +21,6 @@ class PatientCreator extends AbstractPatientEditor
     /** @var SimilarHelper */
     private $similarHelper;
 
-    /** @var PatientSummaryManager */
-    private $patientSummaryManager;
-
     /** @var PasswordGenerator */
     private $passwordGenerator;
 
@@ -35,7 +32,6 @@ class PatientCreator extends AbstractPatientEditor
         LetterTriggerLauncher $letterTriggerLauncher,
         PatientSummaryManager $patientSummaryManager,
         SimilarHelper $similarHelper,
-        PatientSummaryManager $patientSummaryManager,
         PasswordGenerator $passwordGenerator,
         Patient $patientModel
     ) {
@@ -43,7 +39,6 @@ class PatientCreator extends AbstractPatientEditor
             $registrationEmailSender, $letterTriggerLauncher, $patientSummaryManager
         );
         $this->similarHelper = $similarHelper;
-        $this->patientSummaryManager = $patientSummaryManager;
         $this->passwordGenerator = $passwordGenerator;
         $this->patientModel = $patientModel;
     }
@@ -102,11 +97,11 @@ class PatientCreator extends AbstractPatientEditor
         $similarPatients = $this->similarHelper
             ->getSimilarPatients($responseData->currentPatientId, $currentUser->getDocIdOrZero());
 
-        $fullName = $requestData->patientName->firstName . ' ' . $requestData->patientName->lastName;
         if (count($similarPatients)) {
             $responseData->redirectTo = self::DUPLICATE_URL . $responseData->currentPatientId;
             return;
         }
+        $fullName = $requestData->patientName->firstName . ' ' . $requestData->patientName->lastName;
         $responseData->status = sprintf(EditPatientResponseData::PATIENT_ADDED_STATUS, $fullName);
     }
 }

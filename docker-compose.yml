@@ -1,11 +1,8 @@
-version: "2"
+version: "2.1"
 
-# WINDOWS: Windows REQUIRES explicit path for volumes, Linux/Mac can use relative.
+# WINDOWS: Windows REQUIRES explicit path for volumes, Linux/Mac can use relative (default).
   # Windows example cmd for startup: 
-  # ROOT_PATH='c:/Users/MyName/Github/DS3' docker-compose up -d
-# LINUX / MAC: Uncomment Volumes below to switch to Linux-style volumes
-  # Linux cmd for startup: 
-  # docker-compose up -d
+  # ROOT_PATH='c:/Users/MyName/Documents/Github/DS3' docker-compose up -d
 
 services:
   db:
@@ -48,14 +45,9 @@ services:
       DB_USERNAME: homestead
       DB_PASSWORD: secret
     volumes:
-      # WINDOWS: uncomment for Docker on Windows
-      - "${ROOT_PATH}/ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
-      - "${ROOT_PATH}/ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
-      - "${ROOT_PATH}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
-      # LINUX: Uncomment for Docker on Linux/Mac
-      # - "../ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
-      # - "../ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
-      # - "../ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
+      - "${ROOT_PATH:-..}/ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
+      - "${ROOT_PATH:-..}/ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
+      - "${ROOT_PATH:-..}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
     labels:
       - "traefik.port=80"
       - "traefik.backend=loader"
@@ -71,10 +63,7 @@ services:
       DB_USERNAME: homestead
       DB_PASSWORD: secret
     volumes:
-      # WINDOWS: uncomment for Docker on Windows
-      - "${ROOT_PATH}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
-      # LINUX: Uncomment for Docker on Linux/Mac
-      # - "../ds3-private01:/opt/rh/httpd24/root/var/www/html/legacy"
+      - "${ROOT_PATH:-..}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
     labels:
       - "traefik.port=80"
       - "traefik.backend=api"
@@ -87,10 +76,7 @@ services:
       NODE_ENV: development
       PORT: 80
     volumes:
-      # WINDOWS: uncomment for Docker on Windows
-      - "${ROOT_PATH}/ds3-private06-Vue/src:/opt/app/src"
-      # LINUX: Uncomment for Docker on Linux/Mac
-      # - "../ds3-private06-Vue/src:/opt/app/src"
+      - "${ROOT_PATH:-..}/ds3-private06-Vue/src:/opt/app/src"
     labels:
       - "traefik.port=80"
       - "traefik.backend=vue"
@@ -100,8 +86,8 @@ services:
     image: traefik:v1.2.3-alpine
     command: --docker --docker.domain=docker.localhost --logLevel=DEBUG
     ports:
-      - 80:80
-      - 443:443
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
       # NOTE: On Windows10, Skype CONFLICTS with 443 port.
       # Either change to other port (e.g. 4433:443), or kill Skype before starting container.
     volumes:

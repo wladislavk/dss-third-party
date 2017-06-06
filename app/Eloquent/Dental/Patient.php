@@ -813,6 +813,11 @@ class Patient extends Model implements Resource, Repository
             ->get();
     }
 
+    /**
+     * @param string $email
+     * @param int $patientId
+     * @return int
+     */
     public function getSameEmails($email, $patientId)
     {
         return $this->select('patientid')
@@ -828,6 +833,10 @@ class Patient extends Model implements Resource, Repository
             })->count();
     }
 
+    /**
+     * @param int $patientId
+     * @return Patient|null
+     */
     public function getPatientInfoWithDocInfo($patientId)
     {
         return $this->select('dp.*', 'du.use_patient_portal AS doc_use_patient_portal')

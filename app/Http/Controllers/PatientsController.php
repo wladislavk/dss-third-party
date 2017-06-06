@@ -3,7 +3,9 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Exceptions\GeneralException;
+use DentalSleepSolutions\Exceptions\IncorrectEmailException;
 use DentalSleepSolutions\Factories\PatientEditorFactory;
+use DentalSleepSolutions\Helpers\EmailChecker;
 use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use DentalSleepSolutions\Helpers\PatientRuleRetriever;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
@@ -407,6 +409,7 @@ class PatientsController extends Controller
 
         $contacts = $patientResource->getReferrers($docId, $names);
 
+        $response = [];
         if (count($contacts)) {
             foreach ($contacts as $item) {
                 $response[] = [
@@ -424,31 +427,18 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $response);
     }
 
-    public function checkEmail(Request $request, Patient $patientResource)
+    public function checkEmail(Request $request, EmailChecker $emailChecker)
     {
         $email = $request->input('email', '');
         $patientId = $request->input('patient_id', 0);
 
-        // check patient email address
-        if (strlen($email) == 0) {
-            return ApiResponse::responseError(
-                $message = 'The email address you entered is empty.',
-                $code = 417
-            );
-        } elseif ($this->isPatientEmailValid($patientResource, $email, $patientId)) {
-            if ($this->confirmPatientEmail($patientResource, $email, $patientId)) {
-                $message = "You have changed the patient's email address. The patient must be notified via email or he/she will not be able to access the Patient Portal. Send email notification and proceed?";
-            } else {
-                $message = '';
-            }
-
-            return ApiResponse::responseOk('', ['confirm_message' => $message]);
-        } else {
-            return ApiResponse::responseError(
-                $message = 'The email address you entered is already associated with another patient. Please enter a different email address.',
-                $code = 417
-            );
+        try {
+            $message = $emailChecker->checkEmail($email, $patientId);
+        } catch (IncorrectEmailException $e) {
+            return ApiResponse::responseError($e->getMessage(), 417);
         }
+
+        return ApiResponse::responseOk('', ['confirm_message' => $message]);
     }
 
     public function resetAccessCode($patientId, Patient $patientResource)
@@ -508,35 +498,5 @@ class PatientsController extends Controller
                     . ($shortInfo->contacttype != '' ? ' - ' . $shortInfo->contacttype : '');
         }
         return $name;
-    }
-
-    private function isPatientEmailValid(Patient $patientResource, $email, $patientId)
-    {
-        if ($patientResource->getSameEmails($email, $patientId) > 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private function confirmPatientEmail(Patient $patientResource, $email, $patientId)
-    {
-        $patient = $patientResource->getPatientInfoWithDocInfo($patientId);
-
-        $isConfirmed = false;
-        if (
-            $patient
-            &&
-            in_array($patient->registration_status, [1, 2])
-            &&
-            $patient->use_patient_portal == 1
-            &&
-            $patient->doc_use_patient_portal == 1
-            &&
-            $patient->email != $email
-        ) {
-            $isConfirmed = true;
-        }
-        return $isConfirmed;
     }
 }

@@ -4,9 +4,9 @@ namespace DentalSleepSolutions\Structs;
 
 class PatientReferrer
 {
-    /** @var string */
+    /** @var int */
     public $referredBy;
 
-    /** @var string */
+    /** @var int */
     public $source;
 }

@@ -8,6 +8,7 @@ use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
 use DentalSleepSolutions\Structs\LetterData;
+use DentalSleepSolutions\Structs\MDContacts;
 use Mockery\MockInterface;
 use Tests\TestCases\LetterTriggerTestCase;
 
@@ -44,7 +45,12 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $docId = 2;
         $userId = 3;
         $userType = 4;
-        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => [0, 1, 2, 3]];
+        $mdContacts = new MDContacts();
+        $mdContacts->docdentist = 0;
+        $mdContacts->docent = 1;
+        $mdContacts->docmdother = 2;
+        $mdContacts->docmdother2 = 3;
+        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts];
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
         $expectedLetterData = new LetterData();
         $expectedLetterData->patientId = 1;
@@ -66,7 +72,12 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $docId = 2;
         $userId = 3;
         $userType = MailerDataRetriever::DSS_USER_TYPE_SOFTWARE;
-        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => [0, 1, 2, 3]];
+        $mdContacts = new MDContacts();
+        $mdContacts->docdentist = 0;
+        $mdContacts->docent = 1;
+        $mdContacts->docmdother = 2;
+        $mdContacts->docmdother2 = 3;
+        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts];
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
         $expectedLetterData = new LetterData();
         $expectedLetterData->patientId = 1;
@@ -94,7 +105,10 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $docId = 1;
         $userId = 3;
         $userType = 4;
-        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => [1, 2]];
+        $mdContacts = new MDContacts();
+        $mdContacts->docent = 1;
+        $mdContacts->docmdother = 2;
+        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts];
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
         $this->assertEquals([], $this->createdLetters);
     }
@@ -106,7 +120,10 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $docId = 2;
         $userId = 3;
         $userType = 4;
-        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => [1, 2]];
+        $mdContacts = new MDContacts();
+        $mdContacts->docent = 1;
+        $mdContacts->docmdother = 2;
+        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts];
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
         $this->assertEquals([], $this->createdLetters);
     }
@@ -118,7 +135,10 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $docId = 2;
         $userId = 3;
         $userType = 4;
-        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => [1, 2]];
+        $mdContacts = new MDContacts();
+        $mdContacts->docent = 1;
+        $mdContacts->docmdother = 2;
+        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts];
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
         $this->assertEquals([], $this->createdLetters);
     }
@@ -129,7 +149,10 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $docId = 2;
         $userId = 3;
         $userType = 4;
-        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => [3, 4]];
+        $mdContacts = new MDContacts();
+        $mdContacts->docent = 3;
+        $mdContacts->docmdother = 4;
+        $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts];
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
         $this->assertEquals([], $this->createdLetters);
     }
@@ -140,7 +163,7 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $docId = 2;
         $userId = 3;
         $this->expectException(GeneralException::class);
-        $this->expectExceptionMessage(LettersToMDTrigger::MD_CONTACTS_PARAM . ' key must be present in $params and contain an array');
+        $this->expectExceptionMessage(LettersToMDTrigger::MD_CONTACTS_PARAM . ' key must be present in $params and contain an instance of ' . MDContacts::class);
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId);
     }
 
@@ -152,7 +175,7 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $userType = 4;
         $params = [LettersToMDTrigger::MD_CONTACTS_PARAM => 'foo'];
         $this->expectException(GeneralException::class);
-        $this->expectExceptionMessage(LettersToMDTrigger::MD_CONTACTS_PARAM . ' key must be present in $params and contain an array');
+        $this->expectExceptionMessage(LettersToMDTrigger::MD_CONTACTS_PARAM . ' key must be present in $params and contain an instance of ' . MDContacts::class);
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
     }
 

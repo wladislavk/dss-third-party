@@ -6,6 +6,10 @@ use DentalSleepSolutions\Eloquent\Dental\User;
 
 class PatientPortalRetriever
 {
+    const FIELDS = [
+        'use_patient_portal',
+    ];
+
     /** @var User */
     private $userModel;
 
@@ -21,15 +25,17 @@ class PatientPortalRetriever
      */
     public function hasPatientPortal($docId, $usePatientPortal)
     {
-        $docInfo = $this->userModel->getWithFilter('use_patient_portal', ['userid' => $docId]);
+        if (!$usePatientPortal) {
+            return false;
+        }
+        $docInfo = $this->userModel->getWithFilter(self::FIELDS, ['userid' => $docId]);
         // TODO: check if first() should be used
         if (!isset($docInfo[0])) {
             return false;
         }
-        $docPatientPortal = $docInfo[0]->use_patient_portal;
-        if ($docPatientPortal && $usePatientPortal) {
-            return true;
+        if (!$docInfo[0]->use_patient_portal) {
+            return false;
         }
-        return false;
+        return true;
     }
 }

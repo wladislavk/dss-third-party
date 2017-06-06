@@ -4,9 +4,8 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Factories\PatientEditorFactory;
-use DentalSleepSolutions\Helpers\PatientFormDataUpdater;
+use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use DentalSleepSolutions\Helpers\PatientRuleRetriever;
-use DentalSleepSolutions\Helpers\PatientSummaryManager;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -24,7 +23,6 @@ use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
-use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\PdfHeaderData;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
@@ -318,10 +316,7 @@ class PatientsController extends Controller
         Notifications $notificationResource,
         Request $request
     ) {
-        $patientId = 0;
-        if ($request->has('patient_id')) {
-            $patientId = $request->input('patient_id');
-        }
+        $patientId = $request->input('patient_id', 0);
         $foundPatient = $patientResource->find($patientId);
 
         $data = [];

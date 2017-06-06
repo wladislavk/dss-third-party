@@ -4,34 +4,49 @@ namespace DentalSleepSolutions\Helpers;
 
 class PatientFormDataChecker
 {
+    const MANDATORY_KEYS = [
+        'add1',
+        'city',
+        'state',
+        'zip',
+        'dob',
+        'gender',
+    ];
+
+    const PHONE_KEYS = [
+        'home_phone',
+        'work_phone',
+        'cell_phone',
+    ];
+
     /**
      * @param array $patientFormData
      * @return bool
      */
     public function isInfoComplete(array $patientFormData)
     {
-        $patientEmail = false;
-        if (!empty($patientFormData['email'])) {
-            $patientEmail = true;
-        }
         if (
-            ($patientEmail || $this->hasPatientPhone($patientFormData))
+            (isset($patientFormData['email']) || $this->hasPatientPhone($patientFormData))
             &&
-            !empty($patientFormData['add1'])
-            &&
-            !empty($patientFormData['city'])
-            &&
-            !empty($patientFormData['state'])
-            &&
-            !empty($patientFormData['zip'])
-            &&
-            !empty($patientFormData['dob'])
-            &&
-            !empty($patientFormData['gender'])
+            $this->checkMandatoryKeys($patientFormData)
         ) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param array $formData
+     * @return bool
+     */
+    private function checkMandatoryKeys(array $formData)
+    {
+        foreach (self::MANDATORY_KEYS as $key) {
+            if (!isset($formData[$key])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -40,14 +55,10 @@ class PatientFormDataChecker
      */
     private function hasPatientPhone(array $patientFormData)
     {
-        if (
-            !empty($patientFormData['home_phone'])
-            ||
-            !empty($patientFormData['work_phone'])
-            ||
-            !empty($patientFormData['cell_phone'])
-        ) {
-            return true;
+        foreach (self::PHONE_KEYS as $key) {
+            if (isset($patientFormData[$key])) {
+                return true;
+            }
         }
         return false;
     }

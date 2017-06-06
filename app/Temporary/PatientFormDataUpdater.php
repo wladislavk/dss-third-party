@@ -1,6 +1,6 @@
 <?php
 
-namespace DentalSleepSolutions\Helpers;
+namespace DentalSleepSolutions\Temporary;
 
 // TODO: this class was created as temporary means to handle this ugly array
 // TODO: this array has to be destroyed and laravel-ized into a proper model, then this class will be destroyed

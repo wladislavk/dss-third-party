@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractDSSModel;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary as Resource;
 use DentalSleepSolutions\Contracts\Repositories\PatientSummaries as Repository;
 
-class PatientSummary extends Model implements Resource, Repository
+class PatientSummary extends AbstractDSSModel implements Resource, Repository
 {
     /**
      * Mass assignable attributes
@@ -42,8 +42,8 @@ class PatientSummary extends Model implements Resource, Repository
 
     public function updateTrackerNotes($patientId = 0, $docId = 0, $notes = '')
     {
-        return $this->from(DB::raw('dental_patient_summary summary'))
-            ->leftJoin(DB::raw('dental_patients patient'), 'patient.patientid', '=', 'summary.pid')
+        return $this->from(\DB::raw('dental_patient_summary summary'))
+            ->leftJoin(\DB::raw('dental_patients patient'), 'patient.patientid', '=', 'summary.pid')
             ->where('summary.pid', $patientId)
             ->where('patient.docid', $docId)
             ->update(['summary.tracker_notes' => $notes]);

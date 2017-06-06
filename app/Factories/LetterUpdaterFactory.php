@@ -30,9 +30,10 @@ class LetterUpdaterFactory
             throw new GeneralException("Type $type is not valid");
         }
         $class = self::TYPES[$type];
-        if (!$class instanceof LetterUpdaterInterface) {
+        $object = App::make($class);
+        if (!$object instanceof LetterUpdaterInterface) {
             throw new GeneralException("Class $class must implement " . LetterUpdaterInterface::class);
         }
-        return App::make($class);
+        return $object;
     }
 }

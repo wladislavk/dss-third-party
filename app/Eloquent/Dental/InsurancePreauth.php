@@ -166,6 +166,11 @@ class InsurancePreauth extends Model implements Resource, Repository
         ];
     }
 
+    /**
+     * @param $newPatientId
+     * @param $name
+     * @return bool|int
+     */
     public function updateVob($newPatientId, $name)
     {
         $rejectReason = $name . ' altered patient insurance information requiring VOB resubmission on ' . Carbon::now()->format('m/d/Y h:i');

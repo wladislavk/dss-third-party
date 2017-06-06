@@ -2,12 +2,33 @@
 
 namespace DentalSleepSolutions\Helpers\EmailHandlers;
 
+use DentalSleepSolutions\Structs\RequestedEmails;
+
 class RememberEmailHandler extends AbstractRegistrationRelatedEmailHandler
 {
     const MESSAGE = 'The reminding mail was successfully sent.';
 
     // TODO: do these pages still exist? if so, all references to them should have their own namespace
     const LOGIN_PAGE = 'reg/login.php';
+
+    /**
+     * @param RequestedEmails $emailTypesForSending
+     * @param int $registrationStatus
+     * @param string $newEmail
+     * @param string $oldEmail
+     * @return bool
+     */
+    public function isCorrectType(
+        RequestedEmails $emailTypesForSending,
+        $registrationStatus,
+        $newEmail,
+        $oldEmail
+    ) {
+        if ($emailTypesForSending->reminder) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * @param int $patientId

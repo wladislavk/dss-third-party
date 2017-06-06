@@ -28,16 +28,16 @@ class PendingVOBRemover
      */
     public function removePendingVerificationOfBenefits(User $currentUser, $patientId, $userId)
     {
-        $userName = '';
+        $username = '';
         if ($currentUser->name) {
-            $userName = $currentUser->name;
+            $username = $currentUser->name;
         }
-        $updatedVerificationOfBenefits = $this->insurancePreauthModel->updateVob($patientId, $userName);
+        $updatedVerificationOfBenefits = $this->insurancePreauthModel->updateVob($patientId, $username);
         if ($updatedVerificationOfBenefits) {
-            $insurancePreauth = $this->preauthHelper
+            $insurancePreauthData = $this->preauthHelper
                 ->createVerificationOfBenefits($patientId, $userId);
-            if ($insurancePreauth) {
-                $insurancePreauth->save();
+            if ($insurancePreauthData) {
+                $this->insurancePreauthModel->create($insurancePreauthData);
             }
         }
     }

@@ -5,9 +5,14 @@ namespace DentalSleepSolutions\Helpers\EmailHandlers;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\EmailSender;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
+use DentalSleepSolutions\Structs\RequestedEmails;
 
 abstract class AbstractEmailHandler
 {
+    const UNREGISTERED_STATUS = 0;
+    const REGISTRATION_EMAILED_STATUS = 1;
+    const REGISTERED_STATUS = 2;
+
     /** @var MailerDataRetriever */
     private $mailerDataRetriever;
 
@@ -59,6 +64,20 @@ abstract class AbstractEmailHandler
             }
         }
     }
+
+    /**
+     * @param RequestedEmails $emailTypesForSending
+     * @param int $registrationStatus
+     * @param string $newEmail
+     * @param string $oldEmail
+     * @return bool
+     */
+    abstract public function isCorrectType(
+        RequestedEmails $emailTypesForSending,
+        $registrationStatus,
+        $newEmail,
+        $oldEmail
+    );
 
     /**
      * @param array $contactData

@@ -3,7 +3,9 @@
 namespace Tests\Unit\Helpers\EmailHandlers;
 
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
+use DentalSleepSolutions\Helpers\EmailHandlers\AbstractEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\UpdateEmailHandler;
+use DentalSleepSolutions\Structs\RequestedEmails;
 use Tests\TestCases\EmailHandlerTestCase;
 
 class UpdateEmailHandlerTest extends EmailHandlerTestCase
@@ -131,5 +133,41 @@ class UpdateEmailHandlerTest extends EmailHandlerTestCase
         $this->expectException(EmailHandlerException::class);
         $this->expectExceptionMessage('Mailer data is malformed');
         $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
+    }
+
+    public function testCheckIsCorrectType()
+    {
+        $emails = new RequestedEmails([]);
+        $registrationStatus = AbstractEmailHandler::REGISTERED_STATUS;
+        $newEmail = 'new@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->updateEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertTrue($isCorrect);
+    }
+
+    public function testCheckWithIncorrectStatus()
+    {
+        $emails = new RequestedEmails([]);
+        $registrationStatus = AbstractEmailHandler::REGISTRATION_EMAILED_STATUS;
+        $newEmail = 'new@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->updateEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertFalse($isCorrect);
+    }
+
+    public function testCheckWithoutEmailChange()
+    {
+        $emails = new RequestedEmails([]);
+        $registrationStatus = AbstractEmailHandler::REGISTERED_STATUS;
+        $newEmail = 'old@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->updateEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertFalse($isCorrect);
     }
 }

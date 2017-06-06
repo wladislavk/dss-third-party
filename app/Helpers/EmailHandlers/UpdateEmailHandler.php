@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers\EmailHandlers;
 
+use DentalSleepSolutions\Structs\RequestedEmails;
+
 class UpdateEmailHandler extends AbstractEmailHandler
 {
     const MESSAGE = 'The mail about changing patient email was successfully sent.';
@@ -10,6 +12,28 @@ class UpdateEmailHandler extends AbstractEmailHandler
     const EMAIL_VIEW = 'emails.update';
 
     const UPDATED_BY_OTHER_LEGEND = 'An update has been made to your account.';
+
+    /**
+     * @param RequestedEmails $emailTypesForSending
+     * @param int $registrationStatus
+     * @param string $newEmail
+     * @param string $oldEmail
+     * @return bool
+     */
+    public function isCorrectType(
+        RequestedEmails $emailTypesForSending,
+        $registrationStatus,
+        $newEmail,
+        $oldEmail
+    ) {
+        if ($registrationStatus != self::REGISTERED_STATUS) {
+            return false;
+        }
+        if ($newEmail == $oldEmail) {
+            return false;
+        }
+        return true;
+    }
 
     /**
      * @return string

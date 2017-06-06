@@ -7,6 +7,7 @@ use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\EmailSender;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
 use DentalSleepSolutions\Helpers\PasswordResetDataSetter;
+use DentalSleepSolutions\Structs\RequestedEmails;
 
 class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
 {
@@ -36,6 +37,24 @@ class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
         parent::__construct($mailerDataRetriever, $emailSender);
         $this->passwordResetDataSetter = $passwordResetDataSetter;
         $this->patientModel = $patientModel;
+    }
+
+    public function isCorrectType(
+        RequestedEmails $emailTypesForSending,
+        $registrationStatus,
+        $newEmail,
+        $oldEmail
+    ) {
+        if ($emailTypesForSending->registration) {
+            return false;
+        }
+        if ($registrationStatus != self::REGISTRATION_EMAILED_STATUS) {
+            return false;
+        }
+        if ($newEmail == $oldEmail) {
+            return false;
+        }
+        return true;
     }
 
     /**

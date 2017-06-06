@@ -28,7 +28,7 @@ class PreauthHelper
     /**
      * @param int $patientId
      * @param int $userId
-     * @return InsurancePreauth|null
+     * @return array|null
      */
     public function createVerificationOfBenefits($patientId, $userId)
     {
@@ -52,15 +52,14 @@ class PreauthHelper
 
         $patientPreauthInfo = $patientPreauthInfo->toArray();
         $patientPreauthInfo = array_merge($patientPreauthInfo, [
-            'patient_id'                => $patientId,
-            'diagnosis_code'            => $diagnosisCode,
+            'patient_id' => $patientId,
+            'diagnosis_code' => $diagnosisCode,
             'front_office_request_date' => Carbon::now(),
-            'status'                    => self::DSS_PREAUTH_PENDING,
-            'userid'                    => $userId,
-            'viewed'                    => 1,
+            'status' => self::DSS_PREAUTH_PENDING,
+            'userid' => $userId,
+            'viewed' => 1,
         ]);
 
-        $newInsurancePreauth = new InsurancePreauth($patientPreauthInfo);
-        return $newInsurancePreauth;
+        return $patientPreauthInfo;
     }
 }

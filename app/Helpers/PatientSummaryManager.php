@@ -44,7 +44,7 @@ class PatientSummaryManager
         if (!$patientLocation) {
             return;
         }
-        $summaries = $this->summaryModel->getWithFilter(null, ['patientid' => $patientId]);
+        $summaries = $this->summaryModel->getWithFilter([], ['patientid' => $patientId]);
         if (count($summaries)) {
             $summaryData = ['location' => $patientLocation];
             $this->summaryModel->updateForPatient($patientId, $summaryData);
@@ -62,17 +62,16 @@ class PatientSummaryManager
         if (!$patientId) {
             return;
         }
+        $patientSummaryData = [
+            'patient_info' => $isInfoComplete,
+        ];
         /** @var PatientSummary|null $patientSummary */
         $patientSummary = $this->patientSummaryModel->find($patientId);
         if ($patientSummary) {
-            $patientSummary->patient_info = $isInfoComplete;
-            $patientSummary->save();
+            $this->patientSummaryModel->updateStatic($patientSummary, $patientSummaryData);
             return;
         }
-        $patientSummaryData = [
-            'pid'   => $patientId,
-            'patient_info' => $isInfoComplete,
-        ];
+        $patientSummaryData['pid'] = $patientId;
         $this->patientSummaryModel->create($patientSummaryData);
     }
 }

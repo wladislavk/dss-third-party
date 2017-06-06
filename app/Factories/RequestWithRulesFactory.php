@@ -29,9 +29,10 @@ class RequestWithRulesFactory
             throw new GeneralException("Type $type is not valid");
         }
         $class = self::REQUESTS[$type];
-        if (!$class instanceof RequestWithRulesInterface) {
+        $object = App::make($class);
+        if (!$object instanceof RequestWithRulesInterface) {
             throw new GeneralException("Class $class must implement " . RequestWithRulesInterface::class);
         }
-        return App::make($class);
+        return $object;
     }
 }

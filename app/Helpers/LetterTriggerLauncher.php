@@ -6,7 +6,6 @@ use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\LetterToPatientTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
-use DentalSleepSolutions\Structs\MDContacts;
 
 class LetterTriggerLauncher
 {

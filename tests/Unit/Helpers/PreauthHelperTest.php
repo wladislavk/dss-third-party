@@ -28,13 +28,15 @@ class PreauthHelperTest extends UnitTestCase
         $patientId = 1;
         $userId = 1;
         $newInsurancePreauth = $this->preauthHelper->createVerificationOfBenefits($patientId, $userId);
-        $this->assertInstanceOf(InsurancePreauth::class, $newInsurancePreauth);
-        $this->assertEquals(1, $newInsurancePreauth->patient_id);
-        $this->assertEquals('foo', $newInsurancePreauth->diagnosis_code);
-        $this->assertInstanceOf(Carbon::class, $newInsurancePreauth->front_office_request_date);
-        $this->assertEquals(PreauthHelper::DSS_PREAUTH_PENDING, $newInsurancePreauth->status);
-        $this->assertEquals(1, $newInsurancePreauth->userid);
-        $this->assertEquals(1, $newInsurancePreauth->viewed);
+        $expected = [
+            'patient_id' => 1,
+            'diagnosis_code' => 'foo',
+            'front_office_request_date' => Carbon::now(),
+            'status' => PreauthHelper::DSS_PREAUTH_PENDING,
+            'userid' => 1,
+            'viewed' => 1,
+        ];
+        $this->assertEquals($expected, $newInsurancePreauth);
     }
 
     public function testWithoutSleepStudy()
@@ -42,8 +44,15 @@ class PreauthHelperTest extends UnitTestCase
         $patientId = 2;
         $userId = 1;
         $newInsurancePreauth = $this->preauthHelper->createVerificationOfBenefits($patientId, $userId);
-        $this->assertInstanceOf(InsurancePreauth::class, $newInsurancePreauth);
-        $this->assertEquals('', $newInsurancePreauth->diagnosis_code);
+        $expected = [
+            'patient_id' => 2,
+            'diagnosis_code' => '',
+            'front_office_request_date' => Carbon::now(),
+            'status' => PreauthHelper::DSS_PREAUTH_PENDING,
+            'userid' => 1,
+            'viewed' => 1,
+        ];
+        $this->assertEquals($expected, $newInsurancePreauth);
     }
 
     public function testWithoutPreauthInfo()

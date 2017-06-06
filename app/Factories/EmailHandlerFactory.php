@@ -7,6 +7,7 @@ use DentalSleepSolutions\Helpers\EmailHandlers\AbstractEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\RememberEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\UpdateEmailHandler;
+use DentalSleepSolutions\Structs\RequestedEmails;
 use Illuminate\Support\Facades\App;
 
 class EmailHandlerFactory
@@ -15,6 +16,7 @@ class EmailHandlerFactory
     const REGISTRATION_MAIL = 'registration_mail';
     const REMINDER_MAIL = 'reminder_mail';
 
+    // sequence of elements matters
     const EMAIL_TYPES = [
         self::UPDATED_MAIL => UpdateEmailHandler::class,
         self::REMINDER_MAIL => RememberEmailHandler::class,
@@ -32,9 +34,43 @@ class EmailHandlerFactory
             throw new GeneralException("Type $type is not valid");
         }
         $class = self::EMAIL_TYPES[$type];
-        if (!$class instanceof AbstractEmailHandler) {
-            throw new GeneralException("Class $class must extend " . AbstractEmailHandler::class);
+        $object = App::make($class);
+        $this->checkHandler($object);
+        return $object;
+    }
+
+    /**
+     * @param RequestedEmails $emailTypesForSending
+     * @param int $registrationStatus
+     * @param string $newEmail
+     * @param string $oldEmail
+     * @return AbstractEmailHandler|null
+     */
+    public function getCorrectHandler(
+        RequestedEmails $emailTypesForSending,
+        $registrationStatus,
+        $newEmail,
+        $oldEmail
+    ) {
+        foreach (self::EMAIL_TYPES as $class) {
+            /** @var AbstractEmailHandler $handler */
+            $handler = App::make($class);
+            $this->checkHandler($handler);
+            if ($handler->isCorrectType($emailTypesForSending, $registrationStatus, $newEmail, $oldEmail)) {
+                return $handler;
+            }
         }
-        return App::make($class);
+        return null;
+    }
+
+    /**
+     * @param object $object
+     * @throws GeneralException
+     */
+    private function checkHandler($object)
+    {
+        if (!$object instanceof AbstractEmailHandler) {
+            throw new GeneralException("Class " . get_class($object) . " must extend " . AbstractEmailHandler::class);
+        }
     }
 }

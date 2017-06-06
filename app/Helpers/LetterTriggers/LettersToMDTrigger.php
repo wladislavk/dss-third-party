@@ -116,7 +116,7 @@ class LettersToMDTrigger extends AbstractLetterTrigger
             ['use_letters', 'intro_letters'],
             ['userid' => $docId]
         );
-        // TODO: why is only first entry used? perhaps better to use first() on the model
+        // TODO: why is only the first entry used? perhaps better to use first() on the model
         if (isset($baseUserLetterInfo[0])) {
             return $baseUserLetterInfo[0];
         }

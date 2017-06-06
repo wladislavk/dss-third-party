@@ -11,6 +11,9 @@ use DentalSleepSolutions\Structs\EditPatientResponseData;
 
 class RegistrationEmailSender
 {
+    const FAILURE_MESSAGE = 'Unable to send registration email because no cellphone number is set. Please enter a cellphone number and try again.';
+    const SUCCESS_MESSAGE = 'The registration mail was successfully sent.';
+
     /** @var RegistrationEmailHandler */
     private $registrationEmailHandler;
 
@@ -30,14 +33,14 @@ class RegistrationEmailSender
         Patient $unchangedPatient = null
     ) {
         // TODO: this logic needs to be checked. emails are not sent by phone
-        $message = 'Unable to send registration email because no cellphone number is set. Please enter a cellphone number and try again.';
+        $message = self::FAILURE_MESSAGE;
         if ($requestData->newEmail && $requestData->cellphone) {
             $oldEmail = $this->getOldEmail($unchangedPatient);
             $patientId = $this->getPatientId($unchangedPatient);
             $this->registrationEmailHandler->handleEmail(
                 $patientId, $requestData->newEmail, $oldEmail, true
             );
-            $message = 'The registration mail was successfully sent.';
+            $message = self::SUCCESS_MESSAGE;
         }
         $mail = new EditPatientMail();
         $mail->mailType = EmailHandlerFactory::REGISTRATION_MAIL;

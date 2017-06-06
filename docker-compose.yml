@@ -2,7 +2,7 @@ version: "2.1"
 
 # WINDOWS: Windows REQUIRES explicit path for volumes, Linux/Mac can use relative (default).
   # Windows example cmd for startup: 
-  # ROOT_PATH='c:/Users/MyName/Github/DS3' docker-compose up -d
+  # ROOT_PATH='c:/Users/MyName/Documents/Github/DS3' docker-compose up -d
 
 services:
   db:

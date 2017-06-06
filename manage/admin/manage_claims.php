@@ -440,9 +440,6 @@ if (isset($_GET['closedby'])) {
  * Count is better done before ordering
  */
 $claimCountSql = preg_replace('/^SELECT[\s\r\t\n]/', 'SELECT COUNT(claim.insuranceid) AS total, ', $sql);
-$__globalSql []= $claimCountSql;
-
-dd($__globalSql);
 
 $total_rec = $db->getColumn($claimCountSql, 'total', 0);
 $no_pages = $total_rec/$rec_disp;

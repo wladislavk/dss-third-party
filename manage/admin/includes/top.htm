@@ -329,8 +329,6 @@ if (is_billing($_SESSION['admin_access'])) {
     )";
 }
 
-$__globalSql = [$sql];
-
 $num_pending_claims = $db->getColumn($sql, 'total', 0);
 
 ?>

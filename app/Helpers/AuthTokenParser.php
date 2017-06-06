@@ -141,7 +141,7 @@ class AuthTokenParser
      */
     private function getAdminFromModelData (User $modelData)
     {
-        return $this->getAgnosticDataFromModelData($modelData, 'u');
+        return $this->getAgnosticDataFromModelData($modelData, 'a');
     }
 
     /**

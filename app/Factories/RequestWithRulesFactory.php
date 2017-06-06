@@ -25,7 +25,7 @@ class RequestWithRulesFactory
      */
     public function getRequestClass($type)
     {
-        if (!isset(self::REQUESTS[$type])) {
+        if (!array_key_exists($type, self::REQUESTS)) {
             throw new GeneralException("Type $type is not valid");
         }
         $class = self::REQUESTS[$type];

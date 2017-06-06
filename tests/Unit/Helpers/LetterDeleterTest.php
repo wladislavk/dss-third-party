@@ -71,6 +71,7 @@ class LetterDeleterTest extends UnitTestCase
         $recipientId = 2;
         $docId = 3;
         $userId = 4;
+        date_default_timezone_set('UTC');
         $this->letterDeleter->deleteLetter($letterId, $type, $recipientId, $docId, $userId);
         $this->assertEquals([], $this->createdLetter);
         $expectedFirstData = new LetterData();
@@ -107,6 +108,7 @@ class LetterDeleterTest extends UnitTestCase
         $recipientId = 2;
         $docId = 3;
         $userId = 4;
+        date_default_timezone_set('UTC');
         $this->letterDeleter->deleteLetter($letterId, $type, $recipientId, $docId, $userId);
         $this->assertEquals(5, $this->patientId);
     }

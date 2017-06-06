@@ -76,7 +76,7 @@ class LedgerHistory extends Model implements Resource, Repository
                 'dlp.entry_date',
                 DB::raw("CONCAT(p.first_name, ' ', p.last_name) AS name"),
                 DB::raw("'' AS description"),
-                'dlp.amount AS paid_amount,'
+                'dlp.amount AS paid_amount',
                 DB::raw("'' AS status"),
                 DB::raw('IF(
                     dl.secondary_claim_id && dlp.is_secondary,

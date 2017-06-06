@@ -52,9 +52,9 @@ class LetterManager
         PatientReferrer $referrer
     ) {
         if (
-            !isset(self::UPDATE_TYPES[$unchangedPatient->referred_source])
+            !array_key_exists($unchangedPatient->referred_source, self::UPDATE_TYPES)
             ||
-            !isset(self::DELETE_TYPES[$unchangedPatient->referred_source])
+            !array_key_exists($unchangedPatient->referred_source, self::DELETE_TYPES)
         ) {
             // TODO: perhaps an exception is needed
             return;

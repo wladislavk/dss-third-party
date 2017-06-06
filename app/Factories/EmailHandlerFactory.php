@@ -30,7 +30,7 @@ class EmailHandlerFactory
      */
     public function getEmailHandler($type)
     {
-        if (!isset(self::EMAIL_TYPES[$type])) {
+        if (!array_key_exists($type, self::EMAIL_TYPES)) {
             throw new GeneralException("Type $type is not valid");
         }
         $class = self::EMAIL_TYPES[$type];

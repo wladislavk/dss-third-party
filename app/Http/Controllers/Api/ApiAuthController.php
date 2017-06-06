@@ -40,6 +40,10 @@ class ApiAuthController extends ApiBaseController
 
     public function authHealth ()
     {
+        if (!$this->config->get('app.debug') || $this->config->get('app.env') === 'production') {
+            return Response::json(['status' => 'Not Found'], 404);
+        }
+
         return ['status' => 'Health', 'data' => ['user' => $this->currentUser, 'admin' => $this->currentAdmin]];
     }
 

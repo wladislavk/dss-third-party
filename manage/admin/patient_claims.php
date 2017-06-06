@@ -185,6 +185,14 @@ switch ($specialFilter) {
 
 $filedByBackOfficeConditional = filedByBackOfficeConditional();
 
+/**
+ * @see DSS-568
+ *
+ * BO companies can now be owners of claims. Claims will rely on billing_company_id to determine BO ownership,
+ * with the previous method as fallback.
+ */
+$adminCompanyId = intval($_SESSION['admincompanyid']);
+
 $sql = "SELECT
     claim.insuranceid,
     claim.patientid,
@@ -241,7 +249,13 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
             JOIN dental_users users2 ON claim.userid = users2.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN companies c ON (
+                claim.billing_company_id = c.id
+                OR (
+                    claim.billing_company_id = 0
+                    AND c.id = users.billing_company_id
+                )
+            )
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
         ";
@@ -250,8 +264,20 @@ if (is_super($_SESSION['admin_access'])) {
         FROM dental_insurance claim
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
-                AND users.billing_company_id = '" . $db->escape($_SESSION['admincompanyid']) . "'
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+                AND (
+                    claim.billing_company_id = '$adminCompanyId'
+                    OR (
+                        claim.billing_company_id = 0
+                        AND users.billing_company_id = '$adminCompanyId'
+                    )
+                )
+            LEFT JOIN companies c ON (
+                claim.billing_company_id = c.id
+                OR (
+                    claim.billing_company_id = 0
+                    AND c.id = users.billing_company_id
+                )
+            )
             JOIN dental_user_company uc ON uc.userid = claim.docid
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
@@ -262,9 +288,21 @@ if (is_super($_SESSION['admin_access'])) {
         FROM dental_insurance claim
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN companies c ON (
+                claim.billing_company_id = c.id
+                OR (
+                    claim.billing_company_id = 0
+                    AND c.id = users.billing_company_id
+                )
+            )
             JOIN dental_user_company uc ON uc.userid = claim.docid
-                AND uc.companyid = '" . $db->escape($_SESSION['admincompanyid']) . "'
+                AND (
+                    claim.billing_company_id = '$adminCompanyId'
+                    OR (
+                        claim.billing_company_id = 0
+                        AND uc.companyid = '$adminCompanyId'
+                    )
+                )
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
             JOIN dental_users users2 ON claim.userid = users2.userid

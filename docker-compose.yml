@@ -33,7 +33,6 @@ services:
         LOADER_DIR: ds3-private02
         API_DIR: ds3-private03
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/loader
-    env_file: ../ds3-private02/.env.example
     environment:
       APP_URL: https://loader.docker.localhost/
       API_URL: https://api.docker.localhost/
@@ -49,14 +48,13 @@ services:
       - "${ROOT_PATH:-..}/ds3-private02:/opt/rh/httpd24/root/var/www/html/loader"
       - "${ROOT_PATH:-..}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
     labels:
-      - "traefik.port=80"
+      - "traefik.port=${HTTP_PORT}"
       - "traefik.backend=loader"
       - "traefik.frontend.rule=HostRegexp:{host:loader.docker.localhost}"
 
   api:
     build: ../ds3-private03
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/api
-    env_file: ../ds3-private03/.env.example
     environment:
       DB_HOST: db
       DB_DATABASE: homestead
@@ -65,7 +63,7 @@ services:
     volumes:
       - "${ROOT_PATH:-..}/ds3-private03:/opt/rh/httpd24/root/var/www/html/api"
     labels:
-      - "traefik.port=80"
+      - "traefik.port=${HTTP_PORT}"
       - "traefik.backend=api"
       - "traefik.frontend.rule=HostRegexp:{host:api.docker.localhost}"
 
@@ -74,11 +72,11 @@ services:
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/vue
     environment:
       NODE_ENV: development
-      PORT: 80
+      PORT: ${HTTP_PORT}
     volumes:
       - "${ROOT_PATH:-..}/ds3-private06-Vue/src:/opt/app/src"
     labels:
-      - "traefik.port=80"
+      - "traefik.port=${HTTP_PORT}"
       - "traefik.backend=vue"
       - "traefik.frontend.rule=HostRegexp:{host:vue.docker.localhost}"
  
@@ -96,3 +94,10 @@ services:
       - ./ssl/:/etc/ssl/
     labels:
       - "traefik.enable=false"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+        - "${PHPMYADMIN_PORT}:80"
+    links:
+        - db

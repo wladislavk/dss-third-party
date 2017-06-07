@@ -184,7 +184,16 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_patients p ON preauth.patient_id = p.patientid
             JOIN dental_users users ON preauth.doc_id = users.userid
             LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN companies c ON (
+                preauth.billing_company_id = c.id
+                OR (
+                    (
+                        preauth.billing_company_id IS NULL
+                        OR preauth.billing_company_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
             LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
         ";
 } elseif (is_billing($_SESSION['admin_access'])) {
@@ -206,10 +215,28 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_patients p ON preauth.patient_id = p.patientid
             JOIN dental_user_company uc ON uc.userid = p.docid
             JOIN dental_users users ON preauth.doc_id = users.userid
-                AND users.billing_company_id = '{$_SESSION['admincompanyid']}'
+                AND (
+                    preauth.billing_company_id = '$adminCompanyId'
+                    OR (
+                        (
+                            preauth.billing_company_id IS NULL
+                            OR preauth.billing_company_id = 0
+                        )
+                        AND users.billing_company_id = '$adminCompanyId'
+                    )
+                )
             LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
             LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            LEFT JOIN companies c on users.billing_company_id = c.id
+            LEFT JOIN companies c on (
+                preauth.billing_company_id = c.id
+                OR (
+                    (
+                        preauth.billing_company_id IS NULL
+                        OR preauth.billing_company_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
         ";
 } else {
     $sql = "SELECT
@@ -228,7 +255,16 @@ if (is_super($_SESSION['admin_access'])) {
         FROM dental_insurance_preauth preauth
             JOIN dental_patients p ON preauth.patient_id = p.patientid
             JOIN dental_user_company uc ON uc.userid = p.docid
-                AND uc.companyid = '{$_SESSION['admincompanyid']}'
+                AND (
+                    preauth.billing_company_id = '$adminCompanyId'
+                    OR (
+                        (
+                            preauth.billing_company_id IS NULL
+                            OR preauth.billing_company_id = 0
+                        )
+                        AND uc.companyid = '$adminCompanyId'
+                    )
+                )
             JOIN dental_users users ON preauth.doc_id = users.userid
             LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
             LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid

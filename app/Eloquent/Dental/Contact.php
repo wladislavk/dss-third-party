@@ -2,13 +2,14 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
+use DentalSleepSolutions\DentalSleepSolutions\Interfaces\NamedModelInterface;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Contact as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Contacts as Repository;
 use DB;
 
-class Contact extends Model implements Resource, Repository
+class Contact extends Model implements Resource, Repository, NamedModelInterface
 {
     use WithoutUpdatedTimestamp;
 
@@ -256,6 +257,10 @@ class Contact extends Model implements Resource, Repository
             ->first();
     }
 
+    /**
+     * @param int $contactId
+     * @return Contact|null
+     */
     public function getDocShortInfo($contactId)
     {
         return $this->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
@@ -400,5 +405,26 @@ class Contact extends Model implements Resource, Repository
             'total'  => $totalNumber,
             'result' => $resultQuery->get()
         ];
+    }
+
+    public function getFirstName()
+    {
+        return $this->firstname;
+    }
+
+    public function getMiddleName()
+    {
+        return $this->middlename;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastname;
+    }
+
+    // TODO: check if this field exists in the DB
+    public function getLabel()
+    {
+        return $this->contacttype;
     }
 }

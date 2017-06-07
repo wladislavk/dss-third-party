@@ -7,6 +7,9 @@ use DentalSleepSolutions\Exceptions\IncorrectEmailException;
 use DentalSleepSolutions\Factories\PatientEditorFactory;
 use DentalSleepSolutions\Helpers\AccessCodeResetter;
 use DentalSleepSolutions\Helpers\EmailChecker;
+use DentalSleepSolutions\Helpers\FullNameComposer;
+use DentalSleepSolutions\Helpers\NameSetter;
+use DentalSleepSolutions\Helpers\PatientLocationRetriever;
 use DentalSleepSolutions\Helpers\TempPinDocumentCreator;
 use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use DentalSleepSolutions\Helpers\PatientRuleRetriever;
@@ -15,32 +18,22 @@ use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
 use DentalSleepSolutions\Http\Requests\PatientDestroy;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
-use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
-use DentalSleepSolutions\Contracts\Repositories\Summaries;
-use DentalSleepSolutions\Contracts\Resources\Letter;
-use DentalSleepSolutions\Contracts\Resources\Contact;
-use DentalSleepSolutions\Contracts\Resources\ProfileImage;
-use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
-use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
+use DentalSleepSolutions\Eloquent\Dental\HomeSleepTest;
+use DentalSleepSolutions\Eloquent\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Dental\Notification;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
+use DentalSleepSolutions\Eloquent\Dental\ProfileImage;
 use DentalSleepSolutions\Structs\PressedButtons;
 use DentalSleepSolutions\Structs\RequestedEmails;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class PatientsController extends Controller
 {
-    const DSS_REFERRED_PATIENT = 1;
-    const DSS_REFERRED_PHYSICIAN = 2;
-    const DSS_REFERRED_MEDIA = 3;
-    const DSS_REFERRED_FRANCHISE = 4;
-    const DSS_REFERRED_DSSOFFICE = 5;
-    const DSS_REFERRED_OTHER = 6;
-
     /**
      * @param Patients $resources
      * @return JsonResponse
@@ -90,8 +83,6 @@ class PatientsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
      * @param  Patient $resource
      * @param  \DentalSleepSolutions\Http\Requests\PatientDestroy $request
      * @return \Illuminate\Http\JsonResponse
@@ -104,54 +95,54 @@ class PatientsController extends Controller
     }
 
     /**
-     * Get patients by filter.
-     *
      * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
      * @return \Illuminate\Http\JsonResponse
      */
     public function getWithFilter(Patients $resources, Request $request)
     {
-        $fields = $request->input('fields') ?: [];
-        $where  = $request->input('where') ?: [];
+        $fields = $request->input('fields', []);
+        $where  = $request->input('where', []);
 
         $patients = $resources->getWithFilter($fields, $where);
 
         return ApiResponse::responseOk('', $patients);
     }
 
-    public function getNumber(Patients $resources)
+    public function getNumber(Patient $patientModel)
     {
         $docId = $this->currentUser->getDocIdOrZero();
-        $data = $resources->getNumber($docId);
+        $data = $patientModel->getNumber($docId);
 
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getDuplicates(Patients $resources)
+    public function getDuplicates(Patient $patientModel)
     {
         $docId = $this->currentUser->getDocIdOrZero();
-        $data = $resources->getDuplicates($docId);
+        $data = $patientModel->getDuplicates($docId);
 
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getBounces(Patients $resources)
+    public function getBounces(Patient $patientModel)
     {
         $docId = $this->currentUser->getDocIdOrZero();
-        $data = $resources->getBounces($docId);
+        $data = $patientModel->getBounces($docId);
 
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getListPatients(Patients $resources, Request $request)
+    public function getListPatients(Patient $patientModel, Request $request)
     {
         $partialName = $request->input('partial_name', '');
-        $partialName = preg_replace("[^ A-Za-z'\-]", '', $partialName);
+        // TODO: there must not be whitespaces in regexp. is it a typo?
+        $regExp = '/[^ A-Za-z\'\-]/';
+        $partialName = preg_replace($regExp, '', $partialName);
 
         $names = explode(' ', $partialName);
 
         $docId = $this->currentUser->getDocIdOrZero();
-        $data = $resources->getListPatients($docId, $names);
+        $data = $patientModel->getListPatients($docId, $names);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -164,7 +155,7 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('Resource deleted');
     }
 
-    public function find(Patients $resources, Request $request)
+    public function find(Patient $patientModel, Request $request)
     {
         $docId = $this->currentUser->getDocIdOrZero();
         $userType = $this->currentUser->getUserTypeOrZero();
@@ -177,7 +168,7 @@ class PatientsController extends Controller
         $sortColumn      = $request->input('sortColumn', 'name');
         $sortDir         = $request->input('sortDir', '');
 
-        $data = $resources->findBy(
+        $data = $patientModel->findBy(
             $docId,
             $userType,
             $patientId,
@@ -192,18 +183,18 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getReferredByContact(Patients $resources, Request $request)
+    public function getReferredByContact(Patient $patientModel, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
-        $data = $resources->getReferredByContact($contactId);
+        $data = $patientModel->getReferredByContact($contactId);
 
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getByContact(Patients $resources, Request $request)
+    public function getByContact(Patient $patientModel, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
-        $data = $resources->getByContact($contactId);
+        $data = $patientModel->getByContact($contactId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -284,120 +275,93 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $responseData->toArray());
     }
 
+    /**
+     * @param FullNameComposer $fullNameComposer
+     * @param PatientLocationRetriever $patientLocationRetriever
+     * @param InsurancePreauth $insPreauthModel
+     * @param Patient $patientModel
+     * @param ProfileImage $profileImageModel
+     * @param Letter $letterModel
+     * @param HomeSleepTest $homeSleepTestModel
+     * @param Notification $notificationModel
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function getDataForFillingPatientForm(
-        InsurancePreauth $insPreauthResource,
-        Patient $patientResource,
-        Contact $contactResource,
-        Summaries $summariesResource,
-        ProfileImage $profileImageResource,
-        Letter $letterResource,
-        HomeSleepTests $homeSleepTestResource,
-        Notifications $notificationResource,
+        FullNameComposer $fullNameComposer,
+        PatientLocationRetriever $patientLocationRetriever,
+        InsurancePreauth $insPreauthModel,
+        Patient $patientModel,
+        ProfileImage $profileImageModel,
+        Letter $letterModel,
+        HomeSleepTest $homeSleepTestModel,
+        Notification $notificationModel,
         Request $request
     ) {
         $patientId = $request->input('patient_id', 0);
-        $foundPatient = $patientResource->find($patientId);
+        /** @var Patient|null $foundPatient */
+        $foundPatient = $patientModel->find($patientId);
 
-        $data = [];
-        if (!empty($foundPatient)) {
-            $formedFullNames = [];
-            // fields for getting certain short info and forming full name 
-            $docFields = [
-                'docsleep',
-                'docpcp',
-                'docdentist',
-                'docent',
-                'docmdother',
-                'docmdother2',
-                'docmdother3',
-            ];
-
-            foreach ($docFields as $field) {
-                $shortInfo = $contactResource->getDocShortInfo($foundPatient->$field);
-                $formedFullNames[$field . '_name'] = $this->getDocNameFromShortInfo($foundPatient->$field, $shortInfo);
-            }
-
-            if (!empty($foundPatient->p_m_eligible_payer_id)) {
-                $formedFullNames['ins_payer_name'] = $foundPatient->p_m_eligible_payer_id . ' - ' . $foundPatient->p_m_eligible_payer_name;
-            } else {
-                $formedFullNames['ins_payer_name'] = '';
-            }
-
-            if (!empty($foundPatient->s_m_eligible_payer_id)) {
-                $formedFullNames['s_m_ins_payer_name'] = $foundPatient->s_m_eligible_payer_id . ' - ' . $foundPatient->s_m_eligible_payer_name;
-            } else {
-                $formedFullNames['s_m_ins_payer_name'] = '';
-            }
-
-            if ($foundPatient->referred_source == self::DSS_REFERRED_PATIENT) {
-                $referredPatient = $patientResource->getWithFilter([
-                    'lastname', 'firstname', 'middlename'
-                ], ['patientid' => $foundPatient->referred_by])[0];
-
-                $formedFullNames['referred_name'] = $referredPatient->lastname . ', ' . $referredPatient->firstname . ' '
-                    . $referredPatient->middlename . ' - Patient';
-            } elseif($foundPatient->referred_source == self::DSS_REFERRED_PHYSICIAN) {
-                $shortInfo = $contactResource->getDocShortInfo($foundPatient->referred_by);
-
-                $formedFullNames['referred_name'] = $shortInfo->lastname . ', ' . $shortInfo->firstname . ' '
-                    . $shortInfo->middlename
-                    . ($shortInfo->contacttype != '' ? ' - ' . $shortInfo->contacttype : '');
-            }
-
-            $foundLocations = $summariesResource->getWithFilter(['location'], ['patientid' => $patientId]);
-
-            if (count($foundLocations)) {
-                $foundLocation = $foundLocations[0];
-            }
-
-            $patientLocation = '';
-            if (!empty($foundLocation)) {
-                $patientLocation = $foundLocation->location;
-            }
-            $data = [
-                'pending_vob'                 => $insPreauthResource->getPendingVob($patientId),
-                'profile_photo'               => $profileImageResource->getProfilePhoto($patientId),
-                'intro_letter'                => $letterResource->getGeneratedDateOfIntroLetter($patientId),
-                'insurance_card_image'        => $profileImageResource->getInsuranceCardImage($patientId),
-                'uncompleted_home_sleep_test' => $homeSleepTestResource->getUncompleted($patientId),
-                'patient_notification'        => $notificationResource->getWithFilter(null, [
-                                                     'patientid' => $patientId,
-                                                     'status'    => 1,
-                                                 ]),
-                'patient'                     => ApiResponse::transform($foundPatient),
-                'formed_full_names'           => $formedFullNames,
-                'patient_location'            => $patientLocation,
-            ];
+        if (!$foundPatient) {
+            return ApiResponse::responseOk('', []);
         }
+        $formedFullNames = $fullNameComposer->getFormedFullNames($foundPatient);
+        $patientLocation = $patientLocationRetriever->getPatientLocation($patientId);
+
+        $patientNotificationData = [
+            'patientid' => $patientId,
+            'status' => 1,
+        ];
+        $data = [
+            'pending_vob' => $insPreauthModel->getPendingVob($patientId),
+            'profile_photo' => $profileImageModel->getProfilePhoto($patientId),
+            'intro_letter' => $letterModel->getGeneratedDateOfIntroLetter($patientId),
+            'insurance_card_image' => $profileImageModel->getInsuranceCardImage($patientId),
+            'uncompleted_home_sleep_test' => $homeSleepTestModel->getUncompleted($patientId),
+            'patient_notification' => $notificationModel->getWithFilter(null, $patientNotificationData),
+            'patient' => ApiResponse::transform($foundPatient),
+            'formed_full_names' => $formedFullNames,
+            'patient_location' => $patientLocation,
+        ];
+
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getReferrers(Patients $patientResource, Request $request)
+    public function getReferrers(NameSetter $nameSetter, Patient $patientModel, Request $request)
     {
         $docId = $this->currentUser->getDocIdOrZero();
 
         $partial = '';
         if ($request->has('partial_name')) {
-            $partial = preg_replace("[^ A-Za-z'\-]", "", $request->input('partial_name'));
+            // TODO: there must not be whitespaces in regexp. is it a typo?
+            $regExp = '/[^ A-Za-z\'\-]/';
+            $partial = preg_replace($regExp, '', $request->input('partial_name'));
         }
 
         $names = explode(' ', $partial);
 
-        $contacts = $patientResource->getReferrers($docId, $names);
+        $contacts = $patientModel->getReferrers($docId, $names);
 
         $response = [];
-        if (count($contacts)) {
-            foreach ($contacts as $item) {
-                $fullName = $item->lastname . ', ' . $item->firstname . ' ' . $item->middlename . ' - ' . $item->label;
-                $response[] = [
-                    'id'     => $item->patientid,
-                    'name'   => $fullName,
-                    'source' => $item->referral_type,
-                ];
-            }
-        } else {
+        if (!count($contacts)) {
             $response = [
-                'error' => 'Error: No match found for this criteria.'
+                'error' => 'Error: No match found for this criteria.',
+            ];
+            // TODO: 200 should not be returned on error
+            return ApiResponse::responseOk('', $response);
+        }
+        foreach ($contacts as $item) {
+            // TODO: does property "label" exist on the model?
+            $fullName = $nameSetter->formFullName(
+                $item->firstname,
+                $item->middlename,
+                $item->lastname,
+                $item->label
+            );
+            $response[] = [
+                'id'     => $item->patientid,
+                'name'   => $fullName,
+                'source' => $item->referral_type,
             ];
         }
 
@@ -446,23 +410,5 @@ class PatientsController extends Controller
         }
 
         return ApiResponse::responseOk('', ['path_to_pdf' => $url]);
-    }
-
-    private function getDocNameFromShortInfo($field, $shortInfo)
-    {
-        $name = '';
-        if ($field != 'Not Set' && $shortInfo) {
-            $name = $shortInfo->lastname;
-            $name .= ', ';
-            $name .= $shortInfo->firstname;
-            $name .= ' ';
-            $name .= $shortInfo->middlename;
-            $contactType = '';
-            if ($shortInfo->contacttype) {
-                $contactType = ' - ' . $shortInfo->contacttype;
-            }
-            $name .= $contactType;
-        }
-        return $name;
     }
 }

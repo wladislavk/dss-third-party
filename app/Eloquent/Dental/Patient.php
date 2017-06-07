@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
+use DentalSleepSolutions\DentalSleepSolutions\Interfaces\NamedModelInterface;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
@@ -9,12 +10,14 @@ use DentalSleepSolutions\Contracts\Resources\Patient as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Patients as Repository;
 use DB;
 
-class Patient extends Model implements Resource, Repository
+class Patient extends Model implements Resource, Repository, NamedModelInterface
 {
     use WithoutUpdatedTimestamp;
 
     const DSS_REFERRED_PATIENT = 1;
     const DSS_REFERRED_PHYSICIAN = 2;
+
+    const CONTACT_TYPE = 'Patient';
 
     /**
      * Guarded attributes
@@ -625,7 +628,12 @@ class Patient extends Model implements Resource, Repository
             ->update($data);
     }
 
-    public function getReferrers($docId, $names)
+    /**
+     * @param int $docId
+     * @param array $names
+     * @return array|Contact[]
+     */
+    public function getReferrers($docId, array $names)
     {
         $contacts = DB::table(DB::raw('dental_contact c'))
             ->select(
@@ -934,5 +942,25 @@ class Patient extends Model implements Resource, Repository
             throw new GeneralException("Patient with ID $patientId not found");
         }
         return $unchangedPatient;
+    }
+
+    public function getFirstName()
+    {
+        return $this->firstname;
+    }
+
+    public function getMiddleName()
+    {
+        return $this->middlename;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastname;
+    }
+
+    public function getLabel()
+    {
+        return self::CONTACT_TYPE;
     }
 }

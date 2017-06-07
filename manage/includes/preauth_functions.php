@@ -182,10 +182,11 @@ function list_preauth_errors( $pid )
     return $e_text;
 }
 
-function create_vob ($patientId)
+function create_vob ($patientId, $billingCompanyId=0)
 {
     $db = new Db();
     $patientId = intval($patientId);
+    $billingCompanyId = intval($billingCompanyId);
 
     $sql = "SELECT COUNT(tc.transaction_codeid) AS total
         FROM dental_patients p 
@@ -269,6 +270,7 @@ function create_vob ($patientId)
     $diagnosisCode = $db->getColumn($sql, 'diagnosis', '');
     
     $vobModel['patient_id'] = $patientId;
+    $vobModel['billing_company_id'] = $billingCompanyId;
     $vobModel['diagnosis_code'] = $diagnosisCode;
     $vobModel['status'] = DSS_PREAUTH_PENDING;
     $vobModel['userid'] = $_SESSION['userid'];

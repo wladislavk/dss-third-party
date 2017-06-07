@@ -2,8 +2,11 @@
 
 namespace Tests\TestCases;
 
+use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Helpers\EmailSender;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
+use DentalSleepSolutions\Structs\MailerData;
 use Mockery\MockInterface;
 
 class EmailHandlerTestCase extends UnitTestCase
@@ -11,20 +14,19 @@ class EmailHandlerTestCase extends UnitTestCase
     /** @var array */
     protected $sentEmails = [];
 
-    /** @var array */
-    protected $contactData = [];
+    /** @var MailerData */
+    protected $contactData;
 
     public function setUp()
     {
-        $this->contactData = [
-            'patientData' => [
-                'firstname' => 'John',
-                'lastname' => 'Doe',
-            ],
-            'mailingData' => [
-                'foo' => 'bar',
-            ],
-        ];
+        $patientData = new Patient();
+        $patientData->firstname = 'John';
+        $patientData->lastname = 'Doe';
+        $mailingData = new User();
+
+        $this->contactData = new MailerData();
+        $this->contactData->patientData = $patientData;
+        $this->contactData->mailingData = $mailingData;
     }
 
     protected function mockEmailSender()

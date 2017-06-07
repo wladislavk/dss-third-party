@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Helpers\EmailHandlers;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\EmailSender;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
+use DentalSleepSolutions\Structs\MailerData;
 use DentalSleepSolutions\Structs\RequestedEmails;
 
 abstract class AbstractEmailHandler
@@ -39,10 +40,9 @@ abstract class AbstractEmailHandler
         }
         $patientId = intval($patientId);
         $contactData = $this->mailerDataRetriever->retrieveMailerData($patientId);
-        $this->verifyContactData($contactData);
 
-        $patientData = $contactData['patientData'];
-        $mailingData = $contactData['mailingData'];
+        $patientData = $contactData->patientData->toArray();
+        $mailingData = $contactData->mailingData->toArray();
 
         $newPatientData = $this->extendPatientData($patientId, $newEmail, $oldEmail, $patientData);
         $mailingData = $this->modifyMailingData(
@@ -78,25 +78,6 @@ abstract class AbstractEmailHandler
         $newEmail,
         $oldEmail
     );
-
-    /**
-     * @param array $contactData
-     * @throws EmailHandlerException
-     */
-    protected function verifyContactData(array $contactData)
-    {
-        if (
-            !isset($contactData['patientData'])
-            ||
-            !isset($contactData['mailingData'])
-            ||
-            !isset($contactData['patientData']['firstname'])
-            ||
-            !isset($contactData['patientData']['lastname'])
-        ) {
-            throw new EmailHandlerException('Mailer data is malformed');
-        }
-    }
 
     /**
      * @param array $mailingData

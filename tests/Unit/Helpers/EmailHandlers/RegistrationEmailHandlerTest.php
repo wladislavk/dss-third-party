@@ -33,7 +33,7 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
 
     public function testSendEmail()
     {
-        $this->contactData['patientData'][RegistrationEmailHandler::RECOVER_HASH] = '123';
+        $this->contactData->patientData->recover_hash = '123';
         $patientId = 1;
         $newEmail = 'john@doe.com';
         $oldEmail = 'old@doe.com';
@@ -52,7 +52,6 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
         $this->assertEquals(1, sizeof($this->sentEmails));
         $link = RegistrationEmailHandler::ACTIVATE_PAGE . "?id=1&amp;hash=123";
         $expectedData = [
-            'foo' => 'bar',
             'email' => $newEmail,
             'old_email' => $oldEmail,
             'new_email' => $newEmail,
@@ -73,7 +72,7 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
 
     public function testWithoutEmailChange()
     {
-        $this->contactData['patientData'][RegistrationEmailHandler::RECOVER_HASH] = '123';
+        $this->contactData->patientData->recover_hash = '123';
         $patientId = 1;
         $newEmail = 'john@doe.com';
         $oldEmail = 'john@doe.com';
@@ -95,7 +94,7 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
     public function testWithAccessType()
     {
         $this->registrationEmailHandler->setAccessType(2);
-        $this->contactData['patientData'][RegistrationEmailHandler::RECOVER_HASH] = '123';
+        $this->contactData->patientData->recover_hash = '123';
         $patientId = 1;
         $newEmail = 'john@doe.com';
         $oldEmail = 'old@doe.com';
@@ -113,20 +112,9 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
         $this->assertEquals($expectedPatientData, $this->updatedModel);
     }
 
-    public function testWithoutRecoverHash()
-    {
-        $patientId = 1;
-        $newEmail = 'john@doe.com';
-        $oldEmail = 'old@doe.com';
-        $hasPatientPortal = true;
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->registrationEmailHandler->handleEmail($patientId, $oldEmail, $newEmail, $hasPatientPortal);
-    }
-
     public function testWithoutPatientPortal()
     {
-        $this->contactData['patientData'][RegistrationEmailHandler::RECOVER_HASH] = '123';
+        $this->contactData->patientData->recover_hash = '123';
         $patientId = 1;
         $newEmail = 'john@doe.com';
         $oldEmail = 'old@doe.com';

@@ -105,18 +105,6 @@ class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
     }
 
     /**
-     * @param array $contactData
-     * @throws EmailHandlerException
-     */
-    protected function verifyContactData(array $contactData)
-    {
-        parent::verifyContactData($contactData);
-        if (!isset($contactData['patientData'][self::RECOVER_HASH])) {
-            throw new EmailHandlerException('Mailer data is malformed');
-        }
-    }
-
-    /**
      * @param string $newEmail
      * @param string $oldEmail
      * @param bool $hasPatientPortal

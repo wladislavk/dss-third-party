@@ -29,7 +29,6 @@ class UpdateEmailHandlerTest extends EmailHandlerTestCase
         $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
         $this->assertEquals(2, sizeof($this->sentEmails));
         $expectedData = [
-            'foo' => 'bar',
             'email' => $newEmail,
             'old_email' => $oldEmail,
             'new_email' => $newEmail,
@@ -64,7 +63,6 @@ class UpdateEmailHandlerTest extends EmailHandlerTestCase
         $this->updateEmailHandler->handleEmail($patientId, $newEmail);
         $this->assertEquals(1, sizeof($this->sentEmails));
         $expectedData = [
-            'foo' => 'bar',
             'email' => $newEmail,
             'old_email' => '',
             'new_email' => $newEmail,
@@ -89,50 +87,6 @@ class UpdateEmailHandlerTest extends EmailHandlerTestCase
         $oldEmail = ' John@Doe.com';
         $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
         $this->assertEquals(0, sizeof($this->sentEmails));
-    }
-
-    public function testWithoutMailingData()
-    {
-        unset($this->contactData['mailingData']);
-        $patientId = 1;
-        $newEmail = 'john@doe.com';
-        $oldEmail = 'old@doe.com';
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
-    }
-
-    public function testWithoutPatientData()
-    {
-        unset($this->contactData['patientData']);
-        $patientId = 1;
-        $newEmail = 'john@doe.com';
-        $oldEmail = 'old@doe.com';
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
-    }
-
-    public function testWithoutFirstName()
-    {
-        unset($this->contactData['patientData']['firstname']);
-        $patientId = 1;
-        $newEmail = 'john@doe.com';
-        $oldEmail = 'old@doe.com';
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
-    }
-
-    public function testWithoutLastName()
-    {
-        unset($this->contactData['patientData']['lastname']);
-        $patientId = 1;
-        $newEmail = 'john@doe.com';
-        $oldEmail = 'old@doe.com';
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
     }
 
     public function testCheckIsCorrectType()

@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\Summary;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
+use DentalSleepSolutions\Structs\MailerData;
 
 class MailerDataRetriever
 {
@@ -45,8 +46,7 @@ class MailerDataRetriever
      *
      * @param int $patientId
      * @param int $docId
-     *
-     * @return array
+     * @return MailerData
      * @throws EmailHandlerException
      */
     public function retrieveMailerData($patientId, $docId = 0)
@@ -69,10 +69,10 @@ class MailerDataRetriever
         $mailingData = $this->setMailingDataLogo($mailingData);
         $mailingData->mailing_phone = $this->generalHelper->formatPhone($mailingData->mailing_phone);
 
-        return [
-            'patientData' => $patient->toArray(),
-            'mailingData' => $mailingData->toArray(),
-        ];
+        $mailerData = new MailerData();
+        $mailerData->patientData = $patient;
+        $mailerData->mailingData = $mailingData;
+        return $mailerData;
     }
 
     /**

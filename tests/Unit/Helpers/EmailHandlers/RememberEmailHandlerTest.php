@@ -29,7 +29,6 @@ class RememberEmailHandlerTest extends EmailHandlerTestCase
         $this->rememberEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
         $this->assertEquals(1, sizeof($this->sentEmails));
         $expectedData = [
-            'foo' => 'bar',
             'email' => $newEmail,
             'old_email' => $oldEmail,
             'new_email' => $newEmail,

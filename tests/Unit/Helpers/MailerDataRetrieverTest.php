@@ -48,19 +48,14 @@ class MailerDataRetrieverTest extends UnitTestCase
     {
         $patientId = 1;
         $mailerData = $this->mailerDataRetriever->retrieveMailerData($patientId);
-        $expected = [
-            'patientData' => [
-                'patientid' => 1,
-            ],
-            'mailingData' => [
-                'mailing_phone' => '123-45-67',
-                'user_type' => MailerDataRetriever::DSS_USER_TYPE_SOFTWARE,
-                'zip' => 0,
-                'docid' => 0,
-                'logo' => MailerDataRetriever::LOGO,
-            ],
-        ];
-        $this->assertEquals($expected, $mailerData);
+        $patient = $mailerData->patientData;
+        $this->assertEquals(1, $patient->patientid);
+        $user = $mailerData->mailingData;
+        $this->assertEquals('123-45-67', $user->mailing_phone);
+        $this->assertEquals(MailerDataRetriever::DSS_USER_TYPE_SOFTWARE, $user->user_type);
+        $this->assertEquals(0, $user->zip);
+        $this->assertEquals(0, $user->docid);
+        $this->assertEquals(MailerDataRetriever::LOGO, $user->logo);
     }
 
     public function testWithSummaryInfo()
@@ -71,8 +66,8 @@ class MailerDataRetrieverTest extends UnitTestCase
         $summary1->location = '1232';
         $this->summary = [$summary1];
         $mailerData = $this->mailerDataRetriever->retrieveMailerData($patientId, $docId);
-        $this->assertEquals(1232, $mailerData['mailingData']['zip']);
-        $this->assertEquals($docId, $mailerData['mailingData']['docid']);
+        $this->assertEquals(1232, $mailerData->mailingData->zip);
+        $this->assertEquals($docId, $mailerData->mailingData->docid);
     }
 
     public function testWithCustomLogo()
@@ -81,7 +76,7 @@ class MailerDataRetrieverTest extends UnitTestCase
         $patientId = 1;
         $mailerData = $this->mailerDataRetriever->retrieveMailerData($patientId);
         $expectedLogo = MailerDataRetriever::DISPLAY_FILE_PAGE . '?f=5678';
-        $this->assertEquals($expectedLogo, $mailerData['mailingData']['logo']);
+        $this->assertEquals($expectedLogo, $mailerData->mailingData->logo);
     }
 
     public function testWithoutPatient()

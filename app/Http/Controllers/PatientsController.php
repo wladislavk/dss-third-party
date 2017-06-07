@@ -6,12 +6,10 @@ use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Exceptions\IncorrectEmailException;
 use DentalSleepSolutions\Factories\PatientEditorFactory;
 use DentalSleepSolutions\Helpers\EmailChecker;
+use DentalSleepSolutions\Helpers\TempPinDocumentCreator;
 use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use DentalSleepSolutions\Helpers\PatientRuleRetriever;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
-use DentalSleepSolutions\Helpers\MailerDataRetriever;
-use DentalSleepSolutions\Helpers\PdfHelper;
 use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
 use DentalSleepSolutions\Http\Requests\PatientDestroy;
@@ -25,7 +23,6 @@ use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
-use DentalSleepSolutions\Structs\PdfHeaderData;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
 use DentalSleepSolutions\Structs\PressedButtons;
@@ -34,14 +31,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
 class PatientsController extends Controller
 {
     const DSS_REFERRED_PATIENT = 1;
@@ -52,10 +41,8 @@ class PatientsController extends Controller
     const DSS_REFERRED_OTHER = 6;
 
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @param Patients $resources
+     * @return JsonResponse
      */
     public function index(Patients $resources)
     {
@@ -65,10 +52,8 @@ class PatientsController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Patient $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @param Patient $resource
+     * @return JsonResponse
      */
     public function show(Patient $resource)
     {
@@ -76,10 +61,8 @@ class PatientsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
-     * @param  \DentalSleepSolutions\Http\Requests\PatientStore $request
+     * @param Patients $resources
+     * @param PatientStore $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Patients $resources, PatientStore $request)
@@ -94,10 +77,8 @@ class PatientsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Patient $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientUpdate $request
+     * @param  Patient $resource
+     * @param  PatientUpdate $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Patient $resource, PatientUpdate $request)
@@ -139,8 +120,7 @@ class PatientsController extends Controller
 
     public function getNumber(Patients $resources)
     {
-        $docId = $this->currentUser->docid ?: 0;
-
+        $docId = $this->currentUser->getDocIdOrZero();
         $data = $resources->getNumber($docId);
 
         return ApiResponse::responseOk('', $data);
@@ -148,8 +128,7 @@ class PatientsController extends Controller
 
     public function getDuplicates(Patients $resources)
     {
-        $docId = $this->currentUser->docid ?: 0;
-
+        $docId = $this->currentUser->getDocIdOrZero();
         $data = $resources->getDuplicates($docId);
 
         return ApiResponse::responseOk('', $data);
@@ -157,8 +136,7 @@ class PatientsController extends Controller
 
     public function getBounces(Patients $resources)
     {
-        $docId = $this->currentUser->docid ?: 0;
-
+        $docId = $this->currentUser->getDocIdOrZero();
         $data = $resources->getBounces($docId);
 
         return ApiResponse::responseOk('', $data);
@@ -166,13 +144,12 @@ class PatientsController extends Controller
 
     public function getListPatients(Patients $resources, Request $request)
     {
-        $partialName = $request->input('partial_name') ?: '';
+        $partialName = $request->input('partial_name', '');
         $partialName = preg_replace("[^ A-Za-z'\-]", '', $partialName);
 
         $names = explode(' ', $partialName);
 
-        $docId = $this->currentUser->docid ?: 0;
-
+        $docId = $this->currentUser->getDocIdOrZero();
         $data = $resources->getListPatients($docId, $names);
 
         return ApiResponse::responseOk('', $data);
@@ -180,8 +157,7 @@ class PatientsController extends Controller
 
     public function destroyForDoctor($patientId, Patient $resource)
     {
-        $docId = $this->currentUser->docid ?: 0;
-
+        $docId = $this->currentUser->getDocIdOrZero();
         $resource->deleteForDoctor($patientId, $docId);
 
         return ApiResponse::responseOk('Resource deleted');
@@ -189,16 +165,16 @@ class PatientsController extends Controller
 
     public function find(Patients $resources, Request $request)
     {
-        $docId           = $this->currentUser->docid ?: 0;
-        $userType        = $this->currentUser->user_type ?: 0;
+        $docId = $this->currentUser->getDocIdOrZero();
+        $userType = $this->currentUser->getUserTypeOrZero();
 
-        $patientId       = $request->input('patientId') ?: 0;
-        $type            = $request->input('type') ?: 1;
-        $pageNumber      = $request->input('page') ?: 0;
-        $patientsPerPage = $request->input('patientsPerPage') ?: 30;
-        $letter          = $request->input('letter') ?: '';
-        $sortColumn      = $request->input('sortColumn') ?: 'name';
-        $sortDir         = $request->input('sortDir') ?: '';
+        $patientId       = $request->input('patientId', 0);
+        $type            = $request->input('type', 1);
+        $pageNumber      = $request->input('page', 0);
+        $patientsPerPage = $request->input('patientsPerPage', 30);
+        $letter          = $request->input('letter', '');
+        $sortColumn      = $request->input('sortColumn', 'name');
+        $sortDir         = $request->input('sortDir', '');
 
         $data = $resources->findBy(
             $docId,
@@ -373,9 +349,11 @@ class PatientsController extends Controller
                 $foundLocation = $foundLocations[0];
             }
 
-            // data for response
+            $patientLocation = '';
+            if (!empty($foundLocation)) {
+                $patientLocation = $foundLocation->location;
+            }
             $data = [
-                // check if user has pending VOB
                 'pending_vob'                 => $insPreauthResource->getPendingVob($patientId),
                 'profile_photo'               => $profileImageResource->getProfilePhoto($patientId),
                 'intro_letter'                => $letterResource->getGeneratedDateOfIntroLetter($patientId),
@@ -383,11 +361,11 @@ class PatientsController extends Controller
                 'uncompleted_home_sleep_test' => $homeSleepTestResource->getUncompleted($patientId),
                 'patient_notification'        => $notificationResource->getWithFilter(null, [
                                                      'patientid' => $patientId,
-                                                     'status'    => 1
+                                                     'status'    => 1,
                                                  ]),
                 'patient'                     => ApiResponse::transform($foundPatient),
                 'formed_full_names'           => $formedFullNames,
-                'patient_location'            => !empty($foundLocation) ? $foundLocation->location : ''
+                'patient_location'            => $patientLocation,
             ];
         }
         return ApiResponse::responseOk('', $data);
@@ -395,10 +373,7 @@ class PatientsController extends Controller
 
     public function getReferrers(Patients $patientResource, Request $request)
     {
-        $docId = 0;
-        if ($this->currentUser->docid) {
-            $docId = $this->currentUser->docid;
-        }
+        $docId = $this->currentUser->getDocIdOrZero();
 
         $partial = '';
         if ($request->has('partial_name')) {
@@ -412,10 +387,11 @@ class PatientsController extends Controller
         $response = [];
         if (count($contacts)) {
             foreach ($contacts as $item) {
+                $fullName = $item->lastname . ', ' . $item->firstname . ' ' . $item->middlename . ' - ' . $item->label;
                 $response[] = [
                     'id'     => $item->patientid,
-                    'name'   => $item->lastname . ', ' . $item->firstname . ' ' . $item->middlename . ' - ' . $item->label,
-                    'source' => $item->referral_type
+                    'name'   => $fullName,
+                    'source' => $item->referral_type,
                 ];
             }
         } else {
@@ -455,35 +431,25 @@ class PatientsController extends Controller
             ]);
         }
 
-        return ApiResponse::responseOk('', ['access_code' => $accessCode, 'access_code_date' => $accessCodeDate->toDateTimeString()]);
+        return ApiResponse::responseOk('', [
+            'access_code' => $accessCode,
+            'access_code_date' => $accessCodeDate->toDateTimeString()
+        ]);
     }
 
+    /**
+     * @param TempPinDocumentCreator $tempPinDocumentCreator
+     * @param int $patientId
+     * @return JsonResponse
+     */
     public function createTempPinDocument(
-        $patientId = 0,
-        RegistrationEmailHandler $registrationEmailHandler,
-        PdfHelper $pdfHelper,
-        MailerDataRetriever $mailerDataRetriever
+        TempPinDocumentCreator $tempPinDocumentCreator,
+        $patientId = 0
     ) {
         $url = '';
-        if ($patientId > 0) {
-            $docId = 0;
-            if ($this->currentUser->docid) {
-                $docId = $this->currentUser->docid;
-            }
-            $mailerData = $mailerDataRetriever->retrieveMailerData($patientId, $docId);
-            $mailerData = array_merge($mailerData['patientData'], $mailerData['mailingData']);
-
-            if (count($mailerData)) {
-                $registrationEmailHandler->setAccessType(2);
-                $registrationEmailHandler->handleEmail($patientId, $mailerData['email'], $mailerData['email']);
-
-                $filename = 'user_pin_' . $patientId . '.pdf';
-                $headerInfo = new PdfHeaderData();
-                $headerInfo->title = 'User Temporary PIN';
-                $headerInfo->subject = 'User Temporary PIN';
-
-                $url = $pdfHelper->create('pdf.patient.pinInstructions', $mailerData, $filename, $headerInfo, $docId);
-            }
+        if ($patientId) {
+            $docId = $this->currentUser->getDocIdOrZero();
+            $url = $tempPinDocumentCreator->createDocument($patientId, $docId);
         }
 
         return ApiResponse::responseOk('', ['path_to_pdf' => $url]);
@@ -493,9 +459,16 @@ class PatientsController extends Controller
     {
         $name = '';
         if ($field != 'Not Set' && $shortInfo) {
-            $name = $shortInfo->lastname . ', ' . $shortInfo->firstname . ' '
-                    . $shortInfo->middlename
-                    . ($shortInfo->contacttype != '' ? ' - ' . $shortInfo->contacttype : '');
+            $name = $shortInfo->lastname;
+            $name .= ', ';
+            $name .= $shortInfo->firstname;
+            $name .= ' ';
+            $name .= $shortInfo->middlename;
+            $contactType = '';
+            if ($shortInfo->contacttype) {
+                $contactType = ' - ' . $shortInfo->contacttype;
+            }
+            $name .= $contactType;
         }
         return $name;
     }

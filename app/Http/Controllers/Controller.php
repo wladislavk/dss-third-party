@@ -10,6 +10,8 @@ use DentalSleepSolutions\Eloquent\Dental\User;
 
 abstract class Controller extends BaseController
 {
+    // TODO: this class should include common REST methods for all its children
+
     use DispatchesJobs, ValidatesRequests;
 
     /** @var User|mixed */
@@ -33,19 +35,26 @@ abstract class Controller extends BaseController
      */
     private function getUserInfo(JWTAuth $auth, User $userModel)
     {
+        /** @var User $user */
         $user = $auth->toUser();
 
+        if (!$user) {
+            // TODO: a handler for $user === false is needed
+        }
         $user->id = preg_replace('/(?:u_|a_)/', '', $user->id);
 
         $docId = $userModel->getDocId($user->id)->docid;
 
+        $user->docid = $user->userid;
         if ($docId) {
             $user->docid = $docId;
-        } else {
-            $user->docid = $user->userid;
         }
 
-        $user->user_type = $userModel->getUserType($user->docid)->user_type ?: 0;
+        $user->user_type = 0;
+        $userType = $userModel->getUserType($user->docid);
+        if ($userType) {
+            $user->user_type = $userType->user_type;
+        }
 
         return $user;
     }

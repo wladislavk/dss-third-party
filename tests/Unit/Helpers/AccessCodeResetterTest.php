@@ -24,6 +24,7 @@ class AccessCodeResetterTest extends UnitTestCase
     public function testResetAccessCode()
     {
         $patientId = 1;
+        date_default_timezone_set('UTC');
         $updateData = $this->accessCodeResetter->resetAccessCode($patientId);
         $this->assertGreaterThanOrEqual(100000, $updateData['access_code']);
         $this->assertLessThanOrEqual(999999, $updateData['access_code']);

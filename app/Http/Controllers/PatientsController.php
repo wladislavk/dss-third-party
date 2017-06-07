@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Exceptions\IncorrectEmailException;
 use DentalSleepSolutions\Factories\PatientEditorFactory;
+use DentalSleepSolutions\Helpers\AccessCodeResetter;
 use DentalSleepSolutions\Helpers\EmailChecker;
 use DentalSleepSolutions\Helpers\TempPinDocumentCreator;
 use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
@@ -193,7 +194,7 @@ class PatientsController extends Controller
 
     public function getReferredByContact(Patients $resources, Request $request)
     {
-        $contactId = $request->input('contact_id') ?: 0;
+        $contactId = $request->input('contact_id', 0);
         $data = $resources->getReferredByContact($contactId);
 
         return ApiResponse::responseOk('', $data);
@@ -201,7 +202,7 @@ class PatientsController extends Controller
 
     public function getByContact(Patients $resources, Request $request)
     {
-        $contactId = $request->input('contact_id') ?: 0;
+        $contactId = $request->input('contact_id', 0);
         $data = $resources->getByContact($contactId);
 
         return ApiResponse::responseOk('', $data);
@@ -417,24 +418,16 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', ['confirm_message' => $message]);
     }
 
-    public function resetAccessCode($patientId, Patient $patientResource)
+    /**
+     * @param int $patientId
+     * @param AccessCodeResetter $accessCodeResetter
+     * @return JsonResponse
+     */
+    public function resetAccessCode($patientId, AccessCodeResetter $accessCodeResetter)
     {
-        $accessCode = 0;
-        $accessCodeDate = null;
+        $responseData = $accessCodeResetter->resetAccessCode($patientId);
 
-        if ($patientId > 0) {
-            $accessCode = rand(100000, 999999);
-            $accessCodeDate = Carbon::now();
-            $patientResource->updatePatient($patientId, [
-                'access_code'      => $accessCode,
-                'access_code_date' => $accessCodeDate
-            ]);
-        }
-
-        return ApiResponse::responseOk('', [
-            'access_code' => $accessCode,
-            'access_code_date' => $accessCodeDate->toDateTimeString()
-        ]);
+        return ApiResponse::responseOk('', $responseData);
     }
 
     /**

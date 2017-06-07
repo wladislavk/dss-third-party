@@ -260,10 +260,14 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_users users ON claim.docid = users.userid
             JOIN dental_users users2 ON claim.userid = users2.userid
             LEFT JOIN companies c ON (
-                claim.billing_company_id = c.id
+                claim.p_m_billing_id = c.id
                 OR (
-                    claim.billing_company_id = 0
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
                     AND c.id = users.billing_company_id
+                )    
             )
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
@@ -294,18 +298,24 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
                 AND (
-                    claim.billing_company_id = '$adminCompanyId'
+                    claim.p_m_billing_id = '$adminCompanyId'
                     OR (
-                        claim.billing_company_id = 0
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
                         AND users.billing_company_id = '$adminCompanyId'
                     )
                 )
             JOIN dental_user_company uc ON uc.userid = claim.docid
             JOIN dental_users users2 ON claim.userid = users2.userid
             LEFT JOIN companies c ON (
-                claim.billing_company_id = c.id
+                claim.p_m_billing_id = c.id
                 OR (
-                    claim.billing_company_id = 0
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
                     AND c.id = users.billing_company_id
                 )
             )
@@ -328,17 +338,23 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_users users ON claim.docid = users.userid
             JOIN dental_user_company uc ON uc.userid = claim.docid
                 AND (
-                    claim.billing_company_id = '$adminCompanyId'
+                    claim.p_m_billing_id = '$adminCompanyId'
                     OR (
-                        claim.billing_company_id = 0
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
                         AND uc.companyid = '$adminCompanyId'
                     )
                 )
             JOIN dental_users users2 ON claim.userid = users2.userid
             LEFT JOIN companies c ON (
-                claim.billing_company_id = c.id
+                claim.p_m_billing_id = c.id
                 OR (
-                    claim.billing_company_id = 0
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
                     AND c.id = users.billing_company_id
                 )
             )

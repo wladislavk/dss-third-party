@@ -58,7 +58,7 @@
             $m['p_m_gender'] == "" ||
             $m['p_m_ins_co'] == "" ||
             $m['p_m_ins_grp'] == "" ||
-            ($m['p_m_ins_plan'] == "" && $m['p_m_ins_type'] != 1) ||
+            ($m['p_m_ins_plan'] == "" && $m['p_m_ins_type'] != 1) || 
             $m['p_m_ins_type'] == '' ||
             $m['p_m_ins_ass'] == ''
         ){
@@ -72,25 +72,25 @@
             array_push($errors, "Missing transaction code E0486");
         }
 
-        $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss
-                        JOIN dental_patients p on ss.patiendid=p.patientid
-                        WHERE
-                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND
+        $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
+                        JOIN dental_patients p on ss.patiendid=p.patientid                        
+                        WHERE                                 
+                        (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
                         ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
 
         $num = $db->getNumberRows($sleepstudies);
         if( $num <= 0 ){
             array_push($errors, "Summary Sheet - Missing completed sleep study");
-        } else {
+        } else { 
             $p_sql = "SELECT p_m_ins_type FROM dental_patients WHERE patientid='".$pid."';";
             
             $p = $db->getRow($p_sql);
             if ($p['p_m_ins_type'] == 1) {
-                $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss
-                                 JOIN dental_patients p on ss.patiendid=p.patientid
-                                 WHERE
-                                (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND
-                                (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND
+                $sleepstudies = "SELECT ss.diagnosising_doc, diagnosising_npi FROM dental_summ_sleeplab ss                                 
+                                 JOIN dental_patients p on ss.patiendid=p.patientid                        
+                                 WHERE                                 
+                                (p.p_m_ins_type!='1' OR ((ss.diagnosising_doc IS NOT NULL && ss.diagnosising_doc != '') AND (ss.diagnosising_npi IS NOT NULL && ss.diagnosising_npi != ''))) AND 
+                                (ss.diagnosis IS NOT NULL && ss.diagnosis != '') AND 
                                 ss.filename IS NOT NULL AND ss.patiendid = '".$pid."';";
                 
                 $num = $db->getNumberRows($sleepstudies);
@@ -98,9 +98,9 @@
                     array_push($errors, "Flowsheet - Sleep Study: Diagnosing Phys. and Diagnosing NPI# are required for Medicare claims.");
                 }
 
-                $doc_sql = "SELECT u.* FROM
-                            dental_patients p
-                            JOIN dental_users u ON p.docid = u.userid
+                $doc_sql = "SELECT u.* FROM 
+                            dental_patients p 
+                            JOIN dental_users u ON p.docid = u.userid 
                             WHERE p.patientid = '".mysqli_real_escape_string($con,$pid)."'";
                 
                 $doc = $db->getRow($doc_sql);

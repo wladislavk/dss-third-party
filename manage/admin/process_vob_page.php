@@ -1,13 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-use const DSS_PREAUTH_COMPLETE;
-use const DSS_PREAUTH_PENDING;
-use const DSS_PREAUTH_PREAUTH_PENDING;
-use const DSS_PREAUTH_REJECTED;
-use const E_USER_ERROR;
-use function trigger_error;
-
 include_once('../includes/constants.inc');
 include_once('includes/main_include.php');
 include_once('includes/access.php');

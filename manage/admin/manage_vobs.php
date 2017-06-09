@@ -1,42 +1,39 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
-use const DSS_PREAUTH_COMPLETE;
-use const DSS_PREAUTH_PENDING;
-use const DSS_PREAUTH_PREAUTH_PENDING;
-use const DSS_PREAUTH_REJECTED;
 
 include "includes/top.htm";
 include_once('../includes/constants.inc');
 include_once "includes/general.htm";
 
-$fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
-$pid = (isset($_GET['pid']))?$_GET['pid']:'';
-$iid = (isset($_GET['iid']))?$_GET['iid']:'';
+$fid = (int)array_get($_REQUEST, 'fid', 0);
+$pid = (int)array_get($_REQUEST, 'pid', 0);
+$iid = (int)array_get($_REQUEST, 'iid', 0);
 
 $isSuperAdmin = is_super($_SESSION['admin_access']);
 $adminCompanyId = (int)$_SESSION['admincompanyid'];
 
-if($fid!=''){
-  $account_sql = "SELECT * FROM dental_users where userid='".$fid."'";
-
-  $account_r = $db->getRow($account_sql);
-  $account_name = $account_r['last_name'].', '.$account_r['first_name'];
+if ($fid) {
+    $account_name = $db->getColumn("SELECT CONCAT(last_name, ' ', first_name) AS name
+        FROM dental_users
+        WHERE userid = '$fid'", 'name', '');
 }
-if($pid!=''){
-  $account_sql = "SELECT * FROM dental_patients where patientid='".$pid."'";
 
-  $account_r = $db->getRow($account_sql);
-  $patient_name = $account_r['lastname'].', '.$account_r['firstname'];
+if ($pid) {
+    $patient_name = $db->getColumn("SELECT CONCAT(lastname, ' ', firstname) AS name
+        FROM dental_patients
+        WHERE patientid = '$pid'", 'name', '');
 }
-if($iid!=''){
-  $account_sql = "SELECT * FROM dental_contact where contactid='".$iid."'";
 
-  $account_r = $db->getRow($account_sql);
-  $insurance_name = $account_r['company'];
+if ($iid) {
+    $insurance_name = $db->getColumn("SELECT company
+        FROM dental_contact
+        WHERE contactid = '$iid'", 'company', '');
 }
 
 
 function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
+  
+  $db = new Db();
   
   $sql = "SELECT 
         p.patientid as 'patient_id', i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', 
@@ -87,7 +84,7 @@ function insert_preauth_row($patient_id) {
         '" . $my_array['insured_dob'] . "', 
         '" . $my_array['doc_npi'] . "', 
         '" . $my_array['referring_doc_npi'] . "', 
-        " . $my_array['trxn_code_amount'] . ", 
+        '" . $my_array['trxn_code_amount'] . "',
         '" . $my_array['diagnosis_code'] . "', 
         '" . $my_array['doc_medicare_npi'] . "', 
         '" . $my_array['doc_tax_id_or_ssn'] . "', 
@@ -113,7 +110,7 @@ $sort_dir = strtolower(!empty($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : '
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
-$sort_by_sql = '';
+
 switch ($sort_by) {
   case SORT_BY_DATE:
     $sort_by_sql = "preauth.front_office_request_date $sort_dir";
@@ -159,7 +156,7 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$rec_disp = 20;
+$rec_disp = (int)array_get($_GET, 'count', 20);
 
 if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
@@ -188,7 +185,7 @@ if ($isSuperAdmin) {
             c.name AS billing_name,
             pc.name AS vob_billing_name,
             (
-                SELECT COUNT(*)
+                SELECT COUNT(dip.id)
                 FROM dental_insurance_preauth dip
                 WHERE dip.patient_id = p.patientid
             ) AS total_vob,

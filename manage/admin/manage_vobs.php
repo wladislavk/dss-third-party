@@ -119,19 +119,19 @@ switch ($sort_by) {
     $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir";
     break;
   case SORT_BY_INSURANCE:
-    $sort_by_sql = "ins_co $sort_dir";
+    $sort_by_sql = "preauth.ins_co $sort_dir";
     break;
   case SORT_BY_FRANCHISEE:
-    $sort_by_sql = "doc_name $sort_dir";
+    $sort_by_sql = "preauth.doc_name $sort_dir";
     break;
   case SORT_BY_USER:
-    $sort_by_sql = "user_name $sort_dir";
+    $sort_by_sql = "preauth.user_name $sort_dir";
     break;
   case SORT_BY_BC:
-    $sort_by_sql = "billing_name $sort_dir";
+    $sort_by_sql = "preauth.billing_name $sort_dir";
     break;
   case SORT_BY_EDIT:
-    $sort_by_sql = "updated_at $sort_dir";
+    $sort_by_sql = "preauth.updated_at $sort_dir";
     break;
   default:
     // default is SORT_BY_STATUS
@@ -182,24 +182,23 @@ if ($isSuperAdmin) {
             preauth.status,
             DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
             CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
-            c.name AS billing_name,
-            pc.name AS vob_billing_name,
             (
                 SELECT COUNT(dip.id)
                 FROM dental_insurance_preauth dip
                 WHERE dip.patient_id = p.patientid
             ) AS total_vob,
-            c.id AS user_billing_company,
-            pc.id AS vob_billing_company,
-            TRUE AS user_billing_company_matches
+            bc.name AS current_billing_name,
+            pc.name AS stored_billing_name,
+            bc.id AS current_billing_company_id,
+            pc.id AS stored_billing_company_id
         FROM dental_insurance_preauth preauth
             JOIN dental_patients p ON preauth.patient_id = p.patientid
             JOIN dental_users users ON preauth.doc_id = users.userid
             LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
             LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+            LEFT JOIN companies bc ON bc.id = users.billing_company_id
             LEFT JOIN admin a ON a.adminid = preauth.updated_by
             LEFT JOIN admin_company ac ON ac.adminid = a.adminid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
             LEFT JOIN companies pc ON pc.id = ac.companyid
         ";
 } elseif (is_billing($_SESSION['admin_access'])) {
@@ -216,20 +215,19 @@ if ($isSuperAdmin) {
             preauth.status,
             DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
             CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
-            c.name AS billing_name,
-            pc.name AS vob_billing_name,
-            c.id AS user_billing_company,
-            pc.id AS vob_billing_company,
-            (c.id = '$adminCompanyId') AS user_billing_company_matches
+            bc.name AS current_billing_name,
+            pc.name AS stored_billing_name,
+            bc.id AS current_billing_company_id,
+            pc.id AS stored_billing_company_id
         FROM dental_insurance_preauth preauth
             JOIN dental_patients p ON preauth.patient_id = p.patientid
             JOIN dental_user_company uc ON uc.userid = p.docid
             JOIN dental_users users ON preauth.doc_id = users.userid
             LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
             LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+            LEFT JOIN companies bc ON bc.id = users.billing_company_id
             LEFT JOIN admin a ON a.adminid = preauth.updated_by
             LEFT JOIN admin_company ac ON ac.adminid = a.adminid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
             LEFT JOIN companies pc ON pc.id = ac.companyid
         ";
 } else {
@@ -246,20 +244,19 @@ if ($isSuperAdmin) {
             preauth.status,
             DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
             CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
-            c.name AS billing_name,
-            pc.name AS vob_billing_name,
-            c.id AS user_billing_company,
-            pc.id AS vob_billing_company,
-            (c.id = '$adminCompanyId') AS user_billing_company_matches
+            bc.name AS current_billing_name,
+            pc.name AS stored_billing_name,
+            bc.id AS current_billing_company_id,
+            pc.id AS stored_billing_company_id
         FROM dental_insurance_preauth preauth
             JOIN dental_patients p ON preauth.patient_id = p.patientid
             JOIN dental_user_company uc ON uc.userid = p.docid
             JOIN dental_users users ON preauth.doc_id = users.userid
             LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
             LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+            LEFT JOIN companies bc ON bc.id = users.billing_company_id
             LEFT JOIN admin a ON a.adminid = preauth.updated_by
             LEFT JOIN admin_company ac ON ac.adminid = a.adminid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
             LEFT JOIN companies pc ON pc.id = ac.companyid
         ";
 }
@@ -267,7 +264,22 @@ if ($isSuperAdmin) {
 $conditionals = [];
 
 if (!$isSuperAdmin) {
-    $conditionals[] = "'$adminCompanyId' IN (c.id, pc.id)";
+    /**
+     * @see DSS-568
+     *
+     * Restrict non super admins to:
+     *
+     * * Match by company ID
+     * * Pending requests go to current user company
+     */
+    $preAuthPendingStatus = DSS_PREAUTH_PENDING;
+    $conditionals[] = "'$adminCompanyId' IN (bc.id, pc.id)";
+    $conditionals[] = "preauth.status != '$preAuthPendingStatus'
+        OR (
+            preauth.status = '$preAuthPendingStatus'
+            AND bc.id = '$adminCompanyId'
+        )";
+
 }
 
 // filter based on select lists above table
@@ -443,16 +455,25 @@ $(document).ready(function(){
 		</tr>
 	<?php } else {
 		foreach ($my as $myarray) {
-		    $status = $myarray['status'];
-		    
-		    if (!$myarray['user_billing_company_matches']) {
-		        $status = DSS_PREAUTH_COMPLETE;
+		    $status = (int)$myarray['status'];
+		    $isStatusPending = $status === DSS_PREAUTH_PENDING;
+            $isStoredIdMissing = !$myarray['stored_billing_company_id'];
+            $loggedInCompanyMatches = $adminCompanyId === (int)$myarray['current_billing_company_id'];
+            $canInspect = $isSuperAdmin || $loggedInCompanyMatches;
+            $canEdit = $isStatusPending && $canInspect;
+
+            $ownerName = $myarray['stored_billing_name'];
+
+            if ($isStatusPending || $isStoredIdMissing) {
+                $ownerName = $myarray['current_billing_name'];
             }
-            
+
             $status_color = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]) ?
                 'warning' : 'success';
 			$status_color = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING])
                 && $myarray['days_pending'] > 7 ? 'danger' : $status_color;
+
+            $link_label = $canEdit ? 'Edit' : 'View';
 		?>
 			<tr class="<?php echo  (isset($tr_class))?$tr_class:'';?>">
 				<td valign="top">
@@ -465,7 +486,7 @@ $(document).ready(function(){
 					<?php echo st($dss_preauth_status_labels[$status]);?>&nbsp;
 				</td>
 				<td valign="top">
-                    <?php if ($myarray['user_billing_company_matches']) { ?>
+                    <?php if ($canInspect) { ?>
 					    <a href="view_patient.php?pid=<?= e($myarray['patient_id']) ?>">
                             <?= e("{$myarray['patient_lastname']}, {$myarray['patient_firstname']}") ?> (View Chart)
                         </a>
@@ -477,7 +498,7 @@ $(document).ready(function(){
 					<?php echo st($myarray["ins_co"]);?>&nbsp;
 				</td>
 				<td valign="top">
-                    <?php if ($myarray['user_billing_company_matches']) { ?>
+                    <?php if ($canInspect) { ?>
 					    <a href="view_user.php?ed=<?= $myarray['doc_id'] ?>"><?= e($myarray["doc_name"]) ?></a>
                     <?php } else { ?>
                         <?= e($myarray["doc_name"]) ?>
@@ -488,21 +509,10 @@ $(document).ready(function(){
 					<?php echo st($myarray["user_name"]);?>&nbsp;
 				</td>
                 <td valign="top">
-                    <?php if ($myarray['user_billing_company_matches']) { ?>
-                        <?= e($myarray["billing_name"]) ?>
-                    <?php } else { ?>
-                        <?= e($myarray["vob_billing_name"]) ?>
-                    <?php } ?>
+                    <?= e($ownerName) ?>
                     &nbsp;
                 </td>
 				<td valign="top">
-				    <?php
-                    
-                    $link_label =
-                        $myarray['user_billing_company_matches'] && $myarray["status"] == DSS_PREAUTH_PENDING ?
-                            'Edit' : 'View';
-                    
-                    ?>
 					<a class="btn btn-primary btn-sm" title="<?= $link_label ?>"
                        href="process_vob_page.php?ed=<?= $myarray["id"] ?>">
 						<?= $link_label ?>

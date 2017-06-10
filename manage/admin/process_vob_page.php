@@ -35,7 +35,8 @@ $sql = "SELECT
         pcp.lastname AS 'pcp_lastname',
         pcp.phone1 AS 'pcp_phone1',
         p.patientid as 'patientid',
-        (u.billing_company_id = '$adminCompanyId') AS user_billing_company_matches
+        u.billing_company_id AS current_billing_company_id,
+        ac.companyid AS stored_billing_company_id
     FROM dental_insurance_preauth preauth
         JOIN dental_patients p ON p.patientid = preauth.patient_id
         LEFT JOIN dental_users u ON u.userid = preauth.doc_id
@@ -147,6 +148,15 @@ $is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
 $is_rejected = ($preauth['status'] == DSS_PREAUTH_REJECTED) ? true : false;
 $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
 
+/**
+ * @see DSS-568
+ */
+$status = (int)$preauth['status'];
+$isStatusPending = $status === DSS_PREAUTH_PENDING;
+$loggedInCompanyMatches = $adminCompanyId === (int)$preauth['current_billing_company_id'];
+$canInspect = $isSuperAdmin || $loggedInCompanyMatches;
+$canEdit = $isStatusPending && $canInspect;
+
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
 <?php
@@ -187,7 +197,8 @@ if ($disabled) { ?>
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
+<form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
+    <input type="hidden" name="save_vob" value="1" />
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -814,7 +825,7 @@ if ($disabled) { ?>
         </tr>
         <tr>
             <td  colspan="2" align="center">
-                <?php if ($isSuperAdmin || $preauth['user_billing_company_matches']) { ?>
+                <?php if ($canEdit) { ?>
                     <span class="red">
                         * Required Fields
                     </span>

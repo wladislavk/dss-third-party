@@ -1240,15 +1240,22 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 							</a>
 						</li>
 						<li>
+							<a href="/manage/admin/inspect-api.php"
+							   title="Logs of API calls made (only selected endpoints)">
+								<i class="fa fa-search-plus"></i>
+								Inspect API Log
+							</a>
+						</li>
+						<li>
 							<a href="/manage/admin/inspect-emails.php"
-							   title="Patient profile created and updated">
+							   title="Logs of emails sent">
 								<i class="fa fa-search-plus"></i>
 								Inspect Emails Log
 							</a>
 						</li>
 						<li>
 							<a href="/manage/admin/inspect-sms.php"
-							   title="Patient profile created and updated">
+							   title="Logs of SMS sent">
 								<i class="fa fa-search-plus"></i>
 								Inspect SMS Log
 							</a>

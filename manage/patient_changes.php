@@ -158,6 +158,37 @@ foreach (['p', 'c'] as $which) {
 
         ${$which}[$field] = $gender;
     }
+
+    foreach (['marital_status'] as $field) {
+        if (!isset(${$which}[$field])) {
+            continue;
+        }
+
+        $status = strtolower(${$which}[$field]);
+
+        switch ($status) {
+            case 'married':
+            case '1':
+                $status = 'Married';
+                break;
+            case 'single':
+            case '2':
+                $status = 'Single';
+                break;
+            case 'life partner':
+            case '3':
+                $status = 'Life Partner';
+                break;
+            case 'minor':
+            case '4':
+                $status = 'Minor';
+                break;
+            default:
+                $status = '';
+        }
+
+        ${$which}[$field] = $status;
+    }
 }
 
 if (count($emailsToUpdate)) {

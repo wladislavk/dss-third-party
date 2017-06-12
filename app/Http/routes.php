@@ -275,6 +275,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     });
 });
 
-Route::group(['middleware' => 'external.validate'], function () {
+Route::group(['middleware' => ['api.log', 'external.validate']], function () {
     Route::post('external-patient', 'Patient\ExternalPatientController@store');
 });

@@ -319,6 +319,7 @@ $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 
 $pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : '';
+$preauth_selected = ($status == DSS_PREAUTH_PREAUTH_PENDING) ? 'selected' : '';
 $complete_selected = ($status == DSS_PREAUTH_COMPLETE) ? 'selected' : '';
 
 ?>
@@ -358,6 +359,9 @@ $(document).ready(function(){
             <option value="">Any</option>
             <option value="<?= DSS_PREAUTH_PENDING ?>" <?= $pending_selected ?>>
                 <?= $dss_preauth_status_labels[DSS_PREAUTH_PENDING] ?>
+            </option>
+            <option value="<?= DSS_PREAUTH_PREAUTH_PENDING ?>" <?= $preauth_selected ?>>
+                <?= $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING] ?>
             </option>
             <option value="<?= DSS_PREAUTH_COMPLETE ?>" <?= $complete_selected ?>>
                 <?= $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]?>

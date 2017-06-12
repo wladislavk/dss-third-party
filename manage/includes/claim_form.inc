@@ -1459,7 +1459,7 @@ if (!empty($is_back_office) || (($_SESSION['user_type'] == DSS_USER_TYPE_SOFTWAR
         </div>
 <script type="text/javascript">
 $(document).ready(function(){
-  setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', null, null, null, true);
+  setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligible.com/resources/payers/claims/medical.json', null, null, null, true);
 });
 </script>
 <input type="hidden" name="p_m_eligible_payer" id="p_m_eligible_payer" value="<?php echo $p_m_eligible_payer_id."-".$p_m_eligible_payer_name;?>" />

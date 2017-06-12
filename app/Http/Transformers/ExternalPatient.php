@@ -64,8 +64,8 @@ class ExternalPatient extends TransformerAbstract
         'patient.insurance_primary.insured_info.subscriber.group_id'    => 'patient.p_m_ins_id',
         'patient.insurance_primary.insured_info.subscriber.group_name'  => 'patient.p_m_ins_grp',
 
-        //section INCORRECT, should bind to primary insurance, not secondary
-        //need logic to either accept/reject subscriber or dependent based on relationship_to_insured
+        // NOTE: This section is not currently used by DS3 database. It is redundant because "patient" section
+        // already provides this info.  We will need these only if insurance requirements change in future.
         'patient.insurance_primary.insured_info.dependent.id'          => 'patient.s_m_ins_id', 
         'patient.insurance_primary.insured_info.dependent.first_name'  => 'patient.s_m_partyfname',
         'patient.insurance_primary.insured_info.dependent.last_name'   => 'patient.s_m_partylname',

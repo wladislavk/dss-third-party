@@ -35,10 +35,16 @@ class ExternalPatientController extends ExternalBaseController
 
         $created = false;
 
-        $externalPatientData = array_get($data, 'external_patient');
         $patientData = array_get($data, 'patient');
+        $externalPatientData = array_get($data, 'external_patient');
         $externalCompanyId = array_get($externalPatientData, 'software');
         $externalPatientId = array_get($externalPatientData, 'external_id');
+
+        /**
+         * Concatenate patient address
+         */
+        $patientData['p_m_address'] = trim("{$patientData['p_m_address']} {$patientData['p_m_address2']}");
+        unset($patientData['p_m_address2']);
 
         $externalPatient = $resources
             ->where('software', $externalCompanyId)

@@ -8,6 +8,10 @@ class ExternalPatient extends TransformerAbstract
 {
     use WithSimpleRelationship;
 
+    /**
+     * @var array
+     * @see DSS-519 Secondary insurance details removed
+     */
     public $simpleMap = [
         'api_key_company' => 'origin_record.company',
         'api_key_user'    => 'origin_record.user',
@@ -54,7 +58,7 @@ class ExternalPatient extends TransformerAbstract
         'patient.insurance_primary.insured_info.subscriber.last_name'   => 'patient.p_m_partylname',
         'patient.insurance_primary.insured_info.subscriber.middle_name' => 'patient.p_m_partymname',
         'patient.insurance_primary.insured_info.subscriber.address1'    => 'patient.p_m_address',
-        'patient.insurance_primary.insured_info.subscriber.address2'    => 'missing.p_m_address2', // No space for address 2
+        'patient.insurance_primary.insured_info.subscriber.address2'    => 'patient.p_m_address2',
         'patient.insurance_primary.insured_info.subscriber.city'        => 'patient.p_m_city',
         'patient.insurance_primary.insured_info.subscriber.state'       => 'patient.p_m_state',
         'patient.insurance_primary.insured_info.subscriber.zip'         => 'patient.p_m_zip',
@@ -63,21 +67,6 @@ class ExternalPatient extends TransformerAbstract
         'patient.insurance_primary.insured_info.subscriber.gender'      => 'patient.p_m_gender',
         'patient.insurance_primary.insured_info.subscriber.group_id'    => 'patient.p_m_ins_id',
         'patient.insurance_primary.insured_info.subscriber.group_name'  => 'patient.p_m_ins_grp',
-
-//         // NOTE: This section is NOT currently used by DS3 database. It is redundant because "patient" section
-//         // already provides this info.  We need these only if insurance requirements change in future.
-//        'patient.insurance_primary.insured_info.dependent.id'          => 'none',
-//        'patient.insurance_primary.insured_info.dependent.first_name'  => 'none',
-//        'patient.insurance_primary.insured_info.dependent.last_name'   => 'none',
-//        'patient.insurance_primary.insured_info.dependent.middle_name' => 'none',
-//        'patient.insurance_primary.insured_info.dependent.address1'    => 'none',
-//        'patient.insurance_primary.insured_info.dependent.address2'    => 'none',
-//        'patient.insurance_primary.insured_info.dependent.city'        => 'none',
-//        'patient.insurance_primary.insured_info.dependent.state'       => 'none',
-//        'patient.insurance_primary.insured_info.dependent.zip'         => 'none',
-//        'patient.insurance_primary.insured_info.dependent.phone'       => 'none',
-//        'patient.insurance_primary.insured_info.dependent.dob'         => 'none',
-//        'patient.insurance_primary.insured_info.dependent.gender'      => 'none',
     ];
 
     public function transform (Resource $resource) {

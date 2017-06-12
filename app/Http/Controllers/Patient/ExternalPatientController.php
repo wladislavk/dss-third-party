@@ -93,7 +93,7 @@ class ExternalPatientController extends ExternalBaseController
             $created = true;
         }
 
-        if ($externalPatient->wasRecentlyCreated) {
+        if ($externalPatient->wasRecentlyCreated || $patient->wasRecentlyCreated) {
             $externalPatient->update([
                 'software' => $externalCompanyId,
                 'external_id' => $externalPatientId,

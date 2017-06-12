@@ -217,7 +217,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('change-lists', 'ChangeListsController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
-
+    Route::resource('external-companies', 'ExternalCompaniesController');
+    Route::resource('external-user', 'ExternalUsersController');
 
     Route::group(['prefix' => 'enrollments'], function () {
         Route::post('create', [
@@ -272,4 +273,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
             'uses' => 'Api\ApiEnrollmentsController@syncEnrollmentPayers'
         ]);
     });
+});
+
+Route::group(['middleware' => 'external.validate'], function () {
+    Route::post('external-patient', 'Patient\ExternalPatientController@store');
 });

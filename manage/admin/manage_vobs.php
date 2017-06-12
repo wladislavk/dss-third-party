@@ -272,7 +272,7 @@ if (!$isSuperAdmin) {
      * * Match by company ID
      * * Pending requests go to current user company
      */
-    $preAuthPendingStatuses = $db->escapeList(DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING);
+    $preAuthPendingStatuses = $db->escapeList([DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
     $conditionals[] = "'$adminCompanyId' IN (bc.id, pc.id)";
     $conditionals[] = "preauth.status NOT IN ($preAuthPendingStatuses)
         OR (

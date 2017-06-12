@@ -440,6 +440,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 ?>
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
+<input type="hidden" id="dom-api-token" value="<?= adminApiToken() ?>">
 
     <?
     $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.email as mailing_email, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
@@ -638,7 +639,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <?php } ?>
             </h1>
         </div>
-        <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" class="form-horizontal">
+        <form name="userfrm" action="<?php echo $_SERVER['PHP_SELF'];?>?add=1" method="post" class="form-horizontal" id="add-user-form">
             <div class="page-header expanded">
                 <strong>ID and Access Details</strong>
             </div>
@@ -952,6 +953,12 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <input type="checkbox" name="use_payment_reports" value="1" <?php if($use_payment_reports == 1) echo " checked='checked'";?>>
                         Payment Reports
                     </label>
+                    <?php if (is_super($_SESSION['admin_access'])) { ?>
+                    <label id="dentrix-api-checkbox" class="col-md-4" v-cloak>
+                        <input type="checkbox" v-model="fields.enabled">
+                        Dentrix API
+                    </label>
+                    <?php } ?>
                 </div>
             </div>
 
@@ -981,8 +988,36 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                     </label>
                 </div>
             </div>
-            
+
             <?php if (is_super($_SESSION['admin_access'])) { ?>
+            <div class="page-header" v-cloak v-show="fields.enabled">
+                <strong>Dentrix API Details</strong>
+            </div>
+            <div class="form-group" v-cloak v-show="fields.enabled">
+                <label for="user-api_key" class="col-md-3 control-label">API key</label>
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="user-api_key" v-model="fields.api_key" readonly><span class="input-group-addon" v-on="click: generateApiKey(fields)"><i class="glyphicon glyphicon-refresh"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" v-cloak v-show="fields.enabled">
+                <label for="user-valid_from" class="col-md-3 control-label">Valid from</label>
+                <div class="col-md-9">
+                    <div class="input-group date" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="form-control" id="user-valid_from" v-model="fields.valid_from"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" v-cloak v-show="fields.enabled">
+                <label for="user-valid_to" class="col-md-3 control-label">Valid to</label>
+                <div class="col-md-9">
+                    <div class="input-group date" data-date-format="yyyy-mm-dd">
+                        <input type="text" class="form-control" id="user-valid_to" v-model="fields.valid_to"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                    </div>
+                </div>
+            </div>
+
             <div class="page-header">
                 <strong>Administration Details</strong>
             </div>
@@ -1128,9 +1163,9 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                 <div class="col-md-9 col-md-offset-3">
                     <input type="hidden" name="usersub" value="1">
                     <input type="hidden" name="ed" value="<?php echo $themyarray["userid"]?>">
-                    <input type="submit" name="save_but" onclick="return userabc_warn(this.form);" value=" <?php echo $but_text?> User" class="btn btn-primary">
+                    <input type="submit" name="save_but" v-on="click: saveUser" value=" <?php echo $but_text?> User" class="btn btn-primary">
                 <?php if ($themyarray["userid"] != '' && $_SESSION['admin_access']==1 && $themyarray['status']!=3) { ?>
-                    <a href="javascript:parent.window.location='manage_users.php?delid=<?php echo $themyarray["userid"];?>'" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="btn btn-danger pull-right" title="DELETE">
+                    <a href="javascript:parent.window.location='manage_users.php?delid=<?php echo $themyarray["userid"];?>'" v-on="click: deleteUser" class="btn btn-danger pull-right" title="DELETE">
                         Delete
                     </a>
                     <a href="reset_password.php?id=<?php echo $themyarray["userid"];?>" class="btn btn-default pull-right">Reset Password</a>
@@ -1210,6 +1245,14 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
   }
   check_service_npi();  
 </script>
-
+<?php if (is_super($_SESSION['admin_access'])) { ?>
+<script>
+    var apiRoot = <?= json_encode(config('app.apiUrl')) ?>;
+</script>
+<script src="/assets/vendor/moment.js" type="text/javascript"></script>
+<script src="/assets/vendor/vue/vue.js" type="text/javascript"></script>
+<script src="/assets/vendor/vue/vue-resource.min.js" type="text/javascript"></script>
+<script src="/assets/app/external-user.js?v=20170517<?= time() ?>" type="text/javascript"></script>
+<?php } ?>
 </body>
 </html>

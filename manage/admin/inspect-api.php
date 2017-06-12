@@ -2,7 +2,6 @@
 namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/includes/top.htm';
-require_once __DIR__ . '/includes/edx_functions.php';
 
 $isSuperAdmin = is_super($_SESSION['admin_access']);
 $logs = $db->getResults('SELECT *
@@ -41,6 +40,12 @@ $logs = $db->getResults('SELECT *
 </div>
 <?php if ($logs) { ?>
     <table class="table table-bordered table-striped">
+        <colgroup>
+            <col width="8%">
+            <col width="22%">
+            <col width="55%">
+            <col width="15%">
+        </colgroup>
         <thead>
             <tr>
                 <th>Method</th>

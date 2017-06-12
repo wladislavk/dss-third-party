@@ -242,65 +242,97 @@ if (is_super($_SESSION['admin_access'])) {
 
 $num_pending_hst = $db->getColumn($sql, 'total', 0);
 
-$backOfficeClaimsConditional = backOfficeClaimsConditional();
-
-$sql = "SELECT COUNT(claim.insuranceid) AS total
-    FROM dental_insurance claim
-    ";
-
-if (is_super($_SESSION['admin_access'])) {
-    $sql .= "JOIN dental_patients p ON p.patientid = claim.patientid
-            JOIN dental_users users ON claim.docid = users.userid
-            LEFT JOIN dental_users users2 ON claim.userid = users2.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
-        ";
-} else {
-    $sql .= "JOIN dental_patients p ON p.patientid = claim.patientid
-            JOIN dental_users users ON claim.docid = users.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
-        ";
-
-    if (!is_billing($_SESSION['admin_access'])) {
-        $sql .= "JOIN dental_user_company uc ON uc.userid = claim.docid
-            AND uc.companyid = '" . $db->escape($_SESSION['admincompanyid']) . "'
-            ";
-    }
-
-    $sql .= " LEFT JOIN dental_users users2 ON claim.userid = users2.userid ";
-}
-
 /**
  * @see DSS-142
  * @see CS-73
- *
- * Filter BO claims by actionable claims.
- * This query might appear at some other places, please search this "@see DSS-142" tag.
- *
- * The old logic checks the p_m_dss_file and s_m_dss_file columns, which are copies of the options set from the
- * patient's table. This logic does not really set if the claim is filed in the BO.
- *
- * The legacy values are: YES = 1, NO = 2. Thus, if the option is NOT 1 THEN the value is NOT YES.
- *
- * The new indicator will only be the p_m_dss_file column. To avoid conflicts with the previous set of values, the
- * YES indicator will be 3.
+ * @see DSS-568
  */
-$sql .= "WHERE $backOfficeClaimsConditional
-        -- Actionable items
-        AND claim.status IN (
-            '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
-            '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
-            '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
-            '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
-        )";
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+$adminCompanyId = intval($_SESSION['admincompanyid']);
 
-if (is_billing($_SESSION['admin_access'])) {
-    $c_sql = "SELECT companyid
-        FROM admin_company
-        WHERE adminid = '" . $db->escape($_SESSION['adminuserid']) . "'";
+$sql = "SELECT COUNT(claim.insuranceid) AS total ";
 
-    $c = $db->getColumn($c_sql, 'companyid', 0);
-    $sql .= " AND users.billing_company_id = '" . $db->escape($c) . "'";
+if (is_super($_SESSION['admin_access'])) {
+    $sql .= "FROM dental_insurance claim
+            JOIN dental_patients p ON p.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+            JOIN dental_users users2 ON claim.userid = users2.userid
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
+        ";
+} elseif (is_billing($_SESSION['admin_access'])) {
+    $sql .= "FROM dental_insurance claim
+            JOIN dental_patients p ON p.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+                AND (
+                    claim.p_m_billing_id = '$adminCompanyId'
+                    OR (
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
+                        AND users.billing_company_id = '$adminCompanyId'
+                    )
+                )
+            JOIN dental_user_company uc ON uc.userid = claim.docid
+            JOIN dental_users users2 ON claim.userid = users2.userid
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
+        ";
+} else {
+    $sql .= "FROM dental_insurance claim
+            JOIN dental_patients p ON p.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+            JOIN dental_user_company uc ON uc.userid = claim.docid
+                AND (
+                    claim.p_m_billing_id = '$adminCompanyId'
+                    OR (
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
+                        AND uc.companyid = '$adminCompanyId'
+                    )
+                )
+            JOIN dental_users users2 ON claim.userid = users2.userid
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
+        ";
 }
+
+$statusList = $db->escapeList(ClaimFormData::statusListByName('actionable'));
+$sql .= "WHERE $backOfficeClaimsConditional
+    -- Actionable items
+    AND claim.status IN ($statusList)";
+/**
+ * @see DSS-142
+ * @see CS-73
+ * @see DSS-568
+ */
 
 $num_pending_claims = $db->getColumn($sql, 'total', 0);
 

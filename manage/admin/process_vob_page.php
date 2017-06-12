@@ -829,14 +829,11 @@ if ($disabled) { ?>
                 <span class="red">
                     * Required Fields
                 </span>
-
-                <?php if ($canEdit) { ?>
-                    <br />
-                    <a href="#" onclick="$('#reject_reason_div').show(); return false;"
-                       class="editdel btn btn-warning pull-right" title="REJECT">
-                        Reject
-                    </a>
-                <?php } ?>
+                <br />
+                <a <?= $disabled ?> href="#" onclick="$('#reject_reason_div').show(); return false;"
+                   class="editdel btn btn-warning pull-right" title="REJECT">
+                    Reject
+                </a>
 
                 <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
                     <label>
@@ -846,12 +843,10 @@ if ($disabled) { ?>
                     <br />
                     <textarea id="reject_reason" name="reject_reason"><?= e($preauth['reject_reason']) ?></textarea>
 
-                    <?php if ($canEdit) { ?>
-                        <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');"
-                               value="Submit rejection" class="btn btn-primary">
-                        <input type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;"
+                    <input <?= $disabled ?> type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');"
+                           value="Submit rejection" class="btn btn-primary">
+                    <input <?= $disabled ?> type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;"
                                value="Cancel"  class="btn btn-primary">
-                    <?php } ?>
                 </div>
                 <br />
                     
@@ -859,16 +854,14 @@ if ($disabled) { ?>
                 Mark Complete
                 <input type="checkbox" name="complete" value="1" <?= $is_complete ? 'checked' : '' ?> <?=$disabled?>/>
 
-                <?php if ($canEdit) { ?>
-                    <input type="submit" value="Save Verification of Benefits" class="btn btn-primary">
+                <input <?= $disabled ?> type="submit" value="Save Verification of Benefits" class="btn btn-primary">
 
-                    <?php if ($isSuperAdmin) { ?>
-                        <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>"
-                           onclick="javascript: return confirm('Do Your Really want to Delete?.');"
-                           class="editdel btn btn-danger pull-right" title="DELETE">
-                            Delete
-                        </a>
-                    <?php } ?>
+                <?php if ($isSuperAdmin) { ?>
+                    <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>"
+                       onclick="javascript: return confirm('Do Your Really want to Delete?.');"
+                       class="editdel btn btn-danger pull-right" title="DELETE">
+                        Delete
+                    </a>
                 <?php } ?>
             </td>
         </tr>
@@ -886,11 +879,13 @@ if ($disabled) { ?>
   var cal10 = new calendar2(document.getElementById('in_network_appeal_date_received'));
   var cal11 = new calendar2(document.getElementById('written_pre_auth_date_received'));
 </script>
-<?php if ($isSuperAdmin || $preauth['user_billing_company_matches']) {
-    //setting pid to work with eligible check
-    $_GET['pid'] = $pid;
-    require 'eligible_check/eligible_check.php';
-} ?>
+<?php
+
+//setting pid to work with eligible check
+$_GET['pid'] = $pid;
+require 'eligible_check/eligible_check.php';
+
+?>
 
 
 <script language="JavaScript">

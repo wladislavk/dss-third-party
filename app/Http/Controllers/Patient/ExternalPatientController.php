@@ -43,8 +43,11 @@ class ExternalPatientController extends ExternalBaseController
         /**
          * Concatenate patient address
          */
-        $patientData['p_m_address'] = trim("{$patientData['p_m_address']} {$patientData['p_m_address2']}");
-        unset($patientData['p_m_address2']);
+        if (isset($patientData['p_m_address'])) {
+            $address = $patientData['p_m_address'] . ' ' . array_get($patientData, 'p_m_address2');
+            $patientData['p_m_address'] = trim($address);
+            unset($patientData['p_m_address2']);
+        }
 
         $externalPatient = $resources
             ->where('software', $externalCompanyId)
@@ -73,6 +76,10 @@ class ExternalPatientController extends ExternalBaseController
              * Normalize dates, external data uses Y-m-d H-i-s, internal data uses m/d/Y
              */
             foreach (['dob', 'ins_dob', 'ins2_dob'] as $field) {
+                if (!isset($patientData[$field])) {
+                    continue;
+                }
+
                 $dateTime = strtotime($patientData[$field]);
 
                 if ($dateTime) {

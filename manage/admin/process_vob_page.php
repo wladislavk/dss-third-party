@@ -47,7 +47,17 @@ $sql = "SELECT
     WHERE preauth.id = '$preAuthId'
         $andBillingCompanyConditional";
 $preauth = $db->getRow($sql);
+
 $pid = $preauth['patient_id'];
+
+/**
+ * @see DSS-568
+ */
+$status = (int)$preauth['status'];
+$isStatusPending = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
+$loggedInCompanyMatches = $adminCompanyId === (int)$preauth['current_billing_company_id'];
+$canInspect = $isSuperAdmin || $loggedInCompanyMatches;
+$canEdit = $isStatusPending && $canInspect;
 
 if (!$preauth) {
     $message = 'You are not authorized to view this page';
@@ -102,7 +112,7 @@ $my_array = $db->getRow($sql);
 
 $preauth = array_merge($preauth, $my_array);
 
-if (!empty($_POST['save_vob']) && ($isSuperAdmin || $preauth['user_billing_company_matches'])) {
+if (!empty($_POST['save_vob']) && $canEdit) {
     $vobData = processVobInput($_POST, $_SESSION['adminuserid']);
     
     if (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
@@ -147,15 +157,6 @@ if (!empty($_POST['save_vob']) && ($isSuperAdmin || $preauth['user_billing_compa
 $is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
 $is_rejected = ($preauth['status'] == DSS_PREAUTH_REJECTED) ? true : false;
 $disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
-
-/**
- * @see DSS-568
- */
-$status = (int)$preauth['status'];
-$isStatusPending = $status === DSS_PREAUTH_PENDING;
-$loggedInCompanyMatches = $adminCompanyId === (int)$preauth['current_billing_company_id'];
-$canInspect = $isSuperAdmin || $loggedInCompanyMatches;
-$canEdit = $isStatusPending && $canInspect;
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />

@@ -272,11 +272,11 @@ if (!$isSuperAdmin) {
      * * Match by company ID
      * * Pending requests go to current user company
      */
-    $preAuthPendingStatus = DSS_PREAUTH_PENDING;
+    $preAuthPendingStatuses = $db->escapeList(DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING);
     $conditionals[] = "'$adminCompanyId' IN (bc.id, pc.id)";
-    $conditionals[] = "preauth.status != '$preAuthPendingStatus'
+    $conditionals[] = "preauth.status NOT IN ($preAuthPendingStatuses)
         OR (
-            preauth.status = '$preAuthPendingStatus'
+            preauth.status IN ($preAuthPendingStatuses)
             AND bc.id = '$adminCompanyId'
         )";
 
@@ -456,7 +456,7 @@ $(document).ready(function(){
 	<?php } else {
 		foreach ($my as $myarray) {
 		    $status = (int)$myarray['status'];
-		    $isStatusPending = $status === DSS_PREAUTH_PENDING;
+		    $isStatusPending = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
             $isStoredIdMissing = !$myarray['stored_billing_company_id'];
             $loggedInCompanyMatches = $adminCompanyId === (int)$myarray['current_billing_company_id'];
             $canInspect = $isSuperAdmin || $loggedInCompanyMatches;

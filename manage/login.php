@@ -81,7 +81,7 @@ if(isset($_POST["loginsub"]))
 
 			$_SESSION['loginid']=$ins_id;
 
-			if (isset($_GET['goto']) && !empty($_POST['redirect'])) {
+			if (isset($_GET['goto'])) {
                 $goTo = $_GET['goto'];
 
                 if ($goTo[0] !== '/') {
@@ -170,17 +170,6 @@ if(!empty($_GET['msg']))
 						<input type="password" name="password">
 					</td>
 				</tr>
-                <?php if (!empty($_GET['goto'])) { ?>
-                    <tr bgcolor="#fff">
-                        <td colspan="2">
-                            <input id="allow-redirect" type="checkbox" name="redirect" checked />
-                            <label for="allow-redirect">
-                                After login redirect to
-                                <a style="font-size:unset;"><code><?= e($_GET['goto']) ?></code></a>
-                            </label>
-                        </td>
-                    </tr>
-                <?php } ?>
 				<tr bgcolor="#FFFFFF">
 					<td colspan="2" align="center" >
 						<input type="hidden" name="loginsub" value="1">

@@ -54,7 +54,11 @@ class ExternalUsersController extends Controller
     public function store(ExternalUsers $resources, ExternalUserStore $request)
     {
         $data = $request->all();
-        $data['created_by'] = $this->currentAdmin->id;
+        /**
+         * @ToDo: Handle admin tokens
+         * @see AWS-19-Request-Token
+         */
+        $data['created_by'] = $this->currentUser->id;
 
         $resource = $resources->create($data);
 
@@ -74,7 +78,11 @@ class ExternalUsersController extends Controller
         $resource = $resources->where('user_id', $id)->firstOrFail();
 
         $data = $request->all();
-        $data['updated_by'] = $this->currentAdmin->id;
+        /**
+         * @ToDo: Handle admin tokens
+         * @see AWS-19-Request-Token
+         */
+        $data['updated_by'] = $this->currentUser->id;
 
         $resource->update($data);
 

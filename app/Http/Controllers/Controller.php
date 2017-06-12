@@ -25,9 +25,23 @@ abstract class Controller extends BaseController
     {
         $user = $auth->toUser();
 
+        if (!$user) {
+            return $user;
+        }
+
         $user->id = preg_replace('/(?:u_|a_)/', '', $user->id);
 
-        $docId = $userModel->getDocId($user->id)->docid;
+        /**
+         * @ToDo: Handle admin tokens
+         * @see AWS-19-Request-Token
+         */
+        $getter = $userModel->getDocId($user->id);
+
+        if (!$getter) {
+            return $user;
+        }
+
+        $docId = $getter->docid;
 
         if ($docId) {
             $user->docid = $docId;

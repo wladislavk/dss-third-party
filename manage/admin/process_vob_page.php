@@ -156,7 +156,7 @@ if (!empty($_POST['save_vob']) && $canEdit) {
 
 $is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
 $is_rejected = ($preauth['status'] == DSS_PREAUTH_REJECTED) ? true : false;
-$disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
+$disabled = $canEdit ? '' : 'disabled';
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -826,50 +826,50 @@ if ($disabled) { ?>
         </tr>
         <tr>
             <td  colspan="2" align="center">
+                <span class="red">
+                    * Required Fields
+                </span>
+
                 <?php if ($canEdit) { ?>
-                    <span class="red">
-                        * Required Fields
-                    </span>
                     <br />
-		            <?php if (!$is_complete && !$is_rejected) { ?>
-                        <a href="#" onclick="$('#reject_reason_div').show(); return false;"
-                           class="editdel btn btn-warning pull-right" title="REJECT">
-                            Reject
-                        </a>
-                        <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
-                            <label>
-                                VOB will be REJECTED and the dental office will be notified.
-                                Please list the reasons for rejection.
-                            </label>
-                            <br />
-                            <textarea id="reject_reason" name="reject_reason"><?= e($preauth['reject_reason']) ?></textarea>
-                            <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');"
-                                   value="Submit rejection" class="btn btn-primary">
-                            <input type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;"
-                                   value="Cancel"  class="btn btn-primary">
-                        </div>
-                        <br />
+                    <a href="#" onclick="$('#reject_reason_div').show(); return false;"
+                       class="editdel btn btn-warning pull-right" title="REJECT">
+                        Reject
+                    </a>
+                <?php } ?>
+
+                <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
+                    <label>
+                        VOB will be REJECTED and the dental office will be notified.
+                        Please list the reasons for rejection.
+                    </label>
+                    <br />
+                    <textarea id="reject_reason" name="reject_reason"><?= e($preauth['reject_reason']) ?></textarea>
+
+                    <?php if ($canEdit) { ?>
+                        <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');"
+                               value="Submit rejection" class="btn btn-primary">
+                        <input type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;"
+                               value="Cancel"  class="btn btn-primary">
                     <?php } ?>
+                </div>
+                <br />
                     
-                    <input type="hidden" name="preauth_id" value="<?= $_GET['ed'] ?>"/>
-                    Mark Complete
-                    <input type="checkbox" name="complete" value="1" <?= $is_complete ? 'checked' : '' ?> <?=$disabled?>/>
-                    
-                    <?php if (!$is_complete && !$is_rejected ) { ?>
-                        <input type="submit" value="Save Verfication of Benefits" class="btn btn-primary">
-                    <?php } ?>
-                    
-                    <?php if (
-                        in_array($preauth["status"], [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]) &&
-                        $isSuperAdmin
-                    ) { ?>
+                <input type="hidden" name="preauth_id" value="<?= $_GET['ed'] ?>"/>
+                Mark Complete
+                <input type="checkbox" name="complete" value="1" <?= $is_complete ? 'checked' : '' ?> <?=$disabled?>/>
+
+                <?php if ($canEdit) { ?>
+                    <input type="submit" value="Save Verification of Benefits" class="btn btn-primary">
+
+                    <?php if ($isSuperAdmin) { ?>
                         <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>"
                            onclick="javascript: return confirm('Do Your Really want to Delete?.');"
                            class="editdel btn btn-danger pull-right" title="DELETE">
                             Delete
                         </a>
-		            <?php } ?>
-		        <?php } ?>
+                    <?php } ?>
+                <?php } ?>
             </td>
         </tr>
     </table>

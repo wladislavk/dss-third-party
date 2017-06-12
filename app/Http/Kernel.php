@@ -31,6 +31,7 @@ class Kernel extends HttpKernel
         'auth' => \DentalSleepSolutions\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \DentalSleepSolutions\Http\Middleware\RedirectIfAuthenticated::class,
+        'external.validate' => \DentalSleepSolutions\Http\Middleware\ExternalCompanyMiddleware::class,
         'api.log' => \DentalSleepSolutions\Http\Middleware\ApiLogMiddleware::class,
     ];
 }

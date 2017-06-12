@@ -152,6 +152,7 @@ return [
         DentalSleepSolutions\Providers\RouteServiceProvider::class,
         DentalSleepSolutions\Providers\ApiServiceProvider::class,
         DentalSleepSolutions\Providers\CommandServiceProvider::class,
+        DentalSleepSolutions\Providers\CustomValidationServiceProvider::class,
 
     ],
 

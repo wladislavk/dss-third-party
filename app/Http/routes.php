@@ -91,6 +91,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('insurances', 'InsurancesController', ['except' => ['create', 'edit']]);
     Route::post('insurances/rejected', 'InsurancesController@getRejected');
     Route::post('insurances/{type}', 'InsurancesController@getFrontOfficeClaims');
+    Route::post('insurances/remove-claim', 'InsurancesController@removeClaim');
     Route::resource('insurance-files', 'InsuranceFilesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-histories', 'InsuranceHistoriesController', ['except' => ['create', 'edit']]);
     Route::resource('insurance-preauth', 'InsurancePreauthController', ['except' => ['create', 'edit']]);
@@ -104,9 +105,15 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('ledgers', 'LedgersController', ['except' => ['create', 'edit']]);
     Route::post('ledgers/list', 'LedgersController@getListOfLedgerRows');
     Route::post('ledgers/totals', 'LedgersController@getReportTotals');
+    Route::post('ledgers/update-patient-summary', 'LedgersController@updatePatientSummary');
+    Route::post('ledgers/report-data', 'LedgersController@getReportData');
+    Route::post('ledgers/report-rows-number', 'LedgersController@getReportRowsNumber');
     Route::resource('ledger-histories', 'LedgerHistoriesController', ['except' => ['create', 'edit']]);
+    Route::post('ledger-histories/ledger-report', 'LedgerHistoriesController@getHistoriesForLedgerReport');
     Route::resource('ledger-payments', 'LedgerPaymentsController', ['except' => ['create', 'edit']]);
     Route::resource('ledger-records', 'LedgerRecordsController', ['except' => ['create', 'edit']]);
+    Route::resource('ledger-statements', 'LedgerStatementsController', ['except' => ['create', 'edit']]);
+    Route::post('ledger-statements/remove', 'LedgerStatementsController@removeByIdAndPatientId');
     Route::resource('letter-templates', 'LetterTemplatesController', ['except' => ['create', 'edit']]);
     Route::resource('custom-letter-templates', 'CustomLetterTemplatesController', ['except' => ['create', 'edit']]);
     Route::resource('letters', 'LettersController', ['except' => ['create', 'edit']]);
@@ -210,7 +217,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('change-lists', 'ChangeListsController', ['except' => ['create', 'edit']]);
     Route::resource('memo', 'Api\ApiAdminMemoController');
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
-
+    Route::resource('external-companies', 'ExternalCompaniesController');
+    Route::resource('external-user', 'ExternalUsersController');
 
     Route::group(['prefix' => 'enrollments'], function () {
         Route::post('create', [
@@ -265,4 +273,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
             'uses' => 'Api\ApiEnrollmentsController@syncEnrollmentPayers'
         ]);
     });
+});
+
+Route::group(['middleware' => 'external.validate'], function () {
+    Route::post('external-patient', 'Patient\ExternalPatientController@store');
 });

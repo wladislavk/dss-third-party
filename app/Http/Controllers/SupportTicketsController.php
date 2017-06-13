@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\SupportTicketStore;
 use DentalSleepSolutions\Http\Requests\SupportTicketUpdate;
 use DentalSleepSolutions\Http\Requests\SupportTicketDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\SupportTicket;
 use DentalSleepSolutions\Contracts\Repositories\SupportTickets;
 

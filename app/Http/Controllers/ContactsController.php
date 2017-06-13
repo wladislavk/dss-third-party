@@ -2,16 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ContactStore;
 use DentalSleepSolutions\Http\Requests\ContactUpdate;
 use DentalSleepSolutions\Http\Requests\ContactDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Contact;
 use DentalSleepSolutions\Contracts\Repositories\Contacts;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class ContactsController extends Controller
 {

@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\SocialHistoryStore;
 use DentalSleepSolutions\Http\Requests\SocialHistoryUpdate;
 use DentalSleepSolutions\Http\Requests\SocialHistoryDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\SocialHistory;
 use DentalSleepSolutions\Contracts\Repositories\SocialHistories;
 

@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\GuideSettingOptionStore;
 use DentalSleepSolutions\Http\Requests\GuideSettingOptionUpdate;
 use DentalSleepSolutions\Http\Requests\GuideSettingOptionDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\GuideSettingOption;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions;
-use Illuminate\Http\Request;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily

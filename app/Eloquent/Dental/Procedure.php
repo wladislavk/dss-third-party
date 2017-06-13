@@ -4,10 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Procedure as Resource;
-use DentalSleepSolutions\Contracts\Repositories\Procedures as Repository;
 
-class Procedure extends Model implements Resource, Repository
+class Procedure extends Model
 {
     use WithoutUpdatedTimestamp;
 

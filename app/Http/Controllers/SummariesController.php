@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\SummaryStore;
 use DentalSleepSolutions\Http\Requests\SummaryUpdate;
 use DentalSleepSolutions\Http\Requests\SummaryDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Summary;
 use DentalSleepSolutions\Contracts\Repositories\Summaries;
 

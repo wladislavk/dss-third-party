@@ -2,16 +2,22 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Helpers\LetterHelper;
+use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
+use DentalSleepSolutions\Helpers\LetterTriggers\LetterToPatientTrigger;
+use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
+use DentalSleepSolutions\Helpers\EmailHandlers\RememberEmailHandler;
+use DentalSleepSolutions\Helpers\EmailHandlers\UpdateEmailHandler;
+use DentalSleepSolutions\Helpers\LetterDeleter;
+use DentalSleepSolutions\Helpers\LetterTriggerCollection;
+use DentalSleepSolutions\Helpers\MailerDataRetriever;
 use DentalSleepSolutions\Helpers\PreauthHelper;
-use DentalSleepSolutions\Helpers\EmailHelper;
 use DentalSleepSolutions\Helpers\SimilarHelper;
 use DentalSleepSolutions\Helpers\PdfHelper;
 use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
 use DentalSleepSolutions\Http\Requests\PatientDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
@@ -25,8 +31,8 @@ use DentalSleepSolutions\Contracts\Repositories\Notifications;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Libraries\Password;
+use DentalSleepSolutions\Structs\PdfHeaderData;
 use Illuminate\Http\Request;
-
 use Carbon\Carbon;
 
 /**
@@ -39,6 +45,10 @@ use Carbon\Carbon;
  */
 class PatientsController extends Controller
 {
+    const UNREGISTERED_STATUS = 0;
+    const REGISTRATION_EMAILED_STATUS = 1;
+    const REGISTERED_STATUS = 2;
+
     const DSS_REFERRED_PATIENT = 1;
     const DSS_REFERRED_PHYSICIAN = 2;
     const DSS_REFERRED_MEDIA = 3;
@@ -227,8 +237,13 @@ class PatientsController extends Controller
     }
 
     public function editingPatient(
-        LetterHelper $letterHelper,
-        EmailHelper $emailHelper,
+        TreatmentCompleteTrigger $treatmentCompleteTrigger,
+        LettersToMDTrigger $lettersToMDTrigger,
+        LetterToPatientTrigger $letterToPatientTrigger,
+        LetterDeleter $letterDeleter,
+        UpdateEmailHandler $updateEmailHandler,
+        RememberEmailHandler $rememberEmailHandler,
+        RegistrationEmailHandler $registrationEmailHandler,
         PreauthHelper $preauthHelper,
         SimilarHelper $similarHelper,
         Patient $patientResource,
@@ -287,8 +302,7 @@ class PatientsController extends Controller
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
-        $letterHelper->setIdentificators($docId, $patientId, $userType, $userId);
-        $letterHelper->triggerPatientTreatmentComplete();
+        $treatmentCompleteTrigger->trigger($patientId, $docId, $userId);
 
         // need to add logic for logging actions
         // linkRequestData
@@ -300,44 +314,48 @@ class PatientsController extends Controller
 
         if ($similarPatientLogin) {
             $number = str_replace($uniqueLogin, '', $similarPatientLogin->login);
-            $uniqueLogin = $uniqueLogin . ++$number;
+            $number = $number + 1;
+            $uniqueLogin = $uniqueLogin . $number;
         }
 
         $responseData = [];
         $isUpdateAction = true;
-        $emailHelper->setDocId($docId);
 
         if ($patientId) {
             // find an unchanged patient by id
             $unchangedPatient = $patientResource->find($patientId);
 
-            // check registration status:
-            // Unregistered - 0
-            // Registration Emailed - 1
-            // Registered - 2
-
             // TODO: need to rewrite this logic from legacy code to the new Laravel structure
-            if ($unchangedPatient->registration_status == 2 && $patientFormData['email'] != $unchangedPatient->email) {
+            if (
+                $unchangedPatient->registration_status == self::REGISTERED_STATUS
+                &&
+                $patientFormData['email'] != $unchangedPatient->email
+            ) {
                 // notify the user about changing his email
-                $emailHelper->sendUpdatedEmail($patientId, $patientFormData['email'], $unchangedPatient->email, 'doc');
+                $updateEmailHandler->handleEmail($patientId, $patientFormData['email'], $unchangedPatient->email);
 
                 $responseData['mails'] = [
                     'updated_mail' => 'The mail about changing patient email was successfully sent.'
                 ];
             } elseif ($emailTypesForSending && !empty($emailTypesForSending['reminder'])) {
                 // send reminder email
-                $emailHelper->sendRemEmail($patientId, $patientFormData['email']);
+                $rememberEmailHandler->handleEmail($patientId, $patientFormData['email']);
 
                 $responseData['mails'] = [
                     'reminder_mail' => 'The reminding mail was successfully sent.'
                 ];
             } elseif (
-                $emailTypesForSending && empty($emailTypesForSending['registration']) &&
-                $unchangedPatient->registration_status == 1 && $patientFormData['email'] != $unchangedPatient['email']
+                $emailTypesForSending
+                &&
+                empty($emailTypesForSending['registration'])
+                &&
+                $unchangedPatient->registration_status == self::REGISTRATION_EMAILED_STATUS
+                &&
+                $patientFormData['email'] != $unchangedPatient['email']
             ) {
                 if ($docPatientPortal && $usePatientPortal) {
                     // send registration email if email is updated and not registered
-                    $emailHelper->sendRegEmail($patientId, $patientFormData['email'], '');
+                    $registrationEmailHandler->handleEmail($patientId, $patientFormData['email']);
                 }
 
                 $responseData['mails'] = [
@@ -356,9 +374,15 @@ class PatientsController extends Controller
 
             // remove pending vobs if insurance info has changed
             $insuranceInfoFieldsArray = [
-                'p_m_relation', 'p_m_partyfname', 'p_m_partylname',
-                'ins_dob', 'p_m_ins_type', 'p_m_ins_ass',
-                'p_m_ins_id', 'p_m_ins_grp', 'p_m_ins_plan'
+                'p_m_relation',
+                'p_m_partyfname',
+                'p_m_partylname',
+                'ins_dob',
+                'p_m_ins_type',
+                'p_m_ins_ass',
+                'p_m_ins_id',
+                'p_m_ins_grp',
+                'p_m_ins_plan',
             ];
 
             $hasInsuranceInfoChanged = false;
@@ -372,12 +396,16 @@ class PatientsController extends Controller
             }
 
             if ($hasInsuranceInfoChanged) {
-                $userName = $this->currentUser->name ?: '';
-
+                $userName = '';
+                if ($this->currentUser->name) {
+                    $userName = $this->currentUser->name;
+                }
                 $updatedVob = $insurancePreauthResource->updateVob($patientId, $userName);
-
                 if ($updatedVob) {
-                    $insurancePreauthId = $preauthHelper->createVob($patientId)->id;
+                    $insurancePreauth = $preauthHelper->createVerificationOfBenefits($patientId, $userId);
+                    if ($insurancePreauth) {
+                        $insurancePreauth->save();
+                    }
                 }
             }
 
@@ -445,7 +473,9 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($letter->letterid, $parent = null, $type = 'md_referral', $recipientId = $unchangedPatient->referred_by);
+                            $type = 'md_referral';
+                            $recipientId = $unchangedPatient->referred_by;
+                            $letterDeleter->deleteLetter($letter->letterid, $type, $recipientId, $docId, $userId);
                         }
                     }
                 } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] != 1) {
@@ -459,7 +489,9 @@ class PatientsController extends Controller
 
                     if (count($letters)) {
                         foreach ($letters as $letter) {
-                            $letterHelper->deleteLetter($letter->letterid, $parent = null, $type = 'pat_referral', $recipientId = $unchangedPatient->referred_by);
+                            $type = 'pat_referral';
+                            $recipientId = $unchangedPatient->referred_by;
+                            $letterDeleter->deleteLetter($letter->letterid, $type, $recipientId, $docId, $userId);
                         }
                     }
                 }
@@ -521,8 +553,13 @@ class PatientsController extends Controller
         }
 
         $docFields = [
-            'docsleep', 'docpcp', 'docdentist', 'docent',
-            'docmdother', 'docmdother2', 'docmdother3'
+            'docsleep',
+            'docpcp',
+            'docdentist',
+            'docent',
+            'docmdother',
+            'docmdother2',
+            'docmdother3',
         ];
 
         $mdContacts = [];
@@ -530,26 +567,30 @@ class PatientsController extends Controller
             $mdContacts[] = !empty($patientFormData[$field]) ? $patientFormData[$field] : 0;
         }
 
-        $letterHelper->triggerIntroLettersOf12Types($patientId, $mdContacts);
+        $params = [
+            LettersToMDTrigger::MD_CONTACTS_PARAM => $mdContacts,
+        ];
+        $lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
 
         if (!empty($patientFormData['introletter']) && $patientFormData['introletter'] == 1) {
-            $letterHelper->triggerIntroLetterOf3Type($patientId);
+            $letterToPatientTrigger->trigger($patientId, $docId, $userId);
         }
 
         if (
-            $emailTypesForSending && !empty($emailTypesForSending['registration']) &&
+            $emailTypesForSending
+            &&
+            !empty($emailTypesForSending['registration'])
+            &&
             $docPatientPortal && $usePatientPortal
         ) {
+            $message = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
             if ($patientFormData['email'] && $patientFormData['cell_phone']) {
+                $oldEmail = '';
                 if ($isUpdateAction) {
-                    $emailHelper->sendRegEmail($patientId, $patientFormData['email'], $uniqueLogin, $unchangedPatient->email);
-                } else {
-                    $emailHelper->sendRegEmail($patientId, $patientFormData['email'], $uniqueLogin);
+                    $oldEmail = $unchangedPatient->email;
                 }
-
+                $registrationEmailHandler->handleEmail($patientId, $patientFormData['email'], $oldEmail);
                 $message = 'The registration mail was successfully sent.';
-            } else {
-                $message = 'Unable to send registration email because no cell_phone is set. Please enter a cell_phone and try again.';
             }
 
             $responseData['mails'] = [
@@ -558,26 +599,23 @@ class PatientsController extends Controller
         }
 
         // check if required information is filled out
+        $patientPhone = false;
         if (!empty($patientFormData['home_phone']) || !empty($patientFormData['work_phone']) || !empty($patientFormData['cell_phone'])) {
             $patientPhone = true;
-        } else {
-            $patientPhone = false;
         }
 
+        $patientEmail = false;
         if (!empty($patientFormData['email'])) {
             $patientEmail = true;
-        } else {
-            $patientEmail = false;
         }
 
+        $completeInfo = 0;
         if (($patientEmail || $patientPhone)
             && !empty($patientFormData['add1']) && !empty($patientFormData['city'])
             && !empty($patientFormData['state']) && !empty($patientFormData['zip'])
             && !empty($patientFormData['dob']) && !empty($patientFormData['gender'])
         ) {
             $completeInfo = 1;
-        } else {
-            $completeInfo = 0;
         }
 
         // determine whether patient info has been completely set
@@ -597,15 +635,24 @@ class PatientsController extends Controller
         Notifications $notificationResource,
         Request $request
     ) {
-        $patientId = $request->has('patient_id') ? $request->input('patient_id') : 0;
+        $patientId = 0;
+        if ($request->has('patient_id')) {
+            $patientId = $request->input('patient_id');
+        }
         $foundPatient = $patientResource->find($patientId);
 
+        $data = [];
         if (!empty($foundPatient)) {
             $formedFullNames = [];
             // fields for getting certain short info and forming full name 
             $docFields = [
-                'docsleep', 'docpcp', 'docdentist', 'docent',
-                'docmdother', 'docmdother2', 'docmdother3'
+                'docsleep',
+                'docpcp',
+                'docdentist',
+                'docent',
+                'docmdother',
+                'docmdother2',
+                'docmdother3',
             ];
 
             foreach ($docFields as $field) {
@@ -662,21 +709,20 @@ class PatientsController extends Controller
                 'formed_full_names'           => $formedFullNames,
                 'patient_location'            => !empty($foundLocation) ? $foundLocation->location : ''
             ];
-        } else {
-            $data = [];
         }
-
         return ApiResponse::responseOk('', $data);
     }
 
     public function getReferrers(Patients $patientResource, Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+        if ($this->currentUser->docid) {
+            $docId = $this->currentUser->docid;
+        }
 
+        $partial = '';
         if ($request->has('partial_name')) {
             $partial = preg_replace("[^ A-Za-z'\-]", "", $request->input('partial_name'));
-        } else {
-            $partial = '';
         }
 
         $names = explode(' ', $partial);
@@ -735,7 +781,7 @@ class PatientsController extends Controller
         if ($patientId > 0) {
             $accessCode = rand(100000, 999999);
             $accessCodeDate = Carbon::now();
-            $patient = $patientResource->updatePatient($patientId, [
+            $patientResource->updatePatient($patientId, [
                 'access_code'      => $accessCode,
                 'access_code_date' => $accessCodeDate
             ]);
@@ -746,28 +792,29 @@ class PatientsController extends Controller
 
     public function createTempPinDocument(
         $patientId = 0,
-        EmailHelper $emailHelper,
+        RegistrationEmailHandler $registrationEmailHandler,
         PdfHelper $pdfHelper,
-        Patient $patientResource
+        MailerDataRetriever $mailerDataRetriever
     ) {
         $url = '';
         if ($patientId > 0) {
-            $docId = $this->currentUser->docid ?: 0;
-            $mailerData = $emailHelper->retrieveMailerData($patientId, $docId);
+            $docId = 0;
+            if ($this->currentUser->docid) {
+                $docId = $this->currentUser->docid;
+            }
+            $mailerData = $mailerDataRetriever->retrieveMailerData($patientId, $docId);
             $mailerData = array_merge($mailerData['patientData'], $mailerData['mailingData']);
 
             if (count($mailerData)) {
-                $emailHelper->sendRegEmail($patientId, $mailerData['email'], '', $mailerData['email'], 2);
+                $registrationEmailHandler->setAccessType(2);
+                $registrationEmailHandler->handleEmail($patientId, $mailerData['email'], $mailerData['email']);
 
                 $filename = 'user_pin_' . $patientId . '.pdf';
-                $pdfHelper->setHeaderInfo([
-                    'title'   => 'User Temporary PIN',
-                    'subject' => 'User Temporary PIN'
-                ]);
+                $headerInfo = new PdfHeaderData();
+                $headerInfo->title = 'User Temporary PIN';
+                $headerInfo->subject = 'User Temporary PIN';
 
-                $args = ['doc_id' => $docId];
-
-                $url = $pdfHelper->create('pdf.patient.pinInstructions', $mailerData, $filename, $args);
+                $url = $pdfHelper->create('pdf.patient.pinInstructions', $mailerData, $filename, $headerInfo, $docId);
             }
         }
 
@@ -776,14 +823,12 @@ class PatientsController extends Controller
 
     private function getDocNameFromShortInfo($field, $shortInfo)
     {
+        $name = '';
         if ($field != 'Not Set' && $shortInfo) {
             $name = $shortInfo->lastname . ', ' . $shortInfo->firstname . ' '
                     . $shortInfo->middlename
                     . ($shortInfo->contacttype != '' ? ' - ' . $shortInfo->contacttype : '');
-        } else {
-            $name = '';
         }
-
         return $name;
     }
 
@@ -825,14 +870,20 @@ class PatientsController extends Controller
     {
         $patient = $patientResource->getPatientInfoWithDocInfo($patientId);
 
+        $isConfirmed = false;
         if (
-            $patient && in_array($patient->registration_status, [1, 2]) &&
-            $patient->use_patient_portal == 1 && $patient->doc_use_patient_portal == 1 &&
+            $patient
+            &&
+            in_array($patient->registration_status, [1, 2])
+            &&
+            $patient->use_patient_portal == 1
+            &&
+            $patient->doc_use_patient_portal == 1
+            &&
             $patient->email != $email
         ) {
-            return true;
-        } else {
-            return false;
+            $isConfirmed = true;
         }
+        return $isConfirmed;
     }
 }

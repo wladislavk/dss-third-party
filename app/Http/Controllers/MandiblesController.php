@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\MandibleStore;
 use DentalSleepSolutions\Http\Requests\MandibleUpdate;
 use DentalSleepSolutions\Http\Requests\MandibleDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Mandible;
 use DentalSleepSolutions\Contracts\Repositories\Mandibles;
 

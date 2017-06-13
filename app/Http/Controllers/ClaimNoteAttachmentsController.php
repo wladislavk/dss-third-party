@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ClaimNoteAttachmentStore;
 use DentalSleepSolutions\Http\Requests\ClaimNoteAttachmentUpdate;
 use DentalSleepSolutions\Http\Requests\ClaimNoteAttachmentDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\ClaimNoteAttachment;
 use DentalSleepSolutions\Contracts\Repositories\ClaimNoteAttachments;
-use Carbon\Carbon;
 
 class ClaimNoteAttachmentsController extends Controller
 {

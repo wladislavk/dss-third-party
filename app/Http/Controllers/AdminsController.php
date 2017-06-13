@@ -2,16 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\AdminStore;
 use DentalSleepSolutions\Http\Requests\AdminUpdate;
 use DentalSleepSolutions\Http\Requests\AdminDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Admin;
 use DentalSleepSolutions\Contracts\Repositories\Admins;
-use Carbon\Carbon;
-
-use DentalSleepSolutions\Libraries\Password;
 
 class AdminsController extends Controller
 {

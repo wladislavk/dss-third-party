@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\PatientContactStore;
 use DentalSleepSolutions\Http\Requests\PatientContactUpdate;
 use DentalSleepSolutions\Http\Requests\PatientContactDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\PatientContact;
 use DentalSleepSolutions\Contracts\Repositories\PatientContacts;
 use Illuminate\Http\Request;

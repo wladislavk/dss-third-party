@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\JointStore;
 use DentalSleepSolutions\Http\Requests\JointUpdate;
 use DentalSleepSolutions\Http\Requests\JointDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Joint;
 use DentalSleepSolutions\Contracts\Repositories\Joints;
 

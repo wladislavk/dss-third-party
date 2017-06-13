@@ -4,10 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\InsuranceStatusHistory as Resource;
-use DentalSleepSolutions\Contracts\Repositories\InsuranceStatusHistories as Repository;
 
-class InsuranceStatusHistory extends Model implements Resource, Repository
+class InsuranceStatusHistory extends Model
 {
     use WithoutUpdatedTimestamp;
 

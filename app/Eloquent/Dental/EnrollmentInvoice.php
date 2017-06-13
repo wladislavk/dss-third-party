@@ -14,9 +14,9 @@ class EnrollmentInvoice extends Model
     /**
      * add new record
      *
-     * @param $invoice_id
-     * @param $ip
-     * @return mixed
+     * @param int $invoice_id
+     * @param string $ip
+     * @return int
      */
     public static function add($invoice_id, $ip)
     {

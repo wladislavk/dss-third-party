@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\GuideDeviceStore;
 use DentalSleepSolutions\Http\Requests\GuideDeviceUpdate;
 use DentalSleepSolutions\Http\Requests\GuideDeviceDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\GuideDevice;
 use DentalSleepSolutions\Contracts\Repositories\GuideDevices;
 use DentalSleepSolutions\Contracts\Repositories\Devices;

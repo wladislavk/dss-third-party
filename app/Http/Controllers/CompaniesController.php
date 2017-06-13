@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\CompanyStore;
 use DentalSleepSolutions\Http\Requests\CompanyUpdate;
 use DentalSleepSolutions\Http\Requests\CompanyDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Company;
 use DentalSleepSolutions\Contracts\Repositories\Companies;
-use Carbon\Carbon;
 
 class CompaniesController extends Controller
 {

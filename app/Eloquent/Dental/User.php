@@ -130,8 +130,13 @@ class User extends Model implements Resource, Repository
             ->where('userid', $docId)
             ->first();
     }
-  
-    public function getWithFilter($fields = [], $where = [])
+
+    /**
+     * @param array $fields
+     * @param array $where
+     * @return \Illuminate\Database\Eloquent\Collection|User[]
+     */
+    public function getWithFilter(array $fields = [], array $where = [])
     {
         $object = $this;
 
@@ -148,6 +153,12 @@ class User extends Model implements Resource, Repository
         return $object->get();
     }
 
+    /**
+     * @param $docId
+     * @param $patientId
+     * @param int $locationId
+     * @return User|null
+     */
     public function getMailingData($docId, $patientId, $locationId = 0)
     {
         $query = $this->select(

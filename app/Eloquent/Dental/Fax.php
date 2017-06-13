@@ -61,7 +61,12 @@ class Fax extends Model implements Resource, Repository
             ->first();
     }
 
-    public function updateByLetterId($letterId, $data)
+    /**
+     * @param int $letterId
+     * @param array $data
+     * @return bool|int
+     */
+    public function updateByLetterId($letterId, array $data)
     {
         return $this->where('letterid', $letterId)
             ->update($data);

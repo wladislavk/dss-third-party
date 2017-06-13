@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ProfileImageStore;
 use DentalSleepSolutions\Http\Requests\ProfileImageUpdate;
 use DentalSleepSolutions\Http\Requests\ProfileImageDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\ProfileImage;
 use DentalSleepSolutions\Contracts\Repositories\ProfileImages;
 use Illuminate\Http\Request;

@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\EpworthSleepinessScaleStore;
 use DentalSleepSolutions\Http\Requests\EpworthSleepinessScaleUpdate;
 use DentalSleepSolutions\Http\Requests\EpworthSleepinessScaleDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\EpworthSleepinessScale;
 use DentalSleepSolutions\Contracts\Repositories\EpworthSleepinessScale as Epworth;
 

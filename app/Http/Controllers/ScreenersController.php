@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ScreenerStore;
 use DentalSleepSolutions\Http\Requests\ScreenerUpdate;
 use DentalSleepSolutions\Http\Requests\ScreenerDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Screener;
 use DentalSleepSolutions\Contracts\Repositories\Screeners;
 

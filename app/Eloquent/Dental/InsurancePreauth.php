@@ -44,7 +44,7 @@ class InsurancePreauth extends Model implements Resource, Repository
         'DSS_PREAUTH_PENDING'         => 0,
         'DSS_PREAUTH_COMPLETE'        => 1,
         'DSS_PREAUTH_PREAUTH_PENDING' => 2,
-        'DSS_PREAUTH_REJECTED'        => 3
+        'DSS_PREAUTH_REJECTED'        => 3,
     ];
 
     public function scopeCompleted($query)

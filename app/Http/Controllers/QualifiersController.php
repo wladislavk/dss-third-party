@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\QualifierStore;
 use DentalSleepSolutions\Http\Requests\QualifierUpdate;
 use DentalSleepSolutions\Http\Requests\QualifierDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Qualifier;
 use DentalSleepSolutions\Contracts\Repositories\Qualifiers;
 

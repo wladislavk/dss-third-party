@@ -2,11 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\CorporateContactStore;
 use DentalSleepSolutions\Http\Requests\CorporateContactUpdate;
-use DentalSleepSolutions\Http\Requests\CorporateContactDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\CorporateContact;
 use DentalSleepSolutions\Contracts\Repositories\CorporateContacts;
 
@@ -73,6 +71,8 @@ class CorporateContactsController extends Controller
     }
 
     /**
+     * TODO: there is no class CorporateContactDestroy
+     *
      * Remove the specified resource from storage.
      *
      * @param  \DentalSleepSolutions\Contracts\Resources\CorporateContact $resource

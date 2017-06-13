@@ -82,6 +82,11 @@ class Patient extends Model implements Resource, Repository
         return $this->hasOne(TmjClinicalExam::class, 'patientid', 'patientid');
     }
 
+    /**
+     * @param array $fields
+     * @param array $where
+     * @return \Illuminate\Database\Eloquent\Collection|Patient[]
+     */
     public function getWithFilter($fields = [], $where = [])
     {
         $object = $this;
@@ -556,7 +561,12 @@ class Patient extends Model implements Resource, Repository
             })->get();
     }
 
-    public function getPatientReferralIds($patientId = 0, $patientReferredSource = null)
+    /**
+     * @param int $patientId
+     * @param Patient|null $patientReferredSource
+     * @return string
+     */
+    public function getPatientReferralIds($patientId = 0, Patient $patientReferredSource = null)
     {
         if (!empty($patientReferredSource) && $patientReferredSource->referred_source == 1) {
             $contactQuery = $this->select(DB::raw('GROUP_CONCAT(distinct pr.patientid) as ids'))
@@ -657,20 +667,31 @@ class Patient extends Model implements Resource, Repository
             ->get();
     }
 
+    /**
+     * @param int $patientId
+     * @return Patient|null
+     */
     public function getDentalDeviceTransactionCode($patientId)
     {
-        return $this->select('tc.*')
+        /** @var Patient|null $transactionCode */
+        $transactionCode = $this->select('tc.*')
             ->from(DB::raw('dental_patients p'))
             ->join(DB::raw('dental_transaction_code tc'), function($query) {
                 $query->on('p.docid', '=', 'tc.docid')
                     ->where('tc.transaction_code', '=', 'E0486');
             })->where('p.patientid', $patientId)
             ->first();
+        return $transactionCode;
     }
 
+    /**
+     * @param int $patientId
+     * @return User|null
+     */
     public function getUserInfo($patientId)
     {
-        return $this->select('u.*')
+        /** @var User|null $user */
+        $user = $this->select('u.*')
             ->from(DB::raw('dental_patients p'))
             ->join(DB::raw('dental_users u'), 'p.docid', '=', 'u.userid')
             ->where('p.patientid', $patientId)
@@ -682,11 +703,17 @@ class Patient extends Model implements Resource, Repository
                 $query->where('u.ssn', '=', 1)
                     ->orWhere('u.ein', '=', 1);
             })->first();
+        return $user;
     }
 
-    public function getInsurancePreauthInfo($patinetId)
+    /**
+     * @param int $patientId
+     * @return Patient|null
+     */
+    public function getInsurancePreauthInfo($patientId)
     {
-        return $this->select(
+        /** @var Patient|null $preauthInfo */
+        $preauthInfo = $this->select(
                 'i.company as ins_co',
                 "'primary' as ins_rank",
                 'i.phone1 as ins_phone',
@@ -723,10 +750,16 @@ class Patient extends Model implements Resource, Repository
                 $query->on('p.docid', '=', 'tc.docid')
                     ->where('tc.transaction_code', '=', 'E0486');
             })->leftJoin(DB::raw('dental_q_page2 q2'), 'p.patientid', '=', 'q2.patientid')
-            ->where('p.patientid', $patinetId)
+            ->where('p.patientid', $patientId)
             ->first();
+        return $preauthInfo;
     }
 
+    /**
+     * @param $letterId
+     * @param $patient
+     * @return \Illuminate\Database\Eloquent\Collection|Patient[]
+     */
     public function getContactInfo($letterId, $patient)
     {
         return $this->select(
@@ -746,6 +779,11 @@ class Patient extends Model implements Resource, Repository
             ->get();
     }
 
+    /**
+     * @param $letterId
+     * @param $patReferralList
+     * @return \Illuminate\Database\Eloquent\Collection|Patient[]
+     */
     public function getReferralList($letterId, $patReferralList)
     {
         return $this->select(
@@ -795,7 +833,12 @@ class Patient extends Model implements Resource, Repository
             ->first();
     }
 
-    public function getSimilarPatients($docId, $patientInfo)
+    /**
+     * @param int $docId
+     * @param array $patientInfo
+     * @return Patient[]
+     */
+    public function getSimilarPatients($docId, array $patientInfo)
     {
         $defaultPatientInfo = [
             'patient_id' => 0,
@@ -809,7 +852,8 @@ class Patient extends Model implements Resource, Repository
 
         $patientInfo = array_merge($defaultPatientInfo, $patientInfo);
 
-        return $this->from(DB::raw('dental_patients p'))
+        /** @var Patient[] $patients */
+        $patients = $this->from(DB::raw('dental_patients p'))
             ->where('patientid', '!=', $patientInfo['patient_id'])
             ->where('docid', $docId)
             ->active()
@@ -828,6 +872,7 @@ class Patient extends Model implements Resource, Repository
                         ->where('zip', '!=', '');
                 });
             })->get();
+        return $patients;
     }
 
     public function getReferralCountersForContact($contactId, $contactType, $dateConditional, $isDetailed = false)

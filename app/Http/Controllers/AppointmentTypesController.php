@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\AppointmentTypeStore;
 use DentalSleepSolutions\Http\Requests\AppointmentTypeUpdate;
 use DentalSleepSolutions\Http\Requests\AppointmentTypeDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\AppointmentType;
 use DentalSleepSolutions\Contracts\Repositories\AppointmentTypes;
-use Carbon\Carbon;
 
 class AppointmentTypesController extends Controller
 {

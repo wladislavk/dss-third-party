@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ScreenerEpworthStore;
 use DentalSleepSolutions\Http\Requests\ScreenerEpworthUpdate;
 use DentalSleepSolutions\Http\Requests\ScreenerEpworthDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\ScreenerEpworth;
 use DentalSleepSolutions\Contracts\Repositories\ScreenerEpworth as ScrEpworth;
 

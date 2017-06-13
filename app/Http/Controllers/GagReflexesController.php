@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\GagReflexStore;
 use DentalSleepSolutions\Http\Requests\GagReflexUpdate;
 use DentalSleepSolutions\Http\Requests\GagReflexDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\GagReflex;
 use DentalSleepSolutions\Contracts\Repositories\GagReflexes;
 

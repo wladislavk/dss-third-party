@@ -5,25 +5,23 @@ namespace DentalSleepSolutions\Http\Controllers\Api;
 use Exception;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eligible\Client;
-use DentalSleepSolutions\Helpers\Invoice;
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Helpers\SignatureToImage;
+use DentalSleepSolutions\Helpers\InvoiceHelper;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Eloquent\UserSignature;
 use DentalSleepSolutions\Http\Requests\Enrollments\Create;
 use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
 use DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature;
-
 use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
 use DentalSleepSolutions\Eloquent\Enrollments\TransactionType;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
-
 use DentalSleepSolutions\Interfaces\EnrollmentInterface;
 use DentalSleepSolutions\Interfaces\UserSignaturesInterface;
 use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
+use Tymon\JWTAuth\JWTAuth;
+use DentalSleepSolutions\Eloquent\Dental\User;
 
 class ApiEnrollmentsController extends ApiBaseController
 {
-
     /**
      * Enrollments list
      *
@@ -52,9 +50,10 @@ class ApiEnrollmentsController extends ApiBaseController
      * create enrollment
      *
      * @param  \DentalSleepSolutions\Http\Requests\Enrollments\Create $request
+     * @param InvoiceHelper $invoiceHelper
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Create $request)
+    public function store(Create $request, InvoiceHelper $invoiceHelper)
     {
         $user_id = $request->input('user_id');
         $provider_id = $request->input('provider_id');
@@ -110,13 +109,13 @@ class ApiEnrollmentsController extends ApiBaseController
             $ref_id = $response->getObject()->enrollment_npi->id;
 
             $enrollment_id = Enrollment::add($inputs, $user_id, $payer_id, $payer_name, $ref_id, $result, $ip);
-            Invoice::addEnrollment('1', $user_id, $enrollment_id);
+            $enrollment = $invoiceHelper->addEnrollment(1, $user_id, $enrollment_id);
+            $enrollment->save();
 
             if ($request->input('signature', '') != '') {
                 $signature_id = UserSignature::addUpdate($provider_id, $signature, $ip);
 
-                $signature = new SignatureToImage();
-                $img = $signature->sigJsonToImage($request->input('signature', ''));
+                $img = \sigJsonToImage($request->input('signature', ''));
 
                 $file = "signature_" . $provider_id . "_" . $signature_id . ".png";
                 $path = env('SHARED_PATH', '').'/q_file/'.$file;
@@ -224,15 +223,20 @@ class ApiEnrollmentsController extends ApiBaseController
     protected $transcationType = 0;
 
     /**
+     * @param JWTAuth $auth
+     * @param User $userModel
      * @param EnrollmentInterface $enrollments
      * @param EnrollmentPayersInterface $payers
      * @param UserSignaturesInterface $signatures
      */
     public function __construct(
+        JWTAuth $auth,
+        User $userModel,
         EnrollmentInterface $enrollments,
         EnrollmentPayersInterface $payers,
         UserSignaturesInterface $signatures
     ) {
+        parent::__construct($auth, $userModel);
         $this->enrollments = $enrollments;
         $this->payers = $payers;
         $this->signatures = $signatures;
@@ -413,7 +417,7 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
-     * @param integer $user_id
+     * @param int $userId
      * @return mixed
      */
     public function getDentalUserCompanyApiKey($userId)

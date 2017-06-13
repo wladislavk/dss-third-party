@@ -72,21 +72,6 @@ class ExternalPatientController extends ExternalBaseController
                 'adddate' => Carbon::now(),
             ];
 
-            /**
-             * Normalize dates, external data uses Y-m-d H-i-s, internal data uses m/d/Y
-             */
-            foreach (['dob', 'ins_dob', 'ins2_dob'] as $field) {
-                if (!isset($patientData[$field])) {
-                    continue;
-                }
-
-                $dateTime = strtotime($patientData[$field]);
-
-                if ($dateTime) {
-                    $updateData[$field] = date('m/d/Y', $dateTime);
-                }
-            }
-
             $patient = $externalPatient->patient()->create($patientData);
             $patient->update($updateData);
 

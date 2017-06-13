@@ -124,7 +124,7 @@ foreach (['p', 'c'] as $which) {
         }
     }
 
-    foreach (['dob', 'ins_dob', 'ins2_dob'] as $field) {
+    foreach (['dob', 'ins_dob'] as $field) {
         if (!isset(${$which}[$field])) {
             continue;
         }
@@ -136,7 +136,7 @@ foreach (['p', 'c'] as $which) {
         }
     }
 
-    foreach (['gender', 'p_m_gender', 's_m_gender'] as $field) {
+    foreach (['gender', 'p_m_gender'] as $field) {
         if (!isset(${$which}[$field])) {
             continue;
         }

@@ -272,11 +272,11 @@ if (!$isSuperAdmin) {
      * * Match by company ID
      * * Pending requests go to current user company
      */
-    $preAuthPendingStatus = DSS_PREAUTH_PENDING;
+    $preAuthPendingStatuses = $db->escapeList([DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
     $conditionals[] = "'$adminCompanyId' IN (bc.id, pc.id)";
-    $conditionals[] = "preauth.status != '$preAuthPendingStatus'
+    $conditionals[] = "preauth.status NOT IN ($preAuthPendingStatuses)
         OR (
-            preauth.status = '$preAuthPendingStatus'
+            preauth.status IN ($preAuthPendingStatuses)
             AND bc.id = '$adminCompanyId'
         )";
 
@@ -319,6 +319,7 @@ $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 
 $pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : '';
+$preauth_selected = ($status == DSS_PREAUTH_PREAUTH_PENDING) ? 'selected' : '';
 $complete_selected = ($status == DSS_PREAUTH_COMPLETE) ? 'selected' : '';
 
 ?>
@@ -358,6 +359,9 @@ $(document).ready(function(){
             <option value="">Any</option>
             <option value="<?= DSS_PREAUTH_PENDING ?>" <?= $pending_selected ?>>
                 <?= $dss_preauth_status_labels[DSS_PREAUTH_PENDING] ?>
+            </option>
+            <option value="<?= DSS_PREAUTH_PREAUTH_PENDING ?>" <?= $preauth_selected ?>>
+                <?= $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING] ?>
             </option>
             <option value="<?= DSS_PREAUTH_COMPLETE ?>" <?= $complete_selected ?>>
                 <?= $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]?>
@@ -456,7 +460,7 @@ $(document).ready(function(){
 	<?php } else {
 		foreach ($my as $myarray) {
 		    $status = (int)$myarray['status'];
-		    $isStatusPending = $status === DSS_PREAUTH_PENDING;
+		    $isStatusPending = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
             $isStoredIdMissing = !$myarray['stored_billing_company_id'];
             $loggedInCompanyMatches = $adminCompanyId === (int)$myarray['current_billing_company_id'];
             $canInspect = $isSuperAdmin || $loggedInCompanyMatches;

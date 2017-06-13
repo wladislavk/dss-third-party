@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\SymptomStore;
 use DentalSleepSolutions\Http\Requests\SymptomUpdate;
 use DentalSleepSolutions\Http\Requests\SymptomDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Symptom;
 use DentalSleepSolutions\Contracts\Repositories\Symptoms;
 

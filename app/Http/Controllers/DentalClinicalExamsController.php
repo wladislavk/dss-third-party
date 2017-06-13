@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\DentalClinicalExamStore;
 use DentalSleepSolutions\Http\Requests\DentalClinicalExamUpdate;
 use DentalSleepSolutions\Http\Requests\DentalClinicalExamDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\DentalClinicalExam;
 use DentalSleepSolutions\Contracts\Repositories\DentalClinicalExams;
 

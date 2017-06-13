@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\CustomTextStore;
 use DentalSleepSolutions\Http\Requests\CustomTextUpdate;
 use DentalSleepSolutions\Http\Requests\CustomTextDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\CustomText;
 use DentalSleepSolutions\Contracts\Repositories\CustomTexts;
-use Carbon\Carbon;
 
 class CustomTextsController extends Controller
 {

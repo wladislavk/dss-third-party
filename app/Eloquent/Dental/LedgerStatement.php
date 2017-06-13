@@ -4,11 +4,9 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\LedgerStatement as Resource;
-use DentalSleepSolutions\Contracts\Repositories\LedgerStatements as Repository;
 use DB;
 
-class LedgerStatement extends Model implements Resource, Repository
+class LedgerStatement extends Model
 {
     use WithoutUpdatedTimestamp;
 

@@ -8,9 +8,14 @@ class SummSleeplab extends Model
 {
     protected $table = 'dental_summ_sleeplab';
 
+    /**
+     * @param int $patientId
+     * @return SummSleeplab|null
+     */
     public function getPatientDiagnosis($patientId)
     {
-        return $this->select('diagnosis')
+        /** @var SummSleeplab|null $diagnosis */
+        $diagnosis = $this->select('diagnosis')
             ->where(function($query) {
                 $query->whereNotNull('diagnosis')
                     ->where('diagnosis', '!=', '');
@@ -18,5 +23,6 @@ class SummSleeplab extends Model
             ->where('patiendid', $patientId)
             ->orderBy('id', 'desc')
             ->first();
+        return $diagnosis;
     }
 }

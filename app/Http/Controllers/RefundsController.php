@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\RefundStore;
 use DentalSleepSolutions\Http\Requests\RefundUpdate;
 use DentalSleepSolutions\Http\Requests\RefundDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Refund;
 use DentalSleepSolutions\Contracts\Repositories\Refunds;
 

@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\SoftPalateStore;
 use DentalSleepSolutions\Http\Requests\SoftPalateUpdate;
 use DentalSleepSolutions\Http\Requests\SoftPalateDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\SoftPalate;
 use DentalSleepSolutions\Contracts\Repositories\SoftPalates;
 

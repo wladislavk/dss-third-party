@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\NoteStore;
 use DentalSleepSolutions\Http\Requests\NoteUpdate;
 use DentalSleepSolutions\Http\Requests\NoteDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Note;
 use DentalSleepSolutions\Contracts\Repositories\Notes;
 

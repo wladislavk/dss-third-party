@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ChairStore;
 use DentalSleepSolutions\Http\Requests\ChairUpdate;
 use DentalSleepSolutions\Http\Requests\ChairDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Chair;
 use DentalSleepSolutions\Contracts\Repositories\Chairs;
 

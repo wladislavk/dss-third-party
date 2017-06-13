@@ -4,51 +4,84 @@ namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 
-// this class contains all functions from includes\similar.php
+// this class contains all functions from includes/similar.php
 class SimilarHelper
 {
-    private $patient;
+    /** @var Patient */
+    private $patientModel;
 
     public function __construct(Patient $patient)
     {
-        $this->patient = $patient;
+        $this->patientModel = $patient;
     }
 
+    /**
+     * @param int $patientId
+     * @param int $docId
+     * @return array
+     */
     public function getSimilarPatients($patientId, $docId)
     {
-        $foundPatient = $this->patient->find($patientId);
+        /** @var Patient|null $foundPatient */
+        $foundPatient = $this->patientModel->find($patientId);
 
-        if (!empty($foundPatient)) {
-            $patientInfo = [
-                'patient_id' => $patientId,
-                'firstname'  => $foundPatient->firstname,
-                'lastname'   => $foundPatient->lastname,
-                'add1'       => $foundPatient->add1,
-                'city'       => $foundPatient->city,
-                'state'      => $foundPatient->state,
-                'zip'        => $foundPatient->zip
-            ];
-        } else {
-            $patientInfo = [];
+        $patientInfo = [];
+        if ($foundPatient) {
+            $patientInfo = $this->populatePatientInfo($foundPatient);
         }
 
-        $similarPatients = $this->patient->getSimilarPatients($docId, $patientInfo);
+        $similarPatients = $this->patientModel->getSimilarPatients($docId, $patientInfo);
         $docs = [];
-        if (count($similarPatients)) {
-            foreach ($similarPatients as $patient) {
-                $address = $patient->add1 . (!empty($patient->add2) ? ' ' . $patient->add2 : '')
-                        . (!empty($patient->city) ? ' ' . $patient->city : '')
-                        . (!empty($patient->state) ? ' ' . $patient->state : '')
-                        . (!empty($patient->zip) ? ' ' . $patient->zip : '');
-
-                $docs[] = [
-                    'id'      => $patient->patientid,
-                    'name'    => $patient->firstname . ' ' . $patient->lastname,
-                    'address' => $address
-                ];
-            }
+        foreach ($similarPatients as $patient) {
+            $fullName = $patient->firstname . ' ' . $patient->lastname;
+            $address = $this->formAddress($patient);
+            $docs[] = [
+                'id'      => $patient->patientid,
+                'name'    => $fullName,
+                'address' => $address,
+            ];
         }
-
         return $docs;
+    }
+
+    /**
+     * @param Patient $foundPatient
+     * @return array
+     */
+    private function populatePatientInfo(Patient $foundPatient)
+    {
+        $patientInfo = [
+            'patient_id' => $foundPatient->patientid,
+            'firstname'  => $foundPatient->firstname,
+            'lastname'   => $foundPatient->lastname,
+            'add1'       => $foundPatient->add1,
+            'city'       => $foundPatient->city,
+            'state'      => $foundPatient->state,
+            'zip'        => $foundPatient->zip,
+        ];
+        return $patientInfo;
+    }
+
+    /**
+     * @param Patient $patient
+     * @return string
+     */
+    private function formAddress(Patient $patient)
+    {
+        $addressFields = [$patient->add1];
+        if ($patient->add2) {
+            $addressFields[] = $patient->add2;
+        }
+        if ($patient->city) {
+            $addressFields[] = $patient->city;
+        }
+        if ($patient->state) {
+            $addressFields[] = $patient->state;
+        }
+        if ($patient->zip) {
+            $addressFields[] = $patient->zip;
+        }
+        $fullAddress = join(' ', $addressFields);
+        return $fullAddress;
     }
 }

@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\CalendarStore;
 use DentalSleepSolutions\Http\Requests\CalendarUpdate;
 use DentalSleepSolutions\Http\Requests\CalendarDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Calendar;
 use DentalSleepSolutions\Contracts\Repositories\Calendars;
-use Carbon\Carbon;
 
 class CalendarsController extends Controller
 {

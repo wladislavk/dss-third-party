@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\DocumentCategoryStore;
 use DentalSleepSolutions\Http\Requests\DocumentCategoryUpdate;
 use DentalSleepSolutions\Http\Requests\DocumentCategoryDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\DocumentCategory;
 use DentalSleepSolutions\Contracts\Repositories\DocumentCategories;
 

@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\AllergenStore;
 use DentalSleepSolutions\Http\Requests\AllergenUpdate;
 use DentalSleepSolutions\Http\Requests\AllergenDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Allergen;
 use DentalSleepSolutions\Contracts\Repositories\Allergens;
-use Carbon\Carbon;
 
 class AllergensController extends Controller
 {

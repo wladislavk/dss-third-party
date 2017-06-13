@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\DeviceStore;
 use DentalSleepSolutions\Http\Requests\DeviceUpdate;
 use DentalSleepSolutions\Http\Requests\DeviceDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Device;
 use DentalSleepSolutions\Contracts\Repositories\Devices;
-use Carbon\Carbon;
 
 class DevicesController extends Controller
 {

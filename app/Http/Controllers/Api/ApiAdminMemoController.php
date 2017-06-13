@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Brendan
- * Date: 7/23/2015
- * Time: 10:27 AM
- */
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
-use DentalSleepSolutions\Http\Requests\Request;
+
 use \DentalSleepSolutions\Interfaces\MemoAdminInterface;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 
 class ApiAdminMemoController extends ApiBaseController
 {

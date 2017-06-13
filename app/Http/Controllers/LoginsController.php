@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\LoginStore;
 use DentalSleepSolutions\Http\Requests\LoginUpdate;
 use DentalSleepSolutions\Http\Requests\LoginDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Login;
 use DentalSleepSolutions\Contracts\Repositories\Logins;
 

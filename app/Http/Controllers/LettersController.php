@@ -2,19 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\LetterStore;
 use DentalSleepSolutions\Http\Requests\LetterUpdate;
 use DentalSleepSolutions\Http\Requests\LetterDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Repositories\Letters;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Contracts\Resources\ContactType;
-use DentalSleepSolutions\Contracts\Repositories\Patients;
-use DentalSleepSolutions\Contracts\Resources\Contact;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 /**
  * API controller that handles single resource endpoints. It depends heavily

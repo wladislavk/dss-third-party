@@ -245,6 +245,10 @@ class Contact extends Model implements Resource, Repository
         return implode(',', $contactIds);
     }
 
+    /**
+     * @param int $contactId
+     * @return Contact|null
+     */
     public function getActiveContact($contactId = 0)
     {
         return $this->where('contactid', $contactId)
@@ -271,6 +275,11 @@ class Contact extends Model implements Resource, Repository
             ->get();
     }
 
+    /**
+     * @param $letterId
+     * @param $mdList
+     * @return array|\Illuminate\Database\Eloquent\Collection|Contact[]
+     */
     public function getContactInfo($letterId, $mdList)
     {
         return $this->select(

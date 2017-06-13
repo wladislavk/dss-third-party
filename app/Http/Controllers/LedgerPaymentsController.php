@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\LedgerPaymentStore;
 use DentalSleepSolutions\Http\Requests\LedgerPaymentUpdate;
 use DentalSleepSolutions\Http\Requests\LedgerPaymentDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\LedgerPayment;
 use DentalSleepSolutions\Contracts\Repositories\LedgerPayments;
 

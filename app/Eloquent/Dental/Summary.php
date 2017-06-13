@@ -39,6 +39,11 @@ class Summary extends Model implements Resource, Repository
      */
     const CREATED_AT = 'adddate';
 
+    /**
+     * @param array $fields
+     * @param array $where
+     * @return Summary[]
+     */
     public function getWithFilter($fields = [], $where = [])
     {
         $object = $this;

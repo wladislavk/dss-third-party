@@ -4,10 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\FaxErrorCode as Resource;
-use DentalSleepSolutions\Contracts\Repositories\FaxErrorCodes as Repository;
 
-class FaxErrorCode extends Model implements Resource, Repository
+class FaxErrorCode extends Model
 {
     use WithoutUpdatedTimestamp;
 

@@ -2,15 +2,13 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ContactTypeStore;
 use DentalSleepSolutions\Http\Requests\ContactTypeUpdate;
 use DentalSleepSolutions\Http\Requests\ContactTypeDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\ContactType;
 use DentalSleepSolutions\Contracts\Repositories\ContactTypes;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class ContactTypesController extends Controller
 {

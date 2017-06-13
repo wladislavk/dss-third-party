@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\DocumentStore;
 use DentalSleepSolutions\Http\Requests\DocumentUpdate;
 use DentalSleepSolutions\Http\Requests\DocumentDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Document;
 use DentalSleepSolutions\Contracts\Repositories\Documents;
 

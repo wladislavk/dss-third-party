@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\IntoleranceStore;
 use DentalSleepSolutions\Http\Requests\IntoleranceUpdate;
 use DentalSleepSolutions\Http\Requests\IntoleranceDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Intolerance;
 use DentalSleepSolutions\Contracts\Repositories\Intolerances;
 

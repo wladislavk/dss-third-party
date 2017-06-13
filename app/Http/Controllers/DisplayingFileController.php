@@ -2,9 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Helpers\ApiResponse;
-use Illuminate\Http\Response;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Storage;
 
 class DisplayingFileController extends Controller
@@ -24,8 +22,7 @@ class DisplayingFileController extends Controller
             ];
 
             return ApiResponse::responseOk('', $data);
-        } else {
-            return ApiResponse::responseError();
         }
+        return ApiResponse::responseError();
     }
 }

@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\TaskStore;
 use DentalSleepSolutions\Http\Requests\TaskUpdate;
 use DentalSleepSolutions\Http\Requests\TaskDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\Task;
 use DentalSleepSolutions\Contracts\Repositories\Tasks;
 

@@ -2,14 +2,12 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\AccessCodeStore;
 use DentalSleepSolutions\Http\Requests\AccessCodeUpdate;
 use DentalSleepSolutions\Http\Requests\AccessCodeDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Contracts\Resources\AccessCode;
 use DentalSleepSolutions\Contracts\Repositories\AccessCodes;
-use Carbon\Carbon;
 
 class AccessCodesController extends Controller
 {

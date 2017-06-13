@@ -3,10 +3,13 @@ namespace DentalSleepSolutions\Http\Transformers;
 
 use DentalSleepSolutions\Contracts\Resources\Resource;
 use League\Fractal\TransformerAbstract;
+use Carbon\Carbon;
+use InvalidArgumentException;
 
 class ExternalPatient extends TransformerAbstract
 {
     use WithSimpleRelationship;
+    use WithComplexRelationship;
 
     /**
      * @var array
@@ -69,15 +72,130 @@ class ExternalPatient extends TransformerAbstract
         'patient.insurance_primary.insured_info.subscriber.group_name'  => 'patient.p_m_ins_grp',
     ];
 
+    public $complexMap = [
+        'patient.gender' => [
+            'patient.gender' => 'exportGender',
+        ],
+        'patient.insurance_primary.insured_info.subscriber.gender' => [
+            'patient.p_m_gender' => 'exportGender'
+        ],
+        'patient.marital_status' => [
+            'patient.marital_status' => 'exportMaritalStatus',
+        ],
+        'patient.dob' => [
+            'patient.dob' => 'exportDate',
+        ],
+        'patient.insurance_primary.insured_info.subscriber.dob' => [
+            'patient.ins_dob' => 'exportDate',
+        ],
+    ];
+
+    public $inverseComplexMap = [
+        'patient.gender' => [
+            'patient.gender' => 'importGender',
+        ],
+        'patient.p_m_gender' => [
+            'patient.insurance_primary.insured_info.subscriber.gender' => 'importGender'
+        ],
+        'patient.marital_status' => [
+            'patient.marital_status' => 'importMaritalStatus',
+        ],
+        'patient.dob' => [
+            'patient.dob' => 'importDate',
+        ],
+        'patient.ins_dob' => [
+            'patient.insurance_primary.insured_info.subscriber.dob' => 'importDate',
+        ],
+    ];
+
+    private $genderMap = [
+        ['m', 'male'],
+        ['f', 'female'],
+    ];
+
+    private $statusMap = [
+        ['1', 'married'],
+        ['2', 'single'],
+        ['3', 'life partner'],
+        ['4', 'minor'],
+    ];
+
+    private $dateMap = [
+        'external' => 'Y-m-d',
+        'internal' => 'm/d/Y',
+    ];
+
     public function transform (Resource $resource) {
         $mapped = $this->simpleMapping($resource->toArray(), true);
+        $mapped = $this->complexMapping($resource->toArray(), true, $mapped);
 
         return $mapped;
     }
 
     public function fromTransform (Array $resource) {
         $mapped = $this->simpleMapping($resource, false);
+        $mapped = $this->complexMapping($resource, false, $mapped);
 
         return $mapped;
+    }
+
+    public function exportGender ($gender) {
+        return $this->transformData($gender, $this->genderMap, 0);
+    }
+
+    public function importGender ($gender) {
+        return $this->transformData($gender, $this->genderMap, 1);
+    }
+
+    public function exportMaritalStatus ($status) {
+        return $this->transformData($status, $this->statusMap, 0);
+    }
+
+    public function importMaritalStatus ($status) {
+        return $this->transformData($status, $this->statusMap, 1);
+    }
+
+    public function exportDate ($date) {
+        return $this->transformDate($date, $this->dateMap['internal'], $this->dateMap['external']);
+    }
+
+    public function importDate ($date) {
+        return $this->transformDate($date, $this->dateMap['external'], $this->dateMap['internal']);
+    }
+
+    private function transformData ($search, Array $searchMap, $returnIndex) {
+        $search = strtolower($search);
+
+        $match = array_reduce($searchMap, function ($previousValue, Array $currentMap) use ($search, $returnIndex) {
+            return $this->arrayReduceCallback($previousValue, $currentMap, $search, $returnIndex);
+        } ,'');
+
+        return ucwords($match);
+    }
+
+    private function arrayReduceCallback ($previousValue, Array $currentMap, $search, $returnIndex) {
+        if (strlen($previousValue)) {
+            return $previousValue;
+        }
+
+        if (in_array($search, $currentMap)) {
+            return $currentMap[$returnIndex];
+        }
+
+        return $previousValue;
+    }
+
+    private function transformDate ($date, $sourceFormat, $targetFormat) {
+        try {
+            $dateTime = Carbon::createFromFormat($sourceFormat, $date);
+        } catch (InvalidArgumentException $e) {
+            return $date;
+        }
+
+        if ($dateTime) {
+            return $dateTime->format($targetFormat);
+        }
+
+        return $date;
     }
 }

@@ -55,6 +55,15 @@ class User extends Model implements Resource, Repository
      */
     const CREATED_AT = 'adddate';
 
+    public function externalCompanyPivot(){
+        return $this->belongsTo(ExternalCompanyUser::class, 'userid', 'user_id');
+    }
+
+    public function externalCompany()
+    {
+        return $this->externalCompanyPivot->belongsTo(ExternalCompany::class, 'company_id', 'id');
+    }
+
     /**
      * Get user type by user id
      *

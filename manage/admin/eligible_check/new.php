@@ -10,21 +10,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
 
     <!-- Step 3 - Signature.js -->
-    <script src="https://eligibleapi.com/js/jquery.signaturepad.js"></script>
-    <script src="https://eligibleapi.com/js/json2.min.js"></script>
-    <link href="https://eligibleapi.com/css/jquery.signaturepad.min.css" rel="stylesheet">
+    <script src="https://eligible.com/js/jquery.signaturepad.js"></script>
+    <script src="https://eligible.com/js/json2.min.js"></script>
+    <link href="https://eligible.com/css/jquery.signaturepad.min.css" rel="stylesheet">
 
     <!-- Step 4 - Select.js -->
-    <script src="https://eligibleapi.com/js/select2.min.js"></script>
-    <link href="https://eligibleapi.com/css/select2.min.css" rel="stylesheet">
+    <script src="https://eligible.com/js/select2.min.js"></script>
+    <link href="https://eligible.com/css/select2.min.css" rel="stylesheet">
 
     <!-- Step 5 - jQuery UI -->
     <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" rel="stylesheet">
 
     <!-- Step 6 - Enrollment.js -->
-    <script src="https://eligibleapi.com/js/enrollment.min.js"></script>
-    <link href="https://eligibleapi.com/css/enrollment.min.css" rel="stylesheet">
+    <script src="https://eligible.com/js/enrollment.min.js"></script>
+    <link href="https://eligible.com/css/enrollment.min.css" rel="stylesheet">
 
     <script type="text/javascript">
         // Set your publishable key

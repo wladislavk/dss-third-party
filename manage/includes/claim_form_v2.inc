@@ -568,7 +568,7 @@ $otherRelationships = [
         input { text-transform: uppercase; }
         .text-center { text-align: center; }
     </style>
-    <link rel="stylesheet" href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" />
+    <link rel="stylesheet" href="https://eligible.com/css/eligible-claim-1500-2014.min.css" />
     <link rel="stylesheet" href="<?php echo $admin_path?>popup/popup.css" media="screen" />
     <script type="text/javascript" src="/manage/admin/js/tracekit.js"></script>
     <script type="text/javascript" src="/manage/admin/js/tracekit.handler.js"></script>
@@ -814,7 +814,7 @@ if (!empty($is_back_office)){
                 'ins_payer_hints',
                 'p_m_eligible_payer',
                 '',
-                'https://eligibleapi.com/resources/payers/claims/medical.json',
+                'https://eligible.com/resources/payers/claims/medical.json',
                 null,
                 null,
                 null,
@@ -845,7 +845,7 @@ if (!empty($is_back_office)){
             's_m_ins_payer_hints',
             's_m_eligible_payer',
             '',
-            'https://eligibleapi.com/resources/payers/claims/medical.json',
+            'https://eligible.com/resources/payers/claims/medical.json',
             null,
             null,
             null,

@@ -374,9 +374,9 @@ function update_list(){
   }else if(t == '5'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', '', 'ins_payer');
   }else if(t == '6'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/dental.json', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligible.com/resources/payers/claims/dental.json', 'ins_payer');
   }else if(t == '7'){
-    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/claims/institutional.json', 'ins_payer');
+    setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://eligible.com/resources/payers/claims/institutional.json', 'ins_payer');
   }else if(t == '8'){
     setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'payer_id', '', 'https://gds.eligibleapi.com/v1.5/payers.json?endpoint=professional%20claims&enrollment_required=true&api_key='+api_key, 'ins_payer', '','','','','','professional claims');
   }

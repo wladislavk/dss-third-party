@@ -18,9 +18,9 @@ include("includes/sescheck.php");
 
         <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 
-        <script src="https://eligibleapi.com/js/eligible-claim-1500-2014.min.js"></script>
+        <script src="https://eligible.com/js/eligible-claim-1500-2014.min.js"></script>
 
-        <link href="https://eligibleapi.com/css/eligible-claim-1500-2014.min.css" rel="stylesheet">
+        <link href="https://eligible.com/css/eligible-claim-1500-2014.min.css" rel="stylesheet">
 
         <script type="text/javascript"> window.eligiblePublicKey="YOUR_ELIGIBLE_PUBLIC_KEY_HERE"</script>
 

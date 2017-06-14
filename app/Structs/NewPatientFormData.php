@@ -32,13 +32,13 @@ class NewPatientFormData implements Arrayable
     public function toArray()
     {
         return [
-            'password'   => $this->password,
-            'salt'       => $this->salt,
-            'userid'     => $this->userId,
-            'docid'      => $this->docId,
+            'password' => $this->password,
+            'salt' => $this->salt,
+            'userid' => $this->userId,
+            'docid' => $this->docId,
             'ip_address' => $this->ipAddress,
-            'firstname'  => ucfirst($this->patientName->firstName),
-            'lastname'   => ucfirst($this->patientName->lastName),
+            'firstname' => ucfirst($this->patientName->firstName),
+            'lastname' => ucfirst($this->patientName->lastName),
             'middlename' => ucfirst($this->patientName->middleName),
         ];
     }

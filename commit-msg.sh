@@ -12,3 +12,4 @@ if [ ! -z "$JIRA_ID" ]; then
     echo "$JIRA_ID $COMMIT_MSG" > $1
     echo "JIRA ID '$JIRA_ID', matched in current branch name, prepended to commit message. (Use --no-verify to skip)"
 fi
+

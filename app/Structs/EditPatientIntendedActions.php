@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Structs;
 
-class PressedButtons
+class EditPatientIntendedActions
 {
     // TODO: what is hst?
     /** @var bool */

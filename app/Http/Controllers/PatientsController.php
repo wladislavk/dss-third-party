@@ -27,7 +27,7 @@ use DentalSleepSolutions\Eloquent\Dental\Notification;
 use DentalSleepSolutions\Eloquent\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
 use DentalSleepSolutions\Eloquent\Dental\ProfileImage;
-use DentalSleepSolutions\Structs\PressedButtons;
+use DentalSleepSolutions\Structs\EditPatientIntendedActions;
 use DentalSleepSolutions\Structs\RequestedEmails;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -235,7 +235,7 @@ class PatientsController extends Controller
 
         $requestData = new EditPatientRequestData();
         $requestData->requestedEmails = new RequestedEmails($request->input('requested_emails', []));
-        $requestData->pressedButtons = new PressedButtons($request->input('pressed_buttons', []));
+        $requestData->intendedActions = new EditPatientIntendedActions($request->input('pressed_buttons', []));
         $requestData->patientLocation = $patientFormDataUpdater->getPatientLocation();
 
         $patientEditor = $patientEditorFactory->getPatientEditor($patientId);

@@ -28,8 +28,8 @@ class EditPatientRequestData
     /** @var RequestedEmails */
     public $requestedEmails;
 
-    /** @var PressedButtons */
-    public $pressedButtons;
+    /** @var EditPatientIntendedActions */
+    public $intendedActions;
 
     /** @var int */
     public $patientLocation;

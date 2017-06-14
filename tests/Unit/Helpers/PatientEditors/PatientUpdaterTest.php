@@ -12,7 +12,7 @@ use DentalSleepSolutions\Structs\EditPatientMail;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\PatientReferrer;
-use DentalSleepSolutions\Structs\PressedButtons;
+use DentalSleepSolutions\Structs\EditPatientIntendedActions;
 use Mockery\MockInterface;
 use Tests\TestCases\PatientEditorTestCase;
 
@@ -170,7 +170,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
         $buttons = [
             'send_pin_code' => '1234',
         ];
-        $requestData->pressedButtons = new PressedButtons($buttons);
+        $requestData->intendedActions = new EditPatientIntendedActions($buttons);
         $patient = new Patient();
         $patient->patientid = 3;
         $patient->referred_by = 10;
@@ -202,7 +202,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
             'send_pin_code' => '1234',
             'send_hst' => 'foo',
         ];
-        $requestData->pressedButtons = new PressedButtons($buttons);
+        $requestData->intendedActions = new EditPatientIntendedActions($buttons);
         $patient = new Patient();
         $patient->patientid = 3;
         $patient->referred_by = 10;

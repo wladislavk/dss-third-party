@@ -13,7 +13,7 @@ use DentalSleepSolutions\Helpers\RegistrationEmailSender;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
 use DentalSleepSolutions\Structs\NewPatientFormData;
-use DentalSleepSolutions\Structs\PressedButtons;
+use DentalSleepSolutions\Structs\EditPatientIntendedActions;
 
 class PatientUpdater extends AbstractPatientEditor
 {
@@ -106,27 +106,27 @@ class PatientUpdater extends AbstractPatientEditor
         Patient $unchangedPatient = null
     ) {
         $responseData->mails = $this->patientUpdateMailer->handleEmails($unchangedPatient, $requestData);
-        if ($requestData->pressedButtons) {
-            $this->handlePressedButtons($responseData, $requestData->pressedButtons, $unchangedPatient);
+        if ($requestData->intendedActions) {
+            $this->handleIntendedActions($responseData, $requestData->intendedActions, $unchangedPatient);
         }
         $responseData->status = EditPatientResponseData::PATIENT_EDITED_STATUS;
     }
 
     /**
      * @param EditPatientResponseData $responseData
-     * @param PressedButtons $pressedButtons
+     * @param EditPatientIntendedActions $intendedActions
      * @param Patient $unchangedPatient
      */
-    private function handlePressedButtons(
+    private function handleIntendedActions(
         EditPatientResponseData $responseData,
-        PressedButtons $pressedButtons,
+        EditPatientIntendedActions $intendedActions,
         Patient $unchangedPatient
     ) {
-        if ($pressedButtons->sendHst) {
+        if ($intendedActions->sendHst) {
             $responseData->redirectTo = self::REDIRECT_URL . $unchangedPatient->patientid;
             return;
         }
-        if ($pressedButtons->sendPinCode) {
+        if ($intendedActions->sendPinCode) {
             $responseData->sendPinCode = true;
         }
     }

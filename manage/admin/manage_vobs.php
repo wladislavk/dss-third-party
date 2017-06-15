@@ -1,7 +1,5 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
-use function http_build_query;
-
 include "includes/top.htm";
 include_once('../includes/constants.inc');
 include_once "includes/general.htm";

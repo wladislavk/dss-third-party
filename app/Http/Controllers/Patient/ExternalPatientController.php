@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\ExternalBaseController;
 use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
 use DentalSleepSolutions\Contracts\Repositories\ExternalPatients;

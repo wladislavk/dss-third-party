@@ -6,7 +6,7 @@
 
 COMMIT_MSG=$(cat $1)
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-JIRA_ID=$(echo "$CURRENT_BRANCH" | grep -Eo "^DSS\-[0-9]+?")
+JIRA_ID=$(echo "$CURRENT_BRANCH" | grep -Eo "^(DSS|CS|AWS|DEN)\-[0-9]+?")
 COMMIT_MSG_MATCH=$(echo "$COMMIT_MSG" | grep -Eo "^$JIRA_ID")
 
 # if branch name starts with the regexp and commit message does not start with the regexp

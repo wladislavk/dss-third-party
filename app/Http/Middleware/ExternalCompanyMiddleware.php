@@ -2,7 +2,7 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
 use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
 

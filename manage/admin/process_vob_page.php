@@ -21,9 +21,16 @@ if (!empty($_POST['save_vob'])) {
 }
 
 $andBillingCompanyConditional = '';
+$preAuthPendingStatuses = [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING];
+$escapedPreAuthPendingStatuses = $db->escapeList($preAuthPendingStatuses);
 
 if (!$isSuperAdmin) {
-    $andBillingCompanyConditional = "AND '$adminCompanyId' IN (ac.companyid, u.billing_company_id)";
+    $andBillingCompanyConditional = "AND '$adminCompanyId' IN (ac.companyid, u.billing_company_id)
+        AND preauth.status NOT IN ($escapedPreAuthPendingStatuses)
+        OR (
+            preauth.status IN ($escapedPreAuthPendingStatuses)
+            AND u.billing_company_id = '$adminCompanyId'
+        )";
 }
 
 // load preauth
@@ -54,7 +61,7 @@ $pid = $preauth['patient_id'];
  * @see DSS-568
  */
 $status = (int)$preauth['status'];
-$isStatusPending = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
+$isStatusPending = in_array($status, $preAuthPendingStatuses);
 $loggedInCompanyMatches = $adminCompanyId === (int)$preauth['current_billing_company_id'];
 $canInspect = $isSuperAdmin || $loggedInCompanyMatches;
 $canEdit = $isStatusPending && $canInspect;

@@ -1,5 +1,7 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
+use function http_build_query;
+
 include "includes/top.htm";
 include_once('../includes/constants.inc');
 include_once "includes/general.htm";
@@ -116,22 +118,22 @@ switch ($sort_by) {
     $sort_by_sql = "preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_PATIENT:
-    $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir";
+    $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_INSURANCE:
-    $sort_by_sql = "preauth.ins_co $sort_dir";
+    $sort_by_sql = "ins_co $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_FRANCHISEE:
-    $sort_by_sql = "preauth.doc_name $sort_dir";
+    $sort_by_sql = "doc_name $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_USER:
-    $sort_by_sql = "preauth.user_name $sort_dir";
+    $sort_by_sql = "user_name $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_BC:
-    $sort_by_sql = "preauth.billing_name $sort_dir";
+    $sort_by_sql = "owner_billing_name $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_EDIT:
-    $sort_by_sql = "preauth.updated_at $sort_dir";
+    $sort_by_sql = "preauth.updated_at $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   default:
     // default is SORT_BY_STATUS
@@ -168,8 +170,11 @@ $i_val = $index_val * $rec_disp;
 /**
  * @see DSS-568
  */
+$preAuthPendingStatuses = [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING];
+$escapedPreAuthPendingStatuses = $db->escapeList($preAuthPendingStatuses);
+
 if ($isSuperAdmin) {
-    $sql = "SELECT 
+    $sql = "SELECT
             preauth.id,
             preauth.patient_id,
             i.company AS ins_co,
@@ -189,6 +194,11 @@ if ($isSuperAdmin) {
             ) AS total_vob,
             bc.name AS current_billing_name,
             pc.name AS stored_billing_name,
+            CASE
+                WHEN preauth.status IN ($escapedPreAuthPendingStatuses) THEN bc.name
+                WHEN pc.id IS NULL OR pc.id = 0 THEN bc.name
+                ELSE pc.name
+            END AS owner_billing_name,
             bc.id AS current_billing_company_id,
             pc.id AS stored_billing_company_id
         FROM dental_insurance_preauth preauth
@@ -217,6 +227,11 @@ if ($isSuperAdmin) {
             CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
             bc.name AS current_billing_name,
             pc.name AS stored_billing_name,
+            CASE
+                WHEN preauth.status IN ($escapedPreAuthPendingStatuses) THEN bc.name
+                WHEN pc.id IS NULL OR pc.id = 0 THEN bc.name
+                ELSE pc.name
+            END AS owner_billing_name,
             bc.id AS current_billing_company_id,
             pc.id AS stored_billing_company_id
         FROM dental_insurance_preauth preauth
@@ -246,6 +261,11 @@ if ($isSuperAdmin) {
             CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
             bc.name AS current_billing_name,
             pc.name AS stored_billing_name,
+            CASE
+                WHEN preauth.status IN ($escapedPreAuthPendingStatuses) THEN bc.name
+                WHEN pc.id IS NULL OR pc.id = 0 THEN bc.name
+                ELSE pc.name
+            END AS owner_billing_name,
             bc.id AS current_billing_company_id,
             pc.id AS stored_billing_company_id
         FROM dental_insurance_preauth preauth
@@ -272,11 +292,10 @@ if (!$isSuperAdmin) {
      * * Match by company ID
      * * Pending requests go to current user company
      */
-    $preAuthPendingStatuses = $db->escapeList([DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
     $conditionals[] = "'$adminCompanyId' IN (bc.id, pc.id)";
-    $conditionals[] = "preauth.status NOT IN ($preAuthPendingStatuses)
+    $conditionals[] = "preauth.status NOT IN ($escapedPreAuthPendingStatuses)
         OR (
-            preauth.status IN ($preAuthPendingStatuses)
+            preauth.status IN ($escapedPreAuthPendingStatuses)
             AND bc.id = '$adminCompanyId'
         )";
 
@@ -408,7 +427,7 @@ $(document).ready(function(){
 
 <form name="pagefrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<?php  if($total_rec > $rec_disp) {?>
+	<?php if ($total_rec > $rec_disp) { ?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -460,22 +479,13 @@ $(document).ready(function(){
 	<?php } else {
 		foreach ($my as $myarray) {
 		    $status = (int)$myarray['status'];
-		    $isStatusPending = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
-            $isStoredIdMissing = !$myarray['stored_billing_company_id'];
+		    $isStatusPending = in_array($status, $preAuthPendingStatuses);
             $loggedInCompanyMatches = $adminCompanyId === (int)$myarray['current_billing_company_id'];
             $canInspect = $isSuperAdmin || $loggedInCompanyMatches;
             $canEdit = $isStatusPending && $canInspect;
 
-            $ownerName = $myarray['stored_billing_name'];
-
-            if ($isStatusPending || $isStoredIdMissing) {
-                $ownerName = $myarray['current_billing_name'];
-            }
-
-            $status_color = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]) ?
-                'warning' : 'success';
-			$status_color = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING])
-                && $myarray['days_pending'] > 7 ? 'danger' : $status_color;
+            $status_color = $isStatusPending ? 'warning' : 'success';
+			$status_color = $isStatusPending && $myarray['days_pending'] > 7 ? 'danger' : $status_color;
 
             $link_label = $canEdit ? 'Edit' : 'View';
 		?>
@@ -513,7 +523,7 @@ $(document).ready(function(){
 					<?php echo st($myarray["user_name"]);?>&nbsp;
 				</td>
                 <td valign="top">
-                    <?= e($ownerName) ?>
+                    <?= e($myarray['owner_billing_name']) ?>
                     &nbsp;
                 </td>
 				<td valign="top">

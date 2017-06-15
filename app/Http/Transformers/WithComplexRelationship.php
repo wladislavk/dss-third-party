@@ -1,52 +1,89 @@
 <?php
 namespace DentalSleepSolutions\Http\Transformers;
 
+use Illuminate\Support\Arr;
+
+/**
+ * Allow Transformers to define a dot notation map to transform input arrays, applying helper methods to transform
+ * the data.
+ *
+ * Class WithComplexRelationship
+ * @package DentalSleepSolutions\Http\Transformers
+ */
 trait WithComplexRelationship
 {
     /**
+     * Method to map, transform, and merge, data. The new fields are merged recursively into $initialState.
+     *
      * @param array $data
      * @param bool  $export
      * @param array $initialState
      * @return array
      */
-    public function complexMapping (Array $data, $export, Array $initialState=[]) {
+    public function complexMapping(array $data, $export, array $initialState=[]) {
         $mapped = $initialState ?: [];
-        $map = $export ? $this->complexMap : $this->inverseComplexMap;
+        $map = $export ? self::COMPLEX_MAP : self::INVERSE_COMPLEX_MAP;
 
         foreach ($map as $destination=>$source) {
-            $value = null;
+            $value = $this->applyTransformations($data, $source);
 
-            if (is_array($source)) {
-                $buffer = [];
-
-                foreach ($source as $newSource=>$helper) {
-                    if (!method_exists($this, $helper)) {
-                        throw new \RuntimeException("[$helper]: Helper method not defined");
-                    }
-
-                    $buffer []= $this->{$helper}(array_get($data, $newSource));
-                }
-
-                if ($buffer) {
-                    if (count($buffer) === 1) {
-                        $value = $buffer[0];
-                    } else {
-                        // Merge each one of the resulting arrays
-                        $value = $this->deepMerge($buffer);
-                    }
-                }
-            } else {
-                $value = array_get($data, $source);
-            }
-
-            array_set($mapped, $destination, $value);
+            Arr::set($mapped, $destination, $value);
         }
 
         return $mapped;
     }
 
-    public function deepMerge (Array $array) {
-        $map = array_dot($array);
+    /**
+     * Read the map, and apply the helper functions over the given array indexes
+     *
+     * @param $data
+     * @param $source
+     * @return array|string|mixed
+     */
+    private function applyTransformations($data, $source) {
+        if (!is_array($source)) {
+            return Arr::get($data, $source);
+        }
+
+        $buffer = [];
+
+        foreach ($source as $newSource=>$helper) {
+            $this->applyTransformation($buffer, $data, $newSource, [$this, $helper]);
+        }
+
+        if (!$buffer) {
+            return '';
+        }
+
+        if (count($buffer) === 1) {
+            return array_shift($buffer);
+        }
+
+        return $this->deepMerge($buffer);
+    }
+
+    /**
+     * Apply a method over the $data[$index] value, and append the return value to $buffer.
+     *
+     * @param array    $buffer
+     * @param array    $data
+     * @param string   $index
+     * @param callable $helper
+     */
+    private function applyTransformation(array &$buffer, array $data, $index, callable $helper) {
+        $argument = Arr::get($data, $index);
+        $value = call_user_func($helper, $argument);
+        array_push($buffer, $value);
+    }
+
+    /**
+     * Set array values using dot notation. This makes easier to merge arrays.
+     *
+     * @param array $array
+     * @return array
+     */
+    public function deepMerge(array $array) {
+        $map = Arr::dot($array);
         $merged = [];
 
         /**
@@ -55,7 +92,7 @@ trait WithComplexRelationship
          */
         foreach ($map as $path=>$value) {
             $destination = preg_replace('/^\d+\./', '', $path);
-            array_set($merged, $destination, $value);
+            Arr::set($merged, $destination, $value);
         }
 
         return $merged;

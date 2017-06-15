@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Requests;
 class ExternalUserStore extends Request
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Validate incoming requests to store ExternalUser models
      *
      * @return array
      */

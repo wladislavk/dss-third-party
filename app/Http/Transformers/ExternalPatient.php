@@ -6,13 +6,18 @@ use League\Fractal\TransformerAbstract;
 use Carbon\Carbon;
 use InvalidArgumentException;
 
+/**
+ * Map Dentrix API data into Patient/ExternalPatient data
+ *
+ * Class ExternalPatient
+ * @package DentalSleepSolutions\Http\Transformers
+ */
 class ExternalPatient extends TransformerAbstract
 {
     use WithSimpleRelationship;
     use WithComplexRelationship;
 
     /**
-     * @var array
      * @see DSS-519 Secondary insurance details removed
      */
     const SIMPLE_MAP = [
@@ -125,6 +130,12 @@ class ExternalPatient extends TransformerAbstract
         'internal' => 'm/d/Y',
     ];
 
+    /**
+     * Transform model data into an array, for output
+     *
+     * @param Resource $resource
+     * @return array
+     */
     public function transform(Resource $resource) {
         $mapped = $this->simpleMapping($resource->toArray(), true);
         $mapped = $this->complexMapping($resource->toArray(), true, $mapped);
@@ -132,6 +143,12 @@ class ExternalPatient extends TransformerAbstract
         return $mapped;
     }
 
+    /**
+     * Inverse transformation, from array to model data array
+     *
+     * @param array $resource
+     * @return array
+     */
     public function fromTransform(array $resource) {
         $mapped = $this->simpleMapping($resource, false);
         $mapped = $this->complexMapping($resource, false, $mapped);
@@ -139,30 +156,77 @@ class ExternalPatient extends TransformerAbstract
         return $mapped;
     }
 
+    /**
+     * Translate gender internal representation into the API equivalent value
+     *
+     * @param string $gender
+     * @return string
+     */
     public function exportGender($gender) {
         return $this->transformData($gender, self::GENDER_MAP, 0);
     }
 
+    /**
+     * Translate gender API representation into the internal equivalent value
+     *
+     * @param string $gender
+     * @return string
+     */
     public function importGender($gender) {
         return $this->transformData($gender, self::GENDER_MAP, 1);
     }
 
+    /**
+     * Translate marital status internal representation into the API equivalent value
+     *
+     * @param string $status
+     * @return string
+     */
     public function exportMaritalStatus($status) {
         return $this->transformData($status, self::STATUS_MAP, 0);
     }
 
+    /**
+     * Translate marital status API representation into the internal equivalent value
+     *
+     * @param string $status
+     * @return string
+     */
     public function importMaritalStatus($status) {
         return $this->transformData($status, self::STATUS_MAP, 1);
     }
 
+    /**
+     * Translate date internal representation into the API equivalent value
+     *
+     * @param string $date
+     * @return string
+     */
     public function exportDate($date) {
         return $this->transformDate($date, self::DATE_MAP['internal'], self::DATE_MAP['external']);
     }
 
+    /**
+     * Translate date API representation into the internal equivalent value
+     *
+     * @param string $date
+     * @return string
+     */
     public function importDate($date) {
         return $this->transformDate($date, self::DATE_MAP['external'], self::DATE_MAP['internal']);
     }
 
+    /**
+     * Search $search into the nested arrays in $searchMap, and return the nth $returnIndex element of the matching
+     * nested array.
+     *
+     * The returning value is Title Case.
+     *
+     * @param string $search
+     * @param array  $searchMap
+     * @param int    $returnIndex
+     * @return string
+     */
     private function transformData($search, array $searchMap, $returnIndex) {
         $search = strtolower($search);
 
@@ -173,18 +237,35 @@ class ExternalPatient extends TransformerAbstract
         return ucwords($match);
     }
 
+    /**
+     * Callback to find a value in nested arrays. Returns the nth element of the first matching nested array.
+     *
+     * @param string $previousValue
+     * @param array  $currentMap
+     * @param string $search
+     * @param int    $returnIndex
+     * @return string
+     */
     private function arrayReduceCallback($previousValue, array $currentMap, $search, $returnIndex) {
         if (strlen($previousValue)) {
             return $previousValue;
         }
 
-        if (in_array($search, $currentMap)) {
+        if (in_array($search, $currentMap) && isset($currentMap[$returnIndex])) {
             return $currentMap[$returnIndex];
         }
 
         return $previousValue;
     }
 
+    /**
+     * Translate a date to a different format. Return the original date in case the translation cannot be done.
+     *
+     * @param string $date
+     * @param string $sourceFormat
+     * @param string $targetFormat
+     * @return string
+     */
     private function transformDate($date, $sourceFormat, $targetFormat) {
         try {
             $dateTime = Carbon::createFromFormat($sourceFormat, $date);

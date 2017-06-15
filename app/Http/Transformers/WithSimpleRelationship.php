@@ -11,6 +11,7 @@ trait WithSimpleRelationship
 {
     /**
      * Read source and target indexes to read, and set, values from one array to another.
+     * Numeric indexes indicate translation from dot notation (field.nested) to snake case (field_nested).
      *
      * @param array $data
      * @param bool  $export

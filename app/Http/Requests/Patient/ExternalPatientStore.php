@@ -6,7 +6,7 @@ use DentalSleepSolutions\Http\Requests\Request;
 class ExternalPatientStore extends Request
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Validate incoming requests to store AND update ExternalPatient models
      *
      * @return array
      */

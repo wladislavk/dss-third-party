@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class GuideSettingOptionDestroy extends Request
+class GuideSettingOptionDestroy extends AbstractDestroyRequest
 {
     /**
      * Get the validation rules that apply to the request.

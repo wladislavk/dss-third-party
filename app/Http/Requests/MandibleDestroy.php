@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class MandibleDestroy extends Request
+class MandibleDestroy extends AbstractDestroyRequest
 {
     /**
      * Get the validation rules that apply to the request.

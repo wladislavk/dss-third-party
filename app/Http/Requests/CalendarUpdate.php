@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class CalendarUpdate extends Request
+class CalendarUpdate extends AbstractUpdateRequest
 {
     /**
      * Get the validation rules that apply to the request.

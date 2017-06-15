@@ -2,82 +2,36 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\ChargeStore;
-use DentalSleepSolutions\Http\Requests\ChargeUpdate;
-use DentalSleepSolutions\Http\Requests\ChargeDestroy;
-use DentalSleepSolutions\Contracts\Resources\Charge;
-use DentalSleepSolutions\Contracts\Repositories\Charges;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
+use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
+use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
 
 class ChargesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Charges $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Charges $resources)
+    public function index(Repository $resources)
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index($resources);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Charge $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(Charge $resource)
+    public function show(Resource $resource)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($resource);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Charges $resources
-     * @param  \DentalSleepSolutions\Http\Requests\ChargeStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Charges $resources, ChargeStore $request)
+    public function store(Repository $resources, AbstractStoreRequest $request)
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store($resources, $request);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Charge $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ChargeUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Charge $resource, ChargeUpdate $request)
+    public function update(Resource $resource, AbstractUpdateRequest $request)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($resource, $request);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Charge $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ChargeDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Charge $resource, ChargeDestroy $request)
+    public function destroy(Resource $resource, AbstractDestroyRequest $request)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($resource, $request);
     }
 }

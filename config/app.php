@@ -154,7 +154,7 @@ return [
         DentalSleepSolutions\Providers\ApiServiceProvider::class,
         DentalSleepSolutions\Providers\CommandServiceProvider::class,
         DentalSleepSolutions\Providers\CustomValidationServiceProvider::class,
-
+        DentalSleepSolutions\Providers\ControllerServiceProvider::class,
     ],
 
     /*

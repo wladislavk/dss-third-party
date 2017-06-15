@@ -2,8 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-use DentalSleepSolutions\Http\Requests\Request;
-
 class ApiEligibleEnrollmentRequest extends Request
 {
     /**

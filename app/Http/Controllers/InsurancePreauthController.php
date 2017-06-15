@@ -10,14 +10,6 @@ use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as InsPreauth;
 use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
 class InsurancePreauthController extends Controller
 {
     /**
@@ -110,7 +102,7 @@ class InsurancePreauthController extends Controller
 
     public function getPendingVOBByContactId(InsurancePreauth $resource, Request $request)
     {
-        $contactId = $request->input('contact_id') ?: 0;
+        $contactId = $request->input('contact_id', 0);
         $data = $resource->getPendingVOBByContactId($contactId);
       
         return ApiResponse::responseOk('', $data);

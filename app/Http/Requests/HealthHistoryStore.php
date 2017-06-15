@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class HealthHistoryStore extends Request
+class HealthHistoryStore extends AbstractStoreRequest
 {
     /**
      * Get the validation rules that apply to the request.

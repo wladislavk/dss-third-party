@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class PatientContactUpdate extends Request
+class PatientContactUpdate extends AbstractUpdateRequest
 {
     /**
      * Get the validation rules that apply to the request.

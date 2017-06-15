@@ -2,82 +2,36 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\AllergenStore;
-use DentalSleepSolutions\Http\Requests\AllergenUpdate;
-use DentalSleepSolutions\Http\Requests\AllergenDestroy;
-use DentalSleepSolutions\Contracts\Resources\Allergen;
-use DentalSleepSolutions\Contracts\Repositories\Allergens;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
+use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
+use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
 
 class AllergensController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Allergens $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Allergens $resources)
+    public function index(Repository $resources)
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index($resources);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Allergen $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(Allergen $resource)
+    public function show(Resource $resource)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($resource);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Allergens $resources
-     * @param  \DentalSleepSolutions\Http\Requests\AllergenStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Allergens $resources, AllergenStore $request)
+    public function store(Repository $resources, AbstractStoreRequest $request)
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store($resources, $request);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Allergen $resource
-     * @param  \DentalSleepSolutions\Http\Requests\AllergenUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Allergen $resource, AllergenUpdate $request)
+    public function update(Resource $resource, AbstractUpdateRequest $request)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($resource, $request);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Allergen $resource
-     * @param  \DentalSleepSolutions\Http\Requests\AllergenDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Allergen $resource, AllergenDestroy $request)
+    public function destroy(Resource $resource, AbstractDestroyRequest $request)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($resource, $request);
     }
 }

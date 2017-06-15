@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class LedgerRecordDestroy extends Request
+class LedgerRecordDestroy extends AbstractDestroyRequest
 {
     /**
      * Get the validation rules that apply to the request.

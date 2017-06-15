@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class LedgerHistoryUpdate extends Request
+class LedgerHistoryUpdate extends AbstractUpdateRequest
 {
     /**
      * Get the validation rules that apply to the request.

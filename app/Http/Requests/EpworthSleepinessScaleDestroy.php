@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class EpworthSleepinessScaleDestroy extends Request
+class EpworthSleepinessScaleDestroy extends AbstractDestroyRequest
 {
     /**
      * Get the validation rules that apply to the request.

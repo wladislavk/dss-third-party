@@ -3,12 +3,11 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Eloquent\Dental\User;
 
-abstract class Controller extends BaseController
+abstract class Controller extends BaseRestController
 {
     use DispatchesJobs, ValidatesRequests;
 
@@ -24,6 +23,11 @@ abstract class Controller extends BaseController
         }
     }
 
+    /**
+     * @param JWTAuth $auth
+     * @param User $userModel
+     * @return mixed
+     */
     private function getUserInfo(JWTAuth $auth, User $userModel)
     {
         $user = $auth->toUser();

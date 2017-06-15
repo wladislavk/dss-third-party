@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Requests;
 
 use Illuminate\Support\Arr;
 
-class ContactStore extends Request
+class ContactStore extends AbstractStoreRequest
 {
     /**
      * Get the validation rules that apply to the request.

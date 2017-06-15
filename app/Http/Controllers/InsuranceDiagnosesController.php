@@ -2,90 +2,36 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\InsuranceDiagnosisStore;
-use DentalSleepSolutions\Http\Requests\InsuranceDiagnosisUpdate;
-use DentalSleepSolutions\Http\Requests\InsuranceDiagnosisDestroy;
-use DentalSleepSolutions\Contracts\Resources\InsDiagnosis;
-use DentalSleepSolutions\Contracts\Repositories\InsDiagnoses;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
+use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
+use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
 class InsuranceDiagnosesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\InsDiagnoses $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(InsDiagnoses $resources)
+    public function index(Repository $resources)
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index($resources);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\InsDiagnosis $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(InsDiagnosis $resource)
+    public function show(Resource $resource)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($resource);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\InsDiagnoses $resources
-     * @param  \DentalSleepSolutions\Http\Requests\InsuranceDiagnosisStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(InsDiagnoses $resources, InsuranceDiagnosisStore $request)
+    public function store(Repository $resources, AbstractStoreRequest $request)
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store($resources, $request);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\InsDiagnosis $resource
-     * @param  \DentalSleepSolutions\Http\Requests\InsuranceDiagnosisUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(InsDiagnosis $resource, InsuranceDiagnosisUpdate $request)
+    public function update(Resource $resource, AbstractUpdateRequest $request)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($resource, $request);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\InsDiagnosis $resource
-     * @param  \DentalSleepSolutions\Http\Requests\InsuranceDiagnosisDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(InsDiagnosis $resource, InsuranceDiagnosisDestroy $request)
+    public function destroy(Resource $resource, AbstractDestroyRequest $request)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($resource, $request);
     }
 }

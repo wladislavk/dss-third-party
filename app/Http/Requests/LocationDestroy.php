@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class LocationDestroy extends Request
+class LocationDestroy extends AbstractDestroyRequest
 {
     /**
      * Get the validation rules that apply to the request.

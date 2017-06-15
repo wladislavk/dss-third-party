@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class GuideSettingOptionUpdate extends Request
+class GuideSettingOptionUpdate extends AbstractUpdateRequest
 {
     /**
      * Get the validation rules that apply to the request.

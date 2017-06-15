@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Requests;
 
 use Illuminate\Support\Arr;
 
-class ContactUpdate extends Request
+class ContactUpdate extends AbstractUpdateRequest
 {
     /**
      * Get the validation rules that apply to the request.

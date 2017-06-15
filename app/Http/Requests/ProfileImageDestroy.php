@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class ProfileImageDestroy extends Request
+class ProfileImageDestroy extends AbstractDestroyRequest
 {
     /**
      * Get the validation rules that apply to the request.

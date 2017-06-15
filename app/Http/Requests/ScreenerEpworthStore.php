@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class ScreenerEpworthStore extends Request
+class ScreenerEpworthStore extends AbstractStoreRequest
 {
     /**
      * Get the validation rules that apply to the request.

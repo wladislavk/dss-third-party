@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class JointExamStore extends Request
+class JointExamStore extends AbstractStoreRequest
 {
     /**
      * Get the validation rules that apply to the request.

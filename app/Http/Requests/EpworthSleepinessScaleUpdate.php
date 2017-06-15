@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class EpworthSleepinessScaleUpdate extends Request
+class EpworthSleepinessScaleUpdate extends AbstractUpdateRequest
 {
     /**
      * Get the validation rules that apply to the request.

@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class FaxInvoiceDestroy extends Request
+class FaxInvoiceDestroy extends AbstractDestroyRequest
 {
     /**
      * Get the validation rules that apply to the request.

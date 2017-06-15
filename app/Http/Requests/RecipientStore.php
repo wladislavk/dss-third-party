@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class RecipientStore extends Request
+class RecipientStore extends AbstractStoreRequest
 {
     /**
      * Get the validation rules that apply to the request.

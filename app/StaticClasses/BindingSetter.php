@@ -12,12 +12,6 @@ use DentalSleepSolutions\Http\Requests;
 
 class BindingSetter
 {
-    const MODEL_KEY = 0;
-    const CONTROLLER_KEY = 1;
-    const RESOURCE_KEY = 2;
-    const REPOSITORY_KEY = 3;
-    const REQUEST_KEY = 4;
-
     const EXTERNAL_MODEL_KEY = 0;
     const EXTERNAL_RESOURCE_KEY = 1;
     const EXTERNAL_REPOSITORY_KEY = 2;

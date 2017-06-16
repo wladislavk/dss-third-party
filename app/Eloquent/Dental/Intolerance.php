@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Intolerance as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Intolerances as Repository;
 
-class Intolerance extends Model implements Resource, Repository
+class Intolerance extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

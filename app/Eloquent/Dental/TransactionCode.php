@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 
-class TransactionCode extends Model
+class TransactionCode extends AbstractModel
 {
     protected $table = 'dental_transaction_code';
     protected $primaryKey = 'transaction_codeid';

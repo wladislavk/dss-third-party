@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Medicament as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Medications as Repository;
 
-class Medicament extends Model implements Resource, Repository
+class Medicament extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
@@ -41,4 +41,9 @@ class Medicament extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function getPlural()
+    {
+        return 'Medications';
+    }
 }

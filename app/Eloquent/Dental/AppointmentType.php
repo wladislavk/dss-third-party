@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\AppointmentType as Resource;
 use DentalSleepSolutions\Contracts\Repositories\AppointmentTypes as Repository;
 
-class AppointmentType extends Model implements Resource, Repository
+class AppointmentType extends AbstractModel implements Resource, Repository
 {
     /**
      * Mass assignable attributes

@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DB;
 
-class LedgerStatement extends Model
+class LedgerStatement extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

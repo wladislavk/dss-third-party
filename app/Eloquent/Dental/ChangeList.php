@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ChangeList as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ChangeLists as Repository;
 
-class ChangeList extends Model implements Resource, Repository
+class ChangeList extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

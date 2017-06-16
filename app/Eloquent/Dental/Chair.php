@@ -2,11 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resources\Chair as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Chairs as Repository;
 
-class Chair extends Model implements Resource, Repository
+class Chair extends AbstractModel implements Resource, Repository
 {
     /**
      * Mass assignable attributes

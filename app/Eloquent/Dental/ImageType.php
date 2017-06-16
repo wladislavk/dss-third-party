@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ImageType as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ImageTypes as Repository;
 
-class ImageType extends Model implements Resource, Repository
+class ImageType extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

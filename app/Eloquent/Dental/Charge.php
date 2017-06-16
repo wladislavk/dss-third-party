@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Charge as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Charges as Repository;
 
-class Charge extends Model implements Resource, Repository
+class Charge extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

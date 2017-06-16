@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\CustomLetterTemplate as Resource;
 use DentalSleepSolutions\Contracts\Repositories\CustomLetterTemplates as Repository;
 
-class CustomLetterTemplate extends Model implements Resource, Repository
+class CustomLetterTemplate extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

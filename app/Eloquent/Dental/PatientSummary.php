@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary as Resource;
 use DentalSleepSolutions\Contracts\Repositories\PatientSummaries as Repository;
 
-class PatientSummary extends Model implements Resource, Repository
+class PatientSummary extends AbstractModel implements Resource, Repository
 {
     /**
      * Mass assignable attributes

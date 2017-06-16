@@ -2,13 +2,13 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ContactType as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ContactTypes as Repository;
 use DB;
 
-class ContactType extends Model implements Resource, Repository
+class ContactType extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Contracts\Resources;
 
-interface InsDiagnosis extends Resource
+interface InsuranceDiagnosis extends Resource
 {
 
 }

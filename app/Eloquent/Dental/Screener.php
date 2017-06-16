@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Screener as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Screeners as Repository;
 
-class Screener extends Model implements Resource, Repository
+class Screener extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

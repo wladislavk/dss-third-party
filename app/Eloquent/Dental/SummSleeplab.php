@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 
-class SummSleeplab extends Model
+class SummSleeplab extends AbstractModel
 {
     protected $table = 'dental_summ_sleeplab';
 

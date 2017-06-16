@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Contracts\Repositories;
 
-interface InsDiagnoses extends Repository
+interface InsuranceDiagnoses extends Repository
 {
 
 }

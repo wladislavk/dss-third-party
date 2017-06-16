@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Calendar as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Calendars as Repository;
 
-class Calendar extends Model implements Resource, Repository
+class Calendar extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

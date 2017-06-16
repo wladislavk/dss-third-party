@@ -86,7 +86,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory::cl
     return [];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsDiagnosis::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceDiagnosis::class, function ($faker) {
     $insuranceDiagnoses = [
         '039.3 ACTINOMYCOTIC INFECTION CERVICOFACIAL (3)',
         '053.12 POSTHERPETIC TRIGEMINAL NEURALGIA (5)',

@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\InsDiagnosis;
+use DentalSleepSolutions\Eloquent\Dental\InsuranceDiagnosis;
 use Tests\TestCases\ApiTestCase;
 
 class InsuranceDiagnosesApiApiTest extends ApiTestCase
@@ -17,7 +17,7 @@ class InsuranceDiagnosesApiApiTest extends ApiTestCase
      */
     public function testAddInsuranceDiagnosis()
     {
-        $data = factory(InsDiagnosis::class)->make()->toArray();
+        $data = factory(InsuranceDiagnosis::class)->make()->toArray();
 
         $data['sortby'] = 100;
 
@@ -33,7 +33,7 @@ class InsuranceDiagnosesApiApiTest extends ApiTestCase
      */
     public function testUpdateInsuranceDiagnosis()
     {
-        $insuranceDiagnosisTestRecord = factory(InsDiagnosis::class)->create();
+        $insuranceDiagnosisTestRecord = factory(InsuranceDiagnosis::class)->create();
 
         $data = [
             'description' => 'updated insurance diagnosis',
@@ -52,7 +52,7 @@ class InsuranceDiagnosesApiApiTest extends ApiTestCase
      */
     public function testDeleteInsuranceDiagnosis()
     {
-        $insuranceDiagnosisTestRecord = factory(InsDiagnosis::class)->create();
+        $insuranceDiagnosisTestRecord = factory(InsuranceDiagnosis::class)->create();
 
         $this->delete('/api/v1/insurance-diagnoses/' . $insuranceDiagnosisTestRecord->ins_diagnosisid)
             ->notSeeInDatabase('dental_ins_diagnosis', [

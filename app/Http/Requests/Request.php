@@ -10,7 +10,7 @@ abstract class Request extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @return boolean
+     * @return bool
      */
     public function authorize()
     {
@@ -33,9 +33,18 @@ abstract class Request extends FormRequest
         return [];
     }
 
+    /**
+     * @return array
+     */
     abstract public function storeRules();
 
+    /**
+     * @return array
+     */
     abstract public function updateRules();
 
+    /**
+     * @return array
+     */
     abstract public function destroyRules();
 }

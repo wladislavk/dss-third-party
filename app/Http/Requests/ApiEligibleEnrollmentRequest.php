@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class ApiEligibleEnrollmentRequest extends Request
+class ApiEligibleEnrollmentRequest extends AbstractNonRestRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -1,9 +1,10 @@
 <?php
 namespace DentalSleepSolutions\Http\Requests\Patient;
 
+use DentalSleepSolutions\Http\Requests\AbstractNonRestRequest;
 use DentalSleepSolutions\Http\Requests\Request;
 
-class ExternalPatientStore extends Request
+class ExternalPatientStore extends AbstractNonRestRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -85,20 +86,5 @@ class ExternalPatientStore extends Request
             'patient.insurance_primary.insured_info.dependent.dob'         => 'present_with:patient.insurance_primary.insured_info.dependent|date_format:Y-m-d',
             'patient.insurance_primary.insured_info.dependent.gender'      => 'sometimes|alpha|in:m,f,M,F',
         ];
-    }
-
-    public function destroyRules()
-    {
-        return [];
-    }
-
-    public function storeRules()
-    {
-        return [];
-    }
-
-    public function updateRules()
-    {
-        return [];
     }
 }

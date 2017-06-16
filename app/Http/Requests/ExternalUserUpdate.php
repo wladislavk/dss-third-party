@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
-class ExternalUserUpdate extends AbstractUpdateRequest
+class ExternalUserUpdate extends AbstractNonRestRequest
 {
     /**
      * Get the validation rules that apply to the request.

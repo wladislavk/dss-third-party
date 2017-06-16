@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Requests\Enrollments;
 
-use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Http\Requests\AbstractNonRestRequest;
 
-class OriginalSignature extends Request
+class OriginalSignature extends AbstractNonRestRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -19,20 +19,5 @@ class OriginalSignature extends Request
             'original_signature' => 'required|mimes:pdf',
             'npi' => 'required',
         ];
-    }
-
-    public function destroyRules()
-    {
-        return [];
-    }
-
-    public function storeRules()
-    {
-        return [];
-    }
-
-    public function updateRules()
-    {
-        return [];
     }
 }

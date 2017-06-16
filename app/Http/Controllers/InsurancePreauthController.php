@@ -3,79 +3,36 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\InsurancePreauthStore;
-use DentalSleepSolutions\Http\Requests\InsurancePreauthUpdate;
-use DentalSleepSolutions\Http\Requests\InsurancePreauthDestroy;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as InsPreauth;
 use Illuminate\Http\Request;
 
 class InsurancePreauthController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\InsPreauth $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(InsPreauth $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\InsurancePreauth $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(InsurancePreauth $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\InsPreauth $resources
-     * @param  \DentalSleepSolutions\Http\Requests\InsurancePreauthStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(InsPreauth $resources, InsurancePreauthStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\InsurancePreauth $resource
-     * @param  \DentalSleepSolutions\Http\Requests\InsurancePreauthUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(InsurancePreauth $resource, InsurancePreauthUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\InsurancePreauth $resource
-     * @param  \DentalSleepSolutions\Http\Requests\InsurancePreauthDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(InsurancePreauth $resource, InsurancePreauthDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function getByType($type, InsPreauth $resources)

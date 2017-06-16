@@ -3,94 +3,42 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\LoginDetailStore;
-use DentalSleepSolutions\Http\Requests\LoginDetailUpdate;
-use DentalSleepSolutions\Http\Requests\LoginDetailDestroy;
-use DentalSleepSolutions\Contracts\Resources\LoginDetail;
-use DentalSleepSolutions\Contracts\Repositories\LoginDetails;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
 class LoginDetailsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\LoginDetails $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(LoginDetails $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LoginDetail $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(LoginDetail $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\LoginDetails $resources
-     * @param  \DentalSleepSolutions\Http\Requests\LoginDetailStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(LoginDetails $resources, LoginDetailStore $request)
+    public function store()
     {
         $loginId = $this->currentUser->loginid ?: 0;
         $userId = $this->currentUser->id ?: 0;
 
-        $data = array_merge($request->all(), [
+        $data = array_merge($this->request->all(), [
             'loginid'    => $loginId,
             'userid'     => $userId,
-            'ip_address' => $request->ip()
+            'ip_address' => $this->request->ip(),
         ]);
 
-        $resource = $resources->create($data);
+        $resource = $this->resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LoginDetail $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LoginDetailUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(LoginDetail $resource, LoginDetailUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LoginDetail $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LoginDetailDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(LoginDetail $resource, LoginDetailDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

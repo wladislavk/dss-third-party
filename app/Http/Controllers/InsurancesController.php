@@ -3,22 +3,11 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\InsuranceStore;
-use DentalSleepSolutions\Http\Requests\InsuranceUpdate;
-use DentalSleepSolutions\Http\Requests\InsuranceDestroy;
 use DentalSleepSolutions\Contracts\Resources\Insurance;
 use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Insurances;
 use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
 class InsurancesController extends Controller
 {
     const DSS_USER_TYPE_FRANCHISEE = 1;
@@ -27,74 +16,29 @@ class InsurancesController extends Controller
     // Transaction statuses (ledger)
     const DSS_TRXN_NA = 0; // trxn created/updated, but not filed.
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Insurances $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Insurances $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Insurance $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(Insurance $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Insurances $resources
-     * @param  \DentalSleepSolutions\Http\Requests\InsuranceStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Insurances $resources, InsuranceStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Insurance $resource
-     * @param  \DentalSleepSolutions\Http\Requests\InsuranceUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Insurance $resource, InsuranceUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Insurance $resource
-     * @param  \DentalSleepSolutions\Http\Requests\InsuranceDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Insurance $resource, InsuranceDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function getRejected(Insurances $resources, Request $request)
@@ -132,14 +76,14 @@ class InsurancesController extends Controller
 
     public function removeClaim(Insurance $resource, Ledger $ledgerResource, Request $request)
     {
-        $claimId = $request->input('claim_id') ?: 0;
+        $claimId = $request->input('claim_id', 0);
 
         $isSuccess = $resource->removePendingClaim($claimId);
 
         if ($isSuccess) {
             $ledgerResource->updateWherePrimaryClaimId($claimId, [
                 'primary_claim_id' => null,
-                'status'           => self::DSS_TRXN_NA
+                'status'           => self::DSS_TRXN_NA,
             ]);
 
             return ApiResponse::responseOk('Deleted Successfully');

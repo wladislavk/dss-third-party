@@ -11,19 +11,19 @@ use DentalSleepSolutions\Http\Requests;
 
 class BindingSetter
 {
-    const ROUTE_KEY = 0;
-    const MODEL_KEY = 1;
-    const CONTROLLER_KEY = 2;
-    const RESOURCE_KEY = 3;
-    const REPOSITORY_KEY = 4;
-    const STORE_REQUEST_KEY = 5;
-    const UPDATE_REQUEST_KEY = 6;
-    const DESTROY_REQUEST_KEY = 7;
+    const MODEL_KEY = 0;
+    const CONTROLLER_KEY = 1;
+    const RESOURCE_KEY = 2;
+    const REPOSITORY_KEY = 3;
+    const REQUEST_KEY = 4;
+
+    const EXTERNAL_MODEL_KEY = 0;
+    const EXTERNAL_RESOURCE_KEY = 1;
+    const EXTERNAL_REPOSITORY_KEY = 2;
 
     // TODO: this mega-constant should be replaced by a naming convention and reflection API
     const BINDINGS = [
         [
-            'access-codes',
             Eloquent\Dental\AccessCode::class,
             Controllers\AccessCodesController::class,
             Resources\AccessCode::class,
@@ -33,7 +33,6 @@ class BindingSetter
             Requests\AccessCodeDestroy::class,
         ],
         [
-            'admins',
             Eloquent\Admin::class,
             Controllers\AdminsController::class,
             Resources\Admin::class,
@@ -43,7 +42,6 @@ class BindingSetter
             Requests\AdminDestroy::class,
         ],
         [
-            'airway-evaluations',
             Eloquent\Dental\AirwayEvaluation::class,
             Controllers\AirwayEvaluationsController::class,
             Resources\AirwayEvaluation::class,
@@ -53,7 +51,6 @@ class BindingSetter
             Requests\AirwayEvaluationDestroy::class,
         ],
         [
-            'allergens',
             Eloquent\Dental\Allergen::class,
             Controllers\AllergensController::class,
             Resources\Allergen::class,
@@ -63,7 +60,6 @@ class BindingSetter
             Requests\AllergenDestroy::class,
         ],
         [
-            'appt-types',
             Eloquent\Dental\AppointmentType::class,
             Controllers\AppointmentTypesController::class,
             Resources\AppointmentType::class,
@@ -73,7 +69,6 @@ class BindingSetter
             Requests\AppointmentTypeDestroy::class,
         ],
         [
-            'calendars',
             Eloquent\Dental\Calendar::class,
             Controllers\CalendarsController::class,
             Resources\Calendar::class,
@@ -83,7 +78,6 @@ class BindingSetter
             Requests\CalendarDestroy::class,
         ],
         [
-            'chairs',
             Eloquent\Dental\Chair::class,
             Controllers\ChairsController::class,
             Resources\Chair::class,
@@ -93,7 +87,6 @@ class BindingSetter
             Requests\ChairDestroy::class,
         ],
         [
-            'change-lists',
             Eloquent\Dental\ChangeList::class,
             Controllers\ChangeListsController::class,
             Resources\ChangeList::class,
@@ -103,7 +96,6 @@ class BindingSetter
             Requests\ChangeListDestroy::class,
         ],
         [
-            'charges',
             Eloquent\Dental\Charge::class,
             Controllers\ChargesController::class,
             Resources\Charge::class,
@@ -113,7 +105,6 @@ class BindingSetter
             Requests\ChargeDestroy::class,
         ],
         [
-            'claim-note-attachments',
             Eloquent\Dental\ClaimNoteAttachment::class,
             Controllers\ClaimNoteAttachmentsController::class,
             Resources\ClaimNoteAttachment::class,
@@ -123,7 +114,6 @@ class BindingSetter
             Requests\ClaimNoteAttachmentDestroy::class,
         ],
         [
-            'companies',
             Eloquent\Company::class,
             Controllers\CompaniesController::class,
             Resources\Company::class,
@@ -133,7 +123,6 @@ class BindingSetter
             Requests\CompanyDestroy::class,
         ],
         [
-            'complaints',
             Eloquent\Dental\Complaint::class,
             Controllers\ComplaintsController::class,
             Resources\Complaint::class,
@@ -143,7 +132,6 @@ class BindingSetter
             Requests\ComplaintDestroy::class,
         ],
         [
-            'contacts',
             Eloquent\Dental\Contact::class,
             Controllers\ContactsController::class,
             Resources\Contact::class,
@@ -153,7 +141,6 @@ class BindingSetter
             Requests\ContactDestroy::class,
         ],
         [
-            'contact-types',
             Eloquent\Dental\ContactType::class,
             Controllers\ContactTypesController::class,
             Resources\ContactType::class,
@@ -163,7 +150,6 @@ class BindingSetter
             Requests\ContactTypeDestroy::class,
         ],
         [
-            'corporate-contacts',
             Eloquent\Dental\CorporateContact::class,
             Controllers\CorporateContactsController::class,
             Resources\CorporateContact::class,
@@ -173,7 +159,6 @@ class BindingSetter
             Requests\CorporateContactDestroy::class,
         ],
         [
-            'custom-letter-templates',
             Eloquent\Dental\CustomLetterTemplate::class,
             Controllers\CustomLetterTemplatesController::class,
             Resources\CustomLetterTemplate::class,
@@ -183,7 +168,6 @@ class BindingSetter
             Requests\CustomLetterTemplateDestroy::class,
         ],
         [
-            'custom-texts',
             Eloquent\Dental\CustomText::class,
             Controllers\CustomTextsController::class,
             Resources\CustomText::class,
@@ -193,7 +177,6 @@ class BindingSetter
             Requests\CustomTextDestroy::class,
         ],
         [
-            'dental-clinical-exams',
             Eloquent\Dental\DentalClinicalExam::class,
             Controllers\DentalClinicalExamsController::class,
             Resources\DentalClinicalExam::class,
@@ -203,7 +186,6 @@ class BindingSetter
             Requests\DentalClinicalExamDestroy::class,
         ],
         [
-            'devices',
             Eloquent\Dental\Device::class,
             Controllers\DevicesController::class,
             Resources\Device::class,
@@ -213,7 +195,6 @@ class BindingSetter
             Requests\DeviceDestroy::class,
         ],
         [
-            'diagnostics',
             Eloquent\Dental\Diagnostic::class,
             Controllers\DiagnosticsController::class,
             Resources\Diagnostic::class,
@@ -223,7 +204,6 @@ class BindingSetter
             Requests\DiagnosticDestroy::class,
         ],
         [
-            'documents',
             Eloquent\Dental\Document::class,
             Controllers\DocumentsController::class,
             Resources\Document::class,
@@ -233,7 +213,6 @@ class BindingSetter
             Requests\DocumentDestroy::class,
         ],
         [
-            'document-categories',
             Eloquent\Dental\DocumentCategory::class,
             Controllers\DocumentCategoriesController::class,
             Resources\DocumentCategory::class,
@@ -243,7 +222,6 @@ class BindingSetter
             Requests\DocumentCategoryDestroy::class,
         ],
         [
-            'epworth-sleepiness-scale',
             Eloquent\Dental\EpworthSleepinessScale::class,
             Controllers\EpworthSleepinessScaleController::class,
             Resources\EpworthSleepinessScale::class,
@@ -253,7 +231,6 @@ class BindingSetter
             Requests\EpworthSleepinessScaleDestroy::class,
         ],
         [
-            'faxes',
             Eloquent\Dental\Fax::class,
             Controllers\FaxesController::class,
             Resources\Fax::class,
@@ -263,7 +240,6 @@ class BindingSetter
             Requests\FaxDestroy::class,
         ],
         [
-            'fax-invoices',
             Eloquent\Dental\FaxInvoice::class,
             Controllers\FaxInvoicesController::class,
             Resources\FaxInvoice::class,
@@ -273,7 +249,6 @@ class BindingSetter
             Requests\FaxInvoiceDestroy::class,
         ],
         [
-            'gag-reflexes',
             Eloquent\Dental\GagReflex::class,
             Controllers\GagReflexesController::class,
             Resources\GagReflex::class,
@@ -283,7 +258,6 @@ class BindingSetter
             Requests\GagReflexDestroy::class,
         ],
         [
-            'guide-devices',
             Eloquent\Dental\GuideDevice::class,
             Controllers\GuideDevicesController::class,
             Resources\GuideDevice::class,
@@ -293,7 +267,6 @@ class BindingSetter
             Requests\GuideDeviceDestroy::class,
         ],
         [
-            'guide-settings',
             Eloquent\Dental\GuideSetting::class,
             Controllers\GuideSettingsController::class,
             Resources\GuideSetting::class,
@@ -303,7 +276,6 @@ class BindingSetter
             Requests\GuideSettingDestroy::class,
         ],
         [
-            'guide-setting-options',
             Eloquent\Dental\GuideSettingOption::class,
             Controllers\GuideSettingOptionsController::class,
             Resources\GuideSettingOption::class,
@@ -313,7 +285,6 @@ class BindingSetter
             Requests\GuideSettingOptionDestroy::class,
         ],
         [
-            'health-histories',
             Eloquent\Dental\HealthHistory::class,
             Controllers\HealthHistoriesController::class,
             Resources\HealthHistory::class,
@@ -323,7 +294,6 @@ class BindingSetter
             Requests\HealthHistoryDestroy::class,
         ],
         [
-            'home-sleep-tests',
             Eloquent\Dental\HomeSleepTest::class,
             Controllers\HomeSleepTestsController::class,
             Resources\HomeSleepTest::class,
@@ -333,7 +303,6 @@ class BindingSetter
             Requests\HomeSleepTestDestroy::class,
         ],
         [
-            'image-types',
             Eloquent\Dental\ImageType::class,
             Controllers\ImageTypesController::class,
             Resources\ImageType::class,
@@ -343,7 +312,6 @@ class BindingSetter
             Requests\ImageTypeDestroy::class,
         ],
         [
-            'insurance-diagnoses',
             Eloquent\Dental\InsDiagnosis::class,
             Controllers\InsuranceDiagnosesController::class,
             Resources\InsDiagnosis::class,
@@ -353,7 +321,6 @@ class BindingSetter
             Requests\InsuranceDiagnosisDestroy::class,
         ],
         [
-            'insurance-documents',
             Eloquent\Dental\InsuranceDocument::class,
             Controllers\InsuranceDocumentsController::class,
             Resources\InsuranceDocument::class,
@@ -363,7 +330,6 @@ class BindingSetter
             Requests\InsuranceDocumentDestroy::class,
         ],
         [
-            'insurance-files',
             Eloquent\Dental\InsuranceFile::class,
             Controllers\InsuranceFilesController::class,
             Resources\InsuranceFile::class,
@@ -373,7 +339,6 @@ class BindingSetter
             Requests\InsuranceFileDestroy::class,
         ],
         [
-            'insurance-histories',
             Eloquent\Dental\InsuranceHistory::class,
             Controllers\InsuranceHistoriesController::class,
             Resources\InsuranceHistory::class,
@@ -382,63 +347,475 @@ class BindingSetter
             Requests\InsuranceHistoryUpdate::class,
             Requests\InsuranceHistoryDestroy::class,
         ],
-        Eloquent\Dental\InsurancePreauth::class => [Repositories\InsurancePreauth::class, Resources\InsurancePreauth::class],
-        Eloquent\Dental\InsuranceType::class => [Repositories\InsuranceTypes::class, Resources\InsuranceType::class],
-        Eloquent\Dental\Insurance::class => [Repositories\Insurances::class, Resources\Insurance::class],
-        Eloquent\Dental\Intolerance::class => [Repositories\Intolerances::class, Resources\Intolerance::class],
-        Eloquent\Dental\Joint::class => [Repositories\Joints::class, Resources\Joint::class],
-        Eloquent\Dental\JointExam::class => [Repositories\JointExams::class, Resources\JointExam::class],
-        Eloquent\Dental\Ledger::class => [Repositories\Ledgers::class, Resources\Ledger::class],
-        Eloquent\Dental\LedgerHistory::class => [Repositories\LedgerHistories::class, Resources\LedgerHistory::class],
-        Eloquent\Dental\LedgerNote::class => [Repositories\LedgerNotes::class, Resources\LedgerNote::class],
-        Eloquent\Dental\LedgerPayment::class => [Repositories\LedgerPayments::class, Resources\LedgerPayment::class],
-        Eloquent\Dental\LedgerRecord::class => [Repositories\LedgerRecords::class, Resources\LedgerRecord::class],
-        Eloquent\Dental\LedgerStatement::class => [Repositories\LedgerStatements::class, Resources\LedgerStatement::class],
-        Eloquent\Dental\Letter::class => [Repositories\Letters::class, Resources\Letter::class],
-        Eloquent\Dental\LetterTemplate::class => [Repositories\LetterTemplates::class, Resources\LetterTemplate::class],
-        Eloquent\Dental\Location::class => [Repositories\Locations::class, Resources\Location::class],
-        Eloquent\Dental\Login::class => [Repositories\Logins::class, Resources\Login::class],
-        Eloquent\Dental\LoginDetail::class => [Repositories\LoginDetails::class, Resources\LoginDetail::class],
-        Eloquent\Dental\Mandible::class => [Repositories\Mandibles::class, Resources\Mandible::class],
-        Eloquent\Dental\Maxilla::class => [Repositories\Maxillas::class, Resources\Maxilla::class],
-        Eloquent\Dental\MedicalHistory::class => [Repositories\MedicalHistories::class, Resources\MedicalHistory::class],
-        Eloquent\Dental\Medicament::class => [Repositories\Medications::class, Resources\Medicament::class],
-        Eloquent\Dental\Note::class => [Repositories\Notes::class, Resources\Note::class],
-        Eloquent\Dental\Notification::class => [Repositories\Notifications::class, Resources\Notification::class],
-        Eloquent\Dental\Palpation::class => [Repositories\Palpation::class, Resources\Palpation::class],
-        Eloquent\Dental\Patient::class => [Repositories\Patients::class, Resources\Patient::class],
-        Eloquent\Dental\PatientContact::class => [Repositories\PatientContacts::class, Resources\PatientContact::class],
-        Eloquent\Dental\PatientInsurance::class => [Repositories\PatientInsurances::class, Resources\PatientInsurance::class],
-        Eloquent\Dental\PatientSummary::class => [Repositories\PatientSummaries::class, Resources\PatientSummary::class],
-        Eloquent\Dental\PaymentReport::class => [Repositories\PaymentReports::class, Resources\PaymentReport::class],
-        Eloquent\Dental\PlaceService::class => [Repositories\PlaceServices::class, Resources\PlaceService::class],
-        Eloquent\Dental\Plan::class => [Repositories\Plans::class, Resources\Plan::class],
-        Eloquent\Dental\PreviousTreatment::class => [Repositories\PreviousTreatments::class, Resources\PreviousTreatment::class],
-        Eloquent\Dental\ProfileImage::class => [Repositories\ProfileImages::class, Resources\ProfileImage::class],
-        Eloquent\Dental\Qualifier::class => [Repositories\Qualifiers::class, Resources\Qualifier::class],
-        Eloquent\Dental\Recipient::class => [Repositories\Recipients::class, Resources\Recipient::class],
-        Eloquent\Dental\ReferredByContact::class => [Repositories\ReferredByContacts::class, Resources\ReferredByContact::class],
-        Eloquent\Dental\Refund::class => [Repositories\Refunds::class, Resources\Refund::class],
-        Eloquent\Dental\Screener::class => [Repositories\Screeners::class, Resources\Screener::class],
-        Eloquent\Dental\ScreenerEpworth::class => [Repositories\ScreenerEpworth::class, Resources\ScreenerEpworth::class],
-        Eloquent\Dental\Sleeplab::class => [Repositories\Sleeplabs::class, Resources\Sleeplab::class],
-        Eloquent\Dental\SleepStudy::class => [Repositories\SleepStudies::class, Resources\SleepStudy::class],
-        Eloquent\Dental\SleepTest::class => [Repositories\SleepTests::class, Resources\SleepTest::class],
-        Eloquent\Dental\SocialHistory::class => [Repositories\SocialHistories::class, Resources\SocialHistory::class],
-        Eloquent\Dental\SoftPalate::class => [Repositories\SoftPalates::class, Resources\SoftPalate::class],
-        Eloquent\Dental\Summary::class => [Repositories\Summaries::class, Resources\Summary::class],
-        Eloquent\Dental\SupportTicket::class => [Repositories\SupportTickets::class, Resources\SupportTicket::class],
-        Eloquent\Dental\Symptom::class => [Repositories\Symptoms::class, Resources\Symptom::class],
-        Eloquent\Dental\Task::class => [Repositories\Tasks::class, Resources\Task::class],
-        Eloquent\Dental\TmjClinicalExam::class => [Repositories\TmjClinicalExams::class, Resources\TmjClinicalExam::class],
-        Eloquent\Dental\TongueClinicalExam::class => [Repositories\TongueClinicalExams::class, Resources\TongueClinicalExam::class],
-        Eloquent\Dental\TonsilsClinicalExam::class => [Repositories\TonsilsClinicalExams::class, Resources\TonsilsClinicalExam::class],
-        Eloquent\Dental\User::class => [Repositories\Users::class, Resources\User::class],
-        Eloquent\Dental\ExternalCompany::class => [Repositories\ExternalCompanies::class, Resources\ExternalCompany::class],
-        Eloquent\Dental\ExternalUser::class => [Repositories\ExternalUsers::class, Resources\ExternalUser::class],
-        Eloquent\Dental\ExternalPatient::class => [Repositories\ExternalPatients::class, Resources\ExternalPatient::class],
-        Eloquent\Dental\ExternalCompanyUser::class => [Repositories\ExternalCompanyUsers::class, Resources\ExternalCompanyUser::class],
-        Eloquent\Payer::class => [Repositories\Payers::class, Resources\Device::class],
+        [
+            Eloquent\Dental\InsurancePreauth::class,
+            Controllers\InsurancePreauthController::class,
+            Resources\InsurancePreauth::class,
+            Repositories\InsurancePreauth::class,
+            Requests\InsurancePreauthStore::class,
+            Requests\InsurancePreauthUpdate::class,
+            Requests\InsurancePreauthDestroy::class,
+        ],
+        [
+            Eloquent\Dental\InsuranceType::class,
+            Controllers\InsuranceTypesController::class,
+            Resources\InsuranceType::class,
+            Repositories\InsuranceTypes::class,
+            Requests\InsuranceTypeStore::class,
+            Requests\InsuranceTypeUpdate::class,
+            Requests\InsuranceTypeDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Insurance::class,
+            Controllers\InsurancesController::class,
+            Resources\Insurance::class,
+            Repositories\Insurances::class,
+            Requests\InsuranceStore::class,
+            Requests\InsuranceUpdate::class,
+            Requests\InsuranceDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Intolerance::class,
+            Controllers\IntolerancesController::class,
+            Resources\Intolerance::class,
+            Repositories\Intolerances::class,
+            Requests\IntoleranceStore::class,
+            Requests\IntoleranceUpdate::class,
+            Requests\IntoleranceDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Joint::class,
+            Controllers\JointsController::class,
+            Resources\Joint::class,
+            Repositories\Joints::class,
+            Requests\JointStore::class,
+            Requests\JointUpdate::class,
+            Requests\JointDestroy::class,
+        ],
+        [
+            Eloquent\Dental\JointExam::class,
+            Controllers\JointExamsController::class,
+            Resources\JointExam::class,
+            Repositories\JointExams::class,
+            Requests\JointExamStore::class,
+            Requests\JointExamUpdate::class,
+            Requests\JointExamDestroy::class,
+        ],
+        [
+            Eloquent\Dental\LedgerHistory::class,
+            Controllers\LedgerHistoriesController::class,
+            Resources\LedgerHistory::class,
+            Repositories\LedgerHistories::class,
+            Requests\LedgerHistoryStore::class,
+            Requests\LedgerHistoryUpdate::class,
+            Requests\LedgerHistoryDestroy::class,
+        ],
+        [
+            Eloquent\Dental\LedgerNote::class,
+            Controllers\LedgerNotesController::class,
+            Resources\LedgerNote::class,
+            Repositories\LedgerNotes::class,
+            Requests\LedgerNoteStore::class,
+            Requests\LedgerNoteUpdate::class,
+            Requests\LedgerNoteDestroy::class,
+        ],
+        [
+            Eloquent\Dental\LedgerPayment::class,
+            Controllers\LedgerPaymentsController::class,
+            Resources\LedgerPayment::class,
+            Repositories\LedgerPayments::class,
+            Requests\LedgerPaymentStore::class,
+            Requests\LedgerPaymentUpdate::class,
+            Requests\LedgerPaymentDestroy::class,
+        ],
+        [
+            Eloquent\Dental\LedgerRecord::class,
+            Controllers\LedgerRecordsController::class,
+            Resources\LedgerRecord::class,
+            Repositories\LedgerRecords::class,
+            Requests\LedgerRecordStore::class,
+            Requests\LedgerRecordUpdate::class,
+            Requests\LedgerRecordDestroy::class,
+        ],
+        [
+            Eloquent\Dental\LedgerStatement::class,
+            Controllers\LedgerStatementsController::class,
+            Resources\LedgerStatement::class,
+            Repositories\LedgerStatements::class,
+            Requests\LedgerStatementStore::class,
+            Requests\LedgerStatementUpdate::class,
+            Requests\LedgerStatementDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Ledger::class,
+            Controllers\LedgersController::class,
+            Resources\Ledger::class,
+            Repositories\Ledgers::class,
+            Requests\LedgerStore::class,
+            Requests\LedgerUpdate::class,
+            Requests\LedgerDestroy::class,
+        ],
+        [
+            Eloquent\Dental\LetterTemplate::class,
+            Controllers\LetterTemplatesController::class,
+            Resources\LetterTemplate::class,
+            Repositories\LetterTemplates::class,
+            Requests\LetterTemplateStore::class,
+            Requests\LetterTemplateUpdate::class,
+            Requests\LetterTemplateDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Letter::class,
+            Controllers\LettersController::class,
+            Resources\Letter::class,
+            Repositories\Letters::class,
+            Requests\LetterStore::class,
+            Requests\LetterUpdate::class,
+            Requests\LetterDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Location::class,
+            Controllers\LocationsController::class,
+            Resources\Location::class,
+            Repositories\Locations::class,
+            Requests\LocationStore::class,
+            Requests\LocationUpdate::class,
+            Requests\LocationDestroy::class,
+        ],
+        [
+            Eloquent\Dental\LoginDetail::class,
+            Controllers\LoginDetailsController::class,
+            Resources\LoginDetail::class,
+            Repositories\LoginDetails::class,
+            Requests\LoginDetailStore::class,
+            Requests\LoginDetailUpdate::class,
+            Requests\LoginDetailDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Login::class,
+            Controllers\LoginsController::class,
+            Resources\Login::class,
+            Repositories\Logins::class,
+            Requests\LoginStore::class,
+            Requests\LoginUpdate::class,
+            Requests\LoginDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Mandible::class,
+            Controllers\MandiblesController::class,
+            Resources\Mandible::class,
+            Repositories\Mandibles::class,
+            Requests\MandibleStore::class,
+            Requests\MandibleUpdate::class,
+            Requests\MandibleDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Maxilla::class,
+            Controllers\MaxillasController::class,
+            Resources\Maxilla::class,
+            Repositories\Maxillas::class,
+            Requests\MaxillaStore::class,
+            Requests\MaxillaUpdate::class,
+            Requests\MaxillaDestroy::class,
+        ],
+        [
+            Eloquent\Dental\MedicalHistory::class,
+            Controllers\MedicalHistoriesController::class,
+            Resources\MedicalHistory::class,
+            Repositories\MedicalHistories::class,
+            Requests\MedicalHistoryStore::class,
+            Requests\MedicalHistoryUpdate::class,
+            Requests\MedicalHistoryDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Medicament::class,
+            Controllers\MedicationsController::class,
+            Resources\Medicament::class,
+            Repositories\Medications::class,
+            Requests\MedicamentStore::class,
+            Requests\MedicamentUpdate::class,
+            Requests\MedicamentDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Note::class,
+            Controllers\NotesController::class,
+            Resources\Note::class,
+            Repositories\Notes::class,
+            Requests\NoteStore::class,
+            Requests\NoteUpdate::class,
+            Requests\NoteDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Notification::class,
+            Controllers\NotificationsController::class,
+            Resources\Notification::class,
+            Repositories\Notifications::class,
+            Requests\NotificationStore::class,
+            Requests\NotificationUpdate::class,
+            Requests\NotificationDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Palpation::class,
+            Controllers\PalpationController::class,
+            Resources\Palpation::class,
+            Repositories\Palpation::class,
+            Requests\PalpationStore::class,
+            Requests\PalpationUpdate::class,
+            Requests\PalpationDestroy::class,
+        ],
+        [
+            Eloquent\Dental\PatientContact::class,
+            Controllers\PatientContactsController::class,
+            Resources\PatientContact::class,
+            Repositories\PatientContacts::class,
+            Requests\PatientContactStore::class,
+            Requests\PatientContactUpdate::class,
+            Requests\PatientContactDestroy::class,
+        ],
+        [
+            Eloquent\Dental\PatientInsurance::class,
+            Controllers\PatientInsurancesController::class,
+            Resources\PatientInsurance::class,
+            Repositories\PatientInsurances::class,
+            Requests\PatientInsuranceStore::class,
+            Requests\PatientInsuranceUpdate::class,
+            Requests\PatientInsuranceDestroy::class,
+        ],
+        [
+            Eloquent\Dental\PatientSummary::class,
+            Controllers\PatientSummariesController::class,
+            Resources\PatientSummary::class,
+            Repositories\PatientSummaries::class,
+            Requests\PatientSummary::class,
+        ],
+        [
+            Eloquent\Dental\Patient::class,
+            Controllers\PatientsController::class,
+            Resources\Patient::class,
+            Repositories\Patients::class,
+            Requests\Patient::class,
+        ],
+        [
+            Eloquent\Payer::class,
+            Controllers\PayersController::class,
+            Resources\Payer::class,
+            Repositories\Payers::class,
+            Requests\PayerStore::class,
+            Requests\PayerUpdate::class,
+            Requests\PayerDestroy::class,
+        ],
+        [
+            Eloquent\Dental\PaymentReport::class,
+            Controllers\PaymentReportsController::class,
+            Resources\PaymentReport::class,
+            Repositories\PaymentReports::class,
+            Requests\PaymentReportStore::class,
+            Requests\PaymentReportUpdate::class,
+            Requests\PaymentReportDestroy::class,
+        ],
+        [
+            Eloquent\Dental\PlaceService::class,
+            Controllers\PlaceServicesController::class,
+            Resources\PlaceService::class,
+            Repositories\PlaceServices::class,
+            Requests\PlaceServiceStore::class,
+            Requests\PlaceServiceUpdate::class,
+            Requests\PlaceServiceDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Plan::class,
+            Controllers\PlansController::class,
+            Resources\Plan::class,
+            Repositories\Plans::class,
+            Requests\PlanStore::class,
+            Requests\PlanUpdate::class,
+            Requests\PlanDestroy::class,
+        ],
+        [
+            Eloquent\Dental\PreviousTreatment::class,
+            Controllers\PreviousTreatmentsController::class,
+            Resources\PreviousTreatment::class,
+            Repositories\PreviousTreatments::class,
+            Requests\PreviousTreatmentStore::class,
+            Requests\PreviousTreatmentUpdate::class,
+            Requests\PreviousTreatmentDestroy::class,
+        ],
+        [
+            Eloquent\Dental\ProfileImage::class,
+            Controllers\ProfileImagesController::class,
+            Resources\ProfileImage::class,
+            Repositories\ProfileImages::class,
+            Requests\ProfileImageStore::class,
+            Requests\ProfileImageUpdate::class,
+            Requests\ProfileImageDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Qualifier::class,
+            Controllers\QualifiersController::class,
+            Resources\Qualifier::class,
+            Repositories\Qualifiers::class,
+            Requests\QualifierStore::class,
+            Requests\QualifierUpdate::class,
+            Requests\QualifierDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Recipient::class,
+            Controllers\RecipientsController::class,
+            Resources\Recipient::class,
+            Repositories\Recipients::class,
+            Requests\RecipientStore::class,
+            Requests\RecipientUpdate::class,
+            Requests\RecipientDestroy::class,
+        ],
+        [
+            Eloquent\Dental\ReferredByContact::class,
+            Controllers\ReferredByContactsController::class,
+            Resources\ReferredByContact::class,
+            Repositories\ReferredByContacts::class,
+            Requests\ReferredByContact::class,
+        ],
+        [
+            Eloquent\Dental\Refund::class,
+            Controllers\RefundsController::class,
+            Resources\Refund::class,
+            Repositories\Refunds::class,
+            Requests\RefundStore::class,
+            Requests\RefundUpdate::class,
+            Requests\RefundDestroy::class,
+        ],
+        [
+            Eloquent\Dental\ScreenerEpworth::class,
+            Controllers\ScreenerEpworthController::class,
+            Resources\ScreenerEpworth::class,
+            Repositories\ScreenerEpworth::class,
+            Requests\ScreenerEpworthStore::class,
+            Requests\ScreenerEpworthUpdate::class,
+            Requests\ScreenerEpworthDestroy::class,
+        ],
+        [
+            Eloquent\Dental\Screener::class,
+            Controllers\ScreenersController::class,
+            Resources\Screener::class,
+            Repositories\Screeners::class,
+            Requests\Screener::class,
+        ],
+        [
+            Eloquent\Dental\Sleeplab::class,
+            Controllers\SleeplabsController::class,
+            Resources\Sleeplab::class,
+            Repositories\Sleeplabs::class,
+            Requests\Sleeplab::class,
+        ],
+        [
+            Eloquent\Dental\SleepStudy::class,
+            Controllers\SleepStudiesController::class,
+            Resources\SleepStudy::class,
+            Repositories\SleepStudies::class,
+            Requests\SleepStudy::class,
+        ],
+        [
+            Eloquent\Dental\SleepTest::class,
+            Controllers\SleepTestsController::class,
+            Resources\SleepTest::class,
+            Repositories\SleepTests::class,
+            Requests\SleepTest::class,
+        ],
+        [
+            Eloquent\Dental\SocialHistory::class,
+            Controllers\SocialHistoriesController::class,
+            Resources\SocialHistory::class,
+            Repositories\SocialHistories::class,
+            Requests\SocialHistory::class,
+        ],
+        [
+            Eloquent\Dental\SoftPalate::class,
+            Controllers\SoftPalatesController::class,
+            Resources\SoftPalate::class,
+            Repositories\SoftPalates::class,
+            Requests\SoftPalate::class,
+        ],
+        [
+            Eloquent\Dental\Summary::class,
+            Controllers\SummariesController::class,
+            Resources\Summary::class,
+            Repositories\Summaries::class,
+            Requests\Summary::class,
+        ],
+        [
+            Eloquent\Dental\SupportTicket::class,
+            Controllers\SupportTicketsController::class,
+            Resources\SupportTicket::class,
+            Repositories\SupportTickets::class,
+            Requests\SupportTicket::class,
+        ],
+        [
+            'symptoms',
+            Eloquent\Dental\Symptom::class,
+            Controllers\SymptomsController::class,
+            Resources\Symptom::class,
+            Repositories\Symptoms::class,
+            Requests\Symptom::class,
+        ],
+        [
+            'tasks',
+            Eloquent\Dental\Task::class,
+            Controllers\TasksController::class,
+            Resources\Task::class,
+            Repositories\Tasks::class,
+            Requests\Task::class,
+        ],
+        [
+            'tmj-clinical-exams',
+            Eloquent\Dental\TmjClinicalExam::class,
+            Controllers\TmjClinicalExamsController::class,
+            Resources\TmjClinicalExam::class,
+            Repositories\TmjClinicalExams::class,
+            Requests\TmjClinicalExam::class,
+        ],
+        [
+            Eloquent\Dental\TongueClinicalExam::class,
+            Controllers\TongueClinicalExamsController::class,
+            Resources\TongueClinicalExam::class,
+            Repositories\TongueClinicalExams::class,
+            Requests\TongueClinicalExam::class,
+        ],
+        [
+            Eloquent\Dental\TonsilsClinicalExam::class,
+            Controllers\TonsilsClinicalExamsController::class,
+            Resources\TonsilsClinicalExam::class,
+            Repositories\TonsilsClinicalExams::class,
+            Requests\TonsilsClinicalExam::class,
+        ],
+        [
+            Eloquent\Dental\User::class,
+            Controllers\UsersController::class,
+            Resources\User::class,
+            Repositories\Users::class,
+            Requests\User::class,
+        ],
+    ];
+
+    const EXTERNAL_BINDINGS = [
+        [
+            Eloquent\Dental\ExternalCompany::class,
+            Resources\ExternalCompany::class,
+            Repositories\ExternalCompanies::class,
+        ],
+        [
+            Eloquent\Dental\ExternalUser::class,
+            Resources\ExternalUser::class,
+            Repositories\ExternalUsers::class,
+        ],
+        [
+            Eloquent\Dental\ExternalPatient::class,
+            Resources\ExternalPatient::class,
+            Repositories\ExternalPatients::class,
+        ],
+        [
+            Eloquent\Dental\ExternalCompanyUser::class,
+            Resources\ExternalCompanyUser::class,
+            Repositories\ExternalCompanyUsers::class,
+        ],
     ];
 
     /**
@@ -450,14 +827,29 @@ class BindingSetter
         foreach (self::BINDINGS as $binding) {
             $bindingObject = new Bindings();
             $bindingObject
-                ->setRoute($binding[self::ROUTE_KEY])
                 ->setModel($binding[self::MODEL_KEY])
                 ->setController($binding[self::CONTROLLER_KEY])
                 ->setResource($binding[self::RESOURCE_KEY])
                 ->setRepository($binding[self::REPOSITORY_KEY])
-                ->setStoreRequest($binding[self::STORE_REQUEST_KEY])
-                ->setUpdateRequest($binding[self::UPDATE_REQUEST_KEY])
-                ->setDestroyRequest($binding[self::DESTROY_REQUEST_KEY])
+                ->setRequest($binding[self::REQUEST_KEY])
+            ;
+            $bindingObjects[] = $bindingObject;
+        }
+        return $bindingObjects;
+    }
+
+    /**
+     * @return Bindings[]
+     */
+    public static function setExternalBindings()
+    {
+        $bindingObjects = [];
+        foreach (self::EXTERNAL_BINDINGS as $binding) {
+            $bindingObject = new Bindings();
+            $bindingObject
+                ->setModel($binding[self::EXTERNAL_MODEL_KEY])
+                ->setResource($binding[self::EXTERNAL_RESOURCE_KEY])
+                ->setRepository($binding[self::EXTERNAL_REPOSITORY_KEY])
             ;
             $bindingObjects[] = $bindingObject;
         }

@@ -2,21 +2,13 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ExternalCompanyStore;
 use DentalSleepSolutions\Http\Requests\ExternalCompanyUpdate;
 use DentalSleepSolutions\Http\Requests\ExternalCompanyDestroy;
 use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class ExternalCompaniesController extends Controller
+class ExternalCompaniesController extends ExternalBaseController
 {
     /**
      * Display a listing of the resource.
@@ -40,7 +32,7 @@ class ExternalCompaniesController extends Controller
      */
     public function show(ExternalCompanies $resources, $id)
     {
-        $resource = $resources-findOrFail($id);
+        $resource = $resources->findOrFail($id);
         return ApiResponse::responseOk('', $resource);
     }
 

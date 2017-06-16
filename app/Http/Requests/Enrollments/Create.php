@@ -24,4 +24,19 @@ class Create extends Request
             'state' => 'size:2',
         ];
     }
+
+    public function destroyRules()
+    {
+        return [];
+    }
+
+    public function storeRules()
+    {
+        return [];
+    }
+
+    public function updateRules()
+    {
+        return [];
+    }
 }

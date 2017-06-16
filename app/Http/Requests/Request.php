@@ -27,4 +27,15 @@ abstract class Request extends FormRequest
     {
         return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $errors]);
     }
+
+    public function rules()
+    {
+        return [];
+    }
+
+    abstract public function storeRules();
+
+    abstract public function updateRules();
+
+    abstract public function destroyRules();
 }

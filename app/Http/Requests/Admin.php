@@ -1,0 +1,44 @@
+<?php
+
+namespace DentalSleepSolutions\Http\Requests;
+
+class Admin extends Request
+{
+    public function destroyRules()
+    {
+        return [
+            // @todo Provide validation rules
+        ];
+    }
+
+    public function storeRules()
+    {
+        return [
+            'name'         => 'max:250',
+            'username'     => 'required|max:250|unique:admin',
+            'password'     => 'required|max:250',
+            'status'       => 'integer',
+            'admin_access' => 'integer',
+            'email'        => 'email|max:100',
+            'first_name'   => 'string|max:50',
+            'last_name'    => 'string|max:50'
+        ];
+    }
+
+    public function updateRules()
+    {
+        $admin = $this->admins;
+        $ignore = $admin->getKeyName() . ',' . $admin->getKey();
+
+        return [
+            'name'         => 'max:250',
+            'username'     => 'sometimes|required|max:250|unique:admin,username,' . $ignore,
+            'password'     => 'sometimes|required|max:250',
+            'status'       => 'integer',
+            'admin_access' => 'integer',
+            'email'        => 'email|max:100',
+            'first_name'   => 'string|max:50',
+            'last_name'    => 'string|max:50'
+        ];
+    }
+}

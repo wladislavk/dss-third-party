@@ -5,44 +5,39 @@ namespace DentalSleepSolutions\Http\Controllers;
 use Carbon\Carbon;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\Faxes;
-use DentalSleepSolutions\Contracts\Repositories\Repository;
-use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
-use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
-use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
 
 class FaxesController extends Controller
 {
-    public function index(Repository $resources)
+    public function index()
     {
-        return parent::index($resources);
+        return parent::index();
     }
 
-    public function show(Resource $resource)
+    public function show($id)
     {
-        return parent::show($resource);
+        return parent::show($id);
     }
 
-    public function store(Repository $resources, AbstractStoreRequest $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
+        $data = array_merge($this->request->all(), [
             'sent_date'  => Carbon::now(),
-            'ip_address' => $request->ip(),
+            'ip_address' => $this->request->ip(),
         ]);
 
-        $resource = $resources->create($data);
+        $resource = $this->resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
 
-    public function update(Resource $resource, AbstractUpdateRequest $request)
+    public function update($id)
     {
-        return parent::update($resource, $request);
+        return parent::update($id);
     }
 
-    public function destroy(Resource $resource, AbstractDestroyRequest $request)
+    public function destroy($id)
     {
-        return parent::destroy($resource, $request);
+        return parent::destroy($id);
     }
 
     public function getAlerts(Faxes $resources)

@@ -21,7 +21,8 @@ class TmjClinicalExamsApiApiTest extends ApiTestCase
 
         $data['formid'] = 100;
 
-        $this->post('/api/v1/tmj-clinical-exams', $data)
+        $this->post('/api/v1/tmj-clinical-exams', $data);
+        $this
             ->seeInDatabase('dental_ex_page5', ['formid' => 100])
             ->assertResponseOk();
     }
@@ -39,8 +40,8 @@ class TmjClinicalExamsApiApiTest extends ApiTestCase
             'patientid'          => 100,
             'other_range_motion' => 'test'
         ];
-
-        $this->put('/api/v1/tmj-clinical-exams/' . $tmjClinicalExamTestRecord->ex_page5id, $data)
+        $this->put('/api/v1/tmj-clinical-exams/' . $tmjClinicalExamTestRecord->ex_page5id, $data);
+        $this
             ->seeInDatabase('dental_ex_page5', ['patientid' => 100])
             ->assertResponseOk();
     }
@@ -54,7 +55,9 @@ class TmjClinicalExamsApiApiTest extends ApiTestCase
     {
         $tmjClinicalExamTestRecord = factory(TmjClinicalExam::class)->create();
 
-        $this->delete('/api/v1/tmj-clinical-exams/' . $tmjClinicalExamTestRecord->ex_page5id)
+        $this->delete('/api/v1/tmj-clinical-exams/' . $tmjClinicalExamTestRecord->ex_page5id);
+//        var_dump($this->response->getContent());
+        $this
             ->notSeeInDatabase('dental_ex_page5', ['ex_page5id' => $tmjClinicalExamTestRecord->ex_page5id])
             ->assertResponseOk();
     }

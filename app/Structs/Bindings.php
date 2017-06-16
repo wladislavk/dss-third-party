@@ -5,9 +5,6 @@ namespace DentalSleepSolutions\Structs;
 class Bindings
 {
     /** @var string */
-    private $route;
-
-    /** @var string */
     private $model;
 
     /** @var string */
@@ -20,24 +17,7 @@ class Bindings
     private $repository;
 
     /** @var string */
-    private $storeRequest;
-
-    /** @var string */
-    private $updateRequest;
-
-    /** @var string */
-    private $destroyRequest;
-
-    public function setRoute($route)
-    {
-        $this->route = strval($route);
-        return $this;
-    }
-
-    public function getRoute()
-    {
-        return $this->route;
-    }
+    private $request;
 
     public function setModel($model)
     {
@@ -83,36 +63,14 @@ class Bindings
         return $this->repository;
     }
 
-    public function setStoreRequest($storeRequest)
+    public function setRequest($request)
     {
-        $this->storeRequest = strval($storeRequest);
+        $this->request = strval($request);
         return $this;
     }
 
-    public function getStoreRequest()
+    public function getRequest()
     {
-        return $this->storeRequest;
-    }
-
-    public function setUpdateRequest($updateRequest)
-    {
-        $this->updateRequest = strval($updateRequest);
-        return $this;
-    }
-
-    public function getUpdateRequest()
-    {
-        return $this->updateRequest;
-    }
-
-    public function setDestroyRequest($destroyRequest)
-    {
-        $this->destroyRequest = strval($destroyRequest);
-        return $this;
-    }
-
-    public function getDestroyRequest()
-    {
-        return $this->destroyRequest;
+        return $this->request;
     }
 }

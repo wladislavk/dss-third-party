@@ -86,4 +86,19 @@ class ExternalPatientStore extends Request
             'patient.insurance_primary.insured_info.dependent.gender'      => 'sometimes|alpha|in:m,f,M,F',
         ];
     }
+
+    public function destroyRules()
+    {
+        return [];
+    }
+
+    public function storeRules()
+    {
+        return [];
+    }
+
+    public function updateRules()
+    {
+        return [];
+    }
 }

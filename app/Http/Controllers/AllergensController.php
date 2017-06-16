@@ -2,36 +2,30 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Contracts\Repositories\Repository;
-use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
-use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
-use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
-
 class AllergensController extends Controller
 {
-    public function index(Repository $resources)
+    public function index()
     {
-        return parent::index($resources);
+        return parent::index();
     }
 
-    public function show(Resource $resource)
+    public function show($id)
     {
-        return parent::show($resource);
+        return parent::show($id);
     }
 
-    public function store(Repository $resources, AbstractStoreRequest $request)
+    public function store()
     {
-        return parent::store($resources, $request);
+        return parent::store();
     }
 
-    public function update(Resource $resource, AbstractUpdateRequest $request)
+    public function update($id)
     {
-        return parent::update($resource, $request);
+        return parent::update($id);
     }
 
-    public function destroy(Resource $resource, AbstractDestroyRequest $request)
+    public function destroy($id)
     {
-        return parent::destroy($resource, $request);
+        return parent::destroy($id);
     }
 }

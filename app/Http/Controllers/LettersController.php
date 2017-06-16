@@ -3,92 +3,41 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\LetterStore;
-use DentalSleepSolutions\Http\Requests\LetterUpdate;
-use DentalSleepSolutions\Http\Requests\LetterDestroy;
 use DentalSleepSolutions\Contracts\Resources\Letter;
 use DentalSleepSolutions\Contracts\Repositories\Letters;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Contracts\Resources\ContactType;
 use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
 class LettersController extends Controller
 {
     const DSS_USER_TYPE_FRANCHISEE = 1;
     const DSS_USER_TYPE_SOFTWARE = 2;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Letters $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Letters $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Letter $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(Letter $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Letters $resources
-     * @param  \DentalSleepSolutions\Http\Requests\LetterStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Letters $resources, LetterStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Letter $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LetterUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Letter $resource, LetterUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Letter $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LetterDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Letter $resource, LetterDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function getPending(Letters $resources)
@@ -112,7 +61,7 @@ class LettersController extends Controller
     // gets letters that were delivered for contact
     public function getContactSentLetters(Letters $resources, Request $request)
     {
-        $contactId = $request->input('contact_id') ?: 0;
+        $contactId = $request->input('contact_id', 0);
         $data = $resources->getContactSentLetters($contactId);
 
         return ApiResponse::responseOk('', $data);
@@ -121,7 +70,7 @@ class LettersController extends Controller
     // gets letters that were not delivered for contact
     public function getContactPendingLetters(Letters $resources, Request $request)
     {
-        $contactId = $request->input('contact_id') ?: 0;
+        $contactId = $request->input('contact_id', 0);
         $data = $resources->getContactPendingLetters($contactId);
 
         return ApiResponse::responseOk('', $data);
@@ -137,8 +86,8 @@ class LettersController extends Controller
 
         $letterInfo = $userResource->getLetterInfo($docId);
 
-        $templateId = $request->input('template_id') ?: 0;
-        $contactTypeId = $request->input('contact_type_id') ?: 0;
+        $templateId = $request->input('template_id', 0);
+        $contactTypeId = $request->input('contact_type_id', 0);
 
         if ($letterInfo && $letterInfo->use_letters && $letterInfo->intro_letters) {
             $contactType = $contactTypeResource->find($contactTypeId);
@@ -162,7 +111,7 @@ class LettersController extends Controller
 
     public function getGeneratedDateOfIntroLetter(Letter $resource, Request $request)
     {
-        $patientId = $request->input('patient_id') ?: 0;
+        $patientId = $request->input('patient_id', 0);
 
         $data = $resource->getGeneratedDateOfIntroLetter($patientId);
 

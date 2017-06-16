@@ -20,4 +20,19 @@ class OriginalSignature extends Request
             'npi' => 'required',
         ];
     }
+
+    public function destroyRules()
+    {
+        return [];
+    }
+
+    public function storeRules()
+    {
+        return [];
+    }
+
+    public function updateRules()
+    {
+        return [];
+    }
 }

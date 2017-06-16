@@ -2,21 +2,13 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ExternalUserStore;
 use DentalSleepSolutions\Http\Requests\ExternalUserUpdate;
 use DentalSleepSolutions\Http\Requests\ExternalUserDestroy;
 use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class ExternalUsersController extends Controller
+class ExternalUsersController extends ExternalBaseController
 {
     /**
      * Display a listing of the resource.

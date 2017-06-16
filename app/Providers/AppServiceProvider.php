@@ -59,6 +59,11 @@ class AppServiceProvider extends ServiceProvider
             $this->app->bind($binding->getResource(), $binding->getModel());
             $this->app->bind($binding->getRepository(), $binding->getModel());
         }
+        $externalBindings = BindingSetter::setExternalBindings();
+        foreach ($externalBindings as $externalBinding) {
+            $this->app->bind($externalBinding->getResource(), $externalBinding->getModel());
+            $this->app->bind($externalBinding->getRepository(), $externalBinding->getModel());
+        }
 
         $this->app->bind(
             Repositories\ClaimNoteAttachments::class,

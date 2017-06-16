@@ -10,6 +10,7 @@ use DentalSleepSolutions\Http\Controllers\ChangeListsController;
 use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
 use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
 use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
+use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,28 +23,13 @@ class ControllerServiceProvider extends ServiceProvider
         foreach ($bindings as $binding) {
             $this->app
                 ->when($binding->getController())
-                ->needs(Resource::class)
-                ->give($binding->getModel())
-            ;
-            $this->app
-                ->when($binding->getController())
                 ->needs(Repository::class)
                 ->give($binding->getModel())
             ;
             $this->app
                 ->when($binding->getController())
-                ->needs(AbstractStoreRequest::class)
-                ->give($binding->getStoreRequest())
-            ;
-            $this->app
-                ->when($binding->getController())
-                ->needs(AbstractUpdateRequest::class)
-                ->give($binding->getUpdateRequest())
-            ;
-            $this->app
-                ->when($binding->getController())
-                ->needs(AbstractDestroyRequest::class)
-                ->give($binding->getDestroyRequest())
+                ->needs(Request::class)
+                ->give($binding->getRequest())
             ;
         }
     }

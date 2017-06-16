@@ -4,6 +4,14 @@ namespace DentalSleepSolutions\Http\Requests;
 
 class Admin extends Request
 {
+    private $adminModel;
+
+    public function __construct(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null, \DentalSleepSolutions\Eloquent\Admin $adminModel = null)
+    {
+        parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
+        $this->adminModel = $adminModel;
+    }
+
     public function destroyRules()
     {
         return [
@@ -27,7 +35,8 @@ class Admin extends Request
 
     public function updateRules()
     {
-        $admin = $this->admins;
+        /** @var \DentalSleepSolutions\Eloquent\Admin $admin */
+        $admin = $this->adminModel->findOrFail(Request::input('id'));
         $ignore = $admin->getKeyName() . ',' . $admin->getKey();
 
         return [

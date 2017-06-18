@@ -169,80 +169,17 @@ $i_val = $index_val * $rec_disp;
  * @see DSS-568
  */
 $escapedPendingStatus = $db->escape(DSS_PREAUTH_PENDING);
+$totalVobSubQuery = '0';
+$joinByUserCompany = '';
 $conditionals = [];
 
 if ($isSuperAdmin) {
-    $sql = "SELECT
-            preauth.id,
-            preauth.patient_id,
-            i.company AS ins_co,
-            p.firstname AS patient_firstname,
-            p.lastname AS patient_lastname,
-            preauth.doc_id,
-            preauth.updated_at,
-            preauth.front_office_request_date,
-            CONCAT(doctor.first_name, ' ', doctor.last_name) AS doc_name,
-            preauth.status,
-            DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
-            CONCAT(staff.first_name, ' ', staff.last_name) AS user_name,
-            (
-                SELECT COUNT(dip.id)
-                FROM dental_insurance_preauth dip
-                WHERE dip.patient_id = p.patientid
-            ) AS total_vob,
-            doctor_billing_company.name AS current_billing_name,
-            vob_billing_company.name AS stored_billing_name,
-            CASE
-                WHEN preauth.status IN ($escapedPendingStatus) THEN doctor_billing_company.name
-                WHEN IFNULL(vob_billing_company.id, 0) = 0 THEN doctor_billing_company.name
-                ELSE vob_billing_company.name
-            END AS owner_billing_name,
-            doctor_billing_company.id AS current_billing_company_id,
-            vob_billing_company.id AS stored_billing_company_id
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_users doctor ON preauth.doc_id = doctor.userid
-            LEFT JOIN dental_users staff ON preauth.userid = staff.userid
-            LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
-            LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
-            LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
-            LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
-        ";
+    $totalVobSubQuery = "(
+        SELECT COUNT(dip.id)
+            FROM dental_insurance_preauth dip
+            WHERE dip.patient_id = p.patientid
+        )";
 } elseif (is_billing($_SESSION['admin_access'])) {
-    $sql = "SELECT
-            preauth.id,
-            preauth.patient_id,
-            i.company AS ins_co,
-            p.firstname AS patient_firstname,
-            p.lastname AS patient_lastname,
-            preauth.doc_id,
-            preauth.updated_at,
-            preauth.front_office_request_date,
-            CONCAT(doctor.first_name, ' ', doctor.last_name) AS doc_name,
-            preauth.status,
-            DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
-            CONCAT(staff.first_name, ' ', staff.last_name) AS user_name,
-            doctor_billing_company.name AS current_billing_name,
-            vob_billing_company.name AS stored_billing_name,
-            CASE
-                WHEN preauth.status IN ($escapedPendingStatus) THEN doctor_billing_company.name
-                WHEN IFNULL(vob_billing_company.id, 0) = 0 THEN doctor_billing_company.name
-                ELSE vob_billing_company.name
-            END AS owner_billing_name,
-            doctor_billing_company.id AS current_billing_company_id,
-            vob_billing_company.id AS stored_billing_company_id
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_users doctor ON preauth.doc_id = doctor.userid
-            LEFT JOIN dental_users staff ON preauth.userid = staff.userid
-            LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
-            LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
-            LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
-            LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
-        ";
-
     /**
      * @see DSS-568
      *
@@ -255,41 +192,47 @@ if ($isSuperAdmin) {
             AND vob_billing_company.id = '$adminCompanyId'
         )";
 } else {
-    $sql = "SELECT
-            preauth.id,
-            preauth.patient_id,
-            i.company AS ins_co,
-            p.firstname AS patient_firstname,
-            p.lastname AS patient_lastname,
-            preauth.doc_id,
-            preauth.updated_at,
-            preauth.front_office_request_date,
-            CONCAT(doctor.first_name, ' ', doctor.last_name) AS doc_name,
-            preauth.status,
-            DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
-            CONCAT(staff.first_name, ' ', staff.last_name) AS user_name,
-            doctor_billing_company.name AS current_billing_name,
-            vob_billing_company.name AS stored_billing_name,
-            CASE
-                WHEN preauth.status IN ($escapedPendingStatus) THEN doctor_billing_company.name
-                WHEN IFNULL(vob_billing_company.id, 0) = 0 THEN doctor_billing_company.name
-                ELSE vob_billing_company.name
-            END AS owner_billing_name,
-            doctor_billing_company.id AS current_billing_company_id,
-            vob_billing_company.id AS stored_billing_company_id
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_user_company uc ON uc.userid = p.docid
-                AND uc.companyid = '$adminCompanyId'
-            JOIN dental_users doctor ON preauth.doc_id = doctor.userid
-            LEFT JOIN dental_users staff ON preauth.userid = staff.userid
-            LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
-            LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
-            LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
-            LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
-        ";
+    /**
+     * Restrict by HST company
+     */
+    $joinByUserCompany = "JOIN dental_user_company uc ON uc.userid = p.docid
+        AND uc.companyid = '$adminCompanyId'";
 }
+
+$sql = "SELECT
+        preauth.id,
+        preauth.patient_id,
+        i.company AS ins_co,
+        p.firstname AS patient_firstname,
+        p.lastname AS patient_lastname,
+        preauth.doc_id,
+        preauth.updated_at,
+        preauth.front_office_request_date,
+        CONCAT(doctor.first_name, ' ', doctor.last_name) AS doc_name,
+        preauth.status,
+        DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
+        CONCAT(staff.first_name, ' ', staff.last_name) AS user_name,
+        $totalVobSubQuery AS total_vob,
+        doctor_billing_company.name AS current_billing_name,
+        vob_billing_company.name AS stored_billing_name,
+        CASE
+            WHEN preauth.status IN ($escapedPendingStatus) THEN doctor_billing_company.name
+            WHEN IFNULL(vob_billing_company.id, 0) = 0 THEN doctor_billing_company.name
+            ELSE vob_billing_company.name
+        END AS owner_billing_name,
+        doctor_billing_company.id AS current_billing_company_id,
+        vob_billing_company.id AS stored_billing_company_id
+    FROM dental_insurance_preauth preauth
+        JOIN dental_patients p ON preauth.patient_id = p.patientid
+        JOIN dental_users doctor ON preauth.doc_id = doctor.userid
+        LEFT JOIN dental_users staff ON preauth.userid = staff.userid
+        LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+        LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
+        LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
+        LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
+        LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
+        $joinByUserCompany
+    ";
 
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid)) {

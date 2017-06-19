@@ -965,6 +965,10 @@ function preAuthEditPermission (array $preAuthData, $adminCompanyId, $isSuperAdm
     $currentBillingCompanyId = (int)$preAuthData['current_billing_company_id'];
     $storedBillingCompanyId = (int)$preAuthData['stored_billing_company_id'];
 
+    if (!$currentBillingCompanyId && !$storedBillingCompanyId) {
+        return false;
+    }
+
     if ($currentBillingCompanyId === $storedBillingCompanyId) {
         return true;
     }

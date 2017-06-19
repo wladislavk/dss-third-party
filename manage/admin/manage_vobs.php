@@ -558,7 +558,7 @@ function preAuthEditPermission (array $preAuthData, $adminCompanyId, $isSuperAdm
         return true;
     }
 
-    if ($isCurrentBillingCompany && ($isStatusPending || $isStatusPreAuth)) {
+    if ($isCurrentBillingCompany && $isStatusPending) {
         return true;
     }
 

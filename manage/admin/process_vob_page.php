@@ -20,13 +20,31 @@ if (!empty($_POST['save_vob'])) {
     $preAuthId = (int)$_POST['preauth_id'];
 }
 
-$andBillingCompanyConditional = '';
+$escapedPendingStatus = $db->escape(DSS_PREAUTH_PENDING);
+$joinByUserCompany = '';
+$conditionals = ['preauth.id' => $preAuthId];
 
-if (!$isSuperAdmin) {
-    $andBillingCompanyConditional = "AND '$adminCompanyId' IN (ac.companyid, u.billing_company_id)";
+if ($isSuperAdmin) {
+} elseif (is_billing($_SESSION['admin_access'])) {
+    /**
+     * @see DSS-568
+     *
+     * Doctor billing company can see all VOBs. Former billing companies can see all owned by them, except if they
+     * are DSS_PREAUTH_PENDING.
+     */
+    $conditionals[] = "doctor_billing_company.id = '$adminCompanyId'
+        OR (
+            preauth.status NOT IN ($escapedPendingStatus)
+            AND vob_billing_company.id = '$adminCompanyId'
+        )";
+} else {
+    /**
+     * Restrict by HST company
+     */
+    $joinByUserCompany = "JOIN dental_user_company uc ON uc.userid = p.docid
+        AND uc.companyid = '$adminCompanyId'";
 }
 
-// load preauth
 $sql = "SELECT
         preauth.*,
         id.ins_diagnosis,
@@ -35,17 +53,28 @@ $sql = "SELECT
         pcp.lastname AS 'pcp_lastname',
         pcp.phone1 AS 'pcp_phone1',
         p.patientid as 'patientid',
-        u.billing_company_id AS current_billing_company_id,
-        ac.companyid AS stored_billing_company_id
+        doctor_billing_company.id AS current_billing_company_id,
+        vob_billing_company.id AS stored_billing_company_id
     FROM dental_insurance_preauth preauth
-        JOIN dental_patients p ON p.patientid = preauth.patient_id
-        LEFT JOIN dental_users u ON u.userid = preauth.doc_id
-        LEFT JOIN admin a ON a.adminid = preauth.updated_by
-        LEFT JOIN admin_company ac ON ac.adminid = a.adminid
+        JOIN dental_patients p ON preauth.patient_id = p.patientid
+        JOIN dental_users doctor ON preauth.doc_id = doctor.userid
         LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp
         LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code
-    WHERE preauth.id = '$preAuthId'
-        $andBillingCompanyConditional";
+        LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
+        LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
+        LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
+        LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
+        $joinByUserCompany
+    ";
+
+$whereConditionals = '';
+
+if (count($conditionals)) {
+    $conditionals = '(' . join(') AND (', $conditionals) . ')';
+    $whereConditionals = "WHERE $conditionals";
+}
+
+$sql = "$sql $whereConditionals";
 $preauth = $db->getRow($sql);
 
 $pid = $preauth['patient_id'];
@@ -53,11 +82,7 @@ $pid = $preauth['patient_id'];
 /**
  * @see DSS-568
  */
-$status = (int)$preauth['status'];
-$isStatusPending = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
-$loggedInCompanyMatches = $adminCompanyId === (int)$preauth['current_billing_company_id'];
-$canInspect = $isSuperAdmin || $loggedInCompanyMatches;
-$canEdit = $isStatusPending && $canInspect;
+$canEdit = preAuthEditPermission($preauth, $adminCompanyId, $isSuperAdmin);
 
 if (!$preauth) {
     $message = 'You are not authorized to view this page';
@@ -915,6 +940,58 @@ function autoResize(id){
 
 require_once __DIR__ . '/includes/bottom.htm';
 
+/**
+ * Determine edit permissions. Only Pending statuses can be edited.
+ *
+ * @param array $preAuthData
+ * @param int   $adminCompanyId
+ * @param bool  $isSuperAdmin
+ * @return bool
+ */
+function preAuthEditPermission (array $preAuthData, $adminCompanyId, $isSuperAdmin) {
+    $status = (int)$preAuthData['status'];
+    $isStatusPending = $status === DSS_PREAUTH_PENDING;
+    $isStatusPreAuth = $status === DSS_PREAUTH_PREAUTH_PENDING;
+    $isAnyPendingStatus = $isStatusPending || $isStatusPreAuth;
+
+    if (!$isAnyPendingStatus) {
+        return false;
+    }
+
+    if ($isSuperAdmin) {
+        return true;
+    }
+
+    $currentBillingCompanyId = (int)$preAuthData['current_billing_company_id'];
+    $storedBillingCompanyId = (int)$preAuthData['stored_billing_company_id'];
+
+    if (!$currentBillingCompanyId && !$storedBillingCompanyId) {
+        return false;
+    }
+
+    if ($currentBillingCompanyId === $storedBillingCompanyId) {
+        return true;
+    }
+
+    $isCurrentBillingCompany = $currentBillingCompanyId === $adminCompanyId;
+    $isStoredBillingCompany = $storedBillingCompanyId === $adminCompanyId;
+
+    if ($isStoredBillingCompany && $isStatusPreAuth) {
+        return true;
+    }
+
+    if ($isCurrentBillingCompany && $isStatusPending) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * @param array $input
+ * @param int   $adminId
+ * @return mixed
+ */
 function processVobInput (Array $input, $adminId) {
     $vobData = array_only($input, [
         'ins_co',

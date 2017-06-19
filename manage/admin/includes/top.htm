@@ -176,36 +176,58 @@ $letters_query = "SELECT COUNT(dental_letters.letterid) AS total
 
 $pending_letters = $db->getColumn($letters_query, 'total', 0);
 
-if (is_super($_SESSION['admin_access'])) {
+/**
+ * @ses DSS-568
+ */
+$sql = call_user_func(function () use ($adminCompanyId) {
+    $db = new Db();
+
+    $escapedPendingStatus = $db->escape(DSS_PREAUTH_PENDING);
+    $escapedPreAuthStatus = $db->escape(DSS_PREAUTH_PREAUTH_PENDING);
+    $joinByUserCompany = '';
+    $conditionals = ["preauth.status IN ('$escapedPendingStatus', '$escapedPreAuthStatus')"];
+
+    if (is_billing($_SESSION['admin_access'])) {
+        /**
+         * @see DSS-568
+         *
+         * Doctor billing company can see all VOBs. Former billing companies can see all owned by them, except if they
+         * are DSS_PREAUTH_PENDING.
+         */
+        $conditionals[] = "doctor_billing_company.id = '$adminCompanyId'
+            OR (
+                preauth.status NOT IN ($escapedPendingStatus)
+                AND vob_billing_company.id = '$adminCompanyId'
+            )";
+    } elseif (!is_super($_SESSION['admin_access'])) {
+        /**
+         * Restrict by HST company
+         */
+        $joinByUserCompany = "JOIN dental_user_company uc ON uc.userid = p.docid
+            AND uc.companyid = '$adminCompanyId'";
+    }
+
     $sql = "SELECT COUNT(preauth.id) AS total
         FROM dental_insurance_preauth preauth
             JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            JOIN dental_users users ON preauth.doc_id = users.userid
-            LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-        WHERE preauth.status IN ('" . DSS_PREAUTH_PENDING . "', '" . DSS_PREAUTH_PREAUTH_PENDING . "')
+            JOIN dental_users doctor ON preauth.doc_id = doctor.userid
+            LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
+            LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
+            LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
+            LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
+            $joinByUserCompany
         ";
-} elseif (is_billing($_SESSION['admin_access'])) {
-    $sql = "SELECT COUNT(preauth.id) AS total
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            JOIN dental_users users ON preauth.doc_id = users.userid
-            LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-        WHERE preauth.status IN ('" . DSS_PREAUTH_PENDING . "', '" . DSS_PREAUTH_PREAUTH_PENDING . "')
-            AND users.billing_company_id = '" . $db->escape($_SESSION['admincompanyid']) . "'
-        ";
-} else {
-    $sql = "SELECT COUNT(preauth.id) AS total
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            JOIN dental_users users ON preauth.doc_id = users.userid
-            JOIN dental_user_company uc ON uc.userid = users.userid
-            LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-        WHERE preauth.status IN ('" . DSS_PREAUTH_PENDING . "', '" . DSS_PREAUTH_PREAUTH_PENDING . "')
-            AND uc.companyid = '" . $db->escape($_SESSION['admincompanyid']) . "'";
-}
+
+    $whereConditionals = '';
+
+    if (count($conditionals)) {
+        $conditionals = '(' . join(') AND (', $conditionals) . ')';
+        $whereConditionals = "WHERE $conditionals";
+    }
+
+    $sql = "$sql $whereConditionals";
+    return $sql;
+});
 
 $num_pending_preauth = $db->getColumn($sql, 'total', 0);
 

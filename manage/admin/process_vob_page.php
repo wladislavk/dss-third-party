@@ -22,7 +22,7 @@ if (!empty($_POST['save_vob'])) {
 
 $escapedPendingStatus = $db->escape(DSS_PREAUTH_PENDING);
 $joinByUserCompany = '';
-$conditionals = ['preauth.id' => $preAuthId];
+$conditionals = ["preauth.id = '$preAuthId'"];
 
 if ($isSuperAdmin) {
 } elseif (is_billing($_SESSION['admin_access'])) {

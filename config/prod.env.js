@@ -1,5 +1,5 @@
 module.exports = {
   NODE_ENV: '"production"',
-  API_ROOT: '"http://api.ds3.loc:8080/"',
-  API_PATH: '"http://api.ds3.loc:8080/api/v1/"'
+  API_ROOT: '"https://api.docker.localhost/"',
+  API_PATH: '"https://api.docker.localhost/api/v1/"'
 }

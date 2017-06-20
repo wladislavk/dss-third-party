@@ -306,6 +306,12 @@ class Contact extends AbstractModel implements Resource, Repository
             ->get();
     }
 
+    /**
+     * @param $docId
+     * @param $sort
+     * @param string $sortDir
+     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function getReferredByContacts($docId, $sort, $sortDir = 'asc')
     {
         $physicianContacts = $this->select(

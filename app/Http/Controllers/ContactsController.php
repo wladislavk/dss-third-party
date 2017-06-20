@@ -134,17 +134,18 @@ class ContactsController extends BaseRestController
         $contactsPerPage = $request->input('contacts_per_page', 0);
         $isDetailed = $request->input('detailed', false);
 
-        $referredByContacts = $resource->getReferredByContacts($docId, $sort, $sortDir, $page);
+        /** @var \DentalSleepSolutions\Eloquent\Dental\Contact $contactModel */
+        $contactModel = $resource;
+        $referredByContacts = $contactModel->getReferredByContacts($docId, $sort, $sortDir);
 
         $referredByContactsTotalNumber = count($referredByContacts);
         if ($contactsPerPage > 0) {
-            $referredByContacts = [];
             if (count($referredByContacts)) {
-                $referredByContacts = array_slice($referredByContacts, $page * $contactsPerPage, $contactsPerPage);
+                $referredByContacts = $referredByContacts->slice($page * $contactsPerPage, $contactsPerPage);
             }
         }
 
-        $referredByContacts = array_map(function ($contact) use ($patients, $isDetailed) {
+        $referredByContacts->map(function ($contact) use ($patients, $isDetailed) {
             $counters = $this->getReferralCountersForContact(
                 $patients,
                 $contact->contactid,
@@ -164,7 +165,7 @@ class ContactsController extends BaseRestController
             $contact['name'] = $name;
 
             return $contact;
-        }, $referredByContacts);
+        });
 
         switch ($sort) {
             case 'thirty':
@@ -189,7 +190,7 @@ class ContactsController extends BaseRestController
         }
 
         if (!empty($sortColumn)) {
-            $referredByContacts = array_sort( $referredByContacts, function ($first, $second) use ($sortColumn, $sortDir) {
+            $referredByContacts->sort(function ($first, $second) use ($sortColumn, $sortDir) {
                 if ($first->$sortColumn == $second->$sortColumn) {
                     return 0;
                 }

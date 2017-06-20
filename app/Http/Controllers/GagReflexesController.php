@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class GagReflexesController extends Controller
+class GagReflexesController extends BaseRestController
 {
     public function index()
     {

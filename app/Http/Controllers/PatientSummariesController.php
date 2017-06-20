@@ -6,7 +6,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary;
 
-class PatientSummariesController extends Controller
+class PatientSummariesController extends BaseRestController
 {
     public function index()
     {

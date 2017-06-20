@@ -8,7 +8,7 @@ use DentalSleepSolutions\Contracts\Repositories\Contacts;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use Illuminate\Http\Request;
 
-class ContactsController extends Controller
+class ContactsController extends BaseRestController
 {
     const DSS_REFERRED_PHYSICIAN = 2;
 

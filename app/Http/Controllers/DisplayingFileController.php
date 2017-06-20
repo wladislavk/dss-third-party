@@ -5,7 +5,6 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Storage;
 
-// TODO: this class should not extend BaseRestController
 class DisplayingFileController extends Controller
 {
     public function getFile($filename)

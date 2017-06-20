@@ -12,7 +12,7 @@ use DentalSleepSolutions\Contracts\Repositories\LedgerNotes;
 use DentalSleepSolutions\Contracts\Repositories\LedgerStatements;
 use Illuminate\Http\Request;
 
-class LedgersController extends Controller
+class LedgersController extends BaseRestController
 {
     // Transaction types (ledger)
     const DSS_TRXN_TYPE_MED = 1;

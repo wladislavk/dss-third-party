@@ -6,7 +6,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use Illuminate\Http\Request;
 
-class HomeSleepTestsController extends Controller
+class HomeSleepTestsController extends BaseRestController
 {
     public function index()
     {

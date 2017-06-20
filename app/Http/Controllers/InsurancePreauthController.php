@@ -7,7 +7,7 @@ use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
 use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as InsPreauth;
 use Illuminate\Http\Request;
 
-class InsurancePreauthController extends Controller
+class InsurancePreauthController extends BaseRestController
 {
     public function index()
     {

@@ -9,7 +9,7 @@ use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Contracts\Resources\ContactType;
 use Illuminate\Http\Request;
 
-class LettersController extends Controller
+class LettersController extends BaseRestController
 {
     const DSS_USER_TYPE_FRANCHISEE = 1;
     const DSS_USER_TYPE_SOFTWARE = 2;

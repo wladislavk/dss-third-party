@@ -6,7 +6,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\PatientInsurances;
 use Illuminate\Http\Request;
 
-class PatientInsurancesController extends Controller
+class PatientInsurancesController extends BaseRestController
 {
     public function index()
     {

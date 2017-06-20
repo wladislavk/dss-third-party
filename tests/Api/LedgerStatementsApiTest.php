@@ -22,7 +22,8 @@ class LedgerStatementsApiTest extends ApiTestCase
 
         $data['producerid'] = 100;
 
-        $this->post('/api/v1/ledger-statements', $data)
+        $this->post('/api/v1/ledger-statements', $data);
+        $this
             ->seeInDatabase('dental_ledger_statement', ['producerid' => 100])
             ->assertResponseOk();
     }

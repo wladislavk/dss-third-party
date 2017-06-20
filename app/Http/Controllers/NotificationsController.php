@@ -6,7 +6,7 @@ use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
-class NotificationsController extends Controller
+class NotificationsController extends BaseRestController
 {
     public function index()
     {

@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class ClaimNoteAttachmentsController extends Controller
+class ClaimNoteAttachmentsController extends BaseRestController
 {
     public function index()
     {

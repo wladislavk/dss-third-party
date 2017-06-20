@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Carbon\Carbon;
 
-class LedgerRecordsController extends Controller
+class LedgerRecordsController extends BaseRestController
 {
     public function index()
     {

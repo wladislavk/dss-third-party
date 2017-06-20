@@ -3,21 +3,26 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Contracts\Repositories\Repository;
-use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
-use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
-use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Eloquent\Dental\User;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Database\Eloquent\Model;
 
-abstract class Controller extends BaseRestController
+abstract class Controller extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
 
     protected $currentUser;
     protected $auth;
+
+    /** @var Model|Repository */
+    protected $resources;
+
+    /** @var Request */
+    protected $request;
 
     public function __construct(
         Repository $resources,
@@ -25,7 +30,8 @@ abstract class Controller extends BaseRestController
         JWTAuth $auth,
         User $userModel
     ) {
-        parent::__construct($resources, $request);
+        $this->resources = $resources;
+        $this->request = $request;
         // TODO: see how it is possible to generate JWT token while testing
         if (env('APP_ENV') != 'testing') {
             $this->currentUser = $this->getUserInfo($auth, $userModel);

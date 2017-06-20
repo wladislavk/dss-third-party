@@ -6,7 +6,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\ContactTypes;
 use Illuminate\Http\Request;
 
-class ContactTypesController extends Controller
+class ContactTypesController extends BaseRestController
 {
     public function index()
     {

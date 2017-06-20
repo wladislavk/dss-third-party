@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\PaymentReports;
 
-class PaymentReportsController extends Controller
+class PaymentReportsController extends BaseRestController
 {
     public function index()
     {

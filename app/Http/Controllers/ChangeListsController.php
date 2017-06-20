@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class ChangeListsController extends Controller
+class ChangeListsController extends BaseRestController
 {
     public function index()
     {

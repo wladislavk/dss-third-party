@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\SupportTickets;
 
-class SupportTicketsController extends Controller
+class SupportTicketsController extends BaseRestController
 {
     public function index()
     {

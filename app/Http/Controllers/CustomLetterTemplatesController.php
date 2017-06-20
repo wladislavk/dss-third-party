@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class CustomLetterTemplatesController extends Controller
+class CustomLetterTemplatesController extends BaseRestController
 {
     public function index()
     {

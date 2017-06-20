@@ -6,7 +6,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Resources\ReferredByContact;
 use Illuminate\Http\Request;
 
-class ReferredByContactsController extends Controller
+class ReferredByContactsController extends BaseRestController
 {
     public function index()
     {

@@ -8,7 +8,7 @@ use DentalSleepSolutions\Contracts\Repositories\Sleeplabs;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use Illuminate\Http\Request;
 
-class SleeplabsController extends Controller
+class SleeplabsController extends BaseRestController
 {
     public function index()
     {

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Resources\Payer;
 
-class PayersController extends Controller
+class PayersController extends BaseRestController
 {
     public function index()
     {

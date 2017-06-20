@@ -7,7 +7,7 @@ use DentalSleepSolutions\Contracts\Repositories\Devices;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettings;
 use Illuminate\Http\Request;
 
-class GuideDevicesController extends Controller
+class GuideDevicesController extends BaseRestController
 {
     public function index()
     {

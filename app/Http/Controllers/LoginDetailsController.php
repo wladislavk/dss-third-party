@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
-class LoginDetailsController extends Controller
+class LoginDetailsController extends BaseRestController
 {
     public function index()
     {
@@ -18,8 +18,12 @@ class LoginDetailsController extends Controller
 
     public function store()
     {
-        $loginId = $this->currentUser->loginid ?: 0;
-        $userId = $this->currentUser->id ?: 0;
+        $loginId = 0;
+        $userId = 0;
+        if ($this->currentUser) {
+            $loginId = intval($this->currentUser->loginid);
+            $userId = intval($this->currentUser->id);
+        }
 
         $data = array_merge($this->request->all(), [
             'loginid'    => $loginId,

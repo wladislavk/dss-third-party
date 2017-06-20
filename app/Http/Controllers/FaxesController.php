@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\Faxes;
 
-class FaxesController extends Controller
+class FaxesController extends BaseRestController
 {
     public function index()
     {

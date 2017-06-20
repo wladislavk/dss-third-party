@@ -8,7 +8,7 @@ use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Insurances;
 use Illuminate\Http\Request;
 
-class InsurancesController extends Controller
+class InsurancesController extends BaseRestController
 {
     const DSS_USER_TYPE_FRANCHISEE = 1;
     const DSS_USER_TYPE_SOFTWARE   = 2;

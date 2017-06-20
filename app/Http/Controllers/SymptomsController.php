@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class SymptomsController extends Controller
+class SymptomsController extends BaseRestController
 {
     public function index()
     {

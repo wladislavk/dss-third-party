@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions;
 
-class GuideSettingOptionsController extends Controller
+class GuideSettingOptionsController extends BaseRestController
 {
     public function index()
     {

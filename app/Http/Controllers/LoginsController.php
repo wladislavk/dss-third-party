@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
-class LoginsController extends Controller
+class LoginsController extends BaseRestController
 {
     public function index()
     {

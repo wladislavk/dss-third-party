@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\Tasks;
 
-class TasksController extends Controller
+class TasksController extends BaseRestController
 {
     public function index()
     {

@@ -6,7 +6,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Resources\ProfileImage;
 use Illuminate\Http\Request;
 
-class ProfileImagesController extends Controller
+class ProfileImagesController extends BaseRestController
 {
     public function index()
     {

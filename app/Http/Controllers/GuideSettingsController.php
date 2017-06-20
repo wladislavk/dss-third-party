@@ -6,7 +6,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettings;
 use Illuminate\Http\Request;
 
-class GuideSettingsController extends Controller
+class GuideSettingsController extends BaseRestController
 {
     public function index()
     {

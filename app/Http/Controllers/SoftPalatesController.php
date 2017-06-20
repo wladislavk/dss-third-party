@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class SoftPalatesController extends Controller
+class SoftPalatesController extends BaseRestController
 {
     public function index()
     {

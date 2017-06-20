@@ -8,7 +8,7 @@ use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
 use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
 use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
 
-class TmjClinicalExamsController extends Controller
+class TmjClinicalExamsController extends BaseRestController
 {
     public function index()
     {

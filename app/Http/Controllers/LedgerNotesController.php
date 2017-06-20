@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class LedgerNotesController extends Controller
+class LedgerNotesController extends BaseRestController
 {
     public function index()
     {

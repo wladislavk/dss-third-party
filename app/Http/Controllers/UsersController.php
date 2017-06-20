@@ -8,7 +8,7 @@ use DentalSleepSolutions\Contracts\Repositories\Users;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-class UsersController extends Controller
+class UsersController extends BaseRestController
 {
     const DSS_USER_STATUS_ACTIVE    = 1;
     const DSS_USER_STATUS_INACTIVE  = 2;

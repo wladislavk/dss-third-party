@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class EpworthSleepinessScaleController extends Controller
+class EpworthSleepinessScaleController extends BaseRestController
 {
     public function index()
     {

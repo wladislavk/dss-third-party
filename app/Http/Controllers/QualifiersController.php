@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Resources\Qualifier;
 
-class QualifiersController extends Controller
+class QualifiersController extends BaseRestController
 {
     public function index()
     {

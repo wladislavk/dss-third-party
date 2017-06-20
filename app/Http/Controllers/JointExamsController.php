@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class JointExamsController extends Controller
+class JointExamsController extends BaseRestController
 {
     public function index()
     {

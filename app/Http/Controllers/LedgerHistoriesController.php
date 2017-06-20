@@ -7,7 +7,7 @@ use DentalSleepSolutions\Contracts\Repositories\LedgerHistories;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-class LedgerHistoriesController extends Controller
+class LedgerHistoriesController extends BaseRestController
 {
     public function index()
     {

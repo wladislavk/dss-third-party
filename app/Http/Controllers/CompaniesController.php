@@ -6,7 +6,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Resources\Company;
 use DentalSleepSolutions\Contracts\Repositories\Companies;
 
-class CompaniesController extends Controller
+class CompaniesController extends BaseRestController
 {
     public function index()
     {

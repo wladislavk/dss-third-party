@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class CalendarsController extends Controller
+class CalendarsController extends BaseRestController
 {
     public function index()
     {

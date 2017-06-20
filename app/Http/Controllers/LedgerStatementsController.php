@@ -6,7 +6,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Resources\LedgerStatement;
 use Illuminate\Http\Request;
 
-class LedgerStatementsController extends Controller
+class LedgerStatementsController extends BaseRestController
 {
     public function index()
     {

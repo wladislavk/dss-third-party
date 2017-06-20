@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class MandiblesController extends Controller
+class MandiblesController extends BaseRestController
 {
     public function index()
     {

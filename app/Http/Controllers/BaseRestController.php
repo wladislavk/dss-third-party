@@ -2,33 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DentalSleepSolutions\Exceptions\ResourceNotFound;
-use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Controller as BaseController;
 
-abstract class BaseRestController extends BaseController
+abstract class BaseRestController extends Controller
 {
     /** @var bool */
     protected $hasIp = true;
-
-    /** @var Model|Repository */
-    protected $resources;
-
-    /** @var Request */
-    protected $request;
-
-    public function __construct(
-        Repository $resources,
-        Request $request
-    ) {
-        $this->resources = $resources;
-        $this->request = $request;
-    }
 
     /**
      * Display a listing of the resource.
@@ -104,7 +86,6 @@ abstract class BaseRestController extends BaseController
      */
     public function destroy($id)
     {
-        $this->validate($this->request, $this->request->destroyRules());
         try {
             /** @var Resource $resource */
             $resource = $this->resources->findOrFail($id);

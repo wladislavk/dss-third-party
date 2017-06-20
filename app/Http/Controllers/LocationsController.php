@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\Locations;
 
-class LocationsController extends Controller
+class LocationsController extends BaseRestController
 {
     public function index()
     {

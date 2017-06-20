@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class ScreenerEpworthController extends Controller
+class ScreenerEpworthController extends BaseRestController
 {
     public function index()
     {

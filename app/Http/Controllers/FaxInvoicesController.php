@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-class FaxInvoicesController extends Controller
+class FaxInvoicesController extends BaseRestController
 {
     public function index()
     {

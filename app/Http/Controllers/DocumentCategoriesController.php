@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Contracts\Repositories\DocumentCategories;
 
-class DocumentCategoriesController extends Controller
+class DocumentCategoriesController extends BaseRestController
 {
     public function index()
     {

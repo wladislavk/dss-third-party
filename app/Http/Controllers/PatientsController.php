@@ -33,7 +33,7 @@ use DentalSleepSolutions\Structs\PdfHeaderData;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-class PatientsController extends Controller
+class PatientsController extends BaseRestController
 {
     const UNREGISTERED_STATUS = 0;
     const REGISTRATION_EMAILED_STATUS = 1;

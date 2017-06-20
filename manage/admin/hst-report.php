@@ -1,9 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-use function http_build_query;
-use function number_format;
-
 require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/../includes/constants.inc';
 require_once __DIR__ . '/includes/general.htm';
@@ -75,8 +72,6 @@ if (count($queryValues)) {
 if (count($sortQueryValues)) {
     $sortQueryString = '?' . http_build_query($sortQueryValues) . '&sort=%s&dir=%s';
 }
-
-
 
 ?>
 <script>
@@ -208,6 +203,16 @@ if (count($sortQueryValues)) {
 
 require_once __DIR__ . '/includes/bottom.htm';
 
+
+/**
+ * Return a formatted WHERE string, "WHERE" included
+ *
+ * @param bool $isSuperAdmin
+ * @param int  $adminCompanyId
+ * @param int  $companyId
+ * @param int  $userId
+ * @return string
+ */
 function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId)
 {
     $conditionals = [];
@@ -232,6 +237,12 @@ function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId)
     return $whereConditionals;
 }
 
+/**
+ * Whitelist ORDER BY field name
+ *
+ * @param string $sortBy
+ * @return string
+ */
 function hstSortField($sortBy) {
     $sortBy = strtolower($sortBy);
 
@@ -242,6 +253,12 @@ function hstSortField($sortBy) {
     return 'company';
 }
 
+/**
+ * Whitelist ORDER BY direction
+ *
+ * @param string $sortDir
+ * @return string
+ */
 function hstSortDirection($sortDir) {
     $sortDir = strtolower($sortDir);
 
@@ -252,6 +269,13 @@ function hstSortDirection($sortDir) {
     return 'asc';
 }
 
+/**
+ * Generate SQL expression to determine if Add Date lies within a particular lapse
+ *
+ * @param string|int $lowerLimit
+ * @param string|int $upperLimit
+ * @return string
+ */
 function hstInterval($lowerLimit, $upperLimit) {
     $upperLimit = (int)$upperLimit;
     $lowerLimit = (int)$lowerLimit;
@@ -284,6 +308,13 @@ function hstInterval($lowerLimit, $upperLimit) {
         )";
 }
 
+/**
+ * Generate proper ORDER BY expression, "ORDER BY" included
+ *
+ * @param string $sortBy
+ * @param string $direction
+ * @return string
+ */
 function hstSortBy($sortBy, $direction) {
     $orderCompany = "company.name $direction";
     $orderUser = "doctor.last_name $direction, doctor.first_name $direction";
@@ -298,7 +329,7 @@ function hstSortBy($sortBy, $direction) {
 
     if (in_array($sortBy, ['0', '30', '60', '90'])) {
         $lowerLimit = (int)$sortBy;
-        $upperLimit = $sortBy + 30;
+        $upperLimit = $lowerLimit + 30;
 
         if ($upperLimit > 90) {
             $upperLimit = 0;

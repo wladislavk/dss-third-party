@@ -31,6 +31,9 @@ abstract class Request extends FormRequest
         return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $errors]);
     }
 
+    /**
+     * @return array
+     */
     public function rules()
     {
         return [];
@@ -82,10 +85,8 @@ abstract class Request extends FormRequest
             $modifiedRule = str_replace('required', 'sometimes|required', $rule);
             return $modifiedRule;
         }
-        if (is_array($rule)) {
-            if ($rule[0] == 'required') {
-                array_unshift($rule, 'sometimes');
-            }
+        if (is_array($rule) && $rule[0] == 'required') {
+            array_unshift($rule, 'sometimes');
         }
         return $rule;
     }

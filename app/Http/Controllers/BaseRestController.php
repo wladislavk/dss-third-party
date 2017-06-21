@@ -32,12 +32,8 @@ abstract class BaseRestController extends Controller
      */
     public function show($id)
     {
-        try {
-            /** @var Resource $resource */
-            $resource = $this->resources->findOrFail($id);
-        } catch (ModelNotFoundException $e) {
-            throw new ResourceNotFound('Requested resource does not exist.');
-        }
+        /** @var Resource $resource */
+        $resource = $this->resources->findOrFail($id);
         return ApiResponse::responseOk('', $resource);
     }
 
@@ -67,12 +63,8 @@ abstract class BaseRestController extends Controller
     public function update($id)
     {
         $this->validate($this->request, $this->request->updateRules());
-        try {
-            /** @var Resource $resource */
-            $resource = $this->resources->findOrFail($id);
-        } catch (ModelNotFoundException $e) {
-            throw new ResourceNotFound('Requested resource does not exist.');
-        }
+        /** @var Resource $resource */
+        $resource = $this->resources->findOrFail($id);
         $resource->update($this->request->all());
 
         return ApiResponse::responseOk('Resource updated');
@@ -86,12 +78,8 @@ abstract class BaseRestController extends Controller
      */
     public function destroy($id)
     {
-        try {
-            /** @var Resource $resource */
-            $resource = $this->resources->findOrFail($id);
-        } catch (ModelNotFoundException $e) {
-            throw new ResourceNotFound('Requested resource does not exist.');
-        }
+        /** @var Resource $resource */
+        $resource = $this->resources->findOrFail($id);
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');

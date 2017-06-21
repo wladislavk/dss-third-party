@@ -286,6 +286,8 @@ $my=mysqli_query($con,$sql) or trigger_error(mysqli_error($con), E_USER_ERROR);
     <input type="hidden" name="sort_dir" value="<?php echo $sort_dir?>"/>
     <input type="submit" value="Filter List" class="btn btn-primary">
     <input type="button" value="Reset" onclick="window.location='<?php echo $_SERVER['PHP_SELF']?>'" class="btn btn-primary">
+
+      <a class="btn btn-success pull-right" href="/manage/admin/hst-report.php">HST Report</a>
   </form>
 </div>
 

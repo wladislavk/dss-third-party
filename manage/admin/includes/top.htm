@@ -417,12 +417,17 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 						<i class="fa fa-user-md"></i>
 						<span class="title" >
 							HSTs 
-							</span>
-							<span class="badge badge-danger"><?php echo  $num_pending_hst; ?></span>
-						
-						<span class="selected">
-						</span>
+                        </span>
+                        <span class="badge badge-danger"><?php echo  $num_pending_hst; ?></span>
+						<span class="selected"></span>
 					</a>
+                    <ul class="hidden">
+                        <li>
+                            <a href="/manage/admin/hst-report.php">
+                                <i class="fa fa-list"></i> HST Report
+                            </a>
+                        </li>
+                    </ul>
 				</li>
 				<?php } ?>
 				 <?php if (!is_hst($_SESSION['admin_access'])) { ?>

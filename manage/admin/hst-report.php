@@ -10,6 +10,7 @@ $adminCompanyId = (int)$_SESSION['admincompanyid'];
 
 $userId = (int)array_get($_GET, 'uid', 0);
 $companyId = (int)array_get($_GET, 'cid', 0);
+$groupedByCompany = (bool)array_get($_GET, 'grouped', false);
 
 $doctorName = $db->getColumn("SELECT CONCAT(last_name, ', ', first_name) AS name
     FROM dental_users
@@ -22,7 +23,12 @@ $sortField = hstSortField(array_get($_GET, 'sort', 'company'));
 $sortDir = hstSortDirection(array_get($_GET, 'dir', 'asc'));
 
 $whereConditionals = hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId);
+$groupBy = 'GROUP BY company.id, doctor.userid';
 $sortBy = hstSortBy($sortField, $sortDir);
+
+if ($groupedByCompany) {
+    $groupBy = 'GROUP BY company.id';
+}
 
 $count = (int)array_get($_GET, 'count', 20);
 $page = (int)array_get($_GET, 'page', 0);
@@ -41,13 +47,13 @@ $sql = "SELECT
         $interval_0_30 AS '0-30',
         $interval_30_60 AS '31-60',
         $interval_60_90 AS '61-90',
-        $interval_90_0 AS 'lifetime',
-        SUM(IF(hst.id, 1, 0)) AS total
+        $interval_90_0 AS '90+',
+        SUM(IF(hst.id, 1, 0)) AS 'lifetime'
     FROM dental_users doctor
         LEFT JOIN dental_hst hst ON hst.doc_id = doctor.userid
         LEFT JOIN companies company ON company.id = hst.company_id
     $whereConditionals
-    GROUP BY company.id, doctor.userid
+    $groupBy
     HAVING SUM(IF(hst.id, 1, 0)) > 0
     ";
 
@@ -62,7 +68,7 @@ $results = $db->getResults($sql);
 $queryString = '';
 $sortQueryString = '?sort=%s&dir=%s';
 
-$queryValues = array_only($_GET, ['page', 'count', 'cid', 'uid', 'sort', 'dir']);
+$queryValues = array_only($_GET, ['page', 'count', 'grouped', 'cid', 'uid', 'sort', 'dir']);
 $sortQueryValues = array_except($queryValues, ['sort', 'dir']);
 
 if (count($queryValues)) {
@@ -71,6 +77,12 @@ if (count($queryValues)) {
 
 if (count($sortQueryValues)) {
     $sortQueryString = '?' . http_build_query($sortQueryValues) . '&sort=%s&dir=%s';
+}
+
+$hiddenByGroup = '';
+
+if ($groupedByCompany) {
+    $hiddenByGroup = 'hidden';
 }
 
 ?>
@@ -118,17 +130,30 @@ if (count($sortQueryValues)) {
         <input type="submit" value="Filter List" class="btn btn-primary">
         <input type="button" value="Reset" onclick="window.location='<?= $_SERVER['PHP_SELF'] ?>'"
                class="btn btn-primary">
+
+        <?php if ($isSuperAdmin) { ?>
+            <?php if ($groupedByCompany) { ?>
+                <a class="btn btn-success pull-right" href="?grouped=0">List by Company and Doctor</a>
+            <?php } else { ?>
+                <a class="btn btn-success pull-right" href="?grouped=1">List by Company</a>
+            <?php } ?>
+        <?php } ?>
     </form>
 </div>
 <br>
 <table class="table table-bordered table-hover">
     <colgroup>
-        <col width="30%" />
-        <col width="30%" />
-        <col width="10%" />
-        <col width="10%" />
-        <col width="10%" />
-        <col width="10%" />
+        <?php if ($groupedByCompany) { ?>
+            <col width="60%" />
+        <?php } else { ?>
+            <col width="30%" />
+            <col width="30%" />
+        <?php } ?>
+        <col width="8%" />
+        <col width="8%" />
+        <col width="8%" />
+        <col width="8%" />
+        <col width="8%" />
     </colgroup>
     <thead>
         <?php if ($total && $total > $count) { ?>
@@ -140,23 +165,26 @@ if (count($sortQueryValues)) {
             </tr>
         <?php } ?>
         <tr class="tr_bg_h">
-            <th valign="top" class="col_head <?php echo  get_sort_arrow_class($sortField, 'company', $sortDir) ?>">
+            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'company', $sortDir) ?>">
                 <a href="<?= sprintf($sortQueryString, 'company', get_sort_dir($sortField, 'company', $sortDir))?>">HST Company</a>
             </th>
-            <th valign="top" class="col_head <?php echo  get_sort_arrow_class($sortField, 'user', $sortDir) ?>">
+            <th valign="top" class="col_head <?= $hiddenByGroup ?> <?= get_sort_arrow_class($sortField, 'user', $sortDir) ?>">
                 <a href="<?= sprintf($sortQueryString, 'user', get_sort_dir($sortField, 'user', $sortDir))?>">Doctor</a>
             </th>
-            <th valign="top" class="col_head <?php echo  get_sort_arrow_class($sortField, '0', $sortDir) ?>">
+            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '0', $sortDir) ?>">
                 <a href="<?= sprintf($sortQueryString, '0', get_sort_dir($sortField, '0', $sortDir))?>">0 - 30</a>
             </th>
-            <th valign="top" class="col_head <?php echo  get_sort_arrow_class($sortField, '30', $sortDir) ?>">
+            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '30', $sortDir) ?>">
                 <a href="<?= sprintf($sortQueryString, '30', get_sort_dir($sortField, '30', $sortDir))?>">31 - 60</a>
             </th>
-            <th valign="top" class="col_head <?php echo  get_sort_arrow_class($sortField, '60', $sortDir) ?>">
+            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '60', $sortDir) ?>">
                 <a href="<?= sprintf($sortQueryString, '60', get_sort_dir($sortField, '60', $sortDir))?>">61 - 90</a>
             </th>
-            <th valign="top" class="col_head <?php echo  get_sort_arrow_class($sortField, '90', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, '90', get_sort_dir($sortField, '90', $sortDir))?>">Lifetime</a>
+            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '90', $sortDir) ?>">
+                <a href="<?= sprintf($sortQueryString, '90', get_sort_dir($sortField, '90', $sortDir))?>">90+</a>
+            </th>
+            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'lifetime', $sortDir) ?>">
+                <a href="<?= sprintf($sortQueryString, 'lifetime', get_sort_dir($sortField, 'lifetime', $sortDir))?>">Lifetime</a>
             </th>
         </tr>
     </thead>
@@ -167,36 +195,38 @@ if (count($sortQueryValues)) {
                     No Records
                 </td>
             </tr>
-        <?php } else {
-            foreach ($results as $each) { ?>
-                <tr>
-                    <td valign="top">
-                        <?php if ($each['company_id']) { ?>
-                            <?= e($each['company_name']) ?>
-                        <?php } else { ?>
-                            <i>No company</i>
-                        <?php } ?>
-                    </td>
-                    <td valign="top">
-                        <a href="/manage/admin/view_user.php?ed=<?= $each['doctor_id'] ?>">
-                            <?= e($each['doctor_name']) ?>
-                        </a>
-                    </td>
-                    <td valign="top" class="text-right">
-                        <?= number_format($each['0-30'], 0, '.', ',') ?>
-                    </td>
-                    <td valign="top" class="text-right">
-                        <?= number_format($each['31-60'], 0, '.', ',') ?>
-                    </td>
-                    <td valign="top" class="text-right">
-                        <?= number_format($each['61-90'], 0, '.', ',') ?>
-                    </td>
-                    <td valign="top" class="text-right">
-                        <?= number_format($each['lifetime'], 0, '.', ',') ?>
-                    </td>
-                </tr>
-            <?php }
-        } ?>
+        <?php } ?>
+        <?php foreach ($results as $each) { ?>
+            <tr>
+                <td valign="top">
+                    <?php if ($each['company_id']) { ?>
+                        <?= e($each['company_name']) ?>
+                    <?php } else { ?>
+                        <i>No company</i>
+                    <?php } ?>
+                </td>
+                <td valign="top" class="<?= $hiddenByGroup ?>">
+                    <a href="/manage/admin/view_user.php?ed=<?= $each['doctor_id'] ?>">
+                        <?= e($each['doctor_name']) ?>
+                    </a>
+                </td>
+                <td valign="top" class="text-right">
+                    <?= number_format($each['0-30'], 0, '.', ',') ?>
+                </td>
+                <td valign="top" class="text-right">
+                    <?= number_format($each['31-60'], 0, '.', ',') ?>
+                </td>
+                <td valign="top" class="text-right">
+                    <?= number_format($each['61-90'], 0, '.', ',') ?>
+                </td>
+                <td valign="top" class="text-right">
+                    <?= number_format($each['90+'], 0, '.', ',') ?>
+                </td>
+                <td valign="top" class="text-right">
+                    <?= number_format($each['lifetime'], 0, '.', ',') ?>
+                </td>
+            </tr>
+        <?php } ?>
     </tbody>
 </table>
 <?php
@@ -246,7 +276,7 @@ function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId)
 function hstSortField($sortBy) {
     $sortBy = strtolower($sortBy);
 
-    if (in_array($sortBy, ['company', 'user', '0', '30', '60', '90'])) {
+    if (in_array($sortBy, ['company', 'user', '0', '30', '60', '90', 'lifetime'])) {
         return $sortBy;
     }
 
@@ -325,6 +355,10 @@ function hstSortBy($sortBy, $direction) {
 
     if ($sortBy === 'user') {
         return "ORDER BY $orderUser, $orderCompany";
+    }
+
+    if ($sortBy === 'lifetime') {
+        return "ORDER BY SUM(IF(hst.id, 1, 0)) $direction, $orderCompany, $orderUser";
     }
 
     if (in_array($sortBy, ['0', '30', '60', '90'])) {

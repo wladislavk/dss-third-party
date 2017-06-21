@@ -4,6 +4,10 @@ export default {
     reportType: {
       type: String,
       required: true
+    },
+    patientId: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -52,19 +56,45 @@ export default {
   },
   methods: {
     formReportTotals () {
-      this.getLedgerTotals(this.reportType)
+      this.getLedgerTotals(this.reportType, this.patientId)
         .then(function (response) {
           var data = response.data.data
 
+          var credits = []
+
+          if (data.credits.hasOwnProperty('type')) {
+            var notFilteredCredits = data.credits['type'].concat(data.credits['named'])
+
+            notFilteredCredits.forEach((item) => {
+              var index = credits.findIndex((element) => {
+                return element.payment_description === item.payment_description
+              })
+
+              if (index == -1) {
+                credits.push({
+                  payment_description: item.payment_description,
+                  amount: item.amount
+                })
+              } else {
+                credits[index].amount = +credits[index].amount + +item.amount
+              }
+            })
+          } else {
+            credits = data.credits
+          }
+
           this.charges = data.charges
-          this.credits = data.credits.hasOwnProperty('type') ? data.credits['type'].concat(data.credits['named']) : data.credits 
+          this.credits = credits
           this.adjustments = data.adjustments
         }, function (response) {
           this.handleErrors('getLedgerTotals', response)
         })
     },
-    getLedgerTotals (reportType) {
-      var data = { report_type: reportType }
+    getLedgerTotals (reportType, patientId) {
+      var data = {
+        report_type: reportType,
+        patient_id: patientId
+      }
 
       return this.$http.post(process.env.API_PATH + 'ledgers/totals', data)
     },

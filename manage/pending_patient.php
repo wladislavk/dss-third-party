@@ -2,9 +2,13 @@
 include "includes/top.htm";
 include_once 'includes/constants.inc';
 include "includes/similar.php";
+
+$isSelectPatient = !empty($_GET['pid']);
+$selectedPatient = intval($_GET['pid']);
+
 ?>
 
-<link rel="stylesheet" href="css/pending.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/pending.css?v=20170516<?= time() ?>" type="text/css" media="screen" />
 
 <?php
 
@@ -123,7 +127,15 @@ $sql = "SELECT p.*
     WHERE p.docid = '$docId'
         AND p.status = '3'
         AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0
-    ORDER BY p.lastname ASC";
+    ";
+
+if ($isSelectPatient) {
+    $sql .= " ORDER BY IF(p.patientid = '$selectedPatient', 1, 0) DESC, p.lastname ASC, p.firstname ASC";
+} else {
+    $sql .= "ORDER BY p.lastname ASC";
+}
+
+
 $my = $db->getResults($sql);
 ?>
 
@@ -180,8 +192,8 @@ $my = $db->getResults($sql);
 	{
         foreach ($my as $myarray) {
 			$sim = similar_patients($myarray['patientid']); ?>
-	<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
-		<td valign="top">
+	<tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?> <?= $selectedPatient == $myarray['patientid'] ? 'selected' : '' ?>">
+		<td valign="top" <?= $isSelectPatient ? 'id="external-patient"' : '' ?>>
             <?php echo st($myarray["firstname"]);?>&nbsp;
             <?php echo st($myarray["lastname"]);?> 
 		</td>
@@ -199,7 +211,10 @@ $my = $db->getResults($sql);
 			<a href="#" onclick="$('.sim_<?php echo $myarray['patientid']; ?>').toggle();return false;"><?php echo count($sim); ?></a>
 		</td>
 		<td valign="top">
-			<a href="pending_patient.php?createid=<?php echo $myarray["patientid"]; ?>" class="editlink" title="EDIT">
+            <a href="#" onclick="$('.sim_<?php echo $myarray['patientid']; ?>').toggle();return false;">
+                Merge
+            </a>
+            <a href="pending_patient.php?createid=<?php echo $myarray["patientid"]; ?>" class="editlink" title="EDIT">
 			        Create
 			</a> 
             <a href="pending_patient.php?deleteid=<?php echo $myarray["patientid"]; ?>" onclick="return confirm('Are you sure you want to delete <?php echo $myarray['firstname']." ".$myarray['lastname']; ?>?')" class="editlink" title="EDIT">
@@ -221,6 +236,7 @@ $my = $db->getResults($sql);
             <?php echo st($s["phone"]); ?>
         </td>
         <td>
+            <a href="/manage/patient_changes.php?pid=<?= intval($s['id']) ?>&amp;merge_id=<?= intval($myarray['patientid']) ?>">Merge</a>
         </td>
         <td valign="top">
         </td>
@@ -239,7 +255,13 @@ $sql = "SELECT p.*
     WHERE p.docid = '$docId'
         AND p.status = '3'
         AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) = 0
-    ORDER BY p.lastname ASC";
+    ";
+
+if ($isSelectPatient) {
+    $sql .= " ORDER BY IF(p.patientid = '$selectedPatient', 1, 0) DESC, p.lastname, p.firstname";
+} else {
+    $sql .= "ORDER BY p.lastname ASC";
+}
 $my = $db->getResults($sql);
 ?>
 <span class="admin_head">
@@ -278,8 +300,8 @@ $my = $db->getResults($sql);
         {
             foreach ($my as $myarray) {
                 $sim = similar_doctors($myarray['patientid']); ?>
-    <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?>">
-        <td valign="top">
+    <tr class="<?php echo $tr_class;?> <?php echo ($myarray['viewed'])?'':'unviewed'; ?> <?= $selectedPatient == $myarray['patientid'] ? 'selected' : '' ?>">
+        <td valign="top" <?= $isSelectPatient ? 'id="external-patient"' : '' ?>>
             <?php echo st($myarray["firstname"]);?>&nbsp;
             <?php echo st($myarray["lastname"]);?>
         </td>

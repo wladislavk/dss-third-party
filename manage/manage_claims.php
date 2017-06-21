@@ -77,8 +77,7 @@ if(!isset($_GET['filter'])){
 
 if(isset($_REQUEST["delid"]))
 {
-    $del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
-    $db->query($del_sql);
+    deleteClaim($_REQUEST['delid']);
 
     $msg= "Deleted Successfully";
     ?>

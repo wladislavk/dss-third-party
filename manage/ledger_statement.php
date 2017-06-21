@@ -71,16 +71,8 @@
 		}
 
 		if(isset($_REQUEST["delclaimid"]) && $_REQUEST["delclaimid"] != "") {
-	        $del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delclaimid"]."' AND status = ".DSS_CLAIM_PENDING;
-	        
-	        if($db->query($del_sql)){
-		  		$up_sql = "UPDATE dental_ledger set primary_claim_id=NULL, status='".DSS_TRXN_NA."' WHERE primary_claim_id='".$_REQUEST["delclaimid"]."'";
-	          	
-				$db->query($up_sql);
-	          	$msg= "Deleted Successfully";
-	        }else{
-	          	$msg = "Error deleting.";
-	        }
+            deleteClaim($_REQUEST['delclaimid'], DSS_CLAIM_PENDING);
+            $msg = "Deleted Successfully";
 ?>
         	<?php if($_GET['popup']==1) { ?>
         		<script type="text/javascript">

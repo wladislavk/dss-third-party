@@ -1,8 +1,17 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-//inserts row into dental_insurance_history
-function claim_history_update ($claimId, $userId, $adminId) {
+/**
+ * Inserts row into dental_insurance_history
+ * Allows to pass ledger IDs array, to update ledger transactions that have been unlinked
+ *
+ * @param int    $claimId
+ * @param int    $userId
+ * @param int    $adminId
+ * @param array $ledgerIds
+ * @return int|string
+ */
+function claim_history_update ($claimId, $userId, $adminId, $ledgerIds=[]) {
     $db = new Db();
     
     $claimId = intval($claimId);
@@ -29,7 +38,14 @@ function claim_history_update ($claimId, $userId, $adminId) {
     
     if (!empty($claimId)) {
         $backupColumns = $db->backupColumns('dental_ledger', 'dental_ledger_history');
-        
+
+        if (count($ledgerIds)) {
+            $ledgerIds = $db->escapeList($ledgerIds);
+            $ledgerConditional = "l.ledgerid IN ($ledgerIds)";
+        } else {
+            $ledgerConditional = "l.primary_claim_id = '$claimId' OR l.secondary_claim_id = '$claimId'";
+        }
+
         $sql = "INSERT INTO dental_ledger_history(
                 $backupColumns,
                 primary_claim_history_id,
@@ -44,7 +60,7 @@ function claim_history_update ($claimId, $userId, $adminId) {
                 '$adminId',
                 NOW()
             FROM dental_ledger l
-            WHERE l.primary_claim_id = '$claimId'";
+            WHERE $ledgerConditional";
 
         $db->query($sql);
     }
@@ -206,4 +222,44 @@ function updateLedgerTransactions ($claimId, $trxnStatus, $serviceLines) {
             WHERE ledgerid = '$ledgerId'
                 AND '$claimId' IN (primary_claim_id, secondary_claim_id)");
     }
+}
+
+/**
+ * Central function to delete claims, uses soft deletion
+ *
+ * @param int $claimId
+ * @param int|null $status
+ */
+function deleteClaim ($claimId, $status=NULL) {
+    $db = new Db();
+
+    $ledgerIds = [];
+    $claimId = intval($claimId);
+    $andStatusConditional = '';
+
+    if (!is_null($status)) {
+        $status = $db->escape($status);
+        $andStatusConditional = "AND status = '$status'";
+    }
+
+    $deleted = $db->getAffectedRows("UPDATE dental_insurance
+        SET docid = -ABS(docid), patientid = -ABS(patientid)
+        WHERE insuranceid = '$claimId' $andStatusConditional");
+
+    if ($deleted) {
+        $ledgerIds = $db->getResults("SELECT ledgerid
+            FROM dental_ledger
+            WHERE primary_claim_id = '$claimId'
+                OR secondary_claim_id = '$claimId'");
+
+        $db->query("UPDATE dental_ledger
+            SET primary_claim_id = 0
+            WHERE primary_claim_id = '$claimId'");
+
+        $db->query("UPDATE dental_ledger
+            SET secondary_claim_id = 0
+            WHERE secondary_claim_id = '$claimId'");
+    }
+
+    claim_history_update($claimId, $_SESSION['userid'], $_SESSION['adminuserid'], $ledgerIds);
 }

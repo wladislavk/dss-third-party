@@ -252,7 +252,7 @@ Claim <?= $claimId ?>
                 <?php } ?>
               </button>
     <?php
-      $api_sql = "SELECT use_eligible_api FROM dental_users WHERE userid = $docId";
+      $api_sql = "SELECT use_eligible_api FROM dental_users WHERE userid = '$docId'";
       $api_r = $db->getRow($api_sql);
 
       if ($api_r['use_eligible_api'] == 1) {
@@ -498,7 +498,7 @@ Claim <?= $claimId ?>
 <?php 
   if ($api_r['use_eligible_api'] == 1) {
     $_GET['cid'] = (!empty($_GET['claimid']) ? $_GET['claimid'] : '');
-    include 'claim_history_data.php'; 
+    include 'claim_history_data.php';
   }
 
   include 'claim_notes.php';

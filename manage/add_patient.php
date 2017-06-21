@@ -390,7 +390,8 @@ if(!empty($_POST["patientsub"]) && $_POST["patientsub"] == 1){
       $vob_sql = "UPDATE dental_insurance_preauth SET
                     status = " . DSS_PREAUTH_REJECTED . ",
                     reject_reason = '".mysqli_real_escape_string($con,$_SESSION['name'])." altered patient insurance information requiring VOB resubmission on ".date('m/d/Y h:i')."',
-                    viewed = 1
+                    viewed = 1,
+                    updated_at = NOW()
                     WHERE patient_id = '".mysqli_real_escape_string($con,$_REQUEST['ed'])."'
                     AND (status = ".DSS_PREAUTH_PENDING." OR status=".DSS_PREAUTH_PREAUTH_PENDING.")";
       $vob_update = $db->query($vob_sql) or trigger_error(mysqli_error($con), E_USER_ERROR);

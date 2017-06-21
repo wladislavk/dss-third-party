@@ -1,4 +1,4 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
+<?php namespace Ds3\Libraries\Legacy; ?><?php
 include "includes/top.htm";
 
 include 'includes/patient_nav.php';
@@ -74,8 +74,7 @@ switch ($sort_by) {
 $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
 if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
-	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
-	mysqli_query($con, $del_sql);
+    deleteClaim($_REQUEST['delid']);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -83,7 +82,7 @@ if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
 		//alert("Deleted Successfully");
 		window.location="<?=$_SERVER['PHP_SELF']?>?msg=<?=$msg?>&fid=<?=$_REQUEST['fid']?>&pid=<?=$_REQUEST['pid']?>";
 	</script>
-	<?
+	<?php
 	trigger_error("Die called", E_USER_ERROR);
 }
 
@@ -186,6 +185,14 @@ switch ($specialFilter) {
 
 $filedByBackOfficeConditional = filedByBackOfficeConditional();
 
+/**
+ * @see DSS-568
+ *
+ * BO companies can now be owners of claims. Claims will rely on billing_company_id to determine BO ownership,
+ * with the previous method as fallback.
+ */
+$adminCompanyId = intval($_SESSION['admincompanyid']);
+
 $sql = "SELECT
     claim.insuranceid,
     claim.patientid,
@@ -242,7 +249,16 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
             JOIN dental_users users2 ON claim.userid = users2.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
         ";
@@ -251,8 +267,26 @@ if (is_super($_SESSION['admin_access'])) {
         FROM dental_insurance claim
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
-                AND users.billing_company_id = '" . $db->escape($_SESSION['admincompanyid']) . "'
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+                AND (
+                    claim.p_m_billing_id = '$adminCompanyId'
+                    OR (
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
+                        AND users.billing_company_id = '$adminCompanyId'
+                    )
+                )
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
             JOIN dental_user_company uc ON uc.userid = claim.docid
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
@@ -263,9 +297,27 @@ if (is_super($_SESSION['admin_access'])) {
         FROM dental_insurance claim
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
             JOIN dental_user_company uc ON uc.userid = claim.docid
-                AND uc.companyid = '" . $db->escape($_SESSION['admincompanyid']) . "'
+                AND (
+                    claim.p_m_billing_id = '$adminCompanyId'
+                    OR (
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
+                        AND uc.companyid = '$adminCompanyId'
+                    )
+                )
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
             JOIN dental_users users2 ON claim.userid = users2.userid
@@ -318,22 +370,22 @@ $my = $db->getResults($sql);
 if(isset($_GET['msg'])){
 ?>
 <div align="center" class="red">
-	<b><? echo $_GET['msg'];?></b>
+	<b><?php echo $_GET['msg'];?></b>
 </div>
 <?php } ?>
 
 <form name="pagefrm" action="<?=$_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<? if($total_rec > $rec_disp) {?>
+	<?php if($total_rec > $rec_disp) {?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
-			<?
+			<?php
 				 paging($no_pages,$index_val,"status=".$_GET['status']."&fid=".$_GET['fid']."&pid=".$_GET['pid']."&sort_by=".$_GET['sort_by']."&sort_dir=".$_GET['sort_dir'] . ($specialFilter ? "&filed_by=$specialFilter" : ''));
 			?>
 		</TD>
 	</TR>
-	<? }?>
+	<?php }?>
 	<?php
     $sort_qs = $_SERVER['PHP_SELF'] . "?fid=" . $fid . "&pid=" . $pid
              . "&status=" . ((isset($_REQUEST['status']))?$_REQUEST['status']:'') . "&sort_by=%s&sort_dir=%s" .
@@ -602,7 +654,7 @@ if(isset($_GET['msg'])){
 ?>
 /></td>
       </tr>
-	<? 	}
+	<?php 	}
 	}?>
 </table>
 </form>

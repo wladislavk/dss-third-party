@@ -176,36 +176,58 @@ $letters_query = "SELECT COUNT(dental_letters.letterid) AS total
 
 $pending_letters = $db->getColumn($letters_query, 'total', 0);
 
-if (is_super($_SESSION['admin_access'])) {
+/**
+ * @ses DSS-568
+ */
+$sql = call_user_func(function () use ($adminCompanyId) {
+    $db = new Db();
+
+    $escapedPendingStatus = $db->escape(DSS_PREAUTH_PENDING);
+    $escapedPreAuthStatus = $db->escape(DSS_PREAUTH_PREAUTH_PENDING);
+    $joinByUserCompany = '';
+    $conditionals = ["preauth.status IN ('$escapedPendingStatus', '$escapedPreAuthStatus')"];
+
+    if (is_billing($_SESSION['admin_access'])) {
+        /**
+         * @see DSS-568
+         *
+         * Doctor billing company can see all VOBs. Former billing companies can see all owned by them, except if they
+         * are DSS_PREAUTH_PENDING.
+         */
+        $conditionals[] = "doctor_billing_company.id = '$adminCompanyId'
+            OR (
+                preauth.status NOT IN ($escapedPendingStatus)
+                AND vob_billing_company.id = '$adminCompanyId'
+            )";
+    } elseif (!is_super($_SESSION['admin_access'])) {
+        /**
+         * Restrict by HST company
+         */
+        $joinByUserCompany = "JOIN dental_user_company uc ON uc.userid = p.docid
+            AND uc.companyid = '$adminCompanyId'";
+    }
+
     $sql = "SELECT COUNT(preauth.id) AS total
         FROM dental_insurance_preauth preauth
             JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            JOIN dental_users users ON preauth.doc_id = users.userid
-            LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-        WHERE preauth.status IN ('" . DSS_PREAUTH_PENDING . "', '" . DSS_PREAUTH_PREAUTH_PENDING . "')
+            JOIN dental_users doctor ON preauth.doc_id = doctor.userid
+            LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
+            LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
+            LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
+            LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
+            $joinByUserCompany
         ";
-} elseif (is_billing($_SESSION['admin_access'])) {
-    $sql = "SELECT COUNT(preauth.id) AS total
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            JOIN dental_users users ON preauth.doc_id = users.userid
-            LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-        WHERE preauth.status IN ('" . DSS_PREAUTH_PENDING . "', '" . DSS_PREAUTH_PREAUTH_PENDING . "')
-            AND users.billing_company_id = '" . $db->escape($_SESSION['admincompanyid']) . "'
-        ";
-} else {
-    $sql = "SELECT COUNT(preauth.id) AS total
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            JOIN dental_users users ON preauth.doc_id = users.userid
-            JOIN dental_user_company uc ON uc.userid = users.userid
-            LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-        WHERE preauth.status IN ('" . DSS_PREAUTH_PENDING . "', '" . DSS_PREAUTH_PREAUTH_PENDING . "')
-            AND uc.companyid = '" . $db->escape($_SESSION['admincompanyid']) . "'";
-}
+
+    $whereConditionals = '';
+
+    if (count($conditionals)) {
+        $conditionals = '(' . join(') AND (', $conditionals) . ')';
+        $whereConditionals = "WHERE $conditionals";
+    }
+
+    $sql = "$sql $whereConditionals";
+    return $sql;
+});
 
 $num_pending_preauth = $db->getColumn($sql, 'total', 0);
 
@@ -242,65 +264,97 @@ if (is_super($_SESSION['admin_access'])) {
 
 $num_pending_hst = $db->getColumn($sql, 'total', 0);
 
-$backOfficeClaimsConditional = backOfficeClaimsConditional();
-
-$sql = "SELECT COUNT(claim.insuranceid) AS total
-    FROM dental_insurance claim
-    ";
-
-if (is_super($_SESSION['admin_access'])) {
-    $sql .= "JOIN dental_patients p ON p.patientid = claim.patientid
-            JOIN dental_users users ON claim.docid = users.userid
-            LEFT JOIN dental_users users2 ON claim.userid = users2.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
-        ";
-} else {
-    $sql .= "JOIN dental_patients p ON p.patientid = claim.patientid
-            JOIN dental_users users ON claim.docid = users.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
-        ";
-
-    if (!is_billing($_SESSION['admin_access'])) {
-        $sql .= "JOIN dental_user_company uc ON uc.userid = claim.docid
-            AND uc.companyid = '" . $db->escape($_SESSION['admincompanyid']) . "'
-            ";
-    }
-
-    $sql .= " LEFT JOIN dental_users users2 ON claim.userid = users2.userid ";
-}
-
 /**
  * @see DSS-142
  * @see CS-73
- *
- * Filter BO claims by actionable claims.
- * This query might appear at some other places, please search this "@see DSS-142" tag.
- *
- * The old logic checks the p_m_dss_file and s_m_dss_file columns, which are copies of the options set from the
- * patient's table. This logic does not really set if the claim is filed in the BO.
- *
- * The legacy values are: YES = 1, NO = 2. Thus, if the option is NOT 1 THEN the value is NOT YES.
- *
- * The new indicator will only be the p_m_dss_file column. To avoid conflicts with the previous set of values, the
- * YES indicator will be 3.
+ * @see DSS-568
  */
-$sql .= "WHERE $backOfficeClaimsConditional
-        -- Actionable items
-        AND claim.status IN (
-            '" . DSS_CLAIM_PENDING . "', '" . DSS_CLAIM_SEC_PENDING . "',
-            '" . DSS_CLAIM_REJECTED . "', '" . DSS_CLAIM_SEC_REJECTED . "',
-            '" . DSS_CLAIM_DISPUTE . "', '" . DSS_CLAIM_SEC_DISPUTE . "',
-            '" . DSS_CLAIM_PATIENT_DISPUTE . "', '" . DSS_CLAIM_SEC_PATIENT_DISPUTE . "'
-        )";
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+$adminCompanyId = intval($_SESSION['admincompanyid']);
 
-if (is_billing($_SESSION['admin_access'])) {
-    $c_sql = "SELECT companyid
-        FROM admin_company
-        WHERE adminid = '" . $db->escape($_SESSION['adminuserid']) . "'";
+$sql = "SELECT COUNT(claim.insuranceid) AS total ";
 
-    $c = $db->getColumn($c_sql, 'companyid', 0);
-    $sql .= " AND users.billing_company_id = '" . $db->escape($c) . "'";
+if (is_super($_SESSION['admin_access'])) {
+    $sql .= "FROM dental_insurance claim
+            JOIN dental_patients p ON p.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+            JOIN dental_users users2 ON claim.userid = users2.userid
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
+        ";
+} elseif (is_billing($_SESSION['admin_access'])) {
+    $sql .= "FROM dental_insurance claim
+            JOIN dental_patients p ON p.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+                AND (
+                    claim.p_m_billing_id = '$adminCompanyId'
+                    OR (
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
+                        AND users.billing_company_id = '$adminCompanyId'
+                    )
+                )
+            JOIN dental_user_company uc ON uc.userid = claim.docid
+            JOIN dental_users users2 ON claim.userid = users2.userid
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
+        ";
+} else {
+    $sql .= "FROM dental_insurance claim
+            JOIN dental_patients p ON p.patientid = claim.patientid
+            JOIN dental_users users ON claim.docid = users.userid
+            JOIN dental_user_company uc ON uc.userid = claim.docid
+                AND (
+                    claim.p_m_billing_id = '$adminCompanyId'
+                    OR (
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
+                        AND uc.companyid = '$adminCompanyId'
+                    )
+                )
+            JOIN dental_users users2 ON claim.userid = users2.userid
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
+        ";
 }
+
+$statusList = $db->escapeList(ClaimFormData::statusListByName('actionable'));
+$sql .= "WHERE $backOfficeClaimsConditional
+    -- Actionable items
+    AND claim.status IN ($statusList)";
+/**
+ * @see DSS-142
+ * @see CS-73
+ * @see DSS-568
+ */
 
 $num_pending_claims = $db->getColumn($sql, 'total', 0);
 
@@ -313,33 +367,16 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 			<!-- add "navbar-no-scroll" class to disable the scrolling of the sidebar menu -->
 			<!-- BEGIN SIDEBAR MENU -->
 			<ul data-slide-speed="200" data-auto-scroll="true" class="page-sidebar-menu">
-				<!---<li class="sidebar-search-wrapper">
-					<!-- BEGIN RESPONSIVE QUICK SEARCH FORM 
-					<form method="POST" action="extra_search.html" class="sidebar-search">
-						<div class="form-container">
-							<div class="input-box">
-								<a class="remove" href="javascript:;">
-								</a>
-								<input type="text" placeholder="Search...">
-								<input type="button" value=" " class="submit">
-							</div>
-						</div>
-					</form>
-					<!-- END RESPONSIVE QUICK SEARCH FORM 
-				</li>---->
 				<li class="sidebar-search-wrapper hidden-xs">
 					<!-- BEGIN RESPONSIVE QUICK SEARCH FORM -->
 					<!-- DOC: Apply "sidebar-search-bordered" class the below search form to have bordered search box -->
 					<!-- DOC: Apply "sidebar-search-bordered sidebar-search-solid" class the below search form to have bordered & solid search box -->
-					<form class="sidebar-search" action="extra_search.html" method="POST">
+					<form class="sidebar-search" action="/manage/admin/manage_users.php" method="get">
 						<a href="javascript:;" class="remove">
 						<i class="icon-close"></i>
 						</a>
 						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Search...">
-							<span class="input-group-btn">
-							<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>
-							</span>
+							<input type="text" class="form-control" name="search" disabled style="cursor:default;">
 						</div>
 					</form>
 					<!-- END RESPONSIVE QUICK SEARCH FORM -->
@@ -380,12 +417,17 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 						<i class="fa fa-user-md"></i>
 						<span class="title" >
 							HSTs 
-							</span>
-							<span class="badge badge-danger"><?php echo  $num_pending_hst; ?></span>
-						
-						<span class="selected">
-						</span>
+                        </span>
+                        <span class="badge badge-danger"><?php echo  $num_pending_hst; ?></span>
+						<span class="selected"></span>
 					</a>
+                    <ul class="hidden">
+                        <li>
+                            <a href="/manage/admin/hst-report.php">
+                                <i class="fa fa-list"></i> HST Report
+                            </a>
+                        </li>
+                    </ul>
 				</li>
 				<?php } ?>
 				 <?php if (!is_hst($_SESSION['admin_access'])) { ?>
@@ -400,6 +442,35 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 						<span class="selected">
 						</span>
 					</a>
+                    <!-- Include hidden submenu, to display proper breadcrumb path -->
+                    <ul class="hidden">
+                        <li>
+                            <a>
+                                <i class="fa fa-file"></i>
+                                Claim
+                            </a>
+                            <ul class="hidden">
+                                <li>
+                                    <a href="/manage/admin/view_payment_reports.php">
+                                        <i class="fa fa-book"></i>
+                                        Payment Reports
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/manage/admin/payment_report.php">
+                                        <i class="fa fa-book"></i>
+                                        Payment Report
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/manage/admin/view_claim_history.php">
+                                        <i class="fa fa-book"></i>
+                                        Claim History
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
 				</li>
 				<?php } ?>
 				<?php if (is_admin($_SESSION['admin_access'])) { ?>
@@ -1012,6 +1083,13 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 								</span>
 							</a>
 							<ul class="sub-menu">
+                                <?php if (is_super($_SESSION['admin_access'])) { ?>
+                                    <li>
+                                        <a href="/manage/admin/manage-external-companies.php">
+                                            <i class="fa fa-rocket"></i> Dentrix API
+                                        </a>
+                                    </li>
+                                <?php } ?>
 								<li>
 									<a href="/manage/admin/manage_ins_type.php">
 										<i class="fa fa-user"></i> Insurance Type
@@ -1189,15 +1267,22 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 							</a>
 						</li>
 						<li>
+							<a href="/manage/admin/inspect-api.php"
+							   title="Logs of API calls made (only selected endpoints)">
+								<i class="fa fa-search-plus"></i>
+								Inspect API Log
+							</a>
+						</li>
+						<li>
 							<a href="/manage/admin/inspect-emails.php"
-							   title="Patient profile created and updated">
+							   title="Logs of emails sent">
 								<i class="fa fa-search-plus"></i>
 								Inspect Emails Log
 							</a>
 						</li>
 						<li>
 							<a href="/manage/admin/inspect-sms.php"
-							   title="Patient profile created and updated">
+							   title="Logs of SMS sent">
 								<i class="fa fa-search-plus"></i>
 								Inspect SMS Log
 							</a>

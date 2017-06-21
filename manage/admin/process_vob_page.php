@@ -3,198 +3,185 @@ namespace Ds3\Libraries\Legacy;
 
 include_once('../includes/constants.inc');
 include_once('includes/main_include.php');
+include_once('includes/access.php');
 include("includes/sescheck.php");
 include_once('../includes/dental_patient_summary.php');
 include_once('../includes/general_functions.php');
 include_once('includes/invoice_functions.php');
 
-// Get patient id for updating patient summary table
-$sql = "SELECT "
-		 . "  preauth.patient_id "
-		 . "FROM "
-		 . "  dental_insurance_preauth preauth "
-		 . "WHERE "
-		 . "  preauth.id = '" . mysqli_real_escape_string($con, $_GET['ed']) . "'";
-$result = $db->getRow($sql);
-$pid = (!empty($result['patient_id']) ? $result['patient_id'] : '');
+/**
+ * @see DSS-568
+ */
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$adminCompanyId = (int)$_SESSION['admincompanyid'];
+$preAuthId = (int)$_GET['ed'];
 
-if (isset($_GET['ed'])) {
-    // load preauth
-    $sql = "SELECT "
-         . "  preauth.*, id.ins_diagnosis, pcp.salutation as 'pcp_salutation', pcp.firstname as 'pcp_firstname', "
-         . "  pcp.lastname as 'pcp_lastname', pcp.phone1 as 'pcp_phone1', p.patientid as 'patientid' "
-         . "FROM "
-         . "  dental_insurance_preauth preauth "
-         . "  JOIN dental_patients p ON p.patientid = preauth.patient_id "
-         . "  LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp "
-	 . "  LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code "
-         . "WHERE "
-         . "  preauth.id = '" . mysqli_real_escape_string($con, !empty($_GET['ed']) ? $_GET['ed'] : '') . "'";
+if (!empty($_POST['save_vob'])) {
+    $preAuthId = (int)$_POST['preauth_id'];
+}
 
-		$preauth = $db->getRow($sql);
-		// load dynamic preauth info
-		$sql = "SELECT "
-		 . "  i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', "
-		 . "  p.p_m_ins_grp as 'patient_ins_group_id', p.p_m_ins_id as 'patient_ins_id', "
-		 . "  p.firstname as 'patient_firstname', p.lastname as 'patient_lastname', "
-		 . "  p.add1 as 'patient_add1', p.add2 as 'patient_add2', p.city as 'patient_city', "
-		 . "  p.state as 'patient_state', p.zip as 'patient_zip', p.dob as 'patient_dob', "
-		 . "  p.p_m_partyfname as 'insured_first_name', p.p_m_partylname as 'insured_last_name', "
-		 . "  p.ins_dob as 'insured_dob', d.npi as 'doc_npi', r.national_provider_id as 'referring_doc_npi', "
-		 . "  d.medicare_npi as 'doc_medicare_npi', d.tax_id_or_ssn as 'doc_tax_id_or_ssn', "
-		 . "  tc.amount as 'trxn_code_amount', q2.confirmed_diagnosis as 'diagnosis_code', "
-         . "  CONCAT(d.first_name,' ',d.last_name) as doc_name, d.practice as doc_practice, d.address as doc_address, d.phone as doc_phone, "
-		 . "  p.home_phone as 'patient_phone', p.work_phone, p.cell_phone  "
-		 . "FROM "
-		 . "  dental_patients p  "
-		 . "  LEFT JOIN dental_contact r ON p.referred_by = r.contactid  "
-		 . "  JOIN dental_contact i ON p.p_m_ins_co = i.contactid "
-		 . "  JOIN dental_users d ON p.docid = d.userid "
-		 . "  JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486' "
-		 . "  LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid  "
-		 . "WHERE "
-		 . "  p.patientid = '".mysqli_real_escape_string($con, $preauth['patientid']) . "'";
+$escapedPendingStatus = $db->escape(DSS_PREAUTH_PENDING);
+$joinByUserCompany = '';
+$conditionals = ["preauth.id = '$preAuthId'"];
 
-		$my_array = $db->getRow($sql);
-		$preauth = array_merge($preauth, $my_array);
+if ($isSuperAdmin) {
+} elseif (is_billing($_SESSION['admin_access'])) {
+    /**
+     * @see DSS-568
+     *
+     * Doctor billing company can see all VOBs. Former billing companies can see all owned by them, except if they
+     * are DSS_PREAUTH_PENDING.
+     */
+    $conditionals[] = "doctor_billing_company.id = '$adminCompanyId'
+        OR (
+            preauth.status NOT IN ($escapedPendingStatus)
+            AND vob_billing_company.id = '$adminCompanyId'
+        )";
 } else {
-    // update preauth
-    $sql = "UPDATE dental_insurance_preauth SET "
-				 . "ins_co = '" . mysqli_real_escape_string($con, s_for($_POST["ins_co"])) . "', "
-				 . "ins_rank = '" . mysqli_real_escape_string($con, s_for($_POST["ins_rank"])) . "', "
-				 . "ins_phone = '" . mysqli_real_escape_string($con, s_for(num($_POST["ins_phone"]))) . "', "
-				 . "patient_ins_group_id = '" . mysqli_real_escape_string($con, s_for($_POST["patient_ins_group_id"])) . "', "
-				 . "patient_ins_id = '" . mysqli_real_escape_string($con, s_for($_POST["patient_ins_id"])) . "', "
-				 . "patient_firstname = '" . mysqli_real_escape_string($con, s_for($_POST["patient_firstname"])) . "', "
-				 . "patient_lastname = '" . mysqli_real_escape_string($con, s_for($_POST["patient_lastname"])) . "', "
-				 . "patient_add1 = '" . mysqli_real_escape_string($con, s_for($_POST["patient_add1"])) . "', "
-				 . "patient_add2 = '" . mysqli_real_escape_string($con, s_for($_POST["patient_add2"])) . "', "
-				 . "patient_city = '" . mysqli_real_escape_string($con, s_for($_POST["patient_city"])) . "', "
-				 . "patient_state = '" . mysqli_real_escape_string($con, s_for($_POST["patient_state"])) . "', "
-				 . "patient_zip = '" . mysqli_real_escape_string($con, s_for($_POST["patient_zip"])) . "', "
-				 . "patient_dob = '" . mysqli_real_escape_string($con, s_for($_POST["patient_dob"])) . "', "
-				 . "insured_first_name = '" . mysqli_real_escape_string($con, s_for($_POST["insured_first_name"])) . "', "
-				 . "insured_last_name = '" . mysqli_real_escape_string($con, s_for($_POST["insured_last_name"])) . "', "
-				 . "insured_dob = '" . mysqli_real_escape_string($con, s_for($_POST["insured_dob"])) . "', "
-				 . "doc_name = '". mysqli_real_escape_string($con, s_for($_POST["doc_name"])). "', "
-				 . "doc_practice = '". mysqli_real_escape_string($con, s_for($_POST["doc_practice"])). "', "
-				 . "doc_address = '". mysqli_real_escape_string($con, s_for($_POST["doc_address"])). "', "
-				 . "doc_phone = '". mysqli_real_escape_string($con, s_for($_POST["doc_phone"])). "', "
-				 . "doc_npi = '" . mysqli_real_escape_string($con, s_for($_POST["doc_npi"])) . "', "
-				 . "referring_doc_npi = '" . mysqli_real_escape_string($con, s_for($_POST["referring_doc_npi"])) . "', "
-				 . "doc_medicare_npi = '" . mysqli_real_escape_string($con, s_for($_POST["doc_medicare_npi"])) . "', "
-				 . "doc_tax_id_or_ssn = '" . mysqli_real_escape_string($con, s_for(num($_POST["doc_tax_id_or_ssn"], false))) . "', "
-				 . "trxn_code_amount = '" . mysqli_real_escape_string($con, s_for($_POST["trxn_code_amount"])) . "', "
-				 //. "diagnosis_code = '" . mysqli_real_escape_string($con, s_for($_POST["diagnosis_code"])) . "', "
-				 . "patient_phone = '" . mysqli_real_escape_string($con, s_for(num($_POST["patient_phone"]))) . "', "
-         . "date_of_call = '" . mysqli_real_escape_string($con, s_for($_POST["date_of_call"])) . "', "
-         . "insurance_rep = '" . mysqli_real_escape_string($con, s_for($_POST["insurance_rep"])) . "', "
-         . "call_reference_num = '".mysqli_real_escape_string($con, s_for($_POST["call_reference_num"]))."', "
-         . "ins_effective_date = '".mysqli_real_escape_string($con, s_for($_POST["ins_effective_date"]))."', "
-         . "ins_cal_year_start = '".mysqli_real_escape_string($con, s_for($_POST["ins_cal_year_start"]))."', "
-         . "ins_cal_year_end = '".mysqli_real_escape_string($con, s_for($_POST["ins_cal_year_end"]))."', "
-         . "trxn_code_covered = '" . mysqli_real_escape_string($con, s_for($_POST["trxn_code_covered"])) . "', "
-         . "code_covered_notes = '".mysqli_real_escape_string($con, $_POST["code_covered_notes"])."', "
-         . "how_often = '".mysqli_real_escape_string($con, s_for($_POST["how_often"]))."', "
-         . "has_out_of_network_benefits = '" . mysqli_real_escape_string($con, $_POST["has_out_of_network_benefits"]) . "', "
-         . "out_of_network_percentage = '" . mysqli_real_escape_string($con, $_POST["out_of_network_percentage"]) . "', "
-         . "is_hmo = '" . mysqli_real_escape_string($con, $_POST["is_hmo"]) . "', "
-         . "hmo_date_called = '".mysqli_real_escape_string($con, s_for($_POST["hmo_date_called"]))."', "
-         . "hmo_date_received = '".mysqli_real_escape_string($con, s_for($_POST["hmo_date_received"]))."', "
-         . "hmo_needs_auth = '" . mysqli_real_escape_string($con, $_POST["hmo_needs_auth"]) . "', "
-         . "hmo_auth_date_requested = '".mysqli_real_escape_string($con, s_for($_POST["hmo_auth_date_requested"]))."', "
-         . "hmo_auth_date_received = '".mysqli_real_escape_string($con, s_for($_POST["hmo_audoc_tax_id_or_ssnth_date_received"]))."', "
-         . "hmo_auth_notes = '".mysqli_real_escape_string($con, s_for($_POST["hmo_auth_notes"]))."', "
-         . "in_network_percentage = '" . mysqli_real_escape_string($con, $_POST["in_network_percentage"]) . "', "
-         . "in_network_appeal_date_sent = '".mysqli_real_escape_string($con, s_for($_POST["in_network_appeal_date_sent"]))."', "
-         . "in_network_appeal_date_received = '".mysqli_real_escape_string($con, s_for($_POST["in_network_appeal_date_received"]))."', "
-         . "is_pre_auth_required = '" . mysqli_real_escape_string($con, $_POST["is_pre_auth_required"]) . "', "
-         . "verbal_pre_auth_name = '".mysqli_real_escape_string($con, s_for($_POST["verbal_pre_auth_name"]))."', "
-         . "verbal_pre_auth_ref_num = '".mysqli_real_escape_string($con, s_for($_POST["verbal_pre_auth_ref_num"]))."', "
-         . "verbal_pre_auth_notes = '".mysqli_real_escape_string($con, s_for($_POST["verbal_pre_auth_notes"]))."', "
-         . "written_pre_auth_notes = '".mysqli_real_escape_string($con, s_for($_POST["written_pre_auth_notes"]))."', "
-         . "written_pre_auth_date_received = '".mysqli_real_escape_string($con, s_for($_POST["written_pre_auth_date_received"]))."', "
-         . "pre_auth_num = '".mysqli_real_escape_string($con, s_for($_POST["pre_auth_num"]))."', "
-         . "network_benefits = '" . mysqli_real_escape_string($con, $_POST["network_benefits"]) . "', "
-         . "deductible_from = '" . mysqli_real_escape_string($con, $_POST["deductible_from"]) . "', "
-         . "patient_deductible = '" . mysqli_real_escape_string($con, $_POST["patient_deductible"]) . "', "
-         . "patient_amount_met = '" . mysqli_real_escape_string($con, $_POST["patient_amount_met"]) . "', "
-         . "family_deductible = '" . mysqli_real_escape_string($con, $_POST["family_deductible"]) . "', "
-         . "family_amount_met = '" . mysqli_real_escape_string($con, $_POST["family_amount_met"]) . "', "
-         . "deductible_reset_date = '".mysqli_real_escape_string($con, s_for($_POST["deductible_reset_date"]))."', "
-         . "out_of_pocket_met = '" . mysqli_real_escape_string($con, $_POST["out_of_pocket_met"]) . "', "
-         . "patient_amount_left_to_meet = '" . mysqli_real_escape_string($con, $_POST["patient_amount_left_to_meet"]) . "', "
-         . "family_amount_left_to_meet = '" . mysqli_real_escape_string($con, $_POST["family_amount_left_to_meet"]) . "', "
-         . "expected_insurance_payment = '" . mysqli_real_escape_string($con, $_POST["expected_insurance_payment"]) . "', "
-         . "expected_patient_payment = '" . mysqli_real_escape_string($con, $_POST["expected_patient_payment"]) . "', "
-         . "in_deductible_from = '" . mysqli_real_escape_string($con, $_POST["in_deductible_from"]) . "', "
-         . "in_patient_deductible = '" . mysqli_real_escape_string($con, $_POST["in_patient_deductible"]) . "', "
-         . "in_patient_amount_met = '" . mysqli_real_escape_string($con, $_POST["in_patient_amount_met"]) . "', "
-         . "in_family_deductible = '" . mysqli_real_escape_string($con, $_POST["in_family_deductible"]) . "', "
-         . "in_family_amount_met = '" . mysqli_real_escape_string($con, $_POST["in_family_amount_met"]) . "', "
-         . "in_deductible_reset_date = '".mysqli_real_escape_string($con, s_for($_POST["in_deductible_reset_date"]))."', "
-         . "in_out_of_pocket_met = '" . mysqli_real_escape_string($con, $_POST["in_out_of_pocket_met"]) . "', "
-         . "in_patient_amount_left_to_meet = '" . mysqli_real_escape_string($con, $_POST["in_patient_amount_left_to_meet"]) . "', "
-         . "in_family_amount_left_to_meet = '" . mysqli_real_escape_string($con, $_POST["in_family_amount_left_to_meet"]) . "', "
-         . "in_expected_insurance_payment = '" . mysqli_real_escape_string($con, $_POST["in_expected_insurance_payment"]) . "', "
-         . "in_expected_patient_payment = '" . mysqli_real_escape_string($con, $_POST["in_expected_patient_payment"]) . "', "
-         . "has_in_network_benefits = '" . mysqli_real_escape_string($con, $_POST["has_in_network_benefits"]) . "', "
-         . "in_is_pre_auth_required = '" . mysqli_real_escape_string($con, $_POST["in_is_pre_auth_required"]) . "', "
-         . "in_call_reference_num = '" . mysqli_real_escape_string($con, $_POST["in_call_reference_num"]) . "', "
-         . "in_verbal_pre_auth_name = '" . mysqli_real_escape_string($con, $_POST["in_verbal_pre_auth_name"]) . "', "
-         . "in_verbal_pre_auth_ref_num = '" . mysqli_real_escape_string($con, $_POST["in_verbal_pre_auth_ref_num"]) . "', "
-         . "in_verbal_pre_auth_notes = '" . mysqli_real_escape_string($con, $_POST["in_verbal_pre_auth_notes"]) . "', "
-         . "in_written_pre_auth_date_received = '" . mysqli_real_escape_string($con, $_POST["in_written_pre_auth_date_received"]) . "', "
-         . "in_pre_auth_num = '" . mysqli_real_escape_string($con, $_POST["in_pre_auth_num"]) . "', "
-         . "in_written_pre_auth_notes = '" . mysqli_real_escape_string($con, $_POST["in_written_pre_auth_notes"]) . "', "
-	 . "updated_at = now(), "
-	 . "updated_by = '".mysqli_real_escape_string($con, $_SESSION['adminuserid'])."' ";
+    /**
+     * Restrict by HST company
+     */
+    $joinByUserCompany = "JOIN dental_user_company uc ON uc.userid = p.docid
+        AND uc.companyid = '$adminCompanyId'";
+}
+
+$sql = "SELECT
+        preauth.*,
+        id.ins_diagnosis,
+        pcp.salutation AS 'pcp_salutation',
+        pcp.firstname AS 'pcp_firstname',
+        pcp.lastname AS 'pcp_lastname',
+        pcp.phone1 AS 'pcp_phone1',
+        p.patientid as 'patientid',
+        doctor_billing_company.id AS current_billing_company_id,
+        vob_billing_company.id AS stored_billing_company_id
+    FROM dental_insurance_preauth preauth
+        JOIN dental_patients p ON preauth.patient_id = p.patientid
+        JOIN dental_users doctor ON preauth.doc_id = doctor.userid
+        LEFT OUTER JOIN dental_contact pcp ON pcp.contactid = p.docpcp
+        LEFT OUTER JOIN dental_ins_diagnosis id ON id.ins_diagnosisid = preauth.diagnosis_code
+        LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
+        LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
+        LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
+        LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
+        $joinByUserCompany
+    ";
+
+$whereConditionals = '';
+
+if (count($conditionals)) {
+    $conditionals = '(' . join(') AND (', $conditionals) . ')';
+    $whereConditionals = "WHERE $conditionals";
+}
+
+$sql = "$sql $whereConditionals";
+$preauth = $db->getRow($sql);
+
+$pid = $preauth['patient_id'];
+
+/**
+ * @see DSS-568
+ */
+$canEdit = preAuthEditPermission($preauth, $adminCompanyId, $isSuperAdmin);
+
+if (!$preauth) {
+    $message = 'You are not authorized to view this page';
+    ?>
+    <script>
+        window.location = 'manage_vobs.php?msg=<?= urlencode($message) ?>';
+    </script>
+    <?php
     
-    if(isset($_POST['reject_but'])){
-        $sql .= ", status = '" . DSS_PREAUTH_REJECTED . "' ";
-	$sql .= ", reject_reason = '" . mysqli_real_escape_string($con, $_POST['reject_reason']) ."' ";
-        $sql .= ", viewed = 0 ";
-    }elseif (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
-        $sql .= ", status = '" . DSS_PREAUTH_COMPLETE . "' ";
-        $sql .= ", date_completed = NOW() ";
-	$sql .= ", viewed = 0 ";
+    trigger_error('Die called', E_USER_ERROR);
+}
 
+// load dynamic preauth info
+$sql = "SELECT
+        i.company AS 'ins_co',
+        'primary' AS 'ins_rank',
+        i.phone1 AS 'ins_phone',
+        p.p_m_ins_grp AS 'patient_ins_group_id',
+        p.p_m_ins_id AS 'patient_ins_id',
+        p.firstname AS 'patient_firstname',
+        p.lastname AS 'patient_lastname',
+        p.add1 AS 'patient_add1',
+        p.add2 AS 'patient_add2',
+        p.city AS 'patient_city',
+        p.state AS 'patient_state',
+        p.zip AS 'patient_zip',
+        p.dob AS 'patient_dob',
+        p.p_m_partyfname AS 'insured_first_name',
+        p.p_m_partylname AS 'insured_last_name',
+        p.ins_dob AS 'insured_dob',
+        d.npi AS 'doc_npi',
+        r.national_provider_id AS 'referring_doc_npi',
+        d.medicare_npi AS 'doc_medicare_npi',
+        d.tax_id_or_ssn AS 'doc_tax_id_or_ssn',
+        tc.amount AS 'trxn_code_amount',
+        q2.confirmed_diagnosis AS 'diagnosis_code',
+        CONCAT(d.first_name,' ',d.last_name) AS doc_name,
+        d.practice AS doc_practice,
+        d.address AS doc_address,
+        d.phone AS doc_phone,
+        p.home_phone AS 'patient_phone',
+        p.work_phone,
+        p.cell_phone
+    FROM dental_patients p
+        LEFT JOIN dental_contact r ON p.referred_by = r.contactid
+        JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+        JOIN dental_users d ON p.docid = d.userid
+        JOIN dental_transaction_code tc ON p.docid = tc.docid AND tc.transaction_code = 'E0486'
+        LEFT JOIN dental_q_page2 q2 ON p.patientid = q2.patientid
+    WHERE p.patientid = '$pid'";
+$my_array = $db->getRow($sql);
 
-	//IF USER TYPE = SOFTWARE BILL FOR VOB
-	$ut_sql = "SELECT u.userid, u.user_type FROM dental_users u 
-		JOIN dental_insurance_preauth p
-			ON p.doc_id=u.userid
-		WHERE p.id='".mysqli_real_escape_string($con, $_POST['preauth_id'])."'";
-        $ut_q = mysqli_query($con, $ut_sql);
-        $ut_r = mysqli_fetch_assoc($ut_q);
+$preauth = array_merge($preauth, $my_array);
 
-	invoice_add_vob('1', $ut_r['userid'], $_POST['preauth_id']);
+if (!empty($_POST['save_vob']) && $canEdit) {
+    $vobData = processVobInput($_POST, $_SESSION['adminuserid']);
+    
+    if (isset($_POST['complete']) && ($_POST['complete'] == '1')) {
+	    //IF USER TYPE = SOFTWARE BILL FOR VOB
+	    $sql = "SELECT u.userid
+            FROM dental_users u
+		        JOIN dental_insurance_preauth p ON p.doc_id = u.userid
+		    WHERE p.id = '$preAuthId'";
+        $userId = $db->getColumn($sql, 'userid', 0);
 
-	if($ut_r['user_type'] == DSS_USER_TYPE_SOFTWARE){
-	  //$sql .= ", invoice_amount = '45.00' ";
-	}
-				update_patient_summary($pid, 'vob', DSS_PREAUTH_COMPLETE);
-    } elseif($_POST['is_pre_auth_required']==1){ 
-        $sql .= ", status = '" . DSS_PREAUTH_PREAUTH_PENDING . "' ";
-				update_patient_summary($pid, 'vob', DSS_PREAUTH_PREAUTH_PENDING);
-    } else {
-        $sql .= ", status = '" . DSS_PREAUTH_PENDING . "' ";
-                                update_patient_summary($pid, 'vob', DSS_PREAUTH_PENDING);
+	    invoice_add_vob('1', $userId, $preAuthId);
     }
-    $sql .= "WHERE id = '" . mysqli_real_escape_string($con, $_POST["preauth_id"]) . "'";
-    mysqli_query($con, $sql) or trigger_error($sql." | ".mysqli_error($con), E_USER_ERROR);
+    
+    if (!isset($_POST['reject_but'])) {
+        update_patient_summary($pid, 'vob', $vobData['status']);
+    }
+    
+    $vobData = $db->escapeAssignmentList($vobData);
+    
+    if ($vobData['status'] === DSS_PREAUTH_COMPLETE) {
+        $vobData .= ', date_completed = NOW()';
+    }
+    
+    $sql = "UPDATE dental_insurance_preauth
+        SET $vobData, updated_at = NOW()
+        WHERE id = '$preAuthId'";
+    $db->query($sql);
     
     //echo $ed_sql.mysqli_error($con);
     $task_label = (!empty($_POST['completed'])) ? 'Completed' : 'Updated';
     $msg = "Verification of Benefits $task_label Successfully";
-    print "<script type='text/javascript'>";
-    print "parent.window.location='manage_vobs.php?msg=$msg'";
-    print "</script>";
+    
+    ?>
+    <script type="text/javascript">
+        parent.window.location = 'manage_vobs.php?msg=<?= urlencode($msg) ?>';
+    </script>
+    <?php
+    
+    trigger_error('Die called', E_USER_ERROR);
 }
 
 $is_complete = ($preauth['status'] == DSS_PREAUTH_COMPLETE) ? true : false;
 $is_rejected = ($preauth['status'] == DSS_PREAUTH_REJECTED) ? true : false;
-$disabled = ($is_complete || $is_rejected) ? 'DISABLED' : '';
+$disabled = $canEdit ? '' : 'disabled';
 
 ?>
 <link rel="stylesheet" href="popup/popup.css" type="text/css" media="screen" />
@@ -236,7 +223,8 @@ if ($disabled) { ?>
         <? echo $msg;?>
     </div>
     <? }?>
-    <form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
+<form name="preauth_form" action="<?=$_SERVER['PHP_SELF'];?>" method="post" onSubmit="return validatePreAuthForm(this)">
+    <input type="hidden" name="save_vob" value="1" />
     <table class="table table-bordered table-hover">
         <tr>
             <td colspan="2" class="cat_head">
@@ -864,31 +852,46 @@ if ($disabled) { ?>
         <tr>
             <td  colspan="2" align="center">
                 <span class="red">
-                    * Required Fields					
-                </span><br />
-		<?php if(!$is_complete && !$is_rejected){ ?>
-                        <a href="#" onclick="$('#reject_reason_div').show(); return false;" class="editdel btn btn-warning pull-right" title="REJECT">Reject</a>
-                        <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
-                                <label>VOB will be REJECTED and the dental office will be notified.  Please list the reasons for rejection.</label><br /><textarea id="reject_reason" name="reject_reason"><?= $preauth['reject_reason']; ?></textarea>
-                                <input type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');" value="Submit rejection" class="btn btn-primary">
-				<input type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;" value="Cancel"  class="btn btn-primary">
-                        </div>
-<br />
-		<?php } ?>
+                    * Required Fields
+                </span>
+                <br />
+                <a <?= $disabled ?> href="#" onclick="$('#reject_reason_div').show(); return false;"
+                   class="editdel btn btn-warning pull-right" title="REJECT">
+                    Reject
+                </a>
+
+                <div id="reject_reason_div" <?= ($preauth['status']==DSS_PREAUTH_REJECTED)?'':'style="display:none;"'; ?> >
+                    <label>
+                        VOB will be REJECTED and the dental office will be notified.
+                        Please list the reasons for rejection.
+                    </label>
+                    <br />
+                    <textarea id="reject_reason" name="reject_reason"><?= e($preauth['reject_reason']) ?></textarea>
+
+                    <input <?= $disabled ?> type="submit" name="reject_but" onclick="return ($('#reject_reason').val()!='');"
+                           value="Submit rejection" class="btn btn-primary">
+                    <input <?= $disabled ?> type="button" onclick="$('#reject_reason').val(''); $('#reject_reason_div').hide(); return false;"
+                               value="Cancel"  class="btn btn-primary">
+                </div>
+                <br />
+                    
                 <input type="hidden" name="preauth_id" value="<?= $_GET['ed'] ?>"/>
-                Mark Complete <input type="checkbox" name="complete" value="1" <?php if ($is_complete) { print 'CHECKED'; } ?> <?=$disabled?>/>
-                <?php if (!$is_complete && !$is_rejected ) { ?>
-                  <input type="submit" value="Save Verfication of Benefits" class="btn btn-primary">
+                Mark Complete
+                <input type="checkbox" name="complete" value="1" <?= $is_complete ? 'checked' : '' ?> <?=$disabled?>/>
+
+                <input <?= $disabled ?> type="submit" value="Save Verification of Benefits" class="btn btn-primary">
+
+                <?php if ($isSuperAdmin) { ?>
+                    <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>"
+                       onclick="javascript: return confirm('Do Your Really want to Delete?.');"
+                       class="editdel btn btn-danger pull-right" title="DELETE">
+                        Delete
+                    </a>
                 <?php } ?>
-		<?php if(($preauth["status"] == DSS_PREAUTH_PENDING || $preauth["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $_SESSION['admin_access']==1){ ?>
-                    <a target="_parent" href="manage_vobs.php?delid=<?=$preauth["id"];?>" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="editdel btn btn-danger pull-right" title="DELETE">
-                                                Delete
-                                        </a>
-		<?php } ?>
             </td>
         </tr>
     </table>
-    </form>
+</form>
 
 <script type="text/javascript">
   var cal1 = new calendar2(document.getElementById('date_of_call'));
@@ -901,12 +904,13 @@ if ($disabled) { ?>
   var cal10 = new calendar2(document.getElementById('in_network_appeal_date_received'));
   var cal11 = new calendar2(document.getElementById('written_pre_auth_date_received'));
 </script>
-<?php 
+<?php
 
-  //setting pid to work with eligible check
-  $_GET['pid'] = $pid;
-  require 'eligible_check/eligible_check.php';//'eligible_check/eligible_check.php?docid='.$preauth['doc_id'].'&pid='.$preauth['patient_id'];
- ?>
+//setting pid to work with eligible check
+$_GET['pid'] = $pid;
+require 'eligible_check/eligible_check.php';
+
+?>
 
 
 <script language="JavaScript">
@@ -932,7 +936,178 @@ function autoResize(id){
     <iframe id="aj_pop" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0"></iframe>
 </div>
 <div id="backgroundPopup"></div>
+<?php
 
+require_once __DIR__ . '/includes/bottom.htm';
 
+/**
+ * Determine edit permissions. Only Pending statuses can be edited.
+ *
+ * @param array $preAuthData
+ * @param int   $adminCompanyId
+ * @param bool  $isSuperAdmin
+ * @return bool
+ */
+function preAuthEditPermission (array $preAuthData, $adminCompanyId, $isSuperAdmin) {
+    $status = (int)$preAuthData['status'];
+    $isStatusPending = $status === DSS_PREAUTH_PENDING;
+    $isStatusPreAuth = $status === DSS_PREAUTH_PREAUTH_PENDING;
+    $isAnyPendingStatus = $isStatusPending || $isStatusPreAuth;
 
-	<?php include 'includes/bottom.htm'; ?>
+    if (!$isAnyPendingStatus) {
+        return false;
+    }
+
+    if ($isSuperAdmin) {
+        return true;
+    }
+
+    $currentBillingCompanyId = (int)$preAuthData['current_billing_company_id'];
+    $storedBillingCompanyId = (int)$preAuthData['stored_billing_company_id'];
+
+    if (!$currentBillingCompanyId && !$storedBillingCompanyId) {
+        return false;
+    }
+
+    if ($currentBillingCompanyId === $storedBillingCompanyId) {
+        return true;
+    }
+
+    $isCurrentBillingCompany = $currentBillingCompanyId === $adminCompanyId;
+    $isStoredBillingCompany = $storedBillingCompanyId === $adminCompanyId;
+
+    if ($isStoredBillingCompany && $isStatusPreAuth) {
+        return true;
+    }
+
+    if ($isCurrentBillingCompany && $isStatusPending) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * @param array $input
+ * @param int   $adminId
+ * @return mixed
+ */
+function processVobInput (Array $input, $adminId) {
+    $vobData = array_only($input, [
+        'ins_co',
+        'ins_rank',
+        'ins_phone',
+        'patient_ins_group_id',
+        'patient_ins_id',
+        'patient_firstname',
+        'patient_lastname',
+        'patient_add1',
+        'patient_add2',
+        'patient_city',
+        'patient_state',
+        'patient_zip',
+        'patient_dob',
+        'insured_first_name',
+        'insured_last_name',
+        'insured_dob',
+        'doc_name',
+        'doc_practice',
+        'doc_address',
+        'doc_phone',
+        'doc_npi',
+        'referring_doc_npi',
+        'doc_medicare_npi',
+        'doc_tax_id_or_ssn',
+        'trxn_code_amount',
+        'patient_phone',
+        'date_of_call',
+        'insurance_rep',
+        'call_reference_num',
+        'ins_effective_date',
+        'ins_cal_year_start',
+        'ins_cal_year_end',
+        'trxn_code_covered',
+        'code_covered_notes',
+        'how_often',
+        'has_out_of_network_benefits',
+        'out_of_network_percentage',
+        'is_hmo',
+        'hmo_date_called',
+        'hmo_date_received',
+        'hmo_needs_auth',
+        'hmo_auth_date_requested',
+        'hmo_auth_notes',
+        'in_network_percentage',
+        'in_network_appeal_date_sent',
+        'in_network_appeal_date_received',
+        'is_pre_auth_required',
+        'verbal_pre_auth_name',
+        'verbal_pre_auth_ref_num',
+        'verbal_pre_auth_notes',
+        'written_pre_auth_notes',
+        'written_pre_auth_date_received',
+        'pre_auth_num',
+        'network_benefits',
+        'deductible_from',
+        'patient_deductible',
+        'patient_amount_met',
+        'family_deductible',
+        'family_amount_met',
+        'deductible_reset_date',
+        'out_of_pocket_met',
+        'patient_amount_left_to_meet',
+        'family_amount_left_to_meet',
+        'expected_insurance_payment',
+        'expected_patient_payment',
+        'in_deductible_from',
+        'in_patient_deductible',
+        'in_patient_amount_met',
+        'in_family_deductible',
+        'in_family_amount_met',
+        'in_deductible_reset_date',
+        'in_out_of_pocket_met',
+        'in_patient_amount_left_to_meet',
+        'in_family_amount_left_to_meet',
+        'in_expected_insurance_payment',
+        'in_expected_patient_payment',
+        'has_in_network_benefits',
+        'in_is_pre_auth_required',
+        'in_call_reference_num',
+        'in_verbal_pre_auth_name',
+        'in_verbal_pre_auth_ref_num',
+        'in_verbal_pre_auth_notes',
+        'in_written_pre_auth_date_received',
+        'in_pre_auth_num',
+        'in_written_pre_auth_notes',
+    ]);
+    
+    $vobData['hmo_auth_date_received'] = $input['hmo_audoc_tax_id_or_ssnth_date_received'];
+    $vobData['updated_by'] = $adminId;
+    
+    $vobData['ins_phone'] = num($vobData['ins_phone']);
+    $vobData['doc_tax_id_or_ssn'] = num($vobData['doc_tax_id_or_ssn']);
+    $vobData['patient_phone'] = num($vobData['patient_phone']);
+    
+    if (isset($input['reject_but'])) {
+        $vobData['status'] = DSS_PREAUTH_REJECTED;
+        $vobData['viewed'] = 0;
+        $vobData['reject_reason'] = $input['reject_reason'];
+        
+        return $vobData;
+    }
+    
+    if (isset($input['complete']) && ($input['complete'] == '1')) {
+        $vobData['status'] = DSS_PREAUTH_COMPLETE;
+        $vobData['viewed'] = 0;
+        
+        return $vobData;
+    }
+    
+    if ($input['is_pre_auth_required'] == 1) {
+        $vobData['status'] = DSS_PREAUTH_PREAUTH_PENDING;
+        return $vobData;
+    }
+    
+    $vobData['status'] = DSS_PREAUTH_PENDING;
+    return $vobData;
+}

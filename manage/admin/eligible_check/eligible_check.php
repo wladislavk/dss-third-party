@@ -1,5 +1,10 @@
-<?php namespace Ds3\Libraries\Legacy; ?>
+<?php
+namespace Ds3\Libraries\Legacy;
 
+$canEdit = isset($canEdit) ? $canEdit : true;
+$disabled = $canEdit ? '' : 'disabled';
+
+?>
 <link href="eligible_check/css/sample_1.css" rel="stylesheet" media="screen">
 <style>
     #eligibility-check-history {
@@ -107,8 +112,8 @@
       <label for="member_dob" class="col-lg-2 control-label">Test?</label>
 
       <div class="col-lg-10">
-        <input type="radio" name="test" id="test_yes" value="true" <?= $eligible_test ? 'checked="checked"' : '' ?>> Yes
-        <input type="radio" name="test" id="test_no" value="false" <?= !$eligible_test ? 'checked="checked"' : '' ?>> No
+        <input <?= $disabled ?> type="radio" name="test" id="test_yes" value="true" <?= $eligible_test ? 'checked="checked"' : '' ?>> Yes
+        <input <?= $disabled ?> type="radio" name="test" id="test_no" value="false" <?= !$eligible_test ? 'checked="checked"' : '' ?>> No
       </div>
     </div>
 
@@ -119,7 +124,7 @@
       <label for="test_member_id" class="col-lg-2 control-label">Test Member ID</label>
 
       <div class="col-lg-10">
-        <select class="form-control" id="test_member_id">
+        <select <?= $disabled ?> class="form-control" id="test_member_id">
           <option value="AETNA1234">AETNA - AETNA1234</option>
           <option value="BCBSTN81790">BCBS Tennessee - BCBSTN81790</option>
           <option value="GOLD00144">Golden Rule - GOLD00144</option>
@@ -156,7 +161,7 @@
       <label for="payer_id" class="col-lg-2 control-label">Payer ID</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="payer_name" autocomplete="off" value="<?php
+        <input <?= $disabled ?> type="text" class="form-control" id="payer_name" autocomplete="off" value="<?php
       if( !empty($r['p_m_eligible_payer_id']) && !empty($r['p_m_eligible_payer_name']) ) {
         echo $r['p_m_eligible_payer_id'] . ' - ' . $r['p_m_eligible_payer_name'];
       }?>">
@@ -179,7 +184,7 @@
       <label for="date" class="col-lg-2 control-label">Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control calendar" id="date" value="<?php echo  date('m/d/Y'); ?>">
+        <input <?= $disabled ?> type="text" class="form-control calendar" id="date" value="<?php echo  date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -187,7 +192,7 @@
       <label for="from_date" class="col-lg-2 control-label">From Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control calendar" id="from_date" value="<?php echo  date('m/d/Y'); ?>">
+        <input <?= $disabled ?> type="text" class="form-control calendar" id="from_date" value="<?php echo  date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -195,7 +200,7 @@
       <label for="to_date" class="col-lg-2 control-label">To Date</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control calendar" id="to_date" value="<?php echo  date('m/d/Y'); ?>">
+        <input <?= $disabled ?> type="text" class="form-control calendar" id="to_date" value="<?php echo  date('m/d/Y'); ?>">
       </div>
     </div>
 
@@ -203,7 +208,7 @@
       <label for="procedure_code" class="col-lg-2 control-label">Procedure Code (Medicare)</label>
 
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="procedure_code">
+        <input <?= $disabled ?> type="text" class="form-control" id="procedure_code">
       </div>
     </div>
 
@@ -215,7 +220,7 @@
         <label for="provider_npi" class="col-lg-2 control-label">NPI</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_npi" value="<?php echo  $r['npi']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_npi" value="<?php echo  $r['npi']; ?>">
         </div>
       </div>
 
@@ -223,7 +228,7 @@
         <label for="provider_last_name" class="col-lg-2 control-label">Last Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_last_name" value="<?php echo  $r['doc_lastname']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_last_name" value="<?php echo  $r['doc_lastname']; ?>">
         </div>
       </div>
 
@@ -231,7 +236,7 @@
         <label for="provider_first_name" class="col-lg-2 control-label">First Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_first_name" value="<?php echo  $r['doc_firstname']; ?>" >
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_first_name" value="<?php echo  $r['doc_firstname']; ?>" >
         </div>
       </div>
 
@@ -239,7 +244,7 @@
         <label for="provider_organization_name" class="col-lg-2 control-label">Organization Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_organization_name" value="<?php echo  $r['practice']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_organization_name" value="<?php echo  $r['practice']; ?>">
         </div>
       </div>
 
@@ -247,7 +252,7 @@
         <label for="provider_tax_id" class="col-lg-2 control-label">Tax ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_tax_id" value="<?php echo  $r['tax_id_or_ssn']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_tax_id" value="<?php echo  $r['tax_id_or_ssn']; ?>">
         </div>
       </div>
 
@@ -255,7 +260,7 @@
         <label for="provider_taxonomy_code" class="col-lg-2 control-label">Taxonomy Code</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_taxonomy_code" value="332B00000X">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_taxonomy_code" value="332B00000X">
         </div>
       </div>
 
@@ -263,14 +268,14 @@
         <label for="provider_submitter_id" class="col-lg-2 control-label">Submitter ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_submitter_id">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_submitter_id">
         </div>
       </div>
       <div class="form-group real-param">
         <label for="provider_street_line_1" class="col-lg-2 control-label">Street Line 1</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_street_line_1" value="<?php echo  $service_address; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_street_line_1" value="<?php echo  $service_address; ?>">
         </div>
       </div>
 
@@ -278,7 +283,7 @@
         <label for="provider_street_line_2" class="col-lg-2 control-label">Street Line 2</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_street_line_2">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_street_line_2">
         </div>
       </div>
 
@@ -286,7 +291,7 @@
         <label for="provider_city" class="col-lg-2 control-label">City</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_city" value="<?php echo  $service_city; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_city" value="<?php echo  $service_city; ?>">
         </div>
       </div>
 
@@ -294,7 +299,7 @@
         <label for="provider_state" class="col-lg-2 control-label">State</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_state" value="<?php echo  $service_state; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_state" value="<?php echo  $service_state; ?>">
         </div>
       </div>
 
@@ -302,7 +307,7 @@
         <label for="provider_zip" class="col-lg-2 control-label">ZIP</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="provider_zip" value="<?php echo  $service_zip; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="provider_zip" value="<?php echo  $service_zip; ?>">
         </div>
       </div>
 
@@ -316,7 +321,7 @@
         <label for="member_id" class="col-lg-2 control-label">ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_id" value="<?php echo  $r['p_m_ins_id']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_id" value="<?php echo  $r['p_m_ins_id']; ?>">
         </div>
       </div>
 
@@ -324,7 +329,7 @@
         <label for="member_last_name" class="col-lg-2 control-label">Last Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_last_name" value="<?php echo  $r['p_m_partylname']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_last_name" value="<?php echo  $r['p_m_partylname']; ?>">
         </div>
       </div>
 
@@ -332,7 +337,7 @@
         <label for="member_first_name" class="col-lg-2 control-label">First Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_first_name" value="<?php echo  $r['p_m_partyfname']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_first_name" value="<?php echo  $r['p_m_partyfname']; ?>">
         </div>
       </div>
 
@@ -340,7 +345,7 @@
         <label for="member_dob" class="col-lg-2 control-label">DOB</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_dob" value="<?php echo  $r['ins_dob']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_dob" value="<?php echo  $r['ins_dob']; ?>">
         </div>
       </div>
 
@@ -348,7 +353,7 @@
         <label for="member_ssn" class="col-lg-2 control-label">SSN</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_ssn" value="<?php echo  $r['ssn']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_ssn" value="<?php echo  $r['ssn']; ?>">
         </div>
       </div>
 
@@ -356,7 +361,7 @@
         <label for="member_employee_id" class="col-lg-2 control-label">Employee ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_employee_id">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_employee_id">
         </div>
       </div>
 
@@ -364,7 +369,7 @@
         <label for="member_gender" class="col-lg-2 control-label">Gender</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_gender" value="<?php echo  $r['p_m_gender']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_gender" value="<?php echo  $r['p_m_gender']; ?>">
         </div>
       </div>
 
@@ -372,7 +377,7 @@
         <label for="member_group_id" class="col-lg-2 control-label">Group ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_group_id" value="<?php echo  $r['p_m_ins_grp']; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_group_id" value="<?php echo  $r['p_m_ins_grp']; ?>">
         </div>
       </div>
 
@@ -380,7 +385,7 @@
         <label for="member_state" class="col-lg-2 control-label">State</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_state" value="<?php echo  $s_state; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_state" value="<?php echo  $s_state; ?>">
         </div>
       </div>
 
@@ -388,7 +393,7 @@
         <label for="member_city" class="col-lg-2 control-label">City</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_city" value="<?php echo  $s_city; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_city" value="<?php echo  $s_city; ?>">
         </div>
       </div>
 
@@ -396,7 +401,7 @@
         <label for="member_zip" class="col-lg-2 control-label">ZIP</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="member_zip" value="<?php echo  $s_zip; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="member_zip" value="<?php echo  $s_zip; ?>">
         </div>
       </div>
 
@@ -409,7 +414,7 @@
         <label for="dependent_id" class="col-lg-2 control-label">ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_id">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_id">
         </div>
       </div>
 
@@ -417,7 +422,7 @@
         <label for="dependent_last_name" class="col-lg-2 control-label">Last Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_last_name" value="<?php echo  $d_last_name; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_last_name" value="<?php echo  $d_last_name; ?>">
         </div>
       </div>
 
@@ -425,7 +430,7 @@
         <label for="dependent_first_name" class="col-lg-2 control-label">First Name</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_first_name" value="<?php echo  $d_first_name; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_first_name" value="<?php echo  $d_first_name; ?>">
         </div>
       </div>
 
@@ -433,7 +438,7 @@
         <label for="dependent_dob" class="col-lg-2 control-label">DOB</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_dob" value="<?php echo  $d_dob; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_dob" value="<?php echo  $d_dob; ?>">
         </div>
       </div>
 
@@ -441,7 +446,7 @@
         <label for="dependent_ssn" class="col-lg-2 control-label">SSN</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_ssn" value="<?php echo  $d_ssn; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_ssn" value="<?php echo  $d_ssn; ?>">
         </div>
       </div>
 
@@ -449,7 +454,7 @@
         <label for="dependent_employee_id" class="col-lg-2 control-label">Employee ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_employee_id">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_employee_id">
         </div>
       </div>
 
@@ -457,7 +462,7 @@
         <label for="dependent_gender" class="col-lg-2 control-label">Gender</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_gender" value="<?php echo  $d_gender; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_gender" value="<?php echo  $d_gender; ?>">
         </div>
       </div>
 
@@ -465,7 +470,7 @@
         <label for="dependent_group_id" class="col-lg-2 control-label">Group ID</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_group_id">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_group_id">
         </div>
       </div>
 
@@ -473,7 +478,7 @@
         <label for="dependent_state" class="col-lg-2 control-label">State</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_state" value="<?php echo  $d_state; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_state" value="<?php echo  $d_state; ?>">
         </div>
       </div>
 
@@ -481,7 +486,7 @@
         <label for="dependent_city" class="col-lg-2 control-label">City</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_city" value="<?php echo  $d_city; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_city" value="<?php echo  $d_city; ?>">
         </div>
       </div>
 
@@ -489,7 +494,7 @@
         <label for="dependent_zip" class="col-lg-2 control-label">ZIP</label>
 
         <div class="col-lg-10">
-          <input type="text" class="form-control" id="dependent_zip" value="<?php echo  $d_zip; ?>">
+          <input <?= $disabled ?> type="text" class="form-control" id="dependent_zip" value="<?php echo  $d_zip; ?>">
         </div>
       </div>
 
@@ -504,9 +509,9 @@
       <div class="col-lg-offset-2 col-lg-10">
 	<input type="hidden" name="pid" id="pid" value="<?php echo  $_GET['pid']; ?>" />
         <input type="hidden" class="form-control" id="service_type" value="12">
-        <button type="submit" id="submit-button" class="btn btn-primary btn-lg"><div id="submit-button-inner">Submit</div></button>
+        <button <?= $disabled ?> type="submit" id="submit-button" class="btn btn-primary btn-lg"><div id="submit-button-inner">Submit</div></button>
 	<?php if($medicare){ ?>
-          <button type="submit" id="submit-button-medicare" class="btn btn-primary btn-xl"><div id="submit-button-medicare-inner">Medicare Check</div></button>
+          <button <?= $disabled ?> type="submit" id="submit-button-medicare" class="btn btn-primary btn-xl"><div id="submit-button-medicare-inner">Medicare Check</div></button>
 	<?php } ?>
       </div>
     </div>

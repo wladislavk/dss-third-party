@@ -1,3 +1,7 @@
 .similar{ 
 	display:none; 
 }
+
+tr.selected {
+	background-color: #ff9696;
+}

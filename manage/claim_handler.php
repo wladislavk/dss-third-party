@@ -1028,6 +1028,9 @@ function saveEfileClaimForm ($claimId, $patientId, $claimData, $formerStatus, $f
         unset($eligibleServiceLine['verification']);
     }
 
+    // Workaround for "other_payers_subscriber_address_required not set" error
+    array_set($eligibleData, 'other_payers.0.subscriber.address', null);
+
     //Curl post call to claim end point
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);

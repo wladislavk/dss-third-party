@@ -166,16 +166,10 @@
 				 	   where ledgerid='".$_POST["ed"]."'";
 					
 			$db->query($up_sql);
-			// ledger_history_update($_POST['ed'], $_SESSION['docid'], '');
-			if(($claim_r['primary_claim_id']!='' && $claim_r['primary_claim_id']!=0) && $status==DSS_TRXN_NA){
-			  $c_sql = "SELECT COUNT(*) as num_trxn FROM dental_ledger where primary_claim_id='".mysqli_real_escape_string($con,$claim_r['primary_claim_id'])."'";
-			  
-			  $c_r = $db->getRow($c_sql);
-			  if($c_r['num_trxn'] == 0) {
-				$del_sql = "DELETE FROM dental_insurance where insuranceid='".mysqli_real_escape_string($con,$claim_r['primary_claim_id'])."'";
-				$db->query($del_sql);
-			  }
-			}
+
+            /**
+             * Code removed: delete claim when no trxn are associated to it
+             */
 
 			$msg = "Edited Successfully";
 ?>
@@ -450,9 +444,11 @@
           		</tr>		
 		        <tr>
 		            <td>
+		            	<?php if (!($themyarray['status'] == DSS_CLAIM_SENT || $themyarray['status'] == DSS_CLAIM_PAID_INSURANCE)) { ?>
 		              	<a href="/manage/manage_ledger.php?delid=<?php echo  $_GET['ed']; ?>&amp;pid=<?php echo  $_GET['pid']; ?>" target="_parent" style="font-weight:bold;" onclick="javascript: return confirm('Do Your Really want to Delete?.');" class="dellink" title="DELETE">
 		                    Delete 
 		                </a>
+		                <?php } ?>
 		            </td>
 		            <td >
 		                <span class="red">

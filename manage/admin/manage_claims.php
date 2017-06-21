@@ -84,8 +84,7 @@ switch ($sort_by) {
 $status = (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) ? $_REQUEST['status'] : -1;
 
 if(isset($_REQUEST["delid"])  && $_SESSION['admin_access']==1) {
-	$del_sql = "delete from dental_insurance where insuranceid='".$_REQUEST["delid"]."'";
-	mysqli_query($con,$del_sql);
+    deleteClaim($_REQUEST['delid']);
 	
 	$msg= "Deleted Successfully";
 	?>
@@ -185,6 +184,33 @@ $statusFilter = '';
  */
 $backOfficeClaimsConditional = backOfficeClaimsConditional();
 
+/**
+ * @see DSS-568
+ *
+ * BO companies can now be owners of claims. Claims will rely on billing_company_id to determine BO ownership,
+ * with the previous method as fallback.
+ *
+ * BO company can see a claim if:
+ * - User use BO company services
+ *      AND claim filed by BO
+ *      AND billing_company_id IS ZERO
+ * - OR claim filed by BO
+ *      AND billing_company = current company
+ *
+ * Company belonging is set through JOINs, these need to be updated to include the new conditional.
+ *
+ * Original JOIN conditional:
+ * - company.id = user.billing_company_id
+ *
+ * New JOIN conditional:
+ * - claim.billing_company_id = '$adminCompanyId'
+ *      OR (
+ *          claim.billing_company_id = 0
+ *          AND users.billing_company_id = '$adminCompanyId'
+ *      )
+ */
+$adminCompanyId = intval($_SESSION['admincompanyid']);
+
 $sql = "SELECT
         claim.insuranceid,
         claim.patientid,
@@ -233,7 +259,16 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
             JOIN dental_users users2 ON claim.userid = users2.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )    
+            )
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
             LEFT JOIN (
@@ -262,10 +297,28 @@ if (is_super($_SESSION['admin_access'])) {
         FROM dental_insurance claim
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
-                AND users.billing_company_id = '" . $db->escape($_SESSION['admincompanyid']) . "'
+                AND (
+                    claim.p_m_billing_id = '$adminCompanyId'
+                    OR (
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
+                        AND users.billing_company_id = '$adminCompanyId'
+                    )
+                )
             JOIN dental_user_company uc ON uc.userid = claim.docid
             JOIN dental_users users2 ON claim.userid = users2.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN dental_contact co2 ON co2.contactid = p.s_m_ins_co
             LEFT JOIN (
@@ -284,9 +337,27 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
             JOIN dental_user_company uc ON uc.userid = claim.docid
-                AND uc.companyid = '" . $db->escape($_SESSION['admincompanyid']) . "'
+                AND (
+                    claim.p_m_billing_id = '$adminCompanyId'
+                    OR (
+                        (
+                            claim.p_m_billing_id IS NULL
+                            OR claim.p_m_billing_id = 0
+                        )
+                        AND uc.companyid = '$adminCompanyId'
+                    )
+                )
             JOIN dental_users users2 ON claim.userid = users2.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
+            LEFT JOIN companies c ON (
+                claim.p_m_billing_id = c.id
+                OR (
+                    (
+                        claim.p_m_billing_id IS NULL
+                        OR claim.p_m_billing_id = 0
+                    )
+                    AND c.id = users.billing_company_id
+                )
+            )
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
             LEFT JOIN (
                 SELECT claim_id, COUNT(claim_id) AS num_notes
@@ -610,6 +681,10 @@ $statusDropdown = [
                     <?php } elseif (!$statusOverriden && $validEResponse) { ?>
                         <?= $eResponse['data']['event_type'] ?> - <?= $eResponse['data']['adddate'] ?>
                     <?php } ?>
+                    <a class="pull-right text-danger"
+                       href="/manage/admin/view_claim_history.php?id=<?= intval($myarray['insuranceid']) ?>">
+                        <small>History</small>
+                    </a>
                 </td>
 				<td valign="top">
 					<a href="view_patient.php?pid=<?php echo $myarray['patientid'];?>"><?php echo st($myarray["lastname"]);?>, <?php echo st($myarray["firstname"]);?> (View Chart)</a>

@@ -1,34 +1,39 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php  
+<?php namespace Ds3\Libraries\Legacy; ?><?php
+
 include "includes/top.htm";
 include_once('../includes/constants.inc');
 include_once "includes/general.htm";
 
-$fid = (isset($_REQUEST['fid']))?$_REQUEST['fid']:'';
-$pid = (isset($_GET['pid']))?$_GET['pid']:'';
-$iid = (isset($_GET['iid']))?$_GET['iid']:'';
+$fid = (int)array_get($_REQUEST, 'fid', 0);
+$pid = (int)array_get($_REQUEST, 'pid', 0);
+$iid = (int)array_get($_REQUEST, 'iid', 0);
 
-if($fid!=''){
-  $account_sql = "SELECT * FROM dental_users where userid='".$fid."'";
+$isSuperAdmin = is_super($_SESSION['admin_access']);
+$adminCompanyId = (int)$_SESSION['admincompanyid'];
 
-  $account_r = $db->getRow($account_sql);
-  $account_name = $account_r['last_name'].', '.$account_r['first_name'];
+if ($fid) {
+    $account_name = $db->getColumn("SELECT CONCAT(last_name, ' ', first_name) AS name
+        FROM dental_users
+        WHERE userid = '$fid'", 'name', '');
 }
-if($pid!=''){
-  $account_sql = "SELECT * FROM dental_patients where patientid='".$pid."'";
 
-  $account_r = $db->getRow($account_sql);
-  $patient_name = $account_r['lastname'].', '.$account_r['firstname'];
+if ($pid) {
+    $patient_name = $db->getColumn("SELECT CONCAT(lastname, ' ', firstname) AS name
+        FROM dental_patients
+        WHERE patientid = '$pid'", 'name', '');
 }
-if($iid!=''){
-  $account_sql = "SELECT * FROM dental_contact where contactid='".$iid."'";
 
-  $account_r = $db->getRow($account_sql);
-  $insurance_name = $account_r['company'];
+if ($iid) {
+    $insurance_name = $db->getColumn("SELECT company
+        FROM dental_contact
+        WHERE contactid = '$iid'", 'company', '');
 }
 
 
 function insert_preauth_row($patient_id) {
   if (empty($patient_id)) { return; }
+  
+  $db = new Db();
   
   $sql = "SELECT 
         p.patientid as 'patient_id', i.company as 'ins_co', 'primary' as 'ins_rank', i.phone1 as 'ins_phone', 
@@ -79,7 +84,7 @@ function insert_preauth_row($patient_id) {
         '" . $my_array['insured_dob'] . "', 
         '" . $my_array['doc_npi'] . "', 
         '" . $my_array['referring_doc_npi'] . "', 
-        " . $my_array['trxn_code_amount'] . ", 
+        '" . $my_array['trxn_code_amount'] . "',
         '" . $my_array['diagnosis_code'] . "', 
         '" . $my_array['doc_medicare_npi'] . "', 
         '" . $my_array['doc_tax_id_or_ssn'] . "', 
@@ -105,28 +110,28 @@ $sort_dir = strtolower(!empty($_REQUEST['sort_dir']) ? $_REQUEST['sort_dir'] : '
 $sort_dir = (empty($sort_dir) || ($sort_dir != 'asc' && $sort_dir != 'desc')) ? 'asc' : $sort_dir;
 
 $sort_by  = (isset($_REQUEST['sort_by'])) ? $_REQUEST['sort_by'] : SORT_BY_STATUS;
-$sort_by_sql = '';
+
 switch ($sort_by) {
   case SORT_BY_DATE:
     $sort_by_sql = "preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_PATIENT:
-    $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir";
+    $sort_by_sql = "p.lastname $sort_dir, p.firstname $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_INSURANCE:
-    $sort_by_sql = "ins_co $sort_dir";
+    $sort_by_sql = "ins_co $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_FRANCHISEE:
-    $sort_by_sql = "doc_name $sort_dir";
+    $sort_by_sql = "doc_name $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_USER:
-    $sort_by_sql = "user_name $sort_dir";
+    $sort_by_sql = "user_name $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_BC:
-    $sort_by_sql = "billing_name $sort_dir";
+    $sort_by_sql = "owner_billing_name $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   case SORT_BY_EDIT:
-    $sort_by_sql = "updated_at $sort_dir";
+    $sort_by_sql = "preauth.updated_at $sort_dir, preauth.front_office_request_date $sort_dir";
     break;
   default:
     // default is SORT_BY_STATUS
@@ -151,7 +156,7 @@ if(!empty($_REQUEST["delid"]) && is_super($_SESSION['admin_access']))
 	trigger_error("Die called", E_USER_ERROR);
 }
 
-$rec_disp = 20;
+$rec_disp = (int)array_get($_GET, 'count', 20);
 
 if(!empty($_REQUEST["page"]))
 	$index_val = $_REQUEST["page"];
@@ -160,113 +165,104 @@ else
 	
 $i_val = $index_val * $rec_disp;
 
-if (is_super($_SESSION['admin_access'])) {
-    $sql = "SELECT 
-            preauth.id,
-            preauth.patient_id,
-            i.company AS ins_co,
-            p.firstname AS patient_firstname,
-            p.lastname AS patient_lastname,
-            preauth.doc_id,
-            preauth.updated_at,
-            preauth.front_office_request_date,
-            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
-            preauth.status,
-            DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
-            CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
-            c.name AS billing_name,
-            (
-                SELECT COUNT(*)
-                FROM dental_insurance_preauth dip
-                WHERE dip.patient_id = p.patientid
-            ) AS total_vob
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_users users ON preauth.doc_id = users.userid
-            LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-            LEFT JOIN companies c ON c.id = users.billing_company_id
-            LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-        ";
+/**
+ * @see DSS-568
+ */
+$escapedPendingStatus = $db->escape(DSS_PREAUTH_PENDING);
+$totalVobSubQuery = '0';
+$joinByUserCompany = '';
+$conditionals = [];
+
+if ($isSuperAdmin) {
+    $totalVobSubQuery = "(
+        SELECT COUNT(dip.id)
+            FROM dental_insurance_preauth dip
+            WHERE dip.patient_id = p.patientid
+        )";
 } elseif (is_billing($_SESSION['admin_access'])) {
-    $sql = "SELECT
-            preauth.id,
-            preauth.patient_id,
-            i.company AS ins_co,
-            p.firstname AS patient_firstname,
-            p.lastname AS patient_lastname,
-            preauth.doc_id,
-            preauth.updated_at,
-            preauth.front_office_request_date,
-            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
-            preauth.status,
-            DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
-            CONCAT(users2.first_name, ' ', users2.last_name) AS user_name,
-            c.name AS billing_name
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_user_company uc ON uc.userid = p.docid
-            JOIN dental_users users ON preauth.doc_id = users.userid
-                AND users.billing_company_id = '{$_SESSION['admincompanyid']}'
-            LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-            LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-            LEFT JOIN companies c on users.billing_company_id = c.id
-        ";
+    /**
+     * @see DSS-568
+     *
+     * Doctor billing company can see all VOBs. Former billing companies can see all owned by them, except if they
+     * are DSS_PREAUTH_PENDING.
+     */
+    $conditionals[] = "doctor_billing_company.id = '$adminCompanyId'
+        OR (
+            preauth.status NOT IN ($escapedPendingStatus)
+            AND vob_billing_company.id = '$adminCompanyId'
+        )";
 } else {
-    $sql = "SELECT
-            preauth.id,
-            preauth.patient_id,
-            i.company AS ins_co,
-            p.firstname AS patient_firstname,
-            p.lastname AS patient_lastname,
-            preauth.doc_id,
-            preauth.updated_at,
-            preauth.front_office_request_date,
-            CONCAT(users.first_name, ' ', users.last_name) AS doc_name,
-            preauth.status,
-            DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
-            CONCAT(users2.first_name, ' ', users2.last_name) AS user_name
-        FROM dental_insurance_preauth preauth
-            JOIN dental_patients p ON preauth.patient_id = p.patientid
-            JOIN dental_user_company uc ON uc.userid = p.docid
-                AND uc.companyid = '{$_SESSION['admincompanyid']}'
-            JOIN dental_users users ON preauth.doc_id = users.userid
-            LEFT JOIN dental_users users2 ON preauth.userid = users2.userid
-            LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
-        ";
+    /**
+     * Restrict by HST company
+     */
+    $joinByUserCompany = "JOIN dental_user_company uc ON uc.userid = p.docid
+        AND uc.companyid = '$adminCompanyId'";
 }
+
+$sql = "SELECT
+        preauth.id,
+        preauth.patient_id,
+        i.company AS ins_co,
+        p.firstname AS patient_firstname,
+        p.lastname AS patient_lastname,
+        preauth.doc_id,
+        preauth.updated_at,
+        preauth.front_office_request_date,
+        CONCAT(doctor.first_name, ' ', doctor.last_name) AS doc_name,
+        preauth.status,
+        DATEDIFF(NOW(), preauth.front_office_request_date) AS days_pending,
+        CONCAT(staff.first_name, ' ', staff.last_name) AS user_name,
+        $totalVobSubQuery AS total_vob,
+        doctor_billing_company.name AS current_billing_name,
+        vob_billing_company.name AS stored_billing_name,
+        CASE
+            WHEN preauth.status IN ($escapedPendingStatus) THEN doctor_billing_company.name
+            WHEN IFNULL(vob_billing_company.id, 0) = 0 THEN doctor_billing_company.name
+            ELSE vob_billing_company.name
+        END AS owner_billing_name,
+        doctor_billing_company.id AS current_billing_company_id,
+        vob_billing_company.id AS stored_billing_company_id
+    FROM dental_insurance_preauth preauth
+        JOIN dental_patients p ON preauth.patient_id = p.patientid
+        JOIN dental_users doctor ON preauth.doc_id = doctor.userid
+        LEFT JOIN dental_users staff ON preauth.userid = staff.userid
+        LEFT JOIN dental_contact i ON p.p_m_ins_co = i.contactid
+        LEFT JOIN companies doctor_billing_company ON doctor_billing_company.id = doctor.billing_company_id
+        LEFT JOIN admin owner ON owner.adminid = preauth.updated_by
+        LEFT JOIN admin_company ac ON ac.adminid = owner.adminid
+        LEFT JOIN companies vob_billing_company ON vob_billing_company.id = ac.companyid
+        $joinByUserCompany
+    ";
 
 // filter based on select lists above table
 if ((isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) || !empty($fid)) {
-    $sql .= "WHERE ";
-    
     if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
-	if($_REQUEST['status']==DSS_PREAUTH_PENDING){
-	  $sql .= " (preauth.status = " . $_REQUEST['status'] . " OR preauth.status = ".DSS_PREAUTH_PREAUTH_PENDING.") ";
-	}elseif($_REQUEST['status']==DSS_PREAUTH_COMPLETE){
-          $sql .= " (preauth.status = " . $_REQUEST['status'] . " OR preauth.status = ".DSS_PREAUTH_REJECTED.") ";
-        }else{
-          $sql .= "  preauth.status = " . $_REQUEST['status'] . " ";
-	}
+        $statuses = preAuthStatusSequence($_REQUEST['status']);
+        $statuses = $db->escapeList($statuses);
+        $conditionals[] = "preauth.status IN ($statuses)";
     }
     
     if (!empty($fid)) {
-        if (isset($_REQUEST['status']) && ($_REQUEST['status'] != '')) {
-            $sql .= "  AND ";
-        }
-        $sql .= "  users.userid = " . $fid . " ";
+        $conditionals[] = "doctor.userid = '$fid'";
     }
     
     if (!empty($pid)) {
-        $sql .= "AND preauth.patient_id = " . $pid . " ";
+        $conditionals[] = "preauth.patient_id = '$pid'";
     }
 
     if (!empty($iid)) {
-        $sql .= "AND p.p_m_ins_co = " . $iid . " ";
+        $conditionals[] = "p.p_m_ins_co = '$iid'";
     }
-
 }
 
-$sql .= "ORDER BY " . $sort_by_sql;
+$whereConditionals = '';
+
+if (count($conditionals)) {
+    $conditionals = '(' . join(') AND (', $conditionals) . ')';
+    $whereConditionals = "WHERE $conditionals";
+}
+
+$sql .= " $whereConditionals ORDER BY $sort_by_sql";
 
 $total_rec = $db->getNumberRows($sql);
 $no_pages = $total_rec/$rec_disp;
@@ -275,6 +271,7 @@ $sql .= " limit ".$i_val.",".$rec_disp;
 $my = $db->getResults($sql);
 
 $pending_selected = ($status == DSS_PREAUTH_PENDING) ? 'selected' : '';
+$preauth_selected = ($status == DSS_PREAUTH_PREAUTH_PENDING) ? 'selected' : '';
 $complete_selected = ($status == DSS_PREAUTH_COMPLETE) ? 'selected' : '';
 
 ?>
@@ -314,6 +311,9 @@ $(document).ready(function(){
             <option value="">Any</option>
             <option value="<?= DSS_PREAUTH_PENDING ?>" <?= $pending_selected ?>>
                 <?= $dss_preauth_status_labels[DSS_PREAUTH_PENDING] ?>
+            </option>
+            <option value="<?= DSS_PREAUTH_PREAUTH_PENDING ?>" <?= $preauth_selected ?>>
+                <?= $dss_preauth_status_labels[DSS_PREAUTH_PREAUTH_PENDING] ?>
             </option>
             <option value="<?= DSS_PREAUTH_COMPLETE ?>" <?= $complete_selected ?>>
                 <?= $dss_preauth_status_labels[DSS_PREAUTH_COMPLETE]?>
@@ -360,7 +360,7 @@ $(document).ready(function(){
 
 <form name="pagefrm" action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <table class="table table-bordered table-hover">
-	<?php  if($total_rec > $rec_disp) {?>
+	<?php if ($total_rec > $rec_disp) { ?>
 	<TR bgColor="#ffffff">
 		<TD  align="right" colspan="15" class="bp">
 			Pages:
@@ -403,56 +403,82 @@ $(document).ready(function(){
 			Action
 		</td>
 	</tr>
-	<?php  if(count($my) == 0)
-	{ ?>
+	<?php if (!count($my)) { ?>
 		<tr class="tr_bg">
 			<td valign="top" class="col_head" colspan="6" align="center">
 				No Records
 			</td>
 		</tr>
-	<?php  
-	}
-	else
-	{
-		foreach ($my as $myarray)
-		{
-		?>
-			<tr class="<?php echo  (isset($tr_class))?$tr_class:'';?>">
+	<?php } else {
+		foreach ($my as $myarray) {
+		    $status = (int)$myarray['status'];
+		    $isAnyPendingStatus = in_array($status, [DSS_PREAUTH_PENDING, DSS_PREAUTH_PREAUTH_PENDING]);
+            $canEdit = preAuthEditPermission($myarray, $adminCompanyId, $isSuperAdmin);
+
+            $status_color = 'success';
+            $link_label = 'View';
+            $clientClass = 'former-client';
+
+            if ($isAnyPendingStatus) {
+                $status_color = 'warning';
+
+                if ((int)$myarray['days_pending'] > 7) {
+                    $status_color = 'danger';
+                }
+            }
+
+            if ($canEdit) {
+                $link_label = 'Edit';
+            }
+
+            if ($isSuperAdmin || (int)$myarray['current_billing_company_id'] === $adminCompanyId) {
+                $clientClass = 'current-client';
+            }
+
+            ?>
+			<tr class="<?= (isset($tr_class) ? $tr_class : '') ?> <?= $clientClass ?>">
 				<td valign="top">
 					<?php echo st($myarray["front_office_request_date"]);?>&nbsp;
 				</td>
-                                <td valign="top">
-                                        <?php echo st($myarray["updated_at"]);?>&nbsp;
-                                </td>
-				<?php $status_color = ($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) ? "warning" : "success"; ?>
-				<?php $status_color = (($myarray["status"] == DSS_PREAUTH_PENDING || $myarray["status"] == DSS_PREAUTH_PREAUTH_PENDING) && $myarray['days_pending'] > 7) ? "danger" : $status_color; ?>
+                    <td valign="top">
+                        <?php echo st($myarray["updated_at"]);?>&nbsp;
+                    </td>
 				<td valign="top" class="<?php echo  $status_color; ?>">
-					<?php echo st($dss_preauth_status_labels[$myarray["status"]]);?>&nbsp;
+					<?php echo st($dss_preauth_status_labels[$status]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="view_patient.php?pid=<?php echo  $myarray['patient_id'];?>"><?php echo st($myarray["patient_lastname"]);?>, <?php echo st($myarray["patient_firstname"]);?> (View Chart)</a>
-				</td>
+                    <a href="view_patient.php?pid=<?= e($myarray['patient_id']) ?>">
+                        <?= e("{$myarray['patient_lastname']}, {$myarray['patient_firstname']}") ?> (View Chart)
+                    </a>
+                </td>
 				<td valign="top">
 					<?php echo st($myarray["ins_co"]);?>&nbsp;
 				</td>
 				<td valign="top">
-					<a href="view_user.php?ed=<?php echo  $myarray['doc_id']; ?>"><?php echo st($myarray["doc_name"]);?></a>&nbsp;
-				</td>
+                    <a href="view_user.php?ed=<?= $myarray['doc_id'] ?>"><?= e($myarray["doc_name"]) ?></a>
+                    &nbsp;
+                </td>
 				<td valign="top">
 					<?php echo st($myarray["user_name"]);?>&nbsp;
 				</td>
-                                <td valign="top">
-                                        <?php echo st($myarray["billing_name"]);?>&nbsp;
-                                </td>
+                <td valign="top">
+                    <?= e($myarray['owner_billing_name']) ?>
+                    &nbsp;
+                </td>
 				<td valign="top">
-				    <?php $link_label = ($myarray["status"] == DSS_PREAUTH_PENDING) ? 'Edit' : 'View'; ?>
-					<a href="process_vob_page.php?ed=<?php echo $myarray["id"];?>" title="Edit" class="btn btn-primary btn-sm">
-						<?php echo  $link_label ?>
-					 <span class="glyphicon glyphicon-pencil"></span></a>
-                                        <a href="manage_vobs.php?fid=<?php echo $myarray['doc_id']; ?>&pid=<?php echo $myarray["patient_id"];?>" title="Edit" class="btn btn-primary btn-sm">
-						History <?php echo  ($myarray['total_vob']>1)?"(".$myarray['total_vob'].")":''; ?>
-                                         </a>
-
+					<a class="btn btn-primary btn-sm" title="<?= $link_label ?>"
+                       href="process_vob_page.php?ed=<?= $myarray["id"] ?>">
+						<?= $link_label ?>
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    
+                    <a class="btn btn-primary btn-sm" title="<?= $link_label ?>"
+                       href="manage_vobs.php?fid=<?= $myarray['doc_id'] ?>&pid=<?= $myarray["patient_id"] ?>">
+                        History
+                        <?php if ($myarray['total_vob'] > 1) { ?>
+                            (<?= $myarray['total_vob'] ?>)
+                        <?php } ?>
+                    </a>
 				</td>
 			</tr>
 	<?php  	}
@@ -468,4 +494,73 @@ $(document).ready(function(){
 <div id="backgroundPopup"></div>
 
 <br /><br />	
-<?php  include "includes/bottom.htm";?>
+<?php
+
+include __DIR__ . '/includes/bottom.htm';
+
+/**
+ * Determine next status to set in the VOB.
+ *
+ * @param int $initialStatus
+ * @return array
+ */
+function preAuthStatusSequence ($initialStatus) {
+    $initialStatus = (int)$initialStatus;
+    
+    if ($initialStatus === DSS_PREAUTH_PENDING) {
+        return [$initialStatus, DSS_PREAUTH_PREAUTH_PENDING];
+    }
+    
+    if ($initialStatus === DSS_PREAUTH_COMPLETE) {
+        return [$initialStatus, DSS_PREAUTH_REJECTED];
+    }
+    
+    return [$initialStatus];
+}
+
+/**
+ * Determine edit permissions. Only Pending statuses can be edited.
+ *
+ * @param array $preAuthData
+ * @param int   $adminCompanyId
+ * @param bool  $isSuperAdmin
+ * @return bool
+ */
+function preAuthEditPermission (array $preAuthData, $adminCompanyId, $isSuperAdmin) {
+    $status = (int)$preAuthData['status'];
+    $isStatusPending = $status === DSS_PREAUTH_PENDING;
+    $isStatusPreAuth = $status === DSS_PREAUTH_PREAUTH_PENDING;
+    $isAnyPendingStatus = $isStatusPending || $isStatusPreAuth;
+
+    if (!$isAnyPendingStatus) {
+        return false;
+    }
+
+    if ($isSuperAdmin) {
+        return true;
+    }
+
+    $currentBillingCompanyId = (int)$preAuthData['current_billing_company_id'];
+    $storedBillingCompanyId = (int)$preAuthData['stored_billing_company_id'];
+
+    if (!$currentBillingCompanyId && !$storedBillingCompanyId) {
+        return false;
+    }
+
+    if ($currentBillingCompanyId === $storedBillingCompanyId) {
+        return true;
+    }
+
+    $isCurrentBillingCompany = $currentBillingCompanyId === $adminCompanyId;
+    $isStoredBillingCompany = $storedBillingCompanyId === $adminCompanyId;
+
+    if ($isStoredBillingCompany && $isStatusPreAuth) {
+        return true;
+    }
+
+    if ($isCurrentBillingCompany && $isStatusPending) {
+        return true;
+    }
+
+    return false;
+}

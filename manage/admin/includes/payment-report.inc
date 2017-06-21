@@ -11,7 +11,7 @@ namespace Ds3\Libraries\Legacy;
 $docId = intval($_SESSION['docid']);
 $adminCompanyId = intval($_SESSION['admincompanyid']);
 
-$reportId = intval($_REQUEST['report_id']);
+$reportId = isset($reportId) ? $reportId : intval($_REQUEST['report_id']);
 $errorMessages = [];
 
 $extraJoins = '';
@@ -36,22 +36,24 @@ if (!empty($is_back_office)) {
  *
  * Retrieve all NPIs associated to member of this office
  */
-$npiList = $db->getResults("SELECT npi, medicare_npi, service_npi, service_medicare_npi
+if (!isset($npiList)) {
+    $npiList = $db->getResults("SELECT npi, medicare_npi, service_npi, service_medicare_npi
     FROM dental_users
     WHERE docid = '$docId'
         OR userid = '$docId'");
 
-$npiList = $npiList ? array_flatten($npiList) : [];
-$npiList = array_filter(array_unique($npiList));
+    $npiList = $npiList ? array_flatten($npiList) : [];
+    $npiList = array_filter(array_unique($npiList));
 
-if ($npiList) {
-    array_walk($npiList, function (&$each) use ($db) {
-        $each = 'report.response LIKE \'%"npi":"' . $db->escape($each) . '"%\'';
-    });
-    $npiList = join(' OR ', $npiList);
-    $orNpiConditional = "OR ($npiList)";
-} else {
-    $orNpiConditional = '';
+    if ($npiList) {
+        array_walk($npiList, function (&$each) use ($db) {
+            $each = 'report.response LIKE \'%"npi":"' . $db->escape($each) . '"%\'';
+        });
+        $npiList = join(' OR ', $npiList);
+        $orNpiConditional = "OR ($npiList)";
+    } else {
+        $orNpiConditional = '';
+    }
 }
 
 $reportData = $db->getRow("SELECT
@@ -60,7 +62,8 @@ $reportData = $db->getRow("SELECT
         report.reference_id,
         report.response,
         report.adddate,
-        report.ip_address
+        report.ip_address,
+        claim.patientid
     FROM dental_payment_reports report
         LEFT JOIN dental_insurance claim ON claim.insuranceid = report.claimid
             $orNpiConditional
@@ -126,9 +129,13 @@ $service_provider_title = $details->service_provider->last_name . ' ' . $details
 $payee_title = $details->payee->name;
 
 ?>
-<br />
 <div class="<?= $header_class ?>">
-    Payment Report <br/>
+    <?php if (empty($multipleViews) && !empty($is_back_office)) { ?>
+        <h1>Payment Report ID <code><?= e($reportData['payment_id']) ?></code></h1>
+    <?php } else { ?>
+        Payment Report ID <code><?= e($reportData['payment_id']) ?></code>
+        <br/>
+    <?php } ?>
     <?php if (trim($patient_title)) { ?>
         Patient: <?=$patient_title?> <br/>
     <?php } ?>
@@ -139,15 +146,23 @@ $payee_title = $details->payee->name;
         Payee: <?=$payee_title?>
     <?php } ?>
 </div>
-<br />
-<br />
 <?php if ($errorMessages) { ?>
     <div class="<?= $header_class ?>">
         Errors: <?= join('<br>', $errorMessages) ?>
     </div>
 <?php } ?>
-
+<?php if (empty($is_back_office)) { ?>
+    <a class="button" style="float:right;margin-right:14px;"
+       href="/manage/view_claim.php?claimid=<?= $reportData['claimid'] ?>&amp;pid=<?= $reportData['patientid'] ?>">
+        View Claim
+    </a>
+<?php } ?>
 <table <?= $table_style ?>>
+    <colgroup>
+        <col />
+        <col />
+        <col style="min-width:60%;" />
+    </colgroup>
     <tr>
         <th rowspan="2" class="tr_bg_h col_head" valign="top"></th>
         <th class="tr_bg_h col_head" valign="top">Claim Reference ID</th>

@@ -20,7 +20,7 @@ if (isset($_POST['partial_name'])) {
 $result = mysqli_query($con, $sql);
 */
 
-$data = json_decode(file_get_contents("https://eligibleapi.com/resources/claims-payer.json"));
+$data = json_decode(file_get_contents("https://eligible.com/resources/claims-payer.json"));
 
 $payers = $data->claims_payer_list;
 $patients = array();

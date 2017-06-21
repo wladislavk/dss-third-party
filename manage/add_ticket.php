@@ -54,25 +54,23 @@ if(!empty($_POST["ticketsub"]) && $_POST["ticketsub"] == 1){
 	$u_sql = "SELECT a.* FROM admin a 
                 JOIN dental_support_category_admin ca ON ca.adminid=a.adminid
                 WHERE ca.category_id = '".mysqli_real_escape_string($con, $_POST['category_id'])."'";
-	$u_q = $db->getResults($u_sql);
-	$admins = array();
-    if ($u_q) {
-        foreach ($u_q as $u_r) {
-            array_push($admins, $u_r['email']);
-        }
-    }
+	$admins = $db->getResults($u_sql);
 
-    $data = $db->getRow("SELECT first_name, last_name
+	if ($admins) {
+        $admins = array_pluck($admins, 'email');
+
+        $data = $db->getRow("SELECT first_name, last_name
         FROM dental_users
         WHERE userid = '" . intval($_SESSION['userid']) . "'");
-    $data['ticket_id'] = $t_id;
+        $data['ticket_id'] = $t_id;
 
-    $from = 'Dental Sleep Solutions <support@dentalsleepsolutions.com>';
-    $to = join(', ', $admins);
-    $subject = 'Support Ticket Opened';
-    $template = getTemplate('ticket-opened');
+        $from = 'Dental Sleep Solutions <support@dentalsleepsolutions.com>';
+        $to = join(', ', $admins);
+        $subject = 'Support Ticket Opened';
+        $template = getTemplate('ticket-opened');
 
-    sendEmail($from, $to, $subject, $template, $data);
+        sendEmail($from, $to, $subject, $template, $data);
+    }
     
     ?>
 <script type="text/javascript">

@@ -1,9 +1,8 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 include('admin/includes/main_include.php');
 include('admin/includes/password.php');
-//$page_sql = "select * from dental_pages where status=1 and  pageid='".s_for($_GET['pid'])."'";
-//$page_my = mysqli_query($con, $page_sql);
-//$page_myarray = mysqli_fetch_array($page_my);
+
+$queryString = http_build_query($_GET);
 
 if(!empty($_SESSION['loginid']))
 {
@@ -23,29 +22,47 @@ else
 
 if(isset($_POST["loginsub"]))
 {
-	$salt_sql = "SELECT salt FROM dental_users WHERE username='".mysqli_real_escape_string($con, $_POST['username'])."'";
-	$salt_row = $db->getRow($salt_sql);
+    $username = $db->escape($_POST['username']);
+    $password = $_POST['password'];
 
-	$pass = gen_password($_POST['password'], $salt_row['salt']);
+    $salt = $db->getColumn("SELECT salt FROM dental_users WHERE username = '$username'", 'salt');
+    $password = $db->escape(gen_password($password, $salt));
 
-	$check_sql = "SELECT dental_users.userid, username, name, first_name, last_name, user_access, status,
-				CASE docid
-					WHEN 0 THEN dental_users.userid
-					ELSE docid
-				END as docid,
-			user_type, uc.companyid FROM dental_users
-			LEFT JOIN dental_user_company uc ON uc.userid=(
-				CASE docid
-                                        WHEN 0 THEN dental_users.userid
-                                        ELSE docid
-                                END)
-			where username='".mysqli_real_escape_string($con, $_POST['username'])."' and password='".$pass."' and status in (1, 3)";
+    $check_sql = "SELECT
+            u.userid,
+            u.username,
+            u.name,
+            u.first_name,
+            u.last_name,
+            u.user_access,
+            u.status,
+            d.status AS doctor_status,
+            d.userid AS docid,
+            u.user_type,
+            uc.companyid
+        FROM dental_users u
+            LEFT JOIN dental_users d ON d.userid = (
+                CASE u.docid
+                    WHEN 0 THEN u.userid
+                    ELSE u.docid
+                END
+            )
+            LEFT JOIN dental_user_company uc ON uc.userid = (
+                CASE u.docid
+                    WHEN 0 THEN u.userid
+                    ELSE u.docid
+                END
+            )
+        WHERE u.username = '$username'
+            AND u.password = '$password'
+            AND u.status IN (1, 3)
+            AND d.status IN (1, 3)";
 
 	$check_myarray = $db->getRow($check_sql);
 
 	if(!empty($check_myarray))
 	{
-		if($check_myarray['status']=='3'){
+		if ($check_myarray['status'] == 3 || $check_myarray['doctor_status'] == 3) {
 			$msg='This account has been suspended.';
 		}else{
 			/*$ins_sql = "insert into dental_log (userid,adddate,ip_address) values('".$check_myarray['userid']."',now(),'".$_SERVER['REMOTE_ADDR']."')";
@@ -82,7 +99,18 @@ if(isset($_POST["loginsub"]))
 
 			$_SESSION['loginid']=$ins_id;
 
-			header('Location: index.php');
+			if (isset($_GET['goto'])) {
+                $goTo = $_GET['goto'];
+
+                if ($goTo[0] !== '/') {
+                    $goTo = "/$goTo";
+                }
+
+                $goTo = preg_replace('@/\.\./@', '/', $goTo);
+			    header("Location: $goTo");
+            } else {
+                header('Location: /manage/');
+            }
 			trigger_error("Die called", E_USER_ERROR);
 		}
 	}
@@ -120,8 +148,12 @@ if(!empty($_GET['msg']))
 
 <div id="login_container">
 	<div id="form-container">
-		<FORM NAME="loginfrm" id="loginForm" METHOD="POST" ACTION="<?=$_SERVER['PHP_SELF']?>" onSubmit="return loginabc(this)">
+		<FORM NAME="loginfrm" id="loginForm" METHOD="POST" ACTION="/manage/login.php<?= $queryString ? "?$queryString" : '' ?>" onSubmit="return loginabc(this)">
 			<table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C">
+                <colgroup>
+                    <col width="30%" />
+                    <col width="70%" />
+                </colgroup>
 				<tr bgcolor="#FFFFFF">
 					<td colspan="2" class="t_head">
 					   Please Enter Your Login Information

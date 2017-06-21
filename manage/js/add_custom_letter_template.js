@@ -7,7 +7,7 @@ $('#letterid').change(function(){
 	window.location = "manage_default_letters.php?lid="+id;
 });
 
-setup_tinymce('10', 'Arial');
+setup_tinymce('14', 'Helvetica', $('.single-letter:first'));
 
 function fontSizeList()
 {

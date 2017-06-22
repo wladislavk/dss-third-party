@@ -10,7 +10,8 @@ require_once __DIR__ . '/includes/general_functions.php';
 /**
  * @return array
  */
-function getContactTypeList () {
+function getContactTypeList()
+{
     $db = new Db();
     $list = array();
     $types = $db->getResults('SELECT contacttypeid, contacttype FROM dental_contacttype');
@@ -21,243 +22,209 @@ function getContactTypeList () {
 
     return $list;
 }
+
 /**
- * Encapsulate logic to read csv and insert contacts.
- * Each insertion is a batch, to reduce DB load.
+ * Return a map of contact fields, from csv to DB.
  *
- * @param string $filename
- * @param int    $docId
- * @param bool   $ignoreExtension
- * @return array
+ * @param array $firstRow
+ * @return array|bool
  */
-function insertContactList ($filename, $docId, $ignoreExtension=false) {
-    $return = [
-        'total' => 0,
-        'inserted' => 0,
-        'excluded' => 0,
-        'errors' => [],
+function getContactListHeader(array $firstRow)
+{
+    $allowedFields = [
+        'lastname',
+        'firstname',
+        'middlename' => 'middleinit',
+        'salutation' => 'title',
+        'company' => 'companyname',
+        'add1' => 'address1',
+        'add2' => 'address2',
+        'city',
+        'state',
+        'zip' => 'postalcode',
+        'status',
+        'phone1' => 'phone',
+        'phone2',
+        'fax',
+        'email',
+        'national_provider_id' => 'npi',
+        'qualifierid' => 'otherid',
+        'qualifier' => 'otheridqual',
+        'notes',
+        'contacttypeid' => 'contacttype',
+        'specialty',
+        'status' => 'active',
+    ];
+    $specialFields = [
+        'preferredcontact',
+        'notes',
+        'docid',
+        'ip_address'
     ];
 
-    /**
-     * Allow to ignore extension, in case the filename is a temporary file
-     */
-    if (!$ignoreExtension && strtolower(substr($filename, -4)) !== '.csv') {
-        $return['errors'][] = 'The file extension is not CSV.';
-        return $return;
-    }
+    return processCsvHeader($firstRow, $allowedFields, $specialFields);
+}
 
-    $handle = fopen($filename, 'r');
+/**
+ * Map CSV fields into internal representation, remove/ignore not defined fields
+ *
+ * @param array  $destination
+ * @param string $column
+ * @param string $value
+ * @param int    $docId
+ * @param string $ipAddress
+ */
+function translateContactFields(array &$destination, $column, $value, $docId, $ipAddress)
+{
+    $value = trim($value);
 
-    if ($handle === false) {
-        $return['errors'][] = 'The file could not be read.';
-        return $return;
-    }
-
-    set_time_limit(0);
-
-    $db = new Db();
-    $docId = intval($docId);
-
-    $count = 0;
-    $batchSize = 50;
-    $fields = [];
-
-    $contactTypeList = getContactTypeList();
-
-    do {
-        $batch = [];
-
-        do {
-            $row = fgetcsv($handle, 10000, ',');
-
-            if (!$row) {
-                break;
-            }
-
-            $count++;
-
-            if ($count === 1) {
-                $allowedFields = [
-                    'lastname',
-                    'firstname',
-                    'middlename' => 'middleinit',
-                    'salutation' => 'title',
-                    'company' => 'companyname',
-                    'add1' => 'address1',
-                    'add2' => 'address2',
-                    'city',
-                    'state',
-                    'zip' => 'postalcode',
-                    'status',
-                    'phone1' => 'phone',
-                    'phone2',
-                    'fax',
-                    'email',
-                    'national_provider_id' => 'npi',
-                    'qualifierid' => 'otherid',
-                    'qualifier' => 'otheridqual',
-                    'notes',
-                    'contacttypeid' => 'contacttype',
-                    'specialty',
-                    'status' => 'active',
-                ];
-
-                foreach ($row as $index=>$column) {
-                    $column = strtolower(trim($column));
-
-                    /**
-                     * If already stored, or if not a string, skip
-                     */
-                    if (in_array($column, $fields) || is_numeric($column) || !is_string($column)) {
-                        continue;
-                    }
-
-                    /**
-                     * Save the position of the column, to retrieve the proper data field
-                     */
-                    if (array_key_exists($column, $allowedFields)) {
-                        $fields[$index] = $column;
-                        continue;
-                    }
-
-                    if (in_array($column, $allowedFields)) {
-                        $found = array_search($column, $allowedFields);
-                        $fields[$index] = is_numeric($found) ? $column : $found;
-                        continue;
-                    }
-                }
-
-                /**
-                 * No fields = no valid csv
-                 */
-                if (!count($fields)) {
-                    $return['errors'][] = count($row) ? 'The header is invalid.' : 'The CSV file contains no header.';
-                    return $return;
-                }
-
-                /**
-                 * Signal special fields with negative indexes
-                 */
-                foreach (['preferredcontact', 'notes', 'docid', 'ip_address'] as $index=>$each) {
-                    if (!in_array($each, $fields)) {
-                        $fields[-1 - $index] = $each;
-                    }
-                }
-
-                continue;
-            }
-
-            $data = [];
-
-            foreach ($fields as $index=>$column) {
-                switch ($column) {
-                    case 'contacttypeid':
-                        switch (strtolower(trim($row[$index]))) {
-                            case 'insurance':
-                                $type = 'Insurance';
-                                break;
-                            case 'ent':
-                                $type = 'ENT Physician';
-                                break;
-                            case 'dental physician':
-                            case 'orthodontist':
-                                $type = 'Dentist';
-                                break;
-                            case 'primary care physician':
-                                $type = 'Primary Care Physician';
-                                break;
-                            case 'sleep disorder specialist':
-                                $type = 'Sleep Physician';
-                                break;
-                            case 'pulmonologist':
-                                $type = 'Pulmonologist';
-                                break;
-                            default:
-                                $type = 'Other Physician';
-                                break;
-                        }
-
-                        $data[$column] = isset($contactTypeList[$type]) ? intval($contactTypeList[$type]) : '';
-                        break;
-                    case 'status':
-                        $data[$column] = trim($row[$index]) == 'true' || trim($row[$index]) == 3 ? 3 : 4;
-                        break;
-                    case 'docid':
-                        $data[$column] = $docId;
-                        break;
-                    case 'ip_address':
-                        $data[$column] = $_SERVER['REMOTE_ADDR'];
-                        break;
-                    default:
-                        $data[$column] = trim($row[$index]);
-                }
-            }
-
-            /**
-             * No rows are excluded ever in this approach
-             */
-
-            /**
-             * Preferred method of contact
-             */
-            if (!empty($data['fax'])) {
-                $data['preferredcontact'] = 'fax';
-            }
-
-            /**
-             * Process notes
-             */
-            $notes = [];
-            $noteSections = [
-                'qualifierid' => 'OtherID - $1',
-                'qualifier' => 'OtherIDQualifier - $1',
-                'specialty' => 'Specialty - $1',
-                'notes' => '$1'
-            ];
-
-            foreach ($noteSections as $column=>$replacement) {
-                if (strlen($data[$column])) {
-                    $notes[] = str_replace('$1', $data[$column], $replacement);
-                }
-            }
-
-            $data['notes'] = join(' ', $notes);
-            unset($data['specialty']);
-            $batch[] = $data;
-
-            if (count($batch) >= $batchSize) {
-                break;
-            }
-        } while ($row);
-
-        if (!$batch) {
-            break;
+    if ($column === 'status') {
+        if ($value === 'true' || $value === '3' ) {
+            $destination[$column] = 3;
+            return;
         }
 
-        array_walk($batch, function (&$each) use ($db) {
-            $each = $db->escapeList($each);
-        });
+        $destination[$column] = 4;
+        return;
+    }
 
-        $insert = [
-            'columns' => '(' . join(', ', $fields) . ', adddate)',
-            'values' => '(' . join($batch, ", NOW()), (") . ', NOW())',
+    if ($column === 'docid') {
+        $destination[$column] = $docId;
+        return;
+    }
+
+    if ($column === 'ip_address') {
+        $destination[$column] = $ipAddress;
+        return;
+    }
+
+    if ($column === 'contacttypeid') {
+        $contactTypeList = getContactTypeList();
+        $translationList = [
+            'insurance' => 'Insurance',
+            'ent' => 'ENT Physician',
+            'dental physician' => 'Dentist',
+            'orthodontist' => 'Dentist',
+            'primary care physician' => 'Primary Care Physician',
+            'sleep disorder specialist' => 'Sleep Physician',
+            'pulmonologist' => 'Pulmonologist',
         ];
 
-        $return['inserted'] += $db->getAffectedRows("INSERT INTO dental_contact
-            {$insert['columns']} VALUES {$insert['values']}");
-    } while ($row);
+        $type = 'Other Physician';
 
-    fclose($handle);
-    $return['total'] = $count;
+        if (array_key_exists($value, $translationList)) {
+            $type = $translationList[$value];
+        }
 
-    return $return;
+        if (isset($contactTypeList[$type])) {
+            $destination[$column] = (int)$contactTypeList[$type];
+        }
+
+        $destination[$column] = '';
+        return;
+    }
+
+    $destination[$column] = $value;
 }
+
+/**
+ * Translate CSV fields into internal representation, merge or remove special fields
+ *
+ * @param array  $row
+ * @param array  $headerFields
+ * @param int    $docId
+ * @param string $ipAddress
+ * @return array
+ */
+function processContactFields(array $row, array $headerFields, $docId, $ipAddress)
+{
+    $data = [];
+
+    foreach ($headerFields as $index => $column) {
+        translateContactFields($data, $column, $row[$index], $docId, $ipAddress);
+    }
+
+    /**
+     * Preferred method of contact
+     */
+    if (in_array('preferredcontact', $headerFields) && !empty($data['fax'])) {
+        $data['preferredcontact'] = 'fax';
+    }
+
+    /**
+     * Process notes
+     */
+    if (!in_array('notes', $headerFields)) {
+        unset($data['specialty']);
+        return $data;
+    }
+
+    $notes = [];
+    $noteSections = [
+        'qualifierid' => 'OtherID - $1',
+        'qualifier' => 'OtherIDQualifier - $1',
+        'specialty' => 'Specialty - $1',
+        'notes' => '$1'
+    ];
+
+    array_walk($noteSections, function ($subject, $column) use (&$notes, $data) {
+        if (!isset($data[$column]) || !strlen($data[$column])) {
+            return;
+        }
+
+        $notes[] = str_replace('$1', $data[$column], $subject);
+    });
+
+    $data['notes'] = join(' ', $notes);
+    unset($data['specialty']);
+    return $data;
+}
+
+/**
+ * Save contact data into the DB
+ *
+ * @param array $headerFields
+ * @param array $dataBatch
+ * @return bool|int
+ */
+function storeContactFields(array $headerFields, array $dataBatch)
+{
+    $db = new Db();
+
+    $headerFields = $db->escapeList($headerFields, true);
+    $dataBatch = array_map([$db, 'escapeList'], $dataBatch);
+
+    $insert = [
+        'columns' => "($headerFields, adddate)",
+        'values' => '(' . join(", NOW()),\n(", $dataBatch) . ', NOW())',
+    ];
+
+    $insertSql = "INSERT INTO dental_contact
+        {$insert['columns']}
+        VALUES
+        {$insert['values']}";
+
+    $inserted = $db->getAffectedRows($insertSql);
+    return $inserted;
+}
+
 
 if (isset($_POST['submitbut'])) {
     // check there are no errors
     if ($_FILES['csv']['error'] == 0) {
         if (strtolower(substr($_FILES['csv']['name'], -4)) === '.csv') {
-            $details = insertContactList($_FILES['csv']['tmp_name'], $_SESSION['docid'], true);
+            $details = saveCsvContents(
+                $_FILES['csv']['tmp_name'],
+                __NAMESPACE__ . '\\getContactListHeader',
+                function () {
+                    $arguments = func_get_args();
+                    $arguments[] = (int)$_SESSION['docid'];
+                    $arguments[] = $_SERVER['REMOTE_ADDR'];
+                    return call_user_func_array(__NAMESPACE__ . '\\processContactFields', $arguments);
+                },
+                __NAMESPACE__ . '\\storeContactFields',
+                true
+            );
             $errors = $details['errors'];
         } else {
             $errors = ['The file extension is not CSV.'];
@@ -269,12 +236,7 @@ if (isset($_POST['submitbut'])) {
     $message = '';
 
     if (!empty($details)) {
-        $message = ($details['inserted'] ?: 'No') . ' contacts saved.' .
-            ($details['excluded'] ? " {$details['excluded']} rows (excluded) missing both first name and last name." : '');
-
-        if (!$details['total']) {
-            $errors[] = 'The file was empty.';
-        }
+        $message = ($details['inserted'] ?: 'No') . ' contacts saved.';
     }
 
     if ($errors) {
@@ -299,3 +261,174 @@ if (isset($_POST['submitbut'])) {
 <?php
 
 require_once __DIR__ . '/includes/bottom.htm';
+
+/**
+ * Return an associative array with indexes, and labels, of valid CSV headers
+ *
+ * @param array $row
+ * @param array $allowedFields
+ * @param array $specialFields
+ * @return array|bool
+ */
+function processCsvHeader(array $row, array $allowedFields, array $specialFields = [])
+{
+    $headerFields = [];
+
+    array_walk($row, function ($column, $index) use (&$headerFields, $allowedFields) {
+        $column = strtolower(trim($column));
+
+        /**
+         * If already stored, or if not a string, skip
+         */
+        if (in_array($column, $headerFields) || is_numeric($column) || !is_string($column)) {
+            return;
+        }
+
+        /**
+         * Save the position of the column, to retrieve the proper data field
+         */
+        if (array_key_exists($column, $allowedFields)) {
+            $headerFields[$index] = $column;
+            return;
+        }
+
+        if (!in_array($column, $allowedFields)) {
+            return;
+        }
+
+        $found = array_search($column, $allowedFields);
+
+        if (is_numeric($found)) {
+            $headerFields[$index] = $column;
+            return;
+        }
+
+        $headerFields[$index] = $found;
+    });
+
+    /**
+     * No fields = no valid csv
+     */
+    if (!count($headerFields)) {
+        return false;
+    }
+
+    /**
+     * Signal special fields with negative indexes
+     */
+    foreach ($specialFields as $index=>$each) {
+        if (!in_array($each, $headerFields)) {
+            $headerFields[-1 - $index] = $each;
+        }
+    }
+
+    return $headerFields;
+}
+
+/**
+ * Return a row batch of max $batchSize
+ *
+ * @param resource $handle
+ * @param int      $batchSize
+ * @return array
+ */
+function getCsvRowBatch($handle, $batchSize = 20)
+{
+    $batch = [];
+
+    for ($n = 0; $n < $batchSize; $n++) {
+        $row = fgetcsv($handle, 10000, ',');
+
+        if ($row === FALSE) {
+            return $batch;
+        }
+
+        $batch[] = $row;
+    }
+
+    return $batch;
+}
+
+/**
+ * Translate a batch of CSV rows, and insert them into the DB
+ *
+ * @param array    $rowBatch
+ * @param array    $headerFields
+ * @param callable $processFields
+ * @param callable $storeFields
+ * @return int
+ */
+function processCsvRowBatch(array $rowBatch, array $headerFields, callable $processFields, callable $storeFields)
+{
+    $dataBatch = array_map(function ($row) use ($headerFields, $processFields) {
+        return $processFields($row, $headerFields);
+    }, $rowBatch);
+
+    if (!count($dataBatch)) {
+        return 0;
+    }
+
+    $inserted = $storeFields($headerFields, $dataBatch);
+    return $inserted;
+}
+
+/**
+ * Encapsulate logic to read csv and insert data into the DB.
+ *
+ * @param string   $filename
+ * @param callable $retrieveHeaderFields
+ * @param callable $processField
+ * @param callable $storeFields
+ * @param bool     $ignoreExtension
+ * @return array
+ */
+function saveCsvContents (
+    $filename,
+    callable $retrieveHeaderFields,
+    callable $processField,
+    callable $storeFields,
+    $ignoreExtension=false
+) {
+    $return = [
+        'inserted' => 0,
+        'errors' => [],
+    ];
+
+    /**
+     * Allow to ignore extension, in case the filename is a temporary file
+     */
+    if (!$ignoreExtension && strtolower(substr($filename, -4)) !== '.csv') {
+        $return['errors'][] = 'The file extension is not CSV.';
+        return $return;
+    }
+
+    $handle = fopen($filename, 'r');
+
+    if ($handle === false) {
+        $return['errors'][] = 'The file could not be read.';
+        return $return;
+    }
+
+    set_time_limit(0);
+    $batchSize = 20;
+
+    $firstRow = fgetcsv($handle, 1000, ',');
+
+    if ($firstRow === FALSE) {
+        $return['errors'][] = 'The file is empty';
+        return $return;
+    }
+
+    $headerFields = $retrieveHeaderFields($firstRow);
+
+    do {
+        $rowBatch = getCsvRowBatch($handle, $batchSize);
+
+        if (count($rowBatch)) {
+            $return['inserted'] += processCsvRowBatch($rowBatch, $headerFields, $processField, $storeFields);
+        }
+    } while (count($rowBatch));
+
+    fclose($handle);
+    return $return;
+}

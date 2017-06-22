@@ -3,95 +3,52 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\ExternalUserStore;
-use DentalSleepSolutions\Http\Requests\ExternalUserUpdate;
-use DentalSleepSolutions\Http\Requests\ExternalUserDestroy;
-use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
 
-class ExternalUsersController extends ExternalBaseController
+class ExternalUsersController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalUsers $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(ExternalUsers $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalUsers $resources
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(ExternalUsers $resources, $id)
+    public function show($id)
     {
-        $resource = $resources->where('user_id', $id)->firstOrFail();
+        $resource = $this->resources->where('user_id', $id)->firstOrFail();
         return ApiResponse::responseOk('', $resource);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalUsers $resources
-     * @param  \DentalSleepSolutions\Http\Requests\ExternalUserStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(ExternalUsers $resources, ExternalUserStore $request)
+    public function store()
     {
-        $data = $request->all();
+        $this->validate($this->request, $this->request->storeRules());
+        $data = $this->request->all();
+
         /**
          * @ToDo: Handle admin tokens
          * @see AWS-19-Request-Token
          */
         $data['created_by'] = $this->currentUser->id;
-
-        $resource = $resources->create($data);
+        $resource = $this->resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalUsers $resources
-     * @param int $id
-     * @param  \DentalSleepSolutions\Http\Requests\ExternalUserUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(ExternalUsers $resources, $id, ExternalUserUpdate $request)
+    public function update($id)
     {
-        $resource = $resources->where('user_id', $id)->firstOrFail();
-
-        $data = $request->all();
+        $resource = $this->resources->where('user_id', $id)->firstOrFail();
+        $data = $this->request->all();
         /**
          * @ToDo: Handle admin tokens
          * @see AWS-19-Request-Token
          */
         $data['updated_by'] = $this->currentUser->id;
-
         $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalUsers $resources
-     * @param  int $id
-     * @param  \DentalSleepSolutions\Http\Requests\ExternalUserDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(ExternalUsers $resources, $id, ExternalUserDestroy $request)
+    public function destroy($id)
     {
-        $resource = $resources->where('user_id', $id)->firstOrFail();
+        $resource = $this->resources->where('user_id', $id)->firstOrFail();
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');

@@ -40,6 +40,8 @@ class BindingSetter
         Eloquent\Dental\Document::class,
         Eloquent\Dental\DocumentCategory::class,
         Eloquent\Dental\EpworthSleepinessScale::class,
+        Eloquent\Dental\ExternalCompany::class,
+        Eloquent\Dental\ExternalUser::class,
         Eloquent\Dental\Fax::class,
         Eloquent\Dental\FaxInvoice::class,
         Eloquent\Dental\GagReflex::class,
@@ -110,24 +112,14 @@ class BindingSetter
 
     const EXTERNAL_BINDINGS = [
         [
-            Eloquent\Dental\ExternalCompany::class,
-            Resources\ExternalCompany::class,
-            Repositories\ExternalCompanies::class,
-        ],
-        [
-            Eloquent\Dental\ExternalUser::class,
-            Resources\ExternalUser::class,
-            Repositories\ExternalUsers::class,
+            Eloquent\Dental\ExternalCompanyUser::class,
+            Resources\ExternalCompanyUser::class,
+            Repositories\ExternalCompanyUsers::class,
         ],
         [
             Eloquent\Dental\ExternalPatient::class,
             Resources\ExternalPatient::class,
             Repositories\ExternalPatients::class,
-        ],
-        [
-            Eloquent\Dental\ExternalCompanyUser::class,
-            Resources\ExternalCompanyUser::class,
-            Repositories\ExternalCompanyUsers::class,
         ],
     ];
 

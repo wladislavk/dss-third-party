@@ -6,11 +6,11 @@ use DentalSleepSolutions\Http\Requests\Request;
 
 class ExternalPatientStore extends AbstractNonRestRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
+    public function authorize()
+    {
+        return true;
+    }
+
     public function rules()
     {
         return [

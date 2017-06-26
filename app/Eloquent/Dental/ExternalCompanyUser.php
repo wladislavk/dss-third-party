@@ -2,12 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\ExternalCompanyUser as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ExternalCompanyUsers as Repository;
-use DB;
 
-class ExternalCompanyUser extends Model implements Resource, Repository
+class ExternalCompanyUser extends AbstractModel implements Resource, Repository
 {
     /**
      * Guarded attributes
@@ -29,4 +28,9 @@ class ExternalCompanyUser extends Model implements Resource, Repository
      * @var string
      */
     protected $primaryKey = 'id';
+
+    public function getWithFilter($fields = [], $where = [])
+    {
+        // TODO: Implement getWithFilter() method.
+    }
 }

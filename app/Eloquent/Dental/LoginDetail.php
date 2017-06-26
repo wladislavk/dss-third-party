@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LoginDetail as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LoginDetails as Repository;
 
-class LoginDetail extends Model implements Resource, Repository
+class LoginDetail extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

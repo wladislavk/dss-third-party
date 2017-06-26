@@ -2,13 +2,13 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Note as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Notes as Repository;
 use DB;
 
-class Note extends Model implements Resource, Repository
+class Note extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

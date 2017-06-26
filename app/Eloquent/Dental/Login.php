@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\Login as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Logins as Repository;
 
-class Login extends Model implements Resource, Repository
+class Login extends AbstractModel implements Resource, Repository
 {
     /**
      * Mass assignable attributes

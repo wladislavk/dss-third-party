@@ -3,90 +3,33 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\GuideSettingOptionStore;
-use DentalSleepSolutions\Http\Requests\GuideSettingOptionUpdate;
-use DentalSleepSolutions\Http\Requests\GuideSettingOptionDestroy;
-use DentalSleepSolutions\Contracts\Resources\GuideSettingOption;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class GuideSettingOptionsController extends Controller
+class GuideSettingOptionsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(GuideSettingOptions $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\GuideSettingOption $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(GuideSettingOption $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions $resources
-     * @param  \DentalSleepSolutions\Http\Requests\GuideSettingOptionStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(GuideSettingOptions $resources, GuideSettingOptionStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\GuideSettingOption $resource
-     * @param  \DentalSleepSolutions\Http\Requests\GuideSettingOptionUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(GuideSettingOption $resource, GuideSettingOptionUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\GuideSettingOption $resource
-     * @param  \DentalSleepSolutions\Http\Requests\GuideSettingOptionDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(GuideSettingOption $resource, GuideSettingOptionDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function getOptionsForSettingIds(GuideSettingOptions $resources)

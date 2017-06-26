@@ -2,12 +2,10 @@
 
 namespace DentalSleepSolutions\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Admin as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Admins as Repository;
 
-class Admin extends Model implements Resource, Repository
+class Admin extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

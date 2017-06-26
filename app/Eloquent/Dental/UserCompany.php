@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 
-class UserCompany extends Model
+class UserCompany extends AbstractModel
 {
     /**
      * Mass assignable attributes

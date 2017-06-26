@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\LedgerPayment as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerPayments as Repository;
 
-class LedgerPayment extends Model implements Resource, Repository
+class LedgerPayment extends AbstractModel implements Resource, Repository
 {
     /**
      * Guarded attributes

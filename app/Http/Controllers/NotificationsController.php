@@ -2,99 +2,49 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Contracts\Repositories\Patients;
+use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\NotificationStore;
-use DentalSleepSolutions\Http\Requests\NotificationUpdate;
-use DentalSleepSolutions\Http\Requests\NotificationDestroy;
-use DentalSleepSolutions\Contracts\Resources\Notification;
-use DentalSleepSolutions\Contracts\Repositories\Notifications;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class NotificationsController extends Controller
+class NotificationsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Notifications $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Notifications $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Notification $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(Notification $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Notifications $resources
-     * @param  \DentalSleepSolutions\Http\Requests\NotificationStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Notifications $resources, NotificationStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Notification $resource
-     * @param  \DentalSleepSolutions\Http\Requests\NotificationUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Notification $resource, NotificationUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Notification $resource
-     * @param  \DentalSleepSolutions\Http\Requests\NotificationDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Notification $resource, NotificationDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     /**
      * Get notifications by filter.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
+     * @param  Patients $resources
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getWithFilter(Patients $resources, Request $request)
     {
-        $fields = $request->input('fields') ?: [];
-        $where  = $request->input('where') ?: [];
+        $fields = $request->input('fields', []);
+        $where  = $request->input('where', []);
 
         $patients = $resources->getWithFilter($fields, $where);
 

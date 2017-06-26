@@ -2,12 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\ExternalCompany as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies as Repository;
-use DB;
 
-class ExternalCompany extends Model implements Resource, Repository
+class ExternalCompany extends AbstractModel implements Resource, Repository
 {
     /**
      * Guarded attributes

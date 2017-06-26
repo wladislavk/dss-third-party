@@ -8,10 +8,14 @@ use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
 
 class ExternalCompanyMiddleware
 {
+    /** @var ExternalCompanies */
     protected $externalCompaniesRepository;
+
+    /** @var ExternalUsers */
     protected $externalUsersRepository;
 
-    public function __construct (ExternalCompanies $externalCompanies, ExternalUsers $externalUsers) {
+    public function __construct (ExternalCompanies $externalCompanies, ExternalUsers $externalUsers)
+    {
         $this->externalCompaniesRepository = $externalCompanies;
         $this->externalUsersRepository = $externalUsers;
     }

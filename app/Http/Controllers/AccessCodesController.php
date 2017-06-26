@@ -2,82 +2,30 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\AccessCodeStore;
-use DentalSleepSolutions\Http\Requests\AccessCodeUpdate;
-use DentalSleepSolutions\Http\Requests\AccessCodeDestroy;
-use DentalSleepSolutions\Contracts\Resources\AccessCode;
-use DentalSleepSolutions\Contracts\Repositories\AccessCodes;
-
-class AccessCodesController extends Controller
+class AccessCodesController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\AccessCodes $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(AccessCodes $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\AccessCode $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(AccessCode $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\AccessCodes $resources
-     * @param  \DentalSleepSolutions\Http\Requests\AccessCodeStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(AccessCodes $resources, AccessCodeStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\AccessCode $resource
-     * @param  \DentalSleepSolutions\Http\Requests\AccessCodeUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(AccessCode $resource, AccessCodeUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\AccessCode $resource
-     * @param  \DentalSleepSolutions\Http\Requests\AccessCodeDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(AccessCode $resource, AccessCodeDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

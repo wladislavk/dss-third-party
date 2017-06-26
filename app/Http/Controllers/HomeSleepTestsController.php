@@ -3,96 +3,39 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\HomeSleepTestStore;
-use DentalSleepSolutions\Http\Requests\HomeSleepTestUpdate;
-use DentalSleepSolutions\Http\Requests\HomeSleepTestDestroy;
-use DentalSleepSolutions\Contracts\Resources\HomeSleepTest;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class HomeSleepTestsController extends Controller
+class HomeSleepTestsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\HomeSleepTests $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(HomeSleepTests $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\HomeSleepTest $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(HomeSleepTest $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\HomeSleepTests $resources
-     * @param  \DentalSleepSolutions\Http\Requests\HomeSleepTestStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(HomeSleepTests $resources, HomeSleepTestStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\HomeSleepTest $resource
-     * @param  \DentalSleepSolutions\Http\Requests\HomeSleepTestUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(HomeSleepTest $resource, HomeSleepTestUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\HomeSleepTest $resource
-     * @param  \DentalSleepSolutions\Http\Requests\HomeSleepTestDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(HomeSleepTest $resource, HomeSleepTestDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function getUncompleted(HomeSleepTests $resources, Request $request)
     {
-        $patientId = $request->input('patientId') ?: 0;
+        $patientId = $request->input('patientId', 0);
 
         $data = $resources->getUncompleted($patientId);
 

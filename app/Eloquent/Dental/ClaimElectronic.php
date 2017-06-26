@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 
-class ClaimElectronic extends Model
+class ClaimElectronic extends AbstractModel
 {
     protected $table = 'dental_claim_electronic';
     public $timestamps = false;

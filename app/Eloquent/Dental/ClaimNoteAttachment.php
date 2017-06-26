@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ClaimNoteAttachment as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ClaimNoteAttachments as Repository;
 
-class ClaimNoteAttachment extends Model implements Resource, Repository
+class ClaimNoteAttachment extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

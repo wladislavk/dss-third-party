@@ -2,93 +2,42 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\FaxStore;
-use DentalSleepSolutions\Http\Requests\FaxUpdate;
-use DentalSleepSolutions\Http\Requests\FaxDestroy;
-use DentalSleepSolutions\Contracts\Resources\Fax;
-use DentalSleepSolutions\Contracts\Repositories\Faxes;
 use Carbon\Carbon;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Contracts\Repositories\Faxes;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class FaxesController extends Controller
+class FaxesController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Faxes $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Faxes $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Fax $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(Fax $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Faxes $resources
-     * @param  \DentalSleepSolutions\Http\Requests\FaxStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Faxes $resources, FaxStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
+        $data = array_merge($this->request->all(), [
             'sent_date'  => Carbon::now(),
-            'ip_address' => $request->ip()
+            'ip_address' => $this->request->ip(),
         ]);
 
-        $resource = $resources->create($data);
+        $resource = $this->resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Fax $resource
-     * @param  \DentalSleepSolutions\Http\Requests\FaxUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Fax $resource, FaxUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Fax $resource
-     * @param  \DentalSleepSolutions\Http\Requests\FaxDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Fax $resource, FaxDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function getAlerts(Faxes $resources)

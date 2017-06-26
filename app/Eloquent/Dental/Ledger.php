@@ -2,13 +2,13 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\Ledger as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers as Repository;
 use Carbon\Carbon;
 use DB;
 
-class Ledger extends Model implements Resource, Repository
+class Ledger extends AbstractModel implements Resource, Repository
 {
     const DSS_TRXN_TYPE_ADJ = 6;
 

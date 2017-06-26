@@ -9,7 +9,7 @@ use DentalSleepSolutions\Contracts\Resources\Company as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Companies as Repository;
 use DB;
 
-class Company extends Model implements Resource, Repository
+class Company extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

@@ -9,6 +9,7 @@ use DentalSleepSolutions\Contracts\Repositories\ExternalPatients;
 use EventHomes\Api\FractalHelper;
 use DentalSleepSolutions\Http\Transformers\ExternalPatient as Transformer;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 
 class ExternalPatientController extends ExternalBaseController
 {
@@ -21,22 +22,22 @@ class ExternalPatientController extends ExternalBaseController
      * @param  \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store (ExternalPatients $resources, ExternalPatientStore $request) {
+    public function store(ExternalPatients $resources, ExternalPatientStore $request) {
         $transformer = new Transformer;
         $data = $transformer->fromTransform($request->all());
 
         $created = false;
 
-        $patientData = array_get($data, 'patient');
-        $externalPatientData = array_get($data, 'external_patient');
-        $externalCompanyId = array_get($externalPatientData, 'software');
-        $externalPatientId = array_get($externalPatientData, 'external_id');
+        $patientData = Arr::get($data, 'patient');
+        $externalPatientData = Arr::get($data, 'external_patient');
+        $externalCompanyId = Arr::get($externalPatientData, 'software');
+        $externalPatientId = Arr::get($externalPatientData, 'external_id');
 
         /**
          * Concatenate patient address
          */
         if (isset($patientData['p_m_address'])) {
-            $address = $patientData['p_m_address'] . ' ' . array_get($patientData, 'p_m_address2');
+            $address = $patientData['p_m_address'] . ' ' . Arr::get($patientData, 'p_m_address2');
             $patientData['p_m_address'] = trim($address);
             unset($patientData['p_m_address2']);
         }
@@ -82,8 +83,8 @@ class ExternalPatientController extends ExternalBaseController
 
         $redirectUrl = env('FRONTEND_URL') . 'manage/external-patient.php?' .
             http_build_query([
-                'sw' => array_get($data, 'external_patient.software'),
-                'id' => array_get($data, 'external_patient.external_id'),
+                'sw' => Arr::get($data, 'external_patient.software'),
+                'id' => Arr::get($data, 'external_patient.external_id'),
             ]);
 
         return ApiResponse::responseOk(

@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Requests;
 class ExternalUserUpdate extends Request
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Validate incoming requests to update ExternalUser models
      *
      * @return array
      */

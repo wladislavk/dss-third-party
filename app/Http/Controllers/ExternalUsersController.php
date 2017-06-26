@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Requests\ExternalUserStore;
 use DentalSleepSolutions\Http\Requests\ExternalUserUpdate;
 use DentalSleepSolutions\Http\Requests\ExternalUserDestroy;

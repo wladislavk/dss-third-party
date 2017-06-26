@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Requests;
 class ExternalUserDestroy extends Request
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Allow destroy with no parameters.
      *
      * @return array
      */

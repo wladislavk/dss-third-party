@@ -5,14 +5,12 @@ namespace DentalSleepSolutions\Http\Requests;
 class ExternalCompanyDestroy extends Request
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Allow destroy with no parameters.
      *
      * @return array
      */
     public function rules()
     {
-        return [
-            // @todo Provide validation rules
-        ];
+        return [];
     }
 }

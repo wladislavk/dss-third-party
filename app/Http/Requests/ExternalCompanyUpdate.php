@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Requests;
 class ExternalCompanyUpdate extends Request
 {
     /**
-     * Get the validation rules that apply to the request.
+     * Validate incoming requests to update ExternalCompany models
      *
      * @return array
      */

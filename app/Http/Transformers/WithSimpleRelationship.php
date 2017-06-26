@@ -5,7 +5,6 @@ namespace DentalSleepSolutions\Http\Transformers;
  * Allow Transformers to define a dot notation map to transform input arrays, direct relationship.
  *
  * Class WithSimpleRelationship
- * @package DentalSleepSolutions\Http\Transformers
  */
 trait WithSimpleRelationship
 {

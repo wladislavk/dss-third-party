@@ -10,7 +10,6 @@ use InvalidArgumentException;
  * Map Dentrix API data into Patient/ExternalPatient data
  *
  * Class ExternalPatient
- * @package DentalSleepSolutions\Http\Transformers
  */
 class ExternalPatient extends TransformerAbstract
 {

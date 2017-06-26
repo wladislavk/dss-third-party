@@ -8,7 +8,6 @@ use Illuminate\Support\Arr;
  * the data.
  *
  * Class WithComplexRelationship
- * @package DentalSleepSolutions\Http\Transformers
  */
 trait WithComplexRelationship
 {

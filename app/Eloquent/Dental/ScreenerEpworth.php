@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ScreenerEpworth as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ScreenerEpworth as Repository;
 
-class ScreenerEpworth extends Model implements Resource, Repository
+class ScreenerEpworth extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
@@ -41,4 +41,9 @@ class ScreenerEpworth extends Model implements Resource, Repository
      * @var string
      */
     const CREATED_AT = 'adddate';
+
+    public function getPlural()
+    {
+        return 'ScreenerEpworth';
+    }
 }

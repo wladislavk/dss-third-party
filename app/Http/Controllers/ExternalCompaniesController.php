@@ -2,106 +2,53 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\ExternalCompanyStore;
-use DentalSleepSolutions\Http\Requests\ExternalCompanyUpdate;
-use DentalSleepSolutions\Http\Requests\ExternalCompanyDestroy;
-use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class ExternalCompaniesController extends Controller
+class ExternalCompaniesController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(ExternalCompanies $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(ExternalCompanies $resources, $id)
+    public function show($id)
     {
-        $resource = $resources-findOrFail($id);
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
-     * @param  \DentalSleepSolutions\Http\Requests\ExternalCompanyStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(ExternalCompanies $resources, ExternalCompanyStore $request)
+    public function store()
     {
-        $data = $request->all();
+        $this->validate($this->request, $this->request->storeRules());
+        $data = $this->request->all();
+
         /**
          * @ToDo: Handle admin tokens
          * @see AWS-19-Request-Token
          */
         $data['created_by'] = $this->currentUser->id;
-
-        $resource = $resources->create($data);
+        $resource = $this->resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
-     * @param int $id
-     * @param  \DentalSleepSolutions\Http\Requests\ExternalCompanyUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(ExternalCompanies $resources, $id, ExternalCompanyUpdate $request)
+    public function update($id)
     {
-        $resource = $resources->findOrFail($id);
-
-        $data = $request->all();
+        $this->validate($this->request, $this->request->updateRules());
+        /** @var Resource $resource */
+        $resource = $this->resources->findOrFail($id);
+        $data = $this->request->all();
         /**
          * @ToDo: Handle admin tokens
          * @see AWS-19-Request-Token
          */
         $data['updated_by'] = $this->currentUser->id;
-
         $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $resources
-     * @param  int $id
-     * @param  \DentalSleepSolutions\Http\Requests\ExternalCompanyDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(ExternalCompanies $resources, $id, ExternalCompanyDestroy $request)
+    public function destroy($id)
     {
-        $resource = $resources->findOrFail($id);
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

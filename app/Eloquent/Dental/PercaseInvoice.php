@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 
-class PercaseInvoice extends Model
+class PercaseInvoice extends AbstractModel
 {
     protected $table = 'dental_percase_invoice';
     protected $primaryKey = 'id';

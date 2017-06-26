@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resources\Payer as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Payers as Repository;
 
@@ -11,7 +10,7 @@ use DentalSleepSolutions\Contracts\Repositories\Payers as Repository;
  * @property array $names               Available names of a payer.
  * @property array $supported_endpoints Eligible endpoints supported by a payer.
  */
-class Payer extends Model implements Resource, Repository
+class Payer extends AbstractModel implements Resource, Repository
 {
     const ELIGIBILITY_CODE = '270';
     const ELIGIBILITY_ENDPOINT = 'coverage';

@@ -2,13 +2,13 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LedgerHistory as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerHistories as Repository;
 use DB;
 
-class LedgerHistory extends Model implements Resource, Repository
+class LedgerHistory extends AbstractModel implements Resource, Repository
 {
     use WithoutCreatedTimestamp;
 

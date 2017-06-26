@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\GagReflex as Resource;
 use DentalSleepSolutions\Contracts\Repositories\GagReflexes as Repository;
 
-class GagReflex extends Model implements Resource, Repository
+class GagReflex extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

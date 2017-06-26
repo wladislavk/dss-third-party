@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\LedgerRecord as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerRecords as Repository;
 
-class LedgerRecord extends Model implements Resource, Repository
+class LedgerRecord extends AbstractModel implements Resource, Repository
 {
     /**
      * Guarded attributes

@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\Notification as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Notifications as Repository;
 
-class Notification extends Model implements Resource, Repository
+class Notification extends AbstractModel implements Resource, Repository
 {
     /**
      * Guarded attributes

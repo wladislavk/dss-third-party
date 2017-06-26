@@ -2,9 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
-
-abstract class AbstractDSSModel extends Model
+abstract class AbstractDSSModel extends AbstractModel
 {
     public function updateStatic(AbstractDSSModel $model, array $data)
     {

@@ -3,83 +3,34 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\ContactTypeStore;
-use DentalSleepSolutions\Http\Requests\ContactTypeUpdate;
-use DentalSleepSolutions\Http\Requests\ContactTypeDestroy;
-use DentalSleepSolutions\Contracts\Resources\ContactType;
 use DentalSleepSolutions\Contracts\Repositories\ContactTypes;
 use Illuminate\Http\Request;
 
-class ContactTypesController extends Controller
+class ContactTypesController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ContactTypes $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(ContactTypes $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ContactType $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(ContactType $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ContactTypes $resources
-     * @param  \DentalSleepSolutions\Http\Requests\ContactTypeStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(ContactTypes $resources, ContactTypeStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ContactType $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ContactTypeUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(ContactType $resource, ContactTypeUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ContactType $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ContactTypeDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(ContactType $resource, ContactTypeDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function getActiveNonCorporate(ContactTypes $resources)
@@ -98,8 +49,8 @@ class ContactTypesController extends Controller
 
     public function getWithFilter(ContactTypes $resources, Request $request)
     {
-        $fields = $request->input('fields') ?: [];
-        $where  = $request->input('where') ?: [];
+        $fields = $request->input('fields', []);
+        $where  = $request->input('where', []);
 
         $contactTypes = $resources->getWithFilter($fields, $where);
 

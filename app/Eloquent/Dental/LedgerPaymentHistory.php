@@ -2,10 +2,10 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
 
-class LedgerPaymentHistory extends Model
+class LedgerPaymentHistory extends AbstractModel
 {
     use WithoutCreatedTimestamp;
 

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Dental\Allergen;
 use Tests\TestCases\ApiTestCase;
 
-class AllergenApiApiTest extends ApiTestCase
+class AllergensApiTest extends ApiTestCase
 {
     use WithoutMiddleware, DatabaseTransactions;
 
@@ -18,15 +18,16 @@ class AllergenApiApiTest extends ApiTestCase
      */
     public function testAddAllergen()
     {
+        $newAllergen = 'new' . date('Y-m-d H:i:s');
         $data = [
-            'allergens'   => 'testAllergen',
+            'allergens'   => $newAllergen,
             'description' => 'This is test description',
             'sortby'      => 12,
             'status'      => 2
         ];
 
         $this->post('/api/v1/allergens', $data)
-            ->seeInDatabase('dental_allergens', ['allergens' => 'testAllergen'])
+            ->seeInDatabase('dental_allergens', ['allergens' => $newAllergen])
             ->assertResponseOk();
     }
 
@@ -39,13 +40,14 @@ class AllergenApiApiTest extends ApiTestCase
     {
         $allergenTestRecord = factory(Allergen::class)->create();
 
+        $updatedAllergen = 'updated' . date('Y-m-d H:i:s');
         $data = [
-            'allergens'   => 'testUpdatedAllergen',
+            'allergens'   => $updatedAllergen,
             'status'      => 5
         ];
 
         $this->put('/api/v1/allergens/' . $allergenTestRecord->allergensid, $data)
-            ->seeInDatabase('dental_allergens', ['allergens' => 'testUpdatedAllergen'])
+            ->seeInDatabase('dental_allergens', ['allergens' => $updatedAllergen])
             ->assertResponseOk();
     }
 

@@ -2,29 +2,23 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Factories\RequestWithRulesFactory;
+use DentalSleepSolutions\Http\Requests\Patient as PatientRequest;
 
+/**
+ * @todo: If requests were handled properly in the controller, this class would not be needed
+ */
 class PatientRuleRetriever
 {
-    /** @var RequestWithRulesFactory */
-    private $requestWithRulesFactory;
-
-    public function __construct(RequestWithRulesFactory $requestWithRulesFactory)
-    {
-        $this->requestWithRulesFactory = $requestWithRulesFactory;
-    }
-
     /**
      * @param int $patientId
      * @return array
      */
     public function getValidationRules($patientId)
     {
-        $type = RequestWithRulesFactory::PATIENT_STORE;
+        $request = new PatientRequest();
         if ($patientId) {
-            $type = RequestWithRulesFactory::PATIENT_UPDATE;
+            return $request->updateRules();
         }
-        $requestClass = $this->requestWithRulesFactory->getRequestClass($type);
-        return $requestClass->rules();
+        return $request->storeRules();
     }
 }

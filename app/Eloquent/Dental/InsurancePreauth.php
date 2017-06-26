@@ -2,14 +2,14 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as Repository;
 use Carbon\Carbon;
 use DB;
 
-class InsurancePreauth extends Model implements Resource, Repository
+class InsurancePreauth extends AbstractModel implements Resource, Repository
 {
     use WithoutCreatedTimestamp;
 
@@ -196,5 +196,10 @@ class InsurancePreauth extends Model implements Resource, Repository
             })
             ->orderBy('front_office_request_date', 'desc')
             ->first();
+    }
+
+    public function getPlural()
+    {
+        return 'InsurancePreauth';
     }
 }

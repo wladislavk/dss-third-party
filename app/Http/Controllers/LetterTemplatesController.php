@@ -2,86 +2,31 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\LetterTemplateStore;
-use DentalSleepSolutions\Http\Requests\LetterTemplateUpdate;
-use DentalSleepSolutions\Http\Requests\LetterTemplateDestroy;
-use DentalSleepSolutions\Contracts\Resources\LetterTemplate;
-use DentalSleepSolutions\Contracts\Repositories\LetterTemplates;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class LetterTemplatesController extends Controller
+class LetterTemplatesController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\LetterTemplates $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(LetterTemplates $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LetterTemplate $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(LetterTemplate $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\LetterTemplates $resources
-     * @param  \DentalSleepSolutions\Http\Requests\LetterTemplateStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(LetterTemplates $resources, LetterTemplateStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LetterTemplate $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LetterTemplateUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(LetterTemplate $resource, LetterTemplateUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LetterTemplate $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LetterTemplateDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(LetterTemplate $resource, LetterTemplateDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

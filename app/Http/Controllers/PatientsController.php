@@ -14,17 +14,13 @@ use DentalSleepSolutions\Helpers\TempPinDocumentCreator;
 use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use DentalSleepSolutions\Helpers\PatientRuleRetriever;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\PatientStore;
-use DentalSleepSolutions\Http\Requests\PatientUpdate;
-use DentalSleepSolutions\Http\Requests\PatientDestroy;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
-use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Eloquent\Dental\HomeSleepTest;
 use DentalSleepSolutions\Eloquent\Dental\InsurancePreauth;
 use DentalSleepSolutions\Eloquent\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Dental\Notification;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Dental\Patient as PatientModel;
 use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
 use DentalSleepSolutions\Eloquent\Dental\ProfileImage;
 use DentalSleepSolutions\Structs\EditPatientIntendedActions;
@@ -32,66 +28,42 @@ use DentalSleepSolutions\Structs\RequestedEmails;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class PatientsController extends Controller
+class PatientsController extends BaseRestController
 {
-    /**
-     * @param Patients $resources
-     * @return JsonResponse
-     */
-    public function index(Patients $resources)
-    {
-        $data = $resources->all();
+    const UNREGISTERED_STATUS = 0;
+    const REGISTRATION_EMAILED_STATUS = 1;
+    const REGISTERED_STATUS = 2;
 
-        return ApiResponse::responseOk('', $data);
+    const DSS_REFERRED_PATIENT = 1;
+    const DSS_REFERRED_PHYSICIAN = 2;
+    const DSS_REFERRED_MEDIA = 3;
+    const DSS_REFERRED_FRANCHISE = 4;
+    const DSS_REFERRED_DSSOFFICE = 5;
+    const DSS_REFERRED_OTHER = 6;
+
+    public function index()
+    {
+        return parent::index();
     }
 
-    /**
-     * @param Patient $resource
-     * @return JsonResponse
-     */
-    public function show(Patient $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * @param Patients $resources
-     * @param PatientStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Patients $resources, PatientStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * @param  Patient $resource
-     * @param  PatientUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Patient $resource, PatientUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * @param  Patient $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Patient $resource, PatientDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     /**
@@ -108,7 +80,11 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $patients);
     }
 
-    public function getNumber(Patient $patientModel)
+    /**
+     * @param PatientModel $patientModel
+     * @return JsonResponse
+     */
+    public function getNumber(PatientModel $patientModel)
     {
         $docId = $this->currentUser->getDocIdOrZero();
         $data = $patientModel->getNumber($docId);
@@ -116,7 +92,11 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getDuplicates(Patient $patientModel)
+    /**
+     * @param PatientModel $patientModel
+     * @return JsonResponse
+     */
+    public function getDuplicates(PatientModel $patientModel)
     {
         $docId = $this->currentUser->getDocIdOrZero();
         $data = $patientModel->getDuplicates($docId);
@@ -124,7 +104,11 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getBounces(Patient $patientModel)
+    /**
+     * @param PatientModel $patientModel
+     * @return JsonResponse
+     */
+    public function getBounces(PatientModel $patientModel)
     {
         $docId = $this->currentUser->getDocIdOrZero();
         $data = $patientModel->getBounces($docId);
@@ -132,7 +116,12 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getListPatients(Patient $patientModel, Request $request)
+    /**
+     * @param PatientModel $patientModel
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getListPatients(PatientModel $patientModel, Request $request)
     {
         $partialName = $request->input('partial_name', '');
         // TODO: there must not be whitespaces in regexp. is it a typo?
@@ -147,7 +136,12 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function destroyForDoctor($patientId, Patient $resource)
+    /**
+     * @param int $patientId
+     * @param PatientModel $resource
+     * @return JsonResponse
+     */
+    public function destroyForDoctor($patientId, PatientModel $resource)
     {
         $docId = $this->currentUser->getDocIdOrZero();
         $resource->deleteForDoctor($patientId, $docId);
@@ -155,7 +149,12 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('Resource deleted');
     }
 
-    public function find(Patient $patientModel, Request $request)
+    /**
+     * @param PatientModel $patientModel
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function find(PatientModel $patientModel, Request $request)
     {
         $docId = $this->currentUser->getDocIdOrZero();
         $userType = $this->currentUser->getUserTypeOrZero();
@@ -183,7 +182,12 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getReferredByContact(Patient $patientModel, Request $request)
+    /**
+     * @param PatientModel $patientModel
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getReferredByContact(PatientModel $patientModel, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
         $data = $patientModel->getReferredByContact($contactId);
@@ -191,7 +195,12 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getByContact(Patient $patientModel, Request $request)
+    /**
+     * @param PatientModel $patientModel
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getByContact(PatientModel $patientModel, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
         $data = $patientModel->getByContact($contactId);
@@ -203,7 +212,7 @@ class PatientsController extends Controller
      * @param PatientEditorFactory $patientEditorFactory
      * @param PatientRuleRetriever $patientRuleRetriever
      * @param PatientFormDataUpdater $patientFormDataUpdater
-     * @param Patient $patientModel
+     * @param PatientModel $patientModel
      * @param PatientSummary $patientSummaryModel
      * @param Request $request
      * @param int $patientId
@@ -213,7 +222,7 @@ class PatientsController extends Controller
         PatientEditorFactory $patientEditorFactory,
         PatientRuleRetriever $patientRuleRetriever,
         PatientFormDataUpdater $patientFormDataUpdater,
-        Patient $patientModel,
+        PatientModel $patientModel,
         PatientSummary $patientSummaryModel,
         Request $request,
         $patientId = 0
@@ -222,7 +231,7 @@ class PatientsController extends Controller
         // TODO: this block should be decoupled into a different controller action
         if ($request->has('tracker_notes')) {
             $trackerNotes = $request->input('tracker_notes');
-            $this->validate($request, (new PatientSummaryUpdate())->rules());
+            $this->validate($request, (new \DentalSleepSolutions\Http\Requests\PatientSummary())->updateRules());
             $patientSummaryModel->updateTrackerNotes($patientId, $docId, $trackerNotes);
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
@@ -279,7 +288,7 @@ class PatientsController extends Controller
      * @param FullNameComposer $fullNameComposer
      * @param PatientLocationRetriever $patientLocationRetriever
      * @param InsurancePreauth $insPreauthModel
-     * @param Patient $patientModel
+     * @param PatientModel $patientModel
      * @param ProfileImage $profileImageModel
      * @param Letter $letterModel
      * @param HomeSleepTest $homeSleepTestModel
@@ -291,7 +300,7 @@ class PatientsController extends Controller
         FullNameComposer $fullNameComposer,
         PatientLocationRetriever $patientLocationRetriever,
         InsurancePreauth $insPreauthModel,
-        Patient $patientModel,
+        PatientModel $patientModel,
         ProfileImage $profileImageModel,
         Letter $letterModel,
         HomeSleepTest $homeSleepTestModel,
@@ -299,7 +308,7 @@ class PatientsController extends Controller
         Request $request
     ) {
         $patientId = $request->input('patient_id', 0);
-        /** @var Patient|null $foundPatient */
+        /** @var PatientModel|null $foundPatient */
         $foundPatient = $patientModel->find($patientId);
 
         if (!$foundPatient) {
@@ -327,7 +336,13 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getReferrers(NameSetter $nameSetter, Patient $patientModel, Request $request)
+    /**
+     * @param NameSetter $nameSetter
+     * @param PatientModel $patientModel
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getReferrers(NameSetter $nameSetter, PatientModel $patientModel, Request $request)
     {
         $docId = $this->currentUser->getDocIdOrZero();
 
@@ -368,6 +383,11 @@ class PatientsController extends Controller
         return ApiResponse::responseOk('', $response);
     }
 
+    /**
+     * @param Request $request
+     * @param EmailChecker $emailChecker
+     * @return JsonResponse
+     */
     public function checkEmail(Request $request, EmailChecker $emailChecker)
     {
         $email = $request->input('email', '');

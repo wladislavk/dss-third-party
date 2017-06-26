@@ -2,10 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 
-class GuideDeviceSetting extends Model
+class GuideDeviceSetting extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

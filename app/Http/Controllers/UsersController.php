@@ -3,23 +3,12 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\UserStore;
-use DentalSleepSolutions\Http\Requests\UserUpdate;
-use DentalSleepSolutions\Http\Requests\UserDestroy;
 use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Contracts\Repositories\Users;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class UsersController extends Controller
+class UsersController extends BaseRestController
 {
     const DSS_USER_STATUS_ACTIVE    = 1;
     const DSS_USER_STATUS_INACTIVE  = 2;
@@ -31,74 +20,29 @@ class UsersController extends Controller
         self::DSS_USER_STATUS_SUSPENDED => 'Suspended'
     ];
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Users $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Users $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\User $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(User $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Users $resources
-     * @param  \DentalSleepSolutions\Http\Requests\UserStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Users $resources, UserStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\User $resource
-     * @param  \DentalSleepSolutions\Http\Requests\UserUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(User $resource, UserUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\User $resource
-     * @param  \DentalSleepSolutions\Http\Requests\UserDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(User $resource, UserDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     /**
@@ -191,8 +135,8 @@ class UsersController extends Controller
      */
     public function getWithFilter(Users $resources, Request $request)
     {
-        $fields = $request->input('fields') ?: [];
-        $where  = $request->input('where') ?: [];
+        $fields = $request->input('fields', []);
+        $where  = $request->input('where', []);
 
         $patients = $resources->getWithFilter($fields, $where);
 

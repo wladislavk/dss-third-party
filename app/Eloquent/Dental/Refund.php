@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Refund as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Refunds as Repository;
 
-class Refund extends Model implements Resource, Repository
+class Refund extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

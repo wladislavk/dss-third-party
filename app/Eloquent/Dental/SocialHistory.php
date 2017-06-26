@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\SocialHistory as Resource;
 use DentalSleepSolutions\Contracts\Repositories\SocialHistories as Repository;
 
-class SocialHistory extends Model implements Resource, Repository
+class SocialHistory extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

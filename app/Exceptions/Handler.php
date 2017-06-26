@@ -4,8 +4,9 @@ namespace DentalSleepSolutions\Exceptions;
 
 use Exception;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -62,7 +63,7 @@ class Handler extends ExceptionHandler
      */
     protected function renderJsonException(Exception $e)
     {
-        if ($this->isHttpException($e)) {
+        if ($e instanceof HttpException) {
             return ApiResponse::responseError($e->getMessage(), $e->getStatusCode());
         }
 

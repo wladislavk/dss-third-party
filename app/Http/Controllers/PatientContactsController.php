@@ -3,96 +3,39 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\PatientContactStore;
-use DentalSleepSolutions\Http\Requests\PatientContactUpdate;
-use DentalSleepSolutions\Http\Requests\PatientContactDestroy;
-use DentalSleepSolutions\Contracts\Resources\PatientContact;
 use DentalSleepSolutions\Contracts\Repositories\PatientContacts;
 use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class PatientContactsController extends Controller
+class PatientContactsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\PatientContacts $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(PatientContacts $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PatientContact $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(PatientContact $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\PatientContacts $resources
-     * @param  \DentalSleepSolutions\Http\Requests\PatientContactStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(PatientContacts $resources, PatientContactStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PatientContact $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientContactUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(PatientContact $resource, PatientContactUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PatientContact $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientContactDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(PatientContact $resource, PatientContactDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function getCurrent(PatientContacts $resources, Request $request)
     {
-        $patientId = $request->input('patientId') ?: 0;
+        $patientId = $request->input('patientId', 0);
         $docId     = $this->currentUser->docid ?: 0;
 
         $data = $resources->getCurrent($docId, $patientId);

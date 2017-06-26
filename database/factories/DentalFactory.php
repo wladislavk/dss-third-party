@@ -86,7 +86,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory::cl
     return [];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsDiagnosis::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceDiagnosis::class, function ($faker) {
     $insuranceDiagnoses = [
         '039.3 ACTINOMYCOTIC INFECTION CERVICOFACIAL (3)',
         '053.12 POSTHERPETIC TRIGEMINAL NEURALGIA (5)',
@@ -1805,8 +1805,8 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Patient::class, function (
         'partner_name'            => $faker->word,
         'emergency_name'          => $faker->word,
         'emergency_number'        => $faker->word,
-        'referred_source'         => $faker->word,
-        'referred_by'             => $faker->word,
+        'referred_source'         => $faker->randomDigit,
+        'referred_by'             => $faker->randomDigit,
         'premedcheck'             => $faker->randomDigit,
         'premed'                  => $faker->word,
         'docsleep'                => $faker->word,
@@ -2058,7 +2058,9 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PreviousTreatment::class, 
         'dd_who'                 => $faker->word,
         'dd_experience'          => $faker->sentence($nbWords = 3),
         'surgery'                => $faker->randomElement(['Yes', 'No']),
-        'parent_patientid'       => $faker->randomDigit
+        'parent_patientid'       => $faker->randomDigit,
+        'userid'                 => $faker->randomDigit,
+        'docid'                  => $faker->randomDigit,
     ];
 });
 
@@ -2179,7 +2181,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ReferredByContact::class, 
         'fax'                  => $faker->regexify('^1[0-9]{9}$'),
         'email'                => $faker->email,
         'national_provider_id' => $faker->regexify('^[0-9]{9}$'),
-        'qualifier'            => $faker->word,
+        'qualifier'            => $faker->randomDigit,
         'qualifierid'          => $faker->word,
         'greeting'             => $faker->title($gender = 'male'|'female'),
         'sincerely'            => $faker->title($gender = 'male'|'female'),

@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\SoftPalate as Resource;
 use DentalSleepSolutions\Contracts\Repositories\SoftPalates as Repository;
 
-class SoftPalate extends Model implements Resource, Repository
+class SoftPalate extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

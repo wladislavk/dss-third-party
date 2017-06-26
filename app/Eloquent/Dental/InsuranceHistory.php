@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\InsuranceHistory as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsuranceHistories as Repository;
 
-class InsuranceHistory extends Model implements Resource, Repository
+class InsuranceHistory extends AbstractModel implements Resource, Repository
 {
     /**
      * Guarded attributes

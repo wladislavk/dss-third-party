@@ -2,87 +2,31 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\CorporateContactStore;
-use DentalSleepSolutions\Http\Requests\CorporateContactUpdate;
-use DentalSleepSolutions\Contracts\Resources\CorporateContact;
-use DentalSleepSolutions\Contracts\Repositories\CorporateContacts;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class CorporateContactsController extends Controller
+class CorporateContactsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\CorporateContacts $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(CorporateContacts $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\CorporateContact $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(CorporateContact $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\CorporateContacts $resources
-     * @param  \DentalSleepSolutions\Http\Requests\CorporateContactStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(CorporateContacts $resources, CorporateContactStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\CorporateContact $resource
-     * @param  \DentalSleepSolutions\Http\Requests\CorporateContactUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(CorporateContact $resource, CorporateContactUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * TODO: there is no class CorporateContactDestroy
-     *
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\CorporateContact $resource
-     * @param  \DentalSleepSolutions\Http\Requests\CorporateContactDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(CorporateContact $resource, CorporateContactDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\HomeSleepTest as Resource;
 use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests as Repository;
 use DB;
 
-class HomeSleepTest extends Model implements Resource, Repository
+class HomeSleepTest extends AbstractModel implements Resource, Repository
 {
     /**
      * Guarded attributes

@@ -1,15 +1,16 @@
 <?php
 namespace DentalSleepSolutions\Http\Requests\Patient;
 
+use DentalSleepSolutions\Http\Requests\AbstractNonRestRequest;
 use DentalSleepSolutions\Http\Requests\Request;
 
-class ExternalPatientStore extends Request
+class ExternalPatientStore extends AbstractNonRestRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
+    public function authorize()
+    {
+        return true;
+    }
+
     public function rules()
     {
         return [

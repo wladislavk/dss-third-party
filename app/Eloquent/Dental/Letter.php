@@ -2,14 +2,14 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Structs\LetterData;
-use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Contracts\Resources\Letter as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Letters as Repository;
 use Carbon\Carbon;
 use DB;
 
-class Letter extends Model implements Resource, Repository
+class Letter extends AbstractModel implements Resource, Repository
 {
     /**
      * Guarded attributes

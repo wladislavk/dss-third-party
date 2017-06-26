@@ -1,6 +1,8 @@
 <?php
 namespace DentalSleepSolutions\Http\Transformers;
 
+use Illuminate\Support\Arr;
+
 /**
  * Allow Transformers to define a dot notation map to transform input arrays, direct relationship.
  *

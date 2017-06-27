@@ -126,7 +126,7 @@ function update_financial_agreement_medicare_form($id, $backoffice)
          <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
          <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
          <p style="width:100%; text-align:right;">
-            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
             Solutions</small></span>
          </p>
       </div>
@@ -308,7 +308,7 @@ function update_home_care_instructions_form($id, $locid = null, $backoffice = fa
             8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span>
          </p>
          <p style="width:100%; text-align:right;">
-            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
             Solutions</small></span>
          </p>
       </div>
@@ -514,7 +514,7 @@ function update_non_dentist_of_record_release_form($id, $locid = null, $backoffi
          <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
          <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
          <p style="width:100%; text-align:right;">
-            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
             Solutions</small></span>
          </p>
       </div>
@@ -689,7 +689,7 @@ function update_sleep_recorder_release_form($id, $locid = null, $backoffice = fa
          </p>
          <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
          <p style="width:100%; text-align:right;">
-            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
             Solutions</small></span>
          </p>
       </div>
@@ -1017,7 +1017,7 @@ function update_affidavit_for_cpap_intolerance_form($id, $backoffice)
          </p>
          <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
          <p style="width:100%; text-align:right;">
-            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
             Solutions</small></span>
          </p>
       </div>
@@ -1329,7 +1329,7 @@ function update_device_titration_ema_form($id, $backoffice)
          <p class=MsoNormal align=right style=\'margin-bottom:0in;margin-bottom:.0001pt;
             text-align:right\'><span style=\'font-size:8.0pt;line-height:115%;font-family:
             "Arial","sans-serif"\'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            © 2015 Dental Sleep Solutions</span>
+            © 2017 Dental Sleep Solutions</span>
          </p>
       </div>
    </body>
@@ -1627,7 +1627,7 @@ function update_device_titration_form($id, $backoffice)
          </p>
          <p class=MsoNormal align=right style=\'margin-bottom:0in;margin-bottom:.0001pt;
             text-align:right\'><span style=\'font-size:8.0pt;line-height:115%;font-family:
-            "Arial","sans-serif"\'>© 2015 Dental Sleep Solutions</span>
+            "Arial","sans-serif"\'>© 2017 Dental Sleep Solutions</span>
          </p>
       </div>
    </body>
@@ -2184,7 +2184,7 @@ function update_ess_tss_form($id, $backoffice)
             <p style="width:100%; text-align:right;">
                 <span style=
                     "\'font-size:6.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\'">
-                <small>© 2013 Dental Sleep Solutions</small></span>
+                <small>© 2017 Dental Sleep Solutions</small></span>
             </p>
         </div>
     </body>
@@ -2321,7 +2321,7 @@ function update_financial_agreement_form($id, $backoffice)
          <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
          <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
          <p style="width:100%; text-align:right;">
-            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
             Solutions</small></span>
          </p>
       </div>
@@ -2937,7 +2937,7 @@ _______________</span></p></div></body></html>
                 _______________________________________________________ Date: _____________    </span>
             </p>
             <p style="width:100%; text-align:right;">
-                <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+                <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
                 Solutions</small></span>
             </p>
         </div>
@@ -3236,7 +3236,7 @@ function update_medical_hx_update_form($id, $backoffice)
             <p class=MsoNormal align=right style=\'margin-left:.5in;text-align:right\'><span
                 style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
             <p style="width:100%; text-align:right;">
-                <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2013 Dental Sleep
+                <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
                 Solutions</small></span>
             </p>
         </div>
@@ -5339,7 +5339,7 @@ function update_proof_of_delivery_form($id, $locid = null, $backoffice = false)
             </p>
             <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
             <p class=MsoNormal align=right style=\'text-align:right\'><span style=\'font-size:
-                8.0pt;font-family:"Arial","sans-serif"\'>© 2013 Dental Sleep Solutions</span>
+                8.0pt;font-family:"Arial","sans-serif"\'>© 2017 Dental Sleep Solutions</span>
             </p>
         </div>
     </body>

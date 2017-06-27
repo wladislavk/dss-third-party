@@ -2,15 +2,35 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Exceptions\ResourceNotFound;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
+use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Tymon\JWTAuth\JWTAuth;
+use DentalSleepSolutions\Eloquent\Dental\User;
 
 abstract class BaseRestController extends Controller
 {
     /** @var bool */
     protected $hasIp = true;
+
+    /** @var Model|Repository */
+    protected $resources;
+
+    /** @var Request */
+    protected $request;
+
+    public function __construct(
+        JWTAuth $auth,
+        User $userModel,
+        Repository $resources,
+        Request $request
+    ) {
+        parent::__construct($auth, $userModel);
+        $this->resources = $resources;
+        $this->request = $request;
+    }
 
     /**
      * Display a listing of the resource.

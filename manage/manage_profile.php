@@ -224,7 +224,7 @@ set_time_limit(0);
   <tr>
   <td>$cover_image</td>
   <td><center>
-  <b>CONFIDENTAL HEALTH INFORMATION<br />
+  <b>CONFIDENTIAL HEALTH INFORMATION<br />
   FAX COVER SHEET</b>
   </center>
   </td>

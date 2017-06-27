@@ -1200,7 +1200,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
                 <?php } ?>
                 <?php if(!empty($clinch_teeth) && $clinch_teeth == 'Yes' || $clinch_grind_text != ''){ ?>
                                         <tr>
-                                                        <td>Do you clinch or grind your teeth?</td>
+                                                        <td>Do you clench or grind your teeth?</td>
 
                                                         <td><?php echo  $clinch_grind; ?></td>
 

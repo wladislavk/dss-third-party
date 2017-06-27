@@ -10,14 +10,12 @@ use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\RememberEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\UpdateEmailHandler;
 use DentalSleepSolutions\Helpers\LetterDeleter;
-use DentalSleepSolutions\Helpers\LetterTriggerCollection;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use DentalSleepSolutions\Helpers\SimilarHelper;
 use DentalSleepSolutions\Helpers\PdfHelper;
 use DentalSleepSolutions\Http\Requests\PatientStore;
 use DentalSleepSolutions\Http\Requests\PatientUpdate;
-use DentalSleepSolutions\Http\Requests\PatientDestroy;
 use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Repositories\Patients;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
@@ -35,15 +33,7 @@ use DentalSleepSolutions\Structs\PdfHeaderData;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class PatientsController extends Controller
+class PatientsController extends BaseRestController
 {
     const UNREGISTERED_STATUS = 0;
     const REGISTRATION_EMAILED_STATUS = 1;
@@ -56,74 +46,29 @@ class PatientsController extends Controller
     const DSS_REFERRED_DSSOFFICE = 5;
     const DSS_REFERRED_OTHER = 6;
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Patients $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Patient $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(Patient $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
-     * @param  \DentalSleepSolutions\Http\Requests\PatientStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Patients $resources, PatientStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Patient $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Patient $resource, PatientUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Patient $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Patient $resource, PatientDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     /**
@@ -282,9 +227,9 @@ class PatientsController extends Controller
 
         // validate input patient form data
         if ($patientId) {
-            $validator = $this->getValidationFactory()->make($patientFormData, (new PatientUpdate())->rules());
+            $validator = $this->getValidationFactory()->make($patientFormData, (new \DentalSleepSolutions\Http\Requests\Patient())->updateRules());
         } else {
-            $validator = $this->getValidationFactory()->make($patientFormData, (new PatientStore())->rules());
+            $validator = $this->getValidationFactory()->make($patientFormData, (new \DentalSleepSolutions\Http\Requests\Patient())->storeRules());
         }
 
         if ($validator->fails()) {
@@ -295,7 +240,7 @@ class PatientsController extends Controller
 
         // check if the request contains tracker notes
         if ($request->has('tracker_notes')) {
-            $this->validate($request->input('tracker_notes'), (new PatientSummaryUpdate())->rules());
+            $this->validate($request->input('tracker_notes'), (new \DentalSleepSolutions\Http\Requests\PatientSummary())->updateRules());
 
             $patientSummaryResource->updateTrackerNotes($patientId, $docId, $request->input('tracker_notes'));
 

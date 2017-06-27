@@ -2,13 +2,13 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\GuideSetting as Resource;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettings as Repository;
 use DB;
 
-class GuideSetting extends Model implements Resource, Repository
+class GuideSetting extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

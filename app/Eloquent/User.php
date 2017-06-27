@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
 /**
@@ -13,7 +12,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  *
  * @see self::boot
  */
-class User extends Model implements AuthenticatableContract
+class User extends AbstractModel implements AuthenticatableContract
 {
     use Authenticatable;
 

@@ -15,7 +15,7 @@
         "laravel/framework": "5.1.*",
         "eventhomes/laravel-fractalhelper": "^0.1.2",
         "tymon/jwt-auth": "^0.5.4",
-        "zircote/swagger-php": "*",
+        "zircote/swagger-php": "^2.0",
         "rmccue/requests": ">=1.0",
         "jlapp/swaggervel": "master-dev",
         "guzzlehttp/guzzle": "~6.0",
@@ -37,7 +37,7 @@
             "database"
         ],
         "psr-4": {
-            "DentalSleepSolutions\\": "app/",
+            "DentalSleepSolutions\\": ["app/", "app/DentalSleepSolutions/"],
             "Tests\\": "tests/"
         }
     },

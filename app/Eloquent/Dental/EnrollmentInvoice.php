@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 
-class EnrollmentInvoice extends Model
+class EnrollmentInvoice extends AbstractModel
 {
     protected $table = 'dental_enrollment_invoice';
     protected $primaryKey = 'id';

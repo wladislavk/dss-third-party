@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
      */
     protected function renderJsonException(Exception $e)
     {
-        if ($this->isHttpException($e)) {
+        if ($e instanceof HttpException) {
             return ApiResponse::responseError($e->getMessage(), $e->getStatusCode());
         }
 

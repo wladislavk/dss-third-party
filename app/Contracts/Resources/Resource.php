@@ -11,15 +11,15 @@ interface Resource
     /**
      * Update resource.
      *
-     * @param  array  $data
-     * @return boolean
+     * @param array $data
+     * @return bool
      */
     public function update(array $data = []);
 
     /**
      * Delete resource.
      *
-     * @return boolean
+     * @return bool
      */
     public function delete();
 }

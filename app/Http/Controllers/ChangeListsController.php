@@ -2,82 +2,30 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\ChangeListStore;
-use DentalSleepSolutions\Http\Requests\ChangeListUpdate;
-use DentalSleepSolutions\Http\Requests\ChangeListDestroy;
-use DentalSleepSolutions\Contracts\Resources\ChangeList;
-use DentalSleepSolutions\Contracts\Repositories\ChangeLists;
-
-class ChangeListsController extends Controller
+class ChangeListsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ChangeLists $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(ChangeLists $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ChangeList $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(ChangeList $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ChangeLists $resources
-     * @param  \DentalSleepSolutions\Http\Requests\ChangeListStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(ChangeLists $resources, ChangeListStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ChangeList $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ChangeListUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(ChangeList $resource, ChangeListUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ChangeList $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ChangeListDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(ChangeList $resource, ChangeListDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

@@ -2,11 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use Carbon\Carbon;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\LedgerStore;
-use DentalSleepSolutions\Http\Requests\LedgerUpdate;
-use DentalSleepSolutions\Http\Requests\LedgerDestroy;
-use DentalSleepSolutions\Contracts\Resources\Ledger;
 use DentalSleepSolutions\Contracts\Repositories\Ledgers;
 use DentalSleepSolutions\Contracts\Resources\Patient;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary;
@@ -14,17 +11,8 @@ use DentalSleepSolutions\Contracts\Repositories\Insurances;
 use DentalSleepSolutions\Contracts\Repositories\LedgerNotes;
 use DentalSleepSolutions\Contracts\Repositories\LedgerStatements;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class LedgersController extends Controller
+class LedgersController extends BaseRestController
 {
     // Transaction types (ledger)
     const DSS_TRXN_TYPE_MED = 1;
@@ -64,79 +52,40 @@ class LedgersController extends Controller
         self::DSS_TRXN_PAYER_DISCOUNT  => "Professional Discount"
     ];
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Ledgers $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Ledgers $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Ledger $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(Ledger $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Ledgers $resources
-     * @param  \DentalSleepSolutions\Http\Requests\LedgerStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Ledgers $resources, LedgerStore $request)
+    public function store()
     {
         // The `adddate` field must be changed to correct date format.
         // A certain setter should be moved to the model.
         // Now the field has the `varchar` type and `m/d/Y` date format.
 
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip(),
-            'adddate'    => Carbon::now()->format('m/d/Y')
+        $data = array_merge($this->request->all(), [
+            'ip_address' => $this->request->ip(),
+            'adddate'    => Carbon::now()->format('m/d/Y'),
         ]);
 
-        $resource = $resources->create($data);
+        $resource = $this->resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Ledger $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LedgerUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Ledger $resource, LedgerUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Ledger $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LedgerDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Ledger $resource, LedgerDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function getListOfLedgerRows(
@@ -146,11 +95,11 @@ class LedgersController extends Controller
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
-        $reportType = $request->input('report_type') ?: 'today';
-        $page = $request->input('page') ?: 0;
-        $rowsPerPage = $request->input('rows_per_page') ?: 20;
+        $reportType = $request->input('report_type', 'today');
+        $page = $request->input('page', 0);
+        $rowsPerPage = $request->input('rows_per_page', 20);
         $sort = $request->input('sort');
-        $sortDir = $request->input('sort_dir') ?: 'asc';
+        $sortDir = $request->input('sort_dir', 'asc');
 
         if ($reportType === 'today') {
             $ledgerRows = $resources->getTodayList($docId, $page, $rowsPerPage, $sort, $sortDir);
@@ -177,8 +126,8 @@ class LedgersController extends Controller
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $reportType = $request->input('report_type') ?: 'today';
-        $patientId = $request->input('patient_id') ?: 0;
+        $reportType = $request->input('report_type', 'today');
+        $patientId = $request->input('patient_id', 0);
 
         $totals = [
             'charges'     => $resources->getTotalCharges($docId, $reportType, $patientId),
@@ -194,6 +143,7 @@ class LedgersController extends Controller
 
                 switch ($row['payment_payer']) {
                     case self::DSS_TRXN_PAYER_PRIMARY:
+                        // fall through
                     case self::DSS_TRXN_PAYER_SECONDARY:
                         $description = 'Ins. ' . $description;
                         break;
@@ -242,15 +192,15 @@ class LedgersController extends Controller
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
-        $patientId = $request->input('patient_id') ?: 0;
+        $patientId = $request->input('patient_id', 0);
 
         $patientSummary = $patientSummary->getPatientInfo($patientId);
 
         $ifPatientSummaryExists = false;
+        $ledgerBalance = 0;
+
         if (!empty($patientSummary)) {
             $rowsForCountingLedgerBalance = $ledger->getRowsForCountingLedgerBalance($docId, $patientId);
-
-            $ledgerBalance = 0;
 
             if (count($rowsForCountingLedgerBalance) > 0) {
                 foreach ($rowsForCountingLedgerBalance as $row) {
@@ -264,13 +214,14 @@ class LedgersController extends Controller
         } else {
             $patientSummary->create([
                 'pid'    => $patientId,
-                'ledger' => $ledgerBalance
+                'ledger' => $ledgerBalance,
             ]);
         }
 
-        $response = $ifPatientSummaryExists ?
-            'Patient Summary was successfully updated.' :
-            'Patient Summary was successfully inserted.';
+        $response = 'Patient Summary was successfully inserted.';
+        if ($ifPatientSummaryExists) {
+            $response = 'Patient Summary was successfully updated.';
+        }
 
         return ApiResponse::responseOk($response);
     }
@@ -284,12 +235,12 @@ class LedgersController extends Controller
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
-        $patientId = $request->input('patient_id') ?: 0;
-        $page = $request->input('page') ?: 0;
-        $rowsPerPage = $request->input('rows_per_page') ?: 20;
+        $patientId = $request->input('patient_id', 0);
+        $page = $request->input('page', 0);
+        $rowsPerPage = $request->input('rows_per_page', 20);
         $sort = $request->input('sort');
-        $sortDir = $request->input('sort_dir') ?: 'asc';
-        $openClaims = $request->input('open_claims') ?: false;
+        $sortDir = $request->input('sort_dir', 'asc');
+        $openClaims = $request->input('open_claims', false);
 
         if ($openClaims) {
             $data = $insurance->getOpenClaims($patientId, $page, $rowsPerPage, $sort, $sortDir);
@@ -316,7 +267,7 @@ class LedgersController extends Controller
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
-        $patientId = $request->input('patient_id') ?: 0;
+        $patientId = $request->input('patient_id', 0);
 
         $number = $ledger->getReportRowsNumber($ledgerNote, $ledgerStatement, $insurance, $docId, $patientId);
 

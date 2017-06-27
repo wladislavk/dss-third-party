@@ -2,13 +2,13 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Contact as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Contacts as Repository;
 use DB;
 
-class Contact extends Model implements Resource, Repository
+class Contact extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 
@@ -306,6 +306,12 @@ class Contact extends Model implements Resource, Repository
             ->get();
     }
 
+    /**
+     * @param $docId
+     * @param $sort
+     * @param string $sortDir
+     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function getReferredByContacts($docId, $sort, $sortDir = 'asc')
     {
         $physicianContacts = $this->select(

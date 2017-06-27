@@ -2,10 +2,10 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 
-class InsuranceStatusHistory extends Model
+class InsuranceStatusHistory extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

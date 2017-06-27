@@ -3,87 +3,35 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\ReferredByContactStore;
-use DentalSleepSolutions\Http\Requests\ReferredByContactUpdate;
-use DentalSleepSolutions\Http\Requests\ReferredByContactDestroy;
 use DentalSleepSolutions\Contracts\Resources\ReferredByContact;
-use DentalSleepSolutions\Contracts\Repositories\ReferredByContacts;
 use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class ReferredByContactsController extends Controller
+class ReferredByContactsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ReferredByContacts $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(ReferredByContacts $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ReferredByContact $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(ReferredByContact $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ReferredByContacts $resources
-     * @param  \DentalSleepSolutions\Http\Requests\ReferredByContactStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(ReferredByContacts $resources, ReferredByContactStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ReferredByContact $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ReferredByContactUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(ReferredByContact $resource, ReferredByContactUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ReferredByContact $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ReferredByContactDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(ReferredByContact $resource, ReferredByContactDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 
     public function editingContact(
@@ -93,21 +41,22 @@ class ReferredByContactsController extends Controller
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
-        $contactFormData = $request->input('contact_form_data') ?: [];
+        $contactFormData = $request->input('contact_form_data', []);
 
         if ($contactId) {
             $validator = $this->getValidationFactory()->make(
-                $contactFormData, (new ReferredByContactUpdate())->rules()
+                $contactFormData, (new \DentalSleepSolutions\Http\Requests\ReferredByContact())->updateRules()
             );
         } else {
             $validator = $this->getValidationFactory()->make(
-                $contactFormData, (new ReferredByContactStore())->rules()
+                $contactFormData, (new \DentalSleepSolutions\Http\Requests\ReferredByContact())->storeRules()
             );
         }
 
         if ($validator->fails()) {
             return ApiResponse::responseError('', 422, $validator->messages());
-        } elseif (count($contactFormData) == 0) {
+        }
+        if (count($contactFormData) == 0) {
             return ApiResponse::responseError('Contact data is empty.', 422);
         }
 

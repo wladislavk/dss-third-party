@@ -2,86 +2,31 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\LedgerPaymentStore;
-use DentalSleepSolutions\Http\Requests\LedgerPaymentUpdate;
-use DentalSleepSolutions\Http\Requests\LedgerPaymentDestroy;
-use DentalSleepSolutions\Contracts\Resources\LedgerPayment;
-use DentalSleepSolutions\Contracts\Repositories\LedgerPayments;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class LedgerPaymentsController extends Controller
+class LedgerPaymentsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\LedgerPayments $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(LedgerPayments $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LedgerPayment $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(LedgerPayment $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\LedgerPayments $resources
-     * @param  \DentalSleepSolutions\Http\Requests\LedgerPaymentStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(LedgerPayments $resources, LedgerPaymentStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LedgerPayment $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LedgerPaymentUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(LedgerPayment $resource, LedgerPaymentUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LedgerPayment $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LedgerPaymentDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(LedgerPayment $resource, LedgerPaymentDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

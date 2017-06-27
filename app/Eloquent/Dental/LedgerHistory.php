@@ -2,13 +2,13 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LedgerHistory as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerHistories as Repository;
 use DB;
 
-class LedgerHistory extends Model implements Resource, Repository
+class LedgerHistory extends AbstractModel implements Resource, Repository
 {
     use WithoutCreatedTimestamp;
 
@@ -76,7 +76,7 @@ class LedgerHistory extends Model implements Resource, Repository
                 'dlp.entry_date',
                 DB::raw("CONCAT(p.first_name, ' ', p.last_name) AS name"),
                 DB::raw("'' AS description"),
-                'dlp.amount AS paid_amount,'
+                'dlp.amount AS paid_amount',
                 DB::raw("'' AS status"),
                 DB::raw('IF(
                     dl.secondary_claim_id && dlp.is_secondary,

@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\Eloquent\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Symptom as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Symptoms as Repository;
 
-class Symptom extends Model implements Resource, Repository
+class Symptom extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;
 

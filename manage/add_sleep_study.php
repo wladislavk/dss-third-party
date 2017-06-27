@@ -538,9 +538,17 @@ if ($msg && $msg != $errorMessage) { ?>
 <?php
 
 $s_lab_query = "SELECT *
-    FROM dental_summ_sleeplab
+    FROM dental_summ_sleeplab ss
     WHERE patiendid = '$patientId'
-    ORDER BY STR_TO_DATE(date, '%m/%d/%Y') DESC";
+    ORDER BY COALESCE(
+        STR_TO_DATE(ss.date, '%m/%d/%Y'),
+        STR_TO_DATE(ss.date, '%m/%d/%y'),
+        STR_TO_DATE(ss.date, '%Y%m%d'),
+        STR_TO_DATE(ss.date, '%m-%d-%Y'),
+        STR_TO_DATE(ss.date, '%m-%d-%y'),
+        STR_TO_DATE(ss.date, '%m%d%Y'),
+        STR_TO_DATE(ss.date, '%m%d%y')
+    ) DESC, ss.id DESC";
 $s_lab_result = $db->getResults($s_lab_query);
 
 if ($s_lab_result) {

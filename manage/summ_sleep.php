@@ -1,6 +1,12 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-$s_lab_query = "SELECT * FROM dental_summ_sleeplab WHERE patiendid ='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."' ORDER BY id DESC";
-$num_labs = $db->getNumberRows($s_lab_query);
+<?php
+namespace Ds3\Libraries\Legacy;
+
+$patientId = (int)array_get($_GET, 'pid');
+
+$s_lab_query = "SELECT COUNT(id) AS total
+    FROM dental_summ_sleeplab
+    WHERE patiendid = '$patientId'";
+$num_labs = $db->getColumn($s_lab_query, 'total', 0);
 if(isset($_POST['submitnewsleeplabsumm'])){ 
   $num_labs++; 
 }

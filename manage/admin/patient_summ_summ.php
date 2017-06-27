@@ -542,7 +542,7 @@ $last_r = mysqli_fetch_assoc($last_q);
                 STR_TO_DATE(ss.date, '%m-%d-%y'),
                 STR_TO_DATE(ss.date, '%m%d%Y'),
                 STR_TO_DATE(ss.date, '%m%d%y')
-            ) DESC";
+            ) DESC, ss.id DESC";
         
         $result = mysqli_query($con,$sleepstudies);
         $numsleepstudy = mysqli_num_rows($result);

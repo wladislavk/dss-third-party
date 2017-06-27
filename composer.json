@@ -37,7 +37,7 @@
             "database"
         ],
         "psr-4": {
-            "DentalSleepSolutions\\": "app/",
+            "DentalSleepSolutions\\": ["app/", "app/DentalSleepSolutions/"],
             "Tests\\": "tests/"
         }
     },

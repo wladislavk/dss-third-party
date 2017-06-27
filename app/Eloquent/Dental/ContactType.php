@@ -8,6 +8,32 @@ use DentalSleepSolutions\Contracts\Resources\ContactType as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ContactTypes as Repository;
 use DB;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\ContactType
+ *
+ * @property int $contacttypeid
+ * @property string|null $contacttype
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @property int|null $physician
+ * @property int|null $corporate
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType active()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType nonCorporate()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType physician()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType whereContacttype($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType whereContacttypeid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType whereCorporate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType wherePhysician($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType whereSortby($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ContactType whereStatus($value)
+ * @mixin \Eloquent
+ */
 class ContactType extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

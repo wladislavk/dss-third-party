@@ -28,4 +28,9 @@ class EpworthSleepinessScaleController extends BaseRestController
     {
         return parent::destroy($id);
     }
+
+    public function getSingular()
+    {
+        return 'EpworthSleepinessScale';
+    }
 }

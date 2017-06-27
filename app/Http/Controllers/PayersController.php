@@ -46,4 +46,9 @@ class PayersController extends BaseRestController
 
         return ApiResponse::responseOk('', $fields);
     }
+
+    public function getModelNamespace()
+    {
+        return self::BASE_MODEL_NAMESPACE;
+    }
 }

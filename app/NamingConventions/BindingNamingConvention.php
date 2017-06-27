@@ -12,15 +12,45 @@ use DentalSleepSolutions\Http\Requests\Request;
 class BindingNamingConvention
 {
     const BASE_NAMESPACE = 'DentalSleepSolutions';
+    const HTTP_NAMESPACE = self::BASE_NAMESPACE . '\\Http';
 
     /** @var AbstractModel */
     private $model;
 
-    public function __construct($modelName)
+    /** @var BaseRestController */
+    private $controller;
+
+    /** @var Request */
+    private $request;
+
+    public function __construct($modelName = '')
     {
-        $this->model = new $modelName();
+        if ($modelName) {
+            $this->setModel($modelName);
+        }
+    }
+
+    public function setModel($className)
+    {
+        $this->model = new $className();
         if (!$this->model instanceof AbstractModel) {
-            throw new NamingConventionException("$modelName must extend " . AbstractModel::class);
+            throw new NamingConventionException("$className must extend " . AbstractModel::class);
+        }
+    }
+
+    public function setController($className)
+    {
+        $this->controller = new $className();
+        if (!$this->controller instanceof BaseRestController) {
+            throw new NamingConventionException("$className must extend " . BaseRestController::class);
+        }
+    }
+
+    public function setRequest($className)
+    {
+        $this->request = new $className();
+        if (!$this->request instanceof Request) {
+            throw new NamingConventionException("$className must extend " . Request::class);
         }
     }
 
@@ -28,10 +58,29 @@ class BindingNamingConvention
      * @return string
      * @throws NamingConventionException
      */
-    public function getController()
+    public function getModel()
+    {
+        if (!$this->controller) {
+            throw new NamingConventionException('setController() must be called before getModel()');
+        }
+        $name = $this->controller->getSingular();
+        $namespace = $this->controller->getModelNamespace();
+        $model = $namespace . '\\' . $name;
+        if (!class_exists($model) || !is_subclass_of($model, AbstractModel::class)) {
+            throw new NamingConventionException("$model must exist and extend " . AbstractModel::class);
+        }
+        return $model;
+    }
+
+    /**
+     * @param string $namespace
+     * @return string
+     * @throws NamingConventionException
+     */
+    public function getController($namespace = self::HTTP_NAMESPACE)
     {
         $name = $this->model->getPlural();
-        $namespace = self::BASE_NAMESPACE . '\\Http\\Controllers';
+        $namespace = $namespace . '\\Controllers';
         $suffix = 'Controller';
         $controller = $namespace . '\\' . $name . $suffix;
         if (!class_exists($controller) || !is_subclass_of($controller, BaseRestController::class)) {
@@ -71,13 +120,20 @@ class BindingNamingConvention
     }
 
     /**
+     * @param string $namespace
      * @return string
      * @throws NamingConventionException
      */
-    public function getRequest()
+    public function getRequest($namespace = self::HTTP_NAMESPACE)
     {
-        $name = $this->model->getSingular();
-        $namespace = self::BASE_NAMESPACE . '\\Http\\Requests';
+        $name = '';
+        if ($this->model) {
+            $name = $this->model->getSingular();
+        }
+        if ($this->controller) {
+            $name = $this->controller->getSingular();
+        }
+        $namespace = $namespace . '\\Requests';
         $request = $namespace . '\\' . $name;
         if (!class_exists($request) || !is_subclass_of($request, Request::class)) {
             throw new NamingConventionException("$request must exist and extend " . Request::class);

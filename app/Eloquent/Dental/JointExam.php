@@ -7,6 +7,25 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\JointExam as Resource;
 use DentalSleepSolutions\Contracts\Repositories\JointExams as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\JointExam
+ *
+ * @property int $joint_examid
+ * @property string|null $joint_exam
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\JointExam whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\JointExam whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\JointExam whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\JointExam whereJointExam($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\JointExam whereJointExamid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\JointExam whereSortby($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\JointExam whereStatus($value)
+ * @mixin \Eloquent
+ */
 class JointExam extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

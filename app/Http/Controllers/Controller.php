@@ -18,20 +18,10 @@ abstract class Controller extends BaseController
     protected $currentUser;
     protected $auth;
 
-    /** @var Model|Repository */
-    protected $resources;
-
-    /** @var Request */
-    protected $request;
-
     public function __construct(
-        Repository $resources,
-        Request $request,
         JWTAuth $auth,
         User $userModel
     ) {
-        $this->resources = $resources;
-        $this->request = $request;
         // TODO: see how it is possible to generate JWT token while testing
         if (env('APP_ENV') != 'testing') {
             $this->currentUser = $this->getUserInfo($auth, $userModel);

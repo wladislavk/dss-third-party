@@ -8,6 +8,23 @@ use DentalSleepSolutions\Contracts\Resources\GuideSettingOption as Resource;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions as Repository;
 use DB;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\GuideSettingOption
+ *
+ * @property int $id
+ * @property int|null $option_id
+ * @property int|null $setting_id
+ * @property string|null $label
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereOptionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereSettingId($value)
+ * @mixin \Eloquent
+ */
 class GuideSettingOption extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

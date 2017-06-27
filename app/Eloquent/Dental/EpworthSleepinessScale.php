@@ -7,6 +7,25 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\EpworthSleepinessScale as Resource;
 use DentalSleepSolutions\Contracts\Repositories\EpworthSleepinessScale as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale
+ *
+ * @property int $epworthid
+ * @property string|null $epworth
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale whereEpworth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale whereEpworthid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale whereSortby($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale whereStatus($value)
+ * @mixin \Eloquent
+ */
 class EpworthSleepinessScale extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

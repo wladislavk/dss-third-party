@@ -8,6 +8,37 @@ use DentalSleepSolutions\Contracts\Resources\PatientContact as Resource;
 use DentalSleepSolutions\Contracts\Repositories\PatientContacts as Repository;
 use DB;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\PatientContact
+ *
+ * @property int $id
+ * @property int|null $contacttype
+ * @property int|null $patientid
+ * @property string|null $firstname
+ * @property string|null $lastname
+ * @property string|null $address1
+ * @property string|null $address2
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $phone
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereAddress1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereAddress2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereContacttype($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereFirstname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereLastname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact wherePatientid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereZip($value)
+ * @mixin \Eloquent
+ */
 class PatientContact extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

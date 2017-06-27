@@ -6,6 +6,23 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\Login as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Logins as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Login
+ *
+ * @property int $loginid
+ * @property int|null $docid
+ * @property int|null $userid
+ * @property string|null $login_date
+ * @property string|null $logout_date
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Login whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Login whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Login whereLoginDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Login whereLoginid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Login whereLogoutDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Login whereUserid($value)
+ * @mixin \Eloquent
+ */
 class Login extends AbstractModel implements Resource, Repository
 {
     /**

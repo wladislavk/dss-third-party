@@ -7,6 +7,25 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Allergen as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Allergens as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Allergen
+ *
+ * @property int $allergensid
+ * @property string|null $allergens
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Allergen whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Allergen whereAllergens($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Allergen whereAllergensid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Allergen whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Allergen whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Allergen whereSortby($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Allergen whereStatus($value)
+ * @mixin \Eloquent
+ */
 class Allergen extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

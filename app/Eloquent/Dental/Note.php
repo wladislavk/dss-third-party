@@ -8,6 +8,39 @@ use DentalSleepSolutions\Contracts\Resources\Note as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Notes as Repository;
 use DB;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Note
+ *
+ * @property int $notesid
+ * @property int|null $patientid
+ * @property string|null $notes
+ * @property int|null $edited
+ * @property string $editor_initials
+ * @property int|null $userid
+ * @property int|null $docid
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $procedure_date
+ * @property string|null $ip_address
+ * @property int|null $signed_id
+ * @property \Carbon\Carbon|null $signed_on
+ * @property int|null $parentid
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereEdited($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereEditorInitials($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereNotesid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereParentid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note wherePatientid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereProcedureDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereSignedId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereSignedOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereUserid($value)
+ * @mixin \Eloquent
+ */
 class Note extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

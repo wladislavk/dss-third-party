@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
+
 class AdminsController extends BaseRestController
 {
     public function index()
@@ -27,5 +29,10 @@ class AdminsController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
+    }
+
+    public function getModelNamespace()
+    {
+        return self::BASE_MODEL_NAMESPACE;
     }
 }

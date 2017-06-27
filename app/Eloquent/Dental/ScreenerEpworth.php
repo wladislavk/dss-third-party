@@ -7,6 +7,23 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ScreenerEpworth as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ScreenerEpworth as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth
+ *
+ * @property int $id
+ * @property int|null $screener_id
+ * @property int|null $epworth_id
+ * @property int|null $response
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth whereEpworthId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth whereResponse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth whereScreenerId($value)
+ * @mixin \Eloquent
+ */
 class ScreenerEpworth extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

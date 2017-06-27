@@ -5,6 +5,23 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\FaxErrorCode
+ *
+ * @property int $id
+ * @property string|null $error_code
+ * @property string|null $description
+ * @property string|null $resolution
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxErrorCode whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxErrorCode whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxErrorCode whereErrorCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxErrorCode whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxErrorCode whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxErrorCode whereResolution($value)
+ * @mixin \Eloquent
+ */
 class FaxErrorCode extends AbstractModel
 {
     use WithoutUpdatedTimestamp;

@@ -7,6 +7,25 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Palpation as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Palpation as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Palpation
+ *
+ * @property int $palpationid
+ * @property string|null $palpation
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Palpation whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Palpation whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Palpation whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Palpation wherePalpation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Palpation wherePalpationid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Palpation whereSortby($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Palpation whereStatus($value)
+ * @mixin \Eloquent
+ */
 class Palpation extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

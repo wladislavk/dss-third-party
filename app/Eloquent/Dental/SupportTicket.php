@@ -8,6 +8,39 @@ use DentalSleepSolutions\Contracts\Resources\SupportTicket as Resource;
 use DentalSleepSolutions\Contracts\Repositories\SupportTickets as Repository;
 use DB;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\SupportTicket
+ *
+ * @property int $id
+ * @property string|null $title
+ * @property int|null $userid
+ * @property int|null $docid
+ * @property string|null $body
+ * @property int|null $category_id
+ * @property \Carbon\Carbon|null $adddate
+ * @property int|null $status
+ * @property string|null $ip_address
+ * @property string|null $attachment
+ * @property int|null $viewed
+ * @property int|null $creator_id
+ * @property int|null $create_type
+ * @property int|null $company_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereAttachment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereCreateType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereCreatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereUserid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereViewed($value)
+ * @mixin \Eloquent
+ */
 class SupportTicket extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

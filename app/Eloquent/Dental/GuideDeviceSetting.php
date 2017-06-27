@@ -6,6 +6,23 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting
+ *
+ * @property int $id
+ * @property int|null $device_id
+ * @property int|null $setting_id
+ * @property int|null $value
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting whereDeviceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting whereSettingId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting whereValue($value)
+ * @mixin \Eloquent
+ */
 class GuideDeviceSetting extends AbstractModel
 {
     use WithoutUpdatedTimestamp;

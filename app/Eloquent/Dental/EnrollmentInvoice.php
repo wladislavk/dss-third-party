@@ -5,6 +5,27 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\AbstractModel;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice
+ *
+ * @property int $id
+ * @property int|null $invoice_id
+ * @property string|null $description
+ * @property string|null $start_date
+ * @property string|null $end_date
+ * @property float|null $amount
+ * @property string|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice whereStartDate($value)
+ * @mixin \Eloquent
+ */
 class EnrollmentInvoice extends AbstractModel
 {
     protected $table = 'dental_enrollment_invoice';

@@ -6,6 +6,25 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\Notification as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Notifications as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Notification
+ *
+ * @property int $id
+ * @property int|null $patientid
+ * @property int|null $docid
+ * @property string|null $notification
+ * @property string|null $notification_type
+ * @property int|null $status
+ * @property string|null $notification_date
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Notification whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Notification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Notification whereNotification($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Notification whereNotificationDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Notification whereNotificationType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Notification wherePatientid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Notification whereStatus($value)
+ * @mixin \Eloquent
+ */
 class Notification extends AbstractModel implements Resource, Repository
 {
     /**

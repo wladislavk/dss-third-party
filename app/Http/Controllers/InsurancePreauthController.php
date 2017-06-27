@@ -86,4 +86,9 @@ class InsurancePreauthController extends BaseRestController
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getSingular()
+    {
+        return 'InsurancePreauth';
+    }
 }

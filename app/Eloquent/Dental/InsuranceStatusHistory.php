@@ -5,6 +5,25 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory
+ *
+ * @property int $id
+ * @property int|null $insuranceid
+ * @property int|null $status
+ * @property int|null $userid
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property int|null $adminid
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory whereAdminid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory whereInsuranceid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory whereUserid($value)
+ * @mixin \Eloquent
+ */
 class InsuranceStatusHistory extends AbstractModel
 {
     use WithoutUpdatedTimestamp;

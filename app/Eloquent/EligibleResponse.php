@@ -5,6 +5,25 @@ namespace DentalSleepSolutions\Eloquent;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class EligibleResponse
+ *
+ * @property int $id
+ * @property string $claimid
+ * @property \stdClass $response
+ * @property string $event_type
+ * @property string $adddate
+ * @property string $ip_address
+ * @property string $reference_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\EligibleResponse whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\EligibleResponse whereClaimid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\EligibleResponse whereEventType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\EligibleResponse whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\EligibleResponse whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\EligibleResponse whereReferenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\EligibleResponse whereResponse($value)
+ * @mixin \Eloquent
+ */
 class EligibleResponse extends Model
 {
     protected $table = 'dental_eligible_response';

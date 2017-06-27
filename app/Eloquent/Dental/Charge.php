@@ -7,6 +7,35 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Charge as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Charges as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Charge
+ *
+ * @property int $id
+ * @property float|null $amount
+ * @property int|null $userid
+ * @property int|null $adminid
+ * @property string|null $charge_date
+ * @property string|null $stripe_customer
+ * @property string|null $stripe_charge
+ * @property string|null $stripe_card_fingerprint
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property int|null $invoice_id
+ * @property int|null $status
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereAdminid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereChargeDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereStripeCardFingerprint($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereStripeCharge($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereStripeCustomer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Charge whereUserid($value)
+ * @mixin \Eloquent
+ */
 class Charge extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

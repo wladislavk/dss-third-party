@@ -5,6 +5,24 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\Dental\UserCompany;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 
+/**
+ * DentalSleepSolutions\Eloquent\AdminCompany
+ *
+ * @property int $id
+ * @property int|null $adminid
+ * @property int|null $companyid
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property-read \DentalSleepSolutions\Eloquent\Admin $admin
+ * @property-read \DentalSleepSolutions\Eloquent\Company $company
+ * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Dental\UserCompany[] $users
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereAdminid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereCompanyid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereIpAddress($value)
+ * @mixin \Eloquent
+ */
 class AdminCompany extends Model
 {
     use WithoutUpdatedTimestamp;

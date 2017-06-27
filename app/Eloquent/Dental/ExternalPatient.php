@@ -6,6 +6,13 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\ExternalPatient as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ExternalPatients as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\ExternalPatient
+ *
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\ExternalCompany $externalCompany
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\Patient $patient
+ * @mixin \Eloquent
+ */
 class ExternalPatient extends AbstractModel implements Resource, Repository
 {
     /**

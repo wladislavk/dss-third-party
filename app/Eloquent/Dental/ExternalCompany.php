@@ -6,6 +6,12 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\ExternalCompany as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\ExternalCompany
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Dental\User[] $users
+ * @mixin \Eloquent
+ */
 class ExternalCompany extends AbstractModel implements Resource, Repository
 {
     /**

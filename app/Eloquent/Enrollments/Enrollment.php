@@ -5,6 +5,61 @@ namespace DentalSleepSolutions\Eloquent\Enrollments;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * DentalSleepSolutions\Eloquent\Enrollments\Enrollment
+ *
+ * @property int $id
+ * @property int|null $user_id
+ * @property string|null $payer_id
+ * @property int|null $reference_id
+ * @property string|null $response
+ * @property int|null $status
+ * @property string|null $adddate
+ * @property string|null $ip_address
+ * @property string|null $payer_name
+ * @property int|null $transaction_type_id
+ * @property int|null $enrollment_invoice_id
+ * @property string|null $npi
+ * @property string|null $facility_name
+ * @property string|null $provider_name
+ * @property string|null $tax_id
+ * @property string|null $address
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $contact_number
+ * @property string|null $email
+ * @property string|null $download_url
+ * @property string|null $signed_download_url
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereContactNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereDownloadUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereEnrollmentInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereFacilityName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereNpi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment wherePayerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment wherePayerName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereProviderName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereReferenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereResponse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereSignedDownloadUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereTaxId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereTransactionTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereZip($value)
+ * @mixin \Eloquent
+ */
 class Enrollment extends Model
 {
     const DSS_ENROLLMENT_SUBMITTED    = 0;

@@ -4,6 +4,11 @@ namespace DentalSleepSolutions\Eloquent\Enrollments;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * DentalSleepSolutions\Eloquent\Enrollments\PayersList
+ *
+ * @mixin \Eloquent
+ */
 class PayersList extends Model
 {
     /**

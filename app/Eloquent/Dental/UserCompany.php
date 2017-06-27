@@ -4,6 +4,21 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\UserCompany
+ *
+ * @property int $id
+ * @property int|null $userid
+ * @property int|null $companyid
+ * @property string|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereCompanyid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereUserid($value)
+ * @mixin \Eloquent
+ */
 class UserCompany extends AbstractModel
 {
     /**

@@ -7,6 +7,19 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ChangeList as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ChangeLists as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\ChangeList
+ *
+ * @property int $id
+ * @property string|null $content
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ChangeList whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ChangeList whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ChangeList whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ChangeList whereIpAddress($value)
+ * @mixin \Eloquent
+ */
 class ChangeList extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

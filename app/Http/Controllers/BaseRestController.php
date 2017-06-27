@@ -2,15 +2,40 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Exceptions\ResourceNotFound;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
+use DentalSleepSolutions\Contracts\SingularAndPluralInterface;
+use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Tymon\JWTAuth\JWTAuth;
 
-abstract class BaseRestController extends Controller
+abstract class BaseRestController extends Controller implements SingularAndPluralInterface
 {
+    const BASE_MODEL_NAMESPACE = BindingNamingConvention::BASE_NAMESPACE . '\\Eloquent';
+    const DEFAULT_MODEL_NAMESPACE = self::BASE_MODEL_NAMESPACE . '\\Dental';
+
     /** @var bool */
     protected $hasIp = true;
+
+    /** @var Model|Repository */
+    protected $resources;
+
+    /** @var Request */
+    protected $request;
+
+    public function __construct(
+        JWTAuth $auth,
+        User $userModel,
+        Repository $resources,
+        Request $request
+    ) {
+        parent::__construct($auth, $userModel);
+        $this->resources = $resources;
+        $this->request = $request;
+    }
 
     /**
      * Display a listing of the resource.
@@ -83,5 +108,30 @@ abstract class BaseRestController extends Controller
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSingular()
+    {
+        $reflection = new \ReflectionClass($this);
+        $shortName = $reflection->getShortName();
+        return str_singular(str_replace('Controller', '', $shortName));
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlural()
+    {
+        $reflection = new \ReflectionClass($this);
+        $shortName = $reflection->getShortName();
+        return str_replace('Controller', '', $shortName);
+    }
+
+    public function getModelNamespace()
+    {
+        return self::DEFAULT_MODEL_NAMESPACE;
     }
 }

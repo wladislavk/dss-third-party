@@ -6,6 +6,33 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary as Resource;
 use DentalSleepSolutions\Contracts\Repositories\PatientSummaries as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\PatientSummary
+ *
+ * @property int $pid
+ * @property int|null $fspage1_complete
+ * @property string|null $next_visit
+ * @property string|null $last_visit
+ * @property string|null $last_treatment
+ * @property int|null $appliance
+ * @property string|null $delivery_date
+ * @property string|null $vob
+ * @property float|null $ledger
+ * @property int|null $patient_info
+ * @property string $tracker_notes
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary whereAppliance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary whereDeliveryDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary whereFspage1Complete($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary whereLastTreatment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary whereLastVisit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary whereLedger($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary whereNextVisit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary wherePatientInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary wherePid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary whereTrackerNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientSummary whereVob($value)
+ * @mixin \Eloquent
+ */
 class PatientSummary extends AbstractModel implements Resource, Repository
 {
     /**

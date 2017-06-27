@@ -6,9 +6,12 @@ use DentalSleepSolutions\Contracts\Resources\Payer as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Payers as Repository;
 
 /**
+ * DentalSleepSolutions\Eloquent\Payer
+ *
  * @property string $payer_id           Eligible payer unique identifier.
  * @property array $names               Available names of a payer.
  * @property array $supported_endpoints Eligible endpoints supported by a payer.
+ * @mixin \Eloquent
  */
 class Payer extends AbstractModel implements Resource, Repository
 {

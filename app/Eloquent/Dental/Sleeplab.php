@@ -7,6 +7,55 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Sleeplab as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Sleeplabs as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Sleeplab
+ *
+ * @property int $sleeplabid
+ * @property int|null $docid
+ * @property string|null $salutation
+ * @property string|null $lastname
+ * @property string|null $firstname
+ * @property string|null $middlename
+ * @property string|null $company
+ * @property string|null $add1
+ * @property string|null $add2
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $phone1
+ * @property string|null $phone2
+ * @property string|null $fax
+ * @property string|null $email
+ * @property string|null $greeting
+ * @property string|null $sincerely
+ * @property string|null $notes
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereAdd1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereAdd2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereCompany($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereFax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereFirstname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereGreeting($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereLastname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereMiddlename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab wherePhone1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab wherePhone2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereSalutation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereSincerely($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereSleeplabid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Sleeplab whereZip($value)
+ * @mixin \Eloquent
+ */
 class Sleeplab extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

@@ -7,6 +7,24 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Document as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Documents as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Document
+ *
+ * @property int $documentid
+ * @property int $categoryid
+ * @property string|null $name
+ * @property string|null $filename
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\DocumentCategory $category
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Document whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Document whereCategoryid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Document whereDocumentid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Document whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Document whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Document whereName($value)
+ * @mixin \Eloquent
+ */
 class Document extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

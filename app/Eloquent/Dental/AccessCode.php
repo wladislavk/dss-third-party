@@ -7,6 +7,25 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\AccessCode as Resource;
 use DentalSleepSolutions\Contracts\Repositories\AccessCodes as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\AccessCode
+ *
+ * @property int $id
+ * @property string|null $access_code
+ * @property string|null $notes
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property int|null $plan_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereAccessCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode wherePlanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereStatus($value)
+ * @mixin \Eloquent
+ */
 class AccessCode extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

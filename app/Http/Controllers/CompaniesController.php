@@ -59,4 +59,9 @@ class CompaniesController extends BaseRestController
 
         return ApiResponse::responseOk('', $data);
     }
+
+    public function getModelNamespace()
+    {
+        return self::BASE_MODEL_NAMESPACE;
+    }
 }

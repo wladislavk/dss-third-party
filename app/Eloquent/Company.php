@@ -9,6 +9,74 @@ use DentalSleepSolutions\Contracts\Resources\Company as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Companies as Repository;
 use DB;
 
+/**
+ * DentalSleepSolutions\Eloquent\Company
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $add1
+ * @property string|null $add2
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property int $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property string|null $eligible_api_key
+ * @property string|null $stripe_secret_key
+ * @property string|null $stripe_publishable_key
+ * @property string|null $logo
+ * @property float|null $monthly_fee
+ * @property int|null $default_new
+ * @property string|null $sfax_security_context
+ * @property string|null $sfax_app_id
+ * @property string|null $sfax_app_key
+ * @property string|null $sfax_init_vector
+ * @property float|null $fax_fee
+ * @property int|null $free_fax
+ * @property int|null $company_type
+ * @property string|null $phone
+ * @property string|null $fax
+ * @property string|null $email
+ * @property int|null $plan_id
+ * @property string|null $sfax_encryption_key
+ * @property int|null $use_support
+ * @property int|null $exclusive
+ * @property int|null $vob_require_test
+ * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Dental\UserCompany[] $users
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereAdd1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereAdd2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereCompanyType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereDefaultNew($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereEligibleApiKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereExclusive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereFax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereFaxFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereFreeFax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereLogo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereMonthlyFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company wherePlanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereSfaxAppId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereSfaxAppKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereSfaxEncryptionKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereSfaxInitVector($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereSfaxSecurityContext($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereStripePublishableKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereStripeSecretKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereUseSupport($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereVobRequireTest($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereZip($value)
+ * @mixin \Eloquent
+ */
 class Company extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

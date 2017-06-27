@@ -28,4 +28,9 @@ class MedicationsController extends BaseRestController
     {
         return parent::destroy($id);
     }
+
+    public function getSingular()
+    {
+        return 'Medicament';
+    }
 }

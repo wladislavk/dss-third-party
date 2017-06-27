@@ -7,6 +7,27 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Refund as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Refunds as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Refund
+ *
+ * @property int $id
+ * @property float|null $amount
+ * @property int|null $userid
+ * @property int|null $adminid
+ * @property \Carbon\Carbon|null $refund_date
+ * @property int|null $charge_id
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Refund whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Refund whereAdminid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Refund whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Refund whereChargeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Refund whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Refund whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Refund whereRefundDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Refund whereUserid($value)
+ * @mixin \Eloquent
+ */
 class Refund extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

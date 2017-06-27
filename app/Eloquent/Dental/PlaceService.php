@@ -7,6 +7,25 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\PlaceService as Resource;
 use DentalSleepSolutions\Contracts\Repositories\PlaceServices as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\PlaceService
+ *
+ * @property int $place_serviceid
+ * @property string|null $place_service
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PlaceService whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PlaceService whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PlaceService whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PlaceService wherePlaceService($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PlaceService wherePlaceServiceid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PlaceService whereSortby($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PlaceService whereStatus($value)
+ * @mixin \Eloquent
+ */
 class PlaceService extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

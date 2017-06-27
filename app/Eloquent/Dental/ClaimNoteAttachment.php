@@ -7,6 +7,21 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ClaimNoteAttachment as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ClaimNoteAttachments as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment
+ *
+ * @property int $id
+ * @property int|null $note_id
+ * @property string|null $filename
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment whereNoteId($value)
+ * @mixin \Eloquent
+ */
 class ClaimNoteAttachment extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

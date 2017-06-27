@@ -28,4 +28,9 @@ class ScreenerEpworthController extends BaseRestController
     {
         return parent::destroy($id);
     }
+
+    public function getSingular()
+    {
+        return 'ScreenerEpworth';
+    }
 }

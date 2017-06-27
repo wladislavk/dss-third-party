@@ -8,6 +8,329 @@ use DentalSleepSolutions\Contracts\Resources\Patient as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Patients as Repository;
 use DB;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Patient
+ *
+ * @property int $patientid
+ * @property string|null $lastname
+ * @property string|null $firstname
+ * @property string|null $middlename
+ * @property string|null $salutation
+ * @property string $member_no
+ * @property string $group_no
+ * @property string $plan_no
+ * @property string|null $dob
+ * @property string|null $add1
+ * @property string|null $add2
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $gender
+ * @property string|null $marital_status
+ * @property string|null $ssn
+ * @property string|null $internal_patient
+ * @property string|null $home_phone
+ * @property string|null $work_phone
+ * @property string|null $cell_phone
+ * @property string|null $email
+ * @property string|null $patient_notes
+ * @property string|null $alert_text
+ * @property int|null $display_alert
+ * @property int|null $userid
+ * @property int|null $docid
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property string|null $p_d_party
+ * @property string|null $p_d_relation
+ * @property string|null $p_d_other
+ * @property string|null $p_d_employer
+ * @property string|null $p_d_ins_co
+ * @property string|null $p_d_ins_id
+ * @property string|null $s_d_party
+ * @property string|null $s_d_relation
+ * @property string|null $s_d_other
+ * @property string|null $s_d_employer
+ * @property string|null $s_d_ins_co
+ * @property string|null $s_d_ins_id
+ * @property string|null $p_m_partyfname
+ * @property string $p_m_partymname
+ * @property string $p_m_partylname
+ * @property string|null $p_m_relation
+ * @property string|null $p_m_other
+ * @property string|null $p_m_employer
+ * @property string|null $p_m_ins_co
+ * @property string|null $p_m_ins_id
+ * @property string|null $s_m_partyfname
+ * @property string $s_m_partymname
+ * @property string $s_m_partylname
+ * @property string|null $s_m_relation
+ * @property string|null $s_m_other
+ * @property string|null $s_m_employer
+ * @property string|null $s_m_ins_co
+ * @property string|null $s_m_ins_id
+ * @property string $p_m_ins_grp
+ * @property string $s_m_ins_grp
+ * @property string $p_m_ins_plan
+ * @property string $s_m_ins_plan
+ * @property string $p_m_dss_file
+ * @property string $s_m_dss_file
+ * @property string $p_m_ins_type
+ * @property string $s_m_ins_type
+ * @property string $p_m_ins_ass
+ * @property string $s_m_ins_ass
+ * @property string $ins_dob
+ * @property string $ins2_dob
+ * @property string|null $employer
+ * @property string|null $emp_add1
+ * @property string|null $emp_add2
+ * @property string|null $emp_city
+ * @property string|null $emp_state
+ * @property string|null $emp_zip
+ * @property string|null $emp_phone
+ * @property string|null $emp_fax
+ * @property string|null $plan_name
+ * @property string|null $group_number
+ * @property string|null $ins_type
+ * @property string|null $accept_assignment
+ * @property string|null $print_signature
+ * @property string|null $medical_insurance
+ * @property string|null $mark_yes
+ * @property string|null $inactive
+ * @property string|null $partner_name
+ * @property string|null $emergency_name
+ * @property string|null $emergency_number
+ * @property string|null $referred_source
+ * @property string|null $referred_by
+ * @property int $premedcheck
+ * @property string $premed
+ * @property string $docsleep
+ * @property string $docpcp
+ * @property string $docdentist
+ * @property string $docent
+ * @property string $docmdother
+ * @property string|null $preferredcontact
+ * @property string|null $copyreqdate
+ * @property string|null $best_time
+ * @property string|null $best_number
+ * @property string|null $emergency_relationship
+ * @property string|null $has_s_m_ins
+ * @property string|null $referred_notes
+ * @property string|null $login
+ * @property string|null $password
+ * @property string|null $salt
+ * @property string|null $recover_hash
+ * @property \Carbon\Carbon|null $recover_time
+ * @property int|null $registered
+ * @property string|null $access_code
+ * @property int|null $parent_patientid
+ * @property string|null $has_p_m_ins
+ * @property int|null $registration_status
+ * @property \Carbon\Carbon|null $text_date
+ * @property int $text_num
+ * @property int $use_patient_portal
+ * @property \Carbon\Carbon|null $registration_senton
+ * @property string|null $preferred_name
+ * @property string|null $feet
+ * @property string|null $inches
+ * @property string|null $weight
+ * @property string|null $bmi
+ * @property int|null $symptoms_status
+ * @property int|null $sleep_status
+ * @property int|null $treatments_status
+ * @property int|null $history_status
+ * @property \Carbon\Carbon|null $access_code_date
+ * @property int $email_bounce
+ * @property string $docmdother2
+ * @property string $docmdother3
+ * @property int $last_reg_sect
+ * @property int|null $access_type
+ * @property string|null $p_m_eligible_id
+ * @property string|null $p_m_eligible_payer_id
+ * @property string|null $p_m_eligible_payer_name
+ * @property string|null $p_m_gender
+ * @property string|null $s_m_gender
+ * @property int|null $p_m_same_address
+ * @property string|null $p_m_address
+ * @property string|null $p_m_state
+ * @property string|null $p_m_city
+ * @property string|null $p_m_zip
+ * @property int|null $s_m_same_address
+ * @property string|null $s_m_address
+ * @property string|null $s_m_city
+ * @property string|null $s_m_state
+ * @property string|null $s_m_zip
+ * @property \Carbon\Carbon|null $new_fee_date
+ * @property float|null $new_fee_amount
+ * @property string|null $new_fee_desc
+ * @property int|null $new_fee_invoice_id
+ * @property string|null $s_m_eligible_payer_id
+ * @property string|null $s_m_eligible_payer_name
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation $airwayEvaluation
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\DentalClinicalExam $dentalClinicalExam
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\TmjClinicalExam $tmjClinicalExam
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam $tongueClinicalExam
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam $tonsilsClinicalExam
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient active()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient all()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient inactive()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereAcceptAssignment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereAccessCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereAccessCodeDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereAccessType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereAdd1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereAdd2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereAlertText($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereBestNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereBestTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereBmi($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereCellPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereCopyreqdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDisplayAlert($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDob($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDocdentist($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDocent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDocmdother($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDocmdother2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDocmdother3($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDocpcp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereDocsleep($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmailBounce($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmergencyName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmergencyNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmergencyRelationship($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmpAdd1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmpAdd2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmpCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmpFax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmpPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmpState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmpZip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereEmployer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereFeet($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereFirstname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereGroupNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereGroupNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereHasPMIns($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereHasSMIns($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereHistoryStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereHomePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereInactive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereInches($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereIns2Dob($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereInsDob($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereInsType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereInternalPatient($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereLastRegSect($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereLastname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereLogin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereMaritalStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereMarkYes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereMedicalInsurance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereMemberNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereMiddlename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereNewFeeAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereNewFeeDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereNewFeeDesc($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereNewFeeInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePDEmployer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePDInsCo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePDInsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePDOther($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePDParty($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePDRelation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMDssFile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMEligibleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMEligiblePayerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMEligiblePayerName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMEmployer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMInsAss($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMInsCo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMInsGrp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMInsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMInsPlan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMInsType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMOther($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMPartyfname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMPartylname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMPartymname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMRelation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMSameAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePMZip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereParentPatientid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePartnerName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePatientNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePatientid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePlanName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePlanNo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePreferredName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePreferredcontact($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePremed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePremedcheck($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient wherePrintSignature($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereRecoverHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereRecoverTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereReferredBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereReferredNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereReferredSource($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereRegistered($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereRegistrationSenton($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereRegistrationStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSDEmployer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSDInsCo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSDInsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSDOther($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSDParty($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSDRelation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMDssFile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMEligiblePayerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMEligiblePayerName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMEmployer($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMInsAss($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMInsCo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMInsGrp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMInsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMInsPlan($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMInsType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMOther($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMPartyfname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMPartylname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMPartymname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMRelation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMSameAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSMZip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSalt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSalutation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSleepStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSsn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereSymptomsStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereTextDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereTextNum($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereTreatmentsStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereUsePatientPortal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereUserid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereWeight($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereWorkPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Patient whereZip($value)
+ * @mixin \Eloquent
+ */
 class Patient extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

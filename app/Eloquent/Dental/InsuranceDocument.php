@@ -7,6 +7,31 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\InsuranceDocument as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsuranceDocuments as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\InsuranceDocument
+ *
+ * @property int $doc_insuranceid
+ * @property string|null $title
+ * @property string|null $description
+ * @property string|null $video_file
+ * @property string|null $doc_file
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property string|null $docid
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereDocFile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereDocInsuranceid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereSortby($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceDocument whereVideoFile($value)
+ * @mixin \Eloquent
+ */
 class InsuranceDocument extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

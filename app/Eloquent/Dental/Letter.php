@@ -9,6 +9,84 @@ use DentalSleepSolutions\Contracts\Repositories\Letters as Repository;
 use Carbon\Carbon;
 use DB;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\Letter
+ *
+ * @property int $letterid
+ * @property int|null $patientid
+ * @property int|null $stepid
+ * @property \Carbon\Carbon|null $generated_date
+ * @property \Carbon\Carbon|null $delivery_date
+ * @property string|null $send_method
+ * @property string|null $template
+ * @property string|null $pdf_path
+ * @property int|null $status
+ * @property int|null $delivered
+ * @property int|null $deleted
+ * @property int|null $templateid
+ * @property int|null $parentid
+ * @property int|null $topatient
+ * @property string|null $md_list
+ * @property string|null $md_referral_list
+ * @property int|null $docid
+ * @property int|null $userid
+ * @property \Carbon\Carbon|null $date_sent
+ * @property int|null $info_id
+ * @property int|null $edit_userid
+ * @property \Carbon\Carbon|null $edit_date
+ * @property \Carbon\Carbon|null $mailed_date
+ * @property int|null $mailed_once
+ * @property int|null $template_type
+ * @property int|null $cc_topatient
+ * @property string|null $cc_md_list
+ * @property string|null $cc_md_referral_list
+ * @property string|null $font_family
+ * @property int|null $font_size
+ * @property string|null $pat_referral_list
+ * @property string|null $cc_pat_referral_list
+ * @property int|null $deleted_by
+ * @property \Carbon\Carbon|null $deleted_on
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter delivered()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter nonDeleted()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter nonDelivered()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter patientTreatmentComplete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter pending()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereCcMdList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereCcMdReferralList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereCcPatReferralList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereCcTopatient($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereDateSent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereDeleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereDeletedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereDeletedOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereDelivered($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereDeliveryDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereEditDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereEditUserid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereFontFamily($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereFontSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereGeneratedDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereInfoId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereLetterid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereMailedDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereMailedOnce($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereMdList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereMdReferralList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereParentid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter wherePatReferralList($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter wherePatientid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter wherePdfPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereSendMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereStepid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereTemplate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereTemplateType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereTemplateid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereTopatient($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereUserid($value)
+ * @mixin \Eloquent
+ */
 class Letter extends AbstractModel implements Resource, Repository
 {
     /**

@@ -7,6 +7,25 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\CustomLetterTemplate as Resource;
 use DentalSleepSolutions\Contracts\Repositories\CustomLetterTemplates as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $body
+ * @property int|null $docid
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property int|null $status
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate whereStatus($value)
+ * @mixin \Eloquent
+ */
 class CustomLetterTemplate extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

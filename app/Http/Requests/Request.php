@@ -55,6 +55,11 @@ abstract class Request extends FormRequest
         return $this->getUpdateRules();
     }
 
+    public function getRawRules()
+    {
+        return $this->rules;
+    }
+
     /**
      * @return array
      */

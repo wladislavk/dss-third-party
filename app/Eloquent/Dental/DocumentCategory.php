@@ -7,6 +7,22 @@ use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\DocumentCategory as Resource;
 use DentalSleepSolutions\Contracts\Repositories\DocumentCategories as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\DocumentCategory
+ *
+ * @property int $categoryid
+ * @property string|null $name
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\DocumentCategory active()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\DocumentCategory whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\DocumentCategory whereCategoryid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\DocumentCategory whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\DocumentCategory whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\DocumentCategory whereStatus($value)
+ * @mixin \Eloquent
+ */
 class DocumentCategory extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

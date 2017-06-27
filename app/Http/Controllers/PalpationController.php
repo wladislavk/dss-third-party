@@ -28,4 +28,9 @@ class PalpationController extends BaseRestController
     {
         return parent::destroy($id);
     }
+
+    public function getSingular()
+    {
+        return 'Palpation';
+    }
 }

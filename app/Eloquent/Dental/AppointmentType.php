@@ -6,6 +6,21 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\AppointmentType as Resource;
 use DentalSleepSolutions\Contracts\Repositories\AppointmentTypes as Repository;
 
+/**
+ * DentalSleepSolutions\Eloquent\Dental\AppointmentType
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $color
+ * @property string|null $classname
+ * @property int|null $docid
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AppointmentType whereClassname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AppointmentType whereColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AppointmentType whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AppointmentType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AppointmentType whereName($value)
+ * @mixin \Eloquent
+ */
 class AppointmentType extends AbstractModel implements Resource, Repository
 {
     /**

@@ -142,4 +142,9 @@ class UsersController extends BaseRestController
 
         return ApiResponse::responseOk('', $patients);
     }
+
+    public function getModelNamespace()
+    {
+        return self::BASE_MODEL_NAMESPACE;
+    }
 }

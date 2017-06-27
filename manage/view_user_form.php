@@ -23,8 +23,14 @@ $r = $db->getRow($sql);
 
 /*
  * Check date on file to decide if you need to recreate the PDF
+ * ADD extra logic check to VERSION CONTROL forms with $last_form_update
  */
-if (file_exists($filename) && date('U', strtotime($r['updated_at'])) > filemtime($filename)) {
+$last_form_update = new \DateTime("2017-06-27 12:00:00");
+
+if (file_exists($filename)
+    && date('U', strtotime($r['updated_at'])) > filemtime($filename)
+    || $last_form_update > filemtime($filename))
+{
     $recreate = true;
 } else {
     $recreate = false;

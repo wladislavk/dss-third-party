@@ -53,10 +53,32 @@ include "includes/top.htm";
         </tr>
         <tr class="tr_active">
             <td valign="top">
-                Financial Agreement Medicare
+                Financial Agreement - Medicare (Non-Par)
             </td>
             <td valign="top">
-                <a href="view_user_form.php?file=financial_agreement_medicare&did=<?php echo $_SESSION['docid']; ?>"
+                <a href="view_user_form.php?file=financial_agreement_medicare_nonpar&did=<?php echo $_SESSION['docid']; ?>"
+                   class="editlink">
+                    View
+                </a>
+            </td>
+        </tr>
+        <tr class="tr_active">
+            <td valign="top">
+                Financial Agreement - Cash (No Insurance)
+            </td>
+            <td valign="top">
+                <a href="view_user_form.php?file=financial-agreement-cash&did=<?php echo $_SESSION['docid']; ?>"
+                   class="editlink">
+                    View
+                </a>
+            </td>
+        </tr>
+        <tr class="tr_active">
+            <td valign="top">
+                Financial Agreement - Out of Network (OON)
+            </td>
+            <td valign="top">
+                <a href="view_user_form.php?file=financial-agreement-oon&did=<?php echo $_SESSION['docid']; ?>"
                    class="editlink">
                     View
                 </a>
@@ -184,17 +206,6 @@ include "includes/top.htm";
             </td>
             <td valign="top">
                 <a href="view_user_form.php?file=ess_tss_form&did=<?php echo $_SESSION['docid']; ?>" class="editlink">
-                    View
-                </a>
-            </td>
-        </tr>
-        <tr class="tr_active">
-            <td valign="top">
-                Financial Agreement
-            </td>
-            <td valign="top">
-                <a href="view_user_form.php?file=financial_agreement&did=<?php echo $_SESSION['docid']; ?>"
-                   class="editlink">
                     View
                 </a>
             </td>

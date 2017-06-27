@@ -1,7 +1,12 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
+/*
+ * This helper file contains all HTML 'forms' that are converted to PDF files for each user/office.
+ * Some of the HTML has dynamic content to auto-populate user information like name/logo based on user profile.
+ */
+
 
 /**
- * "Financial Agreement Medicare" form PDF generation code
+ * "Financial Agreement Medicare Non-Participating Provider" form PDF generation code
  *
  * This HTML section is auto-populated with user variables to create a customized PDF 'form'
  * that FO user can download from /manage/manage_user_forms.php
@@ -9,7 +14,7 @@
  * @param $id
  * @param $backoffice
  */
-function update_financial_agreement_medicare_form($id, $backoffice)
+function update_financial_agreement_medicare_nonpar_form($id, $backoffice)
 {
     $db = new Db();
     $con = $GLOBALS['con'];
@@ -22,124 +27,121 @@ function update_financial_agreement_medicare_form($id, $backoffice)
 
     $html = '
 <html>
-   <head>
-      <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-      <meta name=Generator content="Microsoft Word 14 (filtered)">
-      <style>
-         <!--
-            /* Font Definitions */
-            @font-face
-            {font-family:Calibri;
-            panose-1:2 15 5 2 2 2 4 3 2 4;}
-            @font-face
-            {font-family:Tahoma;
-            panose-1:2 11 6 4 3 5 4 4 2 4;}
-            /* Style Definitions */
-            p.MsoNormal, li.MsoNormal, div.MsoNormal
-            {margin:0in;
-            margin-bottom:.0001pt;
-            text-autospace:ideograph-other;
-            font-size:12.0pt;
-            font-family:"Times New Roman","serif";}
-            p.MsoHeader, li.MsoHeader, div.MsoHeader
-            {margin:0in;
-            margin-bottom:.0001pt;
-            text-autospace:ideograph-other;
-            font-size:12.0pt;
-            font-family:"Times New Roman","serif";}
-            p.MsoFooter, li.MsoFooter, div.MsoFooter
-            {margin:0in;
-            margin-bottom:.0001pt;
-            text-autospace:ideograph-other;
-            font-size:12.0pt;
-            font-family:"Times New Roman","serif";}
-            p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-            {margin:0in;
-            margin-bottom:.0001pt;
-            text-autospace:ideograph-other;
-            font-size:8.0pt;
-            font-family:"Tahoma","sans-serif";}
-            span.HeaderChar
-            {mso-style-name:"Header Char";}
-            span.FooterChar
-            {mso-style-name:"Footer Char";}
-            .MsoChpDefault
-            {font-size:10.0pt;}
-            .MsoPapDefault
-            {text-autospace:ideograph-other;}
-            /* Page Definitions */
-            @page WordSection1
-            {size:8.5in 11.0in;
-            margin:.4in .6in .3in .6in;}
-            div.WordSection1
-            {page:WordSection1;}
-            -->
-      </style>
-   </head>
-   <body lang=EN-US>
-      <div class=WordSection1>
-         <table>
-            <tr>
-               <td width="30%">' . $logo . '</td>
-               <td width="70%">
-                  <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                     style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
-                  <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                     style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>MEDICARE FINANCIAL
-                     AGREEMENT</span></b>
-                  </h2>
-               </td>
-            </tr>
-         </table>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office
-            charges a customary fee for Dental Sleep Therapy (DST) of $' . $r['amount'] . '.  We are a non-participating
-            Medicare provider and it is possible that our office is out of network for your
-            secondary insurance.  Due to our provider status all insurance reimbursements
-            (Medicare and secondary) will be sent directly to you.   </span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>It is our
-            normal policy to collect the full cost of DST by the delivery of your
-            appliance.  Due to your financial hardship we have agreed to accept $_________
-            as an initial payment and that your maximum out of pocket expense will not
-            exceed this initial payment.  Due to the fact that your secondary insurance payments
-            go directly to you we request that you forward us your Explanation of Benefits
-            (EOB) from your secondary insurance once your check(s) are received.  Any
-            amounts paid to you above your initial payment of $_________ will be required
-            to be paid to this office.  In the event that you do not forward your secondary
-            insurance EOB to us you will be billed for the balance of the of the DST
-            customary fee.</span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing
-            this agreement you agree to pay for services rendered at our office and
-            understand that you are individually responsible for payment of all fees that
-            were previously discussed.</span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                      ________________________</span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                      ________________________</span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
-         <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p style="width:100%; text-align:right;">
-            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
-            Solutions</small></span>
-         </p>
-      </div>
-   </body>
+    <head>
+        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+        <meta name=Generator content="Microsoft Word 14 (filtered)">
+        <style>
+            <!--
+                /* Font Definitions */
+                @font-face
+                {font-family:Calibri;
+                panose-1:2 15 5 2 2 2 4 3 2 4;}
+                @font-face
+                {font-family:Tahoma;
+                panose-1:2 11 6 4 3 5 4 4 2 4;}
+                /* Style Definitions */
+                p.MsoNormal, li.MsoNormal, div.MsoNormal
+                {margin:0in;
+                margin-bottom:.0001pt;
+                text-autospace:ideograph-other;
+                font-size:12.0pt;
+                font-family:"Times New Roman","serif";}
+                p.MsoHeader, li.MsoHeader, div.MsoHeader
+                {margin:0in;
+                margin-bottom:.0001pt;
+                text-autospace:ideograph-other;
+                font-size:12.0pt;
+                font-family:"Times New Roman","serif";}
+                p.MsoFooter, li.MsoFooter, div.MsoFooter
+                {margin:0in;
+                margin-bottom:.0001pt;
+                text-autospace:ideograph-other;
+                font-size:12.0pt;
+                font-family:"Times New Roman","serif";}
+                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+                {margin:0in;
+                margin-bottom:.0001pt;
+                text-autospace:ideograph-other;
+                font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";}
+                span.HeaderChar
+                {mso-style-name:"Header Char";}
+                span.FooterChar
+                {mso-style-name:"Footer Char";}
+                .MsoChpDefault
+                {font-size:10.0pt;}
+                .MsoPapDefault
+                {text-autospace:ideograph-other;}
+                /* Page Definitions */
+                @page WordSection1
+                {size:8.5in 11.0in;
+                margin:.4in .6in .3in .6in;}
+                div.WordSection1
+                {page:WordSection1;}
+                -->
+        </style>
+    </head>
+    <body lang=EN-US>
+        <div class=WordSection1>
+            <table>
+                <tr>
+                    <td width="30%">' . $logo . '</td>
+                    <td width="70%">
+                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
+                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>MEDICARE AND SECONDARY FINANCIAL
+                            AGREEMENT</span></b>
+                        </h2>
+                        <h3 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>Non-Participating Provider</span></b>
+                        </h3>
+                    </td>
+                </tr>
+            </table>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office
+                charges a customary fee for Dental Sleep Therapy (DST) of $' . $r['amount'] . ', which is our standard billable amount to Medicare.  Due to your financial status, we have agreed that your cost for treatment will be no more than $___________ out of pocket.</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>We are a non-participating Medicare provider and if you have Secondary Insurance, it is possible that our office is out of network for your Secondary Insurance provider. Due to our provider status all insurance reimbursements (Medicare and Secondary Insurance) will be sent directly to you.</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>It is our normal policy to collect the full cost of Dental Sleep Therapy by the delivery of your device.  We have agreed to the following payment arrangements as outlined below:</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________________________________________________________________________________________________________</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Since your insurance payments go directly to you we request that you forward us your Explanation of Benefits (EOB) from your insurance carrier once your EOB and check(s) are received. This also allows our insurance team to verify if the claim has been paid correctly and to follow up if needed.  Any amounts paid to you over our collected amount will be required to be paid to this office.  In the event that you do not forward your insurance EOB and payments to us you will be billed for the balance of the Dental Sleep Therapy customary fee of $' . $r['amount'] . '.</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If Medicare and your Secondary Insurance do not reimburse any amount, you agree to pay this office $____________ (max out of pocket) for treatment.</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing
+                this agreement you agree to pay for services rendered at our office as outlined above.</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+                ________________________</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+                ________________________</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
+            <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p style="width:100%; text-align:right;">
+                <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
+                Solutions</small></span>
+            </p>
+        </div>
+    </body>
 </html>
 ';
 
-    $title = "Financial Agreement Medicare";
-    $filename = "financial_agreement_medicare_" . $id . ".pdf";
+    $title = "Financial Agreement Medicare Non-Participating";
+    $filename = "financial_agreement_medicare_nonpar" . $id . ".pdf";
 
     create_form_pdf($html, $filename, $title, $backoffice);
 
 }
+
 
 /**
  * "Home Care Instructions" form PDF generation code
@@ -1342,6 +1344,7 @@ function update_device_titration_ema_form($id, $backoffice)
 
 }
 
+
 /**
  * "Device Titration - Using Key" form PDF generation code
  *
@@ -2201,7 +2204,7 @@ function update_ess_tss_form($id, $backoffice)
 
 
 /**
- * "Financial Agreement" form PDF generation code
+ * "Financial Agreement CASH" form PDF generation code
  *
  * This HTML section is auto-populated with user variables to create a customized PDF 'form'
  * that FO user can download from /manage/manage_user_forms.php
@@ -2209,128 +2212,335 @@ function update_ess_tss_form($id, $backoffice)
  * @param $id
  * @param $backoffice
  */
-function update_financial_agreement_form($id, $backoffice)
+function update_financial_agreement_cash_form($id, $backoffice)
 {
+    $db = new Db();
+    $con = $GLOBALS['con'];
 
     $logo = get_logo($id, $backoffice);
 
+    $s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='" . mysqli_real_escape_string($con, $id) . "'";
+    $q = mysqli_query($con, $s);
+    $r = mysqli_fetch_assoc($q);
+
     $html = '
 <html>
-   <head>
-      <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-      <meta name=Generator content="Microsoft Word 14 (filtered)">
-      <style>
-         <!--
-            /* Font Definitions */
-            @font-face
-            {font-family:Calibri;
-            panose-1:2 15 5 2 2 2 4 3 2 4;}
-            @font-face
-            {font-family:Tahoma;
-            panose-1:2 11 6 4 3 5 4 4 2 4;}
-            /* Style Definitions */
-            p.MsoNormal, li.MsoNormal, div.MsoNormal
-            {margin:0in;
-            margin-bottom:.0001pt;
-            text-autospace:ideograph-other;
-            font-size:12.0pt;
-            font-family:"Times New Roman","serif";}
-            p.MsoHeader, li.MsoHeader, div.MsoHeader
-            {margin:0in;
-            margin-bottom:.0001pt;
-            text-autospace:ideograph-other;
-            font-size:12.0pt;
-            font-family:"Times New Roman","serif";}
-            p.MsoFooter, li.MsoFooter, div.MsoFooter
-            {margin:0in;
-            margin-bottom:.0001pt;
-            text-autospace:ideograph-other;
-            font-size:12.0pt;
-            font-family:"Times New Roman","serif";}
-            p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-            {margin:0in;
-            margin-bottom:.0001pt;
-            text-autospace:ideograph-other;
-            font-size:8.0pt;
-            font-family:"Tahoma","sans-serif";}
-            span.HeaderChar
-            {mso-style-name:"Header Char";}
-            span.FooterChar
-            {mso-style-name:"Footer Char";}
-            .MsoChpDefault
-            {font-size:10.0pt;}
-            .MsoPapDefault
-            {text-autospace:ideograph-other;}
-            /* Page Definitions */
-            @page WordSection1
-            {size:8.5in 11.0in;
-            margin:.4in .6in .3in .6in;}
-            div.WordSection1
-            {page:WordSection1;}
-            -->
-      </style>
-   </head>
-   <body lang=EN-US>
-      <div class=WordSection1>
-         <table>
-            <tr>
-               <td width="30%">' . $logo . '</td>
-               <td width="70%">
-                  <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                     style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
-                  <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                     style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT</span></b></h2>
-               </td>
-            </tr>
-         </table>
-         <p class=MsoNormal><span style=\'font-size:11.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>As a courtesy
-            to you, this office<i><span style=\'color:red\'> </span></i>has verified your
-            third party insurance benefits.  Understand that our verification of benefits
-            does not guarantee your third party payment.  If for any reason your third
-            party carrier(s) should fail to pay for your services, you will be billed for
-            any shortcomings.  Fees for dental sleep therapy vary per case but can cost up
-            to $___________.  </span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Your estimated
-            copayment for your dental device is $________________ and will not exceed
-            $__________ as your total out of pocket expense.  </span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>I
-            ___________________________________ am the responsible party for treatment and
-            have read and agree to the above financial statement.</span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing
-            this agreement you agree to pay for services rendered at our office and
-            understand that you are individually responsible for payment of all fees.</span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                      ________________________</span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                      ________________________</span>
-         </p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
-         <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-         <p style="width:100%; text-align:right;">
-            <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
-            Solutions</small></span>
-         </p>
-      </div>
-   </body>
+    <head>
+        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+        <meta name=Generator content="Microsoft Word 14 (filtered)">
+        <style>
+            <!--
+                /* Font Definitions */
+                @font-face
+                {font-family:Calibri;
+                panose-1:2 15 5 2 2 2 4 3 2 4;
+                mso-font-charset:0;
+                mso-generic-font-family:swiss;
+                mso-font-pitch:variable;
+                mso-font-signature:-536859905 -1073732485 9 0 511 0;}
+                @font-face
+                {font-family:Tahoma;
+                panose-1:2 11 6 4 3 5 4 4 2 4;
+                mso-font-charset:0;
+                mso-generic-font-family:swiss;
+                mso-font-pitch:variable;
+                mso-font-signature:-520081665 -1073717157 41 0 66047 0;}
+                @font-face
+                {font-family:DejaVuSans;
+                panose-1:0 0 0 0 0 0 0 0 0 0;
+                mso-font-alt:"MS Gothic";
+                mso-font-charset:128;
+                mso-generic-font-family:auto;
+                mso-font-format:other;
+                mso-font-pitch:auto;
+                mso-font-signature:0 134676480 16 0 131072 0;}
+                @font-face
+                {font-family:"\@DejaVuSans";
+                panose-1:0 0 0 0 0 0 0 0 0 0;
+                mso-font-charset:128;
+                mso-generic-font-family:auto;
+                mso-font-format:other;
+                mso-font-pitch:auto;
+                mso-font-signature:0 134676480 16 0 131072 0;}
+                /* Style Definitions */
+                p.MsoNormal, li.MsoNormal, div.MsoNormal
+                {mso-style-unhide:no;
+                mso-style-qformat:yes;
+                mso-style-parent:"";
+                margin:0in;
+                margin-bottom:.0001pt;
+                mso-pagination:widow-orphan;
+                font-size:12.0pt;
+                font-family:"Times New Roman","serif";
+                mso-fareast-font-family:"Times New Roman";}
+                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+                {mso-style-unhide:no;
+                mso-style-link:"Balloon Text Char";
+                margin:0in;
+                margin-bottom:.0001pt;
+                mso-pagination:widow-orphan;
+                font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";
+                mso-fareast-font-family:"Times New Roman";}
+                span.BalloonTextChar
+                {mso-style-name:"Balloon Text Char";
+                mso-style-unhide:no;
+                mso-style-locked:yes;
+                mso-style-link:"Balloon Text";
+                mso-ansi-font-size:8.0pt;
+                mso-bidi-font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";
+                mso-ascii-font-family:Tahoma;
+                mso-hansi-font-family:Tahoma;
+                mso-bidi-font-family:Tahoma;}
+                .MsoChpDefault
+                {mso-style-type:export-only;
+                mso-default-props:yes;
+                font-size:10.0pt;
+                mso-ansi-font-size:10.0pt;
+                mso-bidi-font-size:10.0pt;}
+                @page WordSection1
+                {size:8.5in 11.0in;
+                margin:1.0in 1.25in 1.0in 1.25in;
+                mso-header-margin:.5in;
+                mso-footer-margin:.5in;
+                mso-paper-source:0;}
+                div.WordSection1
+                {page:WordSection1;}
+                -->
+        </style>
+    </head>
+    <br lang=EN-US>
+        <br class=WordSection1>
+            <table>
+                <tr>
+                    <td width="30%">' . $logo . '</td>
+                    <td width="70%">
+                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
+                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT (NO INSURANCE)</span></b>
+                        </h2>
+                    </td>
+                </tr>
+            </table>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office’s customary billable fee for Dental Sleep Therapy (DST)
+                is $' . $r['amount'] . '. Due to your lack of medical
+                insurance and/or high deductible you have opted to accept a cash discount for
+                DST in our office. By signing the this
+                agreement you release our office from any responsibility of filing insurance to
+                your providers or for providing documentation to you or other health care
+                providers in order to obtain insurance coverage. </span>
+            </p>
+                </br>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>You agree to pay $_______ with the following terms: </span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________________________________________________________________________________________</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If you decide that you do not wish to move forward with treatment
+                after impressions, you will be responsible for the impressions and office fee of
+                $__________.</span>
+            </p>
+                </br>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing this agreement, you agree to pay for services rendered
+                at our office as outlined above as well as release our office from any
+                responsibility for filing or preparing information for medical insurance
+                submission.</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+                ________________________</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+                ________________________</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
+            <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p style="width:100%; text-align:right;">
+                <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
+                Solutions</small></span>
+            </p>
+        </div>
+    </body>
 </html>
 ';
 
-    $title = "Financial Agreement";
-    $filename = "financial_agreement_" . $id . ".pdf";
+    $title = "Financial Agreement Cash";
+    $filename = "financial_agreement_cash_" . $id . ".pdf";
+
+    create_form_pdf($html, $filename, $title, $backoffice);
+
+}
+
+
+/**
+ * "Financial Agreement OON (Out of Network)" form PDF generation code
+ *
+ * This HTML section is auto-populated with user variables to create a customized PDF 'form'
+ * that FO user can download from /manage/manage_user_forms.php
+ *
+ * @param $id
+ * @param $backoffice
+ */
+function update_financial_agreement_oon_form($id, $backoffice)
+{
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
+    $logo = get_logo($id, $backoffice);
+
+    $s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='" . mysqli_real_escape_string($con, $id) . "'";
+    $q = mysqli_query($con, $s);
+    $r = mysqli_fetch_assoc($q);
+
+    $html = '
+<html>
+    <head>
+        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+        <meta name=Generator content="Microsoft Word 14 (filtered)">
+        <style>
+            <!--
+                /* Font Definitions */
+                @font-face
+                {font-family:Calibri;
+                panose-1:2 15 5 2 2 2 4 3 2 4;
+                mso-font-charset:0;
+                mso-generic-font-family:swiss;
+                mso-font-pitch:variable;
+                mso-font-signature:-536859905 -1073732485 9 0 511 0;}
+                @font-face
+                {font-family:Tahoma;
+                panose-1:2 11 6 4 3 5 4 4 2 4;
+                mso-font-charset:0;
+                mso-generic-font-family:swiss;
+                mso-font-pitch:variable;
+                mso-font-signature:-520081665 -1073717157 41 0 66047 0;}
+                @font-face
+                {font-family:DejaVuSans;
+                panose-1:0 0 0 0 0 0 0 0 0 0;
+                mso-font-alt:"MS Gothic";
+                mso-font-charset:128;
+                mso-generic-font-family:auto;
+                mso-font-format:other;
+                mso-font-pitch:auto;
+                mso-font-signature:0 134676480 16 0 131072 0;}
+                @font-face
+                {font-family:"\@DejaVuSans";
+                panose-1:0 0 0 0 0 0 0 0 0 0;
+                mso-font-charset:128;
+                mso-generic-font-family:auto;
+                mso-font-format:other;
+                mso-font-pitch:auto;
+                mso-font-signature:0 134676480 16 0 131072 0;}
+                /* Style Definitions */
+                p.MsoNormal, li.MsoNormal, div.MsoNormal
+                {mso-style-unhide:no;
+                mso-style-qformat:yes;
+                mso-style-parent:"";
+                margin:0in;
+                margin-bottom:.0001pt;
+                mso-pagination:widow-orphan;
+                font-size:12.0pt;
+                font-family:"Times New Roman","serif";
+                mso-fareast-font-family:"Times New Roman";}
+                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+                {mso-style-unhide:no;
+                mso-style-link:"Balloon Text Char";
+                margin:0in;
+                margin-bottom:.0001pt;
+                mso-pagination:widow-orphan;
+                font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";
+                mso-fareast-font-family:"Times New Roman";}
+                span.BalloonTextChar
+                {mso-style-name:"Balloon Text Char";
+                mso-style-unhide:no;
+                mso-style-locked:yes;
+                mso-style-link:"Balloon Text";
+                mso-ansi-font-size:8.0pt;
+                mso-bidi-font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";
+                mso-ascii-font-family:Tahoma;
+                mso-hansi-font-family:Tahoma;
+                mso-bidi-font-family:Tahoma;}
+                .MsoChpDefault
+                {mso-style-type:export-only;
+                mso-default-props:yes;
+                font-size:10.0pt;
+                mso-ansi-font-size:10.0pt;
+                mso-bidi-font-size:10.0pt;}
+                @page WordSection1
+                {size:8.5in 11.0in;
+                margin:1.0in 1.25in 1.0in 1.25in;
+                mso-header-margin:.5in;
+                mso-footer-margin:.5in;
+                mso-paper-source:0;}
+                div.WordSection1
+                {page:WordSection1;}
+                -->
+        </style>
+    </head>
+    <br lang=EN-US>
+    <br class=WordSection1>
+    <table>
+        <tr>
+            <td width="30%">' . $logo . '</td>
+            <td width="70%">
+                <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
+                <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT (Out of Network Insurance)</span></b>
+                </h2>
+            </td>
+        </tr>
+    </table>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office’s customary billable fee for Dental Sleep Therapy (DST)
+        is $' . $r['amount'] . '. As a courtesy to our patients we will bill this amount to your insurance provider(s).  After your deductible is met insurance typically covers a portion of the <b>allowable amount</b> for billed services.  As an out of network provider we will not typically know the insurance allowable amount until the insurance company approves payment.</span>
+    </p>
+    </br>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>It is our policy to collect the full <b>allowable amount</b> of Dental Sleep Therapy and any additionally agreed fees.  When filing insurance it is our policy to collect your deductible and <b>estimated</b> co-insurance amount or make other financial arrangements prior to the delivery of your device.  </span>
+    </p>
+    </br>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Your estimated out of pocket expense is $___________ not to exceed $___________ </span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>You agree to pay your estimated out of pocket amount as follows:</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________________________________________________________________________________________</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Since your insurance payments and EOB may go directly to you we request that you forward us your Explanation of Benefits (EOB) and any due payments from your insurance carriers once they are received. This also allows our insurance team to verify if the claim has been paid correctly and to follow up if needed.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Once we receive your EOB for DST we will adjust your account to reflect the insurance allowable amount, credits, and any other terms of this agreement.  We will then provide you with a final statement reflecting your balance that is due.  Any amounts paid to you over our collected amount will be required to be paid to this office.  In the event that you do not forward your insurance EOB to us you will be billed for the balance of the Dental Sleep Therapy customary fee of $' . $r['amount'] . '.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If we cannot submit the claim due to any reason, or are not reimbursed by your insurance company, you will be responsible for $____________ (cash fee).  If you decide that you do not wish to move forward with treatment after impressions, you will be responsible for the impressions and office fee of $____________ (impressions fee).</span>
+    </p>
+    </br>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing this agreement, you agree to pay for services rendered
+        at our office as outlined above.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+        ________________________</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+        ________________________</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
+    <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+    <p style="width:100%; text-align:right;">
+        <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
+        Solutions</small></span>
+    </p>
+    </div>
+    </body>
+</html>
+';
+
+    $title = "Financial Agreement OON";
+    $filename = "financial_agreement_oon_" . $id . ".pdf";
 
     create_form_pdf($html, $filename, $title, $backoffice);
 
@@ -2553,223 +2763,219 @@ function update_informed_consent_form($id, $backoffice)
 
     $html = '
 <html>
-
-<head>
-<meta http-equiv=Content-Type content="text/html; charset=unicode">
-<meta name=Generator content="Microsoft Word 14 (filtered)">
-<title>Informed Consent</title>
-
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:Tahoma;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
-@font-face
-	{font-family:Georgia;
-	panose-1:2 4 5 2 5 4 5 2 3 3;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin-top:0in;
-	margin-right:0in;
-	margin-bottom:10.0pt;
-	margin-left:0in;
-	line-height:115%;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";}
-a:link, span.MsoHyperlink
-	{font-family:"Times New Roman","serif";
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;}
-p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-	{mso-style-link:"Balloon Text Char";
-	margin-top:0in;
-	margin-right:0in;
-	margin-bottom:10.0pt;
-	margin-left:0in;
-	line-height:115%;
-	font-size:8.0pt;
-	font-family:"Tahoma","sans-serif";}
-span.BalloonTextChar
-	{mso-style-name:"Balloon Text Char";
-	mso-style-link:"Balloon Text";
-	font-family:"Times New Roman","serif";}
-p.yiv701883374msoheader, li.yiv701883374msoheader, div.yiv701883374msoheader
-	{mso-style-name:yiv701883374msoheader;
-	margin-right:0in;
-	margin-left:0in;
-	font-size:12.0pt;
-	font-family:"Times New Roman","serif";}
-span.yiv701883374grame
-	{mso-style-name:yiv701883374grame;
-	font-family:"Times New Roman","serif";}
-.MsoChpDefault
-	{font-size:10.0pt;
-	font-family:"Calibri","sans-serif";}
-@page WordSection1
-	{size:8.5in 11.0in;
-	margin:45.0pt 1.0in 63.0pt 1.0in;}
-div.WordSection1
-	{page:WordSection1;}
--->
-</style>
-
-</head>
-
-<body lang=EN-US link=blue vlink=purple>
-
-<div class=WordSection1>
-
-<table>
-<tr>
-<td>
-' . $logo . '
-</td>
-<td align="right" style="text-align:right; font-family:\"Georgia\",\"serif\";color:black">
-<b>
-' . $practice . '
-<br>
-' . $loc_r['address'] . '
-<br>
-' . $loc_r['city'] . ', ' . $loc_r['state'] . ' ' . $loc_r['zip'] . '
-<br>
-' . format_phone($loc_r['phone']) . '
-</b>
-</td>
-</tr>
-</table>
-
-<p class=MsoNormal align=center style="margin-bottom:0in;margin-bottom:.0001pt;
-text-align:center;line-height:normal"><b><u><span style="font-size:16.0pt">INFORMED
-CONSENT FOR THE TREATMENT OF  </span></u></b></p>
-
-<p class=MsoNormal align=center style="text-align:center;line-height:normal"><b><u><span
-style="font-size:20.0pt"> OBSTRUCTIVE SLEEP APNEA and SLEEP DISORDERED
-BREATHING</span></u></b></p>
-
-<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Obstructive
-sleep apnea (OSA) is a medical condition with a dental treatment.  For OSA to
-be treated by a dentist, a diagnosis of OSA must be made by a physician trained
-in the field of Sleep Medicine.  If you have not been diagnosed with OSA by
-your physician, please understand that we will not proceed with treatment
-without an overnight sleep study in a sleep lab and a diagnosis of OSA by the
-attending sleep physician. We will work in collaboration with your physician to
-achieve the best results possible for the treatment of your sleep apnea. </span></p>
-
-<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">SUCCESSFUL
-TREATMENT:  </span></b><span style="font-size:12.0pt"> Oral appliance therapy
-is a very effective treatment.  However, no therapy works 100% of the time. 
-The mandibular advancement device (MAD) works by moving the jaw and tongue
-forward at night which acts to keep the airway open. As with any medical
-therapy, successful treatment of OSA using dental appliances cannot be
-guaranteed.   Success depends on many things.  The most important component of
-success is patient compliance.  By signing this document, you hereby agree to
-follow our instructions in detail.  Failure to do so may result in a poor
-clinical outcome.</span></p>
-
-<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">COMPLICATIONS
-OF TREATMENT:</span></b><span style="font-size:12.0pt">  OSA is an unusual
-disease because it has been associated with many co-morbid medical conditions. 
-As a result of OSA, or as a complication of OSA treatment, patients may develop
-any or all of the following temporary or permanent co-morbid diseases: coronary
-artery disease; high blood pressure; diabetes; cerebrovascular disease; stroke;
-heart problems; heart attack; atrial fibrillation, depression, mood disorders,
-sexual dysfunction, weight gain, obesity; excessive daytime sleepiness;
-increased work related and traffic related accidents; and death. </span></p>
-
-<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">Dental
-Issues:</span></b><span style="font-size:12.0pt"> A number of temporary or
-permanent dental issues can develop as a result of long term treatment of OSA
-with a mandibular advancement device (MAD), including but not limited to:  jaw
-joint pain; moderate or severe TMJ dysfunction; headaches; backaches; neck
-aches; pain on chewing; facial pain; popping and noise in the jaw; sore teeth;
-dental decay, gum (periodontal) disease, gingivitis; worsening of periodontal
-pockets; tooth loss; loosening of teeth, dry mouth or excess saliva; fracturing
-or loosening of dental fillings, crowns or bridges;  short term or long term bite
-changes; spacing or shifting of teeth; tilting of teeth; profile changes; 
-lessening of overbite or over jet; dental infection; infection of the gums;
-difficulty chewing; oral cysts, oral tumors, oral cancer, and death.  </span></p>
-
-<p class=MsoNormal style="margin-left:2.5in;line-height:normal"><span
-style="font-size:12.0pt">                                                                                                                                 
-                                           Initial______                                                                                                                       
-</span></p>
-
-<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&nbsp;</span></p>
-
-<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">You
-should be aware that complications as a result of oral appliance therapy have
-been minor; however, it is the patient’s responsibility to immediately inform
-our office of any issues which may develop to prevent a permanent condition or
-complication. </span></p>
-
-<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">FINAL
-SLEEP STUDY AND EVALUATION:</span></b><span style="font-size:12.0pt">  After
-your appliance is placed, it will be adjusted by us to achieve the best results
-possible.  When your apnea symptoms have improved and we are satisfied with the
-results of the adjustments, you will be referred back to your physician for
-post-treatment evaluation and a post-treatment sleep study.  This evaluation is
-to insure that your apnea is adequately controlled by the MAD and that no
-further adjustments or other treatment is needed.  Your treatment must be
-confirmed by an in-lab sleep study and evaluated by your physician after we
-complete our adjustments.</span></p>
-
-<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">Follow-up
-appointments</span></b><span style="font-size:12.0pt"> are required with our
-office on a 6 month or yearly basis to check the effectiveness of your
-appliance and the success of your OSA treatment. Failure to maintain these
-follow-up appointments will constitute a lack of compliance with our office’s
-treatment plan.  Any decision on your part to forego follow-up appointments
-places your health at risk and increases the probability of complications and
-treatment failure. </span></p>
-
-<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Additionally,
-recall appointments should be kept with your general dentist on a three month
-schedule for the first year that you wear a MAD to evaluate your dental
-hygiene, gums and check for decay.  By signing this agreement you agree to
-schedule the recommended recall appointments and to use prescription oral
-topical fluoride daily for the prevention of decay and periodontal disease. 
-The prescription fluoride is to be used for as long as you wear a MAD.</span></p>
-
-<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">ALTERNATIVE
-TREATMENTS:</span></b><span style="font-size:12.0pt">  By signing this consent
-form you acknowledge that you have been made aware of reasonable alternatives
-to MAD therapy for obstructive sleep apnea including, but not limited to: 
-tracheotomy; CPAP; oral or pharyngeal surgery; positional sleep therapy; weight
-loss and exercise.  Additionally, you are aware that more than one treatment may
-be necessary for the best results.</span></p>
-
-<p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">WHEREFORE:
-</span></b><span style="font-size:12.0pt"> I give my consent for the treatment
-of my OSA using a mandibular advancement device (MAD).  I agree and consent to
-allow qualified members of this office to examine my mouth, teeth, jaws, gums,
-and associated structures.  I give consent for the taking of x-rays, photos,
-impressions and any other procedures necessary for the treatment of my OSA.  I,
-also, give consent for a home sleep study, if necessary, for the adjustment of
-my appliance. I consent for the contents of my record to be shared with my
-physician and insurance company.</span></p>
-
-<p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt"> I
-affirm that I have read this document and have been given adequate information
-regarding the treatment of my condition to give my informed consent. I
-understand the proposed treatment of my OSA using MAD therapy and I have been
-given the opportunity to ask questions. All my questions have been answered and
-I am ready to proceed with treatment. </span></p>
-
-<p class=MsoNormal style="line-height:normal"><span style="font-size:11.0pt">Patient
-Signature:       __________________________________    DATE:  ______________</span>
-<br>
-<span style="font-size:11.0pt">Print
-Name:                 __________________________________</span>
-<br>
-<span style="font-size:11.0pt">WITNESS:                     __________________________________    DATE:
-_______________</span></p></div></body></html>
+    <head>
+        <meta http-equiv=Content-Type content="text/html; charset=unicode">
+        <meta name=Generator content="Microsoft Word 14 (filtered)">
+        <title>Informed Consent</title>
+        <style>
+            <!--
+                /* Font Definitions */
+                @font-face
+                {font-family:Calibri;
+                panose-1:2 15 5 2 2 2 4 3 2 4;}
+                @font-face
+                {font-family:Tahoma;
+                panose-1:2 11 6 4 3 5 4 4 2 4;}
+                @font-face
+                {font-family:Georgia;
+                panose-1:2 4 5 2 5 4 5 2 3 3;}
+                /* Style Definitions */
+                p.MsoNormal, li.MsoNormal, div.MsoNormal
+                {margin-top:0in;
+                margin-right:0in;
+                margin-bottom:10.0pt;
+                margin-left:0in;
+                line-height:115%;
+                font-size:11.0pt;
+                font-family:"Calibri","sans-serif";}
+                a:link, span.MsoHyperlink
+                {font-family:"Times New Roman","serif";
+                color:blue;
+                text-decoration:underline;}
+                a:visited, span.MsoHyperlinkFollowed
+                {color:purple;
+                text-decoration:underline;}
+                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+                {mso-style-link:"Balloon Text Char";
+                margin-top:0in;
+                margin-right:0in;
+                margin-bottom:10.0pt;
+                margin-left:0in;
+                line-height:115%;
+                font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";}
+                span.BalloonTextChar
+                {mso-style-name:"Balloon Text Char";
+                mso-style-link:"Balloon Text";
+                font-family:"Times New Roman","serif";}
+                p.yiv701883374msoheader, li.yiv701883374msoheader, div.yiv701883374msoheader
+                {mso-style-name:yiv701883374msoheader;
+                margin-right:0in;
+                margin-left:0in;
+                font-size:12.0pt;
+                font-family:"Times New Roman","serif";}
+                span.yiv701883374grame
+                {mso-style-name:yiv701883374grame;
+                font-family:"Times New Roman","serif";}
+                .MsoChpDefault
+                {font-size:10.0pt;
+                font-family:"Calibri","sans-serif";}
+                @page WordSection1
+                {size:8.5in 11.0in;
+                margin:45.0pt 1.0in 63.0pt 1.0in;}
+                div.WordSection1
+                {page:WordSection1;}
+                -->
+        </style>
+    </head>
+    <body lang=EN-US link=blue vlink=purple>
+        <div class=WordSection1>
+            <table>
+                <tr>
+                    <td>
+                        ' . $logo . '
+                    </td>
+                    <td align="right" style="text-align:right; font-family:\"Georgia\",\"serif\";color:black">
+                    <b>
+                    ' . $practice . '
+                    <br>
+                    ' . $loc_r['address'] . '
+                    <br>
+                    ' . $loc_r['city'] . ', ' . $loc_r['state'] . ' ' . $loc_r['zip'] . '
+                    <br>
+                    ' . format_phone($loc_r['phone']) . '
+                    </b>
+                    </td>
+                </tr>
+            </table>
+            <p class=MsoNormal align=center style="margin-bottom:0in;margin-bottom:.0001pt;
+                text-align:center;line-height:normal"><b><u><span style="font-size:16.0pt">INFORMED
+                CONSENT FOR THE TREATMENT OF  </span></u></b>
+            </p>
+            <p class=MsoNormal align=center style="text-align:center;line-height:normal"><b><u><span
+                style="font-size:20.0pt"> OBSTRUCTIVE SLEEP APNEA and SLEEP DISORDERED
+                BREATHING</span></u></b>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Obstructive
+                sleep apnea (OSA) is a medical condition with a dental treatment.  For OSA to
+                be treated by a dentist, a diagnosis of OSA must be made by a physician trained
+                in the field of Sleep Medicine.  If you have not been diagnosed with OSA by
+                your physician, please understand that we will not proceed with treatment
+                without an overnight sleep study in a sleep lab and a diagnosis of OSA by the
+                attending sleep physician. We will work in collaboration with your physician to
+                achieve the best results possible for the treatment of your sleep apnea. </span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">SUCCESSFUL
+                TREATMENT:  </span></b><span style="font-size:12.0pt"> Oral appliance therapy
+                is a very effective treatment.  However, no therapy works 100% of the time. 
+                The mandibular advancement device (MAD) works by moving the jaw and tongue
+                forward at night which acts to keep the airway open. As with any medical
+                therapy, successful treatment of OSA using dental appliances cannot be
+                guaranteed.   Success depends on many things.  The most important component of
+                success is patient compliance.  By signing this document, you hereby agree to
+                follow our instructions in detail.  Failure to do so may result in a poor
+                clinical outcome.</span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">COMPLICATIONS
+                OF TREATMENT:</span></b><span style="font-size:12.0pt">  OSA is an unusual
+                disease because it has been associated with many co-morbid medical conditions. 
+                As a result of OSA, or as a complication of OSA treatment, patients may develop
+                any or all of the following temporary or permanent co-morbid diseases: coronary
+                artery disease; high blood pressure; diabetes; cerebrovascular disease; stroke;
+                heart problems; heart attack; atrial fibrillation, depression, mood disorders,
+                sexual dysfunction, weight gain, obesity; excessive daytime sleepiness;
+                increased work related and traffic related accidents; and death. </span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">Dental
+                Issues:</span></b><span style="font-size:12.0pt"> A number of temporary or
+                permanent dental issues can develop as a result of long term treatment of OSA
+                with a mandibular advancement device (MAD), including but not limited to:  jaw
+                joint pain; moderate or severe TMJ dysfunction; headaches; backaches; neck
+                aches; pain on chewing; facial pain; popping and noise in the jaw; sore teeth;
+                dental decay, gum (periodontal) disease, gingivitis; worsening of periodontal
+                pockets; tooth loss; loosening of teeth, dry mouth or excess saliva; fracturing
+                or loosening of dental fillings, crowns or bridges;  short term or long term bite
+                changes; spacing or shifting of teeth; tilting of teeth; profile changes; 
+                lessening of overbite or over jet; dental infection; infection of the gums;
+                difficulty chewing; oral cysts, oral tumors, oral cancer, and death.  </span>
+            </p>
+            <p class=MsoNormal style="margin-left:2.5in;line-height:normal"><span
+                style="font-size:12.0pt">                                                                                                                                 
+                Initial______                                                                                                                       
+                </span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&nbsp;</span></p>
+            <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">You
+                should be aware that complications as a result of oral appliance therapy have
+                been minor; however, it is the patient’s responsibility to immediately inform
+                our office of any issues which may develop to prevent a permanent condition or
+                complication. </span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">FINAL
+                SLEEP STUDY AND EVALUATION:</span></b><span style="font-size:12.0pt">  After
+                your appliance is placed, it will be adjusted by us to achieve the best results
+                possible.  When your apnea symptoms have improved and we are satisfied with the
+                results of the adjustments, you will be referred back to your physician for
+                post-treatment evaluation and a post-treatment sleep study.  This evaluation is
+                to insure that your apnea is adequately controlled by the MAD and that no
+                further adjustments or other treatment is needed.  Your treatment must be
+                confirmed by an in-lab sleep study and evaluated by your physician after we
+                complete our adjustments.</span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">Follow-up
+                appointments</span></b><span style="font-size:12.0pt"> are required with our
+                office on a 6 month or yearly basis to check the effectiveness of your
+                appliance and the success of your OSA treatment. Failure to maintain these
+                follow-up appointments will constitute a lack of compliance with our office’s
+                treatment plan.  Any decision on your part to forego follow-up appointments
+                places your health at risk and increases the probability of complications and
+                treatment failure. </span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Additionally,
+                recall appointments should be kept with your general dentist on a three month
+                schedule for the first year that you wear a MAD to evaluate your dental
+                hygiene, gums and check for decay.  By signing this agreement you agree to
+                schedule the recommended recall appointments and to use prescription oral
+                topical fluoride daily for the prevention of decay and periodontal disease. 
+                The prescription fluoride is to be used for as long as you wear a MAD.</span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">ALTERNATIVE
+                TREATMENTS:</span></b><span style="font-size:12.0pt">  By signing this consent
+                form you acknowledge that you have been made aware of reasonable alternatives
+                to MAD therapy for obstructive sleep apnea including, but not limited to: 
+                tracheotomy; CPAP; oral or pharyngeal surgery; positional sleep therapy; weight
+                loss and exercise.  Additionally, you are aware that more than one treatment may
+                be necessary for the best results.</span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">WHEREFORE:
+                </span></b><span style="font-size:12.0pt"> I give my consent for the treatment
+                of my OSA using a mandibular advancement device (MAD).  I agree and consent to
+                allow qualified members of this office to examine my mouth, teeth, jaws, gums,
+                and associated structures.  I give consent for the taking of x-rays, photos,
+                impressions and any other procedures necessary for the treatment of my OSA.  I,
+                also, give consent for a home sleep study, if necessary, for the adjustment of
+                my appliance. I consent for the contents of my record to be shared with my
+                physician and insurance company.</span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt"> I
+                affirm that I have read this document and have been given adequate information
+                regarding the treatment of my condition to give my informed consent. I
+                understand the proposed treatment of my OSA using MAD therapy and I have been
+                given the opportunity to ask questions. All my questions have been answered and
+                I am ready to proceed with treatment. </span>
+            </p>
+            <p class=MsoNormal style="line-height:normal"><span style="font-size:11.0pt">Patient
+                Signature:       __________________________________    DATE:  ______________</span>
+                <br>
+                <span style="font-size:11.0pt">Print
+                Name:                 __________________________________</span>
+                <br>
+                <span style="font-size:11.0pt">WITNESS:                     __________________________________    DATE:
+                _______________</span>
+            </p>
+        </div>
+    </body>
+</html>
 ';
 
     $old = '
@@ -5357,6 +5563,7 @@ function update_proof_of_delivery_form($id, $locid = null, $backoffice = false)
 
 }
 
+
 /**
  * Cleanup function to REGENERATE HTML/PDF forms
  *
@@ -5394,6 +5601,7 @@ function form_update_all($docid, $backoffice = false)
     update_the_dss_experience_form($docid, $backoffice);
 }
 
+
 /**
  * Get frontoffice User "logo" for form
  *
@@ -5429,10 +5637,11 @@ function get_logo($id, $backoffice)
     return $logo;
 }
 
+
 /**
- * CREATE FORM "MASTER" PDF generation code
+ * CREATE FORM "MASTER" PDF generation helper function
  *
- * This HTML section is auto-populated with user variables to create a customized PDF 'form'
+ * This function receives user variables to create a customized PDF 'form'
  * that FO user can download from /manage/manage_user_forms.php
  *
  * @param $html

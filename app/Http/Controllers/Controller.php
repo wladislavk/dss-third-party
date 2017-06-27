@@ -2,14 +2,11 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Contracts\Repositories\Repository;
-use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Database\Eloquent\Model;
 
 abstract class Controller extends BaseController
 {

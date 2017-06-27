@@ -365,7 +365,7 @@ $drymouth_text = $myarray['drymouth_text'];
     <?php if (!empty($clinch_teeth) && $clinch_teeth == 'Yes' || $clinch_grind_text != '') { ?>
         <tr>
             <th>
-                Do you clinch or grind your teeth?:
+                Do you clench or grind your teeth?:
             </th>
             <td>
                 <?php echo  $clinch_grind; ?>

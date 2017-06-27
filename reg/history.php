@@ -638,7 +638,7 @@ $additional_paragraph = st($myarray['additional_paragraph']);
 					</div>
 					
 					<div class="sepH_b half">
-							<label class="lbl_in2">Do you clinch or grind your teeth?</label>
+							<label class="lbl_in2">Do you clench or grind your teeth?</label>
 							
 							<input type="radio" class="extra" name="clinch_grind" value="Yes" <? if($clinch_grind == 'Yes') echo " checked";?> /> Yes
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

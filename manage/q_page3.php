@@ -897,7 +897,7 @@
 										</div>
 										<div>
 					                        <span>
-												<label>Do you clinch or grind your teeth?</label>
+												<label>Do you clench or grind your teeth?</label>
 												<input type="radio" class="extra clinch_grind_radio" name="clinch_grind" value="Yes" <?php if($clinch_grind == 'Yes') echo " checked";?> />Yes
 												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 												<input type="radio" class="extra clinch_grind_radio" name="clinch_grind" value="No" <?php if($clinch_grind == 'No') echo " checked";?> />No

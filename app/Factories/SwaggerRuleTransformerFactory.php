@@ -3,15 +3,13 @@
 namespace DentalSleepSolutions\Factories;
 
 use DentalSleepSolutions\Exceptions\GeneralException;
-use DentalSleepSolutions\Swagger\RuleTransformers\AbstractRuleTransformer;
 use DentalSleepSolutions\Swagger\RuleTransformers\DateTransformer;
 use DentalSleepSolutions\Swagger\RuleTransformers\EmailTransformer;
 use DentalSleepSolutions\Swagger\RuleTransformers\IntegerTransformer;
 use DentalSleepSolutions\Swagger\RuleTransformers\RegexTransformer;
 use DentalSleepSolutions\Swagger\RuleTransformers\StringTransformer;
-use Illuminate\Support\Facades\App;
 
-class SwaggerRuleTransformerFactory
+class SwaggerRuleTransformerFactory extends AbstractSwaggerTransformerFactory
 {
     const DEFAULT_RULE_CLASS = StringTransformer::class;
 
@@ -25,24 +23,10 @@ class SwaggerRuleTransformerFactory
 
     /**
      * @param string $rule
-     * @return AbstractRuleTransformer
+     * @return string
      * @throws GeneralException
      */
-    public function getTransformer($rule)
-    {
-        $className = $this->findRuleClass($rule);
-        $transformer = App::make($className);
-        if (!$transformer instanceof AbstractRuleTransformer) {
-            throw new GeneralException("Class $className must implement " . AbstractRuleTransformer::class);
-        }
-        return $transformer;
-    }
-
-    /**
-     * @param string $rule
-     * @return string
-     */
-    private function findRuleClass($rule)
+    protected function findRuleClass($rule)
     {
         foreach (self::RULE_CLASSES as $name => $className) {
             if (strstr($rule, $name)) {

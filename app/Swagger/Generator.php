@@ -3,8 +3,12 @@
 namespace DentalSleepSolutions\Swagger;
 
 use DentalSleepSolutions\Exceptions\SwaggerGeneratorException;
-use DentalSleepSolutions\Http\Controllers\BaseRestController;
+use DentalSleepSolutions\Factories\SwaggerModelTransformerFactory;
+use DentalSleepSolutions\Factories\SwaggerRuleTransformerFactory;
 use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
+use DentalSleepSolutions\Swagger\AnnotationTypes\ControllerType;
+use DentalSleepSolutions\Swagger\AnnotationTypes\ModelType;
+use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 use Illuminate\Filesystem\FilesystemAdapter;
 
 class Generator
@@ -13,34 +17,37 @@ class Generator
     const CONTROLLER_DIR = '/Controllers';
     const MODEL_DIR = __DIR__ . '/../Eloquent';
     const BASE_CONTROLLER = 'BaseRestController';
-    const COMMON_EXTENSION = '.php';
     const PSR4 = [
         'app' => 'DentalSleepSolutions',
         'tests' => 'Tests',
     ];
 
-    /** @var ControllerAnnotationWriter */
-    private $controllerAnnotationWriter;
+    /** @var AnnotationWriter */
+    private $annotationWriter;
 
-    /** @var ModelAnnotationWriter */
-    private $modelAnnotationWriter;
+    /** @var ControllerType */
+    private $controllerType;
 
-    /** @var BindingNamingConvention */
-    private $namingConvention;
+    /** @var ModelType */
+    private $modelType;
 
     /** @var FilesystemAdapter */
     private $filesystemAdapter;
 
     public function __construct(
-        ControllerAnnotationWriter $controllerAnnotationWriter,
-        ModelAnnotationWriter $modelAnnotationWriter,
-        BindingNamingConvention $namingConvention,
-        FilesystemAdapter $filesystemAdapter
+        AnnotationWriter $annotationWriter,
+        FilesystemAdapter $filesystemAdapter,
+        ControllerType $controllerType,
+        ModelType $modelType,
+        SwaggerModelTransformerFactory $modelTransformerFactory,
+        SwaggerRuleTransformerFactory $ruleTransformerFactory
     ) {
-        $this->controllerAnnotationWriter = $controllerAnnotationWriter;
-        $this->modelAnnotationWriter = $modelAnnotationWriter;
-        $this->namingConvention = $namingConvention;
+        $this->annotationWriter = $annotationWriter;
         $this->filesystemAdapter = $filesystemAdapter;
+        $this->controllerType = $controllerType;
+        $this->controllerType->setTransformerFactory($ruleTransformerFactory);
+        $this->modelType = $modelType;
+        $this->modelType->setTransformerFactory($modelTransformerFactory);
     }
 
     /**
@@ -49,14 +56,22 @@ class Generator
      */
     public function generateSwagger($httpDir = self::HTTP_DIR, $modelDir = self::MODEL_DIR)
     {
+        $models = $this->getModels($modelDir);
+        $annotationGroups = [];
+        foreach ($models as $modelFilename) {
+            $modelClassName = $this->getClassName($modelFilename);
+            $annotationGroups[$modelFilename] = $this->modelType->composeAnnotation($modelClassName);
+        }
         $restControllers = $this->getRestControllers($httpDir);
         foreach ($restControllers as $controllerFilename) {
-            $requestClass = $this->getRequestClass($controllerFilename, $httpDir);
-            $this->controllerAnnotationWriter->writeAnnotations($controllerFilename, $requestClass);
+            $controllerClassName = $this->getClassName($controllerFilename);
+            $annotationParams = new AnnotationParams();
+            $annotationParams->requestClassName = $this->getRequestClass($controllerClassName, $httpDir);
+            $annotationGroups[$controllerFilename] = $this->controllerType
+                ->composeAnnotation($controllerClassName, $annotationParams);
         }
-        $models = $this->getModels($modelDir);
-        foreach ($models as $modelFilename) {
-            $this->modelAnnotationWriter->writeAnnotations($modelFilename);
+        foreach ($annotationGroups as $filename => $annotations) {
+            $this->annotationWriter->writeAnnotations($filename, $annotations);
         }
     }
 
@@ -83,14 +98,13 @@ class Generator
     }
 
     /**
-     * @param string $controllerFilename
+     * @param string $controllerClassName
      * @param string $httpDir
      * @return string
      * @throws SwaggerGeneratorException
      */
-    private function getRequestClass($controllerFilename, $httpDir)
+    private function getRequestClass($controllerClassName, $httpDir)
     {
-        $controllerClassName = $this->getControllerClassName($controllerFilename);
         $namingConvention = new BindingNamingConvention();
         $namingConvention->setController($controllerClassName);
         $namespace = $this->pathToNamespace($httpDir);
@@ -99,17 +113,17 @@ class Generator
     }
 
     /**
-     * @param string $controllerFilename
+     * @param string $filename
      * @return string
      * @throws SwaggerGeneratorException
      */
-    private function getControllerClassName($controllerFilename)
+    private function getClassName($filename)
     {
-        $contents = file_get_contents($controllerFilename);
+        $contents = file_get_contents($filename);
         preg_match('/namespace\s(.+?);/', $contents, $namespaceMatches);
-        preg_match('class\s(.+?)[\s\n]', $contents, $classNameMatches);
+        preg_match('/class\s(.+?)[\s\n]/', $contents, $classNameMatches);
         if (!isset($namespaceMatches[1]) || !isset($classNameMatches[1])) {
-            throw new SwaggerGeneratorException('Namespace or class not found in ' . $controllerFilename);
+            throw new SwaggerGeneratorException('Namespace or class not found in ' . $filename);
         }
         return $namespaceMatches[1] . '\\' . $classNameMatches[1];
     }

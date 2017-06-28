@@ -314,7 +314,6 @@ use DB;
  * @property string|null $other_insured_insurance_type
  * @property string|null $claim_info_code
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Insurance countFrontOfficeClaims($docId = 0)
- * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Insurance filedByBackOfficeConditional($claimAlias = 'claim')
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Insurance pending()
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Insurance rejected()
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Insurance whereAcceptAssignment($value)

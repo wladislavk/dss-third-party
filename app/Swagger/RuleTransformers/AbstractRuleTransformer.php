@@ -2,9 +2,11 @@
 
 namespace DentalSleepSolutions\Swagger\RuleTransformers;
 
-abstract class AbstractRuleTransformer
+use DentalSleepSolutions\Swagger\TransformerInterface;
+
+abstract class AbstractRuleTransformer implements TransformerInterface
 {
-    public function transform($rule)
+    public function transform($name, $type)
     {
         $transformed = [];
         return $transformed;

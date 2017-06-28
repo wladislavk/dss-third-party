@@ -14,7 +14,7 @@
  * @param $id
  * @param $backoffice
  */
-function update_financial_agreement_medicare_nonpar_form($id, $backoffice)
+function update_financial_agreement_medicare_nonpar_form($id, $backoffice = false)
 {
     $db = new Db();
     $con = $GLOBALS['con'];
@@ -26,6 +26,10 @@ function update_financial_agreement_medicare_nonpar_form($id, $backoffice)
     $r = mysqli_fetch_assoc($q);
 
     $html = '
+
+
+
+
 <html>
     <head>
         <meta http-equiv=Content-Type content="text/html; charset=utf-8">
@@ -106,11 +110,13 @@ function update_financial_agreement_medicare_nonpar_form($id, $backoffice)
             </p>
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>It is our normal policy to collect the full cost of Dental Sleep Therapy by the delivery of your device.  We have agreed to the following payment arrangements as outlined below:</span>
             </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________________________________________________________________________________________________________</span>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________________________________________________________________</span>
             </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________________________________________________________________</span>
+            </p>            
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Since your insurance payments go directly to you we request that you forward us your Explanation of Benefits (EOB) from your insurance carrier once your EOB and check(s) are received. This also allows our insurance team to verify if the claim has been paid correctly and to follow up if needed.  Any amounts paid to you over our collected amount will be required to be paid to this office.  In the event that you do not forward your insurance EOB and payments to us you will be billed for the balance of the Dental Sleep Therapy customary fee of $' . $r['amount'] . '.</span>
             </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If Medicare and your Secondary Insurance do not reimburse any amount, you agree to pay this office $____________ (max out of pocket) for treatment.</span>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If Medicare and your Secondary Insurance do not reimburse any amount, you agree to pay this office $______________ (max out of pocket) for treatment.</span>
             </p>
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing
                 this agreement you agree to pay for services rendered at our office as outlined above.</span>
@@ -133,10 +139,352 @@ function update_financial_agreement_medicare_nonpar_form($id, $backoffice)
         </div>
     </body>
 </html>
+
 ';
 
     $title = "Financial Agreement Medicare Non-Participating";
-    $filename = "financial_agreement_medicare_nonpar" . $id . ".pdf";
+    $filename = "financial_agreement_medicare_nonpar_" . $id . ".pdf";
+
+    create_form_pdf($html, $filename, $title, $backoffice);
+
+}
+
+
+/**
+ * "Financial Agreement CASH" form PDF generation code
+ *
+ * This HTML section is auto-populated with user variables to create a customized PDF 'form'
+ * that FO user can download from /manage/manage_user_forms.php
+ *
+ * @param $id
+ * @param $backoffice
+ */
+function update_financial_agreement_cash_form($id, $backoffice = false)
+{
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
+    $logo = get_logo($id, $backoffice);
+
+    $s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='" . mysqli_real_escape_string($con, $id) . "'";
+    $q = mysqli_query($con, $s);
+    $r = mysqli_fetch_assoc($q);
+
+    $html = '
+<html>
+    <head>
+        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+        <meta name=Generator content="Microsoft Word 14 (filtered)">
+        <style>
+            <!--
+                /* Font Definitions */
+                @font-face
+                {font-family:Calibri;
+                panose-1:2 15 5 2 2 2 4 3 2 4;
+                mso-font-charset:0;
+                mso-generic-font-family:swiss;
+                mso-font-pitch:variable;
+                mso-font-signature:-536859905 -1073732485 9 0 511 0;}
+                @font-face
+                {font-family:Tahoma;
+                panose-1:2 11 6 4 3 5 4 4 2 4;
+                mso-font-charset:0;
+                mso-generic-font-family:swiss;
+                mso-font-pitch:variable;
+                mso-font-signature:-520081665 -1073717157 41 0 66047 0;}
+                @font-face
+                {font-family:DejaVuSans;
+                panose-1:0 0 0 0 0 0 0 0 0 0;
+                mso-font-alt:"MS Gothic";
+                mso-font-charset:128;
+                mso-generic-font-family:auto;
+                mso-font-format:other;
+                mso-font-pitch:auto;
+                mso-font-signature:0 134676480 16 0 131072 0;}
+                @font-face
+                {font-family:"\@DejaVuSans";
+                panose-1:0 0 0 0 0 0 0 0 0 0;
+                mso-font-charset:128;
+                mso-generic-font-family:auto;
+                mso-font-format:other;
+                mso-font-pitch:auto;
+                mso-font-signature:0 134676480 16 0 131072 0;}
+                /* Style Definitions */
+                p.MsoNormal, li.MsoNormal, div.MsoNormal
+                {mso-style-unhide:no;
+                mso-style-qformat:yes;
+                mso-style-parent:"";
+                margin:0in;
+                margin-bottom:.0001pt;
+                mso-pagination:widow-orphan;
+                font-size:12.0pt;
+                font-family:"Times New Roman","serif";
+                mso-fareast-font-family:"Times New Roman";}
+                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+                {mso-style-unhide:no;
+                mso-style-link:"Balloon Text Char";
+                margin:0in;
+                margin-bottom:.0001pt;
+                mso-pagination:widow-orphan;
+                font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";
+                mso-fareast-font-family:"Times New Roman";}
+                span.BalloonTextChar
+                {mso-style-name:"Balloon Text Char";
+                mso-style-unhide:no;
+                mso-style-locked:yes;
+                mso-style-link:"Balloon Text";
+                mso-ansi-font-size:8.0pt;
+                mso-bidi-font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";
+                mso-ascii-font-family:Tahoma;
+                mso-hansi-font-family:Tahoma;
+                mso-bidi-font-family:Tahoma;}
+                .MsoChpDefault
+                {mso-style-type:export-only;
+                mso-default-props:yes;
+                font-size:10.0pt;
+                mso-ansi-font-size:10.0pt;
+                mso-bidi-font-size:10.0pt;}
+                @page WordSection1
+                {size:8.5in 11.0in;
+                margin:1.0in 1.25in 1.0in 1.25in;
+                mso-header-margin:.5in;
+                mso-footer-margin:.5in;
+                mso-paper-source:0;}
+                div.WordSection1
+                {page:WordSection1;}
+                -->
+        </style>
+    </head>
+    <br lang=EN-US>
+        <br class=WordSection1>
+            <table>
+                <tr>
+                    <td width="30%">' . $logo . '</td>
+                    <td width="70%">
+                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
+                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT (NO INSURANCE)</span></b>
+                        </h2>
+                    </td>
+                </tr>
+            </table>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office’s customary billable fee for Dental Sleep Therapy (DST)
+                is $' . $r['amount'] . '. Due to your lack of medical
+                insurance and/or high deductible you have opted to accept a cash discount for
+                DST in our office. By signing the this
+                agreement you release our office from any responsibility of filing insurance to
+                your providers or for providing documentation to you or other health care
+                providers in order to obtain insurance coverage. </span>
+            </p>
+
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>You agree to pay $_______ with the following terms: </span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________________________________________________________________________________________</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If you decide that you do not wish to move forward with treatment
+                after impressions, you will be responsible for the impressions and office fee of
+                $__________.</span>
+            </p>
+
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing this agreement, you agree to pay for services rendered
+                at our office as outlined above as well as release our office from any
+                responsibility for filing or preparing information for medical insurance
+                submission.</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+                ________________________</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+                ________________________</span>
+            </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
+            <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p style="width:100%; text-align:right;">
+                <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
+                Solutions</small></span>
+            </p>
+        </div>
+    </body>
+</html>
+';
+
+    $title = "Financial Agreement Cash";
+    $filename = "financial_agreement_cash_" . $id . ".pdf";
+
+    create_form_pdf($html, $filename, $title, $backoffice);
+
+}
+
+
+/**
+ * "Financial Agreement OON (Out of Network)" form PDF generation code
+ *
+ * This HTML section is auto-populated with user variables to create a customized PDF 'form'
+ * that FO user can download from /manage/manage_user_forms.php
+ *
+ * @param $id
+ * @param $backoffice
+ */
+function update_financial_agreement_oon_form($id, $backoffice)
+{
+    $db = new Db();
+    $con = $GLOBALS['con'];
+
+    $logo = get_logo($id, $backoffice);
+
+    $s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='" . mysqli_real_escape_string($con, $id) . "'";
+    $q = mysqli_query($con, $s);
+    $r = mysqli_fetch_assoc($q);
+
+    $html = '
+<html>
+    <head>
+        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+        <meta name=Generator content="Microsoft Word 14 (filtered)">
+        <style>
+            <!--
+                /* Font Definitions */
+                @font-face
+                {font-family:Calibri;
+                panose-1:2 15 5 2 2 2 4 3 2 4;
+                mso-font-charset:0;
+                mso-generic-font-family:swiss;
+                mso-font-pitch:variable;
+                mso-font-signature:-536859905 -1073732485 9 0 511 0;}
+                @font-face
+                {font-family:Tahoma;
+                panose-1:2 11 6 4 3 5 4 4 2 4;
+                mso-font-charset:0;
+                mso-generic-font-family:swiss;
+                mso-font-pitch:variable;
+                mso-font-signature:-520081665 -1073717157 41 0 66047 0;}
+                @font-face
+                {font-family:DejaVuSans;
+                panose-1:0 0 0 0 0 0 0 0 0 0;
+                mso-font-alt:"MS Gothic";
+                mso-font-charset:128;
+                mso-generic-font-family:auto;
+                mso-font-format:other;
+                mso-font-pitch:auto;
+                mso-font-signature:0 134676480 16 0 131072 0;}
+                @font-face
+                {font-family:"\@DejaVuSans";
+                panose-1:0 0 0 0 0 0 0 0 0 0;
+                mso-font-charset:128;
+                mso-generic-font-family:auto;
+                mso-font-format:other;
+                mso-font-pitch:auto;
+                mso-font-signature:0 134676480 16 0 131072 0;}
+                /* Style Definitions */
+                p.MsoNormal, li.MsoNormal, div.MsoNormal
+                {mso-style-unhide:no;
+                mso-style-qformat:yes;
+                mso-style-parent:"";
+                margin:0in;
+                margin-bottom:.0001pt;
+                mso-pagination:widow-orphan;
+                font-size:12.0pt;
+                font-family:"Times New Roman","serif";
+                mso-fareast-font-family:"Times New Roman";}
+                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+                {mso-style-unhide:no;
+                mso-style-link:"Balloon Text Char";
+                margin:0in;
+                margin-bottom:.0001pt;
+                mso-pagination:widow-orphan;
+                font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";
+                mso-fareast-font-family:"Times New Roman";}
+                span.BalloonTextChar
+                {mso-style-name:"Balloon Text Char";
+                mso-style-unhide:no;
+                mso-style-locked:yes;
+                mso-style-link:"Balloon Text";
+                mso-ansi-font-size:8.0pt;
+                mso-bidi-font-size:8.0pt;
+                font-family:"Tahoma","sans-serif";
+                mso-ascii-font-family:Tahoma;
+                mso-hansi-font-family:Tahoma;
+                mso-bidi-font-family:Tahoma;}
+                .MsoChpDefault
+                {mso-style-type:export-only;
+                mso-default-props:yes;
+                font-size:10.0pt;
+                mso-ansi-font-size:10.0pt;
+                mso-bidi-font-size:10.0pt;}
+                @page WordSection1
+                {size:8.5in 11.0in;
+                margin:1.0in 1.25in 1.0in 1.25in;
+                mso-header-margin:.5in;
+                mso-footer-margin:.5in;
+                mso-paper-source:0;}
+                div.WordSection1
+                {page:WordSection1;}
+                -->
+        </style>
+    </head>
+    <br lang=EN-US>
+    <br class=WordSection1>
+    <table>
+        <tr>
+            <td width="30%">' . $logo . '</td>
+            <td width="70%">
+                <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
+                <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT (Out of Network Insurance)</span></b>
+                </h2>
+            </td>
+        </tr>
+    </table>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office’s customary billable fee for Dental Sleep Therapy (DST)
+        is $' . $r['amount'] . '. As a courtesy to our patients we will bill this amount to your insurance provider(s).  After your deductible is met insurance typically covers a portion of the <b>allowable amount</b> for billed services.  As an out of network provider we will not typically know the insurance allowable amount until the insurance company approves payment.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>It is our policy to collect the full <b>allowable amount</b> of Dental Sleep Therapy and any additionally agreed fees.  When filing insurance it is our policy to collect your deductible and <b>estimated</b> co-insurance amount or make other financial arrangements prior to the delivery of your device.  </span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Your estimated out of pocket expense is $____________ not to exceed $____________ </span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>You agree to pay your estimated out of pocket amount as follows:</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________________________________________________________________</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Since your insurance payments and EOB may go directly to you we request that you forward us your Explanation of Benefits (EOB) and any due payments from your insurance carriers once they are received. This also allows our insurance team to verify if the claim has been paid correctly and to follow up if needed.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Once we receive your EOB for DST we will adjust your account to reflect the insurance allowable amount, credits, and any other terms of this agreement.  We will then provide you with a final statement reflecting your balance that is due.  Any amounts paid to you over our collected amount will be required to be paid to this office.  In the event that you do not forward your insurance EOB to us you will be billed for the balance of the Dental Sleep Therapy customary fee of $' . $r['amount'] . '.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If we cannot submit the claim due to any reason, or are not reimbursed by your insurance company, you will be responsible for $____________ (cash fee).  If you decide that you do not wish to move forward with treatment after impressions, you will be responsible for the impressions and office fee of $____________ (impressions fee).</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing this agreement, you agree to pay for services rendered
+        at our office as outlined above.</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+        ________________________</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
+        ________________________</span>
+    </p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
+    <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+    <p style="width:100%; text-align:right;">
+        <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
+        Solutions</small></span>
+    </p>
+    </div>
+    </body>
+</html>
+';
+
+    $title = "Financial Agreement OON";
+    $filename = "financial_agreement_oon_" . $id . ".pdf";
 
     create_form_pdf($html, $filename, $title, $backoffice);
 
@@ -861,11 +1209,8 @@ function update_custom_release_form($id, $locid = null, $backoffice = false)
             normal"><span style="font-size:12.0pt">Additional Comments:</span></p>
          <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">____________________________________________________________________________________
             ____________________________________________________________________________________
-            ____________________________________________________________________________________
             </span>
-         </p>
-         <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Thank
-            you in advance.</span>
+            Thank you in advance.
          </p>
       </div>
    </body>
@@ -2197,350 +2542,6 @@ function update_ess_tss_form($id, $backoffice)
 
     $title = "ESS TSS Form";
     $filename = "ess_tss_form_" . $id . ".pdf";
-
-    create_form_pdf($html, $filename, $title, $backoffice);
-
-}
-
-
-/**
- * "Financial Agreement CASH" form PDF generation code
- *
- * This HTML section is auto-populated with user variables to create a customized PDF 'form'
- * that FO user can download from /manage/manage_user_forms.php
- *
- * @param $id
- * @param $backoffice
- */
-function update_financial_agreement_cash_form($id, $backoffice)
-{
-    $db = new Db();
-    $con = $GLOBALS['con'];
-
-    $logo = get_logo($id, $backoffice);
-
-    $s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='" . mysqli_real_escape_string($con, $id) . "'";
-    $q = mysqli_query($con, $s);
-    $r = mysqli_fetch_assoc($q);
-
-    $html = '
-<html>
-    <head>
-        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-        <meta name=Generator content="Microsoft Word 14 (filtered)">
-        <style>
-            <!--
-                /* Font Definitions */
-                @font-face
-                {font-family:Calibri;
-                panose-1:2 15 5 2 2 2 4 3 2 4;
-                mso-font-charset:0;
-                mso-generic-font-family:swiss;
-                mso-font-pitch:variable;
-                mso-font-signature:-536859905 -1073732485 9 0 511 0;}
-                @font-face
-                {font-family:Tahoma;
-                panose-1:2 11 6 4 3 5 4 4 2 4;
-                mso-font-charset:0;
-                mso-generic-font-family:swiss;
-                mso-font-pitch:variable;
-                mso-font-signature:-520081665 -1073717157 41 0 66047 0;}
-                @font-face
-                {font-family:DejaVuSans;
-                panose-1:0 0 0 0 0 0 0 0 0 0;
-                mso-font-alt:"MS Gothic";
-                mso-font-charset:128;
-                mso-generic-font-family:auto;
-                mso-font-format:other;
-                mso-font-pitch:auto;
-                mso-font-signature:0 134676480 16 0 131072 0;}
-                @font-face
-                {font-family:"\@DejaVuSans";
-                panose-1:0 0 0 0 0 0 0 0 0 0;
-                mso-font-charset:128;
-                mso-generic-font-family:auto;
-                mso-font-format:other;
-                mso-font-pitch:auto;
-                mso-font-signature:0 134676480 16 0 131072 0;}
-                /* Style Definitions */
-                p.MsoNormal, li.MsoNormal, div.MsoNormal
-                {mso-style-unhide:no;
-                mso-style-qformat:yes;
-                mso-style-parent:"";
-                margin:0in;
-                margin-bottom:.0001pt;
-                mso-pagination:widow-orphan;
-                font-size:12.0pt;
-                font-family:"Times New Roman","serif";
-                mso-fareast-font-family:"Times New Roman";}
-                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-                {mso-style-unhide:no;
-                mso-style-link:"Balloon Text Char";
-                margin:0in;
-                margin-bottom:.0001pt;
-                mso-pagination:widow-orphan;
-                font-size:8.0pt;
-                font-family:"Tahoma","sans-serif";
-                mso-fareast-font-family:"Times New Roman";}
-                span.BalloonTextChar
-                {mso-style-name:"Balloon Text Char";
-                mso-style-unhide:no;
-                mso-style-locked:yes;
-                mso-style-link:"Balloon Text";
-                mso-ansi-font-size:8.0pt;
-                mso-bidi-font-size:8.0pt;
-                font-family:"Tahoma","sans-serif";
-                mso-ascii-font-family:Tahoma;
-                mso-hansi-font-family:Tahoma;
-                mso-bidi-font-family:Tahoma;}
-                .MsoChpDefault
-                {mso-style-type:export-only;
-                mso-default-props:yes;
-                font-size:10.0pt;
-                mso-ansi-font-size:10.0pt;
-                mso-bidi-font-size:10.0pt;}
-                @page WordSection1
-                {size:8.5in 11.0in;
-                margin:1.0in 1.25in 1.0in 1.25in;
-                mso-header-margin:.5in;
-                mso-footer-margin:.5in;
-                mso-paper-source:0;}
-                div.WordSection1
-                {page:WordSection1;}
-                -->
-        </style>
-    </head>
-    <br lang=EN-US>
-        <br class=WordSection1>
-            <table>
-                <tr>
-                    <td width="30%">' . $logo . '</td>
-                    <td width="70%">
-                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
-                        <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                            style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT (NO INSURANCE)</span></b>
-                        </h2>
-                    </td>
-                </tr>
-            </table>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office’s customary billable fee for Dental Sleep Therapy (DST)
-                is $' . $r['amount'] . '. Due to your lack of medical
-                insurance and/or high deductible you have opted to accept a cash discount for
-                DST in our office. By signing the this
-                agreement you release our office from any responsibility of filing insurance to
-                your providers or for providing documentation to you or other health care
-                providers in order to obtain insurance coverage. </span>
-            </p>
-                </br>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>You agree to pay $_______ with the following terms: </span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________________________________________________________________________________________</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If you decide that you do not wish to move forward with treatment
-                after impressions, you will be responsible for the impressions and office fee of
-                $__________.</span>
-            </p>
-                </br>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing this agreement, you agree to pay for services rendered
-                at our office as outlined above as well as release our office from any
-                responsibility for filing or preparing information for medical insurance
-                submission.</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                ________________________</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                ________________________</span>
-            </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
-            <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-            <p style="width:100%; text-align:right;">
-                <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
-                Solutions</small></span>
-            </p>
-        </div>
-    </body>
-</html>
-';
-
-    $title = "Financial Agreement Cash";
-    $filename = "financial_agreement_cash_" . $id . ".pdf";
-
-    create_form_pdf($html, $filename, $title, $backoffice);
-
-}
-
-
-/**
- * "Financial Agreement OON (Out of Network)" form PDF generation code
- *
- * This HTML section is auto-populated with user variables to create a customized PDF 'form'
- * that FO user can download from /manage/manage_user_forms.php
- *
- * @param $id
- * @param $backoffice
- */
-function update_financial_agreement_oon_form($id, $backoffice)
-{
-    $db = new Db();
-    $con = $GLOBALS['con'];
-
-    $logo = get_logo($id, $backoffice);
-
-    $s = "SELECT amount from dental_transaction_code WHERE transaction_code='E0486' AND docid='" . mysqli_real_escape_string($con, $id) . "'";
-    $q = mysqli_query($con, $s);
-    $r = mysqli_fetch_assoc($q);
-
-    $html = '
-<html>
-    <head>
-        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-        <meta name=Generator content="Microsoft Word 14 (filtered)">
-        <style>
-            <!--
-                /* Font Definitions */
-                @font-face
-                {font-family:Calibri;
-                panose-1:2 15 5 2 2 2 4 3 2 4;
-                mso-font-charset:0;
-                mso-generic-font-family:swiss;
-                mso-font-pitch:variable;
-                mso-font-signature:-536859905 -1073732485 9 0 511 0;}
-                @font-face
-                {font-family:Tahoma;
-                panose-1:2 11 6 4 3 5 4 4 2 4;
-                mso-font-charset:0;
-                mso-generic-font-family:swiss;
-                mso-font-pitch:variable;
-                mso-font-signature:-520081665 -1073717157 41 0 66047 0;}
-                @font-face
-                {font-family:DejaVuSans;
-                panose-1:0 0 0 0 0 0 0 0 0 0;
-                mso-font-alt:"MS Gothic";
-                mso-font-charset:128;
-                mso-generic-font-family:auto;
-                mso-font-format:other;
-                mso-font-pitch:auto;
-                mso-font-signature:0 134676480 16 0 131072 0;}
-                @font-face
-                {font-family:"\@DejaVuSans";
-                panose-1:0 0 0 0 0 0 0 0 0 0;
-                mso-font-charset:128;
-                mso-generic-font-family:auto;
-                mso-font-format:other;
-                mso-font-pitch:auto;
-                mso-font-signature:0 134676480 16 0 131072 0;}
-                /* Style Definitions */
-                p.MsoNormal, li.MsoNormal, div.MsoNormal
-                {mso-style-unhide:no;
-                mso-style-qformat:yes;
-                mso-style-parent:"";
-                margin:0in;
-                margin-bottom:.0001pt;
-                mso-pagination:widow-orphan;
-                font-size:12.0pt;
-                font-family:"Times New Roman","serif";
-                mso-fareast-font-family:"Times New Roman";}
-                p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
-                {mso-style-unhide:no;
-                mso-style-link:"Balloon Text Char";
-                margin:0in;
-                margin-bottom:.0001pt;
-                mso-pagination:widow-orphan;
-                font-size:8.0pt;
-                font-family:"Tahoma","sans-serif";
-                mso-fareast-font-family:"Times New Roman";}
-                span.BalloonTextChar
-                {mso-style-name:"Balloon Text Char";
-                mso-style-unhide:no;
-                mso-style-locked:yes;
-                mso-style-link:"Balloon Text";
-                mso-ansi-font-size:8.0pt;
-                mso-bidi-font-size:8.0pt;
-                font-family:"Tahoma","sans-serif";
-                mso-ascii-font-family:Tahoma;
-                mso-hansi-font-family:Tahoma;
-                mso-bidi-font-family:Tahoma;}
-                .MsoChpDefault
-                {mso-style-type:export-only;
-                mso-default-props:yes;
-                font-size:10.0pt;
-                mso-ansi-font-size:10.0pt;
-                mso-bidi-font-size:10.0pt;}
-                @page WordSection1
-                {size:8.5in 11.0in;
-                margin:1.0in 1.25in 1.0in 1.25in;
-                mso-header-margin:.5in;
-                mso-footer-margin:.5in;
-                mso-paper-source:0;}
-                div.WordSection1
-                {page:WordSection1;}
-                -->
-        </style>
-    </head>
-    <br lang=EN-US>
-    <br class=WordSection1>
-    <table>
-        <tr>
-            <td width="30%">' . $logo . '</td>
-            <td width="70%">
-                <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
-                <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT (Out of Network Insurance)</span></b>
-                </h2>
-            </td>
-        </tr>
-    </table>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office’s customary billable fee for Dental Sleep Therapy (DST)
-        is $' . $r['amount'] . '. As a courtesy to our patients we will bill this amount to your insurance provider(s).  After your deductible is met insurance typically covers a portion of the <b>allowable amount</b> for billed services.  As an out of network provider we will not typically know the insurance allowable amount until the insurance company approves payment.</span>
-    </p>
-    </br>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>It is our policy to collect the full <b>allowable amount</b> of Dental Sleep Therapy and any additionally agreed fees.  When filing insurance it is our policy to collect your deductible and <b>estimated</b> co-insurance amount or make other financial arrangements prior to the delivery of your device.  </span>
-    </p>
-    </br>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Your estimated out of pocket expense is $___________ not to exceed $___________ </span>
-    </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>You agree to pay your estimated out of pocket amount as follows:</span>
-    </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________________________________________________________________________________________</span>
-    </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Since your insurance payments and EOB may go directly to you we request that you forward us your Explanation of Benefits (EOB) and any due payments from your insurance carriers once they are received. This also allows our insurance team to verify if the claim has been paid correctly and to follow up if needed.</span>
-    </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Once we receive your EOB for DST we will adjust your account to reflect the insurance allowable amount, credits, and any other terms of this agreement.  We will then provide you with a final statement reflecting your balance that is due.  Any amounts paid to you over our collected amount will be required to be paid to this office.  In the event that you do not forward your insurance EOB to us you will be billed for the balance of the Dental Sleep Therapy customary fee of $' . $r['amount'] . '.</span>
-    </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If we cannot submit the claim due to any reason, or are not reimbursed by your insurance company, you will be responsible for $____________ (cash fee).  If you decide that you do not wish to move forward with treatment after impressions, you will be responsible for the impressions and office fee of $____________ (impressions fee).</span>
-    </p>
-    </br>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing this agreement, you agree to pay for services rendered
-        at our office as outlined above.</span>
-    </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-        ________________________</span>
-    </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-        ________________________</span>
-    </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
-    <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-    <p style="width:100%; text-align:right;">
-        <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
-        Solutions</small></span>
-    </p>
-    </div>
-    </body>
-</html>
-';
-
-    $title = "Financial Agreement OON";
-    $filename = "financial_agreement_oon_" . $id . ".pdf";
 
     create_form_pdf($html, $filename, $title, $backoffice);
 

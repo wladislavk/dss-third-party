@@ -67,7 +67,7 @@ include "includes/top.htm";
                 Financial Agreement - Cash (No Insurance)
             </td>
             <td valign="top">
-                <a href="view_user_form.php?file=financial-agreement-cash&did=<?php echo $_SESSION['docid']; ?>"
+                <a href="view_user_form.php?file=financial_agreement_cash&did=<?php echo $_SESSION['docid']; ?>"
                    class="editlink">
                     View
                 </a>
@@ -78,7 +78,7 @@ include "includes/top.htm";
                 Financial Agreement - Out of Network (OON)
             </td>
             <td valign="top">
-                <a href="view_user_form.php?file=financial-agreement-oon&did=<?php echo $_SESSION['docid']; ?>"
+                <a href="view_user_form.php?file=financial_agreement_oon&did=<?php echo $_SESSION['docid']; ?>"
                    class="editlink">
                     View
                 </a>

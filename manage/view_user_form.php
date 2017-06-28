@@ -25,7 +25,8 @@ $r = $db->getRow($sql);
  * Check date on file to decide if you need to recreate the PDF
  * ADD extra logic check to VERSION CONTROL forms with $last_form_update
  */
-$last_form_update = new \DateTime("2017-06-27 12:00:00");
+$last_form_update = time();
+//$last_form_update = new \DateTime("2017-06-27 12:00:00");
 
 if (file_exists($filename)
     && date('U', strtotime($r['updated_at'])) > filemtime($filename)
@@ -50,10 +51,10 @@ if (!empty($_GET['file'])) {
             }
         }
     } elseif ($_GET['file'] == "financial_agreement_medicare_nonpar") {
-        $output = "financial_agreement_medicare";
+        $output = "financial_agreement_medicare_nonpar";
 
         if (!file_exists($filename) || $recreate) {
-            update_financial_agreement_medicare_nonpar_form($_GET['did'], '');
+            update_financial_agreement_medicare_nonpar_form($_GET['did']);
         }
     } elseif ($_GET['file'] == "financial_agreement_cash") {
         $output = "financial_agreement_cash";

@@ -24,12 +24,8 @@ class ControllerType extends AbstractAnnotationType
     /** @var Route[]|RouteCollection */
     private $routes;
 
-    /** @var RequestRuleParser */
-    private $requestRuleParser;
-
-    public function __construct(Router $router, RequestRuleParser $requestRuleParser)
+    public function __construct(Router $router)
     {
-        $this->requestRuleParser = $requestRuleParser;
         $this->routes = $router->getRoutes();
     }
 

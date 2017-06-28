@@ -10,13 +10,17 @@ else
     
 $i_val = $index_val * $rec_disp;
 
+$tot_charges = 0;
+$tot_credit = 0;
+$tot_adj = 0;
+
 $sql = "select dl.*, p.name from dental_ledger AS dl LEFT JOIN dental_users as p ON dl.producerid=p.userid where dl.docid='".$_SESSION['docid']."'";
 
 if (
     (empty($_POST['dailysub']) || $_POST['dailysub'] != 1) &&
     (empty($_POST['monthlysub']) && $_POST['monthlysub'] != 1)
 ) {
-    $sessionDocId = intval($_SESSION['docid']);
+    $docId = (int)$_SESSION['docid'];
     $sql = "
         SELECT
             'ledger'         AS ledger,
@@ -36,9 +40,9 @@ if (
         FROM dental_ledger dl
             JOIN dental_patients AS pat ON dl.patientid = pat.patientid
             LEFT JOIN dental_users AS p ON dl.producerid = p.userid
-        WHERE dl.docid = $sessionDocId
+        WHERE dl.docid = '$docId'
+            AND IFNULL(dl.paid_amount, 0) = 0
             AND dl.service_date = CURDATE()
-            AND (dl.paid_amount IS NULL || dl.paid_amount = 0)
         GROUP BY dl.ledgerid
 
     UNION
@@ -61,11 +65,10 @@ if (
         FROM dental_ledger dl
             JOIN dental_patients AS pat ON dl.patientid = pat.patientid
             LEFT JOIN dental_users AS p ON dl.producerid = p.userid
-            LEFT JOIN dental_transaction_code tc
-                ON tc.transaction_code = dl.transaction_code
-                AND tc.docid = $sessionDocId
-        WHERE dl.docid = $sessionDocId
-            AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
+            LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
+                AND tc.docid = '$docId'
+        WHERE dl.docid = '$docId'
+            AND dl.paid_amount != 0
             AND dl.service_date = CURDATE()
 
     UNION
@@ -89,7 +92,7 @@ if (
             JOIN dental_patients pat ON dl.patientid = pat.patientid
             LEFT JOIN dental_users p ON dl.producerid = p.userid
             LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid = dl.ledgerid
-        WHERE dl.docid = $sessionDocId
+        WHERE dl.docid = '$docId'
             AND dlp.amount != 0
             AND dlp.payment_date = CURDATE()
     ";
@@ -122,7 +125,6 @@ $no_pages = $total_rec/$rec_disp;
 
 $num_users = count($my);
 
-//echo $sql; 
 ?>
 
 <link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
@@ -225,11 +227,6 @@ $num_users = count($my);
     }
     else
     {
-
-        $tot_charges = 0;
-        $tot_credit = 0;
-        $tot_adj = 0;
-
         foreach ($my as $myarray) {
 
             $pat_sql = "select * from dental_patients where patientid='".$myarray['patientid']."'";
@@ -319,45 +316,6 @@ $num_users = count($my);
             <b>Totals</b>
         </td>
         <td valign="top" align="right">
-        
-        <?php
-            if(isset($_GET['pid'])){
-                $ledgerquery = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." AND `transaction_type` = 'Charge'";
-                $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." and `transaction_type`='Credit'";
-            }else{
-                $ledgerquery = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." AND `transaction_type` = 'Charge'";
-                $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." and `transaction_type`='Credit'";
-            }
-
-            $myarray = $db->getRow($ledgerquery);
-            $myarray2 = $db->getRow($ledgerquery2);
-
-            if (!isset($cur_bal)) {
-                $cur_bal = 0;
-            }
-
-            if(st($myarray["amount"]) <> 0) {
-                $cur_bal += st($myarray["amount"]);
-            }
-
-            $i = 0;
-
-            if (!isset($ledgerres2)) {
-                $ledgerres2 = array();
-            }
-
-            if($i < count($ledgerres2)){
-                $cur_bal2 = $myarray2['paid_amount'];
-            }
-            $i++;
-
-            if (!isset($cur_bal2)) {
-                $cur_bal2 = 0;
-            }
-
-            $cur_balfinal = $cur_bal - $cur_bal2;
-            ?>
-
             <b>
                 <?php echo "$".number_format($tot_charges,2); ?>
                 &nbsp;

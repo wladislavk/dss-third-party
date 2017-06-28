@@ -166,81 +166,96 @@ if(!empty($_GET['pid'])){
             $p_date = $i_date = $n_date = $l_date = '';
         }
 
+        $andPatientConditional = $lpsql;
+        $andServiceDateConditional = $l_date;
+        $andPaymentDateConditional = $p_date;
+
+        $docId = (int)$_SESSION['docid'];
+
         $newquery = "
-        select 
-                        'ledger',
-                        dl.ledgerid,
-                        dl.service_date,
-                        dl.entry_date,
-                        dl.amount,
-                        dl.paid_amount,
-                        dl.status, 
-                        dl.description,
-                        CONCAT(p.first_name,' ',p.last_name) as name,
-                        pat.patientid,
-                        pat.firstname, 
-                        pat.lastname,
-        		CONCAT(pat.lastname,' ',pat.firstname) as pname,
-                        '' as payer,
-                        '' as payment_type,
-        		dl.primary_claim_id
-                from dental_ledger dl 
-                        JOIN dental_patients as pat ON dl.patientid = pat.patientid
-                        LEFT JOIN dental_users as p ON dl.producerid=p.userid 
-                where dl.docid='".$_SESSION['docid']."' ".$lpsql." 
-        		and (dl.paid_amount IS NULL || dl.paid_amount = 0)
-        	".$l_date."
-          UNION
-                select 
-                        'ledger_paid',
-                        dl.ledgerid,
-                        dl.service_date,
-                        dl.entry_date,
-                        dl.amount,
-                        dl.paid_amount,
-                        dl.status,
-                        dl.description,
-                        CONCAT(p.first_name,' ',p.last_name),
-                        pat.patientid,
-                        pat.firstname,
-                        pat.lastname,
-                        CONCAT(pat.lastname,' ',pat.firstname) as pname,
-                        tc.type,
+            SELECT 
+                'ledger',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                dl.amount,
+                dl.paid_amount,
+                dl.status, 
+                dl.description,
+                CONCAT(p.first_name, ' ', p.last_name) AS name,
+                pat.patientid,
+                pat.firstname, 
+                pat.lastname,
+                CONCAT(pat.lastname, ' ', pat.firstname) AS pname,
+                '' AS payer,
+                '' AS payment_type,
+                dl.primary_claim_id
+            FROM dental_ledger dl 
+                JOIN dental_patients pat ON dl.patientid = pat.patientid
+                LEFT JOIN dental_users p ON dl.producerid = p.userid 
+            WHERE dl.docid = '$docId'
+          	    AND IFNULL(dl.paid_amount, 0) = 0
+        	    $andServiceDateConditional
+                $andPatientConditional
+            GROUP BY dl.ledgerid
+        
+        UNION
+        
+            SELECT
+                'ledger_paid',
+                dl.ledgerid,
+                dl.service_date,
+                dl.entry_date,
+                dl.amount,
+                dl.paid_amount,
+                dl.status,
+                dl.description,
+                CONCAT(p.first_name, ' ', p.last_name),
+                pat.patientid,
+                pat.firstname,
+                pat.lastname,
+                CONCAT(pat.lastname, ' ', pat.firstname),
+                tc.type,
         		'',
-                        dl.primary_claim_id
-                from dental_ledger dl 
-                        JOIN dental_patients as pat ON dl.patientid = pat.patientid
-                        LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                        LEFT JOIN dental_ledger_payment pay on pay.ledgerid=dl.ledgerid
-                        LEFT JOIN dental_transaction_code tc on tc.transaction_code = dl.transaction_code AND tc.docid='".$_SESSION['docid']."'
-                                where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                                AND (dl.paid_amount IS NOT NULL AND dl.paid_amount != 0)
-        			".$l_date."
-         UNION
-                select 
-                        'ledger_payment',
-                        dlp.id,
-                        dlp.payment_date,
-                        dlp.entry_date,
-                        '',
-                        dlp.amount,
-                        '',
-                        '',
-                        CONCAT(p.first_name,' ',p.last_name),
-                        pat.patientid,
-                        pat.firstname,
-                        pat.lastname,
-        		CONCAT(pat.lastname,' ',pat.firstname) as pname,
-                        dlp.payer,
-                        dlp.payment_type,
+                dl.primary_claim_id
+            FROM dental_ledger dl 
+                JOIN dental_patients pat ON dl.patientid = pat.patientid
+                LEFT JOIN dental_users p ON dl.producerid = p.userid 
+                LEFT JOIN dental_ledger_payment pay ON pay.ledgerid = dl.ledgerid
+                LEFT JOIN dental_transaction_code tc ON tc.transaction_code = dl.transaction_code
+                    AND tc.docid = '$docId'
+            WHERE dl.docid = '$docId'
+                AND dl.paid_amount != 0
+                $andServiceDateConditional
+                $andPatientConditional
+        
+        UNION
+        
+            SELECT
+                'ledger_payment',
+                dlp.id,
+                dlp.payment_date,
+                dlp.entry_date,
+                '',
+                dlp.amount,
+                '',
+                '',
+                CONCAT(p.first_name, ' ', p.last_name),
+                pat.patientid,
+                pat.firstname,
+                pat.lastname,
+        		CONCAT(pat.lastname, ' ', pat.firstname),
+                dlp.payer,
+                dlp.payment_type,
         		''
-                from dental_ledger dl 
-                        JOIN dental_patients pat on dl.patientid = pat.patientid
-                        LEFT JOIN dental_users p ON dl.producerid=p.userid 
-                        LEFT JOIN dental_ledger_payment dlp on dlp.ledgerid=dl.ledgerid
-                                where dl.docid='".$_SESSION['docid']."' ".$lpsql."
-                                AND dlp.amount != 0
-        			".$p_date."
+        	FROM dental_ledger dl
+                JOIN dental_patients pat on dl.patientid = pat.patientid
+                LEFT JOIN dental_users p ON dl.producerid = p.userid 
+                LEFT JOIN dental_ledger_payment dlp ON dlp.ledgerid = dl.ledgerid
+            WHERE dl.docid = '$docId'
+                AND dlp.amount != 0
+                $andPaymentDateConditional
+                $andPatientConditional
         ";
 
 
@@ -338,32 +353,6 @@ if(!empty($_GET['pid'])){
 		</td>
 		<td valign="top" align="right">
 <?php
-    if(isset($_GET['pid'])){
-        $ledgerquery = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." AND `transaction_type` = 'Charge'";
-    }else{
-        $ledgerquery = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." AND `transaction_type` = 'Charge'";
-    }
-    $myarray = $db->getRow($ledgerquery);
-    if(isset($_GET['pid'])){
-        $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `patientid` =".$_GET['pid']." and `transaction_type`='Credit'";
-    }else{
-        $ledgerquery2 = "SELECT * FROM dental_ledger WHERE `docid` =".$_SESSION['docid']." and `transaction_type`='Credit'";
-    }
-
-    if (!isset($cur_bal)) {
-        $cur_bal = '';
-    }
-
-    $myarray2 = $db->getRow($ledgerquery2);
-    if(st($myarray["amount"]) <> 0) {
-        $cur_bal += st($myarray["amount"]);
-    }
-
-    if($myarray2){
-        $cur_bal2 = $myarray2['paid_amount'];
-    }
-
-    $cur_balfinal = $cur_bal - $cur_bal2;
 
     if (!isset($tot_charge)) {
         $tot_charge = 0;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Ds3\Libraries\Legacy;
 
 require_once __DIR__ . '/admin/includes/main_include.php';
@@ -14,13 +15,28 @@ if (empty($_GET['did']) || $_GET['did'] != $_SESSION['docid']) { ?>
     trigger_error('Die called', E_USER_ERROR);
 }
 
-$loc = (isset($_GET['locid']))?$_GET['locid'].'_':'';
-$filename = "../../../shared/q_file/".(!empty($_GET['file']) ? $_GET['file'] : '')."_".$loc.(!empty($_GET['did']) ? $_GET['did'] : '').".pdf";
-$sql = "SELECT updated_at FROM dental_users WHERE userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+$loc = (isset($_GET['locid'])) ? $_GET['locid'] . '_' : '';
+$filename = "../../../shared/q_file/" . (!empty($_GET['file']) ? $_GET['file'] : '') . "_" . $loc . (!empty($_GET['did']) ? $_GET['did'] : '') . ".pdf";
+$sql = "SELECT updated_at FROM dental_users WHERE userid='" . mysqli_real_escape_string($con, $_SESSION['docid']) . "'";
 
 $r = $db->getRow($sql);
 
-if (file_exists($filename) && date('U', strtotime($r['updated_at'])) > filemtime($filename)){
+/*
+ * Check date on file to decide if you need to recreate the PDF
+ * ADD extra logic check to VERSION CONTROL forms with $last_form_update
+ * Use code:
+ * $last_form_update = time();
+ * if you want to immediately regenerate the forms (for testing)
+ */
+$last_form_update = new \DateTime("2017-06-28 12:00:00");
+
+if (
+    file_exists($filename)
+    && (
+        date('U', strtotime($r['updated_at'])) > filemtime($filename)
+        || $last_form_update > filemtime($filename)
+    )
+) {
     $recreate = true;
 } else {
     $recreate = false;
@@ -29,34 +45,46 @@ if (file_exists($filename) && date('U', strtotime($r['updated_at'])) > filemtime
 $output = "";
 
 if (!empty($_GET['file'])) {
-    if($_GET['file'] == "user_record_release") {
+    if ($_GET['file'] == "user_record_release") {
         $output = "record_release";
 
         if (!file_exists($filename) || $recreate) {
-            if (isset($_GET['locid'])){
+            if (isset($_GET['locid'])) {
                 update_custom_release_form($_GET['did'], $_GET['locid']);
             } else {
                 update_custom_release_form($_GET['did']);
             }
         }
-    } elseif ($_GET['file'] == "financial_agreement_medicare") {
-        $output = "financial_agreement_medicare";
+    } elseif ($_GET['file'] == "financial_agreement_medicare_nonpar") {
+        $output = "financial_agreement_medicare_nonpar";
 
-        if (!file_exists($filename) || $recreate){
-            update_financial_agreement_medicare_form($_GET['did'], '');
+        if (!file_exists($filename) || $recreate) {
+            update_financial_agreement_medicare_nonpar_form($_GET['did']);
+        }
+    } elseif ($_GET['file'] == "financial_agreement_cash") {
+        $output = "financial_agreement_cash";
+
+        if (!file_exists($filename) || $recreate) {
+            update_financial_agreement_cash_form($_GET['did']);
+        }
+    } elseif ($_GET['file'] == "financial_agreement_oon") {
+        $output = "financial_agreement_oon";
+
+        if (!file_exists($filename) || $recreate) {
+            update_financial_agreement_oon_form($_GET['did']);
         }
     } elseif ($_GET['file'] == "release_liability") {
         $output = "release_liability";
 
-        if(!file_exists($filename) || $recreate){
+        if (!file_exists($filename) || $recreate) {
             update_release_liability_form($_GET['did']);
         }
     } elseif ($_GET['file'] == "home_care_instructions") {
         $output = "home_care_instructions";
 
-        if (!file_exists($filename) || $recreate){
-            if (isset($_GET['locid'])){
-                    update_home_care_instructions_form($_GET['did'], $_GET['locid']);
+        if (!file_exists($filename) || $recreate) {
+            if (isset($_GET['locid'])) {
+                update_home_care_instructions_form($_GET['did'], $_GET['locid']);
             } else {
                 update_home_care_instructions_form($_GET['did']);
             }
@@ -65,7 +93,7 @@ if (!empty($_GET['file'])) {
         $output = "non_dentist_of_record_release";
 
         if (!file_exists($filename) || $recreate) {
-            if (isset($_GET['locid'])){
+            if (isset($_GET['locid'])) {
                 update_non_dentist_of_record_release_form($_GET['did'], $_GET['locid']);
             } else {
                 update_non_dentist_of_record_release_form($_GET['did']);
@@ -105,19 +133,13 @@ if (!empty($_GET['file'])) {
         if (!file_exists($filename) || $recreate) {
             update_ess_tss_form($_GET['did']);
         }
-    } elseif ($_GET['file'] == "financial_agreement") {
-        $output = "financial_agreement";
-
-        if (!file_exists($filename) || $recreate) {
-            update_financial_agreement_form($_GET['did']);
-        }
     } elseif ($_GET['file'] == "informed_consent") {
         $output = "informed_consent";
 
         if (!file_exists($filename) || $recreate) {
             update_informed_consent_form($_GET['did']);
         }
-    } elseif($_GET['file'] == "lomn_rx") {
+    } elseif ($_GET['file'] == "lomn_rx") {
         $output = "lomn_rx";
 
         if (!file_exists($filename) || $recreate) {
@@ -170,9 +192,9 @@ if (!empty($_GET['file'])) {
 
         if (!file_exists($filename) || $recreate) {
             if (isset($_GET['locid'])) {
-              update_proof_of_delivery_form($_GET['did'], $_GET['locid']);
+                update_proof_of_delivery_form($_GET['did'], $_GET['locid']);
             } else {
-              update_proof_of_delivery_form($_GET['did']);
+                update_proof_of_delivery_form($_GET['did']);
             }
         }
     } elseif (in_array($_GET['file'], ['advanced_beneficiary_notice_medicare', 'dst-progress-questionnaire'])) {

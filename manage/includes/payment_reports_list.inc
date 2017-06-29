@@ -127,10 +127,10 @@ $reports_query = "SELECT *
             pr.response,
             pr.adddate,
             pr.ip_address,
-            0,
-            $docId,
-            '',
-            0
+            0 AS patientid,
+            '$docId' AS docid,
+            '' AS name,
+            0 AS doc_matches
         FROM dental_payment_reports AS pr
             LEFT JOIN dental_insurance i ON i.insuranceid = pr.claimid
         WHERE $npiConditional

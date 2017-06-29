@@ -4,6 +4,11 @@
  * Some of the HTML has dynamic content to auto-populate user information like name/logo based on user profile.
  */
 
+/**
+ * @TODO ALL of the HTML that uses MS Word styling needs to be rewritten to pure HTML
+ * @TODO "Record Release" form is DONE, all else remain
+ */
+
 
 /**
  * "Financial Agreement Medicare Non-Participating Provider" form PDF generation code
@@ -26,9 +31,6 @@ function update_financial_agreement_medicare_nonpar_form($id, $backoffice = fals
     $r = mysqli_fetch_assoc($q);
 
     $html = '
-
-
-
 
 <html>
     <head>
@@ -122,16 +124,15 @@ function update_financial_agreement_medicare_nonpar_form($id, $backoffice = fals
                 this agreement you agree to pay for services rendered at our office as outlined above.</span>
             </p>
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                ________________________</span>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
             </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature 
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                ________________________</span>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
             </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
-            <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness 
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>            
             <p style="width:100%; text-align:right;">
                 <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
                 Solutions</small></span>
@@ -280,13 +281,15 @@ function update_financial_agreement_cash_form($id, $backoffice = false)
                 providers in order to obtain insurance coverage. </span>
             </p>
 
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>You agree to pay $_______ with the following terms: </span>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>You agree to pay $___________ with the following terms: </span>
             </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________________________________________________________________________________________</span>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________________________________________________________________</span>
             </p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________________________________________________________________</span>
+            </p>            
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>If you decide that you do not wish to move forward with treatment
                 after impressions, you will be responsible for the impressions and office fee of
-                $__________.</span>
+                $___________.</span>
             </p>
 
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>By signing this agreement, you agree to pay for services rendered
@@ -295,16 +298,15 @@ function update_financial_agreement_cash_form($id, $backoffice = false)
                 submission.</span>
             </p>
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                ________________________</span>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
             </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature 
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-                ________________________</span>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
             </p>
-            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
-            <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+            <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness 
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>            
             <p style="width:100%; text-align:right;">
                 <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
                 Solutions</small></span>
@@ -438,8 +440,11 @@ function update_financial_agreement_oon_form($id, $backoffice)
                 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
                     style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>DENTAL SLEEP THERAPY</span></b></h2>
                 <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT (Out of Network Insurance)</span></b>
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>FINANCIAL AGREEMENT</span></b>
                 </h2>
+                <h3 class=MsoNormal align=center style=\'text-align:center\'><b><span
+                    style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>(Out of Network Insurance)</span></b>
+                </h3>                
             </td>
         </tr>
     </table>
@@ -464,16 +469,15 @@ function update_financial_agreement_oon_form($id, $backoffice)
         at our office as outlined above.</span>
     </p>
     <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-        ________________________</span>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
     </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature                                                                                          Date</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Signature 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>
     <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>___________________________________________
-        ________________________</span>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>________________________________________________________________</span>
     </p>
-    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness                                                                                              Date    </span></p>
-    <p class=MsoNormal><span style=\'font-size:8.0pt;font-family:"Arial","sans-serif"\'>&nbsp;</span></p>
+    <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>Witness 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</span></p>            
     <p style="width:100%; text-align:right;">
         <span style=\'font-size:6.0pt;font-family:"Arial","sans-serif"\'><small>© 2017 Dental Sleep
         Solutions</small></span>

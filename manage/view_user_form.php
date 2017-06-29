@@ -30,10 +30,13 @@ $r = $db->getRow($sql);
  */
 $last_form_update = new \DateTime("2017-06-28 12:00:00");
 
-if (file_exists($filename)
-    && date('U', strtotime($r['updated_at'])) > filemtime($filename)
-    || $last_form_update > filemtime($filename))
-{
+if (
+    file_exists($filename)
+    && (
+        date('U', strtotime($r['updated_at'])) > filemtime($filename)
+        || $last_form_update > filemtime($filename)
+    )
+) {
     $recreate = true;
 } else {
     $recreate = false;

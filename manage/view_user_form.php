@@ -24,9 +24,11 @@ $r = $db->getRow($sql);
 /*
  * Check date on file to decide if you need to recreate the PDF
  * ADD extra logic check to VERSION CONTROL forms with $last_form_update
+ * Use code:
+ * $last_form_update = time();
+ * if you want to immediately regenerate the forms (for testing)
  */
-$last_form_update = time();
-//$last_form_update = new \DateTime("2017-06-27 12:00:00");
+$last_form_update = new \DateTime("2017-06-28 12:00:00");
 
 if (file_exists($filename)
     && date('U', strtotime($r['updated_at'])) > filemtime($filename)

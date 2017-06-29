@@ -28,10 +28,10 @@ $npiList = [];
 
 switch ($sort_by) {
     case 'date':
-        $sort_by_sql = ' pr.adddate ' . $sort_direction;
+        $sort_by_sql = ' adddate ' . $sort_direction;
         break;
     default:
-        $sort_by_sql = ' pr.adddate ' . $sort_direction;
+        $sort_by_sql = ' adddate ' . $sort_direction;
         break;
 }
 
@@ -89,7 +89,9 @@ $sql_count = "SELECT COUNT(payment_id) AS total
         
         SELECT payment_id
         FROM dental_payment_reports AS pr
+            LEFT JOIN dental_insurance i ON i.insuranceid = pr.claimid
         WHERE $npiConditional
+            AND i.insuranceid IS NULL
     ) reports
     WHERE 1 = 1 $sql_where
     ";
@@ -130,7 +132,9 @@ $reports_query = "SELECT *
             '',
             0
         FROM dental_payment_reports AS pr
+            LEFT JOIN dental_insurance i ON i.insuranceid = pr.claimid
         WHERE $npiConditional
+            AND i.insuranceid IS NULL
     ) reports
     WHERE 1 =1 $sql_where
     ORDER BY $sort_by_sql

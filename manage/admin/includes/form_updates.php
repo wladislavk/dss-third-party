@@ -1087,134 +1087,115 @@ function update_custom_release_form($id, $locid = null, $backoffice = false)
     }
 
     $html = '
+
 <html>
-   <head>
-      <meta http-equiv=Content-Type content="text/html; charset=windows-1252">
-      <meta name=Generator content="Microsoft Word 14 (filtered)">
-      <style>
-         <!--
-            /* Font Definitions */
-            @font-face
-                   {font-family:Wingdings;
-                   panose-1:5 0 0 0 0 0 0 0 0 0;}
-            @font-face
-                   {font-family:Wingdings;
-                   panose-1:5 0 0 0 0 0 0 0 0 0;}
-            @font-face
-                   {font-family:Calibri;
-                   panose-1:2 15 5 2 2 2 4 3 2 4;}
-            /* Style Definitions */
-            p.MsoNormal, li.MsoNormal, div.MsoNormal
-                   {margin-top:0in;
-                   margin-right:0in;
-                   margin-bottom:10.0pt;
-                   margin-left:0in;
-                   line-height:115%;
-                   font-size:11.0pt;
-                   font-family:"Calibri","sans-serif";}
-            .MsoChpDefault
-                   {font-family:"Calibri","sans-serif";}
-            .MsoPapDefault
-                   {margin-bottom:10.0pt;
-                   line-height:115%;}
-            @page WordSection1
-                   {size:8.5in 11.0in;
-                   margin:.5in .5in .5in .5in;
-                   border:solid windowtext 1.0pt;
-                   padding:24.0pt 24.0pt 24.0pt 24.0pt;}
-            div.WordSection1
-                   {page:WordSection1;}
-            /* List Definitions */
-            ol
-                   {margin-bottom:0in;}
-            ul
-                   {margin-bottom:0in;}
-            -->
-      </style>
-   </head>
-   <body lang=EN-US>
-      <div class=WordSection1>
-         <table>
-            <tr>
-               <td width="30%">' . $logo . '</td>
-               <td width="70%">
-                  <h2 class=MsoNormal align=center style=\'text-align:center\'><b><span
-                     style=\'font-size:24.0pt;font-family:"Arial","sans-serif"\'>PATIENT MEDICAL RECORD RELEASE FORM</span></b></h2>
-               </td>
-            </tr>
-         </table>
-         <p class=MsoNormal style="margin-top:4.0pt;line-height:normal"><span
-            style="font-size:12.0pt">This office coordinates
-            treatment with your healthcare providers to help ensure maximum benefit to
-            you.  Please sign the record release form below so we can retrieve medical
-            records related to sleep disordered breathing.</span>
-         </p>
-         <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">To</span></b><span
-            style="font-size:12.0pt">: __________________________________________________________________</span></p>
-         <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">From</span></b><span
-            style="font-size:12.0pt">: ' . $loc_r['name'] . '</span></p>
-         <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">We
-            would like to request a copy of the following if applicable:</span>
-         </p>
-         <p class=MsoNormal style="line-height:normal"><span
-            style="font-size:12.0pt;font-family:Symbol">·<span style="font:7.0pt \"Times New Roman\"">
-            </span></span><span style="font-size:11.0pt">All baseline PSG\'s, oximetry
-            studies, and the patient\'s most recent CPAP titration study</span>
-         </p>
-         <p class=MsoNormal style="line-height:
-            normal"><span style="font-size:12.0pt;font-family:Symbol">·<span
-            style="font:7.0pt \"Times New Roman\"">
-            </span></span><span
-               style="font-size:11.0pt">Any pertinent notes about patient\'s past medical
-            history </span>
-         </p>
-         <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Patient
-            Name: _________________________________________________________</span>
-         </p>
-         <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">Patient
-            DOB: ___________________________________________________________</span>
-         </p>
-         <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">We
-            wish to obtain them in this way:</span>
-         </p>
-         <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&#9633; PICK UP FROM OFFICE</span></p>
-         <p class=MsoNormal style="line-height:normal"><span
-            style="font-size:12.0pt">&#9633; PLEASE MAIL TO US AT THE ADDRESS LISTED BELOW</span></p>
-         <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">&#9633; PLEASE FAX TO THE PHONE NUMBER LISTED BELOW</span></p>
-         <p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            normal"><span style="font-size:12.0pt">ADDRESS:</span></p>
-         <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
-            style="border-collapse:collapse;border:none; margin-bottom:0; margin-top:0;">
-            <tr style="">
-               <td width=515 valign=top style="width:339.25pt;padding:0in 5.4pt 0in 5.4pt;"><span style="font-size:12.0pt">' . $loc_r['address'] . '<br />
-                  ' . $loc_r['city'] . ' ' . $loc_r['state'] . ' ' . $loc_r['zip'] . '</span>
-               </td>
-            </tr>
-         </table>
-         <p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;margin-top:0;line-height:
-            normal"></p>
-         <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">FAX</span></b><span
-            style="font-size:12.0pt">: <b>' . format_phone($loc_r['fax']) . '</b></span></p>
-         <p class=MsoNormal style="line-height:normal"><i><span style="font-size:12.0pt">I
-            request and authorize the above named doctor or health care provider, or individual
-            named in this request to obtain my medical records. A copy of this
-            authorization or my signature thereon may be used with the same effectiveness
-            as an original.</span></i>
-         </p>
-         <p class=MsoNormal style="line-height:normal"><b><span style="font-size:12.0pt">Patient
-            Signature</span></b><span style="font-size:12.0pt">: ________________________________
-            <b>Date</b>: ___________</span>
-         </p>
-         <p class=MsoNormal style="margin-bottom:0in;margin-bottom:.0001pt;line-height:
-            normal"><span style="font-size:12.0pt">Additional Comments:</span></p>
-         <p class=MsoNormal style="line-height:normal"><span style="font-size:12.0pt">____________________________________________________________________________________
-            ____________________________________________________________________________________
-            </span>
-            Thank you in advance.
-         </p>
-      </div>
-   </body>
+  <head>
+    <title>
+      Medical Record Release Form
+    </title>
+    <style type="text/css">
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 250%;
+    }
+    p {
+      font-family: Arial, Verdana, Helvetica, sans-serif;
+      font-size: 120%;
+    }
+    ul {
+      font-family: Arial, Verdana, Helvetica, sans-serif;
+      font-size: 120%;
+    }
+    </style>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td width="30%">
+          ' . $logo . '
+        </td>
+        <td width="70%">
+          <h1 align="center">
+            <strong><span>PATIENT MEDICAL RECORD RELEASE
+            FORM</span></strong>
+          </h1>
+        </td>
+      </tr>
+    </table>
+    <p>
+      This office coordinates treatment with your healthcare
+      providers to help ensure maximum benefit to you. Please sign
+      the record release form below so we can retrieve medical
+      records related to sleep disordered breathing.
+    </p>
+    <p>
+      <strong>TO</strong>:
+      __________________________________________________________________
+    </p>
+    <p>
+      <strong>FROM</strong>: ' . $loc_r['name'] . '
+    </p>
+    <p>
+      We would like to request a copy of the following if
+      applicable:
+    </p>
+    <ul>
+      <li>All baseline PSG\'s, oximetry studies, and the patient\'s
+      most recent CPAP titration study
+      </li>
+      <li>Any pertinent notes about patient\'s past medical history
+      </li>
+    </ul>
+    <p>
+      PATIENT NAME:
+      _________________________________________________________
+    </p>
+    <p>
+      PATIENT DOB:
+      _________________________________________________________
+    </p>
+    <p>
+      We wish to obtain the records in this way:
+    </p>
+    <ul style="list-style-type:none">
+      <li>___ PLEASE FAX TO THE PHONE NUMBER LISTED BELOW<br />
+      </li>
+      <li>___ PLEASE MAIL TO US AT THE ADDRESS LISTED BELOW<br />
+      </li>
+      <li>___ PICK UP FROM OFFICE
+      </li>
+    </ul>
+    <p><strong>ADDRESS</strong>:
+    </p>
+    <p>' . $loc_r['name'] . '<br />
+    ' . $loc_r['address'] . '<br />
+      ' . $loc_r['city'] . ' ' . $loc_r['state'] . ' ' .
+        $loc_r['zip'] . '<br />
+      <strong>FAX: ' . format_phone($loc_r['fax']) . '</strong>
+    </p>
+    <p>
+      <em>I request and authorize the above named doctor or health
+      care provider, or individual named in this request to obtain
+      my medical records. A copy of this authorization or my
+      signature thereon may be used with the same effectiveness as
+      an original.</em>
+    </p>
+    <p>
+      Patient Signature: ________________________________ Date:
+      ___________
+    </p>
+    <p>
+      Additional Comments:<br />
+      __________________________________________________________________________<br />
+
+      __________________________________________________________________________
+    </p>
+    <p>
+      Thank you in advance.
+    </p>
+  </body>
 </html>
+
 ';
 
     $title = "DSS Record Release";

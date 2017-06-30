@@ -34,7 +34,7 @@ if (
     file_exists($filename)
     && (
         date('U', strtotime($r['updated_at'])) > filemtime($filename)
-        || $last_form_update > filemtime($filename)
+        || $last_form_update->format('U') > filemtime($filename)
     )
 ) {
     $recreate = true;

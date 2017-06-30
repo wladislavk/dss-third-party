@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Swagger;
 
-use DentalSleepSolutions\Exceptions\SwaggerGeneratorException;
+use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 
 class AnnotationWriter

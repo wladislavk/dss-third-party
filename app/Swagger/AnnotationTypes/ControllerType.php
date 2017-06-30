@@ -2,11 +2,12 @@
 
 namespace DentalSleepSolutions\Swagger\AnnotationTypes;
 
-use DentalSleepSolutions\Exceptions\SwaggerGeneratorException;
+use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
+use DentalSleepSolutions\Swagger\Factories\SwaggerActionAnnotatorFactory;
 use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\Swagger\RequestRuleParser;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
+use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Routing\Router;
@@ -24,9 +25,13 @@ class ControllerType extends AbstractAnnotationType
     /** @var Route[]|RouteCollection */
     private $routes;
 
-    public function __construct(Router $router)
+    /** @var SwaggerActionAnnotatorFactory */
+    private $annotatorFactory;
+
+    public function __construct(Router $router, SwaggerActionAnnotatorFactory $annotatorFactory)
     {
         $this->routes = $router->getRoutes();
+        $this->annotatorFactory = $annotatorFactory;
     }
 
     /**
@@ -55,19 +60,35 @@ class ControllerType extends AbstractAnnotationType
         return $annotations;
     }
 
-    protected function createAnnotation(AnnotationData $annotationData, array $rules)
+    protected function createAnnotation(AnnotationData $annotationData)
     {
-        return '';
+        $annotator = $this->annotatorFactory->findAnnotator($annotationData->action);
+        $annotation = $annotator->createAnnotation($annotationData);
+        return $annotation;
     }
 
-    protected function getRules(AnnotationData $annotationData)
+    /**
+     * @param AnnotationData $annotationData
+     */
+    protected function setRules(AnnotationData $annotationData)
     {
         /** @var Request $request */
         $request = new $annotationData->requestClassName();
-        if ($annotationData->action == 'store') {
+        $rules = $this->getRequestRules($request, $annotationData->action);
+        foreach ($rules as $field => $rule) {
+            $annotationRule = new AnnotationRule();
+            $annotationRule->rule = $rule;
+            $annotationRule->field = $field;
+            $annotationData->addRule($annotationRule);
+        }
+    }
+
+    private function getRequestRules(Request $request, $action)
+    {
+        if ($action == 'store') {
             return $request->storeRules();
         }
-        if ($annotationData->action == 'update') {
+        if ($action == 'update') {
             return $request->updateRules();
         }
         return [];

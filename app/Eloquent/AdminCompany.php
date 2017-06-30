@@ -6,6 +6,19 @@ use DentalSleepSolutions\Eloquent\Dental\UserCompany;
 use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
 
 /**
+ * @SWG\Definition(
+ *     definition="AdminCompany",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="adminid", type="integer"),
+ *     @SWG\Property(property="companyid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="admin", ref="#/definitions/Admin"),
+ *     @SWG\Property(property="company", ref="#/definitions/Company"),
+ *     @SWG\Property(property="users", type="array", @SWG\Items(ref="#/definitions/UserCompany"))
+ * )
+ *
  * DentalSleepSolutions\Eloquent\AdminCompany
  *
  * @property int $id

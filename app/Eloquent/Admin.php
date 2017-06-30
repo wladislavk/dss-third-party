@@ -6,6 +6,13 @@ use DentalSleepSolutions\Contracts\Resources\Admin as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Admins as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Admin",
+ *     type="object",
+ *     required={"adminid"},
+ *     @SWG\Property(property="adminid", type="integer"),
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Admin
  *
  * @property int $adminid

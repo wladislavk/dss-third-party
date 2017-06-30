@@ -10,6 +10,13 @@ use DentalSleepSolutions\Contracts\Repositories\Companies as Repository;
 use DB;
 
 /**
+ * @SWG\Definition(
+ *     definition="Company",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Company
  *
  * @property int $id

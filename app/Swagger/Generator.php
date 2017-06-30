@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Swagger;
 
-use DentalSleepSolutions\Exceptions\SwaggerGeneratorException;
-use DentalSleepSolutions\Factories\SwaggerModelTransformerFactory;
-use DentalSleepSolutions\Factories\SwaggerRuleTransformerFactory;
+use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
+use DentalSleepSolutions\Swagger\Factories\SwaggerModelTransformerFactory;
+use DentalSleepSolutions\Swagger\Factories\SwaggerRuleTransformerFactory;
 use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
 use DentalSleepSolutions\Swagger\AnnotationTypes\ControllerType;
 use DentalSleepSolutions\Swagger\AnnotationTypes\ModelType;
@@ -92,6 +92,10 @@ class Generator
         return $restControllers;
     }
 
+    /**
+     * @param string $modelDir
+     * @return array
+     */
     private function getModels($modelDir)
     {
         return $this->filesystemAdapter->allFiles($modelDir);
@@ -128,6 +132,10 @@ class Generator
         return $namespaceMatches[1] . '\\' . $classNameMatches[1];
     }
 
+    /**
+     * @param string $path
+     * @return string
+     */
     private function pathToNamespace($path)
     {
         $realPath = realpath($path);

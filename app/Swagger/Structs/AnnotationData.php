@@ -14,11 +14,20 @@ class AnnotationData
     public $action = '';
 
     /** @var string */
-    public $className = '';
+    public $modelClassName = '';
 
     /** @var string */
     public $requestClassName = '';
 
     /** @var string */
     public $route = '';
+
+    /** @var AnnotationRule[] */
+    public $rules = [];
+
+    public function addRule(AnnotationRule $annotationRule)
+    {
+        $annotationRule->action = $this->action;
+        $this->rules[] = $annotationRule;
+    }
 }

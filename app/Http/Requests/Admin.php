@@ -7,9 +7,9 @@ class Admin extends Request
     private $adminModel;
 
     protected $rules = [
-        'name'         => 'max:250',
-        'username'     => 'required|max:250|unique:admin',
-        'password'     => 'required|max:250',
+        'name'         => 'string|max:250',
+        'username'     => 'required|string|max:250|unique:admin',
+        'password'     => 'required|string|max:250',
         'status'       => 'integer',
         'admin_access' => 'integer',
         'email'        => 'email|max:100',

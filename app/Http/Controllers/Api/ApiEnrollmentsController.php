@@ -257,38 +257,77 @@ class ApiEnrollmentsController extends ApiBaseController
      *
      * @SWG\Put(
      *     path="/api/v1/enrollments.json",
-     *     @SWG\Parameter(name="endpoint",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="payer_id",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="transaction_type",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="facility_name",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="provider_name",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="tax_id",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="address",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="city",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="state",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="zip",
-     *                    description="",
-     *                    required=true,type="string"),
-     *
-     *    @SWG\Response(response="200", description="Action completed successfully.")
+     *     @SWG\Parameter(
+     *         name="endpoint",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="payer_id",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="transaction_type",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="facility_name",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="provider_name",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="tax_id",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="address",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="city",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="state",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="zip",
+     *         in="formData",
+     *         description="",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(response="200", description="Action completed successfully.")
      * )
      *
      * @param ApiEligibleEnrollmentRequest $request
@@ -310,6 +349,7 @@ class ApiEnrollmentsController extends ApiBaseController
     /**
      * @SWG\Get(
      *     path="/api/v1/enrollments.json",
+     *     @SWG\Response(response="200", description="Action completed successfully.")
      * )
      *
      * @param integer $enrollmentId

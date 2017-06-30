@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Swagger\AnnotationTypes;
 
-use DentalSleepSolutions\Exceptions\SwaggerGeneratorException;
-use DentalSleepSolutions\Factories\AbstractSwaggerTransformerFactory;
+use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
+use DentalSleepSolutions\Swagger\Factories\AbstractSwaggerTransformerFactory;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 
@@ -12,6 +12,9 @@ abstract class AbstractAnnotationType
     /** @var AbstractSwaggerTransformerFactory */
     private $transformerFactory;
 
+    /**
+     * @param AbstractSwaggerTransformerFactory $transformerFactory
+     */
     public function setTransformerFactory(AbstractSwaggerTransformerFactory $transformerFactory)
     {
         $this->transformerFactory = $transformerFactory;
@@ -33,18 +36,17 @@ abstract class AbstractAnnotationType
         }
         $annotations = $this->getAnnotationData($className, $annotationParams);
         foreach ($annotations as $annotation) {
-            $rules = $this->parseRules($annotation);
-            $annotation->text = $this->createAnnotation($annotation, $rules);
+            $this->parseRules($annotation);
+            $annotation->text = $this->createAnnotation($annotation);
         }
         return $annotations;
     }
 
     /**
      * @param AnnotationData $annotationData
-     * @param string[] $rules
      * @return string
      */
-    abstract protected function createAnnotation(AnnotationData $annotationData, array $rules);
+    abstract protected function createAnnotation(AnnotationData $annotationData);
 
     /**
      * @param string $className
@@ -56,22 +58,18 @@ abstract class AbstractAnnotationType
 
     /**
      * @param AnnotationData $annotationData
-     * @return string[]
      */
     protected function parseRules(AnnotationData $annotationData)
     {
-        $rules = $this->getRules($annotationData);
-        $parsedRules = [];
-        foreach ($rules as $field => $rule) {
+        $this->setRules($annotationData);
+        foreach ($annotationData->rules as $rule) {
             $transformer = $this->transformerFactory->getTransformer($rule);
-            $parsedRules[$field] = $transformer->transform($field, $rule);
+            $transformer->transform($rule);
         }
-        return $parsedRules;
     }
 
     /**
      * @param AnnotationData $annotationData
-     * @return array
      */
-    abstract protected function getRules(AnnotationData $annotationData);
+    abstract protected function setRules(AnnotationData $annotationData);
 }

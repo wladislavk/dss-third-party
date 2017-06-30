@@ -256,26 +256,28 @@ if( $r['homepage'] != '1') {
         $num_payment_reports = $db->getColumn($payment_reports_query, 'total', 0);
     }
 
+    /**
+     * @todo: indexes adddate, signed_on
+     */
     $unsigned_query = "SELECT COUNT(m.notesid) AS total
         FROM (
-            SELECT n.*
+            SELECT
+                n.notesid,
+                n.signed_on,
+                n.parentid
             FROM (
                 SELECT
                     notesid,
                     signed_on,
-                    signed_id,
-                    parentid,
-                    procedure_date
+                    parentid
                 FROM dental_notes
                 WHERE status != 0
                     AND docid = '$docid'
                 ORDER BY adddate DESC
             ) AS n
-                LEFT JOIN dental_users u ON u.userid = n.signed_id
-                LEFT JOIN dental_notes p ON p.notesid = n.parentid
             GROUP BY n.parentid
         ) AS m
-        WHERE COALESCE(m.signed_on, '') = ''";
+        WHERE IFNULL(m.signed_on, '') = ''";
 
     $num_unsigned = $db->getColumn($unsigned_query, 'total', 0);
 

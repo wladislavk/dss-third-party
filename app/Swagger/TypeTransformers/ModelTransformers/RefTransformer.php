@@ -15,7 +15,7 @@ class RefTransformer extends AbstractModelTransformer
         return '';
     }
 
-    protected function checkIfRequired($rule)
+    protected function checkIfRequired(AnnotationRule $annotationRule)
     {
         return false;
     }

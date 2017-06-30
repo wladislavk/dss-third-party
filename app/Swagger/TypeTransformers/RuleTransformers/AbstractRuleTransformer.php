@@ -14,13 +14,10 @@ abstract class AbstractRuleTransformer extends AbstractTypeTransformer
 
     protected function checkIfRequired(AnnotationRule $annotationRule)
     {
-        if ($annotationRule->action != 'store') {
-            return false;
+        if (strstr($annotationRule->rule, 'required|') && !strstr($annotationRule->rule, 'sometimes|')) {
+            return true;
         }
-        if (!strstr($annotationRule->rule, 'required|')) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     protected function addParams(AnnotationRule $annotationRule)

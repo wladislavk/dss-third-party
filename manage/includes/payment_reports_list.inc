@@ -79,7 +79,7 @@ if ($npiList) {
 
 $sql_count = "SELECT COUNT(payment_id) AS total
     FROM (
-        SELECT payment_id
+        SELECT payment_id, viewed
         FROM dental_payment_reports AS pr
             INNER JOIN dental_insurance AS i ON i.insuranceid = pr.claimid
             $sql_join_section
@@ -87,7 +87,7 @@ $sql_count = "SELECT COUNT(payment_id) AS total
         
         UNION
         
-        SELECT payment_id
+        SELECT payment_id, viewed
         FROM dental_payment_reports AS pr
             LEFT JOIN dental_insurance i ON i.insuranceid = pr.claimid
         WHERE $npiConditional
@@ -109,6 +109,7 @@ $reports_query = "SELECT *
             pr.response,
             pr.adddate,
             pr.ip_address,
+            pr.viewed,
             i.patientid,
             i.docid,
             u.name,
@@ -127,6 +128,7 @@ $reports_query = "SELECT *
             pr.response,
             pr.adddate,
             pr.ip_address,
+            pr.viewed,
             0 AS patientid,
             '$docId' AS docid,
             '' AS name,
@@ -154,7 +156,7 @@ $unviewed_url = "unviewed=$is_unviewed&fid=$franchiseeId&sort=$sort_by";
 <div class="<?=$header_class?>">
     <form name="sortfrm" method="get">
         Payment Reports
-        <select name="show">
+        <select name="unviewed">
             <option value="0" <?=!$is_unviewed ? ' selected' : '';?> >All</option>
             <option value="1" <?=$is_unviewed ? ' selected' : '';?> >Unviewed</option>
         </select>

@@ -70,6 +70,8 @@ $fields['p_m_relation'] = "Relationship to Insured";
 $fields['p_m_partyfname'] = "Insured First Name";
 $fields['p_m_partymname'] = "Insured Middle Name";
 $fields['p_m_partylname'] = "Insured Last Name";
+$fields['p_m_gender'] = "Insured Gender";
+$fields['p_m_relation'] = "Relationship to Insured";
 $fields['ins_dob'] = "Insured Date of Birth";
 //$fields['p_m_ins_co'] = "Insurance Company";
 $fields['p_m_ins_id'] = "Insurance ID";
@@ -82,6 +84,8 @@ $fields['s_m_relation'] = "2nd Relationship to Insured";
 $fields['s_m_partyfname'] = "2nd Insured First Name";
 $fields['s_m_partymname'] = "2nd Insured Middle Name";
 $fields['s_m_partylname'] = "2nd Insured Last Name";
+$fields['s_m_gender'] = "2nd Insured Gender";
+$fields['s_m_relation'] = "Relationship to 2nd Insured";
 $fields['ins2_dob'] = "2nd Insured Date of Birth";
 //$fields['s_m_ins_co'] = "2nd Insurance Company";
 $fields['s_m_ins_id'] = "2nd Insurance ID";
@@ -124,7 +128,7 @@ foreach (['p', 'c'] as $which) {
         }
     }
 
-    foreach (['dob', 'ins_dob'] as $field) {
+    foreach (['dob', 'ins_dob', 'ins2_dob'] as $field) {
         if (!isset(${$which}[$field])) {
             continue;
         }
@@ -136,7 +140,7 @@ foreach (['p', 'c'] as $which) {
         }
     }
 
-    foreach (['gender', 'p_m_gender'] as $field) {
+    foreach (['gender', 'p_m_gender', 's_m_gender'] as $field) {
         if (!isset(${$which}[$field])) {
             continue;
         }
@@ -157,6 +161,27 @@ foreach (['p', 'c'] as $which) {
         }
 
         ${$which}[$field] = $gender;
+    }
+
+    foreach (['p_m_relation', 's_m_relation'] as $field) {
+        if (!isset(${$which}[$field])) {
+            continue;
+        }
+
+        $relationship = strtolower(${$which}[$field]);
+
+        switch ($relationship) {
+            case 'self':
+            case 'spouse':
+            case 'child':
+            case 'other':
+                $relationship = ucfirst($relationship);
+                break;
+            default:
+                $relationship = '';
+        }
+
+        ${$which}[$field] = $relationship;
     }
 
     foreach (['marital_status'] as $field) {

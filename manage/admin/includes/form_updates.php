@@ -5574,13 +5574,15 @@ function form_update_all($docid, $backoffice = false)
         update_home_care_instructions_form($docid, $r['id'], $backoffice);
         update_non_dentist_of_record_release_form($docid, $r['id'], $backoffice);
         update_sleep_recorder_release_form($docid, $r['id'], $backoffice);
+
     }
-    update_financial_agreement_medicare_form($docid, $backoffice);
+    update_financial_agreement_medicare_nonpar_form($docid, $backoffice);
+    update_financial_agreement_cash_form($docid, $backoffice);
+    update_financial_agreement_oon_form($docid, $backoffice);
     update_affidavit_for_cpap_intolerance_form($docid, $backoffice);
     update_device_titration_ema_form($docid, $backoffice);
     update_device_titration_form($docid, $backoffice);
     update_ess_tss_form($docid, $backoffice);
-    update_financial_agreement_form($docid, $backoffice);
     update_informed_consent_form($docid, $backoffice);
     update_lomn_rx_form($docid, $backoffice);
     update_medical_hx_update_form($docid, $backoffice);

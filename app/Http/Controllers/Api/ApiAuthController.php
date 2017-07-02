@@ -7,10 +7,10 @@ use DentalSleepSolutions\Eloquent\User;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Illuminate\Support\Facades\Response;
-use DentalSleepSolutions\Http\Controllers\Controller as ApiBaseController;
+use DentalSleepSolutions\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
 
-class ApiAuthController extends ApiBaseController
+class ApiAuthController extends Controller
 {
     /**
      * Authenticate a user.

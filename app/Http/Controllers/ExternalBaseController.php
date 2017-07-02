@@ -31,6 +31,7 @@ abstract class ExternalBaseController extends BaseController
     {
         $this->externalCompaniesRepository = $externalCompanies;
         $this->externalUsersRepository = $externalUsers;
+        /* @todo Implement token parser */
         $this->currentUser = $this->getUserInfo($request, $userView, $userModel);
     }
 
@@ -40,7 +41,16 @@ abstract class ExternalBaseController extends BaseController
         $this->externalUserKey = $request->input('api_key_user');
 
         $externalUser = $this->externalUsersRepository->where('api_key', $this->externalUserKey)->first();
+
+        if (!$externalUser) {
+            return false;
+        }
+
         $user = $userView->find('u_' . $externalUser->user_id)->first();
+
+        if (!$user) {
+            return false;
+        }
 
         $user->id = $externalUser->user_id;
         $user->docid = $userModel->getDocId($user->id)->docid ?: $user->userid;

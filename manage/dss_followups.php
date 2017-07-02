@@ -582,7 +582,7 @@ foreach ($device_my as $device_myarray) {?>
     </tr>
     <tr>
       <td style="background: #E4FFCF;">
-        <input type="text" size="12" name="appt_notesadd" value="<?php echo (!empty($fuquery['appt_notesadd']) ? $fuquery['appt_notesadd'] : ''); ?>" style="width:100px;" />
+        <input type="text" size="12" name="appt_notesadd" value="<?php echo $q_row['appt_notesadd'] ?>" style="width:100px;" />
       </td>
     </tr>
     <tr>

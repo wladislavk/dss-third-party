@@ -62,7 +62,6 @@ foreach ($appt_t_qu as $appt_t_r) {
 function initCal() {
     dhtmlXTooltip.config.timeout_to_display = 500;
     dhtmlXTooltip.config.timeout_to_hide = 100;
-    scheduler.config.time_step = 500;
 	scheduler.config.multi_day = true;
 	scheduler.config.xml_date="%Y-%m-%d %H:%i:%s";
 	scheduler.config.hour_date="%h:%i%A";

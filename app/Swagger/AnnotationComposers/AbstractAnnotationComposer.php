@@ -1,40 +1,30 @@
 <?php
 
-namespace DentalSleepSolutions\Swagger\AnnotationTypes;
+namespace DentalSleepSolutions\Swagger\AnnotationComposers;
 
 use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
 use DentalSleepSolutions\Swagger\Factories\AbstractTransformerFactory;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 
-abstract class AbstractAnnotationType
+abstract class AbstractAnnotationComposer
 {
     /** @var AbstractTransformerFactory */
     private $transformerFactory;
 
-    /**
-     * @param AbstractTransformerFactory $transformerFactory
-     */
-    public function setTransformerFactory(AbstractTransformerFactory $transformerFactory)
+    public function __construct(AbstractTransformerFactory $transformerFactory)
     {
         $this->transformerFactory = $transformerFactory;
     }
 
     /**
-     * @param string $className
      * @param AnnotationParams|null $annotationParams
      * @return AnnotationData[]
      * @throws SwaggerGeneratorException
      */
-    public function composeAnnotation($className, AnnotationParams $annotationParams = null)
+    public function composeAnnotation(AnnotationParams $annotationParams)
     {
-        if (!$this->transformerFactory) {
-            throw new SwaggerGeneratorException('setTransformerFactory() must be called before composeAnnotation()');
-        }
-        if (!$annotationParams) {
-            $annotationParams = new AnnotationParams();
-        }
-        $annotations = $this->getAnnotationData($className, $annotationParams);
+        $annotations = $this->getAnnotationData($annotationParams);
         foreach ($annotations as $annotation) {
             $this->parseRules($annotation);
             $annotation->text = $this->createAnnotation($annotation);
@@ -49,12 +39,11 @@ abstract class AbstractAnnotationType
     abstract protected function createAnnotation(AnnotationData $annotationData);
 
     /**
-     * @param string $className
      * @param AnnotationParams $annotationParams
      * @return AnnotationData[]
      * @throws SwaggerGeneratorException
      */
-    abstract protected function getAnnotationData($className, AnnotationParams $annotationParams);
+    abstract protected function getAnnotationData(AnnotationParams $annotationParams);
 
     /**
      * @param AnnotationData $annotationData

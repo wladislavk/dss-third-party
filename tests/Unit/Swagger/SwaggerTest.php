@@ -2,9 +2,10 @@
 
 namespace Tests\Unit\Swagger;
 
+use DentalSleepSolutions\Helpers\ClassRetriever;
 use DentalSleepSolutions\Swagger\AnnotationModifier;
-use DentalSleepSolutions\Swagger\AnnotationTypes\ControllerType;
-use DentalSleepSolutions\Swagger\AnnotationTypes\ModelType;
+use DentalSleepSolutions\Swagger\AnnotationComposers\ControllerComposer;
+use DentalSleepSolutions\Swagger\AnnotationComposers\ModelComposer;
 use DentalSleepSolutions\Swagger\AnnotationWriter;
 use DentalSleepSolutions\Swagger\Factories\ActionAnnotatorFactory;
 use DentalSleepSolutions\Swagger\Factories\ModelTransformerFactory;
@@ -87,16 +88,16 @@ class SwaggerTest extends TestCase
         $annotationWriter = new AnnotationWriter($annotationModifier, $filesystemWrapper);
         $actionAnnotatorFactory = new ActionAnnotatorFactory($application);
         $router = $this->mockRouter();
-        $controllerType = new ControllerType($actionAnnotatorFactory, $router);
-        $modelType = new ModelType();
         $modelTransformerFactory = new ModelTransformerFactory($application);
         $ruleTransformerFactory = new RuleTransformerFactory($application);
+        $controllerComposer = new ControllerComposer($ruleTransformerFactory, $actionAnnotatorFactory, $router);
+        $modelComposer = new ModelComposer($modelTransformerFactory);
+        $classRetriever = new ClassRetriever();
         $this->generator = new Generator(
             $annotationWriter,
-            $controllerType,
-            $modelType,
-            $modelTransformerFactory,
-            $ruleTransformerFactory,
+            $controllerComposer,
+            $modelComposer,
+            $classRetriever,
             $filesystemWrapper
         );
     }

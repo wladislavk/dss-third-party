@@ -1,10 +1,11 @@
 <?php
 
-namespace DentalSleepSolutions\Swagger\AnnotationTypes;
+namespace DentalSleepSolutions\Swagger\AnnotationComposers;
 
 use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
 use DentalSleepSolutions\Swagger\Factories\ActionAnnotatorFactory;
 use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Swagger\Factories\RuleTransformerFactory;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
@@ -12,7 +13,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Routing\Router;
 
-class ControllerType extends AbstractAnnotationType
+class ControllerComposer extends AbstractAnnotationComposer
 {
     const REST_ACTIONS = [
         'index',
@@ -29,25 +30,25 @@ class ControllerType extends AbstractAnnotationType
     private $annotatorFactory;
 
     public function __construct(
+        RuleTransformerFactory $ruleTransformerFactory,
         ActionAnnotatorFactory $annotatorFactory,
         Router $router
     ) {
+        parent::__construct($ruleTransformerFactory);
         $this->routes = $router->getRoutes();
         $this->annotatorFactory = $annotatorFactory;
     }
 
     /**
-     * @param string $controllerClassName
      * @param AnnotationParams $annotationParams
      * @return AnnotationData[]
      * @throws SwaggerGeneratorException
      */
-    protected function getAnnotationData($controllerClassName, AnnotationParams $annotationParams)
+    protected function getAnnotationData(AnnotationParams $annotationParams)
     {
-        $requestClassName = $annotationParams->requestClassName;
         $annotations = [];
         foreach (self::REST_ACTIONS as $action) {
-            $qualifiedAction = "$controllerClassName@$action";
+            $qualifiedAction = "{$annotationParams->controllerClassName}@$action";
             $route = $this->routes->getByAction($qualifiedAction);
             if (!$route) {
                 throw new SwaggerGeneratorException("Route not found for action $qualifiedAction");
@@ -55,9 +56,9 @@ class ControllerType extends AbstractAnnotationType
             $annotationData = new AnnotationData();
             $annotationData->action = $action;
             $annotationData->route = $this->replaceWildcard($route->getPath());
-            $annotationData->requestClassName = $requestClassName;
-            $annotationData->modelClassName = $annotationParams->modelClassName;
-            $annotationData->shortModelClassName = $this->getShortModelClass($annotationParams->modelClassName);
+            $annotationData->params = $annotationParams;
+            $annotationData->shortModelClassName = $this
+                ->getShortModelClass($annotationParams->modelClassName);
             $annotationData->operator = "public function $action";
             $annotations[] = $annotationData;
         }
@@ -88,7 +89,7 @@ class ControllerType extends AbstractAnnotationType
     protected function setRules(AnnotationData $annotationData)
     {
         /** @var Request $request */
-        $request = new $annotationData->requestClassName();
+        $request = new $annotationData->params->requestClassName();
         $rules = $this->getRequestRules($request, $annotationData->action);
         foreach ($rules as $field => $rule) {
             $annotationRule = new AnnotationRule();

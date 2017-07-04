@@ -9,4 +9,6 @@ class AnnotationParams
 
     /** @var string */
     public $modelClassName = '';
+
+    public $controllerClassName = '';
 }

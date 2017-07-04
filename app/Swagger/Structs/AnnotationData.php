@@ -14,19 +14,16 @@ class AnnotationData
     public $action = '';
 
     /** @var string */
-    public $modelClassName = '';
-
-    /** @var string */
     public $shortModelClassName = '';
-
-    /** @var string */
-    public $requestClassName = '';
 
     /** @var string */
     public $route = '';
 
     /** @var AnnotationRule[] */
     public $rules = [];
+
+    /** @var AnnotationParams */
+    public $params;
 
     public function addRule(AnnotationRule $annotationRule)
     {

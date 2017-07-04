@@ -1,26 +1,31 @@
 <?php
 
-namespace DentalSleepSolutions\Swagger\AnnotationTypes;
+namespace DentalSleepSolutions\Swagger\AnnotationComposers;
 
 use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
+use DentalSleepSolutions\Swagger\Factories\ModelTransformerFactory;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
 
-class ModelType extends AbstractAnnotationType
+class ModelComposer extends AbstractAnnotationComposer
 {
+    public function __construct(ModelTransformerFactory $modelTransformerFactory)
+    {
+        parent::__construct($modelTransformerFactory);
+    }
+
     /**
-     * @param string $modelClassName
      * @param AnnotationParams $annotationParams
      * @return AnnotationData[]
      * @throws SwaggerGeneratorException
      */
-    protected function getAnnotationData($modelClassName, AnnotationParams $annotationParams)
+    protected function getAnnotationData(AnnotationParams $annotationParams)
     {
-        $shortClassName = $this->getShortModelClass($modelClassName);
+        $shortClassName = $this->getShortModelClass($annotationParams->modelClassName);
         $annotationData = new AnnotationData();
         $annotationData->operator = "class $shortClassName";
-        $annotationData->modelClassName = $modelClassName;
+        $annotationData->params = $annotationParams;
         $annotationData->shortModelClassName = $shortClassName;
         $annotations[] = $annotationData;
         return $annotations;
@@ -67,7 +72,7 @@ ANNOTATION;
      */
     protected function setRules(AnnotationData $annotationData)
     {
-        $reflection = new \ReflectionClass($annotationData->modelClassName);
+        $reflection = new \ReflectionClass($annotationData->params->modelClassName);
         $docBlock = $reflection->getDocComment();
         $lines = explode("\n", $docBlock);
         $regexp = '/\*\s@(property(?:\-read)?)\s(\S+?)\s\$([a-zA-Z0-9]+)/';

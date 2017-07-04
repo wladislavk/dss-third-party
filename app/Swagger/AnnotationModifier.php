@@ -54,9 +54,7 @@ class AnnotationModifier
         $existingDocBlockRegexp = "/\/\*\*((?:[^\*]|\*(?!\/))+?)\*\/\s+$operator/sm";
         preg_match($existingDocBlockRegexp, $fileContents, $docBlockMatches);
         if (isset($docBlockMatches[1])) {
-            $strippedRegexp = str_replace('/**', '', $docBlockMatches[1]);
-            $strippedRegexp = str_replace('*/', '', $strippedRegexp);
-            return $strippedRegexp;
+            return $docBlockMatches[1];
         }
         return '';
     }

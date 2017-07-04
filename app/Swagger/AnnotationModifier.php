@@ -6,7 +6,7 @@ use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 
 class AnnotationModifier
 {
-    const MANUAL_ANNOTATION = '@DSS\\\\Manual';
+    const MANUAL_ANNOTATION = '@DSS\\Manual';
 
     /**
      * @param string $fileContents
@@ -35,12 +35,12 @@ class AnnotationModifier
             );
             return $fileContents;
         }
-        $swaggerAnnotationsRegexp = '/\s+?\*\s@SWG\\\\[A-Za-z]+?\(.*?\)/m';
+        $swaggerAnnotationsRegexp = '/\s+?\*\s@SWG\\\\[A-Za-z]+?\(.*?\)\n\s+?(?:$|\*\s*?(?=\n))/sm';
         $newDocBlock = preg_replace($swaggerAnnotationsRegexp, '', $existingDocBlock);
-        $annotationReplacementRegexp = '/(\/\*\*\n)/';
         $replacement = $this->getReplacementAnnotation($textByLines, $padding);
-        $newDocBlock = preg_replace($annotationReplacementRegexp, $replacement, $newDocBlock);
+        $newDocBlock = $replacement . $newDocBlock;
         $fileContents = str_replace($existingDocBlock, $newDocBlock, $fileContents);
+        $fileContents = str_replace('**/', '*/', $fileContents);
         return $fileContents;
     }
 
@@ -51,10 +51,12 @@ class AnnotationModifier
      */
     private function getExistingDocBlock($fileContents, $operator)
     {
-        $existingDocBlockRegexp = "/\/\*\*(.*?)\*\/\s+?$operator/m";
+        $existingDocBlockRegexp = "/\/\*\*((?:[^\*]|\*(?!\/))+?)\*\/\s+$operator/sm";
         preg_match($existingDocBlockRegexp, $fileContents, $docBlockMatches);
         if (isset($docBlockMatches[1])) {
-            return $docBlockMatches[1];
+            $strippedRegexp = str_replace('/**', '', $docBlockMatches[1]);
+            $strippedRegexp = str_replace('*/', '', $strippedRegexp);
+            return $strippedRegexp;
         }
         return '';
     }
@@ -66,7 +68,7 @@ class AnnotationModifier
      */
     private function getIndentation($fileContents, AnnotationData $annotation)
     {
-        $indentationRegexp = "/^(\s*?){$annotation->operator}/";
+        $indentationRegexp = "/\\n( *?){$annotation->operator}/m";
         preg_match($indentationRegexp, $fileContents, $indentationMatches);
         if (isset($indentationMatches[1])) {
             return strlen($indentationMatches[1]);
@@ -83,14 +85,17 @@ class AnnotationModifier
     {
         $newDocBlock = <<<ANNOTATION
 $padding/**
+
 ANNOTATION;
         foreach ($textByLines as $line) {
             $newDocBlock .= <<<ANNOTATION
 $padding * $line
+
 ANNOTATION;
         }
         $newDocBlock .= <<<ANNOTATION
 $padding */
+
 ANNOTATION;
         return $newDocBlock;
     }
@@ -102,10 +107,11 @@ ANNOTATION;
      */
     private function getReplacementAnnotation(array $textByLines, $padding)
     {
-        $replacement = '';
+        $replacement = "\n";
         foreach ($textByLines as $line) {
             $replacement .= <<<ANNOTATION
 $padding * $line
+
 ANNOTATION;
         }
         $replacement .= <<<ANNOTATION

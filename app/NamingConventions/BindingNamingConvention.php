@@ -5,9 +5,11 @@ namespace DentalSleepSolutions\NamingConventions;
 use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 use DentalSleepSolutions\Eloquent\AbstractModel;
+use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Http\Requests\Request;
+use Tymon\JWTAuth\JWTAuth;
 
 class BindingNamingConvention
 {
@@ -38,9 +40,21 @@ class BindingNamingConvention
         }
     }
 
+    /**
+     * @todo: mocking classes indicates bad design, needs to be refactored
+     *
+     * @param string $className
+     * @throws NamingConventionException
+     */
     public function setController($className)
     {
-        $this->controller = new $className();
+        $jwtAuth = \Mockery::mock(JWTAuth::class);
+        $jwtAuth->shouldReceive('toUser')->andReturnNull();
+        $user = \Mockery::mock(User::class);
+        $repository = \Mockery::mock(Repository::class);
+        $request = \Mockery::mock(Request::class);
+
+        $this->controller = new $className($jwtAuth, $user, $repository, $request);
         if (!$this->controller instanceof BaseRestController) {
             throw new NamingConventionException("$className must extend " . BaseRestController::class);
         }
@@ -90,13 +104,14 @@ class BindingNamingConvention
     }
 
     /**
+     * @param string $baseNamespace
      * @return string
      * @throws NamingConventionException
      */
-    public function getResource()
+    public function getResource($baseNamespace = self::BASE_NAMESPACE)
     {
         $name = $this->model->getSingular();
-        $namespace = self::BASE_NAMESPACE . '\\Contracts\\Resources';
+        $namespace = $baseNamespace . '\\Contracts\\Resources';
         $resource = $namespace . '\\' . $name;
         if (!interface_exists($resource) || !is_subclass_of($resource, Resource::class)) {
             throw new NamingConventionException("$resource must exist and extend " . Resource::class);
@@ -105,13 +120,14 @@ class BindingNamingConvention
     }
 
     /**
+     * @param string $baseNamespace
      * @return string
      * @throws NamingConventionException
      */
-    public function getRepository()
+    public function getRepository($baseNamespace = self::BASE_NAMESPACE)
     {
         $name = $this->model->getPlural();
-        $namespace = self::BASE_NAMESPACE . '\\Contracts\\Repositories';
+        $namespace = $baseNamespace . '\\Contracts\\Repositories';
         $repository = $namespace . '\\' . $name;
         if (!interface_exists($repository) || !is_subclass_of($repository, Repository::class)) {
             throw new NamingConventionException("$repository must exist and extend " . Repository::class);

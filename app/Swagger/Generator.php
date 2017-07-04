@@ -3,12 +3,13 @@
 namespace DentalSleepSolutions\Swagger;
 
 use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
-use DentalSleepSolutions\Swagger\Factories\SwaggerModelTransformerFactory;
-use DentalSleepSolutions\Swagger\Factories\SwaggerRuleTransformerFactory;
+use DentalSleepSolutions\Swagger\Factories\ModelTransformerFactory;
+use DentalSleepSolutions\Swagger\Factories\RuleTransformerFactory;
 use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
 use DentalSleepSolutions\Swagger\AnnotationTypes\ControllerType;
 use DentalSleepSolutions\Swagger\AnnotationTypes\ModelType;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
+use DentalSleepSolutions\Swagger\Wrappers\FilesystemWrapper;
 use Illuminate\Filesystem\FilesystemAdapter;
 
 class Generator
@@ -31,23 +32,24 @@ class Generator
     /** @var ModelType */
     private $modelType;
 
-    /** @var FilesystemAdapter */
-    private $filesystemAdapter;
+    /** @var FilesystemWrapper */
+    private $filesystemWrapper;
 
     public function __construct(
         AnnotationWriter $annotationWriter,
-        FilesystemAdapter $filesystemAdapter,
         ControllerType $controllerType,
         ModelType $modelType,
-        SwaggerModelTransformerFactory $modelTransformerFactory,
-        SwaggerRuleTransformerFactory $ruleTransformerFactory
-    ) {
+        ModelTransformerFactory $modelTransformerFactory,
+        RuleTransformerFactory $ruleTransformerFactory,
+        FilesystemWrapper $filesystemWrapper
+    )
+    {
         $this->annotationWriter = $annotationWriter;
-        $this->filesystemAdapter = $filesystemAdapter;
         $this->controllerType = $controllerType;
         $this->controllerType->setTransformerFactory($ruleTransformerFactory);
         $this->modelType = $modelType;
         $this->modelType->setTransformerFactory($modelTransformerFactory);
+        $this->filesystemWrapper = $filesystemWrapper;
     }
 
     /**
@@ -67,6 +69,7 @@ class Generator
             $controllerClassName = $this->getClassName($controllerFilename);
             $annotationParams = new AnnotationParams();
             $annotationParams->requestClassName = $this->getRequestClass($controllerClassName, $httpDir);
+            $annotationParams->modelClassName = $this->getModelClass($controllerClassName, $httpDir);
             $annotationGroups[$controllerFilename] = $this->controllerType
                 ->composeAnnotation($controllerClassName, $annotationParams);
         }
@@ -82,9 +85,9 @@ class Generator
     private function getRestControllers($httpDir)
     {
         $restControllers = [];
-        $controllerFiles = $this->filesystemAdapter->allFiles($httpDir . self::CONTROLLER_DIR);
+        $controllerFiles = $this->filesystemWrapper->allFiles($httpDir . self::CONTROLLER_DIR);
         foreach ($controllerFiles as $filename) {
-            $contents = file_get_contents($filename);
+            $contents = $this->filesystemWrapper->fileGetContents($filename);
             if (strstr($contents, ' extends ' . self::BASE_CONTROLLER)) {
                 $restControllers[] = $filename;
             }
@@ -98,7 +101,7 @@ class Generator
      */
     private function getModels($modelDir)
     {
-        return $this->filesystemAdapter->allFiles($modelDir);
+        return $this->filesystemWrapper->allFiles($modelDir);
     }
 
     /**
@@ -117,13 +120,26 @@ class Generator
     }
 
     /**
+     * @param string $controllerClassName
+     * @param string $httpDir
+     * @return string
+     */
+    private function getModelClass($controllerClassName, $httpDir)
+    {
+        $namingConvention = new BindingNamingConvention();
+        $namingConvention->setController($controllerClassName);
+        $modelClass = $namingConvention->getModel();
+        return $modelClass;
+    }
+
+    /**
      * @param string $filename
      * @return string
      * @throws SwaggerGeneratorException
      */
     private function getClassName($filename)
     {
-        $contents = file_get_contents($filename);
+        $contents = $this->filesystemWrapper->fileGetContents($filename);
         preg_match('/namespace\s(.+?);/', $contents, $namespaceMatches);
         preg_match('/class\s(.+?)[\s\n]/', $contents, $classNameMatches);
         if (!isset($namespaceMatches[1]) || !isset($classNameMatches[1])) {

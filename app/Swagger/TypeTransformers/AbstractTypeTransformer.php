@@ -6,21 +6,21 @@ use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
 
 abstract class AbstractTypeTransformer
 {
-    const FIVE_WHITESPACES = '     ';
+    const FOUR_WHITESPACES = '    ';
 
     /**
      * @param AnnotationRule $annotationRule
      */
     public function transform(AnnotationRule $annotationRule)
     {
-        $transformed = ' *' . self::FIVE_WHITESPACES;
+        $transformed = self::FOUR_WHITESPACES;
         $transformed .= $this->getInitialData($annotationRule->field);
         if ($this->checkIfRequired($annotationRule)) {
             $annotationRule->required = true;
         }
         $newRule = $this->getType($annotationRule->rule);
         if ($newRule) {
-            $transformed .= "type=\"$newRule\"";
+            $transformed .= ", type=\"$newRule\"";
         }
         $format = $this->addFormat();
         if ($format) {
@@ -41,6 +41,7 @@ abstract class AbstractTypeTransformer
     abstract protected function getInitialData($field);
 
     /**
+     * @param string $rule
      * @return string
      */
     abstract protected function getType($rule);

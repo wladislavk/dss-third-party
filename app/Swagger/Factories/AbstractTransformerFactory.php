@@ -5,10 +5,19 @@ namespace DentalSleepSolutions\Swagger\Factories;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Swagger\TypeTransformers\AbstractTypeTransformer;
 use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\App;
 
-abstract class AbstractSwaggerTransformerFactory
+abstract class AbstractTransformerFactory
 {
+    /** @var Application */
+    private $application;
+
+    public function __construct(Application $application)
+    {
+        $this->application = $application;
+    }
+
     /**
      * @param AnnotationRule $rule
      * @return AbstractTypeTransformer
@@ -17,7 +26,7 @@ abstract class AbstractSwaggerTransformerFactory
     public function getTransformer(AnnotationRule $rule)
     {
         $className = $this->findRuleClass($rule);
-        $transformer = App::make($className);
+        $transformer = $this->application->make($className);
         if (!$transformer instanceof AbstractTypeTransformer) {
             throw new GeneralException("Class $className must extend " . AbstractTypeTransformer::class);
         }

@@ -9,7 +9,7 @@ abstract class AbstractRuleTransformer extends AbstractTypeTransformer
 {
     protected function getInitialData($field)
     {
-        return "@SWG\Parameter(name=\"$field\", in=\"formData\", ";
+        return "@SWG\Parameter(name=\"$field\", in=\"formData\"";
     }
 
     protected function checkIfRequired(AnnotationRule $annotationRule)

@@ -22,6 +22,7 @@ class UpdateAnnotator extends AbstractActionAnnotator
     {
         $annotation = <<<ANNOTATION
     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+
 ANNOTATION;
         $annotation .= $this->get404();
         $annotation .= $this->get422();

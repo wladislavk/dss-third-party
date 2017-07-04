@@ -10,11 +10,11 @@ use DentalSleepSolutions\Swagger\TypeTransformers\ModelTransformers\IntegerTrans
 use DentalSleepSolutions\Swagger\TypeTransformers\ModelTransformers\StringTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\ModelTransformers\RefTransformer;
 
-class SwaggerModelTransformerFactory extends AbstractSwaggerTransformerFactory
+class ModelTransformerFactory extends AbstractTransformerFactory
 {
     const RULE_CLASSES = [
         'string' => StringTransformer::class,
-        'integer' => IntegerTransformer::class,
+        'int' => IntegerTransformer::class,
         'float' => FloatTransformer::class,
         '\Carbon\Carbon' => DateTransformer::class,
     ];
@@ -36,7 +36,7 @@ class SwaggerModelTransformerFactory extends AbstractSwaggerTransformerFactory
                 return $className;
             }
         }
-        throw new GeneralException("Rule $rule not found");
+        throw new GeneralException("Rule $rule->rule not found");
     }
 
     private function checkRuleParts(array $splitRule, $name, $className)

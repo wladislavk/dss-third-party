@@ -16,9 +16,13 @@ abstract class AbstractActionAnnotator
         $annotation = <<<ANNOTATION
 @SWG\\{$this->getMethod()}(
     path="{$annotationData->route}",
+
 ANNOTATION;
-        $annotation .= $this->getParameters($annotationData);
-        $annotation .= $this->getResponses($annotationData->modelClassName);
+        $parameters = $this->getParameters($annotationData);
+        if ($parameters) {
+            $annotation .= $this->getParameters($annotationData) . "\n";
+        }
+        $annotation .= $this->getResponses($annotationData->shortModelClassName);
         $annotation .= <<<ANNOTATION
 )
 ANNOTATION;
@@ -60,6 +64,7 @@ ANNOTATION;
     {
         $annotation = <<<ANNOTATION
     @SWG\Response(response="404", ref="#/responses/404_response"),
+
 ANNOTATION;
         return $annotation;
     }
@@ -71,6 +76,7 @@ ANNOTATION;
     {
         $annotation = <<<ANNOTATION
     @SWG\Response(response="422", ref="#/responses/422_response"),
+
 ANNOTATION;
         return $annotation;
     }
@@ -82,6 +88,7 @@ ANNOTATION;
     {
         $annotation = <<<ANNOTATION
     @SWG\Response(response="default", ref="#/responses/error_response")
+
 ANNOTATION;
         return $annotation;
     }

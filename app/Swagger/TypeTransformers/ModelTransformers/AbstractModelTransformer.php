@@ -9,7 +9,7 @@ abstract class AbstractModelTransformer extends AbstractTypeTransformer
 {
     protected function getInitialData($field)
     {
-        return "@SWG\Property(property=\"$field\", ";
+        return "@SWG\Property(property=\"$field\"";
     }
 
     protected function checkIfRequired(AnnotationRule $annotationRule)

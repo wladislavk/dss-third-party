@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Swagger\AnnotationTypes;
 
 use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
-use DentalSleepSolutions\Swagger\Factories\SwaggerActionAnnotatorFactory;
+use DentalSleepSolutions\Swagger\Factories\ActionAnnotatorFactory;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
@@ -19,17 +19,19 @@ class ControllerType extends AbstractAnnotationType
         'show',
         'store',
         'update',
-        'delete',
+        'destroy',
     ];
 
     /** @var Route[]|RouteCollection */
     private $routes;
 
-    /** @var SwaggerActionAnnotatorFactory */
+    /** @var ActionAnnotatorFactory */
     private $annotatorFactory;
 
-    public function __construct(Router $router, SwaggerActionAnnotatorFactory $annotatorFactory)
-    {
+    public function __construct(
+        ActionAnnotatorFactory $annotatorFactory,
+        Router $router
+    ) {
         $this->routes = $router->getRoutes();
         $this->annotatorFactory = $annotatorFactory;
     }
@@ -52,12 +54,25 @@ class ControllerType extends AbstractAnnotationType
             }
             $annotationData = new AnnotationData();
             $annotationData->action = $action;
-            $annotationData->route = $route;
+            $annotationData->route = $this->replaceWildcard($route->getPath());
             $annotationData->requestClassName = $requestClassName;
+            $annotationData->modelClassName = $annotationParams->modelClassName;
+            $annotationData->shortModelClassName = $this->getShortModelClass($annotationParams->modelClassName);
             $annotationData->operator = "public function $action";
             $annotations[] = $annotationData;
         }
         return $annotations;
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    private function replaceWildcard($path)
+    {
+        $regexp = '/(?<=\/)\:([a-z]+?)(?=\/|$)/';
+        $replaced = preg_replace($regexp, '{$1}', $path);
+        return $replaced;
     }
 
     protected function createAnnotation(AnnotationData $annotationData)
@@ -77,10 +92,23 @@ class ControllerType extends AbstractAnnotationType
         $rules = $this->getRequestRules($request, $annotationData->action);
         foreach ($rules as $field => $rule) {
             $annotationRule = new AnnotationRule();
-            $annotationRule->rule = $rule;
+            $stringRule = $this->getStringRule($rule);
+            $annotationRule->rule = $stringRule;
             $annotationRule->field = $field;
             $annotationData->addRule($annotationRule);
         }
+    }
+
+    /**
+     * @param string|array $rule
+     * @return string
+     */
+    private function getStringRule($rule)
+    {
+        if (is_array($rule)) {
+            return join('|', $rule);
+        }
+        return $rule;
     }
 
     private function getRequestRules(Request $request, $action)

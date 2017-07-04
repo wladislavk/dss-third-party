@@ -29,6 +29,7 @@ class StoreAnnotator extends AbstractActionAnnotator
             )
         }
     ),
+
 ANNOTATION;
         $annotation .= $this->get422();
         $annotation .= $this->getDefaultError();

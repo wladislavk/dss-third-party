@@ -2,16 +2,17 @@
 
 namespace DentalSleepSolutions\Swagger\Factories;
 
-use DentalSleepSolutions\Exceptions\SwaggerGeneratorException;
+use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
 use DentalSleepSolutions\Swagger\ActionAnnotators\AbstractActionAnnotator;
 use DentalSleepSolutions\Swagger\ActionAnnotators\DestroyAnnotator;
 use DentalSleepSolutions\Swagger\ActionAnnotators\IndexAnnotator;
 use DentalSleepSolutions\Swagger\ActionAnnotators\ShowAnnotator;
 use DentalSleepSolutions\Swagger\ActionAnnotators\StoreAnnotator;
 use DentalSleepSolutions\Swagger\ActionAnnotators\UpdateAnnotator;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\App;
 
-class SwaggerActionAnnotatorFactory
+class ActionAnnotatorFactory
 {
     const ANNOTATOR_CLASSES = [
         'index' => IndexAnnotator::class,
@@ -20,6 +21,14 @@ class SwaggerActionAnnotatorFactory
         'update' => UpdateAnnotator::class,
         'destroy' => DestroyAnnotator::class,
     ];
+
+    /** @var Application */
+    private $application;
+
+    public function __construct(Application $application)
+    {
+        $this->application = $application;
+    }
 
     /**
      * @param string $action
@@ -32,7 +41,7 @@ class SwaggerActionAnnotatorFactory
             throw new SwaggerGeneratorException("Action $action is not valid");
         }
         $class = self::ANNOTATOR_CLASSES[$action];
-        $object = App::make($class);
+        $object = $this->application->make($class);
         if (!$object instanceof AbstractActionAnnotator) {
             throw new SwaggerGeneratorException("Class $class must implement " . AbstractActionAnnotator::class);
         }

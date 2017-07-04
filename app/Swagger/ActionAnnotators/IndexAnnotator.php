@@ -33,6 +33,7 @@ class IndexAnnotator extends AbstractActionAnnotator
             )
         }
     ),
+
 ANNOTATION;
         $annotation .= $this->getDefaultError();
         return $annotation;

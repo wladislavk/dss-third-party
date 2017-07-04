@@ -3,19 +3,19 @@
 namespace DentalSleepSolutions\Swagger\AnnotationTypes;
 
 use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
-use DentalSleepSolutions\Swagger\Factories\AbstractSwaggerTransformerFactory;
+use DentalSleepSolutions\Swagger\Factories\AbstractTransformerFactory;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 
 abstract class AbstractAnnotationType
 {
-    /** @var AbstractSwaggerTransformerFactory */
+    /** @var AbstractTransformerFactory */
     private $transformerFactory;
 
     /**
-     * @param AbstractSwaggerTransformerFactory $transformerFactory
+     * @param AbstractTransformerFactory $transformerFactory
      */
-    public function setTransformerFactory(AbstractSwaggerTransformerFactory $transformerFactory)
+    public function setTransformerFactory(AbstractTransformerFactory $transformerFactory)
     {
         $this->transformerFactory = $transformerFactory;
     }
@@ -66,6 +66,17 @@ abstract class AbstractAnnotationType
             $transformer = $this->transformerFactory->getTransformer($rule);
             $transformer->transform($rule);
         }
+    }
+
+    /**
+     * @param string $modelClassName
+     * @return string
+     */
+    protected function getShortModelClass($modelClassName)
+    {
+        $explodedClassName = explode('\\', $modelClassName);
+        $shortClassName = $explodedClassName[count($explodedClassName) - 1];
+        return $shortClassName;
     }
 
     /**

@@ -17,9 +17,11 @@ class ModelType extends AbstractAnnotationType
      */
     protected function getAnnotationData($modelClassName, AnnotationParams $annotationParams)
     {
+        $shortClassName = $this->getShortModelClass($modelClassName);
         $annotationData = new AnnotationData();
-        $annotationData->operator = "class $modelClassName";
+        $annotationData->operator = "class $shortClassName";
         $annotationData->modelClassName = $modelClassName;
+        $annotationData->shortModelClassName = $shortClassName;
         $annotations[] = $annotationData;
         return $annotations;
     }
@@ -32,8 +34,9 @@ class ModelType extends AbstractAnnotationType
     {
         $annotation = <<<ANNOTATION
 @SWG\Definition(
-    definition="{$annotationData->modelClassName}",
+    definition="{$annotationData->shortModelClassName}",
     type="object",
+
 ANNOTATION;
         $required = [];
         foreach ($annotationData->rules as $rule) {
@@ -42,9 +45,10 @@ ANNOTATION;
             }
         }
         if (sizeof($required)) {
-            $requiredString = '"' . join('","', $required) . '"';
+            $requiredString = '"' . join('", "', $required) . '"';
             $annotation .= <<<ANNOTATION
-    required=\{$requiredString\},
+    required={{$requiredString}},
+
 ANNOTATION;
         }
         $rules = [];
@@ -66,7 +70,7 @@ ANNOTATION;
         $reflection = new \ReflectionClass($annotationData->modelClassName);
         $docBlock = $reflection->getDocComment();
         $lines = explode("\n", $docBlock);
-        $regexp = '\*\s@(property(?:\-read)?)\s(\S+?)\s\$([a-zA-Z0-9]+)';
+        $regexp = '/\*\s@(property(?:\-read)?)\s(\S+?)\s\$([a-zA-Z0-9]+)/';
         $matches = [];
         foreach ($lines as $line) {
             $hasProperty = preg_match($regexp, $line, $matches);

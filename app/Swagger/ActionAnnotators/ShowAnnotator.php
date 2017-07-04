@@ -29,6 +29,7 @@ class ShowAnnotator extends AbstractActionAnnotator
             )
         }
     ),
+
 ANNOTATION;
         $annotation .= $this->get404();
         $annotation .= $this->getDefaultError();

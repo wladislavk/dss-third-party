@@ -20,6 +20,7 @@ class DestroyAnnotator extends AbstractActionAnnotator
     {
         $annotation = <<<ANNOTATION
     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+
 ANNOTATION;
         $annotation .= $this->get404();
         $annotation .= $this->getDefaultError();

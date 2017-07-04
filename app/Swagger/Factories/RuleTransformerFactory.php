@@ -11,7 +11,7 @@ use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\IntegerTransf
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\RegexTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\StringTransformer;
 
-class SwaggerRuleTransformerFactory extends AbstractSwaggerTransformerFactory
+class RuleTransformerFactory extends AbstractTransformerFactory
 {
     const DEFAULT_RULE_CLASS = StringTransformer::class;
 
@@ -32,7 +32,7 @@ class SwaggerRuleTransformerFactory extends AbstractSwaggerTransformerFactory
     protected function findRuleClass(AnnotationRule $annotationRule)
     {
         foreach (self::RULE_CLASSES as $name => $className) {
-            $regexp = "/[^\|]{$name}[$\|\:]/";
+            $regexp = "/(^|\|){$name}($|\||\:)/";
             if (preg_match($regexp, $annotationRule->rule)) {
                 return $className;
             }

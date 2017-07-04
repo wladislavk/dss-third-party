@@ -17,6 +17,9 @@ class AnnotationData
     public $modelClassName = '';
 
     /** @var string */
+    public $shortModelClassName = '';
+
+    /** @var string */
     public $requestClassName = '';
 
     /** @var string */

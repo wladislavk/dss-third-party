@@ -24,8 +24,10 @@ class ShowAnnotator extends AbstractActionAnnotator
         description="Resource retrieved",
         @SWG\Schema(
             allOf={
-                ref="#/definitions/common_response_fields",
-                @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/$modelClass"))
+                @SWG\Schema(ref="#/definitions/common_response_fields"),
+                @SWG\Schema(
+                    @SWG\Property(property="data", ref="#/definitions/$modelClass")
+                )
             }
         )
     ),

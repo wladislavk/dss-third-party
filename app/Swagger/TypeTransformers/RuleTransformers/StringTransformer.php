@@ -16,7 +16,7 @@ class StringTransformer extends AbstractRuleTransformer
         $params = parent::addParams($annotationRule);
         $maxLength = $this->getMaxLength($annotationRule->rule);
         if ($maxLength) {
-            $params[] = "maxLength=\"$maxLength\"";
+            $params[] = "maxLength=$maxLength";
         }
         return $params;
     }

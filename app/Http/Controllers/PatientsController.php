@@ -52,13 +52,15 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(
      *         response="200",
      *         description="Resources retrieved",
-     *         @SWG\Schema
+     *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(
-     *                     property="data",
-     *                     type="array",
-     *                     @SWG\Items(@SWG\Schema(ref="#/definitions/Patient"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Patient")
+     *                     )
      *                 )
      *             }
      *         )
@@ -80,8 +82,10 @@ class PatientsController extends BaseRestController
      *         description="Resource retrieved",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/Patient"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Patient")
+     *                 )
      *             }
      *         )
      *     ),
@@ -254,8 +258,10 @@ class PatientsController extends BaseRestController
      *         description="Resource created",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/Patient"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Patient")
+     *                 )
      *             }
      *         )
      *     ),
@@ -506,51 +512,6 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    /**
-     * @SWG\Delete(
-     *     path="/patients/{id}",
-     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
-     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
-     *     @SWG\Response(response="404", ref="#/responses/404_response"),
-     *     @SWG\Response(response="default", ref="#/responses/error_response")
-     * )
-     */
-    /**
-     * @SWG\Delete(
-     *     path="/patients/{id}",
-     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
-     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
-     *     @SWG\Response(response="404", ref="#/responses/404_response"),
-     *     @SWG\Response(response="default", ref="#/responses/error_response")
-     * )
-     */
-    /**
-     * @SWG\Delete(
-     *     path="/patients/{id}",
-     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
-     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
-     *     @SWG\Response(response="404", ref="#/responses/404_response"),
-     *     @SWG\Response(response="default", ref="#/responses/error_response")
-     * )
-     */
-    /**
-     * @SWG\Delete(
-     *     path="/patients/{id}",
-     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
-     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
-     *     @SWG\Response(response="404", ref="#/responses/404_response"),
-     *     @SWG\Response(response="default", ref="#/responses/error_response")
-     * )
-     */
-    /**
-     * @SWG\Delete(
-     *     path="/patients/{id}",
-     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
-     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
-     *     @SWG\Response(response="404", ref="#/responses/404_response"),
-     *     @SWG\Response(response="default", ref="#/responses/error_response")
-     * )
-     */
     public function destroyForDoctor($patientId, Patient $resource)
     {
         $docId = $this->currentUser->docid ?: 0;

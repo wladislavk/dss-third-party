@@ -18,7 +18,7 @@ class AnnotationModifier
         if (!strstr($fileContents, $annotation->operator)) {
             return $fileContents;
         }
-        $existingDocBlock = $this->getExistingDocBlock($fileContents, $annotation->operator);
+        $existingDocBlock = $this->getExistingDocBlock($annotation);
         $hasManual = strstr($existingDocBlock, self::MANUAL_ANNOTATION);
         if ($hasManual) {
             return $fileContents;
@@ -45,18 +45,15 @@ class AnnotationModifier
     }
 
     /**
-     * @param string $fileContents
-     * @param string $operator
+     * @param AnnotationData $annotation
      * @return string
      */
-    private function getExistingDocBlock($fileContents, $operator)
+    private function getExistingDocBlock(AnnotationData $annotation)
     {
-        $existingDocBlockRegexp = "/\/\*\*((?:[^\*]|\*(?!\/))+?)\*\/\s+$operator/sm";
-        preg_match($existingDocBlockRegexp, $fileContents, $docBlockMatches);
-        if (isset($docBlockMatches[1])) {
-            return $docBlockMatches[1];
-        }
-        return '';
+        $existingDocBlock = $annotation->docBlock;
+        $existingDocBlock = str_replace('/**', '', $existingDocBlock);
+        $existingDocBlock = str_replace('*/', '', $existingDocBlock);
+        return $existingDocBlock;
     }
 
     /**
@@ -66,7 +63,8 @@ class AnnotationModifier
      */
     private function getIndentation($fileContents, AnnotationData $annotation)
     {
-        $indentationRegexp = "/\\n( *?){$annotation->operator}/m";
+        $operator = preg_quote($annotation->operator);
+        $indentationRegexp = "/\\n( *?)$operator/m";
         preg_match($indentationRegexp, $fileContents, $indentationMatches);
         if (isset($indentationMatches[1])) {
             return strlen($indentationMatches[1]);

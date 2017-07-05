@@ -58,13 +58,15 @@ class LedgersController extends BaseRestController
      *     @SWG\Response(
      *         response="200",
      *         description="Resources retrieved",
-     *         @SWG\Schema
+     *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(
-     *                     property="data",
-     *                     type="array",
-     *                     @SWG\Items(@SWG\Schema(ref="#/definitions/Ledger"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Ledger")
+     *                     )
      *                 )
      *             }
      *         )
@@ -86,8 +88,10 @@ class LedgersController extends BaseRestController
      *         description="Resource retrieved",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/Ledger"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Ledger")
+     *                 )
      *             }
      *         )
      *     ),
@@ -141,8 +145,10 @@ class LedgersController extends BaseRestController
      *         description="Resource created",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/Ledger"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Ledger")
+     *                 )
      *             }
      *         )
      *     ),

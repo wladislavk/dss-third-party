@@ -10,13 +10,15 @@ class ImageTypesController extends BaseRestController
      *     @SWG\Response(
      *         response="200",
      *         description="Resources retrieved",
-     *         @SWG\Schema
+     *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(
-     *                     property="data",
-     *                     type="array",
-     *                     @SWG\Items(@SWG\Schema(ref="#/definitions/ImageType"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/ImageType")
+     *                     )
      *                 )
      *             }
      *         )
@@ -38,8 +40,10 @@ class ImageTypesController extends BaseRestController
      *         description="Resource retrieved",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/ImageType"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/ImageType")
+     *                 )
      *             }
      *         )
      *     ),
@@ -64,8 +68,10 @@ class ImageTypesController extends BaseRestController
      *         description="Resource created",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/ImageType"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/ImageType")
+     *                 )
      *             }
      *         )
      *     ),

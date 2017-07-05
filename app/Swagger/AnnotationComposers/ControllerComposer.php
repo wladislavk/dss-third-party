@@ -55,12 +55,14 @@ class ControllerComposer extends AbstractAnnotationComposer
             }
             $annotationData = new AnnotationData();
             $annotationData->action = $action;
+            $reflector = new \ReflectionClass($annotationParams->controllerClassName);
+            $annotationData->docBlock = '' . $reflector->getMethod($action)->getDocComment();
             $strippedPath = $this->getPathWithoutPrefix($route);
             $annotationData->route = $this->replaceWildcard($strippedPath);
             $annotationData->params = $annotationParams;
             $annotationData->shortModelClassName = $this
                 ->getShortModelClass($annotationParams->modelClassName);
-            $annotationData->operator = "public function $action";
+            $annotationData->operator = "public function $action(";
             $annotations[] = $annotationData;
         }
         return $annotations;

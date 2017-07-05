@@ -27,6 +27,8 @@ class ModelComposer extends AbstractAnnotationComposer
         $annotationData->operator = "class $shortClassName";
         $annotationData->params = $annotationParams;
         $annotationData->shortModelClassName = $shortClassName;
+        $reflector = new \ReflectionClass($annotationParams->modelClassName);
+        $annotationData->docBlock = '' . $reflector->getDocComment();
         $annotations[] = $annotationData;
         return $annotations;
     }
@@ -75,7 +77,7 @@ ANNOTATION;
         $reflection = new \ReflectionClass($annotationData->params->modelClassName);
         $docBlock = $reflection->getDocComment();
         $lines = explode("\n", $docBlock);
-        $regexp = '/\*\s@(property(?:\-read)?)\s(\S+?)\s\$([a-zA-Z0-9]+)/';
+        $regexp = '/\*\s@(property(?:\-read)?)\s(\S+?)\s\$([a-zA-Z0-9_]+)/';
         $matches = [];
         foreach ($lines as $line) {
             $hasProperty = preg_match($regexp, $line, $matches);

@@ -14,6 +14,9 @@ class AnnotationData
     public $action = '';
 
     /** @var string */
+    public $docBlock = '';
+
+    /** @var string */
     public $shortModelClassName = '';
 
     /** @var string */

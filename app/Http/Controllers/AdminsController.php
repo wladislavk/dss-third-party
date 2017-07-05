@@ -10,13 +10,15 @@ class AdminsController extends BaseRestController
      *     @SWG\Response(
      *         response="200",
      *         description="Resources retrieved",
-     *         @SWG\Schema
+     *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(
-     *                     property="data",
-     *                     type="array",
-     *                     @SWG\Items(@SWG\Schema(ref="#/definitions/Admin"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Admin")
+     *                     )
      *                 )
      *             }
      *         )
@@ -40,8 +42,10 @@ class AdminsController extends BaseRestController
      *         description="Resource retrieved",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/Admin"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Admin")
+     *                 )
      *             }
      *         )
      *     ),
@@ -60,21 +64,23 @@ class AdminsController extends BaseRestController
     /**
      * @SWG\Post(
      *     path="/admins",
-     *     @SWG\Parameter(name="name", in="formData", type="string", maxLength="250"),
-     *     @SWG\Parameter(name="username", in="formData", type="string", required=true, maxLength="250"),
-     *     @SWG\Parameter(name="password", in="formData", type="string", required=true, maxLength="250"),
+     *     @SWG\Parameter(name="name", in="formData", type="string", maxLength=250),
+     *     @SWG\Parameter(name="username", in="formData", type="string", required=true, maxLength=250),
+     *     @SWG\Parameter(name="password", in="formData", type="string", required=true, maxLength=250),
      *     @SWG\Parameter(name="status", in="formData", type="integer"),
      *     @SWG\Parameter(name="admin_access", in="formData", type="integer"),
-     *     @SWG\Parameter(name="email", in="formData", type="string", format="email", maxLength="100"),
-     *     @SWG\Parameter(name="first_name", in="formData", type="string", maxLength="50"),
-     *     @SWG\Parameter(name="last_name", in="formData", type="string", maxLength="50"),
+     *     @SWG\Parameter(name="email", in="formData", type="string", format="email", maxLength=100),
+     *     @SWG\Parameter(name="first_name", in="formData", type="string", maxLength=50),
+     *     @SWG\Parameter(name="last_name", in="formData", type="string", maxLength=50),
      *     @SWG\Response(
      *         response="200",
      *         description="Resource created",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/Admin"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Admin")
+     *                 )
      *             }
      *         )
      *     ),
@@ -93,14 +99,14 @@ class AdminsController extends BaseRestController
      * @SWG\Put(
      *     path="/admins/{id}",
      *     @SWG\Parameter(ref="#/parameters/id_in_path"),
-     *     @SWG\Parameter(name="name", in="formData", type="string", maxLength="250"),
-     *     @SWG\Parameter(name="username", in="formData", type="string", maxLength="250"),
-     *     @SWG\Parameter(name="password", in="formData", type="string", maxLength="250"),
+     *     @SWG\Parameter(name="name", in="formData", type="string", maxLength=250),
+     *     @SWG\Parameter(name="username", in="formData", type="string", maxLength=250),
+     *     @SWG\Parameter(name="password", in="formData", type="string", maxLength=250),
      *     @SWG\Parameter(name="status", in="formData", type="integer"),
      *     @SWG\Parameter(name="admin_access", in="formData", type="integer"),
-     *     @SWG\Parameter(name="email", in="formData", type="string", format="email", maxLength="100"),
-     *     @SWG\Parameter(name="first_name", in="formData", type="string", maxLength="50"),
-     *     @SWG\Parameter(name="last_name", in="formData", type="string", maxLength="50"),
+     *     @SWG\Parameter(name="email", in="formData", type="string", format="email", maxLength=100),
+     *     @SWG\Parameter(name="first_name", in="formData", type="string", maxLength=50),
+     *     @SWG\Parameter(name="last_name", in="formData", type="string", maxLength=50),
      *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="422", ref="#/responses/422_response"),

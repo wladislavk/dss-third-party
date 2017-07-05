@@ -19,11 +19,13 @@ class FirstDummiesController extends BaseRestController
      *         description="Resources retrieved",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(
-     *                     property="data",
-     *                     type="array",
-     *                     @SWG\Items(@SWG\Schema(ref="#/definitions/FirstDummy"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/FirstDummy")
+     *                     )
      *                 )
      *             }
      *         )
@@ -45,8 +47,10 @@ class FirstDummiesController extends BaseRestController
      *         description="Resource retrieved",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/FirstDummy"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/FirstDummy")
+     *                 )
      *             }
      *         )
      *     ),
@@ -62,7 +66,7 @@ class FirstDummiesController extends BaseRestController
     /**
      * @SWG\Post(
      *     path="/first",
-     *     @SWG\Parameter(name="first", in="formData", type="string", required=true, maxLength="250"),
+     *     @SWG\Parameter(name="first", in="formData", type="string", required=true, maxLength=250),
      *     @SWG\Parameter(name="second", in="formData", type="integer", required=true),
      *     @SWG\Parameter(name="third", in="formData", type="string", format="dateTime"),
      *     @SWG\Parameter(name="fourth", in="formData", type="string", format="email"),
@@ -71,8 +75,10 @@ class FirstDummiesController extends BaseRestController
      *         description="Resource created",
      *         @SWG\Schema(
      *             allOf={
-     *                 ref="#/definitions/common_response_fields",
-     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/FirstDummy"))
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/FirstDummy")
+     *                 )
      *             }
      *         )
      *     ),
@@ -89,7 +95,7 @@ class FirstDummiesController extends BaseRestController
      * @SWG\Put(
      *     path="/first/{id}",
      *     @SWG\Parameter(ref="#/parameters/id_in_path"),
-     *     @SWG\Parameter(name="first", in="formData", type="string", maxLength="250"),
+     *     @SWG\Parameter(name="first", in="formData", type="string", maxLength=250),
      *     @SWG\Parameter(name="second", in="formData", type="integer"),
      *     @SWG\Parameter(name="third", in="formData", type="string", format="dateTime"),
      *     @SWG\Parameter(name="fourth", in="formData", type="string", format="email"),

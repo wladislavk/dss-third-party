@@ -9,8 +9,8 @@ class GenerateSwaggerCommand extends Command
 {
     /** @var string */
     protected $signature = 'swagger:generate
-                            {--http-dir : Path to root of requests and controllers, /app/Http by default}
-                            {--model-dir : Path to root of Eloquent models, /Eloquent by default }';
+                            {--http-dir= : Path to root of requests and controllers, /app/Http by default}
+                            {--model-dir= : Path to root of Eloquent models, /Eloquent by default }';
 
     protected $description = 'Generate Swagger annotations from existing models and request rules';
 

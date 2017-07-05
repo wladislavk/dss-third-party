@@ -2,19 +2,20 @@
 
 namespace DentalSleepSolutions\Swagger\Wrappers;
 
-use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Filesystem\Filesystem;
+use Symfony\Component\Finder\SplFileInfo;
 
 class FilesystemWrapper
 {
     /** @var resource|bool */
     private $fh;
 
-    /** @var FilesystemAdapter */
-    private $filesystemAdapter;
+    /** @var Filesystem */
+    private $filesystem;
 
-    public function __construct(FilesystemAdapter $filesystemAdapter)
+    public function __construct(Filesystem $filesystem)
     {
-        $this->filesystemAdapter = $filesystemAdapter;
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -28,11 +29,17 @@ class FilesystemWrapper
 
     /**
      * @param string $directory
-     * @return array
+     * @return string[]
      */
     public function allFiles($directory)
     {
-        return $this->filesystemAdapter->allFiles($directory);
+        /** @var SplFileInfo[] $files */
+        $files = $this->filesystem->allFiles($directory);
+        $filenames = [];
+        foreach ($files as $file) {
+            $filenames[] = $file->getPathname();
+        }
+        return $filenames;
     }
 
     /**
@@ -55,6 +62,7 @@ class FilesystemWrapper
     public function fClose()
     {
         fclose($this->fh);
+        $this->fh = null;
     }
 
     public function __destruct()

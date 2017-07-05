@@ -67,14 +67,14 @@ class SwaggerTest extends TestCase
 
         $namespace = 'Tests\Dummies\Http\Controllers\\';
         $this->routes = [
-            $namespace . 'FirstDummiesController@index' => '/first',
-            $namespace . 'FirstDummiesController@show' => '/first/:id',
-            $namespace . 'FirstDummiesController@store' => '/first',
-            $namespace . 'FirstDummiesController@update' => '/first/:id',
-            $namespace . 'FirstDummiesController@destroy' => '/first/:id',
-            $namespace . 'SecondDummiesController@index' => '/second',
-            $namespace . 'SecondDummiesController@store' => '/second',
-            $namespace . 'SecondDummiesController@update' => '/second/:id',
+            $namespace . 'FirstDummiesController@index' => 'api/v1/first',
+            $namespace . 'FirstDummiesController@show' => 'api/v1/first/{first}',
+            $namespace . 'FirstDummiesController@store' => 'api/v1/first',
+            $namespace . 'FirstDummiesController@update' => 'api/v1/first/{first}',
+            $namespace . 'FirstDummiesController@destroy' => 'api/v1/first/{first}',
+            $namespace . 'SecondDummiesController@index' => 'api/v1/second',
+            $namespace . 'SecondDummiesController@store' => 'api/v1/second',
+            $namespace . 'SecondDummiesController@update' => 'api/v1/second/{second}',
         ];
 
         $this->initialize();
@@ -151,6 +151,7 @@ class SwaggerTest extends TestCase
         /** @var Route|MockInterface $route */
         $route = \Mockery::mock(Route::class);
         $route->shouldReceive('getPath')->andReturnUsing([$this, 'getPathCallback']);
+        $route->shouldReceive('getPrefix')->andReturnUsing([$this, 'getPrefixCallback']);
         return $route;
     }
 
@@ -205,6 +206,11 @@ class SwaggerTest extends TestCase
     public function getPathCallback()
     {
         return $this->routeUri;
+    }
+
+    public function getPrefixCallback()
+    {
+        return '/api/v1';
     }
 
     public function makeCallback($className)

@@ -366,6 +366,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
             'uses' => 'Api\ApiEnrollmentsController@syncEnrollmentPayers'
         ]);
     });
+
 });
 
 Route::group(['middleware' => ['api.log', 'external.validate']], function () {

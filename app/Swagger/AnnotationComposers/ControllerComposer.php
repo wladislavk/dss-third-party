@@ -55,7 +55,8 @@ class ControllerComposer extends AbstractAnnotationComposer
             }
             $annotationData = new AnnotationData();
             $annotationData->action = $action;
-            $annotationData->route = $this->replaceWildcard($route->getPath());
+            $strippedPath = $this->getPathWithoutPrefix($route);
+            $annotationData->route = $this->replaceWildcard($strippedPath);
             $annotationData->params = $annotationParams;
             $annotationData->shortModelClassName = $this
                 ->getShortModelClass($annotationParams->modelClassName);
@@ -65,14 +66,21 @@ class ControllerComposer extends AbstractAnnotationComposer
         return $annotations;
     }
 
+    private function getPathWithoutPrefix(Route $route)
+    {
+        $path = '/' . $route->getPath();
+        $strippedPath = str_replace($route->getPrefix(), '', $path);
+        return $strippedPath;
+    }
+
     /**
      * @param string $path
      * @return string
      */
     private function replaceWildcard($path)
     {
-        $regexp = '/(?<=\/)\:([a-z]+?)(?=\/|$)/';
-        $replaced = preg_replace($regexp, '{$1}', $path);
+        $regexp = '/(?<=\/)\{([a-z]+?)\}(?=\/|$)/';
+        $replaced = preg_replace($regexp, '{id}', $path);
         return $replaced;
     }
 

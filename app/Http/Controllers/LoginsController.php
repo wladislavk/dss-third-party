@@ -120,6 +120,11 @@ class LoginsController extends BaseRestController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/logout",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Log out the user.
      *
      * @return \Illuminate\Http\JsonResponse

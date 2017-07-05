@@ -116,6 +116,17 @@ class GuideDevicesController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/guide-devices/with-images",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Devices $devicesResource
+     * @param GuideSettings $guideSettingsResource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getWithImages(Devices $devicesResource, GuideSettings $guideSettingsResource, Request $request)
     {
         $settings = $request->input('settings');

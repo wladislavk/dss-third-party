@@ -305,6 +305,16 @@ class InsurancesController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/insurances/rejected",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Insurances $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getRejected(Insurances $resources, Request $request)
     {
         $patientId = $request->input('patientId');
@@ -314,6 +324,17 @@ class InsurancesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/insurances/{type}",
+     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param string $type
+     * @param Insurances $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getFrontOfficeClaims($type, Insurances $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -338,6 +359,17 @@ class InsurancesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/insurances/remove-claim",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Insurance $resource
+     * @param Ledger $ledgerResource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function removeClaim(Insurance $resource, Ledger $ledgerResource, Request $request)
     {
         $claimId = $request->input('claim_id', 0);
@@ -351,8 +383,7 @@ class InsurancesController extends BaseRestController
             ]);
 
             return ApiResponse::responseOk('Deleted Successfully');
-        } else {
-            return ApiResponse::responseError('Error deleting');
         }
+        return ApiResponse::responseError('Error deleting');
     }
 }

@@ -120,6 +120,15 @@ class QualifiersController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/qualifiers/active",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Qualifier $resource
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getActive(Qualifier $resource)
     {
         $data = $resource->getActive();

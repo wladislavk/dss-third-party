@@ -153,6 +153,17 @@ class SleeplabsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/sleeplabs/list",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Sleeplabs $resources
+     * @param Patients $patientResource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getListOfSleeplabs(
         Sleeplabs $resources,
         Patients $patientResource,
@@ -179,6 +190,23 @@ class SleeplabsController extends BaseRestController
         return ApiResponse::responseOk('', $sleeplabs);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/sleeplabs/edit/{sleeplabId}",
+     *     @SWG\Parameter(name="sleeplabId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @SWG\Post(
+     *     path="/sleeplabs/edit",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Sleeplab $sleeplabResource
+     * @param Request $request
+     * @param int|null $sleeplabId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function editSleeplab(
         Sleeplab $sleeplabResource,
         Request $request,

@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary;
+use DentalSleepSolutions\Http\Requests\PatientSummary as PatientSummaryRequest;
 
 class PatientSummariesController extends BaseRestController
 {
@@ -134,8 +134,20 @@ class PatientSummariesController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function updateTrackerNotes(PatientSummary $resource, PatientSummaryUpdate $request)
+    /**
+     * @SWG\Post(
+     *     path="/patient-summaries/update-tracker-notes",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param PatientSummary $resource
+     * @param PatientSummaryRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateTrackerNotes(PatientSummary $resource, PatientSummaryRequest $request)
     {
+        $this->validate($request, $request->updateRules());
+
         $notes = $request->input('tracker_notes', '');
         $patientId = $request->input('patient_id', 0);
         $docId = $this->currentUser->docid ?: 0;

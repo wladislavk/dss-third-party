@@ -120,6 +120,15 @@ class PaymentReportsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/payment-reports/number",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param PaymentReports $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getNumber(PaymentReports $resources)
     {
         $docId = $this->currentUser->docid ?: 0;

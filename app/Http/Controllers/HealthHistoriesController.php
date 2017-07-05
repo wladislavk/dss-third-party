@@ -246,6 +246,11 @@ class HealthHistoriesController extends BaseRestController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/health-histories/with-filter",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Get health histories by filter.
      *
      * @param  \DentalSleepSolutions\Contracts\Repositories\HealthHistories $resources

@@ -116,6 +116,18 @@ class PayersController extends BaseRestController
     }
 
     /**
+     * @SWG\Get(
+     *     path="/payers/{payer_id}/required-fields",
+     *     @SWG\Parameter(name="payer_id", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @SWG\Get(
+     *     path="/enrollments/requiredfields/{payer_id}",
+     *     @SWG\Parameter(name="payer_id", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Get array of enrollment required fields for a payer.
      *
      * @param  \DentalSleepSolutions\Contracts\Resources\Payer  $payer

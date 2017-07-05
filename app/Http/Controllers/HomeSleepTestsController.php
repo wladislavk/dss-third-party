@@ -211,6 +211,16 @@ class HomeSleepTestsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/home-sleep-tests/uncompleted",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param HomeSleepTests $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUncompleted(HomeSleepTests $resources, Request $request)
     {
         $patientId = $request->input('patientId', 0);
@@ -220,6 +230,17 @@ class HomeSleepTestsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/home-sleep-tests/{type}",
+     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param string $type
+     * @param HomeSleepTests $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getByType($type, HomeSleepTests $resources)
     {
         $docId = $this->currentUser->docid ?: 0;

@@ -186,6 +186,16 @@ class ContactsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/find",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function find(Contacts $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -212,6 +222,16 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/list-contacts-and-companies",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getListContactsAndCompanies(Contacts $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -248,6 +268,16 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $response);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/with-contact-type",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contact $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getWithContactType(Contact $resource, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
@@ -256,6 +286,16 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/insurance",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getInsuranceContacts(Contacts $resource, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -264,6 +304,17 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/referred-by",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resource
+     * @param Patients $patients
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getReferredByContacts(Contacts $resource, Patients $patients, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -351,6 +402,16 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $response);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/corporate",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCorporateContacts(Contacts $resource, Request $request)
     {
         $page = $request->input('page', 0);

@@ -130,6 +130,17 @@ class TasksController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/tasks/{type}",
+     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param string $type
+     * @param Tasks $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getType($type, Tasks $resources)
     {
         $userId = $this->currentUser->id ?: 0;
@@ -164,6 +175,19 @@ class TasksController extends BaseRestController
         return ApiResponse::responseOk('', $tasks);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/tasks/{type}/pid/{patientId}",
+     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     @SWG\Parameter(name="patientId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param string $type
+     * @param int $patientId
+     * @param Tasks $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getTypeForPatient($type, $patientId, Tasks $resources)
     {
         $docId     = $this->currentUser->docid ?: 0;

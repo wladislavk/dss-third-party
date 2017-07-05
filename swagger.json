@@ -910,90 +910,221 @@
                 }
             }
         },
-        "/api/v1/enrollments.json": {
+        "/memo": {
             "get": {
                 "responses": {
                     "200": {
-                        "description": "Action completed successfully."
+                        "description": "TODO: specify the response"
+                    }
+                }
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/memo/{memo_id}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "memo_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             },
             "put": {
                 "parameters": [
                     {
-                        "name": "endpoint",
-                        "in": "formData",
-                        "description": "",
+                        "name": "memo_id",
+                        "in": "path",
                         "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "payer_id",
-                        "in": "formData",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "transaction_type",
-                        "in": "formData",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "facility_name",
-                        "in": "formData",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "provider_name",
-                        "in": "formData",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "tax_id",
-                        "in": "formData",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address",
-                        "in": "formData",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "city",
-                        "in": "formData",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "state",
-                        "in": "formData",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "zip",
-                        "in": "formData",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
+                        "type": "integer"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Action completed successfully."
+                        "description": "TODO: specify the response"
+                    }
+                }
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "name": "memo_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/memos/current": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/list/{userId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/list": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/create": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/payers/{transaction_type}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "transaction_type",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/payers/original-signature/send": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/syncpayers": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/update/{enrollmentId}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "enrollmentId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/retrieve/{enrollmentId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "enrollmentId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/apikey/{userId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/type/{id}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/health-check": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -2391,6 +2522,33 @@
                 }
             }
         },
+        "/companies/company-logo": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/companies/home-sleep-test": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/companies/billing-exclusive-company": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/complaints": {
             "get": {
                 "responses": {
@@ -2755,6 +2913,42 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/contact-types/active-non-corporate": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/contact-types/physician": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/contact-types/with-filter": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/contact-types/sorted": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -3202,6 +3396,60 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/contacts/find": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/contacts/list-contacts-and-companies": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/contacts/with-contact-type": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/contacts/insurance": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/contacts/referred-by": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/contacts/corporate": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -4614,6 +4862,23 @@
                 }
             }
         },
+        "/display-file/{filename}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "filename",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/document-categories": {
             "get": {
                 "responses": {
@@ -4764,6 +5029,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/document-categories/active": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -4930,6 +5204,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/eligible/payers": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -5920,6 +6203,15 @@
                 }
             }
         },
+        "/faxes/alerts": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/gag-reflexes": {
             "get": {
                 "responses": {
@@ -6239,6 +6531,15 @@
                 }
             }
         },
+        "/guide-devices/with-images": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/guide-setting-options": {
             "get": {
                 "responses": {
@@ -6401,6 +6702,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/guide-setting-options/settingIds": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -6615,6 +6925,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/guide-settings/sort": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -7473,6 +7792,15 @@
                 }
             }
         },
+        "/health-histories/with-filter": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/home-sleep-tests": {
             "get": {
                 "responses": {
@@ -8121,6 +8449,32 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/home-sleep-tests/uncompleted": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/home-sleep-tests/{type}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -11501,6 +11855,41 @@
                 }
             }
         },
+        "/insurance-preauth/{type}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/insurance-preauth/pending-VOB": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/insurance-preauth/vobs/find": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/insurance-types": {
             "get": {
                 "responses": {
@@ -12768,6 +13157,41 @@
                 }
             }
         },
+        "/insurances/rejected": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/insurances/{type}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/insurances/remove-claim": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/intolerances": {
             "get": {
                 "responses": {
@@ -13812,6 +14236,15 @@
                 }
             }
         },
+        "/ledger-histories/ledger-report": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/ledger-notes": {
             "get": {
                 "responses": {
@@ -14802,6 +15235,15 @@
                 }
             }
         },
+        "/ledger-statements/remove": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/ledgers": {
             "get": {
                 "responses": {
@@ -15278,6 +15720,51 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/ledgers/list": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/ledgers/totals": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/ledgers/update-patient-summary": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/ledgers/report-data": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/ledgers/report-rows-number": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -15934,6 +16421,60 @@
                 }
             }
         },
+        "/letters/pending": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/letters/unmailed": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/letters/delivered-for-contact": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/letters/not-delivered-for-contact": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/letters/create-welcome-letter": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/letters/gen-date-of-intro": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/locations": {
             "get": {
                 "responses": {
@@ -16182,6 +16723,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/locations/by-doctor": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -16525,6 +17075,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -17475,6 +18034,15 @@
                 }
             }
         },
+        "/notes/unsigned": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/notifications": {
             "get": {
                 "responses": {
@@ -17669,6 +18237,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/notifications/with-filter": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -18088,6 +18665,24 @@
                 }
             }
         },
+        "/patient-contacts/current": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patient-contacts/number": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/patient-insurances": {
             "get": {
                 "responses": {
@@ -18339,6 +18934,24 @@
                 }
             }
         },
+        "/patient-insurances/current": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patient-insurances/number": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/patient-summaries": {
             "get": {
                 "responses": {
@@ -18577,6 +19190,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/patient-summaries/update-tracker-notes": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -20289,6 +20911,182 @@
                 }
             }
         },
+        "/patients/with-filter": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/number": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/duplicates": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/bounces": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/list": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients-by-doctor/{patientId}": {
+            "delete": {
+                "parameters": [
+                    {
+                        "name": "patientId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/find": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/referred-by-contact": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/by-contact": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/edit/{patientId}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "patientId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/edit": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/filling-form": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/referrers": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/check-email": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/reset-access-code/{patientId}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "patientId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/patients/temp-pin-document/{patientId}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "patientId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/payers": {
             "get": {
                 "responses": {
@@ -20416,6 +21214,40 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/payers/{payer_id}/required-fields": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "payer_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/enrollments/requiredfields/{payer_id}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "payer_id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -20591,6 +21423,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/payment-reports/number": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -21889,6 +22730,24 @@
                 }
             }
         },
+        "/profile-images/photo": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/profile-images/insurance-card-image": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/qualifiers": {
             "get": {
                 "responses": {
@@ -22059,6 +22918,15 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/qualifiers/active": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -22797,6 +23665,32 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/referred-by-contacts/edit/{contactId}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "contactId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/referred-by-contacts/edit": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -24661,6 +25555,41 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/sleeplabs/list": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/sleeplabs/edit/{sleeplabId}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "sleeplabId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/sleeplabs/edit": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -27513,6 +28442,15 @@
                 }
             }
         },
+        "/support-tickets/number": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
         "/symptoms": {
             "get": {
                 "responses": {
@@ -28246,6 +29184,46 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/tasks/{type}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/tasks/{type}/pid/{patientId}": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "patientId",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }
@@ -30410,6 +31388,60 @@
                     },
                     "default": {
                         "$ref": "#/responses/error_response"
+                    }
+                }
+            }
+        },
+        "/users/check": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/users/current": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/users/course-staff": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/users/payment-reports": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/users/check-logout": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
+                    }
+                }
+            }
+        },
+        "/users/letter-info": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "TODO: specify the response"
                     }
                 }
             }

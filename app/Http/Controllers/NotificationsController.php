@@ -127,9 +127,14 @@ class NotificationsController extends BaseRestController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/notifications/with-filter",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Get notifications by filter.
      *
-     * @param  Patients $resources
+     * @param Patients $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */

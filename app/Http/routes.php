@@ -18,6 +18,8 @@ Route::post('auth', function () {
 | Eligible webhooks
 |--------------------------------------------------------------------------
 */
+
+// @todo: these routes are incompatible with Swagger, the verb must always be defined
 Route::group(['prefix' => 'webhooks'], function () {
     Route::any('enrollment', ['as' => 'webhooks.enrollment', 'uses' => 'Eligible\WebhooksController@enrollment']);
     Route::any('claims', ['as' => 'webhooks.claims', 'uses' => 'Eligible\WebhooksController@claims']);
@@ -302,7 +304,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('users/check-logout', 'UsersController@checkLogout');
     Route::post('users/letter-info', 'UsersController@getLetterInfo');
 
-    Route::resource('memo', 'Api\ApiAdminMemoController');
+    Route::resource('memo', 'Api\ApiAdminMemoController', ['except' => ['create', 'edit']]);
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
 
     Route::get('health-check', 'Api\HealthCheckController@index');
@@ -331,7 +333,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
             ]);
         });
 
-        Route::post('update/{enrollmentid}', [
+        Route::post('update/{enrollmentId}', [
             'as' => 'enrollments.update',
             'uses' => 'Api\ApiEnrollmentsController@updateEnrollment'
         ]);
@@ -351,7 +353,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
             'uses' => 'Api\ApiEnrollmentsController@listEnrollments'
         ]);
 
-        Route::get('apikey/{userid}', [
+        Route::get('apikey/{userId}', [
             'as' => 'enrollments.apikey',
             'uses' => 'Api\ApiEnrollmentsController@getDentalUserCompanyApiKey'
         ]);

@@ -247,6 +247,7 @@ class GeneratorTest extends TestCase
             return [
                 Generator::MODEL_DIR . '/FirstModel.php',
                 Generator::MODEL_DIR . '/SecondModel.php',
+                Generator::MODEL_DIR . '/AbstractThirdModel.php',
             ];
         }
         return [];

@@ -118,6 +118,15 @@ class GuideSettingOptionsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/guide-setting-options/settingIds",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param GuideSettingOptions $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getOptionsForSettingIds(GuideSettingOptions $resources)
     {
         $guideSettingOptions = $resources->getOptionsBySettingIds();

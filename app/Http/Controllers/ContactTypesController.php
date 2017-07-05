@@ -125,6 +125,15 @@ class ContactTypesController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contact-types/active-non-corporate",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param ContactTypes $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getActiveNonCorporate(ContactTypes $resources)
     {
         $data = $resources->getActiveNonCorporateTypes();
@@ -132,6 +141,15 @@ class ContactTypesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contact-types/physician",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param ContactTypes $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPhysician(ContactTypes $resources)
     {
         $data = $resources->getPhysicianTypes();
@@ -139,6 +157,16 @@ class ContactTypesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contact-types/with-filter",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param ContactTypes $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getWithFilter(ContactTypes $resources, Request $request)
     {
         $fields = $request->input('fields', []);
@@ -149,6 +177,15 @@ class ContactTypesController extends BaseRestController
         return ApiResponse::responseOk('', $contactTypes);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contact-types/sorted",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param ContactTypes $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getSortedContactTypes(ContactTypes $resources)
     {
         $contactTypes = $resources->getSorted();

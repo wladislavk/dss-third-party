@@ -133,6 +133,16 @@ class PatientContactsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patient-contacts/current",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param PatientContacts $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCurrent(PatientContacts $resources, Request $request)
     {
         $patientId = $request->input('patientId', 0);
@@ -143,6 +153,15 @@ class PatientContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patient-contacts/number",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param PatientContacts $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getNumber(PatientContacts $resources)
     {
         $docId = $this->currentUser->docid ?: 0;

@@ -134,6 +134,15 @@ class NotesController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/notes/unsigned",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Notes $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUnsigned(Notes $resources)
     {
         $docId = $this->currentUser->docid ?: 0;

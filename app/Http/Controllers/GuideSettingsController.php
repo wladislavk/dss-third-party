@@ -129,6 +129,16 @@ class GuideSettingsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/guide-settings/sort",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param GuideSettings $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllOrderBy(GuideSettings $resources, Request $request)
     {
         $order = $request->input('order', 'name');

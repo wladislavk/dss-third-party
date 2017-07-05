@@ -322,6 +322,11 @@ class UsersController extends BaseRestController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/users/check",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Get the account status
      *
      * @return \Illuminate\Http\JsonResponse
@@ -344,7 +349,12 @@ class UsersController extends BaseRestController
     }
 
     /**
-     * Get info about current logined user
+     * @SWG\Post(
+     *     path="/users/current",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * Get info about current logged in user
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -354,6 +364,11 @@ class UsersController extends BaseRestController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/users/course-staff",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Get course staff of current logined user
      *
      * @return \Illuminate\Http\JsonResponse
@@ -367,6 +382,15 @@ class UsersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/users/payment-reports",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Users $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPaymentReports(Users $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -376,6 +400,15 @@ class UsersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/users/check-logout",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param User $resource
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function checkLogout(User $resource)
     {
         $userId = $this->currentUser->id ?: 0;
@@ -395,6 +428,16 @@ class UsersController extends BaseRestController
         }
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/users/letter-info",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param User $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getLetterInfo(User $resource, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -404,6 +447,8 @@ class UsersController extends BaseRestController
     }
 
     /**
+     * @todo: currently there is no route for this action
+     *
      * Get users by filter.
      *
      * @param  \DentalSleepSolutions\Contracts\Repositories\Users $resources

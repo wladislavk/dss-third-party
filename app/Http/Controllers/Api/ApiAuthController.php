@@ -4,11 +4,6 @@ namespace DentalSleepSolutions\Http\Controllers\Api;
 
 class ApiAuthController extends ApiBaseController
 {
-
-    public function __construct()
-    {
-    }
-
     /**
      * Authenticate a user.
      *

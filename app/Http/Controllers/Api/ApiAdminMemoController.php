@@ -31,6 +31,14 @@ class ApiAdminMemoController extends ApiBaseController
         $this->memo = $memo;
     }
 
+    /**
+     * @SWG\Get(
+     *     path="/memo",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
 
@@ -50,6 +58,10 @@ class ApiAdminMemoController extends ApiBaseController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/memo",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -82,6 +94,16 @@ class ApiAdminMemoController extends ApiBaseController
 
     }
 
+    /**
+     * @SWG\Put(
+     *     path="/memo/{memo_id}",
+     *     @SWG\Parameter(name="memo_id", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $memo_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update($memo_id)
     {
         $status = null;
@@ -111,6 +133,15 @@ class ApiAdminMemoController extends ApiBaseController
 
     }
 
+    /**
+     * @SWG\Get(
+     *     path="/memo/{memo_id}",
+     *     @SWG\Parameter(name="memo_id", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param $memo_id
+     */
     public function show($memo_id)
     {
         $status = null;
@@ -125,19 +156,16 @@ class ApiAdminMemoController extends ApiBaseController
         }
     }
 
-    public function edit($memo_id)
-    {
-        $status = null;
-        $response = [];
-        try {
-
-        } catch(Exception $ex) {
-
-        } finally {
-
-        }
-    }
-
+    /**
+     * @SWG\Delete(
+     *     path="/memo/{memo_id}",
+     *     @SWG\Parameter(name="memo_id", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $memo_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($memo_id)
     {
         $status = null;
@@ -157,6 +185,14 @@ class ApiAdminMemoController extends ApiBaseController
 
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/memos/current",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCurrent()
     {
         $data = $this->memo->getCurrent();

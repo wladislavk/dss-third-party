@@ -136,6 +136,16 @@ class PatientInsurancesController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patient-insurances/current",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param PatientInsurances $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCurrent(PatientInsurances $resources, Request $request)
     {
         $patientId = $request->input('patientId', 0);
@@ -146,6 +156,15 @@ class PatientInsurancesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patient-insurances/number",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param PatientInsurances $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getNumber(PatientInsurances $resources)
     {
         $docId = $this->currentUser->docid ?: 0;

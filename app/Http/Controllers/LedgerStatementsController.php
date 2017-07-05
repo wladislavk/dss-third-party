@@ -123,6 +123,16 @@ class LedgerStatementsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/ledger-statements/remove",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param LedgerStatement $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function removeByIdAndPatientId(LedgerStatement $resource, Request $request)
     {
         $id = $request->input('id', 0);

@@ -134,6 +134,15 @@ class LocationsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/locations/by-doctor",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Locations $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getDoctorLocations(Locations $resources)
     {
         $docId = $this->currentUser->docid ?: 0;

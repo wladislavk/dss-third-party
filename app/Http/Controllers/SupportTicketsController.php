@@ -134,6 +134,15 @@ class SupportTicketsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/support-tickets/number",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param SupportTickets $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getNumber(SupportTickets $resources)
     {
         $docId = $this->currentUser->docid ?: 0;

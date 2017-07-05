@@ -456,6 +456,11 @@ class PatientsController extends BaseRestController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/patients/with-filter",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Get patients by filter.
      *
      * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
@@ -471,6 +476,15 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $patients);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/number",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Patients $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getNumber(Patients $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -480,6 +494,15 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/duplicates",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Patients $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getDuplicates(Patients $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -489,6 +512,15 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/bounces",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Patients $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getBounces(Patients $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -498,6 +530,16 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/list",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Patients $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getListPatients(Patients $resources, Request $request)
     {
         $partialName = $request->input('partial_name') ?: '';
@@ -512,6 +554,17 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Delete(
+     *     path="/patients-by-doctor/{patientId}",
+     *     @SWG\Parameter(name="patientId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $patientId
+     * @param Patient $resource
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroyForDoctor($patientId, Patient $resource)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -521,6 +574,16 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('Resource deleted');
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/find",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Patients $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function find(Patients $resources, Request $request)
     {
         $docId           = $this->currentUser->docid ?: 0;
@@ -549,6 +612,16 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/referred-by-contact",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Patients $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getReferredByContact(Patients $resources, Request $request)
     {
         $contactId = $request->input('contact_id') ?: 0;
@@ -557,6 +630,16 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/by-contact",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Patients $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getByContact(Patients $resources, Request $request)
     {
         $contactId = $request->input('contact_id') ?: 0;
@@ -565,6 +648,37 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/edit/{patientId}",
+     *     @SWG\Parameter(name="patientId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @SWG\Post(
+     *     path="/patients/edit",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param TreatmentCompleteTrigger $treatmentCompleteTrigger
+     * @param LettersToMDTrigger $lettersToMDTrigger
+     * @param LetterToPatientTrigger $letterToPatientTrigger
+     * @param LetterDeleter $letterDeleter
+     * @param UpdateEmailHandler $updateEmailHandler
+     * @param RememberEmailHandler $rememberEmailHandler
+     * @param RegistrationEmailHandler $registrationEmailHandler
+     * @param PreauthHelper $preauthHelper
+     * @param SimilarHelper $similarHelper
+     * @param Patient $patientResource
+     * @param PatientSummary $patientSummaryResource
+     * @param InsurancePreauth $insurancePreauthResource
+     * @param Summaries $summariesResource
+     * @param Letter $letterResource
+     * @param User $userResource
+     * @param Request $request
+     * @param int|null $patientId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function editingPatient(
         TreatmentCompleteTrigger $treatmentCompleteTrigger,
         LettersToMDTrigger $lettersToMDTrigger,
@@ -953,6 +1067,23 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $responseData);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/filling-form",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param InsurancePreauth $insPreauthResource
+     * @param Patient $patientResource
+     * @param Contact $contactResource
+     * @param Summaries $summariesResource
+     * @param ProfileImage $profileImageResource
+     * @param Letter $letterResource
+     * @param HomeSleepTests $homeSleepTestResource
+     * @param Notifications $notificationResource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getDataForFillingPatientForm(
         InsurancePreauth $insPreauthResource,
         Patient $patientResource,
@@ -1042,6 +1173,16 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/referrers",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Patients $patientResource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getReferrers(Patients $patientResource, Request $request)
     {
         $docId = 0;
@@ -1075,6 +1216,16 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $response);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/check-email",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Request $request
+     * @param Patient $patientResource
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function checkEmail(Request $request, Patient $patientResource)
     {
         $email = $request->input('email', '');
@@ -1102,6 +1253,17 @@ class PatientsController extends BaseRestController
         }
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/reset-access-code/{patientId}",
+     *     @SWG\Parameter(name="patientId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $patientId
+     * @param Patient $patientResource
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function resetAccessCode($patientId, Patient $patientResource)
     {
         $accessCode = 0;
@@ -1119,8 +1281,21 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', ['access_code' => $accessCode, 'access_code_date' => $accessCodeDate->toDateTimeString()]);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/patients/temp-pin-document/{patientId}",
+     *     @SWG\Parameter(name="patientId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $patientId
+     * @param RegistrationEmailHandler $registrationEmailHandler
+     * @param PdfHelper $pdfHelper
+     * @param MailerDataRetriever $mailerDataRetriever
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createTempPinDocument(
-        $patientId = 0,
+        $patientId,
         RegistrationEmailHandler $registrationEmailHandler,
         PdfHelper $pdfHelper,
         MailerDataRetriever $mailerDataRetriever

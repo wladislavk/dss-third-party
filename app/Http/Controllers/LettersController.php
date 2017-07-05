@@ -182,6 +182,15 @@ class LettersController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/letters/pending",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Letters $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPending(Letters $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -191,6 +200,15 @@ class LettersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/letters/unmailed",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Letters $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUnmailed(Letters $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -200,7 +218,18 @@ class LettersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    // gets letters that were delivered for contact
+    /**
+     * @SWG\Post(
+     *     path="/letters/delivered-for-contact",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * gets letters that were delivered for contact
+     *
+     * @param Letters $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getContactSentLetters(Letters $resources, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
@@ -209,7 +238,19 @@ class LettersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    // gets letters that were not delivered for contact
+
+    /**
+     * @SWG\Post(
+     *     path="/letters/not-delivered-for-contact",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * gets letters that were not delivered for contact
+     *
+     * @param Letters $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getContactPendingLetters(Letters $resources, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
@@ -218,6 +259,18 @@ class LettersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/letters/create-welcome-letter",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param User $userResource
+     * @param Letter $resource
+     * @param ContactType $contactTypeResource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createWelcomeLetter(
         User $userResource,
         Letter $resource,
@@ -251,6 +304,16 @@ class LettersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/letters/gen-date-of-intro",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Letter $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getGeneratedDateOfIntroLetter(Letter $resource, Request $request)
     {
         $patientId = $request->input('patient_id', 0);

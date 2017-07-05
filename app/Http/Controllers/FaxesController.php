@@ -130,6 +130,15 @@ class FaxesController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/faxes/alerts",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Faxes $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAlerts(Faxes $resources)
     {
         $docId = $this->currentUser->docid ?: 0;

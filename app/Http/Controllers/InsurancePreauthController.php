@@ -315,6 +315,17 @@ class InsurancePreauthController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/insurance-preauth/{type}",
+     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param string $type
+     * @param InsPreauth $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getByType($type, InsPreauth $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -337,6 +348,16 @@ class InsurancePreauthController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/insurance-preauth/pending-VOB",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param InsurancePreauth $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPendingVOBByContactId(InsurancePreauth $resource, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
@@ -345,6 +366,16 @@ class InsurancePreauthController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/insurance-preauth/vobs/find",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param InsPreauth $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function find(InsPreauth $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;

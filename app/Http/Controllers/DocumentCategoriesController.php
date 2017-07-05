@@ -117,6 +117,11 @@ class DocumentCategoriesController extends BaseRestController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/document-categories/active",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Get active document categories.
      *
      * @param  \DentalSleepSolutions\Contracts\Repositories\DocumentCategories $resources

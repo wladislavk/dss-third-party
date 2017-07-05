@@ -162,6 +162,23 @@ class ReferredByContactsController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/referred-by-contacts/edit/{contactId}",
+     *     @SWG\Parameter(name="contactId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @SWG\Post(
+     *     path="/referred-by-contacts/edit",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param ReferredByContact $referredByContactResource
+     * @param Request $request
+     * @param int|null $contactId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function editingContact(
         ReferredByContact $referredByContactResource,
         Request $request,

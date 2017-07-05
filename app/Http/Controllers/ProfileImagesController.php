@@ -131,6 +131,16 @@ class ProfileImagesController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/profile-images/photo",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param ProfileImage $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getProfilePhoto(ProfileImage $resource, Request $request)
     {
         $patientId = $request->input('patient_id', 0);
@@ -140,6 +150,16 @@ class ProfileImagesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/profile-images/insurance-card-image",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param ProfileImage $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getInsuranceCardImage(ProfileImage $resource, Request $request)
     {
         $patientId = $request->input('patient_id', 0);

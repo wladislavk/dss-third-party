@@ -234,6 +234,17 @@ class LedgersController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/ledgers/list",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Ledgers $resources
+     * @param Patient $patientResource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getListOfLedgerRows(
         Ledgers $resources,
         Patient $patientResource,
@@ -268,6 +279,16 @@ class LedgersController extends BaseRestController
         return ApiResponse::responseOk('', $ledgerRows);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/ledgers/totals",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Ledgers $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getReportTotals(Ledgers $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -331,6 +352,17 @@ class LedgersController extends BaseRestController
         return ApiResponse::responseOk('', $totals);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/ledgers/update-patient-summary",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Request $request
+     * @param PatientSummary $patientSummary
+     * @param Ledgers $ledger
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updatePatientSummary(
         Request $request,
         PatientSummary $patientSummary,
@@ -372,6 +404,19 @@ class LedgersController extends BaseRestController
         return ApiResponse::responseOk($response);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/ledgers/report-data",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Request $request
+     * @param Insurances $insurance
+     * @param Ledgers $ledger
+     * @param LedgerNotes $ledgerNote
+     * @param LedgerStatements $ledgerStatement
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getReportData(
         Request $request,
         Insurances $insurance,
@@ -404,6 +449,19 @@ class LedgersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/ledgers/report-rows-number",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Request $request
+     * @param Ledgers $ledger
+     * @param Insurances $insurance
+     * @param LedgerNotes $ledgerNote
+     * @param LedgerStatements $ledgerStatement
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getReportRowsNumber(
         Request $request,
         Ledgers $ledger,

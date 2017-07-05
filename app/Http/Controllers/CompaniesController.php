@@ -137,6 +137,15 @@ class CompaniesController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/companies/company-logo",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Company $resource
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCompanyLogo(Company $resource)
     {
         $userId = $this->currentUser->id ?: 0;
@@ -146,6 +155,15 @@ class CompaniesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/companies/home-sleep-test",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Companies $resources
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getHomeSleepTestCompanies(Companies $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -155,6 +173,15 @@ class CompaniesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/companies/billing-exclusive-company",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Company $resource
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getBillingExclusiveCompany(Company $resource)
     {
         $docId = $this->currentUser->docid ?: 0;

@@ -195,6 +195,16 @@ class LedgerHistoriesController extends BaseRestController
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/ledger-histories/ledger-report",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param LedgerHistories $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getHistoriesForLedgerReport(LedgerHistories $resource, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;

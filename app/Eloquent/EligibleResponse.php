@@ -6,11 +6,26 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @SWG\Definition(
+ *     definition="EligibleResponse",
+ *     type="object",
+ *     required={"id", "claimid", "response", "event", "adddate", "ip", "reference"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="claimid", type="string"),
+ *     @SWG\Property(property="response", type="string"),
+ *     @SWG\Property(property="event", type="string"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="reference", type="string")
+ * )
+ *
+ * @todo: for some reason $response property is detected as having type "stdClass"
+ *
  * Class EligibleResponse
  *
  * @property int $id
  * @property string $claimid
- * @property \stdClass $response
+ * @property string $response
  * @property string $event_type
  * @property string $adddate
  * @property string $ip_address

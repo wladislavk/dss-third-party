@@ -3,11 +3,39 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Recipient as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Recipients as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Recipient",
+ *     type="object",
+ *     required={"q"},
+ *     @SWG\Property(property="q", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="referring", type="string"),
+ *     @SWG\Property(property="dentist", type="string"),
+ *     @SWG\Property(property="physicians", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="q", type="string"),
+ *     @SWG\Property(property="q", type="string"),
+ *     @SWG\Property(property="q", type="string"),
+ *     @SWG\Property(property="q", type="string"),
+ *     @SWG\Property(property="q", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="q", type="string"),
+ *     @SWG\Property(property="q", type="string"),
+ *     @SWG\Property(property="q", type="string"),
+ *     @SWG\Property(property="q", type="string"),
+ *     @SWG\Property(property="q", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Recipient
  *
  * @property int $q_recipientsid

@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Eloquent;
 
 use DentalSleepSolutions\Contracts\Resources\Admin as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Admins as Repository;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 
 /**
  * @SWG\Definition(
@@ -11,6 +12,23 @@ use DentalSleepSolutions\Contracts\Repositories\Admins as Repository;
  *     type="object",
  *     required={"adminid"},
  *     @SWG\Property(property="adminid", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="username", type="string"),
+ *     @SWG\Property(property="password", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="salt", type="string"),
+ *     @SWG\Property(property="recover", type="string"),
+ *     @SWG\Property(property="recover", type="string"),
+ *     @SWG\Property(property="admin", type="integer"),
+ *     @SWG\Property(property="last", type="string"),
+ *     @SWG\Property(property="claim", type="integer"),
+ *     @SWG\Property(property="claim", type="integer"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="first", type="string"),
+ *     @SWG\Property(property="last", type="string"),
+ *     @SWG\Property(property="adminCompany", ref="#/definitions/AdminCompany")
  * )
  *
  * DentalSleepSolutions\Eloquent\Admin

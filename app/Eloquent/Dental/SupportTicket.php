@@ -3,12 +3,32 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\SupportTicket as Resource;
 use DentalSleepSolutions\Contracts\Repositories\SupportTickets as Repository;
 use DB;
 
 /**
+ * @SWG\Definition(
+ *     definition="SupportTicket",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="title", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="body", type="string"),
+ *     @SWG\Property(property="category", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="attachment", type="string"),
+ *     @SWG\Property(property="viewed", type="integer"),
+ *     @SWG\Property(property="creator", type="integer"),
+ *     @SWG\Property(property="create", type="integer"),
+ *     @SWG\Property(property="company", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\SupportTicket
  *
  * @property int $id

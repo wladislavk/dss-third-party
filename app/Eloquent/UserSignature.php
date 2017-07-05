@@ -6,6 +6,17 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @SWG\Definition(
+ *     definition="UserSignature",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="user", type="integer"),
+ *     @SWG\Property(property="signature", type="string"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\UserSignature
  *
  * @property int $id

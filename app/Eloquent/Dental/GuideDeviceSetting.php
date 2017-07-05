@@ -3,10 +3,21 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 
 /**
+ * @SWG\Definition(
+ *     definition="GuideDeviceSetting",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="device", type="integer"),
+ *     @SWG\Property(property="setting", type="integer"),
+ *     @SWG\Property(property="value", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting
  *
  * @property int $id

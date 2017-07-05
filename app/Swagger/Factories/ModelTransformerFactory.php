@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Swagger\Factories;
 
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
+use DentalSleepSolutions\Swagger\TypeTransformers\ModelTransformers\ArrayTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\ModelTransformers\DateTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\ModelTransformers\FloatTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\ModelTransformers\IntegerTransformer;
@@ -17,6 +18,7 @@ class ModelTransformerFactory extends AbstractTransformerFactory
         'int' => IntegerTransformer::class,
         'float' => FloatTransformer::class,
         '\Carbon\Carbon' => DateTransformer::class,
+        'array' => ArrayTransformer::class,
     ];
 
     /**

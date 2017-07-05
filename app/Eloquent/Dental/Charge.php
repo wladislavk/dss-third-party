@@ -3,11 +3,29 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Charge as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Charges as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Charge",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="adminid", type="integer"),
+ *     @SWG\Property(property="charge", type="string"),
+ *     @SWG\Property(property="stripe", type="string"),
+ *     @SWG\Property(property="stripe", type="string"),
+ *     @SWG\Property(property="stripe", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="invoice", type="integer"),
+ *     @SWG\Property(property="status", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Charge
  *
  * @property int $id

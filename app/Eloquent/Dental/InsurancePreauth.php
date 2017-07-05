@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutCreatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutCreatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as Repository;
 use Carbon\Carbon;

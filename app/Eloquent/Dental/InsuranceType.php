@@ -3,11 +3,24 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\InsuranceType as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsuranceTypes as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="InsuranceType",
+ *     type="object",
+ *     required={"ins", "ip"},
+ *     @SWG\Property(property="ins", type="integer"),
+ *     @SWG\Property(property="ins", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\InsuranceType
  *
  * @property int $ins_typeid

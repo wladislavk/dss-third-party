@@ -6,6 +6,20 @@ use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\AbstractModel;
 
 /**
+ * @SWG\Definition(
+ *     definition="EnrollmentInvoice",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="invoice", type="integer"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="start", type="string"),
+ *     @SWG\Property(property="end", type="string"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice
  *
  * @property int $id

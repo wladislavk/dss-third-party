@@ -3,11 +3,70 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Screener as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Screeners as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Screener",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="first", type="string"),
+ *     @SWG\Property(property="last", type="string"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="epworth", type="integer"),
+ *     @SWG\Property(property="epworth", type="integer"),
+ *     @SWG\Property(property="epworth", type="integer"),
+ *     @SWG\Property(property="epworth", type="integer"),
+ *     @SWG\Property(property="epworth", type="integer"),
+ *     @SWG\Property(property="epworth", type="integer"),
+ *     @SWG\Property(property="epworth", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="breathing", type="integer"),
+ *     @SWG\Property(property="driving", type="integer"),
+ *     @SWG\Property(property="gasping", type="integer"),
+ *     @SWG\Property(property="sleepy", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="weight", type="integer"),
+ *     @SWG\Property(property="blood", type="integer"),
+ *     @SWG\Property(property="jerk", type="integer"),
+ *     @SWG\Property(property="burning", type="integer"),
+ *     @SWG\Property(property="headaches", type="integer"),
+ *     @SWG\Property(property="falling", type="integer"),
+ *     @SWG\Property(property="staying", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="phone", type="string"),
+ *     @SWG\Property(property="contacted", type="integer"),
+ *     @SWG\Property(property="patient", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer"),
+ *     @SWG\Property(property="rx", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Screener
  *
  * @property int $id

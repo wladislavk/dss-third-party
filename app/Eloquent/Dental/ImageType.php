@@ -3,11 +3,24 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ImageType as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ImageTypes as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="ImageType",
+ *     type="object",
+ *     required={"imagetypeid", "ip"},
+ *     @SWG\Property(property="imagetypeid", type="integer"),
+ *     @SWG\Property(property="imagetype", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\ImageType
  *
  * @property int $imagetypeid

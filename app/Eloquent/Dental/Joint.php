@@ -3,11 +3,24 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Joint as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Joints as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Joint",
+ *     type="object",
+ *     required={"jointid", "ip"},
+ *     @SWG\Property(property="jointid", type="integer"),
+ *     @SWG\Property(property="joint", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Joint
  *
  * @property int $jointid

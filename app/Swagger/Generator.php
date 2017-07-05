@@ -96,7 +96,14 @@ class Generator
      */
     private function getModels($modelDir)
     {
-        return $this->filesystemWrapper->allFiles($modelDir);
+        $modelFiles = $this->filesystemWrapper->allFiles($modelDir);
+        $goodFiles = [];
+        foreach ($modelFiles as $modelFile) {
+            if (!strstr($modelFile, 'Abstract')) {
+                $goodFiles[] = $modelFile;
+            }
+        }
+        return $goodFiles;
     }
 
     /**

@@ -10,6 +10,17 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
  *     type="object",
  *     required={"id"},
  *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="companyid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
+ * @SWG\Definition(
+ *     definition="UserCompany",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
  * )
 
  * DentalSleepSolutions\Eloquent\Dental\UserCompany

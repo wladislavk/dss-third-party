@@ -3,11 +3,24 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Mandible as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Mandibles as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Mandible",
+ *     type="object",
+ *     required={"mandibleid", "ip"},
+ *     @SWG\Property(property="mandibleid", type="integer"),
+ *     @SWG\Property(property="mandible", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Mandible
  *
  * @property int $mandibleid

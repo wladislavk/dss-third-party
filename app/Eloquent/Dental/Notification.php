@@ -7,6 +7,19 @@ use DentalSleepSolutions\Contracts\Resources\Notification as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Notifications as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Notification",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="notification", type="string"),
+ *     @SWG\Property(property="notification", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="notification", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Notification
  *
  * @property int $id

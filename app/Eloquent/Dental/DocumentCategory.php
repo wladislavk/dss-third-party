@@ -3,11 +3,22 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\DocumentCategory as Resource;
 use DentalSleepSolutions\Contracts\Repositories\DocumentCategories as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="DocumentCategory",
+ *     type="object",
+ *     required={"categoryid"},
+ *     @SWG\Property(property="categoryid", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\DocumentCategory
  *
  * @property int $categoryid

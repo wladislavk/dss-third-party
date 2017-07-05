@@ -3,11 +3,27 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\InsuranceDocument as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsuranceDocuments as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="InsuranceDocument",
+ *     type="object",
+ *     required={"doc"},
+ *     @SWG\Property(property="doc", type="integer"),
+ *     @SWG\Property(property="title", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="video", type="string"),
+ *     @SWG\Property(property="doc", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="docid", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\InsuranceDocument
  *
  * @property int $doc_insuranceid

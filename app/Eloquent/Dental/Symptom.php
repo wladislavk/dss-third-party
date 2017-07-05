@@ -3,11 +3,54 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Symptom as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Symptoms as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Symptom",
+ *     type="object",
+ *     required={"q", "sleep"},
+ *     @SWG\Property(property="q", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="member", type="string"),
+ *     @SWG\Property(property="group", type="string"),
+ *     @SWG\Property(property="plan", type="string"),
+ *     @SWG\Property(property="primary", type="string"),
+ *     @SWG\Property(property="feet", type="string"),
+ *     @SWG\Property(property="inches", type="string"),
+ *     @SWG\Property(property="weight", type="string"),
+ *     @SWG\Property(property="bmi", type="string"),
+ *     @SWG\Property(property="sleep", type="string"),
+ *     @SWG\Property(property="complaintid", type="string"),
+ *     @SWG\Property(property="other", type="string"),
+ *     @SWG\Property(property="additional", type="string"),
+ *     @SWG\Property(property="energy", type="string"),
+ *     @SWG\Property(property="snoring", type="string"),
+ *     @SWG\Property(property="wake", type="string"),
+ *     @SWG\Property(property="breathing", type="string"),
+ *     @SWG\Property(property="morning", type="string"),
+ *     @SWG\Property(property="hours", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="quit", type="string"),
+ *     @SWG\Property(property="bed", type="string"),
+ *     @SWG\Property(property="sleep", type="string"),
+ *     @SWG\Property(property="told", type="string"),
+ *     @SWG\Property(property="main", type="string"),
+ *     @SWG\Property(property="main", type="string"),
+ *     @SWG\Property(property="exam", type="string", format="dateTime"),
+ *     @SWG\Property(property="chief", type="string"),
+ *     @SWG\Property(property="tss", type="string"),
+ *     @SWG\Property(property="ess", type="string"),
+ *     @SWG\Property(property="parent", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Symptom
  *
  * @property int $q_page1id

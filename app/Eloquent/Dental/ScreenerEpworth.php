@@ -3,11 +3,23 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ScreenerEpworth as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ScreenerEpworth as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="ScreenerEpworth",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="screener", type="integer"),
+ *     @SWG\Property(property="epworth", type="integer"),
+ *     @SWG\Property(property="response", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth
  *
  * @property int $id

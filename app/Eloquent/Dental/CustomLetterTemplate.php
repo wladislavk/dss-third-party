@@ -3,11 +3,24 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\CustomLetterTemplate as Resource;
 use DentalSleepSolutions\Contracts\Repositories\CustomLetterTemplates as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="CustomLetterTemplate",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="body", type="string"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="status", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate
  *
  * @property int $id

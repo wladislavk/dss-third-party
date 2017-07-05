@@ -3,11 +3,24 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Medicament as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Medications as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Medicament",
+ *     type="object",
+ *     required={"medicationsid", "ip"},
+ *     @SWG\Property(property="medicationsid", type="integer"),
+ *     @SWG\Property(property="medications", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Medicament
  *
  * @property int $medicationsid

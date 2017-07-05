@@ -28,14 +28,24 @@ class Admin extends Request
      */
     public function updateRules()
     {
-        /** @var \DentalSleepSolutions\Eloquent\Admin $admin */
-        $admin = $this->adminModel->findOrFail(Request::input('id'));
-        $ignore = $admin->getKeyName() . ',' . $admin->getKey();
-
         $rules = $this->rules;
-        $rules['username'] = 'sometimes|required|max:250|unique:admin,username,' . $ignore;
+        // @todo: uncomment this as soon as it's understood how to make it play nice with swagger
+        //$ignore = $this->getIgnore();
+        //$rules['username'] = 'sometimes|required|max:250|unique:admin,username,' . $ignore;
+        $rules['username'] = 'sometimes|required|max:250|unique:admin,username';
         $rules['password'] = 'sometimes|required|max:250';
 
         return $rules;
+    }
+
+    /**
+     * @return string
+     */
+    private function getIgnore()
+    {
+        /** @var \DentalSleepSolutions\Eloquent\Admin $admin */
+        $admin = $this->adminModel->findOrFail(Request::input('id'));
+        $ignore = $admin->getKeyName() . ',' . $admin->getKey();
+        return $ignore;
     }
 }

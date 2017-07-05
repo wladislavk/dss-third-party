@@ -6,6 +6,15 @@ use DentalSleepSolutions\Contracts\Resources\Payer as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Payers as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Payer",
+ *     type="object",
+ *     required={"payer", "names", "supported"},
+ *     @SWG\Property(property="payer", type="string"),
+ *     @SWG\Property(property="names", type="string"),
+ *     @SWG\Property(property="supported", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Payer
  *
  * @property string $payer_id           Eligible payer unique identifier.

@@ -3,12 +3,14 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\GuideSetting as Resource;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettings as Repository;
 use DB;
 
 /**
+ * @todo: check why $options is not marked as @property-read on generation
+ *
  * DentalSleepSolutions\Eloquent\Dental\GuideSetting
  *
  * @property int $id
@@ -19,9 +21,9 @@ use DB;
  * @property \Carbon\Carbon|null $adddate
  * @property string|null $ip_address
  * @property int|null $rank
- * @property \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption[] $options
  * @property string|null $range_start_label
  * @property string|null $range_end_label
+ * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption[] $options
  * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting[] $deviceSettings
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSetting whereAdddate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSetting whereId($value)

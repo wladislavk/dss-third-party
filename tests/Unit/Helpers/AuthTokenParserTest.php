@@ -3,11 +3,9 @@
 namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Eloquent\User;
-use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Helpers\AuthTokenParser;
-use Illuminate\Support\Facades\App;
 
 class AuthTokenParserTest extends UnitTestCase
 {

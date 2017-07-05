@@ -45,6 +45,10 @@ class ExternalAuthTokenParser
      */
     public function getUserData($companyKey, $userKey)
     {
+        if (!strlen($companyKey) || !strlen($userKey)) {
+            return false;
+        }
+
         $externalCompany = $this->companiesRepository->where('api_key', $companyKey)->first();
 
         if (!$externalCompany) {

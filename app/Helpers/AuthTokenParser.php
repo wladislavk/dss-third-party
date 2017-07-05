@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use function array_reduce;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Eloquent\User;
 

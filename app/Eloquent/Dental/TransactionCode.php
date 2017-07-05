@@ -41,36 +41,6 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\TransactionCode whereType($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="TransactionCode",
- *     type="object",
- *     required={"transaction", "type", "ip", "days"},
- *     @SWG\Property(property="transaction", type="integer"),
- *     @SWG\Property(property="transaction", type="string"),
- *     @SWG\Property(property="description", type="string"),
- *     @SWG\Property(property="type", type="string"),
- *     @SWG\Property(property="sortby", type="integer"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="adddate", type="string"),
- *     @SWG\Property(property="ip", type="string"),
- *     @SWG\Property(property="default", type="integer"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="amount", type="float"),
- *     @SWG\Property(property="place", type="integer"),
- *     @SWG\Property(property="modifier", type="string"),
- *     @SWG\Property(property="modifier", type="string"),
- *     @SWG\Property(property="days", type="string"),
- *     @SWG\Property(property="amount", type="integer")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="TransactionCode",
- *     type="object",
- * 
- * )
- */
 class TransactionCode extends AbstractModel
 {
     protected $table = 'dental_transaction_code';

@@ -94,61 +94,6 @@ use DentalSleepSolutions\Contracts\Repositories\TmjClinicalExams as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\TmjClinicalExam whereUserid($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="TmjClinicalExam",
- *     type="object",
- *     required={"ex"},
- *     @SWG\Property(property="ex", type="integer"),
- *     @SWG\Property(property="formid", type="integer"),
- *     @SWG\Property(property="patientid", type="integer"),
- *     @SWG\Property(property="palpationid", type="string"),
- *     @SWG\Property(property="palpationRid", type="string"),
- *     @SWG\Property(property="additional", type="string"),
- *     @SWG\Property(property="joint", type="string"),
- *     @SWG\Property(property="jointid", type="string"),
- *     @SWG\Property(property="i", type="string"),
- *     @SWG\Property(property="i", type="string"),
- *     @SWG\Property(property="i", type="string"),
- *     @SWG\Property(property="protrusion", type="string"),
- *     @SWG\Property(property="protrusion", type="string"),
- *     @SWG\Property(property="protrusion", type="string"),
- *     @SWG\Property(property="l", type="string"),
- *     @SWG\Property(property="l", type="string"),
- *     @SWG\Property(property="l", type="string"),
- *     @SWG\Property(property="r", type="string"),
- *     @SWG\Property(property="r", type="string"),
- *     @SWG\Property(property="r", type="string"),
- *     @SWG\Property(property="deviation", type="string"),
- *     @SWG\Property(property="deviation", type="string"),
- *     @SWG\Property(property="deviation", type="string"),
- *     @SWG\Property(property="deflection", type="string"),
- *     @SWG\Property(property="deflection", type="string"),
- *     @SWG\Property(property="deflection", type="string"),
- *     @SWG\Property(property="range", type="string"),
- *     @SWG\Property(property="normal", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="additional", type="string"),
- *     @SWG\Property(property="screening", type="string"),
- *     @SWG\Property(property="screening", type="string"),
- *     @SWG\Property(property="userid", type="integer"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="adddate", type="string", format="dateTime"),
- *     @SWG\Property(property="ip", type="string"),
- *     @SWG\Property(property="deviation", type="string"),
- *     @SWG\Property(property="deflection", type="string"),
- *     @SWG\Property(property="dentaldevice", type="integer"),
- *     @SWG\Property(property="dentaldevice", type="string")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="TmjClinicalExam",
- *     type="object",
- * 
- * )
- */
 class TmjClinicalExam extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

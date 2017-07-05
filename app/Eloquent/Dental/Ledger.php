@@ -85,56 +85,6 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Ledger whereUserid($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="Ledger",
- *     type="object",
- *     required={"ledgerid", "placeofservice", "emg", "diagnosispointer", "daysorunits", "epsdt", "idqual", "modcode"},
- *     @SWG\Property(property="ledgerid", type="integer"),
- *     @SWG\Property(property="formid", type="integer"),
- *     @SWG\Property(property="patientid", type="integer"),
- *     @SWG\Property(property="service", type="string", format="dateTime"),
- *     @SWG\Property(property="entry", type="string", format="dateTime"),
- *     @SWG\Property(property="description", type="string"),
- *     @SWG\Property(property="producer", type="string"),
- *     @SWG\Property(property="amount", type="float"),
- *     @SWG\Property(property="transaction", type="string"),
- *     @SWG\Property(property="paid", type="float"),
- *     @SWG\Property(property="userid", type="integer"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="adddate", type="string"),
- *     @SWG\Property(property="ip", type="string"),
- *     @SWG\Property(property="transaction", type="string"),
- *     @SWG\Property(property="placeofservice", type="string"),
- *     @SWG\Property(property="emg", type="string"),
- *     @SWG\Property(property="diagnosispointer", type="string"),
- *     @SWG\Property(property="daysorunits", type="string"),
- *     @SWG\Property(property="epsdt", type="string"),
- *     @SWG\Property(property="idqual", type="string"),
- *     @SWG\Property(property="modcode", type="string"),
- *     @SWG\Property(property="producerid", type="integer"),
- *     @SWG\Property(property="primary", type="integer"),
- *     @SWG\Property(property="primary", type="string"),
- *     @SWG\Property(property="modcode2", type="string"),
- *     @SWG\Property(property="modcode3", type="string"),
- *     @SWG\Property(property="modcode4", type="string"),
- *     @SWG\Property(property="percase", type="string", format="dateTime"),
- *     @SWG\Property(property="percase", type="string"),
- *     @SWG\Property(property="percase", type="float"),
- *     @SWG\Property(property="percase", type="integer"),
- *     @SWG\Property(property="percase", type="integer"),
- *     @SWG\Property(property="percase", type="integer"),
- *     @SWG\Property(property="secondary", type="integer")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="Ledger",
- *     type="object",
- * 
- * )
- */
 class Ledger extends AbstractModel implements Resource, Repository
 {
     const DSS_TRXN_TYPE_ADJ = 6;

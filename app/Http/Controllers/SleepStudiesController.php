@@ -10,16 +10,16 @@ class SleepStudiesController extends BaseRestController
      *     @SWG\Response(
      *         response="200",
      *         description="Resources retrieved",
-     *         allOf={
-     *             @SWG\Schema(ref="#/definitions/common_response_fields"),
-     *             @SWG\Schema(
+     *         @SWG\Schema
+     *             allOf={
+     *                 ref="#/definitions/common_response_fields",
      *                 @SWG\Property(
      *                     property="data",
      *                     type="array",
      *                     @SWG\Items(@SWG\Schema(ref="#/definitions/SleepStudy"))
      *                 )
-     *             )
-     *         }
+     *             }
+     *         )
      *     ),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
@@ -31,17 +31,17 @@ class SleepStudiesController extends BaseRestController
 
     /**
      * @SWG\Get(
-     *     path="/sleep-studies/{sleep_studies}",
+     *     path="/sleep-studies/{id}",
      *     @SWG\Parameter(ref="#/parameters/id_in_path"),
      *     @SWG\Response(
      *         response="200",
      *         description="Resource retrieved",
-     *         allOf={
-     *             @SWG\Schema(ref="#/definitions/common_response_fields"),
-     *             @SWG\Schema(
+     *         @SWG\Schema(
+     *             allOf={
+     *                 ref="#/definitions/common_response_fields",
      *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/SleepStudy"))
-     *             )
-     *         }
+     *             }
+     *         )
      *     ),
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
@@ -72,12 +72,12 @@ class SleepStudiesController extends BaseRestController
      *     @SWG\Response(
      *         response="200",
      *         description="Resource created",
-     *         allOf={
-     *             @SWG\Schema(ref="#/definitions/common_response_fields"),
-     *             @SWG\Schema(
+     *         @SWG\Schema(
+     *             allOf={
+     *                 ref="#/definitions/common_response_fields",
      *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/SleepStudy"))
-     *             )
-     *         }
+     *             }
+     *         )
      *     ),
      *     @SWG\Response(response="422", ref="#/responses/422_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
@@ -91,7 +91,7 @@ class SleepStudiesController extends BaseRestController
 
     /**
      * @SWG\Put(
-     *     path="/sleep-studies/{sleep_studies}",
+     *     path="/sleep-studies/{id}",
      *     @SWG\Parameter(ref="#/parameters/id_in_path"),
      *     @SWG\Parameter(name="testnumber", in="formData", type="string", pattern="^[0-9]{9}$"),
      *     @SWG\Parameter(name="docid", in="formData", type="string", pattern="^[0-9]+$"),
@@ -120,7 +120,7 @@ class SleepStudiesController extends BaseRestController
 
     /**
      * @SWG\Delete(
-     *     path="/sleep-studies/{sleep_studies}",
+     *     path="/sleep-studies/{id}",
      *     @SWG\Parameter(ref="#/parameters/id_in_path"),
      *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
      *     @SWG\Response(response="404", ref="#/responses/404_response"),

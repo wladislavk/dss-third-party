@@ -129,57 +129,6 @@ use DentalSleepSolutions\Contracts\Repositories\PreviousTreatments as Repository
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PreviousTreatment whereUserid($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="PreviousTreatment",
- *     type="object",
- *     required={"q", "triedquittried", "timesovertime"},
- *     @SWG\Property(property="q", type="integer"),
- *     @SWG\Property(property="formid", type="integer"),
- *     @SWG\Property(property="patientid", type="integer"),
- *     @SWG\Property(property="polysomnographic", type="integer"),
- *     @SWG\Property(property="sleep", type="string"),
- *     @SWG\Property(property="sleep", type="string"),
- *     @SWG\Property(property="confirmed", type="string"),
- *     @SWG\Property(property="rdi", type="string"),
- *     @SWG\Property(property="ahi", type="string"),
- *     @SWG\Property(property="cpap", type="string"),
- *     @SWG\Property(property="intolerance", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="userid", type="integer"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="adddate", type="string", format="dateTime"),
- *     @SWG\Property(property="ip", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="affidavit", type="string"),
- *     @SWG\Property(property="type", type="string"),
- *     @SWG\Property(property="nights", type="string"),
- *     @SWG\Property(property="percent", type="string"),
- *     @SWG\Property(property="custom", type="string"),
- *     @SWG\Property(property="sleep", type="string"),
- *     @SWG\Property(property="triedquittried", type="string"),
- *     @SWG\Property(property="timesovertime", type="string"),
- *     @SWG\Property(property="cur", type="string"),
- *     @SWG\Property(property="sleep", type="string"),
- *     @SWG\Property(property="dd", type="string"),
- *     @SWG\Property(property="dd", type="string"),
- *     @SWG\Property(property="dd", type="string"),
- *     @SWG\Property(property="dd", type="string"),
- *     @SWG\Property(property="dd", type="string"),
- *     @SWG\Property(property="dd", type="string"),
- *     @SWG\Property(property="surgery", type="string"),
- *     @SWG\Property(property="parent", type="integer")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="PreviousTreatment",
- *     type="object",
- * 
- * )
- */
 class PreviousTreatment extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

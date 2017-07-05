@@ -79,7 +79,7 @@ class ControllerComposer extends AbstractAnnotationComposer
      */
     private function replaceWildcard($path)
     {
-        $regexp = '/(?<=\/)\{([a-z]+?)\}(?=\/|$)/';
+        $regexp = '/(?<=\/)\{([a-z_]+?)\}(?=\/|$)/';
         $replaced = preg_replace($regexp, '{id}', $path);
         return $replaced;
     }

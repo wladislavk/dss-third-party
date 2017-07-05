@@ -64,46 +64,6 @@ use DentalSleepSolutions\Contracts\Repositories\Plans as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Plan whereVobFee($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="Plan",
- *     type="object",
- *     required={"id"},
- *     @SWG\Property(property="id", type="integer"),
- *     @SWG\Property(property="name", type="string"),
- *     @SWG\Property(property="monthly", type="float"),
- *     @SWG\Property(property="trial", type="integer"),
- *     @SWG\Property(property="fax", type="float"),
- *     @SWG\Property(property="free", type="integer"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="adddate", type="string", format="dateTime"),
- *     @SWG\Property(property="ip", type="string"),
- *     @SWG\Property(property="eligibility", type="float"),
- *     @SWG\Property(property="free", type="integer"),
- *     @SWG\Property(property="enrollment", type="float"),
- *     @SWG\Property(property="free", type="integer"),
- *     @SWG\Property(property="claim", type="float"),
- *     @SWG\Property(property="free", type="integer"),
- *     @SWG\Property(property="vob", type="float"),
- *     @SWG\Property(property="free", type="integer"),
- *     @SWG\Property(property="office", type="integer"),
- *     @SWG\Property(property="efile", type="float"),
- *     @SWG\Property(property="free", type="integer"),
- *     @SWG\Property(property="duration", type="integer"),
- *     @SWG\Property(property="producer", type="float"),
- *     @SWG\Property(property="user", type="float"),
- *     @SWG\Property(property="patient", type="float"),
- *     @SWG\Property(property="e0486", type="integer"),
- *     @SWG\Property(property="e0486", type="float")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="Plan",
- *     type="object",
- * 
- * )
- */
 class Plan extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

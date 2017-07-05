@@ -58,26 +58,6 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientContact whereZip($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="PatientContact",
- *     type="object",
- *     required={"id"},
- *     @SWG\Property(property="id", type="integer"),
- *     @SWG\Property(property="contacttype", type="integer"),
- *     @SWG\Property(property="patientid", type="integer"),
- *     @SWG\Property(property="firstname", type="string"),
- *     @SWG\Property(property="lastname", type="string"),
- *     @SWG\Property(property="address1", type="string"),
- *     @SWG\Property(property="address2", type="string"),
- *     @SWG\Property(property="city", type="string"),
- *     @SWG\Property(property="state", type="string"),
- *     @SWG\Property(property="zip", type="string"),
- *     @SWG\Property(property="phone", type="string"),
- *     @SWG\Property(property="adddate", type="string", format="dateTime"),
- *     @SWG\Property(property="ip", type="string")
- * )
- */
 class PatientContact extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

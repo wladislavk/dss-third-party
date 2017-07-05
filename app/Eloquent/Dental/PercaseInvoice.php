@@ -44,37 +44,6 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PercaseInvoice whereUserFeeDesc($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="PercaseInvoice",
- *     type="object",
- *     required={"id"},
- *     @SWG\Property(property="id", type="integer"),
- *     @SWG\Property(property="adminid", type="integer"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="adddate", type="string"),
- *     @SWG\Property(property="ip", type="string"),
- *     @SWG\Property(property="monthly", type="string"),
- *     @SWG\Property(property="monthly", type="float"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="due", type="string"),
- *     @SWG\Property(property="companyid", type="integer"),
- *     @SWG\Property(property="user", type="string"),
- *     @SWG\Property(property="user", type="float"),
- *     @SWG\Property(property="producer", type="string"),
- *     @SWG\Property(property="producer", type="float"),
- *     @SWG\Property(property="user", type="string"),
- *     @SWG\Property(property="producer", type="string"),
- *     @SWG\Property(property="invoice", type="integer")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="PercaseInvoice",
- *     type="object",
- * 
- * )
- */
 class PercaseInvoice extends AbstractModel
 {
     protected $table = 'dental_percase_invoice';

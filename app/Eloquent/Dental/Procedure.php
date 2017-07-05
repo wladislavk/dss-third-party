@@ -62,46 +62,6 @@ use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Procedure whereUnits($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="Procedure",
- *     type="object",
- *     required={"procedureid"},
- *     @SWG\Property(property="procedureid", type="integer"),
- *     @SWG\Property(property="patientid", type="integer"),
- *     @SWG\Property(property="insuranceid", type="integer"),
- *     @SWG\Property(property="service", type="string"),
- *     @SWG\Property(property="service", type="string"),
- *     @SWG\Property(property="place", type="string"),
- *     @SWG\Property(property="type", type="string"),
- *     @SWG\Property(property="cpt", type="string"),
- *     @SWG\Property(property="units", type="string"),
- *     @SWG\Property(property="charge", type="string"),
- *     @SWG\Property(property="total", type="string"),
- *     @SWG\Property(property="applies", type="string"),
- *     @SWG\Property(property="npi", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="modifier", type="string"),
- *     @SWG\Property(property="modifier", type="string"),
- *     @SWG\Property(property="modifier", type="string"),
- *     @SWG\Property(property="modifier", type="string"),
- *     @SWG\Property(property="epsdt", type="string"),
- *     @SWG\Property(property="emg", type="string"),
- *     @SWG\Property(property="supplemental", type="string"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="adddate", type="string", format="dateTime"),
- *     @SWG\Property(property="ip", type="string")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="Procedure",
- *     type="object",
- * 
- * )
- */
 class Procedure extends AbstractModel
 {
     use WithoutUpdatedTimestamp;

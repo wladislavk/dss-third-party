@@ -127,54 +127,6 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Letter whereUserid($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="Letter",
- *     type="object",
- *     required={"letterid"},
- *     @SWG\Property(property="letterid", type="integer"),
- *     @SWG\Property(property="patientid", type="integer"),
- *     @SWG\Property(property="stepid", type="integer"),
- *     @SWG\Property(property="generated", type="string", format="dateTime"),
- *     @SWG\Property(property="delivery", type="string", format="dateTime"),
- *     @SWG\Property(property="send", type="string"),
- *     @SWG\Property(property="template", type="string"),
- *     @SWG\Property(property="pdf", type="string"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="delivered", type="integer"),
- *     @SWG\Property(property="deleted", type="integer"),
- *     @SWG\Property(property="templateid", type="integer"),
- *     @SWG\Property(property="parentid", type="integer"),
- *     @SWG\Property(property="topatient", type="integer"),
- *     @SWG\Property(property="md", type="string"),
- *     @SWG\Property(property="md", type="string"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="userid", type="integer"),
- *     @SWG\Property(property="date", type="string", format="dateTime"),
- *     @SWG\Property(property="info", type="integer"),
- *     @SWG\Property(property="edit", type="integer"),
- *     @SWG\Property(property="edit", type="string", format="dateTime"),
- *     @SWG\Property(property="mailed", type="string", format="dateTime"),
- *     @SWG\Property(property="mailed", type="integer"),
- *     @SWG\Property(property="template", type="integer"),
- *     @SWG\Property(property="cc", type="integer"),
- *     @SWG\Property(property="cc", type="string"),
- *     @SWG\Property(property="cc", type="string"),
- *     @SWG\Property(property="font", type="string"),
- *     @SWG\Property(property="font", type="integer"),
- *     @SWG\Property(property="pat", type="string"),
- *     @SWG\Property(property="cc", type="string"),
- *     @SWG\Property(property="deleted", type="integer"),
- *     @SWG\Property(property="deleted", type="string", format="dateTime")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="Letter",
- *     type="object",
- * 
- * )
- */
 class Letter extends AbstractModel implements Resource, Repository
 {
     /**

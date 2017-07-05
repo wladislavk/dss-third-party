@@ -22,12 +22,12 @@ class StoreAnnotator extends AbstractActionAnnotator
     @SWG\Response(
         response="200",
         description="Resource created",
-        allOf={
-            @SWG\Schema(ref="#/definitions/common_response_fields"),
-            @SWG\Schema(
+        @SWG\Schema(
+            allOf={
+                ref="#/definitions/common_response_fields",
                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/$modelClass"))
-            )
-        }
+            }
+        )
     ),
 
 ANNOTATION;

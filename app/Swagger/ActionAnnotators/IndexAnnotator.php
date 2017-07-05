@@ -22,16 +22,16 @@ class IndexAnnotator extends AbstractActionAnnotator
     @SWG\Response(
         response="200",
         description="Resources retrieved",
-        allOf={
-            @SWG\Schema(ref="#/definitions/common_response_fields"),
-            @SWG\Schema(
+        @SWG\Schema
+            allOf={
+                ref="#/definitions/common_response_fields",
                 @SWG\Property(
                     property="data",
                     type="array",
                     @SWG\Items(@SWG\Schema(ref="#/definitions/$modelClass"))
                 )
-            )
-        }
+            }
+        )
     ),
 
 ANNOTATION;

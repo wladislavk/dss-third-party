@@ -5,12 +5,6 @@ namespace DentalSleepSolutions\Eloquent\Enrollments;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @SWG\Definition(
- *     definition="PayersList",
- *     type="object",
- * 
- * )
- *
  * DentalSleepSolutions\Eloquent\Enrollments\PayersList
  *
  * @mixin \Eloquent

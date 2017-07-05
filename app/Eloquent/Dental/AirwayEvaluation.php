@@ -52,40 +52,6 @@ use DentalSleepSolutions\Contracts\Repositories\AirwayEvaluations as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereUvula($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="AirwayEvaluation",
- *     type="object",
- *     required={"ex"},
- *     @SWG\Property(property="ex", type="integer"),
- *     @SWG\Property(property="formid", type="integer"),
- *     @SWG\Property(property="patientid", type="integer"),
- *     @SWG\Property(property="maxilla", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="mandible", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="soft", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="uvula", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="gag", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="nasal", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="userid", type="integer"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="adddate", type="string", format="dateTime"),
- *     @SWG\Property(property="ip", type="string")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="AirwayEvaluation",
- *     type="object",
- * 
- * )
- */
 class AirwayEvaluation extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

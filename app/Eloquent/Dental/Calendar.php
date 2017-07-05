@@ -66,36 +66,6 @@ use DentalSleepSolutions\Contracts\Repositories\Calendars as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Calendar whereStartDate($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="Calendar",
- *     type="object",
- *     required={"id"},
- *     @SWG\Property(property="id", type="integer"),
- *     @SWG\Property(property="start", type="string"),
- *     @SWG\Property(property="end", type="string"),
- *     @SWG\Property(property="description", type="string"),
- *     @SWG\Property(property="event", type="integer"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="adddate", type="string", format="dateTime"),
- *     @SWG\Property(property="ip", type="string"),
- *     @SWG\Property(property="category", type="string"),
- *     @SWG\Property(property="producer", type="integer"),
- *     @SWG\Property(property="patientid", type="integer"),
- *     @SWG\Property(property="rec", type="string"),
- *     @SWG\Property(property="event", type="integer"),
- *     @SWG\Property(property="event", type="integer"),
- *     @SWG\Property(property="res", type="integer"),
- *     @SWG\Property(property="rec", type="string")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="Calendar",
- *     type="object",
- * 
- * )
- */
 class Calendar extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

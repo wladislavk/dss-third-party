@@ -60,44 +60,6 @@ use DentalSleepSolutions\Contracts\Repositories\DentalClinicalExams as Repositor
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\DentalClinicalExam whereWhereFacets($value)
  * @mixin \Eloquent
  */
-/**
- * @SWG\Definition(
- *     definition="DentalClinicalExam",
- *     type="object",
- *     required={"ex"},
- *     @SWG\Property(property="ex", type="integer"),
- *     @SWG\Property(property="formid", type="integer"),
- *     @SWG\Property(property="patientid", type="integer"),
- *     @SWG\Property(property="exam", type="string"),
- *     @SWG\Property(property="other", type="string"),
- *     @SWG\Property(property="caries", type="string"),
- *     @SWG\Property(property="where", type="string"),
- *     @SWG\Property(property="cracked", type="string"),
- *     @SWG\Property(property="old", type="string"),
- *     @SWG\Property(property="dental", type="string"),
- *     @SWG\Property(property="dental", type="string"),
- *     @SWG\Property(property="dental", type="string"),
- *     @SWG\Property(property="dental", type="string"),
- *     @SWG\Property(property="additional", type="string"),
- *     @SWG\Property(property="initial", type="string"),
- *     @SWG\Property(property="open", type="string"),
- *     @SWG\Property(property="deistema", type="string"),
- *     @SWG\Property(property="userid", type="integer"),
- *     @SWG\Property(property="docid", type="integer"),
- *     @SWG\Property(property="status", type="integer"),
- *     @SWG\Property(property="adddate", type="string", format="dateTime"),
- *     @SWG\Property(property="ip", type="string"),
- *     @SWG\Property(property="missing", type="string"),
- *     @SWG\Property(property="crossbite", type="string")
- * )
- */
-/**
- * @SWG\Definition(
- *     definition="DentalClinicalExam",
- *     type="object",
- * 
- * )
- */
 class DentalClinicalExam extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

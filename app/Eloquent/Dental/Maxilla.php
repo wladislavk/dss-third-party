@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\Maxilla as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Maxillas as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Maxilla",
+ *     type="object",
+ *     required={"maxillaid", "ip"},
+ *     @SWG\Property(property="maxillaid", type="integer"),
+ *     @SWG\Property(property="maxilla", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Maxilla
  *
  * @property int $maxillaid

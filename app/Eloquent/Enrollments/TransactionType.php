@@ -5,6 +5,19 @@ namespace DentalSleepSolutions\Eloquent\Enrollments;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @SWG\Definition(
+ *     definition="TransactionType",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="transaction", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="endpoint", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Enrollments\TransactionType
  *
  * @property int $id

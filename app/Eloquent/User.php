@@ -6,6 +6,12 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
 /**
+ * @SWG\Definition(
+ *     definition="User",
+ *     type="object",
+ * 
+ * )
+ *
  * Model representing combined dental_users & admin tables data
  * using v_users db view. The view isn't writable thus model
  * is made read-only by disabling saving via model events.

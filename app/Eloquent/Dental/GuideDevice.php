@@ -8,6 +8,17 @@ use DentalSleepSolutions\Contracts\Resources\GuideDevice as Resource;
 use DentalSleepSolutions\Contracts\Repositories\GuideDevices as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="GuideDevice",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="deviceSettings", type="array", @SWG\Items(ref="#/definitions/GuideDeviceSetting"))
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\GuideDevice
  *
  * @property int $id

@@ -7,6 +7,18 @@ use DentalSleepSolutions\Contracts\Resources\Login as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Logins as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Login",
+ *     type="object",
+ *     required={"loginid"},
+ *     @SWG\Property(property="loginid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="login", type="string"),
+ *     @SWG\Property(property="logout", type="string"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Login
  *
  * @property int $loginid

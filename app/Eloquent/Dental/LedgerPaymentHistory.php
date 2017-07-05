@@ -79,6 +79,41 @@ use DentalSleepSolutions\EloquentTraits\WithoutCreatedTimestamp;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerPaymentHistory whereUpdatedByUser($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="LedgerPaymentHistory",
+ *     type="object",
+ *     required={"paymentid", "id", "is"},
+ *     @SWG\Property(property="paymentid", type="integer"),
+ *     @SWG\Property(property="payer", type="integer"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="payment", type="integer"),
+ *     @SWG\Property(property="payment", type="string", format="dateTime"),
+ *     @SWG\Property(property="entry", type="string", format="dateTime"),
+ *     @SWG\Property(property="ledgerid", type="integer"),
+ *     @SWG\Property(property="allowed", type="float"),
+ *     @SWG\Property(property="ins", type="float"),
+ *     @SWG\Property(property="deductible", type="float"),
+ *     @SWG\Property(property="copay", type="float"),
+ *     @SWG\Property(property="coins", type="float"),
+ *     @SWG\Property(property="overpaid", type="float"),
+ *     @SWG\Property(property="followup", type="string", format="dateTime"),
+ *     @SWG\Property(property="note", type="string"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="updated", type="integer"),
+ *     @SWG\Property(property="updated", type="integer"),
+ *     @SWG\Property(property="updated", type="string", format="dateTime"),
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="is", type="integer")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="LedgerPaymentHistory",
+ *     type="object",
+ * 
+ * )
+ */
 class LedgerPaymentHistory extends AbstractModel
 {
     use WithoutCreatedTimestamp;

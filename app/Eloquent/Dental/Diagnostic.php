@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\Diagnostic as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Diagnostics as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Diagnostic",
+ *     type="object",
+ *     required={"diagnosticid", "ip"},
+ *     @SWG\Property(property="diagnosticid", type="integer"),
+ *     @SWG\Property(property="diagnostic", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Diagnostic
  *
  * @property int $diagnosticid

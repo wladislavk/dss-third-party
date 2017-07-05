@@ -45,6 +45,37 @@ use DentalSleepSolutions\Contracts\Repositories\LedgerPayments as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerPayment wherePaymentType($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="LedgerPayment",
+ *     type="object",
+ *     required={"id", "is"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="payer", type="integer"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="payment", type="integer"),
+ *     @SWG\Property(property="payment", type="string", format="dateTime"),
+ *     @SWG\Property(property="entry", type="string", format="dateTime"),
+ *     @SWG\Property(property="ledgerid", type="integer"),
+ *     @SWG\Property(property="allowed", type="float"),
+ *     @SWG\Property(property="ins", type="float"),
+ *     @SWG\Property(property="deductible", type="float"),
+ *     @SWG\Property(property="copay", type="float"),
+ *     @SWG\Property(property="coins", type="float"),
+ *     @SWG\Property(property="overpaid", type="float"),
+ *     @SWG\Property(property="followup", type="string", format="dateTime"),
+ *     @SWG\Property(property="note", type="string"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="is", type="integer")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="LedgerPayment",
+ *     type="object",
+ * 
+ * )
+ */
 class LedgerPayment extends AbstractModel implements Resource, Repository
 {
     /**

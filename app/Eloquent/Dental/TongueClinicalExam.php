@@ -8,6 +8,26 @@ use DentalSleepSolutions\Contracts\Resources\TongueClinicalExam as Resource;
 use DentalSleepSolutions\Contracts\Repositories\TongueClinicalExams as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="TongueClinicalExam",
+ *     type="object",
+ *     required={"ex"},
+ *     @SWG\Property(property="ex", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="blood", type="string"),
+ *     @SWG\Property(property="pulse", type="string"),
+ *     @SWG\Property(property="neck", type="string"),
+ *     @SWG\Property(property="bmi", type="string"),
+ *     @SWG\Property(property="additional", type="string"),
+ *     @SWG\Property(property="tongue", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam
  *
  * @property int $ex_page1id
@@ -39,6 +59,27 @@ use DentalSleepSolutions\Contracts\Repositories\TongueClinicalExams as Repositor
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam whereTongue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam whereUserid($value)
  * @mixin \Eloquent
+ */
+/**
+ * @SWG\Definition(
+ *     definition="TongueClinicalExam",
+ *     type="object",
+ *     required={"ex"},
+ *     @SWG\Property(property="ex", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="blood", type="string"),
+ *     @SWG\Property(property="pulse", type="string"),
+ *     @SWG\Property(property="neck", type="string"),
+ *     @SWG\Property(property="bmi", type="string"),
+ *     @SWG\Property(property="additional", type="string"),
+ *     @SWG\Property(property="tongue", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
  */
 class TongueClinicalExam extends AbstractModel implements Resource, Repository
 {

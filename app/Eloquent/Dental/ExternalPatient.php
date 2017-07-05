@@ -7,6 +7,13 @@ use DentalSleepSolutions\Contracts\Resources\ExternalPatient as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ExternalPatients as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="ExternalPatient",
+ *     type="object",
+ *     @SWG\Property(property="externalCompany", ref="#/definitions/ExternalCompany"),
+ *     @SWG\Property(property="patient", ref="#/definitions/Patient")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\ExternalPatient
  *
  * @property-read \DentalSleepSolutions\Eloquent\Dental\ExternalCompany $externalCompany

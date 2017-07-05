@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\InsuranceDiagnosis as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsuranceDiagnoses as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="InsuranceDiagnosis",
+ *     type="object",
+ *     required={"ins", "ip"},
+ *     @SWG\Property(property="ins", type="integer"),
+ *     @SWG\Property(property="ins", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\InsuranceDiagnosis
  *
  * @property int $ins_diagnosisid

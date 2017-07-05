@@ -14,6 +14,7 @@ use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
  *     @SWG\Property(property="adminid", type="integer"),
  *     @SWG\Property(property="companyid", type="integer"),
  *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
  *     @SWG\Property(property="admin", ref="#/definitions/Admin"),
  *     @SWG\Property(property="company", ref="#/definitions/Company"),
  *     @SWG\Property(property="users", type="array", @SWG\Items(ref="#/definitions/UserCompany"))

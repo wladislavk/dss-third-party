@@ -8,6 +8,20 @@ use DentalSleepSolutions\Contracts\Resources\InsuranceFile as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsuranceFiles as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="InsuranceFile",
+ *     type="object",
+ *     required={"id", "claimid"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="claimid", type="integer"),
+ *     @SWG\Property(property="claimtype", type="string"),
+ *     @SWG\Property(property="filename", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="status", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\InsuranceFile
  *
  * @property int $id

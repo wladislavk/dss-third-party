@@ -57,6 +57,42 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Fax whereViewed($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="Fax",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="sent", type="string", format="dateTime"),
+ *     @SWG\Property(property="pages", type="integer"),
+ *     @SWG\Property(property="contactid", type="integer"),
+ *     @SWG\Property(property="to", type="string"),
+ *     @SWG\Property(property="to", type="string"),
+ *     @SWG\Property(property="letterid", type="integer"),
+ *     @SWG\Property(property="filename", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="fax", type="integer"),
+ *     @SWG\Property(property="sfax", type="string"),
+ *     @SWG\Property(property="sfax", type="integer"),
+ *     @SWG\Property(property="sfax", type="string"),
+ *     @SWG\Property(property="sfax", type="integer"),
+ *     @SWG\Property(property="sfax", type="string"),
+ *     @SWG\Property(property="letter", type="string"),
+ *     @SWG\Property(property="viewed", type="integer")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="Fax",
+ *     type="object",
+ * 
+ * )
+ */
 class Fax extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

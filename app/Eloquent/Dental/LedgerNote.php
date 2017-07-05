@@ -9,6 +9,23 @@ use DentalSleepSolutions\Contracts\Repositories\LedgerNotes as Repository;
 use DB;
 
 /**
+ * @SWG\Definition(
+ *     definition="LedgerNote",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="producerid", type="integer"),
+ *     @SWG\Property(property="note", type="string"),
+ *     @SWG\Property(property="private", type="integer"),
+ *     @SWG\Property(property="service", type="string", format="dateTime"),
+ *     @SWG\Property(property="entry", type="string", format="dateTime"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="admin", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\LedgerNote
  *
  * @property int $id

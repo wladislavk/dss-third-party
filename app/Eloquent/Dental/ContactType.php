@@ -9,6 +9,21 @@ use DentalSleepSolutions\Contracts\Repositories\ContactTypes as Repository;
 use DB;
 
 /**
+ * @SWG\Definition(
+ *     definition="ContactType",
+ *     type="object",
+ *     required={"contacttypeid", "ip"},
+ *     @SWG\Property(property="contacttypeid", type="integer"),
+ *     @SWG\Property(property="contacttype", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="physician", type="integer"),
+ *     @SWG\Property(property="corporate", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\ContactType
  *
  * @property int $contacttypeid

@@ -114,6 +114,52 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Company whereZip($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="Company",
+ *     type="object",
+ *     required={"id", "status"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="add1", type="string"),
+ *     @SWG\Property(property="add2", type="string"),
+ *     @SWG\Property(property="city", type="string"),
+ *     @SWG\Property(property="state", type="string"),
+ *     @SWG\Property(property="zip", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="eligible", type="string"),
+ *     @SWG\Property(property="stripe", type="string"),
+ *     @SWG\Property(property="stripe", type="string"),
+ *     @SWG\Property(property="logo", type="string"),
+ *     @SWG\Property(property="monthly", type="float"),
+ *     @SWG\Property(property="default", type="integer"),
+ *     @SWG\Property(property="sfax", type="string"),
+ *     @SWG\Property(property="sfax", type="string"),
+ *     @SWG\Property(property="sfax", type="string"),
+ *     @SWG\Property(property="sfax", type="string"),
+ *     @SWG\Property(property="fax", type="float"),
+ *     @SWG\Property(property="free", type="integer"),
+ *     @SWG\Property(property="company", type="integer"),
+ *     @SWG\Property(property="phone", type="string"),
+ *     @SWG\Property(property="fax", type="string"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="plan", type="integer"),
+ *     @SWG\Property(property="sfax", type="string"),
+ *     @SWG\Property(property="use", type="integer"),
+ *     @SWG\Property(property="exclusive", type="integer"),
+ *     @SWG\Property(property="vob", type="integer"),
+ *     @SWG\Property(property="users", type="array", @SWG\Items(ref="#/definitions/UserCompany"))
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="Company",
+ *     type="object",
+ * 
+ * )
+ */
 class Company extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

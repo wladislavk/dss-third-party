@@ -8,6 +8,24 @@ use DentalSleepSolutions\Contracts\Resources\TonsilsClinicalExam as Resource;
 use DentalSleepSolutions\Contracts\Repositories\TonsilsClinicalExams as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="TonsilsClinicalExam",
+ *     type="object",
+ *     required={"ex"},
+ *     @SWG\Property(property="ex", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="mallampati", type="string"),
+ *     @SWG\Property(property="tonsils", type="string"),
+ *     @SWG\Property(property="tonsils", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="additional", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam
  *
  * @property int $ex_page2id
@@ -35,6 +53,25 @@ use DentalSleepSolutions\Contracts\Repositories\TonsilsClinicalExams as Reposito
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam whereTonsilsGrade($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam whereUserid($value)
  * @mixin \Eloquent
+ */
+/**
+ * @SWG\Definition(
+ *     definition="TonsilsClinicalExam",
+ *     type="object",
+ *     required={"ex"},
+ *     @SWG\Property(property="ex", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="mallampati", type="string"),
+ *     @SWG\Property(property="tonsils", type="string"),
+ *     @SWG\Property(property="tonsils", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="additional", type="string")
+ * )
  */
 class TonsilsClinicalExam extends AbstractModel implements Resource, Repository
 {

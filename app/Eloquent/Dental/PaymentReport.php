@@ -9,6 +9,19 @@ use DentalSleepSolutions\Contracts\Repositories\PaymentReports as Repository;
 use DB;
 
 /**
+ * @SWG\Definition(
+ *     definition="PaymentReport",
+ *     type="object",
+ *     required={"payment"},
+ *     @SWG\Property(property="payment", type="integer"),
+ *     @SWG\Property(property="claimid", type="integer"),
+ *     @SWG\Property(property="reference", type="string"),
+ *     @SWG\Property(property="response", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="viewed", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\PaymentReport
  *
  * @property int $payment_id

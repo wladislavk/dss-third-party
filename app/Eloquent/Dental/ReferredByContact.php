@@ -68,6 +68,48 @@ use DentalSleepSolutions\Contracts\Repositories\ReferredByContacts as Repository
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereZip($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="ReferredByContact",
+ *     type="object",
+ *     required={"referredbyid"},
+ *     @SWG\Property(property="referredbyid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="salutation", type="string"),
+ *     @SWG\Property(property="lastname", type="string"),
+ *     @SWG\Property(property="firstname", type="string"),
+ *     @SWG\Property(property="middlename", type="string"),
+ *     @SWG\Property(property="company", type="string"),
+ *     @SWG\Property(property="add1", type="string"),
+ *     @SWG\Property(property="add2", type="string"),
+ *     @SWG\Property(property="city", type="string"),
+ *     @SWG\Property(property="state", type="string"),
+ *     @SWG\Property(property="zip", type="string"),
+ *     @SWG\Property(property="phone1", type="string"),
+ *     @SWG\Property(property="phone2", type="string"),
+ *     @SWG\Property(property="fax", type="string"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="national", type="string"),
+ *     @SWG\Property(property="qualifier", type="string"),
+ *     @SWG\Property(property="qualifierid", type="string"),
+ *     @SWG\Property(property="greeting", type="string"),
+ *     @SWG\Property(property="sincerely", type="string"),
+ *     @SWG\Property(property="contacttypeid", type="integer"),
+ *     @SWG\Property(property="notes", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="preferredcontact", type="string"),
+ *     @SWG\Property(property="referredby", type="integer")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="ReferredByContact",
+ *     type="object",
+ * 
+ * )
+ */
 class ReferredByContact extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

@@ -70,6 +70,38 @@ use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Admin whereUsername($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="Admin",
+ *     type="object",
+ *     required={"adminid"},
+ *     @SWG\Property(property="adminid", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="username", type="string"),
+ *     @SWG\Property(property="password", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="salt", type="string"),
+ *     @SWG\Property(property="recover", type="string"),
+ *     @SWG\Property(property="recover", type="string"),
+ *     @SWG\Property(property="admin", type="integer"),
+ *     @SWG\Property(property="last", type="string"),
+ *     @SWG\Property(property="claim", type="integer"),
+ *     @SWG\Property(property="claim", type="integer"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="first", type="string"),
+ *     @SWG\Property(property="last", type="string"),
+ *     @SWG\Property(property="adminCompany", ref="#/definitions/AdminCompany")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="Admin",
+ *     type="object",
+ * 
+ * )
+ */
 class Admin extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

@@ -61,6 +61,34 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SupportTicket whereViewed($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="SupportTicket",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="title", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="body", type="string"),
+ *     @SWG\Property(property="category", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="attachment", type="string"),
+ *     @SWG\Property(property="viewed", type="integer"),
+ *     @SWG\Property(property="creator", type="integer"),
+ *     @SWG\Property(property="create", type="integer"),
+ *     @SWG\Property(property="company", type="integer")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="SupportTicket",
+ *     type="object",
+ * 
+ * )
+ */
 class SupportTicket extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

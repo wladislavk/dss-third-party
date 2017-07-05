@@ -8,6 +8,24 @@ use DentalSleepSolutions\Contracts\Resources\ProfileImage as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ProfileImages as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="ProfileImage",
+ *     type="object",
+ *     required={"imageid"},
+ *     @SWG\Property(property="imageid", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="title", type="string"),
+ *     @SWG\Property(property="image", type="string"),
+ *     @SWG\Property(property="imagetypeid", type="integer"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="adminid", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\ProfileImage
  *
  * @property int $imageid
@@ -37,6 +55,25 @@ use DentalSleepSolutions\Contracts\Repositories\ProfileImages as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ProfileImage whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ProfileImage whereUserid($value)
  * @mixin \Eloquent
+ */
+/**
+ * @SWG\Definition(
+ *     definition="ProfileImage",
+ *     type="object",
+ *     required={"imageid"},
+ *     @SWG\Property(property="imageid", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="title", type="string"),
+ *     @SWG\Property(property="image", type="string"),
+ *     @SWG\Property(property="imagetypeid", type="integer"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="adminid", type="integer")
+ * )
  */
 class ProfileImage extends AbstractModel implements Resource, Repository
 {

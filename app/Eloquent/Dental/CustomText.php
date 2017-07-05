@@ -8,6 +8,20 @@ use DentalSleepSolutions\Contracts\Resources\CustomText as Resource;
 use DentalSleepSolutions\Contracts\Repositories\CustomTexts as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="CustomText",
+ *     type="object",
+ *     required={"customid"},
+ *     @SWG\Property(property="customid", type="integer"),
+ *     @SWG\Property(property="title", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="default", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\CustomText
  *
  * @property int $customid

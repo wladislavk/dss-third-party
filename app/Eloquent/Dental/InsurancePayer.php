@@ -6,6 +6,17 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 
 /**
+ * @SWG\Definition(
+ *     definition="InsurancePayer",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="payer", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\InsurancePayer
  *
  * @property int $id

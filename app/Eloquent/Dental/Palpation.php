@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\Palpation as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Palpation as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Palpation",
+ *     type="object",
+ *     required={"palpationid", "ip"},
+ *     @SWG\Property(property="palpationid", type="integer"),
+ *     @SWG\Property(property="palpation", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Palpation
  *
  * @property int $palpationid

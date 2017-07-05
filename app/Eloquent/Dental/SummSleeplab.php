@@ -69,6 +69,50 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SummSleeplab whereTestnumber($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="SummSleeplab",
+ *     type="object",
+ *     required={"id", "date", "sleeptesttype", "place", "apnea", "hypopnea", "ahi", "ahisupine", "rdi", "rdisupine", "o2nadir", "t9002", "sleepefficiency", "cpaplevel", "dentaldevice", "devicesetting", "diagnosis", "notes", "patiendid"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="date", type="string"),
+ *     @SWG\Property(property="sleeptesttype", type="string"),
+ *     @SWG\Property(property="place", type="string"),
+ *     @SWG\Property(property="apnea", type="string"),
+ *     @SWG\Property(property="hypopnea", type="string"),
+ *     @SWG\Property(property="ahi", type="string"),
+ *     @SWG\Property(property="ahisupine", type="string"),
+ *     @SWG\Property(property="rdi", type="string"),
+ *     @SWG\Property(property="rdisupine", type="string"),
+ *     @SWG\Property(property="o2nadir", type="string"),
+ *     @SWG\Property(property="t9002", type="string"),
+ *     @SWG\Property(property="sleepefficiency", type="string"),
+ *     @SWG\Property(property="cpaplevel", type="string"),
+ *     @SWG\Property(property="dentaldevice", type="string"),
+ *     @SWG\Property(property="devicesetting", type="string"),
+ *     @SWG\Property(property="diagnosis", type="string"),
+ *     @SWG\Property(property="notes", type="string"),
+ *     @SWG\Property(property="patiendid", type="string"),
+ *     @SWG\Property(property="filename", type="string"),
+ *     @SWG\Property(property="testnumber", type="string"),
+ *     @SWG\Property(property="needed", type="string"),
+ *     @SWG\Property(property="scheddate", type="string"),
+ *     @SWG\Property(property="completed", type="string"),
+ *     @SWG\Property(property="interpolation", type="string"),
+ *     @SWG\Property(property="copyreqdate", type="string"),
+ *     @SWG\Property(property="sleeplab", type="string"),
+ *     @SWG\Property(property="diagnosising", type="string"),
+ *     @SWG\Property(property="diagnosising", type="string"),
+ *     @SWG\Property(property="image", type="integer")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="SummSleeplab",
+ *     type="object",
+ * 
+ * )
+ */
 class SummSleeplab extends AbstractModel
 {
     protected $table = 'dental_summ_sleeplab';

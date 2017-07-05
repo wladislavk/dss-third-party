@@ -8,6 +8,23 @@ use DentalSleepSolutions\Contracts\Resources\SleepTest as Resource;
 use DentalSleepSolutions\Contracts\Repositories\SleepTests as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="SleepTest",
+ *     type="object",
+ *     required={"q"},
+ *     @SWG\Property(property="q", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="epworthid", type="string"),
+ *     @SWG\Property(property="analysis", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="parent", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\SleepTest
  *
  * @property int $q_sleepid

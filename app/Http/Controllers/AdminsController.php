@@ -61,8 +61,8 @@ class AdminsController extends BaseRestController
      * @SWG\Post(
      *     path="/admins",
      *     @SWG\Parameter(name="name", in="formData", type="string", maxLength="250"),
-     *     @SWG\Parameter(name="username", in="formData", type="string", maxLength="250", required=true),
-     *     @SWG\Parameter(name="password", in="formData", type="string", maxLength="250", required=true),
+     *     @SWG\Parameter(name="username", in="formData", type="string", required=true, maxLength="250"),
+     *     @SWG\Parameter(name="password", in="formData", type="string", required=true, maxLength="250"),
      *     @SWG\Parameter(name="status", in="formData", type="integer"),
      *     @SWG\Parameter(name="admin_access", in="formData", type="integer"),
      *     @SWG\Parameter(name="email", in="formData", type="string", format="email", maxLength="100"),

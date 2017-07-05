@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\MedicalHistory as Resource;
 use DentalSleepSolutions\Contracts\Repositories\MedicalHistories as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="MedicalHistory",
+ *     type="object",
+ *     required={"historyid", "ip"},
+ *     @SWG\Property(property="historyid", type="integer"),
+ *     @SWG\Property(property="history", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\MedicalHistory
  *
  * @property int $historyid

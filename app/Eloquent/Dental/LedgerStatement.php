@@ -9,6 +9,20 @@ use DentalSleepSolutions\Contracts\Repositories\LedgerRecords as Repository;
 use DB;
 
 /**
+ * @SWG\Definition(
+ *     definition="LedgerStatement",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="producerid", type="integer"),
+ *     @SWG\Property(property="filename", type="string"),
+ *     @SWG\Property(property="service", type="string"),
+ *     @SWG\Property(property="entry", type="string"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\LedgerStatement
  *
  * @property int $id

@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\Document as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Documents as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Document",
+ *     type="object",
+ *     required={"documentid", "categoryid"},
+ *     @SWG\Property(property="documentid", type="integer"),
+ *     @SWG\Property(property="categoryid", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="filename", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="category", ref="#/definitions/DocumentCategory")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Document
  *
  * @property int $documentid

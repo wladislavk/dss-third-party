@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\AccessCode as Resource;
 use DentalSleepSolutions\Contracts\Repositories\AccessCodes as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="AccessCode",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="access", type="string"),
+ *     @SWG\Property(property="notes", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="plan", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\AccessCode
  *
  * @property int $id

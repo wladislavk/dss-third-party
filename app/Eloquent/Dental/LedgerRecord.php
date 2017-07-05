@@ -7,6 +7,28 @@ use DentalSleepSolutions\Contracts\Resources\LedgerRecord as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerRecords as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="LedgerRecord",
+ *     type="object",
+ *     required={"ledgerid"},
+ *     @SWG\Property(property="ledgerid", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="service", type="string"),
+ *     @SWG\Property(property="entry", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="producer", type="string"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="transaction", type="string"),
+ *     @SWG\Property(property="paid", type="float"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="transaction", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\LedgerRecord
  *
  * @property int $ledgerid
@@ -42,6 +64,29 @@ use DentalSleepSolutions\Contracts\Repositories\LedgerRecords as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerRecord whereTransactionType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerRecord whereUserid($value)
  * @mixin \Eloquent
+ */
+/**
+ * @SWG\Definition(
+ *     definition="LedgerRecord",
+ *     type="object",
+ *     required={"ledgerid"},
+ *     @SWG\Property(property="ledgerid", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="service", type="string"),
+ *     @SWG\Property(property="entry", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="producer", type="string"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="transaction", type="string"),
+ *     @SWG\Property(property="paid", type="float"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="transaction", type="string")
+ * )
  */
 class LedgerRecord extends AbstractModel implements Resource, Repository
 {

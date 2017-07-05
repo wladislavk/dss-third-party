@@ -181,6 +181,72 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\HomeSleepTest whereViewed($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="HomeSleepTest",
+ *     type="object",
+ *     required={"id", "provider", "canceled", "hst"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="doc", type="integer"),
+ *     @SWG\Property(property="user", type="integer"),
+ *     @SWG\Property(property="company", type="integer"),
+ *     @SWG\Property(property="patient", type="integer"),
+ *     @SWG\Property(property="screener", type="integer"),
+ *     @SWG\Property(property="ins", type="integer"),
+ *     @SWG\Property(property="ins", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string", format="dateTime"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="patient", type="string"),
+ *     @SWG\Property(property="diagnosis", type="integer"),
+ *     @SWG\Property(property="hst", type="integer"),
+ *     @SWG\Property(property="provider", type="string"),
+ *     @SWG\Property(property="provider", type="string"),
+ *     @SWG\Property(property="provider", type="string"),
+ *     @SWG\Property(property="provider", type="string"),
+ *     @SWG\Property(property="provider", type="string"),
+ *     @SWG\Property(property="provider", type="string"),
+ *     @SWG\Property(property="provider", type="string"),
+ *     @SWG\Property(property="provider", type="string"),
+ *     @SWG\Property(property="provider", type="string", format="dateTime"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="snore", type="integer"),
+ *     @SWG\Property(property="viewed", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="office", type="string"),
+ *     @SWG\Property(property="sleep", type="integer"),
+ *     @SWG\Property(property="authorized", type="integer"),
+ *     @SWG\Property(property="authorizeddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="updatedate", type="string", format="dateTime"),
+ *     @SWG\Property(property="rejected", type="string"),
+ *     @SWG\Property(property="rejecteddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="canceled", type="integer"),
+ *     @SWG\Property(property="canceled", type="string", format="dateTime"),
+ *     @SWG\Property(property="hst", type="integer"),
+ *     @SWG\Property(property="hst", type="string")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="HomeSleepTest",
+ *     type="object",
+ * 
+ * )
+ */
 class HomeSleepTest extends AbstractModel implements Resource, Repository
 {
     /**

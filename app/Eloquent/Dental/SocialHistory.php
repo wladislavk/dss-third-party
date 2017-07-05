@@ -48,6 +48,38 @@ use DentalSleepSolutions\Contracts\Repositories\SocialHistories as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SocialHistory whereUserid($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="SocialHistory",
+ *     type="object",
+ *     required={"q"},
+ *     @SWG\Property(property="q", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="family", type="string"),
+ *     @SWG\Property(property="family", type="string"),
+ *     @SWG\Property(property="additional", type="string"),
+ *     @SWG\Property(property="alcohol", type="string"),
+ *     @SWG\Property(property="sedative", type="string"),
+ *     @SWG\Property(property="caffeine", type="string"),
+ *     @SWG\Property(property="smoke", type="string"),
+ *     @SWG\Property(property="smoke", type="string"),
+ *     @SWG\Property(property="tobacco", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="parent", type="integer")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="SocialHistory",
+ *     type="object",
+ * 
+ * )
+ */
 class SocialHistory extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

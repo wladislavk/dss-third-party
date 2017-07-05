@@ -5,6 +5,16 @@ namespace DentalSleepSolutions\Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @SWG\Definition(
+ *     definition="MemoAdmin",
+ *     type="object",
+ *     required={"memo", "memo", "last", "off"},
+ *     @SWG\Property(property="memo", type="integer"),
+ *     @SWG\Property(property="memo", type="string"),
+ *     @SWG\Property(property="last", type="string"),
+ *     @SWG\Property(property="off", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\MemoAdmin
  *
  * @property int $memo_id

@@ -8,6 +8,20 @@ use DentalSleepSolutions\Contracts\Resources\Device as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Devices as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Device",
+ *     type="object",
+ *     required={"deviceid", "ip"},
+ *     @SWG\Property(property="deviceid", type="integer"),
+ *     @SWG\Property(property="device", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="image", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Device
  *
  * @property int $deviceid

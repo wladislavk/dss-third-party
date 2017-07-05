@@ -8,6 +8,20 @@ use DentalSleepSolutions\Contracts\Resources\FaxInvoice as Resource;
 use DentalSleepSolutions\Contracts\Repositories\FaxInvoices as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="FaxInvoice",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="invoice", type="integer"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="start", type="string", format="dateTime"),
+ *     @SWG\Property(property="end", type="string", format="dateTime"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\FaxInvoice
  *
  * @property int $id

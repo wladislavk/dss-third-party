@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\Qualifier as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Qualifiers as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Qualifier",
+ *     type="object",
+ *     required={"qualifierid", "ip"},
+ *     @SWG\Property(property="qualifierid", type="integer"),
+ *     @SWG\Property(property="qualifier", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Qualifier
  *
  * @property int $qualifierid

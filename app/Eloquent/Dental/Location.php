@@ -60,6 +60,34 @@ use DentalSleepSolutions\Contracts\Repositories\Locations as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Location whereZip($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="Location",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="location", type="string"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="address", type="string"),
+ *     @SWG\Property(property="city", type="string"),
+ *     @SWG\Property(property="state", type="string"),
+ *     @SWG\Property(property="zip", type="string"),
+ *     @SWG\Property(property="phone", type="string"),
+ *     @SWG\Property(property="fax", type="string"),
+ *     @SWG\Property(property="default", type="integer"),
+ *     @SWG\Property(property="email", type="string")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="Location",
+ *     type="object",
+ * 
+ * )
+ */
 class Location extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

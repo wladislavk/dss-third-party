@@ -8,6 +8,18 @@ use DentalSleepSolutions\Contracts\Resources\LoginDetail as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LoginDetails as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="LoginDetail",
+ *     type="object",
+ *     required={"l"},
+ *     @SWG\Property(property="l", type="integer"),
+ *     @SWG\Property(property="loginid", type="integer"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="cur", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\LoginDetail
  *
  * @property int $l_detailid

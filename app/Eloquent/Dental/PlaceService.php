@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\PlaceService as Resource;
 use DentalSleepSolutions\Contracts\Repositories\PlaceServices as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="PlaceService",
+ *     type="object",
+ *     required={"place", "ip"},
+ *     @SWG\Property(property="place", type="integer"),
+ *     @SWG\Property(property="place", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\PlaceService
  *
  * @property int $place_serviceid

@@ -8,6 +8,16 @@ use DentalSleepSolutions\Contracts\Resources\Chair as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Chairs as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Chair",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="rank", type="integer"),
+ *     @SWG\Property(property="docid", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Chair
  *
  * @property int $id

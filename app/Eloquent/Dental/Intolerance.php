@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\Intolerance as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Intolerances as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Intolerance",
+ *     type="object",
+ *     required={"intoleranceid", "ip"},
+ *     @SWG\Property(property="intoleranceid", type="integer"),
+ *     @SWG\Property(property="intolerance", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Intolerance
  *
  * @property int $intoleranceid

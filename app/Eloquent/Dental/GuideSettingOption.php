@@ -9,6 +9,18 @@ use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions as Repositor
 use DB;
 
 /**
+ * @SWG\Definition(
+ *     definition="GuideSettingOption",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="option", type="integer"),
+ *     @SWG\Property(property="setting", type="integer"),
+ *     @SWG\Property(property="label", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\GuideSettingOption
  *
  * @property int $id

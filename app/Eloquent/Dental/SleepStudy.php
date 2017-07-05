@@ -7,6 +7,27 @@ use DentalSleepSolutions\Contracts\Resources\SleepStudy as Resource;
 use DentalSleepSolutions\Contracts\Repositories\SleepStudies as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="SleepStudy",
+ *     type="object",
+ *     required={"id", "testnumber", "docid", "patientid", "needed", "scheddate", "sleeplabwheresched", "completed", "interpolation", "labtype", "copyreqdate", "sleeplab", "scanext", "date"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="testnumber", type="string"),
+ *     @SWG\Property(property="docid", type="string"),
+ *     @SWG\Property(property="patientid", type="string"),
+ *     @SWG\Property(property="needed", type="string"),
+ *     @SWG\Property(property="scheddate", type="string"),
+ *     @SWG\Property(property="sleeplabwheresched", type="string"),
+ *     @SWG\Property(property="completed", type="string"),
+ *     @SWG\Property(property="interpolation", type="string"),
+ *     @SWG\Property(property="labtype", type="string"),
+ *     @SWG\Property(property="copyreqdate", type="string"),
+ *     @SWG\Property(property="sleeplab", type="string"),
+ *     @SWG\Property(property="scanext", type="string"),
+ *     @SWG\Property(property="date", type="string"),
+ *     @SWG\Property(property="filename", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\SleepStudy
  *
  * @property int $id
@@ -40,6 +61,28 @@ use DentalSleepSolutions\Contracts\Repositories\SleepStudies as Repository;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SleepStudy whereSleeplabwheresched($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SleepStudy whereTestnumber($value)
  * @mixin \Eloquent
+ */
+/**
+ * @SWG\Definition(
+ *     definition="SleepStudy",
+ *     type="object",
+ *     required={"id", "testnumber", "docid", "patientid", "needed", "scheddate", "sleeplabwheresched", "completed", "interpolation", "labtype", "copyreqdate", "sleeplab", "scanext", "date"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="testnumber", type="string"),
+ *     @SWG\Property(property="docid", type="string"),
+ *     @SWG\Property(property="patientid", type="string"),
+ *     @SWG\Property(property="needed", type="string"),
+ *     @SWG\Property(property="scheddate", type="string"),
+ *     @SWG\Property(property="sleeplabwheresched", type="string"),
+ *     @SWG\Property(property="completed", type="string"),
+ *     @SWG\Property(property="interpolation", type="string"),
+ *     @SWG\Property(property="labtype", type="string"),
+ *     @SWG\Property(property="copyreqdate", type="string"),
+ *     @SWG\Property(property="sleeplab", type="string"),
+ *     @SWG\Property(property="scanext", type="string"),
+ *     @SWG\Property(property="date", type="string"),
+ *     @SWG\Property(property="filename", type="string")
+ * )
  */
 class SleepStudy extends AbstractModel implements Resource, Repository
 {

@@ -7,6 +7,23 @@ use DentalSleepSolutions\Contracts\Resources\PatientSummary as Resource;
 use DentalSleepSolutions\Contracts\Repositories\PatientSummaries as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="PatientSummary",
+ *     type="object",
+ *     required={"pid", "tracker"},
+ *     @SWG\Property(property="pid", type="integer"),
+ *     @SWG\Property(property="fspage1", type="integer"),
+ *     @SWG\Property(property="next", type="string"),
+ *     @SWG\Property(property="last", type="string"),
+ *     @SWG\Property(property="last", type="string"),
+ *     @SWG\Property(property="appliance", type="integer"),
+ *     @SWG\Property(property="delivery", type="string"),
+ *     @SWG\Property(property="vob", type="string"),
+ *     @SWG\Property(property="ledger", type="float"),
+ *     @SWG\Property(property="patient", type="integer"),
+ *     @SWG\Property(property="tracker", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\PatientSummary
  *
  * @property int $pid

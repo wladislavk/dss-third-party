@@ -9,6 +9,24 @@ use DentalSleepSolutions\Contracts\Repositories\GuideSettings as Repository;
 use DB;
 
 /**
+ * @SWG\Definition(
+ *     definition="GuideSetting",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="setting", type="integer"),
+ *     @SWG\Property(property="range", type="integer"),
+ *     @SWG\Property(property="range", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="rank", type="integer"),
+ *     @SWG\Property(property="range", type="string"),
+ *     @SWG\Property(property="range", type="string"),
+ *     @SWG\Property(property="options", type="array", @SWG\Items(ref="#/definitions/GuideSettingOption")),
+ *     @SWG\Property(property="deviceSettings", type="array", @SWG\Items(ref="#/definitions/GuideDeviceSetting"))
+ * )
+ *
  * @todo: check why $options is not marked as @property-read on generation
  *
  * DentalSleepSolutions\Eloquent\Dental\GuideSetting
@@ -37,6 +55,25 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSetting whereRank($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSetting whereSettingType($value)
  * @mixin \Eloquent
+ */
+/**
+ * @SWG\Definition(
+ *     definition="GuideSetting",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="setting", type="integer"),
+ *     @SWG\Property(property="range", type="integer"),
+ *     @SWG\Property(property="range", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="rank", type="integer"),
+ *     @SWG\Property(property="range", type="string"),
+ *     @SWG\Property(property="range", type="string"),
+ *     @SWG\Property(property="options", type="array", @SWG\Items(ref="#/definitions/GuideSettingOption")),
+ *     @SWG\Property(property="deviceSettings", type="array", @SWG\Items(ref="#/definitions/GuideDeviceSetting"))
+ * )
  */
 class GuideSetting extends AbstractModel implements Resource, Repository
 {

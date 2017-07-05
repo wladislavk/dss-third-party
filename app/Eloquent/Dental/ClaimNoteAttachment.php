@@ -8,6 +8,17 @@ use DentalSleepSolutions\Contracts\Resources\ClaimNoteAttachment as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ClaimNoteAttachments as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="ClaimNoteAttachment",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="note", type="integer"),
+ *     @SWG\Property(property="filename", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment
  *
  * @property int $id

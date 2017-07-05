@@ -7,6 +7,19 @@ use DentalSleepSolutions\Contracts\Resources\LetterTemplate as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LetterTemplates as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="LetterTemplate",
+ *     type="object",
+ *     required={"id", "body", "default"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="template", type="string"),
+ *     @SWG\Property(property="body", type="string"),
+ *     @SWG\Property(property="default", type="integer"),
+ *     @SWG\Property(property="companyid", type="integer"),
+ *     @SWG\Property(property="triggerid", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\LetterTemplate
  *
  * @property int $id

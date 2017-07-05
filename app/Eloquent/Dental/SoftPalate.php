@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\SoftPalate as Resource;
 use DentalSleepSolutions\Contracts\Repositories\SoftPalates as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="SoftPalate",
+ *     type="object",
+ *     required={"soft", "ip"},
+ *     @SWG\Property(property="soft", type="integer"),
+ *     @SWG\Property(property="soft", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\SoftPalate
  *
  * @property int $soft_palateid

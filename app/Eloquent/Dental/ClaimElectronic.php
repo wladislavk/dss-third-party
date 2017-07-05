@@ -5,6 +5,24 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 use DentalSleepSolutions\Eloquent\AbstractModel;
 
 /**
+ * @SWG\Definition(
+ *     definition="ClaimElectronic",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="claimid", type="integer"),
+ *     @SWG\Property(property="response", type="string"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="reference", type="string"),
+ *     @SWG\Property(property="percase", type="string"),
+ *     @SWG\Property(property="percase", type="string"),
+ *     @SWG\Property(property="percase", type="float"),
+ *     @SWG\Property(property="percase", type="integer"),
+ *     @SWG\Property(property="percase", type="integer"),
+ *     @SWG\Property(property="percase", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\ClaimElectronic
  *
  * @property int $id
@@ -32,6 +50,25 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ClaimElectronic whereReferenceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ClaimElectronic whereResponse($value)
  * @mixin \Eloquent
+ */
+/**
+ * @SWG\Definition(
+ *     definition="ClaimElectronic",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="claimid", type="integer"),
+ *     @SWG\Property(property="response", type="string"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="reference", type="string"),
+ *     @SWG\Property(property="percase", type="string"),
+ *     @SWG\Property(property="percase", type="string"),
+ *     @SWG\Property(property="percase", type="float"),
+ *     @SWG\Property(property="percase", type="integer"),
+ *     @SWG\Property(property="percase", type="integer"),
+ *     @SWG\Property(property="percase", type="integer")
+ * )
  */
 class ClaimElectronic extends AbstractModel
 {

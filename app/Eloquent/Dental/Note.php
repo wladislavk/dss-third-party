@@ -9,6 +9,26 @@ use DentalSleepSolutions\Contracts\Repositories\Notes as Repository;
 use DB;
 
 /**
+ * @SWG\Definition(
+ *     definition="Note",
+ *     type="object",
+ *     required={"notesid", "editor", "procedure"},
+ *     @SWG\Property(property="notesid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="notes", type="string"),
+ *     @SWG\Property(property="edited", type="integer"),
+ *     @SWG\Property(property="editor", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="procedure", type="string"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="signed", type="integer"),
+ *     @SWG\Property(property="signed", type="string", format="dateTime"),
+ *     @SWG\Property(property="parentid", type="integer")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Note
  *
  * @property int $notesid
@@ -40,6 +60,27 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Note whereUserid($value)
  * @mixin \Eloquent
+ */
+/**
+ * @SWG\Definition(
+ *     definition="Note",
+ *     type="object",
+ *     required={"notesid", "editor", "procedure"},
+ *     @SWG\Property(property="notesid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="notes", type="string"),
+ *     @SWG\Property(property="edited", type="integer"),
+ *     @SWG\Property(property="editor", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="procedure", type="string"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="signed", type="integer"),
+ *     @SWG\Property(property="signed", type="string", format="dateTime"),
+ *     @SWG\Property(property="parentid", type="integer")
+ * )
  */
 class Note extends AbstractModel implements Resource, Repository
 {

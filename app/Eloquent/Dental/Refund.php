@@ -8,6 +8,20 @@ use DentalSleepSolutions\Contracts\Resources\Refund as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Refunds as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Refund",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="adminid", type="integer"),
+ *     @SWG\Property(property="refund", type="string", format="dateTime"),
+ *     @SWG\Property(property="charge", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Refund
  *
  * @property int $id

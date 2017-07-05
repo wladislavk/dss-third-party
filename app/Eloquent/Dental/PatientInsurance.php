@@ -54,6 +54,32 @@ use DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PatientInsurance whereZip($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="PatientInsurance",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="insurancetype", type="integer"),
+ *     @SWG\Property(property="company", type="string"),
+ *     @SWG\Property(property="address1", type="string"),
+ *     @SWG\Property(property="address2", type="string"),
+ *     @SWG\Property(property="city", type="string"),
+ *     @SWG\Property(property="state", type="string"),
+ *     @SWG\Property(property="zip", type="string"),
+ *     @SWG\Property(property="phone", type="string"),
+ *     @SWG\Property(property="fax", type="string"),
+ *     @SWG\Property(property="email", type="string")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="PatientInsurance",
+ *     type="object",
+ * 
+ * )
+ */
 class PatientInsurance extends AbstractModel implements Resource, Repository
 {
     /**

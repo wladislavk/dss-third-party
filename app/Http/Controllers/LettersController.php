@@ -14,27 +14,261 @@ class LettersController extends BaseRestController
     const DSS_USER_TYPE_FRANCHISEE = 1;
     const DSS_USER_TYPE_SOFTWARE = 2;
 
+    /**
+     * @SWG\Get(
+     *     path="/letters",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         allOf={
+     *             @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *             @SWG\Schema(
+     *                 @SWG\Property(
+     *                     property="data",
+     *                     type="array",
+     *                     @SWG\Items(@SWG\Schema(ref="#/definitions/Letter"))
+     *                 )
+     *             )
+     *         }
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function index()
     {
         return parent::index();
     }
 
+    /**
+     * @SWG\Get(
+     *     path="/letters/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         allOf={
+     *             @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *             @SWG\Schema(
+     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/Letter"))
+     *             )
+     *         }
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function show($id)
     {
         return parent::show($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/letters",
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="stepid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivery_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="send_method", in="formData", type="string"),
+     *     @SWG\Parameter(name="template", in="formData", type="string"),
+     *     @SWG\Parameter(name="pdf_path", in="formData", type="string"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivered", in="formData", type="integer"),
+     *     @SWG\Parameter(name="deleted", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="templateid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="parentid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="topatient", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="md_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="md_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="date_sent", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="info_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="edit_userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="mailed_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="mailed_once", in="formData", type="integer"),
+     *     @SWG\Parameter(name="template_type", in="formData", type="integer"),
+     *     @SWG\Parameter(name="cc_topatient", in="formData", type="integer"),
+     *     @SWG\Parameter(name="cc_md_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="cc_md_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="font_family", in="formData", type="string"),
+     *     @SWG\Parameter(name="font_size", in="formData", type="integer"),
+     *     @SWG\Parameter(name="pat_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="cc_pat_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="deleted_by", in="formData", type="integer"),
+     *     @SWG\Parameter(name="deleted_on", in="formData", type="string", format="dateTime"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         allOf={
+     *             @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *             @SWG\Schema(
+     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/Letter"))
+     *             )
+     *         }
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    /**
+     * @SWG\Post(
+     *     path="/letters",
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="stepid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivery_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="send_method", in="formData", type="string"),
+     *     @SWG\Parameter(name="template", in="formData", type="string"),
+     *     @SWG\Parameter(name="pdf_path", in="formData", type="string"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivered", in="formData", type="integer"),
+     *     @SWG\Parameter(name="deleted", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="templateid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="parentid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="topatient", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="md_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="md_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="date_sent", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="info_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="edit_userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="mailed_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="mailed_once", in="formData", type="integer"),
+     *     @SWG\Parameter(name="template_type", in="formData", type="integer"),
+     *     @SWG\Parameter(name="cc_topatient", in="formData", type="integer"),
+     *     @SWG\Parameter(name="cc_md_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="cc_md_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="font_family", in="formData", type="string"),
+     *     @SWG\Parameter(name="font_size", in="formData", type="integer"),
+     *     @SWG\Parameter(name="pat_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="cc_pat_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="deleted_by", in="formData", type="integer"),
+     *     @SWG\Parameter(name="deleted_on", in="formData", type="string", format="dateTime"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         allOf={
+     *             @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *             @SWG\Schema(
+     *                 @SWG\Property(property="data", @SWG\Schema(ref="#/definitions/Letter"))
+     *             )
+     *         }
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function store()
     {
         $this->hasIp = false;
         return parent::store();
     }
 
+    /**
+     * @SWG\Put(
+     *     path="/letters/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="stepid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivery_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="send_method", in="formData", type="string"),
+     *     @SWG\Parameter(name="template", in="formData", type="string"),
+     *     @SWG\Parameter(name="pdf_path", in="formData", type="string"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivered", in="formData", type="integer"),
+     *     @SWG\Parameter(name="deleted", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="templateid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="parentid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="topatient", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="md_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="md_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="date_sent", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="info_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="edit_userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="mailed_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="mailed_once", in="formData", type="integer"),
+     *     @SWG\Parameter(name="template_type", in="formData", type="integer"),
+     *     @SWG\Parameter(name="cc_topatient", in="formData", type="integer"),
+     *     @SWG\Parameter(name="cc_md_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="cc_md_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="font_family", in="formData", type="string"),
+     *     @SWG\Parameter(name="font_size", in="formData", type="integer"),
+     *     @SWG\Parameter(name="pat_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="cc_pat_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="deleted_by", in="formData", type="integer"),
+     *     @SWG\Parameter(name="deleted_on", in="formData", type="string", format="dateTime"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    /**
+     * @SWG\Put(
+     *     path="/letters/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="stepid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivery_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="send_method", in="formData", type="string"),
+     *     @SWG\Parameter(name="template", in="formData", type="string"),
+     *     @SWG\Parameter(name="pdf_path", in="formData", type="string"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivered", in="formData", type="integer"),
+     *     @SWG\Parameter(name="deleted", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="templateid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="parentid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="topatient", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="md_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="md_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="date_sent", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="info_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="edit_userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="mailed_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="mailed_once", in="formData", type="integer"),
+     *     @SWG\Parameter(name="template_type", in="formData", type="integer"),
+     *     @SWG\Parameter(name="cc_topatient", in="formData", type="integer"),
+     *     @SWG\Parameter(name="cc_md_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="cc_md_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="font_family", in="formData", type="string"),
+     *     @SWG\Parameter(name="font_size", in="formData", type="integer"),
+     *     @SWG\Parameter(name="pat_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="cc_pat_referral_list", in="formData", type="string"),
+     *     @SWG\Parameter(name="deleted_by", in="formData", type="integer"),
+     *     @SWG\Parameter(name="deleted_on", in="formData", type="string", format="dateTime"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function update($id)
     {
         return parent::update($id);
     }
 
+    /**
+     * @SWG\Delete(
+     *     path="/letters/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    /**
+     * @SWG\Delete(
+     *     path="/letters/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function destroy($id)
     {
         return parent::destroy($id);

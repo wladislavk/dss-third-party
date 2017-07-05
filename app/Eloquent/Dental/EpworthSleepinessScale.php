@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\EpworthSleepinessScale as Resource;
 use DentalSleepSolutions\Contracts\Repositories\EpworthSleepinessScale as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="EpworthSleepinessScale",
+ *     type="object",
+ *     required={"epworthid", "ip"},
+ *     @SWG\Property(property="epworthid", type="integer"),
+ *     @SWG\Property(property="epworth", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale
  *
  * @property int $epworthid

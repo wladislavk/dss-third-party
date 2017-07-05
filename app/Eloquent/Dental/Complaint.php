@@ -8,6 +8,19 @@ use DentalSleepSolutions\Contracts\Resources\Complaint as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Complaints as Repository;
 
 /**
+ * @SWG\Definition(
+ *     definition="Complaint",
+ *     type="object",
+ *     required={"complaintid", "ip"},
+ *     @SWG\Property(property="complaintid", type="integer"),
+ *     @SWG\Property(property="complaint", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string")
+ * )
+ *
  * DentalSleepSolutions\Eloquent\Dental\Complaint
  *
  * @property int $complaintid

@@ -64,6 +64,32 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Task whereUserid($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="Task",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="task", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="responsibleid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="due", type="string"),
+ *     @SWG\Property(property="recurring", type="integer"),
+ *     @SWG\Property(property="recurring", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="patientid", type="integer")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="Task",
+ *     type="object",
+ * 
+ * )
+ */
 class Task extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

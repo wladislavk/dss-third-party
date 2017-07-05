@@ -60,6 +60,45 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Enrollments\Enrollment whereZip($value)
  * @mixin \Eloquent
  */
+/**
+ * @SWG\Definition(
+ *     definition="Enrollment",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="user", type="integer"),
+ *     @SWG\Property(property="payer", type="string"),
+ *     @SWG\Property(property="reference", type="integer"),
+ *     @SWG\Property(property="response", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip", type="string"),
+ *     @SWG\Property(property="payer", type="string"),
+ *     @SWG\Property(property="transaction", type="integer"),
+ *     @SWG\Property(property="enrollment", type="integer"),
+ *     @SWG\Property(property="npi", type="string"),
+ *     @SWG\Property(property="facility", type="string"),
+ *     @SWG\Property(property="provider", type="string"),
+ *     @SWG\Property(property="tax", type="string"),
+ *     @SWG\Property(property="address", type="string"),
+ *     @SWG\Property(property="city", type="string"),
+ *     @SWG\Property(property="state", type="string"),
+ *     @SWG\Property(property="zip", type="string"),
+ *     @SWG\Property(property="first", type="string"),
+ *     @SWG\Property(property="last", type="string"),
+ *     @SWG\Property(property="contact", type="string"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="download", type="string"),
+ *     @SWG\Property(property="signed", type="string")
+ * )
+ */
+/**
+ * @SWG\Definition(
+ *     definition="Enrollment",
+ *     type="object",
+ * 
+ * )
+ */
 class Enrollment extends Model
 {
     const DSS_ENROLLMENT_SUBMITTED    = 0;

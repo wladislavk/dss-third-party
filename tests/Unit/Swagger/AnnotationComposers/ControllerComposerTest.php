@@ -5,8 +5,9 @@ namespace Tests\Unit\Swagger\AnnotationComposers;
 use DentalSleepSolutions\Swagger\AnnotationComposers\ControllerComposer;
 use DentalSleepSolutions\Swagger\Factories\ActionAnnotatorFactory;
 use DentalSleepSolutions\Swagger\Factories\RuleTransformerFactory;
+use DentalSleepSolutions\Swagger\RoutePathRetriever;
+use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
 use DentalSleepSolutions\Swagger\Wrappers\DocBlockRetriever;
-use Illuminate\Routing\Router;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
@@ -20,26 +21,26 @@ class ControllerComposerTest extends UnitTestCase
         $ruleTransformerFactory = $this->mockRuleTransformerFactory();
         $docBlockRetriever = $this->mockDocBlockRetriever();
         $actionAnnotatorFactory = $this->mockActionAnnotatorFactory();
-        $router = $this->mockRouter();
+        $routePathRetriever = $this->mockRoutePathRetriever();
         $this->controllerComposer = new ControllerComposer(
-            $ruleTransformerFactory, $docBlockRetriever, $actionAnnotatorFactory, $router
+            $ruleTransformerFactory,
+            $docBlockRetriever,
+            $actionAnnotatorFactory,
+            $routePathRetriever
         );
     }
 
     public function testComposeAnnotation()
     {
-
-    }
-
-    public function testWithoutRoute()
-    {
-
+        $this->markTestIncomplete();
     }
 
     private function mockDocBlockRetriever()
     {
         /** @var DocBlockRetriever|MockInterface $docBlockRetriever */
         $docBlockRetriever = \Mockery::mock(DocBlockRetriever::class);
+        $docBlockRetriever->shouldReceive('getFromFunction')
+            ->andReturnUsing([$this, 'getFromFunctionCallback']);
         return $docBlockRetriever;
     }
 
@@ -47,6 +48,8 @@ class ControllerComposerTest extends UnitTestCase
     {
         /** @var RuleTransformerFactory|MockInterface $ruleTransformerFactory */
         $ruleTransformerFactory = \Mockery::mock(RuleTransformerFactory::class);
+        $ruleTransformerFactory->shouldReceive('getTransformer')
+            ->andReturnUsing([$this, 'getTransformerCallback']);
         return $ruleTransformerFactory;
     }
 
@@ -54,13 +57,42 @@ class ControllerComposerTest extends UnitTestCase
     {
         /** @var ActionAnnotatorFactory|MockInterface $actionAnnotatorFactory */
         $actionAnnotatorFactory = \Mockery::mock(ActionAnnotatorFactory::class);
+        $actionAnnotatorFactory->shouldReceive('findAnnotator')
+            ->andReturnUsing([$this, 'findAnnotatorCallback']);
         return $actionAnnotatorFactory;
     }
 
-    private function mockRouter()
+    private function mockRoutePathRetriever()
     {
-        /** @var Router|MockInterface $router */
-        $router = \Mockery::mock(Router::class);
-        return $router;
+        /** @var RoutePathRetriever|MockInterface $routePathRetriever */
+        $routePathRetriever = \Mockery::mock(RoutePathRetriever::class);
+        $routePathRetriever->shouldReceive('getRoutePath')
+            ->andReturnUsing([$this, 'getRoutePathCallback']);
+        return $routePathRetriever;
+    }
+
+    public function getFromFunctionCallback()
+    {
+
+    }
+
+    public function getRoutePathCallback()
+    {
+
+    }
+
+    public function getTransformerCallback(AnnotationRule $rule)
+    {
+
+    }
+
+    public function transformCallback(AnnotationRule $rule)
+    {
+
+    }
+
+    public function findAnnotatorCallback($action)
+    {
+
     }
 }

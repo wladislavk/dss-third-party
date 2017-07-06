@@ -10,9 +10,7 @@ use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
 use DentalSleepSolutions\Swagger\Wrappers\DocBlockRetriever;
-use Illuminate\Routing\Route;
-use Illuminate\Routing\RouteCollection;
-use Illuminate\Routing\Router;
+use DentalSleepSolutions\Swagger\RoutePathRetriever;
 
 class ControllerComposer extends AbstractAnnotationComposer
 {
@@ -24,21 +22,21 @@ class ControllerComposer extends AbstractAnnotationComposer
         'destroy',
     ];
 
-    /** @var Route[]|RouteCollection */
-    private $routes;
-
     /** @var ActionAnnotatorFactory */
     private $annotatorFactory;
+
+    /** @var RoutePathRetriever */
+    private $routePathRetriever;
 
     public function __construct(
         RuleTransformerFactory $ruleTransformerFactory,
         DocBlockRetriever $docBlockRetriever,
         ActionAnnotatorFactory $annotatorFactory,
-        Router $router
+        RoutePathRetriever $routePathRetriever
     ) {
         parent::__construct($ruleTransformerFactory, $docBlockRetriever);
-        $this->routes = $router->getRoutes();
         $this->annotatorFactory = $annotatorFactory;
+        $this->routePathRetriever = $routePathRetriever;
     }
 
     /**
@@ -50,17 +48,12 @@ class ControllerComposer extends AbstractAnnotationComposer
     {
         $annotations = [];
         foreach (self::REST_ACTIONS as $action) {
-            $qualifiedAction = "{$annotationParams->controllerClassName}@$action";
-            $route = $this->routes->getByAction($qualifiedAction);
-            if (!$route) {
-                throw new SwaggerGeneratorException("Route not found for action $qualifiedAction");
-            }
             $annotationData = new AnnotationData();
             $annotationData->action = $action;
             $annotationData->docBlock = $this->docBlockRetriever
                 ->getFromFunction($annotationParams->controllerClassName, $action);
-            $strippedPath = $this->getPathWithoutPrefix($route);
-            $annotationData->route = $this->replaceWildcard($strippedPath);
+            $annotationData->route = $this->routePathRetriever
+                ->getRoutePath($annotationParams->controllerClassName, $action);
             $annotationData->params = $annotationParams;
             $annotationData->shortModelClassName = $this
                 ->getShortModelClass($annotationParams->modelClassName);
@@ -68,24 +61,6 @@ class ControllerComposer extends AbstractAnnotationComposer
             $annotations[] = $annotationData;
         }
         return $annotations;
-    }
-
-    private function getPathWithoutPrefix(Route $route)
-    {
-        $path = '/' . $route->getPath();
-        $strippedPath = str_replace($route->getPrefix(), '', $path);
-        return $strippedPath;
-    }
-
-    /**
-     * @param string $path
-     * @return string
-     */
-    private function replaceWildcard($path)
-    {
-        $regexp = '/(?<=\/)\{([a-z_]+?)\}(?=\/|$)/';
-        $replaced = preg_replace($regexp, '{id}', $path);
-        return $replaced;
     }
 
     protected function createAnnotation(AnnotationData $annotationData)

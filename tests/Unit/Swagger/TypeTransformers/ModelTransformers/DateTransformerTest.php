@@ -1,0 +1,13 @@
+<?php
+
+namespace Tests\Unit\Swagger\TypeTransformers\ModelTransformers;
+
+use Tests\TestCases\UnitTestCase;
+
+class DateTransformerTest extends UnitTestCase
+{
+    public function testTransform()
+    {
+        $this->markTestIncomplete();
+    }
+}

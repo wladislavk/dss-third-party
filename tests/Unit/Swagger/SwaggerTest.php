@@ -11,6 +11,8 @@ use DentalSleepSolutions\Swagger\Factories\ActionAnnotatorFactory;
 use DentalSleepSolutions\Swagger\Factories\ModelTransformerFactory;
 use DentalSleepSolutions\Swagger\Factories\RuleTransformerFactory;
 use DentalSleepSolutions\Swagger\Generator;
+use DentalSleepSolutions\Swagger\RoutePathRetriever;
+use DentalSleepSolutions\Swagger\Wrappers\DocBlockRetriever;
 use DentalSleepSolutions\Swagger\Wrappers\FilesystemWrapper;
 use Illuminate\Foundation\Application;
 use Illuminate\Routing\Route;
@@ -90,8 +92,15 @@ class SwaggerTest extends UnitTestCase
         $router = $this->mockRouter();
         $modelTransformerFactory = new ModelTransformerFactory($application);
         $ruleTransformerFactory = new RuleTransformerFactory($application);
-        $controllerComposer = new ControllerComposer($ruleTransformerFactory, $actionAnnotatorFactory, $router);
-        $modelComposer = new ModelComposer($modelTransformerFactory);
+        $docBlockRetriever = new DocBlockRetriever();
+        $routePathRetriever = new RoutePathRetriever($router);
+        $controllerComposer = new ControllerComposer(
+            $ruleTransformerFactory,
+            $docBlockRetriever,
+            $actionAnnotatorFactory,
+            $routePathRetriever
+        );
+        $modelComposer = new ModelComposer($modelTransformerFactory, $docBlockRetriever);
         $classRetriever = new ClassRetriever();
         $this->generator = new Generator(
             $annotationWriter,

@@ -12,7 +12,6 @@ abstract class AbstractActionAnnotator
      */
     public function createAnnotation(AnnotationData $annotationData)
     {
-        // todo: check that route is generated correctly
         $annotation = <<<ANNOTATION
 @SWG\\{$this->getMethod()}(
     path="{$annotationData->route}",

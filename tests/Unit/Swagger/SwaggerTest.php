@@ -17,7 +17,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Routing\Router;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCases\UnitTestCase;
 
 /**
  * This class tests all Swagger services in isolation from the filesystem and routes.
@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
  *
  * Class SwaggerTest
  */
-class SwaggerTest extends TestCase
+class SwaggerTest extends UnitTestCase
 {
     const HTTP_DIR = __DIR__ . '/../../Dummies/Http';
     const MODEL_DIR = __DIR__ . '/../../Dummies/Eloquent';

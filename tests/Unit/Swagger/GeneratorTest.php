@@ -12,9 +12,9 @@ use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 use DentalSleepSolutions\Swagger\Wrappers\FilesystemWrapper;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCases\UnitTestCase;
 
-class GeneratorTest extends TestCase
+class GeneratorTest extends UnitTestCase
 {
     /** @var bool */
     private $namespacePresent = true;

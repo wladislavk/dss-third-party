@@ -6,15 +6,22 @@ use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
 use DentalSleepSolutions\Swagger\Factories\AbstractTransformerFactory;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
+use DentalSleepSolutions\Swagger\Wrappers\DocBlockRetriever;
 
 abstract class AbstractAnnotationComposer
 {
     /** @var AbstractTransformerFactory */
     private $transformerFactory;
 
-    public function __construct(AbstractTransformerFactory $transformerFactory)
-    {
+    /** @var DocBlockRetriever */
+    protected $docBlockRetriever;
+
+    public function __construct(
+        AbstractTransformerFactory $transformerFactory,
+        DocBlockRetriever $docBlockRetriever
+    ) {
         $this->transformerFactory = $transformerFactory;
+        $this->docBlockRetriever = $docBlockRetriever;
     }
 
     /**
@@ -33,12 +40,6 @@ abstract class AbstractAnnotationComposer
     }
 
     /**
-     * @param AnnotationData $annotationData
-     * @return string
-     */
-    abstract protected function createAnnotation(AnnotationData $annotationData);
-
-    /**
      * @param AnnotationParams $annotationParams
      * @return AnnotationData[]
      * @throws SwaggerGeneratorException
@@ -48,7 +49,7 @@ abstract class AbstractAnnotationComposer
     /**
      * @param AnnotationData $annotationData
      */
-    protected function parseRules(AnnotationData $annotationData)
+    private function parseRules(AnnotationData $annotationData)
     {
         $this->setRules($annotationData);
         foreach ($annotationData->rules as $rule) {
@@ -56,6 +57,17 @@ abstract class AbstractAnnotationComposer
             $transformer->transform($rule);
         }
     }
+
+    /**
+     * @param AnnotationData $annotationData
+     */
+    abstract protected function setRules(AnnotationData $annotationData);
+
+    /**
+     * @param AnnotationData $annotationData
+     * @return string
+     */
+    abstract protected function createAnnotation(AnnotationData $annotationData);
 
     /**
      * @param string $modelClassName
@@ -67,9 +79,4 @@ abstract class AbstractAnnotationComposer
         $shortClassName = $explodedClassName[count($explodedClassName) - 1];
         return $shortClassName;
     }
-
-    /**
-     * @param AnnotationData $annotationData
-     */
-    abstract protected function setRules(AnnotationData $annotationData);
 }

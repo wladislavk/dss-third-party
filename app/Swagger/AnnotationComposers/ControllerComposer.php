@@ -9,6 +9,7 @@ use DentalSleepSolutions\Swagger\Factories\RuleTransformerFactory;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
+use DentalSleepSolutions\Swagger\Wrappers\DocBlockRetriever;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Routing\Router;
@@ -31,10 +32,11 @@ class ControllerComposer extends AbstractAnnotationComposer
 
     public function __construct(
         RuleTransformerFactory $ruleTransformerFactory,
+        DocBlockRetriever $docBlockRetriever,
         ActionAnnotatorFactory $annotatorFactory,
         Router $router
     ) {
-        parent::__construct($ruleTransformerFactory);
+        parent::__construct($ruleTransformerFactory, $docBlockRetriever);
         $this->routes = $router->getRoutes();
         $this->annotatorFactory = $annotatorFactory;
     }
@@ -55,8 +57,8 @@ class ControllerComposer extends AbstractAnnotationComposer
             }
             $annotationData = new AnnotationData();
             $annotationData->action = $action;
-            $reflector = new \ReflectionClass($annotationParams->controllerClassName);
-            $annotationData->docBlock = '' . $reflector->getMethod($action)->getDocComment();
+            $annotationData->docBlock = $this->docBlockRetriever
+                ->getFromFunction($annotationParams->controllerClassName, $action);
             $strippedPath = $this->getPathWithoutPrefix($route);
             $annotationData->route = $this->replaceWildcard($strippedPath);
             $annotationData->params = $annotationParams;

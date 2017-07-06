@@ -7,12 +7,15 @@ use DentalSleepSolutions\Swagger\Factories\ModelTransformerFactory;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 use DentalSleepSolutions\Swagger\Structs\AnnotationRule;
+use DentalSleepSolutions\Swagger\Wrappers\DocBlockRetriever;
 
 class ModelComposer extends AbstractAnnotationComposer
 {
-    public function __construct(ModelTransformerFactory $modelTransformerFactory)
-    {
-        parent::__construct($modelTransformerFactory);
+    public function __construct(
+        ModelTransformerFactory $modelTransformerFactory,
+        DocBlockRetriever $docBlockRetriever
+    ) {
+        parent::__construct($modelTransformerFactory, $docBlockRetriever);
     }
 
     /**
@@ -27,8 +30,7 @@ class ModelComposer extends AbstractAnnotationComposer
         $annotationData->operator = "class $shortClassName";
         $annotationData->params = $annotationParams;
         $annotationData->shortModelClassName = $shortClassName;
-        $reflector = new \ReflectionClass($annotationParams->modelClassName);
-        $annotationData->docBlock = '' . $reflector->getDocComment();
+        $annotationData->docBlock = $this->docBlockRetriever->getFromClass($annotationParams->modelClassName);
         $annotations[] = $annotationData;
         return $annotations;
     }
@@ -74,9 +76,7 @@ ANNOTATION;
      */
     protected function setRules(AnnotationData $annotationData)
     {
-        $reflection = new \ReflectionClass($annotationData->params->modelClassName);
-        $docBlock = $reflection->getDocComment();
-        $lines = explode("\n", $docBlock);
+        $lines = explode("\n", $annotationData->docBlock);
         $regexp = '/\*\s@(property(?:\-read)?)\s(\S+?)\s\$([a-zA-Z0-9_]+)/';
         $matches = [];
         foreach ($lines as $line) {

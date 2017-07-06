@@ -8,9 +8,9 @@ use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
 use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Wrappers\FilesystemWrapper;
 use Mockery\MockInterface;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCases\UnitTestCase;
 
-class AnnotationWriterTest extends TestCase
+class AnnotationWriterTest extends UnitTestCase
 {
     /** @var bool */
     private $shouldThrowException = false;

@@ -1,10 +1,20 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-//session_start();
-//require_once 'admin/includes/main_include.php';
+<?php
+namespace Ds3\Libraries\Legacy;
 
-include "includes/top.htm";
-require_once('includes/constants.inc');
-require_once('includes/formatters.php');
+define('DSS_SCHEDULER_PRODUCERS', 0);
+define('DSS_SCHEDULER_RESOURCES', 1);
+define('DSS_SCHEDULER_PATIENTS', 2);
+define('DSS_SCHEDULER_APPOINTMENT_TYPES', 3);
+
+require_once __DIR__ . '/includes/top.htm';
+require_once __DIR__ . '/includes/constants.inc';
+require_once __DIR__ . '/includes/formatters.php';
+
+$schedulerProducers = schedulerProducers($_SESSION['docid']);
+$schedulerResources = schedulerResources($_SESSION['docid']);
+$schedulerPatients = schedulerPatients($_SESSION['docid']);
+$schedulerAppointmentTypes = schedulerAppointmentTypes($_SESSION['docid']);
+
 ?>
 	<script src="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.js?t=20131129" type="text/javascript" charset="utf-8"></script>
 	<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_recurring.js?t=20131129" type="text/javascript" charset="utf-8"></script>
@@ -14,15 +24,10 @@ require_once('includes/formatters.php');
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js?t=20131129' type="text/javascript" charset="utf-8"></script>
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_units.js?t=20131129' type="text/javascript" charset="utf-8"></script>
 	<script src='3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_pdf.js?t=20131129' type="text/javascript" charset="utf-8"></script>
-<?php
-/*        <script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcommon.js' type="text/javascript" charset="utf-8"></script> */ 
-?>
-
 	<script src='3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.js?t=20131129' type="text/javascript" charset="utf-8"></script>
 	<script src="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_limit.js?t=20131129"></script>
 	<link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/dhtmlxscheduler.css?t=20131129" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="css/calendar.css?t=20131129" type="text/css" media="screen" title="no title" charset="utf-8">
-<?php /*        <link rel="stylesheet" href="3rdParty/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css" type="text/css" media="screen" title="no title" charset="utf-8"> */ ?>
  	<link rel="stylesheet" type="text/css" href="3rdParty/dhtmlxCombo/codebase/dhtmlxcombo.css?t=20131129">
 <div style="clear: both">
 	<br />
@@ -37,28 +42,20 @@ if(!empty($_GET['msg'])) {
 	</div>
 
 <style type="text/css" media="screen">
-
-	/*.dhx_cal_event.event_general div{ background-color: #FFF9CF !important; }
-	.dhx_cal_event.event_follow_up div{ background-color: #D6CFFF !important; } 
-	.dhx_cal_event.event_sleep_test div{ background-color: #CFF5FF !important; }
-	.dhx_cal_event.event_impressions div {background-color: #DFFFCF !important; }
-	.dhx_cal_event.event_new_patient div{background-color: #FFCFCF !important; }
-        .dhx_cal_event.event_deliver_device div{background-color: #FBA16C !important; }
-	*/
-<?php
-$appt_t_sql = "select * from dental_appt_types WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."'";
-$appt_t_qu = $db->getResults($appt_t_sql);
-foreach ($appt_t_qu as $appt_t_r) {
-	$str = str_replace('&amp;_','',str_replace('.','',str_replace('/','',str_replace(' ', '_', strtolower($appt_t_r['name'])))));
+<?php foreach ($schedulerAppointmentTypes as $appt_t_r) {
+	$str = str_replace(['&amp;_', '.', '/', ' '], '_', strtolower($appt_t_r['name']));
 	?>
 	.dhx_cal_event.event_<?php print $str; ?> div{ 
 		background-color: #<?php print $appt_t_r['color']; ?> !important; 
 	}
-<?
-}?>
+<?php } ?>
 </style>
 
 <script type="text/javascript" charset="utf-8">
+var indexedProducers = <?= safeJsonEncode(indexBy($schedulerProducers, 'userid')) ?>;
+var indexedResources = <?= safeJsonEncode(indexBy($schedulerResources, 'id')) ?>;
+var indexedPatients = <?= safeJsonEncode(indexBy($schedulerPatients, 'patientid')) ?>;
+
 function initCal() {
     dhtmlXTooltip.config.timeout_to_display = 500;
     dhtmlXTooltip.config.timeout_to_hide = 100;
@@ -83,9 +80,6 @@ function initCal() {
 	scheduler.locale.labels.section_resource = "Resource";
 	scheduler.locale.labels.section_patient = "Patient";
 	scheduler.locale.labels.workweek_tab = "W-Week";
-/*scheduler.attachEvent("onXLE", function () {
-    scheduler.config.export_.pdf_mode = "fullcolor";
-});*/
 
 	scheduler.templates.event_text = function(start_date, end_date, event){
 		var ret = '';
@@ -121,7 +115,9 @@ function initCal() {
 	};
 
 	scheduler.templates.tooltip_text = function(start,end,event) {
-		var cat, prod, pat, phone, resource;
+		var cat, prod, resource, patient,
+            pat = 'None',
+            phone = { home: '', cell: '', work: '' };
 
 		switch(event.category){
 			case 'follow_up':
@@ -143,50 +139,24 @@ function initCal() {
 				cat = 'General';
 				break;
 		}
-		switch(event.producer){
-<?php
-$p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
-$p_query = $db->getResults($p_sql);
-foreach ($p_query as $p) {?>
-			case '<?php echo $p["userid"]; ?>':
-				prod = '<?php echo addslashes($p["first_name"]." ".$p["last_name"]); ?>';
-				break;
-<?php
-}?>
+
+		if (indexedProducers.hasOwnProperty(event.producer)) {
+            prod = indexedProducers[event.producer].full_name || '';
 		}
-		switch(event.resource){
-<?php
-$p_sql = "SELECT * FROM dental_resources WHERE docid=".$_SESSION['docid']." order by rank, name asc";
-$p_query = $db->getResults($p_sql);
-foreach ($p_query as $p) {?>
-			case '<?php echo $p["id"]; ?>':
-				resource = '<?php echo addslashes($p["name"]); ?>';
-				break;
-<?php
-}?>
-			default:
-				resource = 'None';
+
+		if (indexedResources.hasOwnProperty(event.resource)) {
+            resource = indexedResources[event.resource].name || '';
 		}
-		switch(event.patient){
-<?php
-$p_sql = "SELECT * FROM dental_patients WHERE docid=".$_SESSION['docid'];
-$p_query = $db->getResults($p_sql);
-foreach ($p_query as $p) {?>
-			case '<?php echo $p["patientid"]; ?>':
-				pat = '<?php echo addslashes($p["firstname"])." ".addslashes($p["lastname"]); ?>';
-				phone = {
-					home: '<?= format_phone($p['home_phone']) ?>',
-					cell: '<?= format_phone($p['cell_phone']) ?>',
-					work: '<?= format_phone($p['work_phone']) ?>',
-				};
-				break;
-<?php
-}?>
-			default:
-				pat = 'None';
-				phone = { home: '', cell: '', work: ''};
-				break;
-		}
+
+        if (indexedPatients.hasOwnProperty(event.patient)) {
+            patient = indexedPatients[event.patient].full_name || '';
+            pat = patient.full_name;
+            phone = {
+                home: patient.home_phone || '',
+                cell: patient.cell_phone || '',
+                work: patient.work_phone || ''
+            };
+        }
 
 		return "<b>Event:</b> "+event.text+"<br/>" +
 			"<b>Appt Type:</b> "+cat+"<br/>" +
@@ -198,7 +168,7 @@ foreach ($p_query as $p) {?>
 			(phone.work.length ? "<b>Pt Work:</b> "+phone.work+"<br/>" : "") +
 			"<b>Start Date:</b> "+scheduler.templates.tooltip_date_format(start)+"<br/>" +
 			"<b>End Date:</b> "+scheduler.templates.tooltip_date_format(end);
-	}
+	};
 
 	scheduler.templates.hour_scale = function(date){
 		var hour = date.getHours();
@@ -218,105 +188,33 @@ foreach ($p_query as $p) {?>
 		return html;		
 	};
 
-	var category = [
-<?php
-$p_sql = "SELECT * FROM dental_appt_types where docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' order by name asc";
-$p_query = $db->getResults($p_sql);
-foreach ($p_query as $p) {?>
-		{ 	key: '<?php echo $p["classname"]; ?>', 
-			label: '<?php echo $p["name"]; ?>'},
-<?php
-}?>
-	];
-	var producer = [
-<?php
-$p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
-$p_query = $db->getResults($p_sql);
-foreach ($p_query as $p) {?>
-		{ 	key: '<?php echo $p["userid"]; ?>', 
-			label: '<?php echo $p["first_name"].' '.$p["last_name"]; ?>'},
-<?php
-}	?>
-	];
-	var resource = [
-<?php
-$p_sql = "SELECT * FROM dental_resources WHERE docid=".$_SESSION['docid']." order by rank, name asc";
-$p_query = $db->getResults($p_sql);
-foreach ($p_query as $p) {?>
-		{ 	key: '<?php echo $p["id"]; ?>', 
-			label: '<?php echo $p["name"]; ?>'},
-<?php
-}	?>
-	];
-	var patient = [
-<?php
-$p_sql = "SELECT * FROM dental_patients WHERE docid=".$_SESSION['docid']." AND status=1";
-$p_query = $db->getResults($p_sql);
-foreach ($p_query as $p) {?>
-		{ 	key: '<?php echo $p["patientid"]; ?>', 
-			label: '<?php echo addslashes($p["firstname"])." ".addslashes($p["lastname"]); ?>'},
-<?php
-}	?>
-		{ 	key: '', 
-			label: 'None' }
-	];
-	var prod_list = [
-<?php
-$p_sql = "SELECT * FROM dental_users WHERE userid=".$_SESSION['docid']." OR (docid=".$_SESSION['docid']." AND producer=1)";
-$p_query = $db->getResults($p_sql);
-foreach ($p_query as $p) {?>
-		{ 	key: '<?php echo $p["userid"]; ?>', 
-			label: '<?php echo $p["name"]; ?>'},
-<?php
-}?>
-	];
+    var category = <?= safeJsonEncode(keyLabelMap($schedulerAppointmentTypes, 'classname', 'name')) ?>;
+    var producer = <?= safeJsonEncode(keyLabelMap($schedulerProducers, 'userid', 'full_name')) ?>;
+    var resource = <?= safeJsonEncode(keyLabelMap($schedulerResources, 'id', 'name')) ?>;
+    var patient = <?= safeJsonEncode(keyLabelMap(
+        filterInactivePatients($schedulerPatients), 'patientid', 'full_name'
+    )) ?>;
+
+	patient.push({
+        key: '',
+        label: 'None'
+    });
+
+    var prod_list = <?= safeJsonEncode(keyLabelMap($schedulerProducers, 'userid', 'full_name')) ?>;
+    var chairs_list = <?= safeJsonEncode(keyLabelMap($schedulerResources, 'id', 'name')) ?>;
+
+    scheduler.createUnitsView({
+        name: "timeline",
+        property: "producer",
+        list: prod_list
+    });
+
 	scheduler.createUnitsView({
-	name: "timeline",
-	property: "producer",
-	list: prod_list
+        name: "chairs",
+        property: "resource",
+        list: chairs_list
 	});
-	/*
-	scheduler.createTimelineView({
-	name:	"timeline",
-	x_unit:	"minute",
-	x_date:	"%H:%i",
-	x_step:	30,
-	x_size: 24,
-	x_start: 16,
-	x_length:	48,
-	y_unit:	producer,
-	y_property:	"producer",
-	render:"bar"
-	});
-	*/
-	var chairs_list = [
-<?php
-$chair_sql = "select * from dental_resources WHERE docid=".$_SESSION['docid']." order by rank, name asc";
-$chair_qu = $db->getResults($chair_sql);
-foreach ($chair_qu as $chair_r) {?>
-		{ 	key:<?php print $chair_r['id']; ?>, 
-			label:<?php print '"' . $chair_r['name'] . '"'; ?>},
-<?php
-}?>
-	];
-	scheduler.createUnitsView({
-	name: "chairs",
-	property: "resource",
-	list: chairs_list
-	});
-	/*		scheduler.createTimelineView({
-	name:	"chairs",
-	x_unit:	"minute",
-	x_date:	"%H:%i",
-	x_step:	30,
-	x_size: 24,
-	x_start: 16,
-	x_length: 48,
-	y_unit:	resource,
-	y_property:	"resource",
-	render:"bar"
-	});
-	*/
+
 	scheduler.attachEvent("onTemplatesReady",function(){
 		//work week
 		scheduler.date.workweek_start = function(date){ return scheduler.date.add(scheduler.date.week_start(date), 1, "day"); }
@@ -518,45 +416,51 @@ function show_minical(){
 }
 
 $(document).ready( function(){
-    var eventId = getParameterByName('eid'),
+    var event = null,
+        eventId = getParameterByName('eid'),
         intervalId = 0,
         retryCount = 0,
         retryLimit = 100;
 
     initCal();
 
-    if (eventId) {
+    if (!eventId) {
+        return;
+    }
+
+    event = scheduler.getEvent(eventId);
+
+    if (event) {
+        return;
+    }
+
+    function eventWatchDog () {
         var event = scheduler.getEvent(eventId);
 
-        if (!event) {
-            $.get('/manage/calendar-events.php?eid=' + eventId, function(eventData){
-                if (!$.isArray(eventData) || !eventData.length || !eventData[0].start_date) {
-                    return;
-                }
+        if (event) {
+            clearInterval(intervalId);
 
-                var eventDate = eventData[0].start_date.match(/^(\d{4})-(\d{2})-(\d{2}) /),
-                    eventWatchDog = function () {
-                        var event = scheduler.getEvent(eventId);
+            scheduler.showEvent(eventId, 'day');
+            scheduler.select(eventId);
+        }
 
-                        if (event) {
-                            clearInterval(intervalId);
+        retryCount++;
 
-                            scheduler.showEvent(eventId, 'day');
-                            scheduler.select(eventId);
-                        }
-
-                        retryCount++;
-
-                        if (retryCount >= retryLimit) {
-                            clearInterval(intervalId);
-                        }
-                    };
-
-                scheduler.setCurrentView(new Date(eventDate[1], +eventDate[2] - 1, eventDate[3]), 'day');
-                intervalId = setInterval(eventWatchDog, 1000);
-            });
+        if (retryCount >= retryLimit) {
+            clearInterval(intervalId);
         }
     }
+
+    $.get('/manage/calendar-events.php?eid=' + eventId, function(eventData){
+        if (!$.isArray(eventData) || !eventData.length || !eventData[0].start_date) {
+            return;
+        }
+
+        var eventDate = eventData[0].start_date.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+        scheduler.setCurrentView(new Date(eventDate[1], +eventDate[2] - 1, eventDate[3]), 'day');
+        intervalId = setInterval(eventWatchDog, 1000);
+    });
 });
 
 </script>
@@ -603,4 +507,142 @@ $(document).ready( function(){
 
 <div style="clear:both;"></div>
 <br /><br />	
-<?php include "includes/bottom.htm";?>
+<?php
+
+require_once __DIR__ . '/includes/bottom.htm';
+
+function schedulerResults($docId, $queryType)
+{
+    $db = new Db();
+    $docId = (int)$docId;
+
+    $constQueries = [
+        DSS_SCHEDULER_PRODUCERS => "SELECT userid, first_name, last_name, name, CONCAT(first_name, ' ', last_name) AS full_name
+            FROM dental_users
+            WHERE userid = '$docId'
+                OR (docid = '$docId' AND producer = 1)",
+        DSS_SCHEDULER_RESOURCES => "SELECT id, name
+            FROM dental_resources
+            WHERE docid = '$docId'
+            ORDER BY rank, name ASC",
+        DSS_SCHEDULER_PATIENTS => "SELECT
+                patientid,
+                firstname,
+                lastname,
+                home_phone,
+                cell_phone,
+                work_phone,
+                CONCAT(firstname, ' ', lastname) AS full_name,
+                status
+            FROM dental_patients
+            WHERE docid = '$docId'
+            ORDER BY lastname, firstname",
+        DSS_SCHEDULER_APPOINTMENT_TYPES => "SELECT name, color, classname
+            FROM dental_appt_types
+            WHERE docid = '$docId'
+            ORDER BY name ASC",
+    ];
+
+    if (!array_key_exists($queryType, $constQueries)) {
+        return [];
+    }
+
+    $result = $db->getResults($constQueries[$queryType]);
+    return $result;
+}
+
+function schedulerProducers($docId)
+{
+    return schedulerResults($docId, DSS_SCHEDULER_PRODUCERS);
+}
+
+function schedulerResources($docId)
+{
+    return schedulerResults($docId, DSS_SCHEDULER_RESOURCES);
+}
+
+function schedulerPatients($docId)
+{
+    return schedulerResults($docId, DSS_SCHEDULER_PATIENTS);
+}
+
+function schedulerAppointmentTypes($docId)
+{
+    return schedulerResults($docId, DSS_SCHEDULER_APPOINTMENT_TYPES);
+}
+
+function indexBy(array $array, $field)
+{
+    $keys = array_pluck($array, $field);
+    return array_combine($keys, $array);
+}
+
+function nestedUtf8Encode(&$value)
+{
+    if (is_null($value)) {
+        $value = '';
+        return;
+    }
+
+    if (!is_string($value)) {
+        return;
+    }
+
+    $value = utf8_encode($value);
+}
+
+function utf8Encode($object)
+{
+    if (is_string($object)) {
+        return utf8_encode($object);
+    }
+
+    if (is_array($object)) {
+        array_walk_recursive($object, __NAMESPACE__ . '\\nestedUtf8Encode');
+    }
+
+    return $object;
+}
+
+function safeJsonEncode($object)
+{
+    $object = utf8Encode($object);
+    return json_encode($object);
+}
+
+function keyLabelMap(array $array, $key, $label)
+{
+    $map = array_map(function ($each) use ($key, $label) {
+        $selectedKey = '';
+        $selectedLabel = '';
+
+        if (isset($each[$key])) {
+            $selectedKey = $each[$key];
+        }
+
+        if (isset($each[$label])) {
+            $selectedLabel = $each[$label];
+        }
+
+        return [
+            'key' => $selectedKey,
+            'label' => $selectedLabel,
+        ];
+    }, $array);
+
+    return $map;
+}
+
+function filterInactivePatients(array $patientList)
+{
+    $filtered = array_filter($patientList, function ($each) {
+        if (!is_array($each) || !isset($each['status'])) {
+            return false;
+        }
+
+        return (int)$each['status'] === 1;
+    });
+
+    $filtered = array_values($filtered);
+    return $filtered;
+}

@@ -149,8 +149,8 @@ function initCal() {
 		}
 
         if (indexedPatients.hasOwnProperty(event.patient)) {
-            patient = indexedPatients[event.patient].full_name || '';
-            pat = patient.full_name;
+            patient = indexedPatients[event.patient];
+            pat = patient.full_name || '';
             phone = {
                 home: patient.home_phone || '',
                 cell: patient.cell_phone || '',

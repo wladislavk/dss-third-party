@@ -3,10 +3,81 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\AirwayEvaluation as Resource;
 use DentalSleepSolutions\Contracts\Repositories\AirwayEvaluations as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="AirwayEvaluation",
+ *     type="object",
+ *     required={"ex_page3id"},
+ *     @SWG\Property(property="ex_page3id", type="integer"),
+ *     @SWG\Property(property="formid", type="integer"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="maxilla", type="string"),
+ *     @SWG\Property(property="other_maxilla", type="string"),
+ *     @SWG\Property(property="mandible", type="string"),
+ *     @SWG\Property(property="other_mandible", type="string"),
+ *     @SWG\Property(property="soft_palate", type="string"),
+ *     @SWG\Property(property="other_soft_palate", type="string"),
+ *     @SWG\Property(property="uvula", type="string"),
+ *     @SWG\Property(property="other_uvula", type="string"),
+ *     @SWG\Property(property="gag_reflex", type="string"),
+ *     @SWG\Property(property="other_gag_reflex", type="string"),
+ *     @SWG\Property(property="nasal_passages", type="string"),
+ *     @SWG\Property(property="other_nasal_passages", type="string"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation
+ *
+ * @property int $ex_page3id
+ * @property int|null $formid
+ * @property int|null $patientid
+ * @property string|null $maxilla
+ * @property string|null $other_maxilla
+ * @property string|null $mandible
+ * @property string|null $other_mandible
+ * @property string|null $soft_palate
+ * @property string|null $other_soft_palate
+ * @property string|null $uvula
+ * @property string|null $other_uvula
+ * @property string|null $gag_reflex
+ * @property string|null $other_gag_reflex
+ * @property string|null $nasal_passages
+ * @property string|null $other_nasal_passages
+ * @property int|null $userid
+ * @property int|null $docid
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereExPage3id($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereFormid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereGagReflex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereMandible($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereMaxilla($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereNasalPassages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereOtherGagReflex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereOtherMandible($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereOtherMaxilla($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereOtherNasalPassages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereOtherSoftPalate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereOtherUvula($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation wherePatientid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereSoftPalate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereUserid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation whereUvula($value)
+ * @mixin \Eloquent
+ */
 class AirwayEvaluation extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

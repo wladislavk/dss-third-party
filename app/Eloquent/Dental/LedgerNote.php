@@ -3,11 +3,55 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LedgerNote as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerNotes as Repository;
 use DB;
 
+/**
+ * @SWG\Definition(
+ *     definition="LedgerNote",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="producerid", type="integer"),
+ *     @SWG\Property(property="note", type="string"),
+ *     @SWG\Property(property="private", type="integer"),
+ *     @SWG\Property(property="service_date", type="string", format="dateTime"),
+ *     @SWG\Property(property="entry_date", type="string", format="dateTime"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="admin_producerid", type="integer")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\LedgerNote
+ *
+ * @property int $id
+ * @property int|null $producerid
+ * @property string|null $note
+ * @property int|null $private
+ * @property \Carbon\Carbon|null $service_date
+ * @property \Carbon\Carbon|null $entry_date
+ * @property int|null $patientid
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property int|null $docid
+ * @property int|null $admin_producerid
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote whereAdminProducerid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote whereEntryDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote whereNote($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote wherePatientid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote wherePrivate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote whereProducerid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerNote whereServiceDate($value)
+ * @mixin \Eloquent
+ */
 class LedgerNote extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

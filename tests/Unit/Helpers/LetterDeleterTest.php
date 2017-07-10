@@ -43,6 +43,8 @@ class LetterDeleterTest extends UnitTestCase
 
     public function setUp()
     {
+        date_default_timezone_set('UTC');
+
         $this->letter = new Letter();
         $this->letter->letterid = 1;
         $this->letter->patientid = 5;

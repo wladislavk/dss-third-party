@@ -4,6 +4,30 @@ namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @SWG\Definition(
+ *     definition="MemoAdmin",
+ *     type="object",
+ *     required={"memo_id", "memo", "last_update", "off_date"},
+ *     @SWG\Property(property="memo_id", type="integer"),
+ *     @SWG\Property(property="memo", type="string"),
+ *     @SWG\Property(property="last_update", type="string"),
+ *     @SWG\Property(property="off_date", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\MemoAdmin
+ *
+ * @property int $memo_id
+ * @property string $memo
+ * @property string $last_update
+ * @property string $off_date
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\MemoAdmin current()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\MemoAdmin whereLastUpdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\MemoAdmin whereMemo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\MemoAdmin whereMemoId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\MemoAdmin whereOffDate($value)
+ * @mixin \Eloquent
+ */
 class MemoAdmin extends Model
 {
     /**

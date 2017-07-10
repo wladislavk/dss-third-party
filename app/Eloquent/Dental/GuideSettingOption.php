@@ -3,11 +3,40 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\GuideSettingOption as Resource;
 use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions as Repository;
 use DB;
 
+/**
+ * @SWG\Definition(
+ *     definition="GuideSettingOption",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="option_id", type="integer"),
+ *     @SWG\Property(property="setting_id", type="integer"),
+ *     @SWG\Property(property="label", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\GuideSettingOption
+ *
+ * @property int $id
+ * @property int|null $option_id
+ * @property int|null $setting_id
+ * @property string|null $label
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereLabel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereOptionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\GuideSettingOption whereSettingId($value)
+ * @mixin \Eloquent
+ */
 class GuideSettingOption extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

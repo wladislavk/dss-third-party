@@ -3,10 +3,45 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\InsuranceFile as Resource;
 use DentalSleepSolutions\Contracts\Repositories\InsuranceFiles as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="InsuranceFile",
+ *     type="object",
+ *     required={"id", "claimid"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="claimid", type="integer"),
+ *     @SWG\Property(property="claimtype", type="string"),
+ *     @SWG\Property(property="filename", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="status", type="integer")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\InsuranceFile
+ *
+ * @property int $id
+ * @property int $claimid
+ * @property string|null $claimtype
+ * @property string|null $filename
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property string|null $description
+ * @property int|null $status
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceFile whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceFile whereClaimid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceFile whereClaimtype($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceFile whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceFile whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceFile whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceFile whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\InsuranceFile whereStatus($value)
+ * @mixin \Eloquent
+ */
 class InsuranceFile extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

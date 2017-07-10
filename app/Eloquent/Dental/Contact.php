@@ -4,11 +4,119 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\DentalSleepSolutions\Interfaces\NamedModelInterface;
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Contact as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Contacts as Repository;
 use DB;
 
+/**
+ * @SWG\Definition(
+ *     definition="Contact",
+ *     type="object",
+ *     required={"contactid", "preferredcontact"},
+ *     @SWG\Property(property="contactid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="salutation", type="string"),
+ *     @SWG\Property(property="lastname", type="string"),
+ *     @SWG\Property(property="firstname", type="string"),
+ *     @SWG\Property(property="middlename", type="string"),
+ *     @SWG\Property(property="company", type="string"),
+ *     @SWG\Property(property="add1", type="string"),
+ *     @SWG\Property(property="add2", type="string"),
+ *     @SWG\Property(property="city", type="string"),
+ *     @SWG\Property(property="state", type="string"),
+ *     @SWG\Property(property="zip", type="string"),
+ *     @SWG\Property(property="phone1", type="string"),
+ *     @SWG\Property(property="phone2", type="string"),
+ *     @SWG\Property(property="fax", type="string"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="national_provider_id", type="string"),
+ *     @SWG\Property(property="qualifier", type="string"),
+ *     @SWG\Property(property="qualifierid", type="string"),
+ *     @SWG\Property(property="greeting", type="string"),
+ *     @SWG\Property(property="sincerely", type="string"),
+ *     @SWG\Property(property="contacttypeid", type="integer"),
+ *     @SWG\Property(property="notes", type="string"),
+ *     @SWG\Property(property="preferredcontact", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="referredby_info", type="integer"),
+ *     @SWG\Property(property="referredby_notes", type="string"),
+ *     @SWG\Property(property="merge_id", type="integer"),
+ *     @SWG\Property(property="merge_date", type="string"),
+ *     @SWG\Property(property="corporate", type="integer")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\Contact
+ *
+ * @property int $contactid
+ * @property int|null $docid
+ * @property string|null $salutation
+ * @property string|null $lastname
+ * @property string|null $firstname
+ * @property string|null $middlename
+ * @property string|null $company
+ * @property string|null $add1
+ * @property string|null $add2
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $phone1
+ * @property string|null $phone2
+ * @property string|null $fax
+ * @property string|null $email
+ * @property string|null $national_provider_id
+ * @property string|null $qualifier
+ * @property string|null $qualifierid
+ * @property string|null $greeting
+ * @property string|null $sincerely
+ * @property int|null $contacttypeid
+ * @property string|null $notes
+ * @property string $preferredcontact
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property int|null $referredby_info
+ * @property string|null $referredby_notes
+ * @property int|null $merge_id
+ * @property string|null $merge_date
+ * @property int|null $corporate
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact active()
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereAdd1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereAdd2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereCompany($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereContactid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereContacttypeid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereCorporate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereFax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereFirstname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereGreeting($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereLastname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereMergeDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereMergeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereMiddlename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereNationalProviderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact wherePhone1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact wherePhone2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact wherePreferredcontact($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereQualifier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereQualifierid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereReferredbyInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereReferredbyNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereSalutation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereSincerely($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Contact whereZip($value)
+ * @mixin \Eloquent
+ */
 class Contact extends AbstractModel implements Resource, Repository, NamedModelInterface
 {
     use WithoutUpdatedTimestamp;

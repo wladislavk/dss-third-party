@@ -3,11 +3,46 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LedgerRecord as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LedgerRecords as Repository;
 use DB;
 
+/**
+ * @SWG\Definition(
+ *     definition="LedgerStatement",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="producerid", type="integer"),
+ *     @SWG\Property(property="filename", type="string"),
+ *     @SWG\Property(property="service_date", type="string"),
+ *     @SWG\Property(property="entry_date", type="string"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\LedgerStatement
+ *
+ * @property int $id
+ * @property int|null $producerid
+ * @property string|null $filename
+ * @property string|null $service_date
+ * @property string|null $entry_date
+ * @property int|null $patientid
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerStatement whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerStatement whereEntryDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerStatement whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerStatement whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerStatement whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerStatement wherePatientid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerStatement whereProducerid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LedgerStatement whereServiceDate($value)
+ * @mixin \Eloquent
+ */
 class LedgerStatement extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

@@ -12,16 +12,107 @@ class ContactsController extends BaseRestController
 {
     const DSS_REFERRED_PHYSICIAN = 2;
 
+    /**
+     * @SWG\Get(
+     *     path="/contacts",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Contact")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function index()
     {
         return parent::index();
     }
 
+    /**
+     * @SWG\Get(
+     *     path="/contacts/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Contact")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function show($id)
     {
         return parent::show($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts",
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="salutation", in="formData", type="string"),
+     *     @SWG\Parameter(name="lastname", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="firstname", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="middlename", in="formData", type="string"),
+     *     @SWG\Parameter(name="company", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="add1", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="add2", in="formData", type="string"),
+     *     @SWG\Parameter(name="city", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="state", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="zip", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="phone1", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="phone2", in="formData", type="string"),
+     *     @SWG\Parameter(name="fax", in="formData", type="string"),
+     *     @SWG\Parameter(name="email", in="formData", type="string", format="email", required=true),
+     *     @SWG\Parameter(name="national_provider_id", in="formData", type="string"),
+     *     @SWG\Parameter(name="qualifier", in="formData", type="string"),
+     *     @SWG\Parameter(name="qualifierid", in="formData", type="string"),
+     *     @SWG\Parameter(name="greeting", in="formData", type="string"),
+     *     @SWG\Parameter(name="sincerely", in="formData", type="string"),
+     *     @SWG\Parameter(name="contacttypeid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="preferredcontact", in="formData", type="string"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="referredby_info", in="formData", type="integer"),
+     *     @SWG\Parameter(name="referredby_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="merge_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="merge_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="corporate", in="formData", type="integer"),
+     *     @SWG\Parameter(name="dea_number", in="formData", type="string"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Contact")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function store()
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -36,16 +127,75 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('Resource created', $resource);
     }
 
+    /**
+     * @SWG\Put(
+     *     path="/contacts/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="salutation", in="formData", type="string"),
+     *     @SWG\Parameter(name="lastname", in="formData", type="string"),
+     *     @SWG\Parameter(name="firstname", in="formData", type="string"),
+     *     @SWG\Parameter(name="middlename", in="formData", type="string"),
+     *     @SWG\Parameter(name="company", in="formData", type="string"),
+     *     @SWG\Parameter(name="add1", in="formData", type="string"),
+     *     @SWG\Parameter(name="add2", in="formData", type="string"),
+     *     @SWG\Parameter(name="city", in="formData", type="string"),
+     *     @SWG\Parameter(name="state", in="formData", type="string"),
+     *     @SWG\Parameter(name="zip", in="formData", type="string"),
+     *     @SWG\Parameter(name="phone1", in="formData", type="string"),
+     *     @SWG\Parameter(name="phone2", in="formData", type="string"),
+     *     @SWG\Parameter(name="fax", in="formData", type="string"),
+     *     @SWG\Parameter(name="email", in="formData", type="string", format="email"),
+     *     @SWG\Parameter(name="national_provider_id", in="formData", type="string"),
+     *     @SWG\Parameter(name="qualifier", in="formData", type="string"),
+     *     @SWG\Parameter(name="qualifierid", in="formData", type="string"),
+     *     @SWG\Parameter(name="greeting", in="formData", type="string"),
+     *     @SWG\Parameter(name="sincerely", in="formData", type="string"),
+     *     @SWG\Parameter(name="contacttypeid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="preferredcontact", in="formData", type="string"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="referredby_info", in="formData", type="integer"),
+     *     @SWG\Parameter(name="referredby_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="merge_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="merge_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="corporate", in="formData", type="integer"),
+     *     @SWG\Parameter(name="dea_number", in="formData", type="string"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function update($id)
     {
         return parent::update($id);
     }
 
+    /**
+     * @SWG\Delete(
+     *     path="/contacts/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
     public function destroy($id)
     {
         return parent::destroy($id);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/find",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function find(Contacts $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -72,6 +222,16 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/list-contacts-and-companies",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resources
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getListContactsAndCompanies(Contacts $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -108,6 +268,16 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $response);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/with-contact-type",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contact $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getWithContactType(Contact $resource, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
@@ -116,6 +286,16 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/insurance",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getInsuranceContacts(Contacts $resource, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -124,6 +304,17 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/referred-by",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resource
+     * @param Patients $patients
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getReferredByContacts(Contacts $resource, Patients $patients, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
@@ -211,6 +402,16 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $response);
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/contacts/corporate",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param Contacts $resource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getCorporateContacts(Contacts $resource, Request $request)
     {
         $page = $request->input('page', 0);

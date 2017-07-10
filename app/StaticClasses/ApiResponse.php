@@ -57,10 +57,10 @@ class ApiResponse
     /**
      * Json response to invalid request.
      *
-     * @param  string  $message
-     * @param  integer $code
-     * @param  array   $data
-     * @param  boolean $create_errors_array
+     * @param string $message
+     * @param int $code
+     * @param array|null $data
+     * @param bool $createErrorsArray
      * @param array $headers
      * @param int $options
      * @return JsonResponse
@@ -69,13 +69,18 @@ class ApiResponse
         $message = '',
         $code = 404,
         $data = null,
-        $create_errors_array = true,
+        $createErrorsArray = true,
         $headers = [],
         $options = 0
     ) {
-        if (!is_array($data) && $create_errors_array) {
+        if (!is_array($data) && $createErrorsArray) {
+            $dataArray = [];
+            if (is_array($data) && isset($data['errors'])) {
+                $dataArray = $data['errors'];
+            }
             $data = [
-                'errors' => [$data ? $data : $message]
+                'errorMessage' => $message,
+                'errors' => $dataArray,
             ];
         }
 
@@ -143,6 +148,8 @@ class ApiResponse
     }
 
     /**
+     * @todo: this function should be checked for argument type-safety
+     *
      * Transform resource with fractal transformers if possible.
      *
      * @param  mixed $data

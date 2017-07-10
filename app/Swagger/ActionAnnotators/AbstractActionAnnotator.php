@@ -19,7 +19,7 @@ abstract class AbstractActionAnnotator
 ANNOTATION;
         $parameters = $this->getParameters($annotationData);
         if ($parameters) {
-            $annotation .= $this->getParameters($annotationData) . "\n";
+            $annotation .= $parameters . "\n";
         }
         $annotation .= $this->getResponses($annotationData->shortModelClassName);
         $annotation .= <<<ANNOTATION

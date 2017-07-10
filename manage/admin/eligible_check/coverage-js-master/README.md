@@ -1,10 +1,10 @@
-### Coverage.js by [Eligible] (https://www.eligibleapi.com) 
+### Coverage.js by [Eligible] (https://www.eligible.com) 
 
 Coverage.js is a javascript library that aims to let you integrate a traditional Healthcare Eligibility and Benefit report with access to over 1000+ insurance companies into your system in less than an hour.   
 
 ### How it works
 
-The Usage pattern is pretty simple, by using your language of choice, on your web application, you create a [Coverage] (https://eligibleapi.com/rest#retrieve-coverage) request to our endpoint, so your server side application acts like a proxy doing the request with your secret API key (you don't want to expose the secret API key on the website).
+The Usage pattern is pretty simple, by using your language of choice, on your web application, you create a [Coverage] (https://eligible.com/rest#retrieve-coverage) request to our endpoint, so your server side application acts like a proxy doing the request with your secret API key (you don't want to expose the secret API key on the website).
 
 Once you get the json response, it can be included on your webpage within a hidden div, and from there you can include our js library to do a quick parsing and show your user a classic Healthcare Eligibility & Benefit report.
 

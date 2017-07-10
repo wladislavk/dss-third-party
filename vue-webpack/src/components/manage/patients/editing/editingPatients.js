@@ -965,7 +965,7 @@ export default {
       return this.$http.post(process.env.API_PATH + 'patients/referrers', data)
     },
     getEligiblePayerSource: function() {
-      return this.$http.get('https://eligibleapi.com/resources/payers/claims/medical.json')
+      return this.$http.get('https://eligible.com/resources/payers/claims/medical.json')
     },
     getStaticEligiblePayerSource: function() {
       return this.$http.get(process.env.API_PATH + 'eligible/payers')

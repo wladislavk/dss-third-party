@@ -30959,7 +30959,7 @@ function webHookEvents () {
                         "signature_required": true,
                         "average_enrollment_process_time": null,
                         "blue_ink_required": false,
-                        "message": "To enroll for Medicare Part B claims you must complete this online using the following link:  https:\/\/connect.edisseb.com \n \nIf you do not have a login, please choose Register Now. \n\u2022 Choose: I am a Provider and complete the registration. \n \nInformation you may need for doing your claims enrollment. \n\u2022 Clearinghouse = Eligible, Inc.\n\u2022 Trading Partner ID\/Submitter ID = CH00433 \n\u2022 Contact = Enrollments Department \n\u2022 Phone # = 888-909-3055, Option 1 \n\u2022 Email = support@eligibleapi.com \n \nIf you are having problems filling out the form \nplease contact the EDISS help desk at 1-800-967-7902. ",
+                        "message": "To enroll for Medicare Part B claims you must complete this online using the following link:  https:\/\/connect.edisseb.com \n \nIf you do not have a login, please choose Register Now. \n\u2022 Choose: I am a Provider and complete the registration. \n \nInformation you may need for doing your claims enrollment. \n\u2022 Clearinghouse = Eligible, Inc.\n\u2022 Trading Partner ID\/Submitter ID = CH00433 \n\u2022 Contact = Enrollments Department \n\u2022 Phone # = 888-909-3055, Option 1 \n\u2022 Email = support@eligible.com \n \nIf you are having problems filling out the form \nplease contact the EDISS help desk at 1-800-967-7902. ",
                         "enrollment_mandatory_fields": [
                             "npi"
                         ],
@@ -31399,7 +31399,7 @@ function webHookEvents () {
                         "signature_required": true,
                         "average_enrollment_process_time": null,
                         "blue_ink_required": false,
-                        "message": "\n\"Submitter and\/or Reciever information                                                                                                                                                Name: Eligble, inc.                                                     Operating as a: Clearinghouse Submitter ID:CHA075108  Street: 1842 Union St City\/State\/Zip: San Francisco CA 94123 Contact Name: Katelyn Gleason Phone Number: 4152371679 Email Address: K@eligibleapi.com Verify email address: k@eligibleapi.com \nhttp:\/\/apps.ngsmedicare.com\/applications\/ediproviderauthform.aspx?CatID=4&RegID=0\"\nhttp:\/\/apps.ngsmedicare.com\/applications\/ediproviderauthform.aspx?CatID=4&RegID=0",
+                        "message": "\n\"Submitter and\/or Reciever information                                                                                                                                                Name: Eligble, inc.                                                     Operating as a: Clearinghouse Submitter ID:CHA075108  Street: 1842 Union St City\/State\/Zip: San Francisco CA 94123 Contact Name: Katelyn Gleason Phone Number: 4152371679 Email Address: K@eligible.com Verify email address: k@eligible.com \nhttp:\/\/apps.ngsmedicare.com\/applications\/ediproviderauthform.aspx?CatID=4&RegID=0\"\nhttp:\/\/apps.ngsmedicare.com\/applications\/ediproviderauthform.aspx?CatID=4&RegID=0",
                         "enrollment_mandatory_fields": [
                             "npi"
                         ],

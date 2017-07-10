@@ -938,7 +938,7 @@ module.exports = {
             return this.$http.post(window.config.API_PATH + 'patients/referrers', data);
         },
         getEligiblePayerSource: function() {
-            return this.$http.get('https://eligibleapi.com/resources/payers/claims/medical.json');
+            return this.$http.get('https://eligible.com/resources/payers/claims/medical.json');
         },
         getStaticEligiblePayerSource: function() {
             return this.$http.get(window.config.API_PATH + 'eligible/payers');

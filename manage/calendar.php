@@ -43,7 +43,7 @@ if(!empty($_GET['msg'])) {
 
 <style type="text/css" media="screen">
 <?php foreach ($schedulerAppointmentTypes as $appt_t_r) {
-	$str = str_replace(['&amp;_', '.', '/', ' '], '_', strtolower($appt_t_r['name']));
+	$str = preg_replace('/[^a-z0-9]/i', '', strtolower($appt_t_r['name']));
 	?>
 	.dhx_cal_event.event_<?php print $str; ?> div{ 
 		background-color: #<?php print $appt_t_r['color']; ?> !important; 
@@ -109,8 +109,10 @@ function initCal() {
 	};
 
 	scheduler.templates.event_class=function(start, end, event){
-		if(event.category) // if event has subject property then special class should be assigned
-		return "event_"+event.category.replace('&_','');
+		if (event.category) { // if event has subject property then special class should be assigned
+            return "event_" + event.category.replace(/[^a-z0-9]+/ig, '');
+        }
+
 		return "event_general"; // default return
 	};
 

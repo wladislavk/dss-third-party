@@ -24,8 +24,8 @@ $(document).ready(function() {
     clickedBut = $(this).attr("name");  
   }); 
   setup_autocomplete('referredby_name', 'referredby_hints', 'referred_by', 'referred_source', 'list_referrers.php', 'referrer', pid);
-  setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', 'ins_payer');
-  setup_autocomplete_local('s_m_ins_payer_name', 's_m_ins_payer_hints', 's_m_eligible_payer', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', 's_m_ins_payer');
+  setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligible.com/resources/payers/claims/medical.json', 'ins_payer');
+  setup_autocomplete_local('s_m_ins_payer_name', 's_m_ins_payer_hints', 's_m_eligible_payer', '', 'https://eligible.com/resources/payers/claims/medical.json', 's_m_ins_payer');
   setup_autocomplete('docpcp_name', 'docpcp_hints', 'docpcp', '', 'list_contacts.php');
   setup_autocomplete('docent_name', 'docent_hints', 'docent', '', 'list_contacts.php');
   setup_autocomplete('docsleep_name', 'docsleep_hints', 'docsleep', '', 'list_contacts.php', 'contact', pid);

@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  	setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligibleapi.com/resources/payers/claims/medical.json', null, null, null, true);
+  	setup_autocomplete_local('ins_payer_name', 'ins_payer_hints', 'p_m_eligible_payer', '', 'https://eligible.com/resources/payers/claims/medical.json', null, null, null, true);
 });
 
 $(".date_field").keydown(function(e){

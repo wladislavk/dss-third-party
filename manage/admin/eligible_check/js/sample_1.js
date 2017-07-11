@@ -137,7 +137,7 @@ var coverageRequest = function (params) {
 // If there is an error with the ajax api request, show it on an alert box
 var errorCallback = function (xhr, textStatus, errorThrown) {
     enable_submit();
-  // Check for NPI on errorThrown, since it may be an enrollment issue (https://eligibleapi.com/rest#enrollments)
+  // Check for NPI on errorThrown, since it may be an enrollment issue (https://eligible.com/rest#enrollments)
   if (typeof(errorThrown) === "String" && errorThrown.indexOf("NPI")) {
     alert("You should enroll your NPI though our website");
   } else if (typeof(errorThrown) === "String" && errorThrown.indexOf("Payer id submitted is not supported")) {

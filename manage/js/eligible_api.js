@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	setup_autocomplete_local('payer_name', 'payer_hints', 'payer_id', '', 'https://eligibleapi.com/resources/payers/eligibility.json', 'eligibility');
+	setup_autocomplete_local('payer_name', 'payer_hints', 'payer_id', '', 'https://eligible.com/resources/payers/eligibility.json', 'eligibility');
 });
 
 $('#api_submit').click( function(){

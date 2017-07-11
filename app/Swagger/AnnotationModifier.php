@@ -76,10 +76,10 @@ class AnnotationModifier
     private function getIndentation($fileContents, AnnotationData $annotation)
     {
         $operator = preg_quote($annotation->operator);
-        $indentationRegexp = "/\\n( *?)$operator/m";
+        $indentationRegexp = "/\\n(?P<indent> *?)$operator/m";
         preg_match($indentationRegexp, $fileContents, $indentationMatches);
-        if (isset($indentationMatches[1])) {
-            return strlen($indentationMatches[1]);
+        if (isset($indentationMatches['indent'])) {
+            return strlen($indentationMatches['indent']);
         }
         return 0;
     }

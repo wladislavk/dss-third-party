@@ -27,11 +27,20 @@ class GenerateSwaggerCommand extends Command
     {
         $httpDir = $this->option('http-dir');
         $modelDir = $this->option('model-dir');
+        $this->runService($httpDir, $modelDir);
+        $this->info('Swagger documentation generated');
+    }
+
+    /**
+     * @param string $httpDir
+     * @param string $modelDir
+     */
+    private function runService($httpDir, $modelDir)
+    {
         if (!$httpDir || !$modelDir) {
             $this->generator->generateSwagger();
-        } else {
-            $this->generator->generateSwagger($httpDir, $modelDir);
+            return;
         }
-        $this->info('Swagger documentation generated');
+        $this->generator->generateSwagger($httpDir, $modelDir);
     }
 }

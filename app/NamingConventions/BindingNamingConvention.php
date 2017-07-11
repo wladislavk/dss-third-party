@@ -32,6 +32,10 @@ class BindingNamingConvention
         }
     }
 
+    /**
+     * @param string $className
+     * @throws NamingConventionException
+     */
     public function setModel($className)
     {
         $this->model = new $className();

@@ -89,7 +89,7 @@ ANNOTATION;
 
     /**
      * @param AnnotationData $annotationData
-     * @param array $matches
+     * @param string[] $matches
      */
     private function addRule(AnnotationData $annotationData, array $matches)
     {

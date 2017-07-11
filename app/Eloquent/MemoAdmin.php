@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\MemoAdmin whereOffDate($value)
  * @mixin \Eloquent
  */
-class MemoAdmin extends Model
+class MemoAdmin extends AbstractModel
 {
     /**
      * The table associated with the model.

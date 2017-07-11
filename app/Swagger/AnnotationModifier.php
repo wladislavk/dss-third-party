@@ -35,13 +35,25 @@ class AnnotationModifier
             );
             return $fileContents;
         }
-        $swaggerAnnotationsRegexp = '/\s+?\*\s@SWG\\\\[A-Za-z]+?\(.*?\)\n\s+?(?:$|\*\s*?(?=\n))/sm';
+        $swaggerAnnotationsRegexp = $this->formSwaggerAnnotationsRegexp();
         $newDocBlock = preg_replace($swaggerAnnotationsRegexp, '', $existingDocBlock);
         $replacement = $this->getReplacementAnnotation($textByLines, $padding);
         $newDocBlock = $replacement . $newDocBlock;
         $fileContents = str_replace($existingDocBlock, $newDocBlock, $fileContents);
         $fileContents = str_replace('**/', '*/', $fileContents);
         return $fileContents;
+    }
+
+    /**
+     * Will match the following string:
+     *     * @SWG\Foo(something goes here)
+     *     either end of doc block or empty doc block line
+     *
+     * @return string
+     */
+    private function formSwaggerAnnotationsRegexp()
+    {
+        return '/\s+?\*\s@SWG\\\\[A-Za-z]+?\(.*?\)\n\s+?(?:$|\*\s*?(?=\n))/sm';
     }
 
     /**

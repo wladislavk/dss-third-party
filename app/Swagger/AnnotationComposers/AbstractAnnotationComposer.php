@@ -75,8 +75,7 @@ abstract class AbstractAnnotationComposer
      */
     protected function getShortModelClass($modelClassName)
     {
-        $explodedClassName = explode('\\', $modelClassName);
-        $shortClassName = $explodedClassName[count($explodedClassName) - 1];
-        return $shortClassName;
+        $reflection = new \ReflectionClass($modelClassName);
+        return $reflection->getShortName();
     }
 }

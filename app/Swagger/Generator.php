@@ -2,9 +2,12 @@
 
 namespace DentalSleepSolutions\Swagger;
 
+use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Swagger\Exceptions\SwaggerGeneratorException;
 use DentalSleepSolutions\Swagger\AnnotationComposers\ControllerComposer;
 use DentalSleepSolutions\Swagger\AnnotationComposers\ModelComposer;
+use DentalSleepSolutions\Swagger\StaticClasses\ClassMetadataRetriever;
+use DentalSleepSolutions\Swagger\StaticClasses\ParentRetriever;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 use DentalSleepSolutions\Swagger\Wrappers\FilesystemWrapper;
 
@@ -13,7 +16,7 @@ class Generator
     const HTTP_DIR = __DIR__ . '/../Http';
     const CONTROLLER_DIR = '/Controllers';
     const MODEL_DIR = __DIR__ . '/../Eloquent';
-    const BASE_CONTROLLER = 'BaseRestController';
+    const BASE_CONTROLLER = BaseRestController::class;
 
     /** @var AnnotationWriter */
     private $annotationWriter;
@@ -52,14 +55,13 @@ class Generator
     {
         $models = $this->getModels($modelDir);
         $annotationGroups = [];
-        foreach ($models as $modelFilename) {
+        foreach ($models as $modelClassName => $modelFilename) {
             $annotationParams = new AnnotationParams();
-            $annotationParams->modelClassName = $this->getClassName($modelFilename);
+            $annotationParams->modelClassName = $modelClassName;
             $annotationGroups[$modelFilename] = $this->modelComposer->composeAnnotation($annotationParams);
         }
         $restControllers = $this->getRestControllers($httpDir);
-        foreach ($restControllers as $controllerFilename) {
-            $controllerClassName = $this->getClassName($controllerFilename);
+        foreach ($restControllers as $controllerClassName => $controllerFilename) {
             $annotationParams = new AnnotationParams();
             $annotationParams->controllerClassName = $controllerClassName;
             $annotationParams->requestClassName = $this->classRetriever
@@ -82,9 +84,10 @@ class Generator
         $restControllers = [];
         $controllerFiles = $this->filesystemWrapper->allFiles($httpDir . self::CONTROLLER_DIR);
         foreach ($controllerFiles as $filename) {
-            $contents = $this->filesystemWrapper->fileGetContents($filename);
-            if (strstr($contents, ' extends ' . self::BASE_CONTROLLER)) {
-                $restControllers[] = $filename;
+            $className = $this->getClassName($filename);
+            $parents = ParentRetriever::getParents($className);
+            if (in_array(self::BASE_CONTROLLER, $parents)) {
+                $restControllers[$className] = $filename;
             }
         }
         return $restControllers;
@@ -99,8 +102,10 @@ class Generator
         $modelFiles = $this->filesystemWrapper->allFiles($modelDir);
         $goodFiles = [];
         foreach ($modelFiles as $modelFile) {
-            if (!strstr($modelFile, 'Abstract')) {
-                $goodFiles[] = $modelFile;
+            $className = $this->getClassName($modelFile);
+            $reflection = new \ReflectionClass($className);
+            if (!$reflection->isAbstract()) {
+                $goodFiles[$className] = $modelFile;
             }
         }
         return $goodFiles;
@@ -114,11 +119,10 @@ class Generator
     private function getClassName($filename)
     {
         $contents = $this->filesystemWrapper->fileGetContents($filename);
-        preg_match('/namespace\s(.+?);/', $contents, $namespaceMatches);
-        preg_match('/class\s(.+?)[\s\n]/', $contents, $classNameMatches);
-        if (!isset($namespaceMatches[1]) || !isset($classNameMatches[1])) {
+        $className = ClassMetadataRetriever::getClassNameFromFile($contents);
+        if (!$className) {
             throw new SwaggerGeneratorException('Namespace or class not found in ' . $filename);
         }
-        return $namespaceMatches[1] . '\\' . $classNameMatches[1];
+        return $className;
     }
 }

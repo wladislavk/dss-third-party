@@ -67,11 +67,12 @@ Add the following lines:
 127.0.0.1 loader.docker.localhost
 127.0.0.1 api.docker.localhost
 127.0.0.1 vue.docker.localhost
+127.0.0.1 swagger.docker.localhost
 ```
 On Mac/Linux use command below.  
 
 ```bash
-sudo echo 127.0.0.1 loader.docker.localhost api.docker.localhost >> /etc/hosts
+sudo echo 127.0.0.1 loader.docker.localhost api.docker.localhost swagger.docker.localhost >> /etc/hosts
 ```
 
 ### Start/Stop Containers

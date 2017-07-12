@@ -23,13 +23,66 @@ use DentalSleepSolutions\Eloquent\Dental\User;
 class ApiEnrollmentsController extends ApiBaseController
 {
     /**
+     * @var EnrollmentInterface $enrollments
+     */
+    protected $enrollments;
+
+    /**
+     * @var EnrollmentPayersInterface $payers
+     */
+    protected $payers;
+
+    /**
+     * @var UserSignaturesInterface $signatures
+     */
+    protected $signatures;
+
+    /**
+     * @var array $enrollmentValues
+     */
+    protected $enrollmentValues = [];
+
+    /**
+     * @var boolean
+     */
+    protected $signatureRequired = false;
+
+    /**
+     * @var boolean
+     */
+    protected $blueInkSignatureRequired = false;
+
+    /** @var int */
+    protected $transactionType = 0;
+
+    /**
+     * @param JWTAuth $auth
+     * @param User $userModel
+     * @param EnrollmentInterface $enrollments
+     * @param EnrollmentPayersInterface $payers
+     * @param UserSignaturesInterface $signatures
+     */
+    public function __construct(
+        JWTAuth $auth,
+        User $userModel,
+        EnrollmentInterface $enrollments,
+        EnrollmentPayersInterface $payers,
+        UserSignaturesInterface $signatures
+    ) {
+        parent::__construct($auth, $userModel);
+        $this->enrollments = $enrollments;
+        $this->payers = $payers;
+        $this->signatures = $signatures;
+    }
+
+    /**
      * Enrollments list
      *
      * @param Request $request
-     * @param bool $userId
+     * @param int $userId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function listEnrollments(Request $request, $userId = false)
+    public function listEnrollments(Request $request, $userId = 0)
     {
         $result = Enrollment::getList(
             $userId,
@@ -55,30 +108,30 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     public function store(Create $request, InvoiceHelper $invoiceHelper)
     {
-        $user_id = $request->input('user_id');
-        $provider_id = $request->input('provider_id');
+        $userId = $request->input('user_id');
+        $providerId = $request->input('provider_id');
 
-        $payer_id = explode('-', $request->input('payer_id'));
+        $payerId = explode('-', $request->input('payer_id'));
 
         $signature = $request->input('signature', '');
         if ($signature == '') {
-            $user_signature = UserSignature::formUser($provider_id);
-            $signature = $user_signature->signature_json;
+            $userSignature = UserSignature::formUser($providerId);
+            $signature = $userSignature->signature_json;
         }
 
-        $transaction_type = TransactionType::where('id', $request->input('transaction_type_id'))
+        $transactionType = TransactionType::where('id', $request->input('transaction_type_id'))
             ->where('status', 1)->first();
 
-        if (count($payer_id) < 2 || !$transaction_type) {
+        if (count($payerId) < 2 || !$transactionType) {
             return ApiResponse::responseError("Error creating enrollment.", 422);
         }
 
-        $payer_name = $payer_id[1];
-        $payer_id = $payer_id[0];
+        $payerName = $payerId[1];
+        $payerId = $payerId[0];
 
         $data['enrollment_npi'] = [
-            "payer_id" => $payer_id,
-            "endpoint" => $transaction_type->endpoint_type,
+            "payer_id" => $payerId,
+            "endpoint" => $transactionType->endpoint_type,
             "facility_name" => $request->input('facility_name'),
             "provider_name" => $request->input('provider_name'),
             "npi" => $request->input('npi'),
@@ -98,7 +151,7 @@ class ApiEnrollmentsController extends ApiBaseController
         ];
 
         $client = new Client;
-        $client->setApiKeyFromUser($user_id);
+        $client->setApiKeyFromUser($userId);
         $response = $client->createEnrollment($data);
 
         if ($response->isSuccess()) {
@@ -108,16 +161,16 @@ class ApiEnrollmentsController extends ApiBaseController
             $result = $response->getContent();
             $ref_id = $response->getObject()->enrollment_npi->id;
 
-            $enrollment_id = Enrollment::add($inputs, $user_id, $payer_id, $payer_name, $ref_id, $result, $ip);
-            $enrollment = $invoiceHelper->addEnrollment(1, $user_id, $enrollment_id);
+            $enrollmentId = Enrollment::add($inputs, $userId, $payerId, $payerName, $ref_id, $result, $ip);
+            $enrollment = $invoiceHelper->addEnrollment(1, $userId, $enrollmentId);
             $enrollment->save();
 
             if ($request->input('signature', '') != '') {
-                $signature_id = UserSignature::addUpdate($provider_id, $signature, $ip);
+                $signatureId = UserSignature::addUpdate($providerId, $signature, $ip);
 
                 $img = \sigJsonToImage($request->input('signature', ''));
 
-                $file = "signature_" . $provider_id . "_" . $signature_id . ".png";
+                $file = "signature_" . $providerId . "_" . $signatureId . ".png";
                 $path = env('SHARED_PATH', '').'/q_file/'.$file;
 
                 if (file_exists($path)) {
@@ -156,18 +209,18 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     public function uploadOriginalSignaturePdf(OriginalSignature $request)
     {
-        $user_id = $request->input('user_id');
+        $userId = $request->input('user_id');
         $npi = $request->input('npi');
-        $reference_id = $request->input('reference_id');
+        $referenceId = $request->input('reference_id');
 
         $data = [
             'file' => $request->file('original_signature')->openFile(),
         ];
 
-        $enrollment = Enrollment::getWhereReference($reference_id);
+        $enrollment = Enrollment::getWhereReference($referenceId);
 
-        $client = new Client;
-        $client->setApiKeyFromUser($user_id);
+        $client = new Client();
+        $client->setApiKeyFromUser($userId);
 
         if ($enrollment->signed_download_url) {
             $response = $client->updateOriginalSignaturePdf($data, $npi);
@@ -177,10 +230,10 @@ class ApiEnrollmentsController extends ApiBaseController
 
         if ($response->isSuccess()) {
             $download_url = $response->getObject()->original_signature_pdf->download_url;
-            Enrollment::setStatus($reference_id, Enrollment::DSS_ENROLLMENT_PDF_SENT);
-            Enrollment::setSignedDownloadUrl($reference_id, $download_url);
+            Enrollment::setStatus($referenceId, Enrollment::DSS_ENROLLMENT_PDF_SENT);
+            Enrollment::setSignedDownloadUrl($referenceId, $download_url);
 
-            (new EnrollmentsHandler)->updateChanges($reference_id);
+            (new EnrollmentsHandler())->updateChanges($referenceId);
         }
 
         return ApiResponse::response(
@@ -191,66 +244,17 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
-     * @var EnrollmentInterface $enrollments
+     * @return array|\Illuminate\Http\JsonResponse
      */
-    protected $enrollments;
-
-    /**
-     * @var EnrollmentPayersInterface $payers
-     */
-    protected $payers;
-
-    /**
-     * @var UserSignaturesInterface $signatures
-     */
-    protected $signatures;
-
-    /**
-     * @var array $enrollmentValues
-     */
-
-    protected $enrollmentValues = [];
-
-    /**
-     * @var boolean
-     */
-    protected $signatureRequired = false;
-
-    /**
-     * @var boolean
-     */
-    protected $blueInkSignatureRequired = false;
-    protected $transcationType = 0;
-
-    /**
-     * @param JWTAuth $auth
-     * @param User $userModel
-     * @param EnrollmentInterface $enrollments
-     * @param EnrollmentPayersInterface $payers
-     * @param UserSignaturesInterface $signatures
-     */
-    public function __construct(
-        JWTAuth $auth,
-        User $userModel,
-        EnrollmentInterface $enrollments,
-        EnrollmentPayersInterface $payers,
-        UserSignaturesInterface $signatures
-    ) {
-        parent::__construct($auth, $userModel);
-        $this->enrollments = $enrollments;
-        $this->payers = $payers;
-        $this->signatures = $signatures;
-    }
-
     public function syncEnrollmentPayers()
     {
         try {
             $results = $this->payers->syncEnrollmentPayersFromProvider(null);
             $response = ['data' => $results, 'status' => true, 'message' => ''];
-            return response()->json($response, 200);
         } catch (Exception $ex) {
-            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+            return $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
         }
+        return response()->json($response, 200);
     }
 
     /**
@@ -293,19 +297,19 @@ class ApiEnrollmentsController extends ApiBaseController
      *
      * @param ApiEligibleEnrollmentRequest $request
      * @param integer $enrollmentId
-     * @return \Illuminate\Http\JsonResponse
+     * @return array|\Illuminate\Http\JsonResponse
      */
     public function updateEnrollment(ApiEligibleEnrollmentRequest $request, $enrollmentId = 0)
     {
-        $response = [];
         try {
             $enrollmentParams = $this->setupEnrollmentArrayFromFormInput($request);
             $enrollment = $this->enrollments->updateEnrollment($enrollmentParams, $enrollmentId);
-            return response()->json($enrollment, 200);
         } catch (Exception $ex) {
-            $this->createErrorResponse('An error occured updating the Enrollment.', 404);
+            return $this->createErrorResponse('An error occured updating the Enrollment.', 404);
         }
+        return response()->json($enrollment, 200);
     }
+
     //Todo - Add relevant params to the Swagger Items.
     /**
      * @SWG\Get(
@@ -313,16 +317,16 @@ class ApiEnrollmentsController extends ApiBaseController
      * )
      *
      * @param integer $enrollmentId
-     * @return \Illuminate\Http\JsonResponse
+     * @return array|\Illuminate\Http\JsonResponse
      */
     public function retrieveEnrollment($enrollmentId = 0)
     {
         try {
             $response = $this->enrollments->retrieveEnrollment($enrollmentId);
-            return response()->json($response, 200);
         } catch (Exception $ex) {
-            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+            return $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
         }
+        return response()->json($response, 200);
     }
 
     /**
@@ -331,11 +335,10 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     private function setupEnrollmentArrayFromFormInput(ApiEligibleEnrollmentRequest $request)
     {
-        $signatureCordinates = [];
-        $this->setTransationTypeValue($request);
+        $this->setTransactionTypeValue($request);
         $elligibleEnrollment['payer_id'] = $request->get('payer_id');
         $elligibleEnrollment['transaction_type_id'] = $request->get('transaction_type_id');
-        $elligibleEnrollment['transaction_type'] = $this->transcationType;
+        $elligibleEnrollment['transaction_type'] = $this->transactionType;
         $elligibleEnrollment['facility_name'] = $request->get('facility_name');
         $elligibleEnrollment['provider_name'] = $request->get('provider_name');
         $elligibleEnrollment['tax_id'] = $request->get('tax_id');
@@ -371,7 +374,7 @@ class ApiEnrollmentsController extends ApiBaseController
         $this->enrollmentValues['user_id'] = $request->get('user_id');
         $this->enrollmentValues['payer_id'] = $request->get('payer_id');
         $this->enrollmentValues['transaction_type_id'] = $request->get('transaction_type_id');
-        $this->enrollmentValues['transaction_type'] = $this->transcationType;
+        $this->enrollmentValues['transaction_type'] = $this->transactionType;
         $this->enrollmentValues['facility_name'] = $request->get('facility_name');
         $this->enrollmentValues['provider_name'] = $request->get('provider_name');
         $this->enrollmentValues['tax_id'] = $request->get('tax_id');
@@ -384,10 +387,7 @@ class ApiEnrollmentsController extends ApiBaseController
         $this->enrollmentValues['contact_number'] = $request->get('contact_number');
         $this->enrollmentValues['email'] = $request->get('email');
         $this->enrollmentValues['payer_name'] = rtrim(
-            implode(
-                ',',
-                $enrollment->enrollment_npi->payer->names
-            ),
+            implode(',', $enrollment->enrollment_npi->payer->names),
             ','
         );
         $this->enrollmentValues['npi'] = $enrollment->enrollment_npi->npi;
@@ -424,29 +424,35 @@ class ApiEnrollmentsController extends ApiBaseController
     {
         try {
             $response = $this->enrollments->getUserCompanyEligibleApiKey($userId);
-            return response()->json($response, 200);
         } catch (Exception $ex) {
-            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+            return $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
         }
+        return response()->json($response, 200);
     }
 
+    /**
+     * @param int $id
+     * @return array|\Illuminate\Http\JsonResponse
+     */
     public function getEnrollmentTransactionType($id = 0)
     {
         try {
             $response = $this->enrollments->getEnrollmentTransactionType($id);
-            return response()->json($response, 200);
         } catch (Exception $ex) {
-            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+            return $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
         }
+        return response()->json($response, 200);
     }
 
     /**
      * @param ApiEligibleEnrollmentRequest $request
      * @return void
      */
-    private function setTransationTypeValue(ApiEligibleEnrollmentRequest $request)
+    private function setTransactionTypeValue(ApiEligibleEnrollmentRequest $request)
     {
         $transactionTypes = $this->enrollments->getEnrollmentTransactionType($request->get('transaction_type_id'));
-        $this->transcationType = $transactionTypes->transaction_type;
+        if (isset($transactionTypes->transaction_type)) {
+            $this->transactionType = $transactionTypes->transaction_type;
+        }
     }
 }

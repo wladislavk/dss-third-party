@@ -27,7 +27,9 @@ abstract class Controller extends BaseController
         if (env('APP_ENV') != 'testing') {
             $this->currentUser = $this->getUserInfo($auth, $userModel);
             $this->auth        = $auth;
+            return;
         }
+        $this->currentUser = new User();
     }
 
     /**

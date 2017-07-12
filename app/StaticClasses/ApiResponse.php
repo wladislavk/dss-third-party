@@ -122,24 +122,24 @@ class ApiResponse
      * Json response depending on provided data. Used after processing Eligible API responses.
      *
      * @param  array  $data
-     * @param  string $message_success
-     * @param  string $message_error
+     * @param  string $messageSuccess
+     * @param  string $messageError
      * @param array $headers
      * @param int $options
      * @return \Illuminate\Http\JsonResponse
      */
     public static function response(
         $data,
-        $message_success,
-        $message_error,
+        $messageSuccess,
+        $messageError,
         $headers = [],
         $options = 0
     ) {
         if ($data['success']) {
-            return self::responseOk($message_success, $data['data'], 200, $headers, $options);
+            return self::responseOk($messageSuccess, $data['data'], 200, $headers, $options);
         }
 
-        return self::responseError($message_error, $data['status'], $data['data'], true, $headers, $options);
+        return self::responseError($messageError, $data['status'], $data['data'], true, $headers, $options);
     }
 
     /**

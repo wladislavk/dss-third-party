@@ -182,8 +182,9 @@ class CreateDentalExternalDataTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dental_external_patients');
         Schema::dropIfExists('dental_external_companies');
+        Schema::dropIfExists('dental_external_users');
+        Schema::dropIfExists('dental_external_patients');
         Schema::dropIfExists('dental_external_company_user');
     }
 }

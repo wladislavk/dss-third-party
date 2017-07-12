@@ -26,7 +26,7 @@ class LetterUpdaterFactory
      */
     public function getLetterUpdater($type)
     {
-        if (!in_array($type, self::TYPES)) {
+        if (!array_key_exists($type, self::TYPES)) {
             throw new GeneralException("Type $type is not valid");
         }
         $class = self::TYPES[$type];

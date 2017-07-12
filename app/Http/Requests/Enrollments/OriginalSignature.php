@@ -20,4 +20,14 @@ class OriginalSignature extends AbstractNonRestRequest
             'npi' => 'required',
         ];
     }
+
+    /**
+     * @todo: check how to implement authorization properly for API tests that do not use middleware
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
 }

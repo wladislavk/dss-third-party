@@ -1,6 +1,17 @@
 default:
     suites:
-        default: ~
-#            paths:    [ %paths.base%/src/WordpressIntegrationBundle/Tests/Behat/Features ]
-#            contexts:
-#                - WordpressIntegrationBundle\Tests\Behat\Contexts\AllPagesContext
+        default:
+            paths:
+                - "%paths.base%/Features"
+            contexts:
+                - Contexts\Main
+                - Contexts\Database
+                - Contexts\Google
+    extensions:
+        Behat\MinkExtension:
+            base_url: "http://example.com"
+            sessions:
+                default:
+                    selenium2:
+                        browser: phantomjs
+                        wd_host: "http://localhost:8643/wd/hub"

@@ -31,8 +31,12 @@ abstract class Controller extends BaseController
     ) {
         $this->config = $config;
 
-        /** @todo: generate tokens with $auth->fromUser($userModel) */
+        /**
+         * @todo Generate tokens with $auth->fromUser($userModel)
+         * @todo Select user/admin data to inject in tests
+         */
         if ($this->config->get('app.env') === 'testing') {
+            $this->currentUser = new User();
             return;
         }
 

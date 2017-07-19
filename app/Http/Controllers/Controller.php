@@ -12,10 +12,10 @@ abstract class Controller extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
 
-    /** @var User */
+    /** @var User|null */
     protected $currentAdmin;
 
-    /** @var User */
+    /** @var User|null */
     protected $currentUser;
 
     /** @var Config */

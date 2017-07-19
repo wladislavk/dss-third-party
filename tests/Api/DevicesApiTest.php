@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Dental\Device;
+use DentalSleepSolutions\Eloquent\Models\Dental\Device;
 
 class DevicesApiTest extends ApiTestCase
 {

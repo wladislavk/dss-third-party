@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use \DentalSleepSolutions\Interfaces\MemoAdminInterface;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;

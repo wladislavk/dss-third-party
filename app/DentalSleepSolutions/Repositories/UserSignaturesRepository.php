@@ -1,7 +1,8 @@
-<?php namespace DentalSleepSolutions\Repositories;
+<?php
 
+namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Eloquent\UserSignature;
+use DentalSleepSolutions\Eloquent\Models\UserSignature;
 use DentalSleepSolutions\Interfaces\UserSignaturesInterface;
 
 class UserSignaturesRepository extends BaseRepository implements UserSignaturesInterface

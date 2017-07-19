@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice;
-use DentalSleepSolutions\Eloquent\Dental\PercaseInvoice;
-use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
+use DentalSleepSolutions\Eloquent\Models\Dental\EnrollmentInvoice;
+use DentalSleepSolutions\Eloquent\Models\Dental\PercaseInvoice;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use DentalSleepSolutions\Exceptions\InvoiceException;
 use DentalSleepSolutions\Helpers\InvoiceHelper;
 use DentalSleepSolutions\Wrappers\RequestWrapper;

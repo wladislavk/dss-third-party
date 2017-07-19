@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Eligible;
 
-use Exception;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eligible\Webhooks\ClaimsHandler;
 use DentalSleepSolutions\Eligible\Webhooks\PayersHandler;

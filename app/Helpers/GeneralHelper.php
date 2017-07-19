@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Wrappers\FileWrapper;
 

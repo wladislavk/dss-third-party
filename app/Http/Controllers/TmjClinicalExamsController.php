@@ -2,12 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Contracts\Repositories\Repository;
-use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
-use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
-use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
-
 class TmjClinicalExamsController extends BaseRestController
 {
     public function index()

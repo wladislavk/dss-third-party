@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Helpers\LetterUpdaters;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Structs\LetterData;
 
 // TODO: this class is never used, check if it's needed

@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Eligible\Webhooks;
 
 use Exception;
 use Illuminate\Http\Request;
-use DentalSleepSolutions\Eloquent\EligibleResponse;
+use DentalSleepSolutions\Eloquent\Models\EligibleResponse;
 
 trait ProcessingWebhooksTrait
 {

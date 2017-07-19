@@ -3,8 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
-use DentalSleepSolutions\Eloquent\Admin;
+use DentalSleepSolutions\Eloquent\Models\Admin;
 use Tests\TestCases\ApiTestCase;
 
 class AdminsApiTest extends ApiTestCase

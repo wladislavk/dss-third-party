@@ -2,13 +2,13 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Fax;
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Fax;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Factories\LetterUpdaterFactory;
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Helpers\LetterDeleter;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Helpers\LetterUpdaters\PatientUpdater;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Structs\LetterData;
@@ -43,6 +43,8 @@ class LetterDeleterTest extends UnitTestCase
 
     public function setUp()
     {
+        date_default_timezone_set('UTC');
+
         $this->letter = new Letter();
         $this->letter->letterid = 1;
         $this->letter->patientid = 5;

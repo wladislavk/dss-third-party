@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Helpers\LetterCreationEvaluator;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;

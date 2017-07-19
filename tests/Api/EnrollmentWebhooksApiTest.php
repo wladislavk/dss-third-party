@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use Tests\TestCases\ApiTestCase;
 
 class EnrollmentWebhooksApiTest extends ApiTestCase

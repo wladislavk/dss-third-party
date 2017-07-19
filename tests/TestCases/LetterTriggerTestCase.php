@@ -2,7 +2,7 @@
 
 namespace Tests\TestCases;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;
 use Mockery\MockInterface;

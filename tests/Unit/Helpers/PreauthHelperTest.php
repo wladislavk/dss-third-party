@@ -4,9 +4,9 @@ namespace Tests\Unit\Helpers;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\SummSleeplab;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;

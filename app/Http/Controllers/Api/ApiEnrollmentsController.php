@@ -7,18 +7,18 @@ use Illuminate\Http\Request;
 use DentalSleepSolutions\Eligible\Client;
 use DentalSleepSolutions\Helpers\InvoiceHelper;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Eloquent\UserSignature;
+use DentalSleepSolutions\Eloquent\Models\UserSignature;
 use DentalSleepSolutions\Http\Requests\Enrollments\Create;
 use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
 use DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature;
-use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
-use DentalSleepSolutions\Eloquent\Enrollments\TransactionType;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\TransactionType;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
 use DentalSleepSolutions\Interfaces\EnrollmentInterface;
 use DentalSleepSolutions\Interfaces\UserSignaturesInterface;
 use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 use Tymon\JWTAuth\JWTAuth;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
 class ApiEnrollmentsController extends ApiBaseController
 {

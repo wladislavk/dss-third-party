@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 
 // this class contains all functions from includes/similar.php
 class SimilarHelper

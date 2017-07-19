@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Repositories;
 
-use DentalSleepSolutions\Eloquent\Enrollments\PayersList;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\PayersList;
 use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 
 class EnrollmentPayersApiRepository extends BaseRepository implements EnrollmentPayersInterface

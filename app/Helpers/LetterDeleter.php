@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Dental\Fax;
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Fax;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Factories\LetterUpdaterFactory;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Structs\LetterData;

@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Eligible\Webhooks;
 
-use DentalSleepSolutions\Eloquent\EligibleResponse;
-use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
+use DentalSleepSolutions\Eloquent\Models\EligibleResponse;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 
 class EnrollmentsHandler
 {

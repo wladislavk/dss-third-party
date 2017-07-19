@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\ApiTestCase;
 
-use DentalSleepSolutions\Eloquent\Dental\LedgerStatement;
+use DentalSleepSolutions\Eloquent\Models\Dental\LedgerStatement;
 
 class LedgerStatementsApiTest extends ApiTestCase
 {

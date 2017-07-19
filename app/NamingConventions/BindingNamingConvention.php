@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\NamingConventions;
 
 use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Eloquent\AbstractModel;
+use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Http\Requests\Request;

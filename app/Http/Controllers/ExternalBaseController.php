@@ -8,8 +8,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
 use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
 use Illuminate\Http\Request;
-use DentalSleepSolutions\Eloquent\Dental\User;
-use DentalSleepSolutions\Eloquent\User as UserView;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\User as UserView;
 
 abstract class ExternalBaseController extends IlluminateBaseController
 {

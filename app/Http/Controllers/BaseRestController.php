@@ -8,7 +8,7 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\JWTAuth;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
 abstract class BaseRestController extends Controller
 {

@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Helpers\LetterTriggers;
 
-use DentalSleepSolutions\Eloquent\Dental\Contact;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;

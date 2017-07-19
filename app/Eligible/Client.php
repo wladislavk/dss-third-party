@@ -2,10 +2,9 @@
 
 namespace DentalSleepSolutions\Eligible;
 
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Exception\ClientException;
-use DentalSleepSolutions\Eloquent\Dental\UserCompany;
+use DentalSleepSolutions\Eloquent\Models\Dental\UserCompany;
 
 /**
  * This class encapsulates easy api for interacting with

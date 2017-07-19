@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Structs\LetterData;
 
 class LetterCreator

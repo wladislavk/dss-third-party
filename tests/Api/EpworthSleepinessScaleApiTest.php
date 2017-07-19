@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale;
+use DentalSleepSolutions\Eloquent\Models\Dental\EpworthSleepinessScale;
 use Tests\TestCases\ApiTestCase;
 
 class EpworthSleepinessScaleApiTest extends ApiTestCase

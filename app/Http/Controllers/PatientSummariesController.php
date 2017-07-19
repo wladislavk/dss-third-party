@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
 use DentalSleepSolutions\Contracts\Resources\PatientSummary;
+use DentalSleepSolutions\Http\Requests\PatientSummary as PatientSummaryRequest;
 
 class PatientSummariesController extends BaseRestController
 {
@@ -34,7 +34,7 @@ class PatientSummariesController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function updateTrackerNotes(PatientSummary $resource, PatientSummaryUpdate $request)
+    public function updateTrackerNotes(PatientSummary $resource, PatientSummaryRequest $request)
     {
         $notes = $request->input('tracker_notes', '');
         $patientId = $request->input('patient_id', 0);

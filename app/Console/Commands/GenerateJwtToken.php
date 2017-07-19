@@ -4,8 +4,7 @@ namespace DentalSleepSolutions\Console\Commands;
 
 use Illuminate\Console\Command;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use DentalSleepSolutions\Eloquent\User;
-use Symfony\Component\Console\Input\InputArgument;
+use DentalSleepSolutions\Eloquent\Models\User;
 
 /**
  * This is a helper command for easy generating JWT tokens from

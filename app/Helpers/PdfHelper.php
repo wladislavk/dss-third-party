@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Barryvdh\DomPDF\PDF;
-use DentalSleepSolutions\Eloquent\Dental\User;
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Structs\PdfData;
 use DentalSleepSolutions\Structs\PdfHeaderData;
 use DentalSleepSolutions\Wrappers\FileWrapper;

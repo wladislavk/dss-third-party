@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\GuideSetting;
+use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
 use Tests\TestCases\ApiTestCase;
 
 class GuideSettingsApiTest extends ApiTestCase

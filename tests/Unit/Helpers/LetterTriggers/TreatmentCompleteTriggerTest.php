@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Helpers\LetterTriggers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
 use DentalSleepSolutions\Structs\LetterData;
 use Mockery\MockInterface;

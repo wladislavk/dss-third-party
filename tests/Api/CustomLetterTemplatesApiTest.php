@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate;
+use DentalSleepSolutions\Eloquent\Models\Dental\CustomLetterTemplate;
 use Tests\TestCases\ApiTestCase;
 
 class CustomLetterTemplatesApiTest extends ApiTestCase

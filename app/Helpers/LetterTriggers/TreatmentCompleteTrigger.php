@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers\LetterTriggers;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;
 

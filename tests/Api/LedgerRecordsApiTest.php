@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\LedgerRecord;
+use DentalSleepSolutions\Eloquent\Models\Dental\LedgerRecord;
 use Tests\TestCases\ApiTestCase;
 
 class LedgerRecordsApiTest extends ApiTestCase

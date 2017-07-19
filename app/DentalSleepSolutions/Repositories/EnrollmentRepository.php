@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Repositories;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Interfaces\EnrollmentInterface;
-use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 
 class EnrollmentRepository extends BaseRepository implements EnrollmentInterface

@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Helpers\EmailHandlers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\EmailSender;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;

@@ -143,6 +143,7 @@ return [
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
 
         /*
          * Application Service Providers...

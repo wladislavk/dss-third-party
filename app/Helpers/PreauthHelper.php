@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\SummSleeplab;
-use DentalSleepSolutions\Eloquent\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab;
+use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
 
 class PreauthHelper
 {

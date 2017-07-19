@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Helpers\SimilarHelper;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;

@@ -52,7 +52,7 @@ class ExternalAuthTokenParser
     /**
      * @param string $companyKey
      * @param string $userKey
-     * @return UserView
+     * @return UserView|null
      */
     public function getUserData($companyKey, $userKey)
     {

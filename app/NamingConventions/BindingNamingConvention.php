@@ -46,13 +46,8 @@ class BindingNamingConvention
      */
     public function getResource()
     {
-        $name = $this->model->getSingular();
-        $namespace = self::BASE_NAMESPACE . '\\Contracts\\Resources';
-        $resource = $namespace . '\\' . $name;
-        if (!interface_exists($resource) || !is_subclass_of($resource, Resource::class)) {
-            throw new NamingConventionException("$resource must exist and extend " . Resource::class);
-        }
-        return $resource;
+//            throw new NamingConventionException("$resource must exist and extend " . Resource::class);
+        return Resource::class;
     }
 
     /**
@@ -61,13 +56,8 @@ class BindingNamingConvention
      */
     public function getRepository()
     {
-        $name = $this->model->getPlural();
-        $namespace = self::BASE_NAMESPACE . '\\Contracts\\Repositories';
-        $repository = $namespace . '\\' . $name;
-        if (!interface_exists($repository) || !is_subclass_of($repository, Repository::class)) {
-            throw new NamingConventionException("$repository must exist and extend " . Repository::class);
-        }
-        return $repository;
+//        throw new NamingConventionException("$repository must exist and extend " . Repository::class);
+        return Repository::class;
     }
 
     /**

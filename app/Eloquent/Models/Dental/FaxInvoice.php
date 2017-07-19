@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\FaxInvoice as Resource;
-use DentalSleepSolutions\Contracts\Repositories\FaxInvoices as Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
 
 class FaxInvoice extends AbstractModel implements Resource, Repository
 {

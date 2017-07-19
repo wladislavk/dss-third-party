@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Models;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\UserCompany;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Company as Resource;
-use DentalSleepSolutions\Contracts\Repositories\Companies as Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DB;
 
 class Company extends AbstractModel implements Resource, Repository

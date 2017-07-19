@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Contracts\Repositories\Patients;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
@@ -37,11 +37,11 @@ class NotificationsController extends BaseRestController
     /**
      * Get notifications by filter.
      *
-     * @param  Patients $resources
+     * @param Patient $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithFilter(Patients $resources, Request $request)
+    public function getWithFilter(Patient $resources, Request $request)
     {
         $fields = $request->input('fields', []);
         $where  = $request->input('where', []);

@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\SleepStudy as Resource;
-use DentalSleepSolutions\Contracts\Repositories\SleepStudies as Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
 
 class SleepStudy extends AbstractModel implements Resource, Repository
 {

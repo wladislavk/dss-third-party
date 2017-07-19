@@ -16,7 +16,7 @@ abstract class BaseRestController extends Controller
     protected $hasIp = true;
 
     /** @var Model|Repository */
-    protected $resources;
+    protected $repository;
 
     /** @var Request */
     protected $request;
@@ -24,11 +24,11 @@ abstract class BaseRestController extends Controller
     public function __construct(
         JWTAuth $auth,
         User $userModel,
-        Repository $resources,
+        Repository $repository,
         Request $request
     ) {
         parent::__construct($auth, $userModel);
-        $this->resources = $resources;
+        $this->repository = $repository;
         $this->request = $request;
     }
 
@@ -39,7 +39,7 @@ abstract class BaseRestController extends Controller
      */
     public function index()
     {
-        $data = $this->resources->all();
+        $data = $this->repository->all();
 
         return ApiResponse::responseOk('', $data);
     }
@@ -53,7 +53,7 @@ abstract class BaseRestController extends Controller
     public function show($id)
     {
         /** @var Resource $resource */
-        $resource = $this->resources->findOrFail($id);
+        $resource = $this->repository->findOrFail($id);
         return ApiResponse::responseOk('', $resource);
     }
 
@@ -69,7 +69,7 @@ abstract class BaseRestController extends Controller
         if ($this->hasIp) {
             $data = array_merge($this->request->all(), ['ip_address' => $this->request->ip()]);
         }
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -84,7 +84,7 @@ abstract class BaseRestController extends Controller
     {
         $this->validate($this->request, $this->request->updateRules());
         /** @var Resource $resource */
-        $resource = $this->resources->findOrFail($id);
+        $resource = $this->repository->findOrFail($id);
         $resource->update($this->request->all());
 
         return ApiResponse::responseOk('Resource updated');
@@ -99,7 +99,7 @@ abstract class BaseRestController extends Controller
     public function destroy($id)
     {
         /** @var Resource $resource */
-        $resource = $this->resources->findOrFail($id);
+        $resource = $this->repository->findOrFail($id);
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');

@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\GagReflex as Resource;
-use DentalSleepSolutions\Contracts\Repositories\GagReflexes as Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
 
 class GagReflex extends AbstractModel implements Resource, Repository
 {

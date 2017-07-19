@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
+use DentalSleepSolutions\Eloquent\Models\Dental\Fax;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Faxes;
 
 class FaxesController extends BaseRestController
 {
@@ -25,7 +25,7 @@ class FaxesController extends BaseRestController
             'ip_address' => $this->request->ip(),
         ]);
 
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -40,7 +40,7 @@ class FaxesController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getAlerts(Faxes $resources)
+    public function getAlerts(Fax $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 

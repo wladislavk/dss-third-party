@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Location;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Locations;
 
 class LocationsController extends BaseRestController
 {
@@ -32,7 +32,7 @@ class LocationsController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getDoctorLocations(Locations $resources)
+    public function getDoctorLocations(Location $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 

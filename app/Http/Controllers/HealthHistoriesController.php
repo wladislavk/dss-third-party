@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\HealthHistory;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\HealthHistories;
 use Illuminate\Http\Request;
 
 class HealthHistoriesController extends BaseRestController
@@ -36,10 +36,10 @@ class HealthHistoriesController extends BaseRestController
     /**
      * Get health histories by filter.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\HealthHistories $resources
+     * @param HealthHistory $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithFilter(HealthHistories $resources, Request $request)
+    public function getWithFilter(HealthHistory $resources, Request $request)
     {
         $fields = $request->input('fields', []);
         $where  = $request->input('where', []);

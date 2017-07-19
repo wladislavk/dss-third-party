@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\LedgerStatement;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\LedgerStatement;
 use Illuminate\Http\Request;
 
 class LedgerStatementsController extends BaseRestController

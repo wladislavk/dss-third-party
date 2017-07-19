@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\PlaceService as Resource;
-use DentalSleepSolutions\Contracts\Repositories\PlaceServices as Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
 
 class PlaceService extends AbstractModel implements Resource, Repository
 {

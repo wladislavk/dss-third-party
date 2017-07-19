@@ -2,9 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\User;
-use DentalSleepSolutions\Contracts\Repositories\Users;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -70,6 +69,7 @@ class UsersController extends BaseRestController
     /**
      * Get info about current logined user
      *
+     * @param User $resource
      * @return \Illuminate\Http\JsonResponse
      */
     public function getCurrentUserInfo(User $resource)
@@ -80,6 +80,7 @@ class UsersController extends BaseRestController
     /**
      * Get course staff of current logined user
      *
+     * @param User $resource
      * @return \Illuminate\Http\JsonResponse
      */
     public function getCourseStaff(User $resource)
@@ -91,7 +92,7 @@ class UsersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getPaymentReports(Users $resources)
+    public function getPaymentReports(User $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -130,10 +131,10 @@ class UsersController extends BaseRestController
     /**
      * Get users by filter.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Users $resources
+     * @param User $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithFilter(Users $resources, Request $request)
+    public function getWithFilter(User $resources, Request $request)
     {
         $fields = $request->input('fields', []);
         $where  = $request->input('where', []);

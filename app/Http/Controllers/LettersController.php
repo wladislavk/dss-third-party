@@ -2,11 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Letter;
-use DentalSleepSolutions\Contracts\Repositories\Letters;
-use DentalSleepSolutions\Contracts\Resources\User;
-use DentalSleepSolutions\Contracts\Resources\ContactType;
 use Illuminate\Http\Request;
 
 class LettersController extends BaseRestController
@@ -40,7 +39,7 @@ class LettersController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getPending(Letters $resources)
+    public function getPending(Letter $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -49,7 +48,7 @@ class LettersController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getUnmailed(Letters $resources)
+    public function getUnmailed(Letter $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -59,7 +58,7 @@ class LettersController extends BaseRestController
     }
 
     // gets letters that were delivered for contact
-    public function getContactSentLetters(Letters $resources, Request $request)
+    public function getContactSentLetters(Letter $resources, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
         $data = $resources->getContactSentLetters($contactId);
@@ -68,7 +67,7 @@ class LettersController extends BaseRestController
     }
 
     // gets letters that were not delivered for contact
-    public function getContactPendingLetters(Letters $resources, Request $request)
+    public function getContactPendingLetters(Letter $resources, Request $request)
     {
         $contactId = $request->input('contact_id', 0);
         $data = $resources->getContactPendingLetters($contactId);

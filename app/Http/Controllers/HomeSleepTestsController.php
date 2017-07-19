@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\HomeSleepTest;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use Illuminate\Http\Request;
 
 class HomeSleepTestsController extends BaseRestController
@@ -33,7 +33,7 @@ class HomeSleepTestsController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getUncompleted(HomeSleepTests $resources, Request $request)
+    public function getUncompleted(HomeSleepTest $resources, Request $request)
     {
         $patientId = $request->input('patientId', 0);
 
@@ -42,7 +42,7 @@ class HomeSleepTestsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getByType($type, HomeSleepTests $resources)
+    public function getByType($type, HomeSleepTest $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 

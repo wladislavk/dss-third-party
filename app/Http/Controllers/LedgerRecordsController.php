@@ -24,7 +24,7 @@ class LedgerRecordsController extends BaseRestController
             'adddate'    => Carbon::now()->format('m/d/Y'),
         ]);
 
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }

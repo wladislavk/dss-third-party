@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\DocumentCategory;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\DocumentCategories;
 
 class DocumentCategoriesController extends BaseRestController
 {
@@ -35,10 +35,10 @@ class DocumentCategoriesController extends BaseRestController
     /**
      * Get active document categories.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\DocumentCategories $resources
+     * @param DocumentCategory $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function active(DocumentCategories $resources)
+    public function active(DocumentCategory $resources)
     {
         $data = $resources->getActiveDocumentCategories();
 

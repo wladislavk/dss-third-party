@@ -2,10 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
+use DentalSleepSolutions\Eloquent\Models\Dental\Ledger;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Insurance;
-use DentalSleepSolutions\Contracts\Resources\Ledger;
-use DentalSleepSolutions\Contracts\Repositories\Insurances;
 use Illuminate\Http\Request;
 
 class InsurancesController extends BaseRestController
@@ -41,7 +40,7 @@ class InsurancesController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getRejected(Insurances $resources, Request $request)
+    public function getRejected(Insurance $resources, Request $request)
     {
         $patientId = $request->input('patientId');
 
@@ -50,7 +49,7 @@ class InsurancesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getFrontOfficeClaims($type, Insurances $resources)
+    public function getFrontOfficeClaims($type, Insurance $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 

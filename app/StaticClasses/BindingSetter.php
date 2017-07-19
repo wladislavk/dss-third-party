@@ -109,16 +109,8 @@ class BindingSetter
     ];
 
     const EXTERNAL_BINDINGS = [
-        [
-            Eloquent\Models\Dental\ExternalCompanyUser::class,
-            Resources\ExternalCompanyUser::class,
-            Repositories\ExternalCompanyUsers::class,
-        ],
-        [
-            Eloquent\Models\Dental\ExternalPatient::class,
-            Resources\ExternalPatient::class,
-            Repositories\ExternalPatients::class,
-        ],
+        Eloquent\Models\Dental\ExternalCompanyUser::class,
+        Eloquent\Models\Dental\ExternalPatient::class,
     ];
 
     /**
@@ -151,9 +143,9 @@ class BindingSetter
         foreach (self::EXTERNAL_BINDINGS as $binding) {
             $bindingObject = new Bindings();
             $bindingObject
-                ->setModel($binding[self::EXTERNAL_MODEL_KEY])
-                ->setResource($binding[self::EXTERNAL_RESOURCE_KEY])
-                ->setRepository($binding[self::EXTERNAL_REPOSITORY_KEY])
+                ->setModel($binding)
+                ->setResource(Resources\Resource::class)
+                ->setRepository(Repositories\Repository::class)
             ;
             $bindingObjects[] = $bindingObject;
         }

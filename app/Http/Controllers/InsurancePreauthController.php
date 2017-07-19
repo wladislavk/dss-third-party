@@ -2,9 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
-use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as InsPreauth;
 use Illuminate\Http\Request;
 
 class InsurancePreauthController extends BaseRestController
@@ -35,7 +34,7 @@ class InsurancePreauthController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getByType($type, InsPreauth $resources)
+    public function getByType($type, InsurancePreauth $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -65,7 +64,7 @@ class InsurancePreauthController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function find(InsPreauth $resources, Request $request)
+    public function find(InsurancePreauth $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 

@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\PaymentReport;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\PaymentReports;
 
 class PaymentReportsController extends BaseRestController
 {
@@ -32,7 +32,7 @@ class PaymentReportsController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getNumber(PaymentReports $resources)
+    public function getNumber(PaymentReport $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 

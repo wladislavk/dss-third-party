@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Device;
+use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Devices;
-use DentalSleepSolutions\Contracts\Repositories\GuideSettings;
 use Illuminate\Http\Request;
 
 class GuideDevicesController extends BaseRestController
@@ -34,7 +34,7 @@ class GuideDevicesController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getWithImages(Devices $devicesResource, GuideSettings $guideSettingsResource, Request $request)
+    public function getWithImages(Device $devicesResource, GuideSetting $guideSettingsResource, Request $request)
     {
         $settings = $request->input('settings');
 

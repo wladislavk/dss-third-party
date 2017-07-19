@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Payer;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Payer;
 
 class PayersController extends BaseRestController
 {
@@ -37,7 +37,7 @@ class PayersController extends BaseRestController
     /**
      * Get array of enrollment required fields for a payer.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Payer  $payer
+     * @param Payer $payer
      * @return \Illuminate\Http\JsonResponse
      */
     public function requiredFields(Payer $payer, Request $request)

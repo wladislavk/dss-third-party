@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\SupportTickets;
 
 class SupportTicketsController extends BaseRestController
 {
@@ -32,7 +32,7 @@ class SupportTicketsController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getNumber(SupportTickets $resources)
+    public function getNumber(SupportTicket $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 

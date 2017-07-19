@@ -3,13 +3,13 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
+use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
+use DentalSleepSolutions\Eloquent\Models\Dental\Ledger;
+use DentalSleepSolutions\Eloquent\Models\Dental\LedgerNote;
+use DentalSleepSolutions\Eloquent\Models\Dental\LedgerStatement;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Ledgers;
-use DentalSleepSolutions\Contracts\Resources\Patient;
-use DentalSleepSolutions\Contracts\Resources\PatientSummary;
-use DentalSleepSolutions\Contracts\Repositories\Insurances;
-use DentalSleepSolutions\Contracts\Repositories\LedgerNotes;
-use DentalSleepSolutions\Contracts\Repositories\LedgerStatements;
 use Illuminate\Http\Request;
 
 class LedgersController extends BaseRestController
@@ -73,7 +73,7 @@ class LedgersController extends BaseRestController
             'adddate'    => Carbon::now()->format('m/d/Y'),
         ]);
 
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -89,7 +89,7 @@ class LedgersController extends BaseRestController
     }
 
     public function getListOfLedgerRows(
-        Ledgers $resources,
+        Ledger $resources,
         Patient $patientResource,
         Request $request
     ) {
@@ -122,7 +122,7 @@ class LedgersController extends BaseRestController
         return ApiResponse::responseOk('', $ledgerRows);
     }
 
-    public function getReportTotals(Ledgers $resources, Request $request)
+    public function getReportTotals(Ledger $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -188,7 +188,7 @@ class LedgersController extends BaseRestController
     public function updatePatientSummary(
         Request $request,
         PatientSummary $patientSummary,
-        Ledgers $ledger
+        Ledger $ledger
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -228,10 +228,10 @@ class LedgersController extends BaseRestController
 
     public function getReportData(
         Request $request,
-        Insurances $insurance,
-        Ledgers $ledger,
-        LedgerNotes $ledgerNote,
-        LedgerStatements $ledgerStatement
+        Insurance $insurance,
+        Ledger $ledger,
+        LedgerNote $ledgerNote,
+        LedgerStatement $ledgerStatement
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -260,10 +260,10 @@ class LedgersController extends BaseRestController
 
     public function getReportRowsNumber(
         Request $request,
-        Ledgers $ledger,
-        Insurances $insurance,
-        LedgerNotes $ledgerNote,
-        LedgerStatements $ledgerStatement
+        Ledger $ledger,
+        Insurance $insurance,
+        LedgerNote $ledgerNote,
+        LedgerStatement $ledgerStatement
     ) {
         $docId = $this->currentUser->docid ?: 0;
 

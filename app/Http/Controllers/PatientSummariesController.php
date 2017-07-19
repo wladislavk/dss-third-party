@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\PatientSummary;
 use DentalSleepSolutions\Http\Requests\PatientSummary as PatientSummaryRequest;
 
 class PatientSummariesController extends BaseRestController

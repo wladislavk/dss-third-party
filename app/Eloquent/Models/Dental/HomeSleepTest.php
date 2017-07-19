@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\HomeSleepTest as Resource;
-use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests as Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DB;
 
 class HomeSleepTest extends AbstractModel implements Resource, Repository

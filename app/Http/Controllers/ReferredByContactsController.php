@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\ReferredByContact;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\ReferredByContact;
 use Illuminate\Http\Request;
 
 class ReferredByContactsController extends BaseRestController

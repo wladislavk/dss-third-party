@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientInsurance;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\PatientInsurances;
 use Illuminate\Http\Request;
 
 class PatientInsurancesController extends BaseRestController
@@ -34,7 +34,7 @@ class PatientInsurancesController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getCurrent(PatientInsurances $resources, Request $request)
+    public function getCurrent(PatientInsurance $resources, Request $request)
     {
         $patientId = $request->input('patientId', 0);
         $docId     = $this->currentUser->docid ?: 0;
@@ -44,7 +44,7 @@ class PatientInsurancesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getNumber(PatientInsurances $resources)
+    public function getNumber(PatientInsurance $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 

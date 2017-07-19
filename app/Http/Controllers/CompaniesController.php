@@ -2,9 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Company;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Company;
-use DentalSleepSolutions\Contracts\Repositories\Companies;
 
 class CompaniesController extends BaseRestController
 {
@@ -42,7 +41,7 @@ class CompaniesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getHomeSleepTestCompanies(Companies $resources)
+    public function getHomeSleepTestCompanies(Company $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 

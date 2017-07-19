@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\ContactTypes;
 use Illuminate\Http\Request;
 
 class ContactTypesController extends BaseRestController
@@ -33,21 +33,21 @@ class ContactTypesController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getActiveNonCorporate(ContactTypes $resources)
+    public function getActiveNonCorporate(ContactType $resources)
     {
         $data = $resources->getActiveNonCorporateTypes();
 
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getPhysician(ContactTypes $resources)
+    public function getPhysician(ContactType $resources)
     {
         $data = $resources->getPhysicianTypes();
 
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getWithFilter(ContactTypes $resources, Request $request)
+    public function getWithFilter(ContactType $resources, Request $request)
     {
         $fields = $request->input('fields', []);
         $where  = $request->input('where', []);
@@ -57,7 +57,7 @@ class ContactTypesController extends BaseRestController
         return ApiResponse::responseOk('', $contactTypes);
     }
 
-    public function getSortedContactTypes(ContactTypes $resources)
+    public function getSortedContactTypes(ContactType $resources)
     {
         $contactTypes = $resources->getSorted();
 

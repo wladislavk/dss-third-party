@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\GuideSettingOption;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\GuideSettingOptions;
 
 class GuideSettingOptionsController extends BaseRestController
 {
@@ -32,7 +32,7 @@ class GuideSettingOptionsController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getOptionsForSettingIds(GuideSettingOptions $resources)
+    public function getOptionsForSettingIds(GuideSettingOption $resources)
     {
         $guideSettingOptions = $resources->getOptionsBySettingIds();
 

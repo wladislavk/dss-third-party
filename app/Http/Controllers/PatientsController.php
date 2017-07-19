@@ -2,6 +2,16 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\HomeSleepTest;
+use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Notification;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
+use DentalSleepSolutions\Eloquent\Models\Dental\ProfileImage;
+use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\LetterToPatientTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
@@ -14,17 +24,6 @@ use DentalSleepSolutions\Helpers\MailerDataRetriever;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use DentalSleepSolutions\Helpers\SimilarHelper;
 use DentalSleepSolutions\Helpers\PdfHelper;
-use DentalSleepSolutions\Contracts\Resources\Patient;
-use DentalSleepSolutions\Contracts\Repositories\Patients;
-use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
-use DentalSleepSolutions\Contracts\Repositories\Summaries;
-use DentalSleepSolutions\Contracts\Resources\Letter;
-use DentalSleepSolutions\Contracts\Resources\Contact;
-use DentalSleepSolutions\Contracts\Resources\PatientSummary;
-use DentalSleepSolutions\Contracts\Resources\ProfileImage;
-use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
-use DentalSleepSolutions\Contracts\Repositories\Notifications;
-use DentalSleepSolutions\Contracts\Resources\User;
 use DentalSleepSolutions\Libraries\Password;
 use DentalSleepSolutions\Structs\PdfHeaderData;
 use Illuminate\Http\Request;
@@ -71,10 +70,10 @@ class PatientsController extends BaseRestController
     /**
      * Get patients by filter.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Patients $resources
+     * @param Patient $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithFilter(Patients $resources, Request $request)
+    public function getWithFilter(Patient $resources, Request $request)
     {
         $fields = $request->input('fields') ?: [];
         $where  = $request->input('where') ?: [];
@@ -84,7 +83,7 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $patients);
     }
 
-    public function getNumber(Patients $resources)
+    public function getNumber(Patient $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -93,7 +92,7 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getDuplicates(Patients $resources)
+    public function getDuplicates(Patient $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -102,7 +101,7 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getBounces(Patients $resources)
+    public function getBounces(Patient $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -111,7 +110,7 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getListPatients(Patients $resources, Request $request)
+    public function getListPatients(Patient $resources, Request $request)
     {
         $partialName = $request->input('partial_name') ?: '';
         $partialName = preg_replace("[^ A-Za-z'\-]", '', $partialName);
@@ -134,7 +133,7 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('Resource deleted');
     }
 
-    public function find(Patients $resources, Request $request)
+    public function find(Patient $resources, Request $request)
     {
         $docId           = $this->currentUser->docid ?: 0;
         $userType        = $this->currentUser->user_type ?: 0;
@@ -162,7 +161,7 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getReferredByContact(Patients $resources, Request $request)
+    public function getReferredByContact(Patient $resources, Request $request)
     {
         $contactId = $request->input('contact_id') ?: 0;
         $data = $resources->getReferredByContact($contactId);
@@ -170,7 +169,7 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getByContact(Patients $resources, Request $request)
+    public function getByContact(Patient $resources, Request $request)
     {
         $contactId = $request->input('contact_id') ?: 0;
         $data = $resources->getByContact($contactId);
@@ -191,7 +190,7 @@ class PatientsController extends BaseRestController
         Patient $patientResource,
         PatientSummary $patientSummaryResource,
         InsurancePreauth $insurancePreauthResource,
-        Summaries $summariesResource,
+        Summary $summariesResource,
         Letter $letterResource,
         User $userResource,
         Request $request,
@@ -570,11 +569,11 @@ class PatientsController extends BaseRestController
         InsurancePreauth $insPreauthResource,
         Patient $patientResource,
         Contact $contactResource,
-        Summaries $summariesResource,
+        Summary $summariesResource,
         ProfileImage $profileImageResource,
         Letter $letterResource,
-        HomeSleepTests $homeSleepTestResource,
-        Notifications $notificationResource,
+        HomeSleepTest $homeSleepTestResource,
+        Notification $notificationResource,
         Request $request
     ) {
         $patientId = 0;
@@ -655,7 +654,7 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getReferrers(Patients $patientResource, Request $request)
+    public function getReferrers(Patient $patientResource, Request $request)
     {
         $docId = 0;
         if ($this->currentUser->docid) {

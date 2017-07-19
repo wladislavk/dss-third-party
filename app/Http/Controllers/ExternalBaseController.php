@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany;
+use DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as IlluminateBaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
-use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Models\User as UserView;
@@ -22,8 +22,8 @@ abstract class ExternalBaseController extends IlluminateBaseController
     protected $externalUsersRepository;
 
     public function __construct(
-        ExternalCompanies $externalCompanies,
-        ExternalUsers $externalUsers,
+        ExternalCompany $externalCompanies,
+        ExternalUser $externalUsers,
         Request $request,
         UserView $userView,
         User $userModel

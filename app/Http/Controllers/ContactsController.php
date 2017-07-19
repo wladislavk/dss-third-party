@@ -2,10 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Contact;
-use DentalSleepSolutions\Contracts\Repositories\Contacts;
-use DentalSleepSolutions\Contracts\Repositories\Patients;
 use Illuminate\Http\Request;
 
 class ContactsController extends BaseRestController
@@ -31,7 +30,7 @@ class ContactsController extends BaseRestController
             'docid' => $docId,
         ]);
 
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -46,7 +45,7 @@ class ContactsController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function find(Contacts $resources, Request $request)
+    public function find(Contact $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -72,7 +71,7 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getListContactsAndCompanies(Contacts $resources, Request $request)
+    public function getListContactsAndCompanies(Contact $resources, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -116,7 +115,7 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getInsuranceContacts(Contacts $resource, Request $request)
+    public function getInsuranceContacts(Contact $resource, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
         $data = $resource->getInsuranceContacts($docId);
@@ -124,7 +123,7 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getReferredByContacts(Contacts $resource, Patients $patients, Request $request)
+    public function getReferredByContacts(Contact $resource, Patient $patients, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -134,7 +133,7 @@ class ContactsController extends BaseRestController
         $contactsPerPage = $request->input('contacts_per_page', 0);
         $isDetailed = $request->input('detailed', false);
 
-        /** @var \DentalSleepSolutions\Eloquent\Dental\Contact $contactModel */
+        /** @var \DentalSleepSolutions\Eloquent\Models\Dental\Contact $contactModel */
         $contactModel = $resource;
         $referredByContacts = $contactModel->getReferredByContacts($docId, $sort, $sortDir);
 
@@ -211,7 +210,7 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $response);
     }
 
-    public function getCorporateContacts(Contacts $resource, Request $request)
+    public function getCorporateContacts(Contact $resource, Request $request)
     {
         $page = $request->input('page', 0);
         $rowsPerPage = $request->input('rows_per_page', 10);
@@ -223,7 +222,7 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $contacts);
     }
 
-    private function getReferralCountersForContact(Patients $patients, $contactId, $contactType, $isDetailed)
+    private function getReferralCountersForContact(Patient $patients, $contactId, $contactType, $isDetailed)
     {
         $counters = [];
         $ranges = [

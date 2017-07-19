@@ -31,7 +31,7 @@ class LoginDetailsController extends BaseRestController
             'ip_address' => $this->request->ip(),
         ]);
 
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }

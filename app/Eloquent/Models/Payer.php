@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Eloquent\Models;
 
-use DentalSleepSolutions\Contracts\Resources\Payer as Resource;
-use DentalSleepSolutions\Contracts\Repositories\Payers as Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
 
 /**
  * @property string $payer_id           Eligible payer unique identifier.

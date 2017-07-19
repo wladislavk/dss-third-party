@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\GuideSettings;
 use Illuminate\Http\Request;
 
 class GuideSettingsController extends BaseRestController
@@ -33,7 +33,7 @@ class GuideSettingsController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getAllOrderBy(GuideSettings $resources, Request $request)
+    public function getAllOrderBy(GuideSetting $resources, Request $request)
     {
         $order = $request->input('order', 'name');
 

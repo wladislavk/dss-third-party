@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Tasks;
 
 class TasksController extends BaseRestController
 {
@@ -32,7 +32,7 @@ class TasksController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getType($type, Tasks $resources)
+    public function getType($type, Task $resources)
     {
         $userId = $this->currentUser->id ?: 0;
 
@@ -66,7 +66,7 @@ class TasksController extends BaseRestController
         return ApiResponse::responseOk('', $tasks);
     }
 
-    public function getTypeForPatient($type, $patientId, Tasks $resources)
+    public function getTypeForPatient($type, $patientId, Task $resources)
     {
         $docId     = $this->currentUser->docid ?: 0;
         $patientId = $patientId ?: 0;

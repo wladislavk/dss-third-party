@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\LedgerHistory;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\LedgerHistories;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -26,7 +26,7 @@ class LedgerHistoriesController extends BaseRestController
             'adddate'    => Carbon::now()->format('m/d/Y'),
         ]);
 
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -41,7 +41,7 @@ class LedgerHistoriesController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getHistoriesForLedgerReport(LedgerHistories $resource, Request $request)
+    public function getHistoriesForLedgerReport(LedgerHistory $resource, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 

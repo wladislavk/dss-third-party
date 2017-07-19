@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Note;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Notes;
 
 class NotesController extends BaseRestController
 {
@@ -32,7 +32,7 @@ class NotesController extends BaseRestController
         return parent::destroy($id);
     }
 
-    public function getUnsigned(Notes $resources)
+    public function getUnsigned(Note $resources)
     {
         $docId = $this->currentUser->docid ?: 0;
 

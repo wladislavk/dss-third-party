@@ -2,10 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Sleeplab;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Sleeplab;
-use DentalSleepSolutions\Contracts\Repositories\Sleeplabs;
-use DentalSleepSolutions\Contracts\Repositories\Patients;
 use Illuminate\Http\Request;
 
 class SleeplabsController extends BaseRestController
@@ -36,8 +35,8 @@ class SleeplabsController extends BaseRestController
     }
 
     public function getListOfSleeplabs(
-        Sleeplabs $resources,
-        Patients $patientResource,
+        Sleeplab $resources,
+        Patient $patientResource,
         Request $request
     ) {
         $docId = $this->currentUser->docid ?: 0;

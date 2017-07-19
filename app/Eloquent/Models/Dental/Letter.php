@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Structs\LetterData;
-use DentalSleepSolutions\Contracts\Resources\Letter as Resource;
-use DentalSleepSolutions\Contracts\Repositories\Letters as Repository;
+use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Contracts\Repositories\Repository;
 use Carbon\Carbon;
 use DB;
 

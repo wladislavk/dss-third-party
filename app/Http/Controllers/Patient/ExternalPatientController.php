@@ -2,10 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\ExternalPatient;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\ExternalBaseController;
 use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
-use DentalSleepSolutions\Contracts\Repositories\ExternalPatients;
 use EventHomes\Api\FractalHelper;
 use DentalSleepSolutions\Http\Transformers\ExternalPatient as Transformer;
 use Carbon\Carbon;
@@ -18,11 +18,11 @@ class ExternalPatientController extends ExternalBaseController
     /**
      * Display the specified resource.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalPatients $resources
-     * @param  \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore $request
+     * @param ExternalPatient $resources
+     * @param \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(ExternalPatients $resources, ExternalPatientStore $request) {
+    public function store(ExternalPatient $resources, ExternalPatientStore $request) {
         $transformer = new Transformer;
         $data = $transformer->fromTransform($request->all());
 

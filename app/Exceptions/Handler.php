@@ -5,6 +5,8 @@ namespace DentalSleepSolutions\Exceptions;
 use Exception;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -38,7 +40,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $e
-     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
+     * @return Response|JsonResponse
      */
     public function render($request, Exception $e)
     {

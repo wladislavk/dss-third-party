@@ -10,137 +10,130 @@ use DentalSleepSolutions\Eloquent\User;
 
 class ExternalAuthTokenParserTest extends UnitTestCase
 {
+    const EMPTY_TOKEN = '';
+    const COMPANY_TOKEN = 'company_key';
+    const USER_TOKEN = 'user_key';
+    const INVALID_COMPANY_TOKEN = 'company_invalid_token';
+    const INVALID_USER_TOKEN = 'user_invalid_token';
+
+    const USER_ID = 1;
+    const USER_VIEW_ID = 'u_1';
+    
     /** @var ExternalAuthTokenParser */
     private $tokenParser;
 
-    public function testNoTokens()
+    /**
+     * @dataProvider tokenDataProvider
+     */
+    public function testTokens($companyToken, $userToken, $userData)
     {
-        $this->setUpTest('returnTrueCallback', 'returnUserCallback', 'returnUserCallback');
-
-        $user = $this->tokenParser->getUserData('', '');
-        $this->assertFalse($user);
+        $this->mockAuthToken();
+        $user = $this->tokenParser->getUserData($companyToken, $userToken);
+        $this->assertEquals($user, $userData);
     }
 
-    public function testNoCompanyToken()
+    public function tokenDataProvider()
     {
-        $this->setUpTest('returnFalseCallback', 'returnUserCallback', 'returnUserCallback');
-
-        $user = $this->tokenParser->getUserData('', 'user_key');
-        $this->assertFalse($user);
+        return [
+            [self::EMPTY_TOKEN, self::EMPTY_TOKEN, null],
+            [self::EMPTY_TOKEN, self::USER_TOKEN, null],
+            [self::COMPANY_TOKEN, self::EMPTY_TOKEN, null],
+            [self::INVALID_COMPANY_TOKEN, self::INVALID_USER_TOKEN, null],
+            [self::INVALID_COMPANY_TOKEN, self::USER_TOKEN, null],
+            [self::COMPANY_TOKEN, self::INVALID_USER_TOKEN, null],
+            [self::COMPANY_TOKEN, self::USER_TOKEN, $this->mockUser()],
+        ];
     }
 
-    public function testNoUserToken()
-    {
-        $this->setUpTest('returnTrueCallback', 'returnFalseCallback', 'returnUserCallback');
-
-        $user = $this->tokenParser->getUserData('company_key', '');
-        $this->assertFalse($user);
-    }
-
-    public function testInvalidTokens()
-    {
-        $this->setUpTest('returnFalseCallback', 'returnFalseCallback', 'returnUserCallback');
-
-        $user = $this->tokenParser->getUserData('company_invalid_key', 'user_invalid_key');
-        $this->assertFalse($user);
-    }
-
-    public function testInvalidCompanyToken()
-    {
-        $this->setUpTest('returnFalseCallback', 'returnUserCallback', 'returnUserCallback');
-
-        $user = $this->tokenParser->getUserData('company_invalid_key', 'user_key');
-        $this->assertFalse($user);
-    }
-
-    public function testInvalidUserToken()
-    {
-        $this->setUpTest('returnTrueCallback', 'returnFalseCallback', 'returnUserCallback');
-
-        $user = $this->tokenParser->getUserData('company_key', 'user_invalid_key');
-        $this->assertFalse($user);
-    }
-
-    public function testValidTokens()
-    {
-        $this->setUpTest('returnTrueCallback', 'returnUserCallback', 'returnUserCallback');
-
-        $user = $this->tokenParser->getUserData('company_key', 'user_key');
-        $this->assertEquals($user->id, '1');
-        $this->assertEquals($user->admin, 0);
-    }
-
-    private function setUpTest($companiesCallback, $usersCallback, $userViewCallback)
+    private function mockAuthToken()
     {
         $this->tokenParser = new ExternalAuthTokenParser(
-            $this->mockExternalCompanies($companiesCallback),
-            $this->mockExternalUsers($usersCallback),
-            $this->mockUserView($userViewCallback)
+            $this->mockExternalCompanies(),
+            $this->mockExternalUsers(),
+            $this->mockUserResource()
         );
     }
 
-    public function returnFalseCallback()
-    {
-        return false;
-    }
-
-    public function returnTrueCallback()
-    {
-        return true;
-    }
-
-    public function returnUserCallback()
+    public function mockUser()
     {
         $user = new User();
-        $user->user_id = 1;
-        $user->id = 'u_1';
+        $user->user_id = self::USER_ID;
+        $user->id = self::USER_ID;
         $user->admin = 0;
 
         return $user;
     }
 
-    private function mockExternalCompanies($returnCallback)
+    public function mockUserView()
+    {
+        $user = $this->mockUser();
+        $user->id = self::USER_VIEW_ID;
+
+        return $user;
+    }
+
+    private function mockExternalCompanies()
     {
         $repository = \Mockery::mock(ExternalCompanies::class);
+        $token = null;
 
         $repository->shouldReceive('where')
-            ->with('api_key', \Mockery::anyOf('', 'company_key', 'company_invalid_key'))
+            ->with('api_key', \Mockery::anyOf(self::EMPTY_TOKEN, self::COMPANY_TOKEN, self::INVALID_COMPANY_TOKEN))
             ->atMost()
             ->times(1)
-            ->andReturnSelf();
+            ->andReturnUsing(function ($fieldName, $fieldValue) use (&$token, $repository) {
+                $token = $fieldValue;
+                return $repository;
+            });
 
         $repository->shouldReceive('first')
             ->atMost()
             ->times(1)
-            ->andReturnUsing([$this, $returnCallback]);
+            ->andReturnUsing(function () use (&$token) {
+                if ($token === self::COMPANY_TOKEN) {
+                    return true;
+                }
+
+                return false;
+            });
 
         return $repository;
     }
 
-    private function mockExternalUsers($returnCallback)
+    private function mockExternalUsers()
     {
         $repository = \Mockery::mock(ExternalUsers::class);
+        $token = null;
 
         $repository->shouldReceive('where')
-            ->with('api_key', \Mockery::anyOf('', 'user_key', 'user_invalid_key'))
+            ->with('api_key', \Mockery::anyOf(self::EMPTY_TOKEN, self::USER_TOKEN, self::INVALID_USER_TOKEN))
             ->atMost()
             ->times(1)
-            ->andReturnSelf();
+            ->andReturnUsing(function ($fieldName, $fieldValue) use (&$token, $repository) {
+                $token = $fieldValue;
+                return $repository;
+            });
 
         $repository->shouldReceive('first')
             ->atMost()
             ->times(1)
-            ->andReturnUsing([$this, $returnCallback]);
+            ->andReturnUsing(function () use (&$token) {
+                if ($token === self::USER_TOKEN) {
+                    return $this->mockUserView();
+                }
+
+                return null;
+            });
 
         return $repository;
     }
 
-    private function mockUserView($returnCallback)
+    private function mockUserResource()
     {
         $repository = \Mockery::mock(User::class);
 
         $repository->shouldReceive('find')
-            ->with('u_1')
+            ->with(self::USER_VIEW_ID)
             ->atMost()
             ->times(1)
             ->andReturnSelf();
@@ -148,7 +141,7 @@ class ExternalAuthTokenParserTest extends UnitTestCase
         $repository->shouldReceive('first')
             ->atMost()
             ->times(1)
-            ->andReturnUsing([$this, $returnCallback]);
+            ->andReturn($this->mockUser());
 
         return $repository;
     }

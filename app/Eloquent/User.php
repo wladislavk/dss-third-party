@@ -20,6 +20,8 @@ class User extends AbstractModel implements AuthenticatableContract
     use Authenticatable;
 
     /**
+     * @todo: check if this table is created on container build and that permissions are correct
+     *
      * The database table used by the model.
      *
      * @var string

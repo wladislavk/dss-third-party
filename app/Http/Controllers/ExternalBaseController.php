@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Routing\Controller as IlluminateBaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
 use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Eloquent\User as UserView;
 
-abstract class ExternalBaseController extends BaseController
+abstract class ExternalBaseController extends IlluminateBaseController
 {
     use DispatchesJobs, ValidatesRequests;
 

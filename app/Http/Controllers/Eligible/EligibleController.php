@@ -10,6 +10,14 @@ class EligibleController extends Controller
 {
     const DSS_DEFAULT_ELIGIBLE_API_KEY = '33b2e3a5-8642-1285-d573-07a22f8a15b4';
 
+    /**
+     * @SWG\Get(
+     *     path="/eligible/payers",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPayers()
     {
         $client = new Client();

@@ -209,7 +209,7 @@ return [
         // DomPdf
         'PDF' => Barryvdh\DomPDF\Facade::class,
 
-        'ApiResponse' => \DentalSleepSolutions\Helpers\ApiResponse::class,
+        'ApiResponse' => \DentalSleepSolutions\StaticClasses\ApiResponse::class,
 
     ],
 

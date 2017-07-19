@@ -3,8 +3,40 @@ namespace DentalSleepSolutions\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\Dental\UserCompany;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 
+/**
+ * @SWG\Definition(
+ *     definition="AdminCompany",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="adminid", type="integer"),
+ *     @SWG\Property(property="companyid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="admin", ref="#/definitions/Admin"),
+ *     @SWG\Property(property="company", ref="#/definitions/Company"),
+ *     @SWG\Property(property="users", type="array", @SWG\Items(ref="#/definitions/UserCompany"))
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\AdminCompany
+ *
+ * @property int $id
+ * @property int|null $adminid
+ * @property int|null $companyid
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property-read \DentalSleepSolutions\Eloquent\Admin $admin
+ * @property-read \DentalSleepSolutions\Eloquent\Company $company
+ * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Dental\UserCompany[] $users
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereAdminid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereCompanyid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\AdminCompany whereIpAddress($value)
+ * @mixin \Eloquent
+ */
 class AdminCompany extends Model
 {
     use WithoutUpdatedTimestamp;

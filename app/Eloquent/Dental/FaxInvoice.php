@@ -3,10 +3,45 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\FaxInvoice as Resource;
 use DentalSleepSolutions\Contracts\Repositories\FaxInvoices as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="FaxInvoice",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="invoice_id", type="integer"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="start_date", type="string", format="dateTime"),
+ *     @SWG\Property(property="end_date", type="string", format="dateTime"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\FaxInvoice
+ *
+ * @property int $id
+ * @property int|null $invoice_id
+ * @property string|null $description
+ * @property \Carbon\Carbon|null $start_date
+ * @property \Carbon\Carbon|null $end_date
+ * @property float|null $amount
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxInvoice whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxInvoice whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxInvoice whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxInvoice whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxInvoice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxInvoice whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxInvoice whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\FaxInvoice whereStartDate($value)
+ * @mixin \Eloquent
+ */
 class FaxInvoice extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

@@ -8,7 +8,10 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 class HealthCheckController extends Controller
 {
     /**
-     * OK
+     * @SWG\Get(
+     *     path="/health-check",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
      * @return \Illuminate\Http\JsonResponse
      */

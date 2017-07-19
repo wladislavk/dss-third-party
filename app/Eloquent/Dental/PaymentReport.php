@@ -3,11 +3,43 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\PaymentReport as Resource;
 use DentalSleepSolutions\Contracts\Repositories\PaymentReports as Repository;
 use DB;
 
+/**
+ * @SWG\Definition(
+ *     definition="PaymentReport",
+ *     type="object",
+ *     required={"payment_id"},
+ *     @SWG\Property(property="payment_id", type="integer"),
+ *     @SWG\Property(property="claimid", type="integer"),
+ *     @SWG\Property(property="reference_id", type="string"),
+ *     @SWG\Property(property="response", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="viewed", type="integer")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\PaymentReport
+ *
+ * @property int $payment_id
+ * @property int|null $claimid
+ * @property string|null $reference_id
+ * @property string|null $response
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property int|null $viewed
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PaymentReport whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PaymentReport whereClaimid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PaymentReport whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PaymentReport wherePaymentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PaymentReport whereReferenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PaymentReport whereResponse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\PaymentReport whereViewed($value)
+ * @mixin \Eloquent
+ */
 class PaymentReport extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

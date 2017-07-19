@@ -4,6 +4,32 @@ namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
 
+/**
+ * @SWG\Definition(
+ *     definition="UserCompany",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="companyid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\UserCompany
+ *
+ * @property int $id
+ * @property int|null $userid
+ * @property int|null $companyid
+ * @property string|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereCompanyid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\UserCompany whereUserid($value)
+ * @mixin \Eloquent
+ */
 class UserCompany extends AbstractModel
 {
     /**

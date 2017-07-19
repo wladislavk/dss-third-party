@@ -6,6 +6,17 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\ExternalCompanyUser as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ExternalCompanyUsers as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="ExternalCompanyUser",
+ *     type="object",
+ * 
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\ExternalCompanyUser
+ *
+ * @mixin \Eloquent
+ */
 class ExternalCompanyUser extends AbstractModel implements Resource, Repository
 {
     /**

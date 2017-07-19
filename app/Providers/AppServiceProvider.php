@@ -3,7 +3,9 @@
 namespace DentalSleepSolutions\Providers;
 
 use DentalSleepSolutions\Eloquent;
+use DentalSleepSolutions\Helpers\ClassRetriever;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
+use DentalSleepSolutions\Swagger\ClassRetrieverInterface;
 use Illuminate\Support\ServiceProvider;
 use DentalSleepSolutions\Contracts\Repositories;
 
@@ -69,5 +71,7 @@ class AppServiceProvider extends ServiceProvider
             Repositories\ClaimNoteAttachments::class,
             Eloquent\Dental\ClaimNoteAttachment::class
         );
+
+        $this->app->bind(ClassRetrieverInterface::class, ClassRetriever::class);
     }
 }

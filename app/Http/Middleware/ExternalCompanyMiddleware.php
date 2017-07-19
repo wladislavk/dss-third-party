@@ -3,48 +3,51 @@ namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
-use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
+use DentalSleepSolutions\Helpers\ExternalAuthTokenParser as TokenParser;
 
 class ExternalCompanyMiddleware
 {
-    /** @var ExternalCompanies */
-    protected $externalCompaniesRepository;
+    const COMPANY_KEY_MISSING = 'api_key_company_not_provided';
+    const USER_KEY_MISSING = 'api_key_user_not_provided';
+    const COMPANY_KEY_INVALID = 'api_key_company_invalid';
+    const USER_KEY_INVALID = 'api_key_user_invalid';
+    const KEYS_INVALID = 'api_keys_invalid';
 
-    /** @var ExternalUsers */
-    protected $externalUsersRepository;
+    /** @var TokenParser */
+    private $tokenParser;
 
-    public function __construct (ExternalCompanies $externalCompanies, ExternalUsers $externalUsers)
+    public function __construct (TokenParser $tokenParser)
     {
-        $this->externalCompaniesRepository = $externalCompanies;
-        $this->externalUsersRepository = $externalUsers;
+        $this->tokenParser = $tokenParser;
     }
 
     public function handle($request, Closure $next)
     {
-        $companyKey = $request->input('api_key_company');
-        $userKey = $request->input('api_key_user');
+        $currentUser = $this->tokenParser->getUserData(
+            $request->input('api_key_company', ''), $request->input('api_key_user', '')
+        );
 
-        if (!strlen($companyKey)) {
-            return ApiResponse::responseError(['error' => 'api_key_company_not_provided'], 400);
+        if ($currentUser) {
+            $request->attributes->set('currentUser', $currentUser);
+            return $next($request);
         }
 
-        if (!strlen($userKey)) {
-            return ApiResponse::responseError(['error' => 'api_key_user_not_provided'], 400);
+        if ($this->tokenParser->getError() === TokenParser::COMPANY_KEY_MISSING) {
+            return ApiResponse::responseError(['error' => self::COMPANY_KEY_MISSING], 400);
         }
 
-        $externalCompany = $this->externalCompaniesRepository->where('api_key', $companyKey)->first();
-
-        if (!$externalCompany) {
-            return ApiResponse::responseError(['error' => 'api_key_company_invalid'], 422);
+        if ($this->tokenParser->getError() === TokenParser::USER_KEY_MISSING) {
+            return ApiResponse::responseError(['error' => self::USER_KEY_MISSING], 400);
         }
 
-        $externalUser = $this->externalUsersRepository->where('api_key', $userKey)->first();
-
-        if (!$externalUser || !$externalUser->user() || !count($externalUser->user())) {
-            return ApiResponse::responseError(['error' => 'api_key_user_invalid'], 422);
+        if ($this->tokenParser->getError() === TokenParser::COMPANY_KEY_INVALID) {
+            return ApiResponse::responseError(['error' => self::COMPANY_KEY_INVALID], 422);
         }
 
-        return $next($request);
+        if ($this->tokenParser->getError() === TokenParser::USER_KEY_INVALID) {
+            return ApiResponse::responseError(['error' => self::USER_KEY_INVALID], 422);
+        }
+
+        return ApiResponse::responseError(['error' => self::KEYS_INVALID], 422);
     }
 }

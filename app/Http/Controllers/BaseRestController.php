@@ -7,7 +7,6 @@ use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
-use Tymon\JWTAuth\JWTAuth;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Helpers\AuthTokenParser;
 
@@ -24,20 +23,18 @@ abstract class BaseRestController extends Controller
 
     /**
      * BaseRestController constructor.
-     * @param \Tymon\JWTAuth\JWTAuth                                  $auth
      * @param \Illuminate\Config\Repository                           $config
      * @param \DentalSleepSolutions\Helpers\AuthTokenParser           $authToken
      * @param \DentalSleepSolutions\Contracts\Repositories\Repository $resources
      * @param \DentalSleepSolutions\Http\Requests\Request             $request
      */
     public function __construct(
-        JWTAuth $auth,
         Config $config,
         AuthTokenParser $authToken,
         Repository $resources,
         Request $request
     ) {
-        parent::__construct($auth, $config, $authToken);
+        parent::__construct($config, $authToken);
         $this->resources = $resources;
         $this->request = $request;
     }

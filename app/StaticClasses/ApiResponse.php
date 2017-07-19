@@ -47,7 +47,7 @@ class ApiResponse
      * @param  integer $code
      * @param  array   $headers
      * @param  integer $options
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public static function responseOk($message = '', $data = null, $code = 200, $headers = [], $options = 0)
     {
@@ -63,7 +63,7 @@ class ApiResponse
      * @param bool $createErrorsArray
      * @param array $headers
      * @param int $options
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public static function responseError(
         $message = '',
@@ -112,7 +112,7 @@ class ApiResponse
      * @param  integer $code
      * @param  array   $headers
      * @param  integer $options
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     private static function createResponse($message, $data, $code, $headers, $options)
     {
@@ -134,7 +134,7 @@ class ApiResponse
      * @param  string $message_error
      * @param array $headers
      * @param int $options
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public static function response(
         $data,
@@ -175,22 +175,21 @@ class ApiResponse
 
     /**
      * @param string|object $resource
-     * @return bool|string
+     * @return string|null
      */
     private static function hasTransformer($resource)
     {
+        $transformer = self::$namespace . class_basename($resource);
+
         try {
-            if (class_exists($transformer = self::$namespace . class_basename($resource))) {
-                return true;
+            if (class_exists($transformer)) {
+                return $transformer;
             }
         } catch (\ErrorException $e) {
-            /**
-             * Autoloader will fail if the class doesn't exist
-             */
-            return false;
+            return null;
         }
 
-        return false;
+        return null;
     }
 
     /**

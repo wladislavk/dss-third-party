@@ -9,132 +9,140 @@ use DentalSleepSolutions\Helpers\AuthTokenParser;
 
 class AuthTokenParserTest extends UnitTestCase
 {
+    const EMPTY_TOKEN = '';
+    const USER_TOKEN_ID = 'u_1';
+    const ADMIN_TOKEN_ID = 'a_1';
+    const INVALID_USER_TOKEN_ID = 'u_2';
+    const INVALID_ADMIN_TOKEN_ID = 'a_2';
+    const USER_ID = 1;
+    const ADMIN_ID = 1;
+
     /** @var JWTAuth */
     private $auth;
 
     /** @var AuthTokenParser */
     private $tokenParser;
 
-    public function testNoToken()
+    /**
+     * @dataProvider tokenDataProvider
+     */
+    public function testToken($token, $user, $admin, $userId, $adminId)
     {
-        $this->setUpTest('', 'returnUserCallback');
+        $this->mockAuthToken($token);
 
-        $user = $this->tokenParser->getUserData();
-        $admin = $this->tokenParser->getAdminData();
+        $userData = $this->tokenParser->getUserData();
+        $adminData = $this->tokenParser->getAdminData();
 
-        $this->assertFalse($user);
-        $this->assertFalse($admin);
+        $this->assertEquals($userData, $user);
+        $this->assertEquals($adminData, $admin);
+
+        if ($userData) {
+            $this->assertEquals($userData->id, $userId);
+            $this->assertEquals($userData->admin, 0);
+        }
+
+        if ($adminData) {
+            $this->assertEquals($adminData->id, $adminId);
+            $this->assertEquals($adminData->admin, 1);
+        }
     }
 
-    public function testUserToken()
+    public function tokenDataProvider()
     {
-        $this->setUpTest('u_1', 'returnUserCallback');
-
-        $user = $this->tokenParser->getUserData();
-        $admin = $this->tokenParser->getAdminData();
-
-        $this->assertEquals($user->id, '1');
-        $this->assertEquals($user->admin, 0);
-        $this->assertFalse($admin);
+        return [
+            [
+                self::EMPTY_TOKEN,
+                null,
+                null,
+                0,
+                0,
+            ],
+            [
+                self::USER_TOKEN_ID,
+                $this->mockUserData(),
+                null,
+                self::USER_ID,
+                0,
+            ],
+            [
+                self::ADMIN_TOKEN_ID,
+                null,
+                $this->mockAdminData(),
+                0,
+                self::ADMIN_ID,
+            ],
+            [
+                self::USER_TOKEN_ID . '|' . self::ADMIN_TOKEN_ID,
+                $this->mockUserData(),
+                $this->mockAdminData(),
+                self::USER_ID,
+                self::ADMIN_ID,
+            ],
+            [
+                self::ADMIN_TOKEN_ID . '|' . self::USER_TOKEN_ID,
+                $this->mockUserData(),
+                $this->mockAdminData(),
+                self::USER_ID,
+                self::ADMIN_ID,
+            ],
+            [
+                self::USER_TOKEN_ID . '|' . self::INVALID_USER_TOKEN_ID,
+                $this->mockUserData(),
+                null,
+                self::USER_ID,
+                0,
+            ],
+            [
+                self::ADMIN_TOKEN_ID . '|' . self::INVALID_ADMIN_TOKEN_ID,
+                null,
+                $this->mockAdminData(),
+                0,
+                self::ADMIN_ID,
+            ],
+        ];
     }
 
-    public function testAdminToken()
+    private function mockAuthToken($mockToken)
     {
-        $this->setUpTest('a_1', 'returnAdminCallback');
-
-        $user = $this->tokenParser->getUserData();
-        $admin = $this->tokenParser->getAdminData();
-
-        $this->assertFalse($user);
-        $this->assertEquals($admin->id, '1');
-        $this->assertEquals($admin->admin, 1);
-    }
-
-    public function testAdminUserToken()
-    {
-        $this->setUpTest('a_1|u_1', 'returnAdminUserCallback');
-
-        $user = $this->tokenParser->getUserData();
-        $admin = $this->tokenParser->getAdminData();
-
-        $this->assertEquals($user->id, '1');
-        $this->assertEquals($user->admin, 0);
-        $this->assertEquals($admin->id, '1');
-        $this->assertEquals($admin->admin, 1);
-    }
-
-    public function testUserAdminToken()
-    {
-        $this->setUpTest('a_1|u_1', 'returnUserAdminCallback');
-
-        $user = $this->tokenParser->getUserData();
-        $admin = $this->tokenParser->getAdminData();
-
-        $this->assertEquals($user->id, '1');
-        $this->assertEquals($user->admin, 0);
-        $this->assertEquals($admin->id, '1');
-        $this->assertEquals($admin->admin, 1);
-    }
-
-    public function testUserUserToken()
-    {
-        $this->setUpTest('u_1|u_2', 'returnUserCallback');
-
-        $user = $this->tokenParser->getUserData();
-        $admin = $this->tokenParser->getAdminData();
-
-        $this->assertEquals($user->id, '1');
-        $this->assertEquals($user->admin, 0);
-        $this->assertFalse($admin);
-    }
-
-    public function testAdminAdminToken()
-    {
-        $this->setUpTest('a_1|a_2', 'returnAdminCallback');
-
-        $user = $this->tokenParser->getUserData();
-        $admin = $this->tokenParser->getAdminData();
-
-        $this->assertFalse($user);
-        $this->assertEquals($admin->id, '1');
-        $this->assertEquals($admin->admin, 1);
-    }
-
-    private function setUpTest($mockToken, $returnCallback)
-    {
-        $this->auth = $this->mockJWTAuth($mockToken, $returnCallback);
+        $this->auth = $this->mockJWTAuth($mockToken);
         $this->tokenParser = new AuthTokenParser($this->auth);
     }
 
-    public function returnUserCallback()
+    private function mockUserView()
     {
-        $user = new User();
-        $user->id = 'u_1';
-        $user->admin = 0;
+        $resource = new User();
+        $resource->id = self::USER_TOKEN_ID;
+        $resource->admin = 0;
 
-        return $user;
+        return $resource;
     }
 
-    public function returnAdminCallback()
+    private function mockAdminView()
     {
-        $user = new User();
-        $user->id = 'a_1';
-        $user->admin = 1;
+        $resource = $this->mockUserView();
+        $resource->id = self::ADMIN_TOKEN_ID;
+        $resource->admin = 1;
 
-        return $user;
+        return $resource;
     }
 
-    public function returnAdminUserCallback()
+    public function mockUserData()
     {
-        return [$this->returnAdminCallback(), $this->returnUserCallback()];
+        $resource = $this->mockUserView();
+        $resource->id = self::USER_ID;
+
+        return $resource;
     }
 
-    public function returnUserAdminCallback()
+    public function mockAdminData()
     {
-        return [$this->returnUserCallback(), $this->returnAdminCallback()];
+        $resource = $this->mockAdminView();
+        $resource->id = self::ADMIN_ID;
+
+        return $resource;
     }
 
-    private function mockJWTAuth($mockToken, $returnCallback)
+    private function mockJWTAuth($mockToken)
     {
         $auth = \Mockery::mock(JWTAuth::class);
 
@@ -145,7 +153,33 @@ class AuthTokenParserTest extends UnitTestCase
         $auth->shouldReceive('toUser')
             ->atMost()
             ->times(2)
-            ->andReturnUsing([$this, $returnCallback]);
+            ->andReturnUsing(function () use ($mockToken) {
+                if ($mockToken === self::USER_TOKEN_ID) {
+                    return $this->mockUserView();
+                }
+                
+                if ($mockToken === self::ADMIN_TOKEN_ID) {
+                    return $this->mockAdminView();
+                }
+                
+                if ($mockToken === self::USER_TOKEN_ID . '|' . self::ADMIN_TOKEN_ID) {
+                    return [$this->mockUserView(), $this->mockAdminView()];
+                }
+                
+                if ($mockToken === self::ADMIN_TOKEN_ID . '|' . self::USER_TOKEN_ID) {
+                    return [$this->mockAdminView(), $this->mockUserView()];
+                }
+                
+                if (strpos($mockToken, self::USER_TOKEN_ID) === 0) {
+                    return $this->mockUserView();
+                }
+                
+                if (strpos($mockToken, self::ADMIN_TOKEN_ID) === 0) {
+                    return $this->mockAdminView();
+                }
+
+                return $this->mockUserView();
+            });
 
         return $auth;
     }

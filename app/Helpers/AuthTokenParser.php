@@ -7,14 +7,10 @@ use DentalSleepSolutions\Eloquent\User;
 
 class AuthTokenParser
 {
-    /**
-     * @var JWTAuth
-     */
-    protected $auth;
+    /** @var JWTAuth */
+    private $auth;
 
     /**
-     * Controller constructor
-     *
      * @param JWTAuth $auth
      */
     public function __construct(JWTAuth $auth)
@@ -25,7 +21,7 @@ class AuthTokenParser
     /**
      * Extract "Admin" user from JWT token
      *
-     * @return User|bool
+     * @return User
      */
     public function getAdminData()
     {
@@ -35,7 +31,7 @@ class AuthTokenParser
     /**
      * Extract "User" user from JWT token
      *
-     * @return User|bool
+     * @return User
      */
     public function getUserData()
     {
@@ -47,11 +43,11 @@ class AuthTokenParser
      *
      * @param callable $getDataFromModelArray
      * @param callable $getDataFromModelData
-     * @return User|bool
+     * @return User
      */
     private function getAgnosticData (callable $getDataFromModelArray, callable $getDataFromModelData) {
         if (!$this->auth->getToken()) {
-            return false;
+            return null;
         }
 
         /**
@@ -70,7 +66,7 @@ class AuthTokenParser
      * Return first Admin instance from model array
      *
      * @param array $modelArray
-     * @return User|bool
+     * @return User
      */
     private function getAdminFromModelArray (Array $modelArray)
     {
@@ -81,7 +77,7 @@ class AuthTokenParser
      * Return first User instance from model array
      *
      * @param array $modelArray
-     * @return User|bool
+     * @return User
      */
     private function getUserFromModelArray (Array $modelArray)
     {
@@ -96,7 +92,7 @@ class AuthTokenParser
      * @return mixed
      */
     private function getAgnosticDataFromModelArray (Array $modelArray, callable $reduceDataFromModelArray) {
-        $modelData = array_reduce($modelArray, $reduceDataFromModelArray, false);
+        $modelData = array_reduce($modelArray, $reduceDataFromModelArray, null);
         return $modelData;
     }
 
@@ -105,7 +101,7 @@ class AuthTokenParser
      *
      * @param User|bool $previousData
      * @param User|bool$currentData
-     * @return User|bool
+     * @return User
      */
     private function reduceAdminFromModelArray ($previousData, $currentData) {
         if ($previousData) {
@@ -121,7 +117,7 @@ class AuthTokenParser
      *
      * @param User|bool $previousData
      * @param User|bool$currentData
-     * @return User|bool
+     * @return User
      */
     private function reduceUserFromModelArray ($previousData, $currentData) {
         if ($previousData) {
@@ -136,7 +132,7 @@ class AuthTokenParser
      * Return User data if it belongs to an Admin
      *
      * @param User $modelData
-     * @return User|bool
+     * @return User
      */
     private function getAdminFromModelData (User $modelData)
     {
@@ -147,7 +143,7 @@ class AuthTokenParser
      * Return User data if it belongs to a User
      *
      * @param User $modelData
-     * @return User|bool
+     * @return User
      */
     private function getUserFromModelData (User $modelData)
     {
@@ -159,7 +155,7 @@ class AuthTokenParser
      *
      * @param User   $modelData
      * @param string $modelTypeFlag
-     * @return User|bool
+     * @return User
      */
     private function getAgnosticDataFromModelData (User $modelData, $modelTypeFlag) {
         $modelTypeFlag = preg_quote($modelTypeFlag);
@@ -171,7 +167,7 @@ class AuthTokenParser
          * * u_\d: User
          */
         if (!preg_match("/^{$modelTypeFlag}_(?P<id>\d+)$/", $modelData->id, $match)) {
-            return false;
+            return null;
         }
 
         $modelData->id = $match['id'];

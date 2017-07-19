@@ -167,7 +167,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TransactionCode::cl
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\User::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\User::class, function ($faker) {
     return [
         'user_access'             => $faker->randomDigit,
         'docid'                   => $faker->randomDigit,
@@ -2064,7 +2064,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PreviousTreatment::
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\HealthHistory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\HealthHistory::class, function ($faker) {
     return [
         'formid'                 => $faker->randomDigit,
         'patientid'              => $faker->randomDigit,

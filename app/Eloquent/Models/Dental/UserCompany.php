@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Eloquent\Models\Company;
 
 class UserCompany extends AbstractModel
 {
@@ -27,7 +28,7 @@ class UserCompany extends AbstractModel
 
     public function company()
     {
-        $this->belongsTo('DentalSleepSolutions\Eloquent\Company', 'companyid');
+        $this->belongsTo(Company::class, 'companyid');
     }
 
     /**

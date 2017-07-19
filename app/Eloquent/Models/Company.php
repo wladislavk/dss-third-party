@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent\Models;
 
-use DentalSleepSolutions\Eloquent\Dental\UserCompany;
+use DentalSleepSolutions\Eloquent\Models\Dental\UserCompany;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Company as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Companies as Repository;

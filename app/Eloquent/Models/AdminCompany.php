@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Eloquent\Dental\UserCompany;
+use DentalSleepSolutions\Eloquent\Models\Dental\UserCompany;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
 class AdminCompany extends Model

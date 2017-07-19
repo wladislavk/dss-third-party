@@ -18,7 +18,7 @@ class Legacy extends IlluminateAuthAdapter
     /**
      * Legacy-code hashed password validation.
      *
-     * @param  \DentalSleepSolutions\Eloquent\User $user
+     * @param  \DentalSleepSolutions\Eloquent\Models\User $user
      * @param  string $password
      * @return boolean
      */

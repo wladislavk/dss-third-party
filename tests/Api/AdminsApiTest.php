@@ -29,7 +29,8 @@ class AdminsApiTest extends ApiTestCase
             'last_name'          => 'testLastName'
         ];
 
-        $this->post('/api/v1/admins', $data)
+        $this->post('/api/v1/admins', $data);
+        $this
             ->seeInDatabase('admin', ['name' => 'PHPUnit admin'])
             ->assertResponseOk();
     }
@@ -49,7 +50,8 @@ class AdminsApiTest extends ApiTestCase
             'password'   => 'test'
         ];
 
-        $this->put('/api/v1/admins/' . $adminTestRecord->adminid, $data)
+        $this->put('/api/v1/admins/' . $adminTestRecord->adminid, $data);
+        $this
             ->seeInDatabase('admin', ['name' => 'PHPUnit updated admin'])
             ->assertResponseOk();
     }
@@ -63,7 +65,8 @@ class AdminsApiTest extends ApiTestCase
     {
         $adminTestRecord = factory(Admin::class)->create();
 
-        $this->delete('/api/v1/admins/' . $adminTestRecord->adminid)
+        $this->delete('/api/v1/admins/' . $adminTestRecord->adminid);
+        $this
             ->notSeeInDatabase('admin', ['adminid' => $adminTestRecord->adminid])
             ->assertResponseOk();
     }

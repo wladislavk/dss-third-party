@@ -11,21 +11,30 @@ use DentalSleepSolutions\Eloquent\User as UserView;
  */
 class ExternalAuthTokenParser
 {
-    /** @var \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies */
-    protected $companiesRepository;
+    const NO_ERROR = '';
+    const COMPANY_KEY_MISSING = 'Company key is missing';
+    const USER_KEY_MISSING = 'User key is missing';
+    const COMPANY_KEY_INVALID = 'Company key is not valid';
+    const USER_KEY_INVALID = 'User key is not valid';
 
-    /** @var \DentalSleepSolutions\Contracts\Repositories\ExternalUsers */
-    protected $usersRepository;
+    /** @var ExternalCompanies */
+    private $companiesRepository;
 
-    /** @var \DentalSleepSolutions\Eloquent\User */
-    protected $userView;
+    /** @var ExternalUsers */
+    private $usersRepository;
+
+    /** @var UserView */
+    private $userView;
+
+    /** @var string */
+    private $error;
 
     /**
      * ExternalAuthTokenParser constructor.
      *
-     * @param \DentalSleepSolutions\Contracts\Repositories\ExternalCompanies $companiesRepository
-     * @param \DentalSleepSolutions\Contracts\Repositories\ExternalUsers     $usersRepository
-     * @param \DentalSleepSolutions\Eloquent\User                            $userView
+     * @param ExternalCompanies $companiesRepository
+     * @param ExternalUsers     $usersRepository
+     * @param UserView          $userView
      */
     public function __construct(
         ExternalCompanies $companiesRepository,
@@ -36,39 +45,68 @@ class ExternalAuthTokenParser
         $this->companiesRepository = $companiesRepository;
         $this->usersRepository = $usersRepository;
         $this->userView = $userView;
+
+        $this->setError(self::NO_ERROR);
     }
 
     /**
      * @param string $companyKey
      * @param string $userKey
-     * @return bool|\DentalSleepSolutions\Eloquent\User
+     * @return UserView
      */
     public function getUserData($companyKey, $userKey)
     {
-        if (!strlen($companyKey) || !strlen($userKey)) {
-            return false;
+        $this->setError(self::NO_ERROR);
+
+        if (!strlen($companyKey)) {
+            $this->setError(self::COMPANY_KEY_MISSING);
+            return null;
+        }
+
+        if (!strlen($userKey)) {
+            $this->setError(self::USER_KEY_MISSING);
+            return null;
         }
 
         $externalCompany = $this->companiesRepository->where('api_key', $companyKey)->first();
 
         if (!$externalCompany) {
-            return false;
+            $this->setError(self::COMPANY_KEY_INVALID);
+            return null;
         }
 
         $externalUser = $this->usersRepository->where('api_key', $userKey)->first();
 
         if (!$externalUser) {
-            return false;
+            $this->setError(self::USER_KEY_INVALID);
+            return null;
         }
 
         $user = $this->userView->find('u_' . $externalUser->user_id)->first();
 
         if (!$user) {
-            return false;
+            $this->setError(self::USER_KEY_INVALID);
+            return null;
         }
 
         $user->id = $externalUser->user_id;
 
         return $user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    /**
+     * @param string $error
+     */
+    private function setError($error)
+    {
+        $this->error = $error;
     }
 }

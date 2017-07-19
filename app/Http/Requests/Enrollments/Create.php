@@ -24,4 +24,14 @@ class Create extends AbstractNonRestRequest
             'state' => 'size:2',
         ];
     }
+
+    /**
+     * @todo: check how to implement authorization properly for API tests that do not use middleware
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
 }

@@ -13,7 +13,6 @@ class CorporateContactsApiTest extends ApiTestCase
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/corporate-contacts -> CorporateContactsController@store method
-     * 
      */
     public function testAddCorporateContact()
     {
@@ -29,7 +28,6 @@ class CorporateContactsApiTest extends ApiTestCase
     /**
      * Test the put method of the Dental Sleep Solutions API
      * Put to /api/v1/corporate-contacts/{id} -> CorporateContactsController@update method
-     * 
      */
     public function testUpdateCorporateContact()
     {
@@ -38,28 +36,30 @@ class CorporateContactsApiTest extends ApiTestCase
         $data = [
             'docid'     => 123,
             'firstname' => 'John',
-            'lastname'  => 'Doe'
+            'lastname'  => 'Doe',
         ];
 
-        $this->put('/api/v1/corporate-contacts/' . $corporateContactTestRecord->contactdid, $data);
+        $this->put('/api/v1/corporate-contacts/' . $corporateContactTestRecord->contactid, $data);
         $this
             ->seeInDatabase('dental_fcontact', ['docid' => 123])
-            ->assertResponseOk();
+            ->assertResponseOk()
+        ;
     }
 
     /**
      * Test the delete method of the Dental Sleep Solutions API
      * Delete to /api/v1/corporate-contacts/{id} -> CorporateContactsController@destroy method
-     * 
      */
     public function testDeleteCorporateContact()
     {
         $corporateContactTestRecord = factory(CorporateContact::class)->create();
 
-        $this->delete('/api/v1/corporate-contacts/' . $corporateContactTestRecord->contactid)
+        $this->delete('/api/v1/corporate-contacts/' . $corporateContactTestRecord->contactid);
+        $this
             ->notSeeInDatabase('dental_fcontact', [
-                'contactid' => $corporateContactTestRecord->contactid
+                'contactid' => $corporateContactTestRecord->contactid,
             ])
-            ->assertResponseOk();
+            ->assertResponseOk()
+        ;
     }
 }

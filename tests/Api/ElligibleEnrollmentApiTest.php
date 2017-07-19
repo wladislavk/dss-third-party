@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Api;
 
+use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCases\ApiTestCase;
 
@@ -10,6 +11,8 @@ class ElligibleEnrollmentApiTest extends ApiTestCase
 
     public function testUpdateEnrollment()
     {
+        /** @var Enrollment $enrollment */
+        $enrollment = factory(Enrollment::class)->create();
         $data = [
             'user_id' => 1,
             'payer_id' => '00282',
@@ -26,17 +29,17 @@ class ElligibleEnrollmentApiTest extends ApiTestCase
             'first_name' => 'Brendan',
             'last_name' => 'Rehman',
             'contact_number' => '425-835-1871',
-            'email' => 'brendan@ignitedcoder.com'
-            ,];
+            'email' => 'brendan@ignitedcoder.com',
+        ];
 
-        $this->post('/api/v1/enrollments/update/123', $data)
-            ->seeStatusCode(200);
+        $this->post("/api/v1/enrollments/update/{$enrollment->id}", $data);
+        $this->seeStatusCode(200);
     }
-
 
     public function testRetrieveEnrollment()
     {
-        $this->get('/api/v1/enrollments/retrieve/123')
-            ->seeStatusCode(200);
+
+        $this->get('/api/v1/enrollments/retrieve/123');
+        $this->seeStatusCode(200);
     }
 }

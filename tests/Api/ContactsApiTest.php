@@ -36,10 +36,12 @@ class ContactsApiTest extends ApiTestCase
             'contacttypeid' => 5
         ];
 
-        $this->post('/api/v1/contacts', $data)
+        $this->post('/api/v1/contacts', $data);
+        $this
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_contact', ['company' => 'Test company']);
+            ->seeInDatabase('dental_contact', ['company' => 'Test company'])
+        ;
     }
 
     /**

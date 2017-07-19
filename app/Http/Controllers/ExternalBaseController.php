@@ -3,11 +3,11 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Routing\Controller as IlluminateBaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use DentalSleepSolutions\Http\Requests\Request;
 
-abstract class ExternalBaseController extends BaseController
+abstract class ExternalBaseController extends IlluminateBaseController
 {
     use DispatchesJobs, ValidatesRequests;
 

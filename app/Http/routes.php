@@ -214,7 +214,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('allergens', 'AllergensController', ['except' => ['create', 'edit']]);
     Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
     Route::resource('change-lists', 'ChangeListsController', ['except' => ['create', 'edit']]);
-    Route::resource('memo', 'Api\ApiAdminMemoController');
+    Route::resource('memo', 'Api\ApiAdminMemoController', ['except' => ['create', 'edit', 'show']]);
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
     Route::resource('external-companies', 'ExternalCompaniesController');
     Route::resource('external-user', 'ExternalUsersController');

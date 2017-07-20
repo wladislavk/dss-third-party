@@ -3,10 +3,42 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\AccessCode as Resource;
 use DentalSleepSolutions\Contracts\Repositories\AccessCodes as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="AccessCode",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="access_code", type="string"),
+ *     @SWG\Property(property="notes", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="plan_id", type="integer")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\AccessCode
+ *
+ * @property int $id
+ * @property string|null $access_code
+ * @property string|null $notes
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property int|null $plan_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereAccessCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode wherePlanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\AccessCode whereStatus($value)
+ * @mixin \Eloquent
+ */
 class AccessCode extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

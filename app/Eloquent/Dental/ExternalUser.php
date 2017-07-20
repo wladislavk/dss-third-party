@@ -6,6 +6,20 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\ExternalUser as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ExternalUsers as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="ExternalUser",
+ *     type="object",
+ *     @SWG\Property(property="company", ref="#/definitions/ExternalCompany"),
+ *     @SWG\Property(property="user", ref="#/definitions/User")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\ExternalUser
+ *
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\ExternalCompany $company
+ * @property-read \DentalSleepSolutions\Eloquent\Dental\User $user
+ * @mixin \Eloquent
+ */
 class ExternalUser extends AbstractModel implements Resource, Repository
 {
     /**

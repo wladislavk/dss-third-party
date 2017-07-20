@@ -3,10 +3,42 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\SoftPalate as Resource;
 use DentalSleepSolutions\Contracts\Repositories\SoftPalates as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="SoftPalate",
+ *     type="object",
+ *     required={"soft_palateid", "ip_address"},
+ *     @SWG\Property(property="soft_palateid", type="integer"),
+ *     @SWG\Property(property="soft_palate", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\SoftPalate
+ *
+ * @property int $soft_palateid
+ * @property string|null $soft_palate
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SoftPalate whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SoftPalate whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SoftPalate whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SoftPalate whereSoftPalate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SoftPalate whereSoftPalateid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SoftPalate whereSortby($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\SoftPalate whereStatus($value)
+ * @mixin \Eloquent
+ */
 class SoftPalate extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

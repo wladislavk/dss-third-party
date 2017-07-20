@@ -33,12 +33,19 @@ abstract class Request extends FormRequest
     /**
      * Get the proper failed validation response for the request.
      *
-     * @param  array $errors
+     * @param array $errors
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function response(array $errors)
     {
-        return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $errors]);
+        $transformed = [];
+        foreach ($errors as $field => $message) {
+            $transformed[] = [
+                'field' => $field,
+                'message' => $message[0],
+            ];
+        }
+        return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $transformed]);
     }
 
     /**
@@ -63,6 +70,11 @@ abstract class Request extends FormRequest
     public function updateRules()
     {
         return $this->getUpdateRules();
+    }
+
+    public function getRawRules()
+    {
+        return $this->rules;
     }
 
     /**

@@ -3,10 +3,45 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Device as Resource;
 use DentalSleepSolutions\Contracts\Repositories\Devices as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="Device",
+ *     type="object",
+ *     required={"deviceid", "ip_address"},
+ *     @SWG\Property(property="deviceid", type="integer"),
+ *     @SWG\Property(property="device", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="image_path", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\Device
+ *
+ * @property int $deviceid
+ * @property string|null $device
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @property string|null $image_path
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Device whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Device whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Device whereDevice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Device whereDeviceid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Device whereImagePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Device whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Device whereSortby($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\Device whereStatus($value)
+ * @mixin \Eloquent
+ */
 class Device extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

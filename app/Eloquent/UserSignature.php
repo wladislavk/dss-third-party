@@ -5,6 +5,32 @@ namespace DentalSleepSolutions\Eloquent;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @SWG\Definition(
+ *     definition="UserSignature",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="user_id", type="integer"),
+ *     @SWG\Property(property="signature_json", type="string"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\UserSignature
+ *
+ * @property int $id
+ * @property int|null $user_id
+ * @property string|null $signature_json
+ * @property string|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\UserSignature whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\UserSignature whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\UserSignature whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\UserSignature whereSignatureJson($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\UserSignature whereUserId($value)
+ * @mixin \Eloquent
+ */
 class UserSignature extends Model
 {
     /**

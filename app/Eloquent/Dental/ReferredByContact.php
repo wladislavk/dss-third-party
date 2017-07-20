@@ -3,10 +3,105 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\ReferredByContact as Resource;
 use DentalSleepSolutions\Contracts\Repositories\ReferredByContacts as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="ReferredByContact",
+ *     type="object",
+ *     required={"referredbyid"},
+ *     @SWG\Property(property="referredbyid", type="integer"),
+ *     @SWG\Property(property="docid", type="integer"),
+ *     @SWG\Property(property="salutation", type="string"),
+ *     @SWG\Property(property="lastname", type="string"),
+ *     @SWG\Property(property="firstname", type="string"),
+ *     @SWG\Property(property="middlename", type="string"),
+ *     @SWG\Property(property="company", type="string"),
+ *     @SWG\Property(property="add1", type="string"),
+ *     @SWG\Property(property="add2", type="string"),
+ *     @SWG\Property(property="city", type="string"),
+ *     @SWG\Property(property="state", type="string"),
+ *     @SWG\Property(property="zip", type="string"),
+ *     @SWG\Property(property="phone1", type="string"),
+ *     @SWG\Property(property="phone2", type="string"),
+ *     @SWG\Property(property="fax", type="string"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="national_provider_id", type="string"),
+ *     @SWG\Property(property="qualifier", type="string"),
+ *     @SWG\Property(property="qualifierid", type="string"),
+ *     @SWG\Property(property="greeting", type="string"),
+ *     @SWG\Property(property="sincerely", type="string"),
+ *     @SWG\Property(property="contacttypeid", type="integer"),
+ *     @SWG\Property(property="notes", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="preferredcontact", type="string"),
+ *     @SWG\Property(property="referredby_info", type="integer")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\ReferredByContact
+ *
+ * @property int $referredbyid
+ * @property int|null $docid
+ * @property string|null $salutation
+ * @property string|null $lastname
+ * @property string|null $firstname
+ * @property string|null $middlename
+ * @property string|null $company
+ * @property string|null $add1
+ * @property string|null $add2
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $phone1
+ * @property string|null $phone2
+ * @property string|null $fax
+ * @property string|null $email
+ * @property string|null $national_provider_id
+ * @property string|null $qualifier
+ * @property string|null $qualifierid
+ * @property string|null $greeting
+ * @property string|null $sincerely
+ * @property int|null $contacttypeid
+ * @property string|null $notes
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property string|null $preferredcontact
+ * @property int|null $referredby_info
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereAdd1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereAdd2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereCompany($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereContacttypeid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereDocid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereFax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereFirstname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereGreeting($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereLastname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereMiddlename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereNationalProviderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact wherePhone1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact wherePhone2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact wherePreferredcontact($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereQualifier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereQualifierid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereReferredbyInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereReferredbyid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereSalutation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereSincerely($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\ReferredByContact whereZip($value)
+ * @mixin \Eloquent
+ */
 class ReferredByContact extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

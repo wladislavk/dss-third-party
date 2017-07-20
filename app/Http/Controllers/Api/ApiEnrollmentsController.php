@@ -76,6 +76,17 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
+     * @SWG\Get(
+     *     path="/enrollments/list/{userId}",
+     *     @SWG\Parameter(name="userId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @SWG\Get(
+     *     path="/enrollments/list",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Enrollments list
      *
      * @param Request $request
@@ -100,6 +111,11 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/enrollments/create",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * create enrollment
      *
      * @param  \DentalSleepSolutions\Http\Requests\Enrollments\Create $request
@@ -186,10 +202,16 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
+     * @SWG\Get(
+     *     path="/enrollments/payers/{transaction_type}",
+     *     @SWG\Parameter(name="transaction_type", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * @param int $transaction_type
      * @return object|string
      */
-    public function getPayersList($transaction_type = 1)
+    public function getPayersList($transaction_type)
     {
         $transaction_type = TransactionType::where('id', $transaction_type)->where('status', 1)->first();
 
@@ -204,6 +226,11 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
+     * @SWG\Post(
+     *     path="/enrollments/payers/original-signature/send",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * @param  \DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -244,10 +271,16 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
+     * @SWG\Get(
+     *     path="/enrollments/syncpayers",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * @return array|\Illuminate\Http\JsonResponse
      */
     public function syncEnrollmentPayers()
     {
+        $response = [];
         try {
             $results = $this->payers->syncEnrollmentPayersFromProvider(null);
             $response = ['data' => $results, 'status' => true, 'message' => ''];
@@ -258,49 +291,19 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
-     *
-     * @SWG\Put(
-     *     path="/api/v1/enrollments.json",
-     *     @SWG\Parameter(name="endpoint",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="payer_id",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="transaction_type",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="facility_name",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="provider_name",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="tax_id",
-     *                    description="",
-     *                    required=true,type="string"),
-     *     @SWG\Parameter(name="address",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="city",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="state",
-     *                    description="",
-     *                    required=true,type="string"),
-     *    @SWG\Parameter(name="zip",
-     *                    description="",
-     *                    required=true,type="string"),
-     *
-     *    @SWG\Response(response="200", description="Action completed successfully.")
+     * @SWG\Post(
+     *     path="/enrollments/update/{enrollmentId}",
+     *     @SWG\Parameter(name="enrollmentId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
      * @param ApiEligibleEnrollmentRequest $request
-     * @param integer $enrollmentId
+     * @param int $enrollmentId
      * @return array|\Illuminate\Http\JsonResponse
      */
     public function updateEnrollment(ApiEligibleEnrollmentRequest $request, $enrollmentId = 0)
     {
+        $enrollment = null;
         try {
             $enrollmentParams = $this->setupEnrollmentArrayFromFormInput($request);
             $enrollment = $this->enrollments->updateEnrollment($enrollmentParams, $enrollmentId);
@@ -310,21 +313,66 @@ class ApiEnrollmentsController extends ApiBaseController
         return response()->json($enrollment, 200);
     }
 
-    //Todo - Add relevant params to the Swagger Items.
     /**
      * @SWG\Get(
-     *     path="/api/v1/enrollments.json",
+     *     path="/enrollments/retrieve/{enrollmentId}",
+     *     @SWG\Parameter(name="enrollmentId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param integer $enrollmentId
+<<<<<<< HEAD
+     * @param int $enrollmentId
      * @return array|\Illuminate\Http\JsonResponse
      */
-    public function retrieveEnrollment($enrollmentId = 0)
+    public function retrieveEnrollment($enrollmentId)
     {
+        $response = [];
         try {
             $response = $this->enrollments->retrieveEnrollment($enrollmentId);
         } catch (Exception $ex) {
             return $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+        }
+        return response()->json($response, 200);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/enrollments/apikey/{userId}",
+     *     @SWG\Parameter(name="userId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $userId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDentalUserCompanyApiKey($userId)
+    {
+        $response = [];
+        try {
+            $response = $this->enrollments->getUserCompanyEligibleApiKey($userId);
+        } catch (Exception $ex) {
+            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
+        }
+        return response()->json($response, 200);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/enrollments/type/{id}",
+     *     @SWG\Parameter(name="id", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getEnrollmentTransactionType($id)
+    {
+        $response = [];
+        try {
+            $response = $this->enrollments->getEnrollmentTransactionType($id);
+        } catch (Exception $ex) {
+            $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
         }
         return response()->json($response, 200);
     }
@@ -414,34 +462,6 @@ class ApiEnrollmentsController extends ApiBaseController
     protected function getDentalUserSignature($user_id)
     {
         return $this->signatures->findBy('user_id', $user_id);
-    }
-
-    /**
-     * @param int $userId
-     * @return mixed
-     */
-    public function getDentalUserCompanyApiKey($userId)
-    {
-        try {
-            $response = $this->enrollments->getUserCompanyEligibleApiKey($userId);
-        } catch (Exception $ex) {
-            return $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
-        }
-        return response()->json($response, 200);
-    }
-
-    /**
-     * @param int $id
-     * @return array|\Illuminate\Http\JsonResponse
-     */
-    public function getEnrollmentTransactionType($id = 0)
-    {
-        try {
-            $response = $this->enrollments->getEnrollmentTransactionType($id);
-        } catch (Exception $ex) {
-            return $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
-        }
-        return response()->json($response, 200);
     }
 
     /**

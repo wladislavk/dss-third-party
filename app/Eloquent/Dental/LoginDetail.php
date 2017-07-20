@@ -3,10 +3,39 @@
 namespace DentalSleepSolutions\Eloquent\Dental;
 
 use DentalSleepSolutions\Eloquent\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\EloquentTraits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\LoginDetail as Resource;
 use DentalSleepSolutions\Contracts\Repositories\LoginDetails as Repository;
 
+/**
+ * @SWG\Definition(
+ *     definition="LoginDetail",
+ *     type="object",
+ *     required={"l_detailid"},
+ *     @SWG\Property(property="l_detailid", type="integer"),
+ *     @SWG\Property(property="loginid", type="integer"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="cur_page", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\LoginDetail
+ *
+ * @property int $l_detailid
+ * @property int|null $loginid
+ * @property int|null $userid
+ * @property string|null $cur_page
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LoginDetail whereAdddate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LoginDetail whereCurPage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LoginDetail whereIpAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LoginDetail whereLDetailid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LoginDetail whereLoginid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Dental\LoginDetail whereUserid($value)
+ * @mixin \Eloquent
+ */
 class LoginDetail extends AbstractModel implements Resource, Repository
 {
     use WithoutUpdatedTimestamp;

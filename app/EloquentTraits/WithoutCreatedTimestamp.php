@@ -1,6 +1,6 @@
 <?php
 
-namespace DentalSleepSolutions\Eloquent;
+namespace DentalSleepSolutions\EloquentTraits;
 
 trait WithoutCreatedTimestamp
 {

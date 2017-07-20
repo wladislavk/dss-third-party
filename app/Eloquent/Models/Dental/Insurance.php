@@ -5,11 +5,10 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DentalSleepSolutions\Libraries\ClaimFormData;
 use DB;
 
-class Insurance extends AbstractModel implements Resource, Repository
+class Insurance extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;
 

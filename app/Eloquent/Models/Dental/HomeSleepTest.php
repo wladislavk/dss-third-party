@@ -4,10 +4,9 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DB;
 
-class HomeSleepTest extends AbstractModel implements Resource, Repository
+class HomeSleepTest extends AbstractModel implements Resource
 {
     /**
      * Guarded attributes

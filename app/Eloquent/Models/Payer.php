@@ -3,14 +3,13 @@
 namespace DentalSleepSolutions\Eloquent\Models;
 
 use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 
 /**
  * @property string $payer_id           Eligible payer unique identifier.
  * @property array $names               Available names of a payer.
  * @property array $supported_endpoints Eligible endpoints supported by a payer.
  */
-class Payer extends AbstractModel implements Resource, Repository
+class Payer extends AbstractModel implements Resource
 {
     const ELIGIBILITY_CODE = '270';
     const ELIGIBILITY_ENDPOINT = 'coverage';

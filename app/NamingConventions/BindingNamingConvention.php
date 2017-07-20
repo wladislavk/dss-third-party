@@ -2,12 +2,12 @@
 
 namespace DentalSleepSolutions\NamingConventions;
 
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Http\Requests\Request;
+use Prettus\Repository\Eloquent\BaseRepository;
 
 class BindingNamingConvention
 {
@@ -56,8 +56,13 @@ class BindingNamingConvention
      */
     public function getRepository()
     {
-//        throw new NamingConventionException("$repository must exist and extend " . Repository::class);
-        return Repository::class;
+        $modelClassName = get_class($this->model);
+        $repoClassName = $modelClassName . 'Repository';
+        $repoClassName = str_replace('Models', 'Repositories', $repoClassName);
+        if (!class_exists($repoClassName) || !is_subclass_of($repoClassName, BaseRepository::class)) {
+            throw new NamingConventionException("$repoClassName must exist and extend " . BaseRepository::class);
+        }
+        return $repoClassName;
     }
 
     /**

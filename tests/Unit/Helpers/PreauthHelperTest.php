@@ -3,7 +3,7 @@
 namespace Tests\Unit\Helpers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;

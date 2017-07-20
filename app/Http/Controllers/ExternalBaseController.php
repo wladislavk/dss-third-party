@@ -27,8 +27,7 @@ abstract class ExternalBaseController extends IlluminateBaseController
         Request $request,
         UserView $userView,
         User $userModel
-    )
-    {
+    ) {
         $this->externalCompaniesRepository = $externalCompanies;
         $this->externalUsersRepository = $externalUsers;
         $this->currentUser = $this->getUserInfo($request, $userView, $userModel);

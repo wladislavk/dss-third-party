@@ -4,10 +4,9 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DB;
 
-class User extends AbstractModel implements Resource, Repository
+class User extends AbstractModel implements Resource
 {
     /**
      * Guarded attributes
@@ -68,7 +67,7 @@ class User extends AbstractModel implements Resource, Repository
      * Get user type by user id
      *
      * @param integer $userId
-     * @return \DentalSleepSolutions\Eloquent\Dental\User
+     * @return \DentalSleepSolutions\Eloquent\Models\Dental\User
      */
     public function getUserType($userId)
     {
@@ -82,7 +81,7 @@ class User extends AbstractModel implements Resource, Repository
      * Get doc id by user id
      *
      * @param integer $userId
-     * @return \DentalSleepSolutions\Eloquent\Dental\User
+     * @return \DentalSleepSolutions\Eloquent\Models\Dental\User
      */
     public function getDocId($userId)
     {
@@ -99,7 +98,7 @@ class User extends AbstractModel implements Resource, Repository
      * Get course staff by user id
      *
      * @param integer $userId
-     * @return \DentalSleepSolutions\Eloquent\Dental\User
+     * @return \DentalSleepSolutions\Eloquent\Models\Dental\User
      */
     public function getCourseStaff($userId)
     {

@@ -5,10 +5,9 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutCreatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DB;
 
-class LedgerHistory extends AbstractModel implements Resource, Repository
+class LedgerHistory extends AbstractModel implements Resource
 {
     use WithoutCreatedTimestamp;
 

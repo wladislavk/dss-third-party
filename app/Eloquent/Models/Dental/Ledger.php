@@ -4,11 +4,10 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use Carbon\Carbon;
 use DB;
 
-class Ledger extends AbstractModel implements Resource, Repository
+class Ledger extends AbstractModel implements Resource
 {
     const DSS_TRXN_TYPE_ADJ = 6;
 

@@ -55,13 +55,6 @@ class ApiEnrollmentsController extends ApiBaseController
     /** @var int */
     protected $transactionType = 0;
 
-    /**
-     * @param JWTAuth $auth
-     * @param User $userModel
-     * @param EnrollmentInterface $enrollments
-     * @param EnrollmentPayersInterface $payers
-     * @param UserSignaturesInterface $signatures
-     */
     public function __construct(
         JWTAuth $auth,
         User $userModel,

@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Prettus\Repository\Eloquent\BaseRepository;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
@@ -15,7 +15,7 @@ abstract class BaseRestController extends Controller
     /** @var bool */
     protected $hasIp = true;
 
-    /** @var Model|Repository */
+    /** @var BaseRepository */
     protected $repository;
 
     /** @var Request */
@@ -24,7 +24,7 @@ abstract class BaseRestController extends Controller
     public function __construct(
         JWTAuth $auth,
         User $userModel,
-        Repository $repository,
+        BaseRepository $repository,
         Request $request
     ) {
         parent::__construct($auth, $userModel);
@@ -53,7 +53,7 @@ abstract class BaseRestController extends Controller
     public function show($id)
     {
         /** @var Resource $resource */
-        $resource = $this->repository->findOrFail($id);
+        $resource = $this->repository->find($id);
         return ApiResponse::responseOk('', $resource);
     }
 
@@ -83,8 +83,8 @@ abstract class BaseRestController extends Controller
     public function update($id)
     {
         $this->validate($this->request, $this->request->updateRules());
-        /** @var Resource $resource */
-        $resource = $this->repository->findOrFail($id);
+        /** @var Model $resource */
+        $resource = $this->repository->find($id);
         $resource->update($this->request->all());
 
         return ApiResponse::responseOk('Resource updated');
@@ -98,8 +98,8 @@ abstract class BaseRestController extends Controller
      */
     public function destroy($id)
     {
-        /** @var Resource $resource */
-        $resource = $this->repository->findOrFail($id);
+        /** @var Model $resource */
+        $resource = $this->repository->find($id);
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');

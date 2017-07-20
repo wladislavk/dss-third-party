@@ -133,7 +133,7 @@ class ContactsController extends BaseRestController
         $contactsPerPage = $request->input('contacts_per_page', 0);
         $isDetailed = $request->input('detailed', false);
 
-        /** @var \DentalSleepSolutions\Eloquent\Models\Dental\Contact $contactModel */
+        /** @var Contact $contactModel */
         $contactModel = $resource;
         $referredByContacts = $contactModel->getReferredByContacts($docId, $sort, $sortDir);
 

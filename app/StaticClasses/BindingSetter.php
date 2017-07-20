@@ -3,10 +3,10 @@
 namespace DentalSleepSolutions\StaticClasses;
 
 use DentalSleepSolutions\Eloquent;
-use DentalSleepSolutions\Contracts\Repositories;
 use DentalSleepSolutions\Contracts\Resources;
 use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
 use DentalSleepSolutions\Structs\Bindings;
+use Prettus\Repository\Eloquent\BaseRepository;
 
 class BindingSetter
 {
@@ -141,11 +141,12 @@ class BindingSetter
     {
         $bindingObjects = [];
         foreach (self::EXTERNAL_BINDINGS as $binding) {
+            $namingConvention = new BindingNamingConvention($binding);
             $bindingObject = new Bindings();
             $bindingObject
                 ->setModel($binding)
                 ->setResource(Resources\Resource::class)
-                ->setRepository(Repositories\Repository::class)
+                ->setRepository($namingConvention->getRepository())
             ;
             $bindingObjects[] = $bindingObject;
         }

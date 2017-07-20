@@ -3,10 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Models;
 
 use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
-class Admin extends AbstractModel implements Resource, Repository
+class Admin extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;
 

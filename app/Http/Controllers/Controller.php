@@ -6,7 +6,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Eloquent\User as UserView;
-use DentalSleepSolutions\Eloquent\Dental\User as Resource;
+use DentalSleepSolutions\Contracts\Repositories\Users;
 use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController
@@ -24,7 +24,7 @@ abstract class Controller extends BaseController
 
     public function __construct(
         JWTAuth $auth,
-        Resource $userModel
+        Users $usersRepository
     ) {
         // TODO: see how it is possible to generate JWT token while testing
         if (env('APP_ENV') === 'testing') {
@@ -33,7 +33,7 @@ abstract class Controller extends BaseController
         }
 
         $this->auth = $auth;
-        $userInfo = $this->getUserInfo($auth, $userModel);
+        $userInfo = $this->getUserInfo($auth, $usersRepository);
 
         $this->currentAdmin = $userInfo['admin'];
         $this->currentUser = $userInfo['user'];
@@ -41,10 +41,10 @@ abstract class Controller extends BaseController
 
     /**
      * @param JWTAuth $auth
-     * @param Resource $userModel
+     * @param Users $usersRepository
      * @return UserView[]|null[]
      */
-    private function getUserInfo(JWTAuth $auth, Resource $userModel)
+    private function getUserInfo(JWTAuth $auth, Users $usersRepository)
     {
         $userData = [
             'admin' => null,
@@ -66,7 +66,7 @@ abstract class Controller extends BaseController
         if (!is_array($authUserData)) {
             $userData = [
                 'admin' => $this->returnIfAdmin($authUserData),
-                'user' => $this->returnIfUser($authUserData, $userModel),
+                'user' => $this->returnIfUser($authUserData, $usersRepository),
             ];
 
             return $userData;
@@ -74,21 +74,21 @@ abstract class Controller extends BaseController
 
         $userData = [
             'admin' => $this->filterAdmin($authUserData),
-            'user' => $this->filterUser($authUserData, $userModel),
+            'user' => $this->filterUser($authUserData, $usersRepository),
         ];
 
         return $userData;
     }
 
     /**
-     * @param array    $collection
-     * @param Resource $userModel
+     * @param array $collection
+     * @param Users $usersRepository
      * @return UserView|null
      */
-    private function filterUser(array $collection, Resource $userModel)
+    private function filterUser(array $collection, Users $usersRepository)
     {
         foreach ($collection as $each) {
-            $user = $this->returnIfUser($each, $userModel);
+            $user = $this->returnIfUser($each, $usersRepository);
 
             if ($user) {
                 return $user;
@@ -117,10 +117,10 @@ abstract class Controller extends BaseController
 
     /**
      * @param UserView $user
-     * @param Resource $userModel
+     * @param Users $usersRepository
      * @return UserView|null
      */
-    private function returnIfUser(UserView $user, Resource $userModel)
+    private function returnIfUser(UserView $user, Users $usersRepository)
     {
         $user = $this->returnIfModelType($user, UserView::USER_PREFIX);
 
@@ -131,13 +131,13 @@ abstract class Controller extends BaseController
         $doctorId = $user->id;
         $userType = 0;
 
-        $getter = $userModel->getDocId($user->id);
+        $getter = $usersRepository->getDocId($user->id);
 
         if ($getter) {
             $doctorId = $getter->docid;
         }
 
-        $getter = $userModel->getUserType($doctorId);
+        $getter = $usersRepository->getUserType($doctorId);
 
         if ($getter) {
             $userType = $getter->user_type;

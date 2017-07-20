@@ -67,5 +67,13 @@ class RouteServiceProvider extends ServiceProvider
         $router->group(['namespace' => $this->namespace], function ($router) {
             require app_path('Http/routes.php');
         });
+
+        // these routes are needed for GenerateSwaggerCommandTest
+        if (env('APP_ENV') == 'testing') {
+            $namespace = 'Tests\Dummies\Http\Controllers';
+            $router->group(['namespace' => $namespace], function ($router) {
+                require __DIR__ . '/../../tests/Dummies/routes.php';
+            });
+        }
     }
 }

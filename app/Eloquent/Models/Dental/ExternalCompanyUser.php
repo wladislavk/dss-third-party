@@ -5,6 +5,17 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 
+/**
+ * @SWG\Definition(
+ *     definition="ExternalCompanyUser",
+ *     type="object",
+ * 
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\ExternalCompanyUser
+ *
+ * @mixin \Eloquent
+ */
 class ExternalCompanyUser extends AbstractModel implements Resource
 {
     /**

@@ -5,6 +5,53 @@ namespace DentalSleepSolutions\Eloquent\Models;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
+/**
+ * @SWG\Definition(
+ *     definition="Admin",
+ *     type="object",
+ *     required={"adminid"},
+ *     @SWG\Property(property="adminid", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="username", type="string"),
+ *     @SWG\Property(property="password", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="salt", type="string"),
+ *     @SWG\Property(property="recover_hash", type="string"),
+ *     @SWG\Property(property="recover_time", type="string"),
+ *     @SWG\Property(property="admin_access", type="integer"),
+ *     @SWG\Property(property="last_accessed_date", type="string"),
+ *     @SWG\Property(property="claim_margin_top", type="integer"),
+ *     @SWG\Property(property="claim_margin_left", type="integer"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="first_name", type="string"),
+ *     @SWG\Property(property="last_name", type="string"),
+ *     @SWG\Property(property="adminCompany", ref="#/definitions/AdminCompany")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Admin
+ *
+ * @property int $adminid
+ * @property string|null $name
+ * @property string|null $username
+ * @property string|null $password
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property string|null $salt
+ * @property string|null $recover_hash
+ * @property string|null $recover_time
+ * @property int|null $admin_access
+ * @property string|null $last_accessed_date
+ * @property int|null $claim_margin_top
+ * @property int|null $claim_margin_left
+ * @property string|null $email
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property-read \DentalSleepSolutions\Eloquent\Models\AdminCompany $adminCompany
+ * @mixin \Eloquent
+ */
 class Admin extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

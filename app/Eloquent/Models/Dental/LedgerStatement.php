@@ -7,6 +7,33 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
+/**
+ * @SWG\Definition(
+ *     definition="LedgerStatement",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="producerid", type="integer"),
+ *     @SWG\Property(property="filename", type="string"),
+ *     @SWG\Property(property="service_date", type="string"),
+ *     @SWG\Property(property="entry_date", type="string"),
+ *     @SWG\Property(property="patientid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\LedgerStatement
+ *
+ * @property int $id
+ * @property int|null $producerid
+ * @property string|null $filename
+ * @property string|null $service_date
+ * @property string|null $entry_date
+ * @property int|null $patientid
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @mixin \Eloquent
+ */
 class LedgerStatement extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

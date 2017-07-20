@@ -6,6 +6,29 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 
+/**
+ * @SWG\Definition(
+ *     definition="ScreenerEpworth",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="screener_id", type="integer"),
+ *     @SWG\Property(property="epworth_id", type="integer"),
+ *     @SWG\Property(property="response", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth
+ *
+ * @property int $id
+ * @property int|null $screener_id
+ * @property int|null $epworth_id
+ * @property int|null $response
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @mixin \Eloquent
+ */
 class ScreenerEpworth extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

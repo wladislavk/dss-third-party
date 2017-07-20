@@ -7,6 +7,29 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
+/**
+ * @SWG\Definition(
+ *     definition="GuideSettingOption",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="option_id", type="integer"),
+ *     @SWG\Property(property="setting_id", type="integer"),
+ *     @SWG\Property(property="label", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\GuideSettingOption
+ *
+ * @property int $id
+ * @property int|null $option_id
+ * @property int|null $setting_id
+ * @property string|null $label
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @mixin \Eloquent
+ */
 class GuideSettingOption extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

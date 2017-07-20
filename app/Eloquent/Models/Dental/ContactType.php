@@ -7,6 +7,35 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
+/**
+ * @SWG\Definition(
+ *     definition="ContactType",
+ *     type="object",
+ *     required={"contacttypeid", "ip_address"},
+ *     @SWG\Property(property="contacttypeid", type="integer"),
+ *     @SWG\Property(property="contacttype", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="physician", type="integer"),
+ *     @SWG\Property(property="corporate", type="integer")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\ContactType
+ *
+ * @property int $contacttypeid
+ * @property string|null $contacttype
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @property int|null $physician
+ * @property int|null $corporate
+ * @mixin \Eloquent
+ */
 class ContactType extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

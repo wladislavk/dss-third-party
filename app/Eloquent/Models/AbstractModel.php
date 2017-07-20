@@ -2,9 +2,10 @@
 
 namespace DentalSleepSolutions\Eloquent\Models;
 
+use DentalSleepSolutions\Contracts\SingularAndPluralInterface;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class AbstractModel extends Model
+abstract class AbstractModel extends Model implements SingularAndPluralInterface
 {
     /**
      * @return string

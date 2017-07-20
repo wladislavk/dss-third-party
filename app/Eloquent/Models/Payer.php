@@ -5,9 +5,21 @@ namespace DentalSleepSolutions\Eloquent\Models;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
+ * @SWG\Definition(
+ *     definition="Payer",
+ *     type="object",
+ *     required={"payer_id", "names", "supported_endpoints"},
+ *     @SWG\Property(property="payer_id", type="string"),
+ *     @SWG\Property(property="names", type="string"),
+ *     @SWG\Property(property="supported_endpoints", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Payer
+ *
  * @property string $payer_id           Eligible payer unique identifier.
  * @property array $names               Available names of a payer.
  * @property array $supported_endpoints Eligible endpoints supported by a payer.
+ * @mixin \Eloquent
  */
 class Payer extends AbstractModel implements Resource
 {

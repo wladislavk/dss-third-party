@@ -6,6 +6,27 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 
+/**
+ * @SWG\Definition(
+ *     definition="DocumentCategory",
+ *     type="object",
+ *     required={"categoryid"},
+ *     @SWG\Property(property="categoryid", type="integer"),
+ *     @SWG\Property(property="name", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\DocumentCategory
+ *
+ * @property int $categoryid
+ * @property string|null $name
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @mixin \Eloquent
+ */
 class DocumentCategory extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

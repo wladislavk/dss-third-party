@@ -4,6 +4,17 @@ namespace DentalSleepSolutions\Eloquent\Models\Enrollments;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @SWG\Definition(
+ *     definition="PayersList",
+ *     type="object",
+ * 
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Enrollments\PayersList
+ *
+ * @mixin \Eloquent
+ */
 class PayersList extends Model
 {
     /**

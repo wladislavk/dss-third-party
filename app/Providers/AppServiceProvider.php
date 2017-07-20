@@ -3,7 +3,9 @@
 namespace DentalSleepSolutions\Providers;
 
 use DentalSleepSolutions\Eloquent;
+use DentalSleepSolutions\Helpers\ClassRetriever;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
+use DentalSleepSolutions\Swagger\ClassRetrieverInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,5 +34,7 @@ class AppServiceProvider extends ServiceProvider
         foreach ($externalBindings as $externalBinding) {
             $this->app->bind($externalBinding->getResource(), $externalBinding->getModel());
         }
+
+        $this->app->bind(ClassRetrieverInterface::class, ClassRetriever::class);
     }
 }

@@ -7,6 +7,31 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
+/**
+ * @SWG\Definition(
+ *     definition="PaymentReport",
+ *     type="object",
+ *     required={"payment_id"},
+ *     @SWG\Property(property="payment_id", type="integer"),
+ *     @SWG\Property(property="claimid", type="integer"),
+ *     @SWG\Property(property="reference_id", type="string"),
+ *     @SWG\Property(property="response", type="string"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="viewed", type="integer")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\PaymentReport
+ *
+ * @property int $payment_id
+ * @property int|null $claimid
+ * @property string|null $reference_id
+ * @property string|null $response
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property int|null $viewed
+ * @mixin \Eloquent
+ */
 class PaymentReport extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

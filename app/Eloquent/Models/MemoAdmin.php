@@ -4,7 +4,26 @@ namespace DentalSleepSolutions\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MemoAdmin extends Model
+/**
+ * @SWG\Definition(
+ *     definition="MemoAdmin",
+ *     type="object",
+ *     required={"memo_id", "memo", "last_update", "off_date"},
+ *     @SWG\Property(property="memo_id", type="integer"),
+ *     @SWG\Property(property="memo", type="string"),
+ *     @SWG\Property(property="last_update", type="string"),
+ *     @SWG\Property(property="off_date", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\MemoAdmin
+ *
+ * @property int $memo_id
+ * @property string $memo
+ * @property string $last_update
+ * @property string $off_date
+ * @mixin \Eloquent
+ */
+class MemoAdmin extends AbstractModel
 {
     /**
      * The table associated with the model.

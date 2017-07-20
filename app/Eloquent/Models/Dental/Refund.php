@@ -6,6 +6,33 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 
+/**
+ * @SWG\Definition(
+ *     definition="Refund",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="userid", type="integer"),
+ *     @SWG\Property(property="adminid", type="integer"),
+ *     @SWG\Property(property="refund_date", type="string", format="dateTime"),
+ *     @SWG\Property(property="charge_id", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\Refund
+ *
+ * @property int $id
+ * @property float|null $amount
+ * @property int|null $userid
+ * @property int|null $adminid
+ * @property \Carbon\Carbon|null $refund_date
+ * @property int|null $charge_id
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @mixin \Eloquent
+ */
 class Refund extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

@@ -6,6 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\Models\Dental\UserCompany;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
+/**
+ * @SWG\Definition(
+ *     definition="AdminCompany",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="adminid", type="integer"),
+ *     @SWG\Property(property="companyid", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="admin", ref="#/definitions/Admin"),
+ *     @SWG\Property(property="company", ref="#/definitions/Company"),
+ *     @SWG\Property(property="users", type="array", @SWG\Items(ref="#/definitions/UserCompany"))
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\AdminCompany
+ *
+ * @property int $id
+ * @property int|null $adminid
+ * @property int|null $companyid
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @property-read \DentalSleepSolutions\Eloquent\Models\Admin $admin
+ * @property-read \DentalSleepSolutions\Eloquent\Models\Company $company
+ * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Models\Dental\UserCompany[] $users
+ * @mixin \Eloquent
+ */
 class AdminCompany extends Model
 {
     use WithoutUpdatedTimestamp;

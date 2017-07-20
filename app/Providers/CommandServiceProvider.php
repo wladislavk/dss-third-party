@@ -10,6 +10,8 @@ use DentalSleepSolutions\Console\Commands\Api\Resource;
 use DentalSleepSolutions\Console\Commands\Api\Contracts;
 use DentalSleepSolutions\Console\Commands\Api\Controller;
 use DentalSleepSolutions\Console\Commands\Api\Transformer;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemInterface;
 
 class CommandServiceProvider extends ServiceProvider
 {

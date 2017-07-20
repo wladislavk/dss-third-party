@@ -6,6 +6,31 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 
+/**
+ * @SWG\Definition(
+ *     definition="JointExam",
+ *     type="object",
+ *     required={"joint_examid", "ip_address"},
+ *     @SWG\Property(property="joint_examid", type="integer"),
+ *     @SWG\Property(property="joint_exam", type="string"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="sortby", type="integer"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\JointExam
+ *
+ * @property int $joint_examid
+ * @property string|null $joint_exam
+ * @property string|null $description
+ * @property int|null $sortby
+ * @property int|null $status
+ * @property \Carbon\Carbon|null $adddate
+ * @property string $ip_address
+ * @mixin \Eloquent
+ */
 class JointExam extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

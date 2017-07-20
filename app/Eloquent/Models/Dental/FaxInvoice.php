@@ -6,6 +6,33 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Contracts\Resources\Resource;
 
+/**
+ * @SWG\Definition(
+ *     definition="FaxInvoice",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="invoice_id", type="integer"),
+ *     @SWG\Property(property="description", type="string"),
+ *     @SWG\Property(property="start_date", type="string", format="dateTime"),
+ *     @SWG\Property(property="end_date", type="string", format="dateTime"),
+ *     @SWG\Property(property="amount", type="float"),
+ *     @SWG\Property(property="adddate", type="string", format="dateTime"),
+ *     @SWG\Property(property="ip_address", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Dental\FaxInvoice
+ *
+ * @property int $id
+ * @property int|null $invoice_id
+ * @property string|null $description
+ * @property \Carbon\Carbon|null $start_date
+ * @property \Carbon\Carbon|null $end_date
+ * @property float|null $amount
+ * @property \Carbon\Carbon|null $adddate
+ * @property string|null $ip_address
+ * @mixin \Eloquent
+ */
 class FaxInvoice extends AbstractModel implements Resource
 {
     use WithoutUpdatedTimestamp;

@@ -19,8 +19,12 @@ class User extends AbstractModel implements AuthenticatableContract
 {
     use Authenticatable;
 
+    const USER_PREFIX = 'u_';
+    const ADMIN_PREFIX = 'a_';
+
     /**
-     * @todo: check if this table is created on container build and that permissions are correct
+     * @todo View generated on database/migrations/2015_12_22_203443_views_combine_users.php
+     * @todo View altered in AWS-19-Request-Token
      *
      * The database table used by the model.
      *
@@ -53,7 +57,11 @@ class User extends AbstractModel implements AuthenticatableContract
     public static function findByIdOrEmail($id)
     {
         return self::where(function ($q) use ($id) {
-            $q->where('email', $id)->orWhere('id', $id);
-        })->first();
+            $id = explode('|', $id);
+            $q->whereIn('email', $id)->orWhereIn('id', $id);
+        })
+            ->orderBy('id', 'ASC')
+            ->get()
+        ;
     }
 }

@@ -124,7 +124,7 @@ return [
         |
         */
 
-        'user' => 'Tymon\JWTAuth\Providers\User\EloquentUserAdapter',
+        'user' => 'DentalSleepSolutions\Providers\JWT\EloquentUserAdapter',
 
         /*
         |--------------------------------------------------------------------------

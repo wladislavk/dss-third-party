@@ -37,12 +37,27 @@ class GenerateJwtToken extends Command
      */
     public function handle()
     {
-        $user = User::findByIdOrEmail($this->argument('id'));
+        /**
+         * DSS can log a single user (FO/BO) or two users (BO "logged in as" FO).
+         * This method can return more than one result, if the given ID has a separator "|"
+         */
+        $userData = User::findByIdOrEmail($this->argument('id'));
 
-        if (!$user) {
+        if (!$userData) {
             exit(0);
         }
 
-        exit(JWTAuth::fromUser($user));
+        /**
+         * JWTAuth relies on user ID (with the default configuration) but it is not possible to generate a payload
+         * with a combined approach. As a workaround, the ID of a single model will be altered to pass along the
+         * list of IDs needed for "logged in as".
+         */
+        $userModel = $userData[0];
+
+        if (isset($userData[1])) {
+            $userModel->id = "{$userData[0]->id}|{$userData[1]->id}";
+        }
+
+        exit(JWTAuth::fromUser($userModel));
     }
 }

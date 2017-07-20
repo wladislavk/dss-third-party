@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use Carbon\Carbon;
 use DB;
 
@@ -90,7 +89,7 @@ use DB;
  * @property int|null $secondary_claim_id
  * @mixin \Eloquent
  */
-class Ledger extends AbstractModel implements Resource
+class Ledger extends AbstractModel
 {
     const DSS_TRXN_TYPE_ADJ = 6;
 

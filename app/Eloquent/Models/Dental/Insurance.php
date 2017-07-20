@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DentalSleepSolutions\Libraries\ClaimFormData;
 use DB;
 
@@ -621,7 +620,7 @@ use DB;
  * @property string|null $claim_info_code
  * @mixin \Eloquent
  */
-class Insurance extends AbstractModel implements Resource
+class Insurance extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

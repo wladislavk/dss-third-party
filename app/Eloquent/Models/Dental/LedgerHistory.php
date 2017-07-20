@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutCreatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
 /**
@@ -100,7 +99,7 @@ use DB;
  * @property int $secondary_claim_id
  * @mixin \Eloquent
  */
-class LedgerHistory extends AbstractModel implements Resource
+class LedgerHistory extends AbstractModel
 {
     use WithoutCreatedTimestamp;
 

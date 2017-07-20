@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
  * @SWG\Definition(
@@ -17,7 +16,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Models\Dental\User[] $users
  * @mixin \Eloquent
  */
-class ExternalCompany extends AbstractModel implements Resource
+class ExternalCompany extends AbstractModel
 {
     /**
      * Guarded attributes

@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
 /**
@@ -338,7 +337,7 @@ use DB;
  * @property-read \DentalSleepSolutions\Eloquent\Models\Dental\TonsilsClinicalExam $tonsilsClinicalExam
  * @mixin \Eloquent
  */
-class Patient extends AbstractModel implements Resource
+class Patient extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

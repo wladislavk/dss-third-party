@@ -2,8 +2,6 @@
 
 namespace DentalSleepSolutions\Eloquent\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 /**
  * @SWG\Definition(
  *     definition="MemoAdmin",

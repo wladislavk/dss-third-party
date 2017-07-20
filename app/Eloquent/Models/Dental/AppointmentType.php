@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
  * @SWG\Definition(
@@ -26,7 +25,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property int|null $docid
  * @mixin \Eloquent
  */
-class AppointmentType extends AbstractModel implements Resource
+class AppointmentType extends AbstractModel
 {
     /**
      * Mass assignable attributes

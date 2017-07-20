@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutCreatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use Carbon\Carbon;
 use DB;
 
@@ -223,7 +222,7 @@ use DB;
  * @property string|null $in_written_pre_auth_notes
  * @mixin \Eloquent
  */
-class InsurancePreauth extends AbstractModel implements Resource
+class InsurancePreauth extends AbstractModel
 {
     use WithoutCreatedTimestamp;
 

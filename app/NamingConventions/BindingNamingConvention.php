@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\NamingConventions;
 
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Exceptions\NamingConventionException;
@@ -112,18 +111,7 @@ class BindingNamingConvention
      * @return string
      * @throws NamingConventionException
      */
-    public function getResource($baseNamespace = self::BASE_NAMESPACE)
-    {
-//            throw new NamingConventionException("$resource must exist and extend " . Resource::class);
-        return Resource::class;
-    }
-
-    /**
-     * @param string $baseNamespace
-     * @return string
-     * @throws NamingConventionException
-     */
-    public function getRepository($baseNamespace = self::BASE_NAMESPACE)
+    public function getRepository()
     {
         $modelClassName = get_class($this->model);
         $repoClassName = $modelClassName . 'Repository';

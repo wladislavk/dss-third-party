@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
 /**
@@ -42,7 +41,7 @@ use DB;
  * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Models\Dental\GuideDeviceSetting[] $deviceSettings
  * @mixin \Eloquent
  */
-class GuideSetting extends AbstractModel implements Resource
+class GuideSetting extends AbstractModel
 {
     // @todo: check why $options is not marked as @property-read on generation
 

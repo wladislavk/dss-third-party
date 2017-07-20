@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
  * @SWG\Definition(
@@ -38,7 +37,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property string $tracker_notes
  * @mixin \Eloquent
  */
-class PatientSummary extends AbstractModel implements Resource
+class PatientSummary extends AbstractModel
 {
     /**
      * Mass assignable attributes

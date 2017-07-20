@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
  * @SWG\Definition(
@@ -31,7 +30,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property string $ip_address
  * @mixin \Eloquent
  */
-class MedicalHistory extends AbstractModel implements Resource
+class MedicalHistory extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

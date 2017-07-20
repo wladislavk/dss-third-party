@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent;
 use DentalSleepSolutions\Helpers\ClassRetriever;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use DentalSleepSolutions\Swagger\ClassRetrieverInterface;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,11 +29,11 @@ class AppServiceProvider extends ServiceProvider
     {
         $bindings = BindingSetter::setBindings();
         foreach ($bindings as $binding) {
-            $this->app->bind($binding->getResource(), $binding->getModel());
+            $this->app->bind(Model::class, $binding->getModel());
         }
         $externalBindings = BindingSetter::setExternalBindings();
         foreach ($externalBindings as $externalBinding) {
-            $this->app->bind($externalBinding->getResource(), $externalBinding->getModel());
+            $this->app->bind(Model::class, $externalBinding->getModel());
         }
 
         $this->app->bind(ClassRetrieverInterface::class, ClassRetriever::class);

@@ -2,8 +2,6 @@
 
 namespace DentalSleepSolutions\Eloquent\Models;
 
-use DentalSleepSolutions\Contracts\Resources\Resource;
-
 /**
  * @SWG\Definition(
  *     definition="Payer",
@@ -21,7 +19,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property array $supported_endpoints Eligible endpoints supported by a payer.
  * @mixin \Eloquent
  */
-class Payer extends AbstractModel implements Resource
+class Payer extends AbstractModel
 {
     const ELIGIBILITY_CODE = '270';
     const ELIGIBILITY_ENDPOINT = 'coverage';

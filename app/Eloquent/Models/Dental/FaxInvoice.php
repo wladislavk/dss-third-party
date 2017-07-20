@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
  * @SWG\Definition(
@@ -33,7 +32,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property string|null $ip_address
  * @mixin \Eloquent
  */
-class FaxInvoice extends AbstractModel implements Resource
+class FaxInvoice extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

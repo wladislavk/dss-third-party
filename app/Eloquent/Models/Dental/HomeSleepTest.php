@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
 /**
@@ -121,7 +120,7 @@ use DB;
  * @property string $hst_positions
  * @mixin \Eloquent
  */
-class HomeSleepTest extends AbstractModel implements Resource
+class HomeSleepTest extends AbstractModel
 {
     /**
      * Guarded attributes

@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
  * @SWG\Definition(
@@ -48,7 +47,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property string|null $transaction_code
  * @mixin \Eloquent
  */
-class LedgerRecord extends AbstractModel implements Resource
+class LedgerRecord extends AbstractModel
 {
     /**
      * Guarded attributes

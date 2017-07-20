@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
  * @SWG\Definition(
@@ -30,7 +29,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property string|null $notification_date
  * @mixin \Eloquent
  */
-class Notification extends AbstractModel implements Resource
+class Notification extends AbstractModel
 {
     /**
      * Guarded attributes

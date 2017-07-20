@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
 /**
@@ -223,7 +222,7 @@ use DB;
  * @property-read \DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompanyUser $externalCompanyPivot
  * @mixin \Eloquent
  */
-class User extends AbstractModel implements Resource
+class User extends AbstractModel
 {
     /**
      * Guarded attributes

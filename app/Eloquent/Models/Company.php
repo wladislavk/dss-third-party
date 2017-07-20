@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\UserCompany;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
 /**
@@ -82,7 +81,7 @@ use DB;
  * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Models\Dental\UserCompany[] $users
  * @mixin \Eloquent
  */
-class Company extends AbstractModel implements Resource
+class Company extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

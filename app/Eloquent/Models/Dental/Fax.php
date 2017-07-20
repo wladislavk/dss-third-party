@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
 /**
@@ -62,7 +61,7 @@ use DB;
  * @property int|null $viewed
  * @mixin \Eloquent
  */
-class Fax extends AbstractModel implements Resource
+class Fax extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 use Carbon\Carbon;
 
@@ -43,7 +42,7 @@ use Carbon\Carbon;
  * @property int|null $patientid
  * @mixin \Eloquent
  */
-class Task extends AbstractModel implements Resource
+class Task extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

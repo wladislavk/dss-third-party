@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
  * @SWG\Definition(
@@ -123,7 +122,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property int|null $rx_afib
  * @mixin \Eloquent
  */
-class Screener extends AbstractModel implements Resource
+class Screener extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

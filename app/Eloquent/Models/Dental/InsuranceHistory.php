@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 
 /**
  * @SWG\Definition(
@@ -626,7 +625,7 @@ use DentalSleepSolutions\Contracts\Resources\Resource;
  * @property string|null $claim_info_code
  * @mixin \Eloquent
  */
-class InsuranceHistory extends AbstractModel implements Resource
+class InsuranceHistory extends AbstractModel
 {
     /**
      * Guarded attributes

@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Eloquent\Models;
 
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
 /**
@@ -52,7 +51,7 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
  * @property-read \DentalSleepSolutions\Eloquent\Models\AdminCompany $adminCompany
  * @mixin \Eloquent
  */
-class Admin extends AbstractModel implements Resource
+class Admin extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

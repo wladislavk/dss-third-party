@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Structs\LetterData;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use Carbon\Carbon;
 use DB;
 
@@ -87,7 +86,7 @@ use DB;
  * @property \Carbon\Carbon|null $deleted_on
  * @mixin \Eloquent
  */
-class Letter extends AbstractModel implements Resource
+class Letter extends AbstractModel
 {
     /**
      * Guarded attributes

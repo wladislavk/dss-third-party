@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use DB;
 
 /**
@@ -30,7 +29,7 @@ use DB;
  * @property string|null $ip_address
  * @mixin \Eloquent
  */
-class GuideSettingOption extends AbstractModel implements Resource
+class GuideSettingOption extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 

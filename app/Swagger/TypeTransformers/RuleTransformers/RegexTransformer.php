@@ -14,10 +14,10 @@ class RegexTransformer extends AbstractRuleTransformer
     protected function addParams(AnnotationRule $annotationRule)
     {
         $params = parent::addParams($annotationRule);
-        $regexp = '/regex\:\/(.+?)(?<!\\\\)\//';
+        $regexp = '/regex\:\/(?P<regex>.+?)(?<!\\\\)\//';
         preg_match($regexp, $annotationRule->rule, $matches);
-        if (isset($matches[1])) {
-            $params[] = "pattern=\"{$matches[1]}\"";
+        if (isset($matches['regex'])) {
+            $params[] = "pattern=\"{$matches['regex']}\"";
         }
         return $params;
     }

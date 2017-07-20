@@ -127,7 +127,7 @@ class ApiAdminMemoController extends ApiBaseController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param $memoId
+     * @param int $memoId
      */
     public function show($memoId)
     {

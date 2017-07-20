@@ -77,7 +77,7 @@ ANNOTATION;
     protected function setRules(AnnotationData $annotationData)
     {
         $lines = explode("\n", $annotationData->docBlock);
-        $regexp = '/\*\s@(property(?:\-read)?)\s(\S+?)\s\$([a-zA-Z0-9_]+)/';
+        $regexp = '/\*\s@(?P<type>property(?:\-read)?)\s(?P<rule>\S+?)\s\$(?P<field>[a-zA-Z0-9_]+)/';
         $matches = [];
         foreach ($lines as $line) {
             $hasProperty = preg_match($regexp, $line, $matches);
@@ -89,14 +89,14 @@ ANNOTATION;
 
     /**
      * @param AnnotationData $annotationData
-     * @param array $matches
+     * @param string[] $matches
      */
     private function addRule(AnnotationData $annotationData, array $matches)
     {
         $rule = new AnnotationRule();
-        $rule->rule = $matches[2];
-        $rule->field = $matches[3];
-        $rule->type = $matches[1];
+        $rule->rule = $matches['rule'];
+        $rule->field = $matches['field'];
+        $rule->type = $matches['type'];
         $annotationData->rules[] = $rule;
     }
 }

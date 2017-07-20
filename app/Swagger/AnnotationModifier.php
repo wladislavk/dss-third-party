@@ -35,13 +35,25 @@ class AnnotationModifier
             );
             return $fileContents;
         }
-        $swaggerAnnotationsRegexp = '/\s+?\*\s@SWG\\\\[A-Za-z]+?\(.*?\)\n\s+?(?:$|\*\s*?(?=\n))/sm';
+        $swaggerAnnotationsRegexp = $this->formSwaggerAnnotationsRegexp();
         $newDocBlock = preg_replace($swaggerAnnotationsRegexp, '', $existingDocBlock);
         $replacement = $this->getReplacementAnnotation($textByLines, $padding);
         $newDocBlock = $replacement . $newDocBlock;
         $fileContents = str_replace($existingDocBlock, $newDocBlock, $fileContents);
         $fileContents = str_replace('**/', '*/', $fileContents);
         return $fileContents;
+    }
+
+    /**
+     * Will match the following string:
+     *     * @SWG\Foo(something goes here)
+     *     either end of doc block or empty doc block line
+     *
+     * @return string
+     */
+    private function formSwaggerAnnotationsRegexp()
+    {
+        return '/\s+?\*\s@SWG\\\\[A-Za-z]+?\(.*?\)\n\s+?(?:$|\*\s*?(?=\n))/sm';
     }
 
     /**
@@ -64,10 +76,10 @@ class AnnotationModifier
     private function getIndentation($fileContents, AnnotationData $annotation)
     {
         $operator = preg_quote($annotation->operator);
-        $indentationRegexp = "/\\n( *?)$operator/m";
+        $indentationRegexp = "/\\n(?P<indent> *?)$operator/m";
         preg_match($indentationRegexp, $fileContents, $indentationMatches);
-        if (isset($indentationMatches[1])) {
-            return strlen($indentationMatches[1]);
+        if (isset($indentationMatches['indent'])) {
+            return strlen($indentationMatches['indent']);
         }
         return 0;
     }

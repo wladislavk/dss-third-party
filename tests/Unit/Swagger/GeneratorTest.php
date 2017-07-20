@@ -12,6 +12,7 @@ use DentalSleepSolutions\Swagger\Structs\AnnotationData;
 use DentalSleepSolutions\Swagger\Structs\AnnotationParams;
 use DentalSleepSolutions\Swagger\Wrappers\FilesystemWrapper;
 use Mockery\MockInterface;
+use Tests\Dummies\Http\Controllers\FirstDummiesController;
 use Tests\TestCases\UnitTestCase;
 
 class GeneratorTest extends UnitTestCase
@@ -51,10 +52,10 @@ class GeneratorTest extends UnitTestCase
     {
         $this->generator->generateSwagger();
         $expectedFilenames = [
-            Generator::MODEL_DIR . '/FirstModel.php',
-            Generator::MODEL_DIR . '/SecondModel.php',
-            Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/FirstController.php',
-            Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/SecondController.php',
+            Generator::MODEL_DIR . '/FirstDummy.php',
+            Generator::MODEL_DIR . '/SecondDummy.php',
+            Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/FirstDummiesController.php',
+            Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/SecondDummiesController.php',
         ];
         $this->assertEquals($expectedFilenames, $this->filenames);
         /** @var AnnotationData[] $firstModelAnnotations */
@@ -62,7 +63,7 @@ class GeneratorTest extends UnitTestCase
         $this->assertEquals(1, sizeof($firstModelAnnotations));
         $firstModelAnnotation = $firstModelAnnotations[0];
         $this->assertEquals('First model annotation', $firstModelAnnotation->text);
-        $this->assertEquals('Tests\\Models\\FirstModel', $firstModelAnnotation->params->modelClassName);
+        $this->assertEquals('Tests\\Dummies\\Eloquent\\FirstDummy', $firstModelAnnotation->params->modelClassName);
         /** @var AnnotationData[] $secondModelAnnotations */
         $secondModelAnnotations = $this->annotations[1];
         $this->assertEquals(1, sizeof($secondModelAnnotations));
@@ -74,23 +75,23 @@ class GeneratorTest extends UnitTestCase
         $firstControllerIndexAnnotation = $firstControllerAnnotations[0];
         $this->assertEquals('First index annotation', $firstControllerIndexAnnotation->text);
         $this->assertEquals(
-            'Tests\\Http\\Controllers\\FirstController',
+            FirstDummiesController::class,
             $firstControllerIndexAnnotation->params->controllerClassName
         );
-        $this->assertEquals('Tests\\Models\\FirstModel', $firstControllerIndexAnnotation->params->modelClassName);
+        $this->assertEquals('Tests\\Dummies\\Eloquent\\FirstDummiesModel', $firstControllerIndexAnnotation->params->modelClassName);
         $this->assertEquals(
-            'Tests\\Http\\Requests\\FirstRequest',
+            'Tests\\Dummies\\Http\\Requests\\FirstDummiesRequest',
             $firstControllerIndexAnnotation->params->requestClassName
         );
         $firstControllerShowAnnotation = $firstControllerAnnotations[1];
         $this->assertEquals('First show annotation', $firstControllerShowAnnotation->text);
         $this->assertEquals(
-            'Tests\\Http\\Controllers\\FirstController',
+            FirstDummiesController::class,
             $firstControllerShowAnnotation->params->controllerClassName
         );
-        $this->assertEquals('Tests\\Models\\FirstModel', $firstControllerShowAnnotation->params->modelClassName);
+        $this->assertEquals('Tests\\Dummies\\Eloquent\\FirstDummiesModel', $firstControllerShowAnnotation->params->modelClassName);
         $this->assertEquals(
-            'Tests\\Http\\Requests\\FirstRequest',
+            'Tests\\Dummies\\Http\\Requests\\FirstDummiesRequest',
             $firstControllerShowAnnotation->params->requestClassName
         );
         /** @var AnnotationData[] $secondControllerAnnotations */
@@ -102,20 +103,11 @@ class GeneratorTest extends UnitTestCase
         $this->assertEquals('Second show annotation', $secondControllerShowAnnotation->text);
     }
 
-    public function testWithNamespaceAbsentFromFile()
-    {
-        $this->namespacePresent = false;
-        $this->expectException(SwaggerGeneratorException::class);
-        $filename = Generator::MODEL_DIR . '/FirstModel.php';
-        $this->expectExceptionMessage('Namespace or class not found in ' . $filename);
-        $this->generator->generateSwagger();
-    }
-
     public function testWithClassNameAbsentFromFile()
     {
         $this->classNamePresent = false;
         $this->expectException(SwaggerGeneratorException::class);
-        $filename = Generator::MODEL_DIR . '/FirstModel.php';
+        $filename = Generator::MODEL_DIR . '/FirstDummy.php';
         $this->expectExceptionMessage('Namespace or class not found in ' . $filename);
         $this->generator->generateSwagger();
     }
@@ -184,11 +176,11 @@ class GeneratorTest extends UnitTestCase
         $secondAnnotation = new AnnotationData();
         $secondAnnotation->params = $annotationParams;
         switch ($shortClassName) {
-            case 'FirstController':
+            case 'FirstDummiesController':
                 $firstAnnotation->text = 'First index annotation';
                 $secondAnnotation->text = 'First show annotation';
                 break;
-            case 'SecondController':
+            case 'SecondDummiesController':
                 $firstAnnotation->text = 'Second index annotation';
                 $secondAnnotation->text = 'Second show annotation';
                 break;
@@ -205,10 +197,10 @@ class GeneratorTest extends UnitTestCase
         $splitClassName = explode('\\', $annotationParams->modelClassName);
         $shortClassName = $splitClassName[count($splitClassName) - 1];
         switch ($shortClassName) {
-            case 'FirstModel':
+            case 'FirstDummy':
                 $annotation->text = 'First model annotation';
                 break;
-            case 'SecondModel':
+            case 'SecondDummy':
                 $annotation->text = 'Second model annotation';
                 break;
         }
@@ -220,7 +212,7 @@ class GeneratorTest extends UnitTestCase
     {
         $splitName = explode('\\', $controllerClassName);
         $shortName = $splitName[count($splitName) - 1];
-        $modelName = 'Tests\\Models\\' . $shortName;
+        $modelName = 'Tests\\Dummies\\Eloquent\\' . $shortName;
         $modelName = str_replace('Controller', 'Model', $modelName);
         return $modelName;
     }
@@ -229,7 +221,7 @@ class GeneratorTest extends UnitTestCase
     {
         $splitName = explode('\\', $controllerClassName);
         $shortName = $splitName[count($splitName) - 1];
-        $requestName = 'Tests\\Http\\Requests\\' . $shortName;
+        $requestName = 'Tests\\Dummies\\Http\\Requests\\' . $shortName;
         $requestName = str_replace('Controller', 'Request', $requestName);
         return $requestName;
     }
@@ -238,16 +230,16 @@ class GeneratorTest extends UnitTestCase
     {
         if (strstr($dirName, 'Controllers')) {
             return [
-                Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/FirstController.php',
-                Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/SecondController.php',
-                Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/ThirdController.php',
+                Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/FirstDummiesController.php',
+                Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/SecondDummiesController.php',
+                Generator::HTTP_DIR . Generator::CONTROLLER_DIR . '/ThirdDummiesController.php',
             ];
         }
         if (strstr($dirName, 'Eloquent')) {
             return [
-                Generator::MODEL_DIR . '/FirstModel.php',
-                Generator::MODEL_DIR . '/SecondModel.php',
-                Generator::MODEL_DIR . '/AbstractThirdModel.php',
+                Generator::MODEL_DIR . '/FirstDummy.php',
+                Generator::MODEL_DIR . '/SecondDummy.php',
+                Generator::MODEL_DIR . '/AbstractThirdDummy.php',
             ];
         }
         return [];
@@ -261,13 +253,13 @@ class GeneratorTest extends UnitTestCase
         $namespace = '';
         $extends = 'Foo';
         if (strstr($className, 'Controller')) {
-            $namespace = 'Tests\\Http\\Controllers';
-            if ($className != 'ThirdController') {
+            $namespace = 'Tests\\Dummies\\Http\\Controllers';
+            if ($className != 'ThirdDummiesController') {
                 $extends = Generator::BASE_CONTROLLER;
             }
         }
-        if (strstr($className, 'Model')) {
-            $namespace = 'Tests\\Models';
+        if (strstr($className, 'Dummy')) {
+            $namespace = 'Tests\\Dummies\\Eloquent';
         }
         $contents = "<?php\n";
         if ($this->namespacePresent) {

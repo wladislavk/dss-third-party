@@ -27,10 +27,10 @@ class StringTransformer extends AbstractRuleTransformer
      */
     private function getMaxLength($rule)
     {
-        $regexp = '/\|max\:(\d+)/';
+        $regexp = '/\|max\:(?P<symbols>\d+)/';
         preg_match($regexp, $rule, $matches);
-        if (isset($matches[1])) {
-            return intval($matches[1]);
+        if (isset($matches['symbols'])) {
+            return intval($matches['symbols']);
         }
         return 0;
     }

@@ -46,3 +46,4 @@
     2. API testing
         1. What must be tested in API test?
         2. Working with the DB and cleaning up
+5. Swagger documentation

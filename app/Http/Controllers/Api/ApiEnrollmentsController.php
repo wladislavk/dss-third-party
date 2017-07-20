@@ -320,7 +320,6 @@ class ApiEnrollmentsController extends ApiBaseController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-<<<<<<< HEAD
      * @param int $enrollmentId
      * @return array|\Illuminate\Http\JsonResponse
      */

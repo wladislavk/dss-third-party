@@ -40,8 +40,12 @@ class Allergen extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'allergens', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'allergens',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

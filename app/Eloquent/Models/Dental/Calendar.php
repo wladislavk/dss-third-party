@@ -58,11 +58,21 @@ class Calendar extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'start_date', 'end_date', 'description',
-        'event_id', 'docid', 'adddate',
-        'ip_address', 'category', 'producer_id',
-        'patientid', 'rec_type', 'event_length',
-        'event_pid', 'res_id', 'rec_pattern'
+        'start_date',
+        'end_date',
+        'description',
+        'event_id',
+        'docid',
+        'adddate',
+        'ip_address',
+        'category',
+        'producer_id',
+        'patientid',
+        'rec_type',
+        'event_length',
+        'event_pid',
+        'res_id',
+        'rec_pattern',
     ];
 
     /**

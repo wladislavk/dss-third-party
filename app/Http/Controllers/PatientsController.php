@@ -12,6 +12,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
 use DentalSleepSolutions\Eloquent\Models\Dental\ProfileImage;
 use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\LetterToPatientTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
@@ -1071,7 +1072,7 @@ class PatientsController extends BaseRestController
      *
      * @param InsurancePreauth $insPreauthResource
      * @param Patient $patientResource
-     * @param Contact $contactResource
+     * @param ContactRepository $contactRepository
      * @param Summaries $summariesResource
      * @param ProfileImage $profileImageResource
      * @param Letter $letterResource
@@ -1083,7 +1084,7 @@ class PatientsController extends BaseRestController
     public function getDataForFillingPatientForm(
         InsurancePreauth $insPreauthResource,
         Patient $patientResource,
-        Contact $contactResource,
+        ContactRepository $contactRepository,
         Summary $summariesResource,
         ProfileImage $profileImageResource,
         Letter $letterResource,
@@ -1112,7 +1113,7 @@ class PatientsController extends BaseRestController
             ];
 
             foreach ($docFields as $field) {
-                $shortInfo = $contactResource->getDocShortInfo($foundPatient->$field);
+                $shortInfo = $contactRepository->getDocShortInfo($foundPatient->$field);
                 $formedFullNames[$field . '_name'] = $this->getDocNameFromShortInfo($foundPatient->$field, $shortInfo);
             }
 

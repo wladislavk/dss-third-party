@@ -4,12 +4,16 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
 class ContactsController extends BaseRestController
 {
     const DSS_REFERRED_PHYSICIAN = 2;
+
+    /** @var ContactRepository */
+    protected $repository;
 
     /**
      * @SWG\Get(
@@ -191,11 +195,10 @@ class ContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Contact $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function find(Contact $resources, Request $request)
+    public function find(Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -207,7 +210,7 @@ class ContactsController extends BaseRestController
         $page            = $request->input('page', 0);
         $contactsPerPage = $request->input('contacts_per_page', 0);
 
-        $data = $resources->find(
+        $data = $this->repository->findContact(
             $contactType,
             $status,
             $docId,
@@ -227,11 +230,10 @@ class ContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Contact $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getListContactsAndCompanies(Contact $resources, Request $request)
+    public function getListContactsAndCompanies(Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -247,7 +249,7 @@ class ContactsController extends BaseRestController
 
         $names = explode(' ', $partial);
 
-        $contactsAndCompanies = $resources->getListContactsAndCompanies(
+        $contactsAndCompanies = $this->repository->getListContactsAndCompanies(
             $docId, $partial, $names, self::DSS_REFERRED_PHYSICIAN, $searchForCompanies
         );
 
@@ -273,14 +275,13 @@ class ContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Contact $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithContactType(Contact $resource, Request $request)
+    public function getWithContactType(Request $request)
     {
         $contactId = $request->input('contact_id', 0);
-        $data = $resource->getWithContactType($contactId);
+        $data = $this->repository->getWithContactType($contactId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -291,14 +292,13 @@ class ContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Contact $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getInsuranceContacts(Contact $resource, Request $request)
+    public function getInsuranceContacts(Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
-        $data = $resource->getInsuranceContacts($docId);
+        $data = $this->repository->getInsuranceContacts($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -309,12 +309,11 @@ class ContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Contact $resource
      * @param Patient $patients
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getReferredByContacts(Contact $resource, Patient $patients, Request $request)
+    public function getReferredByContacts(Patient $patients, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -324,9 +323,7 @@ class ContactsController extends BaseRestController
         $contactsPerPage = $request->input('contacts_per_page', 0);
         $isDetailed = $request->input('detailed', false);
 
-        /** @var Contact $contactModel */
-        $contactModel = $resource;
-        $referredByContacts = $contactModel->getReferredByContacts($docId, $sort, $sortDir);
+        $referredByContacts = $this->repository->getReferredByContacts($docId, $sort, $sortDir);
 
         $referredByContactsTotalNumber = count($referredByContacts);
         if ($contactsPerPage > 0) {
@@ -407,18 +404,17 @@ class ContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Contact $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCorporateContacts(Contact $resource, Request $request)
+    public function getCorporateContacts(Request $request)
     {
         $page = $request->input('page', 0);
         $rowsPerPage = $request->input('rows_per_page', 10);
         $sort = $request->input('sort');
         $sortDir = $request->input('sort_dir', 'asc');
 
-        $contacts = $resource->getCorporate($page, $rowsPerPage, $sort, $sortDir);
+        $contacts = $this->repository->getCorporate($page, $rowsPerPage, $sort, $sortDir);
 
         return ApiResponse::responseOk('', $contacts);
     }

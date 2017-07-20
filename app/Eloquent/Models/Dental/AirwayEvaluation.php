@@ -66,11 +66,25 @@ class AirwayEvaluation extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'formid', 'patientid', 'maxilla', 'other_maxilla',
-        'mandible', 'other_mandible', 'soft_palate', 'other_soft_palate',
-        'uvula', 'other_uvula', 'gag_reflex', 'other_gag_reflex',
-        'nasal_passages', 'other_nasal_passages', 'userid',
-        'docid', 'status', 'adddate', 'ip_address'
+        'formid',
+        'patientid',
+        'maxilla',
+        'other_maxilla',
+        'mandible',
+        'other_mandible',
+        'soft_palate',
+        'other_soft_palate',
+        'uvula',
+        'other_uvula',
+        'gag_reflex',
+        'other_gag_reflex',
+        'nasal_passages',
+        'other_nasal_passages',
+        'userid',
+        'docid',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

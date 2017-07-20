@@ -40,8 +40,12 @@ class AccessCode extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'access_code', 'notes', 'status',
-        'adddate', 'ip_address', 'plan_id'
+        'access_code',
+        'notes',
+        'status',
+        'adddate',
+        'ip_address',
+        'plan_id',
     ];
 
     /**

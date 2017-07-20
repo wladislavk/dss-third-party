@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Wrappers\FileWrapper;
 
@@ -19,14 +19,17 @@ class GeneralHelper
     /** @var Patient */
     private $patientModel;
 
-    /** @var Contact */
-    private $contactModel;
+    /** @var ContactRepository */
+    private $contactRepository;
 
-    public function __construct(FileWrapper $fileWrapper, Patient $patient, Contact $contact)
-    {
+    public function __construct(
+        FileWrapper $fileWrapper,
+        Patient $patient,
+        ContactRepository $contactRepository
+    ) {
         $this->fileWrapper = $fileWrapper;
         $this->patientModel = $patient;
-        $this->contactModel = $contact;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -85,11 +88,11 @@ class GeneralHelper
             $contactInfo->setPatients($patientContactData);
         }
         if ($mdList) {
-            $mdContactData = $this->contactModel->getContactInfo($letterId, $mdList);
+            $mdContactData = $this->contactRepository->getContactInfo($letterId, $mdList);
             $contactInfo->setMds($mdContactData);
         }
         if ($mdReferralList) {
-            $mdReferralContactData = $this->contactModel->getContactInfo($letterId, $mdReferralList);
+            $mdReferralContactData = $this->contactRepository->getContactInfo($letterId, $mdReferralList);
             $contactInfo->setMdReferrals($mdReferralContactData);
         }
         if ($patientReferralList) {

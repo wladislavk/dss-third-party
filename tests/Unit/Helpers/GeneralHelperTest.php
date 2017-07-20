@@ -4,6 +4,7 @@ namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Wrappers\FileWrapper;
 use Mockery\MockInterface;
@@ -18,8 +19,8 @@ class GeneralHelperTest extends UnitTestCase
     {
         $fileWrapper = $this->mockFileWrapper();
         $patientModel = $this->mockPatientModel();
-        $contactModel = $this->mockContactModel();
-        $this->generalHelper = new GeneralHelper($fileWrapper, $patientModel, $contactModel);
+        $contactRepository = $this->mockContactRepository();
+        $this->generalHelper = new GeneralHelper($fileWrapper, $patientModel, $contactRepository);
     }
 
     public function testIsSharedFile()
@@ -139,13 +140,13 @@ class GeneralHelperTest extends UnitTestCase
         return [$firstReferral];
     }
 
-    private function mockContactModel()
+    private function mockContactRepository()
     {
-        /** @var Contact|MockInterface $contactModel */
-        $contactModel = \Mockery::mock(Contact::class);
-        $contactModel->shouldReceive('getContactInfo')
+        /** @var ContactRepository|MockInterface $contactRepository */
+        $contactRepository = \Mockery::mock(ContactRepository::class);
+        $contactRepository->shouldReceive('getContactInfo')
             ->andReturnUsing([$this, 'getContactContactInfoCallback']);
-        return $contactModel;
+        return $contactRepository;
     }
 
     public function getContactContactInfoCallback($letterId)

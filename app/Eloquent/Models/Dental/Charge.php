@@ -50,10 +50,17 @@ class Charge extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'amount', 'userid', 'adminid',
-        'charge_date', 'stripe_customer', 'stripe_charge',
-        'stripe_card_fingerprint', 'adddate', 'ip_address',
-        'invoice_id', 'status'
+        'amount',
+        'userid',
+        'adminid',
+        'charge_date',
+        'stripe_customer',
+        'stripe_charge',
+        'stripe_card_fingerprint',
+        'adddate',
+        'ip_address',
+        'invoice_id',
+        'status',
     ];
 
     /**

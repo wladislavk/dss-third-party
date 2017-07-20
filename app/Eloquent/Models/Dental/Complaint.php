@@ -40,8 +40,12 @@ class Complaint extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'complaint', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'complaint',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Helpers\LetterTriggers;
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -21,18 +22,18 @@ class LettersToMDTrigger extends AbstractLetterTrigger
     /** @var User */
     private $userModel;
 
-    /** @var Contact */
-    private $contactModel;
+    /** @var ContactRepository */
+    private $contactRepository;
 
     public function __construct(
         LetterCreator $letterCreator,
         Letter $letterModel,
         User $userModel,
-        Contact $contactModel
+        ContactRepository $contactRepository
     ) {
         parent::__construct($letterCreator, $letterModel);
         $this->userModel = $userModel;
-        $this->contactModel = $contactModel;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -130,7 +131,7 @@ class LettersToMDTrigger extends AbstractLetterTrigger
         if (!count($mdLists)) {
             return null;
         }
-        $foundContact = $this->contactModel->getActiveContact($contactId);
+        $foundContact = $this->contactRepository->getActiveContact($contactId);
         return $foundContact;
     }
 }

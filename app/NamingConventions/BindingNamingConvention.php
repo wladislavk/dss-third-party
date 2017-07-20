@@ -8,13 +8,21 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Controllers\BaseRestController;
+use DentalSleepSolutions\Http\Controllers\BaseReferencedRestController;
+use DentalSleepSolutions\Http\Controllers\BaseVersionedRestController;
 use DentalSleepSolutions\Http\Requests\Request;
 use Tymon\JWTAuth\JWTAuth;
+use DentalSleepSolutions\Contracts\Transformers\TransformerInterface;
 
 class BindingNamingConvention
 {
     const BASE_NAMESPACE = 'DentalSleepSolutions';
     const HTTP_NAMESPACE = self::BASE_NAMESPACE . '\\Http';
+    const BASE_REST_CONTROLLERS = [
+        BaseRestController::class,
+        BaseReferencedRestController::class,
+        BaseVersionedRestController::class,
+    ];
 
     /** @var AbstractModel */
     private $model;
@@ -101,8 +109,10 @@ class BindingNamingConvention
         $namespace = $namespace . '\\Controllers';
         $suffix = 'Controller';
         $controller = $namespace . '\\' . $name . $suffix;
-        if (!class_exists($controller) || !is_subclass_of($controller, BaseRestController::class)) {
-            throw new NamingConventionException("$controller must exist and extend " . BaseRestController::class);
+        if (!class_exists($controller) || !$this->isRestfulController($controller)) {
+            throw new NamingConventionException(
+                "$controller must exist and extend a base REST controller like " . BaseRestController::class
+            );
         }
         return $controller;
     }
@@ -159,5 +169,53 @@ class BindingNamingConvention
             throw new NamingConventionException("$request must exist and extend " . Request::class);
         }
         return $request;
+    }
+
+    /**
+     * @param string $namespace
+     * @return string
+     * @throws NamingConventionException
+     */
+    public function getRequestTransformer($namespace = self::HTTP_NAMESPACE)
+    {
+        $name = $this->model->getSingular();
+        $namespace = $namespace . '\\Transformers';
+        $transformer = $namespace . '\\' . $name;
+
+        if (!class_exists($transformer)) {
+            return null;
+        }
+
+        if (!$this->implementsInterface($transformer, TransformerInterface::class)) {
+            throw new NamingConventionException("$transformer must implement " . TransformerInterface::class);
+        }
+
+        return $transformer;
+    }
+
+    /**
+     * @param string $controller
+     * @return bool
+     */
+    private function isRestfulController($controller)
+    {
+        foreach (self::BASE_REST_CONTROLLERS as $baseClass) {
+            if (is_subclass_of($controller, $baseClass)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $class
+     * @param string $interface
+     * @return bool
+     */
+    private function implementsInterface($class, $interface)
+    {
+        $interfaces = class_implements($class);
+        return in_array($interface, $interfaces);
     }
 }

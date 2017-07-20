@@ -2,14 +2,8 @@
 
 namespace DentalSleepSolutions\Providers;
 
-use DentalSleepSolutions\Contracts\Repositories\ChangeLists;
 use DentalSleepSolutions\Contracts\Repositories\Repository;
-use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Eloquent\Dental\ChangeList;
-use DentalSleepSolutions\Http\Controllers\ChangeListsController;
-use DentalSleepSolutions\Http\Requests\AbstractDestroyRequest;
-use DentalSleepSolutions\Http\Requests\AbstractStoreRequest;
-use DentalSleepSolutions\Http\Requests\AbstractUpdateRequest;
+use DentalSleepSolutions\Contracts\Transformers\TransformerInterface;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +25,14 @@ class ControllerServiceProvider extends ServiceProvider
                 ->needs(Request::class)
                 ->give($binding->getRequest())
             ;
+
+            if ($binding->getTransformer()) {
+                $this->app
+                    ->when($binding->getController())
+                    ->needs(TransformerInterface::class)
+                    ->give($binding->getTransformer())
+                ;
+            }
         }
     }
 }

@@ -19,6 +19,9 @@ class Bindings
     /** @var string */
     private $request;
 
+    /** @var string */
+    private $transformer;
+
     public function setModel($model)
     {
         $this->model = strval($model);
@@ -72,5 +75,15 @@ class Bindings
     public function getRequest()
     {
         return $this->request;
+    }
+
+    public function setTransformer($transformer)
+    {
+        $this->transformer = $transformer;
+    }
+
+    public function getTransformer()
+    {
+        return $this->transformer;
     }
 }

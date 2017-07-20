@@ -116,6 +116,7 @@ class ApiResponse
     {
         $json = [
             'status'  => self::getStatusName($code),
+            'code'    => $code,
             'message' => $message,
             'data'    => self::transform($data),
         ];
@@ -172,13 +173,21 @@ class ApiResponse
 
     /**
      * @param string|object $resource
-     * @return bool|string
+     * @return string|null
      */
     private static function hasTransformer($resource)
     {
-        return class_exists($transformer = self::$namespace.class_basename($resource))
-                ? $transformer
-                : false;
+        $transformer = self::$namespace . class_basename($resource);
+
+        try {
+            if (class_exists($transformer)) {
+                return $transformer;
+            }
+        } catch (\ErrorException $e) {
+            return null;
+        }
+
+        return null;
     }
 
     /**

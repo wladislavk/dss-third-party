@@ -40,8 +40,12 @@ class Medicament extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'medications', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'medications',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

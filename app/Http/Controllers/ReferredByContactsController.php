@@ -3,11 +3,15 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ReferredByContact;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ReferredByContactRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
 class ReferredByContactsController extends BaseRestController
 {
+    /** @var ReferredByContactRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/referred-by-contacts",
@@ -174,13 +178,11 @@ class ReferredByContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param ReferredByContact $referredByContactResource
      * @param Request $request
      * @param int|null $contactId
      * @return \Illuminate\Http\JsonResponse
      */
     public function editingContact(
-        ReferredByContact $referredByContactResource,
         Request $request,
         $contactId = null
     ) {
@@ -215,11 +217,11 @@ class ReferredByContactsController extends BaseRestController
 
         $responseData = [];
         if ($contactId) {
-            $referredByContactResource->updateContact($contactId, $contactFormData);
+            $this->repository->updateContact($contactId, $contactFormData);
 
             $responseData['status'] = 'Edited Successfully';
         } else { // contactId = 0 -> creating a new contact
-            $referredByContactResource->create($contactFormData);
+            $this->repository->create($contactFormData);
 
             $responseData['status'] = 'Added Successfully';
         }

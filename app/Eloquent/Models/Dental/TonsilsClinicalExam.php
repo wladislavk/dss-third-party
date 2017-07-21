@@ -50,9 +50,17 @@ class TonsilsClinicalExam extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'formid', 'patientid', 'mallampati', 'tonsils',
-        'tonsils_grade', 'userid', 'docid', 'status',
-        'adddate', 'ip_address', 'additional_notes'
+        'formid',
+        'patientid',
+        'mallampati',
+        'tonsils',
+        'tonsils_grade',
+        'userid',
+        'docid',
+        'status',
+        'adddate',
+        'ip_address',
+        'additional_notes',
     ];
 
     /**

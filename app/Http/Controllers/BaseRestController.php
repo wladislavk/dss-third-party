@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Contracts\SingularAndPluralInterface;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
@@ -105,11 +106,11 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
 
     public function __construct(
         JWTAuth $auth,
-        User $userModel,
+        UserRepository $userRepository,
         BaseRepository $repository,
         Request $request
     ) {
-        parent::__construct($auth, $userModel);
+        parent::__construct($auth, $userRepository);
         $this->repository = $repository;
         $this->request = $request;
     }

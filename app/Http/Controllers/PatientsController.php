@@ -13,6 +13,12 @@ use DentalSleepSolutions\Eloquent\Models\Dental\ProfileImage;
 use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\HomeSleepTestRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummaryRepository;
 use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\LetterToPatientTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
@@ -42,6 +48,9 @@ class PatientsController extends BaseRestController
     const DSS_REFERRED_FRANCHISE = 4;
     const DSS_REFERRED_DSSOFFICE = 5;
     const DSS_REFERRED_OTHER = 6;
+
+    /** @var PatientRepository */
+    protected $repository;
 
     /**
      * @SWG\Get(
@@ -460,15 +469,14 @@ class PatientsController extends BaseRestController
      *
      * Get patients by filter.
      *
-     * @param Patient $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithFilter(Patient $resources, Request $request)
+    public function getWithFilter(Request $request)
     {
         $fields = $request->input('fields') ?: [];
         $where  = $request->input('where') ?: [];
 
-        $patients = $resources->getWithFilter($fields, $where);
+        $patients = $this->repository->getWithFilter($fields, $where);
 
         return ApiResponse::responseOk('', $patients);
     }
@@ -479,14 +487,13 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getNumber(Patient $resources)
+    public function getNumber()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getNumber($docId);
+        $data = $this->repository->getNumber($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -497,14 +504,13 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getDuplicates(Patient $resources)
+    public function getDuplicates()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getDuplicates($docId);
+        $data = $this->repository->getDuplicates($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -515,14 +521,13 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getBounces(Patient $resources)
+    public function getBounces()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getBounces($docId);
+        $data = $this->repository->getBounces($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -533,11 +538,10 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getListPatients(Patient $resources, Request $request)
+    public function getListPatients(Request $request)
     {
         $partialName = $request->input('partial_name') ?: '';
         $partialName = preg_replace("[^ A-Za-z'\-]", '', $partialName);
@@ -546,7 +550,7 @@ class PatientsController extends BaseRestController
 
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getListPatients($docId, $names);
+        $data = $this->repository->getListPatients($docId, $names);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -559,14 +563,13 @@ class PatientsController extends BaseRestController
      * )
      *
      * @param int $patientId
-     * @param Patient $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroyForDoctor($patientId, Patient $resource)
+    public function destroyForDoctor($patientId)
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $resource->deleteForDoctor($patientId, $docId);
+        $this->repository->deleteForDoctor($patientId, $docId);
 
         return ApiResponse::responseOk('Resource deleted');
     }
@@ -577,24 +580,23 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function find(Patient $resources, Request $request)
+    public function find(Request $request)
     {
         $docId           = $this->currentUser->docid ?: 0;
         $userType        = $this->currentUser->user_type ?: 0;
 
-        $patientId       = $request->input('patientId') ?: 0;
-        $type            = $request->input('type') ?: 1;
-        $pageNumber      = $request->input('page') ?: 0;
-        $patientsPerPage = $request->input('patientsPerPage') ?: 30;
-        $letter          = $request->input('letter') ?: '';
-        $sortColumn      = $request->input('sortColumn') ?: 'name';
-        $sortDir         = $request->input('sortDir') ?: '';
+        $patientId       = $request->input('patientId', 0);
+        $type            = $request->input('type', 1);
+        $pageNumber      = $request->input('page', 0);
+        $patientsPerPage = $request->input('patientsPerPage', 30);
+        $letter          = $request->input('letter', '');
+        $sortColumn      = $request->input('sortColumn', 'name');
+        $sortDir         = $request->input('sortDir', '');
 
-        $data = $resources->findBy(
+        $data = $this->repository->findPatientBy(
             $docId,
             $userType,
             $patientId,
@@ -615,14 +617,13 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getReferredByContact(Patient $resources, Request $request)
+    public function getReferredByContact(Request $request)
     {
         $contactId = $request->input('contact_id') ?: 0;
-        $data = $resources->getReferredByContact($contactId);
+        $data = $this->repository->getReferredByContact($contactId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -633,14 +634,13 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getByContact(Patient $resources, Request $request)
+    public function getByContact(Request $request)
     {
         $contactId = $request->input('contact_id') ?: 0;
-        $data = $resources->getByContact($contactId);
+        $data = $this->repository->getByContact($contactId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -667,9 +667,9 @@ class PatientsController extends BaseRestController
      * @param PreauthHelper $preauthHelper
      * @param SimilarHelper $similarHelper
      * @param Patient $patientResource
-     * @param PatientSummary $patientSummaryResource
-     * @param InsurancePreauth $insurancePreauthResource
-     * @param Summaries $summariesResource
+     * @param PatientSummaryRepository $patientSummaryRepository
+     * @param InsurancePreauthRepository $insurancePreauthRepository
+     * @param SummaryRepository $summaryRepository
      * @param Letter $letterResource
      * @param User $userResource
      * @param Request $request
@@ -687,9 +687,9 @@ class PatientsController extends BaseRestController
         PreauthHelper $preauthHelper,
         SimilarHelper $similarHelper,
         Patient $patientResource,
-        PatientSummary $patientSummaryResource,
-        InsurancePreauth $insurancePreauthResource,
-        Summary $summariesResource,
+        PatientSummaryRepository $patientSummaryRepository,
+        InsurancePreauthRepository $insurancePreauthRepository,
+        SummaryRepository $summaryRepository,
         Letter $letterResource,
         User $userResource,
         Request $request,
@@ -708,10 +708,9 @@ class PatientsController extends BaseRestController
         // get doc info by id
         $docInfo = $userResource->getWithFilter('use_patient_portal', ['userid' => $docId]);
 
+        $docPatientPortal = false;
         if (count($docInfo)) {
             $docPatientPortal = $docInfo[0]->use_patient_portal;
-        } else {
-            $docPatientPortal = false;
         }
 
         // get form data for a current patient
@@ -729,7 +728,8 @@ class PatientsController extends BaseRestController
 
         if ($validator->fails()) {
             return ApiResponse::responseError('', 422, $validator->messages());
-        } elseif (count($patientFormData) == 0) {
+        }
+        if (count($patientFormData) == 0) {
             return ApiResponse::responseError('Patient data is empty.', 422);
         }
 
@@ -737,7 +737,7 @@ class PatientsController extends BaseRestController
         if ($request->has('tracker_notes')) {
             $this->validate($request->input('tracker_notes'), (new \DentalSleepSolutions\Http\Requests\PatientSummary())->updateRules());
 
-            $patientSummaryResource->updateTrackerNotes($patientId, $docId, $request->input('tracker_notes'));
+            $patientSummaryRepository->updateTrackerNotes($patientId, $docId, $request->input('tracker_notes'));
 
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
@@ -750,7 +750,7 @@ class PatientsController extends BaseRestController
         // generation an unique patient login
         $uniqueLogin = strtolower(substr($patientFormData["firstname"], 0, 1) . $patientFormData["lastname"]);
 
-        $similarPatientLogin = $patientResource->getSimilarPatientLogin($uniqueLogin);
+        $similarPatientLogin = $this->repository->getSimilarPatientLogin($uniqueLogin);
 
         if ($similarPatientLogin) {
             $number = str_replace($uniqueLogin, '', $similarPatientLogin->login);
@@ -763,7 +763,7 @@ class PatientsController extends BaseRestController
 
         if ($patientId) {
             // find an unchanged patient by id
-            $unchangedPatient = $patientResource->find($patientId);
+            $unchangedPatient = $this->repository->find($patientId);
 
             // TODO: need to rewrite this logic from legacy code to the new Laravel structure
             if (
@@ -807,10 +807,9 @@ class PatientsController extends BaseRestController
                 $patientFormData['email_bounce'] = 0;
             }
 
-            // update patient
-            $patientResource->updatePatient($patientId, $patientFormData);
+            $this->repository->updatePatient($patientId, $patientFormData);
             // update email of parent patient for all his children
-            $patientResource->updateChildrenPatients($patientId, ['email' => $patientFormData['email']]);
+            $this->repository->updateChildrenPatients($patientId, ['email' => $patientFormData['email']]);
 
             // remove pending vobs if insurance info has changed
             $insuranceInfoFieldsArray = [
@@ -840,7 +839,7 @@ class PatientsController extends BaseRestController
                 if ($this->currentUser->name) {
                     $userName = $this->currentUser->name;
                 }
-                $updatedVob = $insurancePreauthResource->updateVob($patientId, $userName);
+                $updatedVob = $insurancePreauthRepository->updateVob($patientId, $userName);
                 if ($updatedVob) {
                     $insurancePreauth = $preauthHelper->createVerificationOfBenefits($patientId, $userId);
                     if ($insurancePreauth) {
@@ -851,16 +850,16 @@ class PatientsController extends BaseRestController
 
             // update patient summary if location is set
             if (!empty($patientLocation)) {
-                $summaries = $summariesResource->getWithFilter(null, ['patientid' => $patientId]);
+                $summaries = $summaryRepository->getWithFilter(null, ['patientid' => $patientId]);
 
                 if (count($summaries)) {
-                    $summariesResource->updateForPatient($patientId, [
-                        'location' => $patientLocation
+                    $summaryRepository->updateForPatient($patientId, [
+                        'location' => $patientLocation,
                     ]);
                 } else {
-                    $summariesResource->create([
+                    $summaryRepository->create([
                         'location'  => $patientLocation,
-                        'patientid' => $patientId
+                        'patientid' => $patientId,
                     ]);
                 }
             }
@@ -975,7 +974,7 @@ class PatientsController extends BaseRestController
             $responseData['created_patient_id'] = $createdPatientId;
 
             if ($patientLocation) {
-                $summariesResource->create([
+                $summaryRepository->create([
                     'location'  => $patientLocation,
                     'patientid' => $createdPatientId
                 ]);
@@ -1059,7 +1058,7 @@ class PatientsController extends BaseRestController
         }
 
         // determine whether patient info has been completely set
-        $this->updatePatientSummary($patientSummaryResource, $patientId, 'patient_info', $completeInfo);
+        $this->updatePatientSummary($patientSummaryRepository, $patientId, 'patient_info', $completeInfo);
 
         return ApiResponse::responseOk('', $responseData);
     }
@@ -1070,25 +1069,23 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param InsurancePreauth $insPreauthResource
-     * @param Patient $patientResource
+     * @param InsurancePreauthRepository $insurancePreauthRepository
      * @param ContactRepository $contactRepository
-     * @param Summaries $summariesResource
+     * @param Summary $summariesResource
      * @param ProfileImage $profileImageResource
-     * @param Letter $letterResource
-     * @param HomeSleepTests $homeSleepTestResource
-     * @param Notifications $notificationResource
+     * @param LetterRepository $letterRepository
+     * @param HomeSleepTestRepository $homeSleepTestRepository
+     * @param Notification $notificationResource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getDataForFillingPatientForm(
-        InsurancePreauth $insPreauthResource,
-        Patient $patientResource,
+        InsurancePreauthRepository $insurancePreauthRepository,
         ContactRepository $contactRepository,
         Summary $summariesResource,
         ProfileImage $profileImageResource,
-        Letter $letterResource,
-        HomeSleepTest $homeSleepTestResource,
+        LetterRepository $letterRepository,
+        HomeSleepTestRepository $homeSleepTestRepository,
         Notification $notificationResource,
         Request $request
     ) {
@@ -1096,7 +1093,7 @@ class PatientsController extends BaseRestController
         if ($request->has('patient_id')) {
             $patientId = $request->input('patient_id');
         }
-        $foundPatient = $patientResource->find($patientId);
+        $foundPatient = $this->repository->find($patientId);
 
         $data = [];
         if (!empty($foundPatient)) {
@@ -1130,14 +1127,15 @@ class PatientsController extends BaseRestController
             }
 
             if ($foundPatient->referred_source == self::DSS_REFERRED_PATIENT) {
-                $referredPatient = $patientResource->getWithFilter([
-                    'lastname', 'firstname', 'middlename'
-                ], ['patientid' => $foundPatient->referred_by])[0];
+                $referredPatient = $this->repository->getWithFilter(
+                    ['lastname', 'firstname', 'middlename'],
+                    ['patientid' => $foundPatient->referred_by]
+                )[0];
 
                 $formedFullNames['referred_name'] = $referredPatient->lastname . ', ' . $referredPatient->firstname . ' '
                     . $referredPatient->middlename . ' - Patient';
-            } elseif($foundPatient->referred_source == self::DSS_REFERRED_PHYSICIAN) {
-                $shortInfo = $contactResource->getDocShortInfo($foundPatient->referred_by);
+            } elseif ($foundPatient->referred_source == self::DSS_REFERRED_PHYSICIAN) {
+                $shortInfo = $contactRepository->getDocShortInfo($foundPatient->referred_by);
 
                 $formedFullNames['referred_name'] = $shortInfo->lastname . ', ' . $shortInfo->firstname . ' '
                     . $shortInfo->middlename
@@ -1153,18 +1151,18 @@ class PatientsController extends BaseRestController
             // data for response
             $data = [
                 // check if user has pending VOB
-                'pending_vob'                 => $insPreauthResource->getPendingVob($patientId),
+                'pending_vob'                 => $insurancePreauthRepository->getPendingVob($patientId),
                 'profile_photo'               => $profileImageResource->getProfilePhoto($patientId),
-                'intro_letter'                => $letterResource->getGeneratedDateOfIntroLetter($patientId),
+                'intro_letter'                => $letterRepository->getGeneratedDateOfIntroLetter($patientId),
                 'insurance_card_image'        => $profileImageResource->getInsuranceCardImage($patientId),
-                'uncompleted_home_sleep_test' => $homeSleepTestResource->getUncompleted($patientId),
+                'uncompleted_home_sleep_test' => $homeSleepTestRepository->getUncompleted($patientId),
                 'patient_notification'        => $notificationResource->getWithFilter(null, [
                                                      'patientid' => $patientId,
-                                                     'status'    => 1
+                                                     'status'    => 1,
                                                  ]),
                 'patient'                     => ApiResponse::transform($foundPatient),
                 'formed_full_names'           => $formedFullNames,
-                'patient_location'            => !empty($foundLocation) ? $foundLocation->location : ''
+                'patient_location'            => !empty($foundLocation) ? $foundLocation->location : '',
             ];
         }
         return ApiResponse::responseOk('', $data);
@@ -1176,11 +1174,10 @@ class PatientsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $patientResource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getReferrers(Patient $patientResource, Request $request)
+    public function getReferrers(Request $request)
     {
         $docId = 0;
         if ($this->currentUser->docid) {
@@ -1194,20 +1191,19 @@ class PatientsController extends BaseRestController
 
         $names = explode(' ', $partial);
 
-        $contacts = $patientResource->getReferrers($docId, $names);
+        $contacts = $this->repository->getReferrers($docId, $names);
 
+        $response = [];
         if (count($contacts)) {
             foreach ($contacts as $item) {
                 $response[] = [
                     'id'     => $item->patientid,
                     'name'   => $item->lastname . ', ' . $item->firstname . ' ' . $item->middlename . ' - ' . $item->label,
-                    'source' => $item->referral_type
+                    'source' => $item->referral_type,
                 ];
             }
         } else {
-            $response = [
-                'error' => 'Error: No match found for this criteria.'
-            ];
+            $response['error'] = 'Error: No match found for this criteria.';
         }
 
         return ApiResponse::responseOk('', $response);
@@ -1220,10 +1216,9 @@ class PatientsController extends BaseRestController
      * )
      *
      * @param Request $request
-     * @param Patient $patientResource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function checkEmail(Request $request, Patient $patientResource)
+    public function checkEmail(Request $request)
     {
         $email = $request->input('email', '');
         $patientId = $request->input('patient_id', 0);
@@ -1234,20 +1229,19 @@ class PatientsController extends BaseRestController
                 $message = 'The email address you entered is empty.',
                 $code = 417
             );
-        } elseif ($this->isPatientEmailValid($patientResource, $email, $patientId)) {
-            if ($this->confirmPatientEmail($patientResource, $email, $patientId)) {
+        }
+        if ($this->isPatientEmailValid($email, $patientId)) {
+            $message = '';
+            if ($this->confirmPatientEmail($email, $patientId)) {
                 $message = "You have changed the patient's email address. The patient must be notified via email or he/she will not be able to access the Patient Portal. Send email notification and proceed?";
-            } else {
-                $message = '';
             }
 
             return ApiResponse::responseOk('', ['confirm_message' => $message]);
-        } else {
-            return ApiResponse::responseError(
-                $message = 'The email address you entered is already associated with another patient. Please enter a different email address.',
-                $code = 417
-            );
         }
+        return ApiResponse::responseError(
+            $message = 'The email address you entered is already associated with another patient. Please enter a different email address.',
+            $code = 417
+        );
     }
 
     /**
@@ -1271,7 +1265,7 @@ class PatientsController extends BaseRestController
             $accessCodeDate = Carbon::now();
             $patientResource->updatePatient($patientId, [
                 'access_code'      => $accessCode,
-                'access_code_date' => $accessCodeDate
+                'access_code_date' => $accessCodeDate,
             ]);
         }
 
@@ -1322,7 +1316,12 @@ class PatientsController extends BaseRestController
         return ApiResponse::responseOk('', ['path_to_pdf' => $url]);
     }
 
-    private function getDocNameFromShortInfo($field, $shortInfo)
+    /**
+     * @param string $field
+     * @param Contact $shortInfo
+     * @return string
+     */
+    private function getDocNameFromShortInfo($field, Contact $shortInfo)
     {
         $name = '';
         if ($field != 'Not Set' && $shortInfo) {
@@ -1333,8 +1332,15 @@ class PatientsController extends BaseRestController
         return $name;
     }
 
+    /**
+     * @param PatientSummaryRepository $patientSummaryRepository
+     * @param int $patientId
+     * @param string $column
+     * @param mixed|null $value
+     * @return bool
+     */
     private function updatePatientSummary(
-        PatientSummary $patientSummaryResource,
+        PatientSummaryRepository $patientSummaryRepository,
         $patientId = 0,
         $column = '',
         $value = null
@@ -1343,33 +1349,42 @@ class PatientsController extends BaseRestController
             return false;
         }
 
-        $patientSummary = $patientSummaryResource->find($patientId);
+        $patientSummary = $patientSummaryRepository->find($patientId);
 
         if (!empty($patientSummary)) {
             $patientSummary->$column = $value;
             $patientSummary->save();
         } else {
-            $patientSummaryResource->create([
+            $patientSummaryRepository->create([
                 'pid'   => $patientId,
-                $column => $value
+                $column => $value,
             ]);
         }
 
         return true;
     }
 
-    private function isPatientEmailValid(Patient $patientResource, $email, $patientId)
+    /**
+     * @param string $email
+     * @param int $patientId
+     * @return bool
+     */
+    private function isPatientEmailValid($email, $patientId)
     {
-        if ($patientResource->getSameEmails($email, $patientId) > 0) {
+        if ($this->repository->getSameEmails($email, $patientId) > 0) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
-    private function confirmPatientEmail(Patient $patientResource, $email, $patientId)
+    /**
+     * @param string $email
+     * @param int $patientId
+     * @return bool
+     */
+    private function confirmPatientEmail($email, $patientId)
     {
-        $patient = $patientResource->getPatientInfoWithDocInfo($patientId);
+        $patient = $this->repository->getPatientInfoWithDocInfo($patientId);
 
         $isConfirmed = false;
         if (

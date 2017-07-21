@@ -40,8 +40,12 @@ class Joint extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'joint', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'joint',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

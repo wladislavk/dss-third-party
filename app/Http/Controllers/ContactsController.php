@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -419,14 +420,25 @@ class ContactsController extends BaseRestController
         return ApiResponse::responseOk('', $contacts);
     }
 
-    private function getReferralCountersForContact(Patient $patients, $contactId, $contactType, $isDetailed)
-    {
+    /**
+     * @param PatientRepository $patientRepository
+     * @param int $contactId
+     * @param int $contactType
+     * @param bool $isDetailed
+     * @return array
+     */
+    private function getReferralCountersForContact(
+        PatientRepository $patientRepository,
+        $contactId,
+        $contactType,
+        $isDetailed
+    ) {
         $counters = [];
         $ranges = [
             [0, 30],
             [30, 60],
             [60, 90],
-            [90, 0]
+            [90, 0],
         ];
 
         foreach ($ranges as $range) {
@@ -439,11 +451,8 @@ class ContactsController extends BaseRestController
                 $dateConditional = "< DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)";
             }
 
-            $counters[$key] = $patients->getReferralCountersForContact(
-                $contactId,
-                $contactType,
-                $dateConditional,
-                $isDetailed
+            $counters[$key] = $patientRepository->getReferralCountersForContact(
+                $contactId, $contactType, $dateConditional, $isDetailed
             );
         }
 

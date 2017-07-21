@@ -54,9 +54,19 @@ class TongueClinicalExam extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'formid', 'patientid', 'blood_pressure', 'pulse',
-        'neck_measurement', 'bmi', 'additional_paragraph',
-        'tongue', 'userid', 'docid', 'status', 'adddate', 'ip_address'
+        'formid',
+        'patientid',
+        'blood_pressure',
+        'pulse',
+        'neck_measurement',
+        'bmi',
+        'additional_paragraph',
+        'tongue',
+        'userid',
+        'docid',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

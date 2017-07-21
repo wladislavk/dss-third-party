@@ -38,8 +38,11 @@ class GuideDeviceSetting extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'device_id', 'setting_id', 'value',
-        'adddate', 'ip_address'
+        'device_id',
+        'setting_id',
+        'value',
+        'adddate',
+        'ip_address',
     ];
 
     /**

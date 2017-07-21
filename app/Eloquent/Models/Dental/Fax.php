@@ -71,10 +71,27 @@ class Fax extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'patientid', 'userid', 'docid', 'sent_date', 'pages', 'contactid',
-        'to_number', 'to_name', 'letterid', 'filename', 'status', 'adddate',
-        'ip_address', 'fax_invoice_id', 'sfax_transmission_id', 'sfax_completed',
-        'sfax_response', 'sfax_status', 'sfax_error_code', 'letter_body', 'viewed'
+        'patientid',
+        'userid',
+        'docid',
+        'sent_date',
+        'pages',
+        'contactid',
+        'to_number',
+        'to_name',
+        'letterid',
+        'filename',
+        'status',
+        'adddate',
+        'ip_address',
+        'fax_invoice_id',
+        'sfax_transmission_id',
+        'sfax_completed',
+        'sfax_response',
+        'sfax_status',
+        'sfax_error_code',
+        'letter_body',
+        'viewed',
     ];
 
     /**
@@ -104,24 +121,4 @@ class Fax extends AbstractModel
      * @var string
      */
     const CREATED_AT = 'adddate';
-
-    public function getAlerts($docId = 0)
-    {
-        return $this->select(DB::raw('COUNT(id) AS total'))
-            ->where('docid', $docId)
-            ->whereRaw('COALESCE(viewed, 0) = 0')
-            ->where('sfax_status', 2)
-            ->first();
-    }
-
-    /**
-     * @param int $letterId
-     * @param array $data
-     * @return bool|int
-     */
-    public function updateByLetterId($letterId, array $data)
-    {
-        return $this->where('letterid', $letterId)
-            ->update($data);
-    }
 }

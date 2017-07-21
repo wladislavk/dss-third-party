@@ -3,10 +3,14 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\TaskRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
 class TasksController extends BaseRestController
 {
+    /** @var TaskRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/tasks",
@@ -138,38 +142,36 @@ class TasksController extends BaseRestController
      * )
      *
      * @param string $type
-     * @param Task $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getType($type, Task $resources)
+    public function getType($type)
     {
         $userId = $this->currentUser->id ?: 0;
 
         switch ($type) {
             case 'all':
-                $tasks = $resources->getAll($userId);
+                $tasks = $this->repository->getAll($userId);
                 break;
             case 'overdue':
-                $tasks = $resources->getOverdue($userId);
+                $tasks = $this->repository->getOverdue($userId);
                 break;
             case 'today':
-                $tasks = $resources->getToday($userId);
+                $tasks = $this->repository->getToday($userId);
                 break;
             case 'tomorrow':
-                $tasks = $resources->getTomorrow($userId);
+                $tasks = $this->repository->getTomorrow($userId);
                 break;
             case 'this-week':
-                $tasks = $resources->getThisWeek($userId);
+                $tasks = $this->repository->getThisWeek($userId);
                 break;
             case 'next-week':
-                $tasks = $resources->getNextWeek($userId);
+                $tasks = $this->repository->getNextWeek($userId);
                 break;
             case 'later':
-                $tasks = $resources->getLater($userId);
+                $tasks = $this->repository->getLater($userId);
                 break;
             default:
                 $tasks = [];
-                break;
         }
 
         return ApiResponse::responseOk('', $tasks);
@@ -185,33 +187,30 @@ class TasksController extends BaseRestController
      *
      * @param string $type
      * @param int $patientId
-     * @param Task $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getTypeForPatient($type, $patientId, Task $resources)
+    public function getTypeForPatient($type, $patientId)
     {
-        $docId     = $this->currentUser->docid ?: 0;
-        $patientId = $patientId ?: 0;
+        $docId = $this->currentUser->docid ?: 0;
 
         switch ($type) {
             case 'all':
-                $tasks = $resources->getAllForPatient($docId, $patientId);
+                $tasks = $this->repository->getAllForPatient($docId, $patientId);
                 break;
             case 'overdue':
-                $tasks = $resources->getOverdueForPatient($docId, $patientId);
+                $tasks = $this->repository->getOverdueForPatient($docId, $patientId);
                 break;
             case 'today':
-                $tasks = $resources->getTodayForPatient($docId, $patientId);
+                $tasks = $this->repository->getTodayForPatient($docId, $patientId);
                 break;
             case 'tomorrow':
-                $tasks = $resources->getTomorrowForPatient($docId, $patientId);
+                $tasks = $this->repository->getTomorrowForPatient($docId, $patientId);
                 break;
             case 'future':
-                $tasks = $resources->getFutureForPatient($docId, $patientId);
+                $tasks = $this->repository->getFutureForPatient($docId, $patientId);
                 break;
             default:
                 $tasks = [];
-                break;
         }
 
         return ApiResponse::responseOk('', $tasks);

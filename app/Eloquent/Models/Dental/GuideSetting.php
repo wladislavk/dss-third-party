@@ -53,10 +53,16 @@ class GuideSetting extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'name', 'setting_type', 'range_start',
-        'range_end', 'adddate', 'ip_address',
-        'rank', 'options', 'range_start_label',
-        'range_end_label'
+        'name',
+        'setting_type',
+        'range_start',
+        'range_end',
+        'adddate',
+        'ip_address',
+        'rank',
+        'options',
+        'range_start_label',
+        'range_end_label',
     ];
 
     /**
@@ -95,22 +101,5 @@ class GuideSetting extends AbstractModel
     public function deviceSettings()
     {
         return $this->hasMany(GuideDeviceSetting::class, 'id', 'setting_id');
-    }
-
-    public function getAllOrderBy($order = 'name')
-    {
-        return $this->orderBy($order)
-            ->get();
-    }
-
-    public function getSettingType($deviceId = 0)
-    {
-        return $this->select('s.id', 's.setting_type', 'ds.value')
-            ->from(DB::raw('dental_device_guide_settings s'))
-            ->leftJoin(DB::raw('dental_device_guide_device_setting ds'), function($join) use ($deviceId) {
-                $join->on('s.id', '=', 'ds.setting_id')
-                    ->where('ds.device_id', '=', $deviceId);
-            })
-            ->get();
     }
 }

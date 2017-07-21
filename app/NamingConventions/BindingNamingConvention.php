@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\NamingConventions;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Http\Requests\Request;
@@ -53,11 +53,11 @@ class BindingNamingConvention
     {
         $jwtAuth = \Mockery::mock(JWTAuth::class);
         $jwtAuth->shouldReceive('toUser')->andReturnNull();
-        $user = \Mockery::mock(User::class);
+        $userRepository = \Mockery::mock(UserRepository::class);
         $repository = \Mockery::mock(BaseRepository::class);
         $request = \Mockery::mock(Request::class);
 
-        $this->controller = new $className($jwtAuth, $user, $repository, $request);
+        $this->controller = new $className($jwtAuth, $userRepository, $repository, $request);
         if (!$this->controller instanceof BaseRestController) {
             throw new NamingConventionException("$className must extend " . BaseRestController::class);
         }

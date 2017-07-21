@@ -82,13 +82,33 @@ class ReferredByContact extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'docid', 'salutation', 'lastname', 'firstname',
-        'middlename', 'company', 'add1', 'add2',
-        'city', 'state', 'zip', 'phone1',
-        'phone2', 'fax', 'email', 'national_provider_id',
-        'qualifier', 'qualifierid', 'greeting', 'sincerely',
-        'contacttypeid', 'notes', 'preferredcontact', 'status',
-        'adddate', 'ip_address', 'referredby_info'
+        'docid',
+        'salutation',
+        'lastname',
+        'firstname',
+        'middlename',
+        'company',
+        'add1',
+        'add2',
+        'city',
+        'state',
+        'zip',
+        'phone1',
+        'phone2',
+        'fax',
+        'email',
+        'national_provider_id',
+        'qualifier',
+        'qualifierid',
+        'greeting',
+        'sincerely',
+        'contacttypeid',
+        'notes',
+        'preferredcontact',
+        'status',
+        'adddate',
+        'ip_address',
+        'referredby_info',
     ];
 
     /**
@@ -111,10 +131,4 @@ class ReferredByContact extends AbstractModel
      * @var string
      */
     const CREATED_AT = 'adddate';
-
-    public function updateContact($contactId = 0, $data = [])
-    {
-        return $this->where('referredbyid', $contactId)
-            ->update($data);
-    }
 }

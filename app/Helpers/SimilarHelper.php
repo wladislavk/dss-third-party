@@ -3,16 +3,17 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 
 // this class contains all functions from includes/similar.php
 class SimilarHelper
 {
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
-    public function __construct(Patient $patient)
+    public function __construct(PatientRepository $patientRepository)
     {
-        $this->patientModel = $patient;
+        $this->patientRepository = $patientRepository;
     }
 
     /**
@@ -23,14 +24,14 @@ class SimilarHelper
     public function getSimilarPatients($patientId, $docId)
     {
         /** @var Patient|null $foundPatient */
-        $foundPatient = $this->patientModel->find($patientId);
+        $foundPatient = $this->patientRepository->find($patientId);
 
         $patientInfo = [];
         if ($foundPatient) {
             $patientInfo = $this->populatePatientInfo($foundPatient);
         }
 
-        $similarPatients = $this->patientModel->getSimilarPatients($docId, $patientInfo);
+        $similarPatients = $this->patientRepository->getSimilarPatients($docId, $patientInfo);
         $docs = [];
         foreach ($similarPatients as $patient) {
             $fullName = $patient->firstname . ' ' . $patient->lastname;

@@ -43,8 +43,13 @@ class LedgerStatement extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'producerid', 'filename', 'service_date', 'entry_date',
-        'patientid', 'adddate', 'ip_address'
+        'producerid',
+        'filename',
+        'service_date',
+        'entry_date',
+        'patientid',
+        'adddate',
+        'ip_address',
     ];
 
     /**
@@ -106,12 +111,5 @@ class LedgerStatement extends AbstractModel
             ->first();
 
         return !empty($query) ? $query->number : 0;
-    }
-
-    public function removeByIdAndPatientId($id, $patientId)
-    {
-        return $this->where('id', $id)
-            ->where('patientid', $patientId)
-            ->delete();
     }
 }

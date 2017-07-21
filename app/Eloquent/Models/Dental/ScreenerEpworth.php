@@ -38,8 +38,11 @@ class ScreenerEpworth extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'screener_id', 'epworth_id', 'response',
-        'adddate', 'ip_address'
+        'screener_id',
+        'epworth_id',
+        'response',
+        'adddate',
+        'ip_address',
     ];
 
     /**

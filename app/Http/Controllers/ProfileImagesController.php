@@ -2,12 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\ProfileImage;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ProfileImageRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
 class ProfileImagesController extends BaseRestController
 {
+    /** @var ProfileImageRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/profile-images",
@@ -137,15 +140,14 @@ class ProfileImagesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param ProfileImage $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getProfilePhoto(ProfileImage $resource, Request $request)
+    public function getProfilePhoto(Request $request)
     {
         $patientId = $request->input('patient_id', 0);
 
-        $data = $resource->getProfilePhoto($patientId);
+        $data = $this->repository->getProfilePhoto($patientId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -156,15 +158,14 @@ class ProfileImagesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param ProfileImage $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getInsuranceCardImage(ProfileImage $resource, Request $request)
+    public function getInsuranceCardImage(Request $request)
     {
         $patientId = $request->input('patient_id', 0);
 
-        $data = $resource->getInsuranceCardImage($patientId);
+        $data = $this->repository->getInsuranceCardImage($patientId);
 
         return ApiResponse::responseOk('', $data);
     }

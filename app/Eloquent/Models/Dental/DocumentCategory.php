@@ -60,13 +60,6 @@ class DocumentCategory extends AbstractModel
      */
     const CREATED_AT = 'adddate';
 
-    public function getActiveDocumentCategories()
-    {
-        return self::active()
-            ->orderBy('name')
-            ->get();
-    }
-
     public function scopeActive($query)
     {
         return $query->where('status', 1);

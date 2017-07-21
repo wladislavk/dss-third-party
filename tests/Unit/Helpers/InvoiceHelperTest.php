@@ -3,8 +3,8 @@
 namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\EnrollmentInvoice;
-use DentalSleepSolutions\Eloquent\Models\Dental\PercaseInvoice;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PercaseInvoiceRepository;
 use DentalSleepSolutions\Exceptions\InvoiceException;
 use DentalSleepSolutions\Helpers\InvoiceHelper;
 use DentalSleepSolutions\Wrappers\RequestWrapper;
@@ -21,12 +21,12 @@ class InvoiceHelperTest extends UnitTestCase
 
     public function setUp()
     {
-        $perCaseInvoiceModel = $this->mockPerCaseInvoiceModel();
+        $perCaseInvoiceRepository = $this->mockPerCaseInvoiceRepository();
         $enrollmentModel = $this->mockEnrollmentModel();
         $enrollmentInvoiceModel = $this->mockEnrollmentInvoiceModel();
         $requestWrapper = $this->mockRequestWrapper();
         $this->invoiceHelper = new InvoiceHelper(
-            $perCaseInvoiceModel, $enrollmentModel, $enrollmentInvoiceModel, $requestWrapper
+            $perCaseInvoiceRepository, $enrollmentModel, $enrollmentInvoiceModel, $requestWrapper
         );
     }
 
@@ -90,17 +90,17 @@ class InvoiceHelperTest extends UnitTestCase
         $this->invoiceHelper->addEnrollment($userType, $userId, $enrollmentId);
     }
 
-    private function mockPerCaseInvoiceModel()
+    private function mockPerCaseInvoiceRepository()
     {
-        /** @var PercaseInvoice|MockInterface $perCaseInvoiceModel */
-        $perCaseInvoiceModel = \Mockery::mock(PercaseInvoice::class);
-        $perCaseInvoiceModel->shouldReceive('add')
+        /** @var PercaseInvoiceRepository|MockInterface $perCaseInvoiceRepository */
+        $perCaseInvoiceRepository = \Mockery::mock(PercaseInvoiceRepository::class);
+        $perCaseInvoiceRepository->shouldReceive('add')
             ->andReturnUsing([$this, 'addPerCaseInvoiceCallback']);
-        $perCaseInvoiceModel->shouldReceive('getInvoiceId')
+        $perCaseInvoiceRepository->shouldReceive('getInvoiceId')
             ->andReturnUsing([$this, 'getInvoiceIdCallback']);
-        $perCaseInvoiceModel->shouldReceive('getInvoiceIdWithEnrollmentInvoice')
+        $perCaseInvoiceRepository->shouldReceive('getInvoiceIdWithEnrollmentInvoice')
             ->andReturnUsing([$this, 'getInvoiceIdWithEnrollmentInvoiceCallback']);
-        return $perCaseInvoiceModel;
+        return $perCaseInvoiceRepository;
     }
 
     private function mockEnrollmentModel()

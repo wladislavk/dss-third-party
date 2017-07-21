@@ -75,10 +75,4 @@ class Location extends AbstractModel
      * @var string
      */
     const CREATED_AT = 'adddate';
-
-    public function getDoctorLocations($docId = 0)
-    {
-        return $this->where('docid', $docId)
-            ->get();
-    }
 }

@@ -40,8 +40,12 @@ class InsuranceDiagnosis extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'ins_diagnosis', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'ins_diagnosis',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

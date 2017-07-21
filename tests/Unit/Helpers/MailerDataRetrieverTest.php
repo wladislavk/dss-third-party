@@ -5,6 +5,8 @@ namespace Tests\Unit\Helpers;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -36,11 +38,11 @@ class MailerDataRetrieverTest extends UnitTestCase
         $this->user->logo = '1234';
 
         $generalHelper = $this->mockGeneralHelper();
-        $userModel = $this->mockUserModel();
-        $patientModel = $this->mockPatientModel();
+        $userRepository = $this->mockUserRepository();
+        $patientRepository = $this->mockPatientRepository();
         $summaryModel = $this->mockSummaryModel();
         $this->mailerDataRetriever = new MailerDataRetriever(
-            $generalHelper, $userModel, $patientModel, $summaryModel
+            $generalHelper, $userRepository, $patientRepository, $summaryModel
         );
     }
 
@@ -112,22 +114,22 @@ class MailerDataRetrieverTest extends UnitTestCase
         return $generalHelper;
     }
 
-    private function mockUserModel()
+    private function mockUserRepository()
     {
-        /** @var User|MockInterface $userModel */
-        $userModel = \Mockery::mock(User::class);
-        $userModel->shouldReceive('getMailingData')
+        /** @var UserRepository|MockInterface $userRepository */
+        $userRepository = \Mockery::mock(UserRepository::class);
+        $userRepository->shouldReceive('getMailingData')
             ->andReturnUsing([$this, 'getMailingDataCallback']);
-        return $userModel;
+        return $userRepository;
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('find')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('find')
             ->andReturnUsing([$this, 'findPatientCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     private function mockSummaryModel()

@@ -11,4 +11,22 @@ class SummSleeplabRepository extends BaseRepository
     {
         return SummSleeplab::class;
     }
+
+    /**
+     * @param int $patientId
+     * @return SummSleeplab|null
+     */
+    public function getPatientDiagnosis($patientId)
+    {
+        /** @var SummSleeplab|null $diagnosis */
+        $diagnosis = $this->model->select('diagnosis')
+            ->where(function($query) {
+                $query->whereNotNull('diagnosis')
+                    ->where('diagnosis', '!=', '');
+            })->whereNotNull('filename')
+            ->where('patiendid', $patientId)
+            ->orderBy('id', 'desc')
+            ->first();
+        return $diagnosis;
+    }
 }

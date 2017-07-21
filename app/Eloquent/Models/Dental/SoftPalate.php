@@ -40,8 +40,12 @@ class SoftPalate extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'soft_palate', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'soft_palate',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

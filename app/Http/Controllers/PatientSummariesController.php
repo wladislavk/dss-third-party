@@ -3,11 +3,15 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
 use DentalSleepSolutions\Http\Requests\PatientSummary as PatientSummaryRequest;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
 class PatientSummariesController extends BaseRestController
 {
+    /** @var PatientSummaryRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/patient-summaries",
@@ -140,11 +144,10 @@ class PatientSummariesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param PatientSummary $resource
      * @param PatientSummaryRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateTrackerNotes(PatientSummary $resource, PatientSummaryRequest $request)
+    public function updateTrackerNotes(PatientSummaryRequest $request)
     {
         $this->validate($request, $request->updateRules());
 
@@ -152,7 +155,7 @@ class PatientSummariesController extends BaseRestController
         $patientId = $request->input('patient_id', 0);
         $docId = $this->currentUser->docid ?: 0;
 
-        $resource->updateTrackerNotes($patientId, $docId, $notes);
+        $this->repository->updateTrackerNotes($patientId, $docId, $notes);
 
         return ApiResponse::responseOk('Resource updated');
     }

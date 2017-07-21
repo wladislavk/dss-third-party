@@ -11,4 +11,13 @@ class LocationRepository extends BaseRepository
     {
         return Location::class;
     }
+
+    /**
+     * @param int $docId
+     * @return Location[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getDoctorLocations($docId)
+    {
+        return $this->model->where('docid', $docId)->get();
+    }
 }

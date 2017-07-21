@@ -11,4 +11,14 @@ class ReferredByContactRepository extends BaseRepository
     {
         return ReferredByContact::class;
     }
+
+    /**
+     * @param int $contactId
+     * @param array $data
+     * @return bool|int
+     */
+    public function updateContact($contactId, array $data)
+    {
+        return $this->model->where('referredbyid', $contactId)->update($data);
+    }
 }

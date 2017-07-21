@@ -45,8 +45,14 @@ class ContactType extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'contacttype', 'description', 'sortby', 'status',
-        'adddate', 'ip_address', 'physician', 'corporate'
+        'contacttype',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
+        'physician',
+        'corporate',
     ];
 
     /**
@@ -83,45 +89,5 @@ class ContactType extends AbstractModel
     public function scopePhysician($query)
     {
         return $query->where('physician', 1);
-    }
-
-    public function getActiveNonCorporateTypes()
-    {
-        return $this->select('contacttypeid', 'contacttype')
-            ->active()
-            ->nonCorporate()
-            ->orderBy('sortby')
-            ->get();
-    }
-
-    public function getPhysicianTypes()
-    {
-        return $this->select(DB::raw('GROUP_CONCAT(contacttypeid) as physician_types'))
-            ->physician()
-            ->groupBy('physician')
-            ->first();
-    }
-
-    public function getWithFilter($fields = [], $where = [])
-    {
-        $object = $this;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
-    }
-
-    public function getSorted()
-    {
-        return $this->orderBy('sortby')
-            ->get();
     }
 }

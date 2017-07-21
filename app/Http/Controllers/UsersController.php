@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -13,11 +14,14 @@ class UsersController extends BaseRestController
     const DSS_USER_STATUS_INACTIVE  = 2;
     const DSS_USER_STATUS_SUSPENDED = 3;
 
-    private $statusLabels = [
+    const STATUS_LABELS = [
         self::DSS_USER_STATUS_ACTIVE    => 'Active',
         self::DSS_USER_STATUS_INACTIVE  => 'In-Active',
-        self::DSS_USER_STATUS_SUSPENDED => 'Suspended'
+        self::DSS_USER_STATUS_SUSPENDED => 'Suspended',
     ];
+
+    /** @var UserRepository */
+    protected $repository;
 
     /**
      * @SWG\Get(
@@ -335,13 +339,13 @@ class UsersController extends BaseRestController
         $accountStatuses = [
             self::DSS_USER_STATUS_ACTIVE,
             self::DSS_USER_STATUS_INACTIVE,
-            self::DSS_USER_STATUS_SUSPENDED
+            self::DSS_USER_STATUS_SUSPENDED,
         ];
 
         $data = [];
 
         if ($this->currentUser && in_array($this->currentUser->status, $accountStatuses)) {
-            $data['type'] = $this->statusLabels[$this->currentUser->status];
+            $data['type'] = self::STATUS_LABELS[$this->currentUser->status];
         }
 
         return ApiResponse::responseOk('', $data);
@@ -355,10 +359,9 @@ class UsersController extends BaseRestController
      *
      * Get info about current logged in user
      *
-     * @param User $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCurrentUserInfo(User $resource)
+    public function getCurrentUserInfo()
     {
         return ApiResponse::responseOk('', $this->currentUser);
     }
@@ -371,14 +374,13 @@ class UsersController extends BaseRestController
      *
      * Get course staff of current logined user
      *
-     * @param User $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCourseStaff(User $resource)
+    public function getCourseStaff()
     {
         $userId = $this->currentUser->id ?: 0;
 
-        $data = $resource->getCourseStaff($userId);
+        $data = $this->repository->getCourseStaff($userId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -389,14 +391,13 @@ class UsersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param User $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getPaymentReports(User $resources)
+    public function getPaymentReports()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getPaymentReports($docId);
+        $data = $this->repository->getPaymentReports($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -407,15 +408,14 @@ class UsersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param User $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function checkLogout(User $resource)
+    public function checkLogout()
     {
         $userId = $this->currentUser->id ?: 0;
         $logoutTime = 60 * 60;
 
-        $data = $resource->getLastAccessedDate($userId);
+        $data = $this->repository->getLastAccessedDate($userId);
 
         $lastAccessedDate = strtotime($data->last_accessed_date);
         $now = strtotime(Carbon::now());
@@ -424,9 +424,9 @@ class UsersController extends BaseRestController
             $resetTime = ($logoutTime - ($now - $lastAccessedDate)) * 1000;
 
             return ApiResponse::responseOk('', ['resetTime' => $resetTime]);
-        } else {
-            return ApiResponse::responseOk('', ['logout' => true]);
         }
+
+        return ApiResponse::responseOk('', ['logout' => true]);
     }
 
     /**
@@ -435,14 +435,13 @@ class UsersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param User $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getLetterInfo(User $resource, Request $request)
+    public function getLetterInfo(Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
-        $data = $resource->getLetterInfo($docId);
+        $data = $this->repository->getLetterInfo($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -452,15 +451,14 @@ class UsersController extends BaseRestController
      *
      * Get users by filter.
      *
-     * @param User $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithFilter(User $resources, Request $request)
+    public function getWithFilter(Request $request)
     {
         $fields = $request->input('fields', []);
         $where  = $request->input('where', []);
 
-        $patients = $resources->getWithFilter($fields, $where);
+        $patients = $this->repository->getWithFilter($fields, $where);
 
         return ApiResponse::responseOk('', $patients);
     }

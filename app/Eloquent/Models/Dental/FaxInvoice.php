@@ -42,8 +42,13 @@ class FaxInvoice extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'invoice_id', 'description', 'start_date',
-        'end_date', 'amount', 'adddate', 'ip_address'
+        'invoice_id',
+        'description',
+        'start_date',
+        'end_date',
+        'amount',
+        'adddate',
+        'ip_address',
     ];
 
     /**

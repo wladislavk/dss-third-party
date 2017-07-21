@@ -11,4 +11,13 @@ class SummaryRepository extends BaseRepository
     {
         return Summary::class;
     }
+
+    /**
+     * @param int $patientId
+     * @param array $data
+     */
+    public function updateForPatient($patientId, array $data)
+    {
+        $this->model->where('patientid', $patientId)->update($data);
+    }
 }

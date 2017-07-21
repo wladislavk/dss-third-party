@@ -11,4 +11,16 @@ class LedgerStatementRepository extends BaseRepository
     {
         return LedgerStatement::class;
     }
+
+    /**
+     * @param int $id
+     * @param int $patientId
+     * @return bool|null
+     */
+    public function removeByIdAndPatientId($id, $patientId)
+    {
+        return $this->model->where('id', $id)
+            ->where('patientid', $patientId)
+            ->delete();
+    }
 }

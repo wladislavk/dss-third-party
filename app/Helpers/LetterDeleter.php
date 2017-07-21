@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Models\Dental\Fax;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
 use DentalSleepSolutions\Factories\LetterUpdaterFactory;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Structs\LetterData;
@@ -23,21 +23,21 @@ class LetterDeleter
     /** @var Letter */
     private $letterModel;
 
-    /** @var Fax */
-    private $faxModel;
+    /** @var FaxRepository */
+    private $faxRepository;
 
     public function __construct(
         GeneralHelper $generalHelper,
         LetterCreator $letterCreator,
         LetterUpdaterFactory $letterUpdaterFactory,
         Letter $letterModel,
-        Fax $faxModel
+        FaxRepository $faxRepository
     ) {
         $this->generalHelper = $generalHelper;
         $this->letterCreator = $letterCreator;
         $this->letterUpdaterFactory = $letterUpdaterFactory;
         $this->letterModel = $letterModel;
-        $this->faxModel = $faxModel;
+        $this->faxRepository = $faxRepository;
     }
 
     /**
@@ -106,7 +106,7 @@ class LetterDeleter
         $this->letterModel->updateLetterBy($where, $data, $updatedFields);
 
         $data = ['viewed' => 1];
-        $this->faxModel->updateByLetterId($letterId, $data);
+        $this->faxRepository->updateByLetterId($letterId, $data);
 
         $where = ['parentid' => $letterId];
         $updatedFields = ['parentid'];

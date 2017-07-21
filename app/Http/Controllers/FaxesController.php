@@ -4,10 +4,14 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Fax;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
 class FaxesController extends BaseRestController
 {
+    /** @var FaxRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/faxes",
@@ -136,14 +140,13 @@ class FaxesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Fax $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAlerts(Fax $resources)
+    public function getAlerts()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getAlerts($docId);
+        $data = $this->repository->getAlerts($docId);
 
         return ApiResponse::responseOk('', $data);
     }

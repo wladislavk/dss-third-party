@@ -11,4 +11,28 @@ class GuideSettingRepository extends BaseRepository
     {
         return GuideSetting::class;
     }
+
+    /**
+     * @param string $order
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllOrderBy($order)
+    {
+        return $this->model->orderBy($order)->get();
+    }
+
+    /**
+     * @param int $deviceId
+     * @return array|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getSettingType($deviceId)
+    {
+        return $this->model->select('s.id', 's.setting_type', 'ds.value')
+            ->from(\DB::raw('dental_device_guide_settings s'))
+            ->leftJoin(\DB::raw('dental_device_guide_device_setting ds'), function ($join) use ($deviceId) {
+                $join->on('s.id', '=', 'ds.setting_id')
+                    ->where('ds.device_id', '=', $deviceId);
+            })
+            ->get();
+    }
 }

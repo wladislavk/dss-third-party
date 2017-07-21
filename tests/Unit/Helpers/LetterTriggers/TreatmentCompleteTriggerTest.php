@@ -3,6 +3,7 @@
 namespace Tests\Unit\Helpers\LetterTriggers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
 use DentalSleepSolutions\Structs\LetterData;
 use Mockery\MockInterface;
@@ -20,9 +21,9 @@ class TreatmentCompleteTriggerTest extends LetterTriggerTestCase
     {
         $letterCreator = $this->mockLetterCreator();
         $letterModel = $this->mockLetterModel();
-        $patientModel = $this->mockPatientModel();
+        $patientRepository = $this->mockPatientRepository();
         $this->treatmentCompleteTrigger = new TreatmentCompleteTrigger(
-            $letterCreator, $letterModel, $patientModel
+            $letterCreator, $letterModel, $patientRepository
         );
     }
 
@@ -79,15 +80,15 @@ class TreatmentCompleteTriggerTest extends LetterTriggerTestCase
         $this->assertEquals([], $this->createdLetters);
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('getPatientReferralIds')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('getPatientReferralIds')
             ->andReturnUsing([$this, 'getPatientReferralIdsCallback']);
-        $patientModel->shouldReceive('getWithFilter')
+        $patientRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getPatientWithFilterCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     public function getPatientReferralIdsCallback($patientId, Patient $patientReferredSource = null)

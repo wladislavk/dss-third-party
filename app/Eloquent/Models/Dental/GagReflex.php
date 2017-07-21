@@ -40,8 +40,12 @@ class GagReflex extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'gag_reflex', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'gag_reflex',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

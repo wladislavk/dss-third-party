@@ -11,4 +11,12 @@ class QualifierRepository extends BaseRepository
     {
         return Qualifier::class;
     }
+
+    /**
+     * @return array|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getActive()
+    {
+        return $this->model->active()->orderBy('sortby')->get();
+    }
 }

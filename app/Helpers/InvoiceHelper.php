@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\PercaseInvoice;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use DentalSleepSolutions\Eloquent\Models\Dental\EnrollmentInvoice;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PercaseInvoiceRepository;
 use DentalSleepSolutions\Exceptions\InvoiceException;
 use DentalSleepSolutions\Wrappers\RequestWrapper;
 
@@ -25,8 +25,8 @@ class InvoiceHelper
     const DOC_ID_COLUMN = 'docid';
     const COMPANY_ID_COLUMN = 'companyid';
 
-    /** @var PercaseInvoice */
-    private $perCaseInvoiceModel;
+    /** @var PercaseInvoiceRepository */
+    private $perCaseInvoiceRepository;
 
     /** @var Enrollment */
     private $enrollmentModel;
@@ -38,12 +38,12 @@ class InvoiceHelper
     private $requestWrapper;
 
     public function __construct(
-        PercaseInvoice $perCaseInvoiceModel,
+        PercaseInvoiceRepository $perCaseInvoiceRepository,
         Enrollment $enrollmentModel,
         EnrollmentInvoice $enrollmentInvoiceModel,
         RequestWrapper $requestWrapper
     ) {
-        $this->perCaseInvoiceModel = $perCaseInvoiceModel;
+        $this->perCaseInvoiceRepository = $perCaseInvoiceRepository;
         $this->enrollmentModel = $enrollmentModel;
         $this->enrollmentInvoiceModel = $enrollmentInvoiceModel;
         $this->requestWrapper = $requestWrapper;
@@ -68,10 +68,8 @@ class InvoiceHelper
         }
 
         $column = $this->getColumn($userType);
-        $invoiceId = $this->perCaseInvoiceModel->getInvoiceIdWithEnrollmentInvoice(
-            $column,
-            $userId,
-            self::DSS_INVOICE_PENDING
+        $invoiceId = $this->perCaseInvoiceRepository->getInvoiceIdWithEnrollmentInvoice(
+            $column, $userId, self::DSS_INVOICE_PENDING
         );
 
         if (!$invoiceId) {
@@ -96,12 +94,12 @@ class InvoiceHelper
         $column = $this->getColumn($userType);
         $invoiceType = $this->getInvoiceType($userType);
 
-        $invoiceId = $this->perCaseInvoiceModel->getInvoiceId(
+        $invoiceId = $this->perCaseInvoiceRepository->getInvoiceId(
             $column, $userId, $invoiceType, self::DSS_INVOICE_PENDING
         );
 
         if (!$invoiceId) {
-            $invoiceId = $this->perCaseInvoiceModel->add(
+            $invoiceId = $this->perCaseInvoiceRepository->add(
                 $column,
                 $userId,
                 $invoiceType,

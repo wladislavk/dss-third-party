@@ -318,7 +318,7 @@ class ContactRepository extends BaseRepository
 
     /**
      * @param int $contactId
-     * @return mixed
+     * @return Contact|null
      */
     public function getDocShortInfo($contactId)
     {

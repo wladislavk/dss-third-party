@@ -40,8 +40,12 @@ class MedicalHistory extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'history', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'history',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

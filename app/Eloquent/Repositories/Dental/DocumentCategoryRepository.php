@@ -11,4 +11,12 @@ class DocumentCategoryRepository extends BaseRepository
     {
         return DocumentCategory::class;
     }
+
+    /**
+     * @return DocumentCategory[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getActiveDocumentCategories()
+    {
+        return DocumentCategory::active()->orderBy('name')->get();
+    }
 }

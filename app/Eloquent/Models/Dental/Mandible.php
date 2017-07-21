@@ -40,8 +40,12 @@ class Mandible extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'mandible', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'mandible',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

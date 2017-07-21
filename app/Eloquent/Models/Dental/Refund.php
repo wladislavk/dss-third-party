@@ -42,8 +42,13 @@ class Refund extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'amount', 'userid', 'adminid', 'refund_date',
-        'charge_id', 'adddate', 'ip_address'
+        'amount',
+        'userid',
+        'adminid',
+        'refund_date',
+        'charge_id',
+        'adddate',
+        'ip_address',
     ];
 
     /**

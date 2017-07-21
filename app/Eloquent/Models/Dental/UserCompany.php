@@ -51,23 +51,4 @@ class UserCompany extends AbstractModel
     {
         $this->belongsTo(Company::class, 'companyid');
     }
-
-    /**
-     * return api key from user
-     *
-     * @param $id
-     * @return mixed
-     */
-    public static function getApiKey($id)
-    {
-        $return = self::select(['eligible_api_key'])
-            ->leftJoin('companies', 'companyid', '=', 'companies.id')
-            ->where('userid', $id)
-            ->first();
-        if ($return && $return->eligible_api_key != '') {
-            return $return->eligible_api_key;
-        }
-        return false;
-    }
-
 }

@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,9 @@ class LettersController extends BaseRestController
 {
     const DSS_USER_TYPE_FRANCHISEE = 1;
     const DSS_USER_TYPE_SOFTWARE = 2;
+
+    /** @var LetterRepository */
+    protected $repository;
 
     /**
      * @SWG\Get(
@@ -187,14 +191,13 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Letter $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getPending(Letter $resources)
+    public function getPending()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getPending($docId);
+        $data = $this->repository->getPending($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -205,14 +208,13 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Letter $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUnmailed(Letter $resources)
+    public function getUnmailed()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getUnmailed($docId);
+        $data = $this->repository->getUnmailed($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -225,14 +227,13 @@ class LettersController extends BaseRestController
      *
      * gets letters that were delivered for contact
      *
-     * @param Letter $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getContactSentLetters(Letter $resources, Request $request)
+    public function getContactSentLetters(Request $request)
     {
         $contactId = $request->input('contact_id', 0);
-        $data = $resources->getContactSentLetters($contactId);
+        $data = $this->repository->getContactSentLetters($contactId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -245,14 +246,13 @@ class LettersController extends BaseRestController
      *
      * gets letters that were not delivered for contact
      *
-     * @param Letter $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getContactPendingLetters(Letter $resources, Request $request)
+    public function getContactPendingLetters(Request $request)
     {
         $contactId = $request->input('contact_id', 0);
-        $data = $resources->getContactPendingLetters($contactId);
+        $data = $this->repository->getContactPendingLetters($contactId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -264,14 +264,12 @@ class LettersController extends BaseRestController
      * )
      *
      * @param User $userResource
-     * @param Letter $resource
      * @param ContactType $contactTypeResource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function createWelcomeLetter(
         User $userResource,
-        Letter $resource,
         ContactType $contactTypeResource,
         Request $request
     ) {
@@ -282,21 +280,20 @@ class LettersController extends BaseRestController
         $templateId = $request->input('template_id', 0);
         $contactTypeId = $request->input('contact_type_id', 0);
 
+        $data = [];
         if ($letterInfo && $letterInfo->use_letters && $letterInfo->intro_letters) {
             $contactType = $contactTypeResource->find($contactTypeId);
 
             if ($contactType && $contactType->physician == 1) {
                 if ($this->currentUser->user_type != self::DSS_USER_TYPE_SOFTWARE) {
-                    $resource->createWelcomeLetter(1, $templateId, $docId);
+                    $this->repository->createWelcomeLetter(1, $templateId, $docId);
                 }
-                $resource->createWelcomeLetter(2, $templateId, $docId);
+                $this->repository->createWelcomeLetter(2, $templateId, $docId);
 
                 $data = [
                     'message' => 'This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.'
                 ];
             }
-        } else {
-            $data = [];
         }
       
         return ApiResponse::responseOk('', $data);
@@ -308,15 +305,14 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Letter $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getGeneratedDateOfIntroLetter(Letter $resource, Request $request)
+    public function getGeneratedDateOfIntroLetter(Request $request)
     {
         $patientId = $request->input('patient_id', 0);
 
-        $data = $resource->getGeneratedDateOfIntroLetter($patientId);
+        $data = $this->repository->getGeneratedDateOfIntroLetter($patientId);
 
         return ApiResponse::responseOk('', $data);
     }

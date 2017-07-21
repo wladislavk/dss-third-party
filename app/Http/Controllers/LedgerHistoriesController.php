@@ -3,12 +3,16 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\LedgerHistory;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerHistoryRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class LedgerHistoriesController extends BaseRestController
 {
+    /** @var LedgerHistoryRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/ledger-histories",
@@ -201,19 +205,18 @@ class LedgerHistoriesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param LedgerHistory $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getHistoriesForLedgerReport(LedgerHistory $resource, Request $request)
+    public function getHistoriesForLedgerReport(Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
         $patientId = $request->input('patient_id', 0);
         $ledgerId = $request->input('ledger_id', 0);
-        $type = $request->input('type');
+        $type = $request->input('type', 'ledger');
 
-        $data = $resource->getHistoriesForLedgerReport($docId, $patientId, $ledgerId, $type);
+        $data = $this->repository->getHistoriesForLedgerReport($docId, $patientId, $ledgerId, $type);
 
         return ApiResponse::responseOk('', $data);
     }

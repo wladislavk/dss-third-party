@@ -35,9 +35,7 @@ class GuideDevice extends AbstractModel
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'adddate', 'ip_address'
-    ];
+    protected $fillable = ['name', 'adddate', 'ip_address'];
 
     /**
      * The database table used by the model.

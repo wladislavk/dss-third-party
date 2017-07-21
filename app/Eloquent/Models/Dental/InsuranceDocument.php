@@ -46,9 +46,15 @@ class InsuranceDocument extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'title', 'description', 'video_file',
-        'doc_file', 'sortby', 'status',
-        'adddate', 'ip_address', 'docid'
+        'title',
+        'description',
+        'video_file',
+        'doc_file',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
+        'docid',
     ];
 
     /**

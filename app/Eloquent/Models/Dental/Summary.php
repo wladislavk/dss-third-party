@@ -467,10 +467,4 @@ class Summary extends AbstractModel
 
         return $object->get();
     }
-
-    public function updateForPatient($patientId = 0, $data = [])
-    {
-        $this->where('patientid', $patientId)
-            ->update($data);
-    }
 }

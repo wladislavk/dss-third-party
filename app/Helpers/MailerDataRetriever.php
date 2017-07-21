@@ -5,6 +5,8 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 
 class MailerDataRetriever
@@ -19,24 +21,24 @@ class MailerDataRetriever
     /** @var GeneralHelper */
     private $generalHelper;
 
-    /** @var User */
-    private $userModel;
+    /** @var UserRepository */
+    private $userRepository;
 
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
     /** @var Summary */
     private $summaryModel;
 
     public function __construct(
         GeneralHelper $generalHelper,
-        User $userModel,
-        Patient $patientModel,
+        UserRepository $userRepository,
+        PatientRepository $patientRepository,
         Summary $summaryModel
     ) {
         $this->generalHelper = $generalHelper;
-        $this->userModel = $userModel;
-        $this->patientModel = $patientModel;
+        $this->userRepository = $userRepository;
+        $this->patientRepository = $patientRepository;
         $this->summaryModel = $summaryModel;
     }
 
@@ -45,14 +47,13 @@ class MailerDataRetriever
      *
      * @param int $patientId
      * @param int $docId
-     *
      * @return array
      * @throws EmailHandlerException
      */
     public function retrieveMailerData($patientId, $docId = 0)
     {
         /** @var Patient|null $patient */
-        $patient = $this->patientModel->find($patientId);
+        $patient = $this->patientRepository->find($patientId);
         if (!$patient) {
             throw new EmailHandlerException("Patient with ID $patientId not found");
         }
@@ -62,7 +63,7 @@ class MailerDataRetriever
             $location = $summaryInfo[0]->location;
         }
 
-        $mailingData = $this->userModel->getMailingData($docId, $patientId, $location);
+        $mailingData = $this->userRepository->getMailingData($docId, $patientId, $location);
         if (!$mailingData) {
             throw new EmailHandlerException("Mailing data for patient with ID $patientId not found");
         }

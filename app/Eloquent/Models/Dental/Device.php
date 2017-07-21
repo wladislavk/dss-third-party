@@ -42,9 +42,13 @@ class Device extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'device', 'description', 'sortby',
-        'status', 'adddate', 'ip_address',
-        'image_path'
+        'device',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
+        'image_path',
     ];
 
     /**

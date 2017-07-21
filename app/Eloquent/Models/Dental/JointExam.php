@@ -40,8 +40,12 @@ class JointExam extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'joint_exam', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'joint_exam',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

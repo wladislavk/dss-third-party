@@ -4,11 +4,16 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Sleeplab;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SleeplabRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
 class SleeplabsController extends BaseRestController
 {
+    /** @var SleeplabRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/sleeplabs",
@@ -158,14 +163,12 @@ class SleeplabsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Sleeplabs $resources
-     * @param Patients $patientResource
+     * @param PatientRepository $patientRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getListOfSleeplabs(
-        Sleeplab $resources,
-        Patient $patientResource,
+        PatientRepository $patientRepository,
         Request $request
     ) {
         $docId = $this->currentUser->docid ?: 0;
@@ -176,11 +179,11 @@ class SleeplabsController extends BaseRestController
         $sortDir = $request->input('sort_dir', 'asc');
         $letter = $request->input('letter');
 
-        $sleeplabs = $resources->getList($docId, $page, $rowsPerPage, $sort, $sortDir, $letter);
+        $sleeplabs = $this->repository->getList($docId, $page, $rowsPerPage, $sort, $sortDir, $letter);
 
         if ($sleeplabs['total'] > 0) {
-            $sleeplabs['result']->map(function ($sleeplab) use ($patientResource) { 
-                $sleeplab['patients'] = $patientResource->getRelatedToSleeplab($sleeplab->sleeplabid);
+            $sleeplabs['result']->map(function ($sleeplab) use ($patientRepository) {
+                $sleeplab['patients'] = $patientRepository->getRelatedToSleeplab($sleeplab->sleeplabid);
             
                 return $sleeplab;
             });
@@ -201,16 +204,12 @@ class SleeplabsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Sleeplab $sleeplabResource
      * @param Request $request
      * @param int|null $sleeplabId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function editSleeplab(
-        Sleeplab $sleeplabResource,
-        Request $request,
-        $sleeplabId = null
-    ) {
+    public function editSleeplab(Request $request, $sleeplabId = null)
+    {
         $docId = $this->currentUser->docid ?: 0;
 
         $sleeplabFormData = $request->input('sleeplab_form_data', []);
@@ -239,11 +238,11 @@ class SleeplabsController extends BaseRestController
 
         $responseData = [];
         if ($sleeplabId) {
-            $sleeplabResource->updateSleeplab($sleeplabId, $sleeplabFormData);
+            $this->repository->updateSleeplab($sleeplabId, $sleeplabFormData);
 
             $responseData['status'] = 'Edited Successfully';
         } else { // sleeplabId = 0 -> creating a new sleeplab
-            $sleeplabResource->create($sleeplabFormData);
+            $this->repository->create($sleeplabFormData);
 
             $responseData['status'] = 'Added Successfully';
         }

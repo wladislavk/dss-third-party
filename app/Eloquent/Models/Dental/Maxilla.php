@@ -40,8 +40,12 @@ class Maxilla extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'maxilla', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'maxilla',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

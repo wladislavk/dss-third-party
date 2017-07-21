@@ -3,6 +3,7 @@
 namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\SimilarHelper;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
@@ -33,8 +34,8 @@ class SimilarHelperTest extends UnitTestCase
             ],
         ];
 
-        $patientModel = $this->mockPatientModel();
-        $this->similarHelper = new SimilarHelper($patientModel);
+        $patientRepository = $this->mockPatientRepository();
+        $this->similarHelper = new SimilarHelper($patientRepository);
     }
 
     public function testWithoutFoundPatient()
@@ -64,15 +65,15 @@ class SimilarHelperTest extends UnitTestCase
         $this->assertEquals($expectedPatientInfo, $this->patientInfo);
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('find')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('find')
             ->andReturnUsing([$this, 'findPatientCallback']);
-        $patientModel->shouldReceive('getSimilarPatients')
+        $patientRepository->shouldReceive('getSimilarPatients')
             ->andReturnUsing([$this, 'getSimilarPatientsCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     public function findPatientCallback($patientId)

@@ -40,8 +40,12 @@ class Palpation extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'palpation', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'palpation',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

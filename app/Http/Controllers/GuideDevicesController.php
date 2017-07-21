@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Device;
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -123,12 +124,15 @@ class GuideDevicesController extends BaseRestController
      * )
      *
      * @param Device $devicesResource
-     * @param GuideSetting $guideSettingsResource
+     * @param GuideSettingRepository $guideSettingRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithImages(Device $devicesResource, GuideSetting $guideSettingsResource, Request $request)
-    {
+    public function getWithImages(
+        Device $devicesResource,
+        GuideSettingRepository $guideSettingRepository,
+        Request $request
+    ) {
         $settings = $request->input('settings');
 
         $fields = ['deviceid', 'device', 'image_path'];
@@ -140,7 +144,7 @@ class GuideDevicesController extends BaseRestController
                 $total = 0;
                 $show  = true;
 
-                $guideSettings = $guideSettingsResource->getSettingType($device->deviceid);
+                $guideSettings = $guideSettingRepository->getSettingType($device->deviceid);
 
                 if (count($guideSettings)) {
                     foreach ($guideSettings as $guideSetting) {
@@ -186,7 +190,6 @@ class GuideDevicesController extends BaseRestController
         if ($firstElement['value'] == $secondElement['value']) {
             return 0;
         }
-
         return ($firstElement['value'] > $secondElement['value']) ? -1 : 1;
     }
 }

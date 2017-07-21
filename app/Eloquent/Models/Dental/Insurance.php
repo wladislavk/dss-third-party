@@ -681,50 +681,6 @@ class Insurance extends AbstractModel
      */
     const CREATED_AT = 'adddate';
 
-    private function filedByBackOfficeConditional($claimAlias = 'claim')
-    {
-        return "(
-                -- Filed by back office, legacy logic
-                COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
-                -- Filed by back office, new logic
-                OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
-            )";
-    }
-
-    private function backOfficeClaimsConditional($aliases = [])
-    {
-        $actionableStatusList = "'" . implode("', '", ClaimFormData::statusListByName('actionable')) . "'";
-        $pendingStatusList    = "'" . implode("', '", ClaimFormData::statusListByName('pending')) . "'";
-
-        $claimAlias   = array_get($aliases, 'claim', 'claim');
-        $patientAlias = array_get($aliases, 'patient', 'p');
-        $companyAlias = array_get($aliases, 'company', 'c');
-
-        $filedByBackOfficeConditional = $this->filedByBackOfficeConditional($claimAlias);
-
-        return "(
-            -- Apply claim options only if the status is NOT pending
-            (
-                $claimAlias.status NOT IN ($pendingStatusList)
-                AND $filedByBackOfficeConditional
-            )
-            OR (
-                $claimAlias.status IN ($actionableStatusList)
-                AND (
-                    -- Doctor BO exclusivity
-                    COALESCE($companyAlias.exclusive, 0)
-                    -- Patient's BO filing permission
-                    OR COALESCE(IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file), 0) = 1
-                )
-            )
-        )";
-    }
-
-    private function frontOfficeClaimsConditional($aliases = [])
-    {
-        return '(NOT ' . $this->backOfficeClaimsConditional($aliases) . ')';
-    }
-
     public function scopeRejected($globalQuery)
     {
         return $globalQuery->where(function($query) {
@@ -755,40 +711,6 @@ class Insurance extends AbstractModel
     public function scopePending($query)
     {
         return $query->where('status', self::DSS_CLAIM_PENDING);
-    }
-
-    public function getRejected($patientId = 0)
-    {
-        return $this->rejected()
-            ->where('patientid', $patientId)
-            ->get();
-    }
-
-    public function getPendingClaims($docId = 0)
-    {
-        return $this->countFrontOfficeClaims($docId)
-            ->whereIn('claim.status', ClaimFormData::statusListByName('actionable'))
-            ->first();
-    }
-
-    public function getUnmailedClaims($docId = 0, $isUserTypeSoftware = false)
-    {
-        $query = $this->countFrontOfficeClaims($docId)
-            ->whereNull('claim.mailed_date')
-            ->whereNull('claim.sec_mailed_date');
-
-        if ($isUserTypeSoftware) {
-            $query = $query->whereNotIn('claim.status', ClaimFormData::statusListByName('actionable'));
-        }
-
-        return $query->first();
-    }
-
-    public function getRejectedClaims($docId = 0)
-    {
-        return $this->countFrontOfficeClaims($docId)
-            ->whereIn('claim.status', ClaimFormData::statusListByName('rejected'))
-            ->first();
     }
 
     public function getOpenClaims($patientId, $page, $rowsPerPage, $sort, $sortDir)
@@ -889,13 +811,10 @@ class Insurance extends AbstractModel
         return !empty($query) ? $query->number : 0;
     }
 
-    public function removePendingClaim($claimId)
-    {
-        return $this->where('insuranceid', $claimId)
-            ->pending()
-            ->delete();
-    }
-
+    /**
+     * @param string $sort
+     * @return string
+     */
     private function getSortColumnForList($sort)
     {
         $sortColumns = [
@@ -915,5 +834,61 @@ class Insurance extends AbstractModel
         }
 
         return $sortColumn;
+    }
+
+    /**
+     * @param string $claimAlias
+     * @return string
+     */
+    private function filedByBackOfficeConditional($claimAlias = 'claim')
+    {
+        return "(
+                -- Filed by back office, legacy logic
+                COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
+                -- Filed by back office, new logic
+                OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
+            )";
+    }
+
+    /**
+     * @param array $aliases
+     * @return string
+     */
+    private function backOfficeClaimsConditional($aliases = [])
+    {
+        $actionableStatusList = "'" . implode("', '", ClaimFormData::statusListByName('actionable')) . "'";
+        $pendingStatusList    = "'" . implode("', '", ClaimFormData::statusListByName('pending')) . "'";
+
+        $claimAlias   = array_get($aliases, 'claim', 'claim');
+        $patientAlias = array_get($aliases, 'patient', 'p');
+        $companyAlias = array_get($aliases, 'company', 'c');
+
+        $filedByBackOfficeConditional = $this->filedByBackOfficeConditional($claimAlias);
+
+        return "(
+            -- Apply claim options only if the status is NOT pending
+            (
+                $claimAlias.status NOT IN ($pendingStatusList)
+                AND $filedByBackOfficeConditional
+            )
+            OR (
+                $claimAlias.status IN ($actionableStatusList)
+                AND (
+                    -- Doctor BO exclusivity
+                    COALESCE($companyAlias.exclusive, 0)
+                    -- Patient's BO filing permission
+                    OR COALESCE(IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file), 0) = 1
+                )
+            )
+        )";
+    }
+
+    /**
+     * @param array $aliases
+     * @return string
+     */
+    private function frontOfficeClaimsConditional($aliases = [])
+    {
+        return '(NOT ' . $this->backOfficeClaimsConditional($aliases) . ')';
     }
 }

@@ -74,12 +74,29 @@ class DentalClinicalExam extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'formid', 'patientid', 'exam_teeth', 'other_exam_teeth', 'caries',
-        'where_facets', 'cracked_fractured', 'old_worn_inadequate_restorations',
-        'dental_class_right', 'dental_division_right', 'dental_class_left',
-        'dental_division_left', 'additional_paragraph', 'initial_tooth',
-        'open_proximal', 'deistema', 'userid', 'docid', 'status', 'adddate',
-        'ip_address', 'missing', 'crossbite'
+        'formid',
+        'patientid',
+        'exam_teeth',
+        'other_exam_teeth',
+        'caries',
+        'where_facets',
+        'cracked_fractured',
+        'old_worn_inadequate_restorations',
+        'dental_class_right',
+        'dental_division_right',
+        'dental_class_left',
+        'dental_division_left',
+        'additional_paragraph',
+        'initial_tooth',
+        'open_proximal',
+        'deistema',
+        'userid',
+        'docid',
+        'status',
+        'adddate',
+        'ip_address',
+        'missing',
+        'crossbite',
     ];
 
     /**

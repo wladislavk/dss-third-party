@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserCompanyRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use Exception;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eligible\Client;
@@ -18,7 +20,6 @@ use DentalSleepSolutions\Interfaces\EnrollmentInterface;
 use DentalSleepSolutions\Interfaces\UserSignaturesInterface;
 use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 use Tymon\JWTAuth\JWTAuth;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
 class ApiEnrollmentsController extends ApiBaseController
 {
@@ -57,12 +58,12 @@ class ApiEnrollmentsController extends ApiBaseController
 
     public function __construct(
         JWTAuth $auth,
-        User $userModel,
+        UserRepository $userRepository,
         EnrollmentInterface $enrollments,
         EnrollmentPayersInterface $payers,
         UserSignaturesInterface $signatures
     ) {
-        parent::__construct($auth, $userModel);
+        parent::__construct($auth, $userRepository);
         $this->enrollments = $enrollments;
         $this->payers = $payers;
         $this->signatures = $signatures;
@@ -113,10 +114,14 @@ class ApiEnrollmentsController extends ApiBaseController
      *
      * @param  \DentalSleepSolutions\Http\Requests\Enrollments\Create $request
      * @param InvoiceHelper $invoiceHelper
+     * @param UserCompanyRepository $userCompanyRepository
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Create $request, InvoiceHelper $invoiceHelper)
-    {
+    public function store(
+        Create $request,
+        InvoiceHelper $invoiceHelper,
+        UserCompanyRepository $userCompanyRepository
+    ) {
         $userId = $request->input('user_id');
         $providerId = $request->input('provider_id');
 
@@ -159,7 +164,7 @@ class ApiEnrollmentsController extends ApiBaseController
             ]
         ];
 
-        $client = new Client;
+        $client = new Client($userCompanyRepository);
         $client->setApiKeyFromUser($userId);
         $response = $client->createEnrollment($data);
 

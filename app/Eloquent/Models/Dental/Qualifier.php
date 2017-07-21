@@ -66,11 +66,4 @@ class Qualifier extends AbstractModel
     {
         return $query->where('status', 1);
     }
-
-    public function getActive()
-    {
-        return $this->active()
-            ->orderBy('sortby')
-            ->get();
-    }
 }

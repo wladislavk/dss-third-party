@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Wrappers\FileWrapper;
 
@@ -16,19 +16,19 @@ class GeneralHelper
     /** @var FileWrapper */
     private $fileWrapper;
 
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
     /** @var ContactRepository */
     private $contactRepository;
 
     public function __construct(
         FileWrapper $fileWrapper,
-        Patient $patient,
+        PatientRepository $patientRepository,
         ContactRepository $contactRepository
     ) {
         $this->fileWrapper = $fileWrapper;
-        $this->patientModel = $patient;
+        $this->patientRepository = $patientRepository;
         $this->contactRepository = $contactRepository;
     }
 
@@ -84,7 +84,7 @@ class GeneralHelper
         $mdReferralList = $this->clearIdList($mdReferralList);
         $patientReferralList = $this->clearIdList($patientReferralList);
         if ($patient) {
-            $patientContactData = $this->patientModel->getContactInfo($letterId, $patient);
+            $patientContactData = $this->patientRepository->getContactInfo($letterId, $patient);
             $contactInfo->setPatients($patientContactData);
         }
         if ($mdList) {
@@ -96,7 +96,7 @@ class GeneralHelper
             $contactInfo->setMdReferrals($mdReferralContactData);
         }
         if ($patientReferralList) {
-            $patientReferralContactData = $this->patientModel->getReferralList($letterId, $patientReferralList);
+            $patientReferralContactData = $this->patientRepository->getReferralList($letterId, $patientReferralList);
             $contactInfo->setPatientReferrals($patientReferralContactData);
         }
         return $contactInfo;

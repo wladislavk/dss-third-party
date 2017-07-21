@@ -42,8 +42,13 @@ class InsuranceFile extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'claimid', 'claimtype', 'filename', 'adddate',
-        'ip_address', 'description', 'status'
+        'claimid',
+        'claimtype',
+        'filename',
+        'adddate',
+        'ip_address',
+        'description',
+        'status',
     ];
 
     /**

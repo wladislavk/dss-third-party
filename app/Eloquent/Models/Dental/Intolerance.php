@@ -40,8 +40,12 @@ class Intolerance extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'intolerance', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'intolerance',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**

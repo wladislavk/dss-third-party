@@ -3,26 +3,26 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab;
 use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummSleeplabRepository;
 
 class PreauthHelper
 {
     const DSS_PREAUTH_PENDING = 0;
 
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
-    /** @var SummSleeplab */
-    private $summSleeplabModel;
+    /** @var SummSleeplabRepository */
+    private $summSleeplabRepository;
 
     public function __construct(
-        Patient $patientModel,
-        SummSleeplab $summSleeplabModel
+        PatientRepository $patientRepository,
+        SummSleeplabRepository $summSleeplabRepository
     ) {
-        $this->patientModel = $patientModel;
-        $this->summSleeplabModel = $summSleeplabModel;
+        $this->patientRepository = $patientRepository;
+        $this->summSleeplabRepository = $summSleeplabRepository;
     }
 
     /**
@@ -32,19 +32,19 @@ class PreauthHelper
      */
     public function createVerificationOfBenefits($patientId, $userId)
     {
-        $transactionCode = $this->patientModel->getDentalDeviceTransactionCode($patientId);
-        $userInfo = $this->patientModel->getUserInfo($patientId);
+        $transactionCode = $this->patientRepository->getDentalDeviceTransactionCode($patientId);
+        $userInfo = $this->patientRepository->getUserInfo($patientId);
 
         if (!$transactionCode || !$userInfo) {
             return null;
         }
 
-        $patientPreauthInfo = $this->patientModel->getInsurancePreauthInfo($patientId);
+        $patientPreauthInfo = $this->patientRepository->getInsurancePreauthInfo($patientId);
         if (!$patientPreauthInfo) {
             return null;
         }
 
-        $sleepStudy = $this->summSleeplabModel->getPatientDiagnosis($patientId);
+        $sleepStudy = $this->summSleeplabRepository->getPatientDiagnosis($patientId);
         $diagnosisCode = '';
         if ($sleepStudy) {
             $diagnosisCode = $sleepStudy->diagnosis;

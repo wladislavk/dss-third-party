@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Fax;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
 use DentalSleepSolutions\Factories\LetterUpdaterFactory;
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Helpers\LetterCreator;
@@ -59,9 +59,9 @@ class LetterDeleterTest extends UnitTestCase
         $letterCreator = $this->mockLetterCreator();
         $letterUpdaterFactory = $this->mockLetterUpdaterFactory();
         $letterModel = $this->mockLetterModel();
-        $faxModel = $this->mockFaxModel();
+        $faxRepository = $this->mockFaxRepository();
         $this->letterDeleter = new LetterDeleter(
-            $generalHelper, $letterCreator, $letterUpdaterFactory, $letterModel, $faxModel
+            $generalHelper, $letterCreator, $letterUpdaterFactory, $letterModel, $faxRepository
         );
     }
 
@@ -216,13 +216,13 @@ class LetterDeleterTest extends UnitTestCase
         return $letterModel;
     }
 
-    private function mockFaxModel()
+    private function mockFaxRepository()
     {
-        /** @var Fax|MockInterface $faxModel */
-        $faxModel = \Mockery::mock(Fax::class);
-        $faxModel->shouldReceive('updateByLetterId')
+        /** @var FaxRepository|MockInterface $faxRepository */
+        $faxRepository = \Mockery::mock(FaxRepository::class);
+        $faxRepository->shouldReceive('updateByLetterId')
             ->andReturnUsing([$this, 'updateFaxByLetterIdCallback']);
-        return $faxModel;
+        return $faxRepository;
     }
 
     private function mockPatientUpdater()

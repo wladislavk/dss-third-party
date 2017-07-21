@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Tymon\JWTAuth\JWTAuth;
@@ -12,16 +13,19 @@ abstract class Controller extends BaseController
 {
     use DispatchesJobs, ValidatesRequests;
 
+    /** @var User */
     protected $currentUser;
+
+    /** @var JWTAuth */
     protected $auth;
 
     public function __construct(
         JWTAuth $auth,
-        User $userModel
+        UserRepository $userRepository
     ) {
         // TODO: see how it is possible to generate JWT token while testing
         if (env('APP_ENV') != 'testing') {
-            $this->currentUser = $this->getUserInfo($auth, $userModel);
+            $this->currentUser = $this->getUserInfo($auth, $userRepository);
             $this->auth        = $auth;
             return;
         }
@@ -30,10 +34,10 @@ abstract class Controller extends BaseController
 
     /**
      * @param JWTAuth $auth
-     * @param User $userModel
+     * @param UserRepository $userRepository
      * @return mixed
      */
-    private function getUserInfo(JWTAuth $auth, User $userModel)
+    private function getUserInfo(JWTAuth $auth, UserRepository $userRepository)
     {
         $user = $auth->toUser();
 
@@ -47,7 +51,7 @@ abstract class Controller extends BaseController
          * @ToDo: Handle admin tokens
          * @see AWS-19-Request-Token
          */
-        $getter = $userModel->getDocId($user->id);
+        $getter = $userRepository->getDocId($user->id);
 
         if (!$getter) {
             return $user;
@@ -61,7 +65,7 @@ abstract class Controller extends BaseController
             $user->docid = $user->userid;
         }
 
-        $user->user_type = $userModel->getUserType($user->docid)->user_type ?: 0;
+        $user->user_type = $userRepository->getUserType($user->docid)->user_type ?: 0;
 
         return $user;
     }

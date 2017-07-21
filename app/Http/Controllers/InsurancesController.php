@@ -4,6 +4,8 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
 use DentalSleepSolutions\Eloquent\Models\Dental\Ledger;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -14,6 +16,9 @@ class InsurancesController extends BaseRestController
 
     // Transaction statuses (ledger)
     const DSS_TRXN_NA = 0; // trxn created/updated, but not filed.
+
+    /** @var InsuranceRepository */
+    protected $repository;
 
     /**
      * @SWG\Get(
@@ -310,15 +315,14 @@ class InsurancesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Insurance $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getRejected(Insurance $resources, Request $request)
+    public function getRejected(Request $request)
     {
-        $patientId = $request->input('patientId');
+        $patientId = $request->input('patientId', 0);
 
-        $data = $resources->getRejected($patientId);
+        $data = $this->repository->getRejected($patientId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -331,10 +335,9 @@ class InsurancesController extends BaseRestController
      * )
      *
      * @param string $type
-     * @param Insurance $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getFrontOfficeClaims($type, Insurance $resources)
+    public function getFrontOfficeClaims($type)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -342,13 +345,13 @@ class InsurancesController extends BaseRestController
 
         switch ($type) {
             case 'pending-claims':
-                $data = $resources->getPendingClaims($docId);
+                $data = $this->repository->getPendingClaims($docId);
                 break;
             case 'unmailed-claims':
-                $data = $resources->getUnmailedClaims($docId, $isUserTypeSoftware);
+                $data = $this->repository->getUnmailedClaims($docId, $isUserTypeSoftware);
                 break;
             case 'rejected-claims':
-                $data = $resources->getRejectedClaims($docId);
+                $data = $this->repository->getRejectedClaims($docId);
                 break;
             default:
                 $data = [];
@@ -364,19 +367,18 @@ class InsurancesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Insurance $resource
-     * @param Ledger $ledgerResource
+     * @param LedgerRepository $ledgerRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function removeClaim(Insurance $resource, Ledger $ledgerResource, Request $request)
+    public function removeClaim(LedgerRepository $ledgerRepository, Request $request)
     {
         $claimId = $request->input('claim_id', 0);
 
-        $isSuccess = $resource->removePendingClaim($claimId);
+        $isSuccess = $this->repository->removePendingClaim($claimId);
 
         if ($isSuccess) {
-            $ledgerResource->updateWherePrimaryClaimId($claimId, [
+            $ledgerRepository->updateWherePrimaryClaimId($claimId, [
                 'primary_claim_id' => null,
                 'status'           => self::DSS_TRXN_NA,
             ]);

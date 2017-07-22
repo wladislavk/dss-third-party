@@ -2,11 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\QualifierRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Qualifier;
 
 class QualifiersController extends BaseRestController
 {
+    /** @var QualifierRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/qualifiers",
@@ -126,12 +129,11 @@ class QualifiersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Qualifier $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getActive(Qualifier $resource)
+    public function getActive()
     {
-        $data = $resource->getActive();
+        $data = $this->repository->getActive();
 
         return ApiResponse::responseOk('', $data);
     }

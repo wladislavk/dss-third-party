@@ -17,7 +17,7 @@ class Admin extends Request
         'last_name'    => 'string|max:50',
     ];
 
-    public function __construct(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null, \DentalSleepSolutions\Eloquent\Admin $adminModel = null)
+    public function __construct(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null, \DentalSleepSolutions\Eloquent\Models\Admin $adminModel = null)
     {
         parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
         $this->adminModel = $adminModel;
@@ -43,7 +43,7 @@ class Admin extends Request
      */
     private function getIgnore()
     {
-        /** @var \DentalSleepSolutions\Eloquent\Admin $admin */
+        /** @var \DentalSleepSolutions\Eloquent\Models\Admin $admin */
         $admin = $this->adminModel->findOrFail(Request::input('id'));
         $ignore = $admin->getKeyName() . ',' . $admin->getKey();
         return $ignore;

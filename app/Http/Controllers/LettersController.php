@@ -2,17 +2,20 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactTypeRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Letter;
-use DentalSleepSolutions\Contracts\Repositories\Letters;
-use DentalSleepSolutions\Contracts\Resources\User;
-use DentalSleepSolutions\Contracts\Resources\ContactType;
 use Illuminate\Http\Request;
 
 class LettersController extends BaseRestController
 {
     const DSS_USER_TYPE_FRANCHISEE = 1;
     const DSS_USER_TYPE_SOFTWARE = 2;
+
+    /** @var LetterRepository */
+    protected $repository;
 
     /**
      * @SWG\Get(
@@ -188,14 +191,13 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Letters $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getPending(Letters $resources)
+    public function getPending()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getPending($docId);
+        $data = $this->repository->getPending($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -206,14 +208,13 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Letters $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUnmailed(Letters $resources)
+    public function getUnmailed()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getUnmailed($docId);
+        $data = $this->repository->getUnmailed($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -226,18 +227,16 @@ class LettersController extends BaseRestController
      *
      * gets letters that were delivered for contact
      *
-     * @param Letters $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getContactSentLetters(Letters $resources, Request $request)
+    public function getContactSentLetters(Request $request)
     {
         $contactId = $request->input('contact_id', 0);
-        $data = $resources->getContactSentLetters($contactId);
+        $data = $this->repository->getContactSentLetters($contactId);
 
         return ApiResponse::responseOk('', $data);
     }
-
 
     /**
      * @SWG\Post(
@@ -247,14 +246,13 @@ class LettersController extends BaseRestController
      *
      * gets letters that were not delivered for contact
      *
-     * @param Letters $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getContactPendingLetters(Letters $resources, Request $request)
+    public function getContactPendingLetters(Request $request)
     {
         $contactId = $request->input('contact_id', 0);
-        $data = $resources->getContactPendingLetters($contactId);
+        $data = $this->repository->getContactPendingLetters($contactId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -265,40 +263,38 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param User $userResource
-     * @param Letter $resource
-     * @param ContactType $contactTypeResource
+     * @param UserRepository $userRepository
+     * @param ContactTypeRepository $contactTypeRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function createWelcomeLetter(
-        User $userResource,
-        Letter $resource,
-        ContactType $contactTypeResource,
+        UserRepository $userRepository,
+        ContactTypeRepository $contactTypeRepository,
         Request $request
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
-        $letterInfo = $userResource->getLetterInfo($docId);
+        $letterInfo = $userRepository->getLetterInfo($docId);
 
         $templateId = $request->input('template_id', 0);
         $contactTypeId = $request->input('contact_type_id', 0);
 
+        $data = [];
         if ($letterInfo && $letterInfo->use_letters && $letterInfo->intro_letters) {
-            $contactType = $contactTypeResource->find($contactTypeId);
+            /** @var ContactType|null $contactType */
+            $contactType = $contactTypeRepository->find($contactTypeId);
 
             if ($contactType && $contactType->physician == 1) {
                 if ($this->currentUser->user_type != self::DSS_USER_TYPE_SOFTWARE) {
-                    $resource->createWelcomeLetter(1, $templateId, $docId);
+                    $this->repository->createWelcomeLetter(1, $templateId, $docId);
                 }
-                $resource->createWelcomeLetter(2, $templateId, $docId);
+                $this->repository->createWelcomeLetter(2, $templateId, $docId);
 
                 $data = [
                     'message' => 'This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.'
                 ];
             }
-        } else {
-            $data = [];
         }
       
         return ApiResponse::responseOk('', $data);
@@ -310,15 +306,14 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Letter $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getGeneratedDateOfIntroLetter(Letter $resource, Request $request)
+    public function getGeneratedDateOfIntroLetter(Request $request)
     {
         $patientId = $request->input('patient_id', 0);
 
-        $data = $resource->getGeneratedDateOfIntroLetter($patientId);
+        $data = $this->repository->getGeneratedDateOfIntroLetter($patientId);
 
         return ApiResponse::responseOk('', $data);
     }

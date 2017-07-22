@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
-use DentalSleepSolutions\Eloquent\Dental\Summary;
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
+use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummaryRepository;
 use DentalSleepSolutions\Helpers\PatientSummaryManager;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
@@ -36,9 +38,9 @@ class PatientSummaryManagerTest extends UnitTestCase
         $this->patientSummary = new PatientSummary();
         $this->patientSummary->pid = 1;
 
-        $summaryModel = $this->mockSummaryModel();
-        $patientSummaryModel = $this->mockPatientSummaryModel();
-        $this->patientSummaryManager = new PatientSummaryManager($summaryModel, $patientSummaryModel);
+        $summaryRepository = $this->mockSummaryRepository();
+        $patientSummaryRepository = $this->mockPatientSummaryRepository();
+        $this->patientSummaryManager = new PatientSummaryManager($summaryRepository, $patientSummaryRepository);
     }
 
     public function testCreateSummary()
@@ -133,30 +135,30 @@ class PatientSummaryManagerTest extends UnitTestCase
         $this->assertEquals([], $this->createdPatientSummary);
     }
 
-    private function mockSummaryModel()
+    private function mockSummaryRepository()
     {
-        /** @var Summary|MockInterface $summaryModel */
-        $summaryModel = \Mockery::mock(Summary::class);
-        $summaryModel->shouldReceive('create')
+        /** @var SummaryRepository|MockInterface $summaryRepository */
+        $summaryRepository = \Mockery::mock(SummaryRepository::class);
+        $summaryRepository->shouldReceive('create')
             ->andReturnUsing([$this, 'createSummaryCallback']);
-        $summaryModel->shouldReceive('updateForPatient')
+        $summaryRepository->shouldReceive('updateForPatient')
             ->andReturnUsing([$this, 'updateSummaryForPatientCallback']);
-        $summaryModel->shouldReceive('getWithFilter')
+        $summaryRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getSummaryWithFilterCallback']);
-        return $summaryModel;
+        return $summaryRepository;
     }
 
-    private function mockPatientSummaryModel()
+    private function mockPatientSummaryRepository()
     {
-        /** @var PatientSummary|MockInterface $patientSummaryModel */
-        $patientSummaryModel = \Mockery::mock(PatientSummary::class);
-        $patientSummaryModel->shouldReceive('find')
+        /** @var PatientSummaryRepository|MockInterface $patientSummaryRepository */
+        $patientSummaryRepository = \Mockery::mock(PatientSummaryRepository::class);
+        $patientSummaryRepository->shouldReceive('find')
             ->andReturnUsing([$this, 'findPatientSummaryCallback']);
-        $patientSummaryModel->shouldReceive('create')
+        $patientSummaryRepository->shouldReceive('create')
             ->andReturnUsing([$this, 'createPatientSummaryCallback']);
-        $patientSummaryModel->shouldReceive('updateStatic')
+        $patientSummaryRepository->shouldReceive('update')
             ->andReturnUsing([$this, 'updatePatientSummaryCallback']);
-        return $patientSummaryModel;
+        return $patientSummaryRepository;
     }
 
     public function createSummaryCallback(array $data)
@@ -187,8 +189,8 @@ class PatientSummaryManagerTest extends UnitTestCase
         $this->createdPatientSummary = $data;
     }
 
-    public function updatePatientSummaryCallback(PatientSummary $patientSummary, array $data)
+    public function updatePatientSummaryCallback(array $data, $id)
     {
-        $this->updatedPatientSummary = array_merge(['id' => $patientSummary->pid], $data);
+        $this->updatedPatientSummary = array_merge(['id' => $id], $data);
     }
 }

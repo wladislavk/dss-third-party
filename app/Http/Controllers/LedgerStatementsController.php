@@ -2,12 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerStatementRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\LedgerStatement;
 use Illuminate\Http\Request;
 
 class LedgerStatementsController extends BaseRestController
 {
+    /** @var LedgerStatementRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/ledger-statements",
@@ -129,16 +132,15 @@ class LedgerStatementsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param LedgerStatement $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function removeByIdAndPatientId(LedgerStatement $resource, Request $request)
+    public function removeByIdAndPatientId(Request $request)
     {
         $id = $request->input('id', 0);
         $patientId = $request->input('patient_id', 0);
 
-        $resource->removeByIdAndPatientId($id, $patientId);
+        $this->repository->removeByIdAndPatientId($id, $patientId);
 
         return ApiResponse::responseOk('Resource deleted');
     }

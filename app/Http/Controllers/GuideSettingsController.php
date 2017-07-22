@@ -2,12 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\GuideSettings;
 use Illuminate\Http\Request;
 
 class GuideSettingsController extends BaseRestController
 {
+    /** @var GuideSettingRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/guide-settings",
@@ -135,15 +138,14 @@ class GuideSettingsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param GuideSettings $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAllOrderBy(GuideSettings $resources, Request $request)
+    public function getAllOrderBy(Request $request)
     {
         $order = $request->input('order', 'name');
 
-        $guideSettings = $resources->getAllOrderBy($order);
+        $guideSettings = $this->repository->getAllOrderBy($order);
 
         return ApiResponse::responseOk('', $guideSettings);
     }

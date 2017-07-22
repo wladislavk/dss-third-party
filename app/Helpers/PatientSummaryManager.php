@@ -2,21 +2,24 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\PatientSummary;
-use DentalSleepSolutions\Eloquent\Dental\Summary;
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummaryRepository;
 
 class PatientSummaryManager
 {
-    /** @var Summary */
-    private $summaryModel;
+    /** @var SummaryRepository */
+    private $summaryRepository;
 
-    /** @var PatientSummary */
-    private $patientSummaryModel;
+    /** @var PatientSummaryRepository */
+    private $patientSummaryRepository;
 
-    public function __construct(Summary $summaryModel, PatientSummary $patientSummaryModel)
-    {
-        $this->summaryModel = $summaryModel;
-        $this->patientSummaryModel = $patientSummaryModel;
+    public function __construct(
+        SummaryRepository $summaryRepository,
+        PatientSummaryRepository $patientSummaryRepository
+    ) {
+        $this->summaryRepository = $summaryRepository;
+        $this->patientSummaryRepository = $patientSummaryRepository;
     }
 
     /**
@@ -32,7 +35,7 @@ class PatientSummaryManager
             'location'  => $patientLocation,
             'patientid' => $patientId,
         ];
-        $this->summaryModel->create($summaryData);
+        $this->summaryRepository->create($summaryData);
     }
 
     /**
@@ -44,10 +47,10 @@ class PatientSummaryManager
         if (!$patientLocation) {
             return;
         }
-        $summaries = $this->summaryModel->getWithFilter([], ['patientid' => $patientId]);
+        $summaries = $this->summaryRepository->getWithFilter([], ['patientid' => $patientId]);
         if (count($summaries)) {
             $summaryData = ['location' => $patientLocation];
-            $this->summaryModel->updateForPatient($patientId, $summaryData);
+            $this->summaryRepository->updateForPatient($patientId, $summaryData);
             return;
         }
         $this->createSummary($patientId, $patientLocation);
@@ -66,12 +69,12 @@ class PatientSummaryManager
             'patient_info' => $isInfoComplete,
         ];
         /** @var PatientSummary|null $patientSummary */
-        $patientSummary = $this->patientSummaryModel->find($patientId);
+        $patientSummary = $this->patientSummaryRepository->find($patientId);
         if ($patientSummary) {
-            $this->patientSummaryModel->updateStatic($patientSummary, $patientSummaryData);
+            $this->patientSummaryRepository->update($patientSummaryData, $patientSummary->pid);
             return;
         }
         $patientSummaryData['pid'] = $patientId;
-        $this->patientSummaryModel->create($patientSummaryData);
+        $this->patientSummaryRepository->create($patientSummaryData);
     }
 }

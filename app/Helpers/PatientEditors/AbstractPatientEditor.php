@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers\PatientEditors;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Helpers\LetterTriggerLauncher;
 use DentalSleepSolutions\Helpers\PatientSummaryManager;
 use DentalSleepSolutions\Helpers\RegistrationEmailSender;

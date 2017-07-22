@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Devices;
-use DentalSleepSolutions\Contracts\Repositories\GuideSettings;
 use Illuminate\Http\Request;
 
 class GuideDevicesController extends BaseRestController
@@ -122,17 +122,20 @@ class GuideDevicesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Devices $devicesResource
-     * @param GuideSettings $guideSettingsResource
+     * @param DeviceRepository $deviceRepository
+     * @param GuideSettingRepository $guideSettingRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithImages(Devices $devicesResource, GuideSettings $guideSettingsResource, Request $request)
-    {
+    public function getWithImages(
+        DeviceRepository $deviceRepository,
+        GuideSettingRepository $guideSettingRepository,
+        Request $request
+    ) {
         $settings = $request->input('settings');
 
         $fields = ['deviceid', 'device', 'image_path'];
-        $devices = $devicesResource->getWithFilter($fields);
+        $devices = $deviceRepository->getWithFilter($fields);
         $devicesArray = [];
 
         if (count($devices)) {
@@ -140,7 +143,7 @@ class GuideDevicesController extends BaseRestController
                 $total = 0;
                 $show  = true;
 
-                $guideSettings = $guideSettingsResource->getSettingType($device->deviceid);
+                $guideSettings = $guideSettingRepository->getSettingType($device->deviceid);
 
                 if (count($guideSettings)) {
                     foreach ($guideSettings as $guideSetting) {
@@ -186,7 +189,6 @@ class GuideDevicesController extends BaseRestController
         if ($firstElement['value'] == $secondElement['value']) {
             return 0;
         }
-
         return ($firstElement['value'] > $secondElement['value']) ? -1 : 1;
     }
 }

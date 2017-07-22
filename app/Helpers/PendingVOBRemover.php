@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\InsurancePreauth;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
 class PendingVOBRemover
 {

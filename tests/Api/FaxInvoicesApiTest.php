@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\FaxInvoice;
+use DentalSleepSolutions\Eloquent\Models\Dental\FaxInvoice;
 use Tests\TestCases\ApiTestCase;
 
 class FaxInvoicesApiTest extends ApiTestCase

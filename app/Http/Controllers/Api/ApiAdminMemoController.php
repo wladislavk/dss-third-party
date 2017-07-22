@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\User;
-use \DentalSleepSolutions\Interfaces\MemoAdminInterface;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use DentalSleepSolutions\Eloquent\Repositories\MemoAdminRepository;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
@@ -11,11 +11,8 @@ use Tymon\JWTAuth\JWTAuth;
 
 class ApiAdminMemoController extends ApiBaseController
 {
-    /**
-     * References the memo interface
-     * @var MemoAdminInterface $memo
-     */
-    private $memo;
+    /** @var MemoAdminRepository */
+    protected $repository;
 
     /** @var array */
     private $rules = [
@@ -26,11 +23,11 @@ class ApiAdminMemoController extends ApiBaseController
 
     public function __construct(
         JWTAuth $auth,
-        User $userModel,
-        MemoAdminInterface $memo
+        UserRepository $userRepository,
+        MemoAdminRepository $memoAdminRepository
     ) {
-        parent::__construct($auth, $userModel);
-        $this->memo = $memo;
+        parent::__construct($auth, $userRepository);
+        $this->repository = $memoAdminRepository;
     }
 
     /**
@@ -46,7 +43,7 @@ class ApiAdminMemoController extends ApiBaseController
         $status = null;
         $response = ['status' => null, 'message' => 'Memo list', 'data' => []];
         try {
-            $response['data'] = $this->memo->all();
+            $response['data'] = $this->repository->allWithOrder('memo_id');
             $response['status'] = true;
             $status = 200;
         } catch (Exception $ex) {
@@ -74,8 +71,8 @@ class ApiAdminMemoController extends ApiBaseController
             if ($validator->fails()) {
                 throw new Exception($validator->errors());
             }
-            $this->memo->store(Input::all());
-            $response['data'] = $this->memo->all();
+            $this->repository->create(Input::all());
+            $response['data'] = $this->repository->allWithOrder('memo_id');
             $response['status'] = true;
             $status = 200;
         } catch (Exception $ex) {
@@ -107,8 +104,8 @@ class ApiAdminMemoController extends ApiBaseController
                 // @todo: uncaught exceptions should not be thrown in controller actions
                 throw new Exception($validator->errors());
             }
-            $this->memo->update($memoId, Input::all());
-            $response['data'] = $this->memo->all();
+            $this->repository->update(Input::all(), $memoId);
+            $response['data'] = $this->repository->allWithOrder('memo_id');
             $response['status'] = true;
             $status = 200;
         } catch (Exception $ex) {
@@ -158,8 +155,8 @@ class ApiAdminMemoController extends ApiBaseController
         $status = null;
         $response = ['status' => null, 'message' => 'Memo deleted successfully.', 'data' => []];
         try {
-            $this->memo->destroy($memoId);
-            $response['data'] = $this->memo->all();
+            $this->repository->delete($memoId);
+            $response['data'] = $this->repository->allWithOrder('memo_id');
             $response['status'] = true;
             $status = 200;
         } catch (Exception $ex) {
@@ -181,7 +178,7 @@ class ApiAdminMemoController extends ApiBaseController
      */
     public function getCurrent()
     {
-        $data = $this->memo->getCurrent();
+        $data = $this->repository->getCurrent();
         return ApiResponse::responseOk('', $data);
     }
 }

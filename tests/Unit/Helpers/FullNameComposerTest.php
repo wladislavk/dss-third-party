@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Constants\ReferredTypes;
-use DentalSleepSolutions\Eloquent\Dental\Contact;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Factories\ReferredNameSetterFactory;
 use DentalSleepSolutions\Helpers\FullNameComposer;
 use DentalSleepSolutions\Helpers\NameSetter;
@@ -38,9 +38,9 @@ class FullNameComposerTest extends UnitTestCase
 
         $referredNameSetterFactory = $this->mockReferredNameSetterFactory();
         $nameSetter = new NameSetter();
-        $contactModel = $this->mockContactModel();
+        $contactRepository = $this->mockContactRepository();
         $this->fullNameComposer = new FullNameComposer(
-            $referredNameSetterFactory, $nameSetter, $contactModel
+            $referredNameSetterFactory, $nameSetter, $contactRepository
         );
     }
 
@@ -161,13 +161,13 @@ class FullNameComposerTest extends UnitTestCase
         return $referredNameSetter;
     }
 
-    private function mockContactModel()
+    private function mockContactRepository()
     {
-        /** @var Contact|MockInterface $contactModel */
-        $contactModel = \Mockery::mock(Contact::class);
-        $contactModel->shouldReceive('getDocShortInfo')
+        /** @var ContactRepository|MockInterface $contactRepository */
+        $contactRepository = \Mockery::mock(ContactRepository::class);
+        $contactRepository->shouldReceive('getDocShortInfo')
             ->andReturnUsing([$this, 'getDocShortInfoCallback']);
-        return $contactModel;
+        return $contactRepository;
     }
 
     public function setReferredNameCallback(Patient $foundPatient)

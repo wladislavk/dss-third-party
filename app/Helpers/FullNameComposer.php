@@ -2,8 +2,9 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Contact;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Factories\ReferredNameSetterFactory;
 
 class FullNameComposer
@@ -28,17 +29,17 @@ class FullNameComposer
     /** @var NameSetter */
     private $nameSetter;
 
-    /** @var Contact */
-    private $contactModel;
+    /** @var ContactRepository */
+    private $contactRepository;
 
     public function __construct(
         ReferredNameSetterFactory $referredNameSetterFactory,
         NameSetter $nameSetter,
-        Contact $contactModel
+        ContactRepository $contactRepository
     ) {
         $this->referredNameSetterFactory = $referredNameSetterFactory;
         $this->nameSetter = $nameSetter;
-        $this->contactModel = $contactModel;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -85,6 +86,7 @@ class FullNameComposer
 
     /**
      * @param Patient $foundPatient
+     * @param string $field
      * @return string|null
      */
     private function setNameForDocField(Patient $foundPatient, $field)
@@ -92,7 +94,7 @@ class FullNameComposer
         if (!isset($foundPatient->$field)) {
             return '';
         }
-        $shortInfo = $this->contactModel->getDocShortInfo($foundPatient->$field);
+        $shortInfo = $this->contactRepository->getDocShortInfo($foundPatient->$field);
         if (!$shortInfo) {
             return '';
         }

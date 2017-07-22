@@ -2,8 +2,9 @@
 
 namespace Tests\Unit\Helpers\ReferredNameSetters;
 
-use DentalSleepSolutions\Eloquent\Dental\Contact;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Helpers\NameSetter;
 use DentalSleepSolutions\Helpers\ReferredNameSetters\PhysicianReferredNameSetter;
 use Mockery\MockInterface;
@@ -26,8 +27,10 @@ class PhysicianReferredNameSetterTest extends UnitTestCase
         $this->contact->lastname = 'Doe';
 
         $nameSetter = new NameSetter();
-        $contactModel = $this->mockContactModel();
-        $this->physicianReferredNameSetter = new PhysicianReferredNameSetter($nameSetter, $contactModel);
+        $contactRepository = $this->mockContactRepository();
+        $this->physicianReferredNameSetter = new PhysicianReferredNameSetter(
+            $nameSetter, $contactRepository
+        );
     }
 
     public function testWithContact()
@@ -46,13 +49,13 @@ class PhysicianReferredNameSetterTest extends UnitTestCase
         $this->assertNull($name);
     }
 
-    private function mockContactModel()
+    private function mockContactRepository()
     {
-        /** @var Contact|MockInterface $contactModel */
-        $contactModel = \Mockery::mock(Contact::class);
-        $contactModel->shouldReceive('getDocShortInfo')
+        /** @var ContactRepository|MockInterface $contactRepository */
+        $contactRepository = \Mockery::mock(ContactRepository::class);
+        $contactRepository->shouldReceive('getDocShortInfo')
             ->andReturnUsing([$this, 'getDocShortInfoCallback']);
-        return $contactModel;
+        return $contactRepository;
     }
 
     public function getDocShortInfoCallback($referredBy)

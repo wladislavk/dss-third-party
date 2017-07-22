@@ -2,7 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Exceptions\IncorrectEmailException;
 
 class EmailChecker
@@ -14,12 +15,12 @@ class EmailChecker
     // TODO: resolve magic numbers
     const ALLOWED_STATUSES = [1, 2];
 
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
-    public function __construct(Patient $patientModel)
+    public function __construct(PatientRepository $patientRepository)
     {
-        $this->patientModel = $patientModel;
+        $this->patientRepository = $patientRepository;
     }
 
     /**
@@ -38,7 +39,7 @@ class EmailChecker
             $message = self::EMAIL_IN_USE_MESSAGE;
             throw new IncorrectEmailException($message);
         }
-        $patient = $this->patientModel->getPatientInfoWithDocInfo($patientId);
+        $patient = $this->patientRepository->getPatientInfoWithDocInfo($patientId);
         if ($patient && $this->confirmPatientEmail($email, $patient)) {
             return self::EMAIL_CHANGED_MESSAGE;
         }
@@ -52,7 +53,7 @@ class EmailChecker
      */
     private function isPatientEmailValid($email, $patientId)
     {
-        $numberOfEmails = $this->patientModel->getSameEmails($email, $patientId);
+        $numberOfEmails = $this->patientRepository->getSameEmails($email, $patientId);
         if ($numberOfEmails > 0) {
             return false;
         }

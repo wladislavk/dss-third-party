@@ -2,7 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\UniqueLoginGenerator;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
@@ -17,8 +18,8 @@ class UniqueLoginGeneratorTest extends UnitTestCase
 
     public function setUp()
     {
-        $patientModel = $this->mockPatientModel();
-        $this->uniqueLoginGenerator = new UniqueLoginGenerator($patientModel);
+        $patientRepository = $this->mockPatientRepository();
+        $this->uniqueLoginGenerator = new UniqueLoginGenerator($patientRepository);
     }
 
     public function testWithSimilarPatientLogin()
@@ -49,13 +50,13 @@ class UniqueLoginGeneratorTest extends UnitTestCase
         $this->assertEquals('doe', $uniqueLogin);
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('getSimilarPatientLogin')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('getSimilarPatientLogin')
             ->andReturnUsing([$this, 'getSimilarPatientLoginCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     public function getSimilarPatientLoginCallback()

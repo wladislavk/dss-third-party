@@ -2,8 +2,9 @@
 
 namespace Tests\Unit\Helpers\PatientEditors;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\PasswordGenerator;
 use DentalSleepSolutions\Helpers\PatientEditors\PatientCreator;
 use DentalSleepSolutions\Helpers\PatientSummaryManager;
@@ -17,16 +18,13 @@ use Tests\TestCases\PatientEditorTestCase;
 
 class PatientCreatorTest extends PatientEditorTestCase
 {
-    /** @var array */
-    private $newFormData = [];
+    /** @var Patient */
+    private $newFormData;
 
     private $summary = [];
 
     /** @var Patient[] */
     private $similarPatients = [];
-
-    /** @var int */
-    private $newId = 10;
 
     /** @var PatientCreator */
     private $patientCreator;
@@ -38,14 +36,14 @@ class PatientCreatorTest extends PatientEditorTestCase
         $patientSummaryManager = $this->mockPatientSummaryManager();
         $similarHelper = $this->mockSimilarHelper();
         $passwordGenerator = $this->mockPasswordGenerator();
-        $patientModel = $this->mockPatientModel();
+        $patientRepository = $this->mockPatientRepository();
         $this->patientCreator = new PatientCreator(
             $registrationEmailSender,
             $letterTriggerLauncher,
             $patientSummaryManager,
             $similarHelper,
             $passwordGenerator,
-            $patientModel
+            $patientRepository
         );
     }
 
@@ -62,27 +60,22 @@ class PatientCreatorTest extends PatientEditorTestCase
         $formData = ['foo' => 'bar'];
         $user = new User();
         $responseData = $this->patientCreator->editPatient($formData, $user, $requestData);
-        $this->assertEquals($this->newId, $responseData->currentPatientId);
+        $this->assertEquals(1, $responseData->currentPatientId);
         $status = sprintf(EditPatientResponseData::PATIENT_ADDED_STATUS, 'John Doe');
         $this->assertEquals($status, $responseData->status);
         $this->assertNull($responseData->redirectTo);
         $summary = [
-            'id' => $this->newId,
+            'id' => 1,
             'location' => 5,
         ];
         $this->assertEquals($summary, $this->summary);
-        $newFormData = [
-            'foo' => 'bar',
-            'password' => '123',
-            'ip_address' => '127.0.0.1',
-            'salt' => '',
-            'userid' => 0,
-            'docid' => 0,
-            'firstname' => 'John',
-            'lastname' => 'Doe',
-            'middlename' => '',
-        ];
-        $this->assertEquals($newFormData, $this->newFormData);
+        $this->assertEquals('bar', $this->newFormData->foo);
+        $this->assertEquals('123', $this->newFormData->password);
+        $this->assertEquals('127.0.0.1', $this->newFormData->ip_address);
+        $this->assertEquals(0, $this->newFormData->userid);
+        $this->assertEquals(0, $this->newFormData->docid);
+        $this->assertEquals('John', $this->newFormData->firstname);
+        $this->assertEquals('Doe', $this->newFormData->lastname);
     }
 
     public function testWithoutSSN()
@@ -97,18 +90,13 @@ class PatientCreatorTest extends PatientEditorTestCase
         $formData = ['foo' => 'bar'];
         $user = new User();
         $this->patientCreator->editPatient($formData, $user, $requestData);
-        $newFormData = [
-            'foo' => 'bar',
-            'password' => '',
-            'ip_address' => '127.0.0.1',
-            'salt' => '',
-            'userid' => 0,
-            'docid' => 0,
-            'firstname' => 'John',
-            'lastname' => 'Doe',
-            'middlename' => '',
-        ];
-        $this->assertEquals($newFormData, $this->newFormData);
+        $this->assertEquals('bar', $this->newFormData->foo);
+        $this->assertEquals('', $this->newFormData->password);
+        $this->assertEquals('127.0.0.1', $this->newFormData->ip_address);
+        $this->assertEquals(0, $this->newFormData->userid);
+        $this->assertEquals(0, $this->newFormData->docid);
+        $this->assertEquals('John', $this->newFormData->firstname);
+        $this->assertEquals('Doe', $this->newFormData->lastname);
     }
 
     public function testWithSimilarPatients()
@@ -126,7 +114,7 @@ class PatientCreatorTest extends PatientEditorTestCase
         $user = new User();
         $responseData = $this->patientCreator->editPatient($formData, $user, $requestData);
         $this->assertNull($responseData->status);
-        $redirect = PatientCreator::DUPLICATE_URL . $this->newId;
+        $redirect = PatientCreator::DUPLICATE_URL . 1;
         $this->assertEquals($redirect, $responseData->redirectTo);
     }
 
@@ -148,13 +136,13 @@ class PatientCreatorTest extends PatientEditorTestCase
         return $passwordGenerator;
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('create')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('create')
             ->andReturnUsing([$this, 'createPatientCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     protected function mockPatientSummaryManager()
@@ -186,7 +174,17 @@ class PatientCreatorTest extends PatientEditorTestCase
 
     public function createPatientCallback(array $formData)
     {
-        $this->newFormData = $formData;
-        return $this->newId;
+        $this->newFormData = new Patient();
+        $this->newFormData->patientid = 1;
+        $this->newFormData->foo = 'bar';
+        $this->newFormData->password = $formData['password'];
+        $this->newFormData->salt = '';
+        $this->newFormData->ip_address = '127.0.0.1';
+        $this->newFormData->userid = 0;
+        $this->newFormData->docid = 0;
+        $this->newFormData->firstname = 'John';
+        $this->newFormData->lastname = 'Doe';
+        $this->newFormData->middlename = '';
+        return $this->newFormData;
     }
 }

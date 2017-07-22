@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Structs;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
 class MailerData
 {

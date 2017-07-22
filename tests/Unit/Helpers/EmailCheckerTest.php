@@ -2,7 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Exceptions\IncorrectEmailException;
 use DentalSleepSolutions\Helpers\EmailChecker;
 use Mockery\MockInterface;
@@ -26,8 +27,8 @@ class EmailCheckerTest extends UnitTestCase
         $this->patient->doc_use_patient_portal = 1;
         $this->patient->email = 'old@email.com';
 
-        $patientModel = $this->mockPatientModel();
-        $this->emailChecker = new EmailChecker($patientModel);
+        $patientRepository = $this->mockPatientRepository();
+        $this->emailChecker = new EmailChecker($patientRepository);
     }
 
     public function testCheckWithEmailChanged()
@@ -91,15 +92,15 @@ class EmailCheckerTest extends UnitTestCase
         $this->emailChecker->checkEmail($email, $patientId);
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('getPatientInfoWithDocInfo')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('getPatientInfoWithDocInfo')
             ->andReturnUsing([$this, 'getPatientInfoWithDocInfoCallback']);
-        $patientModel->shouldReceive('getSameEmails')
+        $patientRepository->shouldReceive('getSameEmails')
             ->andReturnUsing([$this, 'getSameEmailsCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     public function getPatientInfoWithDocInfoCallback()

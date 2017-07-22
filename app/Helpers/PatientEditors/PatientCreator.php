@@ -2,8 +2,9 @@
 
 namespace DentalSleepSolutions\Helpers\PatientEditors;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\LetterTriggerLauncher;
 use DentalSleepSolutions\Helpers\PasswordGenerator;
 use DentalSleepSolutions\Helpers\PatientSummaryManager;
@@ -24,8 +25,8 @@ class PatientCreator extends AbstractPatientEditor
     /** @var PasswordGenerator */
     private $passwordGenerator;
 
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
     public function __construct(
         RegistrationEmailSender $registrationEmailSender,
@@ -33,14 +34,14 @@ class PatientCreator extends AbstractPatientEditor
         PatientSummaryManager $patientSummaryManager,
         SimilarHelper $similarHelper,
         PasswordGenerator $passwordGenerator,
-        Patient $patientModel
+        PatientRepository $patientRepository
     ) {
         parent::__construct(
             $registrationEmailSender, $letterTriggerLauncher, $patientSummaryManager
         );
         $this->similarHelper = $similarHelper;
         $this->passwordGenerator = $passwordGenerator;
-        $this->patientModel = $patientModel;
+        $this->patientRepository = $patientRepository;
     }
 
     /**
@@ -77,7 +78,9 @@ class PatientCreator extends AbstractPatientEditor
         EditPatientRequestData $requestData,
         Patient $unchangedPatient = null
     ) {
-        $responseData->currentPatientId = $this->patientModel->create($formData);
+        /** @var Patient $newPatient */
+        $newPatient = $this->patientRepository->create($formData);
+        $responseData->currentPatientId = $newPatient->patientid;
     }
 
     /**

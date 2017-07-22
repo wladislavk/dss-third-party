@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Helpers\PatientEditors;
 
-use DentalSleepSolutions\Dummies\DummyPatientEditor;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
 use DentalSleepSolutions\Structs\EditPatientResponseData;
+use Tests\Dummies\DummyPatientEditor;
 use Tests\TestCases\PatientEditorTestCase;
 
 class AbstractPatientEditorTest extends PatientEditorTestCase

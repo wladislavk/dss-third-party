@@ -2,16 +2,16 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 
 class UniqueLoginGenerator
 {
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
-    public function __construct(Patient $patientModel)
+    public function __construct(PatientRepository $patientRepository)
     {
-        $this->patientModel = $patientModel;
+        $this->patientRepository = $patientRepository;
     }
 
     /**
@@ -23,7 +23,7 @@ class UniqueLoginGenerator
     {
         $initial = $this->getInitial($firstName);
         $uniqueLogin = strtolower($initial . $lastName);
-        $similarPatientLogin = $this->patientModel->getSimilarPatientLogin($uniqueLogin);
+        $similarPatientLogin = $this->patientRepository->getSimilarPatientLogin($uniqueLogin);
 
         if ($similarPatientLogin) {
             $number = $this->getLoginNumber($similarPatientLogin->login, $uniqueLogin);

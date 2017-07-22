@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Helpers\EmailHandlers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\EmailHandlers\AbstractRegistrationRelatedEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
@@ -25,9 +25,9 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
         $mailerDataRetriever = $this->mockMailerDataRetriever();
         $emailSender = $this->mockEmailSender();
         $passwordResetDataSetter = $this->mockPasswordResetDataSetter();
-        $patientModel = $this->mockPatientModel();
+        $patientRepository = $this->mockPatientRepository();
         $this->registrationEmailHandler = new RegistrationEmailHandler(
-            $mailerDataRetriever, $emailSender, $passwordResetDataSetter, $patientModel
+            $mailerDataRetriever, $emailSender, $passwordResetDataSetter, $patientRepository
         );
     }
 
@@ -190,13 +190,13 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
         ];
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('updatePatient')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('updatePatient')
             ->andReturnUsing([$this, 'updatePatientCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     public function updatePatientCallback($patientId, array $newPatientData)

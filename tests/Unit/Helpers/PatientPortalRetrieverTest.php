@@ -2,7 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Helpers\PatientPortalRetriever;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
@@ -17,8 +18,8 @@ class PatientPortalRetrieverTest extends UnitTestCase
 
     public function setUp()
     {
-        $userModel = $this->mockUserModel();
-        $this->patientPortalRetriever = new PatientPortalRetriever($userModel);
+        $userRepository = $this->mockUserRepository();
+        $this->patientPortalRetriever = new PatientPortalRetriever($userRepository);
     }
 
     public function testHasPatientPortal()
@@ -54,13 +55,13 @@ class PatientPortalRetrieverTest extends UnitTestCase
         $this->assertFalse($hasPatientPortal);
     }
 
-    private function mockUserModel()
+    private function mockUserRepository()
     {
-        /** @var User|MockInterface $userModel */
-        $userModel = \Mockery::mock(User::class);
-        $userModel->shouldReceive('getWithFilter')
+        /** @var UserRepository|MockInterface $userRepository */
+        $userRepository = \Mockery::mock(UserRepository::class);
+        $userRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getWithFilterCallback']);
-        return $userModel;
+        return $userRepository;
     }
 
     public function getWithFilterCallback(array $fields, array $where)

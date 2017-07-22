@@ -11,9 +11,6 @@ class Bindings
     private $controller;
 
     /** @var string */
-    private $resource;
-
-    /** @var string */
     private $repository;
 
     /** @var string */
@@ -39,17 +36,6 @@ class Bindings
     public function getController()
     {
         return $this->controller;
-    }
-
-    public function setResource($resource)
-    {
-        $this->resource = strval($resource);
-        return $this;
-    }
-
-    public function getResource()
-    {
-        return $this->resource;
     }
 
     public function setRepository($repository)

@@ -2,18 +2,19 @@
 
 namespace DentalSleepSolutions\Helpers\ReferredNameSetters;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\NameSetter;
 
 class PatientReferredNameSetter extends AbstractReferredNameSetter
 {
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
-    public function __construct(NameSetter $nameSetter, Patient $patientModel)
+    public function __construct(NameSetter $nameSetter, PatientRepository $patientRepository)
     {
         parent::__construct($nameSetter);
-        $this->patientModel = $patientModel;
+        $this->patientRepository = $patientRepository;
     }
 
     /**
@@ -23,7 +24,7 @@ class PatientReferredNameSetter extends AbstractReferredNameSetter
     protected function getModel(Patient $foundPatient)
     {
         $fields = ['lastname', 'firstname', 'middlename'];
-        $referredPatients = $this->patientModel
+        $referredPatients = $this->patientRepository
             ->getWithFilter($fields, ['patientid' => $foundPatient->referred_by]);
         if (!isset($referredPatients[0])) {
             return null;

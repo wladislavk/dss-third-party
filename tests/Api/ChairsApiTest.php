@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\Chair;
+use DentalSleepSolutions\Eloquent\Models\Dental\Chair;
 use Tests\TestCases\ApiTestCase;
 
 class ChairsApiTest extends ApiTestCase

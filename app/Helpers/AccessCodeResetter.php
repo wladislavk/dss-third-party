@@ -3,16 +3,16 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 
 class AccessCodeResetter
 {
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
-    public function __construct(Patient $patientModel)
+    public function __construct(PatientRepository $patientRepository)
     {
-        $this->patientModel = $patientModel;
+        $this->patientRepository = $patientRepository;
     }
 
     public function resetAccessCode($patientId)
@@ -28,7 +28,7 @@ class AccessCodeResetter
         $accessCodeDate = Carbon::now();
         $updateData['access_code'] = $accessCode;
         $updateData['access_code_date'] = $accessCodeDate;
-        $this->patientModel->updatePatient($patientId, $updateData);
+        $this->patientRepository->updatePatient($patientId, $updateData);
         $updateData['access_code_date'] = $accessCodeDate->toDateTimeString();
         return $updateData;
     }

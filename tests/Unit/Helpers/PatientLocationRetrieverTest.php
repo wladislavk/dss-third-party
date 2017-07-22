@@ -2,7 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Summary;
+use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummaryRepository;
 use DentalSleepSolutions\Helpers\PatientLocationRetriever;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
@@ -14,8 +15,8 @@ class PatientLocationRetrieverTest extends UnitTestCase
 
     public function setUp()
     {
-        $summaryModel = $this->mockSummaryModel();
-        $this->patientLocationRetriever = new PatientLocationRetriever($summaryModel);
+        $summaryRepository = $this->mockSummaryRepository();
+        $this->patientLocationRetriever = new PatientLocationRetriever($summaryRepository);
     }
 
     public function testGetLocation()
@@ -32,13 +33,13 @@ class PatientLocationRetrieverTest extends UnitTestCase
         $this->assertEquals(0, $patientLocation);
     }
 
-    private function mockSummaryModel()
+    private function mockSummaryRepository()
     {
-        /** @var Summary|MockInterface $summaryModel */
-        $summaryModel = \Mockery::mock(Summary::class);
-        $summaryModel->shouldReceive('getWithFilter')
+        /** @var SummaryRepository|MockInterface $summaryRepository */
+        $summaryRepository = \Mockery::mock(SummaryRepository::class);
+        $summaryRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getSummaryWithFilterCallback']);
-        return $summaryModel;
+        return $summaryRepository;
     }
 
     public function getSummaryWithFilterCallback(array $fields, array $where)

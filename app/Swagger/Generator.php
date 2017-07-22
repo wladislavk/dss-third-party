@@ -15,7 +15,7 @@ class Generator
 {
     const HTTP_DIR = __DIR__ . '/../Http';
     const CONTROLLER_DIR = '/Controllers';
-    const MODEL_DIR = __DIR__ . '/../Eloquent';
+    const MODEL_DIR = __DIR__ . '/../Eloquent/Models';
     const BASE_CONTROLLER = BaseRestController::class;
 
     /** @var AnnotationWriter */

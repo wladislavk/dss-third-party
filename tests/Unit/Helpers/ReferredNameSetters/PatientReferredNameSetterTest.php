@@ -2,7 +2,8 @@
 
 namespace Tests\Unit\Helpers\ReferredNameSetters;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\NameSetter;
 use DentalSleepSolutions\Helpers\ReferredNameSetters\PatientReferredNameSetter;
 use Mockery\MockInterface;
@@ -25,8 +26,10 @@ class PatientReferredNameSetterTest extends UnitTestCase
         $this->referredPatient->lastname = 'Doe';
 
         $nameSetter = new NameSetter();
-        $patientModel = $this->mockPatientModel();
-        $this->patientReferredNameSetter = new PatientReferredNameSetter($nameSetter, $patientModel);
+        $patientRepository = $this->mockPatientRepository();
+        $this->patientReferredNameSetter = new PatientReferredNameSetter(
+            $nameSetter, $patientRepository
+        );
     }
 
     public function testWithPatients()
@@ -45,13 +48,13 @@ class PatientReferredNameSetterTest extends UnitTestCase
         $this->assertNull($name);
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('getWithFilter')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getWithFilterCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     public function getWithFilterCallback(array $fields, array $where)

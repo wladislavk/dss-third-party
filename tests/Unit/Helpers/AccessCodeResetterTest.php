@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\AccessCodeResetter;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
@@ -17,8 +17,8 @@ class AccessCodeResetterTest extends UnitTestCase
 
     public function setUp()
     {
-        $patientModel = $this->mockPatientModel();
-        $this->accessCodeResetter = new AccessCodeResetter($patientModel);
+        $patientRepository = $this->mockPatientRepository();
+        $this->accessCodeResetter = new AccessCodeResetter($patientRepository);
     }
 
     public function testResetAccessCode()
@@ -46,13 +46,13 @@ class AccessCodeResetterTest extends UnitTestCase
         $this->assertEquals([], $this->updatedData);
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('updatePatient')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('updatePatient')
             ->andReturnUsing([$this, 'updatePatientCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     public function updatePatientCallback($id, array $data)

@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Helpers\LetterTriggers;
 
-use DentalSleepSolutions\Eloquent\Dental\Contact;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -31,11 +33,11 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $this->users = [$user1, $user2];
 
         $letterCreator = $this->mockLetterCreator();
-        $letterModel = $this->mockLetterModel();
-        $userModel = $this->mockUserModel();
-        $contactModel = $this->mockContactModel();
+        $letterRepository = $this->mockLetterRepository();
+        $userRepository = $this->mockUserRepository();
+        $contactRepository = $this->mockContactRepository();
         $this->lettersToMDTrigger = new LettersToMDTrigger(
-            $letterCreator, $letterModel, $userModel, $contactModel
+            $letterCreator, $letterRepository, $userRepository, $contactRepository
         );
     }
 
@@ -179,22 +181,22 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
     }
 
-    private function mockUserModel()
+    private function mockUserRepository()
     {
-        /** @var User|MockInterface $userModel */
-        $userModel = \Mockery::mock(User::class);
-        $userModel->shouldReceive('getWithFilter')
+        /** @var UserRepository|MockInterface $userRepository */
+        $userRepository = \Mockery::mock(UserRepository::class);
+        $userRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getUserWithFilterCallback']);
-        return $userModel;
+        return $userRepository;
     }
 
-    private function mockContactModel()
+    private function mockContactRepository()
     {
-        /** @var Contact|MockInterface $contactModel */
-        $contactModel = \Mockery::mock(Contact::class);
-        $contactModel->shouldReceive('getActiveContact')
+        /** @var ContactRepository|MockInterface $contactRepository */
+        $contactRepository = \Mockery::mock(ContactRepository::class);
+        $contactRepository->shouldReceive('getActiveContact')
             ->andReturnUsing([$this, 'getActiveContactCallback']);
-        return $contactModel;
+        return $contactRepository;
     }
 
     public function getUserWithFilterCallback(array $fields, array $where)

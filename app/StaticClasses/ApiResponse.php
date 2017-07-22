@@ -9,7 +9,6 @@ use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Contracts\Resources\Resource;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -187,7 +186,7 @@ class ApiResponse
      */
     private static function isResource($data)
     {
-        return $data instanceof Resource || $data instanceof Model;
+        return $data instanceof Model;
     }
 
     /**

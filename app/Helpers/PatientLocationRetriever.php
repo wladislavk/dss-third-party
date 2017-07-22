@@ -2,16 +2,16 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Summary;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummaryRepository;
 
 class PatientLocationRetriever
 {
-    /** @var Summary */
-    private $summaryModel;
+    /** @var SummaryRepository */
+    private $summaryRepository;
 
-    public function __construct(Summary $summaryModel)
+    public function __construct(SummaryRepository $summaryRepository)
     {
-        $this->summaryModel = $summaryModel;
+        $this->summaryRepository = $summaryRepository;
     }
 
     /**
@@ -21,7 +21,7 @@ class PatientLocationRetriever
     public function getPatientLocation($patientId)
     {
         $fields = ['location'];
-        $foundLocations = $this->summaryModel->getWithFilter($fields, ['patientid' => $patientId]);
+        $foundLocations = $this->summaryRepository->getWithFilter($fields, ['patientid' => $patientId]);
         if (!count($foundLocations)) {
             return 0;
         }

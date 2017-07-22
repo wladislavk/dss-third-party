@@ -2,8 +2,9 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Helpers\LetterDeleter;
 use DentalSleepSolutions\Helpers\LetterManager;
 use DentalSleepSolutions\Structs\PatientReferrer;
@@ -36,8 +37,8 @@ class LetterManagerTest extends UnitTestCase
         $this->referrer = new PatientReferrer();
 
         $letterDeleter = $this->mockLetterDeleter();
-        $letterModel = $this->mockLetterModel();
-        $this->letterManager = new LetterManager($letterDeleter, $letterModel);
+        $letterRepository = $this->mockLetterRepository();
+        $this->letterManager = new LetterManager($letterDeleter, $letterRepository);
     }
 
     public function testWithReferrerChange()
@@ -101,15 +102,15 @@ class LetterManagerTest extends UnitTestCase
         return $letterDeleter;
     }
 
-    private function mockLetterModel()
+    private function mockLetterRepository()
     {
-        /** @var Letter|MockInterface $letterModel */
-        $letterModel = \Mockery::mock(Letter::class);
-        $letterModel->shouldReceive('updatePendingLettersToNewReferrer')
+        /** @var LetterRepository|MockInterface $letterRepository */
+        $letterRepository = \Mockery::mock(LetterRepository::class);
+        $letterRepository->shouldReceive('updatePendingLettersToNewReferrer')
             ->andReturnUsing([$this, 'updatePendingLettersToNewReferrerCallback']);
-        $letterModel->shouldReceive('getPhysicianOrPatientPendingLetters')
+        $letterRepository->shouldReceive('getPhysicianOrPatientPendingLetters')
             ->andReturnUsing([$this, 'getPhysicianOrPatientPendingLettersCallback']);
-        return $letterModel;
+        return $letterRepository;
     }
 
     public function updatePendingLettersToNewReferrerCallback($oldReferredBy, $newReferredBy, $patientId, $type)

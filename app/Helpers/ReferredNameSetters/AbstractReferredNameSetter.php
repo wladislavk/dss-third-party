@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers\ReferredNameSetters;
 
-use DentalSleepSolutions\DentalSleepSolutions\Interfaces\NamedModelInterface;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Contracts\NamedModelInterface;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Helpers\NameSetter;
 
 abstract class AbstractReferredNameSetter

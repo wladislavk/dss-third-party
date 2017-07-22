@@ -2,10 +2,9 @@
 
 namespace DentalSleepSolutions\Eligible;
 
-use GuzzleHttp\Exception\ConnectException;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserCompanyRepository;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Exception\ClientException;
-use DentalSleepSolutions\Eloquent\Dental\UserCompany;
 
 /**
  * This class encapsulates easy api for interacting with
@@ -16,13 +15,6 @@ use DentalSleepSolutions\Eloquent\Dental\UserCompany;
  */
 class Client
 {
-    private $base_uri = 'https://gds.eligibleapi.com';
-    private $version = 'v1.5';
-    private $api_key;
-    private $handler = null;
-
-    /*********const****/
-
     /**claim statuses*/
     const DSS_CLAIM_PENDING = 0;
     const DSS_CLAIM_SENT = 1;
@@ -48,16 +40,26 @@ class Client
     const DSS_TRXN_TYPE_DIAG = 4;
     const DSS_TRXN_TYPE_ADJ = 6;
 
+    private $base_uri = 'https://gds.eligibleapi.com';
+    private $version = 'v1.5';
+    private $api_key;
+    private $handler = null;
+
+    /** @var UserCompanyRepository */
+    private $userCompanyRepository;
+
     /**
-     * @param string $version
+     * @param UserCompanyRepository $userCompanyRepository
+     * @param string|null $version
      */
-    public function __construct($version = null)
+    public function __construct(UserCompanyRepository $userCompanyRepository, $version = null)
     {
         if ($version) {
             $this->version = $version;
         }
 
         $this->api_key = config('elligibleapi.default_api_key');
+        $this->userCompanyRepository = $userCompanyRepository;
     }
 
     /**
@@ -101,7 +103,7 @@ class Client
      */
     public function setApiKeyFromUser($id)
     {
-        $new_key = UserCompany::getApiKey($id);
+        $new_key = $this->userCompanyRepository->getApiKey($id);
 
         if ($new_key) {
             $this->api_key = $new_key;

@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Transformers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient as Resource;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient as Resource;
 use League\Fractal\TransformerAbstract;
 
 class Patient extends TransformerAbstract

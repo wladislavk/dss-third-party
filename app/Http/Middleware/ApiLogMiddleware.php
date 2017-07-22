@@ -24,7 +24,7 @@ class ApiLogMiddleware
             'method' => $request->method(),
             'route' => $request->path(),
             'payload' => json_encode($request->all()),
-            'created_at' => Carbon::now()
+            'created_at' => Carbon::now(),
         ]);
 
         return $next($request);

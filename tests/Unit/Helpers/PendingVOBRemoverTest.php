@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\InsurancePreauth;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Helpers\PendingVOBRemover;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use Mockery\MockInterface;

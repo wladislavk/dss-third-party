@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Structs\PatientReferrer;
 
 class LetterManager
@@ -30,13 +30,13 @@ class LetterManager
     /** @var LetterDeleter */
     private $letterDeleter;
 
-    /** @var Letter */
-    private $letterModel;
+    /** @var LetterRepository */
+    private $letterRepository;
 
-    public function __construct(LetterDeleter $letterDeleter, Letter $letterModel)
+    public function __construct(LetterDeleter $letterDeleter, LetterRepository $letterRepository)
     {
         $this->letterDeleter = $letterDeleter;
-        $this->letterModel = $letterModel;
+        $this->letterRepository = $letterRepository;
     }
 
     /**
@@ -60,7 +60,7 @@ class LetterManager
             return;
         }
         if ($unchangedPatient->referred_source == $referrer->source) {
-            $this->letterModel->updatePendingLettersToNewReferrer(
+            $this->letterRepository->updatePendingLettersToNewReferrer(
                 $unchangedPatient->referred_by,
                 $referrer->referredBy,
                 $unchangedPatient->patientid,
@@ -68,7 +68,7 @@ class LetterManager
             );
             return;
         }
-        $letters = $this->letterModel->getPhysicianOrPatientPendingLetters(
+        $letters = $this->letterRepository->getPhysicianOrPatientPendingLetters(
             $unchangedPatient->referred_by,
             $unchangedPatient->patientid,
             self::UPDATE_TYPES[$unchangedPatient->referred_source]

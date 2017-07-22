@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 
 class PatientPortalRetriever
 {
@@ -10,12 +10,12 @@ class PatientPortalRetriever
         'use_patient_portal',
     ];
 
-    /** @var User */
-    private $userModel;
+    /** @var UserRepository */
+    private $userRepository;
 
-    public function __construct(User $userModel)
+    public function __construct(UserRepository $userRepository)
     {
-        $this->userModel = $userModel;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -28,7 +28,7 @@ class PatientPortalRetriever
         if (!$usePatientPortal) {
             return false;
         }
-        $docInfo = $this->userModel->getWithFilter(self::FIELDS, ['userid' => $docId]);
+        $docInfo = $this->userRepository->getWithFilter(self::FIELDS, ['userid' => $docId]);
         // TODO: check if first() should be used
         if (!isset($docInfo[0])) {
             return false;

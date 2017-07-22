@@ -6,6 +6,8 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\UserCompanyRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Eloquent\Repositories\EligibleResponseRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\EnrollmentRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Enrollments\PayersListRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Enrollments\TransactionTypeRepository;
 use DentalSleepSolutions\Eloquent\Repositories\UserSignatureRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,63 +18,29 @@ use DentalSleepSolutions\Http\Requests\Enrollments\Create;
 use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
 use DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
-use DentalSleepSolutions\Eloquent\Models\Enrollments\TransactionType;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
-use DentalSleepSolutions\Interfaces\EnrollmentInterface;
-use DentalSleepSolutions\Interfaces\UserSignaturesInterface;
-use DentalSleepSolutions\Interfaces\EnrollmentPayersInterface;
 use Tymon\JWTAuth\JWTAuth;
 
 class ApiEnrollmentsController extends ApiBaseController
 {
     /** @var EnrollmentRepository */
-    protected $repository;
+    private $repository;
 
-    /**
-     * @var EnrollmentInterface $enrollments
-     */
-    protected $enrollments;
+    /** @var array */
+    private $enrollmentValues = [];
 
-    /**
-     * @var EnrollmentPayersInterface $payers
-     */
-    protected $payers;
-
-    /**
-     * @var UserSignaturesInterface $signatures
-     */
-    protected $signatures;
-
-    /**
-     * @var array $enrollmentValues
-     */
-    protected $enrollmentValues = [];
-
-    /**
-     * @var boolean
-     */
-    protected $signatureRequired = false;
-
-    /**
-     * @var boolean
-     */
-    protected $blueInkSignatureRequired = false;
+    /** @var bool */
+    private $signatureRequired = false;
 
     /** @var int */
-    protected $transactionType = 0;
+    private $transactionType = 0;
 
     public function __construct(
         JWTAuth $auth,
         UserRepository $userRepository,
-        EnrollmentInterface $enrollments,
-        EnrollmentPayersInterface $payers,
-        UserSignaturesInterface $signatures,
         EnrollmentRepository $enrollmentRepository
     ) {
         parent::__construct($auth, $userRepository);
-        $this->enrollments = $enrollments;
-        $this->payers = $payers;
-        $this->signatures = $signatures;
         $this->repository = $enrollmentRepository;
     }
 
@@ -123,13 +91,15 @@ class ApiEnrollmentsController extends ApiBaseController
      * @param InvoiceHelper $invoiceHelper
      * @param UserCompanyRepository $userCompanyRepository
      * @param UserSignatureRepository $userSignatureRepository
+     * @param TransactionTypeRepository $transactionTypeRepository
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(
         Create $request,
         InvoiceHelper $invoiceHelper,
         UserCompanyRepository $userCompanyRepository,
-        UserSignatureRepository $userSignatureRepository
+        UserSignatureRepository $userSignatureRepository,
+        TransactionTypeRepository $transactionTypeRepository
     ) {
         $userId = $request->input('user_id');
         $providerId = $request->input('provider_id');
@@ -142,8 +112,7 @@ class ApiEnrollmentsController extends ApiBaseController
             $signature = $userSignature->signature_json;
         }
 
-        $transactionType = TransactionType::where('id', $request->input('transaction_type_id'))
-            ->where('status', 1)->first();
+        $transactionType = $transactionTypeRepository->findWithStatusOne($request->input('transaction_type_id'));
 
         if (count($payerId) < 2 || !$transactionType) {
             return ApiResponse::responseError("Error creating enrollment.", 422);
@@ -217,11 +186,15 @@ class ApiEnrollmentsController extends ApiBaseController
      *
      * @param int $transactionType
      * @param UserCompanyRepository $userCompanyRepository
+     * @param TransactionTypeRepository $transactionTypeRepository
      * @return object|string
      */
-    public function getPayersList($transactionType, UserCompanyRepository $userCompanyRepository)
-    {
-        $transactionTypeModel = TransactionType::where('id', $transactionType)->where('status', 1)->first();
+    public function getPayersList(
+        $transactionType,
+        UserCompanyRepository $userCompanyRepository,
+        TransactionTypeRepository $transactionTypeRepository
+    ) {
+        $transactionTypeModel = $transactionTypeRepository->findWithStatusOne($transactionType);
 
         $client = new Client($userCompanyRepository);
         $response = $client->getPayers($transactionTypeModel->endpoint_type);
@@ -290,12 +263,13 @@ class ApiEnrollmentsController extends ApiBaseController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
+     * @param PayersListRepository $payersListRepository
      * @return array|\Illuminate\Http\JsonResponse
      */
-    public function syncEnrollmentPayers()
+    public function syncEnrollmentPayers(PayersListRepository $payersListRepository)
     {
         try {
-            $results = $this->payers->syncEnrollmentPayersFromProvider(null);
+            $results = $payersListRepository->syncEnrollmentPayersFromProvider(null);
             $response = ['data' => $results, 'status' => true, 'message' => ''];
         } catch (Exception $ex) {
             return $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
@@ -311,15 +285,23 @@ class ApiEnrollmentsController extends ApiBaseController
      * )
      *
      * @param ApiEligibleEnrollmentRequest $request
+     * @param TransactionTypeRepository $transactionTypeRepository
+     * @param UserSignatureRepository $userSignatureRepository
      * @param int $enrollmentId
      * @return array|\Illuminate\Http\JsonResponse
      */
-    public function updateEnrollment(ApiEligibleEnrollmentRequest $request, $enrollmentId = 0)
-    {
+    public function updateEnrollment(
+        ApiEligibleEnrollmentRequest $request,
+        TransactionTypeRepository $transactionTypeRepository,
+        UserSignatureRepository $userSignatureRepository,
+        $enrollmentId
+    ) {
         $enrollment = null;
         try {
-            $enrollmentParams = $this->setupEnrollmentArrayFromFormInput($request);
-            $enrollment = $this->enrollments->updateEnrollment($enrollmentParams, $enrollmentId);
+            $enrollmentParams = $this->setupEnrollmentArrayFromFormInput(
+                $request, $transactionTypeRepository, $userSignatureRepository
+            );
+            $enrollment = $this->repository->updateEnrollment($enrollmentParams, $enrollmentId);
         } catch (Exception $ex) {
             return $this->createErrorResponse('An error occured updating the Enrollment.', 404);
         }
@@ -339,7 +321,7 @@ class ApiEnrollmentsController extends ApiBaseController
     public function retrieveEnrollment($enrollmentId)
     {
         try {
-            $response = $this->enrollments->retrieveEnrollment($enrollmentId);
+            $response = $this->repository->retrieveEnrollment($enrollmentId);
         } catch (Exception $ex) {
             return $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
         }
@@ -360,7 +342,7 @@ class ApiEnrollmentsController extends ApiBaseController
     {
         $response = [];
         try {
-            $response = $this->enrollments->getUserCompanyEligibleApiKey($userId);
+            $response = $this->repository->getUserCompanyEligibleApiKey($userId);
         } catch (Exception $ex) {
             $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
         }
@@ -375,13 +357,14 @@ class ApiEnrollmentsController extends ApiBaseController
      * )
      *
      * @param int $id
+     * @param TransactionTypeRepository $transactionTypeRepository
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getEnrollmentTransactionType($id)
+    public function getEnrollmentTransactionType($id, TransactionTypeRepository $transactionTypeRepository)
     {
         $response = [];
         try {
-            $response = $this->enrollments->getEnrollmentTransactionType($id);
+            $response = $transactionTypeRepository->findWithStatusOne($id);
         } catch (Exception $ex) {
             $this->createErrorResponse('Could not retrieve list of Enrollments from Provider', 404);
         }
@@ -390,11 +373,16 @@ class ApiEnrollmentsController extends ApiBaseController
 
     /**
      * @param ApiEligibleEnrollmentRequest $request
+     * @param TransactionTypeRepository $transactionTypeRepository
+     * @param UserSignatureRepository $userSignatureRepository
      * @return mixed
      */
-    private function setupEnrollmentArrayFromFormInput(ApiEligibleEnrollmentRequest $request)
-    {
-        $this->setTransactionTypeValue($request);
+    private function setupEnrollmentArrayFromFormInput(
+        ApiEligibleEnrollmentRequest $request,
+        TransactionTypeRepository $transactionTypeRepository,
+        UserSignatureRepository $userSignatureRepository
+    ) {
+        $this->setTransactionTypeValue($request, $transactionTypeRepository);
         $elligibleEnrollment['payer_id'] = $request->get('payer_id');
         $elligibleEnrollment['transaction_type_id'] = $request->get('transaction_type_id');
         $elligibleEnrollment['transaction_type'] = $this->transactionType;
@@ -415,13 +403,15 @@ class ApiEnrollmentsController extends ApiBaseController
             'email' => $request->get('email'),
         ];
         if ($this->signatureRequired) {
-            $signature = $this->getDentalUserSignature($request->get('user_id'));
+            $signature = $this->getDentalUserSignature($request->get('user_id'), $userSignatureRepository);
             $elligibleEnrollment['authorized_signer']['signature'] = ['coordinates' => $signature->signature_json];
         }
         return $elligibleEnrollment;
     }
 
     /**
+     * @todo: this method is never called
+     *
      * @param ApiEligibleEnrollmentRequest $request
      * @param \stdClass $enrollment
      * @return void
@@ -458,30 +448,37 @@ class ApiEnrollmentsController extends ApiBaseController
     }
 
     /**
-     * @param integer $payerId
+     * @todo: this method is never called
+     *
+     * @param int $payerId
+     * @param PayersListRepository $payersListRepository
      * @return mixed
      */
-    protected function checkEnrollmentFields($payerId)
+    private function checkEnrollmentFields($payerId, PayersListRepository $payersListRepository)
     {
-        return $this->enrollments->getRequiredFieldsForEnrollment($payerId);
+        $endpoints = $payersListRepository->getPayerSupportedEndpoints($payerId);
+        return $this->repository->getRequiredFieldsForEnrollment($endpoints);
     }
 
     /**
-     * @param integer $user_id
+     * @param int $userId
+     * @param UserSignatureRepository $userSignatureRepository
      * @return mixed
      */
-    protected function getDentalUserSignature($user_id)
+    private function getDentalUserSignature($userId, UserSignatureRepository $userSignatureRepository)
     {
-        return $this->signatures->findBy('user_id', $user_id);
+        return $userSignatureRepository->getOneBy('user_id', $userId);
     }
 
     /**
      * @param ApiEligibleEnrollmentRequest $request
-     * @return void
+     * @param TransactionTypeRepository $transactionTypeRepository
      */
-    private function setTransactionTypeValue(ApiEligibleEnrollmentRequest $request)
-    {
-        $transactionTypes = $this->enrollments->getEnrollmentTransactionType($request->get('transaction_type_id'));
+    private function setTransactionTypeValue(
+        ApiEligibleEnrollmentRequest $request,
+        TransactionTypeRepository $transactionTypeRepository
+    ) {
+        $transactionTypes = $transactionTypeRepository->findWithStatusOne($request->get('transaction_type_id'));
         if (isset($transactionTypes->transaction_type)) {
             $this->transactionType = $transactionTypes->transaction_type;
         }

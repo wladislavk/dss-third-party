@@ -11,4 +11,16 @@ class TransactionTypeRepository extends AbstractRepository
     {
         return TransactionType::class;
     }
+
+    /**
+     * @param int $id
+     * @return TransactionType|null
+     */
+    public function findWithStatusOne($id)
+    {
+        return $this->model
+            ->where('id', $id)
+            ->where('status', 1)
+            ->first();
+    }
 }

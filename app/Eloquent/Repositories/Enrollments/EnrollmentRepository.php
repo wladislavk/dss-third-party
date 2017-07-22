@@ -134,4 +134,148 @@ class EnrollmentRepository extends AbstractRepository
     {
         return $this->model->where('reference_id', $referenceId)->first();
     }
+
+    /**
+     * @param int $userId
+     * @return mixed
+     */
+    public function getUserCompanyEligibleApiKey($userId)
+    {
+        $query = \DB::table('dental_user_company')
+            ->join('companies','dental_user_company.companyid','=','companies.id')
+            ->select(array('eligible_api_key'))
+            ->where('dental_user_company.userid','=',$userId)
+            ->first();
+
+        return $query;
+    }
+
+    /**
+     * @todo: this method needs to be moved to a service
+     *
+     * @param int $enrollmentId
+     * @return string
+     */
+    public function retrieveEnrollment($enrollmentId)
+    {
+        if ($enrollmentId == 0) {
+            return 'enrollment id parameter missing';
+        }
+        $config = config('elligibleapi');
+
+        $eligibleParams = [];
+        $eligibleParams['api_key'] = $config['default_api_key'];
+        if ($config['test']) {
+            $eligibleParams['test'] = "test";
+        }
+        $dataString = json_encode($eligibleParams);
+        $headers = $this->setupApiRequestHeaders($dataString);
+
+        $requestUri = $this->setupRetrieveEnrollmentUrl($enrollmentId, $config, $eligibleParams);
+        $response = \Requests::get($requestUri, $headers);
+
+        return $response->body;
+    }
+
+    /**
+     * @todo: this method needs to be moved to a service
+     *
+     * @param array $enrollmentParams
+     * @param int $enrollmentId
+     * @return mixed
+     */
+    public function updateEnrollment(array $enrollmentParams, $enrollmentId)
+    {
+        $config = config('elligibleapi');
+        $enrollmentParams['endpoint'] = 'coverage';
+
+        $eligibleParams = [];
+        $eligibleParams['api_key'] = $config['default_api_key'];
+        $eligibleParams['enrollment_api'] = $enrollmentParams;
+        $dataString = json_encode($eligibleParams);
+        $headers = $this->setupApiRequestHeaders($dataString);
+
+        $requestUri = $config['base_uri'] . $config['request_uri']['enrollments'] . '/' . $enrollmentId;
+        $response = \Requests::put($requestUri, $headers, $dataString);
+
+        $enrollmentResponse = json_decode($response->body);
+        if (isset($enrollmentResponse->error)) {
+            return $enrollmentResponse->error;
+        }
+
+        $this->setupEnrollmentResponseForCreateUpdate(
+            $enrollmentParams, $enrollmentResponse, $response
+        );
+
+        return $enrollmentResponse;
+    }
+
+    /**
+     * @todo: this method needs to be moved to a service
+     *
+     * @param \stdClass $endpoints
+     * @return array
+     */
+    public function getRequiredFieldsForEnrollment(\stdClass $endpoints)
+    {
+        $mandatoryEnrollmentFields = [];
+
+        foreach ($endpoints as $endpoint) {
+            if ($endpoint->endpoint == 'coverage') {
+                foreach ($endpoint->enrollment_mandatory_fields as $mandatoryEnrollmentField) {
+                    $mandatoryEnrollmentFields[] = $mandatoryEnrollmentField;
+                }
+            }
+        }
+
+        return $mandatoryEnrollmentFields;
+    }
+
+    /**
+     * @todo: this method needs to be moved to a service
+     *
+     * @param string $dataString
+     * @return array
+     */
+    private function setupApiRequestHeaders($dataString)
+    {
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Content-Length: ' . strlen($dataString),
+        ];
+        return $headers;
+    }
+
+    /**
+     * @todo: this method needs to be moved to a service
+     *
+     * @param string $enrollmentId
+     * @param array $config
+     * @param array $eligibleParams
+     * @return string
+     */
+    private function setupRetrieveEnrollmentUrl($enrollmentId, array $config, array $eligibleParams)
+    {
+        $urlParams = $enrollmentId . '?api_key=' . $eligibleParams['api_key'];
+        $urlParams .= array_key_exists('test', $eligibleParams) ? '&test=true' : '';
+        $requestUri = $config['base_uri'] . $config['request_uri']['enrollments'] . '/' . $urlParams;
+        return $requestUri;
+    }
+
+    /**
+     * @todo: this method needs to be moved to a service
+     *
+     * @param array $enrollmentParams
+     * @param \stdClass $enrollmentResponse
+     * @param \Requests_Response $response
+     */
+    private function setupEnrollmentResponseForCreateUpdate(
+        array $enrollmentParams,
+        \stdClass $enrollmentResponse,
+        \Requests_Response $response
+    ) {
+        $enrollmentResponse->ip_address = $enrollmentParams['ip_address'];
+        $enrollmentResponse->adddate = Carbon::now();
+        $enrollmentResponse->response = $response->body;
+    }
 }

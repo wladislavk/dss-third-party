@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Fax;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class FaxRepository extends BaseRepository
+class FaxRepository extends AbstractRepository
 {
     public function model()
     {

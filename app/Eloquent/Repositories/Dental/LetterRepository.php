@@ -4,10 +4,11 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Structs\LetterData;
-use Prettus\Repository\Eloquent\BaseRepository;
+use Illuminate\Database\Query\Builder;
 
-class LetterRepository extends BaseRepository
+class LetterRepository extends AbstractRepository
 {
     public function model()
     {
@@ -26,7 +27,7 @@ class LetterRepository extends BaseRepository
             ->where('dental_letters.delivered', 0)
             ->where('dental_letters.deleted', 0)
             ->where('dental_letters.docid', $docId)
-            ->where(function($query) {
+            ->where(function (Builder $query) {
                 return $query->whereNull('dental_letters.parentid')
                     ->orWhere('dental_letters.parentid', 0);
             })
@@ -42,7 +43,7 @@ class LetterRepository extends BaseRepository
     {
         return $this->model->select(\DB::raw('COUNT(letterid) AS total'))
             ->leftJoin('dental_patients', 'dental_letters.patientid', '=', 'dental_patients.patientid')
-            ->where(function($query) {
+            ->where(function (Builder $query) {
                 return $query->where('dental_letters.status', 1)
                     ->orWhere('dental_letters.delivered', 1);
             })
@@ -59,7 +60,7 @@ class LetterRepository extends BaseRepository
     public function getContactSentLetters($contactId)
     {
         return $this->model->delivered()
-            ->where(function($query) use ($contactId) {
+            ->where(function (Builder $query) use ($contactId) {
                 $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
                     ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
             })->get();
@@ -72,7 +73,7 @@ class LetterRepository extends BaseRepository
     public function getContactPendingLetters($contactId)
     {
         return $this->model->nonDelivered()
-            ->where(function($query) use ($contactId) {
+            ->where(function (Builder $query) use ($contactId) {
                 $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
                     ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
             })->get();

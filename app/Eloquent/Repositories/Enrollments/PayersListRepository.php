@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Enrollments;
 
 use DentalSleepSolutions\Eloquent\Models\Enrollments\PayersList;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class PayersListRepository extends BaseRepository
+class PayersListRepository extends AbstractRepository
 {
     public function model()
     {

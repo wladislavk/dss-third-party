@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Chair;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class ChairRepository extends BaseRepository
+class ChairRepository extends AbstractRepository
 {
     public function model()
     {

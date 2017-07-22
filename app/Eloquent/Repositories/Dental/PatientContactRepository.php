@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\PatientContact;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class PatientContactRepository extends BaseRepository
+class PatientContactRepository extends AbstractRepository
 {
     public function model()
     {
@@ -15,7 +15,7 @@ class PatientContactRepository extends BaseRepository
     /**
      * @param int $docId
      * @param int $patientId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return array
      */
     public function getCurrent($docId, $patientId)
     {

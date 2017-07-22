@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class GuideSettingRepository extends BaseRepository
+class GuideSettingRepository extends AbstractRepository
 {
     public function model()
     {
@@ -14,7 +14,7 @@ class GuideSettingRepository extends BaseRepository
 
     /**
      * @param string $order
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return array
      */
     public function getAllOrderBy($order)
     {

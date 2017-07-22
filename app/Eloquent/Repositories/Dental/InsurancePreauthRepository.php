@@ -3,10 +3,10 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Database\Query\Builder;
-use Prettus\Repository\Eloquent\BaseRepository;
 
-class InsurancePreauthRepository extends BaseRepository
+class InsurancePreauthRepository extends AbstractRepository
 {
     public function model()
     {
@@ -58,11 +58,11 @@ class InsurancePreauthRepository extends BaseRepository
         return $this->model->select('ip.*')
             ->from(\DB::raw('dental_insurance_preauth ip'))
             ->join(\DB::raw('dental_patients p'), 'p.patientid', '=', 'ip.patient_id')
-            ->where(function($query) use ($contactId) {
-                $query->where(function($query) use ($contactId) {
+            ->where(function (Builder $query) use ($contactId) {
+                $query->where(function (Builder $query) use ($contactId) {
                     $query->where('p.p_m_ins_co', '=', $contactId)
                         ->orWhere('p.s_m_ins_co', '=', $contactId);
-                })->where(function($query) {
+                })->where(function (Builder $query) {
                     $query->where('ip.status', '=', InsurancePreauth::DSS_PREAUTH_PENDING)
                         ->orWhere('ip.status', '=', InsurancePreauth::DSS_PREAUTH_PREAUTH_PENDING);
                 });
@@ -121,7 +121,7 @@ class InsurancePreauthRepository extends BaseRepository
             if ($viewed == 1) {
                 $query = $query->where('preauth.viewed', $viewed);
             } else {
-                $query = $query->where(function($query) {
+                $query = $query->where(function (Builder $query) {
                     $query->where('preauth.viewed', '=', 0)
                         ->orWhereNull('preauth.viewed');
                 });
@@ -146,7 +146,7 @@ class InsurancePreauthRepository extends BaseRepository
         $rejectReason = $name . ' altered patient insurance information requiring VOB resubmission on ' . Carbon::now()->format('m/d/Y h:i');
 
         return $this->model->where('patient_id', $newPatientId)
-            ->where(function($query) {
+            ->where(function (Builder $query) {
                 $query
                     ->where('status', '=', InsurancePreauth::DSS_PREAUTH_PENDING)
                     ->orWhere('status', '=', InsurancePreauth::DSS_PREAUTH_PREAUTH_PENDING)
@@ -166,7 +166,7 @@ class InsurancePreauthRepository extends BaseRepository
     public function getPendingVob($patientId)
     {
         return $this->model->where('patient_id', $patientId)
-            ->where(function($query) {
+            ->where(function (Builder $query) {
                 $query
                     ->where('status', '=', InsurancePreauth::DSS_PREAUTH_PENDING)
                     ->orWhere('status', '=', InsurancePreauth::DSS_PREAUTH_PREAUTH_PENDING)

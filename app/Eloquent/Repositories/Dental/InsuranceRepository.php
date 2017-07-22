@@ -3,13 +3,13 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Libraries\ClaimFormData;
 use Illuminate\Database\Query\Builder;
-use Prettus\Repository\Eloquent\BaseRepository;
 
-class InsuranceRepository extends BaseRepository
+class InsuranceRepository extends AbstractRepository
 {
-    /** @var Insurance */
+    /** @var Insurance|Builder */
     protected $model;
 
     public function model()

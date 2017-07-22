@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\AirwayEvaluation;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class AirwayEvaluationRepository extends BaseRepository
+class AirwayEvaluationRepository extends AbstractRepository
 {
     public function model()
     {

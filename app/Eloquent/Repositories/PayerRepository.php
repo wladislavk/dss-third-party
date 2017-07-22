@@ -4,9 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\Payer;
 use Illuminate\Database\Eloquent\Builder;
-use Prettus\Repository\Eloquent\BaseRepository;
 
-class PayerRepository extends BaseRepository
+class PayerRepository extends AbstractRepository
 {
     public function model()
     {

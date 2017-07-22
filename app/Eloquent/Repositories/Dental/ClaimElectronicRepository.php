@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ClaimElectronic;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class ClaimElectronicRepository extends BaseRepository
+class ClaimElectronicRepository extends AbstractRepository
 {
     public function model()
     {

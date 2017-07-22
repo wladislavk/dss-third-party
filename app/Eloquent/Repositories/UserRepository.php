@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\User;
-use Prettus\Repository\Eloquent\BaseRepository;
+use Illuminate\Database\Query\Builder;
 
-class UserRepository extends BaseRepository
+class UserRepository extends AbstractRepository
 {
     public function model()
     {
@@ -18,7 +18,7 @@ class UserRepository extends BaseRepository
      */
     public function findByIdOrEmail($id)
     {
-        return $this->model->where(function ($q) use ($id) {
+        return $this->model->where(function (Builder $q) use ($id) {
             $q->where('email', $id)->orWhere('id', $id);
         })->first();
     }

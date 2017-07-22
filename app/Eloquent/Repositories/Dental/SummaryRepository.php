@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class SummaryRepository extends BaseRepository
+class SummaryRepository extends AbstractRepository
 {
     public function model()
     {
@@ -19,27 +19,5 @@ class SummaryRepository extends BaseRepository
     public function updateForPatient($patientId, array $data)
     {
         $this->model->where('patientid', $patientId)->update($data);
-    }
-
-    /**
-     * @param array $fields
-     * @param array $where
-     * @return Summary[]
-     */
-    public function getWithFilter(array $fields = [], array $where = [])
-    {
-        $object = $this->model;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
     }
 }

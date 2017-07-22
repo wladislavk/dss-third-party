@@ -4,9 +4,9 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\PercaseInvoice;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class PercaseInvoiceRepository extends BaseRepository
+class PercaseInvoiceRepository extends AbstractRepository
 {
     public function model()
     {

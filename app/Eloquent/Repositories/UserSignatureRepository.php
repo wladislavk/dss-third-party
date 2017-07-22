@@ -4,9 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\UserSignature;
-use Prettus\Repository\Eloquent\BaseRepository;
 
-class UserSignatureRepository extends BaseRepository
+class UserSignatureRepository extends AbstractRepository
 {
     public function model()
     {

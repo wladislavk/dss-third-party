@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\FaxErrorCode;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class FaxErrorCodeRepository extends BaseRepository
+class FaxErrorCodeRepository extends AbstractRepository
 {
     public function model()
     {

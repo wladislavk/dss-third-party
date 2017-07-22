@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\LedgerStatement;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class LedgerStatementRepository extends BaseRepository
+class LedgerStatementRepository extends AbstractRepository
 {
     public function model()
     {

@@ -3,9 +3,8 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\AdminCompany;
-use Prettus\Repository\Eloquent\BaseRepository;
 
-class AdminCompanyRepository extends BaseRepository
+class AdminCompanyRepository extends AbstractRepository
 {
     public function model()
     {

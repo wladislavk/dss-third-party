@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\TonsilsClinicalExam;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class TonsilsClinicalExamRepository extends BaseRepository
+class TonsilsClinicalExamRepository extends AbstractRepository
 {
     public function model()
     {

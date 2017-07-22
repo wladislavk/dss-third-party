@@ -5,11 +5,10 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
 use DentalSleepSolutions\Eloquent\Models\Dental\Ledger;
-use DentalSleepSolutions\Eloquent\Models\Dental\LedgerNote;
-use DentalSleepSolutions\Eloquent\Models\Dental\LedgerStatement;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Database\Query\Builder;
 
-class LedgerRepository extends BaseRepository
+class LedgerRepository extends AbstractRepository
 {
     public function model()
     {
@@ -48,7 +47,7 @@ class LedgerRepository extends BaseRepository
                 $query->on('tc.transaction_code', '=', 'dl.transaction_code')
                     ->where('tc.docid', '=', $docId);
             })->where('dl.docid', $docId)
-            ->where(function ($query) {
+            ->where(function (Builder $query) {
                 $query->whereNotNull('dl.paid_amount')
                     ->where('dl.paid_amount', '!=', 0);
             })->where('dl.service_date', Carbon::now());
@@ -96,7 +95,7 @@ class LedgerRepository extends BaseRepository
             ->leftJoin(\DB::raw('dental_users AS p'), 'dl.producerid', '=', 'p.userid')
             ->where('dl.docid', $docId)
             ->where('dl.service_date', Carbon::now())
-            ->where(function ($query) {
+            ->where(function (Builder $query) {
                 $query->whereNull('dl.paid_amount')
                     ->orWhere('dl.paid_amount', 0);
             })->groupBy('dl.ledgerid')
@@ -245,7 +244,7 @@ class LedgerRepository extends BaseRepository
                     $query->on('tc.transaction_code', '=', 'dl.transaction_code')
                         ->where('tc.docid', '=', $docId);
                 })->where('dl.docid', $docId)
-                ->where(function($query) {
+                ->where(function (Builder $query) {
                     $query->whereNotNull('dl.paid_amount')
                         ->where('dl.paid_amount', '!=', 0);
                 })->whereRaw("COALESCE(tc.type, '') != ?", [Ledger::DSS_TRXN_TYPE_ADJ]);
@@ -281,7 +280,7 @@ class LedgerRepository extends BaseRepository
                 'named' => $totalCreditsNamed,
             ];
         }
-        $query = $this->select(
+        $query = $this->model->select(
             \DB::raw("COALESCE(dl.description, '') AS payment_description"),
             \DB::raw('SUM(dl.paid_amount) AS amount')
         )->from(\DB::raw('dental_ledger dl'))
@@ -310,7 +309,7 @@ class LedgerRepository extends BaseRepository
                     $query->on('tc.transaction_code', '=', 'dl.transaction_code')
                         ->where('tc.docid', '=', $docId);
                 })->where('dl.docid', $docId)
-                ->where(function ($query) {
+                ->where(function (Builder $query) {
                     $query->whereNotNull('dl.paid_amount')
                         ->where('dl.paid_amount', '!=', 0);
                 })->where('tc.type', Ledger::DSS_TRXN_TYPE_ADJ);
@@ -387,7 +386,7 @@ class LedgerRepository extends BaseRepository
             ->leftJoin(\DB::raw('dental_ledger_payment pay'), 'pay.ledgerid', '=', 'dl.ledgerid')
             ->leftJoin(\DB::raw('dental_insurance di'), 'di.insuranceid', '=', 'dl.primary_claim_id')
             ->where('dl.docid', $data['doc_id'])
-            ->where(function ($query) {
+            ->where(function (Builder $query) {
                 $query->whereNull('dl.paid_amount')
                     ->orWhere('dl.paid_amount', 0);
             });
@@ -449,7 +448,7 @@ class LedgerRepository extends BaseRepository
                 $query->on('tc.transaction_code', '=', 'dl.transaction_code')
                     ->where('tc.docid', '=', $data['doc_id']);
             })->where('dl.docid', $data['doc_id'])
-            ->where(function ($query) {
+            ->where(function (Builder $query) {
                 $query->whereNotNull('dl.paid_amount')
                     ->where('dl.paid_amount', '!=', 0);
             });
@@ -489,7 +488,7 @@ class LedgerRepository extends BaseRepository
         $subQueryJoinedWithLedgerPayment = $this->model->select('dl.ledgerid')
             ->from(\DB::raw('dental_ledger dl'))
             ->where('dl.docid', $docId)
-            ->where(function ($query) {
+            ->where(function (Builder $query) {
                 $query->whereNull('dl.paid_amount')
                     ->orWhere('dl.paid_amount', 0);
             })->where('dl.patientid', $patientId)
@@ -513,7 +512,7 @@ class LedgerRepository extends BaseRepository
             \DB::raw('COUNT(dl.ledgerid) as number')
         )->from(\DB::raw('dental_ledger dl'))
             ->where('dl.docid', $docId)
-            ->where(function ($query) {
+            ->where(function (Builder $query) {
                 $query->whereNotNull('dl.paid_amount')
                     ->where('dl.paid_amount', '!=', 0);
             })->where('dl.patientid', $patientId)
@@ -543,30 +542,8 @@ class LedgerRepository extends BaseRepository
     }
 
     /**
-     * @param array $fields
-     * @param array $where
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getWithFilter(array $fields = [], array $where = [])
-    {
-        $object = $this;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
-    }
-
-    /**
      * @param int $patientId
-     * @return Insurance
+     * @return Builder
      */
     private function getInsuranceLedgerDetailsQuery($patientId)
     {
@@ -636,7 +613,7 @@ class LedgerRepository extends BaseRepository
      * @param int $patientId
      * @return array
      */
-    public function getLedgerNoteLedgerDetailsQuery($patientId)
+    private function getLedgerNoteLedgerDetailsQuery($patientId)
     {
         $userQuery = $this->model->select(
             'n.patientid',
@@ -698,7 +675,7 @@ class LedgerRepository extends BaseRepository
      * @param int $patientId
      * @return int
      */
-    public function getLedgerNoteLedgerDetailsRowsNumber($patientId)
+    private function getLedgerNoteLedgerDetailsRowsNumber($patientId)
     {
         $userQuery = $this->model->select(
             \DB::raw('COUNT(n.id) as number')
@@ -721,9 +698,9 @@ class LedgerRepository extends BaseRepository
     /**
      * @param int $docId
      * @param int $patientId
-     * @return LedgerStatement
+     * @return Builder
      */
-    public function getLedgerStatementLedgerDetailsQuery($docId, $patientId)
+    private function getLedgerStatementLedgerDetailsQuery($docId, $patientId)
     {
         return $this->model->select(
             's.patientid',
@@ -755,7 +732,7 @@ class LedgerRepository extends BaseRepository
      * @param int $patientId
      * @return int
      */
-    public function getLedgerStatementLedgerDetailsRowsNumber($patientId)
+    private function getLedgerStatementLedgerDetailsRowsNumber($patientId)
     {
         $query = $this->model->select(
             \DB::raw('COUNT(s.id) as number')

@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideDeviceSetting;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class GuideDeviceSettingRepository extends BaseRepository
+class GuideDeviceSettingRepository extends AbstractRepository
 {
     public function model()
     {

@@ -3,9 +3,8 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\EligibleResponse;
-use Prettus\Repository\Eloquent\BaseRepository;
 
-class EligibleResponseRepository extends BaseRepository
+class EligibleResponseRepository extends AbstractRepository
 {
     public function model()
     {

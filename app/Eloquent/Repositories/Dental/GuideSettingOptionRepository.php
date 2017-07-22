@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideSettingOption;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class GuideSettingOptionRepository extends BaseRepository
+class GuideSettingOptionRepository extends AbstractRepository
 {
     public function model()
     {
@@ -13,7 +13,7 @@ class GuideSettingOptionRepository extends BaseRepository
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return array
      */
     public function getOptionsBySettingIds()
     {

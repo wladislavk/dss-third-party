@@ -4,36 +4,14 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Database\Query\Builder;
-use Prettus\Repository\Eloquent\BaseRepository;
 
-class PatientRepository extends BaseRepository
+class PatientRepository extends AbstractRepository
 {
     public function model()
     {
         return Patient::class;
-    }
-
-    /**
-     * @param array $fields
-     * @param array $where
-     * @return \Illuminate\Database\Eloquent\Collection|Patient[]
-     */
-    public function getWithFilter(array $fields = [], array $where = [])
-    {
-        $object = $this->model;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
     }
 
     /**
@@ -116,8 +94,8 @@ class PatientRepository extends BaseRepository
         return $this->model->select(\DB::raw('p.patientid, p.lastname, p.firstname, p.middlename, s.patient_info'))
             ->from(\DB::raw('dental_patients p'))
             ->leftJoin(\DB::raw('dental_patient_summary s'), 'p.patientid', '=', 's.pid')
-            ->where(function($query) use ($names) {
-                $query->where(function($query) use ($names) {
+            ->where(function (Builder $query) use ($names) {
+                $query->where(function (Builder $query) use ($names) {
                     $query->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", array($names[0] . '%', $names[0] . '%'))
                         ->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", array($names[1] . '%', $names[1] . '%'));
                 })
@@ -159,11 +137,11 @@ class PatientRepository extends BaseRepository
                 \DB::raw(Patient::DSS_REFERRED_PHYSICIAN),
                 'ct.contacttype'
             )->leftJoin(\DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
-            ->where(function($query) use ($names) {
-                $query->where(function($query) use ($names) {
+            ->where(function (Builder $query) use ($names) {
+                $query->where(function (Builder $query) use ($names) {
                     $query->where('lastname', 'like', $names[0] . '%')
                         ->orWhere('firstname', 'like', $names[0] . '%');
-                })->where(function($query) {
+                })->where(function (Builder $query) {
                     $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
                         ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
                 });
@@ -180,11 +158,11 @@ class PatientRepository extends BaseRepository
         )->from(\DB::raw('dental_patients p'))
             ->leftJoin(\DB::raw('dental_patient_summary s'), 'p.patientid', '=', 's.pid')
             ->leftJoin(\DB::raw('dental_device d'), 's.appliance', '=', 'd.deviceid')
-            ->where(function($query) use ($names) {
-                $query->where(function($query) use ($names) {
+            ->where(function (Builder $query) use ($names) {
+                $query->where(function (Builder $query) use ($names) {
                     $query->where('lastname', 'like', $names[0] . '%')
                         ->orWhere('firstname', 'like', $names[0] . '%');
-                })->where(function($query) {
+                })->where(function (Builder $query) {
                     $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
                         ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
                 });
@@ -216,11 +194,11 @@ class PatientRepository extends BaseRepository
     {
         return $this->model->select('patientid')
             ->where('email', $email)
-            ->where(function($query) use ($patientId) {
-                $query->where(function($query) use ($patientId) {
+            ->where(function (Builder $query) use ($patientId) {
+                $query->where(function (Builder $query) use ($patientId) {
                     $query->where('patientid', '!=', $patientId)
                         ->where('parent_patientid', '!=', $patientId);
-                })->orWhere(function($query) use ($patientId) {
+                })->orWhere(function (Builder $query) use ($patientId) {
                     $query->where('patientid', '!=', $patientId)
                         ->whereNull('parent_patientid');
                 });
@@ -587,12 +565,12 @@ class PatientRepository extends BaseRepository
 
     /**
      * @param int $contactId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return array
      */
     public function getReferredByContact($contactId)
     {
         return $this->model->select('patientid', 'firstname', 'lastname')
-            ->where(function($query) {
+            ->where(function (Builder $query) {
                 $query->whereNull('parent_patientid')
                     ->orWhere('parent_patientid', '=', '');
             })
@@ -603,15 +581,15 @@ class PatientRepository extends BaseRepository
 
     /**
      * @param int $contactId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return array|\Illuminate\Database\Eloquent\Collection
      */
     public function getByContact($contactId)
     {
         return $this->model->select('patientid', 'firstname', 'lastname')
-            ->where(function($query) {
+            ->where(function (Builder $query) {
                 $query->whereNull('parent_patientid')
                     ->orWhere('parent_patientid', '=', '');
-            })->where(function($query) use ($contactId) {
+            })->where(function (Builder $query) use ($contactId) {
                 $query->where('docpcp', '=', $contactId)
                     ->orWhere('docent', '=', $contactId)
                     ->orWhere('docsleep', '=', $contactId)
@@ -771,7 +749,7 @@ class PatientRepository extends BaseRepository
             ->whereNotNull('u.npi')
             ->where('u.tax_id_or_ssn', '!=', '')
             ->whereNotNull('u.tax_id_or_ssn')
-            ->where(function($query) {
+            ->where(function (Builder $query) {
                 $query->where('u.ssn', '=', 1)
                     ->orWhere('u.ein', '=', 1);
             })->first();
@@ -856,11 +834,11 @@ class PatientRepository extends BaseRepository
             ->where('patientid', '!=', $patientInfo['patient_id'])
             ->where('docid', $docId)
             ->active()
-            ->where(function($query) use ($patientInfo) {
-                $query->where(function($query) use ($patientInfo) {
+            ->where(function (Builder $query) use ($patientInfo) {
+                $query->where(function (Builder $query) use ($patientInfo) {
                     $query->where('firstname', '=', $patientInfo['firstname'])
                         ->where('lastname', '=', $patientInfo['lastname']);
-                })->orWhere(function($query) use ($patientInfo) {
+                })->orWhere(function (Builder $query) use ($patientInfo) {
                     $query->where('add1', '=', $patientInfo['add1'])
                         ->where('add1', '!=', '')
                         ->where('city', '=', $patientInfo['city'])
@@ -879,7 +857,7 @@ class PatientRepository extends BaseRepository
      * @param int $contactType
      * @param string $dateConditional
      * @param bool $isDetailed
-     * @return \Illuminate\Database\Eloquent\Collection|int
+     * @return array|\Illuminate\Database\Eloquent\Collection|int
      */
     public function getReferralCountersForContact($contactId, $contactType, $dateConditional, $isDetailed)
     {
@@ -902,7 +880,7 @@ class PatientRepository extends BaseRepository
 
     /**
      * @param int $sleeplabId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return array
      */
     public function getRelatedToSleeplab($sleeplabId)
     {

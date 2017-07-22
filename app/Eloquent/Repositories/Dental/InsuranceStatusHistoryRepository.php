@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\InsuranceStatusHistory;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class InsuranceStatusHistoryRepository extends BaseRepository
+class InsuranceStatusHistoryRepository extends AbstractRepository
 {
     public function model()
     {

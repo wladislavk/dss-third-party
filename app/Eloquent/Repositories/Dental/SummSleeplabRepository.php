@@ -3,9 +3,10 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Database\Query\Builder;
 
-class SummSleeplabRepository extends BaseRepository
+class SummSleeplabRepository extends AbstractRepository
 {
     public function model()
     {
@@ -20,7 +21,7 @@ class SummSleeplabRepository extends BaseRepository
     {
         /** @var SummSleeplab|null $diagnosis */
         $diagnosis = $this->model->select('diagnosis')
-            ->where(function($query) {
+            ->where(function (Builder $query) {
                 $query->whereNotNull('diagnosis')
                     ->where('diagnosis', '!=', '');
             })->whereNotNull('filename')

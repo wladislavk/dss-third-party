@@ -3,9 +3,10 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Database\Query\Builder;
 
-class TaskRepository extends BaseRepository
+class TaskRepository extends AbstractRepository
 {
     public function model()
     {
@@ -103,7 +104,7 @@ class TaskRepository extends BaseRepository
     public function getAllForPatient($docId, $patientId)
     {
         return $this->model->forPatient()
-            ->where(function($query) use ($docId) {
+            ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
             })
@@ -119,7 +120,7 @@ class TaskRepository extends BaseRepository
     public function getOverdueForPatient($docId, $patientId)
     {
         return $this->model->forPatient()
-            ->where(function($query) use ($docId) {
+            ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
             })
@@ -136,7 +137,7 @@ class TaskRepository extends BaseRepository
     public function getTodayForPatient($docId, $patientId)
     {
         return $this->model->forPatient()
-            ->where(function($query) use ($docId) {
+            ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
             })
@@ -153,7 +154,7 @@ class TaskRepository extends BaseRepository
     public function getTomorrowForPatient($docId, $patientId)
     {
         return $this->model->forPatient()
-            ->where(function($query) use ($docId) {
+            ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
             })
@@ -170,7 +171,7 @@ class TaskRepository extends BaseRepository
     public function getFutureForPatient($docId, $patientId)
     {
         return $this->model->forPatient()
-            ->where(function($query) use ($docId) {
+            ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
             })

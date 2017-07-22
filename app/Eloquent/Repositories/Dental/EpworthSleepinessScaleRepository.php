@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\EpworthSleepinessScale;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class EpworthSleepinessScaleRepository extends BaseRepository
+class EpworthSleepinessScaleRepository extends AbstractRepository
 {
     public function model()
     {

@@ -3,9 +3,8 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\Company;
-use Prettus\Repository\Eloquent\BaseRepository;
 
-class CompanyRepository extends BaseRepository
+class CompanyRepository extends AbstractRepository
 {
     public function model()
     {
@@ -27,7 +26,7 @@ class CompanyRepository extends BaseRepository
 
     /**
      * @param int $docId
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return array|\Illuminate\Database\Eloquent\Collection
      */
     public function getHomeSleepTestCompanies($docId)
     {

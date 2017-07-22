@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\CustomLetterTemplate;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class CustomLetterTemplateRepository extends BaseRepository
+class CustomLetterTemplateRepository extends AbstractRepository
 {
     public function model()
     {

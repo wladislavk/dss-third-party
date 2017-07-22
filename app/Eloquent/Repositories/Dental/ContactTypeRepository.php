@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class ContactTypeRepository extends BaseRepository
+class ContactTypeRepository extends AbstractRepository
 {
     public function model()
     {
@@ -33,28 +33,6 @@ class ContactTypeRepository extends BaseRepository
             ->physician()
             ->groupBy('physician')
             ->first();
-    }
-
-    /**
-     * @param array $fields
-     * @param array $where
-     * @return mixed
-     */
-    public function getWithFilter(array $fields = [], array $where = [])
-    {
-        $object = $this->model;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
     }
 
     /**

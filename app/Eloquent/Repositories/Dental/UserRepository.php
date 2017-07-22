@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class UserRepository extends BaseRepository
+class UserRepository extends AbstractRepository
 {
     public function model()
     {
@@ -88,28 +88,6 @@ class UserRepository extends BaseRepository
         }
 
         return $query->first();
-    }
-
-    /**
-     * @param array $fields
-     * @param array $where
-     * @return \Illuminate\Database\Eloquent\Collection|User[]
-     */
-    public function getWithFilter(array $fields = [], array $where = [])
-    {
-        $object = $this->model;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
     }
 
     /**

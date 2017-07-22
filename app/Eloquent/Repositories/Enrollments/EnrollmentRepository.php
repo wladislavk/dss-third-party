@@ -4,9 +4,10 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Enrollments;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Database\Query\Builder;
 
-class EnrollmentRepository extends BaseRepository
+class EnrollmentRepository extends AbstractRepository
 {
     public function model()
     {
@@ -74,7 +75,7 @@ class EnrollmentRepository extends BaseRepository
         $query->where(\DB::raw('dental_eligible_enrollment.user_id'), '=', $userId);
 
         if ($search && $search != '') {
-            $query->where(function ($q) use ($search) {
+            $query->where(function (Builder $q) use ($search) {
                 $q->where('dental_eligible_enrollment.provider_name', 'like', "%$search%")
                     ->orWhere('types.transaction_type', 'like', "%$search%")
                     ->orWhere('types.description', 'like', "%$search%")

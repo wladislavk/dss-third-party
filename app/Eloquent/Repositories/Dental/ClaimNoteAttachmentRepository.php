@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ClaimNoteAttachment;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 
-class ClaimNoteAttachmentRepository extends BaseRepository
+class ClaimNoteAttachmentRepository extends AbstractRepository
 {
     public function model()
     {

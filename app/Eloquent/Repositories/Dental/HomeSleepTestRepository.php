@@ -3,9 +3,10 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\HomeSleepTest;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Database\Query\Builder;
 
-class HomeSleepTestRepository extends BaseRepository
+class HomeSleepTestRepository extends AbstractRepository
 {
     public function model()
     {
@@ -18,7 +19,7 @@ class HomeSleepTestRepository extends BaseRepository
      */
     public function getUncompleted($patientId)
     {
-        return $this->model->where(function($query) {
+        return $this->model->where(function (Builder $query) {
             $query->requested()->orPending()->orScheduled()->orRejected();
         })->where('patient_id', $patientId)->get();
     }

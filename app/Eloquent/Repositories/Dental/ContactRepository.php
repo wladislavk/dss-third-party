@@ -3,9 +3,10 @@
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
-use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Database\Query\Builder;
 
-class ContactRepository extends BaseRepository
+class ContactRepository extends AbstractRepository
 {
     public function model()
     {
@@ -37,16 +38,16 @@ class ContactRepository extends BaseRepository
             'ct.contacttype'
         )->from(\DB::raw('dental_contact c'))
             ->leftJoin(\DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
-            ->where(function($query) use ($names, $partial, $searchForCompanies) {
-                $query->where(function($query) use ($names, $partial) {
-                    $query->where(function($query) use ($names) {
+            ->where(function(Builder $query) use ($names, $partial, $searchForCompanies) {
+                $query->where(function(Builder $query) use ($names, $partial) {
+                    $query->where(function(Builder $query) use ($names) {
                         $query->where('lastname', 'like', $names[0] . '%')
                             ->orWhere('firstname', 'like', $names[0] . '%');
-                    })->where(function($query) use ($names) {
+                    })->where(function(Builder $query) use ($names) {
                         $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
                             ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
                     });
-                })->orWhere(function($query) use ($names) {
+                })->orWhere(function(Builder $query) use ($names) {
                     $query->where('firstname', 'like', $names[0] . '%')
                         ->where('middlename', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
                         ->where('lastname', 'like', (!empty($names[2]) ? $names[2] : '') . '%');
@@ -234,14 +235,14 @@ class ContactRepository extends BaseRepository
             ->leftJoin(\DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
             ->leftJoin(\DB::raw('dental_patients dp_ref'), function($join) {
                 $join->on('dp_ref.referred_by', '=', 'dc.contactid')
-                    ->where(function($query) {
+                    ->where(function(Builder $query) {
                         $query->whereNull('dp_ref.parent_patientid')
                             ->orWhere('dp_ref.parent_patientid', '=', '');
                     })
                     ->where('dp_ref.referred_source', '=', 2);
             })
             ->leftJoin(\DB::raw('dental_patients dp_pat'), function($join) {
-                $join->on(function($query) {
+                $join->on(function(Builder $query) {
                     $query->whereNull('dp_pat.parent_patientid')
                         ->orWhere('dp_pat.parent_patientid', '=', '');
                 })->where(function($query) {
@@ -267,9 +268,9 @@ class ContactRepository extends BaseRepository
         }
 
         if ($letter) {
-            $contacts = $contacts->where(function($query) use ($letter) {
+            $contacts = $contacts->where(function(Builder $query) use ($letter) {
                 $query->where('dc.lastname', 'like', $letter . '%')
-                    ->orWhere(function($query) use ($letter) {
+                    ->orWhere(function(Builder $query) use ($letter) {
                         $query->where('dc.lastname', '')
                             ->where('dc.company', 'like', $letter . '%');
                     });
@@ -289,7 +290,7 @@ class ContactRepository extends BaseRepository
                     break;
 
                 case 'type':
-                    $contacts = $contacts->orderBy(DB::raw("IF (dct.contacttype = '' OR dct.contacttype IS NULL, 1, 0)"), $sortDir)
+                    $contacts = $contacts->orderBy(\DB::raw("IF (dct.contacttype = '' OR dct.contacttype IS NULL, 1, 0)"), $sortDir)
                         ->orderBy('dct.contacttype', $sortDir)
                         ->orderBy('dc.lastname', 'asc')
                         ->orderBy('firstname', 'asc')

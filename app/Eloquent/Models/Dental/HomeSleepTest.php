@@ -3,8 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DB;
-use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -157,89 +155,14 @@ class HomeSleepTest extends AbstractModel
         'canceled_date',
     ];
 
-    private $preAuthorizationStatuses = [
-        'DSS_HST_CANCELED'  => -1,
-        'DSS_HST_REQUESTED' => 0,
-        'DSS_HST_PENDING'   => 1,
-        'DSS_HST_SCHEDULED' => 2,
-        'DSS_HST_COMPLETE'  => 3,
-        'DSS_HST_REJECTED'  => 4,
-        'DSS_HST_CONTACTED' => 5,
-    ];
+    const DSS_HST_CANCELED = -1;
+    const DSS_HST_REQUESTED = 0;
+    const DSS_HST_PENDING = 1;
+    const DSS_HST_SCHEDULED = 2;
+    const DSS_HST_COMPLETE = 3;
+    const DSS_HST_REJECTED = 4;
+    const DSS_HST_CONTACTED = 5;
 
     const CREATED_AT = 'adddate';
-
     const UPDATED_AT = 'updatedate';
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeRequested(Builder $query)
-    {
-        return $query->where('status', $this->preAuthorizationStatuses['DSS_HST_REQUESTED']);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeOrPending(Builder$query)
-    {
-        return $query->orWhere('status', $this->preAuthorizationStatuses['DSS_HST_PENDING']);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeOrScheduled(Builder $query)
-    {
-        return $query->orWhere('status', $this->preAuthorizationStatuses['DSS_HST_SCHEDULED']);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeOrRejected(Builder $query)
-    {
-        return $query->orWhere(function($query) {
-            $query->where('status', $this->preAuthorizationStatuses['DSS_HST_REJECTED'])
-                ->where(function($query) {
-                    $query->whereNull('viewed')
-                        ->orWhere('viewed', 0);
-                });
-        });
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeCompleted(Builder $query)
-    {
-        return $query->where('status', $this->preAuthorizationStatuses['DSS_HST_COMPLETE']);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeRejected(Builder $query)
-    {
-        return $query->where('status', $this->preAuthorizationStatuses['DSS_HST_REJECTED']);
-    }
-
-    /**
-     * @param Builder $query
-     * @param int $docId
-     * @return Builder
-     */
-    public function scopeBase(Builder $query, $docId = 0)
-    {
-        return $query->select(DB::raw('COUNT(id) AS total'))
-            ->where('doc_id', $docId)
-            ->whereRaw('COALESCE(viewed, 0) != 1');
-    }
 }

@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -68,21 +67,6 @@ class ProfileImage extends AbstractModel
 
     const CREATED_AT = 'adddate';
 
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeProfilePhoto(Builder $query)
-    {
-        return $query->where('imagetypeid', 4);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeInsuranceCardImage(Builder $query)
-    {
-        return $query->where('imagetypeid', 10);
-    }
+    const PROFILE_PHOTO_ID = 4;
+    const INSURANCE_CARD_IMAGE_ID = 10;
 }

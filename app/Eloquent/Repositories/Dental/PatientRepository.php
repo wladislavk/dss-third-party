@@ -525,13 +525,14 @@ class PatientRepository extends AbstractRepository
      * @return Builder
      */
     private function getConditions(
-        $query,
+        Builder $query,
         $type,
         $docId,
         $patientId,
         $letter,
         array $patientIds = []
     ) {
+        /** @var Builder $query */
         $query = $query->where('p.docid', $docId);
 
         if (!empty($patientId)) {
@@ -540,13 +541,15 @@ class PatientRepository extends AbstractRepository
 
         switch ($type) {
             case 1:
-                $query = $query->active();
+                $query = $query->where('p.status', 1);
                 break;
             case 2:
-                $query = $query->all();
+                $query = $query->where(function (Builder $query) {
+                    $query->where('p.status', 1)->orWhere('p.status', 2);
+                });
                 break;
             case 3:
-                $query = $query->inactive();
+                $query = $query->where('p.status', 2);
                 break;
             default:
                 break;
@@ -833,7 +836,7 @@ class PatientRepository extends AbstractRepository
         $patients = $this->model->from(\DB::raw('dental_patients p'))
             ->where('patientid', '!=', $patientInfo['patient_id'])
             ->where('docid', $docId)
-            ->active()
+            ->where('p.status', 1)
             ->where(function (Builder $query) use ($patientInfo) {
                 $query->where(function (Builder $query) use ($patientInfo) {
                     $query->where('firstname', '=', $patientInfo['firstname'])

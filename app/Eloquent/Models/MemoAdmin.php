@@ -1,6 +1,7 @@
 <?php
 
 namespace DentalSleepSolutions\Eloquent\Models;
+use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -50,14 +51,4 @@ class MemoAdmin extends AbstractModel
      * @var bool
      */
     public $timestamps = false;
-
-    public static function getCurrent()
-    {
-        return self::current()->get();
-    }
-
-    public function scopeCurrent($query)
-    {
-        return $query->where('off_date', '<=', 'CURDATE()');
-    }
 }

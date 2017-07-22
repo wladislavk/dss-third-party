@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use DentalSleepSolutions\Eloquent\Repositories\MemoAdminRepository;
 use \DentalSleepSolutions\Interfaces\MemoAdminInterface;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -17,6 +18,9 @@ class ApiAdminMemoController extends ApiBaseController
      */
     private $memo;
 
+    /** @var MemoAdminRepository */
+    private $memoAdminRepository;
+
     /** @var array */
     private $rules = [
         'memo' => 'required',
@@ -27,10 +31,12 @@ class ApiAdminMemoController extends ApiBaseController
     public function __construct(
         JWTAuth $auth,
         UserRepository $userRepository,
+        MemoAdminRepository $memoAdminRepository,
         MemoAdminInterface $memo
     ) {
         parent::__construct($auth, $userRepository);
         $this->memo = $memo;
+        $this->memoAdminRepository = $memoAdminRepository;
     }
 
     /**
@@ -181,7 +187,7 @@ class ApiAdminMemoController extends ApiBaseController
      */
     public function getCurrent()
     {
-        $data = $this->memo->getCurrent();
+        $data = $this->memoAdminRepository->getCurrent();
         return ApiResponse::responseOk('', $data);
     }
 }

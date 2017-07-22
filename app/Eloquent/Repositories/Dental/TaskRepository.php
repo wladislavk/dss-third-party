@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
+use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Database\Query\Builder;
@@ -19,7 +20,7 @@ class TaskRepository extends AbstractRepository
      */
     public function getAll($responsibleId)
     {
-        return $this->model->forPatient()
+        return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
             ->get();
     }
@@ -30,9 +31,9 @@ class TaskRepository extends AbstractRepository
      */
     public function getOverdue($responsibleId)
     {
-        return $this->model->forPatient()
+        return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
-            ->overdue()
+            ->whereRaw('dt.due_date < CURDATE()')
             ->get();
     }
 
@@ -42,9 +43,9 @@ class TaskRepository extends AbstractRepository
      */
     public function getToday($responsibleId)
     {
-        return $this->model->forPatient()
+        return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
-            ->today()
+            ->whereRaw('dt.due_date = CURDATE()')
             ->get();
     }
 
@@ -54,9 +55,9 @@ class TaskRepository extends AbstractRepository
      */
     public function getTomorrow($responsibleId)
     {
-        return $this->model->forPatient()
+        return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
-            ->tomorrow()
+            ->whereRaw('dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY)')
             ->get();
     }
 
@@ -66,9 +67,15 @@ class TaskRepository extends AbstractRepository
      */
     public function getThisWeek($responsibleId)
     {
-        return $this->model->forPatient()
+        if (Carbon::now()->dayOfWeek == Carbon::SUNDAY) {
+            $thisSunday = Carbon::now()->toDateString();
+        } else {
+            $thisSunday = Carbon::parse('next sunday')->toDateString();
+        }
+
+        return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
-            ->thisWeek()
+            ->whereRaw('dt.due_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 2 DAY) AND ?', [$thisSunday])
             ->get();
     }
 
@@ -78,9 +85,17 @@ class TaskRepository extends AbstractRepository
      */
     public function getNextWeek($responsibleId)
     {
-        return $this->model->forPatient()
+        if (Carbon::now()->dayOfWeek == Carbon::SUNDAY) {
+            $nextMonday = Carbon::parse('next tuesday')->toDateString();
+            $nextSunday = Carbon::parse('next sunday')->toDateString();
+        } else {
+            $nextMonday = Carbon::parse('next monday')->toDateString();
+            $nextSunday = Carbon::parse('next sunday + 1 week')->toDateString();
+        }
+
+        return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
-            ->nextWeek()
+            ->whereRaw('dt.due_date BETWEEN ? AND ?', [$nextMonday, $nextSunday])
             ->get();
     }
 
@@ -90,9 +105,15 @@ class TaskRepository extends AbstractRepository
      */
     public function getLater($responsibleId)
     {
-        return $this->model->forPatient()
+        if (Carbon::now()->dayOfWeek == Carbon::SUNDAY) {
+            $nextSunday = Carbon::parse('next sunday')->toDateString();
+        } else {
+            $nextSunday = Carbon::parse('next sunday + 1 week')->toDateString();
+        }
+
+        return $this->forPatient()
             ->where('dt.responsibleid', $responsibleId)
-            ->later()
+            ->whereRaw('dt.due_date > ? ORDER BY dt.due_date ASC', [$nextSunday])
             ->get();
     }
 
@@ -103,7 +124,7 @@ class TaskRepository extends AbstractRepository
      */
     public function getAllForPatient($docId, $patientId)
     {
-        return $this->model->forPatient()
+        return $this->forPatient()
             ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
@@ -119,13 +140,13 @@ class TaskRepository extends AbstractRepository
      */
     public function getOverdueForPatient($docId, $patientId)
     {
-        return $this->model->forPatient()
+        return $this->forPatient()
             ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
             })
             ->where('dt.patientid', $patientId)
-            ->overdue()
+            ->whereRaw('dt.due_date < CURDATE()')
             ->get();
     }
 
@@ -136,13 +157,13 @@ class TaskRepository extends AbstractRepository
      */
     public function getTodayForPatient($docId, $patientId)
     {
-        return $this->model->forPatient()
+        return $this->forPatient()
             ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
             })
             ->where('dt.patientid', $patientId)
-            ->today()
+            ->whereRaw('dt.due_date = CURDATE()')
             ->get();
     }
 
@@ -153,13 +174,13 @@ class TaskRepository extends AbstractRepository
      */
     public function getTomorrowForPatient($docId, $patientId)
     {
-        return $this->model->forPatient()
+        return $this->forPatient()
             ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
             })
             ->where('dt.patientid', $patientId)
-            ->tomorrow()
+            ->whereRaw('dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY)')
             ->get();
     }
 
@@ -170,13 +191,29 @@ class TaskRepository extends AbstractRepository
      */
     public function getFutureForPatient($docId, $patientId)
     {
-        return $this->model->forPatient()
+        return $this->forPatient()
             ->where(function (Builder $query) use ($docId) {
                 $query->where('du.docid', $docId)
                     ->orWhere('du.userid', $docId);
             })
             ->where('dt.patientid', $patientId)
-            ->future()
+            ->whereRaw('dt.due_date > DATE_ADD(CURDATE(), INTERVAL 1 DAY)')
             ->get();
+    }
+
+    /**
+     * @return Builder
+     */
+    private function forPatient()
+    {
+        return $this->model
+            ->from(\DB::raw('dental_task dt'))
+            ->select(\DB::raw('dt.*, du.name, p.firstname, p.lastname'))
+            ->join(\DB::raw('dental_users du'), 'dt.responsibleid', '=', 'du.userid')
+            ->leftJoin(\DB::raw('dental_patients p'), 'p.patientid', '=', 'dt.patientid')
+            ->where(function (Builder $query) {
+                $query->where('dt.status', '0')
+                    ->orWhereNull('dt.status');
+            });
     }
 }

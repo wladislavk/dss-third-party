@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\Payer;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 
 class PayerRepository extends AbstractRepository
 {
@@ -14,7 +14,7 @@ class PayerRepository extends AbstractRepository
 
     /**
      * @param int $uid
-     * @return Payer|Builder|null
+     * @return \Illuminate\Database\Eloquent\Model|Payer|null
      */
     public function findByUid($uid)
     {

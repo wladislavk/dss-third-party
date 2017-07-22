@@ -19,7 +19,10 @@ class InsurancePreauthRepository extends AbstractRepository
      */
     public function getCompleted($docId)
     {
-        return $this->basedPreauth($docId)->completed()->first();
+        return $this
+            ->basedPreauth($docId)
+            ->where('status', InsurancePreauth::DSS_PREAUTH_COMPLETE)
+            ->first();
     }
 
     /**
@@ -28,7 +31,10 @@ class InsurancePreauthRepository extends AbstractRepository
      */
     public function getPending($docId)
     {
-        return $this->basedPreauth($docId)->pending()->first();
+        return $this
+            ->basedPreauth($docId)
+            ->where('status', InsurancePreauth::DSS_PREAUTH_PENDING)
+            ->first();
     }
 
     /**
@@ -37,7 +43,10 @@ class InsurancePreauthRepository extends AbstractRepository
      */
     public function getRejected($docId)
     {
-        return $this->basedPreauth($docId)->rejected()->first();
+        return $this
+            ->basedPreauth($docId)
+            ->where('status', InsurancePreauth::DSS_PREAUTH_REJECTED)
+            ->first();
     }
 
     /**
@@ -46,7 +55,10 @@ class InsurancePreauthRepository extends AbstractRepository
      */
     private function basedPreauth($docId)
     {
-        return $this->model->basedPreauth($docId);
+        return $this->model
+            ->select(\DB::raw('COUNT(id) AS total'))
+            ->where('doc_id', $docId)
+            ->whereRaw('COALESCE(viewed, 0) != 1');
     }
 
     /**

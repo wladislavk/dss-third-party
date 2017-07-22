@@ -7,7 +7,6 @@ use DentalSleepSolutions\Interfaces\MemoAdminInterface;
 
 class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
 {
-
     /**
      *
      * @var string
@@ -15,7 +14,6 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
      * Main model name for the Memos Model
      */
     protected $modelName = MemoAdmin::class;
-
 
     /**
      *
@@ -112,8 +110,8 @@ class MemoAdminRepository extends BaseRepository implements MemoAdminInterface
 
     public function getCurrent()
     {
-        $model = $this->getModelName();
-
-        return $model::getCurrent();
+        /** @var \DentalSleepSolutions\Eloquent\Repositories\MemoAdminRepository $repository */
+        $repository = \App::make(\DentalSleepSolutions\Eloquent\Repositories\MemoAdminRepository::class);
+        return $repository->getCurrent();
     }
 }

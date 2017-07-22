@@ -18,8 +18,8 @@ class ContactTypeRepository extends AbstractRepository
     public function getActiveNonCorporateTypes()
     {
         return $this->model->select('contacttypeid', 'contacttype')
-            ->active()
-            ->nonCorporate()
+            ->where('status', 1)
+            ->where('corporate', 0)
             ->orderBy('sortby')
             ->get();
     }
@@ -30,7 +30,7 @@ class ContactTypeRepository extends AbstractRepository
     public function getPhysicianTypes()
     {
         return $this->model->select(\DB::raw('GROUP_CONCAT(contacttypeid) as physician_types'))
-            ->physician()
+            ->where('physician', 1)
             ->groupBy('physician')
             ->first();
     }

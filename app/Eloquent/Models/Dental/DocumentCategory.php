@@ -54,9 +54,4 @@ class DocumentCategory extends AbstractModel
     protected $primaryKey = 'categoryid';
 
     const CREATED_AT = 'adddate';
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', 1);
-    }
 }

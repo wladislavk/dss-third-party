@@ -87,7 +87,8 @@ class ContactRepository extends AbstractRepository
      */
     public function getInsuranceContacts($docId)
     {
-        return $this->model->active()
+        return $this->model
+            ->where('status', 1)
             ->whereNull('merge_id')
             ->where('contacttypeid', 11)
             ->where('docid', $docId)
@@ -245,7 +246,7 @@ class ContactRepository extends AbstractRepository
                 $join->on(function(Builder $query) {
                     $query->whereNull('dp_pat.parent_patientid')
                         ->orWhere('dp_pat.parent_patientid', '=', '');
-                })->where(function($query) {
+                })->where(function(Builder $query) {
                     $query->on('dp_pat.docpcp', '=', 'dc.contactid')
                         ->orOn('dp_pat.docent', '=', 'dc.contactid')
                         ->orOn('dp_pat.docsleep', '=', 'dc.contactid')
@@ -268,9 +269,9 @@ class ContactRepository extends AbstractRepository
         }
 
         if ($letter) {
-            $contacts = $contacts->where(function(Builder $query) use ($letter) {
+            $contacts = $contacts->where(function($query) use ($letter) {
                 $query->where('dc.lastname', 'like', $letter . '%')
-                    ->orWhere(function(Builder $query) use ($letter) {
+                    ->orWhere(function($query) use ($letter) {
                         $query->where('dc.lastname', '')
                             ->where('dc.company', 'like', $letter . '%');
                     });
@@ -290,7 +291,7 @@ class ContactRepository extends AbstractRepository
                     break;
 
                 case 'type':
-                    $contacts = $contacts->orderBy(\DB::raw("IF (dct.contacttype = '' OR dct.contacttype IS NULL, 1, 0)"), $sortDir)
+                    $contacts = $contacts->orderBy(DB::raw("IF (dct.contacttype = '' OR dct.contacttype IS NULL, 1, 0)"), $sortDir)
                         ->orderBy('dct.contacttype', $sortDir)
                         ->orderBy('dc.lastname', 'asc')
                         ->orderBy('firstname', 'asc')
@@ -368,7 +369,7 @@ class ContactRepository extends AbstractRepository
     public function getActiveContact($contactId)
     {
         return $this->model->where('contactid', $contactId)
-            ->active()
+            ->where('status', 1)
             ->first();
     }
 }

@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -57,13 +56,4 @@ class Qualifier extends AbstractModel
     protected $primaryKey = 'qualifierid';
 
     const CREATED_AT = 'adddate';
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeActive(Builder $query)
-    {
-        return $query->where('status', 1);
-    }
 }

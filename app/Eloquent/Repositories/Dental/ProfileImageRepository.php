@@ -18,7 +18,8 @@ class ProfileImageRepository extends AbstractRepository
      */
     public function getProfilePhoto($patientId)
     {
-        return $this->model->profilePhoto()
+        return $this->model
+            ->where('imagetypeid', ProfileImage::PROFILE_PHOTO_ID)
             ->where('patientid', $patientId)
             ->orderBy('adddate', 'desc')
             ->first();
@@ -30,7 +31,8 @@ class ProfileImageRepository extends AbstractRepository
      */
     public function getInsuranceCardImage($patientId)
     {
-        return $this->model->insuranceCardImage()
+        return $this->model
+            ->where('imagetypeid', ProfileImage::INSURANCE_CARD_IMAGE_ID)
             ->where('patientid', $patientId)
             ->orderBy('adddate', 'desc')
             ->first();

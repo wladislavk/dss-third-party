@@ -10,4 +10,12 @@ class MemoAdminRepository extends AbstractRepository
     {
         return MemoAdmin::class;
     }
+
+    /**
+     * @return array|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getCurrent()
+    {
+        return $this->model->where('off_date', '<=', 'CURDATE()')->get();
+    }
 }

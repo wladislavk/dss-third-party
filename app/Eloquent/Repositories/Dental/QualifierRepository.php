@@ -17,6 +17,9 @@ class QualifierRepository extends AbstractRepository
      */
     public function getActive()
     {
-        return $this->model->active()->orderBy('sortby')->get();
+        return $this->model
+            ->where('status', 1)
+            ->orderBy('sortby')
+            ->get();
     }
 }

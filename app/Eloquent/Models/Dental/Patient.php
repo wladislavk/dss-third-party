@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -423,35 +422,5 @@ class Patient extends AbstractModel
     public function tmjClinicalExam()
     {
         return $this->hasOne(TmjClinicalExam::class, 'patientid', 'patientid');
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeActive(Builder $query)
-    {
-        return $query->where('p.status', 1);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeAll(Builder $query)
-    {
-        return $query->where(function($query) {
-            $query->where('p.status', 1)
-                ->orWhere('p.status', 2);
-        });
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeInactive(Builder $query)
-    {
-        return $query->where('p.status', 2);
     }
 }

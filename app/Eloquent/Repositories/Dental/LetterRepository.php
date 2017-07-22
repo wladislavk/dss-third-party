@@ -59,7 +59,8 @@ class LetterRepository extends AbstractRepository
      */
     public function getContactSentLetters($contactId)
     {
-        return $this->model->delivered()
+        return $this->model
+            ->where('delivered', 1)
             ->where(function (Builder $query) use ($contactId) {
                 $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
                     ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
@@ -72,7 +73,8 @@ class LetterRepository extends AbstractRepository
      */
     public function getContactPendingLetters($contactId)
     {
-        return $this->model->nonDelivered()
+        return $this->model
+            ->where('delivered', 0)
             ->where(function (Builder $query) use ($contactId) {
                 $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
                     ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
@@ -126,7 +128,7 @@ class LetterRepository extends AbstractRepository
     {
         return $this->model->select('generated_date')
             ->where('templateid', 3)
-            ->nonDeleted()
+            ->where('deleted', '0')
             ->where('patientid', $patientId)
             ->orderBy('generated_date')
             ->first();
@@ -141,7 +143,7 @@ class LetterRepository extends AbstractRepository
     {
         return $this->model->select('letterid')
             ->where('patientid', $patientId)
-            ->patientTreatmentComplete()
+            ->where('templateid', 20)
             ->where('pat_referral_list', $patientReferralIds)
             ->get();
     }
@@ -205,7 +207,7 @@ class LetterRepository extends AbstractRepository
 
         return $this->model->where($field, $referralList)
             ->where('patientid', $patientId)
-            ->pending()
+            ->where('status', 0)
             ->get();
     }
 
@@ -218,7 +220,9 @@ class LetterRepository extends AbstractRepository
      */
     public function updatePendingLettersToNewReferrer($oldReferredBy, $newReferredBy, $patientId, $type)
     {
-        $letter = $this->model->pending()->where('patientid', $patientId);
+        $letter = $this->model
+            ->where('status', 0)
+            ->where('patientid', $patientId);
 
         $field = '';
         switch ($type) {

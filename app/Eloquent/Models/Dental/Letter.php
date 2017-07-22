@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -120,51 +119,5 @@ class Letter extends AbstractModel
     ];
 
     const CREATED_AT = 'generated_date';
-
     const UPDATED_AT = 'edit_date';
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeDelivered(Builder $query)
-    {
-        return $query->where('delivered', 1);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeNonDelivered(Builder $query)
-    {
-        return $query->where('delivered', 0);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeNonDeleted(Builder $query)
-    {
-        return $query->where('deleted', '0');
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopePatientTreatmentComplete(Builder $query)
-    {
-        return $query->where('templateid', 20);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopePending(Builder $query)
-    {
-        return $query->where('status', 0);
-    }
 }

@@ -20,7 +20,18 @@ class HomeSleepTestRepository extends AbstractRepository
     public function getUncompleted($patientId)
     {
         return $this->model->where(function (Builder $query) {
-            $query->requested()->orPending()->orScheduled()->orRejected();
+            $query
+                ->where('status', HomeSleepTest::DSS_HST_REQUESTED)
+                ->orWhere('status', HomeSleepTest::DSS_HST_PENDING)
+                ->orWhere('status', HomeSleepTest::DSS_HST_SCHEDULED)
+                ->orWhere(function (Builder $query) {
+                    $query
+                        ->where('status', HomeSleepTest::DSS_HST_REJECTED)
+                        ->where(function (Builder $query) {
+                            $query->whereNull('viewed')->orWhere('viewed', 0);
+                        });
+                })
+            ;
         })->where('patient_id', $patientId)->get();
     }
 
@@ -30,7 +41,12 @@ class HomeSleepTestRepository extends AbstractRepository
      */
     public function getCompleted($docId)
     {
-        return $this->model->base($docId)->completed()->first();
+        return $this->model
+            ->select(\DB::raw('COUNT(id) AS total'))
+            ->where('doc_id', $docId)
+            ->whereRaw('COALESCE(viewed, 0) != 1')
+            ->where('status', HomeSleepTest::DSS_HST_COMPLETE)
+            ->first();
     }
 
     /**
@@ -39,7 +55,12 @@ class HomeSleepTestRepository extends AbstractRepository
      */
     public function getRequested($docId)
     {
-        return $this->model->base($docId)->requested()->first();
+        return $this->model
+            ->select(\DB::raw('COUNT(id) AS total'))
+            ->where('doc_id', $docId)
+            ->whereRaw('COALESCE(viewed, 0) != 1')
+            ->where('status', HomeSleepTest::DSS_HST_REQUESTED)
+            ->first();
     }
 
     /**
@@ -48,6 +69,11 @@ class HomeSleepTestRepository extends AbstractRepository
      */
     public function getRejected($docId)
     {
-        return $this->model->base($docId)->rejected()->first();
+        return $this->model
+            ->select(\DB::raw('COUNT(id) AS total'))
+            ->where('doc_id', $docId)
+            ->whereRaw('COALESCE(viewed, 0) != 1')
+            ->where('status', HomeSleepTest::DSS_HST_REJECTED)
+            ->first();
     }
 }

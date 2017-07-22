@@ -17,6 +17,6 @@ class DocumentCategoryRepository extends AbstractRepository
      */
     public function getActiveDocumentCategories()
     {
-        return DocumentCategory::active()->orderBy('name')->get();
+        return $this->model->where('status', 1)->orderBy('name')->get();
     }
 }

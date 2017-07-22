@@ -142,9 +142,4 @@ class Contact extends AbstractModel
     protected $primaryKey = 'contactid';
 
     const CREATED_AT = 'adddate';
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', 1);
-    }
 }

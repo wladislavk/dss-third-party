@@ -69,19 +69,4 @@ class ContactType extends AbstractModel
     protected $primaryKey = 'contacttypeid';
 
     const CREATED_AT = 'adddate';
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', 1);
-    }
-
-    public function scopeNonCorporate($query)
-    {
-        return $query->where('corporate', 0);
-    }
-
-    public function scopePhysician($query)
-    {
-        return $query->where('physician', 1);
-    }
 }

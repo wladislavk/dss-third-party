@@ -4,8 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutCreatedTimestamp;
-use DB;
-use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -252,45 +250,6 @@ class InsurancePreauth extends AbstractModel
      * @var string
      */
     protected $primaryKey = 'id';
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeCompleted(Builder $query)
-    {
-        return $query->where('status', self::DSS_PREAUTH_COMPLETE);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopePending(Builder $query)
-    {
-        return $query->where('status', self::DSS_PREAUTH_PENDING);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeRejected(Builder $query)
-    {
-        return $query->where('status', self::DSS_PREAUTH_REJECTED);
-    }
-
-    /**
-     * @param Builder $query
-     * @param int $docId
-     * @return Builder
-     */
-    public function scopeBasedPreauth(Builder $query, $docId = 0)
-    {
-        return $query->select(DB::raw('COUNT(id) AS total'))
-            ->where('doc_id', $docId)
-            ->whereRaw('COALESCE(viewed, 0) != 1');
-    }
 
     /**
      * @return string

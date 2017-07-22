@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\LedgerHistory;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerHistoryRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;

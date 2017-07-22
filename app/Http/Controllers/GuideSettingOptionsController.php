@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\GuideSettingOption;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingOptionRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 

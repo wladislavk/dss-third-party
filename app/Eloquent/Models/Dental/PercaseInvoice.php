@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
-use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 
 /**

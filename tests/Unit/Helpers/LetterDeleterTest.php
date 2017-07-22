@@ -4,6 +4,7 @@ namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Factories\LetterUpdaterFactory;
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Helpers\LetterCreator;
@@ -58,10 +59,10 @@ class LetterDeleterTest extends UnitTestCase
         $generalHelper = $this->mockGeneralHelper();
         $letterCreator = $this->mockLetterCreator();
         $letterUpdaterFactory = $this->mockLetterUpdaterFactory();
-        $letterModel = $this->mockLetterModel();
+        $letterRepository = $this->mockLetterRepository();
         $faxRepository = $this->mockFaxRepository();
         $this->letterDeleter = new LetterDeleter(
-            $generalHelper, $letterCreator, $letterUpdaterFactory, $letterModel, $faxRepository
+            $generalHelper, $letterCreator, $letterUpdaterFactory, $letterRepository, $faxRepository
         );
     }
 
@@ -206,14 +207,14 @@ class LetterDeleterTest extends UnitTestCase
         return $letterUpdaterFactory;
     }
 
-    private function mockLetterModel()
+    private function mockLetterRepository()
     {
-        /** @var Letter|MockInterface $letterModel */
-        $letterModel = \Mockery::mock(Letter::class);
-        $letterModel->shouldReceive('find')->andReturnUsing([$this, 'findLetterCallback']);
-        $letterModel->shouldReceive('updateLetterBy')
+        /** @var LetterRepository|MockInterface $letterRepository */
+        $letterRepository = \Mockery::mock(LetterRepository::class);
+        $letterRepository->shouldReceive('find')->andReturnUsing([$this, 'findLetterCallback']);
+        $letterRepository->shouldReceive('updateLetterBy')
             ->andReturnUsing([$this, 'updateLetterByCallback']);
-        return $letterModel;
+        return $letterRepository;
     }
 
     private function mockFaxRepository()

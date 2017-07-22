@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\ReferredByContact;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ReferredByContactRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;

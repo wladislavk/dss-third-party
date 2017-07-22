@@ -40,7 +40,12 @@ class InsuranceStatusHistory extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'insuranceid', 'status', 'userid', 'adddate', 'ip_address', 'adminid'
+        'insuranceid',
+        'status',
+        'userid',
+        'adddate',
+        'ip_address',
+        'adminid',
     ];
 
     /**
@@ -57,10 +62,5 @@ class InsuranceStatusHistory extends AbstractModel
      */
     protected $primaryKey = 'id';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

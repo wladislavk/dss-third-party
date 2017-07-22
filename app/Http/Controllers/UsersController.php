@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
@@ -451,6 +450,7 @@ class UsersController extends BaseRestController
      *
      * Get users by filter.
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getWithFilter(Request $request)
@@ -463,6 +463,9 @@ class UsersController extends BaseRestController
         return ApiResponse::responseOk('', $patients);
     }
 
+    /**
+     * @return string
+     */
     public function getModelNamespace()
     {
         return self::BASE_MODEL_NAMESPACE;

@@ -2,8 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\Dental\Sleeplab;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\SleeplabRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;

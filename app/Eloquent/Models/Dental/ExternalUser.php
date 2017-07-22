@@ -42,30 +42,16 @@ class ExternalUser extends AbstractModel
     protected $primaryKey = 'id';
 
     /**
-     * RELATIONS
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user () {
         return $this->belongsTo(User::class, 'user_id', 'userid');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function company () {
         return $this->belongsTo(ExternalCompany::class, 'company_id', 'id');
-    }
-
-    public function getWithFilter($fields = [], $where = [])
-    {
-        $object = $this;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
     }
 }

@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DB;
+use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -149,8 +150,11 @@ class HomeSleepTest extends AbstractModel
      * @var array
      */
     protected $dates = [
-        'patient_dob', 'provider_date', 'authorizeddate',
-        'rejecteddate', 'canceled_date'
+        'patient_dob',
+        'provider_date',
+        'authorizeddate',
+        'rejecteddate',
+        'canceled_date',
     ];
 
     private $preAuthorizationStatuses = [
@@ -160,39 +164,45 @@ class HomeSleepTest extends AbstractModel
         'DSS_HST_SCHEDULED' => 2,
         'DSS_HST_COMPLETE'  => 3,
         'DSS_HST_REJECTED'  => 4,
-        'DSS_HST_CONTACTED' => 5
+        'DSS_HST_CONTACTED' => 5,
     ];
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
-    /**
-     * The name of the "updated at" column.
-     *
-     * @var string
-     */
     const UPDATED_AT = 'updatedate';
 
-    public function scopeRequested($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeRequested(Builder $query)
     {
         return $query->where('status', $this->preAuthorizationStatuses['DSS_HST_REQUESTED']);
     }
 
-    public function scopeOrPending($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeOrPending(Builder$query)
     {
         return $query->orWhere('status', $this->preAuthorizationStatuses['DSS_HST_PENDING']);
     }
 
-    public function scopeOrScheduled($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeOrScheduled(Builder $query)
     {
         return $query->orWhere('status', $this->preAuthorizationStatuses['DSS_HST_SCHEDULED']);
     }
 
-    public function scopeOrRejected($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeOrRejected(Builder $query)
     {
         return $query->orWhere(function($query) {
             $query->where('status', $this->preAuthorizationStatuses['DSS_HST_REJECTED'])
@@ -203,17 +213,30 @@ class HomeSleepTest extends AbstractModel
         });
     }
 
-    public function scopeCompleted($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeCompleted(Builder $query)
     {
         return $query->where('status', $this->preAuthorizationStatuses['DSS_HST_COMPLETE']);
     }
 
-    public function scopeRejected($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeRejected(Builder $query)
     {
         return $query->where('status', $this->preAuthorizationStatuses['DSS_HST_REJECTED']);
     }
 
-    public function scopeBase($query, $docId = 0)
+    /**
+     * @param Builder $query
+     * @param int $docId
+     * @return Builder
+     */
+    public function scopeBase(Builder $query, $docId = 0)
     {
         return $query->select(DB::raw('COUNT(id) AS total'))
             ->where('doc_id', $docId)

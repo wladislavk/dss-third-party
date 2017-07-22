@@ -53,8 +53,7 @@ class MemoAdmin extends AbstractModel
 
     public static function getCurrent()
     {
-        return self::current()
-            ->get();
+        return self::current()->get();
     }
 
     public function scopeCurrent($query)

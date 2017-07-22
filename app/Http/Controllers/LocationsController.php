@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Location;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LocationRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 

@@ -54,9 +54,10 @@ class Payer extends AbstractModel
     /**
      * Get enrollment required fields for a payer.
      *
+     * @param string|null $endpoint
      * @return string[]
      */
-    public function requiredFields($endpoint = null)
+    public function requiredFields($endpoint)
     {
         $endpoints = collect((array)$this->supported_endpoints);
 
@@ -113,15 +114,5 @@ class Payer extends AbstractModel
     public function setNamesAttribute($names)
     {
         $this->attributes['names'] = json_encode((array)$names);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Repository implementation
-    |--------------------------------------------------------------------------
-    */
-    public function findByUid($uid)
-    {
-        return static::query()->where('payer_id', $uid)->first();
     }
 }

@@ -66,18 +66,21 @@ class ProfileImage extends AbstractModel
      */
     protected $primaryKey = 'imageid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
     public function scopeProfilePhoto(Builder $query)
     {
         return $query->where('imagetypeid', 4);
     }
 
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
     public function scopeInsuranceCardImage(Builder $query)
     {
         return $query->where('imagetypeid', 10);

@@ -71,10 +71,5 @@ class InsuranceDocument extends AbstractModel
      */
     protected $primaryKey = 'doc_insuranceid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

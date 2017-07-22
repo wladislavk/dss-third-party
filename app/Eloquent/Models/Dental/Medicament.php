@@ -62,13 +62,11 @@ class Medicament extends AbstractModel
      */
     protected $primaryKey = 'medicationsid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
+    /**
+     * @return string
+     */
     public function getPlural()
     {
         return 'Medications';

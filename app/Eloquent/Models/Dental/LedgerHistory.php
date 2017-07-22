@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutCreatedTimestamp;
-use DB;
 
 /**
  * @SWG\Definition(

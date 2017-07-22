@@ -62,13 +62,11 @@ class Palpation extends AbstractModel
      */
     protected $primaryKey = 'palpationid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
+    /**
+     * @return string
+     */
     public function getPlural()
     {
         return 'Palpation';

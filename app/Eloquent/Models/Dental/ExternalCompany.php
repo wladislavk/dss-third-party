@@ -40,26 +40,9 @@ class ExternalCompany extends AbstractModel
     protected $primaryKey = 'id';
 
     /**
-     * RELATIONS
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function users () {
+    public function users() {
         return $this->hasManyThrough(User::class, ExternalCompanyUser::class, 'user_id', 'userid');
-    }
-
-    public function getWithFilter($fields = [], $where = [])
-    {
-        $object = $this;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
     }
 }

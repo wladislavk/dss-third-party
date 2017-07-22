@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\PatientInsurance;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientInsuranceRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;

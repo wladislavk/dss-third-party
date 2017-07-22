@@ -65,27 +65,5 @@ class Device extends AbstractModel
      */
     protected $primaryKey = 'deviceid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
-
-    public function getWithFilter($fields = [], $where = [])
-    {
-        $object = $this;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
-    }
 }

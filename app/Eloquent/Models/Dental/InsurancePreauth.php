@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutCreatedTimestamp;
-use Carbon\Carbon;
 use DB;
+use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -253,35 +253,48 @@ class InsurancePreauth extends AbstractModel
      */
     protected $primaryKey = 'id';
 
-    private $preAuthorizationStatuses = [
-        'DSS_PREAUTH_PENDING'         => 0,
-        'DSS_PREAUTH_COMPLETE'        => 1,
-        'DSS_PREAUTH_PREAUTH_PENDING' => 2,
-        'DSS_PREAUTH_REJECTED'        => 3,
-    ];
-
-    public function scopeCompleted($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeCompleted(Builder $query)
     {
-        return $query->where('status', $this->preAuthorizationStatuses['DSS_PREAUTH_COMPLETE']);
+        return $query->where('status', self::DSS_PREAUTH_COMPLETE);
     }
 
-    public function scopePending($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePending(Builder $query)
     {
-        return $query->where('status', $this->preAuthorizationStatuses['DSS_PREAUTH_PENDING']);
+        return $query->where('status', self::DSS_PREAUTH_PENDING);
     }
 
-    public function scopeRejected($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeRejected(Builder $query)
     {
-        return $query->where('status', $this->preAuthorizationStatuses['DSS_PREAUTH_REJECTED']);
+        return $query->where('status', self::DSS_PREAUTH_REJECTED);
     }
 
-    public function scopeBasedPreauth($query, $docId = 0)
+    /**
+     * @param Builder $query
+     * @param int $docId
+     * @return Builder
+     */
+    public function scopeBasedPreauth(Builder $query, $docId = 0)
     {
-        return $this->select(DB::raw('COUNT(id) AS total'))
+        return $query->select(DB::raw('COUNT(id) AS total'))
             ->where('doc_id', $docId)
             ->whereRaw('COALESCE(viewed, 0) != 1');
     }
 
+    /**
+     * @return string
+     */
     public function getPlural()
     {
         return 'InsurancePreauth';

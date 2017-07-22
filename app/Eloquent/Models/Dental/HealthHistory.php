@@ -179,27 +179,5 @@ class HealthHistory extends AbstractModel
      */
     protected $primaryKey = 'q_page3id';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
-
-    public function getWithFilter($fields = [], $where = [])
-    {
-        $object = $this;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
-    }
 }

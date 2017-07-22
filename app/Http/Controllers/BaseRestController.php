@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Tymon\JWTAuth\JWTAuth;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
 
 /**
  * @SWG\Swagger(
@@ -92,7 +91,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
      * )
      */
 
-    const BASE_MODEL_NAMESPACE = BindingNamingConvention::BASE_NAMESPACE . '\\Eloquent';
+    const BASE_MODEL_NAMESPACE = BindingNamingConvention::BASE_NAMESPACE . '\\Eloquent\\Models';
     const DEFAULT_MODEL_NAMESPACE = self::BASE_MODEL_NAMESPACE . '\\Dental';
 
     /** @var bool */
@@ -208,6 +207,9 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         return str_replace('Controller', '', $shortName);
     }
 
+    /**
+     * @return string
+     */
     public function getModelNamespace()
     {
         return self::DEFAULT_MODEL_NAMESPACE;

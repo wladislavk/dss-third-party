@@ -85,10 +85,5 @@ class Sleeplab extends AbstractModel
      */
     protected $primaryKey = 'sleeplabid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

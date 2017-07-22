@@ -38,8 +38,11 @@ class FaxErrorCode extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'error_code', 'description', 'resolution',
-        'adddate', 'ip_address'
+        'error_code',
+        'description',
+        'resolution',
+        'adddate',
+        'ip_address',
     ];
 
     /**
@@ -56,10 +59,5 @@ class FaxErrorCode extends AbstractModel
      */
     protected $primaryKey = 'id';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

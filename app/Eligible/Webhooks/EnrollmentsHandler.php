@@ -2,12 +2,27 @@
 
 namespace DentalSleepSolutions\Eligible\Webhooks;
 
-use DentalSleepSolutions\Eloquent\Models\EligibleResponse;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
+use DentalSleepSolutions\Eloquent\Repositories\EligibleResponseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Enrollments\EnrollmentRepository;
 
 class EnrollmentsHandler
 {
     use ProcessingWebhooksTrait;
+
+    /** @var EligibleResponseRepository */
+    private $eligibleResponseRepository;
+
+    /** @var EnrollmentRepository */
+    private $enrollmentRepository;
+
+    public function __construct(
+        EligibleResponseRepository $eligibleResponseRepository,
+        EnrollmentRepository $enrollmentRepository
+    ) {
+        $this->eligibleResponseRepository = $eligibleResponseRepository;
+        $this->enrollmentRepository = $enrollmentRepository;
+    }
 
     /**
      * enrollment_status event
@@ -17,31 +32,29 @@ class EnrollmentsHandler
      */
     public function enrollmentStatus($content)
     {
-        $enrollment_statuses = [
+        $enrollmentStatuses = [
             'submitted' => Enrollment::DSS_ENROLLMENT_SUBMITTED,
             'accepted' => Enrollment::DSS_ENROLLMENT_ACCEPTED,
             'rejected' => Enrollment::DSS_ENROLLMENT_REJECTED,
         ];
 
-        if (isset($enrollment_statuses[$content->details->status])) {
-            Enrollment::setStatus($content->details->id, $enrollment_statuses[$content->details->status]);
+        if (isset($enrollmentStatuses[$content->details->status])) {
+            $this->enrollmentRepository->setStatus($content->details->id, $enrollmentStatuses[$content->details->status]);
         }
 
         return $content->details->id;
     }
 
     /**
-     * enrollment_status event
-     *
-     * @param $content
-     * @return mixed
+     * @param object $content
+     * @return int
      */
     public function receivedPdf($content)
     {
         $url = $content->details->received_pdf->download_url;
         if ($url) {
-            Enrollment::setStatus($content->details->id, Enrollment::DSS_ENROLLMENT_PDF_RECEIVED);
-            Enrollment::setDownloadUrl($content->details->id, $url);
+            $this->enrollmentRepository->setStatus($content->details->id, Enrollment::DSS_ENROLLMENT_PDF_RECEIVED);
+            $this->enrollmentRepository->setDownloadUrl($content->details->id, $url);
         }
 
         return $content->details->id;
@@ -50,11 +63,12 @@ class EnrollmentsHandler
     /**
      * repeat run last webhooks handler
      *
-     * @param $reference_id
+     * @param int $referenceId
      */
-    public function updateChanges($reference_id)
+    public function updateChanges($referenceId)
     {
-        $response = EligibleResponse::getWhere($reference_id, ['enrollment_status', 'receivedPdf']);
+        $response = $this->eligibleResponseRepository
+            ->getWhere($referenceId, ['enrollment_status', 'receivedPdf']);
 
         if ($response) {
             $this->callHandler($response->response, $this);

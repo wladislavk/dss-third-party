@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Note;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\NoteRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 

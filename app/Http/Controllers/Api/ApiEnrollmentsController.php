@@ -4,12 +4,14 @@ namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserCompanyRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use DentalSleepSolutions\Eloquent\Repositories\EligibleResponseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Enrollments\EnrollmentRepository;
+use DentalSleepSolutions\Eloquent\Repositories\UserSignatureRepository;
 use Exception;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eligible\Client;
 use DentalSleepSolutions\Helpers\InvoiceHelper;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Eloquent\Models\UserSignature;
 use DentalSleepSolutions\Http\Requests\Enrollments\Create;
 use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
 use DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature;
@@ -23,6 +25,9 @@ use Tymon\JWTAuth\JWTAuth;
 
 class ApiEnrollmentsController extends ApiBaseController
 {
+    /** @var EnrollmentRepository */
+    protected $repository;
+
     /**
      * @var EnrollmentInterface $enrollments
      */
@@ -61,12 +66,14 @@ class ApiEnrollmentsController extends ApiBaseController
         UserRepository $userRepository,
         EnrollmentInterface $enrollments,
         EnrollmentPayersInterface $payers,
-        UserSignaturesInterface $signatures
+        UserSignaturesInterface $signatures,
+        EnrollmentRepository $enrollmentRepository
     ) {
         parent::__construct($auth, $userRepository);
         $this->enrollments = $enrollments;
         $this->payers = $payers;
         $this->signatures = $signatures;
+        $this->repository = $enrollmentRepository;
     }
 
     /**
@@ -89,7 +96,7 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     public function listEnrollments(Request $request, $userId = 0)
     {
-        $result = Enrollment::getList(
+        $result = $this->repository->getList(
             $userId,
             $request->get('num_rows', false),
             $request->get('search', false),
@@ -115,12 +122,14 @@ class ApiEnrollmentsController extends ApiBaseController
      * @param  \DentalSleepSolutions\Http\Requests\Enrollments\Create $request
      * @param InvoiceHelper $invoiceHelper
      * @param UserCompanyRepository $userCompanyRepository
+     * @param UserSignatureRepository $userSignatureRepository
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(
         Create $request,
         InvoiceHelper $invoiceHelper,
-        UserCompanyRepository $userCompanyRepository
+        UserCompanyRepository $userCompanyRepository,
+        UserSignatureRepository $userSignatureRepository
     ) {
         $userId = $request->input('user_id');
         $providerId = $request->input('provider_id');
@@ -129,7 +138,7 @@ class ApiEnrollmentsController extends ApiBaseController
 
         $signature = $request->input('signature', '');
         if ($signature == '') {
-            $userSignature = UserSignature::formUser($providerId);
+            $userSignature = $userSignatureRepository->formUser($providerId);
             $signature = $userSignature->signature_json;
         }
 
@@ -175,12 +184,12 @@ class ApiEnrollmentsController extends ApiBaseController
             $result = $response->getContent();
             $ref_id = $response->getObject()->enrollment_npi->id;
 
-            $enrollmentId = Enrollment::add($inputs, $userId, $payerId, $payerName, $ref_id, $result, $ip);
+            $enrollmentId = $this->repository->add($inputs, $userId, $payerId, $payerName, $ref_id, $result, $ip);
             $enrollment = $invoiceHelper->addEnrollment(1, $userId, $enrollmentId);
             $enrollment->save();
 
             if ($request->input('signature', '') != '') {
-                $signatureId = UserSignature::addUpdate($providerId, $signature, $ip);
+                $signatureId = $userSignatureRepository->addUpdate($providerId, $signature, $ip);
 
                 $img = \sigJsonToImage($request->input('signature', ''));
 
@@ -206,15 +215,16 @@ class ApiEnrollmentsController extends ApiBaseController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param int $transaction_type
+     * @param int $transactionType
+     * @param UserCompanyRepository $userCompanyRepository
      * @return object|string
      */
-    public function getPayersList($transaction_type)
+    public function getPayersList($transactionType, UserCompanyRepository $userCompanyRepository)
     {
-        $transaction_type = TransactionType::where('id', $transaction_type)->where('status', 1)->first();
+        $transactionTypeModel = TransactionType::where('id', $transactionType)->where('status', 1)->first();
 
-        $client = new Client;
-        $response = $client->getPayers($transaction_type->endpoint_type);
+        $client = new Client($userCompanyRepository);
+        $response = $client->getPayers($transactionTypeModel->endpoint_type);
 
         if ($response->isSuccess()) {
             return \Response::json($response->getObject());
@@ -229,11 +239,16 @@ class ApiEnrollmentsController extends ApiBaseController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param  \DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature $request
+     * @param OriginalSignature $request
+     * @param UserCompanyRepository $userCompanyRepository
+     * @param EligibleResponseRepository $eligibleResponseRepository
      * @return \Illuminate\Http\JsonResponse
      */
-    public function uploadOriginalSignaturePdf(OriginalSignature $request)
-    {
+    public function uploadOriginalSignaturePdf(
+        OriginalSignature $request,
+        UserCompanyRepository $userCompanyRepository,
+        EligibleResponseRepository $eligibleResponseRepository
+    ) {
         $userId = $request->input('user_id');
         $npi = $request->input('npi');
         $referenceId = $request->input('reference_id');
@@ -242,9 +257,9 @@ class ApiEnrollmentsController extends ApiBaseController
             'file' => $request->file('original_signature')->openFile(),
         ];
 
-        $enrollment = Enrollment::getWhereReference($referenceId);
+        $enrollment = $this->repository->getWhereReference($referenceId);
 
-        $client = new Client();
+        $client = new Client($userCompanyRepository);
         $client->setApiKeyFromUser($userId);
 
         if ($enrollment->signed_download_url) {
@@ -254,11 +269,12 @@ class ApiEnrollmentsController extends ApiBaseController
         }
 
         if ($response->isSuccess()) {
-            $download_url = $response->getObject()->original_signature_pdf->download_url;
-            Enrollment::setStatus($referenceId, Enrollment::DSS_ENROLLMENT_PDF_SENT);
-            Enrollment::setSignedDownloadUrl($referenceId, $download_url);
+            $downloadUrl = $response->getObject()->original_signature_pdf->download_url;
+            $this->repository->setStatus($referenceId, Enrollment::DSS_ENROLLMENT_PDF_SENT);
+            $this->repository->setSignedDownloadUrl($referenceId, $downloadUrl);
 
-            (new EnrollmentsHandler())->updateChanges($referenceId);
+            $handler = new EnrollmentsHandler($eligibleResponseRepository, $this->repository);
+            $handler->updateChanges($referenceId);
         }
 
         return ApiResponse::response(
@@ -278,7 +294,6 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     public function syncEnrollmentPayers()
     {
-        $response = [];
         try {
             $results = $this->payers->syncEnrollmentPayersFromProvider(null);
             $response = ['data' => $results, 'status' => true, 'message' => ''];
@@ -318,13 +333,11 @@ class ApiEnrollmentsController extends ApiBaseController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-<<<<<<< HEAD
      * @param int $enrollmentId
      * @return array|\Illuminate\Http\JsonResponse
      */
     public function retrieveEnrollment($enrollmentId)
     {
-        $response = [];
         try {
             $response = $this->enrollments->retrieveEnrollment($enrollmentId);
         } catch (Exception $ex) {

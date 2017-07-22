@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
@@ -398,6 +397,9 @@ class InsurancePreauthController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @return string
+     */
     public function getSingular()
     {
         return 'InsurancePreauth';

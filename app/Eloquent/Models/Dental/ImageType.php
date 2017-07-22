@@ -40,8 +40,12 @@ class ImageType extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'imagetype', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'imagetype',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**
@@ -58,10 +62,5 @@ class ImageType extends AbstractModel
      */
     protected $primaryKey = 'imagetypeid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

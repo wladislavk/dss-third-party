@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Models\Dental\Fax;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 

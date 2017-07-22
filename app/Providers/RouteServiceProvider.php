@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Providers;
 
+use DentalSleepSolutions\Eloquent\Repositories\PayerRepository;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Illuminate\Routing\Router;
 use DentalSleepSolutions\Exceptions\ResourceNotFound;
@@ -29,7 +30,9 @@ class RouteServiceProvider extends ServiceProvider
     {
         $router->bind('payer_id', function ($uid) {
             try {
-                return $this->app[\DentalSleepSolutions\Contracts\Repositories\Payers::class]->findByUid($uid);
+                /** @var PayerRepository $payerRepository */
+                $payerRepository = $this->app[PayerRepository::class];
+                return $payerRepository->findByUid($uid);
             } catch (ModelNotFoundException $e) {
                 throw new ResourceNotFound('Requested resource does not exist.');
             }

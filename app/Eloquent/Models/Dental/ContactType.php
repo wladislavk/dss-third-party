@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DB;
 
 /**
  * @SWG\Definition(
@@ -69,11 +68,6 @@ class ContactType extends AbstractModel
      */
     protected $primaryKey = 'contacttypeid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
     public function scopeActive($query)

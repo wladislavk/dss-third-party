@@ -62,10 +62,5 @@ class JointExam extends AbstractModel
      */
     protected $primaryKey = 'joint_examid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

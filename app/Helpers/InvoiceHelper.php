@@ -3,8 +3,9 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
-use DentalSleepSolutions\Eloquent\Models\Dental\EnrollmentInvoice;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\EnrollmentInvoiceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PercaseInvoiceRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Enrollments\EnrollmentRepository;
 use DentalSleepSolutions\Exceptions\InvoiceException;
 use DentalSleepSolutions\Wrappers\RequestWrapper;
 
@@ -28,24 +29,24 @@ class InvoiceHelper
     /** @var PercaseInvoiceRepository */
     private $perCaseInvoiceRepository;
 
-    /** @var Enrollment */
-    private $enrollmentModel;
+    /** @var EnrollmentRepository */
+    private $enrollmentRepository;
 
-    /** @var EnrollmentInvoice */
-    private $enrollmentInvoiceModel;
+    /** @var EnrollmentInvoiceRepository */
+    private $enrollmentInvoiceRepository;
 
     /** @var RequestWrapper */
     private $requestWrapper;
 
     public function __construct(
         PercaseInvoiceRepository $perCaseInvoiceRepository,
-        Enrollment $enrollmentModel,
-        EnrollmentInvoice $enrollmentInvoiceModel,
+        EnrollmentRepository $enrollmentRepository,
+        EnrollmentInvoiceRepository $enrollmentInvoiceRepository,
         RequestWrapper $requestWrapper
     ) {
         $this->perCaseInvoiceRepository = $perCaseInvoiceRepository;
-        $this->enrollmentModel = $enrollmentModel;
-        $this->enrollmentInvoiceModel = $enrollmentInvoiceModel;
+        $this->enrollmentRepository = $enrollmentRepository;
+        $this->enrollmentInvoiceRepository = $enrollmentInvoiceRepository;
         $this->requestWrapper = $requestWrapper;
     }
 
@@ -62,7 +63,7 @@ class InvoiceHelper
     {
         // TODO: this function only ever gets called with $userType of 1. do we need the first argument?
         /** @var Enrollment|null $enrollment */
-        $enrollment = $this->enrollmentModel->find($enrollmentId);
+        $enrollment = $this->enrollmentRepository->find($enrollmentId);
         if (!$enrollment) {
             throw new InvoiceException("Enrollment with ID $enrollmentId does not exist");
         }
@@ -74,7 +75,7 @@ class InvoiceHelper
 
         if (!$invoiceId) {
             $existingInvoiceId = $this->find($userType, $userId);
-            $invoiceId = $this->enrollmentInvoiceModel->add($existingInvoiceId, $this->getIp());
+            $invoiceId = $this->enrollmentInvoiceRepository->add($existingInvoiceId, $this->getIp());
         }
 
         $enrollment->enrollment_invoice_id = $invoiceId;

@@ -62,10 +62,5 @@ class SoftPalate extends AbstractModel
      */
     protected $primaryKey = 'soft_palateid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

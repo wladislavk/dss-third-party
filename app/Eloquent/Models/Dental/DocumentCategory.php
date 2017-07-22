@@ -53,11 +53,6 @@ class DocumentCategory extends AbstractModel
      */
     protected $primaryKey = 'categoryid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
     public function scopeActive($query)

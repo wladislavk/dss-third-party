@@ -5,6 +5,8 @@ namespace Tests\Unit\Helpers;
 use Barryvdh\DomPDF\PDF;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Helpers\PdfHelper;
 use DentalSleepSolutions\Structs\PdfFontData;
 use DentalSleepSolutions\Structs\PdfHeaderData;
@@ -40,10 +42,10 @@ class PdfHelperTest extends UnitTestCase
         $domPdfWrapper = $this->mockDomPdfWrapper();
         $urlGenerator = $this->mockUrlGenerator();
         $fileWrapper = $this->mockFileWrapper();
-        $userModel = $this->mockUserModel();
-        $letterModel = $this->mockLetterModel();
+        $userRepository = $this->mockUserRepository();
+        $letterRepository = $this->mockLetterRepository();
         $this->pdfHelper = new PdfHelper(
-            $domPdfWrapper, $urlGenerator, $fileWrapper, $userModel, $letterModel
+            $domPdfWrapper, $urlGenerator, $fileWrapper, $userRepository, $letterRepository
         );
     }
 
@@ -281,20 +283,20 @@ class PdfHelperTest extends UnitTestCase
         return $fileWrapper;
     }
 
-    private function mockUserModel()
+    private function mockUserRepository()
     {
-        /** @var User|MockInterface $userModel */
-        $userModel = \Mockery::mock(User::class);
-        $userModel->shouldReceive('find')->andReturnUsing([$this, 'findUserCallback']);
-        return $userModel;
+        /** @var UserRepository|MockInterface $userRepository */
+        $userRepository = \Mockery::mock(UserRepository::class);
+        $userRepository->shouldReceive('find')->andReturnUsing([$this, 'findUserCallback']);
+        return $userRepository;
     }
 
-    private function mockLetterModel()
+    private function mockLetterRepository()
     {
-        /** @var Letter|MockInterface $letterModel */
-        $letterModel = \Mockery::mock(Letter::class);
-        $letterModel->shouldReceive('find')->andReturnUsing([$this, 'findLetterCallback']);
-        return $letterModel;
+        /** @var LetterRepository|MockInterface $letterRepository */
+        $letterRepository = \Mockery::mock(LetterRepository::class);
+        $letterRepository->shouldReceive('find')->andReturnUsing([$this, 'findLetterCallback']);
+        return $letterRepository;
     }
 
     public function loadViewCallback($view, array $data)

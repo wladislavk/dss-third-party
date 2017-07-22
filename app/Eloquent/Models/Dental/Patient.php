@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DB;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -366,15 +365,17 @@ class Patient extends AbstractModel
      */
     protected $primaryKey = 'patientid';
 
-
     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
     protected $dates = [
-        'recover_time', 'text_date', 'registration_senton',
-        'access_code_date', 'new_fee_date'
+        'recover_time',
+        'text_date',
+        'registration_senton',
+        'access_code_date',
+        'new_fee_date',
     ];
 
     /**
@@ -385,39 +386,59 @@ class Patient extends AbstractModel
     const CREATED_AT = 'adddate';
 
     /**
-     * RELATIONS
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function tongueClinicalExam()
     {
         return $this->hasOne(TongueClinicalExam::class, 'patientid', 'patientid');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function tonsilsClinicalExam()
     {
         return $this->hasOne(TonsilsClinicalExam::class, 'patientid', 'patientid');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function airwayEvaluation()
     {
         return $this->hasOne(AirwayEvaluation::class, 'patientid', 'patientid');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function dentalClinicalExam()
     {
         return $this->hasOne(DentalClinicalExam::class, 'patientid', 'patientid');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function tmjClinicalExam()
     {
         return $this->hasOne(TmjClinicalExam::class, 'patientid', 'patientid');
     }
 
-    public function scopeActive($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeActive(Builder $query)
     {
         return $query->where('p.status', 1);
     }
 
-    public function scopeAll($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeAll(Builder $query)
     {
         return $query->where(function($query) {
             $query->where('p.status', 1)
@@ -425,7 +446,11 @@ class Patient extends AbstractModel
         });
     }
 
-    public function scopeInactive($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeInactive(Builder $query)
     {
         return $query->where('p.status', 2);
     }

@@ -62,10 +62,5 @@ class Joint extends AbstractModel
      */
     protected $primaryKey = 'jointid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

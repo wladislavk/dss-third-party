@@ -3,9 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Structs\LetterData;
-use Carbon\Carbon;
-use DB;
+use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -115,226 +113,58 @@ class Letter extends AbstractModel
      * @var array
      */
     protected $dates = [
-        'delivery_date', 'date_sent',
-        'mailed_date', 'deleted_on'
+        'delivery_date',
+        'date_sent',
+        'mailed_date',
+        'deleted_on',
     ];
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'generated_date';
 
-    /**
-     * The name of the "updated at" column.
-     *
-     * @var string
-     */
     const UPDATED_AT = 'edit_date';
 
-    public function scopeDelivered($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeDelivered(Builder $query)
     {
         return $query->where('delivered', 1);
     }
 
-    public function scopeNonDelivered($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNonDelivered(Builder $query)
     {
         return $query->where('delivered', 0);
     }
-  
-    public function scopeNonDeleted($query)
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNonDeleted(Builder $query)
     {
         return $query->where('deleted', '0');
     }
 
-    public function scopePatientTreatmentComplete($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePatientTreatmentComplete(Builder $query)
     {
         return $query->where('templateid', 20);
     }
 
-    public function scopePending($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePending(Builder $query)
     {
         return $query->where('status', 0);
-    }
-
-    /**
-     * @param int $patientId
-     * @param string $patientReferralIds
-     * @return array|\Illuminate\Database\Eloquent\Collection|Letter[]
-     */
-    public function getPatientTreatmentComplete($patientId = 0, $patientReferralIds = '')
-    {
-        return $this->select('letterid')
-            ->where('patientid', $patientId)
-            ->patientTreatmentComplete()
-            ->where('pat_referral_list', $patientReferralIds)
-            ->get();
-    }
-
-    /**
-     * @param LetterData $letterData
-     * @return static
-     */
-    public function createLetter(LetterData $letterData)
-    {
-        if (isset($letterData->parentId) && $letterData->status != true) {
-            $newLetter['parentid'] = $letterData->parentId;
-        } elseif ($letterData->status == true) {
-            $newLetter['parentid'] = '';
-        }
-
-        if ($letterData->toPatient !== null && !$letterData->ccToPatient) {
-            $newLetter['cc_topatient'] = $letterData->toPatient;
-        } else {
-            $newLetter['cc_topatient'] = $letterData->ccToPatient;
-        }
-
-        if ($letterData->mdList !== null && !$letterData->ccMdList) {
-            $newLetter['cc_md_list'] = $letterData->mdList;
-        } else {
-            $newLetter['cc_md_list'] = $letterData->ccMdList;
-        }
-
-        if ($letterData->mdReferralList !== null && !$letterData->ccMdReferralList) {
-            $newLetter['cc_md_referral_list'] = $letterData->mdReferralList;
-        } else {
-            $newLetter['cc_md_referral_list'] = $letterData->ccMdReferralList;
-        }
-
-        if ($letterData->patientReferralList !== null && !$letterData->ccPatientReferralList) {
-            $newLetter['cc_pat_referral_list'] = $letterData->patientReferralList;
-        } else {
-            $newLetter['cc_pat_referral_list'] = $letterData->ccPatientReferralList;
-        }
-
-        if ($letterData->template) {
-            $regExp = '/(&Acirc;|&acirc;|&nbsp;)+/i';
-            $template = html_entity_decode(
-                preg_replace($regExp, '', $letterData->template),
-                ENT_COMPAT | ENT_IGNORE,
-                "UTF-8"
-            );
-            $newLetter['template'] = $template;
-        }
-
-        $dateSent = '';
-        if ($letterData->status == true) {
-            $dateSent = Carbon::now();
-        }
-        $patientId = 0;
-        if ($letterData->patientId > 0) {
-            $patientId = $letterData->patientId;
-        }
-        $infoId = 0;
-        if ($letterData->infoId > 0) {
-            $infoId = $letterData->infoId;
-        }
-        $newLetter = [
-            'templateid'           => $letterData->templateId,
-            'date_sent'            => $dateSent,
-            'patientid'            => $patientId,
-            'info_id'              => $infoId,
-            'topatient'            => $letterData->toPatient,
-            'md_list'              => $letterData->mdList,
-            'cc_md_list'           => $letterData->ccMdList,
-            'md_referral_list'     => $letterData->mdReferralList,
-            'cc_md_referral_list'  => $letterData->ccMdReferralList,
-            'pat_referral_list'    => $letterData->patientReferralList,
-            'send_method'          => $letterData->sendMethod,
-            'status'               => $letterData->status,
-            'deleted'              => $letterData->deleted,
-            'deleted_by'           => $letterData->userId,
-            'deleted_on'           => Carbon::now(),
-            'template_type'        => $letterData->templateType,
-            'font_size'            => $letterData->fontSize,
-            'font_family'          => $letterData->fontFamily,
-            'generated_date'       => Carbon::now(),
-            'delivered'            => '0',
-            'docid'                => $letterData->docId,
-            'userid'               => $letterData->userId,
-        ];
-
-        return $this->create($newLetter);
-    }
-
-    public function getMdList($contactId, $letter1Id = 0, $letter2Id = 0)
-    {
-        return $this->select('md_list')
-            ->whereNotNull('md_list')
-            ->whereRaw("CONCAT(',', md_list, ',') LIKE ?", ['%,' . $contactId . ',%'])
-            ->whereIn('templateid', [$letter1Id, $letter2Id])
-            ->get();
-    }
-
-    public function updatePendingLettersToNewReferrer($oldReferredBy, $newReferredBy, $patientId, $type)
-    {
-        $letter = $this->pending()
-            ->where('patientid', $patientId);
-
-        switch ($type) {
-            case 'physician':
-                $field = 'md_referral_list';
-                break;
-
-            case 'patient':
-                $field = 'pat_referral_list';
-                break;
-
-            default:
-                break;
-        }
-
-        return $letter->where($field, $oldReferredBy)
-            ->update([
-                'template' => null,
-                $field     => $newReferredBy
-            ]);
-    }
-
-    public function getPhysicianOrPatientPendingLetters($referralList, $patientId, $type = 'physician')
-    {
-        switch ($type) {
-            case 'physician':
-                $field = 'md_referral_list';
-                break;
-
-            case 'patient':
-                $field = 'pat_referral_list';
-                break;
-
-            default:
-                $field = '';
-                break;
-        }
-
-        return $this->where($field, $referralList)
-            ->where('patientid', $patientId)
-            ->pending()
-            ->get();
-    }
-
-    /**
-     * @param array $where
-     * @param LetterData $data
-     * @param array $fields
-     * @return bool|int
-     */
-    public function updateLetterBy(array $where, LetterData $data, array $fields)
-    {
-        $query = $this;
-
-        foreach ($where as $key => $value) {
-            $query = $query->where($key, $value);
-        }
-
-        $dataArray = $data->toArray();
-        $updated = [];
-        foreach ($fields as $field) {
-            if (isset($dataArray[$field])) {
-                $updated[$field] = $dataArray[$field];
-            }
-        }
-        return $query->update($updated);
     }
 }

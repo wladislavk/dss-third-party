@@ -40,7 +40,12 @@ class CustomLetterTemplate extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'name', 'body', 'docid', 'adddate', 'ip_address', 'status'
+        'name',
+        'body',
+        'docid',
+        'adddate',
+        'ip_address',
+        'status',
     ];
 
     /**
@@ -57,10 +62,5 @@ class CustomLetterTemplate extends AbstractModel
      */
     protected $primaryKey = 'id';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

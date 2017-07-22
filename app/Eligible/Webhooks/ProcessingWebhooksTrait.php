@@ -25,6 +25,7 @@ trait ProcessingWebhooksTrait
             'ip_address' => $request->server('REMOTE_ADDR'),
         ];
 
+        // @todo: This call must be put outside of trait for the method to be moved into repository
         EligibleResponse::add($data);
 
         return response()->json(); //return status 200

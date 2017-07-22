@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DB;
 
 /**
  * @SWG\Definition(
@@ -39,8 +38,11 @@ class GuideSettingOption extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'option_id', 'setting_id', 'label',
-        'adddate', 'ip_address'
+        'option_id',
+        'setting_id',
+        'label',
+        'adddate',
+        'ip_address',
     ];
 
     /**
@@ -57,10 +59,5 @@ class GuideSettingOption extends AbstractModel
      */
     protected $primaryKey = 'id';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

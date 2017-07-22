@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Eloquent\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -46,41 +45,4 @@ class UserSignature extends Model
      * @var bool
      */
     public $timestamps = false;
-
-    /**
-     * @param $user_id
-     * @return mixed
-     */
-    public static function formUser($user_id)
-    {
-        return self::where('user_id', $user_id)->first();
-    }
-
-    /**
-     * @param $user_id
-     * @param $signature_json
-     * @param $ip_address
-     * @return mixed
-     */
-    public static function addUpdate($user_id, $signature_json, $ip_address)
-    {
-        if ($updated = self::where('user_id', $user_id)->first()) {
-            self::where('user_id', $user_id)
-                ->update([
-                    'signature_json'=>$signature_json,
-                    'ip_address' =>  $ip_address,
-                ]);
-
-            return $updated->id;
-        }
-
-        $new = new UserSignature();
-        $new->user_id = $user_id;
-        $new->signature_json = $signature_json;
-        $new->adddate = Carbon::now();
-        $new->ip_address = $ip_address;
-        $new->save();
-
-        return $new->id;
-    }
 }

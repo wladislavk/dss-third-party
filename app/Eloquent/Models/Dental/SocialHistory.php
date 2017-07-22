@@ -77,10 +77,5 @@ class SocialHistory extends AbstractModel
      */
     protected $primaryKey = 'q_page4id';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

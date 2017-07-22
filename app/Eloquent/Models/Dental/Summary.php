@@ -439,32 +439,5 @@ class Summary extends AbstractModel
      */
     protected $primaryKey = 'summaryid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
-
-    /**
-     * @param array $fields
-     * @param array $where
-     * @return Summary[]
-     */
-    public function getWithFilter($fields = [], $where = [])
-    {
-        $object = $this;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
-    }
 }

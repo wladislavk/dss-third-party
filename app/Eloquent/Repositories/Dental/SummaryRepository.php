@@ -20,4 +20,26 @@ class SummaryRepository extends BaseRepository
     {
         $this->model->where('patientid', $patientId)->update($data);
     }
+
+    /**
+     * @param array $fields
+     * @param array $where
+     * @return Summary[]
+     */
+    public function getWithFilter(array $fields = [], array $where = [])
+    {
+        $object = $this->model;
+
+        if (count($fields)) {
+            $object = $object->select($fields);
+        }
+
+        if (count($where)) {
+            foreach ($where as $key => $value) {
+                $object = $object->where($key, $value);
+            }
+        }
+
+        return $object->get();
+    }
 }

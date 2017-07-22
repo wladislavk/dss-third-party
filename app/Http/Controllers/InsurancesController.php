@@ -2,8 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
-use DentalSleepSolutions\Eloquent\Models\Dental\Ledger;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;

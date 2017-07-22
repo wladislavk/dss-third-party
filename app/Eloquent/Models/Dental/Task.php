@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
-use DB;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -74,34 +74,54 @@ class Task extends AbstractModel
      */
     const CREATED_AT = 'adddate';
 
-    public function scopeForPatient($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeForPatient(Builder $query)
     {
-        return $query->from(DB::raw('dental_task dt'))
-            ->select(DB::raw('dt.*, du.name, p.firstname, p.lastname'))
-            ->join(DB::raw('dental_users du'), 'dt.responsibleid', '=', 'du.userid')
-            ->leftJoin(DB::raw('dental_patients p'), 'p.patientid', '=', 'dt.patientid')
+        return $query->from(\DB::raw('dental_task dt'))
+            ->select(\DB::raw('dt.*, du.name, p.firstname, p.lastname'))
+            ->join(\DB::raw('dental_users du'), 'dt.responsibleid', '=', 'du.userid')
+            ->leftJoin(\DB::raw('dental_patients p'), 'p.patientid', '=', 'dt.patientid')
             ->where(function($query) {
                 $query->where('dt.status', '0')
                     ->orWhereNull('dt.status');
             });
     }
 
-    public function scopeOverdue($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeOverdue(Builder $query)
     {
         return $query->whereRaw('dt.due_date < CURDATE()');
     }
 
-    public function scopeToday($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeToday(Builder $query)
     {
         return $query->whereRaw('dt.due_date = CURDATE()');
     }
 
-    public function scopeTomorrow($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeTomorrow(Builder $query)
     {
         return $query->whereRaw('dt.due_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY)');
     }
 
-    public function scopeThisWeek($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeThisWeek(Builder $query)
     {
         if (Carbon::now()->dayOfWeek == Carbon::SUNDAY) {
             $thisSunday = Carbon::now()->toDateString();
@@ -112,7 +132,11 @@ class Task extends AbstractModel
         return $query->whereRaw('dt.due_date BETWEEN DATE_ADD(CURDATE(), INTERVAL 2 DAY) AND ?', [$thisSunday]);
     }
 
-    public function scopeNextWeek($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNextWeek(Builder $query)
     {
         if (Carbon::now()->dayOfWeek == Carbon::SUNDAY) {
             $nextMonday = Carbon::parse('next tuesday')->toDateString();
@@ -125,7 +149,11 @@ class Task extends AbstractModel
         return $query->whereRaw('dt.due_date BETWEEN ? AND ?', [$nextMonday, $nextSunday]);
     }
 
-    public function scopeLater($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeLater(Builder $query)
     {
         if (Carbon::now()->dayOfWeek == Carbon::SUNDAY) {
             $nextSunday = Carbon::parse('next sunday')->toDateString();
@@ -136,7 +164,11 @@ class Task extends AbstractModel
         return $query->whereRaw('dt.due_date > ? ORDER BY dt.due_date ASC', [$nextSunday]);
     }
 
-    public function scopeFuture($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeFuture(Builder $query)
     {
         return $query->whereRaw('dt.due_date > DATE_ADD(CURDATE(), INTERVAL 1 DAY)');
     }

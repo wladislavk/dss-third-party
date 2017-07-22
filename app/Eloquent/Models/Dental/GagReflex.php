@@ -62,10 +62,5 @@ class GagReflex extends AbstractModel
      */
     protected $primaryKey = 'gag_reflexid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

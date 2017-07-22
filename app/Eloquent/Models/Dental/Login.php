@@ -35,8 +35,11 @@ class Login extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'docid', 'userid', 'login_date',
-        'logout_date', 'ip_address'
+        'docid',
+        'userid',
+        'login_date',
+        'logout_date',
+        'ip_address',
     ];
 
     /**

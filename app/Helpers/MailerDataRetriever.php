@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 
@@ -27,19 +27,19 @@ class MailerDataRetriever
     /** @var PatientRepository */
     private $patientRepository;
 
-    /** @var Summary */
-    private $summaryModel;
+    /** @var SummaryRepository */
+    private $summaryRepository;
 
     public function __construct(
         GeneralHelper $generalHelper,
         UserRepository $userRepository,
         PatientRepository $patientRepository,
-        Summary $summaryModel
+        SummaryRepository $summaryRepository
     ) {
         $this->generalHelper = $generalHelper;
         $this->userRepository = $userRepository;
         $this->patientRepository = $patientRepository;
-        $this->summaryModel = $summaryModel;
+        $this->summaryRepository = $summaryRepository;
     }
 
     /**
@@ -57,7 +57,7 @@ class MailerDataRetriever
         if (!$patient) {
             throw new EmailHandlerException("Patient with ID $patientId not found");
         }
-        $summaryInfo = $this->summaryModel->getWithFilter('location', ['patientid' => $patientId]);
+        $summaryInfo = $this->summaryRepository->getWithFilter(['location'], ['patientid' => $patientId]);
         $location = 0;
         if (isset($summaryInfo[0])) {
             $location = $summaryInfo[0]->location;

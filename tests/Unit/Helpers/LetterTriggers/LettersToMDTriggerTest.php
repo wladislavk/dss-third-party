@@ -5,6 +5,7 @@ namespace Tests\Unit\Helpers\LetterTriggers;
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -31,11 +32,11 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $this->users = [$user1, $user2];
 
         $letterCreator = $this->mockLetterCreator();
-        $letterModel = $this->mockLetterModel();
-        $userModel = $this->mockUserModel();
+        $letterRepository = $this->mockLetterRepository();
+        $userRepository = $this->mockUserRepository();
         $contactRepository = $this->mockContactRepository();
         $this->lettersToMDTrigger = new LettersToMDTrigger(
-            $letterCreator, $letterModel, $userModel, $contactRepository
+            $letterCreator, $letterRepository, $userRepository, $contactRepository
         );
     }
 
@@ -157,13 +158,13 @@ class LettersToMDTriggerTest extends LetterTriggerTestCase
         $this->lettersToMDTrigger->trigger($patientId, $docId, $userId, $userType, $params);
     }
 
-    private function mockUserModel()
+    private function mockUserRepository()
     {
-        /** @var User|MockInterface $userModel */
-        $userModel = \Mockery::mock(User::class);
-        $userModel->shouldReceive('getWithFilter')
+        /** @var UserRepository|MockInterface $userRepository */
+        $userRepository = \Mockery::mock(UserRepository::class);
+        $userRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getUserWithFilterCallback']);
-        return $userModel;
+        return $userRepository;
     }
 
     private function mockContactRepository()

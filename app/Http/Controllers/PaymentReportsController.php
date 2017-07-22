@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\PaymentReport;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PaymentReportRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 

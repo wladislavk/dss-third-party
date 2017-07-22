@@ -37,9 +37,4 @@ class ExternalCompanyUser extends AbstractModel
      * @var string
      */
     protected $primaryKey = 'id';
-
-    public function getWithFilter($fields = [], $where = [])
-    {
-        // TODO: Implement getWithFilter() method.
-    }
 }

@@ -42,8 +42,13 @@ class CustomText extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'title', 'description', 'docid', 'status',
-        'adddate', 'ip_address', 'default_text'
+        'title',
+        'description',
+        'docid',
+        'status',
+        'adddate',
+        'ip_address',
+        'default_text',
     ];
 
     /**
@@ -60,10 +65,5 @@ class CustomText extends AbstractModel
      */
     protected $primaryKey = 'customid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Helpers;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Factories\LetterUpdaterFactory;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Structs\LetterData;
@@ -20,8 +21,8 @@ class LetterDeleter
     /** @var LetterUpdaterFactory */
     private $letterUpdaterFactory;
 
-    /** @var Letter */
-    private $letterModel;
+    /** @var LetterRepository */
+    private $letterRepository;
 
     /** @var FaxRepository */
     private $faxRepository;
@@ -30,13 +31,13 @@ class LetterDeleter
         GeneralHelper $generalHelper,
         LetterCreator $letterCreator,
         LetterUpdaterFactory $letterUpdaterFactory,
-        Letter $letterModel,
+        LetterRepository $letterRepository,
         FaxRepository $faxRepository
     ) {
         $this->generalHelper = $generalHelper;
         $this->letterCreator = $letterCreator;
         $this->letterUpdaterFactory = $letterUpdaterFactory;
-        $this->letterModel = $letterModel;
+        $this->letterRepository = $letterRepository;
         $this->faxRepository = $faxRepository;
     }
 
@@ -53,7 +54,7 @@ class LetterDeleter
     public function deleteLetter($letterId, $type, $recipientId, $docId, $userId, $template = null)
     {
         /** @var Letter|null $letter */
-        $letter = $this->letterModel->find($letterId);
+        $letter = $this->letterRepository->find($letterId);
         if (!$letter) {
             return;
         }
@@ -103,7 +104,7 @@ class LetterDeleter
         $data->deletedBy = $userId;
         $data->deletedOn = Carbon::now();
 
-        $this->letterModel->updateLetterBy($where, $data, $updatedFields);
+        $this->letterRepository->updateLetterBy($where, $data, $updatedFields);
 
         $data = ['viewed' => 1];
         $this->faxRepository->updateByLetterId($letterId, $data);
@@ -111,7 +112,7 @@ class LetterDeleter
         $where = ['parentid' => $letterId];
         $updatedFields = ['parentid'];
         $data = new LetterData();
-        $this->letterModel->updateLetterBy($where, $data, $updatedFields);
+        $this->letterRepository->updateLetterBy($where, $data, $updatedFields);
     }
 
     /**
@@ -139,7 +140,7 @@ class LetterDeleter
         if ($newLetterId > 0) {
             $where = ['letterid' => $letter->letterid];
             $updatedFields = $letterUpdater->getUpdatedFields();
-            $this->letterModel->updateLetterBy($where, $dataForUpdate, $updatedFields);
+            $this->letterRepository->updateLetterBy($where, $dataForUpdate, $updatedFields);
         }
     }
 

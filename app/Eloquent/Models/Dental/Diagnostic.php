@@ -40,8 +40,12 @@ class Diagnostic extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'diagnostic', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'diagnostic',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**
@@ -58,10 +62,5 @@ class Diagnostic extends AbstractModel
      */
     protected $primaryKey = 'diagnosticid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

@@ -2,8 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Device;
-use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
@@ -123,20 +122,20 @@ class GuideDevicesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Device $devicesResource
+     * @param DeviceRepository $deviceRepository
      * @param GuideSettingRepository $guideSettingRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getWithImages(
-        Device $devicesResource,
+        DeviceRepository $deviceRepository,
         GuideSettingRepository $guideSettingRepository,
         Request $request
     ) {
         $settings = $request->input('settings');
 
         $fields = ['deviceid', 'device', 'image_path'];
-        $devices = $devicesResource->getWithFilter($fields);
+        $devices = $deviceRepository->getWithFilter($fields);
         $devicesArray = [];
 
         if (count($devices)) {

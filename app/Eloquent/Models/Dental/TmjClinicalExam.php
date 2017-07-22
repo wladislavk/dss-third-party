@@ -172,10 +172,5 @@ class TmjClinicalExam extends AbstractModel
      */
     protected $primaryKey = 'ex_page5id';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

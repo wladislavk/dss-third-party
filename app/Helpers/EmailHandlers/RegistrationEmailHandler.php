@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Helpers\EmailHandlers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\EmailSender;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -23,18 +23,18 @@ class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
     /** @var PasswordResetDataSetter */
     private $passwordResetDataSetter;
 
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
     public function __construct(
         MailerDataRetriever $mailerDataRetriever,
         EmailSender $emailSender,
         PasswordResetDataSetter $passwordResetDataSetter,
-        Patient $patientModel
+        PatientRepository $patientRepository
     ) {
         parent::__construct($mailerDataRetriever, $emailSender);
         $this->passwordResetDataSetter = $passwordResetDataSetter;
-        $this->patientModel = $patientModel;
+        $this->patientRepository = $patientRepository;
     }
 
     /**
@@ -62,7 +62,7 @@ class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
      */
     protected function updateModels($patientId, array $newPatientData)
     {
-        $this->patientModel->updatePatient($patientId, $newPatientData);
+        $this->patientRepository->updatePatient($patientId, $newPatientData);
     }
 
     /**

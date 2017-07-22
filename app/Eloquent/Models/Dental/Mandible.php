@@ -62,10 +62,5 @@ class Mandible extends AbstractModel
      */
     protected $primaryKey = 'mandibleid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

@@ -83,10 +83,5 @@ class TongueClinicalExam extends AbstractModel
      */
     protected $primaryKey = 'ex_page1id';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

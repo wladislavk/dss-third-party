@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\HomeSleepTest;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\HomeSleepTestRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
@@ -259,7 +258,6 @@ class HomeSleepTestsController extends BaseRestController
                 break;
             default:
                 $data = [];
-                break;
         }
 
         return ApiResponse::responseOk('', $data);

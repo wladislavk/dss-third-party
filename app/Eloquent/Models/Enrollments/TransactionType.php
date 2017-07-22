@@ -37,8 +37,12 @@ class TransactionType extends Model
      * @var array
      */
     protected $fillable = [
-        'transaction_type', 'description', 'addddate',
-        'ip_address', 'status', 'endpoint',
+        'transaction_type',
+        'description',
+        'addddate',
+        'ip_address',
+        'status',
+        'endpoint',
     ];
 
     /**

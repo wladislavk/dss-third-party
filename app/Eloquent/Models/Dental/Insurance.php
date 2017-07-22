@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 use DentalSleepSolutions\Libraries\ClaimFormData;
 use DB;
+use Illuminate\Database\Query\Builder;
 
 /**
  * @SWG\Definition(
@@ -624,9 +625,6 @@ class Insurance extends AbstractModel
 {
     use WithoutUpdatedTimestamp;
 
-    // Claim statuses (insurance)
-    const DSS_CLAIM_PENDING = 0;
-
     /**
      * Guarded attributes
      *
@@ -655,41 +653,43 @@ class Insurance extends AbstractModel
      */
     protected $dates = ['mailed_date', 'sec_mailed_date', 'percase_date'];
 
-    private $claimStatuses = [
-        'DSS_CLAIM_PENDING'             => 0,
-        'DSS_CLAIM_SENT'                => 1,
-        'DSS_CLAIM_DISPUTE'             => 2,
-        'DSS_CLAIM_PAID_INSURANCE'      => 3,
-        'DSS_CLAIM_REJECTED'            => 4,
-        'DSS_CLAIM_PAID_PATIENT'        => 5,
-        'DSS_CLAIM_SEC_PENDING'         => 6,
-        'DSS_CLAIM_SEC_SENT'            => 7,
-        'DSS_CLAIM_SEC_DISPUTE'         => 8,
-        'DSS_CLAIM_PAID_SEC_INSURANCE'  => 9,
-        'DSS_CLAIM_PATIENT_DISPUTE'     => 10,
-        'DSS_CLAIM_PAID_SEC_PATIENT'    => 11,
-        'DSS_CLAIM_SEC_PATIENT_DISPUTE' => 12,
-        'DSS_CLAIM_SEC_REJECTED'        => 13,
-        'DSS_CLAIM_EFILE_ACCEPTED'      => 14,
-        'DSS_CLAIM_SEC_EFILE_ACCEPTED'  => 15
-    ];
+    const DSS_CLAIM_PENDING = 0;
+    const DSS_CLAIM_SENT = 1;
+    const DSS_CLAIM_DISPUTE = 2;
+    const DSS_CLAIM_PAID_INSURANCE = 3;
+    const DSS_CLAIM_REJECTED = 4;
+    const DSS_CLAIM_PAID_PATIENT = 5;
+    const DSS_CLAIM_SEC_PENDING = 6;
+    const DSS_CLAIM_SEC_SENT = 7;
+    const DSS_CLAIM_SEC_DISPUTE = 8;
+    const DSS_CLAIM_PAID_SEC_INSURANCE = 9;
+    const DSS_CLAIM_PATIENT_DISPUTE = 10;
+    const DSS_CLAIM_PAID_SEC_PATIENT = 11;
+    const DSS_CLAIM_SEC_PATIENT_DISPUTE = 12;
+    const DSS_CLAIM_SEC_REJECTED = 13;
+    const DSS_CLAIM_EFILE_ACCEPTED = 14;
+    const DSS_CLAIM_SEC_EFILE_ACCEPTED = 15;
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
-    public function scopeRejected($globalQuery)
+    /**
+     * @param Builder $globalQuery
+     * @return Builder
+     */
+    public function scopeRejected(Builder $globalQuery)
     {
         return $globalQuery->where(function($query) {
-            return $query->where('status', $this->claimStatuses['DSS_CLAIM_REJECTED'])
-                ->orWhere('status', $this->claimStatuses['DSS_CLAIM_SEC_REJECTED']);
+            return $query->where('status', self::DSS_CLAIM_REJECTED)
+                ->orWhere('status', self::DSS_CLAIM_SEC_REJECTED);
         });
     }
 
-    public function scopeFiledByBackOfficeConditional($query, $claimAlias='claim')
+    /**
+     * @param Builder $query
+     * @param string $claimAlias
+     * @return Builder
+     */
+    public function scopeFiledByBackOfficeConditional(Builder $query, $claimAlias='claim')
     {
         // Filed by back office, legacy logic
         return $query->whereRaw("COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1")
@@ -697,7 +697,12 @@ class Insurance extends AbstractModel
             ->orWhereRaw("COALESCE($claimAlias.p_m_dss_file, 0) = 3");
     }
 
-    public function scopeCountFrontOfficeClaims($query, $docId = 0)
+    /**
+     * @param Builder $query
+     * @param int $docId
+     * @return Builder
+     */
+    public function scopeCountFrontOfficeClaims(Builder $query, $docId = 0)
     {
         return $query->from(DB::raw('dental_insurance claim'))
             ->select(DB::raw('COUNT(claim.insuranceid) AS total'))
@@ -708,153 +713,20 @@ class Insurance extends AbstractModel
             ->where('claim.docid', $docId);
     }
 
-    public function scopePending($query)
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopePending(Builder $query)
     {
         return $query->where('status', self::DSS_CLAIM_PENDING);
-    }
-
-    public function getOpenClaims($patientId, $page, $rowsPerPage, $sort, $sortDir)
-    {
-        $query = $this->select(
-                'i.patientid',
-                'i.docid',
-                DB::raw("'claim'"),
-                'i.insuranceid AS ledgerid',
-                'i.adddate AS service_date',
-                'i.adddate AS entry_date',
-                DB::raw("'Claim' AS name"),
-                DB::raw("'Insurance Claim' AS description"),
-                DB::raw('(
-                            SELECT SUM(dl2.amount)
-                            FROM dental_ledger dl2
-                                INNER JOIN dental_insurance i2 ON dl2.primary_claim_id = i2.insuranceid
-                            WHERE i2.insuranceid = i.insuranceid
-                        ) AS amount'),
-                DB::raw('SUM(pay.amount) AS paid_amount'),
-                'i.status',
-                'i.insuranceid AS primary_claim_id',
-                'i.mailed_date',
-                DB::raw($this->filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
-            )->from(DB::raw('dental_insurance i'))
-            ->leftJoin(DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
-            ->leftJoin(DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
-            ->where('i.patientid', $patientId)
-            ->whereNotIn('i.status', [
-                $this->claimStatuses['DSS_CLAIM_PAID_INSURANCE'],
-                $this->claimStatuses['DSS_CLAIM_PAID_SEC_INSURANCE'],
-                $this->claimStatuses['DSS_CLAIM_PAID_PATIENT']
-            ])->groupBy('i.insuranceid')
-            ->orderBy($this->getSortColumnForList($sort), $sortDir)
-            ->skip($page * $rowsPerPage)
-            ->take($rowsPerPage);
-
-        return $query->get();
-    }
-
-    public function getLedgerDetailsQuery($patientId)
-    {
-        return $this->select(
-            'i.patientid',
-            'i.docid',
-            DB::raw("'claim'"),
-            'i.insuranceid',
-            'i.adddate',
-            'i.adddate',
-            DB::raw("'Claim'"),
-            DB::raw("'Insurance Claim'"),
-            DB::raw('(
-                SELECT SUM(dl2.amount)
-                FROM dental_ledger dl2
-                    INNER JOIN dental_insurance i2 ON dl2.primary_claim_id = i2.insuranceid
-                WHERE i2.insuranceid = i.insuranceid)'),
-            DB::raw('SUM(pay.amount)'),
-            'i.status',
-            'i.primary_claim_id',
-            'i.mailed_date',
-            DB::raw("''"),
-            DB::raw("''"),
-            DB::raw("''"),
-            DB::raw("''"),
-            DB::raw('(
-                SELECT COUNT(id)
-                FROM dental_claim_notes
-                WHERE claim_id = i.insuranceid)'),
-            DB::raw("(
-                SELECT COUNT(id)
-                FROM dental_claim_notes
-                WHERE claim_id = i.insuranceid
-                    AND create_type = '1')"),
-            DB::raw($this->filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
-        )->from(DB::raw('dental_insurance i'))
-        ->leftJoin(DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
-        ->leftJoin(DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
-        ->where('i.patientid', $patientId)
-        ->groupBy('i.insuranceid');
-    }
-
-    public function getLedgerDetailsRowsNumber($patientId)
-    {
-        $subQuery = $this->select('i.insuranceid')
-            ->from(DB::raw('dental_insurance i'))
-            ->leftJoin(DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
-            ->leftJoin(DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
-            ->whereRaw('i.patientid = ?', [$patientId])
-            ->groupBy('i.insuranceid');
-
-        $subQueryString = $subQuery->toSql();
-
-        $query = $this->select(DB::raw('COUNT(insuranceid) as number'))
-            ->from(DB::raw("($subQueryString) as test"))
-            ->mergeBindings($subQuery->getQuery())
-            ->first();
-
-        return !empty($query) ? $query->number : 0;
-    }
-
-    /**
-     * @param string $sort
-     * @return string
-     */
-    private function getSortColumnForList($sort)
-    {
-        $sortColumns = [
-            'entry_date'  => 'entry_date',
-            'producer'    => 'name',
-            'patient'     => 'lastname',
-            'description' => 'description',
-            'amount'      => 'amount',
-            'paid_amount' => 'paid_amount',
-            'status'      => 'status'
-        ];
-
-        if (array_key_exists($sort, $sortColumns)) {
-            $sortColumn = $sortColumns[$sort];
-        } else {
-            $sortColumn = 'service_date';
-        }
-
-        return $sortColumn;
-    }
-
-    /**
-     * @param string $claimAlias
-     * @return string
-     */
-    private function filedByBackOfficeConditional($claimAlias = 'claim')
-    {
-        return "(
-                -- Filed by back office, legacy logic
-                COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
-                -- Filed by back office, new logic
-                OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
-            )";
     }
 
     /**
      * @param array $aliases
      * @return string
      */
-    private function backOfficeClaimsConditional($aliases = [])
+    private function backOfficeClaimsConditional(array $aliases = [])
     {
         $actionableStatusList = "'" . implode("', '", ClaimFormData::statusListByName('actionable')) . "'";
         $pendingStatusList    = "'" . implode("', '", ClaimFormData::statusListByName('pending')) . "'";
@@ -887,8 +759,22 @@ class Insurance extends AbstractModel
      * @param array $aliases
      * @return string
      */
-    private function frontOfficeClaimsConditional($aliases = [])
+    private function frontOfficeClaimsConditional(array $aliases = [])
     {
         return '(NOT ' . $this->backOfficeClaimsConditional($aliases) . ')';
+    }
+
+    /**
+     * @param string $claimAlias
+     * @return string
+     */
+    public static function filedByBackOfficeConditional($claimAlias)
+    {
+        return "(
+                -- Filed by back office, legacy logic
+                COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
+                -- Filed by back office, new logic
+                OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
+            )";
     }
 }

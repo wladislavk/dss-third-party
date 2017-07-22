@@ -3,13 +3,9 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
-use DentalSleepSolutions\Eloquent\Models\Dental\Ledger;
-use DentalSleepSolutions\Eloquent\Models\Dental\LedgerNote;
-use DentalSleepSolutions\Eloquent\Models\Dental\LedgerStatement;
-use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
@@ -246,12 +242,12 @@ class LedgersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $patientResource
+     * @param PatientRepository $patientRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getListOfLedgerRows(
-        Patient $patientResource,
+        PatientRepository $patientRepository,
         Request $request
     ) {
         $docId = $this->currentUser->docid ?: 0;
@@ -269,8 +265,8 @@ class LedgersController extends BaseRestController
         }
 
         if ($ledgerRows['total'] > 0) {
-            $ledgerRows['result']->map(function ($row) use ($patientResource) {
-                $patients = $patientResource->getWithFilter(['firstname', 'lastname'], [
+            $ledgerRows['result']->map(function ($row) use ($patientRepository) {
+                $patients = $patientRepository->getWithFilter(['firstname', 'lastname'], [
                     'patientid' => $row->patientid
                 ]);
 
@@ -412,16 +408,12 @@ class LedgersController extends BaseRestController
      * )
      *
      * @param Request $request
-     * @param Insurance $insurance
-     * @param LedgerNote $ledgerNote
-     * @param LedgerStatement $ledgerStatement
+     * @param InsuranceRepository $insuranceRepository
      * @return \Illuminate\Http\JsonResponse
      */
     public function getReportData(
         Request $request,
-        Insurance $insurance,
-        LedgerNote $ledgerNote,
-        LedgerStatement $ledgerStatement
+        InsuranceRepository $insuranceRepository
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -433,9 +425,9 @@ class LedgersController extends BaseRestController
         $openClaims = $request->input('open_claims', false);
 
         if ($openClaims) {
-            $data = $insurance->getOpenClaims($patientId, $page, $rowsPerPage, $sort, $sortDir);
+            $data = $insuranceRepository->getOpenClaims($patientId, $page, $rowsPerPage, $sort, $sortDir);
         } else {
-            $data = $this->repository->getReportData($ledgerNote, $ledgerStatement, $insurance, [
+            $data = $this->repository->getReportData([
                 'doc_id'        => $docId,
                 'patient_id'    => $patientId,
                 'page'          => $page,
@@ -455,22 +447,15 @@ class LedgersController extends BaseRestController
      * )
      *
      * @param Request $request
-     * @param Insurance $insurance
-     * @param LedgerNote $ledgerNote
-     * @param LedgerStatement $ledgerStatement
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getReportRowsNumber(
-        Request $request,
-        Insurance $insurance,
-        LedgerNote $ledgerNote,
-        LedgerStatement $ledgerStatement
-    ) {
+    public function getReportRowsNumber(Request $request)
+    {
         $docId = $this->currentUser->docid ?: 0;
 
         $patientId = $request->input('patient_id', 0);
 
-        $number = $this->repository->getReportRowsNumber($ledgerNote, $ledgerStatement, $insurance, $docId, $patientId);
+        $number = $this->repository->getReportRowsNumber($docId, $patientId);
 
         return ApiResponse::responseOk('', ['number' => $number]);
     }

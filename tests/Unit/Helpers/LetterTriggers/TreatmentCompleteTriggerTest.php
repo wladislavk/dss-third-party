@@ -20,10 +20,10 @@ class TreatmentCompleteTriggerTest extends LetterTriggerTestCase
     public function setUp()
     {
         $letterCreator = $this->mockLetterCreator();
-        $letterModel = $this->mockLetterModel();
+        $letterRepository = $this->mockLetterRepository();
         $patientRepository = $this->mockPatientRepository();
         $this->treatmentCompleteTrigger = new TreatmentCompleteTrigger(
-            $letterCreator, $letterModel, $patientRepository
+            $letterCreator, $letterRepository, $patientRepository
         );
     }
 

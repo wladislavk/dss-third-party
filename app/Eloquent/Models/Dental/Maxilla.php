@@ -62,10 +62,5 @@ class Maxilla extends AbstractModel
      */
     protected $primaryKey = 'maxillaid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

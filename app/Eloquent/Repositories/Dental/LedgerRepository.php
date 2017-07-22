@@ -345,18 +345,11 @@ class LedgerRepository extends BaseRepository
     }
 
     /**
-     * @param LedgerNote $ledgerNoteModel
-     * @param LedgerStatement $ledgerStatementModel
-     * @param Insurance $insuranceModel
      * @param array $data
      * @return array|\Illuminate\Database\Eloquent\Collection
      */
-    public function getReportData(
-        LedgerNote $ledgerNoteModel,
-        LedgerStatement $ledgerStatementModel,
-        Insurance $insuranceModel,
-        array $data
-    ) {
+    public function getReportData(array $data)
+    {
         $defaultData = [
             'doc_id'        => 0,
             'patient_id'    => 0,
@@ -469,9 +462,9 @@ class LedgerRepository extends BaseRepository
 
         $queryJoinedWithLedgerPayment = $queryJoinedWithLedgerPayment->groupBy('dl.ledgerid');
 
-        $ledgerNotesQuery = $ledgerNoteModel->getLedgerDetailsQuery($data['patient_id']);
-        $ledgerStatementsQuery = $ledgerStatementModel->getLedgerDetailsQuery($data['doc_id'], $data['patient_id']);
-        $insuranceQuery = $insuranceModel->getLedgerDetailsQuery($data['patient_id']);
+        $ledgerNotesQuery = $this->getLedgerNoteLedgerDetailsQuery($data['patient_id']);
+        $ledgerStatementsQuery = $this->getLedgerStatementLedgerDetailsQuery($data['doc_id'], $data['patient_id']);
+        $insuranceQuery = $this->getInsuranceLedgerDetailsQuery($data['patient_id']);
 
         $query = $queryJoinedWithLedgerPayment->union($queryJoinedWithLedgerPayment1)
             ->union($query)
@@ -487,20 +480,12 @@ class LedgerRepository extends BaseRepository
     }
 
     /**
-     * @param LedgerNote $ledgerNoteModel
-     * @param LedgerStatement $ledgerStatementModel
-     * @param Insurance $insuranceModel
      * @param int $docId
      * @param int $patientId
      * @return int
      */
-    public function getReportRowsNumber(
-        LedgerNote $ledgerNoteModel,
-        LedgerStatement $ledgerStatementModel,
-        Insurance $insuranceModel,
-        $docId,
-        $patientId
-    ) {
+    public function getReportRowsNumber($docId, $patientId)
+    {
         $subQueryJoinedWithLedgerPayment = $this->model->select('dl.ledgerid')
             ->from(\DB::raw('dental_ledger dl'))
             ->where('dl.docid', $docId)
@@ -534,9 +519,9 @@ class LedgerRepository extends BaseRepository
             })->where('dl.patientid', $patientId)
             ->first();
 
-        $ledgerNotesRowsNumber = $ledgerNoteModel->getLedgerDetailsRowsNumber($patientId);
-        $ledgerStatementsRowsNumber = $ledgerStatementModel->getLedgerDetailsRowsNumber($patientId);
-        $insuranceRowsNumber = $insuranceModel->getLedgerDetailsRowsNumber($patientId);
+        $ledgerNotesRowsNumber = $this->getLedgerNoteLedgerDetailsRowsNumber($patientId);
+        $ledgerStatementsRowsNumber = $this->getLedgerStatementLedgerDetailsRowsNumber($patientId);
+        $insuranceRowsNumber = $this->getInsuranceLedgerDetailsRowsNumber($patientId);
         $totalNumber = (!empty($queryJoinedWithLedgerPayment) ? $queryJoinedWithLedgerPayment->number : 0)
             + (!empty($queryJoinedWithLedgerPayment1) ? $queryJoinedWithLedgerPayment1->number : 0)
             + (!empty($query) ? $query->number : 0)
@@ -555,5 +540,230 @@ class LedgerRepository extends BaseRepository
     public function updateWherePrimaryClaimId($primaryClaimId, array $data = [])
     {
         return $this->model->where('primary_claim_id', $primaryClaimId)->update($data);
+    }
+
+    /**
+     * @param array $fields
+     * @param array $where
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getWithFilter(array $fields = [], array $where = [])
+    {
+        $object = $this;
+
+        if (count($fields)) {
+            $object = $object->select($fields);
+        }
+
+        if (count($where)) {
+            foreach ($where as $key => $value) {
+                $object = $object->where($key, $value);
+            }
+        }
+
+        return $object->get();
+    }
+
+    /**
+     * @param int $patientId
+     * @return Insurance
+     */
+    private function getInsuranceLedgerDetailsQuery($patientId)
+    {
+        return $this->model->select(
+            'i.patientid',
+            'i.docid',
+            \DB::raw("'claim'"),
+            'i.insuranceid',
+            'i.adddate',
+            'i.adddate',
+            \DB::raw("'Claim'"),
+            \DB::raw("'Insurance Claim'"),
+            \DB::raw('(
+                SELECT SUM(dl2.amount)
+                FROM dental_ledger dl2
+                    INNER JOIN dental_insurance i2 ON dl2.primary_claim_id = i2.insuranceid
+                WHERE i2.insuranceid = i.insuranceid)'),
+            \DB::raw('SUM(pay.amount)'),
+            'i.status',
+            'i.primary_claim_id',
+            'i.mailed_date',
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw('(
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = i.insuranceid)'),
+            \DB::raw("(
+                SELECT COUNT(id)
+                FROM dental_claim_notes
+                WHERE claim_id = i.insuranceid
+                    AND create_type = '1')"),
+            \DB::raw(Insurance::filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
+        )->from(\DB::raw('dental_insurance i'))
+            ->leftJoin(\DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
+            ->leftJoin(\DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
+            ->where('i.patientid', $patientId)
+            ->groupBy('i.insuranceid');
+    }
+
+    /**
+     * @param int $patientId
+     * @return int
+     */
+    private function getInsuranceLedgerDetailsRowsNumber($patientId)
+    {
+        $subQuery = $this->model->select('i.insuranceid')
+            ->from(\DB::raw('dental_insurance i'))
+            ->leftJoin(\DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
+            ->leftJoin(\DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
+            ->whereRaw('i.patientid = ?', [$patientId])
+            ->groupBy('i.insuranceid');
+
+        $subQueryString = $subQuery->toSql();
+
+        $query = $this->model->select(\DB::raw('COUNT(insuranceid) as number'))
+            ->from(\DB::raw("($subQueryString) as test"))
+            ->mergeBindings($subQuery->getQuery())
+            ->first();
+
+        return !empty($query) ? $query->number : 0;
+    }
+
+    /**
+     * @param int $patientId
+     * @return array
+     */
+    public function getLedgerNoteLedgerDetailsQuery($patientId)
+    {
+        $userQuery = $this->model->select(
+            'n.patientid',
+            'n.docid',
+            \DB::raw("'note' AS ledger"),
+            'n.id AS ledgerid',
+            'n.service_date',
+            'n.entry_date',
+            \DB::raw("CONCAT('Note - ', p.first_name, ' ', p.last_name) AS name"),
+            'n.note AS description',
+            \DB::raw('0.0 AS amount'),
+            \DB::raw('0.0 AS paid_amount'),
+            'n.private AS status',
+            \DB::raw('0 AS primary_claim_id'),
+            \DB::raw('NULL AS mailed_date'),
+            \DB::raw("'' AS payer"),
+            \DB::raw("'' AS payment_type"),
+            \DB::raw("'' AS claim_status"),
+            \DB::raw("'' AS filename"),
+            \DB::raw("'' AS num_notes"),
+            \DB::raw("'' AS num_fo_notes"),
+            \DB::raw("0 AS filed_by_bo")
+        )->from(\DB::raw('dental_ledger_note n'))
+            ->join(\DB::raw('dental_users p'), 'n.producerid', '=', 'p.userid')
+            ->where('n.patientid', $patientId);
+
+        $adminQuery = $this->model->select(
+            'n.patientid',
+            'n.docid',
+            \DB::raw("'note'"),
+            'n.id',
+            'n.service_date',
+            'n.entry_date',
+            \DB::raw("CONCAT('Note - Backoffice ID - ', p.adminid)"),
+            'n.note',
+            \DB::raw('0.0'),
+            \DB::raw('0.0'),
+            'n.private',
+            \DB::raw('0'),
+            \DB::raw('NULL'),
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw("0 AS filed_by_bo")
+        )->from(\DB::raw('dental_ledger_note n'))
+            ->join(\DB::raw('admin p'), 'n.admin_producerid', '=', 'p.adminid')
+            ->where('n.patientid', $patientId);
+
+        return [
+            'users'  => $userQuery,
+            'admins' => $adminQuery,
+        ];
+    }
+
+    /**
+     * @param int $patientId
+     * @return int
+     */
+    public function getLedgerNoteLedgerDetailsRowsNumber($patientId)
+    {
+        $userQuery = $this->model->select(
+            \DB::raw('COUNT(n.id) as number')
+        )->from(\DB::raw('dental_ledger_note n'))
+            ->join(\DB::raw('dental_users p'), 'n.producerid', '=', 'p.userid')
+            ->where('n.patientid', $patientId)
+            ->first();
+
+        $adminQuery = $this->model->select(
+            \DB::raw('COUNT(n.id) as number')
+        )->from(\DB::raw('dental_ledger_note n'))
+            ->join(\DB::raw('admin p'), 'n.admin_producerid', '=', 'p.adminid')
+            ->where('n.patientid', $patientId)
+            ->first();
+
+        return (!empty($userQuery) ? $userQuery->number : 0)
+            + (!empty($adminQuery) ? $adminQuery->number : 0);
+    }
+
+    /**
+     * @param int $docId
+     * @param int $patientId
+     * @return LedgerStatement
+     */
+    public function getLedgerStatementLedgerDetailsQuery($docId, $patientId)
+    {
+        return $this->model->select(
+            's.patientid',
+            \DB::raw("'$docId'"),
+            \DB::raw("'statement'"),
+            's.id',
+            's.service_date',
+            's.entry_date',
+            \DB::raw("CONCAT(p.first_name, ' ', p.last_name)"),
+            \DB::raw("'Ledger statement created (Click to view)'"),
+            \DB::raw('0.0'),
+            \DB::raw('0.0'),
+            \DB::raw("''"),
+            \DB::raw('0'),
+            \DB::raw('NULL'),
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw("''"),
+            's.filename',
+            \DB::raw("''"),
+            \DB::raw("''"),
+            \DB::raw('0 AS filed_by_bo')
+        )->from(\DB::raw('dental_ledger_statement s'))
+            ->join(\DB::raw('dental_users p'), 's.producerid', '=', 'p.userid')
+            ->where('s.patientid', $patientId);
+    }
+
+    /**
+     * @param int $patientId
+     * @return int
+     */
+    public function getLedgerStatementLedgerDetailsRowsNumber($patientId)
+    {
+        $query = $this->model->select(
+            \DB::raw('COUNT(s.id) as number')
+        )->from(\DB::raw('dental_ledger_statement s'))
+            ->join(\DB::raw('dental_users p'), 's.producerid', '=', 'p.userid')
+            ->where('s.patientid', $patientId)
+            ->first();
+
+        return !empty($query) ? $query->number : 0;
     }
 }

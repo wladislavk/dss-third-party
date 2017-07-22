@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany;
-use DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as IlluminateBaseController;
@@ -25,44 +25,47 @@ abstract class ExternalBaseController extends IlluminateBaseController
     /** @var string|null */
     protected $externalUserKey;
 
-    /** @var ExternalCompany */
+    /** @var ExternalCompanyRepository */
     protected $externalCompaniesRepository;
 
-    /** @var ExternalUser */
+    /** @var ExternalUserRepository */
     protected $externalUsersRepository;
 
+    /** @var UserRepository */
+    private $userRepository;
+
+    /** @var UserViewRepository */
+    private $userViewRepository;
+
     public function __construct(
-        ExternalCompany $externalCompanies,
-        ExternalUser $externalUsers,
+        ExternalCompanyRepository $externalCompanyRepository,
+        ExternalUserRepository $externalUserRepository,
         Request $request,
         UserViewRepository $userViewRepository,
         UserRepository $userRepository
     ) {
-        $this->externalCompaniesRepository = $externalCompanies;
-        $this->externalUsersRepository = $externalUsers;
-        $this->currentUser = $this->getUserInfo($request, $userViewRepository, $userRepository);
+        $this->externalCompaniesRepository = $externalCompanyRepository;
+        $this->externalUsersRepository = $externalUserRepository;
+        $this->userRepository = $userRepository;
+        $this->userViewRepository = $userViewRepository;
+        $this->currentUser = $this->getUserInfo($request);
     }
 
     /**
      * @param Request $request
-     * @param UserViewRepository $userViewRepository
-     * @param UserRepository $userRepository
      * @return UserView|null
      */
-    private function getUserInfo(
-        Request $request,
-        UserViewRepository $userViewRepository,
-        UserRepository $userRepository
-    ) {
+    private function getUserInfo(Request $request)
+    {
         $this->externalCompanyKey = $request->input('api_key_company');
         $this->externalUserKey = $request->input('api_key_user');
 
-        $externalUser = $this->externalUsersRepository->where('api_key', $this->externalUserKey)->first();
-        $user = $userViewRepository->find('u_' . $externalUser->user_id)->first();
+        $externalUser = $this->externalUsersRepository->findByApiKey($this->externalUserKey);
+        $user = $this->userViewRepository->find('u_' . $externalUser->user_id)->first();
 
         $user->id = $externalUser->user_id;
-        $user->docid = $userRepository->getDocId($user->id)->docid ?: $user->userid;
-        $user->user_type = $userRepository->getUserType($user->docid)->user_type ?: 0;
+        $user->docid = $this->userRepository->getDocId($user->id)->docid ?: $user->userid;
+        $user->user_type = $this->userRepository->getUserType($user->docid)->user_type ?: 0;
 
         return $user;
     }

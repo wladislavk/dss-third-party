@@ -4,6 +4,8 @@ namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Helpers\LetterCreationEvaluator;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;
@@ -24,10 +26,10 @@ class LetterCreatorTest extends UnitTestCase
     public function setUp()
     {
         $letterCreationEvaluator = $this->mockLetterCreationEvaluator();
-        $userModel = $this->mockUserModel();
-        $letterModel = $this->mockLetterModel();
+        $userRepository = $this->mockUserRepository();
+        $letterRepository = $this->mockLetterRepository();
         $this->letterCreator = new LetterCreator(
-            $letterCreationEvaluator, $userModel, $letterModel
+            $letterCreationEvaluator, $userRepository, $letterRepository
         );
     }
 
@@ -98,22 +100,22 @@ class LetterCreatorTest extends UnitTestCase
         return $letterCreationEvaluator;
     }
 
-    private function mockUserModel()
+    private function mockUserRepository()
     {
-        /** @var User|MockInterface $userModel */
-        $userModel = \Mockery::mock(User::class);
-        $userModel->shouldReceive('getWithFilter')
+        /** @var UserRepository|MockInterface $userRepository */
+        $userRepository = \Mockery::mock(UserRepository::class);
+        $userRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getUserWithFilterCallback']);
-        return $userModel;
+        return $userRepository;
     }
 
-    private function mockLetterModel()
+    private function mockLetterRepository()
     {
-        /** @var Letter|MockInterface $letterModel */
-        $letterModel = \Mockery::mock(Letter::class);
-        $letterModel->shouldReceive('createLetter')
+        /** @var LetterRepository|MockInterface $letterRepository */
+        $letterRepository = \Mockery::mock(LetterRepository::class);
+        $letterRepository->shouldReceive('createLetter')
             ->andReturnUsing([$this, 'createLetterCallback']);
-        return $letterModel;
+        return $letterRepository;
     }
 
     public function shouldLetterBeCreatedCallback()

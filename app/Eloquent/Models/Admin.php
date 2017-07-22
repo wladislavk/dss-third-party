@@ -67,9 +67,24 @@ class Admin extends AbstractModel
      *
      * @var array
      */
-    protected $fillable = ['adminid', 'name', 'username', 'password', 'status', 'adddate', 'ip_address', 'salt',
-        'recover_time', 'admin_access', 'last_accessed_date', 'claim_margin_top', 'claim_margin_left', 'email',
-        'first_name', 'last_name'];
+    protected $fillable = [
+        'adminid',
+        'name',
+        'username',
+        'password',
+        'status',
+        'adddate',
+        'ip_address',
+        'salt',
+        'recover_time',
+        'admin_access',
+        'last_accessed_date',
+        'claim_margin_top',
+        'claim_margin_left',
+        'email',
+        'first_name',
+        'last_name',
+    ];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -85,14 +100,12 @@ class Admin extends AbstractModel
      */
     const CREATED_AT = 'adddate';
 
-
     protected $primaryKey = 'adminid';
-
 
     /**
      * User has many Location
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function adminCompany()
     {

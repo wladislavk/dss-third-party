@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\GeneralHelper;
@@ -40,9 +41,9 @@ class MailerDataRetrieverTest extends UnitTestCase
         $generalHelper = $this->mockGeneralHelper();
         $userRepository = $this->mockUserRepository();
         $patientRepository = $this->mockPatientRepository();
-        $summaryModel = $this->mockSummaryModel();
+        $summaryRepository = $this->mockSummaryRepository();
         $this->mailerDataRetriever = new MailerDataRetriever(
-            $generalHelper, $userRepository, $patientRepository, $summaryModel
+            $generalHelper, $userRepository, $patientRepository, $summaryRepository
         );
     }
 
@@ -132,13 +133,13 @@ class MailerDataRetrieverTest extends UnitTestCase
         return $patientRepository;
     }
 
-    private function mockSummaryModel()
+    private function mockSummaryRepository()
     {
-        /** @var Summary|MockInterface $summaryModel */
-        $summaryModel = \Mockery::mock(Summary::class);
-        $summaryModel->shouldReceive('getWithFilter')
+        /** @var SummaryRepository|MockInterface $summaryRepository */
+        $summaryRepository = \Mockery::mock(SummaryRepository::class);
+        $summaryRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getWithFilterCallback']);
-        return $summaryModel;
+        return $summaryRepository;
     }
 
     public function findPatientCallback($id)
@@ -149,7 +150,7 @@ class MailerDataRetrieverTest extends UnitTestCase
         return null;
     }
 
-    public function getWithFilterCallback()
+    public function getWithFilterCallback(array $fields = [], array $where = [])
     {
         return $this->summary;
     }

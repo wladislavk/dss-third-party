@@ -3,22 +3,16 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
-use DentalSleepSolutions\Eloquent\Models\Dental\HomeSleepTest;
-use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
-use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Models\Dental\Notification;
-use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary;
-use DentalSleepSolutions\Eloquent\Models\Dental\ProfileImage;
-use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\HomeSleepTestRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\NotificationRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ProfileImageRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\SummaryRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Helpers\LetterTriggers\LettersToMDTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\LetterToPatientTrigger;
 use DentalSleepSolutions\Helpers\LetterTriggers\TreatmentCompleteTrigger;
@@ -666,12 +660,11 @@ class PatientsController extends BaseRestController
      * @param RegistrationEmailHandler $registrationEmailHandler
      * @param PreauthHelper $preauthHelper
      * @param SimilarHelper $similarHelper
-     * @param Patient $patientResource
      * @param PatientSummaryRepository $patientSummaryRepository
      * @param InsurancePreauthRepository $insurancePreauthRepository
      * @param SummaryRepository $summaryRepository
-     * @param Letter $letterResource
-     * @param User $userResource
+     * @param LetterRepository $letterRepository
+     * @param UserRepository $userRepository
      * @param Request $request
      * @param int|null $patientId
      * @return \Illuminate\Http\JsonResponse
@@ -686,12 +679,11 @@ class PatientsController extends BaseRestController
         RegistrationEmailHandler $registrationEmailHandler,
         PreauthHelper $preauthHelper,
         SimilarHelper $similarHelper,
-        Patient $patientResource,
         PatientSummaryRepository $patientSummaryRepository,
         InsurancePreauthRepository $insurancePreauthRepository,
         SummaryRepository $summaryRepository,
-        Letter $letterResource,
-        User $userResource,
+        LetterRepository $letterRepository,
+        UserRepository $userRepository,
         Request $request,
         $patientId = null
     ) {
@@ -706,7 +698,7 @@ class PatientsController extends BaseRestController
         $pressedButtons = $request->has('pressed_buttons') ? $request->input('pressed_buttons') : false;
 
         // get doc info by id
-        $docInfo = $userResource->getWithFilter('use_patient_portal', ['userid' => $docId]);
+        $docInfo = $userRepository->getWithFilter('use_patient_portal', ['userid' => $docId]);
 
         $docPatientPortal = false;
         if (count($docInfo)) {
@@ -865,9 +857,8 @@ class PatientsController extends BaseRestController
             }
 
             if ($unchangedPatient->login == '') {
-                $patientResource->updatePatient($patientId, ['login' => $uniqueLogin]);
+                $this->repository->updatePatient($patientId, ['login' => $uniqueLogin]);
             }
-
             // TODO: if it is required need to rewrite it to the new Laravel structure:
             /*
             if (!empty($_POST['copyreqdate'])) {
@@ -887,7 +878,7 @@ class PatientsController extends BaseRestController
                 if ($unchangedPatient->referred_source == 2 && $patientFormData['referred_source'] == 2) {
                     // physician -> physician
 
-                    $letterResource->updatePendingLettersToNewReferrer(
+                    $letterRepository->updatePendingLettersToNewReferrer(
                         $unchangedPatient->referred_by,
                         $patientFormData['referred_by'],
                         $patientId,
@@ -896,7 +887,7 @@ class PatientsController extends BaseRestController
                 } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] == 1) {
                     // patient -> patient
 
-                    $letterResource->updatePendingLettersToNewReferrer(
+                    $letterRepository->updatePendingLettersToNewReferrer(
                         $unchangedPatient->referred_by,
                         $patientFormData['referred_by'],
                         $patientId,
@@ -905,9 +896,10 @@ class PatientsController extends BaseRestController
                 } elseif ($unchangedPatient->referred_source == 2 && $patientFormData['referred_source'] != 2) {
                     // physician -> not physician
 
-                    $letters = $letterResource->getPhysicianOrPatientPendingLetters(
+                    $letters = $letterRepository->getPhysicianOrPatientPendingLetters(
                         $unchangedPatient->referred_by,
-                        $patientId
+                        $patientId,
+                        'physician'
                     );
 
                     if (count($letters)) {
@@ -920,7 +912,7 @@ class PatientsController extends BaseRestController
                 } elseif ($unchangedPatient->referred_source == 1 && $patientFormData['referred_source'] != 1) {
                     // patient -> not patient
 
-                    $letters = $letterResource->getPhysicianOrPatientPendingLetters(
+                    $letters = $letterRepository->getPhysicianOrPatientPendingLetters(
                         $unchangedPatient->referred_by,
                         $patientId,
                         'patient'
@@ -970,7 +962,7 @@ class PatientsController extends BaseRestController
                 'middlename' => !empty($patientFormData['middlename']) ? ucfirst($patientFormData['middlename']) : ''
             ]);
 
-            $createdPatientId = $patientResource->create($patientFormData)->patientid;
+            $createdPatientId = $this->repository->create($patientFormData)->patientid;
             $responseData['created_patient_id'] = $createdPatientId;
 
             if ($patientLocation) {
@@ -1071,22 +1063,22 @@ class PatientsController extends BaseRestController
      *
      * @param InsurancePreauthRepository $insurancePreauthRepository
      * @param ContactRepository $contactRepository
-     * @param Summary $summariesResource
-     * @param ProfileImage $profileImageResource
+     * @param SummaryRepository $summaryRepository
+     * @param ProfileImageRepository $profileImageRepository
      * @param LetterRepository $letterRepository
      * @param HomeSleepTestRepository $homeSleepTestRepository
-     * @param Notification $notificationResource
+     * @param NotificationRepository $notificationRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getDataForFillingPatientForm(
         InsurancePreauthRepository $insurancePreauthRepository,
         ContactRepository $contactRepository,
-        Summary $summariesResource,
-        ProfileImage $profileImageResource,
+        SummaryRepository $summaryRepository,
+        ProfileImageRepository $profileImageRepository,
         LetterRepository $letterRepository,
         HomeSleepTestRepository $homeSleepTestRepository,
-        Notification $notificationResource,
+        NotificationRepository $notificationRepository,
         Request $request
     ) {
         $patientId = 0;
@@ -1142,7 +1134,7 @@ class PatientsController extends BaseRestController
                     . ($shortInfo->contacttype != '' ? ' - ' . $shortInfo->contacttype : '');
             }
 
-            $foundLocations = $summariesResource->getWithFilter(['location'], ['patientid' => $patientId]);
+            $foundLocations = $summaryRepository->getWithFilter(['location'], ['patientid' => $patientId]);
 
             if (count($foundLocations)) {
                 $foundLocation = $foundLocations[0];
@@ -1152,11 +1144,11 @@ class PatientsController extends BaseRestController
             $data = [
                 // check if user has pending VOB
                 'pending_vob'                 => $insurancePreauthRepository->getPendingVob($patientId),
-                'profile_photo'               => $profileImageResource->getProfilePhoto($patientId),
+                'profile_photo'               => $profileImageRepository->getProfilePhoto($patientId),
                 'intro_letter'                => $letterRepository->getGeneratedDateOfIntroLetter($patientId),
-                'insurance_card_image'        => $profileImageResource->getInsuranceCardImage($patientId),
+                'insurance_card_image'        => $profileImageRepository->getInsuranceCardImage($patientId),
                 'uncompleted_home_sleep_test' => $homeSleepTestRepository->getUncompleted($patientId),
-                'patient_notification'        => $notificationResource->getWithFilter(null, [
+                'patient_notification'        => $notificationRepository->getWithFilter(null, [
                                                      'patientid' => $patientId,
                                                      'status'    => 1,
                                                  ]),
@@ -1252,10 +1244,9 @@ class PatientsController extends BaseRestController
      * )
      *
      * @param int $patientId
-     * @param Patient $patientResource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function resetAccessCode($patientId, Patient $patientResource)
+    public function resetAccessCode($patientId)
     {
         $accessCode = 0;
         $accessCodeDate = null;
@@ -1263,7 +1254,7 @@ class PatientsController extends BaseRestController
         if ($patientId > 0) {
             $accessCode = rand(100000, 999999);
             $accessCodeDate = Carbon::now();
-            $patientResource->updatePatient($patientId, [
+            $this->repository->updatePatient($patientId, [
                 'access_code'      => $accessCode,
                 'access_code_date' => $accessCodeDate,
             ]);

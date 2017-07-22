@@ -37,8 +37,12 @@ class LetterTemplate extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'name', 'template', 'body',
-        'default_letter','companyid', 'triggerid'
+        'name',
+        'template',
+        'body',
+        'default_letter',
+        'companyid',
+        'triggerid',
     ];
 
     /**

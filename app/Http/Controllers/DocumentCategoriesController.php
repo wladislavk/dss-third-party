@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\DocumentCategory;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\DocumentCategoryRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 

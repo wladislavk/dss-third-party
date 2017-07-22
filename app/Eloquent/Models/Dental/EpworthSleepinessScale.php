@@ -40,8 +40,12 @@ class EpworthSleepinessScale extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'epworth', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'epworth',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**
@@ -58,11 +62,6 @@ class EpworthSleepinessScale extends AbstractModel
      */
     protected $primaryKey = 'epworthid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
     public function getPlural()

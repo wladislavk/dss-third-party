@@ -42,31 +42,17 @@ class ExternalPatient extends AbstractModel
     protected $primaryKey = 'id';
 
     /**
-     * RELATIONS
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function patient () {
         return $this->hasOne(Patient::class, 'patientid', 'patient_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function externalCompany()
     {
         return $this->belongsTo(ExternalCompany::class, 'company_id', 'id');
-    }
-
-    public function getWithFilter($fields = [], $where = [])
-    {
-        $object = $this;
-
-        if (count($fields)) {
-            $object = $object->select($fields);
-        }
-
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
-        }
-
-        return $object->get();
     }
 }

@@ -40,8 +40,12 @@ class InsuranceType extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'ins_type', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'ins_type',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**
@@ -58,10 +62,5 @@ class InsuranceType extends AbstractModel
      */
     protected $primaryKey = 'ins_typeid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

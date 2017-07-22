@@ -2,8 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
-use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
@@ -310,11 +308,11 @@ class ContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Patient $patients
+     * @param PatientRepository $patientRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getReferredByContacts(Patient $patients, Request $request)
+    public function getReferredByContacts(PatientRepository $patientRepository, Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
@@ -333,9 +331,9 @@ class ContactsController extends BaseRestController
             }
         }
 
-        $referredByContacts->map(function ($contact) use ($patients, $isDetailed) {
+        $referredByContacts->map(function ($contact) use ($patientRepository, $isDetailed) {
             $counters = $this->getReferralCountersForContact(
-                $patients,
+                $patientRepository,
                 $contact->contactid,
                 $contact->referral_type,
                 $isDetailed

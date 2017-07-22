@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DB;
 
 /**
  * @SWG\Definition(
@@ -263,17 +262,18 @@ class User extends AbstractModel
         'registration_date', 'suspended_date'
     ];
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function externalCompanyPivot(){
         return $this->belongsTo(ExternalCompanyUser::class, 'userid', 'user_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function externalCompany()
     {
         return $this->externalCompanyPivot->belongsTo(ExternalCompany::class, 'company_id', 'id');

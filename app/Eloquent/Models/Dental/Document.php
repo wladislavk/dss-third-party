@@ -58,15 +58,10 @@ class Document extends AbstractModel
      */
     protected $primaryKey = 'documentid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 
     /**
-     * RELATIONS
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function category()
     {

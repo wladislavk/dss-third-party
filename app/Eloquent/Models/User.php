@@ -49,11 +49,4 @@ class User extends AbstractModel implements AuthenticatableContract
             return false;
         });
     }
-
-    public static function findByIdOrEmail($id)
-    {
-        return self::where(function ($q) use ($id) {
-            $q->where('email', $id)->orWhere('id', $id);
-        })->first();
-    }
 }

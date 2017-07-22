@@ -47,8 +47,11 @@ class UserCompany extends AbstractModel
      */
     public $timestamps = false;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function company()
     {
-        $this->belongsTo(Company::class, 'companyid');
+        return $this->belongsTo(Company::class, 'companyid');
     }
 }

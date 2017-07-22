@@ -85,10 +85,5 @@ class CorporateContact extends AbstractModel
      */
     protected $primaryKey = 'contactid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

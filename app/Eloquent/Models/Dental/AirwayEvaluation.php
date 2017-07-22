@@ -101,10 +101,5 @@ class AirwayEvaluation extends AbstractModel
      */
     protected $primaryKey = 'ex_page3id';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

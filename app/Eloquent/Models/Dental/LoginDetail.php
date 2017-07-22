@@ -38,8 +38,11 @@ class LoginDetail extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'loginid', 'userid', 'cur_page',
-        'adddate', 'ip_address'
+        'loginid',
+        'userid',
+        'cur_page',
+        'adddate',
+        'ip_address',
     ];
 
     /**
@@ -56,10 +59,5 @@ class LoginDetail extends AbstractModel
      */
     protected $primaryKey = 'l_detailid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

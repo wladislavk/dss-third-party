@@ -45,9 +45,16 @@ class PatientSummary extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'pid', 'fspage1_complete', 'next_visit',
-        'last_visit', 'last_treatment', 'appliance',
-        'delivery_date', 'vob', 'ledger', 'patient_info'
+        'pid',
+        'fspage1_complete',
+        'next_visit',
+        'last_visit',
+        'last_treatment',
+        'appliance',
+        'delivery_date',
+        'vob',
+        'ledger',
+        'patient_info',
     ];
 
     /**

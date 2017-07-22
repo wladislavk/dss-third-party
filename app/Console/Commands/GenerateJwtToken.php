@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Console\Commands;
 
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use Illuminate\Console\Command;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use DentalSleepSolutions\Eloquent\Models\User;
@@ -29,14 +30,23 @@ class GenerateJwtToken extends Command
      */
     protected $description = 'Generate JWT token for a user.';
 
+    /** @var UserRepository */
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        parent::__construct();
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
     public function handle()
     {
-        $user = User::findByIdOrEmail($this->argument('id'));
+        $user = $this->userRepository->findByIdOrEmail($this->argument('id'));
 
         if (!$user) {
             exit(0);

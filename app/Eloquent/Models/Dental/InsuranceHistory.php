@@ -655,10 +655,5 @@ class InsuranceHistory extends AbstractModel
      */
     protected $dates = ['mailed_date', 'sec_mailed_date', 'percase_date'];
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

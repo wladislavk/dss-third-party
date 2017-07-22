@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Helpers\LetterTriggers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;
@@ -12,13 +12,13 @@ abstract class AbstractLetterTrigger
     /** @var LetterCreator */
     protected $letterCreator;
 
-    /** @var Letter */
-    protected $letterModel;
+    /** @var LetterRepository */
+    protected $letterRepository;
 
-    public function __construct(LetterCreator $letterCreator, Letter $letterModel)
+    public function __construct(LetterCreator $letterCreator, LetterRepository $letterRepository)
     {
         $this->letterCreator = $letterCreator;
-        $this->letterModel = $letterModel;
+        $this->letterRepository = $letterRepository;
     }
 
     /**

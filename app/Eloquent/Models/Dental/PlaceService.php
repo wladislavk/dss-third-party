@@ -40,8 +40,12 @@ class PlaceService extends AbstractModel
      * @var array
      */
     protected $fillable = [
-        'place_service', 'description', 'sortby',
-        'status', 'adddate', 'ip_address'
+        'place_service',
+        'description',
+        'sortby',
+        'status',
+        'adddate',
+        'ip_address',
     ];
 
     /**
@@ -58,10 +62,5 @@ class PlaceService extends AbstractModel
      */
     protected $primaryKey = 'place_serviceid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

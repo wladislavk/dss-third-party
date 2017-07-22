@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\ExternalPatient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\ExternalBaseController;
 use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
@@ -18,11 +18,11 @@ class ExternalPatientController extends ExternalBaseController
     /**
      * Display the specified resource.
      *
-     * @param ExternalPatient $resources
+     * @param ExternalPatientRepository $repository
      * @param \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(ExternalPatient $resources, ExternalPatientStore $request) {
+    public function store(ExternalPatientRepository $repository, ExternalPatientStore $request) {
         $transformer = new Transformer;
         $data = $transformer->fromTransform($request->all());
 
@@ -42,13 +42,10 @@ class ExternalPatientController extends ExternalBaseController
             unset($patientData['p_m_address2']);
         }
 
-        $externalPatient = $resources
-            ->where('software', $externalCompanyId)
-            ->where('external_id', $externalPatientId)
-            ->first();
+        $externalPatient = $repository->findByExternalCompanyAndPatient($externalCompanyId, $externalPatientId);
 
         if (!$externalPatient) {
-            $externalPatient = $resources->create($externalPatientData);
+            $externalPatient = $repository->create($externalPatientData);
         } else {
             $externalPatient->update($externalPatientData);
             $externalPatient->update(['dirty' => 1]);

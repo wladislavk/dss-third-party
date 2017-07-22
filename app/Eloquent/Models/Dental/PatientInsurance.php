@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DB;
 
 /**
  * @SWG\Definition(

@@ -93,10 +93,5 @@ class Procedure extends AbstractModel
      */
     protected $primaryKey = 'procedureid';
 
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
     const CREATED_AT = 'adddate';
 }

@@ -3,9 +3,9 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
-use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactTypeRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -263,26 +263,27 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param User $userResource
-     * @param ContactType $contactTypeResource
+     * @param UserRepository $userRepository
+     * @param ContactTypeRepository $contactTypeRepository
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function createWelcomeLetter(
-        User $userResource,
-        ContactType $contactTypeResource,
+        UserRepository $userRepository,
+        ContactTypeRepository $contactTypeRepository,
         Request $request
     ) {
         $docId = $this->currentUser->docid ?: 0;
 
-        $letterInfo = $userResource->getLetterInfo($docId);
+        $letterInfo = $userRepository->getLetterInfo($docId);
 
         $templateId = $request->input('template_id', 0);
         $contactTypeId = $request->input('contact_type_id', 0);
 
         $data = [];
         if ($letterInfo && $letterInfo->use_letters && $letterInfo->intro_letters) {
-            $contactType = $contactTypeResource->find($contactTypeId);
+            /** @var ContactType|null $contactType */
+            $contactType = $contactTypeRepository->find($contactTypeId);
 
             if ($contactType && $contactType->physician == 1) {
                 if ($this->currentUser->user_type != self::DSS_USER_TYPE_SOFTWARE) {

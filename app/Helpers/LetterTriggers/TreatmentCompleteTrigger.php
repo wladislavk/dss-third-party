@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers\LetterTriggers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;
@@ -29,10 +29,10 @@ class TreatmentCompleteTrigger extends AbstractLetterTrigger
 
     public function __construct(
         LetterCreator $letterCreator,
-        Letter $letterModel,
+        LetterRepository $letterRepository,
         PatientRepository $patientRepository
     ) {
-        parent::__construct($letterCreator, $letterModel);
+        parent::__construct($letterCreator, $letterRepository);
         $this->patientRepository = $patientRepository;
     }
 
@@ -60,7 +60,7 @@ class TreatmentCompleteTrigger extends AbstractLetterTrigger
         if (!$patientReferralIds) {
             return false;
         }
-        $letters = $this->letterModel->getPatientTreatmentComplete($patientId, $patientReferralIds);
+        $letters = $this->letterRepository->getPatientTreatmentComplete($patientId, $patientReferralIds);
         if (count($letters)) {
             return false;
         }

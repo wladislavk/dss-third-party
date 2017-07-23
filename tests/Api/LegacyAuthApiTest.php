@@ -1,13 +1,10 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\ApiTestCase;
 
 class LegacyAuthApiTest extends ApiTestCase
 {
-    use DatabaseTransactions;
-
     /** @test */
     public function testLegacyHashingAlgorithm()
     {

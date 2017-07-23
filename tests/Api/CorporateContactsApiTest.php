@@ -1,15 +1,11 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Dental\CorporateContact;
 use Tests\TestCases\ApiTestCase;
 
 class CorporateContactsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/corporate-contacts -> CorporateContactsController@store method

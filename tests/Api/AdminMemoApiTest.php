@@ -2,16 +2,10 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\MemoAdmin;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\ApiTestCase;
 
 class AdminMemoApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    protected $memo_id;
-
     /**
      * Tests the post method of the Dental Sleep Solutions API
      * Posts to /api/v1/post -> Api/ApiAdminMemoController@post method
@@ -25,8 +19,8 @@ class AdminMemoApiTest extends ApiTestCase
             'last_update' => $date,
             'off_date' => date('Y-m-d', strtotime("$date +7 days")),
         ];
+        $this->post('/api/v1/memo', $data);
         $this
-            ->post('/api/v1/memo', $data)
             ->seeStatusCode(200)
             ->seeJsonContains(['status' => true])
             ->seeInDatabase('memo_admin', ['memo' => 'PHPUnit Inserted Test Memo'])

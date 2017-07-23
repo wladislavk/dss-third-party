@@ -1,8 +1,6 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCases\ApiTestCase;
@@ -10,9 +8,6 @@ use DentalSleepSolutions\Eloquent\Dental\ContactType;
 
 class ContactTypesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware;
-    use DatabaseTransactions;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/contact-types -> Api/ApiContactTypesController@store method

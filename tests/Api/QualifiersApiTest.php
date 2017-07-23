@@ -1,15 +1,11 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Dental\Qualifier;
 use Tests\TestCases\ApiTestCase;
 
 class QualifiersApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/qualifiers -> QualifiersController@store method

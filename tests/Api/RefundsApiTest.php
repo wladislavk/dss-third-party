@@ -1,15 +1,11 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Dental\Refund;
 use Tests\TestCases\ApiTestCase;
 
 class RefundsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/refunds -> RefundsController@store method

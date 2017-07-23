@@ -1,16 +1,11 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
 use DentalSleepSolutions\Eloquent\Admin;
 use Tests\TestCases\ApiTestCase;
 
 class AdminsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/admins -> AdminsController@post method

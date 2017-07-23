@@ -3,15 +3,11 @@ namespace Tests\Api;
 
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\ApiTestCase;
 use DentalSleepSolutions\Eloquent\Dental\Device;
 
 class DevicesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/device -> Api/ApiDeviceController@store method

@@ -1,16 +1,12 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Dental\Calendar;
 use Tests\TestCases\ApiTestCase;
 
 class CalendarsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
     /**
      * Test the post method of the Dental Sleep Solutions API
      * Post to /api/v1/calendars -> CalendarsController@store method

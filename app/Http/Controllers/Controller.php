@@ -60,7 +60,7 @@ abstract class Controller extends BaseController
         $authUserData = $auth->toUser();
 
         if (!$userData) {
-            return $userData;
+            return null;
         }
 
         if (!is_array($authUserData)) {
@@ -167,7 +167,7 @@ abstract class Controller extends BaseController
     {
         $modelPrefix = preg_quote($modelPrefix);
 
-        if (preg_match($user->id, "/^{$modelPrefix}(?P<id>\d+)$/", $matches)) {
+        if (preg_match("/^{$modelPrefix}(?P<id>\d+)$/", $user->id, $matches)) {
             $user->id = $matches['id'];
             return $user;
         }

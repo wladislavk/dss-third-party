@@ -92,11 +92,7 @@ class ExternalCompaniesController extends BaseRestController
         $this->validate($this->request, $this->request->storeRules());
         $data = $this->request->all();
 
-        /**
-         * @ToDo: Handle admin tokens
-         * @see AWS-19-Request-Token
-         */
-        $data['created_by'] = $this->currentUser->id;
+        $data['created_by'] = $this->currentAdmin->id;
         $resource = $this->resources->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
@@ -128,11 +124,8 @@ class ExternalCompaniesController extends BaseRestController
         /** @var Resource $resource */
         $resource = $this->resources->findOrFail($id);
         $data = $this->request->all();
-        /**
-         * @ToDo: Handle admin tokens
-         * @see AWS-19-Request-Token
-         */
-        $data['updated_by'] = $this->currentUser->id;
+
+        $data['updated_by'] = $this->currentAdmin->id;
         $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');

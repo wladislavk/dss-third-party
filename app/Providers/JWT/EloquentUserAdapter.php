@@ -34,6 +34,7 @@ class EloquentUserAdapter implements UserInterface
         return $this->user->whereIn($key, $value)
             ->orderBy('id', 'ASC')
             ->get()
-            ->all();
+            ->all()
+        ;
     }
 }

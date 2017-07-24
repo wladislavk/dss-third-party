@@ -5,9 +5,9 @@ namespace Tests\Command;
 use DentalSleepSolutions\Console\Commands\GenerateSwaggerCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Tests\TestCases\ApiTestCase;
+use Tests\TestCases\BaseApiTestCase;
 
-class GenerateSwaggerCommandTest extends ApiTestCase
+class GenerateSwaggerCommandTest extends BaseApiTestCase
 {
     const FIRST_MODEL = __DIR__ . '/../Dummies/Eloquent/FirstDummy.php';
     const SECOND_MODEL = __DIR__ . '/../Dummies/Eloquent/SecondDummy.php';

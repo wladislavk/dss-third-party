@@ -6,54 +6,32 @@ use Tests\TestCases\ApiTestCase;
 
 class JointExamsApiTest extends ApiTestCase
 {
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/joint-exams -> JointExamsController@store method
-     * 
-     */
-    public function testAddJointExam()
+    protected function getModel()
     {
-        $data = factory(JointExam::class)->make()->toArray();
-
-        $data['joint_exam'] = 'test joint exam';
-
-        $this->post('/api/v1/joint-exams', $data)
-            ->seeInDatabase('dental_joint_exam', ['joint_exam' => 'test joint exam'])
-            ->assertResponseOk();
+        return JointExam::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/joint-exams/{id} -> JointExamsController@update method
-     * 
-     */
-    public function testUpdateJointExam()
+    protected function getRoute()
     {
-        $jointExamTestRecord = factory(JointExam::class)->create();
+        return '/joint-exams';
+    }
 
-        $data = [
-            'description' => 'updated test joint exam',
-            'status'      => '7'
+    protected function getStoreData()
+    {
+        return [
+            "joint_exam" => "test joint exam",
+            "description" => "Consequatur deleniti corrupti voluptatibus.",
+            "sortby" => 3,
+            "status" => 0,
+            "adddate" => "1991-07-03 09:07:19",
         ];
-
-        $this->put('/api/v1/joint-exams/' . $jointExamTestRecord->joint_examid, $data)
-            ->seeInDatabase('dental_joint_exam', ['status' => '7'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/joint-exams/{id} -> JointExamsController@destroy method
-     * 
-     */
-    public function testDeleteJointExam()
+    protected function getUpdateData()
     {
-        $jointExamTestRecord = factory(JointExam::class)->create();
-
-        $this->delete('/api/v1/joint-exams/' . $jointExamTestRecord->joint_examid)
-            ->notSeeInDatabase('dental_joint_exam', [
-                'joint_examid' => $jointExamTestRecord->joint_examid
-            ])
-            ->assertResponseOk();
+        return [
+            'description' => 'updated test joint exam',
+            'status'      => '7',
+        ];
     }
 }

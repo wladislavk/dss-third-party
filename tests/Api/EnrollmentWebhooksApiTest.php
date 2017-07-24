@@ -2,10 +2,14 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
-use Tests\TestCases\ApiTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCases\BaseApiTestCase;
 
-class EnrollmentWebhooksApiTest extends ApiTestCase
+class EnrollmentWebhooksApiTest extends BaseApiTestCase
 {
+    use WithoutMiddleware, DatabaseTransactions;
+
     /** @var array */
     private $enrollmentStatusRequest = [
         'event' => 'enrollment_status',

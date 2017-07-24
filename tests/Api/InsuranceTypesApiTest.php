@@ -6,54 +6,32 @@ use Tests\TestCases\ApiTestCase;
 
 class InsuranceTypesApiTest extends ApiTestCase
 {
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/insurance-types -> InsuranceTypesController@store method
-     * 
-     */
-    public function testAddInsuranceType()
+    protected function getModel()
     {
-        $data = factory(InsuranceType::class)->make()->toArray();
-
-        $data['sortby'] = 100;
-
-        $this->post('/api/v1/insurance-types', $data)
-            ->seeInDatabase('dental_ins_type', ['sortby' => 100])
-            ->assertResponseOk();
+        return InsuranceType::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/insurance-types/{id} -> InsuranceTypesController@update method
-     * 
-     */
-    public function testUpdateInsuranceType()
+    protected function getRoute()
     {
-        $insuranceTypeTestRecord = factory(InsuranceType::class)->create();
+        return '/insurance-types';
+    }
 
-        $data = [
-            'description' => 'updated insurance type',
-            'status'      => 3
+    protected function getStoreData()
+    {
+        return [
+            "ins_type" => "Voluptatem qui non numquam.",
+            "description" => "Ipsum temporibus enim accusantium laboriosam eos qui doloremque.",
+            "sortby" => 100,
+            "status" => 5,
+            "adddate" => "1984-06-29 01:26:27",
         ];
-
-        $this->put('/api/v1/insurance-types/' . $insuranceTypeTestRecord->ins_typeid, $data)
-            ->seeInDatabase('dental_ins_type', ['description' => 'updated insurance type'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/insurance-types/{id} -> InsuranceTypesController@destroy method
-     * 
-     */
-    public function testDeleteInsuranceType()
+    protected function getUpdateData()
     {
-        $insuranceTypeTestRecord = factory(InsuranceType::class)->create();
-
-        $this->delete('/api/v1/insurance-types/' . $insuranceTypeTestRecord->ins_typeid)
-            ->notSeeInDatabase('dental_ins_type', [
-                'ins_typeid' => $insuranceTypeTestRecord->ins_typeid
-            ])
-            ->assertResponseOk();
+        return [
+            'description' => 'updated insurance type',
+            'status'      => 3,
+        ];
     }
 }

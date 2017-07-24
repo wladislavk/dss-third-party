@@ -4,10 +4,10 @@ namespace Tests\Functional;
 use DentalSleepSolutions\Eloquent\Payer;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Tests\TestCases\ApiTestCase;
+use Tests\TestCases\BaseApiTestCase;
 
 // TODO: check if this test is needed
-class PayersApiTest extends ApiTestCase
+class PayersApiTest extends BaseApiTestCase
 {
     use DatabaseTransactions, WithoutMiddleware;
 

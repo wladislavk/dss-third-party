@@ -6,54 +6,33 @@ use Tests\TestCases\ApiTestCase;
 
 class FaxInvoicesApiTest extends ApiTestCase
 {
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/fax-invoices -> FaxInvoicesController@store method
-     * 
-     */
-    public function testAddFaxInvoice()
+    protected function getModel()
     {
-        $data = factory(FaxInvoice::class)->make()->toArray();
-
-        $data['invoice_id'] = 10;
-
-        $this->post('/api/v1/fax-invoices', $data)
-            ->seeInDatabase('dental_fax_invoice', ['invoice_id' => 10])
-            ->assertResponseOk();
+        return FaxInvoice::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/fax-invoices/{id} -> FaxInvoicesController@update method
-     * 
-     */
-    public function testUpdateFaxInvoice()
+    protected function getRoute()
     {
-        $faxInvoiceTestRecord = factory(FaxInvoice::class)->create();
+        return '/fax-invoices';
+    }
 
-        $data = [
-            'invoice_id' => 100,
-            'amount'     => 5.55
+    protected function getStoreData()
+    {
+        return [
+            'invoice_id' => 10,
+            "description" => "Earum delectus dicta porro et debitis.",
+            "start_date" => "2017-07-25",
+            "end_date" => "2017-08-03",
+            "amount" => "5.11",
+            "adddate" => "2017-07-24 10:45:09",
         ];
-
-        $this->put('/api/v1/fax-invoices/' . $faxInvoiceTestRecord->id, $data)
-            ->seeInDatabase('dental_fax_invoice', ['amount' => 5.55])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/fax-invoices/{id} -> FaxInvoicesController@destroy method
-     * 
-     */
-    public function testDeleteFaxInvoice()
+    protected function getUpdateData()
     {
-        $faxInvoiceTestRecord = factory(FaxInvoice::class)->create();
-
-        $this->delete('/api/v1/fax-invoices/' . $faxInvoiceTestRecord->id)
-            ->notSeeInDatabase('dental_fax_invoice', [
-                'id' => $faxInvoiceTestRecord->id
-            ])
-            ->assertResponseOk();
+        return [
+            'invoice_id' => 100,
+            'amount'     => 5.55,
+        ];
     }
 }

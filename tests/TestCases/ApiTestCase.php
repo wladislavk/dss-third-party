@@ -11,10 +11,11 @@ abstract class ApiTestCase extends BaseApiTestCase
 
     const ROUTE_PREFIX = '/api/v1';
 
-    protected $table;
-
     /** @var int */
     protected $userId = 100;
+
+    /** @var Model */
+    protected $model;
 
     /**
      * @return string
@@ -26,43 +27,64 @@ abstract class ApiTestCase extends BaseApiTestCase
      */
     abstract protected function getRoute();
 
+    /**
+     * @return array
+     */
+    abstract protected function getStoreData();
+
+    /**
+     * @return array
+     */
+    abstract protected function getUpdateData();
+
     public function setUp()
     {
         parent::setUp();
         $modelClass = $this->getModel();
-        /** @var Model $model */
-        $model = new $modelClass();
-        $this->table = $model->getTable();
+        $this->model = new $modelClass();
     }
 
     public function testStore()
     {
-        $data = factory($this->getModel())->make()->toArray();
-
-        $data['userid'] = $this->userId;
-
-        $this->post(self::ROUTE_PREFIX . $this->getRoute(), $data);
+        $this->post(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
         $this->assertResponseOk();
-        $this->seeInDatabase($this->table, ['userid' => $this->userId]);
+
+        // uncomment this line to debug the actual created record
+        //$this->verifyCreation(["amount" => "5.11"]);
+
+        $this->seeInDatabase($this->model->getTable(), $this->getStoreData());
     }
 
     public function testUpdate()
     {
         $testRecord = factory($this->getModel())->create();
 
-        $data['adminid'] = $this->userId;
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
 
-        $this->put(self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->id, $data);
+        $this->put($endpoint, $this->getUpdateData());
         $this->assertResponseOk();
-        $this->seeInDatabase($this->table, ['adminid' => $this->userId]);
+        $this->seeInDatabase($this->model->getTable(), $this->getUpdateData());
     }
 
     public function testDestroy()
     {
         $testRecord = factory($this->getModel())->create();
 
-        $this->delete(self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->id);
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
+
+        $this->delete($endpoint);
         $this->assertResponseOk();
-        $this->notSeeInDatabase($this->table, ['id' => $testRecord->id]);
+        $this->notSeeInDatabase($this->model->getTable(), [$primaryKey => $testRecord->id]);
+    }
+
+    private function verifyCreation(array $where)
+    {
+        $database = $this->app->make('db');
+        $connection = $database->getDefaultConnection();
+        $new = $database->connection($connection)->table($this->model->getTable())
+            ->where($where)->first();
+        var_dump($new);
     }
 }

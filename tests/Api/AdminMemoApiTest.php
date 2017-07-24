@@ -6,53 +6,33 @@ use Tests\TestCases\ApiTestCase;
 
 class AdminMemoApiTest extends ApiTestCase
 {
-    /**
-     * Tests the post method of the Dental Sleep Solutions API
-     * Posts to /api/v1/post -> Api/ApiAdminMemoController@post method
-     *
-     */
-    public function testAddMemo()
+    protected function getModel()
+    {
+        return MemoAdmin::class;
+    }
+
+    protected function getRoute()
+    {
+        return '/memo';
+    }
+
+    protected function getStoreData()
     {
         $date = date("Y-m-d");
-        $data = [
+        return [
             'memo' => 'PHPUnit Inserted Test Memo',
             'last_update' => $date,
             'off_date' => date('Y-m-d', strtotime("$date +7 days")),
         ];
-        $this->post('/api/v1/memo', $data);
-        $this
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
-            ->seeInDatabase('memo_admin', ['memo' => 'PHPUnit Inserted Test Memo'])
-        ;
     }
 
-    public function testUpdateMemo()
+    protected function getUpdateData()
     {
-        $adminMemoTestRecord = factory(MemoAdmin::class)->create();
-
         $date = date("Y-m-d");
-        $data = [
+        return [
             'memo' => 'PHPUnit Updated Test Memo',
             'last_update' => $date,
             'off_date' => date('Y-m-d', strtotime("$date +7 days")),
         ];
-        $this
-            ->put('/api/v1/memo/'.$adminMemoTestRecord->memo_id, $data)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
-            ->seeInDatabase('memo_admin', ['memo' => 'PHPUnit Updated Test Memo'])
-        ;
-    }
-
-    public function testDeleteMemo()
-    {
-        $adminMemoTestRecord = factory(MemoAdmin::class)->create();
-        $this
-            ->delete('/api/v1/memo/'.$adminMemoTestRecord->memo_id)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => true])
-            ->notSeeInDatabase('memo_admin', ['memo' => 'PHPUnit Updated Test Memo'])
-        ;
     }
 }

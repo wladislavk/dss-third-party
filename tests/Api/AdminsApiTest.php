@@ -6,15 +6,20 @@ use Tests\TestCases\ApiTestCase;
 
 class AdminsApiTest extends ApiTestCase
 {
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/admins -> AdminsController@post method
-     * 
-     */
-    public function testAddAdmin()
+    protected function getModel()
+    {
+        return Admin::class;
+    }
+
+    protected function getRoute()
+    {
+        return '/admins';
+    }
+
+    protected function getStoreData()
     {
         $username = 'new' . date('Y-m-d H:i:s');
-        $data = [
+        return [
             'name'               => 'PHPUnit admin',
             'username'           => $username,
             'password'           => 'testPassword',
@@ -22,45 +27,16 @@ class AdminsApiTest extends ApiTestCase
             'admin_access'       => 4,
             'email'              => 'test@email.com',
             'first_name'         => 'testFirstName',
-            'last_name'          => 'testLastName'
+            'last_name'          => 'testLastName',
         ];
-
-        $this->post('/api/v1/admins', $data)
-            ->seeInDatabase('admin', ['name' => 'PHPUnit admin'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/admins/{adminId} -> AdminsController@update method
-     * 
-     */
-    public function testUpdateAdmin()
+    protected function getUpdateData()
     {
-        $adminTestRecord = factory(Admin::class)->create();
-
-        $data = [
+        return [
             'name'       => 'PHPUnit updated admin',
             'first_name' => 'testFirstNameUpdated',
-            'password'   => 'test'
+            'password'   => 'test',
         ];
-
-        $this->put('/api/v1/admins/' . $adminTestRecord->adminid, $data)
-            ->seeInDatabase('admin', ['name' => 'PHPUnit updated admin'])
-            ->assertResponseOk();
-    }
-
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/admins/{adminId} -> AdminsController@destroy method
-     * 
-     */
-    public function testDeleteAdmin()
-    {
-        $adminTestRecord = factory(Admin::class)->create();
-
-        $this->delete('/api/v1/admins/' . $adminTestRecord->adminid)
-            ->notSeeInDatabase('admin', ['adminid' => $adminTestRecord->adminid])
-            ->assertResponseOk();
     }
 }

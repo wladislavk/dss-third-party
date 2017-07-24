@@ -2,10 +2,14 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
-use Tests\TestCases\ApiTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCases\BaseApiTestCase;
 
-class EligibleEnrollmentApiTest extends ApiTestCase
+class EligibleEnrollmentApiTest extends BaseApiTestCase
 {
+    use WithoutMiddleware, DatabaseTransactions;
+
     public function testUpdateEnrollment()
     {
         /** @var Enrollment $enrollment */

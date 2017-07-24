@@ -6,56 +6,32 @@ use Tests\TestCases\ApiTestCase;
 
 class IntolerancesApiTest extends ApiTestCase
 {
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/intolerances -> IntolerancesController@store method
-     * 
-     */
-    public function testAddIntolerance()
+    protected function getModel()
     {
-        $data = factory(Intolerance::class)->make()->toArray();
-
-        $data['description'] = 'Test intolerance description';
-
-        $this->post('/api/v1/intolerances', $data)
-            ->seeInDatabase('dental_intolerance', ['description' => 'Test intolerance description'])
-            ->assertResponseOk();
+        return Intolerance::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/intolerances/{id} -> IntolerancesController@update method
-     * 
-     */
-    public function testUpdateIntolerance()
+    protected function getRoute()
     {
-        $intoleranceTestRecord = factory(Intolerance::class)->create();
+        return '/intolerances';
+    }
 
-        $data = [
-            'description' => 'updated intolerance description',
-            'status'      => 8
+    protected function getStoreData()
+    {
+        return [
+            "intolerance" => "Necessitatibus cumque ut nemo minima excepturi.",
+            "description" => "Test intolerance description",
+            "sortby" => 8,
+            "status" => 0,
+            "adddate" => "2009-10-24 19:44:55",
         ];
-
-        $this->put('/api/v1/intolerances/' . $intoleranceTestRecord->intoleranceid, $data)
-            ->seeInDatabase('dental_intolerance', [
-                'description' => 'updated intolerance description'
-            ])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/intolerances/{id} -> IntolerancesController@destroy method
-     * 
-     */
-    public function testDeleteIntolerance()
+    protected function getUpdateData()
     {
-        $intoleranceTestRecord = factory(Intolerance::class)->create();
-
-        $this->delete('/api/v1/intolerances/' . $intoleranceTestRecord->intoleranceid)
-            ->notSeeInDatabase('dental_intolerance', [
-                'intoleranceid' => $intoleranceTestRecord->intoleranceid
-            ])
-            ->assertResponseOk();
+        return [
+            'description' => 'updated intolerance description',
+            'status'      => 8,
+        ];
     }
 }

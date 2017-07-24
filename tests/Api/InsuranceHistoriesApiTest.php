@@ -6,62 +6,46 @@ use Tests\TestCases\ApiTestCase;
 
 class InsuranceHistoriesApiTest extends ApiTestCase
 {
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/insurance-histories -> InsuranceHistoriesController@store method
-     * 
-     */
-    public function testAddInsuranceHistory()
+    protected function getModel()
     {
-        $this->markTestSkipped('Column \'fo_paid_viewed\' does not exist in the DB');
-        return;
+        return InsuranceHistory::class;
+    }
+
+    protected function getRoute()
+    {
+        return '/insurance-histories';
+    }
+
+    protected function getStoreData()
+    {
         $data = factory(InsuranceHistory::class)->make()->toArray();
 
         $data['userid'] = 100;
-
-        $this->post('/api/v1/insurance-histories', $data)
-            ->seeInDatabase('dental_insurance_history', ['userid' => 100])
-            ->assertResponseOk();
+        return $data;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/insurance-histories/{id} -> InsuranceHistoriesController@update method
-     * 
-     */
-    public function testUpdateInsuranceHistory()
+    protected function getUpdateData()
     {
-        $this->markTestSkipped('Column \'fo_paid_viewed\' does not exist in the DB');
-        return;
-
-        $insuranceHistoryTestRecord = factory(InsuranceHistory::class)->create();
-
-        $data = [
+        return [
             'patientid'        => 7,
-            'patient_lastname' => 'test lastname'
+            'patient_lastname' => 'test lastname',
         ];
-
-        $this->put('/api/v1/insurance-histories/' . $insuranceHistoryTestRecord->id, $data)
-            ->seeInDatabase('dental_insurance_history', ['patient_lastname' => 'test lastname'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/insurance-histories/{id} -> InsuranceHistoriesController@destroy method
-     * 
-     */
-    public function testDeleteInsuranceHistory()
+    // @todo: Restore these tests
+
+    public function testStore()
     {
         $this->markTestSkipped('Column \'fo_paid_viewed\' does not exist in the DB');
-        return;
+    }
 
-        $insuranceHistoryTestRecord = factory(InsuranceHistory::class)->create();
+    public function testUpdate()
+    {
+        $this->markTestSkipped('Column \'fo_paid_viewed\' does not exist in the DB');
+    }
 
-        $this->delete('/api/v1/insurance-histories/' . $insuranceHistoryTestRecord->id)
-            ->notSeeInDatabase('dental_insurance_history', [
-                'id' => $insuranceHistoryTestRecord->id
-            ])
-            ->assertResponseOk();
+    public function testDestroy()
+    {
+        $this->markTestSkipped('Column \'fo_paid_viewed\' does not exist in the DB');
     }
 }

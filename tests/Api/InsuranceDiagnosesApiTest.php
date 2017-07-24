@@ -6,54 +6,32 @@ use Tests\TestCases\ApiTestCase;
 
 class InsuranceDiagnosesApiTest extends ApiTestCase
 {
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/insurance-diagnoses -> InsuranceDiagnosesController@store method
-     * 
-     */
-    public function testAddInsuranceDiagnosis()
+    protected function getModel()
     {
-        $data = factory(InsuranceDiagnosis::class)->make()->toArray();
-
-        $data['sortby'] = 100;
-
-        $this->post('/api/v1/insurance-diagnoses', $data)
-            ->seeInDatabase('dental_ins_diagnosis', ['sortby' => 100])
-            ->assertResponseOk();
+        return InsuranceDiagnosis::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/insurance-diagnoses/{id} -> InsuranceDiagnosesController@update method
-     * 
-     */
-    public function testUpdateInsuranceDiagnosis()
+    protected function getRoute()
     {
-        $insuranceDiagnosisTestRecord = factory(InsuranceDiagnosis::class)->create();
+        return '/insurance-diagnoses';
+    }
 
-        $data = [
-            'description' => 'updated insurance diagnosis',
-            'status'      => 5
+    protected function getStoreData()
+    {
+        return [
+            "ins_diagnosis" => "053.13 POSTHERPETIC POLYNEUROPATHY (6)",
+            "description" => "Aspernatur dignissimos autem pariatur repudiandae molestias reiciendis.",
+            "sortby" => 100,
+            "status" => 3,
+            "adddate" => "1995-11-26 05:42:06",
         ];
-
-        $this->put('/api/v1/insurance-diagnoses/' . $insuranceDiagnosisTestRecord->ins_diagnosisid, $data)
-            ->seeInDatabase('dental_ins_diagnosis', ['description' => 'updated insurance diagnosis'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/insurance-diagnoses/{id} -> InsuranceDiagnosesController@destroy method
-     * 
-     */
-    public function testDeleteInsuranceDiagnosis()
+    protected function getUpdateData()
     {
-        $insuranceDiagnosisTestRecord = factory(InsuranceDiagnosis::class)->create();
-
-        $this->delete('/api/v1/insurance-diagnoses/' . $insuranceDiagnosisTestRecord->ins_diagnosisid)
-            ->notSeeInDatabase('dental_ins_diagnosis', [
-                'ins_diagnosisid' => $insuranceDiagnosisTestRecord->ins_diagnosisid
-            ])
-            ->assertResponseOk();
+        return [
+            'description' => 'updated insurance diagnosis',
+            'status'      => 5,
+        ];
     }
 }

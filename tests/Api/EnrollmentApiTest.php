@@ -2,13 +2,17 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Dental\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
-use Tests\TestCases\ApiTestCase;
+use Tests\TestCases\BaseApiTestCase;
 
-class EnrollmentApiTest extends ApiTestCase
+class EnrollmentApiTest extends BaseApiTestCase
 {
+    use WithoutMiddleware, DatabaseTransactions;
+
     /** @var int */
     private $enrollmentId = 0;
 

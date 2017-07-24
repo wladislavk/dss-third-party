@@ -6,55 +6,29 @@ use Tests\TestCases\ApiTestCase;
 
 class EpworthSleepinessScaleApiTest extends ApiTestCase
 {
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/epworth-sleepiness-scale -> EpworthSleepinessScaleController@store method
-     * 
-     */
-    public function testAddEpworthSleepinessScale()
+    protected function getModel()
     {
-        $data = [
+        return EpworthSleepinessScale::class;
+    }
+
+    protected function getRoute()
+    {
+        return '/epworth-sleepiness-scale';
+    }
+
+    protected function getStoreData()
+    {
+        return [
             'epworth' => 'test situation',
-            'status'  => 7
+            'status'  => 7,
         ];
-
-        $this->post('/api/v1/epworth-sleepiness-scale', $data)
-            ->seeInDatabase('dental_epworth', ['epworth' => 'test situation'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/epworth-sleepiness-scale/{id} -> EpworthSleepinessScaleController@update method
-     * 
-     */
-    public function testUpdateEpworthSleepinessScale()
+    protected function getUpdateData()
     {
-        $epworthSleepinessScaleTestRecord = factory(EpworthSleepinessScale::class)->create();
-
-        $data = [
+        return [
             'sortby' => 10,
-            'status' => 5
+            'status' => 5,
         ];
-
-        $this->put('/api/v1/epworth-sleepiness-scale/' . $epworthSleepinessScaleTestRecord->epworthid, $data)
-            ->seeInDatabase('dental_epworth', ['status' => 5])
-            ->assertResponseOk();
-    }
-
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/epworth-sleepiness-scale/{id} -> EpworthSleepinessScaleController@destroy method
-     * 
-     */
-    public function testDeleteEpworthSleepinessScale()
-    {
-        $epworthSleepinessScaleTestRecord = factory(EpworthSleepinessScale::class)->create();
-
-        $this->delete('/api/v1/epworth-sleepiness-scale/' . $epworthSleepinessScaleTestRecord->epworthid)
-            ->notSeeInDatabase('dental_epworth', [
-                'epworthid' => $epworthSleepinessScaleTestRecord->epworthid
-            ])
-            ->assertResponseOk();
     }
 }

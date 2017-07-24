@@ -12,6 +12,8 @@ Route::post('auth', function () {
     return ['status' => 'Authenticated', 'token' => $token];
 });
 
+Route::get('health-check', 'Api\HealthCheckController@index');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -306,8 +308,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('memo', 'Api\ApiAdminMemoController', ['except' => ['create', 'edit', 'show']]);
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
-
-    Route::get('health-check', 'Api\HealthCheckController@index');
 
     // grouped routes
 

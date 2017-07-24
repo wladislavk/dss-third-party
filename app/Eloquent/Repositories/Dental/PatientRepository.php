@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class PatientRepository extends AbstractRepository
 {

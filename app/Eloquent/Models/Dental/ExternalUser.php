@@ -44,14 +44,14 @@ class ExternalUser extends AbstractModel
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user () {
+    public function user() {
         return $this->belongsTo(User::class, 'user_id', 'userid');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function company () {
+    public function company() {
         return $this->belongsTo(ExternalCompany::class, 'company_id', 'id');
     }
 }

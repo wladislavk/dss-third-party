@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Enrollments;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class EnrollmentRepository extends AbstractRepository
 {

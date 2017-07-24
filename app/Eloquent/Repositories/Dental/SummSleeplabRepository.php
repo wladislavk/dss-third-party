@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class SummSleeplabRepository extends AbstractRepository
 {

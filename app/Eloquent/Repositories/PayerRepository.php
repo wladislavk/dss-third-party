@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\Payer;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class PayerRepository extends AbstractRepository
 {

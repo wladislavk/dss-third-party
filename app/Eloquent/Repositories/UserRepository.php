@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\User;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserRepository extends AbstractRepository
 {

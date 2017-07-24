@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 abstract class AbstractRepository extends BaseRepository

@@ -2,87 +2,406 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\InsurancePreauthStore;
-use DentalSleepSolutions\Http\Requests\InsurancePreauthUpdate;
-use DentalSleepSolutions\Http\Requests\InsurancePreauthDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
-use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as InsPreauth;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class InsurancePreauthController extends Controller
+class InsurancePreauthController extends BaseRestController
 {
+    /** @var InsurancePreauthRepository */
+    protected $repository;
+
     /**
-     * Display a listing of the resource.
+     * @SWG\Get(
+     *     path="/insurance-preauth",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/InsurancePreauth")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function index()
+    {
+        return parent::index();
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/insurance-preauth/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/InsurancePreauth")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function show($id)
+    {
+        return parent::show($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/insurance-preauth",
+     *     @SWG\Parameter(name="doc_id", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="patient_id", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="ins_co", in="formData", type="string"),
+     *     @SWG\Parameter(name="ins_rank", in="formData", type="string"),
+     *     @SWG\Parameter(name="ins_phone", in="formData", type="string", pattern="^[0-9]{10}$"),
+     *     @SWG\Parameter(name="patient_ins_group_id", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_ins_id", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_firstname", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="patient_lastname", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="patient_add1", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_add2", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_city", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_state", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_zip", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_dob", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="insured_first_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="insured_last_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="insured_dob", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="doc_npi", in="formData", type="string"),
+     *     @SWG\Parameter(name="referring_doc_npi", in="formData", type="string"),
+     *     @SWG\Parameter(name="trxn_code_amount", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="diagnosis_code", in="formData", type="string"),
+     *     @SWG\Parameter(name="date_of_call", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="insurance_rep", in="formData", type="string"),
+     *     @SWG\Parameter(name="call_reference_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_medicare_npi", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_tax_id_or_ssn", in="formData", type="string"),
+     *     @SWG\Parameter(name="ins_effective_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="ins_cal_year_start", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="ins_cal_year_end", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="trxn_code_covered", in="formData", type="integer"),
+     *     @SWG\Parameter(name="code_covered_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="has_out_of_network_benefits", in="formData", type="integer"),
+     *     @SWG\Parameter(name="out_of_network_percentage", in="formData", type="integer"),
+     *     @SWG\Parameter(name="is_hmo", in="formData", type="integer"),
+     *     @SWG\Parameter(name="hmo_date_called", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="hmo_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="hmo_needs_auth", in="formData", type="integer"),
+     *     @SWG\Parameter(name="hmo_auth_date_requested", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="hmo_auth_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="hmo_auth_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_network_percentage", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_network_appeal_date_sent", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="in_network_appeal_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="is_pre_auth_required", in="formData", type="integer"),
+     *     @SWG\Parameter(name="verbal_pre_auth_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="verbal_pre_auth_ref_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="verbal_pre_auth_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="written_pre_auth_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="written_pre_auth_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="front_office_request_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patient_deductible", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="patient_amount_met", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="family_deductible", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="family_amount_met", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="deductible_reset_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="out_of_pocket_met", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patient_amount_left_to_meet", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="expected_insurance_payment", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="expected_patient_payment", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="network_benefits", in="formData", type="integer"),
+     *     @SWG\Parameter(name="viewed", in="formData", type="integer"),
+     *     @SWG\Parameter(name="date_completed", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="how_often", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_phone", in="formData", type="string", pattern="[0-9]{10}"),
+     *     @SWG\Parameter(name="pre_auth_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="family_amount_left_to_meet", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="deductible_from", in="formData", type="integer"),
+     *     @SWG\Parameter(name="reject_reason", in="formData", type="string"),
+     *     @SWG\Parameter(name="invoice_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="invoice_amount", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="invoice_status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="invoice_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="updated_by", in="formData", type="integer"),
+     *     @SWG\Parameter(name="doc_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_practice", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_address", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_phone", in="formData", type="string", pattern="[0-9]{10}"),
+     *     @SWG\Parameter(name="in_deductible_from", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_patient_deductible", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_patient_amount_met", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_patient_amount_left_to_meet", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_family_deductible", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_family_amount_met", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_family_amount_left_to_meet", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_deductible_reset_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="in_out_of_pocket_met", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_expected_insurance_payment", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_expected_patient_payment", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_call_reference_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="has_in_network_benefits", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_is_pre_auth_required", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_verbal_pre_auth_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_verbal_pre_auth_ref_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_verbal_pre_auth_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_written_pre_auth_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="in_pre_auth_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_written_pre_auth_notes", in="formData", type="string"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/InsurancePreauth")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function store()
+    {
+        $this->hasIp = false;
+        return parent::store();
+    }
+
+    /**
+     * @SWG\Put(
+     *     path="/insurance-preauth/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="doc_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patient_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="ins_co", in="formData", type="string"),
+     *     @SWG\Parameter(name="ins_rank", in="formData", type="string"),
+     *     @SWG\Parameter(name="ins_phone", in="formData", type="string", pattern="^[0-9]{10}$"),
+     *     @SWG\Parameter(name="patient_ins_group_id", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_ins_id", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_firstname", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_lastname", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_add1", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_add2", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_city", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_state", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_zip", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_dob", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="insured_first_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="insured_last_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="insured_dob", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="doc_npi", in="formData", type="string"),
+     *     @SWG\Parameter(name="referring_doc_npi", in="formData", type="string"),
+     *     @SWG\Parameter(name="trxn_code_amount", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="diagnosis_code", in="formData", type="string"),
+     *     @SWG\Parameter(name="date_of_call", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="insurance_rep", in="formData", type="string"),
+     *     @SWG\Parameter(name="call_reference_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_medicare_npi", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_tax_id_or_ssn", in="formData", type="string"),
+     *     @SWG\Parameter(name="ins_effective_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="ins_cal_year_start", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="ins_cal_year_end", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="trxn_code_covered", in="formData", type="integer"),
+     *     @SWG\Parameter(name="code_covered_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="has_out_of_network_benefits", in="formData", type="integer"),
+     *     @SWG\Parameter(name="out_of_network_percentage", in="formData", type="integer"),
+     *     @SWG\Parameter(name="is_hmo", in="formData", type="integer"),
+     *     @SWG\Parameter(name="hmo_date_called", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="hmo_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="hmo_needs_auth", in="formData", type="integer"),
+     *     @SWG\Parameter(name="hmo_auth_date_requested", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="hmo_auth_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="hmo_auth_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_network_percentage", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_network_appeal_date_sent", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="in_network_appeal_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="is_pre_auth_required", in="formData", type="integer"),
+     *     @SWG\Parameter(name="verbal_pre_auth_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="verbal_pre_auth_ref_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="verbal_pre_auth_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="written_pre_auth_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="written_pre_auth_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="front_office_request_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patient_deductible", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="patient_amount_met", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="family_deductible", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="family_amount_met", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="deductible_reset_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="out_of_pocket_met", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patient_amount_left_to_meet", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="expected_insurance_payment", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="expected_patient_payment", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="network_benefits", in="formData", type="integer"),
+     *     @SWG\Parameter(name="viewed", in="formData", type="integer"),
+     *     @SWG\Parameter(name="date_completed", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="how_often", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_phone", in="formData", type="string", pattern="[0-9]{10}"),
+     *     @SWG\Parameter(name="pre_auth_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="family_amount_left_to_meet", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="deductible_from", in="formData", type="integer"),
+     *     @SWG\Parameter(name="reject_reason", in="formData", type="string"),
+     *     @SWG\Parameter(name="invoice_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="invoice_amount", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="invoice_status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="invoice_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="updated_by", in="formData", type="integer"),
+     *     @SWG\Parameter(name="doc_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_practice", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_address", in="formData", type="string"),
+     *     @SWG\Parameter(name="doc_phone", in="formData", type="string", pattern="[0-9]{10}"),
+     *     @SWG\Parameter(name="in_deductible_from", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_patient_deductible", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_patient_amount_met", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_patient_amount_left_to_meet", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_family_deductible", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_family_amount_met", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_family_amount_left_to_meet", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_deductible_reset_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="in_out_of_pocket_met", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_expected_insurance_payment", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_expected_patient_payment", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="in_call_reference_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="has_in_network_benefits", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_is_pre_auth_required", in="formData", type="integer"),
+     *     @SWG\Parameter(name="in_verbal_pre_auth_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_verbal_pre_auth_ref_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_verbal_pre_auth_notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_written_pre_auth_date_received", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="in_pre_auth_num", in="formData", type="string"),
+     *     @SWG\Parameter(name="in_written_pre_auth_notes", in="formData", type="string"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function update($id)
+    {
+        return parent::update($id);
+    }
+
+    /**
+     * @SWG\Delete(
+     *     path="/insurance-preauth/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function destroy($id)
+    {
+        return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/insurance-preauth/{type}",
+     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\InsPreauth $resources
+     * @param string $type
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(InsPreauth $resources)
+    public function getByType($type)
     {
-        $data = $resources->all();
+        $docId = $this->currentUser->docid ?: 0;
+
+        switch ($type) {
+            case 'completed':
+                $data = $this->repository->getCompleted($docId);
+                break;
+            case 'pending':
+                $data = $this->repository->getPending($docId);
+                break;
+            case 'rejected':
+                $data = $this->repository->getRejected($docId);
+                break;
+            default:
+                $data = [];
+                break;
+        }
 
         return ApiResponse::responseOk('', $data);
     }
 
     /**
-     * Display the specified resource.
+     * @SWG\Post(
+     *     path="/insurance-preauth/pending-VOB",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\InsurancePreauth $resource
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(InsurancePreauth $resource)
+    public function getPendingVOBByContactId(Request $request)
     {
-        return ApiResponse::responseOk('', $resource);
+        $contactId = $request->input('contact_id', 0);
+        $data = $this->repository->getPendingVOBByContactId($contactId);
+      
+        return ApiResponse::responseOk('', $data);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @SWG\Post(
+     *     path="/insurance-preauth/vobs/find",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\InsPreauth $resources
-     * @param  \DentalSleepSolutions\Http\Requests\InsurancePreauthStore $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(InsPreauth $resources, InsurancePreauthStore $request)
+    public function find(Request $request)
     {
-        $resource = $resources->create($request->all());
+        $docId = $this->currentUser->docid ?: 0;
 
-        return ApiResponse::responseOk('Resource created', $resource);
+        $pageNumber = $request->input('page', 0);
+        $vobsPerPage = $request->input('vobsPerPage', 20);
+        $sortColumn = $request->input('sortColumn', 'status');
+        $sortDir = $request->input('sortDir', 'desc');
+        $viewed = $request->input('viewed');
+
+        $data = $this->repository->getListVobs(
+            $docId, 
+            $sortColumn,
+            $sortDir,
+            $vobsPerPage,
+            $pageNumber,
+            $viewed
+        );
+
+        return ApiResponse::responseOk('', $data);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\InsurancePreauth $resource
-     * @param  \DentalSleepSolutions\Http\Requests\InsurancePreauthUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return string
      */
-    public function update(InsurancePreauth $resource, InsurancePreauthUpdate $request)
+    public function getSingular()
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\InsurancePreauth $resource
-     * @param  \DentalSleepSolutions\Http\Requests\InsurancePreauthDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(InsurancePreauth $resource, InsurancePreauthDestroy $request)
-    {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return 'InsurancePreauth';
     }
 }

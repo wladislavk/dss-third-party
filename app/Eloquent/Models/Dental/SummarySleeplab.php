@@ -6,7 +6,7 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 
 /**
  * @SWG\Definition(
- *     definition="SummSleeplab",
+ *     definition="SummarySleeplab",
  *     type="object",
  *     required={"id", "date", "sleeptesttype", "place", "apnea", "hypopnea", "ahi", "ahisupine", "rdi", "rdisupine", "o2nadir", "t9002", "sleepefficiency", "cpaplevel", "dentaldevice", "devicesetting", "diagnosis", "notes", "patiendid"},
  *     @SWG\Property(property="id", type="integer"),

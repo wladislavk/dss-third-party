@@ -2,13 +2,13 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
+/**
+ * @todo: this code should be completed or deleted
+ *
+ * Class ApiAuthController
+ */
 class ApiAuthController extends ApiBaseController
 {
-
-    public function __construct()
-    {
-    }
-
     /**
      * Authenticate a user.
      *

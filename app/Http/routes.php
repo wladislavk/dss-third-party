@@ -285,6 +285,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('summary-sleeplabs', 'SummarySleeplabsController', ['except' => ['create', 'edit']]);
 
+    Route::resource('support-attachments', 'SupportAttachmentsController', ['except' => ['create', 'edit']]);
+
     Route::resource('support-tickets', 'SupportTicketsController', ['except' => ['create', 'edit']]);
     Route::post('support-tickets/number', 'SupportTicketsController@getNumber');
 

@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Providers;
 
 use DentalSleepSolutions\Eloquent\Repositories\PayerRepository;
-use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Illuminate\Routing\Router;
 use DentalSleepSolutions\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

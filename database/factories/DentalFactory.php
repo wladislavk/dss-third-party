@@ -2299,6 +2299,19 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SupportCategory::cl
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SupportResponse::class, function ($faker) {
+    return [
+        'ticket_id'     => $faker->randomDigit,
+        'responder_id'  => $faker->randomDigit,
+        'body'          => $faker->sentence($nbWords = 5),
+        'response_type' => $faker->randomDigit,
+        'adddate'       => $faker->dateTime(),
+        'ip_address'    => $faker->ipv4,
+        'viewed'        => $faker->boolean,
+        'attachment'    => $faker->regexify('[a-z0-9_\-]{15}\.(jpg|jpeg|png|bmp|gif)')
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

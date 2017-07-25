@@ -95,6 +95,7 @@ class BindingSetter
         Eloquent\Models\Dental\SleepStudy::class,
         Eloquent\Models\Dental\SleepTest::class,
         Eloquent\Models\Dental\SocialHistory::class,
+        Eloquent\Models\Dental\SupportAttachment::class,
         Eloquent\Models\Dental\SoftPalate::class,
         Eloquent\Models\Dental\Summary::class,
         Eloquent\Models\Dental\SupportTicket::class,

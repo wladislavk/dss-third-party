@@ -1,11 +1,13 @@
 <?php
 
+namespace Tests\Api;
+
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use DentalSleepSolutions\Eloquent\Models\Dental\SupportAttachment;
+use Tests\TestCases\ApiTestCase;
 
-use DentalSleepSolutions\Eloquent\Dental\SupportAttachment;
-
-class SupportAttachmentsApiTest extends TestCase
+class SupportAttachmentsApiTest extends ApiTestCase
 {
     use WithoutMiddleware, DatabaseTransactions;
 

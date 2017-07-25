@@ -99,6 +99,7 @@ class BindingSetter
         Eloquent\Models\Dental\SoftPalate::class,
         Eloquent\Models\Dental\Summary::class,
         Eloquent\Models\Dental\SummarySleeplab::class,
+        Eloquent\Models\Dental\SupportCategory::class,
         Eloquent\Models\Dental\SupportTicket::class,
         Eloquent\Models\Dental\Symptom::class,
         Eloquent\Models\Dental\Task::class,

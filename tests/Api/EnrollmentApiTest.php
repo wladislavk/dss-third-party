@@ -36,7 +36,6 @@ class EnrollmentApiTest extends BaseApiTestCase
             'ptan' => '54321',
             'first_name' => 'Lorem',
             'last_name' => 'Ipsum',
-            //'phone' => '1478963250',
             'contact_number' => '1478963251',
             'email' => 'provider@eligibleapi.com',
         ];
@@ -64,7 +63,6 @@ class EnrollmentApiTest extends BaseApiTestCase
             'ptan' => '54321',
             'first_name' => 'Lorem',
             'last_name' => 'Ipsum',
-            //'phone' => '1478963250',
             'contact_number' => '1478963251',
             'email' => 'provider@eligibleapi.com',
         ];

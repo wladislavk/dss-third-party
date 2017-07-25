@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Api;
 
-use Tests\TestCases\ApiTestCase;
+use Tests\TestCases\BaseApiTestCase;
 
-class LegacyAuthApiTest extends ApiTestCase
+class LegacyAuthApiTest extends BaseApiTestCase
 {
     /** @test */
     public function testLegacyHashingAlgorithm()

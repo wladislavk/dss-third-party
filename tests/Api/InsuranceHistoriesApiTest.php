@@ -18,10 +18,17 @@ class InsuranceHistoriesApiTest extends ApiTestCase
 
     protected function getStoreData()
     {
-        $data = factory(InsuranceHistory::class)->make()->toArray();
-
-        $data['userid'] = 100;
-        return $data;
+        return [
+            "insuranceid" => 3,
+            "formid" => 4,
+            "patientid" => 6,
+            "patient_firstname" => "Wyatt",
+            "patient_lastname" => "Tremblay",
+            "insured_firstname" => "Gerald",
+            "insured_lastname" => "Jerde",
+            "userid" => 100,
+            "docid" => 8,
+        ];
     }
 
     protected function getUpdateData()
@@ -30,22 +37,5 @@ class InsuranceHistoriesApiTest extends ApiTestCase
             'patientid'        => 7,
             'patient_lastname' => 'test lastname',
         ];
-    }
-
-    // @todo: Restore these tests
-
-    public function testStore()
-    {
-        $this->markTestSkipped('Column \'fo_paid_viewed\' does not exist in the DB');
-    }
-
-    public function testUpdate()
-    {
-        $this->markTestSkipped('Column \'fo_paid_viewed\' does not exist in the DB');
-    }
-
-    public function testDestroy()
-    {
-        $this->markTestSkipped('Column \'fo_paid_viewed\' does not exist in the DB');
     }
 }

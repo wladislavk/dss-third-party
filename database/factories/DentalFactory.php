@@ -696,7 +696,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam::class
         'status'           => $faker->randomDigit,
         'adddate'          => $faker->dateTime(),
         'ip_address'       => $faker->ipv4,
-        'parent_patientid' => $faker->randomDigit
     ];
 });
 
@@ -717,7 +716,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepTest::class, function
         'status'           => $faker->randomDigit,
         'adddate'          => $faker->dateTime(),
         'ip_address'       => $faker->ipv4,
-        'additional_notes' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true)
     ];
 });
 
@@ -1246,8 +1244,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceHistory::class, f
         'percase_status'                    => $faker->randomDigit,
         'percase_invoice'                   => $faker->randomDigit,
         'primary_claim_id'                  => $faker->randomDigit,
-        'fo_paid_viewed'                    => $faker->randomDigit,
-        'bo_paid_viewed'                    => $faker->randomDigit,
         'primary_claim_version'             => $faker->randomDigit,
         'secondary_claim_version'           => $faker->randomDigit,
         'icd_ind'                           => $faker->randomDigit,
@@ -1711,7 +1707,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PatientSummary::class, fun
         'delivery_date'    => $faker->dateTime(),
         'vob'              => $faker->numerify('#'),
         'ledger'           => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 1000),
-        'patient_info'     => $faker->boolean
+        'patient_info'     => $faker->boolean,
     ];
 });
 

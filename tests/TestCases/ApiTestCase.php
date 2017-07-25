@@ -50,7 +50,7 @@ abstract class ApiTestCase extends BaseApiTestCase
         $this->assertResponseOk();
 
         // uncomment this line to debug the actual created record
-        //$this->verifyCreation(["amount" => "5.11"]);
+        //$this->verifyCreation(["vob" => "8"]);
 
         $this->seeInDatabase($this->model->getTable(), $this->getStoreData());
     }

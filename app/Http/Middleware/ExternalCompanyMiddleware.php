@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Http\Middleware;
 use Closure;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
-use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Illuminate\Http\Request;
 
 class ExternalCompanyMiddleware
 {

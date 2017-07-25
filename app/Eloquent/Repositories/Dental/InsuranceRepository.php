@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Libraries\ClaimFormData;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class InsuranceRepository extends AbstractRepository
 {

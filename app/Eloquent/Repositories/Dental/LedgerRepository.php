@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
 use DentalSleepSolutions\Eloquent\Models\Dental\Ledger;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class LedgerRepository extends AbstractRepository
 {

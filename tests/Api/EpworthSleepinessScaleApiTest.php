@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;

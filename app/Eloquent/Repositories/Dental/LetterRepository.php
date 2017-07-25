@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Structs\LetterData;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class LetterRepository extends AbstractRepository
 {

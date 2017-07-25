@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class TaskRepository extends AbstractRepository
 {

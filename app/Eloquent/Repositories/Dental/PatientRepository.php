@@ -6,7 +6,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 class PatientRepository extends AbstractRepository
 {

@@ -2,91 +2,114 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\UserCompanyStore;
-use DentalSleepSolutions\Http\Requests\UserCompanyUpdate;
-use DentalSleepSolutions\Http\Requests\UserCompanyDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\UserCompany;
-use DentalSleepSolutions\Contracts\Repositories\UserCompanies;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class UserCompaniesController extends Controller
+class UserCompaniesController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\UserCompanies $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/user-companies",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/UserCompany")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(UserCompanies $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\UserCompany $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/user-companies/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/UserCompany")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(UserCompany $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\UserCompanies $resources
-     * @param  \DentalSleepSolutions\Http\Requests\UserCompanyStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/user-companies",
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="companyid", in="formData", type="integer", required=true),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/UserCompany")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(UserCompanies $resources, UserCompanyStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\UserCompany $resource
-     * @param  \DentalSleepSolutions\Http\Requests\UserCompanyUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/user-companies/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="companyid", in="formData", type="integer"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(UserCompany $resource, UserCompanyUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\UserCompany $resource
-     * @param  \DentalSleepSolutions\Http\Requests\UserCompanyDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/user-companies/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(UserCompany $resource, UserCompanyDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

@@ -2,91 +2,140 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\SocialHistoryStore;
-use DentalSleepSolutions\Http\Requests\SocialHistoryUpdate;
-use DentalSleepSolutions\Http\Requests\SocialHistoryDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\SocialHistory;
-use DentalSleepSolutions\Contracts\Repositories\SocialHistories;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class SocialHistoriesController extends Controller
+class SocialHistoriesController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\SocialHistories $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/social-histories",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/SocialHistory")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(SocialHistories $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\SocialHistory $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/social-histories/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/SocialHistory")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(SocialHistory $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\SocialHistories $resources
-     * @param  \DentalSleepSolutions\Http\Requests\SocialHistoryStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/social-histories",
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="family_had", in="formData", type="string"),
+     *     @SWG\Parameter(name="family_diagnosed", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="additional_paragraph", in="formData", type="string"),
+     *     @SWG\Parameter(name="alcohol", in="formData", type="string"),
+     *     @SWG\Parameter(name="sedative", in="formData", type="string"),
+     *     @SWG\Parameter(name="caffeine", in="formData", type="string"),
+     *     @SWG\Parameter(name="smoke", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="smoke_packs", in="formData", type="string", pattern="^[0-9]{1,2}$"),
+     *     @SWG\Parameter(name="tobacco", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="parent_patientid", in="formData", type="integer"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/SocialHistory")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(SocialHistories $resources, SocialHistoryStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\SocialHistory $resource
-     * @param  \DentalSleepSolutions\Http\Requests\SocialHistoryUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/social-histories/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="family_had", in="formData", type="string"),
+     *     @SWG\Parameter(name="family_diagnosed", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="additional_paragraph", in="formData", type="string"),
+     *     @SWG\Parameter(name="alcohol", in="formData", type="string"),
+     *     @SWG\Parameter(name="sedative", in="formData", type="string"),
+     *     @SWG\Parameter(name="caffeine", in="formData", type="string"),
+     *     @SWG\Parameter(name="smoke", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="smoke_packs", in="formData", type="string", pattern="^[0-9]{1,2}$"),
+     *     @SWG\Parameter(name="tobacco", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="parent_patientid", in="formData", type="integer"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(SocialHistory $resource, SocialHistoryUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\SocialHistory $resource
-     * @param  \DentalSleepSolutions\Http\Requests\SocialHistoryDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/social-histories/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(SocialHistory $resource, SocialHistoryDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

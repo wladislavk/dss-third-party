@@ -2,94 +2,151 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\FaxStore;
-use DentalSleepSolutions\Http\Requests\FaxUpdate;
-use DentalSleepSolutions\Http\Requests\FaxDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\Fax;
-use DentalSleepSolutions\Contracts\Repositories\Faxes;
-
 use Carbon\Carbon;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class FaxesController extends Controller
+class FaxesController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Faxes $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(Faxes $resources)
-    {
-        $data = $resources->all();
+    /** @var FaxRepository */
+    protected $repository;
 
-        return ApiResponse::responseOk('', $data);
+    /**
+     * @SWG\Get(
+     *     path="/faxes",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Fax")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function index()
+    {
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Fax $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/faxes/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Fax")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(Fax $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Faxes $resources
-     * @param  \DentalSleepSolutions\Http\Requests\FaxStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/faxes",
+     *     @SWG\Parameter(name="invoice_id", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="description", in="formData", type="string"),
+     *     @SWG\Parameter(name="start_date", in="formData", type="string", format="dateTime", required=true),
+     *     @SWG\Parameter(name="end_date", in="formData", type="string", format="dateTime", required=true),
+     *     @SWG\Parameter(name="amount", in="formData", type="string", pattern="^\d*(\.\d{2})?$"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Fax")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(Faxes $resources, FaxStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
+        $data = array_merge($this->request->all(), [
             'sent_date'  => Carbon::now(),
-            'ip_address' => $request->ip()
+            'ip_address' => $this->request->ip(),
         ]);
 
-        $resource = $resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Fax $resource
-     * @param  \DentalSleepSolutions\Http\Requests\FaxUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/faxes/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="invoice_id", in="formData", type="integer"),
+     *     @SWG\Parameter(name="description", in="formData", type="string"),
+     *     @SWG\Parameter(name="start_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="end_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="amount", in="formData", type="string", pattern="^\d*(\.\d{2})?$"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(Fax $resource, FaxUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @SWG\Delete(
+     *     path="/faxes/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function destroy($id)
+    {
+        return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/faxes/alerts",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Fax $resource
-     * @param  \DentalSleepSolutions\Http\Requests\FaxDestroy $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Fax $resource, FaxDestroy $request)
+    public function getAlerts()
     {
-        $resource->delete();
+        $docId = $this->currentUser->docid ?: 0;
 
-        return ApiResponse::responseOk('Resource deleted');
+        $data = $this->repository->getAlerts($docId);
+
+        return ApiResponse::responseOk('', $data);
     }
 }

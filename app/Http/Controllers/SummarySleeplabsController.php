@@ -2,87 +2,31 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\SummarySleeplabStore;
-use DentalSleepSolutions\Http\Requests\SummarySleeplabUpdate;
-use DentalSleepSolutions\Http\Requests\SummarySleeplabDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\SummarySleeplab;
-use DentalSleepSolutions\Contracts\Repositories\SummarySleeplabs;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class SummarySleeplabsController extends Controller
+class SummarySleeplabsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\SummarySleeplabs $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(SummarySleeplabs $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\SummarySleeplab $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(SummarySleeplab $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\SummarySleeplabs $resources
-     * @param  \DentalSleepSolutions\Http\Requests\SummarySleeplabStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(SummarySleeplabs $resources, SummarySleeplabStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\SummarySleeplab $resource
-     * @param  \DentalSleepSolutions\Http\Requests\SummarySleeplabUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(SummarySleeplab $resource, SummarySleeplabUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\SummarySleeplab $resource
-     * @param  \DentalSleepSolutions\Http\Requests\SummarySleeplabDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(SummarySleeplab $resource, SummarySleeplabDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

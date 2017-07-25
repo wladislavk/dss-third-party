@@ -2,91 +2,173 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\PatientContactStore;
-use DentalSleepSolutions\Http\Requests\PatientContactUpdate;
-use DentalSleepSolutions\Http\Requests\PatientContactDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\PatientContact;
-use DentalSleepSolutions\Contracts\Repositories\PatientContacts;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientContactRepository;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class PatientContactsController extends Controller
+class PatientContactsController extends BaseRestController
 {
+    /** @var PatientContactRepository */
+    protected $repository;
+
     /**
-     * Display a listing of the resource.
+     * @SWG\Get(
+     *     path="/patient-contacts",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/PatientContact")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function index()
+    {
+        return parent::index();
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/patient-contacts/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/PatientContact")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function show($id)
+    {
+        return parent::show($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/patient-contacts",
+     *     @SWG\Parameter(name="contacttype", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="firstname", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="lastname", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="address1", in="formData", type="string"),
+     *     @SWG\Parameter(name="address2", in="formData", type="string"),
+     *     @SWG\Parameter(name="city", in="formData", type="string"),
+     *     @SWG\Parameter(name="state", in="formData", type="string"),
+     *     @SWG\Parameter(name="zip", in="formData", type="string", pattern="^[0-9]{5}$"),
+     *     @SWG\Parameter(name="phone", in="formData", type="string", pattern="^[0-9]{10}$"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/PatientContact")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function store()
+    {
+        return parent::store();
+    }
+
+    /**
+     * @SWG\Put(
+     *     path="/patient-contacts/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="contacttype", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="firstname", in="formData", type="string"),
+     *     @SWG\Parameter(name="lastname", in="formData", type="string"),
+     *     @SWG\Parameter(name="address1", in="formData", type="string"),
+     *     @SWG\Parameter(name="address2", in="formData", type="string"),
+     *     @SWG\Parameter(name="city", in="formData", type="string"),
+     *     @SWG\Parameter(name="state", in="formData", type="string"),
+     *     @SWG\Parameter(name="zip", in="formData", type="string", pattern="^[0-9]{5}$"),
+     *     @SWG\Parameter(name="phone", in="formData", type="string", pattern="^[0-9]{10}$"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function update($id)
+    {
+        return parent::update($id);
+    }
+
+    /**
+     * @SWG\Delete(
+     *     path="/patient-contacts/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function destroy($id)
+    {
+        return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/patient-contacts/current",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\PatientContacts $resources
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(PatientContacts $resources)
+    public function getCurrent(Request $request)
     {
-        $data = $resources->all();
+        $patientId = $request->input('patientId', 0);
+        $docId     = $this->currentUser->docid ?: 0;
+
+        $data = $this->repository->getCurrent($docId, $patientId);
 
         return ApiResponse::responseOk('', $data);
     }
 
     /**
-     * Display the specified resource.
+     * @SWG\Post(
+     *     path="/patient-contacts/number",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PatientContact $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(PatientContact $resource)
+    public function getNumber()
     {
-        return ApiResponse::responseOk('', $resource);
-    }
+        $docId = $this->currentUser->docid ?: 0;
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\PatientContacts $resources
-     * @param  \DentalSleepSolutions\Http\Requests\PatientContactStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(PatientContacts $resources, PatientContactStore $request)
-    {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
+        $data = $this->repository->getNumber($docId);
 
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PatientContact $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientContactUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(PatientContact $resource, PatientContactUpdate $request)
-    {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PatientContact $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientContactDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(PatientContact $resource, PatientContactDestroy $request)
-    {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return ApiResponse::responseOk('', $data);
     }
 }

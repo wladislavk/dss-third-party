@@ -2,7 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Eligible;
 
-use Exception;
+use DentalSleepSolutions\Eloquent\Repositories\EligibleResponseRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Enrollments\EnrollmentRepository;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eligible\Webhooks\ClaimsHandler;
 use DentalSleepSolutions\Eligible\Webhooks\PayersHandler;
@@ -14,12 +15,17 @@ class WebhooksController extends ApiBaseController
 {
     /**
      * @param  \Illuminate\Http\Request $request
+     * @param EligibleResponseRepository $eligibleResponseRepository
+     * @param EnrollmentRepository $enrollmentRepository
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function enrollment(Request $request)
-    {
-        $handler = new EnrollmentsHandler;
+    public function enrollment(
+        Request $request,
+        EligibleResponseRepository $eligibleResponseRepository,
+        EnrollmentRepository $enrollmentRepository
+    ) {
+        $handler = new EnrollmentsHandler($eligibleResponseRepository, $enrollmentRepository);
 
         return $handler->processing($request);
     }

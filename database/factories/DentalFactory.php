@@ -2582,3 +2582,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Summary::class, fun
         'location'                         => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SupportAttachment::class, function ($faker) {
+    return [
+        'ticket_id'   => $faker->randomDigit,
+        'response_id' => $faker->randomDigit,
+        'filename'    => $faker->regexify('support_attachment_[0-9]{1,2}_[0-9]_[0-9]{4}\.(gif|jpeg|png|bmp|jpg)'),
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});

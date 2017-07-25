@@ -1,0 +1,126 @@
+<?php
+
+namespace DentalSleepSolutions\Eloquent\Models\Enrollments;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @SWG\Definition(
+ *     definition="Enrollment",
+ *     type="object",
+ *     required={"id"},
+ *     @SWG\Property(property="id", type="integer"),
+ *     @SWG\Property(property="user_id", type="integer"),
+ *     @SWG\Property(property="payer_id", type="string"),
+ *     @SWG\Property(property="reference_id", type="integer"),
+ *     @SWG\Property(property="response", type="string"),
+ *     @SWG\Property(property="status", type="integer"),
+ *     @SWG\Property(property="adddate", type="string"),
+ *     @SWG\Property(property="ip_address", type="string"),
+ *     @SWG\Property(property="payer_name", type="string"),
+ *     @SWG\Property(property="transaction_type_id", type="integer"),
+ *     @SWG\Property(property="enrollment_invoice_id", type="integer"),
+ *     @SWG\Property(property="npi", type="string"),
+ *     @SWG\Property(property="facility_name", type="string"),
+ *     @SWG\Property(property="provider_name", type="string"),
+ *     @SWG\Property(property="tax_id", type="string"),
+ *     @SWG\Property(property="address", type="string"),
+ *     @SWG\Property(property="city", type="string"),
+ *     @SWG\Property(property="state", type="string"),
+ *     @SWG\Property(property="zip", type="string"),
+ *     @SWG\Property(property="first_name", type="string"),
+ *     @SWG\Property(property="last_name", type="string"),
+ *     @SWG\Property(property="contact_number", type="string"),
+ *     @SWG\Property(property="email", type="string"),
+ *     @SWG\Property(property="download_url", type="string"),
+ *     @SWG\Property(property="signed_download_url", type="string")
+ * )
+ *
+ * DentalSleepSolutions\Eloquent\Enrollments\Enrollment
+ *
+ * @property int $id
+ * @property int|null $user_id
+ * @property string|null $payer_id
+ * @property int|null $reference_id
+ * @property string|null $response
+ * @property int|null $status
+ * @property string|null $adddate
+ * @property string|null $ip_address
+ * @property string|null $payer_name
+ * @property int|null $transaction_type_id
+ * @property int|null $enrollment_invoice_id
+ * @property string|null $npi
+ * @property string|null $facility_name
+ * @property string|null $provider_name
+ * @property string|null $tax_id
+ * @property string|null $address
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $contact_number
+ * @property string|null $email
+ * @property string|null $download_url
+ * @property string|null $signed_download_url
+ * @mixin \Eloquent
+ */
+class Enrollment extends Model
+{
+    const DSS_ENROLLMENT_SUBMITTED    = 0;
+    const DSS_ENROLLMENT_ACCEPTED     = 1;
+    const DSS_ENROLLMENT_REJECTED     = 2;
+    const DSS_ENROLLMENT_PDF_RECEIVED = 3;
+    const DSS_ENROLLMENT_PDF_SENT     = 4;
+
+    /**
+     * Mass assignable attributes
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_id',
+        'payer_id',
+        'payer_name',
+        'npi',
+        'reference_id',
+        'response',
+        'transaction_type_id',
+        'status',
+        'facility_name',
+        'provider_name',
+        'tax_id',
+        'address',
+        'city',
+        'state',
+        'zip',
+        'first_name',
+        'last_name',
+        'contact_number',
+        'email',
+        'adddate',
+        'ip_address',
+        'enrollment_invoice_id',
+        'download_url',
+        'signed_download_url',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'dental_eligible_enrollment';
+
+    /**
+     * Primary key for the table
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
+}

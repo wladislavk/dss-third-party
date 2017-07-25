@@ -13,7 +13,7 @@ use Carbon\Carbon;
 |
 */
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\SummSleeplab::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab::class, function ($faker) {
     return [
         'date' => $faker->word,
         'sleeptesttype' => $faker->word,
@@ -36,25 +36,25 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SummSleeplab::class, funct
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Qualifier::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Qualifier::class, function ($faker) {
     return [
         'ip_address' => $faker->ipv4,
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\PlaceService::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PlaceService::class, function ($faker) {
     return [
         'ip_address' => $faker->ipv4,
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\ClaimElectronic::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ClaimElectronic::class, function ($faker) {
     return [
 
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Insurance::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Insurance::class, function ($faker) {
     return [
         'card' => $faker->numberBetween(1000, 9999),
         'patient_phone' => $faker->phoneNumber,
@@ -74,7 +74,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Insurance::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsurancePreauth::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth::class, function ($faker) {
     return [
         'doc_id' => $faker->randomDigit,
         'patient_id' => $faker->randomDigit,
@@ -82,11 +82,11 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsurancePreauth::class, f
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsuranceStatusHistory::class, function ($faker) {
     return [];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsDiagnosis::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsuranceDiagnosis::class, function ($faker) {
     $insuranceDiagnoses = [
         '039.3 ACTINOMYCOTIC INFECTION CERVICOFACIAL (3)',
         '053.12 POSTHERPETIC TRIGEMINAL NEURALGIA (5)',
@@ -103,7 +103,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsDiagnosis::class, funct
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Ledger::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Ledger::class, function ($faker) {
     return [
         'placeofservice' => $faker->randomDigit,
         'emg' => $faker->word,
@@ -120,7 +120,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Ledger::class, function ($
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Patient::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Patient::class, function ($faker) {
     return [
         'member_no' => $faker->randomDigit,
         'group_no' => $faker->randomDigit,
@@ -159,7 +159,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Patient::class, function (
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\TransactionCode::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TransactionCode::class, function ($faker) {
     return [
         'type' => $faker->word,
         'ip_address' => $faker->ipv4,
@@ -167,26 +167,117 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\TransactionCode::class, fu
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\User::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\User::class, function ($faker) {
     return [
-        'npi' => 1111111111,
-        'city' => '435 Sugar Lane',
-        'state' => 'CA',
-        'zip' => '941233476',
-        'fax' => $faker->word,
-        'tax_id_or_ssn' => "111111111",
-        'medicare_ptan' => $faker->randomNumber(),
-        'address' => $faker->streetAddress,
-        //'phone' => $faker->phoneNumber,
-        'ein' => 1,
+        'user_access'             => $faker->randomDigit,
+        'docid'                   => $faker->randomDigit,
+        'username'                => $faker->userName,
+        'npi'                     => $faker->numerify('##########'),
+        'password'                => $faker->regexify('[a-z0-9]{65}'),
+        'name'                    => $faker->name(),
+        'email'                   => $faker->email,
+        'address'                 => $faker->address,
+        'city'                    => $faker->city,
+        'state'                   => $faker->stateAbbr,
+        'zip'                     => $faker->numerify('#####'),
+        'phone'                   => $faker->numerify('##########'),
+        'status'                  => $faker->randomDigit,
+        'adddate'                 => $faker->dateTime(),
+        'ip_address'              => $faker->ipv4,
+        'medicare_npi'            => $faker->numerify('##########'),
+        'tax_id_or_ssn'           => $faker->word,
+        'producer'                => $faker->randomDigit,
+        'practice'                => $faker->sentence($nbWords = 4),
+        'email_header'            => $faker->regexify('dss_email_header_[0-9]{6}_[0-9]{4}\.(gif|png|bmp|jpg|jpeg)'),
+        'email_footer'            => $faker->regexify('dss_email_footer_[0-9]{6}_[0-9]{4}\.(gif|png|bmp|jpg|jpeg)'),
+        'fax_header'              => $faker->regexify('dss_print_header_[0-9]{6}_[0-9]{4}\.(gif|png|bmp|jpg|jpeg)'),
+        'fax_footer'              => $faker->regexify('dss_print_footer_[0-9]{6}_[0-9]{4}\.(gif|png|bmp|jpg|jpeg)'),
+        'salt'                    => $faker->regexify('[a-z0-9]{12}'),
+        'recover_hash'            => $faker->regexify('[a-z0-9]{65}'),
+        'recover_time'            => $faker->dateTime(),
+        'ssn'                     => $faker->boolean,
+        'ein'                     => $faker->boolean,
+        'use_patient_portal'      => $faker->boolean,
+        'mailing_practice'        => $faker->word,
+        'mailing_name'            => $faker->name(),
+        'mailing_address'         => $faker->address,
+        'mailing_city'            => $faker->city,
+        'mailing_state'           => $faker->stateAbbr,
+        'mailing_zip'             => $faker->numerify('#####'),
+        'mailing_phone'           => $faker->numerify('##########'),
+        'last_accessed_date'      => $faker->dateTime(),
+        'use_digital_fax'         => $faker->boolean,
+        'fax'                     => $faker->numerify('##########'),
+        'use_letters'             => $faker->boolean,
+        'sign_notes'              => $faker->randomDigit,
+        'use_eligible_api'        => $faker->boolean,
+        'access_code'             => $faker->regexify('[A-Z][0-9]{4}'),
+        'text_date'               => $faker->dateTime(),
+        'text_num'                => $faker->randomDigit,
+        'access_code_date'        => $faker->dateTime(),
+        'registration_email_date' => $faker->dateTime(),
+        'producer_files'          => $faker->boolean,
+        'medicare_ptan'           => $faker->word,
+        'use_course'              => $faker->boolean,
+        'use_course_staff'        => $faker->boolean,
+        'manage_staff'            => $faker->boolean,
+        'cc_id'                   => $faker->regexify('cus_[A-Za-z0-9_]+'),
+        'user_type'               => $faker->randomDigit,
+        'letter_margin_header'    => $faker->randomDigit,
+        'letter_margin_footer'    => $faker->randomDigit,
+        'letter_margin_top'       => $faker->randomDigit,
+        'letter_margin_bottom'    => $faker->randomDigit,
+        'letter_margin_left'      => $faker->randomDigit,
+        'letter_margin_right'     => $faker->randomDigit,
+        'claim_margin_top'        => $faker->randomDigit,
+        'claim_margin_left'       => $faker->randomDigit,
+        'logo'                    => $faker->regexify('user_logo_[0-9]+\.(gif|png|bmp|jpg|jpeg)'),
+        'homepage'                => $faker->boolean,
+        'use_letter_header'       => $faker->boolean,
+        'access_code_id'          => $faker->randomDigit,
+        'first_name'              => $faker->firstNameMale,
+        'last_name'               => $faker->lastName,
+        'indent_address'          => $faker->boolean,
+        'registration_date'       => $faker->dateTime(),
+        'header_space'            => $faker->randomDigit,
+        'billing_company_id'      => $faker->randomDigit,
+        'edx_id'                  => $faker->randomDigit,
+        'help_id'                 => $faker->randomDigit,
+        'tracker_letters'         => $faker->randomDigit,
+        'intro_letters'           => $faker->randomDigit,
+        'plan_id'                 => $faker->randomDigit,
+        'suspended_reason'        => $faker->word,
+        'suspended_date'          => $faker->dateTime(),
+        'updated_at'              => $faker->dateTime(),
+        'signature_file'          => $faker->word,
+        'signature_json'          => $faker->word,
+        'use_service_npi'         => $faker->randomDigit,
+        'service_name'            => $faker->name(),
+        'service_address'         => $faker->address,
+        'service_city'            => $faker->city,
+        'service_state'           => $faker->stateAbbr,
+        'service_zip'             => $faker->numerify('#####'),
+        'service_phone'           => $faker->numerify('##########'),
+        'service_fax'             => $faker->numerify('##########'),
+        'service_npi'             => $faker->numerify('#'),
+        'service_medicare_npi'    => $faker->numerify('#'),
+        'service_medicare_ptan'   => $faker->word,
+        'service_tax_id_or_ssn'   => $faker->word,
+        'service_ssn'             => $faker->randomDigit,
+        'service_ein'             => $faker->randomDigit,
+        'eligible_test'           => $faker->randomDigit,
+        'billing_plan_id'         => $faker->randomDigit,
+        'post_ledger_adjustments' => $faker->randomDigit,
+        'edit_ledger_entries'     => $faker->randomDigit,
+        'use_payment_reports'     => $faker->randomDigit
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\UserCompany::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\UserCompany::class, function ($faker) {
     return [];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\AppointmentType::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AppointmentType::class, function ($faker) {
     return [
         'name'      => $faker->word,
         'color'     => $faker->hexcolor,
@@ -195,7 +286,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\AppointmentType::class, fu
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\AccessCode::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AccessCode::class, function ($faker) {
     return [
         'access_code' => $faker->word,
         'notes'       => $faker->sentence($nbWords = 6),
@@ -206,7 +297,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\AccessCode::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ClaimNoteAttachment::class, function ($faker) {
     return [
         'note_id'    => $faker->randomDigit,
         'filename'   => $faker->sentence($nbWords = 6),
@@ -215,7 +306,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment::class
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\ChangeList::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ChangeList::class, function ($faker) {
     return [
         'content'    => $faker->paragraph($nbSentences = 3),
         'adddate'    => $faker->dateTime(),
@@ -223,7 +314,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ChangeList::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Complaint::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Complaint::class, function ($faker) {
     return [
         'complaint'   => $faker->sentence($nbWords = 6),
         'description' => $faker->sentence($nbWords = 6),
@@ -233,7 +324,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Complaint::class, function
         'ip_address'  => $faker->ipv4
     ];
 });
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Allergen::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Allergen::class, function ($faker) {
     return [
         'allergens'   => $faker->word,
 
@@ -246,7 +337,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Allergen::class, function 
 });
 
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\CustomText::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\CustomText::class, function ($faker) {
     return [
         'title'        => $faker->sentence($nbWords = 3),
         'description'  => $faker->sentence($nbWords = 6),
@@ -258,7 +349,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\CustomText::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Contact::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Contact::class, function ($faker) {
     return [
         'docid'                => $faker->randomDigit,
         'salutation'           => $faker->title($gender = 'male'|'female'),
@@ -295,7 +386,33 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Contact::class, function (
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Device::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\CorporateContact::class, function ($faker) {
+    return [
+        'docid'                => $faker->randomDigit,
+        'salutation'           => $faker->title($gender = 'male'|'female'),
+        'lastname'             => $faker->lastName,
+        'firstname'            => $faker->firstName($gender = 'male'|'female'),
+        'middlename'           => $faker->word,
+        'company'              => $faker->company,
+        'add1'                 => $faker->address,
+        'add2'                 => $faker->address,
+        'city'                 => $faker->city,
+        'state'                => $faker->state,
+        'zip'                  => $faker->postcode,
+        'phone1'               => $faker->regexify('^1[0-9]{9}$'),
+        'phone2'               => $faker->regexify('^1[0-9]{9}$'),
+        'fax'                  => $faker->regexify('^1[0-9]{9}$'),
+        'email'                => $faker->email,
+        'greeting'             => $faker->title($gender = 'male'|'female'),
+        'sincerely'            => $faker->title($gender = 'male'|'female'),
+        'contacttypeid'        => $faker->randomDigit,
+        'notes'                => $faker->sentence($nbWords = 6),
+        'adddate'              => $faker->dateTime(),
+        'ip_address'           => $faker->ipv4
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Device::class, function ($faker) {
     return [
         'device'      => $faker->sentence($nbWords = 3),
         'description' => $faker->sentence($nbWords = 6),
@@ -307,7 +424,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Device::class, function ($
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\ContactType::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ContactType::class, function ($faker) {
     return [
         'contacttype' => $faker->sentence($nbWords = 3),
         'ip_address'  => $faker->ipv4,
@@ -316,7 +433,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ContactType::class, functi
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Calendar::class, function ($faker) {
     return [
         'start_date'   => Carbon::now()->addDays(1),
         'end_date'     => Carbon::now()->addDays(2),
@@ -336,7 +453,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Calendar::class, function 
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Charge::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Charge::class, function ($faker) {
     return [
         'amount'                  => $faker->regexify('^\d*(\.\d{2})?$'),
         'userid'                  => $faker->randomDigit,
@@ -352,7 +469,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Charge::class, function ($
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSettingOption::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\GuideSettingOption::class, function ($faker) {
     return [
         'option_id'  => $faker->randomDigit,
         'setting_id' => $faker->randomDigit,
@@ -362,7 +479,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSettingOption::class,
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\GuideDeviceSetting::class, function ($faker) {
     return [
         'device_id'  => $faker->randomDigit,
         'setting_id' => $faker->randomDigit,
@@ -372,7 +489,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideDeviceSetting::class,
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Document::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Document::class, function ($faker) {
     return [
         'categoryid' => $faker->randomDigit,
         'name'       => $faker->word,
@@ -382,7 +499,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Document::class, function 
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\GuideDevice::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\GuideDevice::class, function ($faker) {
     return [
         'name'       => $faker->name,
         'adddate'    => $faker->dateTime(),
@@ -390,7 +507,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideDevice::class, functi
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\LoginDetail::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\LoginDetail::class, function ($faker) {
     return [
         'loginid'    => $faker->randomDigit,
         'userid'     => $faker->randomDigit,
@@ -400,7 +517,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LoginDetail::class, functi
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\DocumentCategory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\DocumentCategory::class, function ($faker) {
     return [
         'name'       => $faker->name,
         'status'     => $faker->randomDigit,
@@ -409,7 +526,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\DocumentCategory::class, f
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Sleeplab::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Sleeplab::class, function ($faker) {
     return [
         'docid'      => $faker->randomDigit,
         'salutation' => $faker->word,
@@ -435,7 +552,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Sleeplab::class, function 
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsurancePayer::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsurancePayer::class, function ($faker) {
     return [
         'name'       => $faker->sentence($nbWords = 5),
         'payer_id'   => $faker->numerify('#####'),
@@ -444,7 +561,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsurancePayer::class, fun
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSetting::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting::class, function ($faker) {
     return [
         'name'              => $faker->name,
         'setting_type'      => $faker->randomDigit,
@@ -459,7 +576,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\GuideSetting::class, funct
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Diagnostic::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Diagnostic::class, function ($faker) {
     return [
         'diagnostic'  => $faker->sentence($nbWords = 6),
         'description' => $faker->paragraph,
@@ -470,7 +587,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Diagnostic::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\FaxErrorCode::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\FaxErrorCode::class, function ($faker) {
     return [
         'error_code'  => $faker->numerify('2####'),
         'description' => $faker->sentence($nbWords = 6),
@@ -480,7 +597,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\FaxErrorCode::class, funct
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\EpworthSleepinessScale::class, function ($faker) {
     return [
         'epworth'     => $faker->sentence($nbWords = 4),
         'description' => $faker->sentence($nbWords = 7),
@@ -491,7 +608,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale::cl
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Qualifier::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Qualifier::class, function ($faker) {
     return [
         'qualifier'   => $faker->sentence($nbWords = 5),
         'description' => $faker->sentence($nbWords = 7),
@@ -502,7 +619,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Qualifier::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceType::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsuranceType::class, function ($faker) {
     return [
         'ins_type'    => $faker->sentence($nbWords = 5),
         'description' => $faker->sentence($nbWords = 7),
@@ -513,7 +630,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceType::class, func
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\SoftPalate::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SoftPalate::class, function ($faker) {
     return [
         'soft_palate' => $faker->sentence($nbWords = 4),
         'description' => $faker->sentence($nbWords = 7),
@@ -524,7 +641,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SoftPalate::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceDocument::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsuranceDocument::class, function ($faker) {
     return [
         'title'       => $faker->word,
         'description' => $faker->sentence($nbWords = 5),
@@ -538,7 +655,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceDocument::class, 
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Fax::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Fax::class, function ($faker) {
     $sentDate = $faker->dateTimeBetween($startDate = '-5 days', $endDate = 'now');
     $partOfFilename = $sentDate->format('Y-m-d_H-i-s');
 
@@ -564,7 +681,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Fax::class, function ($fak
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TonsilsClinicalExam::class, function ($faker) {
     return [
         'formid'           => $faker->randomDigit,
         'patientid'        => $faker->randomDigit,
@@ -583,7 +700,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\TonsilsClinicalExam::class
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\SleepTest::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SleepTest::class, function ($faker) {
     $epworthIds = [
         '1|1~2|2~5|3~7|3~8|2~',
         '1|3~2|2~3|2~4|3~5|3~6|3~7|3~8|2~',
@@ -604,7 +721,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepTest::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TongueClinicalExam::class, function ($faker) {
     return [
         'formid'               => $faker->randomDigit,
         'patientid'            => $faker->randomDigit,
@@ -622,7 +739,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam::class,
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\SocialHistory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SocialHistory::class, function ($faker) {
     return [
         'formid'               => $faker->randomDigit,
         'patientid'            => $faker->randomDigit,
@@ -644,7 +761,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SocialHistory::class, func
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AirwayEvaluation::class, function ($faker) {
     return [
         'formid'               => $faker->randomDigit,
         'patientid'            => $faker->randomDigit,
@@ -668,7 +785,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation::class, f
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\DentalClinicalExam::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\DentalClinicalExam::class, function ($faker) {
     $teethNumbers = [
         'A, B, C, 01, 02, 03, 17, 18, 19',
         '04, 05, 20, 25',
@@ -719,7 +836,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\DentalClinicalExam::class,
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\TmjClinicalExam::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam::class, function ($faker) {
     $palpation = [
         '1|1~3|4~5|0~',
         '1|0~2|0~3|0~4|0~5|0~6|0~7|0~8|0~9|0~10|0~11|0~12|0~13|0~',
@@ -778,7 +895,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\TmjClinicalExam::class, fu
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\FaxInvoice::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\FaxInvoice::class, function ($faker) {
     return [
         'invoice_id'  => $faker->randomDigit,
         'description' => $faker->sentence($nbWords = 5),
@@ -790,7 +907,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\FaxInvoice::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\GagReflex::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\GagReflex::class, function ($faker) {
     return [
         'gag_reflex'  => $faker->word,
         'description' => $faker->sentence($nbWords = 5),
@@ -801,7 +918,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\GagReflex::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Mandible::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Mandible::class, function ($faker) {
     return [
         'mandible'    => $faker->word,
         'description' => $faker->sentence($nbWords = 5),
@@ -812,7 +929,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Mandible::class, function 
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Medicament::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Medicament::class, function ($faker) {
     return [
         'medications' => $faker->word,
         'description' => $faker->sentence($nbWords = 5),
@@ -823,7 +940,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Medicament::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\MedicalHistory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\MedicalHistory::class, function ($faker) {
     return [
         'history'     => $faker->word,
         'description' => $faker->sentence($nbWords = 5),
@@ -834,7 +951,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\MedicalHistory::class, fun
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Joint::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Joint::class, function ($faker) {
     return [
         'joint'       => $faker->sentence($nbWords = 3),
         'description' => $faker->sentence($nbWords = 3),
@@ -845,7 +962,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Joint::class, function ($f
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Intolerance::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Intolerance::class, function ($faker) {
     return [
         'intolerance' => $faker->sentence($nbWords = 4),
         'description' => $faker->word,
@@ -856,7 +973,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Intolerance::class, functi
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\ImageType::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ImageType::class, function ($faker) {
     return [
         'imagetype'   => $faker->word,
         'description' => $faker->sentence($nbWords = 5),
@@ -867,7 +984,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ImageType::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\JointExam::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\JointExam::class, function ($faker) {
     return [
         'joint_exam'  => $faker->sentence($nbWords = 3),
         'description' => $faker->sentence($nbWords = 5),
@@ -878,7 +995,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\JointExam::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Maxilla::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Maxilla::class, function ($faker) {
     return [
         'maxilla'     => $faker->word,
         'description' => $faker->sentence($nbWords = 5),
@@ -889,7 +1006,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Maxilla::class, function (
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\PatientContact::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PatientContact::class, function ($faker) {
     return [
         'contacttype' => $faker->randomDigit,
         'patientid'   => $faker->randomDigit,
@@ -906,7 +1023,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PatientContact::class, fun
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Insurance::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Insurance::class, function ($faker) {
     return [
         'formid'                            => $faker->randomDigit,
         'patientid'                         => $faker->randomDigit,
@@ -1003,7 +1120,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Insurance::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceFile::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsuranceFile::class, function ($faker) {
     return [
         'claimid'     => $faker->randomDigit,
         'claimtype'   => $faker->randomElement(['primary', 'secondary']),
@@ -1015,7 +1132,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceFile::class, func
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceHistory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsuranceHistory::class, function ($faker) {
     return [
         'insuranceid'                       => $faker->randomDigit,
         'formid'                            => $faker->randomDigit,
@@ -1141,7 +1258,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceHistory::class, f
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsuranceStatusHistory::class, function ($faker) {
     return [
         'insuranceid' => $faker->randomDigit,
         'status'      => $faker->randomDigit,
@@ -1152,7 +1269,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsuranceStatusHistory::cl
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\InsurancePreauth::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth::class, function ($faker) {
     return [
         'doc_id'                            => $faker->randomDigit,
         'patient_id'                        => $faker->randomDigit,
@@ -1257,7 +1374,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\InsurancePreauth::class, f
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerNote::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\LedgerNote::class, function ($faker) {
     return [
         'producerid'       => $faker->randomDigit,
         'note'             => $faker->sentence($nbWords = 4),
@@ -1272,7 +1389,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerNote::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Ledger::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Ledger::class, function ($faker) {
     return [
         'formid'                 => $faker->randomDigit,
         'patientid'              => $faker->randomDigit,
@@ -1312,7 +1429,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Ledger::class, function ($
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerHistory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\LedgerHistory::class, function ($faker) {
     return [
             'ledgerid'                 => $faker->randomDigit,
             'formid'                   => $faker->randomDigit,
@@ -1356,7 +1473,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerHistory::class, func
         ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerPayment::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\LedgerPayment::class, function ($faker) {
     return [
         'payer'          => $faker->randomDigit,
         'amount'         => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 3000),
@@ -1376,7 +1493,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerPayment::class, func
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerPaymentHistory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\LedgerPaymentHistory::class, function ($faker) {
     return [
         'paymentid'         => $faker->randomDigit,
         'payer'             => $faker->randomDigit,
@@ -1399,7 +1516,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerPaymentHistory::clas
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerRecord::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\LedgerRecord::class, function ($faker) {
     return [
         'formid'           => $faker->randomDigit,
         'patientid'        => $faker->randomDigit,
@@ -1419,7 +1536,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerRecord::class, funct
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerStatement::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\LedgerStatement::class, function ($faker) {
     return [
         'producerid'   => $faker->randomDigit,
         'filename'     => $faker->regexify('\/manage\/letterpdfs\/statement_[0-9]+_[0-9]+\.pdf'),
@@ -1431,7 +1548,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LedgerStatement::class, fu
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\LetterTemplate::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\LetterTemplate::class, function ($faker) {
     return [
         'name'           => $faker->sentence($nbWords = 4),
         'template'       => $faker->regexify('\/manage\/([a-z]+_)+[a-z]+\.php'),
@@ -1442,7 +1559,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\LetterTemplate::class, fun
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\CustomLetterTemplate::class, function ($faker) {
     return [
         'name'       => $faker->sentence($nbWords = 3),
         'body'       => $faker->sentence($nbWords = 6),
@@ -1453,7 +1570,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\CustomLetterTemplate::clas
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Letter::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Letter::class, function ($faker) {
     return [
         'patientid'            => $faker->randomDigit,
         'stepid'               => $faker->randomDigit,
@@ -1489,7 +1606,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Letter::class, function ($
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Location::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Location::class, function ($faker) {
     return [
         'location'         => $faker->word,
         'docid'            => $faker->randomDigit,
@@ -1506,7 +1623,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Location::class, function 
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Login::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Login::class, function ($faker) {
     return [
         'docid'       => $faker->randomDigit,
         'userid'      => $faker->randomDigit,
@@ -1516,7 +1633,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Login::class, function ($f
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Note::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Note::class, function ($faker) {
     return [
         'patientid'       => $faker->randomDigit,
         'notes'           => $faker->sentence($nbWords = 5),
@@ -1534,7 +1651,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Note::class, function ($fa
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Palpation::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Palpation::class, function ($faker) {
     return [
         'palpation'   => $faker->sentence($nbWords = 4),
         'description' => $faker->sentence($nbWords = 6),
@@ -1545,7 +1662,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Palpation::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Refund::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Refund::class, function ($faker) {
     return [
         'amount'      => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 1000),
         'userid'      => $faker->randomDigit,
@@ -1557,7 +1674,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Refund::class, function ($
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ScreenerEpworth::class, function ($faker) {
     return [
         'screener_id' => $faker->randomDigit,
         'epworth_id'  => $faker->randomDigit,
@@ -1567,7 +1684,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth::class, fu
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\PatientInsurance::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PatientInsurance::class, function ($faker) {
     return [
         'patientid'     => $faker->randomDigit,
         'insurancetype' => $faker->randomDigit,
@@ -1583,7 +1700,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PatientInsurance::class, f
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\PatientSummary::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PatientSummary::class, function ($faker) {
     return [
         'pid'              => $faker->randomDigit,
         'fspage1_complete' => $faker->boolean,
@@ -1598,7 +1715,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PatientSummary::class, fun
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Patient::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Patient::class, function ($faker) {
     return [
         'lastname'                => $faker->lastName,
         'firstname'               => $faker->firstNameMale,
@@ -1688,8 +1805,8 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Patient::class, function (
         'partner_name'            => $faker->word,
         'emergency_name'          => $faker->word,
         'emergency_number'        => $faker->word,
-        'referred_source'         => $faker->word,
-        'referred_by'             => $faker->word,
+        'referred_source'         => $faker->randomDigit,
+        'referred_by'             => $faker->randomDigit,
         'premedcheck'             => $faker->randomDigit,
         'premed'                  => $faker->word,
         'docsleep'                => $faker->word,
@@ -1755,7 +1872,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Patient::class, function (
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\PaymentReport::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PaymentReport::class, function ($faker) {
     $json = '{
         "reference_id": "137073682155420112914",
         "details": {
@@ -1775,7 +1892,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PaymentReport::class, func
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\PlaceService::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PlaceService::class, function ($faker) {
     return [
         'place_service' => $faker->numerify('##'),
         'description'   => $faker->sentence($nbWords = 5),
@@ -1786,7 +1903,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PlaceService::class, funct
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Plan::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Plan::class, function ($faker) {
     return [
         'name'             => $faker->word,
         'monthly_fee'      => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 500),
@@ -1816,7 +1933,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Plan::class, function ($fa
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Procedure::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Procedure::class, function ($faker) {
     return [
         'patientid'          => $faker->randomDigit,
         'insuranceid'        => $faker->randomDigit,
@@ -1846,7 +1963,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Procedure::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\ProfileImage::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ProfileImage::class, function ($faker) {
     return [
         'formid'      => $faker->randomDigit,
         'patientid'   => $faker->randomDigit,
@@ -1862,7 +1979,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\ProfileImage::class, funct
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Symptom::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Symptom::class, function ($faker) {
     $complaintIds = [
         '1|5~10|6~11|2~12|19~13|4~14|18~15|17~16|1~0|1~',
         '1|1~11|4~17|2~20|5~22|6~26|3~0|1~',
@@ -1909,7 +2026,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Symptom::class, function (
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\PreviousTreatment::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PreviousTreatment::class, function ($faker) {
     return [
         'formid'                 => $faker->randomDigit,
         'patientid'              => $faker->randomDigit,
@@ -1941,11 +2058,13 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\PreviousTreatment::class, 
         'dd_who'                 => $faker->word,
         'dd_experience'          => $faker->sentence($nbWords = 3),
         'surgery'                => $faker->randomElement(['Yes', 'No']),
-        'parent_patientid'       => $faker->randomDigit
+        'parent_patientid'       => $faker->randomDigit,
+        'userid'                 => $faker->randomDigit,
+        'docid'                  => $faker->randomDigit,
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\HealthHistory::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\HealthHistory::class, function ($faker) {
     return [
         'formid'                 => $faker->randomDigit,
         'patientid'              => $faker->randomDigit,
@@ -2018,7 +2137,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\HealthHistory::class, func
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Recipient::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Recipient::class, function ($faker) {
     return [
         'formid'              => $faker->randomDigit,
         'patientid'           => $faker->randomDigit,
@@ -2044,7 +2163,39 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Recipient::class, function
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Chair::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ReferredByContact::class, function ($faker) {
+    return [
+        'docid'                => $faker->randomDigit,
+        'salutation'           => $faker->title($gender = 'male'|'female'),
+        'lastname'             => $faker->lastName,
+        'firstname'            => $faker->firstName($gender = 'male'|'female'),
+        'middlename'           => $faker->word,
+        'company'              => $faker->company,
+        'add1'                 => $faker->address,
+        'add2'                 => $faker->address,
+        'city'                 => $faker->city,
+        'state'                => $faker->state,
+        'zip'                  => $faker->regexify('^[0-9]{5}$'),
+        'phone1'               => $faker->regexify('^1[0-9]{9}$'),
+        'phone2'               => $faker->regexify('^1[0-9]{9}$'),
+        'fax'                  => $faker->regexify('^1[0-9]{9}$'),
+        'email'                => $faker->email,
+        'national_provider_id' => $faker->regexify('^[0-9]{9}$'),
+        'qualifier'            => $faker->randomDigit,
+        'qualifierid'          => $faker->word,
+        'greeting'             => $faker->title($gender = 'male'|'female'),
+        'sincerely'            => $faker->title($gender = 'male'|'female'),
+        'contacttypeid'        => $faker->randomDigit,
+        'notes'                => $faker->sentence($nbWords = 6),
+        'preferredcontact'     => $faker->word,
+        'status'               => $faker->randomDigit,
+        'referredby_info'      => $faker->randomDigit,
+        'adddate'              => $faker->dateTime(),
+        'ip_address'           => $faker->ipv4,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Chair::class, function ($faker) {
     return [
         'name'  => $faker->word,
         'rank'  => $faker->randomDigit,
@@ -2052,7 +2203,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Chair::class, function ($f
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\Screener::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Screener::class, function ($faker) {
     return [
         'docid'                 => $faker->randomDigit,
         'userid'                => $faker->randomDigit,
@@ -2109,7 +2260,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\Screener::class, function 
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SleepStudy::class, function ($faker) {
     return [
         'testnumber'         => $faker->numerify('#########'),
         'docid'              => $faker->numerify('##'),
@@ -2128,7 +2279,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\SleepStudy::class, functio
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Dental\TransactionCode::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TransactionCode::class, function ($faker) {
     return [
         'transaction_code' => $faker->regexify('[A-Z][0-9]{4}'),
         'description'      => $faker->sentence($nbWords = 7),
@@ -2145,5 +2296,309 @@ $factory->define(DentalSleepSolutions\Eloquent\Dental\TransactionCode::class, fu
         'modifier_code_2'  => $faker->word,
         'days_units'       => $faker->numerify('#'),
         'amount_adjust'    => $faker->randomDigit
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
+    return [
+        'task'           => $faker->sentence($nbWords = 5),
+        'description'    => $faker->sentence($nbWords = 5),
+        'userid'         => $faker->randomDigit,
+        'responsibleid'  => $faker->randomDigit,
+        'status'         => $faker->randomDigit,
+        'due_date'       => $faker->dateTime(),
+        'recurring'      => $faker->randomDigit,
+        'recurring_unit' => $faker->randomDigit,
+        'adddate'        => $faker->dateTime(),
+        'ip_address'     => $faker->ipv4,
+        'patientid'      => $faker->randomDigit
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\HomeSleepTest::class, function ($faker) {
+    return [
+        'doc_id'               => $faker->randomDigit,
+        'user_id'              => $faker->randomDigit,
+        'company_id'           => $faker->randomDigit,
+        'patient_id'           => $faker->randomDigit,
+        'screener_id'          => $faker->randomDigit,
+        'ins_co_id'            => $faker->randomDigit,
+        'ins_phone'            => $faker->numerify('##########'),
+        'patient_ins_group_id' => $faker->numerify('##'),
+        'patient_ins_id'       => $faker->numerify('##'),
+        'patient_firstname'    => $faker->firstNameMale,
+        'patient_lastname'     => $faker->lastName,
+        'patient_add1'         => $faker->address,
+        'patient_add2'         => $faker->address,
+        'patient_city'         => $faker->city,
+        'patient_state'        => $faker->stateAbbr,
+        'patient_zip'          => $faker->numerify('#####'),
+        'patient_dob'          => $faker->date,
+        'patient_cell_phone'   => $faker->numerify('##########'),
+        'patient_home_phone'   => $faker->numerify('##########'),
+        'patient_email'        => $faker->email,
+        'diagnosis_id'         => $faker->randomDigit,
+        'hst_type'             => $faker->randomDigit,
+        'provider_firstname'   => $faker->firstNameMale,
+        'provider_lastname'    => $faker->lastName,
+        'provider_phone'       => $faker->numerify('##########'),
+        'provider_address'     => $faker->address,
+        'provider_city'        => $faker->city,
+        'provider_state'       => $faker->stateAbbr,
+        'provider_zip'         => $faker->numerify('#####'),
+        'provider_signature'   => $faker->word,
+        'provider_date'        => $faker->date,
+        'snore_1'              => $faker->randomDigit,
+        'snore_2'              => $faker->randomDigit,
+        'snore_3'              => $faker->randomDigit,
+        'snore_4'              => $faker->randomDigit,
+        'snore_5'              => $faker->randomDigit,
+        'viewed'               => $faker->randomDigit,
+        'status'               => $faker->randomDigit,
+        'adddate'              => $faker->dateTime(),
+        'ip_address'           => $faker->ipv4,
+        'office_notes'         => $faker->sentence($nbWords = 6),
+        'sleep_study_id'       => $faker->randomDigit,
+        'authorized_id'        => $faker->randomDigit,
+        'authorizeddate'       => $faker->dateTime(),
+        'updatedate'           => $faker->dateTime(),
+        'rejected_reason'      => $faker->sentence($nbWords = 6),
+        'rejecteddate'         => $faker->dateTime(),
+        'canceled_id'          => $faker->randomDigit,
+        'canceled_date'        => $faker->dateTime(),
+        'hst_nights'           => $faker->randomDigit,
+        'hst_positions'        => $faker->sentence($nbWords = 2)
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket::class, function ($faker) {
+    return [
+        'title'       => $faker->sentence($nbWords = 6),
+        'userid'      => $faker->randomDigit,
+        'docid'       => $faker->randomDigit,
+        'body'        => $faker->sentence($nbWords = 5),
+        'category_id' => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'status'      => $faker->randomDigit,
+        'ip_address'  => $faker->ipv4,
+        'attachment'  => $faker->regexify('[a-z0-9_-]{15,20}\.(jpg|jpeg|png|gif|bmp)'),
+        'viewed'      => $faker->boolean,
+        'creator_id'  => $faker->randomDigit,
+        'create_type' => $faker->randomDigit,
+        'company_id'  => $faker->randomDigit
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Notification::class, function ($faker) {
+    return [
+        'patientid'         => $faker->randomDigit,
+        'docid'             => $faker->randomDigit,
+        'notification'      => $faker->sentence($nbWords = 4),
+        'notification_type' => $faker->word,
+        'status'            => $faker->randomDigit,
+        'notification_date' => $faker->dateTime()
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Summary::class, function ($faker) {
+    return [
+        'formid'                           => $faker->randomDigit,
+        'patientid'                        => $faker->randomDigit,
+        'patient_name'                     => $faker->name,
+        'patient_dob'                      => $faker->dateTime()->format('m/d/Y'),
+        'docpcp'                           => $faker->numerify('##'),
+        'docsmd'                           => $faker->numerify('##'),
+        'docomd1'                          => $faker->numerify('##'),
+        'docomd2'                          => $faker->numerify('##'),
+        'docdds'                           => $faker->word,
+        'osite'                            => $faker->word,
+        'referral_source'                  => $faker->word,
+        'reason_seeking_tx'                => $faker->word,
+        'symptoms_osa'                     => $faker->word,
+        'bed_time_partner'                 => $faker->word,
+        'snoring'                          => $faker->word,
+        'apnea'                            => $faker->word,
+        'history_surgery'                  => $faker->word,
+        'tried_cpap'                       => $faker->word,
+        'cpap_totalnights'                 => $faker->randomDigit,
+        'fna'                              => $faker->word,
+        'cpap_date'                        => $faker->word,
+        'problem_cpap'                     => $faker->word,
+        'wearing_cpap'                     => $faker->word,
+        'max_translation_from'             => $faker->word,
+        'max_translation_to'               => $faker->word,
+        'max_translation_equal'            => $faker->word,
+        'initial_device_titration_1'       => $faker->numerify('##'),
+        'initial_device_titration_equal_h' => $faker->numerify('##'),
+        'initial_device_titration_equal_v' => $faker->numerify('##'),
+        'optimum_echovision_ver'           => $faker->numerify('##'),
+        'optimum_echovision_hor'           => $faker->numerify('##'),
+        'type_device'                      => $faker->word,
+        'personal'                         => $faker->word,
+        'lab_name'                         => $faker->word,
+        'sti_test_1'                       => $faker->word,
+        'sti_test_2'                       => $faker->word,
+        'sti_test_3'                       => $faker->word,
+        'sti_test_4'                       => $faker->word,
+        'sti_date_1'                       => $faker->dateTime()->format('Y-m-d'),
+        'sti_date_2'                       => $faker->dateTime()->format('Y-m-d'),
+        'sti_date_3'                       => $faker->dateTime()->format('Y-m-d'),
+        'sti_date_4'                       => $faker->dateTime()->format('Y-m-d'),
+        'sti_ahi_1'                        => $faker->word,
+        'sti_ahi_2'                        => $faker->word,
+        'sti_ahi_3'                        => $faker->word,
+        'sti_ahi_4'                        => $faker->word,
+        'sti_rdi_1'                        => $faker->word,
+        'sti_rdi_2'                        => $faker->word,
+        'sti_rdi_3'                        => $faker->word,
+        'sti_rdi_4'                        => $faker->word,
+        'sti_supine_ahi_1'                 => $faker->word,
+        'sti_supine_ahi_2'                 => $faker->word,
+        'sti_supine_ahi_3'                 => $faker->word,
+        'sti_supine_ahi_4'                 => $faker->word,
+        'sti_supine_rdi_1'                 => $faker->word,
+        'sti_supine_rdi_2'                 => $faker->word,
+        'sti_supine_rdi_3'                 => $faker->word,
+        'sti_supine_rdi_4'                 => $faker->word,
+        'sti_lsat_1'                       => $faker->word,
+        'sti_lsat_2'                       => $faker->word,
+        'sti_lsat_3'                       => $faker->word,
+        'sti_lsat_4'                       => $faker->word,
+        'sti_titration_1'                  => $faker->word,
+        'sti_titration_2'                  => $faker->word,
+        'sti_titration_3'                  => $faker->word,
+        'sti_titration_4'                  => $faker->word,
+        'sti_cpap_p_1'                     => $faker->word,
+        'sti_cpap_p_2'                     => $faker->word,
+        'sti_cpap_p_3'                     => $faker->word,
+        'sti_cpap_p_4'                     => $faker->word,
+        'sti_apnea_1'                      => $faker->word,
+        'sti_apnea_2'                      => $faker->word,
+        'sti_apnea_3'                      => $faker->word,
+        'sti_apnea_4'                      => $faker->word,
+        'ep_date_1'                        => $faker->dateTime()->format('Y-m-d'),
+        'ep_date_2'                        => $faker->dateTime()->format('Y-m-d'),
+        'ep_date_3'                        => $faker->dateTime()->format('Y-m-d'),
+        'ep_date_4'                        => $faker->dateTime()->format('Y-m-d'),
+        'ep_date_5'                        => $faker->dateTime()->format('Y-m-d'),
+        'dset1'                            => $faker->word,
+        'dset2'                            => $faker->word,
+        'dset3'                            => $faker->word,
+        'dset4'                            => $faker->word,
+        'dset5'                            => $faker->word,
+        'ep_e_1'                           => $faker->word,
+        'ep_e_2'                           => $faker->word,
+        'ep_e_3'                           => $faker->word,
+        'ep_e_4'                           => $faker->word,
+        'ep_e_5'                           => $faker->word,
+        'ep_s_1'                           => $faker->word,
+        'ep_s_2'                           => $faker->word,
+        'ep_s_3'                           => $faker->word,
+        'ep_s_4'                           => $faker->word,
+        'ep_s_5'                           => $faker->word,
+        'ep_w_1'                           => $faker->word,
+        'ep_w_2'                           => $faker->word,
+        'ep_w_3'                           => $faker->word,
+        'ep_w_4'                           => $faker->word,
+        'ep_w_5'                           => $faker->word,
+        'ep_a_1'                           => $faker->word,
+        'ep_a_2'                           => $faker->word,
+        'ep_a_3'                           => $faker->word,
+        'ep_a_4'                           => $faker->word,
+        'ep_a_5'                           => $faker->word,
+        'ep_el_1'                          => $faker->word,
+        'ep_el_2'                          => $faker->word,
+        'ep_el_3'                          => $faker->word,
+        'ep_el_4'                          => $faker->word,
+        'ep_el_5'                          => $faker->word,
+        'ep_h_1'                           => $faker->word,
+        'ep_h_2'                           => $faker->word,
+        'ep_h_3'                           => $faker->word,
+        'ep_h_4'                           => $faker->word,
+        'ep_h_5'                           => $faker->word,
+        'ep_r_1'                           => $faker->word,
+        'ep_r_2'                           => $faker->word,
+        'ep_r_3'                           => $faker->word,
+        'ep_r_4'                           => $faker->word,
+        'ep_r_5'                           => $faker->word,
+        'mini_consult'                     => $faker->word,
+        'exam_impressions'                 => $faker->word,
+        'oa_soap'                          => $faker->word,
+        'fm_blue'                          => $faker->word,
+        'oa_check_1'                       => $faker->word,
+        'oa_check_2'                       => $faker->word,
+        'oa_check_3'                       => $faker->word,
+        'oa_check_4'                       => $faker->word,
+        'oa_check_5'                       => $faker->word,
+        'oa_check_6'                       => $faker->word,
+        'month_check_1'                    => $faker->word,
+        'month_check_2'                    => $faker->word,
+        'month_check_3'                    => $faker->word,
+        'month_check_4'                    => $faker->word,
+        'oa_psg'                           => $faker->word,
+        'year_check_1'                     => $faker->word,
+        'year_check_2'                     => $faker->word,
+        'year_check_3'                     => $faker->word,
+        'year_check_4'                     => $faker->word,
+        'additional_notes'                 => $faker->sentence($nbWords = 5),
+        'userid'                           => $faker->randomDigit,
+        'docid'                            => $faker->randomDigit,
+        'status'                           => $faker->randomDigit,
+        'adddate'                          => $faker->dateTime(),
+        'ip_address'                       => $faker->ipv4,
+        'office'                           => $faker->word,
+        'sleep_same_room'                  => $faker->word,
+        'currently_wearing'                => $faker->word,
+        'what_percentage'                  => $faker->word,
+        'how_long'                         => $faker->word,
+        'sleep_md'                         => $faker->word,
+        'test_type_name'                   => $faker->word,
+        'sti_sleep_efficiency_1'           => $faker->word,
+        'sti_sleep_efficiency_2'           => $faker->word,
+        'sti_sleep_efficiency_3'           => $faker->word,
+        'sti_sleep_efficiency_4'           => $faker->word,
+        'sti_rem_ahi_1'                    => $faker->word,
+        'sti_rem_ahi_2'                    => $faker->word,
+        'sti_rem_ahi_3'                    => $faker->word,
+        'sti_rem_ahi_4'                    => $faker->word,
+        'sti_o2_1'                         => $faker->word,
+        'sti_o2_2'                         => $faker->word,
+        'sti_o2_3'                         => $faker->word,
+        'sti_o2_4'                         => $faker->word,
+        'sti_other_1'                      => $faker->word,
+        'sti_other_2'                      => $faker->word,
+        'sti_other_3'                      => $faker->word,
+        'sti_other_4'                      => $faker->word,
+        'ep_ts_1'                          => $faker->word,
+        'ep_ts_2'                          => $faker->word,
+        'ep_ts_3'                          => $faker->word,
+        'ep_ts_4'                          => $faker->word,
+        'ep_ts_5'                          => $faker->word,
+        'ep_tr_1'                          => $faker->word,
+        'ep_tr_2'                          => $faker->word,
+        'ep_tr_3'                          => $faker->word,
+        'ep_tr_4'                          => $faker->word,
+        'ep_tr_5'                          => $faker->word,
+        'appt_notes_1'                     => $faker->word,
+        'appt_notes_2'                     => $faker->word,
+        'appt_notes_3'                     => $faker->word,
+        'appt_notes_4'                     => $faker->word,
+        'appt_notes_1p3'                   => $faker->word,
+        'appt_notes_2p3'                   => $faker->word,
+        'appt_notes_3p3'                   => $faker->word,
+        'appt_notes_4p3'                   => $faker->word,
+        'appt_notes_5p3'                   => $faker->word,
+        'wapn1'                            => $faker->word,
+        'wapn2'                            => $faker->word,
+        'wapn3'                            => $faker->word,
+        'wapn4'                            => $faker->word,
+        'wapn5'                            => $faker->word,
+        'patientphoto'                     => $faker->regexify('[a-z0-9_\-]+\.(jpg|gif|bmp|png)'),
+        'sleep_qual1'                      => $faker->word,
+        'sleep_qual2'                      => $faker->word,
+        'sleep_qual3'                      => $faker->word,
+        'sleep_qual4'                      => $faker->word,
+        'sleep_qual5'                      => $faker->word,
+        'location'                         => $faker->randomDigit
     ];
 });

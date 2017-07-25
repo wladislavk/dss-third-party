@@ -2,91 +2,178 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\PreviousTreatmentStore;
-use DentalSleepSolutions\Http\Requests\PreviousTreatmentUpdate;
-use DentalSleepSolutions\Http\Requests\PreviousTreatmentDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\PreviousTreatment;
-use DentalSleepSolutions\Contracts\Repositories\PreviousTreatments;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class PreviousTreatmentsController extends Controller
+class PreviousTreatmentsController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\PreviousTreatments $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/previous-treatments",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/PreviousTreatment")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(PreviousTreatments $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PreviousTreatment $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/previous-treatments/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/PreviousTreatment")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(PreviousTreatment $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\PreviousTreatments $resources
-     * @param  \DentalSleepSolutions\Http\Requests\PreviousTreatmentStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/previous-treatments",
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="polysomnographic", in="formData", type="integer"),
+     *     @SWG\Parameter(name="sleep_center_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="sleep_study_on", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="confirmed_diagnosis", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="rdi", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="ahi", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="cpap", in="formData", type="string", required=true, pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="intolerance", in="formData", type="string", pattern="^~([0-9]+~)+$"),
+     *     @SWG\Parameter(name="other_intolerance", in="formData", type="string"),
+     *     @SWG\Parameter(name="other_therapy", in="formData", type="string"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="other", in="formData", type="string"),
+     *     @SWG\Parameter(name="affidavit", in="formData", type="string"),
+     *     @SWG\Parameter(name="type_study", in="formData", type="string"),
+     *     @SWG\Parameter(name="nights_wear_cpap", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="percent_night_cpap", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="custom_diagnosis", in="formData", type="string"),
+     *     @SWG\Parameter(name="sleep_study_by", in="formData", type="string"),
+     *     @SWG\Parameter(name="triedquittried", in="formData", type="string"),
+     *     @SWG\Parameter(name="timesovertime", in="formData", type="string"),
+     *     @SWG\Parameter(name="cur_cpap", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="sleep_center_name_text", in="formData", type="string"),
+     *     @SWG\Parameter(name="dd_wearing", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="dd_prev", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="dd_otc", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="dd_fab", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="dd_who", in="formData", type="string"),
+     *     @SWG\Parameter(name="dd_experience", in="formData", type="string"),
+     *     @SWG\Parameter(name="surgery", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="parent_patientid", in="formData", type="integer"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/PreviousTreatment")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(PreviousTreatments $resources, PreviousTreatmentStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PreviousTreatment $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PreviousTreatmentUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/previous-treatments/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="polysomnographic", in="formData", type="integer"),
+     *     @SWG\Parameter(name="sleep_center_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="sleep_study_on", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="confirmed_diagnosis", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="rdi", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="ahi", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="cpap", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="intolerance", in="formData", type="string", pattern="^~([0-9]+~)+$"),
+     *     @SWG\Parameter(name="other_intolerance", in="formData", type="string"),
+     *     @SWG\Parameter(name="other_therapy", in="formData", type="string"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="other", in="formData", type="string"),
+     *     @SWG\Parameter(name="affidavit", in="formData", type="string"),
+     *     @SWG\Parameter(name="type_study", in="formData", type="string"),
+     *     @SWG\Parameter(name="nights_wear_cpap", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="percent_night_cpap", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="custom_diagnosis", in="formData", type="string"),
+     *     @SWG\Parameter(name="sleep_study_by", in="formData", type="string"),
+     *     @SWG\Parameter(name="triedquittried", in="formData", type="string"),
+     *     @SWG\Parameter(name="timesovertime", in="formData", type="string"),
+     *     @SWG\Parameter(name="cur_cpap", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="sleep_center_name_text", in="formData", type="string"),
+     *     @SWG\Parameter(name="dd_wearing", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="dd_prev", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="dd_otc", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="dd_fab", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="dd_who", in="formData", type="string"),
+     *     @SWG\Parameter(name="dd_experience", in="formData", type="string"),
+     *     @SWG\Parameter(name="surgery", in="formData", type="string", pattern="^(:?Yes|No)$"),
+     *     @SWG\Parameter(name="parent_patientid", in="formData", type="integer"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(PreviousTreatment $resource, PreviousTreatmentUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PreviousTreatment $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PreviousTreatmentDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/previous-treatments/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(PreviousTreatment $resource, PreviousTreatmentDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

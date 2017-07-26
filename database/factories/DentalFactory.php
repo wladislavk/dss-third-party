@@ -2559,6 +2559,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Flowsheet::class, f
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ModifierCode::class, function ($faker) {
+    return [
+        'modifier_code' => $faker->numerify('##'),
+        'description'   => $faker->sentence($nbWords = 6),
+        'sortby'        => $faker->randomDigit,
+        'status'        => $faker->randomDigit,
+        'adddate'       => $faker->dateTime(),
+        'ip_address'    => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

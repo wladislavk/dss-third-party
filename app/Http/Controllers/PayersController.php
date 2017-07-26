@@ -2,101 +2,152 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Payer;
 use Illuminate\Http\Request;
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\PayerStore;
-use DentalSleepSolutions\Contracts\Resources\Payer;
-use DentalSleepSolutions\Http\Requests\PayerUpdate;
-use DentalSleepSolutions\Http\Requests\PayerDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Repositories\Payers;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class PayersController extends Controller
+class PayersController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Payers $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/payers",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Payer")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(Payers $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Payer $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/payers/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Payer")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(Payer $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
+     * @SWG\Post(
+     *     path="/payers",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Payer")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function store()
+    {
+        $this->hasIp = false;
+        return parent::store();
+    }
+
+    /**
+     * @SWG\Put(
+     *     path="/payers/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     * 
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function update($id)
+    {
+        return parent::update($id);
+    }
+
+    /**
+     * @SWG\Delete(
+     *     path="/payers/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function destroy($id)
+    {
+        return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/payers/{payer_id}/required-fields",
+     *     @SWG\Parameter(name="payer_id", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @SWG\Get(
+     *     path="/enrollments/requiredfields/{payer_id}",
+     *     @SWG\Parameter(name="payer_id", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
      * Get array of enrollment required fields for a payer.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Payer  $payer
+     * @param Request $request
+     * @param int|null $payerId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function requiredFields(Payer $payer, Request $request)
+    public function requiredFields(Request $request, $payerId = null)
     {
-        $fields = $payer->requiredFields($request->get('endpoint'));
+        $fields = [];
+        if ($payerId) {
+            /** @var Payer $payer */
+            $payer = $this->repository->find($payerId);
+            $fields = $payer->requiredFields($request->get('endpoint'));
+        }
 
         return ApiResponse::responseOk('', $fields);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Payers $resources
-     * @param  \DentalSleepSolutions\Http\Requests\PayerStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(Payers $resources, PayerStore $request)
+    public function getModelNamespace()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Payer $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PayerUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Payer $resource, PayerUpdate $request)
-    {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Payer $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PayerDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(Payer $resource, PayerDestroy $request)
-    {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return self::BASE_MODEL_NAMESPACE;
     }
 }

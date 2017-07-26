@@ -2,87 +2,160 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\PatientSummaryStore;
-use DentalSleepSolutions\Http\Requests\PatientSummaryUpdate;
-use DentalSleepSolutions\Http\Requests\PatientSummaryDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\PatientSummary;
-use DentalSleepSolutions\Contracts\Repositories\PatientSummaries;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
+use DentalSleepSolutions\Http\Requests\PatientSummary as PatientSummaryRequest;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class PatientSummariesController extends Controller
+class PatientSummariesController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\PatientSummaries $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(PatientSummaries $resources)
-    {
-        $data = $resources->all();
+    /** @var PatientSummaryRepository */
+    protected $repository;
 
-        return ApiResponse::responseOk('', $data);
+    /**
+     * @SWG\Get(
+     *     path="/patient-summaries",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/PatientSummary")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function index()
+    {
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PatientSummary $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/patient-summaries/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/PatientSummary")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(PatientSummary $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\PatientSummaries $resources
-     * @param  \DentalSleepSolutions\Http\Requests\PatientSummaryStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/patient-summaries",
+     *     @SWG\Parameter(name="pid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="fspage1_complete", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="next_visit", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="last_visit", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="last_treatment", in="formData", type="string"),
+     *     @SWG\Parameter(name="appliance", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivery_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="vob", in="formData", type="string"),
+     *     @SWG\Parameter(name="ledger", in="formData", type="string", pattern="^-?[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="patient_info", in="formData", type="boolean"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/PatientSummary")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(PatientSummaries $resources, PatientSummaryStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
+     * @SWG\Put(
+     *     path="/patient-summaries/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="pid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="fspage1_complete", in="formData", type="boolean"),
+     *     @SWG\Parameter(name="next_visit", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="last_visit", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="last_treatment", in="formData", type="string"),
+     *     @SWG\Parameter(name="appliance", in="formData", type="integer"),
+     *     @SWG\Parameter(name="delivery_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="vob", in="formData", type="string"),
+     *     @SWG\Parameter(name="ledger", in="formData", type="string", pattern="^-?[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="patient_info", in="formData", type="boolean"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function update($id)
+    {
+        return parent::update($id);
+    }
+
+    /**
+     * @SWG\Delete(
+     *     path="/patient-summaries/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function destroy($id)
+    {
+        return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/patient-summaries/update-tracker-notes",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PatientSummary $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientSummaryUpdate $request
+     * @param PatientSummaryRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(PatientSummary $resource, PatientSummaryUpdate $request)
+    public function updateTrackerNotes(PatientSummaryRequest $request)
     {
-        $resource->update($request->all());
+        $this->validate($request, $request->updateRules());
+
+        $notes = $request->input('tracker_notes', '');
+        $patientId = $request->input('patient_id', 0);
+        $docId = $this->currentUser->docid ?: 0;
+
+        $this->repository->updateTrackerNotes($patientId, $docId, $notes);
 
         return ApiResponse::responseOk('Resource updated');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\PatientSummary $resource
-     * @param  \DentalSleepSolutions\Http\Requests\PatientSummaryDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(PatientSummary $resource, PatientSummaryDestroy $request)
-    {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
     }
 }

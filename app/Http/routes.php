@@ -57,6 +57,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
 
+    Route::resource('claim-notes', 'ClaimNotesController', ['except' => 'create', 'edit']);
+
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
 
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);

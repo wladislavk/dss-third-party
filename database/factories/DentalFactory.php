@@ -299,6 +299,22 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ClaimNote::class, f
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ClaimElectronic::class, function ($faker) {
+    return [
+        'claimid'         => $faker->randomDigit,
+        'response'        => $faker->sentence($nbWords = 6),
+        'adddate'         => $faker->dateTime(),
+        'ip_address'      => $faker->ipv4,
+        'reference_id'    => $faker->word,
+        'percase_date'    => $faker->dateTime(),
+        'percase_name'    => $faker->sentence($nbWords = 3),
+        'percase_amount'  => $faker->randomFloat($nbMaxDecimals = NULL, $min = 0, $max = NULL),
+        'percase_status'  => $faker->randomDigit,
+        'percase_invoice' => $faker->randomDigit,
+        'percase_free'    => $faker->randomDigit,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AppointmentType::class, function ($faker) {
     return [
         'name'      => $faker->word,

@@ -22,6 +22,7 @@ class BindingSetter
         Eloquent\Models\Dental\Chair::class,
         Eloquent\Models\Dental\ChangeList::class,
         Eloquent\Models\Dental\Charge::class,
+        Eloquent\Models\Dental\ClaimElectronic::class,
         Eloquent\Models\Dental\ClaimNote::class,
         Eloquent\Models\Dental\ClaimNoteAttachment::class,
         Eloquent\Models\Company::class,

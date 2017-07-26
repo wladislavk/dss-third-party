@@ -2,91 +2,152 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\DentalClinicalExamStore;
-use DentalSleepSolutions\Http\Requests\DentalClinicalExamUpdate;
-use DentalSleepSolutions\Http\Requests\DentalClinicalExamDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\DentalClinicalExam;
-use DentalSleepSolutions\Contracts\Repositories\DentalClinicalExams;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class DentalClinicalExamsController extends Controller
+class DentalClinicalExamsController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\DentalClinicalExams $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/dental-clinical-exams",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/DentalClinicalExam")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(DentalClinicalExams $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\DentalClinicalExam $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/dental-clinical-exams/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/DentalClinicalExam")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(DentalClinicalExam $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\DentalClinicalExams $resources
-     * @param  \DentalSleepSolutions\Http\Requests\DentalClinicalExamStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/dental-clinical-exams",
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="exam_teeth", in="formData", type="string"),
+     *     @SWG\Parameter(name="other_exam_teeth", in="formData", type="string"),
+     *     @SWG\Parameter(name="caries", in="formData", type="string"),
+     *     @SWG\Parameter(name="where_facets", in="formData", type="string"),
+     *     @SWG\Parameter(name="cracked_fractured", in="formData", type="string"),
+     *     @SWG\Parameter(name="old_worn_inadequate_restorations", in="formData", type="string"),
+     *     @SWG\Parameter(name="dental_class_right", in="formData", type="string"),
+     *     @SWG\Parameter(name="dental_division_right", in="formData", type="string"),
+     *     @SWG\Parameter(name="dental_class_left", in="formData", type="string"),
+     *     @SWG\Parameter(name="dental_division_left", in="formData", type="string"),
+     *     @SWG\Parameter(name="additional_paragraph", in="formData", type="string"),
+     *     @SWG\Parameter(name="initial_tooth", in="formData", type="string"),
+     *     @SWG\Parameter(name="open_proximal", in="formData", type="string"),
+     *     @SWG\Parameter(name="deistema", in="formData", type="string"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="missing", in="formData", type="string"),
+     *     @SWG\Parameter(name="crossbite", in="formData", type="string"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/DentalClinicalExam")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(DentalClinicalExams $resources, DentalClinicalExamStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\DentalClinicalExam $resource
-     * @param  \DentalSleepSolutions\Http\Requests\DentalClinicalExamUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/dental-clinical-exams/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="exam_teeth", in="formData", type="string"),
+     *     @SWG\Parameter(name="other_exam_teeth", in="formData", type="string"),
+     *     @SWG\Parameter(name="caries", in="formData", type="string"),
+     *     @SWG\Parameter(name="where_facets", in="formData", type="string"),
+     *     @SWG\Parameter(name="cracked_fractured", in="formData", type="string"),
+     *     @SWG\Parameter(name="old_worn_inadequate_restorations", in="formData", type="string"),
+     *     @SWG\Parameter(name="dental_class_right", in="formData", type="string"),
+     *     @SWG\Parameter(name="dental_division_right", in="formData", type="string"),
+     *     @SWG\Parameter(name="dental_class_left", in="formData", type="string"),
+     *     @SWG\Parameter(name="dental_division_left", in="formData", type="string"),
+     *     @SWG\Parameter(name="additional_paragraph", in="formData", type="string"),
+     *     @SWG\Parameter(name="initial_tooth", in="formData", type="string"),
+     *     @SWG\Parameter(name="open_proximal", in="formData", type="string"),
+     *     @SWG\Parameter(name="deistema", in="formData", type="string"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="missing", in="formData", type="string"),
+     *     @SWG\Parameter(name="crossbite", in="formData", type="string"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(DentalClinicalExam $resource, DentalClinicalExamUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\DentalClinicalExam $resource
-     * @param  \DentalSleepSolutions\Http\Requests\DentalClinicalExamDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/dental-clinical-exams/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(DentalClinicalExam $resource, DentalClinicalExamDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

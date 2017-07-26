@@ -2,91 +2,148 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\RecipientStore;
-use DentalSleepSolutions\Http\Requests\RecipientUpdate;
-use DentalSleepSolutions\Http\Requests\RecipientDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\Recipient;
-use DentalSleepSolutions\Contracts\Repositories\Recipients;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class RecipientsController extends Controller
+class RecipientsController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Recipients $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/recipients",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Recipient")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(Recipients $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Recipient $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/recipients/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Recipient")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(Recipient $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Recipients $resources
-     * @param  \DentalSleepSolutions\Http\Requests\RecipientStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/recipients",
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="referring_physician", in="formData", type="string"),
+     *     @SWG\Parameter(name="dentist", in="formData", type="string"),
+     *     @SWG\Parameter(name="physicians_other", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_info", in="formData", type="string"),
+     *     @SWG\Parameter(name="q_file1", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file2", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file3", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file4", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file5", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="q_file6", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file7", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file8", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file9", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file10", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Recipient")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(Recipients $resources, RecipientStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Recipient $resource
-     * @param  \DentalSleepSolutions\Http\Requests\RecipientUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/recipients/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="referring_physician", in="formData", type="string"),
+     *     @SWG\Parameter(name="dentist", in="formData", type="string"),
+     *     @SWG\Parameter(name="physicians_other", in="formData", type="string"),
+     *     @SWG\Parameter(name="patient_info", in="formData", type="string"),
+     *     @SWG\Parameter(name="q_file1", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file2", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file3", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file4", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file5", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="q_file6", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file7", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file8", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file9", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Parameter(name="q_file10", in="formData", type="string", pattern="^[a-z0-9]{12}\.(gif|png|jpg)$"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(Recipient $resource, RecipientUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Recipient $resource
-     * @param  \DentalSleepSolutions\Http\Requests\RecipientDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/recipients/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(Recipient $resource, RecipientDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

@@ -221,6 +221,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('medications', 'MedicationsController', ['except' => ['create', 'edit']]);
 
+    Route::resource('missing-teeth', 'MissingTeethController', ['except' => ['create', 'edit']]);
+
     Route::resource('modifier-codes', 'ModifierCodesController', ['except' => ['create', 'edit']]);
 
     Route::resource('nasal-passages', 'NasalPassagesController', ['except' => ['create', 'edit']]);

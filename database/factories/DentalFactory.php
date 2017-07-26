@@ -2570,6 +2570,28 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ModifierCode::class
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\MissingTooth::class, function ($faker) {
+    return [
+        'formid'     => $faker->randomDigit,
+        'patientid'  => $faker->randomDigit,
+        'pck'        => $faker->regexify('(~[0-9]*)+'),
+        'rec'        => $faker->regexify('(~[0-9]*)+'),
+        'mob'        => $faker->regexify('(~[0-9]*)+'),
+        'rec1'       => $faker->regexify('(~[0-9]*)+'),
+        'pck1'       => $faker->regexify('(~[0-9]*)+'),
+        's1'         => $faker->numerify('#'),
+        's2'         => $faker->numerify('#'),
+        's3'         => $faker->numerify('#'),
+        's4'         => $faker->numerify('#'),
+        's5'         => $faker->numerify('#'),
+        's6'         => $faker->numerify('#'),
+        'userid'     => $faker->randomDigit,
+        'docid'      => $faker->randomDigit,
+        'status'     => $faker->randomDigit,
+        'ip_address' => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

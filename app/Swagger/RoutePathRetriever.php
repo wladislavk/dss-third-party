@@ -32,7 +32,7 @@ class RoutePathRetriever
         }
         $path = '/' . $route->getPath();
         $path = str_replace($route->getPrefix(), '', $path);
-        $regexp = '/(?<=\/)\{([a-z_]+?)\}(?=\/|$)/';
+        $regexp = '/(?<=\/)\{([a-z0-9_]+?)\}(?=\/|$)/';
         $path = preg_replace($regexp, '{id}', $path);
         return $path;
     }

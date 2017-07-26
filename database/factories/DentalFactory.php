@@ -2634,6 +2634,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExtraPercaseInvoice
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\QPage2Surgery::class, function ($faker) {
+    return [
+        'patientid'    => $faker->randomDigit,
+        'surgery_date' => $faker->dateTime(),
+        'surgery'      => $faker->sentence($nbWords = 6),
+        'surgeon'      => $faker->name(),
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

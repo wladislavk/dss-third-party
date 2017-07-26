@@ -290,6 +290,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('qualifiers', 'QualifiersController', ['except' => ['create', 'edit']]);
     Route::post('qualifiers/active', 'QualifiersController@getActive');
 
+    Route::resource('q-page2-surgeries', 'QPage2SurgeriesController', ['except' => ['create', 'edit']]);
+
     Route::resource('recipients', 'RecipientsController', ['except' => ['create', 'edit']]);
 
     Route::resource('referred-by-contacts', 'ReferredByContactsController', ['except' => ['create', 'edit']]);

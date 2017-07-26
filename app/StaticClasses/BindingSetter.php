@@ -102,6 +102,7 @@ class BindingSetter
         Eloquent\Models\Dental\PreviousTreatment::class,
         Eloquent\Models\Dental\ProfileImage::class,
         Eloquent\Models\Dental\Qualifier::class,
+        Eloquent\Models\Dental\QPage2Surgery::class,
         Eloquent\Models\Dental\Recipient::class,
         Eloquent\Models\Dental\ReferredByContact::class,
         Eloquent\Models\Dental\Refund::class,

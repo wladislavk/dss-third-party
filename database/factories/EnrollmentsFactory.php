@@ -11,7 +11,7 @@
 |
 */
 
-$factory->define(DentalSleepSolutions\Eloquent\Enrollments\Enrollment::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment::class, function ($faker) {
     return [
         'reference_id' => 51,
         'status' => 0,

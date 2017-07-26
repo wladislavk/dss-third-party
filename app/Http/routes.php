@@ -271,6 +271,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('payment-reports', 'PaymentReportsController', ['except' => ['create', 'edit']]);
     Route::post('payment-reports/number', 'PaymentReportsController@getNumber');
 
+    Route::resource('percase-invoices', 'PercaseInvoicesController', ['except' => ['create', 'edit']]);
+
     Route::resource('place-services', 'PlaceServicesController', ['except' => ['create', 'edit']]);
 
     Route::resource('plans', 'PlansController', ['except' => ['create', 'edit']]);

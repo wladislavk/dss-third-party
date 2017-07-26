@@ -2592,6 +2592,27 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\MissingTooth::class
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PercaseInvoice::class, function ($faker) {
+    return [
+        'adminid'             => $faker->randomDigit,
+        'docid'               => $faker->randomDigit,
+        'adddate'             => $faker->dateTime(),
+        'ip_address'          => $faker->ipv4,
+        'monthly_fee_date'    => $faker->dateTime(),
+        'monthly_fee_amount'  => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 1000),
+        'status'              => $faker->randomDigit,
+        'due_date'            => $faker->dateTime(),
+        'companyid'           => $faker->randomDigit,
+        'user_fee_date'       => $faker->dateTime(),
+        'user_fee_amount'     => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 1000),
+        'producer_fee_date'   => $faker->dateTime(),
+        'producer_fee_amount' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 1000),
+        'user_fee_desc'       => $faker->word,
+        'producer_fee_desc'   => $faker->word,
+        'invoice_type'        => $faker->randomDigit
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

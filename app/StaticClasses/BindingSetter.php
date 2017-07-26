@@ -94,6 +94,7 @@ class BindingSetter
         Eloquent\Models\Dental\Patient::class,
         Eloquent\Models\Payer::class,
         Eloquent\Models\Dental\PaymentReport::class,
+        Eloquent\Models\Dental\PercaseInvoice::class,
         Eloquent\Models\Dental\PlaceService::class,
         Eloquent\Models\Dental\Plan::class,
         Eloquent\Models\Dental\PreviousTreatment::class,

@@ -124,6 +124,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('flowsheet-segments', 'FlowsheetSegmentsController', ['except' => ['create', 'edit']]);
 
+    Route::resource('flowsheet-steps', 'FlowsheetStepsController', ['except' => ['create', 'edit']]);
+
     Route::resource('gag-reflexes', 'GagReflexesController', ['except' => ['create', 'edit']]);
 
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);

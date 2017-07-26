@@ -2424,6 +2424,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\UserCompany::class,
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\FlowsheetStep::class, function ($faker) {
+    return [
+        'name'       => $faker->word,
+        'sort_by'    => $faker->randomDigit,
+        'section'    => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\UserHstCompany::class, function ($faker) {
     return [
         'userid'     => $faker->randomDigit,

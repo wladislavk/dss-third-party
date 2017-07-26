@@ -25,11 +25,6 @@ use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
  * @property string|null $adddate
  * @property string|null $ip_address
  * @mixin \Eloquent
- * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Models\UserSignature whereAdddate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Models\UserSignature whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Models\UserSignature whereIpAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Models\UserSignature whereSignatureJson($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\DentalSleepSolutions\Eloquent\Models\UserSignature whereUserId($value)
  */
 class UserSignature extends AbstractModel
 {

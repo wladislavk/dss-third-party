@@ -2323,6 +2323,26 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SupportResponse::cl
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TransactionCode::class, function ($faker) {
+    return [
+        'transaction_code' => $faker->regexify('[A-Z][0-9]{4}'),
+        'description'      => $faker->sentence($nbWords = 7),
+        'type'             => $faker->numerify('#'),
+        'sortby'           => $faker->randomDigit,
+        'status'           => $faker->randomDigit,
+        'adddate'          => $faker->dateTime(),
+        'ip_address'       => $faker->ipv4,
+        'default_code'     => $faker->randomDigit,
+        'docid'            => $faker->randomDigit,
+        'amount'           => $faker->numerify('###.##'),
+        'place'            => $faker->randomDigit,
+        'modifier_code_1'  => $faker->word,
+        'modifier_code_2'  => $faker->word,
+        'days_units'       => $faker->numerify('#'),
+        'amount_adjust'    => $faker->randomDigit
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

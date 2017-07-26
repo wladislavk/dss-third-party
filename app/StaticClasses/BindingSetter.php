@@ -108,6 +108,7 @@ class BindingSetter
         Eloquent\Models\Dental\Tongue::class,
         Eloquent\Models\Dental\TongueClinicalExam::class,
         Eloquent\Models\Dental\TonsilsClinicalExam::class,
+        Eloquent\Models\Dental\TransactionCode::class,
         Eloquent\Models\Dental\User::class,
     ];
 

@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Requests\Enrollments;
 
-use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Http\Requests\AbstractNonRestRequest;
 
-class OriginalSignature extends Request
+class OriginalSignature extends AbstractNonRestRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -17,7 +17,17 @@ class OriginalSignature extends Request
             'user_id' => 'required|exists:dental_users,userid',
             'reference_id' => 'required|exists:dental_eligible_enrollment,reference_id',
             'original_signature' => 'required|mimes:pdf',
-            'npi' => 'required|integer',
+            'npi' => 'required',
         ];
+    }
+
+    /**
+     * @todo: check how to implement authorization properly for API tests that do not use middleware
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
     }
 }

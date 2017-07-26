@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Eligible;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserCompanyRepository;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Exception\ClientException;
-use DentalSleepSolutions\Eloquent\Dental\UserCompany;
 
 /**
  * This class encapsulates easy api for interacting with
@@ -15,13 +15,6 @@ use DentalSleepSolutions\Eloquent\Dental\UserCompany;
  */
 class Client
 {
-    private $base_uri = 'https://gds.eligibleapi.com';
-    private $version = 'v1.5';
-    private $api_key;
-    private $handler = null;
-
-    /*********const****/
-
     /**claim statuses*/
     const DSS_CLAIM_PENDING = 0;
     const DSS_CLAIM_SENT = 1;
@@ -47,16 +40,26 @@ class Client
     const DSS_TRXN_TYPE_DIAG = 4;
     const DSS_TRXN_TYPE_ADJ = 6;
 
+    private $base_uri = 'https://gds.eligibleapi.com';
+    private $version = 'v1.5';
+    private $api_key;
+    private $handler = null;
+
+    /** @var UserCompanyRepository */
+    private $userCompanyRepository;
+
     /**
-     * @param string $version
+     * @param UserCompanyRepository $userCompanyRepository
+     * @param string|null $version
      */
-    public function __construct($version = null)
+    public function __construct(UserCompanyRepository $userCompanyRepository, $version = null)
     {
         if ($version) {
             $this->version = $version;
         }
 
         $this->api_key = config('elligibleapi.default_api_key');
+        $this->userCompanyRepository = $userCompanyRepository;
     }
 
     /**
@@ -71,6 +74,7 @@ class Client
         if ($this->handler) {
             $arg['handler'] = $this->handler;
         }
+        $arg['headers'] = ['User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:43.0) Gecko/20100101 Firefox/43.0'];
         return $arg;
     }
 
@@ -99,7 +103,7 @@ class Client
      */
     public function setApiKeyFromUser($id)
     {
-        $new_key = UserCompany::getApiKey($id);
+        $new_key = $this->userCompanyRepository->getApiKey($id);
 
         if ($new_key) {
             $this->api_key = $new_key;
@@ -116,6 +120,41 @@ class Client
         $this->handler = $handler;
     }
 
+
+    /**
+     * create get request
+     *
+     * @param string $address
+     * @param array $data
+     * @return mixed
+     * @throws \Exception
+     */
+    public function requestGet($address, array $data)
+    {
+        $data['api_key'] = $this->api_key;
+
+        if (config('elligibleapi.test')) {
+            $data['test'] = 'true';
+        }
+
+        $args = http_build_query($data);
+        $address = '/' . $this->version . '/' . $address . ($args != '' ? '?' : '').$args;
+
+        try {
+            $client = new \GuzzleHttp\Client($this->getConstructArguments());
+            $response = $client->get($address);
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+        }
+
+        if ($response->getStatusCode() >= 500) {
+            throw new \Exception("Server error:" . $response->getStatusCode());
+        }
+
+        return new Response($response);
+    }
+
+
     /**
      * create post/put request
      *
@@ -125,7 +164,7 @@ class Client
      * @return mixed
      * @throws \Exception
      */
-    public function request($type, $address, $data)
+    public function request($type, $address, $data, $as = 'json')
     {
         $data['api_key'] = $this->api_key;
 
@@ -136,14 +175,14 @@ class Client
         try {
             $client = new \GuzzleHttp\Client($this->getConstructArguments());
             $response = $client->request($type, '/' . $this->version . '/' . $address, [
-                'json' => $data
+                $as => $data
             ]);
         } catch (ClientException $e) {
             $response = $e->getResponse();
         }
 
         if ($response->getStatusCode() >= 500) {
-            throw new \Exception("Server error:" + $response->getStatusCode());
+            throw new \Exception("Server error:" . $response->getStatusCode());
         }
 
         return new Response($response);
@@ -154,12 +193,13 @@ class Client
      *
      * @param string $address
      * @param array $data
+     * $param string $as
      * @return mixed
      * @throws \Exception
      */
-    public function requestPost($address, $data)
+    public function requestPost($address, $data, $as = 'json')
     {
-        return $this->request('POST', $address, $data);
+        return $this->request('POST', $address, $data, $as);
     }
 
     /**
@@ -167,12 +207,13 @@ class Client
      *
      * @param string $address
      * @param array $data
+     * $param string $as
      * @return mixed
      * @throws \Exception
      */
-    public function requestPut($address, $data)
+    public function requestPut($address, $data, $as = 'json')
     {
-        return $this->request('PUT', $address, $data);
+        return $this->request('PUT', $address, $data, $as);
     }
 
     /**
@@ -180,12 +221,13 @@ class Client
      *
      * @param string $address
      * @param array $data
+     * $param string $as
      * @return mixed
      * @throws \Exception
      */
-    public function requestDelete($address, $data)
+    public function requestDelete($address, $data, $as = 'json')
     {
-        return $this->request('DELETE', $address, $data);
+        return $this->request('DELETE', $address, $data, $as);
     }
 
     /**
@@ -213,6 +255,19 @@ class Client
     }
 
     /**
+     * get payers list
+     *
+     * @param int $endpoint
+     * @return Response
+     */
+    public function getPayers($endpoint)
+    {
+        $data['endpoint'] = $endpoint;
+        $data['enrollment_required'] = 'true';
+        return $this->requestGet('payers.json', $data);
+    }
+
+    /**
      * send data for create Original Signature Pdf
      *
      * @param $data
@@ -221,7 +276,7 @@ class Client
      */
     public function createOriginalSignaturePdf($data, $npi)
     {
-        return $this->requestPost('enrollment_npis/' . $npi . '/original_signature_pdf', $data);
+        return $this->requestPost('enrollment_npis/' . $npi . '/original_signature_pdf', $data, 'form_params');
     }
 
     /**
@@ -233,7 +288,7 @@ class Client
      */
     public function updateOriginalSignaturePdf($data, $npi)
     {
-        return $this->requestPut('enrollment_npis/' . $npi . '/original_signature_pdf', $data);
+        return $this->requestPut('enrollment_npis/' . $npi . '/original_signature_pdf', $data, 'form_params');
     }
 
     /**
@@ -245,6 +300,6 @@ class Client
      */
     public function deleteOriginalSignaturePdf($data, $npi)
     {
-        return $this->requestDelete('enrollment_npis/' . $npi . '/original_signature_pdf', $data);
+        return $this->requestDelete('enrollment_npis/' . $npi . '/original_signature_pdf', $data, 'form_params');
     }
 }

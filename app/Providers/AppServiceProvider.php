@@ -2,6 +2,11 @@
 
 namespace DentalSleepSolutions\Providers;
 
+use DentalSleepSolutions\Eloquent;
+use DentalSleepSolutions\Helpers\ClassRetriever;
+use DentalSleepSolutions\StaticClasses\BindingSetter;
+use DentalSleepSolutions\Swagger\ClassRetrieverInterface;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +18,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
     }
 
     /**
@@ -23,17 +27,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
-        if ($this->app->environment() == 'local')
-        {
-            //$this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
+        $bindings = BindingSetter::setBindings();
+        foreach ($bindings as $binding) {
+            $this->app->bind(Model::class, $binding->getModel());
+        }
+        $externalBindings = BindingSetter::setExternalBindings();
+        foreach ($externalBindings as $externalBinding) {
+            $this->app->bind(Model::class, $externalBinding->getModel());
         }
 
-        $this->app->register('Tymon\JWTAuth\Providers\JWTAuthServiceProvider');
-
-        $this->app->bind(
-            'DentalSleepSolutions\\Contracts\\Repositories\\ClaimTexts',
-            'DentalSleepSolutions\\Eloquent\\Dental\\ClaimText'
-        );
+        $this->app->bind(ClassRetrieverInterface::class, ClassRetriever::class);
     }
 }

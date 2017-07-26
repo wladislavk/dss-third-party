@@ -1,6 +1,7 @@
 <?php
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
+
 use DentalSleepSolutions\Http\Controllers\BaseController;
 
 class ApiBaseController extends BaseController

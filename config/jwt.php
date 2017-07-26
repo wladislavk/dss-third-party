@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'user' => DentalSleepSolutions\Eloquent\User::class,
+    'user' => DentalSleepSolutions\Eloquent\Models\User::class,
 
     /*
     |--------------------------------------------------------------------------

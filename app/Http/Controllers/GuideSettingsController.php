@@ -2,91 +2,151 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\GuideSettingStore;
-use DentalSleepSolutions\Http\Requests\GuideSettingUpdate;
-use DentalSleepSolutions\Http\Requests\GuideSettingDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\GuideSetting;
-use DentalSleepSolutions\Contracts\Repositories\GuideSettings;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class GuideSettingsController extends Controller
+class GuideSettingsController extends BaseRestController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\GuideSettings $resources
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index(GuideSettings $resources)
-    {
-        $data = $resources->all();
+    /** @var GuideSettingRepository */
+    protected $repository;
 
-        return ApiResponse::responseOk('', $data);
+    /**
+     * @SWG\Get(
+     *     path="/guide-settings",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/GuideSetting")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function index()
+    {
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\GuideSetting $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/guide-settings/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/GuideSetting")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(GuideSetting $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\GuideSettings $resources
-     * @param  \DentalSleepSolutions\Http\Requests\GuideSettingStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/guide-settings",
+     *     @SWG\Parameter(name="name", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="setting_type", in="formData", type="integer"),
+     *     @SWG\Parameter(name="range_start", in="formData", type="integer"),
+     *     @SWG\Parameter(name="range_end", in="formData", type="integer"),
+     *     @SWG\Parameter(name="rank", in="formData", type="integer"),
+     *     @SWG\Parameter(name="options", in="formData", type="integer"),
+     *     @SWG\Parameter(name="range_start_label", in="formData", type="string"),
+     *     @SWG\Parameter(name="range_end_label", in="formData", type="string"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/GuideSetting")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(GuideSettings $resources, GuideSettingStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\GuideSetting $resource
-     * @param  \DentalSleepSolutions\Http\Requests\GuideSettingUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/guide-settings/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="name", in="formData", type="string"),
+     *     @SWG\Parameter(name="setting_type", in="formData", type="integer"),
+     *     @SWG\Parameter(name="range_start", in="formData", type="integer"),
+     *     @SWG\Parameter(name="range_end", in="formData", type="integer"),
+     *     @SWG\Parameter(name="rank", in="formData", type="integer"),
+     *     @SWG\Parameter(name="options", in="formData", type="integer"),
+     *     @SWG\Parameter(name="range_start_label", in="formData", type="string"),
+     *     @SWG\Parameter(name="range_end_label", in="formData", type="string"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(GuideSetting $resource, GuideSettingUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @SWG\Delete(
+     *     path="/guide-settings/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function destroy($id)
+    {
+        return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/guide-settings/sort",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\GuideSetting $resource
-     * @param  \DentalSleepSolutions\Http\Requests\GuideSettingDestroy $request
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(GuideSetting $resource, GuideSettingDestroy $request)
+    public function getAllOrderBy(Request $request)
     {
-        $resource->delete();
+        $order = $request->input('order', 'name');
 
-        return ApiResponse::responseOk('Resource deleted');
+        $guideSettings = $this->repository->getAllOrderBy($order);
+
+        return ApiResponse::responseOk('', $guideSettings);
     }
 }

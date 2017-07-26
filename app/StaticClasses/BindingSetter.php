@@ -87,6 +87,7 @@ class BindingSetter
         Eloquent\Models\Dental\MissingTooth::class,
         Eloquent\Models\Dental\ModifierCode::class,
         Eloquent\Models\Dental\NasalPassage::class,
+        Eloquent\Models\Dental\NewFlowsheet::class,
         Eloquent\Models\Dental\Note::class,
         Eloquent\Models\Dental\Notification::class,
         Eloquent\Models\Dental\Palpation::class,

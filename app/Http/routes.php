@@ -231,6 +231,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('nasal-passages', 'NasalPassagesController', ['except' => ['create', 'edit']]);
 
+    Route::resource('new-flowsheets', 'NewFlowsheetsController', ['except' => ['create', 'edit']]);
+
     Route::resource('notes', 'NotesController', ['except' => ['create', 'edit']]);
     Route::post('notes/unsigned', 'NotesController@getUnsigned');
 

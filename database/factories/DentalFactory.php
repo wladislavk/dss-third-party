@@ -2453,6 +2453,15 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\UserHstCompany::cla
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PlanText::class, function ($faker) {
+    return [
+        'plan_text'  => $faker->sentence($nbWords = 4),
+        'status'     => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\UserSignature::class, function ($faker) {
     return [
         'user_id' => $faker->randomDigit,

@@ -279,6 +279,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('plans', 'PlansController', ['except' => ['create', 'edit']]);
 
+    Route::resource('plan-texts', 'PlanTextsController', ['except' => ['create', 'edit']]);
+
     Route::resource('previous-treatments', 'PreviousTreatmentsController', ['except' => ['create', 'edit']]);
 
     Route::resource('profile-images', 'ProfileImagesController', ['except' => ['create', 'edit']]);

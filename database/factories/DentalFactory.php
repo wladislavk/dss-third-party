@@ -2643,6 +2643,24 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\QPage2Surgery::clas
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Thorton::class, function ($faker) {
+    return [
+        'formid'     => $faker->randomDigit,
+        'patientid'  => $faker->randomDigit,
+        'snore_1'    => $faker->randomDigit,
+        'snore_2'    => $faker->randomDigit,
+        'snore_3'    => $faker->randomDigit,
+        'snore_4'    => $faker->randomDigit,
+        'snore_5'    => $faker->randomDigit,
+        'tot_score'  => $faker->randomDigit,
+        'userid'     => $faker->randomDigit,
+        'docid'      => $faker->randomDigit,
+        'status'     => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

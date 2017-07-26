@@ -336,6 +336,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('teeth-exams', 'TeethExamsController', ['except' => ['create', 'edit']]);
 
+    Route::resource('thortons', 'ThortonsController', ['except' => ['create', 'edit']]);
+
     Route::resource('tmj-clinical-exams', 'TmjClinicalExamsController', ['except' => ['create', 'edit']]);
 
     Route::resource('tongue-clinical-exams', 'TongueClinicalExamsController', ['except' => ['create', 'edit']]);

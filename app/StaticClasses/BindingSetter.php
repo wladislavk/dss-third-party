@@ -122,6 +122,7 @@ class BindingSetter
         Eloquent\Models\Dental\Symptom::class,
         Eloquent\Models\Dental\Task::class,
         Eloquent\Models\Dental\TeethExam::class,
+        Eloquent\Models\Dental\Thorton::class,
         Eloquent\Models\Dental\TmjClinicalExam::class,
         Eloquent\Models\Dental\Tongue::class,
         Eloquent\Models\Dental\TongueClinicalExam::class,

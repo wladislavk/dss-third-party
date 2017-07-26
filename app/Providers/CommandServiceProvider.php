@@ -10,6 +10,8 @@ use DentalSleepSolutions\Console\Commands\Api\Resource;
 use DentalSleepSolutions\Console\Commands\Api\Contracts;
 use DentalSleepSolutions\Console\Commands\Api\Controller;
 use DentalSleepSolutions\Console\Commands\Api\Transformer;
+use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemInterface;
 
 class CommandServiceProvider extends ServiceProvider
 {
@@ -31,7 +33,6 @@ class CommandServiceProvider extends ServiceProvider
         $this->registerRouteGenerator();
         $this->registerRequestsGenerator();
         $this->registerResourceGenerator();
-        $this->registerContractsGenerators();
         $this->registerControllerGenerator();
         $this->registerTransformerGenerator();
 
@@ -50,7 +51,6 @@ class CommandServiceProvider extends ServiceProvider
             'command.api.route',
             'command.api.requests',
             'command.api.resource',
-            'command.api.contracts',
             'command.api.controller',
             'command.api.transformer',
         ];
@@ -101,18 +101,6 @@ class CommandServiceProvider extends ServiceProvider
     {
         $this->app->singleton('command.api.resource', function ($app) {
             return new Resource;
-        });
-    }
-
-    /**
-     * Register the contracts generators.
-     *
-     * @return void
-     */
-    protected function registerContractsGenerators()
-    {
-        $this->app->singleton('command.api.contracts', function ($app) {
-            return new Contracts($app['files']);
         });
     }
 

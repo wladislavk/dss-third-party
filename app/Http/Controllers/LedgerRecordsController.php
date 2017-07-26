@@ -2,94 +2,146 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\LedgerRecordStore;
-use DentalSleepSolutions\Http\Requests\LedgerRecordUpdate;
-use DentalSleepSolutions\Http\Requests\LedgerRecordDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\LedgerRecord;
-use DentalSleepSolutions\Contracts\Repositories\LedgerRecords;
-
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Carbon\Carbon;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class LedgerRecordsController extends Controller
+class LedgerRecordsController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\LedgerRecords $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/ledger-records",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/LedgerRecord")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(LedgerRecords $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LedgerRecord $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/ledger-records/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/LedgerRecord")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(LedgerRecord $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\LedgerRecords $resources
-     * @param  \DentalSleepSolutions\Http\Requests\LedgerRecordStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/ledger-records",
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="service_date", in="formData", type="string"),
+     *     @SWG\Parameter(name="entry_date", in="formData", type="string"),
+     *     @SWG\Parameter(name="description", in="formData", type="string"),
+     *     @SWG\Parameter(name="producer", in="formData", type="string"),
+     *     @SWG\Parameter(name="amount", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="transaction_type", in="formData", type="string"),
+     *     @SWG\Parameter(name="paid_amount", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="transaction_code", in="formData", type="string", pattern="^[A-Z][0-9]{4}$"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/LedgerRecord")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(LedgerRecords $resources, LedgerRecordStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip(),
-            'adddate'    => Carbon::now()->format('m/d/Y')
+        $data = array_merge($this->request->all(), [
+            'ip_address' => $this->request->ip(),
+            'adddate'    => Carbon::now()->format('m/d/Y'),
         ]);
 
-        $resource = $resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LedgerRecord $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LedgerRecordUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/ledger-records/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="service_date", in="formData", type="string"),
+     *     @SWG\Parameter(name="entry_date", in="formData", type="string"),
+     *     @SWG\Parameter(name="description", in="formData", type="string"),
+     *     @SWG\Parameter(name="producer", in="formData", type="string"),
+     *     @SWG\Parameter(name="amount", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="transaction_type", in="formData", type="string"),
+     *     @SWG\Parameter(name="paid_amount", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="transaction_code", in="formData", type="string", pattern="^[A-Z][0-9]{4}$"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(LedgerRecord $resource, LedgerRecordUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\LedgerRecord $resource
-     * @param  \DentalSleepSolutions\Http\Requests\LedgerRecordDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/ledger-records/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(LedgerRecord $resource, LedgerRecordDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

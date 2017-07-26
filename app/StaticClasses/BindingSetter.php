@@ -43,6 +43,7 @@ class BindingSetter
         Eloquent\Models\Dental\EpworthSleepinessScale::class,
         Eloquent\Models\Dental\ExternalCompany::class,
         Eloquent\Models\Dental\ExternalUser::class,
+        Eloquent\Models\Dental\ExtraPercaseInvoice::class,
         Eloquent\Models\Dental\Fax::class,
         Eloquent\Models\Dental\FaxInvoice::class,
         Eloquent\Models\Filemanager::class,

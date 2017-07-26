@@ -115,6 +115,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('external-user', 'ExternalUsersController');
 
+    Route::resource('extra-percase-invoices', 'ExtraPercaseInvoicesController', ['except' => ['create', 'edit']]);
+
     Route::resource('faxes', 'FaxesController', ['except' => ['create', 'edit']]);
     Route::post('faxes/alerts', 'FaxesController@getAlerts');
 

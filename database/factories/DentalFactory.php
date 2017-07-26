@@ -2613,6 +2613,18 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\PercaseInvoice::cla
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExtraPercaseInvoice::class, function ($faker) {
+    return [
+        'percase_date'    => $faker->dateTime(),
+        'percase_name'    => $faker->name(),
+        'percase_amount'  => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = 1000),
+        'percase_status'  => $faker->randomDigit,
+        'percase_invoice' => $faker->randomDigit,
+        'adddate'         => $faker->dateTime(),
+        'ip_address'      => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

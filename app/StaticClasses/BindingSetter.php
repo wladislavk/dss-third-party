@@ -113,6 +113,7 @@ class BindingSetter
         Eloquent\Models\Dental\User::class,
         Eloquent\Models\Dental\UserCompany::class,
         Eloquent\Models\Dental\UserHstCompany::class,
+        Eloquent\Models\Dental\UserSignature::class,
     ];
 
     const EXTERNAL_BINDINGS = [

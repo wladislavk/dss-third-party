@@ -324,6 +324,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('user-hst-companies', 'UserHstCompaniesController', ['except' => ['create', 'edit']]);
 
+    Route::resource('user-signatures', 'UserSignaturesController', ['except' => ['create', 'edit']]);
+
     Route::resource('memo', 'Api\ApiAdminMemoController', ['except' => ['create', 'edit']]);
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
 

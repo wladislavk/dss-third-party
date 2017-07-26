@@ -36,6 +36,7 @@ class BindingSetter
         Eloquent\Models\Dental\Document::class,
         Eloquent\Models\Dental\DocumentCategory::class,
         Eloquent\Models\EdxCertificate::class,
+        Eloquent\Models\Dental\EpworthHomeSleepTest::class,
         Eloquent\Models\Dental\EpworthSleepinessScale::class,
         Eloquent\Models\Dental\ExternalCompany::class,
         Eloquent\Models\Dental\ExternalUser::class,

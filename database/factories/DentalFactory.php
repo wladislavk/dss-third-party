@@ -2392,6 +2392,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\UserSignature::clas
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\EpworthHomeSleepTest::class, function ($faker) {
+    return [
+        'hst_id'     => $faker->randomDigit,
+        'epworth_id' => $faker->randomDigit,
+        'response'   => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

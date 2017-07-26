@@ -101,6 +101,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('edx-certificates', 'EdxCertificatesController', ['except' => ['create', 'edit']]);
 
+    Route::resource('epworth-home-sleep-tests', 'EpworthHomeSleepTestsController', ['except' => ['create', 'edit']]);
+
     Route::resource('epworth-sleepiness-scale', 'EpworthSleepinessScaleController', ['except' => ['create', 'edit']]);
 
     Route::resource('external-companies', 'ExternalCompaniesController');

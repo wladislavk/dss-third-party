@@ -41,6 +41,7 @@ class BindingSetter
         Eloquent\Models\Dental\ExternalUser::class,
         Eloquent\Models\Dental\Fax::class,
         Eloquent\Models\Dental\FaxInvoice::class,
+        Eloquent\Models\Filemanager::class,
         Eloquent\Models\Dental\GagReflex::class,
         Eloquent\Models\Dental\GuideDevice::class,
         Eloquent\Models\Dental\GuideSetting::class,

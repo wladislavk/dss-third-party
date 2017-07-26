@@ -2341,7 +2341,18 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Uvula::class, funct
         'sortby'      => $faker->randomDigit,
         'status'      => $faker->randomDigit,
         'adddate'     => $faker->dateTime(),
-        'ip_address'  => $faker->ipv4
+        'ip_address'  => $faker->ipv4,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TeethExam::class, function ($faker) {
+    return [
+        'exam_teeth'  => $faker->word,
+        'description' => $faker->sentence($nbWords = 6),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4,
     ];
 });
 

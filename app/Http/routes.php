@@ -308,6 +308,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('tasks/{type}', 'TasksController@getType');
     Route::post('tasks/{type}/pid/{patientId}', 'TasksController@getTypeForPatient');
 
+    Route::resource('teeth-exams', 'TeethExamsController', ['except' => ['create', 'edit']]);
+
     Route::resource('tmj-clinical-exams', 'TmjClinicalExamsController', ['except' => ['create', 'edit']]);
 
     Route::resource('tongue-clinical-exams', 'TongueClinicalExamsController', ['except' => ['create', 'edit']]);

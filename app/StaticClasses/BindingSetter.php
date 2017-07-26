@@ -25,6 +25,7 @@ class BindingSetter
         Eloquent\Models\Dental\ClaimElectronic::class,
         Eloquent\Models\Dental\ClaimNote::class,
         Eloquent\Models\Dental\ClaimNoteAttachment::class,
+        Eloquent\Models\Dental\ClaimText::class,
         Eloquent\Models\Company::class,
         Eloquent\Models\Dental\Complaint::class,
         Eloquent\Models\Dental\Contact::class,

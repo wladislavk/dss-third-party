@@ -315,6 +315,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ClaimElectronic::cl
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ClaimText::class, function ($faker) {
+    return [
+        'title'        => $faker->word,
+        'description'  => $faker->sentence($nbWords = 6),
+        'adddate'      => $faker->dateTime(),
+        'ip_address'   => $faker->ipv4,
+        'default_text' => $faker->randomDigit,
+        'companyid'    => $faker->randomDigit,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\AppointmentType::class, function ($faker) {
     return [
         'name'      => $faker->word,

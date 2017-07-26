@@ -63,6 +63,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('claims-electronic', 'ClaimsElectronicController', ['except' => ['create', 'edit']]);
 
+    Route::resource('claim-texts', 'ClaimTextsController', ['except' => ['create', 'edit']]);
+
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
     Route::post('companies/company-logo', 'CompaniesController@getCompanyLogo');
     Route::post('companies/home-sleep-test', 'CompaniesController@getHomeSleepTestCompanies');

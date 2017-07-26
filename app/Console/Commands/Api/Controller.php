@@ -6,7 +6,6 @@ use ReflectionClass;
 use ReflectionException;
 use Illuminate\Support\Str;
 use Illuminate\Console\GeneratorCommand;
-use Symfony\Component\Console\Input\InputOption;
 
 class Controller extends GeneratorCommand
 {

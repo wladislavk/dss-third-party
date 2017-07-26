@@ -11,7 +11,7 @@
 |
 */
 
-$factory->define(DentalSleepSolutions\Eloquent\Payer::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Payer::class, function ($faker) {
 
     $created = $faker->dateTimeThisDecade;
     $endpoints = ['coverage', 'cost estimate', 'fetch and append', 'proffessional claims'];
@@ -50,7 +50,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Payer::class, function ($faker) {
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\User::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\User::class, function ($faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->email,
@@ -59,7 +59,7 @@ $factory->define(DentalSleepSolutions\Eloquent\User::class, function ($faker) {
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Admin::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Admin::class, function ($faker) {
     return [
         'name'         => 'PHPUnit admin',
         'username'     => $faker->userName,
@@ -74,7 +74,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Admin::class, function ($faker) {
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\Company::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Company::class, function ($faker) {
     return [
         'name'       => $faker->word,
         'add1'       => $faker->address,
@@ -85,7 +85,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Company::class, function ($faker)
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\MemoAdmin::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\MemoAdmin::class, function ($faker) {
     return [
         'memo' => 'PHPUnit updated memo',
         'last_update' => $faker->date('Y-m-d'),
@@ -93,7 +93,7 @@ $factory->define(DentalSleepSolutions\Eloquent\MemoAdmin::class, function ($fake
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\AdminCompany::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\AdminCompany::class, function ($faker) {
     return [
         'adminid'    => $faker->randomDigit,
         'companyid'  => $faker->randomDigit,

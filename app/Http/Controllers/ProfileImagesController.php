@@ -2,91 +2,171 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\ProfileImageStore;
-use DentalSleepSolutions\Http\Requests\ProfileImageUpdate;
-use DentalSleepSolutions\Http\Requests\ProfileImageDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\ProfileImage;
-use DentalSleepSolutions\Contracts\Repositories\ProfileImages;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ProfileImageRepository;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class ProfileImagesController extends Controller
+class ProfileImagesController extends BaseRestController
 {
+    /** @var ProfileImageRepository */
+    protected $repository;
+
     /**
-     * Display a listing of the resource.
+     * @SWG\Get(
+     *     path="/profile-images",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/ProfileImage")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function index()
+    {
+        return parent::index();
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/profile-images/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/ProfileImage")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function show($id)
+    {
+        return parent::show($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/profile-images",
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="title", in="formData", type="string"),
+     *     @SWG\Parameter(name="image_file", in="formData", type="string"),
+     *     @SWG\Parameter(name="imagetypeid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="adminid", in="formData", type="integer"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/ProfileImage")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function store()
+    {
+        return parent::store();
+    }
+
+    /**
+     * @SWG\Put(
+     *     path="/profile-images/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="title", in="formData", type="string"),
+     *     @SWG\Parameter(name="image_file", in="formData", type="string"),
+     *     @SWG\Parameter(name="imagetypeid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="adminid", in="formData", type="integer"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function update($id)
+    {
+        return parent::update($id);
+    }
+
+    /**
+     * @SWG\Delete(
+     *     path="/profile-images/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function destroy($id)
+    {
+        return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/profile-images/photo",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ProfileImages $resources
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(ProfileImages $resources)
+    public function getProfilePhoto(Request $request)
     {
-        $data = $resources->all();
+        $patientId = $request->input('patient_id', 0);
+
+        $data = $this->repository->getProfilePhoto($patientId);
 
         return ApiResponse::responseOk('', $data);
     }
 
     /**
-     * Display the specified resource.
+     * @SWG\Post(
+     *     path="/profile-images/insurance-card-image",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ProfileImage $resource
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(ProfileImage $resource)
+    public function getInsuranceCardImage(Request $request)
     {
-        return ApiResponse::responseOk('', $resource);
-    }
+        $patientId = $request->input('patient_id', 0);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ProfileImages $resources
-     * @param  \DentalSleepSolutions\Http\Requests\ProfileImageStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(ProfileImages $resources, ProfileImageStore $request)
-    {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
+        $data = $this->repository->getInsuranceCardImage($patientId);
 
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ProfileImage $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ProfileImageUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(ProfileImage $resource, ProfileImageUpdate $request)
-    {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ProfileImage $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ProfileImageDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(ProfileImage $resource, ProfileImageDestroy $request)
-    {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return ApiResponse::responseOk('', $data);
     }
 }

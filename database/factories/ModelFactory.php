@@ -124,3 +124,11 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Filemanager::class, functi
         'ext'     => $faker->regexify('(gif|jpg|jpeg|bmp|png)'),
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\FlowsheetSegment::class, function ($faker) {
+    return [
+        'section' => $faker->word,
+        'content' => $faker->sentence($nbWords = 6),
+        'sortby'  => $faker->randomDigit,
+    ];
+});

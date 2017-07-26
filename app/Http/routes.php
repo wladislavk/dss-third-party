@@ -304,6 +304,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('tongue-clinical-exams', 'TongueClinicalExamsController', ['except' => ['create', 'edit']]);
 
+    Route::resource('tongues', 'TonguesController', ['except' => ['create', 'edit']]);
+
     Route::resource('tonsils-clinical-exams', 'TonsilsClinicalExamsController', ['except' => ['create', 'edit']]);
 
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);

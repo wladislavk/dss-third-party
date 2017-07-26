@@ -310,6 +310,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('transaction-codes', 'TransactionCodesController', ['except' => ['create', 'edit']]);
 
+    Route::resource('type-services', 'TypeServicesController', ['except' => ['create', 'edit']]);
+
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
     Route::post('users/current', 'UsersController@getCurrentUserInfo');
     Route::post('users/course-staff', 'UsersController@getCourseStaff');

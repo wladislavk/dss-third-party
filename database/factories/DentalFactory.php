@@ -373,6 +373,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Complaint::class, f
         'ip_address'  => $faker->ipv4
     ];
 });
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Allergen::class, function ($faker) {
     return [
         'allergens'   => $faker->word,
@@ -2448,6 +2449,17 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\EpworthHomeSleepTes
         'response'   => $faker->randomDigit,
         'adddate'    => $faker->dateTime(),
         'ip_address' => $faker->ipv4,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\NasalPassage::class, function ($faker) {
+    return [
+        'nasal_passages' => $faker->sentence($nbWords = 2),
+        'description'    => $faker->sentence($nbWords = 6),
+        'sortby'         => $faker->randomDigit,
+        'status'         => $faker->randomDigit,
+        'adddate'        => $faker->dateTime(),
+        'ip_address'     => $faker->ipv4,
     ];
 });
 

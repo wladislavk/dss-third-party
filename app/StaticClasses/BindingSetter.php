@@ -79,6 +79,7 @@ class BindingSetter
         Eloquent\Models\Dental\Maxilla::class,
         Eloquent\Models\Dental\MedicalHistory::class,
         Eloquent\Models\Dental\Medicament::class,
+        Eloquent\Models\Dental\NasalPassage::class,
         Eloquent\Models\Dental\Note::class,
         Eloquent\Models\Dental\Notification::class,
         Eloquent\Models\Dental\Palpation::class,

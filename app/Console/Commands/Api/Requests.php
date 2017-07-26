@@ -4,7 +4,6 @@ namespace DentalSleepSolutions\Console\Commands\Api;
 
 use Exception;
 use Illuminate\Support\Str;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Console\GeneratorCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Database\Eloquent\Model as Eloquent;

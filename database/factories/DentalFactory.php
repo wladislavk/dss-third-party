@@ -2323,10 +2323,21 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SupportResponse::cl
     ];
 });
 
-    $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Tongue::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Tongue::class, function ($faker) {
     return [
         'tongue'      => $faker->sentence($nbWords = 3),
         'description' => $faker->sentence($nbWords = 7),
+        'sortby'      => $faker->randomDigit,
+        'status'      => $faker->randomDigit,
+        'adddate'     => $faker->dateTime(),
+        'ip_address'  => $faker->ipv4
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Uvula::class, function ($faker) {
+    return [
+        'uvula'       => $faker->sentence($nbWords = 3),
+        'description' => $faker->sentence($nbWords = 6),
         'sortby'      => $faker->randomDigit,
         'status'      => $faker->randomDigit,
         'adddate'     => $faker->dateTime(),

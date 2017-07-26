@@ -2582,15 +2582,3 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Summary::class, fun
         'location'                         => $faker->randomDigit
     ];
 });
-
-$factory->define(DentalSleepSolutions\Eloquent\Models\EdxCertificate::class, function ($faker) {
-    return [
-        'url' => $faker->url,
-        'edx_id' => $faker->randomDigit,
-        'number_ce' => $faker->randomDigit,
-        'course_name' => $faker->word,
-        'course_section' => $faker->word,
-        'adddate' => $faker->dateTime(),
-        'ip_address' => $faker->ipv4,
-    ];
-});

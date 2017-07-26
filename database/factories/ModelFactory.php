@@ -102,7 +102,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\AdminCompany::class, funct
     ];
 });
 
-$factory->define(DentalSleepSolutions\Eloquent\EdxCertificate::class, function ($faker) {
+$factory->define(DentalSleepSolutions\Eloquent\Models\EdxCertificate::class, function ($faker) {
     return [
         'url'               => $faker->url,
         'edx_id'            => $faker->randomDigit,

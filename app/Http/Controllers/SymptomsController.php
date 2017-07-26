@@ -2,91 +2,178 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\SymptomStore;
-use DentalSleepSolutions\Http\Requests\SymptomUpdate;
-use DentalSleepSolutions\Http\Requests\SymptomDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\Symptom;
-use DentalSleepSolutions\Contracts\Repositories\Symptoms;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class SymptomsController extends Controller
+class SymptomsController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Symptoms $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/symptoms",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Symptom")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(Symptoms $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Symptom $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/symptoms/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Symptom")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(Symptom $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Symptoms $resources
-     * @param  \DentalSleepSolutions\Http\Requests\SymptomStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/symptoms",
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="member_no", in="formData", type="string"),
+     *     @SWG\Parameter(name="group_no", in="formData", type="string"),
+     *     @SWG\Parameter(name="plan_no", in="formData", type="string"),
+     *     @SWG\Parameter(name="primary_care_physician", in="formData", type="string"),
+     *     @SWG\Parameter(name="feet", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="inches", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="weight", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="bmi", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="sleep_qual", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="complaintid", in="formData", type="string", pattern="^(:?[0-9]+\|[0-9]+~)+$"),
+     *     @SWG\Parameter(name="other_complaint", in="formData", type="string"),
+     *     @SWG\Parameter(name="additional_paragraph", in="formData", type="string"),
+     *     @SWG\Parameter(name="energy_level", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="snoring_sound", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="wake_night", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="breathing_night", in="formData", type="string"),
+     *     @SWG\Parameter(name="morning_headaches", in="formData", type="string"),
+     *     @SWG\Parameter(name="hours_sleep", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="quit_breathing", in="formData", type="string"),
+     *     @SWG\Parameter(name="bed_time_partner", in="formData", type="string", pattern="^(:?Yes|Sometimes|No)$"),
+     *     @SWG\Parameter(name="sleep_same_room", in="formData", type="string", pattern="^(:?Yes|Sometimes|No)$"),
+     *     @SWG\Parameter(name="told_you_snore", in="formData", type="string", pattern="^(:?Yes|Sometimes|No)$"),
+     *     @SWG\Parameter(name="main_reason", in="formData", type="string"),
+     *     @SWG\Parameter(name="main_reason_other", in="formData", type="string"),
+     *     @SWG\Parameter(name="exam_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="chief_complaint_text", in="formData", type="string"),
+     *     @SWG\Parameter(name="tss", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="ess", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="parent_patientid", in="formData", type="integer"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Symptom")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(Symptoms $resources, SymptomStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Symptom $resource
-     * @param  \DentalSleepSolutions\Http\Requests\SymptomUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/symptoms/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="formid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="member_no", in="formData", type="string"),
+     *     @SWG\Parameter(name="group_no", in="formData", type="string"),
+     *     @SWG\Parameter(name="plan_no", in="formData", type="string"),
+     *     @SWG\Parameter(name="primary_care_physician", in="formData", type="string"),
+     *     @SWG\Parameter(name="feet", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="inches", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="weight", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="bmi", in="formData", type="string", pattern="^[0-9]+\.[0-9]{2}$"),
+     *     @SWG\Parameter(name="sleep_qual", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="complaintid", in="formData", type="string", pattern="^(:?[0-9]+\|[0-9]+~)+$"),
+     *     @SWG\Parameter(name="other_complaint", in="formData", type="string"),
+     *     @SWG\Parameter(name="additional_paragraph", in="formData", type="string"),
+     *     @SWG\Parameter(name="energy_level", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="snoring_sound", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="wake_night", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="breathing_night", in="formData", type="string"),
+     *     @SWG\Parameter(name="morning_headaches", in="formData", type="string"),
+     *     @SWG\Parameter(name="hours_sleep", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="userid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="docid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="quit_breathing", in="formData", type="string"),
+     *     @SWG\Parameter(name="bed_time_partner", in="formData", type="string", pattern="^(:?Yes|Sometimes|No)$"),
+     *     @SWG\Parameter(name="sleep_same_room", in="formData", type="string", pattern="^(:?Yes|Sometimes|No)$"),
+     *     @SWG\Parameter(name="told_you_snore", in="formData", type="string", pattern="^(:?Yes|Sometimes|No)$"),
+     *     @SWG\Parameter(name="main_reason", in="formData", type="string"),
+     *     @SWG\Parameter(name="main_reason_other", in="formData", type="string"),
+     *     @SWG\Parameter(name="exam_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="chief_complaint_text", in="formData", type="string"),
+     *     @SWG\Parameter(name="tss", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="ess", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="parent_patientid", in="formData", type="integer"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(Symptom $resource, SymptomUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Symptom $resource
-     * @param  \DentalSleepSolutions\Http\Requests\SymptomDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/symptoms/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(Symptom $resource, SymptomDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

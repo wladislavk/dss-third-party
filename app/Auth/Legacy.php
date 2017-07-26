@@ -2,10 +2,8 @@
 
 namespace DentalSleepSolutions\Auth;
 
-use Exception;
 use Illuminate\Support\Arr;
-use Illuminate\Auth\AuthManager;
-use DentalSleepSolutions\Eloquent\User;
+use DentalSleepSolutions\Eloquent\Models\User;
 use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
 
 /**
@@ -20,7 +18,7 @@ class Legacy extends IlluminateAuthAdapter
     /**
      * Legacy-code hashed password validation.
      *
-     * @param  \DentalSleepSolutions\Eloquent\User $user
+     * @param User $user
      * @param  string $password
      * @return boolean
      */

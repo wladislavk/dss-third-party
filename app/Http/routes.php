@@ -320,6 +320,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('users/check-logout', 'UsersController@checkLogout');
     Route::post('users/letter-info', 'UsersController@getLetterInfo');
 
+    Route::resource('user-companies', 'UserCompaniesController', ['except' => ['create', 'edit']]);
+
     Route::resource('memo', 'Api\ApiAdminMemoController', ['except' => ['create', 'edit']]);
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
 

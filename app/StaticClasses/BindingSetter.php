@@ -112,6 +112,7 @@ class BindingSetter
         Eloquent\Models\Dental\TypeService::class,
         Eloquent\Models\Dental\User::class,
         Eloquent\Models\Dental\UserCompany::class,
+        Eloquent\Models\Dental\UserHstCompany::class,
     ];
 
     const EXTERNAL_BINDINGS = [

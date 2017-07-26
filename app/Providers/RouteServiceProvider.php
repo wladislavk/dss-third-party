@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Providers;
 
+use DentalSleepSolutions\Eloquent\Repositories\PayerRepository;
+use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Illuminate\Routing\Router;
 use DentalSleepSolutions\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,15 +21,6 @@ class RouteServiceProvider extends ServiceProvider
     protected $namespace = 'DentalSleepSolutions\Http\Controllers';
 
     /**
-     * Route model bindings for the resources.
-     *
-     * @var array
-     */
-    protected $resourceBindings = [
-        'claim-notes' => \DentalSleepSolutions\Eloquent\Dental\ClaimNote::class,
-    ];
-
-    /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @param  \Illuminate\Routing\Router  $router
@@ -35,9 +28,15 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        foreach ($this->resourceBindings as $key => $resource) {
-            $this->bindResource($key, $resource);
-        }
+        $router->bind('payer_id', function ($uid) {
+            try {
+                /** @var PayerRepository $payerRepository */
+                $payerRepository = $this->app[PayerRepository::class];
+                return $payerRepository->findByUid($uid);
+            } catch (ModelNotFoundException $e) {
+                throw new ResourceNotFound('Requested resource does not exist.');
+            }
+        });
 
         parent::boot($router);
     }
@@ -45,15 +44,15 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Bind resource to a route and let controllers use its instance rather than id.
      *
-     * @param  string $key   Url parameter name.
-     * @param  string $class Resource class name.
+     * @param  string $routeName   Url parameter name.
+     * @param  string $modelClass Resource class name.
      * @return void
      */
-    protected function bindResource($key, $class)
+    protected function bindResource($routeName, $modelClass)
     {
-        $this->app['router']->bind($key, function ($id) use ($class) {
+        $this->app['router']->bind($routeName, function ($id) use ($modelClass) {
             try {
-                return $class::findOrFail($id);
+                return $modelClass::findOrFail($id);
             } catch (ModelNotFoundException $e) {
                 throw new ResourceNotFound('Requested resource does not exist.');
             }
@@ -71,5 +70,13 @@ class RouteServiceProvider extends ServiceProvider
         $router->group(['namespace' => $this->namespace], function ($router) {
             require app_path('Http/routes.php');
         });
+
+        // these routes are needed for GenerateSwaggerCommandTest
+        if (env('APP_ENV') == 'testing') {
+            $namespace = 'Tests\Dummies\Http\Controllers';
+            $router->group(['namespace' => $namespace], function ($router) {
+                require __DIR__ . '/../../tests/Dummies/routes.php';
+            });
+        }
     }
 }

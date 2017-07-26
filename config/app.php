@@ -113,7 +113,6 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
-        Jlapp\Swaggervel\SwaggervelServiceProvider::class,
         Illuminate\Foundation\Providers\ArtisanServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
@@ -139,6 +138,14 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
+         * 3rd party providers...
+         */
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
+
+        /*
          * Application Service Providers...
          */
         DentalSleepSolutions\Providers\AppServiceProvider::class,
@@ -146,7 +153,8 @@ return [
         DentalSleepSolutions\Providers\RouteServiceProvider::class,
         DentalSleepSolutions\Providers\ApiServiceProvider::class,
         DentalSleepSolutions\Providers\CommandServiceProvider::class,
-
+        DentalSleepSolutions\Providers\CustomValidationServiceProvider::class,
+        DentalSleepSolutions\Providers\ControllerServiceProvider::class,
     ],
 
     /*
@@ -196,10 +204,13 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
 
         //JWT Facades
-        'JWTAuth'       => \Tymon\JWTAuth\Facades\JWTAuth::class,
-        'JWTFactory'    => \Tymon\JWTAuth\Facades\JWTFactory::class,
+        'JWTAuth'    => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
 
-        'ApiResponse' => \DentalSleepSolutions\Helpers\ApiResponse::class,
+        // DomPdf
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+
+        'ApiResponse' => \DentalSleepSolutions\StaticClasses\ApiResponse::class,
 
     ],
 

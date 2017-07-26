@@ -2,84 +2,133 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\ClaimElectronicStore;
-use DentalSleepSolutions\Http\Requests\ClaimElectronicUpdate;
-use DentalSleepSolutions\Http\Requests\ClaimElectronicDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\ClaimElectronic;
-use DentalSleepSolutions\Contracts\Repositories\ClaimsElectronic;
-use Carbon\Carbon;
-
-class ClaimsElectronicController extends Controller
+class ClaimsElectronicController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ClaimsElectronic $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/claims-electronic",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/ClaimElectronic")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(ClaimsElectronic $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ClaimElectronic $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/claims-electronic/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/ClaimElectronic")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(ClaimElectronic $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ClaimsElectronic $resources
-     * @param  \DentalSleepSolutions\Http\Requests\ClaimElectronicStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/claims-electronic",
+     *     @SWG\Parameter(name="claimid", in="formData", type="integer", required=true),
+     *     @SWG\Parameter(name="response", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="reference_id", in="formData", type="string"),
+     *     @SWG\Parameter(name="percase_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="percase_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="percase_amount", in="formData", type="string", pattern="^\d*(\.\d{2})?$"),
+     *     @SWG\Parameter(name="percase_status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="percase_invoice", in="formData", type="integer"),
+     *     @SWG\Parameter(name="percase_free", in="formData", type="integer"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/ClaimElectronic")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(ClaimsElectronic $resources, ClaimElectronicStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ClaimElectronic $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ClaimElectronicUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/claims-electronic/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="claimid", in="formData", type="integer"),
+     *     @SWG\Parameter(name="response", in="formData", type="string"),
+     *     @SWG\Parameter(name="reference_id", in="formData", type="string"),
+     *     @SWG\Parameter(name="percase_date", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="percase_name", in="formData", type="string"),
+     *     @SWG\Parameter(name="percase_amount", in="formData", type="string", pattern="^\d*(\.\d{2})?$"),
+     *     @SWG\Parameter(name="percase_status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="percase_invoice", in="formData", type="integer"),
+     *     @SWG\Parameter(name="percase_free", in="formData", type="integer"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(ClaimElectronic $resource, ClaimElectronicUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\ClaimElectronic $resource
-     * @param  \DentalSleepSolutions\Http\Requests\ClaimElectronicDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/claims-electronic/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(ClaimElectronic $resource, ClaimElectronicDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
+        return parent::destroy($id);
+    }
 
-        return ApiResponse::responseOk('Resource deleted');
+    public function getSingular()
+    {
+        return 'ClaimElectronic';
     }
 }

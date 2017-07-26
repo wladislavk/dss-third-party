@@ -1,60 +1,64 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Brendan
- * Date: 7/23/2015
- * Time: 10:27 AM
- */
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
-use DentalSleepSolutions\Http\Requests\Request;
-use \DentalSleepSolutions\Interfaces\MemoAdminInterface;
+
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use DentalSleepSolutions\Eloquent\Repositories\MemoAdminRepository;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Tymon\JWTAuth\JWTAuth;
 
 class ApiAdminMemoController extends ApiBaseController
 {
+    /** @var MemoAdminRepository */
+    protected $repository;
 
-    /**
-     * References the memo interface
-     * @var $memo
-     */
-    protected $memo;
-
+    /** @var array */
     private $rules = [
         'memo' => 'required',
         'off_date' => 'required|date_format:Y-m-d',
         'last_update' => 'required',
     ];
 
-    /**
-     *
-     * @param MemoAdminInterface $memo
-     */
-    public function __construct(MemoAdminInterface $memo)
-    {
-        $this->memo = $memo;
+    public function __construct(
+        JWTAuth $auth,
+        UserRepository $userRepository,
+        MemoAdminRepository $memoAdminRepository
+    ) {
+        parent::__construct($auth, $userRepository);
+        $this->repository = $memoAdminRepository;
     }
 
+    /**
+     * @SWG\Get(
+     *     path="/memo",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
-
         $status = null;
-        $response = ['status' => null,'message' => 'Memo list','data' => []];
+        $response = ['status' => null, 'message' => 'Memo list', 'data' => []];
         try {
-            $response['data'] = $this->memo->all();
+            $response['data'] = $this->repository->allWithOrder('memo_id');
             $response['status'] = true;
             $status = 200;
-        } catch(Exception $ex) {
+        } catch (Exception $ex) {
             $status = 404;
             $response['status'] = false;
         } finally {
             return response()->json($response,$status);
         }
-
     }
 
     /**
+     * @SWG\Post(
+     *     path="/memo",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -62,104 +66,119 @@ class ApiAdminMemoController extends ApiBaseController
     {
         $status = null;
         $response = ['status' => null,'message' => 'Memo added successfully.','data' => []];
-
         try {
-
-            $validator = \Validator::make(Input::all(),$this->rules);
-
-            if($validator->fails())
-            {
+            $validator = \Validator::make(Input::all(), $this->rules);
+            if ($validator->fails()) {
                 throw new Exception($validator->errors());
             }
-
-            $this->memo->store(Input::all());
-            $response['data'] = $this->memo->all();
+            $this->repository->create(Input::all());
+            $response['data'] = $this->repository->allWithOrder('memo_id');
             $response['status'] = true;
             $status = 200;
-
-        } catch(Exception $ex) {
+        } catch (Exception $ex) {
             $status = 404;
             $response['status'] = false;
             $response['message'] = $ex->getMessage();
         } finally {
-            return response()->json($response,$status);
+            return response()->json($response, $status);
         }
-
     }
 
-    public function update($memo_id)
+    /**
+     * @SWG\Put(
+     *     path="/memo/{memoId}",
+     *     @SWG\Parameter(name="memoId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $memoId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update($memoId)
     {
         $status = null;
-        $response = ['status' => null,'message' => 'Memo updated successfully.','data' => []];
-
+        $response = ['status' => null, 'message' => 'Memo updated successfully.', 'data' => []];
         try {
-
-            $validator = \Validator::make(Input::all(),$this->rules);
-
-            if($validator->fails())
-            {
+            $validator = \Validator::make(Input::all(), $this->rules);
+            if ($validator->fails()) {
+                // @todo: uncaught exceptions should not be thrown in controller actions
                 throw new Exception($validator->errors());
             }
-
-            $this->memo->update($memo_id,Input::all());
-            $response['data'] = $this->memo->all();
+            $this->repository->update(Input::all(), $memoId);
+            $response['data'] = $this->repository->allWithOrder('memo_id');
             $response['status'] = true;
             $status = 200;
-
-        } catch(Exception $ex) {
+        } catch (Exception $ex) {
             $status = 404;
             $response['status'] = false;
             $response['message'] = $ex->getMessage();
         } finally {
             return response()->json($response,$status);
         }
-
     }
 
-    public function show($memo_id)
+    /**
+     * @SWG\Get(
+     *     path="/memo/{memoId}",
+     *     @SWG\Parameter(name="memoId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $memoId
+     */
+    public function show($memoId)
     {
         $status = null;
         $response = [];
         try {
-
-        } catch(Exception $ex) {
+            // @todo: complete this code
+        } catch (Exception $ex) {
             $status = 200;
             $response['status'] = false;
         } finally {
-
+            // @todo: complete this code
         }
     }
 
-    public function edit($memo_id)
+    /**
+     * @SWG\Delete(
+     *     path="/memo/{memoId}",
+     *     @SWG\Parameter(name="memoId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $memoId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($memoId)
     {
         $status = null;
-        $response = [];
+        $response = ['status' => null, 'message' => 'Memo deleted successfully.', 'data' => []];
         try {
-
-        } catch(Exception $ex) {
-
-        } finally {
-
-        }
-    }
-
-    public function destroy($memo_id)
-    {
-        $status = null;
-        $response = ['status' => null,'message' => 'Memo deleted successfully.','data' => []];
-        try {
-            $this->memo->destroy($memo_id);
-            $response['data'] = $this->memo->all();
+            $this->repository->delete($memoId);
+            $response['data'] = $this->repository->allWithOrder('memo_id');
             $response['status'] = true;
             $status = 200;
-        } catch(Exception $ex) {
+        } catch (Exception $ex) {
             $status = 404;
             $response['status'] = false;
             $response['message'] = $ex->getMessage();
         } finally {
-            return response()->json($response,$status);
+            return response()->json($response, $status);
         }
-
     }
 
+    /**
+     * @SWG\Post(
+     *     path="/memos/current",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCurrent()
+    {
+        $data = $this->repository->getCurrent();
+        return ApiResponse::responseOk('', $data);
+    }
 }

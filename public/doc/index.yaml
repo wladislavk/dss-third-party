@@ -1,0 +1,15 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: API
+consumes:
+  - x-www-form-urlencoded
+paths:
+  /api/v1/enrollments/create:
+    $ref: /doc/enrollment_create.yaml
+  /api/v1/enrollments/original-signature/send:
+    $ref: /doc/original_signature.yaml
+  /api/v1/enrollments/payers/{transaction_type}:
+    $ref: /doc/payers_list.yaml
+  /api/v1/enrollments/list/{userid}:
+    $ref: /doc/enrollment_list.yaml

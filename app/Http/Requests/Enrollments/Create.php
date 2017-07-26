@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Requests\Enrollments;
 
-use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Http\Requests\AbstractNonRestRequest;
 
-class Create extends Request
+class Create extends AbstractNonRestRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -19,8 +19,19 @@ class Create extends Request
             'transaction_type_id' => 'required|exists:dental_enrollment_transaction_type,id',
             'facility_name' => 'required',
             'provider_name' => 'required',
-            'npi' => 'required|integer',
+            'provider_id' => 'required|exists:dental_users,userid',
+            'npi' => 'required',
             'state' => 'size:2',
         ];
+    }
+
+    /**
+     * @todo: check how to implement authorization properly for API tests that do not use middleware
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
     }
 }

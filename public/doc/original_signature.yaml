@@ -1,0 +1,130 @@
+    post:
+      tags: [enrollment]
+      description: |
+        Send original Signature PDF
+      parameters:
+        - name: user_id
+          in: formData
+          description: user id
+          required: true
+          type: integer
+          format: int32
+        - name: npi
+          in: formData
+          description: npi
+          required: true
+          type: string
+        - name: reference_id
+          in: formData
+          description: reference_id
+          required: true
+          type: string
+        - name: original_signature
+          in: formData
+          description: original_signature
+          required: true
+          type: file
+
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "OK"
+                message:
+                  type: string
+        '400':
+          description: Bad request, invalid or missing parameters.
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Bad Request"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items:
+                        type: string
+        '401':
+          description: Authentication or authorization error. Mostly due to invalid api_key or provider need enrollment with payer.
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Unauthorized"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items:
+                        type: string
+        '408':
+          description: Connection time out or payer is unable to respond to the request.
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Request Timeout"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items:
+                        type: string
+        '422':
+          description: Unprocessable Entity
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Unprocessable Entity"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      description: key can by name of input
+                      items:
+                        type: string
+        '500':
+          description:  Internal Server error
+          schema:
+            title: jsonResponse
+            type: object
+            properties:
+                success:
+                  type: string
+                  description: value - "Internal Server Error"
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    errors:
+                      type: array
+                      items:
+                        type: string

@@ -49,6 +49,7 @@ class BindingSetter
         Eloquent\Models\FlowsheetSegment::class,
         Eloquent\Models\Dental\Flowsheet::class,
         Eloquent\Models\Dental\FlowsheetStep::class,
+        Eloquent\Models\Dental\Form::class,
         Eloquent\Models\Dental\GagReflex::class,
         Eloquent\Models\Dental\GuideDevice::class,
         Eloquent\Models\Dental\GuideSetting::class,

@@ -2338,6 +2338,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SupportCategory::cl
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Form::class, function ($faker) {
+    return [
+        'docid'      => $faker->randomDigit,
+        'patientid'  => $faker->randomDigit,
+        'formtype'   => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TypeService::class, function ($faker) {
     return [
         'type_service' => $faker->numerify('##'),

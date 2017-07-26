@@ -2,84 +2,118 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\AccessCodeStore;
-use DentalSleepSolutions\Http\Requests\AccessCodeUpdate;
-use DentalSleepSolutions\Http\Requests\AccessCodeDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\AccessCode;
-use DentalSleepSolutions\Contracts\Repositories\AccessCodes;
-use Carbon\Carbon;
-
-class AccessCodesController extends Controller
+class AccessCodesController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\AccessCodes $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/access-codes",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/AccessCode")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(AccessCodes $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\AccessCode $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/access-codes/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/AccessCode")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(AccessCode $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\AccessCodes $resources
-     * @param  \DentalSleepSolutions\Http\Requests\AccessCodeStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/access-codes",
+     *     @SWG\Parameter(name="access_code", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="plan_id", in="formData", type="integer"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/AccessCode")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(AccessCodes $resources, AccessCodeStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\AccessCode $resource
-     * @param  \DentalSleepSolutions\Http\Requests\AccessCodeUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/access-codes/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="access_code", in="formData", type="string"),
+     *     @SWG\Parameter(name="notes", in="formData", type="string"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="plan_id", in="formData", type="integer"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(AccessCode $resource, AccessCodeUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\AccessCode $resource
-     * @param  \DentalSleepSolutions\Http\Requests\AccessCodeDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/access-codes/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(AccessCode $resource, AccessCodeDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

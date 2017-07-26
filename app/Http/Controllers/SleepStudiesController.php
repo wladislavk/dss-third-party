@@ -2,87 +2,139 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\SleepStudyStore;
-use DentalSleepSolutions\Http\Requests\SleepStudyUpdate;
-use DentalSleepSolutions\Http\Requests\SleepStudyDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\SleepStudy;
-use DentalSleepSolutions\Contracts\Repositories\SleepStudies;
-
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class SleepStudiesController extends Controller
+class SleepStudiesController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\SleepStudies $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/sleep-studies",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/SleepStudy")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(SleepStudies $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\SleepStudy $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/sleep-studies/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/SleepStudy")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(SleepStudy $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\SleepStudies $resources
-     * @param  \DentalSleepSolutions\Http\Requests\SleepStudyStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/sleep-studies",
+     *     @SWG\Parameter(name="testnumber", in="formData", type="string", required=true, pattern="^[0-9]{9}$"),
+     *     @SWG\Parameter(name="docid", in="formData", type="string", required=true, pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="string", required=true, pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="needed", in="formData", type="string", pattern="^(?:Yes|No)$"),
+     *     @SWG\Parameter(name="scheddate", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="sleeplabwheresched", in="formData", type="string", required=true, pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="completed", in="formData", type="string", pattern="^(?:Yes|No)$"),
+     *     @SWG\Parameter(name="interpolation", in="formData", type="string", pattern="^(?:Yes|No)$"),
+     *     @SWG\Parameter(name="labtype", in="formData", type="string", required=true, pattern="^(?:PSG|HST)$"),
+     *     @SWG\Parameter(name="copyreqdate", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="sleeplab", in="formData", type="string", required=true, pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="scanext", in="formData", type="string", pattern="^(?:jpg|docx|rtf|pdf)$"),
+     *     @SWG\Parameter(name="date", in="formData", type="string", required=true, pattern="^[0-9]{8}$"),
+     *     @SWG\Parameter(name="filename", in="formData", type="string", pattern="^[a-z0-9_]{15}$"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/SleepStudy")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(SleepStudies $resources, SleepStudyStore $request)
+    public function store()
     {
-        $resource = $resources->create($request->all());
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        $this->hasIp = false;
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\SleepStudy $resource
-     * @param  \DentalSleepSolutions\Http\Requests\SleepStudyUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/sleep-studies/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="testnumber", in="formData", type="string", pattern="^[0-9]{9}$"),
+     *     @SWG\Parameter(name="docid", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="patientid", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="needed", in="formData", type="string", pattern="^(?:Yes|No)$"),
+     *     @SWG\Parameter(name="scheddate", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="sleeplabwheresched", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="completed", in="formData", type="string", pattern="^(?:Yes|No)$"),
+     *     @SWG\Parameter(name="interpolation", in="formData", type="string", pattern="^(?:Yes|No)$"),
+     *     @SWG\Parameter(name="labtype", in="formData", type="string", pattern="^(?:PSG|HST)$"),
+     *     @SWG\Parameter(name="copyreqdate", in="formData", type="string", format="dateTime"),
+     *     @SWG\Parameter(name="sleeplab", in="formData", type="string", pattern="^[0-9]+$"),
+     *     @SWG\Parameter(name="scanext", in="formData", type="string", pattern="^(?:jpg|docx|rtf|pdf)$"),
+     *     @SWG\Parameter(name="date", in="formData", type="string", pattern="^[0-9]{8}$"),
+     *     @SWG\Parameter(name="filename", in="formData", type="string", pattern="^[a-z0-9_]{15}$"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(SleepStudy $resource, SleepStudyUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\SleepStudy $resource
-     * @param  \DentalSleepSolutions\Http\Requests\SleepStudyDestroy $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Delete(
+     *     path="/sleep-studies/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function destroy(SleepStudy $resource, SleepStudyDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
+        return parent::destroy($id);
     }
 }

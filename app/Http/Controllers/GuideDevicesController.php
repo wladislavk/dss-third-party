@@ -2,91 +2,193 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\GuideDeviceStore;
-use DentalSleepSolutions\Http\Requests\GuideDeviceUpdate;
-use DentalSleepSolutions\Http\Requests\GuideDeviceDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\GuideDevice;
-use DentalSleepSolutions\Contracts\Repositories\GuideDevices;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Illuminate\Http\Request;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class GuideDevicesController extends Controller
+class GuideDevicesController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\GuideDevices $resources
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/guide-devices",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/GuideDevice")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function index(GuideDevices $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\GuideDevice $resource
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Get(
+     *     path="/guide-devices/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/GuideDevice")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function show(GuideDevice $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\GuideDevices $resources
-     * @param  \DentalSleepSolutions\Http\Requests\GuideDeviceStore $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Post(
+     *     path="/guide-devices",
+     *     @SWG\Parameter(name="name", in="formData", type="string", required=true),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/GuideDevice")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function store(GuideDevices $resources, GuideDeviceStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\GuideDevice $resource
-     * @param  \DentalSleepSolutions\Http\Requests\GuideDeviceUpdate $request
-     * @return \Illuminate\Http\JsonResponse
+     * @SWG\Put(
+     *     path="/guide-devices/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="name", in="formData", type="string", required=true),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      */
-    public function update(GuideDevice $resource, GuideDeviceUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @SWG\Delete(
+     *     path="/guide-devices/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function destroy($id)
+    {
+        return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/guide-devices/with-images",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\GuideDevice $resource
-     * @param  \DentalSleepSolutions\Http\Requests\GuideDeviceDestroy $request
+     * @param DeviceRepository $deviceRepository
+     * @param GuideSettingRepository $guideSettingRepository
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(GuideDevice $resource, GuideDeviceDestroy $request)
-    {
-        $resource->delete();
+    public function getWithImages(
+        DeviceRepository $deviceRepository,
+        GuideSettingRepository $guideSettingRepository,
+        Request $request
+    ) {
+        $settings = $request->input('settings');
 
-        return ApiResponse::responseOk('Resource deleted');
+        $fields = ['deviceid', 'device', 'image_path'];
+        $devices = $deviceRepository->getWithFilter($fields);
+        $devicesArray = [];
+
+        if (count($devices)) {
+            foreach ($devices as $device) {
+                $total = 0;
+                $show  = true;
+
+                $guideSettings = $guideSettingRepository->getSettingType($device->deviceid);
+
+                if (count($guideSettings)) {
+                    foreach ($guideSettings as $guideSetting) {
+                        if (empty($settings[$guideSetting->id])) {
+                            continue;
+                        }
+                        $setting = $settings[$guideSetting->id];
+
+                        if ($guideSetting->setting_type == 1) {
+                            if ($guideSetting->value != '1' && $setting['checked'] == 1) {
+                                $show = false;
+                            }
+                        } else {
+                            $value = $setting['checked'] * $guideSetting->value;
+
+                            if (isset($setting['checkedImp'])) {
+                                $value *= 1.75;
+                            }
+
+                            $total += $value;
+                        }
+                    }
+                }
+
+                if ($show) {
+                    array_push($devicesArray, [
+                        'name'       => $device->device,
+                        'id'         => $device->deviceid,
+                        'value'      => $total,
+                        'imagePath'  => $device->image_path,
+                    ]);
+                }
+            }
+        }
+
+        usort($devicesArray, [$this, 'sortDevices']);
+
+        return ApiResponse::responseOk('', $devicesArray);
+    }
+
+    private function sortDevices($firstElement, $secondElement)
+    {
+        if ($firstElement['value'] == $secondElement['value']) {
+            return 0;
+        }
+        return ($firstElement['value'] > $secondElement['value']) ? -1 : 1;
     }
 }

@@ -2,91 +2,137 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\DocumentCategoryStore;
-use DentalSleepSolutions\Http\Requests\DocumentCategoryUpdate;
-use DentalSleepSolutions\Http\Requests\DocumentCategoryDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\DocumentCategory;
-use DentalSleepSolutions\Contracts\Repositories\DocumentCategories;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\DocumentCategoryRepository;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
 
-/**
- * API controller that handles single resource endpoints. It depends heavily
- * on the IoC dependency injection and routes model binding in that each
- * method gets resource instance injected, rather than its identifier.
- *
- * @see \DentalSleepSolutions\Providers\RouteServiceProvider::boot
- * @link http://laravel.com/docs/5.1/routing#route-model-binding
- */
-class DocumentCategoriesController extends Controller
+class DocumentCategoriesController extends BaseRestController
 {
+    /** @var DocumentCategoryRepository */
+    protected $repository;
+
     /**
-     * Display a listing of the resource.
+     * @SWG\Get(
+     *     path="/document-categories",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/DocumentCategory")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function index()
+    {
+        return parent::index();
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/document-categories/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/DocumentCategory")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function show($id)
+    {
+        return parent::show($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/document-categories",
+     *     @SWG\Parameter(name="name", in="formData", type="string", required=true),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/DocumentCategory")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function store()
+    {
+        return parent::store();
+    }
+
+    /**
+     * @SWG\Put(
+     *     path="/document-categories/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="name", in="formData", type="string"),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function update($id)
+    {
+        return parent::update($id);
+    }
+
+    /**
+     * @SWG\Delete(
+     *     path="/document-categories/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     */
+    public function destroy($id)
+    {
+        return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/document-categories/active",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\DocumentCategories $resources
+     * Get active document categories.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(DocumentCategories $resources)
+    public function active()
     {
-        $data = $resources->all();
+        $data = $this->repository->getActiveDocumentCategories();
 
         return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\DocumentCategory $resource
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function show(DocumentCategory $resource)
-    {
-        return ApiResponse::responseOk('', $resource);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\DocumentCategories $resources
-     * @param  \DentalSleepSolutions\Http\Requests\DocumentCategoryStore $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function store(DocumentCategories $resources, DocumentCategoryStore $request)
-    {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\DocumentCategory $resource
-     * @param  \DentalSleepSolutions\Http\Requests\DocumentCategoryUpdate $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(DocumentCategory $resource, DocumentCategoryUpdate $request)
-    {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Resources\DocumentCategory $resource
-     * @param  \DentalSleepSolutions\Http\Requests\DocumentCategoryDestroy $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function destroy(DocumentCategory $resource, DocumentCategoryDestroy $request)
-    {
-        $resource->delete();
-
-        return ApiResponse::responseOk('Resource deleted');
     }
 }

@@ -11,6 +11,7 @@ use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\IntegerTransf
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\JsonTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\RegexTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\StringTransformer;
+use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\UrlTransformer;
 
 class RuleTransformerFactory extends AbstractTransformerFactory
 {
@@ -24,6 +25,7 @@ class RuleTransformerFactory extends AbstractTransformerFactory
         'date' => DateTransformer::class,
         'boolean' => BooleanTransformer::class,
         'json' => JsonTransformer::class,
+        'url' => UrlTransformer::class,
     ];
 
     /**

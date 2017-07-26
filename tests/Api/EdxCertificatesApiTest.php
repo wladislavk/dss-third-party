@@ -1,0 +1,67 @@
+<?php
+
+namespace Tests\Api;
+
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use DentalSleepSolutions\Eloquent\Models\EdxCertificate;
+use Tests\TestCases\ApiTestCase;
+
+class EdxCertificatesApiTest extends ApiTestCase
+{
+    use WithoutMiddleware, DatabaseTransactions;
+
+    /**
+     * Test the post method of the Dental Sleep Solutions API
+     * Post to /api/v1/edx-certificates -> EdxCertificatesController@store method
+     * 
+     */
+    public function testAddEdxCertificate()
+    {
+        $data = factory(EdxCertificate::class)->make()->toArray();
+
+        $data['number_ce'] = 8;
+
+        $this->post('/api/v1/edx-certificates', $data);
+        $this
+            ->seeInDatabase('edx_certificates', ['number_ce' => 8])
+            ->assertResponseOk();
+    }
+
+    /**
+     * Test the put method of the Dental Sleep Solutions API
+     * Put to /api/v1/edx-certificates/{id} -> EdxCertificatesController@update method
+     * 
+     */
+    public function testUpdateEdxCertificate()
+    {
+        $edxCertificateTestRecord = factory(EdxCertificate::class)->create();
+
+        $data = [
+            'course_name' => 'updated course name',
+            'number_ce'   => 9
+        ];
+
+        $this->put('/api/v1/edx-certificates/' . $edxCertificateTestRecord->id, $data)
+            ->seeInDatabase('edx_certificates', [
+                'course_name' => 'updated course name'
+            ])
+            ->assertResponseOk();
+    }
+
+    /**
+     * Test the delete method of the Dental Sleep Solutions API
+     * Delete to /api/v1/edx-certificates/{id} -> EdxCertificatesController@destroy method
+     * 
+     */
+    public function testDeleteEdxCertificate()
+    {
+        $edxCertificateTestRecord = factory(EdxCertificate::class)->create();
+
+        $this->delete('/api/v1/edx-certificates/' . $edxCertificateTestRecord->id)
+            ->notSeeInDatabase('edx_certificates', [
+                'id' => $edxCertificateTestRecord->id
+            ])
+            ->assertResponseOk();
+    }
+}

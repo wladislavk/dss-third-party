@@ -99,6 +99,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('document-categories', 'DocumentCategoriesController', ['except' => ['create', 'edit']]);
     Route::post('document-categories/active', 'DocumentCategoriesController@active');
 
+    Route::resource('edx-certificates', 'EdxCertificatesController', ['except' => ['create', 'edit']]);
+
     Route::resource('epworth-sleepiness-scale', 'EpworthSleepinessScaleController', ['except' => ['create', 'edit']]);
 
     Route::resource('external-companies', 'ExternalCompaniesController');

@@ -2,86 +2,144 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Helpers\ApiResponse;
-use DentalSleepSolutions\Http\Requests\AdminStore;
-use DentalSleepSolutions\Http\Requests\AdminUpdate;
-use DentalSleepSolutions\Http\Requests\AdminDestroy;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use DentalSleepSolutions\Contracts\Resources\Admin;
-use DentalSleepSolutions\Contracts\Repositories\Admins;
-use Carbon\Carbon;
-
-use DentalSleepSolutions\Libraries\Password;
-
-class AdminsController extends Controller
+class AdminsController extends BaseRestController
 {
     /**
-     * Display a listing of the resource.
+     * @SWG\Get(
+     *     path="/admins",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Admin")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Admins $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Admins $resources)
+    public function index()
     {
-        $data = $resources->all();
-
-        return ApiResponse::responseOk('', $data);
+        return parent::index();
     }
 
     /**
-     * Display the specified resource.
+     * @SWG\Get(
+     *     path="/admins/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Admin")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Admin $resource
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Admin $resource)
+    public function show($id)
     {
-        return ApiResponse::responseOk('', $resource);
+        return parent::show($id);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @SWG\Post(
+     *     path="/admins",
+     *     @SWG\Parameter(name="name", in="formData", type="string", maxLength=250),
+     *     @SWG\Parameter(name="username", in="formData", type="string", required=true, maxLength=250),
+     *     @SWG\Parameter(name="password", in="formData", type="string", required=true, maxLength=250),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="admin_access", in="formData", type="integer"),
+     *     @SWG\Parameter(name="email", in="formData", type="string", format="email", maxLength=100),
+     *     @SWG\Parameter(name="first_name", in="formData", type="string", maxLength=50),
+     *     @SWG\Parameter(name="last_name", in="formData", type="string", maxLength=50),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resource created",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(property="data", ref="#/definitions/Admin")
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\Admins $resources
-     * @param  \DentalSleepSolutions\Http\Requests\AdminStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Admins $resources, AdminStore $request)
+    public function store()
     {
-        $data = array_merge($request->all(), [
-            'ip_address' => $request->ip()
-        ]);
-
-        $resource = $resources->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
-     * Update the specified resource in storage.
+     * @SWG\Put(
+     *     path="/admins/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Parameter(name="name", in="formData", type="string", maxLength=250),
+     *     @SWG\Parameter(name="username", in="formData", type="string", maxLength=250),
+     *     @SWG\Parameter(name="password", in="formData", type="string", maxLength=250),
+     *     @SWG\Parameter(name="status", in="formData", type="integer"),
+     *     @SWG\Parameter(name="admin_access", in="formData", type="integer"),
+     *     @SWG\Parameter(name="email", in="formData", type="string", format="email", maxLength=100),
+     *     @SWG\Parameter(name="first_name", in="formData", type="string", maxLength=50),
+     *     @SWG\Parameter(name="last_name", in="formData", type="string", maxLength=50),
+     *     @SWG\Response(response="200", description="Resource updated", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="422", ref="#/responses/422_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Admin $resource
-     * @param  \DentalSleepSolutions\Http\Requests\AdminUpdate $request
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Admin $resource, AdminUpdate $request)
+    public function update($id)
     {
-        $resource->update($request->all());
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @SWG\Delete(
+     *     path="/admins/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="Resource deleted", ref="#/responses/empty_ok_response"),
+     *     @SWG\Response(response="404", ref="#/responses/404_response"),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Admin $resource
-     * @param  \DentalSleepSolutions\Http\Requests\AdminDestroy $request
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Admin $resource, AdminDestroy $request)
+    public function destroy($id)
     {
-        $resource->delete();
+        return parent::destroy($id);
+    }
 
-        return ApiResponse::responseOk('Resource deleted');
+    public function getModelNamespace()
+    {
+        return self::BASE_MODEL_NAMESPACE;
     }
 }

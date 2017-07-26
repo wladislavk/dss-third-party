@@ -2661,6 +2661,16 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Thorton::class, fun
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\FlowsheetNextStep::class, function ($faker) {
+    return [
+        'parent_id'  => $faker->randomDigit,
+        'child_id'   => $faker->randomDigit,
+        'sort_by'    => $faker->randomDigit,
+        'adddate'    => $faker->dateTime(),
+        'ip_address' => $faker->ipv4,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Task::class, function ($faker) {
     return [
         'task'           => $faker->sentence($nbWords = 5),

@@ -128,6 +128,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('flowsheet-steps', 'FlowsheetStepsController', ['except' => ['create', 'edit']]);
 
+    Route::resource('flowsheet-next-steps', 'FlowsheetNextStepsController', ['except' => ['create', 'edit']]);
+
     Route::resource('flowsheets', 'FlowsheetsController', ['except' => ['create', 'edit']]);
 
     Route::resource('forms', 'FormsController', ['except' => ['create', 'edit']]);

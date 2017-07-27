@@ -9,11 +9,6 @@ abstract class ApiTestCase extends BaseApiTestCase
 {
     use WithoutMiddleware, DatabaseTransactions;
 
-    const ROUTE_PREFIX = '/api/v1';
-
-    /** @var int */
-    protected $userId = 100;
-
     /** @var Model */
     protected $model;
 
@@ -49,8 +44,7 @@ abstract class ApiTestCase extends BaseApiTestCase
         factory($this->getModel())->create();
         $this->get(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
         $this->assertResponseOk();
-        $content = json_decode($this->response->getContent(), true);
-        $this->assertGreaterThan(0, count($content['data']));
+        $this->assertGreaterThan(0, count($this->getResponseData()));
     }
 
     public function testShow()
@@ -61,8 +55,8 @@ abstract class ApiTestCase extends BaseApiTestCase
         $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
         $this->get($endpoint);
         $this->assertResponseOk();
-        $content = json_decode($this->response->getContent(), true);
-        $this->assertEquals($testRecord->$primaryKey, $content['data'][$primaryKey]);
+        $data = $this->getResponseData();
+        $this->assertEquals($testRecord->$primaryKey, $data[$primaryKey]);
     }
 
     public function testStore()
@@ -107,5 +101,11 @@ abstract class ApiTestCase extends BaseApiTestCase
         $new = $database->connection($connection)->table($this->model->getTable())
             ->where($where)->first();
         var_dump($new);
+    }
+
+    protected function getResponseData()
+    {
+        $content = json_decode($this->response->getContent(), true);
+        return $content['data'];
     }
 }

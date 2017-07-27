@@ -132,8 +132,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('insurances', 'InsurancesController', ['except' => ['create', 'edit']]);
     Route::post('insurances/rejected', 'InsurancesController@getRejected');
-    Route::post('insurances/{type}', 'InsurancesController@getFrontOfficeClaims');
     Route::post('insurances/remove-claim', 'InsurancesController@removeClaim');
+    Route::post('insurances/{type}', 'InsurancesController@getFrontOfficeClaims');
 
     Route::resource('insurance-diagnoses', 'InsuranceDiagnosesController', ['except' => ['create', 'edit']]);
 
@@ -145,8 +145,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('insurance-preauth', 'InsurancePreauthController', ['except' => ['create', 'edit']]);
     Route::post('insurance-preauth/vobs/find', 'InsurancePreauthController@find');
-    Route::post('insurance-preauth/{type}', 'InsurancePreauthController@getByType');
     Route::post('insurance-preauth/pending-VOB', 'InsurancePreauthController@getPendingVOBByContactId');
+    Route::post('insurance-preauth/{type}', 'InsurancePreauthController@getByType');
 
     Route::resource('insurance-types', 'InsuranceTypesController', ['except' => ['create', 'edit']]);
 

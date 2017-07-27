@@ -96,4 +96,12 @@ class HealthHistoriesApiTest extends ApiTestCase
             'additional_paragraph' => 'updated additional paragraph for hh',
         ];
     }
+
+    public function testGetWithFilter()
+    {
+        $this->post(self::ROUTE_PREFIX . '/health-histories/with-filter');
+        $this->assertResponseOk();
+        $this->assertEquals(45, count($this->getResponseData()));
+        $this->assertEquals(1, $this->getResponseData()[0]['patientid']);
+    }
 }

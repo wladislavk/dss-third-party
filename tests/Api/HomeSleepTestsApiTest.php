@@ -79,4 +79,24 @@ class HomeSleepTestsApiTest extends ApiTestCase
             'user_id'      => 7,
         ];
     }
+
+    public function testGetUncompleted()
+    {
+        $this->post(self::ROUTE_PREFIX . '/home-sleep-tests/uncompleted');
+        $this->assertResponseOk();
+        $ids = array_column($this->getResponseData(), 'id');
+        $expected = [20, 21];
+        $this->assertEquals($expected, $ids);
+    }
+
+    public function testGetByType()
+    {
+        $type = 'completed';
+        $this->post(self::ROUTE_PREFIX . '/home-sleep-tests/' . $type);
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 }

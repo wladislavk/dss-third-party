@@ -156,7 +156,7 @@ class InsuranceRepository extends AbstractRepository
      * @param string $claimAlias
      * @return string
      */
-    private function filedByBackOfficeConditional($claimAlias)
+    public static function filedByBackOfficeConditional($claimAlias)
     {
         return "(
                 -- Filed by back office, legacy logic

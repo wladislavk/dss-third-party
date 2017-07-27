@@ -121,4 +121,34 @@ class InsurancesApiTest extends ApiTestCase
             'docid'             => 8,
         ];
     }
+
+    public function testGetRejected()
+    {
+        $this->post(self::ROUTE_PREFIX . '/insurances/rejected');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
+
+    public function testGetFrontOfficeClaims()
+    {
+        $type = 'pending-claims';
+        $this->post(self::ROUTE_PREFIX . '/insurances/' . $type);
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testRemoveClaim()
+    {
+        /** @var Insurance $insurance */
+        $insurance = factory($this->getModel())->create();
+        $insurance->status = Insurance::DSS_CLAIM_PENDING;
+        $insurance->save();
+        $insuranceId = $insurance->insuranceid;
+        $this->post(self::ROUTE_PREFIX . '/insurances/remove-claim', ['claim_id' => $insuranceId]);
+        $this->assertResponseOk();
+        $this->notSeeInDatabase($this->model->getTable(), ['insuranceid' => $insuranceId]);
+    }
 }

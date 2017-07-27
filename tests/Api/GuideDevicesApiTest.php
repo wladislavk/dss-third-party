@@ -29,4 +29,18 @@ class GuideDevicesApiTest extends ApiTestCase
             'name' => 'John Doe II',
         ];
     }
+
+    public function testGetWithImages()
+    {
+        $this->post(self::ROUTE_PREFIX . '/guide-devices/with-images');
+        $this->assertResponseOk();
+        $this->assertEquals(19, count($this->getResponseData()));
+        $expectedFirst = [
+            'name' => 'EMA',
+            'id' => 16,
+            'value' => 0,
+            'imagePath' => 'dental_device_16.jpg',
+        ];
+        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
+    }
 }

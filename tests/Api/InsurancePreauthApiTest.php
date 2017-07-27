@@ -131,4 +131,33 @@ class InsurancePreauthApiTest extends ApiTestCase
             'patient_lastname'  => 'Doe',
         ];
     }
+
+    public function testFind()
+    {
+        $this->post(self::ROUTE_PREFIX . '/insurance-preauth/vobs/find');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+            'result' => [],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testGetPendingVOBByContactId()
+    {
+        $this->post(self::ROUTE_PREFIX . '/insurance-preauth/pending-VOB');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
+
+    public function testGetByType()
+    {
+        $type = 'completed';
+        $this->post(self::ROUTE_PREFIX . '/insurance-preauth/' . $type);
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 }

@@ -7,6 +7,8 @@ use Illuminate\Contracts\Console\Kernel;
 
 class BaseApiTestCase extends BaseTestCase
 {
+    const ROUTE_PREFIX = '/api/v1';
+
     /**
      * The base URL to use while testing the application.
      *

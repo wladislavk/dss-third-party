@@ -38,13 +38,12 @@ class GuideSettingsApiTest extends ApiTestCase
 
     public function testGetAllOrderBy()
     {
-        $this->post('/api/v1/guide-settings/sort');
+        $this->post(self::ROUTE_PREFIX . '/guide-settings/sort');
         $this->assertResponseOk();
-        $result = json_decode($this->response->getContent(), true)['data'];
-        $names = array_column($result, 'name');
+        $names = array_column($this->getResponseData(), 'name');
         $sortedNames = Helpers::saneSort($names);
         $this->assertTrue($names === $sortedNames);
-        $ids = array_column($result, 'id');
+        $ids = array_column($this->getResponseData(), 'id');
         $sortedIds = Helpers::saneSort($ids);
         $this->assertFalse($ids === $sortedIds);
     }

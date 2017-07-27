@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 
 class ContactRepository extends AbstractRepository
 {
@@ -234,20 +235,20 @@ class ContactRepository extends AbstractRepository
         )
             ->from(\DB::raw('dental_contact dc'))
             ->leftJoin(\DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
-            ->leftJoin(\DB::raw('dental_patients dp_ref'), function($join) {
+            ->leftJoin(\DB::raw('dental_patients dp_ref'), function(JoinClause $join) {
                 $join->on('dp_ref.referred_by', '=', 'dc.contactid')
-                    ->where(function(Builder $query) {
+                    ->where(function(JoinClause $query) {
                         $query->whereNull('dp_ref.parent_patientid')
                             ->orWhere('dp_ref.parent_patientid', '=', '');
                     })
                     ->where('dp_ref.referred_source', '=', 2);
             })
-            ->leftJoin(\DB::raw('dental_patients dp_pat'), function($join) {
-                $join->on(function(Builder $query) {
+            ->leftJoin(\DB::raw('dental_patients dp_pat'), function(JoinClause $join) {
+                $join->on(function(JoinClause $query) {
                     $query->whereNull('dp_pat.parent_patientid')
                         ->orWhere('dp_pat.parent_patientid', '=', '');
-                })->where(function(Builder $query) {
-                    $query->on('dp_pat.docpcp', '=', 'dc.contactid')
+                })->where(function(JoinClause $join) {
+                    $join->on('dp_pat.docpcp', '=', 'dc.contactid')
                         ->orOn('dp_pat.docent', '=', 'dc.contactid')
                         ->orOn('dp_pat.docsleep', '=', 'dc.contactid')
                         ->orOn('dp_pat.docdentist', '=', 'dc.contactid')
@@ -269,9 +270,9 @@ class ContactRepository extends AbstractRepository
         }
 
         if ($letter) {
-            $contacts = $contacts->where(function($query) use ($letter) {
+            $contacts = $contacts->where(function(Builder $query) use ($letter) {
                 $query->where('dc.lastname', 'like', $letter . '%')
-                    ->orWhere(function($query) use ($letter) {
+                    ->orWhere(function(Builder $query) use ($letter) {
                         $query->where('dc.lastname', '')
                             ->where('dc.company', 'like', $letter . '%');
                     });

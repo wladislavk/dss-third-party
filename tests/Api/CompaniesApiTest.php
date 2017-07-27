@@ -36,4 +36,25 @@ class CompaniesApiTest extends ApiTestCase
             'status' => 2,
         ];
     }
+
+    public function testGetCompanyLogo()
+    {
+        $this->post(self::ROUTE_PREFIX . '/companies/company-logo');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
+
+    public function testGetHomeSleepTestCompanies()
+    {
+        $this->post(self::ROUTE_PREFIX . '/companies/home-sleep-test');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
+
+    public function testGetBillingExclusiveCompany()
+    {
+        $this->post(self::ROUTE_PREFIX . '/companies/billing-exclusive-company');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
 }

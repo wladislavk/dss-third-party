@@ -30,4 +30,27 @@ class DocumentCategoriesApiTest extends ApiTestCase
             'status' => 7,
         ];
     }
+
+    public function testActive()
+    {
+        $this->post(self::ROUTE_PREFIX . '/document-categories/active');
+        $this->assertResponseOk();
+        $expected = [
+            [
+                'categoryid' => 23,
+                'name' => 'Final test',
+                'status' => 1,
+                'adddate' => '2011-06-23 15:50:25',
+                'ip_address' => '192.168.1.168',
+            ],
+            [
+                'categoryid' => 20,
+                'name' => 'test 2',
+                'status' => 1,
+                'adddate' => null,
+                'ip_address' => null,
+            ],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 }

@@ -7,6 +7,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
 use DentalSleepSolutions\Eloquent\Models\Dental\Ledger;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 
 class LedgerRepository extends AbstractRepository
 {
@@ -444,7 +445,7 @@ class LedgerRepository extends AbstractRepository
             ->leftJoin(\DB::raw('dental_users p'), 'dl.producerid', '=', 'p.userid')
             ->leftJoin(\DB::raw('dental_ledger_payment pay'), 'pay.ledgerid', '=', 'dl.ledgerid')
             ->leftJoin(\DB::raw('dental_insurance di'), 'di.insuranceid', '=', 'dl.primary_claim_id')
-            ->leftJoin(\DB::raw('dental_transaction_code tc'), function ($query) use ($data) {
+            ->leftJoin(\DB::raw('dental_transaction_code tc'), function (JoinClause $query) use ($data) {
                 $query->on('tc.transaction_code', '=', 'dl.transaction_code')
                     ->where('tc.docid', '=', $data['doc_id']);
             })->where('dl.docid', $data['doc_id'])
@@ -578,7 +579,7 @@ class LedgerRepository extends AbstractRepository
                 FROM dental_claim_notes
                 WHERE claim_id = i.insuranceid
                     AND create_type = '1')"),
-            \DB::raw(Insurance::filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
+            \DB::raw(InsuranceRepository::filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
         )->from(\DB::raw('dental_insurance i'))
             ->leftJoin(\DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
             ->leftJoin(\DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')

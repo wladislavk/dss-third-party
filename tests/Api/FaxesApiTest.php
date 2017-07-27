@@ -44,4 +44,14 @@ class FaxesApiTest extends ApiTestCase
             'userid' => 100,
         ];
     }
+
+    public function testGetAlerts()
+    {
+        $this->post(self::ROUTE_PREFIX . '/faxes/alerts');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 }

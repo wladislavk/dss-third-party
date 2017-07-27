@@ -36,6 +36,11 @@ class PatientSummariesApiTest extends ApiTestCase
         ];
     }
 
+    public function testShow()
+    {
+        $this->markTestSkipped('dental_patient_summary table does not have a primary key');
+    }
+
     public function testStore()
     {
         $this->markTestSkipped('dental_patient_summary table does not have a primary key');

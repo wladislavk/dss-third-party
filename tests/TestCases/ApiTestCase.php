@@ -44,13 +44,34 @@ abstract class ApiTestCase extends BaseApiTestCase
         $this->model = new $modelClass();
     }
 
+    public function testIndex()
+    {
+        factory($this->getModel())->create();
+        $this->get(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
+        $this->assertResponseOk();
+        $content = json_decode($this->response->getContent(), true);
+        $this->assertGreaterThan(0, count($content['data']));
+    }
+
+    public function testShow()
+    {
+        $testRecord = factory($this->getModel())->create();
+
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
+        $this->get($endpoint);
+        $this->assertResponseOk();
+        $content = json_decode($this->response->getContent(), true);
+        $this->assertEquals($testRecord->$primaryKey, $content['data'][$primaryKey]);
+    }
+
     public function testStore()
     {
         $this->post(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
         $this->assertResponseOk();
 
         // uncomment this line to debug the actual created record
-        //$this->verifyCreation(["cur_page" => "architecto"]);
+        //$this->verifyCreation(["foo" => "bar"]);
 
         $this->seeInDatabase($this->model->getTable(), $this->getStoreData());
     }

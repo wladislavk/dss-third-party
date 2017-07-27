@@ -35,4 +35,9 @@ class AdminMemoApiTest extends ApiTestCase
             'off_date' => date('Y-m-d', strtotime("$date +7 days")),
         ];
     }
+
+    public function testShow()
+    {
+        $this->markTestSkipped('API method is incomplete');
+    }
 }

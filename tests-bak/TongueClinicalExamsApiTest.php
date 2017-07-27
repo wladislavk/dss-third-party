@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\TongueClinicalExam;
+use DentalSleepSolutions\Eloquent\Models\Dental\TongueClinicalExam;
 use Tests\TestCases\ApiTestCase;
 
 class TongueClinicalExamsApiTest extends ApiTestCase
@@ -27,7 +27,8 @@ class TongueClinicalExamsApiTest extends ApiTestCase
             'status'               => 5
         ];
 
-        $this->post('/api/v1/tongue-clinical-exams', $data)
+        $this->post('/api/v1/tongue-clinical-exams', $data);
+        $this
             ->seeInDatabase('dental_ex_page1', ['blood_pressure' => '130/85'])
             ->assertResponseOk();
     }
@@ -46,7 +47,8 @@ class TongueClinicalExamsApiTest extends ApiTestCase
             'status'               => 8
         ];
 
-        $this->put('/api/v1/tongue-clinical-exams/' . $tongueClinicalExamTestRecord->ex_page1id, $data)
+        $this->put('/api/v1/tongue-clinical-exams/' . $tongueClinicalExamTestRecord->ex_page1id, $data);
+        $this
             ->seeInDatabase('dental_ex_page1', ['additional_paragraph' => 'Update Test additional paragraph'])
             ->assertResponseOk();
     }
@@ -60,7 +62,8 @@ class TongueClinicalExamsApiTest extends ApiTestCase
     {
         $tongueClinicalExamTestRecord = factory(TongueClinicalExam::class)->create();
 
-        $this->delete('/api/v1/tongue-clinical-exams/' . $tongueClinicalExamTestRecord->ex_page1id)
+        $this->delete('/api/v1/tongue-clinical-exams/' . $tongueClinicalExamTestRecord->ex_page1id);
+        $this
             ->notSeeInDatabase('dental_ex_page1', ['ex_page1id' => $tongueClinicalExamTestRecord->ex_page1id])
             ->assertResponseOk();
     }

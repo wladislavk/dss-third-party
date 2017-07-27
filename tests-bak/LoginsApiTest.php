@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Dental\Login;
+use DentalSleepSolutions\Eloquent\Models\Dental\Login;
 use Tests\TestCases\ApiTestCase;
 
 class LoginsApiTest extends ApiTestCase

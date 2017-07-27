@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\FaxInvoice;
+use DentalSleepSolutions\Eloquent\Models\Dental\FaxInvoice;
 use Tests\TestCases\ApiTestCase;
 
 class FaxInvoicesApiTest extends ApiTestCase

@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\LedgerRecord;
+use DentalSleepSolutions\Eloquent\Models\Dental\LedgerRecord;
 use Tests\TestCases\ApiTestCase;
 
 class LedgerRecordsApiTest extends ApiTestCase

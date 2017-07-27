@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Dental\Device;
+use DentalSleepSolutions\Eloquent\Models\Dental\Device;
 
 class DevicesApiTest extends ApiTestCase
 {

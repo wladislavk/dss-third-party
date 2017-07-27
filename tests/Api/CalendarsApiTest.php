@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Dental\Calendar;
+use DentalSleepSolutions\Eloquent\Models\Dental\Calendar;
 use Tests\TestCases\ApiTestCase;
 
 class CalendarsApiTest extends ApiTestCase

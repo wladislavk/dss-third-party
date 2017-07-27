@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\AppointmentType;
+use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentType;
 use Tests\TestCases\ApiTestCase;
 
 class AppointmentTypesApiTest extends ApiTestCase

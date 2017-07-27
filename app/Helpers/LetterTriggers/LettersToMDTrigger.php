@@ -2,13 +2,16 @@
 
 namespace DentalSleepSolutions\Helpers\LetterTriggers;
 
-use DentalSleepSolutions\Eloquent\Dental\Contact;
-use DentalSleepSolutions\Eloquent\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
 use DentalSleepSolutions\Structs\LetterData;
+use DentalSleepSolutions\Structs\MDContacts;
 
 class LettersToMDTrigger extends AbstractLetterTrigger
 {
@@ -18,21 +21,21 @@ class LettersToMDTrigger extends AbstractLetterTrigger
     const LETTER_TO_MD_FROM_DSS = 1;
     const LETTER_TO_MD_FROM_FRANCHISEE = 2;
 
-    /** @var User */
-    private $userModel;
+    /** @var UserRepository */
+    private $userRepository;
 
-    /** @var Contact */
-    private $contactModel;
+    /** @var ContactRepository */
+    private $contactRepository;
 
     public function __construct(
         LetterCreator $letterCreator,
-        Letter $letterModel,
-        User $userModel,
-        Contact $contactModel
+        LetterRepository $letterRepository,
+        UserRepository $userRepository,
+        ContactRepository $contactRepository
     ) {
-        parent::__construct($letterCreator, $letterModel);
-        $this->userModel = $userModel;
-        $this->contactModel = $contactModel;
+        parent::__construct($letterCreator, $letterRepository);
+        $this->userRepository = $userRepository;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -67,13 +70,7 @@ class LettersToMDTrigger extends AbstractLetterTrigger
         ) {
             return false;
         }
-        $recipients = [];
-        foreach ($params[self::MD_CONTACTS_PARAM] as $contactId) {
-            $foundContact = $this->findContact($contactId);
-            if ($foundContact) {
-                $recipients[] = $contactId;
-            }
-        }
+        $recipients = $this->getRecipientsList($params[self::MD_CONTACTS_PARAM]);
         if (!count($recipients)) {
             return false;
         }
@@ -83,14 +80,30 @@ class LettersToMDTrigger extends AbstractLetterTrigger
     }
 
     /**
+     * @param MDContacts $mdContacts
+     * @return array
+     */
+    private function getRecipientsList(MDContacts $mdContacts)
+    {
+        $recipients = [];
+        foreach ($mdContacts as $contactId) {
+            $foundContact = $this->findContact($contactId);
+            if ($foundContact) {
+                $recipients[] = $contactId;
+            }
+        }
+        return array_unique($recipients);
+    }
+
+    /**
      * @param array $params
      * @throws GeneralException
      */
     protected function checkParams(array $params)
     {
-        if (!isset($params[self::MD_CONTACTS_PARAM]) || !is_array($params[self::MD_CONTACTS_PARAM])) {
+        if (!isset($params[self::MD_CONTACTS_PARAM]) || !$params[self::MD_CONTACTS_PARAM] instanceof MDContacts) {
             throw new GeneralException(
-                self::MD_CONTACTS_PARAM . ' key must be present in $params and contain an array'
+                self::MD_CONTACTS_PARAM . ' key must be present in $params and contain an instance of ' . MDContacts::class
             );
         }
     }
@@ -101,11 +114,11 @@ class LettersToMDTrigger extends AbstractLetterTrigger
      */
     private function getUserLetterInfo($docId)
     {
-        $baseUserLetterInfo = $this->userModel->getWithFilter(
+        $baseUserLetterInfo = $this->userRepository->getWithFilter(
             ['use_letters', 'intro_letters'],
             ['userid' => $docId]
         );
-        // TODO: why is only first entry used? perhaps better to use first() on the model
+        // TODO: why is only the first entry used? perhaps better to use first() on the model
         if (isset($baseUserLetterInfo[0])) {
             return $baseUserLetterInfo[0];
         }
@@ -121,7 +134,7 @@ class LettersToMDTrigger extends AbstractLetterTrigger
         if ($contactId <= 0) {
             return null;
         }
-        $mdLists = $this->letterModel->getMdList(
+        $mdLists = $this->letterRepository->getMdList(
             $contactId,
             self::LETTER_TO_MD_FROM_DSS,
             self::LETTER_TO_MD_FROM_FRANCHISEE
@@ -130,7 +143,7 @@ class LettersToMDTrigger extends AbstractLetterTrigger
         if (!count($mdLists)) {
             return null;
         }
-        $foundContact = $this->contactModel->getActiveContact($contactId);
+        $foundContact = $this->contactRepository->getActiveContact($contactId);
         return $foundContact;
     }
 }

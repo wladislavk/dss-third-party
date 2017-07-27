@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\ImageType;
+use DentalSleepSolutions\Eloquent\Models\Dental\ImageType;
 use Tests\TestCases\ApiTestCase;
 
 class ImageTypesApiTest extends ApiTestCase

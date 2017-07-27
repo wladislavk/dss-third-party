@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Chair;
+use DentalSleepSolutions\Eloquent\Models\Dental\Chair;
 use Tests\TestCases\ApiTestCase;
 
 class ChairsApiTest extends ApiTestCase

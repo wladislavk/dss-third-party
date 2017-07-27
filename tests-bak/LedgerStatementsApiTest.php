@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Dental\LedgerStatement;
+use DentalSleepSolutions\Eloquent\Models\Dental\LedgerStatement;
 
 class LedgerStatementsApiTest extends ApiTestCase
 {

@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\SupportTicket;
+use DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket;
 use Tests\TestCases\ApiTestCase;
 
 class SupportTicketsApiTest extends ApiTestCase

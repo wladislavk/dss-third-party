@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Admin;
+use DentalSleepSolutions\Eloquent\Models\Admin;
 use Tests\TestCases\ApiTestCase;
 
 class AdminsApiTest extends ApiTestCase

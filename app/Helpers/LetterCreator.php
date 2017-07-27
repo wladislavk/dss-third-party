@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Structs\LetterData;
 
 class LetterCreator
@@ -11,20 +11,20 @@ class LetterCreator
     /** @var LetterCreationEvaluator */
     private $letterCreationEvaluator;
 
-    /** @var User */
-    private $userModel;
+    /** @var UserRepository */
+    private $userRepository;
 
-    /** @var Letter */
-    private $letterModel;
+    /** @var LetterRepository */
+    private $letterRepository;
 
     public function __construct(
         LetterCreationEvaluator $letterCreationEvaluator,
-        User $userModel,
-        Letter $letterModel
+        UserRepository $userRepository,
+        LetterRepository $letterRepository
     ) {
         $this->letterCreationEvaluator = $letterCreationEvaluator;
-        $this->userModel = $userModel;
-        $this->letterModel = $letterModel;
+        $this->userRepository = $userRepository;
+        $this->letterRepository = $letterRepository;
     }
 
     /**
@@ -46,7 +46,7 @@ class LetterCreator
         $letterData->userId = $userId;
         $letterData->docId = $docId;
 
-        $createdLetter = $this->letterModel->createLetter($letterData);
+        $createdLetter = $this->letterRepository->createLetter($letterData);
 
         if ($createdLetter) {
             return $createdLetter->letterid;
@@ -60,7 +60,7 @@ class LetterCreator
      */
     private function checkUseLetters($docId)
     {
-        $foundUsers = $this->userModel->getWithFilter(
+        $foundUsers = $this->userRepository->getWithFilter(
             ['use_letters'],
             ['userid' => $docId]
         );

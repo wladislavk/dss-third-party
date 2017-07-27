@@ -2,11 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LocationRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Locations;
 
 class LocationsController extends BaseRestController
 {
+    /** @var LocationRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/locations",
@@ -140,14 +143,13 @@ class LocationsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Locations $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getDoctorLocations(Locations $resources)
+    public function getDoctorLocations()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getDoctorLocations($docId);
+        $data = $this->repository->getDoctorLocations($docId);
 
         return ApiResponse::responseOk('', $data);
     }

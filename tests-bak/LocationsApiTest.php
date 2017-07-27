@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Location;
+use DentalSleepSolutions\Eloquent\Models\Dental\Location;
 use Tests\TestCases\ApiTestCase;
 
 class LocationsApiTest extends ApiTestCase

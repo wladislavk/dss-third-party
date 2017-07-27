@@ -2,11 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PaymentReportRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\PaymentReports;
 
 class PaymentReportsController extends BaseRestController
 {
+    /** @var PaymentReportRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/payment-reports",
@@ -126,14 +129,13 @@ class PaymentReportsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param PaymentReports $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getNumber(PaymentReports $resources)
+    public function getNumber()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getNumber($docId);
+        $data = $this->repository->getNumber($docId);
 
         return ApiResponse::responseOk('', $data);
     }

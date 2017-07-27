@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\CustomText;
+use DentalSleepSolutions\Eloquent\Models\Dental\CustomText;
 use Tests\TestCases\ApiTestCase;
 
 class CustomTextsApiTest extends ApiTestCase

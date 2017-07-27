@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCases\BaseApiTestCase;

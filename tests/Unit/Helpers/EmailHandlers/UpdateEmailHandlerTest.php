@@ -3,7 +3,9 @@
 namespace Tests\Unit\Helpers\EmailHandlers;
 
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
+use DentalSleepSolutions\Helpers\EmailHandlers\AbstractEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\UpdateEmailHandler;
+use DentalSleepSolutions\Structs\RequestedEmails;
 use Tests\TestCases\EmailHandlerTestCase;
 
 class UpdateEmailHandlerTest extends EmailHandlerTestCase
@@ -27,7 +29,6 @@ class UpdateEmailHandlerTest extends EmailHandlerTestCase
         $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
         $this->assertEquals(2, sizeof($this->sentEmails));
         $expectedData = [
-            'foo' => 'bar',
             'email' => $newEmail,
             'old_email' => $oldEmail,
             'new_email' => $newEmail,
@@ -62,7 +63,6 @@ class UpdateEmailHandlerTest extends EmailHandlerTestCase
         $this->updateEmailHandler->handleEmail($patientId, $newEmail);
         $this->assertEquals(1, sizeof($this->sentEmails));
         $expectedData = [
-            'foo' => 'bar',
             'email' => $newEmail,
             'old_email' => '',
             'new_email' => $newEmail,
@@ -89,47 +89,39 @@ class UpdateEmailHandlerTest extends EmailHandlerTestCase
         $this->assertEquals(0, sizeof($this->sentEmails));
     }
 
-    public function testWithoutMailingData()
+    public function testCheckIsCorrectType()
     {
-        unset($this->contactData['mailingData']);
-        $patientId = 1;
-        $newEmail = 'john@doe.com';
-        $oldEmail = 'old@doe.com';
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
+        $emails = new RequestedEmails([]);
+        $registrationStatus = AbstractEmailHandler::REGISTERED_STATUS;
+        $newEmail = 'new@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->updateEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertTrue($isCorrect);
     }
 
-    public function testWithoutPatientData()
+    public function testCheckWithIncorrectStatus()
     {
-        unset($this->contactData['patientData']);
-        $patientId = 1;
-        $newEmail = 'john@doe.com';
-        $oldEmail = 'old@doe.com';
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
+        $emails = new RequestedEmails([]);
+        $registrationStatus = AbstractEmailHandler::REGISTRATION_EMAILED_STATUS;
+        $newEmail = 'new@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->updateEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertFalse($isCorrect);
     }
 
-    public function testWithoutFirstName()
+    public function testCheckWithoutEmailChange()
     {
-        unset($this->contactData['patientData']['firstname']);
-        $patientId = 1;
-        $newEmail = 'john@doe.com';
-        $oldEmail = 'old@doe.com';
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
-    }
-
-    public function testWithoutLastName()
-    {
-        unset($this->contactData['patientData']['lastname']);
-        $patientId = 1;
-        $newEmail = 'john@doe.com';
-        $oldEmail = 'old@doe.com';
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->updateEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
+        $emails = new RequestedEmails([]);
+        $registrationStatus = AbstractEmailHandler::REGISTERED_STATUS;
+        $newEmail = 'old@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->updateEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertFalse($isCorrect);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Joint;
+use DentalSleepSolutions\Eloquent\Models\Dental\Joint;
 use Tests\TestCases\ApiTestCase;
 
 class JointsApiTest extends ApiTestCase

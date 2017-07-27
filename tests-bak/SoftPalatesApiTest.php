@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\SoftPalate;
+use DentalSleepSolutions\Eloquent\Models\Dental\SoftPalate;
 use Tests\TestCases\ApiTestCase;
 
 class SoftPalatesApiTest extends ApiTestCase

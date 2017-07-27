@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Mandible;
+use DentalSleepSolutions\Eloquent\Models\Dental\Mandible;
 use Tests\TestCases\ApiTestCase;
 
 class MandiblesApiTest extends ApiTestCase

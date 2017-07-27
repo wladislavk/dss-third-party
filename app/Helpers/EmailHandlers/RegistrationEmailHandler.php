@@ -2,14 +2,15 @@
 
 namespace DentalSleepSolutions\Helpers\EmailHandlers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Exceptions\EmailHandlerException;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\EmailSender;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
 use DentalSleepSolutions\Helpers\PasswordResetDataSetter;
+use DentalSleepSolutions\Structs\RequestedEmails;
 
 class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
 {
+    const MESSAGE = 'Your email address was updated and not registered. The registration mail was successfully sent.';
     const HEAR_FROM_YOU_LEGEND = '<p>We hope to hear from you soon!</p>';
 
     // TODO: do these pages still exist? if so, all references to them should have their own namespace
@@ -23,18 +24,36 @@ class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
     /** @var PasswordResetDataSetter */
     private $passwordResetDataSetter;
 
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
     public function __construct(
         MailerDataRetriever $mailerDataRetriever,
         EmailSender $emailSender,
         PasswordResetDataSetter $passwordResetDataSetter,
-        Patient $patientModel
+        PatientRepository $patientRepository
     ) {
         parent::__construct($mailerDataRetriever, $emailSender);
         $this->passwordResetDataSetter = $passwordResetDataSetter;
-        $this->patientModel = $patientModel;
+        $this->patientRepository = $patientRepository;
+    }
+
+    public function isCorrectType(
+        RequestedEmails $emailTypesForSending,
+        $registrationStatus,
+        $newEmail,
+        $oldEmail
+    ) {
+        if ($emailTypesForSending->registration) {
+            return false;
+        }
+        if ($registrationStatus != self::REGISTRATION_EMAILED_STATUS) {
+            return false;
+        }
+        if ($newEmail == $oldEmail) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -62,7 +81,7 @@ class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
      */
     protected function updateModels($patientId, array $newPatientData)
     {
-        $this->patientModel->updatePatient($patientId, $newPatientData);
+        $this->patientRepository->updatePatient($patientId, $newPatientData);
     }
 
     /**
@@ -85,15 +104,17 @@ class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
     }
 
     /**
-     * @param array $contactData
-     * @throws EmailHandlerException
+     * @param string $newEmail
+     * @param string $oldEmail
+     * @param bool $hasPatientPortal
+     * @return bool
      */
-    protected function verifyContactData(array $contactData)
+    protected function shouldBeSent($newEmail, $oldEmail, $hasPatientPortal)
     {
-        parent::verifyContactData($contactData);
-        if (!isset($contactData['patientData'][self::RECOVER_HASH])) {
-            throw new EmailHandlerException('Mailer data is malformed');
+        if ($hasPatientPortal) {
+            return true;
         }
+        return false;
     }
 
     /**
@@ -102,5 +123,13 @@ class RegistrationEmailHandler extends AbstractRegistrationRelatedEmailHandler
     public function setAccessType($accessType)
     {
         $this->accessType = $accessType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return self::MESSAGE;
     }
 }

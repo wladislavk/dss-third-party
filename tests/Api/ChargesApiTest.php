@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Dental\Charge;
+use DentalSleepSolutions\Eloquent\Models\Dental\Charge;
 use Tests\TestCases\ApiTestCase;
 
 class ChargesApiTest extends ApiTestCase

@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use Tests\TestCases\BaseApiTestCase;
 
 class EnrollmentWebhooksApiTest extends BaseApiTestCase

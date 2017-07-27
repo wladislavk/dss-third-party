@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Company;
+use DentalSleepSolutions\Eloquent\Models\Company;
 use Tests\TestCases\ApiTestCase;
 
 class CompaniesApiTest extends ApiTestCase

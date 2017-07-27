@@ -47,7 +47,6 @@ abstract class ApiTestCase extends BaseApiTestCase
     public function testStore()
     {
         $this->post(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
-        var_dump($this->response->getContent());
         $this->assertResponseOk();
 
         // uncomment this line to debug the actual created record

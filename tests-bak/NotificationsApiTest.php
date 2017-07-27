@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Notification;
+use DentalSleepSolutions\Eloquent\Models\Dental\Notification;
 use Tests\TestCases\ApiTestCase;
 
 class NotificationsApiTest extends ApiTestCase

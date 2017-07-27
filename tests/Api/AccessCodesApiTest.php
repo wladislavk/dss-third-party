@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\AccessCode;
+use DentalSleepSolutions\Eloquent\Models\Dental\AccessCode;
 use Tests\TestCases\ApiTestCase;
 
 class AccessCodesApiTest extends ApiTestCase

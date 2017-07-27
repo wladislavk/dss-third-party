@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\GuideSettingOption;
+use DentalSleepSolutions\Eloquent\Models\Dental\GuideSettingOption;
 use Tests\TestCases\ApiTestCase;
 
 class GuideSettingOptionsApiTest extends ApiTestCase

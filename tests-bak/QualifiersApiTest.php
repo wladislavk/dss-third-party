@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Qualifier;
+use DentalSleepSolutions\Eloquent\Models\Dental\Qualifier;
 use Tests\TestCases\ApiTestCase;
 
 class QualifiersApiTest extends ApiTestCase

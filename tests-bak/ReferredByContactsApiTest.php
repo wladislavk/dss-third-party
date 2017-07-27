@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\ReferredByContact;
+use DentalSleepSolutions\Eloquent\Models\Dental\ReferredByContact;
 use Tests\TestCases\ApiTestCase;
 
 class ReferredByContactsApiTest extends ApiTestCase

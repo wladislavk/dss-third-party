@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment;
+use DentalSleepSolutions\Eloquent\Models\Dental\ClaimNoteAttachment;
 
 class ClaimNoteAttachmentsApiTest extends ApiTestCase
 {

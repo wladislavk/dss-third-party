@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Sleeplab;
+use DentalSleepSolutions\Eloquent\Models\Dental\Sleeplab;
 use Tests\TestCases\ApiTestCase;
 
 class SleeplabsApiTest extends ApiTestCase

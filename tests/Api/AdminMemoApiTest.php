@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\MemoAdmin;
+use DentalSleepSolutions\Eloquent\Models\MemoAdmin;
 use Tests\TestCases\ApiTestCase;
 
 class AdminMemoApiTest extends ApiTestCase

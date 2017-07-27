@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\GagReflex;
+use DentalSleepSolutions\Eloquent\Models\Dental\GagReflex;
 use Tests\TestCases\ApiTestCase;
 
 class GagReflexesApiTest extends ApiTestCase

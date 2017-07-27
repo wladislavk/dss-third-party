@@ -14,8 +14,10 @@ class LetterToPatientTriggerTest extends LetterTriggerTestCase
     public function setUp()
     {
         $letterCreator = $this->mockLetterCreator();
-        $letterModel = $this->mockLetterModel();
-        $this->letterToPatientTrigger = new LetterToPatientTrigger($letterCreator, $letterModel);
+        $letterRepository = $this->mockLetterRepository();
+        $this->letterToPatientTrigger = new LetterToPatientTrigger(
+            $letterCreator, $letterRepository
+        );
     }
 
     public function testTrigger()

@@ -2,12 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\CompanyRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Company;
-use DentalSleepSolutions\Contracts\Repositories\Companies;
 
 class CompaniesController extends BaseRestController
 {
+    /** @var CompanyRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/companies",
@@ -143,14 +145,13 @@ class CompaniesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Company $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCompanyLogo(Company $resource)
+    public function getCompanyLogo()
     {
         $userId = $this->currentUser->id ?: 0;
 
-        $data = $resource->getCompanyLogo($userId);
+        $data = $this->repository->getCompanyLogo($userId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -161,14 +162,13 @@ class CompaniesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Companies $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getHomeSleepTestCompanies(Companies $resources)
+    public function getHomeSleepTestCompanies()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getHomeSleepTestCompanies($docId);
+        $data = $this->repository->getHomeSleepTestCompanies($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -179,18 +179,20 @@ class CompaniesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Company $resource
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getBillingExclusiveCompany(Company $resource)
+    public function getBillingExclusiveCompany()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resource->getBillingExclusiveCompany($docId);
+        $data = $this->repository->getBillingExclusiveCompany($docId);
 
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @return string
+     */
     public function getModelNamespace()
     {
         return self::BASE_MODEL_NAMESPACE;

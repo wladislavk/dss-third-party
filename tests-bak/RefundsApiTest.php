@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Refund;
+use DentalSleepSolutions\Eloquent\Models\Dental\Refund;
 use Tests\TestCases\ApiTestCase;
 
 class RefundsApiTest extends ApiTestCase

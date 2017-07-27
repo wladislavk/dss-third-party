@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Dental\ContactType;
+use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
 
 class ContactTypesApiTest extends ApiTestCase
 {

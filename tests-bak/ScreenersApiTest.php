@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Screener;
+use DentalSleepSolutions\Eloquent\Models\Dental\Screener;
 use Tests\TestCases\ApiTestCase;
 
 class ScreenersApiTest extends ApiTestCase

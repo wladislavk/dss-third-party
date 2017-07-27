@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use Tests\TestCases\ApiTestCase;
 
 class LettersApiTest extends ApiTestCase

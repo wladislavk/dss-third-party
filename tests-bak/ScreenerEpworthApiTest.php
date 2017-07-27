@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\ScreenerEpworth;
+use DentalSleepSolutions\Eloquent\Models\Dental\ScreenerEpworth;
 use Tests\TestCases\ApiTestCase;
 
 class ScreenerEpworthApiTest extends ApiTestCase

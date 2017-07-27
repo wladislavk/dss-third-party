@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\SocialHistory;
+use DentalSleepSolutions\Eloquent\Models\Dental\SocialHistory;
 use Tests\TestCases\ApiTestCase;
 
 class SocialHistoriesApiTest extends ApiTestCase

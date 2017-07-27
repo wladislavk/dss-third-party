@@ -1,7 +1,8 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\GuideSetting;
+use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
+use DentalSleepSolutions\StaticClasses\Helpers;
 use Tests\TestCases\ApiTestCase;
 
 class GuideSettingsApiTest extends ApiTestCase
@@ -33,5 +34,18 @@ class GuideSettingsApiTest extends ApiTestCase
             'name' => 'John Doe II',
             'rank' => 5,
         ];
+    }
+
+    public function testGetAllOrderBy()
+    {
+        $this->post('/api/v1/guide-settings/sort');
+        $this->assertResponseOk();
+        $result = json_decode($this->response->getContent(), true)['data'];
+        $names = array_column($result, 'name');
+        $sortedNames = Helpers::saneSort($names);
+        $this->assertTrue($names === $sortedNames);
+        $ids = array_column($result, 'id');
+        $sortedIds = Helpers::saneSort($ids);
+        $this->assertFalse($ids === $sortedIds);
     }
 }

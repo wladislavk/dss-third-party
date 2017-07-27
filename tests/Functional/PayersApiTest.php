@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Functional;
 
-use DentalSleepSolutions\Eloquent\Payer;
+use DentalSleepSolutions\Eloquent\Models\PayerRepository;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\BaseApiTestCase;
@@ -14,9 +14,9 @@ class PayersApiTest extends BaseApiTestCase
     /** @test */
     public function required_fields_for_all_endpoints()
     {
-        factory(Payer::class, 5)->create();
+        factory(PayerRepository::class, 5)->create();
 
-        Payer::create($this->getPayerData());
+        PayerRepository::create($this->getPayerData());
 
         $this->get('api/v1/payers/RIBLS/required-fields')
              ->seeJson(['data' => ['provider_name', 'address', 'city', 'state', 'zip', 'npi']])
@@ -26,9 +26,9 @@ class PayersApiTest extends BaseApiTestCase
     /** @test */
     public function required_fields_for_single_endpoint()
     {
-        factory(Payer::class, 5)->create();
+        factory(PayerRepository::class, 5)->create();
 
-        Payer::create($this->getPayerData());
+        PayerRepository::create($this->getPayerData());
 
         $this->get('api/v1/payers/RIBLS/required-fields?endpoint=coverage')
              ->seeJson(['data' => ['npi']])

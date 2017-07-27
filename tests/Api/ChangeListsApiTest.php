@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Dental\ChangeList;
+use DentalSleepSolutions\Eloquent\Models\Dental\ChangeList;
 
 class ChangeListsApiTest extends ApiTestCase
 {

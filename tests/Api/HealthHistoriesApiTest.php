@@ -1,7 +1,13 @@
 <?php
 namespace Tests\Api;
 
+<<<<<<< HEAD
 use DentalSleepSolutions\Eloquent\Dental\HealthHistory;
+=======
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use DentalSleepSolutions\Eloquent\Models\Dental\HealthHistory;
+>>>>>>> master
 use Tests\TestCases\ApiTestCase;
 
 class HealthHistoriesApiTest extends ApiTestCase

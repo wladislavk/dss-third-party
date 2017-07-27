@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Dental\Complaint;
+use DentalSleepSolutions\Eloquent\Models\Dental\Complaint;
 
 class ComplaintsApiTest extends ApiTestCase
 {

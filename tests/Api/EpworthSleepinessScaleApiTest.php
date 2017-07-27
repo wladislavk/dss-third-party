@@ -1,7 +1,8 @@
 <?php
+
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\EpworthSleepinessScale;
+use DentalSleepSolutions\Eloquent\Models\Dental\EpworthSleepinessScale;
 use Tests\TestCases\ApiTestCase;
 
 class EpworthSleepinessScaleApiTest extends ApiTestCase

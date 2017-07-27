@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\DocumentCategory;
+use DentalSleepSolutions\Eloquent\Models\Dental\DocumentCategory;
 use Tests\TestCases\ApiTestCase;
 
 class DocumentCategoriesApiTest extends ApiTestCase

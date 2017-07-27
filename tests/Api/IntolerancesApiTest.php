@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Api;
 
-use DentalSleepSolutions\Eloquent\Dental\Intolerance;
+use DentalSleepSolutions\Eloquent\Models\Dental\Intolerance;
 use Tests\TestCases\ApiTestCase;
 
 class IntolerancesApiTest extends ApiTestCase

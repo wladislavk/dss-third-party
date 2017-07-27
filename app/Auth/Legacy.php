@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Auth;
 
-use Exception;
-use Illuminate\Support\Arr;
 use Illuminate\Auth\AuthManager;
-use DentalSleepSolutions\Eloquent\User;
 use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Eloquent\Models\User;
+use Illuminate\Support\Arr;
 
 /**
  * This class is used as Authentication provider implementation
@@ -17,10 +17,24 @@ use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
  */
 class Legacy extends IlluminateAuthAdapter
 {
+    const LOGIN_ID_DELIMITER = '|';
+
+    /** @var UserRepository */
+    private $userRepository;
+
+    public function __construct(
+        AuthManager $auth,
+        UserRepository $userRepository
+    )
+    {
+        parent::__construct($auth);
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Legacy-code hashed password validation.
      *
-     * @param  \DentalSleepSolutions\Eloquent\User $user
+     * @param User $user
      * @param  string $password
      * @return boolean
      */
@@ -39,7 +53,7 @@ class Legacy extends IlluminateAuthAdapter
     {
         $password = Arr::pull($credentials, 'password');
 
-        $user = User::where($credentials)->first();
+        $user = $this->userRepository->where($credentials)->first();
 
         if ($user && $this->check($user, $password)) {
             $this->auth->login($user, false);
@@ -54,25 +68,29 @@ class Legacy extends IlluminateAuthAdapter
      * Check user ID. DSS can use a composite ID, to log in an admin AND some user, "login as" behavior
      *
      * @param mixed $id
-     * @return mixed
+     * @return bool|User[]
      */
     public function byId ($id)
     {
         /**
          * Single ID
          */
-        if (strpos($id, '|') === false) {
+        if (strpos($id, self::LOGIN_ID_DELIMITER) === false) {
             return parent::byId($id);
         }
 
         /**
          * Wrong ID structure
          */
-        if (!preg_match('/^a_\d+\|u_\d+$/', $id)) {
+        $adminPrefix = preg_quote(User::ADMIN_PREFIX);
+        $userPrefix = preg_quote(User::USER_PREFIX);
+        $delimiter = preg_quote(self::LOGIN_ID_DELIMITER);
+
+        if (!preg_match("/^{$adminPrefix}\d+{$delimiter}{$userPrefix}\d+$/", $id)) {
             return false;
         }
 
-        list($adminId, $userId) = explode('|', $id, 2);
+        list($adminId, $userId) = explode(self::LOGIN_ID_DELIMITER, $id, 2);
         $admin = parent::byId($adminId);
         $user = parent::byId($userId);
 

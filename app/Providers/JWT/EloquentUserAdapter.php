@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class EloquentUserAdapter implements UserInterface
 {
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     protected $user;
 
     /**
      * Create a new User instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $user
+     * @param  Model $user
      */
     public function __construct(Model $user)
     {
@@ -26,7 +26,7 @@ class EloquentUserAdapter implements UserInterface
      *
      * @param  mixed  $key
      * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getBy($key, $value)
     {

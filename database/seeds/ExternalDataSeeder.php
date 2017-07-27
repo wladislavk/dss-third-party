@@ -44,7 +44,6 @@ class ExternalDataSeeder extends Seeder
             'company_id' => $externalCompanyId,
             'created_by' => 1,
             'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
         ]);
     }
 }

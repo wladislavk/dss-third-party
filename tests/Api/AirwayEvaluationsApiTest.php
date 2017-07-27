@@ -3,8 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
-use DentalSleepSolutions\Eloquent\Dental\AirwayEvaluation;
+use DentalSleepSolutions\Eloquent\Models\Dental\AirwayEvaluation;
 use Tests\TestCases\ApiTestCase;
 
 class AirwayEvaluationsApiTest extends ApiTestCase

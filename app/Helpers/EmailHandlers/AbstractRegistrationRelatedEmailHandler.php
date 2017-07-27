@@ -26,16 +26,6 @@ abstract class AbstractRegistrationRelatedEmailHandler extends AbstractEmailHand
     /**
      * @param string $newEmail
      * @param string $oldEmail
-     * @return bool
-     */
-    protected function shouldBeSent($newEmail, $oldEmail)
-    {
-        return true;
-    }
-
-    /**
-     * @param string $newEmail
-     * @param string $oldEmail
      * @return array
      */
     protected function getAddresses($newEmail, $oldEmail)

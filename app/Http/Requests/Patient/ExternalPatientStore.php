@@ -2,7 +2,6 @@
 namespace DentalSleepSolutions\Http\Requests\Patient;
 
 use DentalSleepSolutions\Http\Requests\AbstractNonRestRequest;
-use DentalSleepSolutions\Http\Requests\Request;
 
 class ExternalPatientStore extends AbstractNonRestRequest
 {

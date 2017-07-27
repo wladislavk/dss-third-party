@@ -2,10 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\ExternalBaseController;
 use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
-use DentalSleepSolutions\Contracts\Repositories\ExternalPatients;
 use EventHomes\Api\FractalHelper;
 use DentalSleepSolutions\Http\Transformers\ExternalPatient as Transformer;
 use Carbon\Carbon;
@@ -18,11 +18,11 @@ class ExternalPatientController extends ExternalBaseController
     /**
      * Display the specified resource.
      *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalPatients $resources
-     * @param  \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore $request
+     * @param ExternalPatientRepository $repository
+     * @param \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(ExternalPatients $resources, ExternalPatientStore $request) {
+    public function store(ExternalPatientRepository $repository, ExternalPatientStore $request) {
         $transformer = new Transformer;
         $data = $transformer->fromTransform($request->all());
 
@@ -42,13 +42,10 @@ class ExternalPatientController extends ExternalBaseController
             unset($patientData['p_m_address2']);
         }
 
-        $externalPatient = $resources
-            ->where('software', $externalCompanyId)
-            ->where('external_id', $externalPatientId)
-            ->first();
+        $externalPatient = $repository->findByExternalCompanyAndPatient($externalCompanyId, $externalPatientId);
 
         if (!$externalPatient) {
-            $externalPatient = $resources->create($externalPatientData);
+            $externalPatient = $repository->create($externalPatientData);
         } else {
             $externalPatient->update($externalPatientData);
             $externalPatient->update(['dirty' => 1]);

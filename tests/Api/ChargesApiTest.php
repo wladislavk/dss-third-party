@@ -4,7 +4,7 @@ namespace Tests\Api;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Dental\Charge;
+use DentalSleepSolutions\Eloquent\Models\Dental\Charge;
 use Tests\TestCases\ApiTestCase;
 
 class ChargesApiTest extends ApiTestCase

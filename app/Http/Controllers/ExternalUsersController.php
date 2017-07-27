@@ -2,10 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
 class ExternalUsersController extends BaseRestController
 {
+    /** @var ExternalUserRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/external-user",
@@ -55,7 +59,7 @@ class ExternalUsersController extends BaseRestController
      */
     public function show($id)
     {
-        $resource = $this->resources->where('user_id', $id)->firstOrFail();
+        $resource = $this->repository->findFirstById($id);
         return ApiResponse::responseOk('', $resource);
     }
 
@@ -89,7 +93,7 @@ class ExternalUsersController extends BaseRestController
         $data = $this->request->all();
 
         $data['created_by'] = $this->currentAdmin->id;
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -111,7 +115,7 @@ class ExternalUsersController extends BaseRestController
      */
     public function update($id)
     {
-        $resource = $this->resources->where('user_id', $id)->firstOrFail();
+        $resource = $this->repository->findFirstById($id);
         $data = $this->request->all();
 
         $data['updated_by'] = $this->currentAdmin->id;
@@ -131,7 +135,7 @@ class ExternalUsersController extends BaseRestController
      */
     public function destroy($id)
     {
-        $resource = $this->resources->where('user_id', $id)->firstOrFail();
+        $resource = $this->repository->findFirstById($id);
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');

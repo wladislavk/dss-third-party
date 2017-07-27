@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Console\Commands;
 
 use Illuminate\Console\Command;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use DentalSleepSolutions\Eloquent\User;
-use Symfony\Component\Console\Input\InputArgument;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Auth\Legacy;
 
 /**
  * This is a helper command for easy generating JWT tokens from
@@ -30,10 +30,19 @@ class GenerateJwtToken extends Command
      */
     protected $description = 'Generate JWT token for a user.';
 
+    /** @var UserRepository */
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        parent::__construct();
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
     public function handle()
     {
@@ -41,9 +50,9 @@ class GenerateJwtToken extends Command
          * DSS can log a single user (FO/BO) or two users (BO "logged in as" FO).
          * This method can return more than one result, if the given ID has a separator "|"
          */
-        $userData = User::findByIdOrEmail($this->argument('id'));
+        $userData = $this->userRepository->findByIdOrEmail($this->argument('id'));
 
-        if (!$userData) {
+        if (!$userData || !isset($userData[0])) {
             exit(0);
         }
 
@@ -55,7 +64,7 @@ class GenerateJwtToken extends Command
         $userModel = $userData[0];
 
         if (isset($userData[1])) {
-            $userModel->id = "{$userData[0]->id}|{$userData[1]->id}";
+            $userModel->id = join(Legacy::LOGIN_ID_DELIMITER, [$userData[0]->id, $userData[1]->id]);
         }
 
         exit(JWTAuth::fromUser($userModel));

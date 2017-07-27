@@ -2,9 +2,12 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\Summary;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Summary;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummaryRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
@@ -36,11 +39,11 @@ class MailerDataRetrieverTest extends UnitTestCase
         $this->user->logo = '1234';
 
         $generalHelper = $this->mockGeneralHelper();
-        $userModel = $this->mockUserModel();
-        $patientModel = $this->mockPatientModel();
-        $summaryModel = $this->mockSummaryModel();
+        $userRepository = $this->mockUserRepository();
+        $patientRepository = $this->mockPatientRepository();
+        $summaryRepository = $this->mockSummaryRepository();
         $this->mailerDataRetriever = new MailerDataRetriever(
-            $generalHelper, $userModel, $patientModel, $summaryModel
+            $generalHelper, $userRepository, $patientRepository, $summaryRepository
         );
     }
 
@@ -48,19 +51,14 @@ class MailerDataRetrieverTest extends UnitTestCase
     {
         $patientId = 1;
         $mailerData = $this->mailerDataRetriever->retrieveMailerData($patientId);
-        $expected = [
-            'patientData' => [
-                'patientid' => 1,
-            ],
-            'mailingData' => [
-                'mailing_phone' => '123-45-67',
-                'user_type' => MailerDataRetriever::DSS_USER_TYPE_SOFTWARE,
-                'zip' => 0,
-                'docid' => 0,
-                'logo' => MailerDataRetriever::LOGO,
-            ],
-        ];
-        $this->assertEquals($expected, $mailerData);
+        $patient = $mailerData->patientData;
+        $this->assertEquals(1, $patient->patientid);
+        $user = $mailerData->mailingData;
+        $this->assertEquals('123-45-67', $user->mailing_phone);
+        $this->assertEquals(MailerDataRetriever::DSS_USER_TYPE_SOFTWARE, $user->user_type);
+        $this->assertEquals(0, $user->zip);
+        $this->assertEquals(0, $user->docid);
+        $this->assertEquals(MailerDataRetriever::LOGO, $user->logo);
     }
 
     public function testWithSummaryInfo()
@@ -71,8 +69,8 @@ class MailerDataRetrieverTest extends UnitTestCase
         $summary1->location = '1232';
         $this->summary = [$summary1];
         $mailerData = $this->mailerDataRetriever->retrieveMailerData($patientId, $docId);
-        $this->assertEquals(1232, $mailerData['mailingData']['zip']);
-        $this->assertEquals($docId, $mailerData['mailingData']['docid']);
+        $this->assertEquals(1232, $mailerData->mailingData->zip);
+        $this->assertEquals($docId, $mailerData->mailingData->docid);
     }
 
     public function testWithCustomLogo()
@@ -81,7 +79,7 @@ class MailerDataRetrieverTest extends UnitTestCase
         $patientId = 1;
         $mailerData = $this->mailerDataRetriever->retrieveMailerData($patientId);
         $expectedLogo = MailerDataRetriever::DISPLAY_FILE_PAGE . '?f=5678';
-        $this->assertEquals($expectedLogo, $mailerData['mailingData']['logo']);
+        $this->assertEquals($expectedLogo, $mailerData->mailingData->logo);
     }
 
     public function testWithoutPatient()
@@ -112,31 +110,31 @@ class MailerDataRetrieverTest extends UnitTestCase
         return $generalHelper;
     }
 
-    private function mockUserModel()
+    private function mockUserRepository()
     {
-        /** @var User|MockInterface $userModel */
-        $userModel = \Mockery::mock(User::class);
-        $userModel->shouldReceive('getMailingData')
+        /** @var UserRepository|MockInterface $userRepository */
+        $userRepository = \Mockery::mock(UserRepository::class);
+        $userRepository->shouldReceive('getMailingData')
             ->andReturnUsing([$this, 'getMailingDataCallback']);
-        return $userModel;
+        return $userRepository;
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('find')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('find')
             ->andReturnUsing([$this, 'findPatientCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
-    private function mockSummaryModel()
+    private function mockSummaryRepository()
     {
-        /** @var Summary|MockInterface $summaryModel */
-        $summaryModel = \Mockery::mock(Summary::class);
-        $summaryModel->shouldReceive('getWithFilter')
+        /** @var SummaryRepository|MockInterface $summaryRepository */
+        $summaryRepository = \Mockery::mock(SummaryRepository::class);
+        $summaryRepository->shouldReceive('getWithFilter')
             ->andReturnUsing([$this, 'getWithFilterCallback']);
-        return $summaryModel;
+        return $summaryRepository;
     }
 
     public function findPatientCallback($id)
@@ -147,7 +145,7 @@ class MailerDataRetrieverTest extends UnitTestCase
         return null;
     }
 
-    public function getWithFilterCallback()
+    public function getWithFilterCallback(array $fields = [], array $where = [])
     {
         return $this->summary;
     }

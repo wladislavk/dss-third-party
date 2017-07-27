@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Helpers\LetterUpdaters;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Helpers\LetterUpdaters\PatientUpdater;
 use DentalSleepSolutions\Structs\LetterData;
 use Tests\TestCases\UnitTestCase;

@@ -2,7 +2,7 @@
 
 namespace Tests\TestCases;
 
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;
 use Mockery\MockInterface;
@@ -24,15 +24,15 @@ class LetterTriggerTestCase extends UnitTestCase
         return $letterCreator;
     }
 
-    protected function mockLetterModel()
+    protected function mockLetterRepository()
     {
-        /** @var Letter|MockInterface $letterModel */
-        $letterModel = \Mockery::mock(Letter::class);
-        $letterModel->shouldReceive('getMdList')
+        /** @var LetterRepository|MockInterface $letterRepository */
+        $letterRepository = \Mockery::mock(LetterRepository::class);
+        $letterRepository->shouldReceive('getMdList')
             ->andReturnUsing([$this, 'getMdListCallback']);
-        $letterModel->shouldReceive('getPatientTreatmentComplete')
+        $letterRepository->shouldReceive('getPatientTreatmentComplete')
             ->andReturnUsing([$this, 'getPatientTreatmentCompleteCallback']);
-        return $letterModel;
+        return $letterRepository;
     }
 
     public function createLetterCallback($templateId, LetterData $letterData, $docId, $userId)

@@ -2,25 +2,28 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
-use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
+use Illuminate\Http\Request;
 
 class ExternalCompanyMiddleware
 {
-    /** @var ExternalCompanies */
-    protected $externalCompaniesRepository;
+    /** @var ExternalCompanyRepository */
+    protected $externalCompanyRepository;
 
-    /** @var ExternalUsers */
-    protected $externalUsersRepository;
+    /** @var ExternalUserRepository */
+    protected $externalUserRepository;
 
-    public function __construct (ExternalCompanies $externalCompanies, ExternalUsers $externalUsers)
-    {
-        $this->externalCompaniesRepository = $externalCompanies;
-        $this->externalUsersRepository = $externalUsers;
+    public function __construct(
+        ExternalCompanyRepository $externalCompanyRepository,
+        ExternalUserRepository $externalUserRepository
+    ) {
+        $this->externalCompanyRepository = $externalCompanyRepository;
+        $this->externalUserRepository = $externalUserRepository;
     }
 
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $companyKey = $request->input('api_key_company');
         $userKey = $request->input('api_key_user');
@@ -33,13 +36,13 @@ class ExternalCompanyMiddleware
             return ApiResponse::responseError(['error' => 'api_key_user_not_provided'], 400);
         }
 
-        $externalCompany = $this->externalCompaniesRepository->where('api_key', $companyKey)->first();
+        $externalCompany = $this->externalCompanyRepository->findByApiKey($companyKey);
 
         if (!$externalCompany) {
             return ApiResponse::responseError(['error' => 'api_key_company_invalid'], 422);
         }
 
-        $externalUser = $this->externalUsersRepository->where('api_key', $userKey)->first();
+        $externalUser = $this->externalUserRepository->findByApiKey($userKey);
 
         if (!$externalUser || !$externalUser->user() || !count($externalUser->user())) {
             return ApiResponse::responseError(['error' => 'api_key_user_invalid'], 422);

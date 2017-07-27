@@ -3,48 +3,48 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\SummSleeplab;
-use DentalSleepSolutions\Eloquent\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummSleeplabRepository;
 
 class PreauthHelper
 {
     const DSS_PREAUTH_PENDING = 0;
 
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
-    /** @var SummSleeplab */
-    private $summSleeplabModel;
+    /** @var SummSleeplabRepository */
+    private $summSleeplabRepository;
 
     public function __construct(
-        Patient $patientModel,
-        SummSleeplab $summSleeplabModel
+        PatientRepository $patientRepository,
+        SummSleeplabRepository $summSleeplabRepository
     ) {
-        $this->patientModel = $patientModel;
-        $this->summSleeplabModel = $summSleeplabModel;
+        $this->patientRepository = $patientRepository;
+        $this->summSleeplabRepository = $summSleeplabRepository;
     }
 
     /**
      * @param int $patientId
      * @param int $userId
-     * @return InsurancePreauth|null
+     * @return array|null
      */
     public function createVerificationOfBenefits($patientId, $userId)
     {
-        $transactionCode = $this->patientModel->getDentalDeviceTransactionCode($patientId);
-        $userInfo = $this->patientModel->getUserInfo($patientId);
+        $transactionCode = $this->patientRepository->getDentalDeviceTransactionCode($patientId);
+        $userInfo = $this->patientRepository->getUserInfo($patientId);
 
         if (!$transactionCode || !$userInfo) {
             return null;
         }
 
-        $patientPreauthInfo = $this->patientModel->getInsurancePreauthInfo($patientId);
+        $patientPreauthInfo = $this->patientRepository->getInsurancePreauthInfo($patientId);
         if (!$patientPreauthInfo) {
             return null;
         }
 
-        $sleepStudy = $this->summSleeplabModel->getPatientDiagnosis($patientId);
+        $sleepStudy = $this->summSleeplabRepository->getPatientDiagnosis($patientId);
         $diagnosisCode = '';
         if ($sleepStudy) {
             $diagnosisCode = $sleepStudy->diagnosis;
@@ -52,15 +52,14 @@ class PreauthHelper
 
         $patientPreauthInfo = $patientPreauthInfo->toArray();
         $patientPreauthInfo = array_merge($patientPreauthInfo, [
-            'patient_id'                => $patientId,
-            'diagnosis_code'            => $diagnosisCode,
+            'patient_id' => $patientId,
+            'diagnosis_code' => $diagnosisCode,
             'front_office_request_date' => Carbon::now(),
-            'status'                    => self::DSS_PREAUTH_PENDING,
-            'userid'                    => $userId,
-            'viewed'                    => 1,
+            'status' => self::DSS_PREAUTH_PENDING,
+            'userid' => $userId,
+            'viewed' => 1,
         ]);
 
-        $newInsurancePreauth = new InsurancePreauth($patientPreauthInfo);
-        return $newInsurancePreauth;
+        return $patientPreauthInfo;
     }
 }

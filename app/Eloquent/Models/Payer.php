@@ -38,6 +38,8 @@ class Payer extends AbstractModel
     }
 
     /**
+     * @todo: this table does not exist
+     *
      * The database table used by the model.
      *
      * @var string

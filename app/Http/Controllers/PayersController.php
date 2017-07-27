@@ -6,6 +6,11 @@ use DentalSleepSolutions\Eloquent\Models\Payer;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
+/**
+ * @todo: the associated table does not exist
+ *
+ * Class PayersController
+ */
 class PayersController extends BaseRestController
 {
     /**
@@ -131,17 +136,14 @@ class PayersController extends BaseRestController
      * Get array of enrollment required fields for a payer.
      *
      * @param Request $request
-     * @param int|null $payerId
+     * @param int $payerId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function requiredFields(Request $request, $payerId = null)
+    public function requiredFields(Request $request, $payerId)
     {
-        $fields = [];
-        if ($payerId) {
-            /** @var Payer $payer */
-            $payer = $this->repository->find($payerId);
-            $fields = $payer->requiredFields($request->get('endpoint'));
-        }
+        /** @var Payer $payer */
+        $payer = $this->repository->find($payerId);
+        $fields = $payer->requiredFields($request->get('endpoint'));
 
         return ApiResponse::responseOk('', $fields);
     }

@@ -62,20 +62,4 @@ class LedgerHistoriesApiTest extends ApiTestCase
             'status'      => 5,
         ];
     }
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/ledger-histories -> LedgerHistoriesController@store method
-     * 
-     */
-    public function testAddLedgerHistory()
-    {
-        $data = factory(LedgerHistory::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/ledger-histories', $data)
-            ->seeInDatabase('dental_ledger_history', ['patientid' => 100])
-            ->assertResponseOk();
-    }
 }

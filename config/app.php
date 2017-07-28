@@ -28,6 +28,11 @@ return [
 
     'url' => 'http://localhost',
 
+    'external_patient' => [
+        'frontend_url' => env('FRONTEND_URL', 'http://localhost/'),
+        'redirect_uri' => env('EXTERNAL_REDIRECT_URI', 'manage/external-patient.php')
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -143,6 +148,7 @@ return [
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Prettus\Repository\Providers\RepositoryServiceProvider::class,
 
         /*
          * Application Service Providers...

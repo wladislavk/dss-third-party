@@ -3,10 +3,12 @@
 namespace Tests\Unit\Helpers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\SummSleeplab;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummSleeplabRepository;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
@@ -18,9 +20,9 @@ class PreauthHelperTest extends UnitTestCase
 
     public function setUp()
     {
-        $patientModel = $this->mockPatientModel();
-        $summSleeplabModel = $this->mockSummSleeplabModel();
-        $this->preauthHelper = new PreauthHelper($patientModel, $summSleeplabModel);
+        $patientRepository = $this->mockPatientRepository();
+        $summSleeplabRepository = $this->mockSummSleeplabRepository();
+        $this->preauthHelper = new PreauthHelper($patientRepository, $summSleeplabRepository);
     }
 
     public function testWithSleepStudy()
@@ -28,13 +30,15 @@ class PreauthHelperTest extends UnitTestCase
         $patientId = 1;
         $userId = 1;
         $newInsurancePreauth = $this->preauthHelper->createVerificationOfBenefits($patientId, $userId);
-        $this->assertInstanceOf(InsurancePreauth::class, $newInsurancePreauth);
-        $this->assertEquals(1, $newInsurancePreauth->patient_id);
-        $this->assertEquals('foo', $newInsurancePreauth->diagnosis_code);
-        $this->assertInstanceOf(Carbon::class, $newInsurancePreauth->front_office_request_date);
-        $this->assertEquals(PreauthHelper::DSS_PREAUTH_PENDING, $newInsurancePreauth->status);
-        $this->assertEquals(1, $newInsurancePreauth->userid);
-        $this->assertEquals(1, $newInsurancePreauth->viewed);
+        $expected = [
+            'patient_id' => 1,
+            'diagnosis_code' => 'foo',
+            'front_office_request_date' => Carbon::now(),
+            'status' => PreauthHelper::DSS_PREAUTH_PENDING,
+            'userid' => 1,
+            'viewed' => 1,
+        ];
+        $this->assertEquals($expected, $newInsurancePreauth);
     }
 
     public function testWithoutSleepStudy()
@@ -42,8 +46,15 @@ class PreauthHelperTest extends UnitTestCase
         $patientId = 2;
         $userId = 1;
         $newInsurancePreauth = $this->preauthHelper->createVerificationOfBenefits($patientId, $userId);
-        $this->assertInstanceOf(InsurancePreauth::class, $newInsurancePreauth);
-        $this->assertEquals('', $newInsurancePreauth->diagnosis_code);
+        $expected = [
+            'patient_id' => 2,
+            'diagnosis_code' => '',
+            'front_office_request_date' => Carbon::now(),
+            'status' => PreauthHelper::DSS_PREAUTH_PENDING,
+            'userid' => 1,
+            'viewed' => 1,
+        ];
+        $this->assertEquals($expected, $newInsurancePreauth);
     }
 
     public function testWithoutPreauthInfo()
@@ -70,26 +81,26 @@ class PreauthHelperTest extends UnitTestCase
         $this->assertNull($newInsurancePreauth);
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('getDentalDeviceTransactionCode')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('getDentalDeviceTransactionCode')
             ->andReturnUsing([$this, 'getDentalDeviceTransactionCodeCallback']);
-        $patientModel->shouldReceive('getUserInfo')
+        $patientRepository->shouldReceive('getUserInfo')
             ->andReturnUsing([$this, 'getUserInfoCallback']);
-        $patientModel->shouldReceive('getInsurancePreauthInfo')
+        $patientRepository->shouldReceive('getInsurancePreauthInfo')
             ->andReturnUsing([$this, 'getInsurancePreauthInfoCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
-    private function mockSummSleeplabModel()
+    private function mockSummSleeplabRepository()
     {
-        /** @var SummSleeplab|MockInterface $summSleeplabModel */
-        $summSleeplabModel = \Mockery::mock(SummSleeplab::class);
-        $summSleeplabModel->shouldReceive('getPatientDiagnosis')
+        /** @var SummSleeplabRepository|MockInterface $summSleeplabRepository */
+        $summSleeplabRepository = \Mockery::mock(SummSleeplabRepository::class);
+        $summSleeplabRepository->shouldReceive('getPatientDiagnosis')
             ->andReturnUsing([$this, 'getPatientDiagnosisCallback']);
-        return $summSleeplabModel;
+        return $summSleeplabRepository;
     }
 
     public function getDentalDeviceTransactionCodeCallback($patientId)

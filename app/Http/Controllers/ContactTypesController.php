@@ -2,12 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactTypeRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\ContactTypes;
 use Illuminate\Http\Request;
 
 class ContactTypesController extends BaseRestController
 {
+    /** @var ContactTypeRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/contact-types",
@@ -131,12 +134,11 @@ class ContactTypesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param ContactTypes $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getActiveNonCorporate(ContactTypes $resources)
+    public function getActiveNonCorporate()
     {
-        $data = $resources->getActiveNonCorporateTypes();
+        $data = $this->repository->getActiveNonCorporateTypes();
 
         return ApiResponse::responseOk('', $data);
     }
@@ -147,12 +149,11 @@ class ContactTypesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param ContactTypes $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getPhysician(ContactTypes $resources)
+    public function getPhysician()
     {
-        $data = $resources->getPhysicianTypes();
+        $data = $this->repository->getPhysicianTypes();
 
         return ApiResponse::responseOk('', $data);
     }
@@ -163,16 +164,15 @@ class ContactTypesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param ContactTypes $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWithFilter(ContactTypes $resources, Request $request)
+    public function getWithFilter(Request $request)
     {
         $fields = $request->input('fields', []);
         $where  = $request->input('where', []);
 
-        $contactTypes = $resources->getWithFilter($fields, $where);
+        $contactTypes = $this->repository->getWithFilter($fields, $where);
 
         return ApiResponse::responseOk('', $contactTypes);
     }
@@ -183,12 +183,11 @@ class ContactTypesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param ContactTypes $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSortedContactTypes(ContactTypes $resources)
+    public function getSortedContactTypes()
     {
-        $contactTypes = $resources->getSorted();
+        $contactTypes = $this->repository->getSorted();
 
         return ApiResponse::responseOk('', $contactTypes);
     }

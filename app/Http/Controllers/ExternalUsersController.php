@@ -2,10 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
 class ExternalUsersController extends BaseRestController
 {
+    /** @var ExternalUserRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/external-user",
@@ -55,7 +59,7 @@ class ExternalUsersController extends BaseRestController
      */
     public function show($id)
     {
-        $resource = $this->resources->where('user_id', $id)->firstOrFail();
+        $resource = $this->repository->findFirstById($id);
         return ApiResponse::responseOk('', $resource);
     }
 
@@ -88,12 +92,8 @@ class ExternalUsersController extends BaseRestController
         $this->validate($this->request, $this->request->storeRules());
         $data = $this->request->all();
 
-        /**
-         * @ToDo: Handle admin tokens
-         * @see AWS-19-Request-Token
-         */
-        $data['created_by'] = $this->currentUser->id;
-        $resource = $this->resources->create($data);
+        $data['created_by'] = $this->currentAdmin->id;
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -115,13 +115,10 @@ class ExternalUsersController extends BaseRestController
      */
     public function update($id)
     {
-        $resource = $this->resources->where('user_id', $id)->firstOrFail();
+        $resource = $this->repository->findFirstById($id);
         $data = $this->request->all();
-        /**
-         * @ToDo: Handle admin tokens
-         * @see AWS-19-Request-Token
-         */
-        $data['updated_by'] = $this->currentUser->id;
+
+        $data['updated_by'] = $this->currentAdmin->id;
         $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');
@@ -138,7 +135,7 @@ class ExternalUsersController extends BaseRestController
      */
     public function destroy($id)
     {
-        $resource = $this->resources->where('user_id', $id)->firstOrFail();
+        $resource = $this->repository->findFirstById($id);
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');

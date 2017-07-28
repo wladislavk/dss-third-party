@@ -2,7 +2,7 @@
 
 namespace Tests\Dummies\Eloquent;
 
-use DentalSleepSolutions\Eloquent\AbstractModel;
+use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 
 /**
  * @DSS\Manual

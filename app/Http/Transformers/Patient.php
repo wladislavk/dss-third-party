@@ -2,11 +2,17 @@
 
 namespace DentalSleepSolutions\Http\Transformers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient as Resource;
-use League\Fractal\TransformerAbstract;
+use DentalSleepSolutions\Contracts\TransformerInterface;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient as Resource;
 
-class Patient extends TransformerAbstract
+class Patient extends BaseTransformer implements TransformerInterface
 {
+    use WithTransformer;
+
+    /**
+     * @param Resource $patient
+     * @return array
+     */
     public function transform(Resource $patient)
     {
         $attributes = array_keys($patient->toArray());

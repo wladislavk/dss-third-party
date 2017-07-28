@@ -2,38 +2,43 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Tymon\JWTAuth\JWTAuth;
-use DentalSleepSolutions\Eloquent\User as UserView;
-use DentalSleepSolutions\Contracts\Repositories\Users;
+use Illuminate\Config\Repository as Config;
+use DentalSleepSolutions\Eloquent\Models\User;
 use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController
 {
+    // TODO: this class should include common REST methods for all its children
+
     use DispatchesJobs, ValidatesRequests;
 
-    /** @var UserView|null */
+    /** @var User|null */
     protected $currentAdmin;
 
-    /** @var UserView|null */
+    /** @var User|null */
     protected $currentUser;
+
 
     /** @var JWTAuth */
     protected $auth;
 
     public function __construct(
         JWTAuth $auth,
-        Users $usersRepository
+        UserRepository $userRepository,
+        Config $config
     ) {
         // TODO: see how it is possible to generate JWT token while testing
-        if (env('APP_ENV') === 'testing') {
-            $this->currentUser = new UserView();
+        if ($config->get('app.env') === 'testing') {
+            $this->currentUser = new User();
             return;
         }
 
         $this->auth = $auth;
-        $userInfo = $this->getUserInfo($auth, $usersRepository);
+        $userInfo = $this->getUserInfo($auth, $userRepository);
 
         $this->currentAdmin = $userInfo['admin'];
         $this->currentUser = $userInfo['user'];
@@ -41,10 +46,10 @@ abstract class Controller extends BaseController
 
     /**
      * @param JWTAuth $auth
-     * @param Users $usersRepository
-     * @return UserView[]|null[]
+     * @param UserRepository $userRepository
+     * @return mixed
      */
-    private function getUserInfo(JWTAuth $auth, Users $usersRepository)
+    private function getUserInfo(JWTAuth $auth, UserRepository $userRepository)
     {
         $userData = [
             'admin' => null,
@@ -59,14 +64,14 @@ abstract class Controller extends BaseController
 
         $authUserData = $auth->toUser();
 
-        if (!$userData) {
-            return $userData;
+        if (!$authUserData) {
+            return null;
         }
 
         if (!is_array($authUserData)) {
             $userData = [
                 'admin' => $this->returnIfAdmin($authUserData),
-                'user' => $this->returnIfUser($authUserData, $usersRepository),
+                'user' => $this->returnIfUser($authUserData, $userRepository),
             ];
 
             return $userData;
@@ -74,7 +79,7 @@ abstract class Controller extends BaseController
 
         $userData = [
             'admin' => $this->filterAdmin($authUserData),
-            'user' => $this->filterUser($authUserData, $usersRepository),
+            'user' => $this->filterUser($authUserData, $userRepository),
         ];
 
         return $userData;
@@ -82,13 +87,13 @@ abstract class Controller extends BaseController
 
     /**
      * @param array $collection
-     * @param Users $usersRepository
-     * @return UserView|null
+     * @param UserRepository $userRepository
+     * @return User|null
      */
-    private function filterUser(array $collection, Users $usersRepository)
+    private function filterUser(array $collection, UserRepository $userRepository)
     {
         foreach ($collection as $each) {
-            $user = $this->returnIfUser($each, $usersRepository);
+            $user = $this->returnIfUser($each, $userRepository);
 
             if ($user) {
                 return $user;
@@ -100,7 +105,7 @@ abstract class Controller extends BaseController
 
     /**
      * @param array $collection
-     * @return UserView|null
+     * @return User|null
      */
     private function filterAdmin(array $collection)
     {
@@ -116,13 +121,13 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * @param UserView $user
-     * @param Users $usersRepository
-     * @return UserView|null
+     * @param User $user
+     * @param UserRepository $userRepository
+     * @return User|null
      */
-    private function returnIfUser(UserView $user, Users $usersRepository)
+    private function returnIfUser(User $user, UserRepository $userRepository)
     {
-        $user = $this->returnIfModelType($user, UserView::USER_PREFIX);
+        $user = $this->returnIfModelType($user, User::USER_PREFIX);
 
         if (!$user) {
             return null;
@@ -131,13 +136,13 @@ abstract class Controller extends BaseController
         $doctorId = $user->id;
         $userType = 0;
 
-        $getter = $usersRepository->getDocId($user->id);
+        $getter = $userRepository->getDocId($user->id);
 
         if ($getter) {
             $doctorId = $getter->docid;
         }
 
-        $getter = $usersRepository->getUserType($doctorId);
+        $getter = $userRepository->getUserType($doctorId);
 
         if ($getter) {
             $userType = $getter->user_type;
@@ -150,24 +155,24 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * @param UserView $user
-     * @return UserView|null
+     * @param User $user
+     * @return User|null
      */
-    private function returnIfAdmin(UserView $user)
+    private function returnIfAdmin(User $user)
     {
-        return $this->returnIfModelType($user, UserView::ADMIN_PREFIX);
+        return $this->returnIfModelType($user, User::ADMIN_PREFIX);
     }
 
     /**
-     * @param UserView $user
-     * @param string   $modelPrefix
-     * @return UserView|null
+     * @param User   $user
+     * @param string $modelPrefix
+     * @return User|null
      */
-    private function returnIfModelType(UserView $user, $modelPrefix)
+    private function returnIfModelType(User $user, $modelPrefix)
     {
         $modelPrefix = preg_quote($modelPrefix);
 
-        if (preg_match($user->id, "/^{$modelPrefix}(?P<id>\d+)$/", $matches)) {
+        if (preg_match("/^{$modelPrefix}(?P<id>\d+)$/", $user->id, $matches)) {
             $user->id = $matches['id'];
             return $user;
         }

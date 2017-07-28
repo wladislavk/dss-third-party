@@ -2,11 +2,12 @@
 
 namespace Tests\Unit\Helpers\EmailHandlers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\EmailHandlers\AbstractRegistrationRelatedEmailHandler;
 use DentalSleepSolutions\Helpers\EmailHandlers\RegistrationEmailHandler;
 use DentalSleepSolutions\Helpers\PasswordResetDataSetter;
+use DentalSleepSolutions\Structs\RequestedEmails;
 use Mockery\MockInterface;
 use Tests\TestCases\EmailHandlerTestCase;
 
@@ -24,19 +25,20 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
         $mailerDataRetriever = $this->mockMailerDataRetriever();
         $emailSender = $this->mockEmailSender();
         $passwordResetDataSetter = $this->mockPasswordResetDataSetter();
-        $patientModel = $this->mockPatientModel();
+        $patientRepository = $this->mockPatientRepository();
         $this->registrationEmailHandler = new RegistrationEmailHandler(
-            $mailerDataRetriever, $emailSender, $passwordResetDataSetter, $patientModel
+            $mailerDataRetriever, $emailSender, $passwordResetDataSetter, $patientRepository
         );
     }
 
     public function testSendEmail()
     {
-        $this->contactData['patientData'][RegistrationEmailHandler::RECOVER_HASH] = '123';
+        $this->contactData->patientData->recover_hash = '123';
         $patientId = 1;
         $newEmail = 'john@doe.com';
         $oldEmail = 'old@doe.com';
-        $this->registrationEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
+        $hasPatientPortal = true;
+        $this->registrationEmailHandler->handleEmail($patientId, $newEmail, $oldEmail, $hasPatientPortal);
         $expectedPatientData = [
             1 => [
                 'patientId' => 1,
@@ -50,7 +52,6 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
         $this->assertEquals(1, sizeof($this->sentEmails));
         $link = RegistrationEmailHandler::ACTIVATE_PAGE . "?id=1&amp;hash=123";
         $expectedData = [
-            'foo' => 'bar',
             'email' => $newEmail,
             'old_email' => $oldEmail,
             'new_email' => $newEmail,
@@ -71,11 +72,12 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
 
     public function testWithoutEmailChange()
     {
-        $this->contactData['patientData'][RegistrationEmailHandler::RECOVER_HASH] = '123';
+        $this->contactData->patientData->recover_hash = '123';
         $patientId = 1;
         $newEmail = 'john@doe.com';
         $oldEmail = 'john@doe.com';
-        $this->registrationEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
+        $hasPatientPortal = true;
+        $this->registrationEmailHandler->handleEmail($patientId, $newEmail, $oldEmail, $hasPatientPortal);
         $expectedPatientData = [
             1 => [
                 'patientId' => 1,
@@ -92,11 +94,12 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
     public function testWithAccessType()
     {
         $this->registrationEmailHandler->setAccessType(2);
-        $this->contactData['patientData'][RegistrationEmailHandler::RECOVER_HASH] = '123';
+        $this->contactData->patientData->recover_hash = '123';
         $patientId = 1;
         $newEmail = 'john@doe.com';
         $oldEmail = 'old@doe.com';
-        $this->registrationEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
+        $hasPatientPortal = true;
+        $this->registrationEmailHandler->handleEmail($patientId, $newEmail, $oldEmail, $hasPatientPortal);
         $expectedPatientData = [
             1 => [
                 'patientId' => 1,
@@ -109,14 +112,62 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
         $this->assertEquals($expectedPatientData, $this->updatedModel);
     }
 
-    public function testWithoutRecoverHash()
+    public function testWithoutPatientPortal()
     {
+        $this->contactData->patientData->recover_hash = '123';
         $patientId = 1;
         $newEmail = 'john@doe.com';
         $oldEmail = 'old@doe.com';
-        $this->expectException(EmailHandlerException::class);
-        $this->expectExceptionMessage('Mailer data is malformed');
-        $this->registrationEmailHandler->handleEmail($patientId, $oldEmail, $newEmail);
+        $this->registrationEmailHandler->handleEmail($patientId, $newEmail, $oldEmail);
+        $this->assertEquals([], $this->updatedModel);
+    }
+
+    public function testCheckIsCorrectType()
+    {
+        $emails = new RequestedEmails([]);
+        $registrationStatus = RegistrationEmailHandler::REGISTRATION_EMAILED_STATUS;
+        $newEmail = 'new@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->registrationEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertTrue($isCorrect);
+    }
+
+    public function testCheckWithRegistration()
+    {
+        $emails = new RequestedEmails(['registration' => 1]);
+        $registrationStatus = RegistrationEmailHandler::REGISTRATION_EMAILED_STATUS;
+        $newEmail = 'new@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->registrationEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertFalse($isCorrect);
+    }
+
+    public function testCheckWithBadRegistrationStatus()
+    {
+        $emails = new RequestedEmails([]);
+        $registrationStatus = RegistrationEmailHandler::REGISTERED_STATUS;
+        $newEmail = 'new@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->registrationEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertFalse($isCorrect);
+    }
+
+    public function testCheckWithoutEmailChange()
+    {
+        $emails = new RequestedEmails([]);
+        $registrationStatus = RegistrationEmailHandler::REGISTRATION_EMAILED_STATUS;
+        $newEmail = 'old@email.com';
+        $oldEmail = 'old@email.com';
+        $isCorrect = $this->registrationEmailHandler->isCorrectType(
+            $emails, $registrationStatus, $newEmail, $oldEmail
+        );
+        $this->assertFalse($isCorrect);
     }
 
     private function mockPasswordResetDataSetter()
@@ -139,13 +190,13 @@ class RegistrationEmailHandlerTest extends EmailHandlerTestCase
         ];
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('updatePatient')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('updatePatient')
             ->andReturnUsing([$this, 'updatePatientCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     public function updatePatientCallback($patientId, array $newPatientData)

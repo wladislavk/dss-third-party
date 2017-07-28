@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'user' => DentalSleepSolutions\Eloquent\User::class,
+    'user' => DentalSleepSolutions\Eloquent\Models\User::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -124,7 +124,7 @@ return [
         |
         */
 
-        'user' => 'DentalSleepSolutions\Providers\JWT\EloquentUserAdapter',
+        'user' => DentalSleepSolutions\Providers\JWT\EloquentUserAdapter::class,
 
         /*
         |--------------------------------------------------------------------------

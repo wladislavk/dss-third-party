@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Providers;
 
-use DentalSleepSolutions\Contracts\Repositories\Repository;
-use DentalSleepSolutions\Contracts\Transformers\TransformerInterface;
+use DentalSleepSolutions\Contracts\TransformerInterface;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Illuminate\Support\ServiceProvider;
+use Prettus\Repository\Eloquent\BaseRepository;
 
 // this class binds common RESTful request and model interfaces to controllers
 class ControllerServiceProvider extends ServiceProvider
@@ -17,8 +17,8 @@ class ControllerServiceProvider extends ServiceProvider
         foreach ($bindings as $binding) {
             $this->app
                 ->when($binding->getController())
-                ->needs(Repository::class)
-                ->give($binding->getModel())
+                ->needs(BaseRepository::class)
+                ->give($binding->getRepository())
             ;
             $this->app
                 ->when($binding->getController())
@@ -33,6 +33,14 @@ class ControllerServiceProvider extends ServiceProvider
                     ->give($binding->getTransformer())
                 ;
             }
+        }
+        $externalBindings = BindingSetter::setExternalBindings();
+        foreach ($externalBindings as $externalBinding) {
+            $this->app
+                ->when($externalBinding->getController())
+                ->needs(BaseRepository::class)
+                ->give($externalBinding->getRepository())
+            ;
         }
     }
 }

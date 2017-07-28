@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use Tests\TestCases\ApiTestCase;
 
 class UsersApiTest extends ApiTestCase
@@ -21,7 +21,8 @@ class UsersApiTest extends ApiTestCase
 
         $data['docid'] = 100;
 
-        $this->post('/api/v1/users', $data)
+        $this->post('/api/v1/users', $data);
+        $this
             ->seeInDatabase('dental_users', ['docid' => 100])
             ->assertResponseOk();
     }
@@ -41,7 +42,8 @@ class UsersApiTest extends ApiTestCase
             'zip'      => '12345'
         ];
 
-        $this->put('/api/v1/users/' . $userTestRecord->userid, $data)
+        $this->put('/api/v1/users/' . $userTestRecord->userid, $data);
+        $this
             ->seeInDatabase('dental_users', ['docid' => 876])
             ->assertResponseOk();
     }
@@ -55,7 +57,8 @@ class UsersApiTest extends ApiTestCase
     {
         $userTestRecord = factory(User::class)->create();
 
-        $this->delete('/api/v1/users/' . $userTestRecord->userid)
+        $this->delete('/api/v1/users/' . $userTestRecord->userid);
+        $this
             ->notSeeInDatabase('dental_users', [
                 'userid' => $userTestRecord->userid
             ])

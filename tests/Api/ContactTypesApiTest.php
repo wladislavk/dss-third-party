@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Dental\ContactType;
+use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
 
 class ContactTypesApiTest extends ApiTestCase
 {

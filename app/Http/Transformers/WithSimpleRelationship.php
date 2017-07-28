@@ -19,7 +19,7 @@ trait WithSimpleRelationship
      * @param array $initialState
      * @return array
      */
-    public function simpleMapping(array $data, $export, array $initialState=[]) {
+    public function simpleMapping(array $data, $export, array $initialState = []) {
         $mapped = $initialState ?: [];
 
         foreach (self::SIMPLE_MAP as $dotted=>$dashed) {

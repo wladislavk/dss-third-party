@@ -3,10 +3,10 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\CustomText;
+use DentalSleepSolutions\Eloquent\Models\Dental\CustomText;
 use Tests\TestCases\ApiTestCase;
 
-class CustomsApiApiTest extends ApiTestCase
+class CustomTextsApiTest extends ApiTestCase
 {
     use WithoutMiddleware, DatabaseTransactions;
 

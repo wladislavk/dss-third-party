@@ -4,7 +4,7 @@ namespace Tests\Api;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Dental\Calendar;
+use DentalSleepSolutions\Eloquent\Models\Dental\Calendar;
 use Tests\TestCases\ApiTestCase;
 
 class CalendarsApiTest extends ApiTestCase

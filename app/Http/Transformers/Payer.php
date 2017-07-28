@@ -2,15 +2,19 @@
 
 namespace DentalSleepSolutions\Http\Transformers;
 
-use DentalSleepSolutions\Eloquent\Payer as Resource;
-use League\Fractal\TransformerAbstract;
+use DentalSleepSolutions\Contracts\TransformerInterface;
+use DentalSleepSolutions\Eloquent\Models\Payer as Resource;
 
-class Payer extends TransformerAbstract
+class Payer extends BaseTransformer implements TransformerInterface
 {
-	public function transform(Resource $payer)
-	{
-	    return [
-            //
-	    ];
-	}
+    use WithTransformer;
+
+    /**
+     * @param Resource $resource
+     * @return array
+     */
+    public function transform(Resource $resource)
+    {
+        return $this->simpleTransform($resource);
+    }
 }

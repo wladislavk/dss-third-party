@@ -1,7 +1,10 @@
 <?php
 namespace DentalSleepSolutions\Http\Transformers;
 
-use DentalSleepSolutions\Contracts\Resources\Resource;
+use DentalSleepSolutions\Contracts\ComplexRelationshipInterface;
+use DentalSleepSolutions\Contracts\SimpleRelationshipInterface;
+use DentalSleepSolutions\Contracts\TransformerInterface;
+use Illuminate\Database\Eloquent\Model;
 use League\Fractal\TransformerAbstract;
 use Carbon\Carbon;
 use InvalidArgumentException;
@@ -11,7 +14,9 @@ use InvalidArgumentException;
  *
  * Class ExternalPatient
  */
-class ExternalPatient extends TransformerAbstract
+class ExternalPatient
+    extends TransformerAbstract
+    implements TransformerInterface, SimpleRelationshipInterface, ComplexRelationshipInterface
 {
     use WithSimpleRelationship;
     use WithComplexRelationship;
@@ -132,10 +137,10 @@ class ExternalPatient extends TransformerAbstract
     /**
      * Transform model data into an array, for output
      *
-     * @param Resource $resource
+     * @param Model $resource
      * @return array
      */
-    public function transform(Resource $resource) {
+    public function transform(Model $resource) {
         $mapped = $this->simpleMapping($resource->toArray(), true);
         $mapped = $this->complexMapping($resource->toArray(), true, $mapped);
 

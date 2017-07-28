@@ -5,9 +5,15 @@ namespace DentalSleepSolutions\Helpers\EmailHandlers;
 use DentalSleepSolutions\Exceptions\EmailHandlerException;
 use DentalSleepSolutions\Helpers\EmailSender;
 use DentalSleepSolutions\Helpers\MailerDataRetriever;
+use DentalSleepSolutions\Structs\MailerData;
+use DentalSleepSolutions\Structs\RequestedEmails;
 
 abstract class AbstractEmailHandler
 {
+    const UNREGISTERED_STATUS = 0;
+    const REGISTRATION_EMAILED_STATUS = 1;
+    const REGISTERED_STATUS = 2;
+
     /** @var MailerDataRetriever */
     private $mailerDataRetriever;
 
@@ -24,20 +30,19 @@ abstract class AbstractEmailHandler
      * @param int $patientId
      * @param string $newEmail
      * @param string $oldEmail
-     *
+     * @param bool $hasPatientPortal
      * @return void
      */
-    public function handleEmail($patientId, $newEmail, $oldEmail = '')
+    public function handleEmail($patientId, $newEmail, $oldEmail = '', $hasPatientPortal = false)
     {
-        if (!$this->shouldBeSent($newEmail, $oldEmail)) {
+        if (!$this->shouldBeSent($newEmail, $oldEmail, $hasPatientPortal)) {
             return;
         }
         $patientId = intval($patientId);
         $contactData = $this->mailerDataRetriever->retrieveMailerData($patientId);
-        $this->verifyContactData($contactData);
 
-        $patientData = $contactData['patientData'];
-        $mailingData = $contactData['mailingData'];
+        $patientData = $contactData->patientData->toArray();
+        $mailingData = $contactData->mailingData->toArray();
 
         $newPatientData = $this->extendPatientData($patientId, $newEmail, $oldEmail, $patientData);
         $mailingData = $this->modifyMailingData(
@@ -61,23 +66,18 @@ abstract class AbstractEmailHandler
     }
 
     /**
-     * @param array $contactData
-     * @throws EmailHandlerException
+     * @param RequestedEmails $emailTypesForSending
+     * @param int $registrationStatus
+     * @param string $newEmail
+     * @param string $oldEmail
+     * @return bool
      */
-    protected function verifyContactData(array $contactData)
-    {
-        if (
-            !isset($contactData['patientData'])
-            ||
-            !isset($contactData['mailingData'])
-            ||
-            !isset($contactData['patientData']['firstname'])
-            ||
-            !isset($contactData['patientData']['lastname'])
-        ) {
-            throw new EmailHandlerException('Mailer data is malformed');
-        }
-    }
+    abstract public function isCorrectType(
+        RequestedEmails $emailTypesForSending,
+        $registrationStatus,
+        $newEmail,
+        $oldEmail
+    );
 
     /**
      * @param array $mailingData
@@ -109,6 +109,11 @@ abstract class AbstractEmailHandler
     }
 
     /**
+     * @return string
+     */
+    abstract public function getMessage();
+
+    /**
      * @param int $patientId
      * @param array $newPatientData
      * @return void
@@ -128,9 +133,10 @@ abstract class AbstractEmailHandler
     /**
      * @param string $newEmail
      * @param string $oldEmail
+     * @param bool $hasPatientPortal
      * @return bool
      */
-    abstract protected function shouldBeSent($newEmail, $oldEmail);
+    abstract protected function shouldBeSent($newEmail, $oldEmail, $hasPatientPortal);
 
     /**
      * @return string|null

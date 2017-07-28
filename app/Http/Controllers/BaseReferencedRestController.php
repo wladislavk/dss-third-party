@@ -9,7 +9,7 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Contracts\Repositories\Users;
-use DentalSleepSolutions\Contracts\Transformers\TransformerInterface;
+use DentalSleepSolutions\Contracts\TransformerInterface;
 use EventHomes\Api\FractalHelper;
 
 abstract class BaseReferencedRestController extends Controller

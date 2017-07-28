@@ -1,9 +1,10 @@
 <?php
 namespace Tests\Api;
 
+use DentalSleepSolutions\StaticClasses\Helpers;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\GuideSetting;
+use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
 use Tests\TestCases\ApiTestCase;
 
 class GuideSettingsApiTest extends ApiTestCase
@@ -25,7 +26,8 @@ class GuideSettingsApiTest extends ApiTestCase
             'rank'         => 5
         ];
 
-        $this->post('/api/v1/guide-settings', $data)
+        $this->post('/api/v1/guide-settings', $data);
+        $this
             ->seeInDatabase('dental_device_guide_settings', [])
             ->assertResponseOk();
     }
@@ -44,7 +46,8 @@ class GuideSettingsApiTest extends ApiTestCase
             'rank' => 5
         ];
 
-        $this->put('/api/v1/guide-settings/' . $guideSettingTestRecord->id, $data)
+        $this->put('/api/v1/guide-settings/' . $guideSettingTestRecord->id, $data);
+        $this
             ->seeInDatabase('dental_device_guide_settings', ['name' => 'John Doe II'])
             ->assertResponseOk();
     }
@@ -58,8 +61,22 @@ class GuideSettingsApiTest extends ApiTestCase
     {
         $guideSettingTestRecord = factory(GuideSetting::class)->create();
 
-        $this->delete('/api/v1/guide-settings/' . $guideSettingTestRecord->id)
+        $this->delete('/api/v1/guide-settings/' . $guideSettingTestRecord->id);
+        $this
             ->notSeeInDatabase('dental_device_guide_settings', ['id' => $guideSettingTestRecord->id])
             ->assertResponseOk();
+    }
+
+    public function testGetAllOrderBy()
+    {
+        $this->post('/api/v1/guide-settings/sort');
+        $this->assertResponseOk();
+        $result = json_decode($this->response->getContent(), true)['data'];
+        $names = array_column($result, 'name');
+        $sortedNames = Helpers::saneSort($names);
+        $this->assertTrue($names === $sortedNames);
+        $ids = array_column($result, 'id');
+        $sortedIds = Helpers::saneSort($ids);
+        $this->assertFalse($ids === $sortedIds);
     }
 }

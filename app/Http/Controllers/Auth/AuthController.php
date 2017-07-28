@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Auth;
 
-use DentalSleepSolutions\User;
+use DentalSleepSolutions\Eloquent\Models\User;
 use Validator;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;

@@ -3,12 +3,12 @@
 namespace DentalSleepSolutions\Http\Transformers;
 
 use League\Fractal\TransformerAbstract;
-use DentalSleepSolutions\Contracts\Resources\Resource;
-use DentalSleepSolutions\Contracts\Transformers\TransformerInterface;
+use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Contracts\TransformerInterface;
 
 abstract class BaseTransformer extends TransformerAbstract implements TransformerInterface
 {
-    public function transform(Resource $resource)
+    public function simpleTransform(AbstractModel $resource)
     {
         return $resource->toArray();
     }

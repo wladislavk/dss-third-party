@@ -2,12 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\HomeSleepTestRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\HomeSleepTests;
 use Illuminate\Http\Request;
 
 class HomeSleepTestsController extends BaseRestController
 {
+    /** @var HomeSleepTestRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/home-sleep-tests",
@@ -217,15 +220,14 @@ class HomeSleepTestsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param HomeSleepTests $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUncompleted(HomeSleepTests $resources, Request $request)
+    public function getUncompleted(Request $request)
     {
         $patientId = $request->input('patientId', 0);
 
-        $data = $resources->getUncompleted($patientId);
+        $data = $this->repository->getUncompleted($patientId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -238,26 +240,24 @@ class HomeSleepTestsController extends BaseRestController
      * )
      *
      * @param string $type
-     * @param HomeSleepTests $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getByType($type, HomeSleepTests $resources)
+    public function getByType($type)
     {
         $docId = $this->currentUser->docid ?: 0;
 
         switch ($type) {
             case 'completed':
-                $data = $resources->getCompleted($docId);
+                $data = $this->repository->getCompleted($docId);
                 break;
             case 'requested':
-                $data = $resources->getRequested($docId);
+                $data = $this->repository->getRequested($docId);
                 break;
             case 'rejected':
-                $data = $resources->getRejected($docId);
+                $data = $this->repository->getRejected($docId);
                 break;
             default:
                 $data = [];
-                break;
         }
 
         return ApiResponse::responseOk('', $data);

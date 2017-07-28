@@ -19,7 +19,7 @@ trait WithComplexRelationship
      * @param array $initialState
      * @return array
      */
-    public function complexMapping(array $data, $export, array $initialState=[]) {
+    public function complexMapping(array $data, $export, array $initialState = []) {
         $mapped = $initialState ?: [];
         $map = $export ? self::COMPLEX_MAP : self::INVERSE_COMPLEX_MAP;
 

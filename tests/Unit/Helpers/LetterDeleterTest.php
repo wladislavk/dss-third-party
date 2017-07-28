@@ -2,13 +2,14 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Fax;
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Factories\LetterUpdaterFactory;
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Helpers\LetterDeleter;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Helpers\LetterUpdaters\PatientUpdater;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Structs\LetterData;
@@ -58,10 +59,10 @@ class LetterDeleterTest extends UnitTestCase
         $generalHelper = $this->mockGeneralHelper();
         $letterCreator = $this->mockLetterCreator();
         $letterUpdaterFactory = $this->mockLetterUpdaterFactory();
-        $letterModel = $this->mockLetterModel();
-        $faxModel = $this->mockFaxModel();
+        $letterRepository = $this->mockLetterRepository();
+        $faxRepository = $this->mockFaxRepository();
         $this->letterDeleter = new LetterDeleter(
-            $generalHelper, $letterCreator, $letterUpdaterFactory, $letterModel, $faxModel
+            $generalHelper, $letterCreator, $letterUpdaterFactory, $letterRepository, $faxRepository
         );
     }
 
@@ -73,6 +74,7 @@ class LetterDeleterTest extends UnitTestCase
         $recipientId = 2;
         $docId = 3;
         $userId = 4;
+        date_default_timezone_set('UTC');
         $this->letterDeleter->deleteLetter($letterId, $type, $recipientId, $docId, $userId);
         $this->assertEquals([], $this->createdLetter);
         $expectedFirstData = new LetterData();
@@ -109,6 +111,7 @@ class LetterDeleterTest extends UnitTestCase
         $recipientId = 2;
         $docId = 3;
         $userId = 4;
+        date_default_timezone_set('UTC');
         $this->letterDeleter->deleteLetter($letterId, $type, $recipientId, $docId, $userId);
         $this->assertEquals(5, $this->patientId);
     }
@@ -206,23 +209,23 @@ class LetterDeleterTest extends UnitTestCase
         return $letterUpdaterFactory;
     }
 
-    private function mockLetterModel()
+    private function mockLetterRepository()
     {
-        /** @var Letter|MockInterface $letterModel */
-        $letterModel = \Mockery::mock(Letter::class);
-        $letterModel->shouldReceive('find')->andReturnUsing([$this, 'findLetterCallback']);
-        $letterModel->shouldReceive('updateLetterBy')
+        /** @var LetterRepository|MockInterface $letterRepository */
+        $letterRepository = \Mockery::mock(LetterRepository::class);
+        $letterRepository->shouldReceive('find')->andReturnUsing([$this, 'findLetterCallback']);
+        $letterRepository->shouldReceive('updateLetterBy')
             ->andReturnUsing([$this, 'updateLetterByCallback']);
-        return $letterModel;
+        return $letterRepository;
     }
 
-    private function mockFaxModel()
+    private function mockFaxRepository()
     {
-        /** @var Fax|MockInterface $faxModel */
-        $faxModel = \Mockery::mock(Fax::class);
-        $faxModel->shouldReceive('updateByLetterId')
+        /** @var FaxRepository|MockInterface $faxRepository */
+        $faxRepository = \Mockery::mock(FaxRepository::class);
+        $faxRepository->shouldReceive('updateByLetterId')
             ->andReturnUsing([$this, 'updateFaxByLetterIdCallback']);
-        return $faxModel;
+        return $faxRepository;
     }
 
     private function mockPatientUpdater()

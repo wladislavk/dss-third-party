@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Dental\ClaimNoteAttachment;
+use DentalSleepSolutions\Eloquent\Models\Dental\ClaimNoteAttachment;
 
 class ClaimNoteAttachmentsApiTest extends ApiTestCase
 {

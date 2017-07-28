@@ -2,8 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Wrappers\FileWrapper;
 
@@ -16,17 +16,20 @@ class GeneralHelper
     /** @var FileWrapper */
     private $fileWrapper;
 
-    /** @var Patient */
-    private $patientModel;
+    /** @var PatientRepository */
+    private $patientRepository;
 
-    /** @var Contact */
-    private $contactModel;
+    /** @var ContactRepository */
+    private $contactRepository;
 
-    public function __construct(FileWrapper $fileWrapper, Patient $patient, Contact $contact)
-    {
+    public function __construct(
+        FileWrapper $fileWrapper,
+        PatientRepository $patientRepository,
+        ContactRepository $contactRepository
+    ) {
         $this->fileWrapper = $fileWrapper;
-        $this->patientModel = $patient;
-        $this->contactModel = $contact;
+        $this->patientRepository = $patientRepository;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -81,19 +84,19 @@ class GeneralHelper
         $mdReferralList = $this->clearIdList($mdReferralList);
         $patientReferralList = $this->clearIdList($patientReferralList);
         if ($patient) {
-            $patientContactData = $this->patientModel->getContactInfo($letterId, $patient);
+            $patientContactData = $this->patientRepository->getContactInfo($letterId, $patient);
             $contactInfo->setPatients($patientContactData);
         }
         if ($mdList) {
-            $mdContactData = $this->contactModel->getContactInfo($letterId, $mdList);
+            $mdContactData = $this->contactRepository->getContactInfo($letterId, $mdList);
             $contactInfo->setMds($mdContactData);
         }
         if ($mdReferralList) {
-            $mdReferralContactData = $this->contactModel->getContactInfo($letterId, $mdReferralList);
+            $mdReferralContactData = $this->contactRepository->getContactInfo($letterId, $mdReferralList);
             $contactInfo->setMdReferrals($mdReferralContactData);
         }
         if ($patientReferralList) {
-            $patientReferralContactData = $this->patientModel->getReferralList($letterId, $patientReferralList);
+            $patientReferralContactData = $this->patientRepository->getReferralList($letterId, $patientReferralList);
             $contactInfo->setPatientReferrals($patientReferralContactData);
         }
         return $contactInfo;

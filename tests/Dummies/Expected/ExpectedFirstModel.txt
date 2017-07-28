@@ -2,7 +2,7 @@
 
 namespace Tests\Dummies\Eloquent;
 
-use DentalSleepSolutions\Eloquent\AbstractModel;
+use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 
 /**
  * @SWG\Definition(
@@ -65,8 +65,8 @@ use DentalSleepSolutions\Eloquent\AbstractModel;
  * @property string|null $field20
  * @property string|null $field21
  * @property string|null $field22
- * @property-read \DentalSleepSolutions\Eloquent\Admin $admin
- * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Dental\UserCompany[] $users
+ * @property-read \DentalSleepSolutions\Eloquent\Models\Admin $admin
+ * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Models\Dental\UserCompany[] $users
  */
 class FirstDummy extends AbstractModel
 {

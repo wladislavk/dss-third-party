@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Eloquent\Repositories\MemoAdminRepository;
+use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
@@ -24,9 +25,10 @@ class ApiAdminMemoController extends ApiBaseController
     public function __construct(
         JWTAuth $auth,
         UserRepository $userRepository,
-        MemoAdminRepository $memoAdminRepository
+        MemoAdminRepository $memoAdminRepository,
+        Config $config
     ) {
-        parent::__construct($auth, $userRepository);
+        parent::__construct($auth, $userRepository, $config);
         $this->repository = $memoAdminRepository;
     }
 

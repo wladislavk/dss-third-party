@@ -74,6 +74,7 @@ class Controller extends GeneratorCommand
         );
 
         $this->files->put($path, $content);
+
         $this->info("Resource [{$key}] bound to routes.");
     }
 
@@ -113,7 +114,9 @@ class Controller extends GeneratorCommand
     protected function getResourceName()
     {
         $controller = $this->parseName($this->getNameInput());
+
         $base = str_replace('Controller', '', class_basename($controller));
+
         return Str::singular($base);
     }
 

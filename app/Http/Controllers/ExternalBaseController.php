@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use Illuminate\Config\Repository as Config;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as IlluminateBaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -31,6 +32,9 @@ abstract class ExternalBaseController extends IlluminateBaseController
     /** @var ExternalUserRepository */
     protected $externalUsersRepository;
 
+    /** @var Config */
+    protected $config;
+
     /** @var UserRepository */
     private $userRepository;
 
@@ -40,12 +44,14 @@ abstract class ExternalBaseController extends IlluminateBaseController
     public function __construct(
         ExternalCompanyRepository $externalCompanyRepository,
         ExternalUserRepository $externalUserRepository,
+        Config $config,
         Request $request,
         UserViewRepository $userViewRepository,
         UserRepository $userRepository
     ) {
         $this->externalCompaniesRepository = $externalCompanyRepository;
         $this->externalUsersRepository = $externalUserRepository;
+        $this->config = $config;
         $this->userRepository = $userRepository;
         $this->userViewRepository = $userViewRepository;
         $this->currentUser = $this->getUserInfo($request);
@@ -61,11 +67,35 @@ abstract class ExternalBaseController extends IlluminateBaseController
         $this->externalUserKey = $request->input('api_key_user');
 
         $externalUser = $this->externalUsersRepository->findByApiKey($this->externalUserKey);
-        $user = $this->userViewRepository->find('u_' . $externalUser->user_id)->first();
+
+        if (!$externalUser) {
+            return null;
+        }
+
+        $user = $this->userViewRepository->find(UserView::USER_PREFIX . $externalUser->user_id)->first();
+
+        if (!$user) {
+            return null;
+        }
 
         $user->id = $externalUser->user_id;
-        $user->docid = $this->userRepository->getDocId($user->id)->docid ?: $user->userid;
-        $user->user_type = $this->userRepository->getUserType($user->docid)->user_type ?: 0;
+        $doctorId = $user->id;
+        $userType = 0;
+
+        $getter = $this->userRepository->getDocId($user->id);
+
+        if ($getter) {
+            $doctorId = $getter->docid;
+        }
+
+        $getter = $this->userRepository->getUserType($doctorId);
+
+        if ($getter) {
+            $userType = $getter->user_type;
+        }
+
+        $user->docid = $doctorId;
+        $user->user_type = $userType;
 
         return $user;
     }

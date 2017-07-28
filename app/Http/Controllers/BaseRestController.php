@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Tymon\JWTAuth\JWTAuth;
+use Illuminate\Config\Repository as Config;
 
 /**
  * @SWG\Swagger(
@@ -106,10 +107,11 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     public function __construct(
         JWTAuth $auth,
         UserRepository $userRepository,
+        Config $config,
         BaseRepository $repository,
         Request $request
     ) {
-        parent::__construct($auth, $userRepository);
+        parent::__construct($auth, $userRepository, $config);
         $this->repository = $repository;
         $this->request = $request;
     }

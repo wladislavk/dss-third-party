@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\UserCompanyRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Eloquent\Repositories\EligibleResponseRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\EnrollmentRepository;
+use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\PayersListRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\TransactionTypeRepository;
 use DentalSleepSolutions\Eloquent\Repositories\UserSignatureRepository;
@@ -38,9 +39,10 @@ class ApiEnrollmentsController extends ApiBaseController
     public function __construct(
         JWTAuth $auth,
         UserRepository $userRepository,
-        EnrollmentRepository $enrollmentRepository
+        EnrollmentRepository $enrollmentRepository,
+        Config $config
     ) {
-        parent::__construct($auth, $userRepository);
+        parent::__construct($auth, $userRepository, $config);
         $this->repository = $enrollmentRepository;
     }
 

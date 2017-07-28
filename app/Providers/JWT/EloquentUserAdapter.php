@@ -3,6 +3,7 @@ namespace DentalSleepSolutions\Providers\JWT;
 
 use Tymon\JWTAuth\Providers\User\UserInterface;
 use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Auth\Legacy;
 
 class EloquentUserAdapter implements UserInterface
 {
@@ -30,7 +31,7 @@ class EloquentUserAdapter implements UserInterface
      */
     public function getBy($key, $value)
     {
-        $value = explode('|', $value);
+        $value = explode(Legacy::LOGIN_ID_DELIMITER, $value);
         return $this->user->whereIn($key, $value)
             ->orderBy('id', 'ASC')
             ->get()

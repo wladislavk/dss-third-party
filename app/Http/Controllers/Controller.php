@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Tymon\JWTAuth\JWTAuth;
+use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Eloquent\Models\User;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -27,10 +28,11 @@ abstract class Controller extends BaseController
 
     public function __construct(
         JWTAuth $auth,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        Config $config
     ) {
         // TODO: see how it is possible to generate JWT token while testing
-        if (env('APP_ENV') === 'testing') {
+        if ($config->get('app.env') === 'testing') {
             $this->currentUser = new User();
             return;
         }

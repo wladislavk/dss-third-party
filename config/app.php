@@ -28,6 +28,11 @@ return [
 
     'url' => 'http://localhost',
 
+    'external_patient' => [
+        'frontend_url' => env('FRONTEND_URL', 'http://localhost/'),
+        'redirect_uri' => env('EXTERNAL_REDIRECT_URI', 'manage/external-patient.php')
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

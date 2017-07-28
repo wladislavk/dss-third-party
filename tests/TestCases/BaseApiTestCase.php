@@ -29,4 +29,10 @@ class BaseApiTestCase extends BaseTestCase
 
         return $app;
     }
+
+    protected function getResponseData()
+    {
+        $content = json_decode($this->response->getContent(), true);
+        return $content['data'];
+    }
 }

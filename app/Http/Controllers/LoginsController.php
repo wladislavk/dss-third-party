@@ -127,13 +127,17 @@ class LoginsController extends BaseRestController
      *
      * Log out the user.
      *
+     * @todo: RESTful APIs should not keep state, which makes this method meaningless
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout()
     {
         // TODO: Need to implement setting the logout_date field in dental_login
 
-        $this->auth->invalidate($this->auth->getToken());
+        if ($this->auth) {
+            $this->auth->invalidate($this->auth->getToken());
+        }
 
         return ApiResponse::responseOk('User was logged out');
     }

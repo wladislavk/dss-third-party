@@ -44,7 +44,7 @@ class LedgerHistoryRepository extends AbstractRepository
                 ->leftJoin(\DB::raw('admin a'), 'a.adminid', '=', 'dl.updated_by_admin')
                 ->where('dl.docid', $docId)
                 ->where('dl.patientid', $patientId)
-                ->whereRaw('coalesce(dl.paid_amount, 0) = ?', 0)
+                ->whereRaw('coalesce(dl.paid_amount, 0) = ?', [0])
                 ->where('dl.ledgerid', $ledgerId)
                 ->orderBy('dl.updated_at');
         } else {

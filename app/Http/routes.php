@@ -343,10 +343,11 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
             'uses' => 'Api\ApiEnrollmentsController@retrieveEnrollment'
         ]);
 
-        Route::delete('delete', [
+        // @todo: controller action does not exist
+        /*Route::delete('delete', [
             'as' => 'enrollments.delete',
             'uses' => 'Api\ApiEnrollmentsController@destroyEnrollment'
-        ]);
+        ]);*/
 
         Route::get('list/{userid?}', [
             'as' => 'enrollments.list',

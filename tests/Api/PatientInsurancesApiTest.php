@@ -42,4 +42,21 @@ class PatientInsurancesApiTest extends ApiTestCase
             'email'     => 'test@mail.com',
         ];
     }
+
+    public function testGetCurrent()
+    {
+        $this->post(self::ROUTE_PREFIX . '/patient-insurances/current');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
+
+    public function testGetNumber()
+    {
+        $this->post(self::ROUTE_PREFIX . '/patient-insurances/number');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 }

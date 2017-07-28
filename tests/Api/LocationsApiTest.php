@@ -41,4 +41,11 @@ class LocationsApiTest extends ApiTestCase
             'name'     => 'John Doe',
         ];
     }
+
+    public function testGetDoctorLocations()
+    {
+        $this->post(self::ROUTE_PREFIX . '/locations/by-doctor');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
 }

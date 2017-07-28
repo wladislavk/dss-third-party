@@ -759,7 +759,7 @@ class PatientsController extends BaseRestController
     ) {
         $patientId = $request->input('patient_id', 0);
         /** @var Patient|null $foundPatient */
-        $foundPatient = $this->repository->find($patientId);
+        $foundPatient = $this->repository->findOrNull($patientId);
 
         if (!$foundPatient) {
             return ApiResponse::responseOk('', []);

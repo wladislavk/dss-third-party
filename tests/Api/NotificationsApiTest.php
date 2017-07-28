@@ -34,4 +34,12 @@ class NotificationsApiTest extends ApiTestCase
             'notification' => 'updated notification',
         ];
     }
+
+    public function testGetWithFilter()
+    {
+        $this->post(self::ROUTE_PREFIX . '/notifications/with-filter');
+        $this->assertResponseOk();
+        $this->assertEquals(147, count($this->getResponseData()));
+        $this->assertEquals(1, $this->getResponseData()[0]['patientid']);
+    }
 }

@@ -62,8 +62,8 @@ class LetterRepository extends AbstractRepository
         return $this->model
             ->where('delivered', 1)
             ->where(function (Builder $query) use ($contactId) {
-                $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
-                    ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
+                $query->whereRaw('FIND_IN_SET(?, md_list)', [$contactId])
+                    ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', [$contactId]);
             })->get();
     }
 
@@ -76,8 +76,8 @@ class LetterRepository extends AbstractRepository
         return $this->model
             ->where('delivered', 0)
             ->where(function (Builder $query) use ($contactId) {
-                $query->whereRaw('FIND_IN_SET(?, md_list)', $contactId)
-                    ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', $contactId);
+                $query->whereRaw('FIND_IN_SET(?, md_list)', [$contactId])
+                    ->orWhereRaw('FIND_IN_SET(?, md_referral_list)', [$contactId]);
             })->get();
     }
 

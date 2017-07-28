@@ -4,12 +4,13 @@ namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 abstract class AbstractRepository extends BaseRepository
 {
     /**
-     * @var Model|Builder
+     * @var Model|Builder|QueryBuilder
      */
     protected $model;
 
@@ -153,5 +154,22 @@ abstract class AbstractRepository extends BaseRepository
             ->with($relations)
             ->where($field, $value)
             ->first();
+    }
+
+    /**
+     * @param int $id
+     * @return Model|null
+     */
+    public function findOrNull($id)
+    {
+        $this->applyCriteria();
+        $this->applyScope();
+        $model = $this->model->find($id);
+        $this->resetModel();
+        if (!$model) {
+            return null;
+        }
+
+        return $this->parserResult($model);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Api;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientContact;
 use DentalSleepSolutions\Eloquent\Models\Dental\ReferredByContact;
 use Tests\TestCases\ApiTestCase;
 
@@ -53,5 +54,24 @@ class ReferredByContactsApiTest extends ApiTestCase
             'company' => 'US Test Company',
             'add1'    => 'Fake Street, 16',
         ];
+    }
+
+    public function testEditingContact()
+    {
+        /** @var PatientContact $contact */
+        $contact = factory($this->getModel())->create();
+        $primaryKey = $this->model->getKeyName();
+        $data = [
+            'contact_form_data' => [
+                'lastname' => 'updated lastname',
+            ],
+        ];
+        $this->post(self::ROUTE_PREFIX . '/referred-by-contacts/edit/' . $contact->$primaryKey, $data);
+        $this->assertResponseOk();
+        $expected = [
+            'status' => 'Edited Successfully',
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+        $this->seeInDatabase($this->model->getTable(), [$primaryKey => $contact->$primaryKey, 'lastname' => 'updated lastname']);
     }
 }

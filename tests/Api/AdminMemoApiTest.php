@@ -40,4 +40,19 @@ class AdminMemoApiTest extends ApiTestCase
     {
         $this->markTestSkipped('API method is incomplete');
     }
+
+    public function testGetCurrent()
+    {
+        $this->post(self::ROUTE_PREFIX . '/memos/current');
+        $this->assertResponseOk();
+        $expected = [
+            [
+                'memo_id' => 2,
+                'memo' => ' Testing Again',
+                'last_update' => '2010-10-19',
+                'off_date' => '2010-10-20',
+            ],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 }

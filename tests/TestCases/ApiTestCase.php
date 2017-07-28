@@ -102,10 +102,4 @@ abstract class ApiTestCase extends BaseApiTestCase
             ->where($where)->first();
         var_dump($new);
     }
-
-    protected function getResponseData()
-    {
-        $content = json_decode($this->response->getContent(), true);
-        return $content['data'];
-    }
 }

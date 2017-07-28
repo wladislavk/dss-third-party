@@ -87,7 +87,7 @@ class EnrollmentWebhooksApiTest extends BaseApiTestCase
     ];
 
 
-    public function testWrongRequest()
+    public function testEnrollmentWrongRequest()
     {
         $this->json('POST', 'webhooks/enrollment');
 
@@ -132,7 +132,7 @@ class EnrollmentWebhooksApiTest extends BaseApiTestCase
         );
     }
 
-    public function testReceivedPdf()
+    public function testEnrollmentReceivedPdf()
     {
         $data = $this->receivedPdfRequest;
 
@@ -147,5 +147,20 @@ class EnrollmentWebhooksApiTest extends BaseApiTestCase
                 'status' => Enrollment::DSS_ENROLLMENT_PDF_RECEIVED,
             ]
         );
+    }
+
+    public function testClaims()
+    {
+        $this->markTestSkipped('Check how to form the request');
+    }
+
+    public function testPayment()
+    {
+        $this->markTestSkipped('Check how to form the request');
+    }
+
+    public function testPayers()
+    {
+        $this->markTestSkipped('Check how to form the request');
     }
 }

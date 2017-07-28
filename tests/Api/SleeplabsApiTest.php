@@ -49,4 +49,34 @@ class SleeplabsApiTest extends ApiTestCase
             'firstname' => 'John',
         ];
     }
+
+    public function testGetListOfSleeplabs()
+    {
+        $this->post(self::ROUTE_PREFIX . '/sleeplabs/list');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+            'result' => [],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testEditSleeplab()
+    {
+        /** @var Sleeplab $sleeplab */
+        $sleeplab = factory($this->getModel())->create();
+        $primaryKey = $this->model->getKeyName();
+        $data = [
+            'sleeplab_form_data' => [
+                'lastname' => 'updated lastname',
+            ],
+        ];
+        $this->post(self::ROUTE_PREFIX . '/sleeplabs/edit/' . $sleeplab->$primaryKey, $data);
+        $this->assertResponseOk();
+        $expected = [
+            'status' => 'Edited Successfully',
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+        $this->seeInDatabase($this->model->getTable(), [$primaryKey => $sleeplab->$primaryKey, 'lastname' => 'updated lastname']);
+    }
 }

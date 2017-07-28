@@ -62,4 +62,11 @@ class LedgerHistoriesApiTest extends ApiTestCase
             'status'      => 5,
         ];
     }
+
+    public function testGetHistoriesForLedgerReport()
+    {
+        $this->post(self::ROUTE_PREFIX . '/ledger-histories/ledger-report');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
 }

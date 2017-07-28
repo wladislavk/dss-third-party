@@ -4,7 +4,10 @@ namespace DentalSleepSolutions\Temporary;
 
 // TODO: this class was created as temporary means to handle this ugly array
 // TODO: this array has to be destroyed and laravel-ized into a proper model, then this class will be destroyed
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Helpers\PatientFormDataChecker;
+use DentalSleepSolutions\Helpers\PatientPortalRetriever;
+use DentalSleepSolutions\Helpers\UniqueLoginGenerator;
 use DentalSleepSolutions\Structs\MDContacts;
 use DentalSleepSolutions\Structs\PatientName;
 use DentalSleepSolutions\Structs\PatientReferrer;

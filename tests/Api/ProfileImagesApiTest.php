@@ -39,4 +39,18 @@ class ProfileImagesApiTest extends ApiTestCase
             'title'     => 'updated profile image',
         ];
     }
+
+    public function testGetProfilePhoto()
+    {
+        $this->post(self::ROUTE_PREFIX . '/profile-images/photo');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
+
+    public function testGetInsuranceCardImage()
+    {
+        $this->post(self::ROUTE_PREFIX . '/profile-images/insurance-card-image');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
 }

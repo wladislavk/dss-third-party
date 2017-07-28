@@ -415,17 +415,19 @@ class UsersController extends BaseRestController
         $logoutTime = 60 * 60;
 
         $data = $this->repository->getLastAccessedDate($userId);
+        if (!$data) {
+            return ApiResponse::responseOk('', ['logout' => true]);
+        }
 
         $lastAccessedDate = strtotime($data->last_accessed_date);
         $now = strtotime(Carbon::now());
 
-        if ($lastAccessedDate > $now - $logoutTime) {
-            $resetTime = ($logoutTime - ($now - $lastAccessedDate)) * 1000;
-
-            return ApiResponse::responseOk('', ['resetTime' => $resetTime]);
+        if ($lastAccessedDate <= $now - $logoutTime) {
+            return ApiResponse::responseOk('', ['logout' => true]);
         }
 
-        return ApiResponse::responseOk('', ['logout' => true]);
+        $resetTime = ($logoutTime - ($now - $lastAccessedDate)) * 1000;
+        return ApiResponse::responseOk('', ['resetTime' => $resetTime]);
     }
 
     /**

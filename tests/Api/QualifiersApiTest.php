@@ -33,4 +33,22 @@ class QualifiersApiTest extends ApiTestCase
             'status'      => 5,
         ];
     }
+
+    public function testGetActive()
+    {
+        $this->post(self::ROUTE_PREFIX . '/qualifiers/active');
+        $this->assertResponseOk();
+        $this->assertEquals(8, count($this->getResponseData()));
+        $expectedFirst = [
+            'qualifierid' => 1,
+            'qualifier' => '0B State license number',
+            'description' => '',
+            'sortby' => 1,
+            'status' => 1,
+        ];
+        $first = $this->getResponseData()[0];
+        unset($first['adddate']);
+        unset($first['ip_address']);
+        $this->assertEquals($expectedFirst, $first);
+    }
 }

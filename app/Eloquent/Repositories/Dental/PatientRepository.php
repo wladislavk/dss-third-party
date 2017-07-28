@@ -7,6 +7,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class PatientRepository extends AbstractRepository
 {
@@ -138,11 +139,11 @@ class PatientRepository extends AbstractRepository
                 \DB::raw(Patient::DSS_REFERRED_PHYSICIAN),
                 'ct.contacttype'
             )->leftJoin(\DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
-            ->where(function (Builder $query) use ($names) {
-                $query->where(function (Builder $query) use ($names) {
+            ->where(function (QueryBuilder $query) use ($names) {
+                $query->where(function (QueryBuilder $query) use ($names) {
                     $query->where('lastname', 'like', $names[0] . '%')
                         ->orWhere('firstname', 'like', $names[0] . '%');
-                })->where(function (Builder $query) {
+                })->where(function (QueryBuilder $query) {
                     $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
                         ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
                 });

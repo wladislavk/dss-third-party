@@ -3,8 +3,8 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
-use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Illuminate\Http\Request;
 
 class NotificationsController extends BaseRestController
 {

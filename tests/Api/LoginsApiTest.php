@@ -31,4 +31,10 @@ class LoginsApiTest extends ApiTestCase
             'userid' => 33,
         ];
     }
+
+    public function testLogout()
+    {
+        $this->post(self::ROUTE_PREFIX . '/logout');
+        $this->assertResponseOk();
+    }
 }

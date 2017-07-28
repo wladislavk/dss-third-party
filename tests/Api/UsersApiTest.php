@@ -126,4 +126,49 @@ class UsersApiTest extends ApiTestCase
             'zip'      => '12345',
         ];
     }
+
+    public function testCheck()
+    {
+        $this->post(self::ROUTE_PREFIX . '/users/check');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
+
+    public function testGetCurrentUserInfo()
+    {
+        $this->post(self::ROUTE_PREFIX . '/users/current');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
+
+    public function testGetCourseStaff()
+    {
+        $this->post(self::ROUTE_PREFIX . '/users/course-staff');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
+
+    public function testGetPaymentReports()
+    {
+        $this->post(self::ROUTE_PREFIX . '/users/payment-reports');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
+
+    public function testCheckLogout()
+    {
+        $this->post(self::ROUTE_PREFIX . '/users/check-logout');
+        $this->assertResponseOk();
+        $expected = [
+            'logout' => true,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testGetLetterInfo()
+    {
+        $this->post(self::ROUTE_PREFIX . '/users/letter-info');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
 }

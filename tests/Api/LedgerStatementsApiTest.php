@@ -32,4 +32,18 @@ class LedgerStatementsApiTest extends ApiTestCase
             'producerid' => 40,
         ];
     }
+
+    public function testRemoveByIdAndPatientId()
+    {
+        /** @var LedgerStatement $testRecord */
+        $testRecord = factory($this->getModel())->create();
+        $testRecord->patientid = 1;
+        $testRecord->save();
+        $primaryKey = $this->model->getKeyName();
+        $id = $testRecord->$primaryKey;
+
+        $this->post(self::ROUTE_PREFIX . '/ledger-statements/remove', ['id' => $id, 'patient_id' => 1]);
+        $this->assertResponseOk();
+        $this->notSeeInDatabase($this->model->getTable(), [$primaryKey => $id]);
+    }
 }

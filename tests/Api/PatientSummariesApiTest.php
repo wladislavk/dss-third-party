@@ -55,4 +55,13 @@ class PatientSummariesApiTest extends ApiTestCase
     {
         $this->markTestSkipped('dental_patient_summary table does not have a primary key');
     }
+
+    public function testUpdateTrackerNotes()
+    {
+        $this->markTestSkipped('dental_patient_summary table does not have a primary key');
+        return;
+
+        $this->post(self::ROUTE_PREFIX . '/patient-summaries/update-tracker-notes');
+        $this->assertResponseOk();
+    }
 }

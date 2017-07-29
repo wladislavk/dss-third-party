@@ -39,11 +39,6 @@ class GenerateJwtToken extends Command
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
         /**
@@ -53,7 +48,7 @@ class GenerateJwtToken extends Command
         $userData = $this->userRepository->findByIdOrEmail($this->argument('id'));
 
         if (!$userData || !isset($userData[0])) {
-            exit(0);
+            return;
         }
 
         /**
@@ -67,6 +62,6 @@ class GenerateJwtToken extends Command
             $userModel->id = join(Legacy::LOGIN_ID_DELIMITER, [$userData[0]->id, $userData[1]->id]);
         }
 
-        exit(JWTAuth::fromUser($userModel));
+        $this->info(JWTAuth::fromUser($userModel));
     }
 }

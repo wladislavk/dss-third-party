@@ -70,7 +70,7 @@ class Legacy extends IlluminateAuthAdapter
      * @param mixed $id
      * @return bool|User[]
      */
-    public function byId ($id)
+    public function byId($id)
     {
         /**
          * Single ID
@@ -94,6 +94,10 @@ class Legacy extends IlluminateAuthAdapter
         $admin = parent::byId($adminId);
         $user = parent::byId($userId);
 
-        return $admin && $user ? [$admin, $user] : false;
+        if ($admin && $user) {
+            return [$admin, $user];
+        }
+
+        return false;
     }
 }

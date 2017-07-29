@@ -9,6 +9,7 @@ use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Http\Controllers\BaseReferencedRestController;
 use DentalSleepSolutions\Http\Controllers\BaseVersionedRestController;
 use DentalSleepSolutions\Http\Requests\Request;
+use Illuminate\Config\Repository as Config;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Contracts\TransformerInterface;
@@ -60,12 +61,15 @@ class BindingNamingConvention
     public function setController($className)
     {
         $jwtAuth = \Mockery::mock(JWTAuth::class);
+        $jwtAuth->shouldReceive('getToken')->andReturnNull();
         $jwtAuth->shouldReceive('toUser')->andReturnNull();
         $userRepository = \Mockery::mock(UserRepository::class);
+        $config = \Mockery::mock(Config::class);
+        $config->shouldReceive('get')->andReturnNull();
         $repository = \Mockery::mock(BaseRepository::class);
         $request = \Mockery::mock(Request::class);
 
-        $this->controller = new $className($jwtAuth, $userRepository, $repository, $request);
+        $this->controller = new $className($jwtAuth, $userRepository, $config, $repository, $request);
         if (!$this->controller instanceof BaseRestController) {
             throw new NamingConventionException("$className must extend " . BaseRestController::class);
         }

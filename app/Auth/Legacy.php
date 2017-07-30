@@ -55,7 +55,7 @@ class Legacy extends IlluminateAuthAdapter
     {
         $password = Arr::pull($credentials, 'password');
 
-        $user = $this->userRepository->where($credentials)->first();
+        $user = $this->userRepository->findWhere($credentials)->first();
 
         if ($user && $this->check($user, $password)) {
             $this->auth->login($user, false);

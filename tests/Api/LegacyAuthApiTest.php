@@ -3,6 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\ApiTestCase;
+use DentalSleepSolutions\Eloquent\Models\Admin;
 
 class LegacyAuthApiTest extends ApiTestCase
 {
@@ -11,24 +12,15 @@ class LegacyAuthApiTest extends ApiTestCase
     /** @test */
     public function testLegacyHashingAlgorithm()
     {
-        $reason = <<<TEXT
-Invalid authorization specification: 1045 Access denied 
-in query "select * from `v_users` where (`email` = ?) limit 1".
-Need to check Docker DB settings and migrations
-TEXT;
+        $password = 'secret';
 
-        $this->markTestSkipped($reason);
-        return;
-        // @todo - replace with factory after merging admin model
-        \DB::table('admin')->insert([
-            'email'    => 'test@me.com',
-            'username' => 'johndoe',
-            'salt'     => 'abcd1234',
-            'password' => hash('sha256', 'secret' . 'abcd1234'),
-        ]);
+        $record = factory(Admin::class)->make();
+        $record->password = hash('sha256', $password . $record->salt);
+        $record->save();
 
-        $this->post('auth', ['email' => 'test@me.com', 'password' => 'secret']);
-        $this
+        $data = ['email' => $record->email, 'password' => $password];
+
+        $this->post('auth', $data)
             ->seeJson(['status' => 'Authenticated'])
             ->assertResponseOk()
         ;

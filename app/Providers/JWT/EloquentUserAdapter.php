@@ -31,7 +31,8 @@ class EloquentUserAdapter implements UserInterface
      */
     public function getBy($key, $value)
     {
-        $value = explode(Legacy::LOGIN_ID_DELIMITER, $value);
+        /** @todo Move method logic to a repository */
+        $value = explode(Legacy::LOGIN_ID_DELIMITER, $value, Legacy::LOGIN_ID_SECTIONS);
         return $this->user->whereIn($key, $value)
             ->orderBy('id', 'ASC')
             ->get()

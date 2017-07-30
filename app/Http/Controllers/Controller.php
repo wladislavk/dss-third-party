@@ -34,6 +34,10 @@ abstract class Controller extends BaseController
         // TODO: see how it is possible to generate JWT token while testing
         if ($config->get('app.env') === 'testing') {
             $this->currentUser = new User();
+            $this->currentAdmin = new User();
+            $this->currentUser->id = 0;
+            $this->currentAdmin->id = 0;
+
             return;
         }
 

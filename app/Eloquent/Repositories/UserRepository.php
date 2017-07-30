@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use DentalSleepSolutions\Auth\Legacy;
 
 class UserRepository extends AbstractRepository
 {
@@ -19,7 +20,7 @@ class UserRepository extends AbstractRepository
     public function findByIdOrEmail($id)
     {
         return $this->model->where(function (Builder $q) use ($id) {
-            $id = explode('|', $id);
+            $id = explode(Legacy::LOGIN_ID_DELIMITER, $id, Legacy::LOGIN_ID_SECTIONS);
             $q->whereIn('email', $id)->orWhereIn('id', $id);
         })
             ->orderBy('id', 'ASC')

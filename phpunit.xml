@@ -28,10 +28,9 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory>./tests</directory>
+            <directory>./app</directory>
             <exclude>
-                <directory>./tests/file</directory>
-                <directory>./tests/TestCases</directory>
+                <directory>./tests</directory>
             </exclude>
         </whitelist>
     </filter>

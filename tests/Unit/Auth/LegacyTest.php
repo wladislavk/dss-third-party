@@ -7,6 +7,7 @@ use Illuminate\Auth\AuthManager;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
 use Illuminate\Support\Arr;
+use const LDAP_ESCAPE_DN;
 use Tests\TestCases\UnitTestCase;
 
 class LegacyTest extends UnitTestCase
@@ -49,6 +50,30 @@ class LegacyTest extends UnitTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
+    public function testIsSimpleId()
+    {
+        $result = $this->legacy->isSimpleId('');
+        $this->assertTrue($result);
+
+        $result = $this->legacy->isSimpleId(Legacy::LOGIN_ID_DELIMITER);
+        $this->assertFalse($result);
+    }
+
+    public function testIsValidCompositeId()
+    {
+        $result = $this->legacy->isValidCompositeId('');
+        $this->assertFalse($result);
+
+        $result = $this->legacy->isValidCompositeId(self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID);
+        $this->assertTrue($result);
+    }
+
+    public function testComposeId()
+    {
+        $result = $this->legacy->composeId(self::ADMIN_ID, self::USER_ID);
+        $this->assertEquals(self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID, $result);
+    }
+
     public function byCredentialsDataProvider()
     {
         return [
@@ -62,16 +87,11 @@ class LegacyTest extends UnitTestCase
     {
         return [
             [self::USER_ID, true],
-            [$this->compositeId(self::ADMIN_ID, self::USER_ID), [true, true]],
-            [$this->compositeId(self::INVALID_ADMIN_ID, self::USER_ID), false],
-            [$this->compositeId(self::USER_ID, self::ADMIN_ID), false],
-            [$this->compositeId(self::USER_ID, ''), false],
+            [self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID, [true, true]],
+            [self::INVALID_ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID, false],
+            [self::USER_ID . Legacy::LOGIN_ID_DELIMITER . self::ADMIN_ID, false],
+            [self::USER_ID . Legacy::LOGIN_ID_DELIMITER, false],
         ];
-    }
-
-    private function compositeId($firstId, $secondId)
-    {
-        return join(Legacy::LOGIN_ID_DELIMITER, [$firstId, $secondId]);
     }
 
     private function mockAuthManager()

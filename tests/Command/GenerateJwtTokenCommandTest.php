@@ -15,11 +15,17 @@ class GenerateJwtTokenCommandTest extends ApiTestCase
     const USER_ID = User::USER_PREFIX . '1';
     const ADMIN_ID = User::ADMIN_PREFIX . '1';
 
+    const BASE_64_REGEXP = '[a-z\d\+\/]+';
+    const TOKEN_REGEXP = '/' . self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP . '/i';
+
     /** @var GenerateJwtToken */
     private $command;
 
     /** @var BufferedOutput */
     private $output;
+
+    /** @var Legacy */
+    private $legacyMock;
 
     public function setUp()
     {
@@ -29,35 +35,46 @@ class GenerateJwtTokenCommandTest extends ApiTestCase
         $this->command = $this->app->make(GenerateJwtToken::class);
         $this->command->setLaravel($this->app);
         $this->output = new BufferedOutput();
+        $this->legacyMock = $this->mockLegacyAuth();
     }
 
-    /**
-     * @dataProvider jwtTokenDataProvider
-     */
-    public function testGenerateJwtToken($userId, $expectedResult)
+    public function testInvalidToken()
     {
-        $options = ['id' => $userId];
+        $options = ['id' => self::INVALID_ID];
         $input = new ArrayInput($options);
         $this->command->run($input, $this->output);
         $result = $this->output->fetch();
-        $this->assertThat($result, $expectedResult);
+
+        $this->assertEquals('', $result);
     }
 
-    public function jwtTokenDataProvider()
+    public function testSimpleToken()
     {
-        $base64Regexp = '[a-z\d\+\/]+';
-        $isNotEmpty = $this->matchesRegularExpression("/$base64Regexp\.$base64Regexp\.$base64Regexp/i");
-        $isEmpty = $this->equalTo('');
+        $options = ['id' => self::USER_ID];
+        $input = new ArrayInput($options);
+        $this->command->run($input, $this->output);
+        $result = $this->output->fetch();
 
-        return [
-            [self::INVALID_ID, $isEmpty],
-            [self::USER_ID, $isNotEmpty],
-            [$this->compositeId(self::ADMIN_ID, self::USER_ID), $isNotEmpty],
-        ];
+        $this->assertRegExp(self::TOKEN_REGEXP, $result);
     }
-    
-    private function compositeId($firstId, $secondId)
+
+    public function testCompositeToken()
     {
-        return join(Legacy::LOGIN_ID_DELIMITER, [$firstId, $secondId]);
+        $options = ['id' => $this->legacyMock->composeId(self::ADMIN_ID, self::USER_ID)];
+        $input = new ArrayInput($options);
+        $this->command->run($input, $this->output);
+        $result = $this->output->fetch();
+
+        $this->assertRegExp(self::TOKEN_REGEXP, $result);
+    }
+
+    private function mockLegacyAuth()
+    {
+        $mock = $this->getMockBuilder(Legacy::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+
+        return $mock;
     }
 }

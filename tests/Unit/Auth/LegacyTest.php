@@ -7,7 +7,6 @@ use Illuminate\Auth\AuthManager;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
 use Illuminate\Support\Arr;
-use const LDAP_ESCAPE_DN;
 use Tests\TestCases\UnitTestCase;
 
 class LegacyTest extends UnitTestCase
@@ -17,6 +16,9 @@ class LegacyTest extends UnitTestCase
     const USER_ID = User::USER_PREFIX . '1';
     const ADMIN_ID = User::ADMIN_PREFIX . '1';
     const INVALID_ADMIN_ID = User::ADMIN_PREFIX . '2';
+
+    /** @var array */
+    private $whereArguments;
 
     /** @var Legacy */
     private $legacy;
@@ -28,44 +30,67 @@ class LegacyTest extends UnitTestCase
         $this->legacy = new Legacy($authManager, $userRepository);
     }
 
-    /**
-     * @dataProvider byCredentialsDataProvider
-     */
-    public function testByCredentials($username, $password, $expectedResult)
+    public function testInvalidUsername()
     {
         $credentials = [
-            'username' => $username,
-            'password' => $password,
+            'username' => '',
+            'password' => self::PASSWORD,
         ];
         $result = $this->legacy->byCredentials($credentials);
-        $this->assertEquals($expectedResult, $result);
+        $this->assertEquals(false, $result);
+    }
+
+    public function testInvalidPassword()
+    {
+        $credentials = [
+            'username' => self::USERNAME,
+            'password' => '',
+        ];
+        $result = $this->legacy->byCredentials($credentials);
+        $this->assertEquals(false, $result);
+    }
+
+    public function testValidCredentials()
+    {
+        $credentials = [
+            'username' => self::USERNAME,
+            'password' => self::PASSWORD,
+        ];
+        $result = $this->legacy->byCredentials($credentials);
+        $this->assertEquals(true, $result);
     }
 
     /**
      * @dataProvider byIdDataProvider
      */
-    public function testById($id, $expectedResult)
+    public function testById($perCaseDescription, $id, $expectedResult)
     {
-        $result = $this->legacy->byId($id);
-        $this->assertEquals($expectedResult, $result);
+        $actualResult = $this->legacy->byId($id);
+        $this->assertEquals($expectedResult, $actualResult, $perCaseDescription);
     }
 
     public function testIsSimpleId()
     {
         $result = $this->legacy->isSimpleId('');
         $this->assertTrue($result);
+    }
 
+    public function testIsNotSimpleId()
+    {
         $result = $this->legacy->isSimpleId(Legacy::LOGIN_ID_DELIMITER);
         $this->assertFalse($result);
     }
 
     public function testIsValidCompositeId()
     {
-        $result = $this->legacy->isValidCompositeId('');
-        $this->assertFalse($result);
-
         $result = $this->legacy->isValidCompositeId(self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID);
         $this->assertTrue($result);
+    }
+
+    public function testIsNotValidCompositeId()
+    {
+        $result = $this->legacy->isValidCompositeId('');
+        $this->assertFalse($result);
     }
 
     public function testComposeId()
@@ -74,23 +99,34 @@ class LegacyTest extends UnitTestCase
         $this->assertEquals(self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID, $result);
     }
 
-    public function byCredentialsDataProvider()
-    {
-        return [
-            [self::USERNAME, '', false],
-            ['', self::PASSWORD, false],
-            [self::USERNAME, self::PASSWORD, true],
-        ];
-    }
-
     public function byIdDataProvider()
     {
         return [
-            [self::USER_ID, true],
-            [self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID, [true, true]],
-            [self::INVALID_ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID, false],
-            [self::USER_ID . Legacy::LOGIN_ID_DELIMITER . self::ADMIN_ID, false],
-            [self::USER_ID . Legacy::LOGIN_ID_DELIMITER, false],
+            [
+                'USER_ID is a valid ID',
+                self::USER_ID,
+                true
+            ],
+            [
+                'Composite ADMIN_ID/USER_ID is a valid ID, method returns array',
+                self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID,
+                [true, true]
+            ],
+            [
+                'Composite INVALID_ADMIN_ID/USER_ID is not a valid ID',
+                self::INVALID_ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID,
+                false
+            ],
+            [
+                'Composite USER_ID/ADMIN_ID is not a valid ID',
+                self::USER_ID . Legacy::LOGIN_ID_DELIMITER . self::ADMIN_ID,
+                false
+            ],
+            [
+                'Incomplete composite ID is not a valid ID',
+                self::USER_ID . Legacy::LOGIN_ID_DELIMITER,
+                false
+            ],
         ];
     }
 
@@ -120,20 +156,20 @@ class LegacyTest extends UnitTestCase
 
     private function mockUserRepository()
     {
-        $whereArguments = [];
+        $this->whereArguments = [];
 
         $mock = \Mockery::mock(UserRepository::class);
         $mock->shouldReceive('where')
             ->atMost(1)
-            ->andReturnUsing(function ($arguments) use ($mock, &$whereArguments) {
-                $whereArguments = $arguments;
+            ->andReturnUsing(function (array $arguments) use ($mock) {
+                $this->whereArguments = $arguments;
                 return $mock;
             })
         ;
         $mock->shouldReceive('first')
             ->atMost(1)
-            ->andReturnUsing(function () use (&$whereArguments) {
-                if (Arr::pull($whereArguments, 'username') === self::USERNAME) {
+            ->andReturnUsing(function () {
+                if (Arr::pull($this->whereArguments, 'username') === self::USERNAME) {
                     return $this->mockUser();
                 }
 

@@ -167,6 +167,25 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TransactionCode::cl
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Admin::class, function ($faker) {
+    return [
+        'name' => $faker->name,
+        'username' => $faker->userName,
+        'password' => $faker->regexify('[a-z0-9]{65}'),
+        'status' => $faker->randomDigit,
+        'ip_address' => $faker->ipv4,
+        'salt' => $faker->regexify('[a-z0-9]{12}'),
+        'recover_time' => $faker->dateTime(),
+        'admin_access' => $faker->randomDigit,
+        'last_accessed_date' => $faker->dateTime(),
+        'claim_margin_top' => $faker->randomDigit,
+        'claim_margin_left' => $faker->randomDigit,
+        'email' => $faker->email,
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\User::class, function ($faker) {
     return [
         'user_access'             => $faker->randomDigit,

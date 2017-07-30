@@ -20,7 +20,7 @@ class UserRepository extends AbstractRepository
     public function findByIdOrEmail($id)
     {
         return $this->model->where(function (Builder $q) use ($id) {
-            $id = explode(Legacy::LOGIN_ID_DELIMITER, $id, 2);
+            $id = explode(Legacy::LOGIN_ID_DELIMITER, $id, Legacy::LOGIN_ID_SECTIONS);
             $q->whereIn('email', $id)->orWhereIn('id', $id);
         })
             ->orderBy('id', 'ASC')

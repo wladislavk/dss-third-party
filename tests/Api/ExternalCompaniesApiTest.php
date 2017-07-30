@@ -5,6 +5,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany;
 use Tests\TestCases\ApiTestCase;
+use Faker\Factory as Faker;
 
 class ExternalCompaniesApiTest extends ApiTestCase
 {
@@ -38,12 +39,13 @@ class ExternalCompaniesApiTest extends ApiTestCase
 
     public function testUpdateExternalCompany()
     {
+        $faker = Faker::create();
         $record = factory(ExternalCompany::class)->create();
         $data = $record->toArray();
-        $data['api_key'] = 'api_key';
+        $data['api_key'] = $faker->sha1;
 
         $this->json('put', self::ENDPOINT . '/' . $record->id, $data)
-            ->seeInDatabase($record->getTable(), ['name' => 'test'])
+            ->seeInDatabase($record->getTable(), ['api_key' => $data['api_key']])
             ->assertResponseOk()
         ;
     }

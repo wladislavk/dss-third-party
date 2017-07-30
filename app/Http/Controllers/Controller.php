@@ -35,6 +35,9 @@ abstract class Controller extends BaseController
         if ($config->get('app.env') === 'testing') {
             $this->currentUser = new User();
             $this->currentAdmin = new User();
+            $this->currentUser->id = 0;
+            $this->currentAdmin->id = 0;
+
             return;
         }
 

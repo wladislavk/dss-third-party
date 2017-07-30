@@ -150,9 +150,13 @@ class Legacy extends IlluminateAuthAdapter
         $compositeId->id = $id;
 
         $regexp = $this->compositeIdRegexp();
+        preg_match($regexp, $id, $matches);
 
-        if (preg_match($regexp, $id, $matches)) {
+        if (isset($matches['adminId'])) {
             $compositeId->adminId = $matches['adminId'];
+        }
+
+        if (isset($matches['userId'])) {
             $compositeId->userId = $matches['userId'];
         }
 

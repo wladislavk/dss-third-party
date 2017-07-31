@@ -70,10 +70,9 @@ class GenerateJwtTokenCommandTest extends ApiTestCase
 
     private function mockLegacyAuth()
     {
-        $mock = $this->getMockBuilder(Legacy::class)
-            ->disableOriginalConstructor()
-            ->setMethods(null)
-            ->getMock()
+        $mock = \Mockery::mock(Legacy::class);
+        $mock->shouldReceive('composeId')
+            ->passthru()
         ;
 
         return $mock;

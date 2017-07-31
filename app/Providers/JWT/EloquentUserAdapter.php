@@ -3,23 +3,21 @@ namespace DentalSleepSolutions\Providers\JWT;
 
 use Tymon\JWTAuth\Providers\User\UserInterface;
 use Illuminate\Database\Eloquent\Model;
-use DentalSleepSolutions\Auth\Legacy;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository as Repository;
 
 class EloquentUserAdapter implements UserInterface
 {
-    /**
-     * @var Model
-     */
-    protected $user;
+    /** @var Repository */
+    private $repository;
 
     /**
      * Create a new User instance.
      *
-     * @param  Model $user
+     * @param Repository $repository
      */
-    public function __construct(Model $user)
+    public function __construct(Repository $repository)
     {
-        $this->user = $user;
+        $this->repository = $repository;
     }
 
     /**
@@ -31,11 +29,8 @@ class EloquentUserAdapter implements UserInterface
      */
     public function getBy($key, $value)
     {
-        /** @todo Move method logic to a repository */
-        $value = explode(Legacy::LOGIN_ID_DELIMITER, $value, Legacy::LOGIN_ID_SECTIONS);
-        return $this->user->whereIn($key, $value)
-            ->orderBy('id', 'ASC')
-            ->get()
+        return $this->repository
+            ->findByIdOrField($key, $value)
             ->all()
         ;
     }

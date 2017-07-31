@@ -33,10 +33,17 @@ class GenerateJwtToken extends Command
     /** @var UserRepository */
     private $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    /** @var Legacy */
+    private $legacyAuth;
+
+    public function __construct(
+        UserRepository $userRepository,
+        Legacy $legacyAuth
+    )
     {
         parent::__construct();
         $this->userRepository = $userRepository;
+        $this->legacyAuth = $legacyAuth;
     }
 
     public function handle()
@@ -59,7 +66,7 @@ class GenerateJwtToken extends Command
         $userModel = $userData[0];
 
         if (isset($userData[1])) {
-            $userModel->id = join(Legacy::LOGIN_ID_DELIMITER, [$userData[0]->id, $userData[1]->id]);
+            $userModel->id = $this->legacyAuth->composeId($userData[0]->id, $userData[1]->id);
         }
 
         $this->info(JWTAuth::fromUser($userModel));

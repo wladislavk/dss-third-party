@@ -15,10 +15,10 @@ use DentalSleepSolutions\Structs\PatientReferrer;
 class PatientFormDataUpdater
 {
     const DOC_FIELDS = [
-        'docsleep',
         'docpcp',
-        'docdentist',
         'docent',
+        'docsleep',
+        'docdentist',
         'docmdother',
         'docmdother2',
         'docmdother3',

@@ -914,4 +914,44 @@ class PatientRepository extends AbstractRepository
         }
         return $unchangedPatient;
     }
+
+    /**
+     * @param int $contactId
+     * @param int $contactType
+     * @param bool $isDetailed
+     * @return array
+     */
+    public function getReferralCountersForContactWithoutDate(
+        $contactId,
+        $contactType,
+        $isDetailed
+    ) {
+        $counters = [];
+        $ranges = [
+            [0, 30],
+            [30, 60],
+            [60, 90],
+            [90, 0],
+        ];
+
+        foreach ($ranges as $range) {
+            if ($range[1]) {
+                $key = "num_ref{$range[1]}";
+                $curDate = 'CURDATE()';
+                if ($range[0]) {
+                    $curDate = "DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)";
+                }
+                $dateConditional = "BETWEEN DATE_SUB(CURDATE(), INTERVAL {$range[1]} DAY) AND $curDate";
+            } else {
+                $key = "num_ref{$range[0]}plus";
+                $dateConditional = "< DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)";
+            }
+
+            $counters[$key] = $this->getReferralCountersForContact(
+                $contactId, $contactType, $dateConditional, $isDetailed
+            );
+        }
+
+        return $counters;
+    }
 }

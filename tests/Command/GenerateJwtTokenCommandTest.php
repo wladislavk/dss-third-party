@@ -72,6 +72,7 @@ class GenerateJwtTokenCommandTest extends ApiTestCase
     {
         $mock = $this->getMockBuilder(Legacy::class)
             ->disableOriginalConstructor()
+            ->setMethods(null)
             ->getMock()
         ;
 

@@ -74,9 +74,11 @@ class ApiResponse
     ) {
         if (!is_array($data) && $createErrorsArray) {
             $dataArray = [];
+
             if (is_array($data) && isset($data['errors'])) {
                 $dataArray = $data['errors'];
             }
+
             $data = [
                 'errorMessage' => $message,
                 'errors' => $dataArray,
@@ -131,7 +133,7 @@ class ApiResponse
      * @param  string $messageError
      * @param array $headers
      * @param int $options
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public static function response(
         $data,

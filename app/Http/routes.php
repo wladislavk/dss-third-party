@@ -4,12 +4,12 @@
 | Authenticate user and get a token for subsequent requests
 |--------------------------------------------------------------------------
 */
-Route::post('auth', function () {
-    if (!$token = JWTAuth::attempt(Request::all())) {
-        return Response::json(['status' => 'Invalid credentials'], 422);
-    }
+Route::post('auth', 'Api\ApiAuthController@auth');
+Route::get('auth-health', 'Api\ApiAuthController@authHealth');
 
-    return ['status' => 'Authenticated', 'token' => $token];
+Route::group(['middleware' => 'jwt.auth'], function () {
+    Route::post('auth-as', 'Api\ApiAuthController@authAs');
+    Route::post('refresh-token', 'Api\ApiAuthController@refreshToken');
 });
 
 Route::get('health-check', 'Api\HealthCheckController@index');

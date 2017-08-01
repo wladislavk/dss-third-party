@@ -62,7 +62,7 @@ class Legacy extends IlluminateAuthAdapter
 
         return false;
     }
-    
+
     /**
      * Check user ID. DSS can use a composite ID, to log in an admin AND some user, "login as" behavior
      *

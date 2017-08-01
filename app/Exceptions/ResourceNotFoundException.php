@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Exceptions;
 
 use RuntimeException;
 
-class ResourceNotFound extends RuntimeException
+class ResourceNotFoundException extends RuntimeException
 {
     //
 }

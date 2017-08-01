@@ -2,11 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\NoteRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Notes;
 
 class NotesController extends BaseRestController
 {
+    /** @var NoteRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/notes",
@@ -140,14 +143,13 @@ class NotesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Notes $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getUnsigned(Notes $resources)
+    public function getUnsigned()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getUnsigned($docId);
+        $data = $this->repository->getUnsigned($docId);
 
         return ApiResponse::responseOk('', $data);
     }

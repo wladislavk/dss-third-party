@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\JointExam;
+use DentalSleepSolutions\Eloquent\Models\Dental\JointExam;
 use Tests\TestCases\ApiTestCase;
 
 class JointExamsApiTest extends ApiTestCase

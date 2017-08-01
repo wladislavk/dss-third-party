@@ -3,11 +3,14 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\Faxes;
 
 class FaxesController extends BaseRestController
 {
+    /** @var FaxRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/faxes",
@@ -91,7 +94,7 @@ class FaxesController extends BaseRestController
             'ip_address' => $this->request->ip(),
         ]);
 
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -136,14 +139,13 @@ class FaxesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param Faxes $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAlerts(Faxes $resources)
+    public function getAlerts()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getAlerts($docId);
+        $data = $this->repository->getAlerts($docId);
 
         return ApiResponse::responseOk('', $data);
     }

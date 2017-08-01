@@ -2,13 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\InsurancePreauth;
-use DentalSleepSolutions\Contracts\Repositories\InsurancePreauth as InsPreauth;
 use Illuminate\Http\Request;
 
 class InsurancePreauthController extends BaseRestController
 {
+    /** @var InsurancePreauthRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/insurance-preauth",
@@ -323,22 +325,21 @@ class InsurancePreauthController extends BaseRestController
      * )
      *
      * @param string $type
-     * @param InsPreauth $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getByType($type, InsPreauth $resources)
+    public function getByType($type)
     {
         $docId = $this->currentUser->docid ?: 0;
 
         switch ($type) {
             case 'completed':
-                $data = $resources->getCompleted($docId);
+                $data = $this->repository->getCompleted($docId);
                 break;
             case 'pending':
-                $data = $resources->getPending($docId);
+                $data = $this->repository->getPending($docId);
                 break;
             case 'rejected':
-                $data = $resources->getRejected($docId);
+                $data = $this->repository->getRejected($docId);
                 break;
             default:
                 $data = [];
@@ -354,14 +355,13 @@ class InsurancePreauthController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param InsurancePreauth $resource
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getPendingVOBByContactId(InsurancePreauth $resource, Request $request)
+    public function getPendingVOBByContactId(Request $request)
     {
         $contactId = $request->input('contact_id', 0);
-        $data = $resource->getPendingVOBByContactId($contactId);
+        $data = $this->repository->getPendingVOBByContactId($contactId);
       
         return ApiResponse::responseOk('', $data);
     }
@@ -372,32 +372,34 @@ class InsurancePreauthController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param InsPreauth $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function find(InsPreauth $resources, Request $request)
+    public function find(Request $request)
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $pageNumber = $request->input('page');
-        $vobsPerPage = $request->input('vobsPerPage');
-        $sortColumn = $request->input('sortColumn');
-        $sortDir = $request->input('sortDir');
+        $pageNumber = $request->input('page', 0);
+        $vobsPerPage = $request->input('vobsPerPage', 20);
+        $sortColumn = $request->input('sortColumn', 'status');
+        $sortDir = $request->input('sortDir', 'desc');
         $viewed = $request->input('viewed');
 
-        $data = $resources->getListVobs(
+        $data = $this->repository->getListVobs(
             $docId, 
-            $viewed, 
             $sortColumn,
             $sortDir,
             $vobsPerPage,
-            $pageNumber
+            $pageNumber,
+            $viewed
         );
 
         return ApiResponse::responseOk('', $data);
     }
 
+    /**
+     * @return string
+     */
     public function getSingular()
     {
         return 'InsurancePreauth';

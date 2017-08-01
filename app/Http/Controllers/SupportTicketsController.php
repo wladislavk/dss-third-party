@@ -2,11 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SupportTicketRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\SupportTickets;
 
 class SupportTicketsController extends BaseRestController
 {
+    /** @var SupportTicketRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/support-tickets",
@@ -140,14 +144,13 @@ class SupportTicketsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param SupportTickets $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getNumber(SupportTickets $resources)
+    public function getNumber()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getNumber($docId);
+        $data = $this->repository->getNumber($docId);
 
         return ApiResponse::responseOk('', $data);
     }

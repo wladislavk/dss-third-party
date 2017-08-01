@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\GagReflex;
+use DentalSleepSolutions\Eloquent\Models\Dental\GagReflex;
 use Tests\TestCases\ApiTestCase;
 
 class GagReflexesApiTest extends ApiTestCase

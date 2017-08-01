@@ -3,7 +3,8 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Tymon\JWTAuth\JWTAuth;
-use DentalSleepSolutions\Eloquent\User;
+use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\StaticClasses\SudoHelper;
 
 class AuthTokenParser
 {
@@ -136,7 +137,7 @@ class AuthTokenParser
      */
     private function getAdminFromModelData (User $modelData)
     {
-        return $this->getAgnosticDataFromModelData($modelData, 'a');
+        return $this->getAgnosticDataFromModelData($modelData, SudoHelper::ADMIN_PREFIX);
     }
 
     /**
@@ -147,7 +148,7 @@ class AuthTokenParser
      */
     private function getUserFromModelData (User $modelData)
     {
-        return $this->getAgnosticDataFromModelData($modelData, 'u');
+        return $this->getAgnosticDataFromModelData($modelData, SudoHelper::USER_PREFIX);
     }
 
     /**
@@ -160,13 +161,7 @@ class AuthTokenParser
     private function getAgnosticDataFromModelData (User $modelData, $modelTypeFlag) {
         $modelTypeFlag = preg_quote($modelTypeFlag);
 
-        /**
-         * IDs come from v_users view, that follows the convention:
-         *
-         * * a_\d: Admin
-         * * u_\d: User
-         */
-        if (!preg_match("/^{$modelTypeFlag}_(?P<id>\d+)$/", $modelData->id, $match)) {
+        if (!preg_match("/^{$modelTypeFlag}(?P<id>\d+)$/", $modelData->id, $match)) {
             return null;
         }
 

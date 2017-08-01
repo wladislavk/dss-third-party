@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\PatientInsurance;
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientInsurance;
 use Tests\TestCases\ApiTestCase;
 
 class PatientInsurancesApiTest extends ApiTestCase

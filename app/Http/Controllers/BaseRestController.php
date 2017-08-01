@@ -2,14 +2,13 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Contracts\Repositories\Repository;
 use DentalSleepSolutions\Contracts\SingularAndPluralInterface;
-use DentalSleepSolutions\Eloquent\Dental\User;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Helpers\AuthTokenParser;
 
@@ -92,33 +91,26 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
      * )
      */
 
-    const BASE_MODEL_NAMESPACE = BindingNamingConvention::BASE_NAMESPACE . '\\Eloquent';
+    const BASE_MODEL_NAMESPACE = BindingNamingConvention::BASE_NAMESPACE . '\\Eloquent\\Models';
     const DEFAULT_MODEL_NAMESPACE = self::BASE_MODEL_NAMESPACE . '\\Dental';
 
     /** @var bool */
     protected $hasIp = true;
 
-    /** @var Model|Repository */
-    protected $resources;
+    /** @var BaseRepository */
+    protected $repository;
 
     /** @var Request */
     protected $request;
 
-    /**
-     * BaseRestController constructor.
-     * @param Config $config
-     * @param AuthTokenParser $authToken
-     * @param Repository $resources
-     * @param Request $request
-     */
     public function __construct(
         Config $config,
-        AuthTokenParser $authToken,
-        Repository $resources,
+        AuthTokenParser $authTokenParser,
+        BaseRepository $repository,
         Request $request
     ) {
-        parent::__construct($config, $authToken);
-        $this->resources = $resources;
+        parent::__construct($config, $authTokenParser);
+        $this->repository = $repository;
         $this->request = $request;
     }
 
@@ -129,7 +121,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
      */
     public function index()
     {
-        $data = $this->resources->all();
+        $data = $this->repository->all();
 
         return ApiResponse::responseOk('', $data);
     }
@@ -143,7 +135,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     public function show($id)
     {
         /** @var Resource $resource */
-        $resource = $this->resources->findOrFail($id);
+        $resource = $this->repository->find($id);
         return ApiResponse::responseOk('', $resource);
     }
 
@@ -159,7 +151,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         if ($this->hasIp) {
             $data = array_merge($this->request->all(), ['ip_address' => $this->request->ip()]);
         }
-        $resource = $this->resources->create($data);
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -173,8 +165,8 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     public function update($id)
     {
         $this->validate($this->request, $this->request->updateRules());
-        /** @var Resource $resource */
-        $resource = $this->resources->findOrFail($id);
+        /** @var Model $resource */
+        $resource = $this->repository->find($id);
         $resource->update($this->request->all());
 
         return ApiResponse::responseOk('Resource updated');
@@ -188,8 +180,8 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
      */
     public function destroy($id)
     {
-        /** @var Resource $resource */
-        $resource = $this->resources->findOrFail($id);
+        /** @var Model $resource */
+        $resource = $this->repository->find($id);
         $resource->delete();
 
         return ApiResponse::responseOk('Resource deleted');
@@ -215,6 +207,9 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         return str_replace('Controller', '', $shortName);
     }
 
+    /**
+     * @return string
+     */
     public function getModelNamespace()
     {
         return self::DEFAULT_MODEL_NAMESPACE;

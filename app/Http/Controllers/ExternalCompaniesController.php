@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Http\Requests\ExternalCompany;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 
 class ExternalCompaniesController extends BaseRestController
@@ -92,12 +93,8 @@ class ExternalCompaniesController extends BaseRestController
         $this->validate($this->request, $this->request->storeRules());
         $data = $this->request->all();
 
-        /**
-         * @ToDo: Handle admin tokens
-         * @see AWS-19-Request-Token
-         */
-        $data['created_by'] = $this->currentUser->id;
-        $resource = $this->resources->create($data);
+        $data['created_by'] = $this->currentAdmin->id;
+        $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
     }
@@ -125,14 +122,11 @@ class ExternalCompaniesController extends BaseRestController
     public function update($id)
     {
         $this->validate($this->request, $this->request->updateRules());
-        /** @var Resource $resource */
-        $resource = $this->resources->findOrFail($id);
+        /** @var ExternalCompany $resource */
+        $resource = $this->repository->find($id);
         $data = $this->request->all();
-        /**
-         * @ToDo: Handle admin tokens
-         * @see AWS-19-Request-Token
-         */
-        $data['updated_by'] = $this->currentUser->id;
+
+        $data['updated_by'] = $this->currentAdmin->id;
         $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');

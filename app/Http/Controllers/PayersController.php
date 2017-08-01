@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Payer;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Resources\Payer;
 
 class PayersController extends BaseRestController
 {
@@ -130,12 +130,18 @@ class PayersController extends BaseRestController
      *
      * Get array of enrollment required fields for a payer.
      *
-     * @param  \DentalSleepSolutions\Contracts\Resources\Payer  $payer
+     * @param Request $request
+     * @param int|null $payerId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function requiredFields(Payer $payer, Request $request)
+    public function requiredFields(Request $request, $payerId = null)
     {
-        $fields = $payer->requiredFields($request->get('endpoint'));
+        $fields = [];
+        if ($payerId) {
+            /** @var Payer $payer */
+            $payer = $this->repository->find($payerId);
+            $fields = $payer->requiredFields($request->get('endpoint'));
+        }
 
         return ApiResponse::responseOk('', $fields);
     }

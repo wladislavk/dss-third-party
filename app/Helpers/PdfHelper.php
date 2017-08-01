@@ -3,8 +3,10 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Barryvdh\DomPDF\PDF;
-use DentalSleepSolutions\Eloquent\Dental\User;
-use DentalSleepSolutions\Eloquent\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Structs\PdfData;
 use DentalSleepSolutions\Structs\PdfHeaderData;
 use DentalSleepSolutions\Wrappers\FileWrapper;
@@ -23,24 +25,24 @@ class PdfHelper
     /** @var FileWrapper */
     private $fileWrapper;
 
-    /** @var User */
-    private $userModel;
+    /** @var UserRepository */
+    private $userRepository;
 
-    /** @var Letter */
-    private $letterModel;
+    /** @var LetterRepository */
+    private $letterRepository;
 
     public function __construct(
         PDF $domPdfWrapper,
         UrlGenerator $urlGenerator,
         FileWrapper $fileWrapper,
-        User $userModel,
-        Letter $letterModel
+        UserRepository $userRepository,
+        LetterRepository $letterRepository
     ) {
         $this->domPdfWrapper = $domPdfWrapper;
         $this->urlGenerator = $urlGenerator;
         $this->fileWrapper = $fileWrapper;
-        $this->userModel = $userModel;
-        $this->letterModel = $letterModel;
+        $this->userRepository = $userRepository;
+        $this->letterRepository = $letterRepository;
     }
 
     /**
@@ -77,7 +79,7 @@ class PdfHelper
     private function addDoctorData($docId, $letterId, PdfData $pdfData)
     {
         /** @var User|null $doctor */
-        $doctor = $this->userModel->find($docId);
+        $doctor = $this->userRepository->find($docId);
         // TODO: what is 2?
         if (!$doctor || $doctor->user_type != 2) {
             return;
@@ -92,7 +94,7 @@ class PdfHelper
             return;
         }
         /** @var Letter|null $letter */
-        $letter = $this->letterModel->find($letterId);
+        $letter = $this->letterRepository->find($letterId);
         if ($letter) {
             $pdfData->fontData->family = $letter->font_family;
             $pdfData->fontData->size = $letter->font_size;

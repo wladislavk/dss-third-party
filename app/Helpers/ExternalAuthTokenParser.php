@@ -2,9 +2,11 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Contracts\Repositories\ExternalCompanies;
-use DentalSleepSolutions\Contracts\Repositories\ExternalUsers;
-use DentalSleepSolutions\Eloquent\User as UserView;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\StaticClasses\SudoHelper;
 
 /**
  * Class ExternalAuthTokenParser
@@ -17,14 +19,14 @@ class ExternalAuthTokenParser
     const COMPANY_KEY_INVALID = 'Company key is not valid';
     const USER_KEY_INVALID = 'User key is not valid';
 
-    /** @var ExternalCompanies */
-    private $companiesRepository;
+    /** @var ExternalCompanyRepository */
+    private $externalCompanyRepository;
 
-    /** @var ExternalUsers */
-    private $usersRepository;
+    /** @var ExternalUserRepository */
+    private $externalUserRepository;
 
-    /** @var UserView */
-    private $userView;
+    /** @var UserRepository */
+    private $userRepository;
 
     /** @var string */
     private $error;
@@ -32,19 +34,19 @@ class ExternalAuthTokenParser
     /**
      * ExternalAuthTokenParser constructor.
      *
-     * @param ExternalCompanies $companiesRepository
-     * @param ExternalUsers     $usersRepository
-     * @param UserView          $userView
+     * @param ExternalCompanyRepository $externalCompanyRepository
+     * @param ExternalUserRepository    $externalUserRepository
+     * @param UserRepository            $userRepository
      */
     public function __construct(
-        ExternalCompanies $companiesRepository,
-        ExternalUsers $usersRepository,
-        UserView $userView
+        ExternalCompanyRepository $externalCompanyRepository,
+        ExternalUserRepository $externalUserRepository,
+        UserRepository $userRepository
     )
     {
-        $this->companiesRepository = $companiesRepository;
-        $this->usersRepository = $usersRepository;
-        $this->userView = $userView;
+        $this->externalCompanyRepository = $externalCompanyRepository;
+        $this->externalUserRepository = $externalUserRepository;
+        $this->userRepository = $userRepository;
 
         $this->setError(self::NO_ERROR);
     }
@@ -52,7 +54,7 @@ class ExternalAuthTokenParser
     /**
      * @param string $companyKey
      * @param string $userKey
-     * @return UserView|null
+     * @return User|null
      */
     public function getUserData($companyKey, $userKey)
     {
@@ -68,21 +70,21 @@ class ExternalAuthTokenParser
             return null;
         }
 
-        $externalCompany = $this->companiesRepository->where('api_key', $companyKey)->first();
+        $externalCompany = $this->externalCompanyRepository->findWhere(['api_key' => $companyKey])->first();
 
         if (!$externalCompany) {
             $this->setError(self::COMPANY_KEY_INVALID);
             return null;
         }
 
-        $externalUser = $this->usersRepository->where('api_key', $userKey)->first();
+        $externalUser = $this->externalUserRepository->findWhere(['api_key' => $userKey])->first();
 
         if (!$externalUser) {
             $this->setError(self::USER_KEY_INVALID);
             return null;
         }
 
-        $user = $this->userView->find('u_' . $externalUser->user_id)->first();
+        $user = $this->userRepository->find(SudoHelper::USER_PREFIX . $externalUser->user_id)->first();
 
         if (!$user) {
             $this->setError(self::USER_KEY_INVALID);

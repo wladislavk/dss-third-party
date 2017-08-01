@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Http\Middleware;
 use Closure;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Helpers\ExternalAuthTokenParser as TokenParser;
+use Illuminate\Http\Request;
 
 class ExternalCompanyMiddleware
 {
@@ -21,14 +22,14 @@ class ExternalCompanyMiddleware
         $this->tokenParser = $tokenParser;
     }
 
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $currentUser = $this->tokenParser->getUserData(
-            $request->input('api_key_company', ''), $request->input('api_key_user', '')
-        );
+        $companyKey = $request->input('api_key_company');
+        $userKey = $request->input('api_key_user');
+
+        $currentUser = $this->tokenParser->getUserData($companyKey, $userKey);
 
         if ($currentUser) {
-            $request->attributes->set('currentUser', $currentUser);
             return $next($request);
         }
 

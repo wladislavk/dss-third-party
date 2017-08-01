@@ -2,19 +2,34 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as IlluminateBaseController;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use DentalSleepSolutions\Http\Requests\Request;
+use Illuminate\Config\Repository as Config;
+use DentalSleepSolutions\Helpers\ExternalAuthTokenParser;
+use Illuminate\Http\Request;
+use DentalSleepSolutions\Eloquent\Models\User;
 
 abstract class ExternalBaseController extends IlluminateBaseController
 {
     use DispatchesJobs, ValidatesRequests;
 
+    /** @var User|null */
     protected $currentUser;
 
-    public function __construct(Request $request)
-    {
-        $this->currentUser = $request->attributes->get('currentUser');
+    /** @var Config */
+    protected $config;
+
+    public function __construct(
+        Config $config,
+        ExternalAuthTokenParser $authTokenParser,
+        Request $request
+    ) {
+        $this->config = $config;
+
+        $companyKey = $request->input('api_key_company');
+        $userKey = $request->input('api_key_user');
+
+        $this->currentUser = $authTokenParser->getUserData($companyKey, $userKey);
     }
 }

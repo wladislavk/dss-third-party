@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\Contact;
-use DentalSleepSolutions\Eloquent\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Wrappers\FileWrapper;
 use Mockery\MockInterface;
@@ -17,9 +19,9 @@ class GeneralHelperTest extends UnitTestCase
     public function setUp()
     {
         $fileWrapper = $this->mockFileWrapper();
-        $patientModel = $this->mockPatientModel();
-        $contactModel = $this->mockContactModel();
-        $this->generalHelper = new GeneralHelper($fileWrapper, $patientModel, $contactModel);
+        $patientRepository = $this->mockPatientRepository();
+        $contactRepository = $this->mockContactRepository();
+        $this->generalHelper = new GeneralHelper($fileWrapper, $patientRepository, $contactRepository);
     }
 
     public function testIsSharedFile()
@@ -112,15 +114,15 @@ class GeneralHelperTest extends UnitTestCase
         return true;
     }
 
-    private function mockPatientModel()
+    private function mockPatientRepository()
     {
-        /** @var Patient|MockInterface $patientModel */
-        $patientModel = \Mockery::mock(Patient::class);
-        $patientModel->shouldReceive('getContactInfo')
+        /** @var PatientRepository|MockInterface $patientRepository */
+        $patientRepository = \Mockery::mock(PatientRepository::class);
+        $patientRepository->shouldReceive('getContactInfo')
             ->andReturnUsing([$this, 'getPatientContactInfoCallback']);
-        $patientModel->shouldReceive('getReferralList')
+        $patientRepository->shouldReceive('getReferralList')
             ->andReturnUsing([$this, 'getReferralListCallback']);
-        return $patientModel;
+        return $patientRepository;
     }
 
     public function getPatientContactInfoCallback()
@@ -139,13 +141,13 @@ class GeneralHelperTest extends UnitTestCase
         return [$firstReferral];
     }
 
-    private function mockContactModel()
+    private function mockContactRepository()
     {
-        /** @var Contact|MockInterface $contactModel */
-        $contactModel = \Mockery::mock(Contact::class);
-        $contactModel->shouldReceive('getContactInfo')
+        /** @var ContactRepository|MockInterface $contactRepository */
+        $contactRepository = \Mockery::mock(ContactRepository::class);
+        $contactRepository->shouldReceive('getContactInfo')
             ->andReturnUsing([$this, 'getContactContactInfoCallback']);
-        return $contactModel;
+        return $contactRepository;
     }
 
     public function getContactContactInfoCallback($letterId)

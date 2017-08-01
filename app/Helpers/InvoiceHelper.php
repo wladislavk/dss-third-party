@@ -2,9 +2,10 @@
 
 namespace DentalSleepSolutions\Helpers;
 
-use DentalSleepSolutions\Eloquent\Dental\PercaseInvoice;
-use DentalSleepSolutions\Eloquent\Enrollments\Enrollment;
-use DentalSleepSolutions\Eloquent\Dental\EnrollmentInvoice;
+use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\EnrollmentInvoiceRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PercaseInvoiceRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Enrollments\EnrollmentRepository;
 use DentalSleepSolutions\Exceptions\InvoiceException;
 use DentalSleepSolutions\Wrappers\RequestWrapper;
 
@@ -25,27 +26,27 @@ class InvoiceHelper
     const DOC_ID_COLUMN = 'docid';
     const COMPANY_ID_COLUMN = 'companyid';
 
-    /** @var PercaseInvoice */
-    private $perCaseInvoiceModel;
+    /** @var PercaseInvoiceRepository */
+    private $perCaseInvoiceRepository;
 
-    /** @var Enrollment */
-    private $enrollmentModel;
+    /** @var EnrollmentRepository */
+    private $enrollmentRepository;
 
-    /** @var EnrollmentInvoice */
-    private $enrollmentInvoiceModel;
+    /** @var EnrollmentInvoiceRepository */
+    private $enrollmentInvoiceRepository;
 
     /** @var RequestWrapper */
     private $requestWrapper;
 
     public function __construct(
-        PercaseInvoice $perCaseInvoiceModel,
-        Enrollment $enrollmentModel,
-        EnrollmentInvoice $enrollmentInvoiceModel,
+        PercaseInvoiceRepository $perCaseInvoiceRepository,
+        EnrollmentRepository $enrollmentRepository,
+        EnrollmentInvoiceRepository $enrollmentInvoiceRepository,
         RequestWrapper $requestWrapper
     ) {
-        $this->perCaseInvoiceModel = $perCaseInvoiceModel;
-        $this->enrollmentModel = $enrollmentModel;
-        $this->enrollmentInvoiceModel = $enrollmentInvoiceModel;
+        $this->perCaseInvoiceRepository = $perCaseInvoiceRepository;
+        $this->enrollmentRepository = $enrollmentRepository;
+        $this->enrollmentInvoiceRepository = $enrollmentInvoiceRepository;
         $this->requestWrapper = $requestWrapper;
     }
 
@@ -62,21 +63,19 @@ class InvoiceHelper
     {
         // TODO: this function only ever gets called with $userType of 1. do we need the first argument?
         /** @var Enrollment|null $enrollment */
-        $enrollment = $this->enrollmentModel->find($enrollmentId);
+        $enrollment = $this->enrollmentRepository->find($enrollmentId);
         if (!$enrollment) {
             throw new InvoiceException("Enrollment with ID $enrollmentId does not exist");
         }
 
         $column = $this->getColumn($userType);
-        $invoiceId = $this->perCaseInvoiceModel->getInvoiceIdWithEnrollmentInvoice(
-            $column,
-            $userId,
-            self::DSS_INVOICE_PENDING
+        $invoiceId = $this->perCaseInvoiceRepository->getInvoiceIdWithEnrollmentInvoice(
+            $column, $userId, self::DSS_INVOICE_PENDING
         );
 
         if (!$invoiceId) {
             $existingInvoiceId = $this->find($userType, $userId);
-            $invoiceId = $this->enrollmentInvoiceModel->add($existingInvoiceId, $this->getIp());
+            $invoiceId = $this->enrollmentInvoiceRepository->add($existingInvoiceId, $this->getIp());
         }
 
         $enrollment->enrollment_invoice_id = $invoiceId;
@@ -96,12 +95,12 @@ class InvoiceHelper
         $column = $this->getColumn($userType);
         $invoiceType = $this->getInvoiceType($userType);
 
-        $invoiceId = $this->perCaseInvoiceModel->getInvoiceId(
+        $invoiceId = $this->perCaseInvoiceRepository->getInvoiceId(
             $column, $userId, $invoiceType, self::DSS_INVOICE_PENDING
         );
 
         if (!$invoiceId) {
-            $invoiceId = $this->perCaseInvoiceModel->add(
+            $invoiceId = $this->perCaseInvoiceRepository->add(
                 $column,
                 $userId,
                 $invoiceType,

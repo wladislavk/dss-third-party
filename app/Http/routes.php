@@ -12,6 +12,9 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('refresh-token', 'Api\ApiAuthController@refreshToken');
 });
 
+Route::get('health-check', 'Api\HealthCheckController@index');
+
+
 /*
 |--------------------------------------------------------------------------
 | Eligible webhooks
@@ -303,10 +306,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('users/check-logout', 'UsersController@checkLogout');
     Route::post('users/letter-info', 'UsersController@getLetterInfo');
 
-    Route::resource('memo', 'Api\ApiAdminMemoController', ['except' => ['create', 'edit', 'show']]);
+    Route::resource('memo', 'Api\ApiAdminMemoController', ['except' => ['create', 'edit']]);
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');
-
-    Route::get('health-check', 'Api\HealthCheckController@index');
 
     // grouped routes
 

@@ -2,12 +2,15 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientContactRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Contracts\Repositories\PatientContacts;
 use Illuminate\Http\Request;
 
 class PatientContactsController extends BaseRestController
 {
+    /** @var PatientContactRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/patient-contacts",
@@ -139,16 +142,15 @@ class PatientContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param PatientContacts $resources
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCurrent(PatientContacts $resources, Request $request)
+    public function getCurrent(Request $request)
     {
         $patientId = $request->input('patientId', 0);
         $docId     = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getCurrent($docId, $patientId);
+        $data = $this->repository->getCurrent($docId, $patientId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -159,14 +161,13 @@ class PatientContactsController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param PatientContacts $resources
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getNumber(PatientContacts $resources)
+    public function getNumber()
     {
         $docId = $this->currentUser->docid ?: 0;
 
-        $data = $resources->getNumber($docId);
+        $data = $this->repository->getNumber($docId);
 
         return ApiResponse::responseOk('', $data);
     }

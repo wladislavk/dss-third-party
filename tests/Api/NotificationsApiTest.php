@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\Notification;
+use DentalSleepSolutions\Eloquent\Models\Dental\Notification;
 use Tests\TestCases\ApiTestCase;
 
 class NotificationsApiTest extends ApiTestCase

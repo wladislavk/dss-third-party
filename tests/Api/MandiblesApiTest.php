@@ -3,7 +3,7 @@ namespace Tests\Api;
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use DentalSleepSolutions\Eloquent\Dental\Mandible;
+use DentalSleepSolutions\Eloquent\Models\Dental\Mandible;
 use Tests\TestCases\ApiTestCase;
 
 class MandiblesApiTest extends ApiTestCase

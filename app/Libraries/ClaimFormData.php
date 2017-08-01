@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Libraries;
 
-// Need to rewrite this class to laravel structure
+// @todo: Need to rewrite this class to laravel structure
 
 require_once 'constants.inc';
 
@@ -208,7 +208,7 @@ class ClaimFormData
      * @return string
      */
     private static function prepareClaimDataFields ($claimData) {
-        $db = new Db();
+        $db = new \Db();
 
         $dbFields = [
             'pica1',
@@ -563,7 +563,7 @@ class ClaimFormData
      * @return array
      */
     public static function storedLedgerItems ($claimId) {
-        $db = new Db();
+        $db = new \Db();
 
         $claimId = intval($claimId);
         $claimData = $db->getRow("SELECT * FROM dental_insurance WHERE insuranceid = '$claimId'");
@@ -631,7 +631,7 @@ class ClaimFormData
      * @return array
      */
     public static function associatedLedgerItems ($claimId) {
-        $db = new Db();
+        $db = new \Db();
         $claimId = intval($claimId);
 
         $dynamicItems = self::dynamicLedgerItems($claimId);
@@ -778,7 +778,7 @@ class ClaimFormData
      * @return array
      */
     public static function dynamicClaimData ($patientId, $producerId, $sequence='primary', $primaryClaimId=null) {
-        $db = new Db();
+        $db = new \Db();
 
         $patientId = intval($patientId);
         $producerId = intval($producerId);
@@ -1089,7 +1089,7 @@ class ClaimFormData
      * @return array|null
      */
     public static function historicClaimData ($claimId, $historyId) {
-        $db = new Db();
+        $db = new \Db();
 
         $claimId = intval($claimId);
         $historyId = intval($historyId);
@@ -1119,7 +1119,7 @@ class ClaimFormData
         $empty=false,
         $forcedStatus=false
     ) {
-        $db = new Db();
+        $db = new \Db();
 
         $patientId = intval($patientId);
         $producerId = intval($producerId);
@@ -1219,7 +1219,7 @@ class ClaimFormData
      * @return array
      */
     public static function dynamicDataForClaim ($claimId) {
-        $db = new Db();
+        $db = new \Db();
         $claimId = intval($claimId);
 
         $claimDetails = $db->getRow("SELECT patientid, producer, status, primary_claim_id
@@ -1255,7 +1255,7 @@ class ClaimFormData
      * @return array
      */
     public static function storedDataForClaim ($claimId, $patientId=null) {
-        $db = new Db();
+        $db = new \Db();
         $claimId = intval($claimId);
 
         $sql = "SELECT * FROM dental_insurance WHERE insuranceid = '$claimId'";

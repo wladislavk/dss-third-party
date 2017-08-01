@@ -2,9 +2,12 @@
 
 namespace DentalSleepSolutions\Auth;
 
-use Illuminate\Support\Arr;
-use DentalSleepSolutions\Eloquent\User;
+use Illuminate\Auth\AuthManager;
 use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\StaticClasses\SudoHelper;
+use Illuminate\Support\Arr;
 
 /**
  * This class is used as Authentication provider implementation
@@ -15,16 +18,28 @@ use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
  */
 class Legacy extends IlluminateAuthAdapter
 {
+    /** @var UserRepository */
+    private $userRepository;
+
+    public function __construct(
+        AuthManager $auth,
+        UserRepository $userRepository
+    )
+    {
+        parent::__construct($auth);
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Legacy-code hashed password validation.
      *
-     * @param  \DentalSleepSolutions\Eloquent\User $user
-     * @param  string $password
+     * @param User $user
+     * @param string $password
      * @return boolean
      */
-    protected function check($user, $password)
+    protected function check(User $user, $password)
     {
-        return $user->password === hash('sha256', $password . $user->salt);
+        return $user->password === $this->hashPassword($password, $user->salt);
     }
 
     /**
@@ -37,7 +52,7 @@ class Legacy extends IlluminateAuthAdapter
     {
         $password = Arr::pull($credentials, 'password');
 
-        $user = User::where($credentials)->first();
+        $user = $this->userRepository->findWhere($credentials)->first();
 
         if ($user && $this->check($user, $password)) {
             $this->auth->login($user, false);
@@ -51,33 +66,40 @@ class Legacy extends IlluminateAuthAdapter
     /**
      * Check user ID. DSS can use a composite ID, to log in an admin AND some user, "login as" behavior
      *
-     * @param int|string $id
-     * @return array|bool
+     * @param mixed $id
+     * @return bool|array
      */
-    public function byId ($id)
+    public function byId($id)
     {
         /**
          * Single ID
          */
-        if (strpos($id, '|') === false) {
+        if (SudoHelper::isSimpleId($id)) {
             return parent::byId($id);
         }
 
-        /**
-         * Wrong ID structure
-         */
-        if (!preg_match('/^(a_\d+[|]u_\d+|u_\d+[|]a_\d+)$/', $id)) {
+        if (!SudoHelper::isSudoId($id)) {
             return false;
         }
 
-        list($adminId, $userId) = explode('|', $id, 2);
-        $admin = parent::byId($adminId);
-        $user = parent::byId($userId);
+        $sudoId = SudoHelper::parseId($id);
+        $admin = parent::byId($sudoId->adminId);
+        $user = parent::byId($sudoId->userId);
 
         if ($admin && $user) {
             return [$admin, $user];
         }
 
         return false;
+    }
+
+    /**
+     * @param string $password
+     * @param string $salt
+     * @return string
+     */
+    public function hashPassword($password, $salt)
+    {
+        return hash('sha256', $password . $salt);
     }
 }

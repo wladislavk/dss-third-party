@@ -2,10 +2,13 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
+use DentalSleepSolutions\Helpers\ExternalAuthTokenParser;
+use Illuminate\Config\Repository as Config;
+use Illuminate\Http\Request;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\ExternalBaseController;
 use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
-use DentalSleepSolutions\Contracts\Repositories\ExternalPatients;
 use EventHomes\Api\FractalHelper;
 use DentalSleepSolutions\Http\Transformers\ExternalPatient as Transformer;
 use Carbon\Carbon;
@@ -15,16 +18,33 @@ class ExternalPatientController extends ExternalBaseController
 {
     use FractalHelper;
 
+    /** @var Transformer */
+    private $transformer;
+
+    public function __construct(
+        Config $config,
+        Request $request,
+        ExternalAuthTokenParser $authTokenParser,
+        Transformer $transformer
+    )
+    {
+        parent::__construct(
+            $config,
+            $authTokenParser,
+            $request
+        );
+
+        $this->transformer = $transformer;
+    }
+
     /**
-     * Display the specified resource.
-     *
-     * @param  \DentalSleepSolutions\Contracts\Repositories\ExternalPatients $resources
-     * @param  \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore $request
+     * @param \DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository $repository
+     * @param \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore             $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store(ExternalPatients $resources, ExternalPatientStore $request) {
-        $transformer = new Transformer;
-        $data = $transformer->fromTransform($request->all());
+    public function store(ExternalPatientRepository $repository, ExternalPatientStore $request) {
+        $data = $this->transformer->fromTransform($request->all());
 
         $created = false;
 
@@ -42,13 +62,10 @@ class ExternalPatientController extends ExternalBaseController
             unset($patientData['p_m_address2']);
         }
 
-        $externalPatient = $resources
-            ->where('software', $externalCompanyId)
-            ->where('external_id', $externalPatientId)
-            ->first();
+        $externalPatient = $repository->findByExternalCompanyAndPatient($externalCompanyId, $externalPatientId);
 
         if (!$externalPatient) {
-            $externalPatient = $resources->create($externalPatientData);
+            $externalPatient = $repository->create($externalPatientData);
         } else {
             $externalPatient->update($externalPatientData);
             $externalPatient->update(['dirty' => 1]);
@@ -81,16 +98,22 @@ class ExternalPatientController extends ExternalBaseController
             $created = true;
         }
 
-        $redirectUrl = env('FRONTEND_URL') . 'manage/external-patient.php?' .
+        $redirectUrl = join('', [
+            $this->config->get('app.external_patient.frontend_url'),
+            $this->config->get('app.external_patient.redirect_uri'),
+            '?',
             http_build_query([
                 'sw' => Arr::get($data, 'external_patient.software'),
                 'id' => Arr::get($data, 'external_patient.external_id'),
-            ]);
+            ])
+        ]);
 
-        return ApiResponse::responseOk(
-            '',
-            ['redirect_url' => $redirectUrl],
-            $created ? 201 : 200
-        );
+        $httpStatus = 200;
+
+        if ($created) {
+            $httpStatus = 201;
+        }
+
+        return ApiResponse::responseOk('', ['redirect_url' => $redirectUrl], $httpStatus);
     }
 }

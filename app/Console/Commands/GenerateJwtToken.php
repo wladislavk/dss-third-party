@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Console\Commands;
 use Illuminate\Console\Command;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
-use DentalSleepSolutions\Auth\Legacy;
+use DentalSleepSolutions\StaticClasses\SudoHelper;
 
 /**
  * This is a helper command for easy generating JWT tokens from
@@ -33,17 +33,10 @@ class GenerateJwtToken extends Command
     /** @var UserRepository */
     private $userRepository;
 
-    /** @var Legacy */
-    private $legacyAuth;
-
-    public function __construct(
-        UserRepository $userRepository,
-        Legacy $legacyAuth
-    )
+    public function __construct(UserRepository $userRepository)
     {
         parent::__construct();
         $this->userRepository = $userRepository;
-        $this->legacyAuth = $legacyAuth;
     }
 
     public function handle()
@@ -52,7 +45,7 @@ class GenerateJwtToken extends Command
          * DSS can log a single user (FO/BO) or two users (BO "logged in as" FO).
          * This method can return more than one result, if the given ID has a separator "|"
          */
-        $userData = $this->userRepository->findByIdOrEmail($this->argument('id'));
+        $userData = $this->userRepository->findById($this->argument('id'));
 
         if (!$userData || !isset($userData[0])) {
             return;
@@ -66,7 +59,7 @@ class GenerateJwtToken extends Command
         $userModel = $userData[0];
 
         if (isset($userData[1])) {
-            $userModel->id = $this->legacyAuth->composeId($userData[0]->id, $userData[1]->id);
+            $userModel->id = SudoHelper::sudoId($userData[0]->id, $userData[1]->id);
         }
 
         $this->info(JWTAuth::fromUser($userModel));

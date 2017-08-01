@@ -3,24 +3,10 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use DentalSleepSolutions\Eloquent\Models\User;
-use Illuminate\Container\Container as Application;
-use Illuminate\Database\Eloquent\Builder;
-use DentalSleepSolutions\Auth\Legacy;
+use DentalSleepSolutions\StaticClasses\SudoHelper;
 
 class UserRepository extends AbstractRepository
 {
-    /** @var Legacy */
-    private $legacyAuth;
-
-    public function __construct(
-        Application $app,
-        Legacy $legacyAuth
-    )
-    {
-        parent::__construct($app);
-        $this->legacyAuth = $legacyAuth;
-    }
-
     public function model()
     {
         return User::class;
@@ -28,61 +14,43 @@ class UserRepository extends AbstractRepository
 
     /**
      * @param int|string $id
+     * @param array $columns
      * @return User|null
      */
-    public function findByIdOrEmail($id)
+    public function findById($id, $columns = ['*'])
     {
-        if (!strlen((string)$id)) {
-            return null;
+        if (!SudoHelper::isSudoId($id)) {
+            return $this->model->where('id', $id)
+                ->orderBy('id', 'ASC')
+                ->get($columns)
+                ;
         }
 
-        $ids = [];
-        $compositeId = $this->legacyAuth->decomposeId($id);
+        $sudoId = SudoHelper::parseId($id);
+        $ids = [
+            $sudoId->id,
+            $sudoId->adminId,
+            $sudoId->userId,
+        ];
 
-        if (strlen($compositeId->adminId)) {
-            $ids[] = $compositeId->adminId;
-        }
-
-        if (strlen($compositeId->userId)) {
-            $ids[] = $compositeId->userId;
-        }
-
-        return $this->model->where(function (Builder $q) use ($id, $ids) {
-            $q->where('email', $id);
-
-            if (count($ids)) {
-                $q->orWhereIn('id', $ids);
-            }
-        })
+        return $this->model->whereIn('id', $ids)
             ->orderBy('id', 'ASC')
-            ->get()
+            ->get($columns)
             ;
     }
 
-    public function findByIdOrField($field, $value = null, $columns = ['*'])
+    /**
+     * @param string $field
+     * @param mixed  $value
+     * @param array $columns
+     * @return \DentalSleepSolutions\Eloquent\Models\User|mixed|null
+     */
+    public function findByField($field, $value = null, $columns = ['*'])
     {
-        if (is_string($value) && $this->legacyAuth->isValidCompositeId($value)) {
-            $ids = [];
-
-            $compositeId = $this->legacyAuth->decomposeId($value);
-
-            if (strlen($compositeId->adminId)) {
-                $ids[] = $compositeId->adminId;
-            }
-
-            if (strlen($compositeId->userId)) {
-                $ids[] = $compositeId->userId;
-            }
-
-            if (count($ids)) {
-                $value = $ids;
-            }
+        if ($field === 'id') {
+            return self::findById($value, $columns);
         }
 
-        if (is_array($value)) {
-            return $this->findWhereIn($field, $value, $columns);
-        }
-
-        return $this->findWhere([$field => $value], $columns);
+        return parent::findByField($field, $value, $columns);
     }
 }

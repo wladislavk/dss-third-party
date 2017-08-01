@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Structs;
 
-class CompositeId
+class SudoId
 {
     /** @var string */
     public $id = '';

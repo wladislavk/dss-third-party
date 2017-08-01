@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use DentalSleepSolutions\StaticClasses\SudoHelper;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as IlluminateBaseController;
@@ -72,7 +73,7 @@ abstract class ExternalBaseController extends IlluminateBaseController
             return null;
         }
 
-        $user = $this->userViewRepository->find(UserView::USER_PREFIX . $externalUser->user_id)->first();
+        $user = $this->userViewRepository->find(SudoHelper::USER_PREFIX . $externalUser->user_id)->first();
 
         if (!$user) {
             return null;

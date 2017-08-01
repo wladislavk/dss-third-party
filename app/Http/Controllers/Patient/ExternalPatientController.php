@@ -23,17 +23,12 @@ class ExternalPatientController extends ExternalBaseController
 
     public function __construct(
         Config $config,
-        Request $request,
         ExternalAuthTokenParser $authTokenParser,
+        Request $request,
         Transformer $transformer
     )
     {
-        parent::__construct(
-            $config,
-            $authTokenParser,
-            $request
-        );
-
+        parent::__construct($config, $authTokenParser, $request);
         $this->transformer = $transformer;
     }
 
@@ -44,7 +39,7 @@ class ExternalPatientController extends ExternalBaseController
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function store(ExternalPatientRepository $repository, ExternalPatientStore $request) {
-        $data = $this->transformer->fromTransform($request->all());
+        $data = $this->transformer->inverseTransform($request->all());
 
         $created = false;
 

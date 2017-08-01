@@ -2,10 +2,11 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
+use DentalSleepSolutions\StaticClasses\SudoHelper;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Helpers\AuthTokenParser;
-use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\Eloquent\User as UserView;
+use Illuminate\Http\Request;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use Tymon\JWTAuth\JWTAuth;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -19,19 +20,19 @@ class ApiAuthController extends Controller
     /** @var JWTAuth */
     private $auth;
 
-    /** @var UserView */
-    private $resources;
+    /** @var UserRepository */
+    private $userRepository;
 
     public function __construct(
         Config $config,
-        AuthTokenParser $authToken,
+        AuthTokenParser $authTokenParser,
         JWTAuth $auth,
-        UserView $resources
+        UserRepository $userRepository
     )
     {
-        parent::__construct($config, $authToken);
+        parent::__construct($config, $authTokenParser);
         $this->auth = $auth;
-        $this->resources = $resources;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -63,7 +64,7 @@ class ApiAuthController extends Controller
     /**
      * @return array|JsonResponse
      */
-    public function authHealth ()
+    public function authHealth()
     {
         if (!$this->config->get('app.debug') || $this->config->get('app.env') === 'production') {
             return ApiResponse::responseError('Not Found', 404);
@@ -89,7 +90,13 @@ class ApiAuthController extends Controller
          * DSS can log a single user (FO/BO) or two users (BO "logged in as" FO).
          * This method can return more than one result, if the given ID has a separator "|"
          */
-        $resource = $this->resources->where('username', $request->input('username'))->where('admin', 0)->first();
+        $resource = $this->userRepository
+            ->findWhere([
+                'username' => $request->input('username'),
+                'admin' => 0,
+            ])
+            ->first()
+        ;
 
         if (!$resource) {
             return ApiResponse::responseError('Invalid credentials', 422);
@@ -100,7 +107,7 @@ class ApiAuthController extends Controller
          * with a combined approach. As a workaround, the ID of a single model will be altered to pass along the
          * list of IDs needed for "logged in as".
          */
-        $resource->id = "a_{$this->currentAdmin->id}|{$resource->id}";
+        $resource->id = SudoHelper::sudoId(SudoHelper::ADMIN_PREFIX . $this->currentAdmin->id, $resource->id);
         return ['status' => 'Authenticated', 'token' => $this->auth->fromUser($resource)];
     }
 

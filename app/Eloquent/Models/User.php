@@ -19,9 +19,6 @@ class User extends AbstractModel implements AuthenticatableContract
 {
     use Authenticatable;
 
-    const USER_PREFIX = 'u_';
-    const ADMIN_PREFIX = 'a_';
-
     /**
      * @todo View generated on database/migrations/2015_12_22_203443_views_combine_users.php
      * @todo View altered in AWS-19-Request-Token

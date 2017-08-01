@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use DentalSleepSolutions\StaticClasses\SudoHelper;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Tymon\JWTAuth\JWTAuth;
@@ -131,7 +132,7 @@ abstract class Controller extends BaseController
      */
     private function returnIfUser(User $user, UserRepository $userRepository)
     {
-        $user = $this->returnIfModelType($user, User::USER_PREFIX);
+        $user = $this->returnIfModelType($user, SudoHelper::USER_PREFIX);
 
         if (!$user) {
             return null;
@@ -164,7 +165,7 @@ abstract class Controller extends BaseController
      */
     private function returnIfAdmin(User $user)
     {
-        return $this->returnIfModelType($user, User::ADMIN_PREFIX);
+        return $this->returnIfModelType($user, SudoHelper::ADMIN_PREFIX);
     }
 
     /**

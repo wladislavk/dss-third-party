@@ -3,6 +3,7 @@
 namespace Tests\Unit\Auth;
 
 use DentalSleepSolutions\Auth\Legacy;
+use DentalSleepSolutions\StaticClasses\SudoHelper;
 use Illuminate\Auth\AuthManager;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
@@ -13,9 +14,10 @@ class LegacyTest extends UnitTestCase
 {
     const USERNAME = 'username';
     const PASSWORD = 'password';
-    const USER_ID = User::USER_PREFIX . '1';
-    const ADMIN_ID = User::ADMIN_PREFIX . '1';
-    const INVALID_ADMIN_ID = User::ADMIN_PREFIX . '2';
+    const SALT = '';
+    const USER_ID = SudoHelper::USER_PREFIX . '1';
+    const ADMIN_ID = SudoHelper::ADMIN_PREFIX . '1';
+    const INVALID_ADMIN_ID = SudoHelper::ADMIN_PREFIX . '2';
 
     /** @var array */
     private $whereArguments;
@@ -60,6 +62,12 @@ class LegacyTest extends UnitTestCase
         $this->assertEquals(true, $result);
     }
 
+    public function testHashPassword()
+    {
+        $result = $this->legacy->hashPassword(self::PASSWORD, self::SALT);
+        $this->assertEquals($this->hashPassword(), $result);
+    }
+
     /**
      * @dataProvider byIdDataProvider
      */
@@ -67,36 +75,6 @@ class LegacyTest extends UnitTestCase
     {
         $actualResult = $this->legacy->byId($id);
         $this->assertEquals($expectedResult, $actualResult, $perCaseDescription);
-    }
-
-    public function testIsSimpleId()
-    {
-        $result = $this->legacy->isSimpleId('');
-        $this->assertTrue($result);
-    }
-
-    public function testIsNotSimpleId()
-    {
-        $result = $this->legacy->isSimpleId(Legacy::LOGIN_ID_DELIMITER);
-        $this->assertFalse($result);
-    }
-
-    public function testIsValidCompositeId()
-    {
-        $result = $this->legacy->isValidCompositeId(self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID);
-        $this->assertTrue($result);
-    }
-
-    public function testIsNotValidCompositeId()
-    {
-        $result = $this->legacy->isValidCompositeId('');
-        $this->assertFalse($result);
-    }
-
-    public function testComposeId()
-    {
-        $result = $this->legacy->composeId(self::ADMIN_ID, self::USER_ID);
-        $this->assertEquals(self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID, $result);
     }
 
     public function byIdDataProvider()
@@ -108,23 +86,23 @@ class LegacyTest extends UnitTestCase
                 true
             ],
             [
-                'Composite ADMIN_ID/USER_ID is a valid ID, method returns array',
-                self::ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID,
+                'Sudo ADMIN_ID/USER_ID is a valid ID, method returns array',
+                self::ADMIN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::USER_ID,
                 [true, true]
             ],
             [
-                'Composite INVALID_ADMIN_ID/USER_ID is not a valid ID',
-                self::INVALID_ADMIN_ID . Legacy::LOGIN_ID_DELIMITER . self::USER_ID,
+                'Sudo INVALID_ADMIN_ID/USER_ID is not a valid ID',
+                self::INVALID_ADMIN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::USER_ID,
                 false
             ],
             [
-                'Composite USER_ID/ADMIN_ID is not a valid ID',
-                self::USER_ID . Legacy::LOGIN_ID_DELIMITER . self::ADMIN_ID,
+                'Sudo USER_ID/ADMIN_ID is not a valid ID',
+                self::USER_ID . SudoHelper::LOGIN_ID_DELIMITER . self::ADMIN_ID,
                 false
             ],
             [
                 'Incomplete composite ID is not a valid ID',
-                self::USER_ID . Legacy::LOGIN_ID_DELIMITER,
+                self::USER_ID . SudoHelper::LOGIN_ID_DELIMITER,
                 false
             ],
         ];
@@ -159,7 +137,7 @@ class LegacyTest extends UnitTestCase
         $this->whereArguments = [];
 
         $mock = \Mockery::mock(UserRepository::class);
-        $mock->shouldReceive('where')
+        $mock->shouldReceive('findWhere')
             ->atMost(1)
             ->andReturnUsing(function (array $arguments) use ($mock) {
                 $this->whereArguments = $arguments;
@@ -185,7 +163,7 @@ class LegacyTest extends UnitTestCase
         $mock = \Mockery::mock(User::class);
         $mock->shouldReceive('getAttribute')
             ->with('salt')
-            ->andReturn('')
+            ->andReturn(self::SALT)
         ;
         $mock->shouldReceive('getAttribute')
             ->with('password')
@@ -197,6 +175,6 @@ class LegacyTest extends UnitTestCase
 
     private function hashPassword()
     {
-        return hash('sha256', self::PASSWORD);
+        return hash('sha256', self::PASSWORD . self::SALT);
     }
 }

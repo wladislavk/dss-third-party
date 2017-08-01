@@ -6,7 +6,7 @@ use Illuminate\Auth\AuthManager;
 use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
-use DentalSleepSolutions\Structs\CompositeId;
+use DentalSleepSolutions\StaticClasses\SudoHelper;
 use Illuminate\Support\Arr;
 
 /**
@@ -18,9 +18,6 @@ use Illuminate\Support\Arr;
  */
 class Legacy extends IlluminateAuthAdapter
 {
-    const LOGIN_ID_DELIMITER = '|';
-    const LOGIN_ID_SECTIONS = 2;
-
     /** @var UserRepository */
     private $userRepository;
 
@@ -37,12 +34,12 @@ class Legacy extends IlluminateAuthAdapter
      * Legacy-code hashed password validation.
      *
      * @param User $user
-     * @param  string $password
+     * @param string $password
      * @return boolean
      */
-    protected function check($user, $password)
+    protected function check(User $user, $password)
     {
-        return $user->password === hash('sha256', $password . $user->salt);
+        return $user->password === $this->hashPassword($password, $user->salt);
     }
 
     /**
@@ -77,17 +74,17 @@ class Legacy extends IlluminateAuthAdapter
         /**
          * Single ID
          */
-        if ($this->isSimpleId($id)) {
+        if (SudoHelper::isSimpleId($id)) {
             return parent::byId($id);
         }
 
-        if (!$this->isValidCompositeId($id)) {
+        if (!SudoHelper::isSudoId($id)) {
             return false;
         }
 
-        $compositeId = $this->decomposeId($id);
-        $admin = parent::byId($compositeId->adminId);
-        $user = parent::byId($compositeId->userId);
+        $sudoId = SudoHelper::parseId($id);
+        $admin = parent::byId($sudoId->adminId);
+        $user = parent::byId($sudoId->userId);
 
         if ($admin && $user) {
             return [$admin, $user];
@@ -97,82 +94,12 @@ class Legacy extends IlluminateAuthAdapter
     }
 
     /**
-     * Check if the given id contains the delimiter
-     *
-     * @param string $id
-     * @return bool
-     */
-    public function isSimpleId($id)
-    {
-        $isSimple = strpos($id, self::LOGIN_ID_DELIMITER) === false;
-        return $isSimple;
-    }
-
-    /**
-     * Check if the given id conforms to the composite id structure
-     *
-     * @param string $id
-     * @return bool
-     */
-    public function isValidCompositeId($id)
-    {
-        $regexp = $this->compositeIdRegexp();
-
-        if (preg_match($regexp, $id)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Join two ids using the id separator
-     *
-     * @param string $adminId
-     * @param string $userId
+     * @param string $password
+     * @param string $salt
      * @return string
      */
-    public function composeId($adminId, $userId)
+    public function hashPassword($password, $salt)
     {
-        $compositeId = join(self::LOGIN_ID_DELIMITER, [$adminId, $userId]);
-        return $compositeId;
-    }
-
-    /**
-     * Parse the id and separate its components
-     *
-     * @param string $id
-     * @return CompositeId
-     */
-    public function decomposeId($id)
-    {
-        $compositeId = new CompositeId();
-        $compositeId->id = $id;
-
-        $regexp = $this->compositeIdRegexp();
-        preg_match($regexp, $id, $matches);
-
-        if (isset($matches['adminId'])) {
-            $compositeId->adminId = $matches['adminId'];
-        }
-
-        if (isset($matches['userId'])) {
-            $compositeId->userId = $matches['userId'];
-        }
-
-        return $compositeId;
-    }
-
-    /**
-     * @return string
-     */
-    private function compositeIdRegexp()
-    {
-        $adminPrefix = preg_quote(User::ADMIN_PREFIX);
-        $userPrefix = preg_quote(User::USER_PREFIX);
-        $delimiter = preg_quote(self::LOGIN_ID_DELIMITER);
-
-        $regexp = "/^(?P<adminId>{$adminPrefix}\d+){$delimiter}(?P<userId>{$userPrefix}\d+)$/";
-        return $regexp;
+        return hash('sha256', $password . $salt);
     }
 }

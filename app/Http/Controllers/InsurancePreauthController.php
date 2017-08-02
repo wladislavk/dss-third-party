@@ -319,32 +319,51 @@ class InsurancePreauthController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/insurance-preauth/{type}",
-     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     path="/insurance-preauth/completed",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param string $type
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getByType($type)
+    public function getCompleted()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = $this->currentUser->getDocIdOrZero();
 
-        switch ($type) {
-            case 'completed':
-                $data = $this->repository->getCompleted($docId);
-                break;
-            case 'pending':
-                $data = $this->repository->getPending($docId);
-                break;
-            case 'rejected':
-                $data = $this->repository->getRejected($docId);
-                break;
-            default:
-                $data = [];
-                break;
-        }
+        $data = $this->repository->getCompleted($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/insurance-preauth/pending",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPending()
+    {
+        $docId = $this->currentUser->getDocIdOrZero();
+
+        $data = $this->repository->getPending($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/insurance-preauth/rejected",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRejected()
+    {
+        $docId = $this->currentUser->getDocIdOrZero();
+
+        $data = $this->repository->getRejected($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -383,14 +402,15 @@ class InsurancePreauthController extends BaseRestController
         $vobsPerPage = $request->input('vobsPerPage', 20);
         $sortColumn = $request->input('sortColumn', 'status');
         $sortDir = $request->input('sortDir', 'desc');
-        $viewed = $request->input('viewed');
+        $viewed = $request->input('viewed', null);
 
+        $offset = $vobsPerPage * $pageNumber;
         $data = $this->repository->getListVobs(
             $docId, 
             $sortColumn,
             $sortDir,
             $vobsPerPage,
-            $pageNumber,
+            $offset,
             $viewed
         );
 

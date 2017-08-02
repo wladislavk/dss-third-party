@@ -7,6 +7,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
+use DentalSleepSolutions\Helpers\OpenClaimSorter;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -413,6 +414,7 @@ class LedgersController extends BaseRestController
      */
     public function getReportData(
         Request $request,
+        OpenClaimSorter $openClaimSorter,
         InsuranceRepository $insuranceRepository
     ) {
         $docId = $this->currentUser->docid ?: 0;
@@ -425,7 +427,8 @@ class LedgersController extends BaseRestController
         $openClaims = $request->input('open_claims', false);
 
         if ($openClaims) {
-            $data = $insuranceRepository->getOpenClaims($patientId, $page, $rowsPerPage, $sort, $sortDir);
+            $sortColumn = $openClaimSorter->getSortColumnForList($sort);
+            $data = $insuranceRepository->getOpenClaims($patientId, $page, $rowsPerPage, $sortColumn, $sortDir);
         } else {
             $data = $this->repository->getReportData([
                 'doc_id'        => $docId,

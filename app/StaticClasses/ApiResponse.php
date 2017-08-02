@@ -74,11 +74,9 @@ class ApiResponse
     ) {
         if (!is_array($data) && $createErrorsArray) {
             $dataArray = [];
-
             if (is_array($data) && isset($data['errors'])) {
                 $dataArray = $data['errors'];
             }
-
             $data = [
                 'errorMessage' => $message,
                 'errors' => $dataArray,
@@ -174,21 +172,24 @@ class ApiResponse
 
     /**
      * @param string|object $resource
-     * @return string|null
+     * @return string|false
      */
     private static function hasTransformer($resource)
     {
         $transformer = self::$namespace . class_basename($resource);
 
+        /**
+         * class_exists() throws an exception if the class doesn't exist and autoload is enabled
+         */
         try {
             if (class_exists($transformer)) {
                 return $transformer;
             }
         } catch (\ErrorException $e) {
-            return null;
+            return false;
         }
 
-        return null;
+        return false;
     }
 
     /**

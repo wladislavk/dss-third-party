@@ -3,26 +3,18 @@
 namespace DentalSleepSolutions\NamingConventions;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Controllers\BaseRestController;
-use DentalSleepSolutions\Http\Controllers\BaseReferencedRestController;
-use DentalSleepSolutions\Http\Controllers\BaseVersionedRestController;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 use Prettus\Repository\Eloquent\BaseRepository;
-use Tymon\JWTAuth\JWTAuth;
+use DentalSleepSolutions\Helpers\AuthTokenParser;
 use DentalSleepSolutions\Contracts\TransformerInterface;
 
 class BindingNamingConvention
 {
     const BASE_NAMESPACE = 'DentalSleepSolutions';
     const HTTP_NAMESPACE = self::BASE_NAMESPACE . '\\Http';
-    const BASE_REST_CONTROLLERS = [
-        BaseRestController::class,
-        BaseReferencedRestController::class,
-        BaseVersionedRestController::class,
-    ];
 
     /** @var AbstractModel */
     private $model;
@@ -60,16 +52,22 @@ class BindingNamingConvention
      */
     public function setController($className)
     {
-        $jwtAuth = \Mockery::mock(JWTAuth::class);
-        $jwtAuth->shouldReceive('getToken')->andReturnNull();
-        $jwtAuth->shouldReceive('toUser')->andReturnNull();
-        $userRepository = \Mockery::mock(UserRepository::class);
         $config = \Mockery::mock(Config::class);
-        $config->shouldReceive('get')->andReturnNull();
+        $authTokenParser = \Mockery::mock(AuthTokenParser::class);
         $repository = \Mockery::mock(BaseRepository::class);
         $request = \Mockery::mock(Request::class);
 
-        $this->controller = new $className($jwtAuth, $userRepository, $config, $repository, $request);
+        $config->shouldReceive('get')
+            ->andReturnNull()
+        ;
+        $authTokenParser->shouldReceive('getUserData')
+            ->andReturnNull()
+        ;
+        $authTokenParser->shouldReceive('getAdminData')
+            ->andReturnNull()
+        ;
+
+        $this->controller = new $className($config, $authTokenParser, $repository, $request);
         if (!$this->controller instanceof BaseRestController) {
             throw new NamingConventionException("$className must extend " . BaseRestController::class);
         }
@@ -112,10 +110,8 @@ class BindingNamingConvention
         $namespace = $namespace . '\\Controllers';
         $suffix = 'Controller';
         $controller = $namespace . '\\' . $name . $suffix;
-        if (!class_exists($controller) || !$this->isRestfulController($controller)) {
-            throw new NamingConventionException(
-                "$controller must exist and extend a base REST controller like " . BaseRestController::class
-            );
+        if (!class_exists($controller) || !is_subclass_of($controller, BaseRestController::class)) {
+            throw new NamingConventionException("$controller must exist and extend " . BaseRestController::class);
         }
         return $controller;
     }
@@ -178,21 +174,6 @@ class BindingNamingConvention
         }
 
         return $transformer;
-    }
-
-    /**
-     * @param string $controller
-     * @return bool
-     */
-    private function isRestfulController($controller)
-    {
-        foreach (self::BASE_REST_CONTROLLERS as $baseClass) {
-            if (is_subclass_of($controller, $baseClass)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

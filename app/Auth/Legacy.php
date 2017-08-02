@@ -51,12 +51,10 @@ class Legacy extends IlluminateAuthAdapter
     public function byCredentials(array $credentials = [])
     {
         $password = Arr::pull($credentials, 'password');
-
         $user = $this->userRepository->findWhere($credentials)->first();
 
         if ($user && $this->check($user, $password)) {
             $this->auth->login($user, false);
-
             return true;
         }
 

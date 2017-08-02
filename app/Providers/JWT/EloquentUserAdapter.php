@@ -32,7 +32,9 @@ class EloquentUserAdapter implements UserInterface
     {
         /** @todo Method implemented in repository, find a way to inject the dependency */
         if ($key !== 'id' || !SudoHelper::isSudoId($value)) {
-            $this->model->where($key, $value);
+            return $this->model->where($key, $value)
+                ->get()
+            ;
         }
 
         $sudoId = SudoHelper::parseId($value);

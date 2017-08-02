@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
-use DentalSleepSolutions\StaticClasses\SudoHelper;
+use DentalSleepSolutions\Helpers\SudoHelper;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Tymon\JWTAuth\JWTAuth;
@@ -22,7 +22,6 @@ abstract class Controller extends BaseController
 
     /** @var User|null */
     protected $currentUser;
-
 
     /** @var JWTAuth */
     protected $auth;

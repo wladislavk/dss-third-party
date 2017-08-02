@@ -3,10 +3,11 @@
 namespace Tests\Command;
 
 use DentalSleepSolutions\Console\Commands\GenerateJwtToken;
-use DentalSleepSolutions\StaticClasses\SudoHelper;
+use DentalSleepSolutions\Helpers\SudoHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tests\TestCases\ApiTestCase;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 
 class GenerateJwtTokenTest extends ApiTestCase
 {
@@ -23,6 +24,9 @@ class GenerateJwtTokenTest extends ApiTestCase
     /** @var BufferedOutput */
     private $output;
 
+    /** @var UserRepository */
+    private $userRepository;
+
     public function setUp()
     {
         parent::setUp();
@@ -31,6 +35,8 @@ class GenerateJwtTokenTest extends ApiTestCase
         $this->command = $this->app->make(GenerateJwtToken::class);
         $this->command->setLaravel($this->app);
         $this->output = new BufferedOutput();
+
+        $this->userRepository = $this->app->make(UserRepository::class);
     }
 
     public function testInvalidToken()
@@ -55,7 +61,7 @@ class GenerateJwtTokenTest extends ApiTestCase
 
     public function testSudoToken()
     {
-        $options = ['id' => SudoHelper::sudoId(self::ADMIN_ID, self::USER_ID)];
+        $options = ['id' => $this->userRepository->sudoId(self::ADMIN_ID, self::USER_ID)];
         $input = new ArrayInput($options);
         $this->command->run($input, $this->output);
         $result = $this->output->fetch();

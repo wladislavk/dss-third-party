@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Helpers;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\StaticClasses\SudoHelper;
+use Illuminate\Database\Eloquent\Collection;
 
 class AuthTokenParser
 {
@@ -56,6 +57,10 @@ class AuthTokenParser
          */
         $userModelData = $this->auth->toUser();
 
+        if ($userModelData instanceof Collection || is_subclass_of($userModelData, Collection::class)) {
+            $userModelData = $userModelData->all();
+        }
+
         if (is_array($userModelData)) {
             return $getDataFromModelArray($userModelData);
         }
@@ -69,7 +74,7 @@ class AuthTokenParser
      * @param array $modelArray
      * @return User|null
      */
-    private function getAdminFromModelArray (Array $modelArray)
+    private function getAdminFromModelArray (array $modelArray)
     {
         return $this->getAgnosticDataFromModelArray($modelArray, [$this, 'reduceAdminFromModelArray']);
     }
@@ -80,7 +85,7 @@ class AuthTokenParser
      * @param array $modelArray
      * @return User|null
      */
-    private function getUserFromModelArray (Array $modelArray)
+    private function getUserFromModelArray (array $modelArray)
     {
         return $this->getAgnosticDataFromModelArray($modelArray, [$this, 'reduceUserFromModelArray']);
     }
@@ -92,7 +97,7 @@ class AuthTokenParser
      * @param callable $reduceDataFromModelArray
      * @return User|null
      */
-    private function getAgnosticDataFromModelArray (Array $modelArray, callable $reduceDataFromModelArray) {
+    private function getAgnosticDataFromModelArray (array $modelArray, callable $reduceDataFromModelArray) {
         $modelData = array_reduce($modelArray, $reduceDataFromModelArray, null);
         return $modelData;
     }

@@ -3,7 +3,6 @@
 namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\User;
-use const SUNFUNCS_RET_DOUBLE;
 use Tests\TestCases\UnitTestCase;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Helpers\AuthTokenParser;

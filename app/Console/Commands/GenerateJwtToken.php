@@ -39,13 +39,9 @@ class GenerateJwtToken extends Command
 
     public function handle()
     {
-        /** @var Collection|null */
-        $collection = $this->userRepository->findById($this->argument('id'));
-
-        if (!$collection) {
-            return;
-        }
-
+        $id = $this->argument('id');
+        /** @var Collection */
+        $collection = $this->userRepository->findById($id);
         $token = $this->tokenFromCollection($collection);
         $this->info($token);
     }

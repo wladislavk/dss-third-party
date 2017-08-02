@@ -14,6 +14,7 @@ class GenerateJwtTokenTest extends ApiTestCase
     const INVALID_ID = '-';
     const USER_ID = SudoHelper::USER_PREFIX . '1';
     const ADMIN_ID = SudoHelper::ADMIN_PREFIX . '1';
+    const SUDO_ID = self::ADMIN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::USER_ID;
 
     const BASE_64_REGEXP = '[a-z\d\+\/\_\-]+';
     const TOKEN_REGEXP = '/' . self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP . '/i';
@@ -24,9 +25,6 @@ class GenerateJwtTokenTest extends ApiTestCase
     /** @var BufferedOutput */
     private $output;
 
-    /** @var UserRepository */
-    private $userRepository;
-
     public function setUp()
     {
         parent::setUp();
@@ -35,37 +33,36 @@ class GenerateJwtTokenTest extends ApiTestCase
         $this->command = $this->app->make(GenerateJwtToken::class);
         $this->command->setLaravel($this->app);
         $this->output = new BufferedOutput();
-
-        $this->userRepository = $this->app->make(UserRepository::class);
     }
 
     public function testInvalidToken()
     {
-        $options = ['id' => self::INVALID_ID];
-        $input = new ArrayInput($options);
-        $this->command->run($input, $this->output);
-        $result = $this->output->fetch();
-
-        $this->assertEquals('', $result);
+        $id = self::INVALID_ID;
+        $token = $this->runCommand($id);
+        $this->assertEquals('', $token);
     }
 
     public function testSimpleToken()
     {
-        $options = ['id' => self::USER_ID];
-        $input = new ArrayInput($options);
-        $this->command->run($input, $this->output);
-        $result = $this->output->fetch();
-
-        $this->assertRegExp(self::TOKEN_REGEXP, $result);
+        $id = self::USER_ID;
+        $token = $this->runCommand($id);
+        $this->assertRegExp(self::TOKEN_REGEXP, $token);
     }
 
     public function testSudoToken()
     {
-        $options = ['id' => $this->userRepository->sudoId(self::ADMIN_ID, self::USER_ID)];
+        $id = self::SUDO_ID;
+        $token = $this->runCommand($id);
+        $this->assertRegExp(self::TOKEN_REGEXP, $token);
+    }
+
+    private function runCommand($id)
+    {
+        $options = ['id' => $id];
         $input = new ArrayInput($options);
         $this->command->run($input, $this->output);
         $result = $this->output->fetch();
 
-        $this->assertRegExp(self::TOKEN_REGEXP, $result);
+        return trim($result);
     }
 }

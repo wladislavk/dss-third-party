@@ -24,6 +24,8 @@ class ExternalUsersApiTest extends ApiTestCase
             'api_key' => 'test api key',
             'valid_from' => 'test valid from',
             'valid_to' => 'test valid to',
+            'created_by' => 1,
+            'updated_by' => 1,
             'enabled' => true,
         ];
     }
@@ -35,28 +37,18 @@ class ExternalUsersApiTest extends ApiTestCase
         ];
     }
 
-    public function testIndex()
-    {
-        $this->markTestSkipped('Table dental_external_users does not exist');
-    }
-
     public function testShow()
     {
-        $this->markTestSkipped('Table dental_external_users does not exist');
-    }
-
-    public function testStore()
-    {
-        $this->markTestSkipped('Table dental_external_users does not exist');
+        $this->markTestSkipped('Current controller implementation is not RESTful');
     }
 
     public function testUpdate()
     {
-        $this->markTestSkipped('Table dental_external_users does not exist');
+        $this->markTestSkipped('Current controller implementation is not RESTful');
     }
 
     public function testDestroy()
     {
-        $this->markTestSkipped('Table dental_external_users does not exist');
+        $this->markTestSkipped('Current controller implementation is not RESTful');
     }
 }

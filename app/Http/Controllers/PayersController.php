@@ -141,8 +141,11 @@ class PayersController extends BaseRestController
      */
     public function requiredFields(Request $request, $payerId)
     {
-        /** @var Payer $payer */
+        /** @var Payer|null $payer */
         $payer = $this->repository->find($payerId);
+        if (!$payer) {
+            return ApiResponse::responseError();
+        }
         $fields = $payer->requiredFields($request->get('endpoint'));
 
         return ApiResponse::responseOk('', $fields);

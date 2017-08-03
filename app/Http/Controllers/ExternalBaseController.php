@@ -61,6 +61,9 @@ abstract class ExternalBaseController extends IlluminateBaseController
         $this->externalUserKey = $request->input('api_key_user');
 
         $externalUser = $this->externalUsersRepository->findByApiKey($this->externalUserKey);
+        if (!$externalUser) {
+            return null;
+        }
         $user = $this->userViewRepository->find('u_' . $externalUser->user_id)->first();
 
         $user->id = $externalUser->user_id;

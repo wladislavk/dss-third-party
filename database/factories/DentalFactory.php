@@ -2578,3 +2578,36 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Summary::class, fun
         'location'                         => $faker->randomDigit
     ];
 });
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany::class, function ($faker) {
+    return [
+        'software' => $faker->word,
+        'api_key' => $faker->word,
+        'name' => $faker->word,
+        'short_name' => $faker->word,
+        'url' => $faker->word,
+        'description' => $faker->word,
+        'reason' => $faker->word,
+        'status'            => $faker->randomDigit,
+        'created_by'            => $faker->randomDigit,
+        'updated_by'            => $faker->randomDigit,
+        'valid_from' => $faker->dateTime(),
+        'valid_to' => $faker->dateTime(),
+        'created_at' => $faker->dateTime(),
+        'updated_at' => $faker->dateTime(),
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser::class, function ($faker) {
+    return [
+        'user_id' => $faker->randomDigit,
+        'api_key' => $faker->word,
+        'enabled'            => $faker->randomDigit,
+        'created_by'            => $faker->randomDigit,
+        'updated_by'            => $faker->randomDigit,
+        'valid_from' => $faker->dateTime(),
+        'valid_to' => $faker->dateTime(),
+        'created_at' => $faker->dateTime(),
+        'updated_at' => $faker->dateTime(),
+    ];
+});

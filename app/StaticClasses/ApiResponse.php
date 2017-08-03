@@ -157,14 +157,17 @@ class ApiResponse
      */
     public static function transform($data)
     {
-        $fractal = new Manager;
+        $fractal = new Manager();
+        $transformer = self::hasTransformer($data);
 
-        if (self::isResource($data) && $transformer = self::hasTransformer($data)) {
+        if (self::isResource($data) && strlen($transformer)) {
             $data = $fractal->createData(new Item($data, new $transformer))->toArray();
         }
 
-        if (self::isCollection($data) && self::isResource($data[0]) && $transformer = self::hasTransformer($data[0])) {
-            $data = $fractal->createData(new Collection($data, new $transformer))->toArray();
+        $transformer = self::hasTransformer($data[0]);
+
+        if (self::isCollection($data) && self::isResource($data[0]) && strlen($transformer)) {
+            $data = $fractal->createData(new Collection($data, new $transformer()))->toArray();
         }
 
         return Arr::get($data, 'data', $data);
@@ -172,7 +175,7 @@ class ApiResponse
 
     /**
      * @param string|object $resource
-     * @return string|false
+     * @return string
      */
     private static function hasTransformer($resource)
     {
@@ -186,10 +189,10 @@ class ApiResponse
                 return $transformer;
             }
         } catch (\ErrorException $e) {
-            return false;
+            return '';
         }
 
-        return false;
+        return '';
     }
 
     /**

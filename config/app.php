@@ -217,7 +217,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
 
         'ApiResponse' => \DentalSleepSolutions\StaticClasses\ApiResponse::class,
-
+        'UserRepository' => \DentalSleepSolutions\Eloquent\Repositories\UserRepository::class,
     ],
 
 ];

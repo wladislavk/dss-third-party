@@ -1,10 +1,11 @@
 <?php
 namespace DentalSleepSolutions\Providers\JWT;
 
-use DentalSleepSolutions\StaticClasses\SudoHelper;
 use Tymon\JWTAuth\Providers\User\UserInterface;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Facades\UserRepositoryFacade;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentUserAdapter implements UserInterface
 {
@@ -26,28 +27,10 @@ class EloquentUserAdapter implements UserInterface
      *
      * @param  mixed  $key
      * @param  mixed  $value
-     * @return Model|Model[]
+     * @return Collection
      */
     public function getBy($key, $value)
     {
-        /** @todo Method implemented in repository, find a way to inject the dependency */
-        if ($key !== 'id' || !SudoHelper::isSudoId($value)) {
-            return $this->model->where($key, $value)
-                ->get()
-            ;
-        }
-
-        $sudoId = SudoHelper::parseId($value);
-        $values = [
-            $sudoId->id,
-            $sudoId->adminId,
-            $sudoId->userId,
-        ];
-
-        return $this->model->whereIn($key, $values)
-            ->orderBy('id', 'ASC')
-            ->get()
-            ->all()
-        ;
+        return UserRepositoryFacade::findByField($key, $value);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace DentalSleepSolutions\StaticClasses;
+namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Structs\SudoId;
 
@@ -17,7 +17,7 @@ class SudoHelper
      * @param string $id
      * @return bool
      */
-    public static function isSimpleId($id)
+    public function isSimpleId($id)
     {
         $isSimple = strpos($id, self::LOGIN_ID_DELIMITER) === false;
         return $isSimple;
@@ -29,9 +29,9 @@ class SudoHelper
      * @param string $id
      * @return bool
      */
-    public static function isSudoId($id)
+    public function isSudoId($id)
     {
-        $regexp = self::sudoIdRegexp();
+        $regexp = $this->sudoIdRegexp();
 
         if (preg_match($regexp, $id)) {
             return true;
@@ -47,7 +47,7 @@ class SudoHelper
      * @param string $userId
      * @return string
      */
-    public static function sudoId($adminId, $userId)
+    public function sudoId($adminId, $userId)
     {
         $sudoId = join(self::LOGIN_ID_DELIMITER, [$adminId, $userId]);
         return $sudoId;
@@ -59,12 +59,12 @@ class SudoHelper
      * @param string $id
      * @return SudoId
      */
-    public static function parseId($id)
+    public function parseId($id)
     {
         $sudoId = new SudoId();
         $sudoId->id = $id;
 
-        $regexp = self::sudoIdRegexp();
+        $regexp = $this->sudoIdRegexp();
         preg_match($regexp, $id, $matches);
 
         if (isset($matches['adminId'])) {
@@ -79,15 +79,61 @@ class SudoHelper
     }
 
     /**
+     * @param string $id
+     * @return bool
+     */
+    public function isUid($id)
+    {
+        return $this->isOfType($id, self::USER_PREFIX);
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function isAid($id)
+    {
+        return $this->isOfType($id, self::ADMIN_PREFIX);
+    }
+
+    /**
+     * @param string|int $id
+     * @param string $prefix
+     * @return bool
+     */
+    private function isOfType($id, $prefix)
+    {
+        $regexp = $this->idTypeRegexp($prefix);
+
+        if (preg_match("/^{$regexp}$/", $id)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return string
      */
-    private static function sudoIdRegexp()
+    private function sudoIdRegexp()
     {
-        $adminPrefix = preg_quote(self::ADMIN_PREFIX);
-        $userPrefix = preg_quote(self::USER_PREFIX);
+        $adminPrefix = $this->idTypeRegexp(self::ADMIN_PREFIX);
+        $userPrefix = $this->idTypeRegexp(self::USER_PREFIX);
         $delimiter = preg_quote(self::LOGIN_ID_DELIMITER);
 
-        $regexp = "/^(?P<adminId>{$adminPrefix}\d+){$delimiter}(?P<userId>{$userPrefix}\d+)$/";
+        $regexp = "/^(?P<adminId>{$adminPrefix}){$delimiter}(?P<userId>{$userPrefix})$/";
+        return $regexp;
+    }
+
+    /**
+     * @param string $prefix
+     * @return string
+     */
+    private function idTypeRegexp($prefix)
+    {
+        $prefix = preg_quote($prefix);
+        $regexp = "{$prefix}\d+";
+
         return $regexp;
     }
 }

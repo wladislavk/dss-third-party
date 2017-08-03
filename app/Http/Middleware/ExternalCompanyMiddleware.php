@@ -3,7 +3,9 @@ namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Helpers\ExternalAuthTokenParser as TokenParser;
+use DentalSleepSolutions\Helpers\ExternalAuthTokenParser;
+use DentalSleepSolutions\Structs\ExternalAuthTokenErrors as AuthErrors;
+use DentalSleepSolutions\Structs\ExternalCompanyMiddlewareErrors as MiddlewareErrors;
 use Illuminate\Http\Request;
 
 class ExternalCompanyMiddleware
@@ -14,41 +16,44 @@ class ExternalCompanyMiddleware
     const USER_KEY_INVALID = 'api_key_user_invalid';
     const KEYS_INVALID = 'api_keys_invalid';
 
-    /** @var TokenParser */
-    private $tokenParser;
+    /** @var ExternalAuthTokenParser */
+    private $authTokenParser;
 
-    public function __construct (TokenParser $tokenParser)
+    public function __construct(ExternalAuthTokenParser $authTokenParser)
     {
-        $this->tokenParser = $tokenParser;
+        $this->authTokenParser = $authTokenParser;
     }
 
     public function handle(Request $request, Closure $next)
     {
-        $companyKey = $request->input('api_key_company');
-        $userKey = $request->input('api_key_user');
-
-        $currentUser = $this->tokenParser->getUserData($companyKey, $userKey);
+        $currentUser = $this->authTokenParser->getUserData();
 
         if ($currentUser) {
             return $next($request);
         }
+        
+        $validationError = $this->authTokenParser->validationError();
 
-        if ($this->tokenParser->getError() === TokenParser::COMPANY_KEY_MISSING) {
-            return ApiResponse::responseError(['error' => self::COMPANY_KEY_MISSING], 400);
+        if ($validationError === AuthErrors::COMPANY_KEY_MISSING) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::COMPANY_KEY_MISSING], 400);
         }
 
-        if ($this->tokenParser->getError() === TokenParser::USER_KEY_MISSING) {
-            return ApiResponse::responseError(['error' => self::USER_KEY_MISSING], 400);
+        if ($validationError === AuthErrors::USER_KEY_MISSING) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::USER_KEY_MISSING], 400);
         }
 
-        if ($this->tokenParser->getError() === TokenParser::COMPANY_KEY_INVALID) {
-            return ApiResponse::responseError(['error' => self::COMPANY_KEY_INVALID], 422);
+        if ($validationError === AuthErrors::COMPANY_KEY_INVALID) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::COMPANY_KEY_INVALID], 422);
         }
 
-        if ($this->tokenParser->getError() === TokenParser::USER_KEY_INVALID) {
-            return ApiResponse::responseError(['error' => self::USER_KEY_INVALID], 422);
+        if ($validationError === AuthErrors::USER_KEY_INVALID) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::USER_KEY_INVALID], 422);
         }
 
-        return ApiResponse::responseError(['error' => self::KEYS_INVALID], 422);
+        if ($validationError === AuthErrors::USER_NOT_FOUND) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::USER_NOT_FOUND], 422);
+        }
+
+        return ApiResponse::responseError(['error' => MiddlewareErrors::KEYS_INVALID], 422);
     }
 }

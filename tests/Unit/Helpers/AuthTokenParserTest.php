@@ -3,185 +3,196 @@
 namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use Tests\TestCases\UnitTestCase;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Helpers\AuthTokenParser;
-use DentalSleepSolutions\StaticClasses\SudoHelper;
+use DentalSleepSolutions\Helpers\SudoHelper;
+use Illuminate\Database\Eloquent\Collection;
 
 class AuthTokenParserTest extends UnitTestCase
 {
-    const USER_ID = 1;
-    const ADMIN_ID = 1;
     const EMPTY_TOKEN = '';
-    const USER_TOKEN_ID = SudoHelper::USER_PREFIX . self::USER_ID;
-    const ADMIN_TOKEN_ID = SudoHelper::ADMIN_PREFIX . self::ADMIN_ID;
-    const INVALID_USER_TOKEN_ID = SudoHelper::USER_PREFIX . '2';
-    const INVALID_ADMIN_TOKEN_ID = SudoHelper::ADMIN_PREFIX . '2';
-
-    /** @var JWTAuth */
-    private $auth;
+    const INVALID_TOKEN = '-';
+    const USER_TOKEN = 'user-token';
+    const ADMIN_TOKEN = 'admin-token';
+    const USER_ID = SudoHelper::USER_PREFIX . 1;
+    const ADMIN_ID = SudoHelper::ADMIN_PREFIX . 1;
 
     /** @var AuthTokenParser */
     private $tokenParser;
 
-    /**
-     * @dataProvider tokenDataProvider
-     */
-    public function testToken($token, $user, $admin, $userId, $adminId)
+    public function testGetAdminDataNoToken()
     {
-        $this->mockAuthToken($token);
+        $token = self::EMPTY_TOKEN;
+        $this->newAuthToken($token);
+        $result = $this->tokenParser->getAdminData();
 
-        $userData = $this->tokenParser->getUserData();
-        $adminData = $this->tokenParser->getAdminData();
-
-        $this->assertEquals($userData, $user);
-        $this->assertEquals($adminData, $admin);
-
-        if ($userData) {
-            $this->assertEquals($userData->id, $userId);
-            $this->assertEquals($userData->admin, 0);
-        }
-
-        if ($adminData) {
-            $this->assertEquals($adminData->id, $adminId);
-            $this->assertEquals($adminData->admin, 1);
-        }
+        $this->assertNull($result);
     }
 
-    public function tokenDataProvider()
+    public function testGetAdminDataInvalidToken()
     {
-        return [
-            [
-                self::EMPTY_TOKEN,
-                null,
-                null,
-                0,
-                0,
-            ],
-            [
-                self::USER_TOKEN_ID,
-                $this->mockUserData(),
-                null,
-                self::USER_ID,
-                0,
-            ],
-            [
-                self::ADMIN_TOKEN_ID,
-                null,
-                $this->mockAdminData(),
-                0,
-                self::ADMIN_ID,
-            ],
-            [
-                self::USER_TOKEN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::ADMIN_TOKEN_ID,
-                $this->mockUserData(),
-                $this->mockAdminData(),
-                self::USER_ID,
-                self::ADMIN_ID,
-            ],
-            [
-                self::ADMIN_TOKEN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::USER_TOKEN_ID,
-                $this->mockUserData(),
-                $this->mockAdminData(),
-                self::USER_ID,
-                self::ADMIN_ID,
-            ],
-            [
-                self::USER_TOKEN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::INVALID_USER_TOKEN_ID,
-                $this->mockUserData(),
-                null,
-                self::USER_ID,
-                0,
-            ],
-            [
-                self::ADMIN_TOKEN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::INVALID_ADMIN_TOKEN_ID,
-                null,
-                $this->mockAdminData(),
-                0,
-                self::ADMIN_ID,
-            ],
-        ];
+        $token = self::INVALID_TOKEN;
+        $this->newAuthToken($token);
+        $result = $this->tokenParser->getAdminData();
+
+        $this->assertNull($result);
     }
 
-    private function mockAuthToken($mockToken)
+    public function testGetAdminDataUserToken()
     {
-        $this->auth = $this->mockJWTAuth($mockToken);
-        $this->tokenParser = new AuthTokenParser($this->auth);
+        $token = self::USER_TOKEN;
+        $this->newAuthToken($token);
+        $result = $this->tokenParser->getAdminData();
+
+        $this->assertNull($result);
     }
 
-    private function mockUserView()
+    public function testGetAdminDataAdminToken()
+    {
+        $token = self::ADMIN_TOKEN;
+        $this->newAuthToken($token);
+        $result = $this->tokenParser->getAdminData();
+
+        $this->assertNotNull($result);
+        $this->assertEquals(self::ADMIN_ID, $result->id);
+        $this->assertEquals(1, $result->admin);
+    }
+
+    public function testGetUserDataNoToken()
+    {
+        $token = self::EMPTY_TOKEN;
+        $this->newAuthToken($token);
+        $result = $this->tokenParser->getUserData();
+
+        $this->assertNull($result);
+    }
+
+    public function testGetUserDataInvalidToken()
+    {
+        $token = self::INVALID_TOKEN;
+        $this->newAuthToken($token);
+        $result = $this->tokenParser->getUserData();
+
+        $this->assertNull($result);
+    }
+
+    public function testGetUserDataAdminToken()
+    {
+        $token = self::ADMIN_TOKEN;
+        $this->newAuthToken($token);
+        $result = $this->tokenParser->getUserData();
+
+        $this->assertNull($result);
+    }
+
+    public function testGetUserDataUserToken()
+    {
+        $token = self::USER_TOKEN;
+        $this->newAuthToken($token);
+        $result = $this->tokenParser->getUserData();
+
+        $this->assertNotNull($result);
+        $this->assertEquals(self::USER_ID, $result->id);
+        $this->assertEquals(0, $result->admin);
+    }
+
+    private function newAuthToken($token)
+    {
+        $auth = $this->mockJWTAuth($token);
+        $userRepository = $this->mockUserRepository();
+        $this->tokenParser = new AuthTokenParser($auth, $userRepository);
+    }
+
+    private function newUser()
     {
         $resource = new User();
-        $resource->id = self::USER_TOKEN_ID;
+        $resource->id = self::USER_ID;
         $resource->admin = 0;
 
         return $resource;
     }
 
-    private function mockAdminView()
+    private function newAdmin()
     {
-        $resource = $this->mockUserView();
-        $resource->id = self::ADMIN_TOKEN_ID;
+        $resource = $this->newUser();
+        $resource->id = self::ADMIN_ID;
         $resource->admin = 1;
 
         return $resource;
     }
 
-    public function mockUserData()
-    {
-        $resource = $this->mockUserView();
-        $resource->id = self::USER_ID;
-
-        return $resource;
-    }
-
-    public function mockAdminData()
-    {
-        $resource = $this->mockAdminView();
-        $resource->id = self::ADMIN_ID;
-
-        return $resource;
-    }
-
-    private function mockJWTAuth($mockToken)
+    private function mockJWTAuth($token)
     {
         $auth = \Mockery::mock(JWTAuth::class);
 
         $auth->shouldReceive('getToken')
-            ->twice()
-            ->andReturn($mockToken);
+            ->atMost()
+            ->times(1)
+            ->andReturn($token);
 
         $auth->shouldReceive('toUser')
             ->atMost()
-            ->times(2)
-            ->andReturnUsing(function () use ($mockToken) {
-                if ($mockToken === self::USER_TOKEN_ID) {
-                    return $this->mockUserView();
-                }
-                
-                if ($mockToken === self::ADMIN_TOKEN_ID) {
-                    return $this->mockAdminView();
-                }
-                
-                if ($mockToken === self::USER_TOKEN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::ADMIN_TOKEN_ID) {
-                    return [$this->mockUserView(), $this->mockAdminView()];
-                }
-                
-                if ($mockToken === self::ADMIN_TOKEN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::USER_TOKEN_ID) {
-                    return [$this->mockAdminView(), $this->mockUserView()];
-                }
-                
-                if (strpos($mockToken, self::USER_TOKEN_ID) === 0) {
-                    return $this->mockUserView();
-                }
-                
-                if (strpos($mockToken, self::ADMIN_TOKEN_ID) === 0) {
-                    return $this->mockAdminView();
+            ->times(1)
+            ->andReturnUsing(function () use ($token) {
+                if ($token === self::USER_TOKEN) {
+                    return $this->mockCollection([$this->newUser()]);
                 }
 
-                return $this->mockUserView();
+                if ($token === self::ADMIN_TOKEN) {
+                    return $this->mockCollection([$this->newAdmin()]);
+                }
+
+                return $this->mockCollection();
             });
 
         return $auth;
+    }
+
+    private function mockCollection(array $collection = [])
+    {
+        $mock = \Mockery::mock(Collection::class, [$collection]);
+        $mock->shouldReceive('count')
+            ->atMost()
+            ->times(1)
+            ->passthru()
+        ;
+        $mock->shouldReceive('all')
+            ->atMost()
+            ->times(1)
+            ->passthru()
+        ;
+
+        return $mock;
+    }
+
+    private function mockUserRepository()
+    {
+        $mock = \Mockery::mock(UserRepository::class);
+        $mock->shouldReceive('isAid')
+            ->atMost()
+            ->times(1)
+            ->andReturnUsing(function ($fieldValue) {
+                if ($fieldValue === self::ADMIN_ID) {
+                    return true;
+                }
+
+                return false;
+            })
+        ;
+        $mock->shouldReceive('isUid')
+            ->atMost()
+            ->times(1)
+            ->andReturnUsing(function ($fieldValue) {
+                if ($fieldValue === self::USER_ID) {
+                    return true;
+                }
+
+                return false;
+            })
+        ;
+
+        return $mock;
     }
 }

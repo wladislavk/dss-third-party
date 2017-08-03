@@ -4,12 +4,16 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Interfaces\BackOfficeConditionalInterface;
+use DentalSleepSolutions\Eloquent\Repositories\Interfaces\BackOfficeConditionalTrait;
 use DentalSleepSolutions\Libraries\ClaimFormData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
-class InsuranceRepository extends AbstractRepository
+class InsuranceRepository extends AbstractRepository implements BackOfficeConditionalInterface
 {
+    use BackOfficeConditionalTrait;
+
     /** @var Insurance|Builder */
     protected $model;
 
@@ -26,8 +30,10 @@ class InsuranceRepository extends AbstractRepository
     {
         return $this->model
             ->where(function (Builder $query) {
-                return $query->where('status', Insurance::DSS_CLAIM_REJECTED)
-                    ->orWhere('status', Insurance::DSS_CLAIM_SEC_REJECTED);
+                return $query
+                    ->where('status', Insurance::DSS_CLAIM_REJECTED)
+                    ->orWhere('status', Insurance::DSS_CLAIM_SEC_REJECTED)
+                ;
             })
             ->where('patientid', $patientId)
             ->get()
@@ -174,20 +180,6 @@ class InsuranceRepository extends AbstractRepository
         ;
 
         return $query->get();
-    }
-
-    /**
-     * @param string $claimAlias
-     * @return string
-     */
-    public static function filedByBackOfficeConditional($claimAlias)
-    {
-        return "(
-                -- Filed by back office, legacy logic
-                COALESCE(IF($claimAlias.primary_claim_id, $claimAlias.s_m_dss_file, $claimAlias.p_m_dss_file), 0) = 1
-                -- Filed by back office, new logic
-                OR COALESCE($claimAlias.p_m_dss_file, 0) = 3
-            )";
     }
 
     /**

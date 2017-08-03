@@ -13,6 +13,12 @@ class InsurancePreauthRepository extends AbstractRepository
 {
     const REJECT_REASON = '%s altered patient insurance information requiring VOB resubmission on %s';
 
+    const COLUMN_CHANGE_RULES = [
+        'request_date' => 'preauth.front_office_request_date',
+        'patient_name' => 'p.lastname',
+        'status' => 'preauth.status',
+    ];
+
     public function model()
     {
         return InsurancePreauth::class;
@@ -174,14 +180,8 @@ class InsurancePreauthRepository extends AbstractRepository
      */
     private function changeSortColumn($sortColumn)
     {
-        $columnChangeRules = [
-            'request_date' => 'preauth.front_office_request_date',
-            'patient_name' => 'p.lastname',
-            'status' => 'preauth.status',
-        ];
-
-        if (isset($columnChangeRules[$sortColumn])) {
-            return $columnChangeRules[$sortColumn];
+        if (array_key_exists($sortColumn, self::COLUMN_CHANGE_RULES)) {
+            return self::COLUMN_CHANGE_RULES[$sortColumn];
         }
 
         return $sortColumn;

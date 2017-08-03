@@ -231,13 +231,35 @@ class EnrollmentApiTest extends BaseApiTestCase
 
     public function testSyncEnrollmentPayers()
     {
-        $this->markTestSkipped('Table enrollment_payers_list doesn\'t exist');
-        return;
         $this->get(self::ROUTE_PREFIX . '/enrollments/syncpayers');
         $this->assertResponseOk();
-        $expected = [
+        $this->assertEquals(79, count($this->getResponseData()));
+        $expectedFirst = [
+            'payer_id' => '00901',
+            'names' => [
+                'Medicare Part B of Maryland',
+                'Medicare of Maryland',
+            ],
+            'created_at' => '2014-07-20T07:17:21Z',
+            'updated_at' => '2017-01-03T21:32:25Z',
+            'supported_endpoints' => [
+                [
+                    'endpoint' => 'coverage',
+                    'pass_through_fee' => 0,
+                    'enrollment_required' => true,
+                    'signature_required' => false,
+                    'average_enrollment_process_time' => '1 day',
+                    'blue_ink_required' => false,
+                    'message' => '',
+                    'enrollment_mandatory_fields' => ['npi'],
+                    'status' => 'available',
+                    'status_details' => 'Payer is working fine.',
+                    'status_updated_at' => '2017-05-11T14:01:17Z',
+                    'original_signature_pdf' => false,
+                ],
+            ],
         ];
-        $this->assertEquals($expected, $this->getResponseData());
+        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
     }
 
     public function tearDown()

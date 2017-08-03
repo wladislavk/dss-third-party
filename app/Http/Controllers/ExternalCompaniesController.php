@@ -97,7 +97,9 @@ class ExternalCompaniesController extends BaseRestController
          * @ToDo: Handle admin tokens
          * @see AWS-19-Request-Token
          */
-        $data['created_by'] = $this->currentUser->id;
+        if ($this->currentUser->id) {
+            $data['created_by'] = $this->currentUser->id;
+        }
         $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);

@@ -13,6 +13,7 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
+use Exception;
 
 class ApiAuthController extends Controller
 {
@@ -51,7 +52,9 @@ class ApiAuthController extends Controller
 
         try {
             $token = $this->auth->attempt($credentials);
-        } catch (\Exception $e) { /* Several errors, invalid fields, empty POST payload */ }
+        } catch (Exception $e) {
+            return ApiResponse::responseError('Invalid credentials', 422);
+        }
 
         if (!$token) {
             return ApiResponse::responseError('Invalid credentials', 422);
@@ -94,11 +97,6 @@ class ApiAuthController extends Controller
             return ApiResponse::responseError('Invalid credentials', 422);
         }
 
-        /**
-         * JWTAuth relies on user ID (with the default configuration) but it is not possible to generate a payload
-         * with a combined approach. As a workaround, the ID of a single model will be altered to pass along the
-         * list of IDs needed for "logged in as".
-         */
         $resource->id = $this->userRepository->sudoId($this->currentAdmin->id, $resource->id);
         return ['status' => 'Authenticated', 'token' => $this->auth->fromUser($resource)];
     }

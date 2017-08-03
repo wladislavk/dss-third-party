@@ -26,10 +26,6 @@ abstract class ExternalBaseController extends IlluminateBaseController
         Request $request
     ) {
         $this->config = $config;
-
-        $companyKey = $request->input('api_key_company');
-        $userKey = $request->input('api_key_user');
-
-        $this->currentUser = $authTokenParser->getUserData($companyKey, $userKey);
+        $this->currentUser = $authTokenParser->getUserData();
     }
 }

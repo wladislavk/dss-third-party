@@ -3,8 +3,6 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Structs\SudoId;
-use const false;
-use function preg_quote;
 
 class SudoHelper
 {

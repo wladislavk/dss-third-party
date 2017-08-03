@@ -175,12 +175,12 @@ abstract class AbstractRepository extends BaseRepository
     }
 
     /**
-     * @param QueryBuilder $query
+     * @param Builder|QueryBuilder $query
      * @param int $offset
      * @param int $recordsPerPage
      * @return array
      */
-    public function getPagedResult(QueryBuilder $query, $offset, $recordsPerPage)
+    public function getPagedResult($query, $offset, $recordsPerPage)
     {
         /** @var Collection $allResults */
         $allResults = $query->get();

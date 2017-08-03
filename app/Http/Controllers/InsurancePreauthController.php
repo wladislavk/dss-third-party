@@ -3,7 +3,9 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository;
+use DentalSleepSolutions\Helpers\QueryComposers\InsurancePreauthQueryComposer;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Structs\ListVOBQueryData;
 use Illuminate\Http\Request;
 
 class InsurancePreauthController extends BaseRestController
@@ -392,27 +394,25 @@ class InsurancePreauthController extends BaseRestController
      * )
      *
      * @param Request $request
+     * @param InsurancePreauthQueryComposer $queryComposer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function find(Request $request)
+    public function find(Request $request, InsurancePreauthQueryComposer $queryComposer)
     {
-        $docId = $this->currentUser->docid ?: 0;
-
         $pageNumber = $request->input('page', 0);
         $vobsPerPage = $request->input('vobsPerPage', 20);
-        $sortColumn = $request->input('sortColumn', 'status');
-        $sortDir = $request->input('sortDir', 'desc');
-        $viewed = $request->input('viewed', null);
 
         $offset = $vobsPerPage * $pageNumber;
-        $data = $this->repository->getListVobs(
-            $docId, 
-            $sortColumn,
-            $sortDir,
-            $vobsPerPage,
-            $offset,
-            $viewed
-        );
+
+        $listVOBQueryData = new ListVOBQueryData();
+        $listVOBQueryData->docId = $this->currentUser->getDocIdOrZero();
+        $listVOBQueryData->sortColumn = $request->input('sortColumn', 'status');
+        $listVOBQueryData->sortDir = $request->input('sortDir', 'desc');
+        $listVOBQueryData->vobsPerPage = $request->input('vobsPerPage', 20);
+        $listVOBQueryData->offset = $offset;
+        $listVOBQueryData->viewed = $request->input('viewed', null);
+
+        $data = $queryComposer->composeGetListVobsQuery($listVOBQueryData);
 
         return ApiResponse::responseOk('', $data);
     }

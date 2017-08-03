@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use DentalSleepSolutions\Structs\ListVOBQueryData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,18 @@ class InsurancePreauthRepository extends AbstractRepository
         'patient_name' => 'p.lastname',
         'status' => 'preauth.status',
     ];
+
+    const VOB_QUERY_FIELDS = [
+        'preauth.id',
+        'p.firstname',
+        'p.lastname',
+        'preauth.viewed',
+        'preauth.front_office_request_date',
+        'preauth.patient_id',
+        'preauth.status',
+        'preauth.reject_reason',
+    ];
+
 
     public function model()
     {
@@ -108,83 +121,52 @@ class InsurancePreauthRepository extends AbstractRepository
     }
 
     /**
-     * @param int $docId
-     * @param string $sortColumn
-     * @param string $sortDir
-     * @param int $vobsPerPage
-     * @param int $offset
-     * @param bool|null $viewed
-     * @return array
+     * @param ListVOBQueryData $data
+     * @return Builder|QueryBuilder
      */
-    public function getListVobs(
-        $docId,
-        $sortColumn,
-        $sortDir,
-        $vobsPerPage,
-        $offset,
-        $viewed
-    ) {
-        $newSortColumn = $this->changeSortColumn($sortColumn);
-
-        $selected = [
-            'preauth.id',
-            'p.firstname',
-            'p.lastname',
-            'preauth.viewed',
-            'preauth.front_office_request_date',
-            'preauth.patient_id',
-            'preauth.status',
-            'preauth.reject_reason',
-        ];
-        /** @var Builder|QueryBuilder $query */
+    public function getListVobsBaseQuery(ListVOBQueryData $data) {
         $query = $this->model
-            ->select(\DB::raw(join(', ', $selected)))
+            ->select(\DB::raw(join(', ', self::VOB_QUERY_FIELDS)))
             ->from(\DB::raw('dental_insurance_preauth preauth'))
             ->join(\DB::raw('dental_patients p'), 'p.patientid', '=', 'preauth.patient_id')
-            ->where('preauth.doc_id', '=', $docId)
+            ->where('preauth.doc_id', '=', $data->docId)
         ;
 
-        if ($viewed !== null) {
-            $query = $this->setPreauthViewed($query, $viewed);
-        }
-
-        $query = $query->orderBy($newSortColumn, $sortDir);
-
-        return [
-            'total'  => $query->get()->count(),
-            'result' => $query->skip($offset)->take($vobsPerPage)->get(),
-        ];
+        return $query;
     }
 
     /**
      * @param Builder|QueryBuilder $query
-     * @param bool $viewed
      * @return Builder|QueryBuilder
      */
-    private function setPreauthViewed($query, $viewed)
+    public function getListVobsSetPreauthViewedWithViewed($query)
     {
-        if ($viewed) {
-            return $query->where('preauth.viewed', 1);
-        }
+        return $query->where('preauth.viewed', 1);
+    }
+
+    /**
+     * @param Builder|QueryBuilder $query
+     * @param string $sortColumn
+     * @param string $sortDir
+     * @return Builder|QueryBuilder
+     */
+    public function getListVobsSetOrderBy($query, $sortColumn, $sortDir)
+    {
+        return $query->orderBy($sortColumn, $sortDir);
+    }
+
+    /**
+     * @param Builder|QueryBuilder $query
+     * @return Builder|QueryBuilder
+     */
+    public function getListVobsSetPreauthViewedWithoutViewed($query)
+    {
         return $query->where(function (QueryBuilder $query) {
             $query
                 ->where('preauth.viewed', '=', 0)
                 ->orWhereNull('preauth.viewed')
             ;
         });
-    }
-
-    /**
-     * @param string $sortColumn
-     * @return string
-     */
-    private function changeSortColumn($sortColumn)
-    {
-        if (array_key_exists($sortColumn, self::COLUMN_CHANGE_RULES)) {
-            return self::COLUMN_CHANGE_RULES[$sortColumn];
-        }
-
-        return $sortColumn;
     }
 
     /**

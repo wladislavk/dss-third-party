@@ -56,6 +56,8 @@ class ExternalUsersController extends BaseRestController
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @todo: this implementation is not RESTful
      */
     public function show($id)
     {
@@ -96,7 +98,9 @@ class ExternalUsersController extends BaseRestController
          * @ToDo: Handle admin tokens
          * @see AWS-19-Request-Token
          */
-        $data['created_by'] = $this->currentUser->id;
+        if ($this->currentUser->id) {
+            $data['created_by'] = $this->currentUser->id;
+        }
         $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
@@ -116,6 +120,8 @@ class ExternalUsersController extends BaseRestController
      *     @SWG\Response(response="422", ref="#/responses/422_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @todo: this implementation is not RESTful
      */
     public function update($id)
     {
@@ -139,6 +145,8 @@ class ExternalUsersController extends BaseRestController
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @todo: this implementation is not RESTful
      */
     public function destroy($id)
     {

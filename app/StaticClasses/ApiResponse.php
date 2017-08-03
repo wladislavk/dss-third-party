@@ -159,7 +159,9 @@ class ApiResponse
         $fractal = new Manager;
 
         if (self::isResource($data) && $transformer = self::hasTransformer($data)) {
-            $data = $fractal->createData(new Item($data, new $transformer))->toArray();
+            $item = new Item($data, new $transformer);
+            $data = $fractal->createData($item);
+            $data = $data->toArray();
         }
 
         if (self::isCollection($data) && self::isResource($data[0]) && $transformer = self::hasTransformer($data[0])) {

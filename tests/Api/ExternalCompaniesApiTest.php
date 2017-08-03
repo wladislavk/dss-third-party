@@ -29,6 +29,8 @@ class ExternalCompaniesApiTest extends ApiTestCase
             'url' => 'test url',
             'description' => 'test description',
             'status' => 1,
+            'created_by' => 1,
+            'updated_by' => 2,
             'reason' => 'test reason',
         ];
     }
@@ -39,30 +41,5 @@ class ExternalCompaniesApiTest extends ApiTestCase
             'software' => 'updated software',
             'name' => 'updated name',
         ];
-    }
-
-    public function testIndex()
-    {
-        $this->markTestSkipped('Table dental_external_companies does not exist');
-    }
-
-    public function testShow()
-    {
-        $this->markTestSkipped('Table dental_external_companies does not exist');
-    }
-
-    public function testStore()
-    {
-        $this->markTestSkipped('Table dental_external_companies does not exist');
-    }
-
-    public function testUpdate()
-    {
-        $this->markTestSkipped('Table dental_external_companies does not exist');
-    }
-
-    public function testDestroy()
-    {
-        $this->markTestSkipped('Table dental_external_companies does not exist');
     }
 }

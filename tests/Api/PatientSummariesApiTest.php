@@ -21,7 +21,6 @@ class PatientSummariesApiTest extends ApiTestCase
         return [
             "pid" => 100,
             "fspage1_complete" => 1,
-//            "next_visit":{"date":"1981-01-10 09:27:42.000000","timezone_type":3,"timezone":"UTC"},"last_visit":{"date":"2016-12-20 05:31:43.000000","timezone_type":3,"timezone":"UTC"},"last_treatment":"Voluptatem doloremque reiciendis velit.","appliance":0,"delivery_date":{"date":"1971-08-19 16:47:37.000000","timezone_type":3,"timezone":"UTC"},
             "vob" => "8",
             "ledger" => 56.84,
             "patient_info" => 1,

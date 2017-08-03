@@ -6,10 +6,6 @@ RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.
 RUN set -xe \
     yum update -y \
 
-#    && yum --enablerepo=extras install -y \
-#        epel-release \
-#        centos-release-scl \
-
     && yum install -y \
         php71w-fpm \
         php71w-opcache \
@@ -19,10 +15,6 @@ RUN set -xe \
         php71w-pdo \
         nodejs \
         fontconfig
-
-#    && yum --enablerepo=centos-sclo-rh install -y \
-#        rh-php71 \
-#        rh-php71-php \
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \

@@ -6,18 +6,16 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
-use DentalSleepSolutions\StaticClasses\SudoHelper;
+use Illuminate\Http\Request;
+use DentalSleepSolutions\Structs\ExternalAuthTokenErrors;
 
 /**
  * Class ExternalAuthTokenParser
  */
 class ExternalAuthTokenParser
 {
-    const NO_ERROR = '';
-    const COMPANY_KEY_MISSING = 'Company key is missing';
-    const USER_KEY_MISSING = 'User key is missing';
-    const COMPANY_KEY_INVALID = 'Company key is not valid';
-    const USER_KEY_INVALID = 'User key is not valid';
+    const COMPANY_KEY_INDEX = 'api_key_company';
+    const USER_KEY_INDEX = 'api_key_user';
 
     /** @var ExternalCompanyRepository */
     private $externalCompanyRepository;
@@ -29,7 +27,10 @@ class ExternalAuthTokenParser
     private $userRepository;
 
     /** @var string */
-    private $error;
+    private $companyKey;
+
+    /** @var string */
+    private $userKey;
 
     /**
      * ExternalAuthTokenParser constructor.
@@ -37,60 +38,33 @@ class ExternalAuthTokenParser
      * @param ExternalCompanyRepository $externalCompanyRepository
      * @param ExternalUserRepository    $externalUserRepository
      * @param UserRepository            $userRepository
+     * @param Request                   $request
      */
     public function __construct(
         ExternalCompanyRepository $externalCompanyRepository,
         ExternalUserRepository $externalUserRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        Request $request
     )
     {
         $this->externalCompanyRepository = $externalCompanyRepository;
         $this->externalUserRepository = $externalUserRepository;
         $this->userRepository = $userRepository;
-
-        $this->setError(self::NO_ERROR);
+        $this->companyKey = $request->input(self::COMPANY_KEY_INDEX, '');
+        $this->userKey = $request->input(self::USER_KEY_INDEX, '');
     }
 
     /**
-     * @param string $companyKey
-     * @param string $userKey
      * @return User|null
      */
-    public function getUserData($companyKey, $userKey)
+    public function getUserData()
     {
-        $this->setError(self::NO_ERROR);
-
-        if (!strlen($companyKey)) {
-            $this->setError(self::COMPANY_KEY_MISSING);
+        if ($this->validationError() !== ExternalAuthTokenErrors::NO_ERROR) {
             return null;
         }
 
-        if (!strlen($userKey)) {
-            $this->setError(self::USER_KEY_MISSING);
-            return null;
-        }
-
-        $externalCompany = $this->externalCompanyRepository->findWhere(['api_key' => $companyKey])->first();
-
-        if (!$externalCompany) {
-            $this->setError(self::COMPANY_KEY_INVALID);
-            return null;
-        }
-
-        $externalUser = $this->externalUserRepository->findWhere(['api_key' => $userKey])->first();
-
-        if (!$externalUser) {
-            $this->setError(self::USER_KEY_INVALID);
-            return null;
-        }
-
-        $user = $this->userRepository->find(SudoHelper::USER_PREFIX . $externalUser->user_id)->first();
-
-        if (!$user) {
-            $this->setError(self::USER_KEY_INVALID);
-            return null;
-        }
-
+        $externalUser = $this->externalUserRepository->findByApiKey($this->userKey);
+        $user = $this->userRepository->findByUid($externalUser->user_id);
         $user->id = $externalUser->user_id;
 
         return $user;
@@ -99,16 +73,34 @@ class ExternalAuthTokenParser
     /**
      * @return string
      */
-    public function getError()
+    public function validationError()
     {
-        return $this->error;
-    }
+        if (!strlen($this->companyKey)) {
+            return ExternalAuthTokenErrors::COMPANY_KEY_MISSING;
+        }
 
-    /**
-     * @param string $error
-     */
-    private function setError($error)
-    {
-        $this->error = $error;
+        if (!strlen($this->userKey)) {
+            return ExternalAuthTokenErrors::USER_KEY_MISSING;
+        }
+
+        $externalCompany = $this->externalCompanyRepository->findByApiKey($this->companyKey);
+
+        if (!$externalCompany) {
+            return ExternalAuthTokenErrors::COMPANY_KEY_INVALID;
+        }
+
+        $externalUser = $this->externalUserRepository->findByApiKey($this->userKey);
+
+        if (!$externalUser) {
+            return ExternalAuthTokenErrors::USER_KEY_INVALID;
+        }
+
+        $user = $this->userRepository->findByUid($externalUser->user_id);
+
+        if (!$user) {
+            return ExternalAuthTokenErrors::USER_NOT_FOUND;
+        }
+
+        return ExternalAuthTokenErrors::NO_ERROR;
     }
 }

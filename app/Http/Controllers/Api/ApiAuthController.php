@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
-use DentalSleepSolutions\StaticClasses\SudoHelper;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Helpers\AuthTokenParser;
 use Illuminate\Http\Request;
@@ -86,17 +85,10 @@ class ApiAuthController extends Controller
             return ApiResponse::responseError('Unauthorized', 401);
         }
 
-        /**
-         * DSS can log a single user (FO/BO) or two users (BO "logged in as" FO).
-         * This method can return more than one result, if the given ID has a separator "|"
-         */
-        $resource = $this->userRepository
-            ->findWhere([
-                'username' => $request->input('username'),
-                'admin' => 0,
-            ])
-            ->first()
-        ;
+        $resource = $this->userRepository->findByCredentials([
+            'username' => $request->input('username'),
+            'admin' => 0
+        ]);
 
         if (!$resource) {
             return ApiResponse::responseError('Invalid credentials', 422);
@@ -107,7 +99,7 @@ class ApiAuthController extends Controller
          * with a combined approach. As a workaround, the ID of a single model will be altered to pass along the
          * list of IDs needed for "logged in as".
          */
-        $resource->id = SudoHelper::sudoId(SudoHelper::ADMIN_PREFIX . $this->currentAdmin->id, $resource->id);
+        $resource->id = $this->userRepository->sudoId($this->currentAdmin->id, $resource->id);
         return ['status' => 'Authenticated', 'token' => $this->auth->fromUser($resource)];
     }
 

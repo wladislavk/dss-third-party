@@ -6,7 +6,6 @@ use Illuminate\Auth\AuthManager;
 use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
-use DentalSleepSolutions\StaticClasses\SudoHelper;
 use Illuminate\Support\Arr;
 
 /**
@@ -51,7 +50,7 @@ class Legacy extends IlluminateAuthAdapter
     public function byCredentials(array $credentials = [])
     {
         $password = Arr::pull($credentials, 'password');
-        $user = $this->userRepository->findWhere($credentials)->first();
+        $user = $this->userRepository->findByCredentials($credentials);
 
         if ($user && $this->check($user, $password)) {
             $this->auth->login($user, false);
@@ -64,31 +63,18 @@ class Legacy extends IlluminateAuthAdapter
     /**
      * Check user ID. DSS can use a composite ID, to log in an admin AND some user, "login as" behavior
      *
-     * @param mixed $id
-     * @return bool|array
+     * @param string $id
+     * @return array
      */
     public function byId($id)
     {
-        /**
-         * Single ID
-         */
-        if (SudoHelper::isSimpleId($id)) {
-            return parent::byId($id);
+        $collection = $this->userRepository->findById($id);
+
+        if ($collection->count()) {
+            return $collection->all();
         }
 
-        if (!SudoHelper::isSudoId($id)) {
-            return false;
-        }
-
-        $sudoId = SudoHelper::parseId($id);
-        $admin = parent::byId($sudoId->adminId);
-        $user = parent::byId($sudoId->userId);
-
-        if ($admin && $user) {
-            return [$admin, $user];
-        }
-
-        return false;
+        return [];
     }
 
     /**

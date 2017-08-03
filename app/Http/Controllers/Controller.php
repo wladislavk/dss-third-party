@@ -24,10 +24,6 @@ abstract class Controller extends BaseController
     /** @var Config */
     protected $config;
 
-    /**
-     * @param Config          $config
-     * @param AuthTokenParser $authTokenParser
-     */
     public function __construct(
         Config $config,
         AuthTokenParser $authTokenParser
@@ -43,9 +39,12 @@ abstract class Controller extends BaseController
             && $config->get('app.testing.tokens', false) !== true
         ) {
             $this->currentUser = new User();
-            $this->currentAdmin = new User();
             $this->currentUser->id = 0;
+            $this->currentUser->userid = 0;
+
+            $this->currentAdmin = new User();
             $this->currentAdmin->id = 0;
+            $this->currentAdmin->adminid = 0;
 
             return;
         }

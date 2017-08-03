@@ -16,6 +16,8 @@ class AlterViewCombineUsers extends Migration
         DB::unprepared("ALTER VIEW v_users AS
                 SELECT
                     CONCAT('u_', u.userid) COLLATE utf8_unicode_ci AS id,
+                    u.userid,
+                    0 AS adminid,
                     0 AS admin,
                     docid,
                     user_type,
@@ -42,6 +44,8 @@ class AlterViewCombineUsers extends Migration
             UNION
                 SELECT
                     CONCAT('a_', a.adminid) COLLATE utf8_unicode_ci AS id,
+                    0 AS userid,
+                    a.adminid,
                     1 AS admin,
                     0 AS docid,
                     0 AS user_type,

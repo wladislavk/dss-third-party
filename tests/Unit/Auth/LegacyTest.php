@@ -3,7 +3,8 @@
 namespace Tests\Unit\Auth;
 
 use DentalSleepSolutions\Auth\Legacy;
-use DentalSleepSolutions\StaticClasses\SudoHelper;
+use DentalSleepSolutions\Helpers\SudoHelper;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Auth\AuthManager;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
@@ -16,8 +17,7 @@ class LegacyTest extends UnitTestCase
     const PASSWORD = 'password';
     const SALT = '';
     const USER_ID = SudoHelper::USER_PREFIX . '1';
-    const ADMIN_ID = SudoHelper::ADMIN_PREFIX . '1';
-    const INVALID_ADMIN_ID = SudoHelper::ADMIN_PREFIX . '2';
+    const INVALID_USER_ID = self::USER_ID . '2';
 
     /** @var array */
     private $whereArguments;
@@ -39,7 +39,7 @@ class LegacyTest extends UnitTestCase
             'password' => self::PASSWORD,
         ];
         $result = $this->legacy->byCredentials($credentials);
-        $this->assertEquals(false, $result);
+        $this->assertFalse($result);
     }
 
     public function testInvalidPassword()
@@ -49,7 +49,7 @@ class LegacyTest extends UnitTestCase
             'password' => '',
         ];
         $result = $this->legacy->byCredentials($credentials);
-        $this->assertEquals(false, $result);
+        $this->assertFalse($result);
     }
 
     public function testValidCredentials()
@@ -59,53 +59,25 @@ class LegacyTest extends UnitTestCase
             'password' => self::PASSWORD,
         ];
         $result = $this->legacy->byCredentials($credentials);
-        $this->assertEquals(true, $result);
+        $this->assertTrue($result);
     }
 
     public function testHashPassword()
     {
         $result = $this->legacy->hashPassword(self::PASSWORD, self::SALT);
-        $this->assertEquals($this->hashPassword(), $result);
+        $this->assertEquals(hash('sha256', self::PASSWORD . self::SALT), $result);
     }
 
-    /**
-     * @dataProvider byIdDataProvider
-     */
-    public function testById($perCaseDescription, $id, $expectedResult)
+    public function testByIdInvalidId()
     {
-        $actualResult = $this->legacy->byId($id);
-        $this->assertEquals($expectedResult, $actualResult, $perCaseDescription);
+        $result = $this->legacy->byId(self::INVALID_USER_ID);
+        $this->assertFalse($result);
     }
 
-    public function byIdDataProvider()
+    public function testByIdValidId()
     {
-        return [
-            [
-                'USER_ID is a valid ID',
-                self::USER_ID,
-                true
-            ],
-            [
-                'Sudo ADMIN_ID/USER_ID is a valid ID, method returns array',
-                self::ADMIN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::USER_ID,
-                [true, true]
-            ],
-            [
-                'Sudo INVALID_ADMIN_ID/USER_ID is not a valid ID',
-                self::INVALID_ADMIN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::USER_ID,
-                false
-            ],
-            [
-                'Sudo USER_ID/ADMIN_ID is not a valid ID',
-                self::USER_ID . SudoHelper::LOGIN_ID_DELIMITER . self::ADMIN_ID,
-                false
-            ],
-            [
-                'Incomplete composite ID is not a valid ID',
-                self::USER_ID . SudoHelper::LOGIN_ID_DELIMITER,
-                false
-            ],
-        ];
+        $result = $this->legacy->byId(self::USER_ID);
+        $this->assertCount(1, $result);
     }
 
     private function mockAuthManager()
@@ -113,20 +85,6 @@ class LegacyTest extends UnitTestCase
         $mock = \Mockery::mock(AuthManager::class);
         $mock->shouldReceive('login')
             ->atMost(1)
-        ;
-        $mock->shouldReceive('onceUsingId')
-            ->atMost(2)
-            ->andReturnUsing(function ($id) {
-                if ($id === self::USER_ID) {
-                    return true;
-                }
-
-                if ($id === self::ADMIN_ID) {
-                    return true;
-                }
-
-                return null;
-            })
         ;
 
         return $mock;
@@ -137,44 +95,49 @@ class LegacyTest extends UnitTestCase
         $this->whereArguments = [];
 
         $mock = \Mockery::mock(UserRepository::class);
-        $mock->shouldReceive('findWhere')
+        $mock->shouldReceive('findByCredentials')
             ->atMost(1)
-            ->andReturnUsing(function (array $arguments) use ($mock) {
-                $this->whereArguments = $arguments;
-                return $mock;
-            })
-        ;
-        $mock->shouldReceive('first')
-            ->atMost(1)
-            ->andReturnUsing(function () {
-                if (Arr::pull($this->whereArguments, 'username') === self::USERNAME) {
-                    return $this->mockUser();
+            ->andReturnUsing(function (array $where) {
+                if (Arr::pull($where, 'username') === self::USERNAME) {
+                    return $this->newUser();
                 }
 
                 return null;
             })
         ;
+        $mock->shouldReceive('findById')
+            ->atMost(1)
+            ->andReturnUsing(function ($id) {
+                if ($id === self::USER_ID) {
+                    return $this->mockCollection([true]);
+                }
 
-        return $mock;
-    }
-
-    private function mockUser()
-    {
-        $mock = \Mockery::mock(User::class);
-        $mock->shouldReceive('getAttribute')
-            ->with('salt')
-            ->andReturn(self::SALT)
-        ;
-        $mock->shouldReceive('getAttribute')
-            ->with('password')
-            ->andReturn($this->hashPassword())
+                return $this->mockCollection();
+            })
         ;
 
         return $mock;
     }
 
-    private function hashPassword()
+    private function newUser()
     {
-        return hash('sha256', self::PASSWORD . self::SALT);
+        $user = new User();
+        $user->salt = self::SALT;
+        $user->password = hash('sha256', self::PASSWORD . self::SALT);
+
+        return $user;
+    }
+
+    private function mockCollection(array $collection = [])
+    {
+        $mock = \Mockery::mock(Collection::class, $collection);
+        $mock->shouldReceive('count')
+            ->passthru()
+        ;
+        $mock->shouldReceive('all')
+            ->passthru()
+        ;
+
+        return $mock;
     }
 }

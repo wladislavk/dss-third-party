@@ -3,13 +3,11 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use function sleep;
 use Tests\TestCases\ApiTestCase;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Models\Admin;
-use DentalSleepSolutions\StaticClasses\SudoHelper;
+use DentalSleepSolutions\Helpers\SudoHelper;
 use Tymon\JWTAuth\JWTAuth;
-use Carbon\Carbon;
 
 class LegacyAuthApiTest extends ApiTestCase
 {
@@ -59,8 +57,8 @@ class LegacyAuthApiTest extends ApiTestCase
     {
         $data = ['username' => '', 'password' => ''];
 
-        $this->json('post', '/auth', $data)
-            ->seeJson(['message' => 'Invalid credentials'])
+        $this->json('post', '/auth', $data);
+        $this->seeJson(['message' => 'Invalid credentials'])
             ->assertResponseStatus(422)
         ;
     }
@@ -73,8 +71,8 @@ class LegacyAuthApiTest extends ApiTestCase
 
         $data = ['username' => $record->username, 'password' => self::PASSWORD];
 
-        $this->json('post', '/auth', $data)
-            ->seeJson(['status' => 'Authenticated'])
+        $this->json('post', '/auth', $data);
+        $this->seeJson(['status' => 'Authenticated'])
             ->assertResponseOk()
         ;
     }
@@ -87,16 +85,16 @@ class LegacyAuthApiTest extends ApiTestCase
 
         $data = ['username' => $record->username, 'password' => self::PASSWORD, 'admin' => self::ADMIN_FLAG];
 
-        $this->json('post', '/auth', $data)
-            ->seeJson(['status' => 'Authenticated'])
+        $this->json('post', '/auth', $data);
+        $this->seeJson(['status' => 'Authenticated'])
             ->assertResponseOk()
         ;
     }
 
     public function testAuthHealthNoAccess()
     {
-        $this->json('get', '/auth-health')
-            ->seeJson(['message' => 'Not Found'])
+        $this->json('get', '/auth-health');
+        $this->seeJson(['message' => 'Not Found'])
             ->assertResponseStatus(404)
         ;
     }
@@ -104,8 +102,8 @@ class LegacyAuthApiTest extends ApiTestCase
     public function testAuthHealthNoToken()
     {
         $this->enableDebug();
-        $this->json('get', '/auth-health')
-            ->seeJson([
+        $this->json('get', '/auth-health');
+        $this->seeJson([
                 'status' => 'Health',
                 'data' => ['user' => null, 'admin' => null],
             ])
@@ -116,8 +114,8 @@ class LegacyAuthApiTest extends ApiTestCase
     public function testAuthHealthUserToken()
     {
         $this->enableDebug();
-        $this->json('get', '/auth-health', [], $this->userAuthHeader)
-            ->seeJson([
+        $this->json('get', '/auth-health', [], $this->userAuthHeader);
+        $this->seeJson([
                 'status' => 'Health',
                 'admin' => null,
                 'username' => $this->user->username,
@@ -129,8 +127,8 @@ class LegacyAuthApiTest extends ApiTestCase
     public function testAuthHealthAdminToken()
     {
         $this->enableDebug();
-        $this->json('get', '/auth-health', [], $this->adminAuthHeader)
-            ->seeJson([
+        $this->json('get', '/auth-health', [], $this->adminAuthHeader);
+        $this->seeJson([
                 'status' => 'Health',
                 'user' => null,
                 'username' => $this->admin->username,
@@ -142,8 +140,8 @@ class LegacyAuthApiTest extends ApiTestCase
     public function testAuthHealthSudoToken()
     {
         $this->enableDebug();
-        $this->json('get', '/auth-health', [], $this->sudoAuthHeader)
-            ->seeJson(['status' => 'Health'])
+        $this->json('get', '/auth-health', [], $this->sudoAuthHeader);
+        $this->seeJson(['status' => 'Health'])
             ->seeJson(['username' => $this->admin->username])
             ->seeJson(['username' => $this->user->username])
             ->assertResponseOk()
@@ -152,32 +150,32 @@ class LegacyAuthApiTest extends ApiTestCase
 
     public function testAuthAsUserToken()
     {
-        $this->json('post', '/auth-as', [], $this->userAuthHeader)
-            ->seeJson(['message' => 'Unauthorized'])
+        $this->json('post', '/auth-as', [], $this->userAuthHeader);
+        $this->seeJson(['message' => 'Unauthorized'])
             ->assertResponseStatus(401)
         ;
     }
 
     public function testAuthAsInvalidUser()
     {
-        $this->json('post', '/auth-as', ['username' => self::INVALID_USERNAME], $this->adminAuthHeader)
-            ->seeJson(['message' => 'Invalid credentials'])
+        $this->json('post', '/auth-as', ['username' => self::INVALID_USERNAME], $this->adminAuthHeader);
+        $this->seeJson(['message' => 'Invalid credentials'])
             ->assertResponseStatus(422)
         ;
     }
 
     public function testAuthAsValidUser()
     {
-        $this->json('post', '/auth-as', ['username' => $this->user->username], $this->adminAuthHeader)
-            ->seeJson(['status' => 'Authenticated'])
+        $this->json('post', '/auth-as', ['username' => $this->user->username], $this->adminAuthHeader);
+        $this->seeJson(['status' => 'Authenticated'])
             ->assertResponseOk()
         ;
     }
 
     public function testAuthAsAuthHealth()
     {
-        $this->json('post', '/auth-as', ['username' => $this->user->username], $this->adminAuthHeader)
-            ->seeJson(['status' => 'Authenticated'])
+        $this->json('post', '/auth-as', ['username' => $this->user->username], $this->adminAuthHeader);
+        $this->seeJson(['status' => 'Authenticated'])
             ->assertResponseOk()
         ;
 
@@ -187,8 +185,8 @@ class LegacyAuthApiTest extends ApiTestCase
         $this->hardRefreshApplication();
         $this->enableDebug();
 
-        $this->json('get', '/auth-health', [], $this->generateAuthHeader('', $json['token']))
-            ->seeJson(['status' => 'Health'])
+        $this->json('get', '/auth-health', [], $this->generateAuthHeader('', $json['token']));
+        $this->seeJson(['status' => 'Health'])
             ->seeJson(['username' => $this->admin->username])
             ->seeJson(['username' => $this->user->username])
             ->assertResponseOk()
@@ -197,8 +195,8 @@ class LegacyAuthApiTest extends ApiTestCase
 
     public function testRefreshTokenNoToken()
     {
-        $this->json('post', '/refresh-token')
-            ->seeJson(['message' => 'Token not provided'])
+        $this->json('post', '/refresh-token');
+        $this->seeJson(['message' => 'Token not provided'])
             ->assertResponseStatus(422)
         ;
     }
@@ -210,8 +208,8 @@ class LegacyAuthApiTest extends ApiTestCase
 
         $token = $this->generateJwtToken(SudoHelper::USER_PREFIX . $this->user->userid, true);
         sleep(1);
-        $this->json('post', '/refresh-token', [], $this->generateAuthHeader('', $token))
-            ->seeJson(['message' => 'Expired token'])
+        $this->json('post', '/refresh-token', [], $this->generateAuthHeader('', $token));
+        $this->seeJson(['message' => 'Expired token'])
             ->assertResponseStatus(422)
         ;
     }
@@ -221,16 +219,16 @@ class LegacyAuthApiTest extends ApiTestCase
         $this->markTestSkipped('Token validation must be implemented in the controller');
         return;
 
-        $this->json('post', '/refresh-token', [], $this->generateAuthHeader('', self::INVALID_USERNAME))
-            ->seeJson(['message' => 'Invalid token'])
+        $this->json('post', '/refresh-token', [], $this->generateAuthHeader('', self::INVALID_USERNAME));
+        $this->seeJson(['message' => 'Invalid token'])
             ->assertResponseStatus(422)
         ;
     }
 
     public function testRefreshToken()
     {
-        $this->json('post', '/refresh-token', [], $this->userAuthHeader)
-            ->seeJson(['status' => 'Authenticated'])
+        $this->json('post', '/refresh-token', [], $this->userAuthHeader);
+        $this->seeJson(['status' => 'Authenticated'])
             ->assertResponseOk()
         ;
     }
@@ -245,9 +243,13 @@ class LegacyAuthApiTest extends ApiTestCase
     {
         $this->userAuthHeader = $this->generateAuthHeader(SudoHelper::USER_PREFIX . $this->user->userid);
         $this->adminAuthHeader = $this->generateAuthHeader(SudoHelper::ADMIN_PREFIX . $this->admin->adminid);
-        $this->sudoAuthHeader = $this->generateAuthHeader(SudoHelper::sudoId(
-            SudoHelper::ADMIN_PREFIX . $this->admin->adminid, SudoHelper::USER_PREFIX . $this->user->userid
-        ));
+        $this->sudoAuthHeader = $this->generateAuthHeader(
+            SudoHelper::ADMIN_PREFIX
+            . $this->admin->adminid
+            . SudoHelper::LOGIN_ID_DELIMITER
+            . SudoHelper::USER_PREFIX
+            . $this->user->userid
+        );
     }
 
     private function hardRefreshApplication()
@@ -286,7 +288,7 @@ class LegacyAuthApiTest extends ApiTestCase
             return $this->jwt->fromUser($collection[0]);
         }
 
-        $collection[0]->id = SudoHelper::sudoId($collection[0]->id, $collection[1]->id);
+        $collection[0]->id = $collection[0]->id . SudoHelper::LOGIN_ID_DELIMITER . $collection[1]->id;
         return $this->jwt->fromUser($collection[0], ['ttl' => $timeToLive]);
     }
 

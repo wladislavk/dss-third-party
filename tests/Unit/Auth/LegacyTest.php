@@ -71,7 +71,7 @@ class LegacyTest extends UnitTestCase
     public function testByIdInvalidId()
     {
         $result = $this->legacy->byId(self::INVALID_USER_ID);
-        $this->assertFalse($result);
+        $this->assertEmpty($result);
     }
 
     public function testByIdValidId()

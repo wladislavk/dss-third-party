@@ -119,7 +119,7 @@ abstract class BaseReferencedRestController extends Controller
     public function update($id)
     {
         $this->validate($this->request, $this->request->updateRules());
-        $data = $this->transformer->fromTransform($this->request->all());
+        $data = $this->transformer->inverseTransform($this->request->all());
         $createData = $this->getCreateAttributes($id);
         $updateData = $this->getUpdateAttributes();
 

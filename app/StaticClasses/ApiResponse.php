@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\StaticClasses;
 
+use function is_object;
 use Traversable;
 use League\Fractal\Manager;
 use Illuminate\Support\Arr;
@@ -164,9 +165,13 @@ class ApiResponse
             $data = $fractal->createData(new Item($data, new $transformer))->toArray();
         }
 
-        $transformer = self::hasTransformer($data[0]);
+        $transformer = '';
 
-        if (self::isCollection($data) && self::isResource($data[0]) && strlen($transformer)) {
+        if (self::isCollection($data) && self::isResource($data[0])) {
+            $transformer = self::hasTransformer($data);
+        }
+
+        if (strlen($transformer)) {
             $data = $fractal->createData(new Collection($data, new $transformer()))->toArray();
         }
 
@@ -179,6 +184,10 @@ class ApiResponse
      */
     private static function hasTransformer($resource)
     {
+        if (!is_string($resource) || !is_object($resource)) {
+            return '';
+        }
+
         $transformer = self::$namespace . class_basename($resource);
 
         /**

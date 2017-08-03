@@ -4,5 +4,5 @@ namespace DentalSleepSolutions\Contracts;
 
 interface TransformerInterface
 {
-    public function fromTransform(array $data);
+    public function inverseTransform(array $data);
 }

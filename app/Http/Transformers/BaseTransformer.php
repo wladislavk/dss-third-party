@@ -13,7 +13,7 @@ abstract class BaseTransformer extends TransformerAbstract implements Transforme
         return $resource->toArray();
     }
 
-    public function fromTransform(array $data)
+    public function inverseTransform(array $data)
     {
         return $data;
     }

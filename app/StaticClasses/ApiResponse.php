@@ -7,7 +7,6 @@ use League\Fractal\Manager;
 use Illuminate\Support\Arr;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -164,10 +163,16 @@ class ApiResponse
             $data = $fractal->createData(new Item($data, new $transformer))->toArray();
         }
 
-        $transformer = self::hasTransformer($data[0]);
+        $transformer = '';
 
-        if (self::isCollection($data) && self::isResource($data[0]) && strlen($transformer)) {
-            $data = $fractal->createData(new Collection($data, new $transformer()))->toArray();
+        if (self::isCollection($data) && self::isResource($data[0])) {
+            $transformer = self::hasTransformer($data[0]);
+        }
+
+        if (strlen($transformer)) {
+            $item = new Item($data, new $transformer());
+            $data = $fractal->createData($item);
+            $data = $data->toArray();
         }
 
         return Arr::get($data, 'data', $data);
@@ -179,6 +184,10 @@ class ApiResponse
      */
     private static function hasTransformer($resource)
     {
+        if (!is_string($resource) && !is_object($resource)) {
+            return '';
+        }
+
         $transformer = self::$namespace . class_basename($resource);
 
         /**

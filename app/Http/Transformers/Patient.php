@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Transformers;
 use DentalSleepSolutions\Contracts\TransformerInterface;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient as Resource;
 
-class Patient extends BaseTransformer implements TransformerInterface
+class Patient extends AbstractTransformer implements TransformerInterface
 {
     use WithTransformer;
 

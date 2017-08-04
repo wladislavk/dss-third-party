@@ -10,12 +10,6 @@ use Illuminate\Http\Request;
 
 class ExternalCompanyMiddleware
 {
-    const COMPANY_KEY_MISSING = 'api_key_company_not_provided';
-    const USER_KEY_MISSING = 'api_key_user_not_provided';
-    const COMPANY_KEY_INVALID = 'api_key_company_invalid';
-    const USER_KEY_INVALID = 'api_key_user_invalid';
-    const KEYS_INVALID = 'api_keys_invalid';
-
     /** @var ExternalAuthTokenParser */
     private $authTokenParser;
 

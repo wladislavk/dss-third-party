@@ -103,6 +103,27 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     /** @var Request */
     protected $request;
 
+    /** @var string */
+    protected $ipAddressKey;
+
+    /** @var string */
+    protected $doctorKey;
+
+    /** @var string */
+    protected $userKey;
+
+    /** @var string */
+    protected $createdByUserKey;
+
+    /** @var string */
+    protected $createdByAdminKey;
+
+    /** @var string */
+    protected $updatedByUserKey;
+
+    /** @var string */
+    protected $updatedByAdminKey;
+
     public function __construct(
         Config $config,
         AuthTokenParser $authTokenParser,
@@ -142,15 +163,19 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     /**
      * Store a newly created resource in storage.
      *
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function store()
     {
         $this->validate($this->request, $this->request->storeRules());
         $data = $this->request->all();
-        if ($this->hasIp) {
-            $data = array_merge($this->request->all(), ['ip_address' => $this->request->ip()]);
+        $createData = $this->getCreateAttributes();
+
+        if (count($createData)) {
+            $data = array_merge($data, $createData);
         }
+
         $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
@@ -165,9 +190,16 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     public function update($id)
     {
         $this->validate($this->request, $this->request->updateRules());
+        $data = $this->request->all();
+        $updateData = $this->getUpdateAttributes();
+
+        if (count($updateData)) {
+            $data = array_merge($data, $updateData);
+        }
+
         /** @var Model $resource */
         $resource = $this->repository->find($id);
-        $resource->update($this->request->all());
+        $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');
     }
@@ -177,6 +209,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
      *
      * @param int $id
      * @return JsonResponse
+     * @throws \Exception
      */
     public function destroy($id)
     {
@@ -213,5 +246,89 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     public function getModelNamespace()
     {
         return self::DEFAULT_MODEL_NAMESPACE;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getCreateAttributes()
+    {
+        $attributes = [];
+
+        if ($this->hasIp) {
+            $attributes['ip_address'] = $this->request->ip();
+        }
+
+        if ($this->doctorKey) {
+            $attributes[$this->doctorKey] = $this->getDoctorId();
+        }
+
+        if ($this->userKey) {
+            $attributes[$this->userKey] = $this->getUserId();
+        }
+
+        if ($this->createdByUserKey) {
+            $attributes[$this->createdByUserKey] = $this->getUserId();
+        }
+
+        if ($this->createdByAdminKey) {
+            $attributes[$this->createdByAdminKey] = $this->getAdminId();
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUpdateAttributes()
+    {
+        $attributes = [];
+
+        if ($this->updatedByUserKey) {
+            $attributes[$this->updatedByUserKey] = $this->getUserId();
+        }
+
+        if ($this->updatedByAdminKey) {
+            $attributes[$this->updatedByAdminKey] = $this->getAdminId();
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getUserId()
+    {
+        if (!$this->currentUser) {
+            return 0;
+        }
+
+        return $this->currentUser->userid;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getDoctorId()
+    {
+        if (!$this->currentUser) {
+            return 0;
+        }
+
+        return $this->currentUser->docid;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getAdminId()
+    {
+        if (!$this->currentAdmin) {
+            return 0;
+        }
+
+        return $this->currentAdmin->adminid;
     }
 }

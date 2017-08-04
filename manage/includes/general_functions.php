@@ -36,14 +36,17 @@ function generateApiToken($idOrEmail) {
 
     if ($apiPath && $phpPath) {
         $idOrEmail = escapeshellarg($idOrEmail);
-        return exec("$phpPath {$apiPath}/artisan jwt:token {$idOrEmail}");
+        $token = exec("$phpPath {$apiPath}/artisan jwt:token {$idOrEmail}");
+        $token = trim($token);
+
+        return $token;
     }
 
     return '';
 }
 
 function apiToken() {
-  return isset($_SESSION['api_token']) ? $_SESSION['api_token'] : '';
+    return isset($_SESSION['api_token']) ? $_SESSION['api_token'] : '';
 }
 
 function adminApiToken () {
@@ -1012,7 +1015,15 @@ function cleanupPostData (Array $data) {
                 ccard|creditc|
                 ccnum|cc_num|
                 _cc_|^cc_|_cc$|
-                cvn|ccvn
+                cvn|ccvn|
+                card-cvc|
+                card-expiry-month|
+                card-expiry-day|
+                card-name|
+                card-zip|
+                cnumber|
+                cname|
+                cvc
             /x',
             $key
         )) {

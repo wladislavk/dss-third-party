@@ -92,11 +92,7 @@ class ExternalUsersController extends BaseRestController
         $this->validate($this->request, $this->request->storeRules());
         $data = $this->request->all();
 
-        /**
-         * @ToDo: Handle admin tokens
-         * @see AWS-19-Request-Token
-         */
-        $data['created_by'] = $this->currentUser->id;
+        $data['created_by'] = $this->currentAdmin->id;
         $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
@@ -121,11 +117,8 @@ class ExternalUsersController extends BaseRestController
     {
         $resource = $this->repository->findFirstById($id);
         $data = $this->request->all();
-        /**
-         * @ToDo: Handle admin tokens
-         * @see AWS-19-Request-Token
-         */
-        $data['updated_by'] = $this->currentUser->id;
+
+        $data['updated_by'] = $this->currentAdmin->id;
         $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');

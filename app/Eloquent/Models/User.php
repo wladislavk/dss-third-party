@@ -20,7 +20,8 @@ class User extends AbstractModel implements AuthenticatableContract
     use Authenticatable;
 
     /**
-     * @todo: check if this table is created on container build and that permissions are correct
+     * @todo View generated on database/migrations/2015_12_22_203443_views_combine_users.php
+     * @todo View altered in AWS-19-Request-Token
      *
      * The database table used by the model.
      *

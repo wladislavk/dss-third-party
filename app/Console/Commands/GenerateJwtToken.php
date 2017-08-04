@@ -2,55 +2,78 @@
 
 namespace DentalSleepSolutions\Console\Commands;
 
-use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use Illuminate\Console\Command;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\JWTAuth;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Eloquent\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
- * This is a helper command for easy generating JWT tokens from
- * cli, given either user's email or combined id (both admin
- * and dental_users tables) - usable from the legacy code.
+ * CLI to generate JWT tokens with v_users IDs
  *
  * @see \ViewsCombineUsers::up
  */
 class GenerateJwtToken extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $signature = 'jwt:token {id : User identifier - either email or compound id (a_X for admins, u_X for dental_users).}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    /** @var string */
     protected $description = 'Generate JWT token for a user.';
 
     /** @var UserRepository */
     private $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    /** @var JWTAuth */
+    private $auth;
+
+    public function __construct(
+        UserRepository $userRepository,
+        JWTAuth $auth
+    )
     {
         parent::__construct();
         $this->userRepository = $userRepository;
+        $this->auth = $auth;
+    }
+
+    public function handle()
+    {
+        $id = $this->argument('id');
+        /** @var Collection */
+        $collection = $this->userRepository->findById($id);
+        $token = $this->tokenFromCollection($collection);
+        $this->info($token);
     }
 
     /**
-     * Execute the console command.
-     *
-     * @return int
+     * @param User $model
+     * @return string
      */
-    public function handle()
+    private function tokenFromSingleModel(User $model)
     {
-        $user = $this->userRepository->findByIdOrEmail($this->argument('id'));
+        return $this->auth->fromUser($model);
+    }
 
-        if (!$user) {
-            exit(0);
+    /**
+     * @param Collection $collection
+     * @return string
+     */
+    private function tokenFromCollection(Collection $collection)
+    {
+        if (!$collection->count()) {
+            return '';
         }
 
-        exit(JWTAuth::fromUser($user));
+        if ($collection->count() === 1) {
+            return $this->tokenFromSingleModel($collection->get(0));
+        }
+
+        $primaryModel = $collection->get(0);
+        $secondaryModel = $collection->get(1);
+        /** @todo Refactor, SRP */
+        $primaryModel->id = $this->userRepository->sudoId($primaryModel->id, $secondaryModel->id);
+
+        return $this->tokenFromSingleModel($primaryModel);
     }
 }

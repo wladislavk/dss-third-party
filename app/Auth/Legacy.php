@@ -2,9 +2,11 @@
 
 namespace DentalSleepSolutions\Auth;
 
-use Illuminate\Support\Arr;
-use DentalSleepSolutions\Eloquent\Models\User;
+use Illuminate\Auth\AuthManager;
 use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Eloquent\Models\User;
+use Illuminate\Support\Arr;
 
 /**
  * This class is used as Authentication provider implementation
@@ -15,16 +17,28 @@ use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
  */
 class Legacy extends IlluminateAuthAdapter
 {
+    /** @var UserRepository */
+    private $userRepository;
+
+    public function __construct(
+        AuthManager $auth,
+        UserRepository $userRepository
+    )
+    {
+        parent::__construct($auth);
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Legacy-code hashed password validation.
      *
      * @param User $user
-     * @param  string $password
+     * @param string $password
      * @return boolean
      */
-    protected function check($user, $password)
+    protected function check(User $user, $password)
     {
-        return $user->password === hash('sha256', $password . $user->salt);
+        return $user->password === $this->hashPassword($password, $user->salt);
     }
 
     /**
@@ -37,7 +51,7 @@ class Legacy extends IlluminateAuthAdapter
     {
         $password = Arr::pull($credentials, 'password');
 
-        $user = User::where($credentials)->first();
+        $user = $this->userRepository->findByCredentials($credentials);
 
         if ($user && $this->check($user, $password)) {
             $this->auth->login($user, false);
@@ -46,5 +60,32 @@ class Legacy extends IlluminateAuthAdapter
         }
 
         return false;
+    }
+    
+    /**
+     * Check user ID. DSS can use a composite ID, to log in an admin AND some user, "login as" behavior
+     *
+     * @param mixed $id
+     * @return bool|array
+     */
+    public function byId($id)
+    {
+        $collection = $this->userRepository->findById($id);
+
+        if ($collection->count()) {
+            return $collection->all();
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $password
+     * @param string $salt
+     * @return string
+     */
+    public function hashPassword($password, $salt)
+    {
+        return hash('sha256', $password . $salt);
     }
 }

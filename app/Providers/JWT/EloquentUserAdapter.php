@@ -5,6 +5,7 @@ use Tymon\JWTAuth\Providers\User\UserInterface;
 use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Facades\UserRepositoryFacade;
+use Illuminate\Database\Eloquent\Collection;
 
 class EloquentUserAdapter implements UserInterface
 {
@@ -26,7 +27,7 @@ class EloquentUserAdapter implements UserInterface
      *
      * @param  mixed  $key
      * @param  mixed  $value
-     * @return Model|Model[]
+     * @return Collection
      */
     public function getBy($key, $value)
     {

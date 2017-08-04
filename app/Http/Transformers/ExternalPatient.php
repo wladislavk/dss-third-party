@@ -148,7 +148,7 @@ class ExternalPatient extends TransformerAbstract
      * @param array $resource
      * @return array
      */
-    public function fromTransform(array $resource) {
+    public function inverseTransform(array $resource) {
         $mapped = $this->simpleMapping($resource, false);
         $mapped = $this->complexMapping($resource, false, $mapped);
 

@@ -69,4 +69,28 @@ class SudoHelperTest extends UnitTestCase
         $this->assertEquals('', $result->adminId);
         $this->assertEquals('', $result->userId);
     }
+
+    public function testIsUid()
+    {
+        $result = $this->sudo->isUid(self::USER_ID);
+        $this->assertTrue($result);
+    }
+
+    public function testIsNotUid()
+    {
+        $result = $this->sudo->isUid(self::SUDO_ID);
+        $this->assertFalse($result);
+    }
+
+    public function testIsAid()
+    {
+        $result = $this->sudo->isAid(self::ADMIN_ID);
+        $this->assertTrue($result);
+    }
+
+    public function testIsNotAid()
+    {
+        $result = $this->sudo->isAid(self::SUDO_ID);
+        $this->assertFalse($result);
+    }
 }

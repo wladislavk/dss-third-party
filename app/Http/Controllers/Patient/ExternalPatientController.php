@@ -2,12 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
-use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use DentalSleepSolutions\Helpers\ExternalAuthTokenParser;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
-use DentalSleepSolutions\Eloquent\Repositories\UserRepository as UserViewRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\ExternalBaseController;
@@ -25,41 +22,24 @@ class ExternalPatientController extends ExternalBaseController
     private $transformer;
 
     public function __construct(
-        ExternalCompanyRepository $externalCompanyRepository,
-        ExternalUserRepository $externalUserRepository,
         Config $config,
+        ExternalAuthTokenParser $authTokenParser,
         Request $request,
-        UserViewRepository $userViewRepository,
-        UserRepository $userRepository,
         Transformer $transformer
     )
     {
-        /**
-         * @todo Refactor dependencies
-         * @see AWS-19-Request-Token-Parser
-         */
-        parent::__construct(
-            $externalCompanyRepository,
-            $externalUserRepository,
-            $config,
-            $request,
-            $userViewRepository,
-            $userRepository
-        );
-
+        parent::__construct($config, $authTokenParser, $request);
         $this->transformer = $transformer;
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param ExternalPatientRepository $repository
-     * @param \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore $request
+     * @param \DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository $repository
+     * @param \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore             $request
      * @return \Illuminate\Http\JsonResponse
-     * @throws asdf
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function store(ExternalPatientRepository $repository, ExternalPatientStore $request) {
-        $data = $this->transformer->fromTransform($request->all());
+        $data = $this->transformer->inverseTransform($request->all());
 
         $created = false;
 

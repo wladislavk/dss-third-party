@@ -50,23 +50,21 @@ class Legacy extends IlluminateAuthAdapter
     public function byCredentials(array $credentials = [])
     {
         $password = Arr::pull($credentials, 'password');
-
         $user = $this->userRepository->findByCredentials($credentials);
 
         if ($user && $this->check($user, $password)) {
             $this->auth->login($user, false);
-
             return true;
         }
 
         return false;
     }
-    
+
     /**
      * Check user ID. DSS can use a composite ID, to log in an admin AND some user, "login as" behavior
      *
-     * @param mixed $id
-     * @return bool|array
+     * @param string $id
+     * @return array
      */
     public function byId($id)
     {
@@ -76,7 +74,7 @@ class Legacy extends IlluminateAuthAdapter
             return $collection->all();
         }
 
-        return false;
+        return [];
     }
 
     /**

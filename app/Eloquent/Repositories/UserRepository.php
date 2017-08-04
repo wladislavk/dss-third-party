@@ -36,13 +36,6 @@ class UserRepository extends AbstractRepository
      */
     public function findById($id, $columns = ['*'])
     {
-        if (!$this->sudo->isSudoId($id)) {
-            return $this->model->where('id', $id)
-                ->orderBy('id', 'ASC')
-                ->get($columns)
-                ;
-        }
-
         $sudoId = $this->sudo->parseId($id);
         $ids = [
             $sudoId->id,
@@ -86,9 +79,20 @@ class UserRepository extends AbstractRepository
      * @param string|int $id
      * @return User|null
      */
-    public function findByUId($id)
+    public function findByUid($id)
     {
-        return $this->find(SudoHelper::USER_PREFIX . $id)
+        return $this->findWhere(['userid' => $id])
+            ->first()
+            ;
+    }
+
+    /**
+     * @param string|int $id
+     * @return User|null
+     */
+    public function findByAid($id)
+    {
+        return $this->findWhere(['adminid' => $id])
             ->first()
             ;
     }
@@ -102,5 +106,25 @@ class UserRepository extends AbstractRepository
     {
         /** @todo Refactor this method & call, it breaks the SRP */
         return $this->sudo->sudoId($adminId, $userId);
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function isUid($id)
+    {
+        /** @todo Refactor this method & call, it breaks the SRP */
+        return $this->sudo->isUid($id);
+    }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public function isAid($id)
+    {
+        /** @todo Refactor this method & call, it breaks the SRP */
+        return $this->sudo->isAid($id);
     }
 }

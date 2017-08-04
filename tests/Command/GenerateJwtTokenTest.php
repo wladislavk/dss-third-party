@@ -7,7 +7,6 @@ use DentalSleepSolutions\Helpers\SudoHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tests\TestCases\ApiTestCase;
-use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 
 class GenerateJwtTokenTest extends ApiTestCase
 {

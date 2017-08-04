@@ -3,13 +3,12 @@
 namespace DentalSleepSolutions\NamingConventions;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Exceptions\NamingConventionException;
 use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 use Prettus\Repository\Eloquent\BaseRepository;
-use Tymon\JWTAuth\JWTAuth;
+use DentalSleepSolutions\Helpers\AuthTokenParser;
 
 class BindingNamingConvention
 {
@@ -52,16 +51,22 @@ class BindingNamingConvention
      */
     public function setController($className)
     {
-        $jwtAuth = \Mockery::mock(JWTAuth::class);
-        $jwtAuth->shouldReceive('getToken')->andReturnNull();
-        $jwtAuth->shouldReceive('toUser')->andReturnNull();
-        $userRepository = \Mockery::mock(UserRepository::class);
         $config = \Mockery::mock(Config::class);
-        $config->shouldReceive('get')->andReturnNull();
+        $authTokenParser = \Mockery::mock(AuthTokenParser::class);
         $repository = \Mockery::mock(BaseRepository::class);
         $request = \Mockery::mock(Request::class);
 
-        $this->controller = new $className($jwtAuth, $userRepository, $config, $repository, $request);
+        $config->shouldReceive('get')
+            ->andReturnNull()
+        ;
+        $authTokenParser->shouldReceive('getUserData')
+            ->andReturnNull()
+        ;
+        $authTokenParser->shouldReceive('getAdminData')
+            ->andReturnNull()
+        ;
+
+        $this->controller = new $className($config, $authTokenParser, $repository, $request);
         if (!$this->controller instanceof BaseRestController) {
             throw new NamingConventionException("$className must extend " . BaseRestController::class);
         }

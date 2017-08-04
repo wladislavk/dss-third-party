@@ -7,7 +7,6 @@ use League\Fractal\Manager;
 use Illuminate\Support\Arr;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -115,6 +114,7 @@ class ApiResponse
     {
         $json = [
             'status'  => self::getStatusName($code),
+            'code'    => $code,
             'message' => $message,
             'data'    => self::transform($data),
         ];
@@ -130,7 +130,7 @@ class ApiResponse
      * @param  string $messageError
      * @param array $headers
      * @param int $options
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public static function response(
         $data,
@@ -156,14 +156,23 @@ class ApiResponse
      */
     public static function transform($data)
     {
-        $fractal = new Manager;
+        $fractal = new Manager();
+        $transformer = self::hasTransformer($data);
 
-        if (self::isResource($data) && $transformer = self::hasTransformer($data)) {
+        if (self::isResource($data) && strlen($transformer)) {
             $data = $fractal->createData(new Item($data, new $transformer))->toArray();
         }
 
-        if (self::isCollection($data) && self::isResource($data[0]) && $transformer = self::hasTransformer($data[0])) {
-            $data = $fractal->createData(new Collection($data, new $transformer))->toArray();
+        $transformer = '';
+
+        if (self::isCollection($data) && self::isResource($data[0])) {
+            $transformer = self::hasTransformer($data[0]);
+        }
+
+        if (strlen($transformer)) {
+            $item = new Item($data, new $transformer());
+            $data = $fractal->createData($item);
+            $data = $data->toArray();
         }
 
         return Arr::get($data, 'data', $data);
@@ -171,13 +180,28 @@ class ApiResponse
 
     /**
      * @param string|object $resource
-     * @return bool|string
+     * @return string
      */
     private static function hasTransformer($resource)
     {
-        return class_exists($transformer = self::$namespace.class_basename($resource))
-                ? $transformer
-                : false;
+        if (!is_string($resource) && !is_object($resource)) {
+            return '';
+        }
+
+        $transformer = self::$namespace . class_basename($resource);
+
+        /**
+         * class_exists() throws an exception if the class doesn't exist and autoload is enabled
+         */
+        try {
+            if (class_exists($transformer)) {
+                return $transformer;
+            }
+        } catch (\ErrorException $e) {
+            return '';
+        }
+
+        return '';
     }
 
     /**

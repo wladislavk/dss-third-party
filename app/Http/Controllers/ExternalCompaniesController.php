@@ -93,7 +93,7 @@ class ExternalCompaniesController extends BaseRestController
         $this->validate($this->request, $this->request->storeRules());
         $data = $this->request->all();
 
-        $data['created_by'] = $this->currentAdmin->id;
+        $data['created_by'] = $this->currentAdmin->adminid;
         $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
@@ -126,7 +126,7 @@ class ExternalCompaniesController extends BaseRestController
         $resource = $this->repository->find($id);
         $data = $this->request->all();
 
-        $data['updated_by'] = $this->currentAdmin->id;
+        $data['updated_by'] = $this->currentAdmin->adminid;
         $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');

@@ -29,7 +29,7 @@ class ExternalCompaniesApiTest extends ApiTestCase
             'url' => 'test url',
             'description' => 'test description',
             'status' => 1,
-            'created_by' => 1,
+            'created_by' => 0,
             'updated_by' => 2,
             'reason' => 'test reason',
         ];

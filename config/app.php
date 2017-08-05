@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'env' => env('APP_ENV', 'production'),
 
     /*
     |--------------------------------------------------------------------------
@@ -27,6 +28,11 @@ return [
     */
 
     'url' => 'http://localhost',
+
+    'external_patient' => [
+        'frontend_url' => env('FRONTEND_URL', 'http://localhost/'),
+        'redirect_uri' => env('EXTERNAL_REDIRECT_URI', 'manage/external-patient.php')
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -211,7 +217,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
 
         'ApiResponse' => \DentalSleepSolutions\StaticClasses\ApiResponse::class,
-
+        'UserRepository' => \DentalSleepSolutions\Eloquent\Repositories\UserRepository::class,
     ],
 
 ];

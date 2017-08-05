@@ -178,6 +178,25 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\TransactionCode::cl
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Admin::class, function ($faker) {
+    return [
+        'name' => $faker->name,
+        'username' => $faker->userName,
+        'password' => $faker->regexify('[a-z0-9]{65}'),
+        'status' => $faker->randomDigit,
+        'ip_address' => $faker->ipv4,
+        'salt' => $faker->regexify('[a-z0-9]{12}'),
+        'recover_time' => $faker->dateTime(),
+        'admin_access' => $faker->randomDigit,
+        'last_accessed_date' => $faker->dateTime(),
+        'claim_margin_top' => $faker->randomDigit,
+        'claim_margin_left' => $faker->randomDigit,
+        'email' => $faker->email,
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\User::class, function ($faker) {
     return [
         'user_access'             => $faker->randomDigit,
@@ -655,6 +674,35 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\EpworthSleepinessSc
         'status'      => $faker->randomDigit,
         'adddate'     => $faker->dateTime(),
         'ip_address'  => $faker->ipv4
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany::class, function ($faker) {
+    return [
+        'software' => $faker->word,
+        'api_key' => $faker->md5,
+        'valid_from' => $faker->date() . ' ' . $faker->time(),
+        'valid_to' => $faker->date() . ' ' . $faker->time(),
+        'name' => $faker->company,
+        'short_name' => $faker->slug,
+        'url' => $faker->url,
+        'description' => $faker->catchPhrase,
+        'status' => $faker->randomElement([1, 2, 3]),
+        'reason' => $faker->sentence($nbWords = 6, $variableNbWords = true),
+        'created_by' => $faker->randomDigit,
+        'updated_by' => $faker->randomDigit,
+    ];
+});
+
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser::class, function ($faker) {
+    return [
+        'user_id' => $faker->randomDigit,
+        'api_key' => $faker->md5,
+        'valid_from' => $faker->date() . ' ' . $faker->time(),
+        'valid_to' => $faker->date() . ' ' . $faker->time(),
+        'enabled' => $faker->boolean,
+        'created_by' => $faker->randomDigit,
+        'updated_by' => $faker->randomDigit,
     ];
 });
 

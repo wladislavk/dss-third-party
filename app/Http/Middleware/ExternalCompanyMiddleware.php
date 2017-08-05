@@ -2,52 +2,52 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Helpers\ExternalAuthTokenParser;
+use DentalSleepSolutions\Structs\ExternalAuthTokenErrors as AuthErrors;
+use DentalSleepSolutions\Structs\ExternalCompanyMiddlewareErrors as MiddlewareErrors;
 use Illuminate\Http\Request;
 
 class ExternalCompanyMiddleware
 {
-    /** @var ExternalCompanyRepository */
-    protected $externalCompanyRepository;
+    /** @var ExternalAuthTokenParser */
+    private $authTokenParser;
 
-    /** @var ExternalUserRepository */
-    protected $externalUserRepository;
-
-    public function __construct(
-        ExternalCompanyRepository $externalCompanyRepository,
-        ExternalUserRepository $externalUserRepository
-    ) {
-        $this->externalCompanyRepository = $externalCompanyRepository;
-        $this->externalUserRepository = $externalUserRepository;
+    public function __construct(ExternalAuthTokenParser $authTokenParser)
+    {
+        $this->authTokenParser = $authTokenParser;
     }
 
     public function handle(Request $request, Closure $next)
     {
-        $companyKey = $request->input('api_key_company');
-        $userKey = $request->input('api_key_user');
+        $currentUser = $this->authTokenParser->getUserData();
 
-        if (!strlen($companyKey)) {
-            return ApiResponse::responseError(['error' => 'api_key_company_not_provided'], 400);
+        if ($currentUser) {
+            return $next($request);
+        }
+        
+        $validationError = $this->authTokenParser->validationError();
+
+        if ($validationError === AuthErrors::COMPANY_KEY_MISSING) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::COMPANY_KEY_MISSING], 400);
         }
 
-        if (!strlen($userKey)) {
-            return ApiResponse::responseError(['error' => 'api_key_user_not_provided'], 400);
+        if ($validationError === AuthErrors::USER_KEY_MISSING) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::USER_KEY_MISSING], 400);
         }
 
-        $externalCompany = $this->externalCompanyRepository->findByApiKey($companyKey);
-
-        if (!$externalCompany) {
-            return ApiResponse::responseError(['error' => 'api_key_company_invalid'], 422);
+        if ($validationError === AuthErrors::COMPANY_KEY_INVALID) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::COMPANY_KEY_INVALID], 422);
         }
 
-        $externalUser = $this->externalUserRepository->findByApiKey($userKey);
-
-        if (!$externalUser || !$externalUser->user() || !count($externalUser->user())) {
-            return ApiResponse::responseError(['error' => 'api_key_user_invalid'], 422);
+        if ($validationError === AuthErrors::USER_KEY_INVALID) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::USER_KEY_INVALID], 422);
         }
 
-        return $next($request);
+        if ($validationError === AuthErrors::USER_NOT_FOUND) {
+            return ApiResponse::responseError(['error' => MiddlewareErrors::USER_NOT_FOUND], 422);
+        }
+
+        return ApiResponse::responseError(['error' => MiddlewareErrors::KEYS_INVALID], 422);
     }
 }

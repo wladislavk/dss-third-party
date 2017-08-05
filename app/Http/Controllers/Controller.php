@@ -2,11 +2,11 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Tymon\JWTAuth\JWTAuth;
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use Illuminate\Config\Repository as Config;
+use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Helpers\AuthTokenParser;
 use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController
@@ -15,63 +15,41 @@ abstract class Controller extends BaseController
 
     use DispatchesJobs, ValidatesRequests;
 
-    /** @var User */
+    /** @var User|null */
+    protected $currentAdmin;
+
+    /** @var User|null */
     protected $currentUser;
 
-    protected $auth;
+    /** @var Config */
+    protected $config;
 
     public function __construct(
-        JWTAuth $auth,
-        UserRepository $userRepository
+        Config $config,
+        AuthTokenParser $authTokenParser
     ) {
-        // TODO: see how it is possible to generate JWT token while testing
-        if (env('APP_ENV') != 'testing') {
-            $this->currentUser = $this->getUserInfo($auth, $userRepository);
-            $this->auth        = $auth;
-            return;
-        }
-        $this->currentUser = new User();
-    }
-
-    /**
-     * @param JWTAuth $auth
-     * @param UserRepository $userRepository
-     * @return mixed
-     */
-    private function getUserInfo(JWTAuth $auth, UserRepository $userRepository)
-    {
-        /** @var User $user */
-        $user = $auth->toUser();
-
-        if (!$user) {
-            return $user;
-        }
-
-        $user->id = preg_replace('/(?:u_|a_)/', '', $user->id);
+        $this->config = $config;
 
         /**
-         * @ToDo: Handle admin tokens
-         * @see AWS-19-Request-Token
+         * @todo Generate tokens with $auth->fromUser($userModel)
+         * @todo Select user/admin data to inject in tests
          */
-        $getter = $userRepository->getDocId($user->id);
+        if (
+            $config->get('app.env') === 'testing'
+            && $config->get('app.testing.tokens', false) !== true
+        ) {
+            $this->currentUser = new User();
+            $this->currentUser->id = 0;
+            $this->currentUser->userid = 0;
 
-        if (!$getter) {
-            return $user;
+            $this->currentAdmin = new User();
+            $this->currentAdmin->id = 0;
+            $this->currentAdmin->adminid = 0;
+
+            return;
         }
 
-        $docId = $getter->docid;
-
-        $user->docid = $user->userid;
-        if ($docId) {
-            $user->docid = $docId;
-        }
-
-        $user->user_type = 0;
-        $userType = $userRepository->getUserType($user->docid);
-        if ($userType) {
-            $user->user_type = $userType->user_type;
-        }
-
-        return $user;
+        $this->currentAdmin = $authTokenParser->getAdminData();
+        $this->currentUser = $authTokenParser->getUserData();
     }
 }

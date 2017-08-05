@@ -24,7 +24,7 @@ class ExternalUsersApiTest extends ApiTestCase
             'api_key' => 'test api key',
             'valid_from' => 'test valid from',
             'valid_to' => 'test valid to',
-            'created_by' => 1,
+            'created_by' => 0,
             'updated_by' => 1,
             'enabled' => true,
         ];

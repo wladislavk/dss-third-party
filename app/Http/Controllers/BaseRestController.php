@@ -3,14 +3,14 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Contracts\SingularAndPluralInterface;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\NamingConventions\BindingNamingConvention;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Prettus\Repository\Eloquent\BaseRepository;
-use Tymon\JWTAuth\JWTAuth;
+use Illuminate\Config\Repository as Config;
+use DentalSleepSolutions\Helpers\AuthTokenParser;
 
 /**
  * @SWG\Swagger(
@@ -104,12 +104,12 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     protected $request;
 
     public function __construct(
-        JWTAuth $auth,
-        UserRepository $userRepository,
+        Config $config,
+        AuthTokenParser $authTokenParser,
         BaseRepository $repository,
         Request $request
     ) {
-        parent::__construct($auth, $userRepository);
+        parent::__construct($config, $authTokenParser);
         $this->repository = $repository;
         $this->request = $request;
     }

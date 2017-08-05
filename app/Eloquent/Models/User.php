@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Eloquent\Models;
 
+use DentalSleepSolutions\Contracts\UserInterface;
+use DentalSleepSolutions\Eloquent\Traits\UserTrait;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
@@ -15,12 +17,13 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  * @see self::boot
  * @mixin \Eloquent
  */
-class User extends AbstractModel implements AuthenticatableContract
+class User extends AbstractModel implements AuthenticatableContract, UserInterface
 {
-    use Authenticatable;
+    use Authenticatable, UserTrait;
 
     /**
-     * @todo: check if this table is created on container build and that permissions are correct
+     * @todo View generated on database/migrations/2015_12_22_203443_views_combine_users.php
+     * @todo View altered in AWS-19-Request-Token
      *
      * The database table used by the model.
      *

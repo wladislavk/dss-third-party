@@ -138,7 +138,11 @@ class UsersApiTest extends ApiTestCase
     {
         $this->post(self::ROUTE_PREFIX . '/users/current');
         $this->assertResponseOk();
-        $this->assertEquals([], $this->getResponseData());
+        $expected = [
+            'id' => 0,
+            'userid' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 
     public function testGetCourseStaff()

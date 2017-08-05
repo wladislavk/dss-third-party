@@ -442,11 +442,10 @@ class ContactsController extends BaseRestController
         foreach ($ranges as $range) {
             if ($range[1]) {
                 $key = "num_ref{$range[1]}";
-                $dateConditional = "BETWEEN DATE_SUB(CURDATE(), INTERVAL {$range[1]} DAY) AND " .
-                    ($range[0] ? "DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)" : 'CURDATE()');
+                $dateConditional = $patientRepository->getDateConditionalBetweenDays($range[0], $range[1]);
             } else {
                 $key = "num_ref{$range[0]}plus";
-                $dateConditional = "< DATE_SUB(CURDATE(), INTERVAL {$range[0]} DAY)";
+                $dateConditional = $patientRepository->getDateConditionalForDay($range[0]);
             }
 
             $counters[$key] = $patientRepository->getReferralCountersForContact(

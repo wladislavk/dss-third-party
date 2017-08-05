@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
+use DentalSleepSolutions\Exceptions\GeneralException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -171,5 +172,22 @@ abstract class AbstractRepository extends BaseRepository
         }
 
         return $this->parserResult($model);
+    }
+
+    /**
+     * @param int $patientId
+     * @return Model|null
+     * @throws GeneralException
+     */
+    public function findByIdOrNull($patientId)
+    {
+        if (!$patientId) {
+            return null;
+        }
+        $resource = $this->model->find($patientId);
+        if (!$resource) {
+            throw new GeneralException("Resource of type " . get_class($resource) . " with ID $patientId not found");
+        }
+        return $resource;
     }
 }

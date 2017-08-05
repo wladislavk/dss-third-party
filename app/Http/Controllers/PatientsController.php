@@ -17,12 +17,14 @@ use DentalSleepSolutions\Helpers\AccessCodeResetter;
 use DentalSleepSolutions\Helpers\EmailChecker;
 use DentalSleepSolutions\Helpers\FullNameComposer;
 use DentalSleepSolutions\Helpers\NameSetter;
+use DentalSleepSolutions\Helpers\PatientFinder;
 use DentalSleepSolutions\Helpers\PatientLocationRetriever;
 use DentalSleepSolutions\Helpers\PatientRuleRetriever;
 use DentalSleepSolutions\Helpers\TempPinDocumentCreator;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Structs\EditPatientIntendedActions;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
+use DentalSleepSolutions\Structs\PatientFinderData;
 use DentalSleepSolutions\Structs\RequestedEmails;
 use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use Illuminate\Http\JsonResponse;
@@ -493,7 +495,7 @@ class PatientsController extends BaseRestController
      */
     public function getNumber()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = $this->currentUser->getDocIdOrZero();
 
         $data = $this->repository->getNumber($docId);
 
@@ -510,7 +512,7 @@ class PatientsController extends BaseRestController
      */
     public function getDuplicates()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = $this->currentUser->getDocIdOrZero();
 
         $data = $this->repository->getDuplicates($docId);
 
@@ -527,7 +529,7 @@ class PatientsController extends BaseRestController
      */
     public function getBounces()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = $this->currentUser->getDocIdOrZero();
 
         $data = $this->repository->getBounces($docId);
 
@@ -582,32 +584,23 @@ class PatientsController extends BaseRestController
      * )
      *
      * @param Request $request
+     * @param PatientFinder $patientFinder
      * @return JsonResponse
      */
-    public function find(Request $request)
+    public function find(Request $request, PatientFinder $patientFinder)
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-        $userType = $this->currentUser->getUserTypeOrZero();
+        $patientFinderData = new PatientFinderData();
+        $patientFinderData->docId = $this->currentUser->getDocIdOrZero();
+        $patientFinderData->userType = $this->currentUser->getUserTypeOrZero();
+        $patientFinderData->patientId = $request->input('patientId', 0);
+        $patientFinderData->type = $request->input('type', 1);
+        $patientFinderData->pageNumber = $request->input('page', 0);
+        $patientFinderData->patientsPerPage = $request->input('patientsPerPage', 30);
+        $patientFinderData->letter = $request->input('letter', '');
+        $patientFinderData->sortColumn = $request->input('sortColumn', 'name');
+        $patientFinderData->sortDir = $request->input('sortDir', '');
 
-        $patientId       = $request->input('patientId', 0);
-        $type            = $request->input('type', 1);
-        $pageNumber      = $request->input('page', 0);
-        $patientsPerPage = $request->input('patientsPerPage', 30);
-        $letter          = $request->input('letter', '');
-        $sortColumn      = $request->input('sortColumn', 'name');
-        $sortDir         = $request->input('sortDir', '');
-
-        $data = $this->repository->findPatientBy(
-            $docId,
-            $userType,
-            $patientId,
-            $type,
-            $pageNumber,
-            $patientsPerPage,
-            $letter,
-            $sortColumn,
-            $sortDir
-        );
+        $data = $patientFinder->findPatientBy($patientFinderData);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -701,9 +694,9 @@ class PatientsController extends BaseRestController
             return ApiResponse::responseError('', 422, $validator->getMessageBag()->all());
         }
 
-        $unchangedPatient = null;
         try {
-            $unchangedPatient = $this->repository->getUnchangedPatient($patientId);
+            /** @var Patient|null $unchangedPatient */
+            $unchangedPatient = $this->repository->findByIdOrNull($patientId);
         } catch (GeneralException $e) {
             return ApiResponse::responseError($e->getMessage(), 422);
         }

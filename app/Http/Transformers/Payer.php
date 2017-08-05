@@ -2,12 +2,16 @@
 
 namespace DentalSleepSolutions\Http\Transformers;
 
-use DentalSleepSolutions\Eloquent\Models\Payer as Resource;
+use Illuminate\Database\Eloquent\Collection;
 use League\Fractal\TransformerAbstract;
 
 class Payer extends TransformerAbstract
 {
-	public function transform(Resource $payer)
+    /**
+     * @param Collection|\DentalSleepSolutions\Eloquent\Models\Payer $payer
+     * @return array
+     */
+	public function transform($payer)
 	{
 	    return [
             //

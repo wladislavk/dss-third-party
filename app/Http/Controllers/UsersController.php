@@ -377,7 +377,7 @@ class UsersController extends BaseRestController
      */
     public function getCourseStaff()
     {
-        $userId = $this->currentUser->id ?: 0;
+        $userId = $this->currentUser->userid ?: 0;
 
         $data = $this->repository->getCourseStaff($userId);
 
@@ -411,7 +411,7 @@ class UsersController extends BaseRestController
      */
     public function checkLogout()
     {
-        $userId = $this->currentUser->id ?: 0;
+        $userId = $this->currentUser->userid ?: 0;
         $logoutTime = 60 * 60;
 
         $data = $this->repository->getLastAccessedDate($userId);

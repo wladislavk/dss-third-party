@@ -19,7 +19,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         HttpException::class,
-        ResourceNotFound::class,
+        ResourceNotFoundException::class,
     ];
 
     /**
@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if ($e instanceof ResourceNotFound || $e instanceof ModelNotFoundException) {
+        if ($e instanceof ResourceNotFoundException || $e instanceof ModelNotFoundException) {
             $e = new HttpException(404, 'Resource not found');
         }
 
@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
             return ApiResponse::responseError($e->getMessage(), $e->getStatusCode());
         }
 
-        $message = 'Internal error occured. We are investigating the issue.';
+        $message = 'An internal error occurred. We are investigating the issue.';
 
         return ApiResponse::responseError($message, 500);
     }

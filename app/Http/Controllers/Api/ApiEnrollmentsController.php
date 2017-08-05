@@ -3,9 +3,10 @@
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserCompanyRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Eloquent\Repositories\EligibleResponseRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\EnrollmentRepository;
+use DentalSleepSolutions\Helpers\AuthTokenParser;
+use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\PayersListRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\TransactionTypeRepository;
 use DentalSleepSolutions\Eloquent\Repositories\UserSignatureRepository;
@@ -19,7 +20,6 @@ use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
 use DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
-use Tymon\JWTAuth\JWTAuth;
 
 class ApiEnrollmentsController extends ApiBaseController
 {
@@ -36,11 +36,11 @@ class ApiEnrollmentsController extends ApiBaseController
     private $transactionType = 0;
 
     public function __construct(
-        JWTAuth $auth,
-        UserRepository $userRepository,
+        Config $config,
+        AuthTokenParser $authTokenParser,
         EnrollmentRepository $enrollmentRepository
     ) {
-        parent::__construct($auth, $userRepository);
+        parent::__construct($config, $authTokenParser);
         $this->repository = $enrollmentRepository;
     }
 

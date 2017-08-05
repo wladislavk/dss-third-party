@@ -20,7 +20,7 @@ class DisplayingFileController extends Controller
     public function getFile($filename)
     {
         // access only to own directory
-        $userId     = $this->currentUser->id;
+        $userId     = $this->currentUser->userid;
         $pathToFile = 'user_' . $userId . '/' . $filename;
 
         if (Storage::has($pathToFile)) {

@@ -75,7 +75,7 @@ class LetterManager
         );
         foreach ($letters as $letter) {
             $this->letterDeleter->deleteLetter(
-                $letter->letterid,
+                $letter,
                 self::DELETE_TYPES[$unchangedPatient->referred_source],
                 $unchangedPatient->referred_by,
                 $docId,

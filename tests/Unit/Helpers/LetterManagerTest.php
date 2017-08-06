@@ -134,10 +134,10 @@ class LetterManagerTest extends UnitTestCase
         return $letters;
     }
 
-    public function deleteLetterCallback($letterId, $type, $recipientId, $docId, $userId)
+    public function deleteLetterCallback(Letter $letter, $type, $recipientId, $docId, $userId)
     {
         $this->deletedLetters[] = [
-            'letterId' => $letterId,
+            'letterId' => $letter->letterid,
             'type' => $type,
             'recipientId' => $recipientId,
             'docId' => $docId,

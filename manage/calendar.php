@@ -43,7 +43,9 @@ if(!empty($_GET['msg'])) {
 
 <style type="text/css" media="screen">
 <?php foreach ($schedulerAppointmentTypes as $appt_t_r) {
-	$str = preg_replace('/[^a-z0-9]/i', '', strtolower($appt_t_r['name']));
+    $str = strtolower($appt_t_r['name']);
+    $str = html_entity_decode($str);
+	$str = preg_replace('/[^a-z0-9]/i', '', $str);
 	?>
 	.dhx_cal_event.event_<?php print $str; ?> div{ 
 		background-color: #<?php print $appt_t_r['color']; ?> !important; 

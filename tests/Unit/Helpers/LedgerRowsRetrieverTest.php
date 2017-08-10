@@ -5,6 +5,8 @@ namespace Tests\Unit\Helpers;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
+use DentalSleepSolutions\Exceptions\MissingElementException;
+use DentalSleepSolutions\Exceptions\ObjectTypeException;
 use DentalSleepSolutions\Helpers\LedgerRowsRetriever;
 use DentalSleepSolutions\Http\Controllers\LedgersController;
 use DentalSleepSolutions\Structs\LedgerReportData;
@@ -109,8 +111,8 @@ class LedgerRowsRetrieverTest extends UnitTestCase
 
         $data = new LedgerReportData();
         $reportType = 'foo';
-        $this->expectException(GeneralException::class);
-        $this->expectExceptionMessage('Rows array must contain keys \'result\' and \'total\'');
+        $this->expectException(MissingElementException::class);
+        $this->expectExceptionMessage('Rows array must contain keys \'total\', \'result\'');
         $this->ledgerRowsRetriever->getLedgerRows($data, $reportType);
     }
 
@@ -122,8 +124,8 @@ class LedgerRowsRetrieverTest extends UnitTestCase
 
         $data = new LedgerReportData();
         $reportType = 'foo';
-        $this->expectException(GeneralException::class);
-        $this->expectExceptionMessage('Rows array must contain keys \'result\' and \'total\'');
+        $this->expectException(MissingElementException::class);
+        $this->expectExceptionMessage('Rows array must contain keys \'total\', \'result\'');
         $this->ledgerRowsRetriever->getLedgerRows($data, $reportType);
     }
 
@@ -136,8 +138,8 @@ class LedgerRowsRetrieverTest extends UnitTestCase
 
         $data = new LedgerReportData();
         $reportType = 'foo';
-        $this->expectException(GeneralException::class);
-        $this->expectExceptionMessage('Result must be of type ' . Collection::class);
+        $this->expectException(ObjectTypeException::class);
+        $this->expectExceptionMessage('Result must be of type or extend ' . Collection::class);
         $this->ledgerRowsRetriever->getLedgerRows($data, $reportType);
     }
 
@@ -152,7 +154,7 @@ class LedgerRowsRetrieverTest extends UnitTestCase
 
         $data = new LedgerReportData();
         $reportType = 'foo';
-        $this->expectException(GeneralException::class);
+        $this->expectException(MissingElementException::class);
         $this->expectExceptionMessage('Each row must contain key \'patientid\'');
         $this->ledgerRowsRetriever->getLedgerRows($data, $reportType);
     }

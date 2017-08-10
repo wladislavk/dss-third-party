@@ -5,6 +5,8 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
+use DentalSleepSolutions\Exceptions\MissingElementException;
+use DentalSleepSolutions\Exceptions\ObjectTypeException;
 use DentalSleepSolutions\Http\Controllers\LedgersController;
 use DentalSleepSolutions\Structs\LedgerReportData;
 use Illuminate\Database\Eloquent\Collection;
@@ -27,18 +29,19 @@ class LedgerRowsRetriever
      * @param LedgerReportData $data
      * @param string $reportType
      * @return array
-     * @throws GeneralException
+     * @throws ObjectTypeException|MissingElementException
      */
     public function getLedgerRows(LedgerReportData $data, $reportType)
     {
         $ledgerRows = $this->queryLedgerRows($data, $reportType);
 
         if (!isset($ledgerRows['total']) || !isset($ledgerRows['result'])) {
-            throw new GeneralException('Rows array must contain keys \'result\' and \'total\'');
+            $keys = ['total', 'result'];
+            throw new MissingElementException($keys, 'Rows array');
         }
 
         if (!$ledgerRows['result'] instanceof Collection) {
-            throw new GeneralException('Result must be of type ' . Collection::class);
+            throw new ObjectTypeException($ledgerRows['result'], Collection::class, 'Result');
         }
 
         if ($ledgerRows['total'] > 0) {
@@ -66,12 +69,14 @@ class LedgerRowsRetriever
     /**
      * @param array $row
      * @return array
-     * @throws GeneralException
+     * @throws MissingElementException
      */
     private function modifyResult(array $row)
     {
         if (!isset($row['patientid'])) {
-            throw new GeneralException('Each row must contain key \'patientid\'');
+            $arrayName = 'Each row';
+            $keys = ['patientid'];
+            throw new MissingElementException($keys, $arrayName);
         }
 
         $patients = $this->patientRepository->getWithFilter(

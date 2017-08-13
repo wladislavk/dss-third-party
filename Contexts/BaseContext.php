@@ -5,9 +5,13 @@ namespace Contexts;
 use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Element\DocumentElement;
+use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+
+require_once __DIR__ . '/../config.php';
 
 abstract class BaseContext extends RawMinkContext
 {
@@ -19,6 +23,10 @@ abstract class BaseContext extends RawMinkContext
     const VERY_SHORT_WAIT_TIME = 200;
 
     const NUMBER_OF_TRIES = 3;
+
+    const PASSWORDS = [
+        'doc1f' => 'cr3at1vItY',
+    ];
 
     /**
      * @var DocumentElement
@@ -41,6 +49,8 @@ abstract class BaseContext extends RawMinkContext
      */
     public function beforeScenario(BeforeScenarioScope $scope)
     {
+        $this->getMink()->stopSessions();
+
         /** @var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
         $this->common = $environment->getContext($this->getCommonContext());
@@ -87,14 +97,45 @@ abstract class BaseContext extends RawMinkContext
 
     /**
      * @param string $selector
+     * @param NodeElement|null $parentElement
+     * @return NodeElement|null
+     */
+    protected function findCss($selector, NodeElement $parentElement = null)
+    {
+        if (!$parentElement) {
+            $parentElement = $this->page;
+        }
+        return $parentElement->find('css', $selector);
+    }
+
+    /**
+     * @param string $selector
+     * @param NodeElement|null $parentElement
+     * @return NodeElement[]
+     */
+    protected function findAllCss($selector, NodeElement $parentElement = null)
+    {
+        if (!$parentElement) {
+            $parentElement = $this->page;
+        }
+        return $parentElement->findAll('css', $selector);
+    }
+
+    /**
+     * @param string $selector
      * @param string $text
-     * @return NodeElement
+     * @param Element|null $parentElement
+     * @param bool $allowNull
+     * @return NodeElement|null
      * @throws BehatException
      */
-    protected function findElementWithText($selector, $text)
+    protected function findElementWithText($selector, $text, Element $parentElement = null, $allowNull = false)
     {
-        $element = $this->page->find('xpath', '//' . $selector . '[text()="' . $text . '"]');
-        if (!$element) {
+        if (!$parentElement) {
+            $parentElement = $this->page;
+        }
+        $element = $parentElement->find('xpath', '//' . $selector . '[text()="' . $text . '"]');
+        if (!$element && !$allowNull) {
             throw new BehatException("Element with text $text not found");
         }
         return $element;
@@ -112,5 +153,42 @@ abstract class BaseContext extends RawMinkContext
             throw new BehatException("Element with text $text not found");
         }
         $element->click();
+    }
+
+    protected function visitStartPage()
+    {
+        $this->getCommonClient()->visit(START_URL);
+    }
+
+    protected function login($user, $password = '')
+    {
+        if (!$password && array_key_exists($user, self::PASSWORDS)) {
+            $password = self::PASSWORDS[$user];
+        }
+        $this->page->fillField('username', $user);
+        $this->page->fillField('password', $password);
+        $loginButton = $this->findCss('input[value=" Login "]');
+        $loginButton->click();
+    }
+
+    /**
+     * @todo: this function should be deleted when redirects are fixed
+     */
+    protected function reloadStartPage()
+    {
+        $this->visitStartPage();
+        $this->getCommonClient()->wait(self::SHORT_WAIT_TIME);
+        $this->page = $this->getCommonClient()->getPage();
+    }
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    protected function sanitizeText($text)
+    {
+        $text = preg_replace('/\s{2,}/', ' ', $text);
+        $text = trim($text);
+        return $text;
     }
 }

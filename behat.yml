@@ -4,9 +4,12 @@ default:
             paths:
                 - "%paths.base%/Features"
             contexts:
+                - Contexts\Auth
+                - Contexts\Dashboard
                 - Contexts\Main
-                - Contexts\Database
-                - Contexts\Google
+                - Contexts\PatientChart
+                - Contexts\Staff
+                - Contexts\Support
     extensions:
         Behat\MinkExtension:
             base_url: "http://example.com"

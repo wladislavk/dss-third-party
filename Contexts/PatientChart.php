@@ -52,6 +52,18 @@ class PatientChart extends BaseContext
     }
 
     /**
+     * @When I click on :menuPoint patient chart menu point
+     *
+     * @param string $menuPoint
+     */
+    public function clickPatientChartMenu($menuPoint)
+    {
+        $list = $this->findCss('div#patient_nav > ul');
+        $link = $this->findElementWithText('a', $menuPoint, $list);
+        $link->click();
+    }
+
+    /**
      * @Then I see patient search form
      */
     public function testPatientSearchForm()
@@ -104,6 +116,22 @@ class PatientChart extends BaseContext
     }
 
     /**
+     * @Then I see questionnaire subpoints:
+     *
+     * @param TableNode $table
+     */
+    public function testQuestionnaireSubpoints(TableNode $table)
+    {
+        $expectedPoints = array_column($table->getHash(), 'name');
+        $table = $this->findCss('div#contentMain > table');
+        $subpoints = $this->findAllCss('td', $table);
+        foreach ($expectedPoints as $key => $expectedPoint) {
+            $subpointText = $this->sanitizeText($subpoints[$key]->getText());
+            Assert::assertEquals($expectedPoint, $subpointText);
+        }
+    }
+
+    /**
      * @Then I see :text button
      *
      * @param string $text
@@ -141,27 +169,5 @@ class PatientChart extends BaseContext
     public function testFormWarning($text, TableNode $missingFields)
     {
         // @todo: fill this method
-    }
-
-    /**
-     * @Then I can see following forms:
-     *
-     * @param TableNode $table
-     */
-    public function testPatientForms(TableNode $table)
-    {
-        $parentForm = $this->findCss('form[name="sortfrm"]');
-        $rows = $this->findAllCss('tr > td:nth-child(1)', $parentForm);
-        $expectedForms = array_column($table->getHash(), 'name');
-        foreach ($expectedForms as $expectedForm) {
-            $formExists = false;
-            foreach ($rows as $row) {
-                $formText = $this->sanitizeText($row->getText());
-                if ($formText == $expectedForm) {
-                    $formExists = true;
-                }
-            }
-            Assert::assertTrue($formExists);
-        }
     }
 }

@@ -30,6 +30,12 @@ Feature: Patient Chart
       | Questionnaire  |
       | Clinical Exam  |
       | Patient Info   |
+    When I click on "Questionnaire" patient chart menu point
+    Then I see questionnaire subpoints:
+      | name                |
+      | Symptoms            |
+      | Previous Treatments |
+      | Health Hx.          |
 
   Scenario: Add patient
     Given I am logged in as "doc1f"
@@ -56,13 +62,3 @@ Feature: Patient Chart
 #      | Last Name  | Test           |
 #      | Cell Phone | (941) 254-1111 |
 #    And I see "Send Registration Email" button
-
-  Scenario: Download patient forms
-    Given I am logged in as "doc1f"
-    When I visit start page
-    And I click on "Forms" menu point
-    Then I can see following forms:
-      | name                  |
-      | Patient Notices       |
-      | New Patient Form      |
-      | Patient Questionnaire |

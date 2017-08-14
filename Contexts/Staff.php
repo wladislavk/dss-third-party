@@ -7,8 +7,6 @@ use PHPUnit\Framework\Assert;
 
 class Staff extends BaseContext
 {
-    const REQUIRED_HTML = '<span class="red">*</span>';
-
     /**
      * @Then I see the staff list:
      *

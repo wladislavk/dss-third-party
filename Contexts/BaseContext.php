@@ -24,6 +24,8 @@ abstract class BaseContext extends RawMinkContext
 
     const NUMBER_OF_TRIES = 3;
 
+    const REQUIRED_HTML = '<span class="red">*</span>';
+
     const PASSWORDS = [
         'doc1f' => 'cr3at1vItY',
     ];

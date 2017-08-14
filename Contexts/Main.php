@@ -118,4 +118,22 @@ class Main extends BaseContext
         Assert::assertNotNull($title);
         Assert::assertEquals($page, trim($title->getText()));
     }
+
+    /**
+     * @Then I see list that contains :pages pages and I am on page :currentPage
+     *
+     * @param string $pages
+     * @param string $currentPage
+     */
+    public function testPagedList($pages, $currentPage)
+    {
+        $form = $this->findCss('form[name="sortfrm"]');
+        Assert::assertNotNull($form);
+        $pagesColumn = $this->findCss('table > tbody > tr:first-child > td.bp');
+        Assert::assertContains('Pages', $pagesColumn->getText());
+        $numberOfLinks = count($this->findAllCss('a', $pagesColumn));
+        Assert::assertEquals($pages - 1, $numberOfLinks);
+        $boldPage = $this->findCss('strong', $pagesColumn);
+        Assert::assertEquals($currentPage, $boldPage->getText());
+    }
 }

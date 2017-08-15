@@ -27,6 +27,24 @@ class Dashboard extends BaseContext
     }
 
     /**
+     * @When I click on :menuPoint in notifications menu
+     *
+     * @param string $menuPoint
+     * @throws BehatException
+     */
+    public function clickNotifications($menuPoint)
+    {
+        $spans = $this->findAllCss('a.notification > span.label');
+        foreach ($spans as $span) {
+            if ($span->getText() == $menuPoint) {
+                $span->getParent()->click();
+                return;
+            }
+        }
+        throw new BehatException("Menu point with text $menuPoint not found");
+    }
+
+    /**
      * @When I run mouse over :menuPoint menu point
      *
      * @param string $menuPoint

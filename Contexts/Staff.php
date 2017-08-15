@@ -61,23 +61,8 @@ class Staff extends BaseContext
             $nameColumn = $this->findCss("td:nth-child(1)", $newTableRows[$childNumber]);
             $valueColumn = $this->findCss("td:nth-child(2)", $newTableRows[$childNumber]);
             Assert::assertEquals($row['field'], $this->sanitizeText($nameColumn->getText()));
-            $valueHtml = $this->sanitizeText($valueColumn->getHtml());
-            if ($row['required'] == 'yes') {
-                Assert::assertContains(self::REQUIRED_HTML, $valueHtml);
-            } else {
-                Assert::assertNotContains(self::REQUIRED_HTML, $valueHtml);
-            }
-            switch ($row['type']) {
-                case 'text':
-                    // fall through
-                case 'checkbox':
-                    $input = $this->findCss("input[type=\"{$row['type']}\"]", $valueColumn);
-                    Assert::assertNotNull($input);
-                    break;
-                case 'select':
-                    Assert::assertContains('<select', $valueHtml);
-                    break;
-            }
+            Assert::assertTrue($this->checkRequiredFormElement($valueColumn, $row['required']));
+            Assert::assertTrue($this->checkFormElement($valueColumn, $row['type']));
         }
 
         $this->getCommonClient()->switchToIFrame();

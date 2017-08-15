@@ -9,7 +9,6 @@ use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 require_once __DIR__ . '/../config.php';
 
@@ -192,5 +191,65 @@ abstract class BaseContext extends RawMinkContext
         $text = preg_replace('/\s{2,}/', ' ', $text);
         $text = trim($text);
         return $text;
+    }
+
+    /**
+     * @param NodeElement $element
+     * @param string $type
+     * @return bool
+     */
+    protected function checkFormElement(NodeElement $element, $type)
+    {
+        $html = $this->sanitizeText($element->getHtml());
+        switch ($type) {
+            case 'text':
+                // fall through
+            case 'file':
+                // fall through
+            case 'checkbox':
+                $input = $this->findCss("input[type=\"$type\"]", $element);
+                if ($input) {
+                    return true;
+                }
+                return false;
+            case 'date':
+                $input = $this->findCss("input[type=\"text\"]", $element);
+                if ($input && strstr($input->getAttribute('class'), 'calendar')) {
+                    return true;
+                }
+                return false;
+            case 'select':
+                if (strstr($html, '<select')) {
+                    return true;
+                }
+                return false;
+            case 'textarea':
+                if (strstr($html, '<textarea')) {
+                    return true;
+                }
+                return false;
+        }
+        return false;
+    }
+
+    /**
+     * @param NodeElement $element
+     * @param string $isRequired
+     * @return bool
+     */
+    protected function checkRequiredFormElement(NodeElement $element, $isRequired)
+    {
+        $html = $this->sanitizeText($element->getHtml());
+        $pattern = '/.*?\<span.*?\>\*\<\/span\>.*?/';
+        if ($isRequired == 'yes') {
+            if (preg_match($pattern, $html)) {
+                return true;
+            }
+            return false;
+        }
+        if (preg_match($pattern, $html)) {
+            return false;
+        }
+        return true;
     }
 }

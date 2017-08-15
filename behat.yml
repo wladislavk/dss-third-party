@@ -8,9 +8,11 @@ default:
                 - Contexts\Contacts
                 - Contexts\Dashboard
                 - Contexts\Forms
+                - Contexts\Letters
                 - Contexts\Main
                 - Contexts\PatientChart
                 - Contexts\PatientScreener
+                - Contexts\PatientSummary
                 - Contexts\Staff
                 - Contexts\Support
                 - Contexts\Tasks

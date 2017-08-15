@@ -117,20 +117,7 @@ class Support extends BaseContext
             $labelText = str_replace(':', '', $label->getText());
             Assert::assertEquals($row['field'], $this->sanitizeText($labelText));
             $valueHtml = $this->sanitizeText($column->getHtml());
-            switch ($row['type']) {
-                case 'text':
-                    // fall through
-                case 'file':
-                    $input = $this->findCss("input[type=\"{$row['type']}\"]", $column);
-                    Assert::assertNotNull($input);
-                    break;
-                case 'select':
-                    Assert::assertContains('<select', $valueHtml);
-                    break;
-                case 'textarea':
-                    Assert::assertContains('<textarea', $valueHtml);
-                    break;
-            }
+            Assert::assertTrue($this->checkFormElement($column, $row['type']));
         }
 
         $this->getCommonClient()->switchToIFrame();

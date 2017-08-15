@@ -37,28 +37,8 @@ class Tasks extends BaseContext
             $label = $this->findCss('label', $column);
             $labelText = str_replace(':', '', $label->getText());
             Assert::assertEquals($row['field'], $labelText);
-            $valueHtml = $this->sanitizeText($column->getHtml());
-            if ($row['required'] == 'yes') {
-                Assert::assertContains(self::REQUIRED_HTML, $valueHtml);
-            } else {
-                Assert::assertNotContains(self::REQUIRED_HTML, $valueHtml);
-            }
-            switch ($row['type']) {
-                case 'text':
-                    // fall through
-                case 'checkbox':
-                    $input = $this->findCss("input[type=\"{$row['type']}\"]", $column);
-                    Assert::assertNotNull($input);
-                    break;
-                case 'date':
-                    $input = $this->findCss("input[type=\"text\"]", $column);
-                    Assert::assertNotNull($input);
-                    Assert::assertContains('calendar', $input->getAttribute('class'));
-                    break;
-                case 'select':
-                    Assert::assertContains('<select', $valueHtml);
-                    break;
-            }
+            Assert::assertTrue($this->checkRequiredFormElement($column, $row['required']));
+            Assert::assertTrue($this->checkFormElement($column, $row['type']));
         }
     }
 }

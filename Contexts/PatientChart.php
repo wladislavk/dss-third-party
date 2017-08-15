@@ -170,4 +170,31 @@ class PatientChart extends BaseContext
     {
         // @todo: fill this method
     }
+
+    /**
+     * @Then I see add patient image form:
+     *
+     * @param TableNode $table
+     */
+    public function testAddImageFormFields(TableNode $table)
+    {
+        $this->getCommonClient()->switchToIFrame('aj_ref');
+
+        $form = $this->findCss('form[name="imagefrm"]');
+        $expectedRows = $table->getHash();
+        $tableRows = $this->findAllCss("tbody > tr", $form);
+        foreach ($tableRows as $key => $tableRow) {
+            if (!$tableRow->isVisible()) {
+                unset($tableRows[$key]);
+            }
+        }
+        $tableRows = array_values($tableRows);
+        foreach ($expectedRows as $rowNumber => $row) {
+            $childNumber = $rowNumber + 1;
+            $column = $this->findCss("td", $tableRows[$childNumber]);
+            Assert::assertContains($row['field'], $column->getText());
+            Assert::assertTrue($this->checkRequiredFormElement($column, $row['required']));
+            Assert::assertTrue($this->checkFormElement($column, $row['type']));
+        }
+    }
 }

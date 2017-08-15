@@ -57,6 +57,23 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I click input button with text :button
+     *
+     * @param string $button
+     * @throws BehatException
+     */
+    public function clickInputButton($button)
+    {
+        $buttonElements = $this->findAllCss('input[type="button"]');
+        foreach ($buttonElements as $buttonElement) {
+            if ($buttonElement->getValue() == $button) {
+                $buttonElement->click();
+            }
+        }
+        throw new BehatException('Button element not found');
+    }
+
+    /**
      * @When I click add button with text :button
      *
      * @param string $button
@@ -66,8 +83,22 @@ class Main extends BaseContext
     {
         $buttonElements = $this->findAllCss('button.addButton');
         foreach ($buttonElements as $buttonElement) {
-            if (trim($buttonElement->getText()) == $button) {
+            if ($button == trim($buttonElement->getText())) {
                 $buttonElement->click();
+                return;
+            }
+        }
+        $inputButtonElements = $this->findAllCss('input[type="button"].addButton');
+        foreach ($inputButtonElements as $inputButtonElement) {
+            if ($button == trim($inputButtonElement->getAttribute('value'))) {
+                $inputButtonElement->click();
+                return;
+            }
+        }
+        $inputSubmitElements = $this->findAllCss('input[type="submit"].addButton');
+        foreach ($inputSubmitElements as $inputSubmitElement) {
+            if ($button == trim($inputSubmitElement->getAttribute('value'))) {
+                $inputSubmitElement->click();
                 return;
             }
         }
@@ -96,15 +127,49 @@ class Main extends BaseContext
     }
 
     /**
+     * @Then I see input button with text :button
+     *
+     * @param string $button
+     */
+    public function testSeeInputButton($button)
+    {
+        $buttonElements = $this->findAllCss('input[type="button"]');
+        $exists = false;
+        foreach ($buttonElements as $buttonElement) {
+            if ($buttonElement->getValue() == $button) {
+                $exists = true;
+            }
+        }
+        Assert::assertTrue($exists);
+    }
+
+    /**
      * @Then I see add button with text :button
      *
      * @param string $button
      */
     public function testSeeAddButton($button)
     {
-        $buttonElement = $this->findCss('button.addButton');
-        Assert::assertNotNull($buttonElement);
-        Assert::assertEquals($button, trim($buttonElement->getText()));
+        $exists = false;
+        $buttonElements = $this->findAllCss('button.addButton');
+        foreach ($buttonElements as $buttonElement) {
+            if ($button == trim($buttonElement->getText())) {
+                $exists = true;
+            }
+        }
+        $inputButtonElements = $this->findAllCss('input[type="button"].addButton');
+        foreach ($inputButtonElements as $inputButtonElement) {
+            if ($button == trim($inputButtonElement->getAttribute('value'))) {
+                $exists = true;
+            }
+        }
+        $inputSubmitElements = $this->findAllCss('input[type="submit"].addButton');
+        foreach ($inputSubmitElements as $inputSubmitElement) {
+            if ($button == trim($inputSubmitElement->getAttribute('value'))) {
+                $exists = true;
+            }
+        }
+        Assert::assertTrue($exists);
     }
 
     /**
@@ -127,13 +192,24 @@ class Main extends BaseContext
      */
     public function testPagedList($pages, $currentPage)
     {
-        $form = $this->findCss('form[name="sortfrm"]');
-        Assert::assertNotNull($form);
         $pagesColumn = $this->findCss('table > tbody > tr:first-child > td.bp');
-        Assert::assertContains('Pages', $pagesColumn->getText());
+        if (!$pagesColumn) {
+            $pagesColumn = $this->findCss('div.letters-pager');
+        }
+        Assert::assertContains('Page', $pagesColumn->getText());
         $numberOfLinks = count($this->findAllCss('a', $pagesColumn));
         Assert::assertEquals($pages - 1, $numberOfLinks);
         $boldPage = $this->findCss('strong', $pagesColumn);
         Assert::assertEquals($currentPage, $boldPage->getText());
+    }
+
+    /**
+     * @Then I see :text text
+     *
+     * @param string $text
+     */
+    public function testSeeText($text)
+    {
+        Assert::assertContains($text, $this->page->getText());
     }
 }

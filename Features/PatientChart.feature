@@ -36,6 +36,14 @@ Feature: Patient Chart
       | Symptoms            |
       | Previous Treatments |
       | Health Hx.          |
+    When I click on "Images" patient chart menu point
+    Then I see add button with text "Add New Image"
+    When I click add button with text "Add New Image"
+    Then I see add patient image form:
+      | field            | type   | required |
+      | Image Type       | select | yes      |
+      | Title            | text   | yes      |
+      | Image            | file   | yes      |
 
   Scenario: Add patient
     Given I am logged in as "doc1f"

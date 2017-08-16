@@ -87,8 +87,6 @@ class JwtHelper
             throw new InvalidTokenException($e->getMessage());
         }
 
-        \Log::info(__FUNCTION__, $payload);
-
         return $payload;
     }
 

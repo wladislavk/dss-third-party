@@ -178,12 +178,6 @@ abstract class AbstractGuard implements Guard
             ->first()
         ;
 
-        \Log::info(__FUNCTION__, $credentials);
-
-        if ($user) {
-            \Log::info(__FUNCTION__, $user->toArray());
-        }
-
         if (!$user) {
             return null;
         }
@@ -192,7 +186,6 @@ abstract class AbstractGuard implements Guard
             $hash = hash('sha256', $password . $user->salt);
 
             if ($hash !== $user->password) {
-                \Log::info(__FUNCTION__, ['Password mismatch']);
                 return null;
             }
         }
@@ -203,7 +196,6 @@ abstract class AbstractGuard implements Guard
 
         foreach ($this->enforceCredentials as $field=>$value) {
             if ($user->{$field} !== $value) {
-                \Log::info(__FUNCTION__, ['Credentials mismatch']);
                 return null;
             }
         }

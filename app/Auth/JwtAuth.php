@@ -93,7 +93,11 @@ class JwtAuth
         }
 
         $role = strtolower($role);
-        $token = $this->tokenHelper->createToken([$role => $user->getAuthIdentifier()]);
+        $token = $this->tokenHelper
+            ->createToken([
+                $role => $user->getAuthIdentifier()
+            ])
+        ;
 
         return $token;
     }

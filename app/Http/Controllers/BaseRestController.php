@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Config\Repository as Config;
-use DentalSleepSolutions\Auth\JwtAuth;
 
 /**
  * @SWG\Swagger(
@@ -105,11 +104,10 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
 
     public function __construct(
         Config $config,
-        JwtAuth $authTokenParser,
         BaseRepository $repository,
         Request $request
     ) {
-        parent::__construct($config, $authTokenParser);
+        parent::__construct($config);
         $this->repository = $repository;
         $this->request = $request;
     }

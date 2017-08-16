@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
-use DentalSleepSolutions\Auth\DentrixAuth;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
@@ -23,18 +22,17 @@ class ExternalPatientController extends ExternalBaseController
 
     public function __construct(
         Config $config,
-        DentrixAuth $authTokenParser,
         Request $request,
         Transformer $transformer
     )
     {
-        parent::__construct($config, $authTokenParser, $request);
+        parent::__construct($config, $request);
         $this->transformer = $transformer;
     }
 
     /**
-     * @param \DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository $repository
-     * @param \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore             $request
+     * @param ExternalPatientRepository $repository
+     * @param ExternalPatientStore      $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */

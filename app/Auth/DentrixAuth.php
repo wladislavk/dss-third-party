@@ -86,7 +86,7 @@ class DentrixAuth
             throw new InvalidTokenException(DentrixAuthErrors::USER_TOKEN_INVALID);
         }
 
-        $authenticated = $this->guard->once(['user_id' => $externalUser->user_id]);
+        $authenticated = $this->guard->once(['userid' => $externalUser->user_id]);
 
         if (!$authenticated) {
             throw new UserNotFoundException(DentrixAuthErrors::USER_NOT_FOUND);

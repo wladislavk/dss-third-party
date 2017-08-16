@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
-use DentalSleepSolutions\Helpers\ExternalAuthTokenParser;
+use DentalSleepSolutions\Auth\DentrixAuth;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
@@ -23,7 +23,7 @@ class ExternalPatientController extends ExternalBaseController
 
     public function __construct(
         Config $config,
-        ExternalAuthTokenParser $authTokenParser,
+        DentrixAuth $authTokenParser,
         Request $request,
         Transformer $transformer
     )

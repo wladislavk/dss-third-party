@@ -3,7 +3,6 @@
 namespace Tests\Command;
 
 use DentalSleepSolutions\Console\Commands\GenerateJwtToken;
-use DentalSleepSolutions\Helpers\SudoHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tests\TestCases\ApiTestCase;
@@ -11,9 +10,7 @@ use Tests\TestCases\ApiTestCase;
 class GenerateJwtTokenTest extends ApiTestCase
 {
     const INVALID_ID = '-';
-    const USER_ID = SudoHelper::USER_PREFIX . '1';
-    const ADMIN_ID = SudoHelper::ADMIN_PREFIX . '1';
-    const SUDO_ID = self::ADMIN_ID . SudoHelper::LOGIN_ID_DELIMITER . self::USER_ID;
+    const VALID_ID = 'u_1';
 
     const BASE_64_REGEXP = '[a-z\d\+\/\_\-]+';
     const TOKEN_REGEXP = '/' . self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP . '\.' . self::BASE_64_REGEXP . '/i';
@@ -41,16 +38,9 @@ class GenerateJwtTokenTest extends ApiTestCase
         $this->assertEquals('', $token);
     }
 
-    public function testSimpleToken()
+    public function testValidToken()
     {
         $id = self::USER_ID;
-        $token = $this->runCommand($id);
-        $this->assertRegExp(self::TOKEN_REGEXP, $token);
-    }
-
-    public function testSudoToken()
-    {
-        $id = self::SUDO_ID;
         $token = $this->runCommand($id);
         $this->assertRegExp(self::TOKEN_REGEXP, $token);
     }

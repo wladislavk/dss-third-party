@@ -8,7 +8,7 @@ use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 use Prettus\Repository\Eloquent\BaseRepository;
-use DentalSleepSolutions\Helpers\AuthTokenParser;
+use DentalSleepSolutions\Auth\JwtAuth;
 
 class BindingNamingConvention
 {
@@ -52,7 +52,7 @@ class BindingNamingConvention
     public function setController($className)
     {
         $config = \Mockery::mock(Config::class);
-        $authTokenParser = \Mockery::mock(AuthTokenParser::class);
+        $authTokenParser = \Mockery::mock(JwtAuth::class);
         $repository = \Mockery::mock(BaseRepository::class);
         $request = \Mockery::mock(Request::class);
 

@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Providers;
 use DentalSleepSolutions\Eloquent\Repositories\PayerRepository;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Illuminate\Routing\Router;
-use DentalSleepSolutions\Exceptions\ResourceNotFound;
+use DentalSleepSolutions\Exceptions\ResourceNotFoundException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -34,7 +34,7 @@ class RouteServiceProvider extends ServiceProvider
                 $payerRepository = $this->app[PayerRepository::class];
                 return $payerRepository->findByUid($uid);
             } catch (ModelNotFoundException $e) {
-                throw new ResourceNotFound('Requested resource does not exist.');
+                throw new ResourceNotFoundException('Requested resource does not exist.');
             }
         });
 
@@ -54,7 +54,7 @@ class RouteServiceProvider extends ServiceProvider
             try {
                 return $modelClass::findOrFail($id);
             } catch (ModelNotFoundException $e) {
-                throw new ResourceNotFound('Requested resource does not exist.');
+                throw new ResourceNotFoundException('Requested resource does not exist.');
             }
         });
     }

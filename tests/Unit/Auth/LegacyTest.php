@@ -3,8 +3,6 @@
 namespace Tests\Unit\Auth;
 
 use DentalSleepSolutions\Auth\Legacy;
-use DentalSleepSolutions\Helpers\SudoHelper;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Auth\AuthManager;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
@@ -16,7 +14,7 @@ class LegacyTest extends UnitTestCase
     const USERNAME = 'username';
     const PASSWORD = 'password';
     const SALT = '';
-    const USER_ID = SudoHelper::USER_PREFIX . '1';
+    const USER_ID = 'u_1';
     const INVALID_USER_ID = self::USER_ID . '2';
 
     /** @var array */
@@ -109,10 +107,10 @@ class LegacyTest extends UnitTestCase
             ->atMost(1)
             ->andReturnUsing(function ($id) {
                 if ($id === self::USER_ID) {
-                    return $this->mockCollection([true]);
+                    return true;
                 }
 
-                return $this->mockCollection();
+                return false;
             })
         ;
 
@@ -126,18 +124,5 @@ class LegacyTest extends UnitTestCase
         $user->password = hash('sha256', self::PASSWORD . self::SALT);
 
         return $user;
-    }
-
-    private function mockCollection(array $collection = [])
-    {
-        $mock = \Mockery::mock(Collection::class, $collection);
-        $mock->shouldReceive('count')
-            ->passthru()
-        ;
-        $mock->shouldReceive('all')
-            ->passthru()
-        ;
-
-        return $mock;
     }
 }

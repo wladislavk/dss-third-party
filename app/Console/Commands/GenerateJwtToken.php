@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Tymon\JWTAuth\JWTAuth;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 
 /**
  * CLI to generate JWT tokens with v_users IDs
@@ -40,9 +39,9 @@ class GenerateJwtToken extends Command
     public function handle()
     {
         $id = $this->argument('id');
-        /** @var Collection */
-        $collection = $this->userRepository->findById($id);
-        $token = $this->tokenFromCollection($collection);
+        /** @var User */
+        $user = $this->userRepository->findById($id);
+        $token = $this->tokenFromSingleModel($user);
         $this->info($token);
     }
 
@@ -53,27 +52,5 @@ class GenerateJwtToken extends Command
     private function tokenFromSingleModel(User $model)
     {
         return $this->auth->fromUser($model);
-    }
-
-    /**
-     * @param Collection $collection
-     * @return string
-     */
-    private function tokenFromCollection(Collection $collection)
-    {
-        if (!$collection->count()) {
-            return '';
-        }
-
-        if ($collection->count() === 1) {
-            return $this->tokenFromSingleModel($collection->get(0));
-        }
-
-        $primaryModel = $collection->get(0);
-        $secondaryModel = $collection->get(1);
-        /** @todo Refactor, SRP */
-        $primaryModel->id = $this->userRepository->sudoId($primaryModel->id, $secondaryModel->id);
-
-        return $this->tokenFromSingleModel($primaryModel);
     }
 }

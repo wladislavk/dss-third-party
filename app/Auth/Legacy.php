@@ -61,20 +61,19 @@ class Legacy extends IlluminateAuthAdapter
     }
 
     /**
-     * Check user ID. DSS can use a composite ID, to log in an admin AND some user, "login as" behavior
-     *
      * @param string $id
-     * @return array
+     * @return bool
      */
     public function byId($id)
     {
-        $collection = $this->userRepository->findById($id);
+        $user = $this->userRepository->findById($id);
 
-        if ($collection->count()) {
-            return $collection->all();
+        if ($user) {
+            $this->auth->login($user, false);
+            return true;
         }
 
-        return [];
+        return false;
     }
 
     /**

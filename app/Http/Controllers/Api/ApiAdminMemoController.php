@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Eloquent\Repositories\MemoAdminRepository;
-use DentalSleepSolutions\Helpers\AuthTokenParser;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
@@ -23,10 +22,9 @@ class ApiAdminMemoController extends ApiBaseController
 
     public function __construct(
         Config $config,
-        AuthTokenParser $authTokenParser,
         MemoAdminRepository $memoAdminRepository
     ) {
-        parent::__construct($config, $authTokenParser);
+        parent::__construct($config);
         $this->repository = $memoAdminRepository;
     }
 

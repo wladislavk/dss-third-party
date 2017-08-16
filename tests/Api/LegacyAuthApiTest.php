@@ -6,7 +6,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\ApiTestCase;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Models\Admin;
-use DentalSleepSolutions\Helpers\SudoHelper;
 use Tymon\JWTAuth\JWTAuth;
 
 class LegacyAuthApiTest extends ApiTestCase
@@ -36,9 +35,6 @@ class LegacyAuthApiTest extends ApiTestCase
 
     /** @var array */
     private $adminAuthHeader;
-
-    /** @var array */
-    private $sudoAuthHeader;
 
     public function setUp()
     {
@@ -137,17 +133,6 @@ class LegacyAuthApiTest extends ApiTestCase
         ;
     }
 
-    public function testAuthHealthSudoToken()
-    {
-        $this->enableDebug();
-        $this->json('get', '/auth-health', [], $this->sudoAuthHeader);
-        $this->seeJson(['status' => 'Health'])
-            ->seeJson(['username' => $this->admin->username])
-            ->seeJson(['username' => $this->user->username])
-            ->assertResponseOk()
-        ;
-    }
-
     public function testAuthAsUserToken()
     {
         $this->json('post', '/auth-as', [], $this->userAuthHeader);
@@ -204,9 +189,9 @@ class LegacyAuthApiTest extends ApiTestCase
     public function testRefreshTokenExpiredToken()
     {
         $this->markTestSkipped('Token validation must be implemented in the controller');
-        return;
+        //return;
 
-        $token = $this->generateJwtToken(SudoHelper::USER_PREFIX . $this->user->userid, true);
+        $token = $this->generateJwtToken('u_' . $this->user->userid, true);
         sleep(1);
         $this->json('post', '/refresh-token', [], $this->generateAuthHeader('', $token));
         $this->seeJson(['message' => 'Expired token'])
@@ -217,7 +202,7 @@ class LegacyAuthApiTest extends ApiTestCase
     public function testRefreshTokenInvalidToken()
     {
         $this->markTestSkipped('Token validation must be implemented in the controller');
-        return;
+        //return;
 
         $this->json('post', '/refresh-token', [], $this->generateAuthHeader('', self::INVALID_USERNAME));
         $this->seeJson(['message' => 'Invalid token'])
@@ -241,15 +226,8 @@ class LegacyAuthApiTest extends ApiTestCase
 
     private function setupAuthHeaders()
     {
-        $this->userAuthHeader = $this->generateAuthHeader(SudoHelper::USER_PREFIX . $this->user->userid);
-        $this->adminAuthHeader = $this->generateAuthHeader(SudoHelper::ADMIN_PREFIX . $this->admin->adminid);
-        $this->sudoAuthHeader = $this->generateAuthHeader(
-            SudoHelper::ADMIN_PREFIX
-            . $this->admin->adminid
-            . SudoHelper::LOGIN_ID_DELIMITER
-            . SudoHelper::USER_PREFIX
-            . $this->user->userid
-        );
+        $this->userAuthHeader = $this->generateAuthHeader('u_' . $this->user->userid);
+        $this->adminAuthHeader = $this->generateAuthHeader('a_' . $this->admin->adminid);
     }
 
     private function hardRefreshApplication()
@@ -278,18 +256,13 @@ class LegacyAuthApiTest extends ApiTestCase
             $timeToLive = 0;
         }
 
-        $collection = $this->repository->findById($id);
+        $user = $this->repository->findById($id);
 
-        if (!isset($collection[0])) {
+        if (!$user) {
             return '';
         }
 
-        if (!isset($collection[1])) {
-            return $this->jwt->fromUser($collection[0]);
-        }
-
-        $collection[0]->id = $collection[0]->id . SudoHelper::LOGIN_ID_DELIMITER . $collection[1]->id;
-        return $this->jwt->fromUser($collection[0], ['ttl' => $timeToLive]);
+        return $this->jwt->fromUser($user);
     }
 
     private function generateAuthHeader($id, $token = '')

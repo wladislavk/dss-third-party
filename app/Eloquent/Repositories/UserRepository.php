@@ -21,25 +21,9 @@ class UserRepository extends AbstractRepository
      */
     public function findById($id, $columns = ['*'])
     {
-        return $this->model
-            ->find($id, $columns)
+        return $this->findByField('id', $id, $columns)
             ->first()
             ;
-    }
-
-    /**
-     * @param string $field
-     * @param mixed  $value
-     * @param array $columns
-     * @return User|null
-     */
-    public function findByField($field, $value = null, $columns = ['*'])
-    {
-        if ($field === 'id') {
-            return self::findById($value, $columns);
-        }
-
-        return parent::findByField($field, $value, $columns);
     }
 
     /**

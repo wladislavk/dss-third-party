@@ -21,7 +21,7 @@ class JwtAuth
     private $adminGuard;
 
     /** @var JwtHelper */
-    private $tokenHelper;
+    private $jwtHelper;
 
     /** @var Request */
     private $request;
@@ -29,13 +29,13 @@ class JwtAuth
     public function __construct(
         UserGuard $userGuard,
         AdminGuard $adminGuard,
-        JwtHelper $tokenHelper,
+        JwtHelper $jwtHelper,
         Request $request
     )
     {
         $this->userGuard = $userGuard;
         $this->adminGuard = $adminGuard;
-        $this->tokenHelper = $tokenHelper;
+        $this->jwtHelper = $jwtHelper;
         $this->request = $request;
     }
 
@@ -92,10 +92,10 @@ class JwtAuth
             throw new UserNotFoundException();
         }
 
-        $role = strtolower($role);
-        $token = $this->tokenHelper
+        $token = $this->jwtHelper
             ->createToken([
-                $role => $user->getAuthIdentifier()
+                'role' => $role,
+                'id'  => $user->getAuthIdentifier(),
             ])
         ;
 
@@ -114,20 +114,18 @@ class JwtAuth
     public function toRole($role)
     {
         $token = $this->getTokenFromHeader();
-        $claims = $this->tokenHelper->parseToken($token);
+        $claims = $this->jwtHelper->parseToken($token);
 
-        $this->tokenHelper->validateClaims($claims);
+        $this->jwtHelper->validateClaims($claims);
 
-        $claimRole = strtolower($role);
-
-        if (!isset($claims[$claimRole])) {
+        if (!isset($claims['role']) || $claims['role'] !== $role || !isset($claims['id'])) {
             throw new InvalidPayloadException(JwtAuthErrors::INVALID_ROLE);
         }
 
-        $id = $claims[$claimRole];
-
         $authenticated = $this->guard($role)
-            ->once(['id' => $id])
+            ->once([
+                'id' => $claims['id']
+            ])
         ;
 
         if (!$authenticated) {

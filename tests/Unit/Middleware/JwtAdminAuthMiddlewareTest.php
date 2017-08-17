@@ -34,6 +34,8 @@ class JwtAdminAuthMiddlewareTest extends UnitTestCase
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->closureCalls = 0;
         $this->adminResolver = null;
         $this->request = $this->mockRequest();

@@ -44,6 +44,8 @@ class JwtUserAuthMiddlewareTest extends UnitTestCase
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->closureCalls = 0;
         $this->userResolver = null;
         $this->request = $this->mockRequest();

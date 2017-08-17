@@ -35,17 +35,17 @@ class JwtUserAuthMiddleware
         try {
             $this->auth->toUser();
         } catch (EmptyTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_MISSING, 400, [$e->getMessage()]);
+            return ApiResponse::responseError(MiddlewareErrors::TOKEN_MISSING, 400);
         } catch (InvalidTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INVALID, 400, [$e->getMessage()]);
+            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INVALID, 400);
         } catch (InactiveTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INACTIVE, 422, [$e->getMessage()]);
+            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INACTIVE, 422);
         } catch (ExpiredTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_EXPIRED, 422, [$e->getMessage()]);
+            return ApiResponse::responseError(MiddlewareErrors::TOKEN_EXPIRED, 422);
         } catch (InvalidPayloadException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INVALID, 422, [$e->getMessage()]);
+            return ApiResponse::responseError(MiddlewareErrors::TOKEN_INVALID, 422);
         } catch (UserNotFoundException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::USER_NOT_FOUND, 422, [$e->getMessage()]);
+            return ApiResponse::responseError(MiddlewareErrors::USER_NOT_FOUND, 422);
         }
 
         $request->setUserResolver(function () {
@@ -66,6 +66,11 @@ class JwtUserAuthMiddleware
     private function handleSudo(Request $request)
     {
         $sudoId = $request->input('sudo_as', '');
+
+        $data = $request->all();
+        unset($data['sudo_as']);
+        $request->replace($data);
+
         $user = $this->auth
             ->guard('User')
             ->once([

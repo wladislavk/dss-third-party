@@ -51,10 +51,6 @@ class DentrixAuthMiddleware
             return $user;
         });
 
-        $request->setAdminResolver(function () {
-            return null;
-        });
-
         return $next($request);
     }
 }

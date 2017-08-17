@@ -16,6 +16,8 @@ use DentalSleepSolutions\Exceptions\JwtException;
  */
 class GenerateJwtToken extends Command
 {
+    const DATE_FORMAT = 'Y-m-d H:i:s';
+
     /** @var string */
     protected $signature = 'jwt:token
         {id : User identifier - v_users id (a_X for admins, u_X for dental_users).}
@@ -32,19 +34,14 @@ class GenerateJwtToken extends Command
     /** @var JwtHelper */
     private $jwtHelper;
 
-    /** @var Carbon */
-    private $carbon;
-
     public function __construct(
         UserRepository $userRepository,
-        JwtHelper $jwtHelper,
-        Carbon $carbon
+        JwtHelper $jwtHelper
     )
     {
         parent::__construct();
         $this->userRepository = $userRepository;
         $this->jwtHelper = $jwtHelper;
-        $this->carbon = $carbon;
     }
 
     public function handle()
@@ -60,13 +57,11 @@ class GenerateJwtToken extends Command
         }
 
         if (!is_null($notBefore)) {
-            $this->carbon->setTimeFromTimeString($notBefore);
-            $notBefore = $this->carbon->getTimestamp();
+            $notBefore = Carbon::createFromFormat(self::DATE_FORMAT, $notBefore);
         }
 
         if (!is_null($expire)) {
-            $this->carbon->setTimeFromTimeString($expire);
-            $expire = $this->carbon->getTimestamp();
+            $expire = Carbon::createFromFormat(self::DATE_FORMAT, $expire);
         }
 
         /** @var User */

@@ -135,8 +135,33 @@ if ($isSelectPatient) {
     $sql .= "ORDER BY p.lastname ASC";
 }
 
-
 $my = $db->getResults($sql);
+
+$message = '';
+
+if (!empty($_GET['msg'])) {
+    $message = e($_GET['msg']);
+    $json = json_decode($_GET['msg'], true);
+
+    if (is_string($json)) {
+        $message = e($json);
+    }
+
+    if (is_array($json)) {
+        $message = '';
+
+        array_walk_recursive($json, 'e');
+
+        if (!empty($json['errors'])) {
+            $message .= '<ul><li>' . join('</li><li>', $json['errors']) . '.</li></ul>';
+        }
+
+        if (!empty($json['inserted'])) {
+            $message .= "{$json['inserted']} new patients.";
+        }
+    }
+}
+
 ?>
 
 <script src="js/pending.js" type="text/javascript"></script>
@@ -157,9 +182,11 @@ $my = $db->getResults($sql);
 <a href="<?php echo $_SERVER['PHP_SELF']; ?>?deletetype=yes" style="margin-right:10px;float:right;" onclick="return confirm('Are you sure you want to delete all?');">Delete All</a>
 <a href="<?php echo $_SERVER['PHP_SELF']; ?>?createtype=yes" style="margin-right:10px;float:right;">Create All</a>
 <br />
-<div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
-</div>
+<?php if ($message) { ?>
+    <div align="center" class="red">
+        <?= $message ?>
+    </div>
+<?php } ?>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">

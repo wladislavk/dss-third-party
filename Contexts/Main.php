@@ -2,6 +2,7 @@
 
 namespace Contexts;
 
+use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Session;
 use PHPUnit\Framework\Assert;
 
@@ -122,8 +123,12 @@ class Main extends BaseContext
      */
     public function testSeeButton($button)
     {
+        $exists = false;
         $buttonElement = $this->findElementWithText('button', $button);
-        Assert::assertNotNull($buttonElement);
+        if ($buttonElement) {
+            $exists = true;
+        }
+        Assert::assertTrue($exists);
     }
 
     /**
@@ -211,5 +216,20 @@ class Main extends BaseContext
     public function testSeeText($text)
     {
         Assert::assertContains($text, $this->page->getText());
+    }
+
+    /**
+     * @Then I see table with columns:
+     *
+     * @param TableNode $table
+     */
+    public function testTableColumns(TableNode $table)
+    {
+        $columns = $this->findAllCss('tr.tr_bg_h > td.col_head');
+        $expected = array_column($table->getHash(), 'name');
+        foreach ($expected as $key => $column) {
+            $linkText = $this->sanitizeText($columns[$key]->getText());
+            Assert::assertEquals($column, $linkText);
+        }
     }
 }

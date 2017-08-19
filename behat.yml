@@ -5,14 +5,19 @@ default:
                 - "%paths.base%/Features"
             contexts:
                 - Contexts\Auth
+                - Contexts\Claims
                 - Contexts\Contacts
                 - Contexts\Dashboard
+                - Contexts\DeviceSelector
                 - Contexts\Forms
+                - Contexts\Insurance
+                - Contexts\Ledger
                 - Contexts\Letters
                 - Contexts\Main
                 - Contexts\PatientChart
                 - Contexts\PatientScreener
                 - Contexts\PatientSummary
+                - Contexts\Profile
                 - Contexts\Staff
                 - Contexts\Support
                 - Contexts\Tasks

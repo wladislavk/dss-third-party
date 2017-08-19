@@ -5,6 +5,9 @@ require_once __DIR__ . '/CsvProcessorAdapterInterface.php';
 
 class CsvPatientProcessorAdapter implements CsvProcessorAdapterInterface
 {
+    const STATUS_PENDING_ACTIVE = 3;
+    const STATUS_PENDING_INACTIVE = 4;
+
     /** @var Db */
     private $db;
     
@@ -52,12 +55,16 @@ class CsvPatientProcessorAdapter implements CsvProcessorAdapterInterface
         $value = trim($value);
 
         if ($column === 'status') {
-            if ($value === 'A') {
-                $destination[$column] = 3;
+            if (isset($destination[$column])) {
                 return;
             }
 
-            $destination[$column] = 4;
+            if ($value === 'A') {
+                $destination[$column] = self::STATUS_PENDING_ACTIVE;
+                return;
+            }
+
+            $destination[$column] = self::STATUS_PENDING_INACTIVE;
             return;
         }
 
@@ -161,8 +168,9 @@ class CsvPatientProcessorAdapter implements CsvProcessorAdapterInterface
             30 => 'add2',
             37 => 'email',
             40 => 'middlename',
-            -1 => 'docid',
-            -2 => 'ip_address',
+            -1 => 'status',
+            -2 => 'docid',
+            -3 => 'ip_address',
         ];
 
         return $headerFields;

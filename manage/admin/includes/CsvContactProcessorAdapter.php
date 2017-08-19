@@ -5,8 +5,14 @@ require_once __DIR__ . '/CsvProcessorAdapterInterface.php';
 
 class CsvContactProcessorAdapter implements CsvProcessorAdapterInterface
 {
+    const STATUS_PENDING_ACTIVE = 3;
+    const STATUS_PENDING_INACTIVE = 4;
+
     /** @var Db */
     private $db;
+
+    /** @var array */
+    private $contactTypeList;
 
     public function __construct(Db $db)
     {
@@ -21,6 +27,7 @@ class CsvContactProcessorAdapter implements CsvProcessorAdapterInterface
     public function getSpecialHeaders()
     {
         return [
+            'status',
             'preferredcontact',
             'notes',
             'docid',
@@ -48,13 +55,18 @@ class CsvContactProcessorAdapter implements CsvProcessorAdapterInterface
      */
     public function getContactTypeList()
     {
-        $list = array();
+        if ($this->contactTypeList) {
+            return $this->contactTypeList;
+        }
+
+        $list = [];
         $types = $this->db->getResults('SELECT contacttypeid, contacttype FROM dental_contacttype');
 
         foreach ($types as $type) {
             $list[$type['contacttype']] = $type['contacttypeid'];
         }
 
+        $this->contactTypeList = $list;
         return $list;
     }
 
@@ -68,25 +80,25 @@ class CsvContactProcessorAdapter implements CsvProcessorAdapterInterface
         $headerFields = [
             'lastname',
             'firstname',
-            'middlename' => 'MiddleInit',
-            'salutation' => 'Title',
-            'company' => 'CompanyName',
-            'add1' => 'Address1',
-            'add2' => 'Address2',
+            'middlename' => 'middleinit',
+            'salutation' => 'title',
+            'company' => 'companyname',
+            'add1' => 'address1',
+            'add2' => 'address2',
             'city',
             'state',
-            'zip' => 'PostalCode',
-            'phone1' => 'Phone',
+            'zip' => 'postalcode',
+            'phone1' => 'phone',
             'phone2',
             'fax',
             'email',
-            'national_provider_id' => 'NPI',
-            'qualifierid' => 'OtherID',
-            'qualifier' => 'OtherIDQual',
+            'national_provider_id' => 'npi',
+            'qualifierid' => 'otherid',
+            'qualifier' => 'otheridqual',
             'notes',
-            'contacttypeid' => 'ContactType',
+            'contacttypeid' => 'contacttype',
             'specialty',
-            'status' => 'Active',
+            'status' => 'active',
         ];
 
         return $headerFields;
@@ -106,12 +118,16 @@ class CsvContactProcessorAdapter implements CsvProcessorAdapterInterface
         $value = trim($value);
 
         if ($column === 'status') {
-            if ($value === 'true' || $value === '3' ) {
-                $destination[$column] = 3;
+            if (isset($destination[$column])) {
                 return;
             }
 
-            $destination[$column] = 4;
+            if (strtolower($value) === 'true' || $value === '3' ) {
+                $destination[$column] = self::STATUS_PENDING_ACTIVE;
+                return;
+            }
+
+            $destination[$column] = self::STATUS_PENDING_INACTIVE;
             return;
         }
 
@@ -204,6 +220,7 @@ class CsvContactProcessorAdapter implements CsvProcessorAdapterInterface
 
         $data['notes'] = join(' ', $notes);
         unset($data['specialty']);
+
         return $data;
     }
 

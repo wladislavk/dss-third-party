@@ -214,6 +214,10 @@ if( $r['homepage'] != '1') {
                 FROM dental_patients
                 WHERE docid = '$docid'
                     AND status = 1
+                    AND (
+                        IFNULL(firstname, '') != ''
+                        OR IFNULL(lastname, '') != ''
+                    )
                 GROUP BY firstname, lastname
             ) by_name
             ON by_name.firstname = p.firstname
@@ -223,6 +227,12 @@ if( $r['homepage'] != '1') {
                 FROM dental_patients
                 WHERE docid = '$docid'
                     AND status = 1
+                    AND (
+                        IFNULL(add1, '') != ''
+                        OR IFNULL(city, '') != ''
+                        OR IFNULL(state, '') != ''
+                        OR IFNULL(zip, '') != ''
+                    )
                 GROUP BY add1, city, state, zip
             ) by_address
             ON by_address.add1 = p.add1

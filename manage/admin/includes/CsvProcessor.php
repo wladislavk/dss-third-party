@@ -1,6 +1,9 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+use function is_null;
+use function is_string;
+
 require_once __DIR__ . '/CsvProcessorAdapterInterface.php';
 
 class CsvProcessor
@@ -97,6 +100,34 @@ class CsvProcessor
         return $batch;
     }
 
+    public function filterEmptyRows($row)
+    {
+        $row = array_filter($row, [$this, 'filterEmptyElements']);
+
+        if ($row) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function filterEmptyElements($each)
+    {
+        if (is_null($each)) {
+            return false;
+        }
+
+        if (!is_string($each)) {
+            return true;
+        }
+
+        if (trim($each) === '') {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Translate a batch of CSV rows, and insert them into the DB
      *
@@ -115,6 +146,8 @@ class CsvProcessor
         $ipAddress
     )
     {
+        $rowBatch = array_filter($rowBatch, [$this, 'filterEmptyRows']);
+
         $dataBatch = array_map(function ($row) use ($headerFields, $docId, $ipAddress, $csvProcessor) {
             return $csvProcessor->processRow($row, $headerFields, $docId, $ipAddress);
         }, $rowBatch);
@@ -154,7 +187,7 @@ class CsvProcessor
          * Allow to ignore extension, in case the filename is a temporary file
          */
         if (!$ignoreExtension && strtolower(substr($filename, -4)) !== '.csv') {
-            $return['errors'][] = 'The file extension is not CSV.';
+            $return['errors'][] = 'The file does not have a .csv extension.';
             return $return;
         }
 

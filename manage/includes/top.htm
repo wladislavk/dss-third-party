@@ -204,32 +204,44 @@ if( $r['homepage'] != '1') {
 
     $num_c = $db->getColumn($c_query, 'total', 0);
 
-    $simsql = "(SELECT COUNT(dp.patientid)
-        FROM dental_patients dp
-        WHERE dp.status = 1
-            AND dp.docid = '$docid'
-            AND (
-                (
-                    dp.firstname = p.firstname
-                    AND dp.lastname = p.lastname
-                )
-                OR (
-                    dp.add1 = p.add1
-                    AND dp.city = p.city
-                    AND dp.state = p.state
-                    AND dp.zip = p.zip
-                )
-            )
-        )";
-
     /**
      * @ToDo: Use named statuses for the patient
      */
     $d_sql = "SELECT COUNT(p.patientid) AS total
         FROM dental_patients p
-        WHERE p.status IN (3, 4)
-            AND p.docid = '$docid'
-            AND $simsql !=0";
+            LEFT JOIN (
+                SELECT COUNT(patientid) AS total, firstname, lastname
+                FROM dental_patients
+                WHERE docid = '$docid'
+                    AND status = 1
+                    AND (
+                        IFNULL(firstname, '') != ''
+                        OR IFNULL(lastname, '') != ''
+                    )
+                GROUP BY firstname, lastname
+            ) by_name
+            ON by_name.firstname = p.firstname
+                AND by_name.lastname = p.lastname
+            LEFT JOIN (
+                SELECT COUNT(patientid) AS total, add1, city, state, zip
+                FROM dental_patients
+                WHERE docid = '$docid'
+                    AND status = 1
+                    AND (
+                        IFNULL(add1, '') != ''
+                        OR IFNULL(city, '') != ''
+                        OR IFNULL(state, '') != ''
+                        OR IFNULL(zip, '') != ''
+                    )
+                GROUP BY add1, city, state, zip
+            ) by_address
+            ON by_address.add1 = p.add1
+                AND by_address.city = p.city
+                AND by_address.state = p.state
+                AND by_address.zip = p.zip
+        WHERE p.docid = '$docid'
+            AND p.status IN (3, 4)
+            AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0";
 
     $num_pending_duplicates = $db->getColumn($d_sql, 'total', 0);
 

@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
+<?php
+namespace Ds3\Libraries\Legacy;
+
+set_time_limit(0);
+
 include "includes/top.htm";
 require_once('includes/constants.inc');
 require_once('includes/formatters.php');
@@ -32,7 +36,7 @@ if(isset($_POST['submitbut'])){
                     // get the values from the csv
                     if($row == 0){
                         for($i=0;$i<27;$i++){
-                            switch(strtolower(trim($data[$i]))){ 
+                            switch(strtolower(trim($data[$i]))){
                                 case 'lastname':
                                         $fields[] = 'lastname';
                                         break;
@@ -134,10 +138,15 @@ if(isset($_POST['submitbut'])){
                     			case 'dob':
                     				if($data[$id]!=''){
                                         $patientdob = true;
-                                        //uncomment following line for dd/mm/yyyy
-                                        //$data[$id] = str_replace('/','-', $data[$id]);
-                                        $d = date('m/d/Y', strtotime($data[$id]));
-                                        $s .= $field . " = '" .$d."', ";	
+                                        $timestamp = strtotime($data[$id]);
+
+                                        if (!$timestamp) {
+                                            $timestamp = str_replace('/', '-', $data[$id]);
+                                            $timestamp = strtotime($timestamp);
+                                        }
+
+                                        $d = $timestamp ? date('m/d/Y', $timestamp) : $data[$id];
+                                        $s .= $field . " = '" .$d."', ";
                     				}
                     				break;
                                 case 'work_phone':
@@ -198,7 +207,7 @@ if(isset($_POST['submitbut'])){
                     				break;
                             }
                         }
-            			$s .= " docid = '".$_SESSION[docid]."', adddate = now()";
+            			$s .= " docid = '".$_SESSION[docid]."', adddate = NOW(), ip_address = '".$db->escape($_SERVER['REMOTE_ADDR'])."'";
             			//echo $s;
             			$pid = $db->getInsertId($s);
 

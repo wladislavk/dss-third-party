@@ -11,13 +11,41 @@ $selectedPatient = intval($_GET['pid']);
 <link rel="stylesheet" href="css/pending.css?v=20170516<?= time() ?>" type="text/css" media="screen" />
 
 <?php
- 
-//SQL to search for possible duplicates
-$simsql = "(select count(*) FROM dental_patients dp WHERE dp.status=1 AND dp.docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND 
-		((dp.firstname=p.firstname AND dp.lastname=p.lastname) OR
-		(dp.add1=p.add1 AND dp.city=p.city AND dp.state=p.state AND dp.zip=p.zip))
-		)";
 
+//SQL to search for possible duplicates
+$docId = intval($_SESSION['docid']);
+$leftJoinDuplicates = "LEFT JOIN (
+        SELECT COUNT(patientid) AS total, firstname, lastname
+        FROM dental_patients
+        WHERE docid = '$docId'
+            AND status = 1
+            AND (
+                IFNULL(firstname, '') != ''
+                OR IFNULL(lastname, '') != ''
+            )
+        GROUP BY firstname, lastname
+    ) by_name
+    ON by_name.firstname = p.firstname
+        AND by_name.lastname = p.lastname
+    LEFT JOIN (
+        SELECT COUNT(patientid) AS total, add1, city, state, zip
+        FROM dental_patients
+        WHERE docid = '$docId'
+            AND status = 1
+            AND (
+                IFNULL(add1, '') != ''
+                OR IFNULL(city, '') != ''
+                OR IFNULL(state, '') != ''
+                OR IFNULL(zip, '') != ''
+            )
+        GROUP BY add1, city, state, zip
+    ) by_address
+    ON by_address.add1 = p.add1
+        AND by_address.city = p.city
+        AND by_address.state = p.state
+        AND by_address.zip = p.zip
+    ";
+$sumTotalsConditional = 'IFNULL(by_name.total, 0) + IFNULL(by_address.total, 0)';
 
 if(isset($_REQUEST['deleteid'])){
     $dsql = "DELETE FROM dental_patients WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con, $_REQUEST['deleteid'])."'";
@@ -37,22 +65,36 @@ if(isset($_REQUEST['deleteid'])){
 }elseif(isset($_REQUEST['createtype'])){
 	//createtype for duplicates or not
 	if($_REQUEST['createtype']=='yes'){
-        $sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
-        $sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
+        $sql3 = "SELECT p.patientid
+            FROM dental_patients p
+                $leftJoinDuplicates
+            WHERE p.docid = '$docId'
+                AND p.status = '3'
+                AND $sumTotalsConditional > 0";
+        $sql4 = "SELECT p.patientid
+            FROM dental_patients p
+                $leftJoinDuplicates
+            WHERE p.docid = '$docId'
+                AND p.status = '4'
+                AND $sumTotalsConditional > 0";
 	}elseif($_REQUEST['createtype']=='no'){
-        $sql3 = "SELECT p.patientid FROM dental_patients p WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
-        $sql4 = "SELECT p.patientid FROM dental_patients p WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
+        $sql3 = "SELECT p.patientid
+            FROM dental_patients p
+                $leftJoinDuplicates
+            WHERE p.docid = '$docId'
+                AND p.status = '3'
+                AND $sumTotalsConditional = 0";
+        $sql4 = "SELECT p.patientid
+            FROM dental_patients p
+                $leftJoinDuplicates
+            WHERE p.docid = '$docId'
+                AND p.status = '4'
+                AND $sumTotalsConditional = 0";
 	}
     $q3 = $db->getResults($sql3);
-	$ids3 = array();
-    foreach ($q3 as $r3) {
-		array_push($ids3, $r3['patientid']);
-	}
+    $ids3 = array_pluck($q3, 'patientid');
     $q4 = $db->getResults($sql4);
-    $ids4 = array();
-    foreach ($q4 as $r4) {
-        array_push($ids4, $r4['patientid']);
-    }
+    $ids4 = array_pluck($q4, 'patientid');
 	$s = "UPDATE dental_patients SET status=1 WHERE patientid IN('" . implode($ids3, "', '") . "')";
 	$db->query($s);
 	$s = "UPDATE dental_patients SET status=2 WHERE patientid IN('" . implode($ids4, "', '") . "')";
@@ -65,15 +107,22 @@ if(isset($_REQUEST['deleteid'])){
 
 }elseif(isset($_REQUEST['deletetype'])){
         if($_REQUEST['deletetype']=='yes'){
-            $sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
+            $sql = "SELECT p.patientid
+                FROM dental_patients p
+                    $leftJoinDuplicates
+                WHERE p.docid = '$docId'
+                    AND p.status IN (3, 4)
+                    AND $sumTotalsConditional > 0";
         }elseif($_REQUEST['deletetype']=='no'){
-            $sql = "SELECT p.patientid FROM dental_patients p WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
+            $sql = "SELECT p.patientid
+                FROM dental_patients p
+                    $leftJoinDuplicates
+                WHERE p.docid = '$docId'
+                    AND p.status IN (3, 4)
+                    AND $sumTotalsConditional = 0";
         }
         $q = $db->getResults($sql);
-        $ids = array();
-        foreach ($q as $r) {
-            array_push($ids, $r['patientid']);
-        }
+        $ids = array_pluck($q, 'patientid');
         $s = "DELETE FROM dental_patients WHERE patientid IN('" . implode($ids, "', '") . "')";
         $db->query($s);
 ?>  
@@ -82,7 +131,13 @@ if(isset($_REQUEST['deleteid'])){
 </script>
 <?php
 }
-$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0 ";
+$sql = "SELECT p.*
+    FROM dental_patients p
+        $leftJoinDuplicates
+    WHERE p.docid = '$docId'
+        AND p.status = '3'
+        AND $sumTotalsConditional > 0
+    ";
 
 if ($isSelectPatient) {
     $sql .= " ORDER BY IF(p.patientid = '$selectedPatient', 1, 0) DESC, p.lastname ASC, p.firstname ASC";
@@ -90,8 +145,33 @@ if ($isSelectPatient) {
     $sql .= "ORDER BY p.lastname ASC";
 }
 
-
 $my = $db->getResults($sql);
+
+$message = '';
+
+if (!empty($_GET['msg'])) {
+    $message = e($_GET['msg']);
+    $json = json_decode($_GET['msg'], true);
+
+    if (is_string($json)) {
+        $message = e($json);
+    }
+
+    if (is_array($json)) {
+        $message = '';
+
+        array_walk_recursive($json, 'e');
+
+        if (!empty($json['errors'])) {
+            $message .= '<ul><li>' . join('</li><li>', $json['errors']) . '.</li></ul>';
+        }
+
+        if (!empty($json['inserted'])) {
+            $message .= "{$json['inserted']} new patients.";
+        }
+    }
+}
+
 ?>
 
 <script src="js/pending.js" type="text/javascript"></script>
@@ -112,9 +192,11 @@ $my = $db->getResults($sql);
 <a href="<?php echo $_SERVER['PHP_SELF']; ?>?deletetype=yes" style="margin-right:10px;float:right;" onclick="return confirm('Are you sure you want to delete all?');">Delete All</a>
 <a href="<?php echo $_SERVER['PHP_SELF']; ?>?createtype=yes" style="margin-right:10px;float:right;">Create All</a>
 <br />
-<div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
-</div>
+<?php if ($message) { ?>
+    <div align="center" class="red">
+        <?= $message ?>
+    </div>
+<?php } ?>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
@@ -204,7 +286,13 @@ $my = $db->getResults($sql);
 </table>
 
 <?php
-$sql = "SELECT p.* FROM dental_patients p WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0 ";
+$sql = "SELECT p.*
+    FROM dental_patients p
+        $leftJoinDuplicates
+    WHERE p.docid = '$docId'
+        AND p.status = '3'
+        AND IFNULL(by_name.total, 0) + IFNULL(by_address.total, 0) = 0
+    ";
 
 if ($isSelectPatient) {
     $sql .= " ORDER BY IF(p.patientid = '$selectedPatient', 1, 0) DESC, p.lastname, p.firstname";

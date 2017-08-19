@@ -57,10 +57,10 @@ class JwtHelper
         }
 
         $payload = new JwtPayload();
-        $payload->iat = $now->getTimestamp();
-        $payload->nbf = $notBefore->getTimestamp();
-        $payload->exp = $expireDate->getTimestamp();
-        $payload->jti = $payload->iss . '-' . $payload->iat;
+        $payload->issuedAt = $now->getTimestamp();
+        $payload->notBefore = $notBefore->getTimestamp();
+        $payload->expiresAt = $expireDate->getTimestamp();
+        $payload->jwtUniqueId = md5($payload->issuer . '-' . $payload->issuedAt);
 
         $baseClaims = $payload->toArray();
         $claims = array_merge($customClaims, $baseClaims);
@@ -116,16 +116,16 @@ class JwtHelper
             $audience = $claims['aud'];
         }
 
-        if ($issuer !== $payload->iss) {
-            throw new InvalidTokenException("Invalid Issuer (iss): got '$issuer', expected '{$payload->iss}'");
+        if ($issuer !== $payload->issuer) {
+            throw new InvalidTokenException("Invalid Issuer (iss): got '$issuer', expected '{$payload->issuer}'");
         }
 
-        if ($subject !== $payload->sub) {
-            throw new InvalidTokenException("Invalid Subject (sub): got '$subject', expected '{$payload->sub}'");
+        if ($subject !== $payload->subject) {
+            throw new InvalidTokenException("Invalid Subject (sub): got '$subject', expected '{$payload->subject}'");
         }
 
-        if ($audience !== $payload->aud) {
-            throw new InvalidTokenException("Invalid Audience (aud): got '$audience', expected '{$payload->aud}'");
+        if ($audience !== $payload->audience) {
+            throw new InvalidTokenException("Invalid Audience (aud): got '$audience', expected '{$payload->audience}'");
         }
         
         if (isset($claims['nbf']) && $this->carbon->timestamp($claims['nbf'])->isFuture()) {

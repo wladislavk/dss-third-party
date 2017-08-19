@@ -5,36 +5,36 @@ namespace DentalSleepSolutions\Structs;
 class JwtPayload
 {
     /** @var string */
-    public $iss = 'DentalSleepSolutions';
+    public $issuer = 'DentalSleepSolutions';
 
     /** @var string */
-    public $sub = 'Auth';
+    public $subject = 'Auth';
 
     /** @var string */
-    public $aud = 'API';
+    public $audience = 'API';
 
     /** @var string */
-    public $jti = 'DentalSleepSolutions-';
+    public $jwtUniqueId = 'DentalSleepSolutions-';
 
     /** @var string */
-    public $iat = '';
+    public $issuedAt = '';
 
     /** @var string */
-    public $exp = '';
+    public $expiresAt = '';
 
     /** @var string */
-    public $nbf = '';
+    public $notBefore = '';
 
     public function toArray()
     {
         return [
-            'iss' => $this->iss,
-            'sub' => $this->sub,
-            'aud' => $this->aud,
-            'jti' => $this->jti,
-            'iat' => $this->iat,
-            'exp' => $this->exp,
-            'nbf' => $this->nbf,
+            'iss' => $this->issuer,
+            'sub' => $this->subject,
+            'aud' => $this->audience,
+            'jti' => $this->jwtUniqueId,
+            'iat' => $this->issuedAt,
+            'exp' => $this->expiresAt,
+            'nbf' => $this->notBefore,
         ];
     }
 }

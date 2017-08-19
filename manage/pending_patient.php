@@ -14,12 +14,15 @@ $selectedPatient = intval($_GET['pid']);
 
 //SQL to search for possible duplicates
 $docId = intval($_SESSION['docid']);
-$simsql = '';
 $leftJoinDuplicates = "LEFT JOIN (
         SELECT COUNT(patientid) AS total, firstname, lastname
         FROM dental_patients
         WHERE docid = '$docId'
             AND status = 1
+            AND (
+                IFNULL(firstname, '') != ''
+                OR IFNULL(lastname, '') != ''
+            )
         GROUP BY firstname, lastname
     ) by_name
     ON by_name.firstname = p.firstname
@@ -29,13 +32,20 @@ $leftJoinDuplicates = "LEFT JOIN (
         FROM dental_patients
         WHERE docid = '$docId'
             AND status = 1
+            AND (
+                IFNULL(add1, '') != ''
+                OR IFNULL(city, '') != ''
+                OR IFNULL(state, '') != ''
+                OR IFNULL(zip, '') != ''
+            )
         GROUP BY add1, city, state, zip
     ) by_address
     ON by_address.add1 = p.add1
         AND by_address.city = p.city
         AND by_address.state = p.state
-        AND by_address.zip = p.zip";
-
+        AND by_address.zip = p.zip
+    ";
+$sumTotalsConditional = 'IFNULL(by_name.total, 0) + IFNULL(by_address.total, 0)';
 
 if(isset($_REQUEST['deleteid'])){
     $dsql = "DELETE FROM dental_patients WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND patientid='".mysqli_real_escape_string($con, $_REQUEST['deleteid'])."'";
@@ -60,26 +70,26 @@ if(isset($_REQUEST['deleteid'])){
                 $leftJoinDuplicates
             WHERE p.docid = '$docId'
                 AND p.status = '3'
-                AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0";
+                AND $sumTotalsConditional > 0";
         $sql4 = "SELECT p.patientid
             FROM dental_patients p
                 $leftJoinDuplicates
             WHERE p.docid = '$docId'
                 AND p.status = '4'
-                AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0";
+                AND $sumTotalsConditional > 0";
 	}elseif($_REQUEST['createtype']=='no'){
         $sql3 = "SELECT p.patientid
             FROM dental_patients p
                 $leftJoinDuplicates
             WHERE p.docid = '$docId'
                 AND p.status = '3'
-                AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) = 0";
+                AND $sumTotalsConditional = 0";
         $sql4 = "SELECT p.patientid
             FROM dental_patients p
                 $leftJoinDuplicates
             WHERE p.docid = '$docId'
                 AND p.status = '4'
-                AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) = 0";
+                AND $sumTotalsConditional = 0";
 	}
     $q3 = $db->getResults($sql3);
     $ids3 = array_pluck($q3, 'patientid');
@@ -102,14 +112,14 @@ if(isset($_REQUEST['deleteid'])){
                     $leftJoinDuplicates
                 WHERE p.docid = '$docId'
                     AND p.status IN (3, 4)
-                    AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0";
+                    AND $sumTotalsConditional > 0";
         }elseif($_REQUEST['deletetype']=='no'){
             $sql = "SELECT p.patientid
                 FROM dental_patients p
                     $leftJoinDuplicates
                 WHERE p.docid = '$docId'
                     AND p.status IN (3, 4)
-                    AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) = 0";
+                    AND $sumTotalsConditional = 0";
         }
         $q = $db->getResults($sql);
         $ids = array_pluck($q, 'patientid');
@@ -126,7 +136,7 @@ $sql = "SELECT p.*
         $leftJoinDuplicates
     WHERE p.docid = '$docId'
         AND p.status = '3'
-        AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) > 0
+        AND $sumTotalsConditional > 0
     ";
 
 if ($isSelectPatient) {
@@ -281,7 +291,7 @@ $sql = "SELECT p.*
         $leftJoinDuplicates
     WHERE p.docid = '$docId'
         AND p.status = '3'
-        AND COALESCE(by_name.total, 0) + COALESCE(by_address.total, 0) = 0
+        AND IFNULL(by_name.total, 0) + IFNULL(by_address.total, 0) = 0
     ";
 
 if ($isSelectPatient) {

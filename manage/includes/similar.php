@@ -10,9 +10,7 @@ function similar_doctors($id){
     $s = "SELECT * from dental_patient_contacts WHERE id='$id'";
     $r = $db->getRow($s);
 
-    array_walk($r, function (&$each) use ($db) {
-        $each = $db->escape($each);
-    });
+    $r = array_map([$db, 'escape'], $r);
 
     $s2 = "SELECT firstname, lastname, add1, city, state, zip
         FROM dental_contact
@@ -21,23 +19,23 @@ function similar_doctors($id){
             AND (
                 (
                     (
-                        COALESCE(firstname, '') != ''
-                        OR COALESCE(lastname, '') != ''
+                        IFNULL(firstname, '') != ''
+                        OR IFNULL(lastname, '') != ''
                     )
-                    AND COALESCE(firstname, '') = '{$r['firstname']}'
-                    AND COALESCE(lastname, '') = '{$r['lastname']}'
+                    AND IFNULL(firstname, '') = '{$r['firstname']}'
+                    AND IFNULL(lastname, '') = '{$r['lastname']}'
                 )
                 OR (
                     (
-                        COALESCE(add1, '') != ''
-                        OR COALESCE(city, '') != ''
-                        OR COALESCE(state, '') != ''
-                        OR COALESCE(zip, '') != ''
+                        IFNULL(add1, '') != ''
+                        OR IFNULL(city, '') != ''
+                        OR IFNULL(state, '') != ''
+                        OR IFNULL(zip, '') != ''
                     )
-                    AND COALESCE(add1, '') = '{$r['add1']}'
-                    AND COALESCE(city, '') = '{$r['city']}'
-                    AND COALESCE(state, '') = '{$r['state']}'
-                    AND COALESCE(zip, '') = '{$r['zip']}'
+                    AND IFNULL(add1, '') = '{$r['add1']}'
+                    AND IFNULL(city, '') = '{$r['city']}'
+                    AND IFNULL(state, '') = '{$r['state']}'
+                    AND IFNULL(zip, '') = '{$r['zip']}'
                 )
             )";
 
@@ -67,9 +65,7 @@ function similar_contacts($id){
         WHERE contactid = '$id'";
     $r = $db->getRow($s);
 
-    array_walk($r, function (&$each) use ($db) {
-        $each = $db->escape($each);
-    });
+    $r = array_map([$db, 'escape'], $r);
 
     $s2 = "SELECT firstname, lastname, company, add1, city, state, zip, phone1
         FROM dental_contact
@@ -78,28 +74,28 @@ function similar_contacts($id){
             AND contactid != '$id'
             AND (
                 (
-                    COALESCE(company, '') != ''
-                    AND COALESCE(company, '') = '{$r['company']}'
+                    IFNULL(company, '') != ''
+                    AND IFNULL(company, '') = '{$r['company']}'
                 )
                 OR (
                     (
-                        COALESCE(firstname, '') != ''
-                        OR COALESCE(lastname, '') != ''
+                        IFNULL(firstname, '') != ''
+                        OR IFNULL(lastname, '') != ''
                     )
-                    AND COALESCE(firstname, '') = '{$r['firstname']}'
-                    AND COALESCE(lastname, '') = '{$r['lastname']}'
+                    AND IFNULL(firstname, '') = '{$r['firstname']}'
+                    AND IFNULL(lastname, '') = '{$r['lastname']}'
                 )
                 OR (
                     (
-                        COALESCE(add1, '') != ''
-                        OR COALESCE(city, '') != ''
-                        OR COALESCE(state, '') != ''
-                        OR COALESCE(zip, '') != ''
+                        IFNULL(add1, '') != ''
+                        OR IFNULL(city, '') != ''
+                        OR IFNULL(state, '') != ''
+                        OR IFNULL(zip, '') != ''
                     )
-                    AND COALESCE(add1, '') = '{$r['add1']}'
-                    AND COALESCE(city, '') = '{$r['city']}'
-                    AND COALESCE(state, '') = '{$r['state']}'
-                    AND COALESCE(zip, '') = '{$r['zip']}'
+                    AND IFNULL(add1, '') = '{$r['add1']}'
+                    AND IFNULL(city, '') = '{$r['city']}'
+                    AND IFNULL(state, '') = '{$r['state']}'
+                    AND IFNULL(zip, '') = '{$r['zip']}'
                 )
             )";
 
@@ -143,23 +139,23 @@ function similar_patients($id){
             AND (
                 (
                     (
-                        COALESCE(firstname, '') != ''
-                        OR COALESCE(lastname, '') != ''
+                        IFNULL(firstname, '') != ''
+                        OR IFNULL(lastname, '') != ''
                     )
-                    AND COALESCE(firstname, '') = '{$r['firstname']}'
-                    AND COALESCE(lastname, '') = '{$r['lastname']}'
+                    AND IFNULL(firstname, '') = '{$r['firstname']}'
+                    AND IFNULL(lastname, '') = '{$r['lastname']}'
                 )
                 OR (
                     (
-                        COALESCE(add1, '') != ''
-                        OR COALESCE(city, '') != ''
-                        OR COALESCE(state, '') != ''
-                        OR COALESCE(zip, '') != ''
+                        IFNULL(add1, '') != ''
+                        OR IFNULL(city, '') != ''
+                        OR IFNULL(state, '') != ''
+                        OR IFNULL(zip, '') != ''
                     )
-                    AND COALESCE(add1, '') = '{$r['add1']}'
-                    AND COALESCE(city, '') = '{$r['city']}'
-                    AND COALESCE(state, '') = '{$r['state']}'
-                    AND COALESCE(zip, '') = '{$r['zip']}'
+                    AND IFNULL(add1, '') = '{$r['add1']}'
+                    AND IFNULL(city, '') = '{$r['city']}'
+                    AND IFNULL(state, '') = '{$r['state']}'
+                    AND IFNULL(zip, '') = '{$r['zip']}'
                 )
             )";
 
@@ -199,20 +195,20 @@ function similar_insurance($id){
             AND contacttypeid =  '11'
             AND (
                 (
-                    COALESCE(company, '') != ''
+                    IFNULL(company, '') != ''
                     AND company LIKE '%{$r['company']}%'
                 )
                 OR (
                     (
-                        COALESCE(add1, '') != ''
-                        OR COALESCE(city, '') != ''
-                        OR COALESCE(state, '') != ''
-                        OR COALESCE(zip, '') != ''
+                        IFNULL(add1, '') != ''
+                        OR IFNULL(city, '') != ''
+                        OR IFNULL(state, '') != ''
+                        OR IFNULL(zip, '') != ''
                     )
-                    AND COALESCE(add1, '') = '{$r['add1']}'
-                    AND COALESCE(city, '') = '{$r['city']}'
-                    AND COALESCE(state, '') = '{$r['state']}'
-                    AND COALESCE(zip, '') = '{$r['zip']}'
+                    AND IFNULL(add1, '') = '{$r['add1']}'
+                    AND IFNULL(city, '') = '{$r['city']}'
+                    AND IFNULL(state, '') = '{$r['state']}'
+                    AND IFNULL(zip, '') = '{$r['zip']}'
                 )
             )";
 

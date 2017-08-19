@@ -10,38 +10,47 @@ include "includes/similar.php";
 //SQL to search for possible duplicates
 
 $docId = intval($_SESSION['docid']);
-$simsql = "(
-        SELECT COUNT(dc.contactid)
-        FROM dental_contact dc
-        WHERE dc.docid = '$docId'
-            AND dc.status = 1
+$leftJoinDuplicates = "LEFT JOIN (
+        SELECT COUNT(contactid) AS total, company
+        FROM dental_contact
+        WHERE docid = '$docId'
+            AND status = 1
+            AND IFNULL(company, '') != ''
+        GROUP BY company
+    ) by_company
+    ON by_company.company = c.company
+    LEFT JOIN (
+        SELECT COUNT(contactid) AS total, firstname, lastname
+        FROM dental_contact
+        WHERE docid = '$docId'
+            AND status = 1
             AND (
-                (
-                    COALESCE(dc.company, '') != ''
-                    AND dc.company = c.company
-                )
-                OR (
-                    (
-                        COALESCE(dc.firstname, '') != ''
-                        OR COALESCE(dc.lastname, '') != ''
-                    )
-                    AND COALESCE(dc.firstname, '') = COALESCE(c.firstname, '')
-                    AND COALESCE(dc.lastname, '') = COALESCE(c.lastname, '')
-                )
-                OR (
-                    (
-                        COALESCE(dc.add1, '') != ''
-                        OR COALESCE(dc.city, '') != ''
-                        OR COALESCE(dc.state, '') != ''
-                        OR COALESCE(dc.zip, '') != ''
-                    )
-                    AND COALESCE(dc.add1, '') = COALESCE(c.add1)
-                    AND COALESCE(dc.city, '') = COALESCE(c.city)
-                    AND COALESCE(dc.state, '') = COALESCE(c.state)
-                    AND COALESCE(dc.zip, '') = COALESCE(c.zip)
-                )
+                IFNULL(firstname, '') != ''
+                OR IFNULL(lastname, '') != ''
             )
-    )";
+        GROUP BY firstname, lastname
+    ) by_name
+    ON by_name.firstname = c.firstname
+        AND by_name.lastname = c.lastname
+    LEFT JOIN (
+        SELECT COUNT(contactid) AS total, add1, city, state, zip
+        FROM dental_contact
+        WHERE docid = '$docId'
+            AND status = 1
+            AND (
+                IFNULL(add1, '') != ''
+                OR IFNULL(city, '') != ''
+                OR IFNULL(state, '') != ''
+                OR IFNULL(zip, '') != ''
+            )
+        GROUP BY add1, city, state, zip
+    ) by_address
+    ON by_address.add1 = c.add1
+        AND by_address.city = c.city
+        AND by_address.state = c.state
+        AND by_address.zip = c.zip
+    ";
+$sumTotalsConditional = 'IFNULL(by_company.total, 0) + IFNULL(by_name.total, 0) + IFNULL(by_address.total, 0)';
 
 if(isset($_REQUEST['deleteid'])){
     $dsql = "DELETE FROM dental_contact WHERE docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND contactid='".mysqli_real_escape_string($con, $_REQUEST['deleteid'])."'";
@@ -62,11 +71,31 @@ if(isset($_REQUEST['deleteid'])){
 }elseif(isset($_REQUEST['createtype'])){
 	//createtype for duplicates or not
 	if($_REQUEST['createtype']=='yes'){
-        $sql3 = "SELECT c.contactid FROM dental_contact c WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
-        $sql4 = "SELECT c.contactid FROM dental_contact c WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
+        $sql3 = "SELECT c.contactid
+            FROM dental_contact c
+                $leftJoinDuplicates
+            WHERE c.docid = '$docId'
+                AND c.status = '3'
+                AND $sumTotalsConditional > 0";
+        $sql4 = "SELECT c.contactid
+            FROM dental_contact c
+                $leftJoinDuplicates
+            WHERE c.docid = '$docId'
+                AND c.status = '4'
+                AND $sumTotalsConditional > 0";
 	}elseif($_REQUEST['createtype']=='no'){
-        $sql3 = "SELECT c.contactid FROM dental_contact c WHERE status='3' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
-        $sql4 = "SELECT c.contactid FROM dental_contact c WHERE status='4' AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
+        $sql3 = "SELECT c.contactid
+            FROM dental_contact c
+                $leftJoinDuplicates
+            WHERE c.docid = '$docId'
+                AND c.status = '3'
+                AND $sumTotalsConditional = 0";
+        $sql4 = "SELECT c.contactid
+            FROM dental_contact c
+                $leftJoinDuplicates
+            WHERE c.docid = '$docId'
+                AND c.status = '4'
+                AND $sumTotalsConditional = 0";
 	}
     $q3 = $db->getResults($sql3);
     $ids3 = array();
@@ -93,9 +122,19 @@ if(isset($_REQUEST['deleteid'])){
 <?php
 }elseif(isset($_REQUEST['deletetype'])){
     if($_REQUEST['deletetype']=='yes'){
-        $sql = "SELECT c.contactid FROM dental_contact c WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0";
+        $sql = "SELECT c.contactid
+                FROM dental_contact c
+                    $leftJoinDuplicates
+                WHERE c.docid = '$docId'
+                    AND c.status IN (3, 4)
+                    AND $sumTotalsConditional > 0";
     }elseif($_REQUEST['deletetype']=='no'){
-        $sql = "SELECT c.contactid FROM dental_contact c WHERE (status='3' || status='4' ) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0";
+        $sql = "SELECT c.contactid
+                FROM dental_contact c
+                    $leftJoinDuplicates
+                WHERE c.docid = '$docId'
+                    AND c.status IN (3, 4)
+                    AND $sumTotalsConditional = 0";
     }
     $q = $db->getResults($sql);
     $ids = array();
@@ -110,9 +149,40 @@ if(isset($_REQUEST['deleteid'])){
 </script>
 <?php
 }
-$sql = "SELECT c.* FROM dental_contact c WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."!=0 ";
-$sql .= "ORDER BY c.lastname ASC";
+$sql = "SELECT c.*
+    FROM dental_contact c
+        $leftJoinDuplicates
+    WHERE c.docid = '$docId'
+        AND c.status IN (3, 4)
+        AND $sumTotalsConditional > 0
+    ORDER BY c.lastname ASC";
 $my = $db->getResults($sql);
+
+$message = '';
+
+if (!empty($_GET['msg'])) {
+    $message = e($_GET['msg']);
+    $json = json_decode($_GET['msg'], true);
+
+    if (is_string($json)) {
+        $message = e($json);
+    }
+
+    if (is_array($json)) {
+        $message = '';
+
+        array_walk_recursive($json, 'e');
+
+        if (!empty($json['errors'])) {
+            $message .= '<ul><li>' . join('</li><li>', $json['errors']) . '.</li></ul>';
+        }
+
+        if (!empty($json['inserted'])) {
+            $message .= "{$json['inserted']} new contacts.";
+        }
+    }
+}
+
 ?>
 
 <script src="js/pending.js" type="text/javascript"></script>
@@ -129,9 +199,11 @@ $my = $db->getResults($sql);
 <a href="<?php echo $_SERVER['PHP_SELF']; ?>?deletetype=yes" style="margin-right:10px;float:right;" onclick="return confirm('Are you sure you want to delete all?');">Delete All</a>
 <a href="<?php echo $_SERVER['PHP_SELF']; ?>?createtype=yes" style="margin-right:10px;float:right;">Create All</a>
 <br />
-<div align="center" class="red">
-	<b><?php echo (!empty($_GET['msg']) ? $_GET['msg'] : '');?></b>
-</div>
+<?php if ($message) { ?>
+    <div align="center" class="red">
+        <?= $message ?>
+    </div>
+<?php } ?>
 
 <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
 	<tr class="tr_bg_h">
@@ -231,8 +303,13 @@ $my = $db->getResults($sql);
 </table>
 
 <?php
-$sql = "SELECT c.* FROM dental_contact c WHERE status IN (3,4) AND docid='".mysqli_real_escape_string($con, $_SESSION['docid'])."' AND ".$simsql."=0 ";
-$sql .= "ORDER BY c.lastname ASC";
+$sql = "SELECT c.*
+    FROM dental_contact c
+        $leftJoinDuplicates
+    WHERE c.docid = '$docId'
+        AND c.status IN (3, 4)
+        AND $sumTotalsConditional = 0
+    ORDER BY c.lastname ASC";
 $my = $db->getResults($sql);
 ?>
 <span class="admin_head">
@@ -323,9 +400,7 @@ function similarContacts ($id) {
         WHERE contactid='$id'";
     $r = $db->getRow($s);
 
-    array_walk($r, function (&$each) use ($db) {
-        $each = $db->escape($each);
-    });
+    $r = array_map([$db, 'escape'], $r);
 
     $s2 = "SELECT firstname, lastname, company, add1, city, state, zip, phone1
         FROM dental_contact
@@ -334,28 +409,28 @@ function similarContacts ($id) {
             AND contactid != '$id'
             AND (
                 (
-                    COALESCE(company, '') != ''
-                    AND COALESCE(company, '') = '{$r['company']}'
+                    IFNULL(company, '') != ''
+                    AND IFNULL(company, '') = '{$r['company']}'
                 )
                 OR (
                     (
-                        COALESCE(firstname, '') != ''
-                        OR COALESCE(lastname, '') != ''
+                        IFNULL(firstname, '') != ''
+                        OR IFNULL(lastname, '') != ''
                     )
-                    AND COALESCE(firstname, '') = '{$r['firstname']}'
-                    AND COALESCE(lastname, '') = '{$r['lastname']}'
+                    AND IFNULL(firstname, '') = '{$r['firstname']}'
+                    AND IFNULL(lastname, '') = '{$r['lastname']}'
                 )
                 OR (
                     (
-                        COALESCE(add1, '') != ''
-                        OR COALESCE(city, '') != ''
-                        OR COALESCE(state, '') != ''
-                        OR COALESCE(zip, '') != ''
+                        IFNULL(add1, '') != ''
+                        OR IFNULL(city, '') != ''
+                        OR IFNULL(state, '') != ''
+                        OR IFNULL(zip, '') != ''
                     )
-                    AND COALESCE(add1, '') = '{$r['add1']}'
-                    AND COALESCE(city, '') = '{$r['city']}'
-                    AND COALESCE(state, '') = '{$r['state']}'
-                    AND COALESCE(zip, '') = '{$r['zip']}'
+                    AND IFNULL(add1, '') = '{$r['add1']}'
+                    AND IFNULL(city, '') = '{$r['city']}'
+                    AND IFNULL(state, '') = '{$r['state']}'
+                    AND IFNULL(zip, '') = '{$r['zip']}'
                 )
             )";
 

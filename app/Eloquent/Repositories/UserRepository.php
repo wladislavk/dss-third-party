@@ -32,27 +32,9 @@ class UserRepository extends AbstractRepository
      */
     public function findByCredentials(array $where)
     {
-        $password = null;
-
-        if (isset($where['password']) && is_string($where['password'])) {
-            $password = $where['password'];
-        }
-
-        $user = $this->findWhere($where)
+        return $this->findWhere($where)
             ->first()
             ;
-
-        if (is_null($user) || is_null($password)) {
-            return $user;
-        }
-
-        $hash = $this->genPassword($password, $user->salt);
-
-        if ($hash !== $user->password) {
-            return null;
-        }
-
-        return $user;
     }
 
     /**

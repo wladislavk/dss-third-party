@@ -2,15 +2,17 @@
 
 namespace DentalSleepSolutions\Auth;
 
-use DentalSleepSolutions\Helpers\JwtHelper;
-use Illuminate\Contracts\Auth\Authenticatable;
-use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\Structs\JwtAuthErrors;
-use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
+use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
 use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
+use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
-use DentalSleepSolutions\Exceptions\Auth\UserNotFoundException;
+use DentalSleepSolutions\Helpers\JwtHelper;
+use DentalSleepSolutions\Providers\Auth\AbstractGuard;
+use DentalSleepSolutions\Providers\Auth\AdminGuard;
+use DentalSleepSolutions\Providers\Auth\UserGuard;
+use DentalSleepSolutions\Structs\JwtAuthErrors;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class JwtAuth
 {
@@ -23,60 +25,26 @@ class JwtAuth
     /** @var JwtHelper */
     private $jwtHelper;
 
-    /** @var Request */
-    private $request;
-
+    /**
+     * @param UserGuard  $userGuard
+     * @param AdminGuard $adminGuard
+     * @param JwtHelper  $jwtHelper
+     */
     public function __construct(
         UserGuard $userGuard,
         AdminGuard $adminGuard,
-        JwtHelper $jwtHelper,
-        Request $request
+        JwtHelper $jwtHelper
     )
     {
         $this->userGuard = $userGuard;
         $this->adminGuard = $adminGuard;
         $this->jwtHelper = $jwtHelper;
-        $this->request = $request;
-    }
-
-    /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * @return Authenticatable
-     * @throws ExpiredTokenException
-     * @throws InactiveTokenException
-     * @throws InvalidTokenException
-     * @throws InvalidPayloadException
-     * @throws UserNotFoundException
-     */
-    public function toAdmin()
-    {
-        return $this->toRole('Admin');
-    }
-
-    /**
-     * @return Authenticatable
-     * @throws ExpiredTokenException
-     * @throws InactiveTokenException
-     * @throws InvalidTokenException
-     * @throws InvalidPayloadException
-     * @throws UserNotFoundException
-     */
-    public function toUser()
-    {
-        return $this->toRole('User');
     }
 
     /**
      * @param string $role
      * @return string
-     * @throws UserNotFoundException
+     * @throws AuthenticatableNotFoundException
      * @throws ExpiredTokenException
      * @throws InactiveTokenException
      * @throws InvalidPayloadException
@@ -89,7 +57,7 @@ class JwtAuth
         ;
 
         if (!$user) {
-            throw new UserNotFoundException();
+            throw new AuthenticatableNotFoundException();
         }
 
         $token = $this->jwtHelper
@@ -104,23 +72,18 @@ class JwtAuth
 
     /**
      * @param string $role
+     * @param string $token
      * @return Authenticatable|null
      * @throws ExpiredTokenException
      * @throws InactiveTokenException
      * @throws InvalidTokenException
      * @throws InvalidPayloadException
-     * @throws UserNotFoundException
+     * @throws AuthenticatableNotFoundException
      */
-    public function toRole($role)
+    public function toRole($role, $token)
     {
-        $token = $this->getTokenFromHeader();
         $claims = $this->jwtHelper->parseToken($token);
-
-        $this->jwtHelper->validateClaims($claims);
-
-        if (!isset($claims['role']) || $claims['role'] !== $role || !isset($claims['id'])) {
-            throw new InvalidPayloadException(JwtAuthErrors::INVALID_ROLE);
-        }
+        $this->jwtHelper->validateClaims($claims, ['role' => $role], ['id']);
 
         $authenticated = $this->guard($role)
             ->once([
@@ -129,7 +92,7 @@ class JwtAuth
         ;
 
         if (!$authenticated) {
-            throw new UserNotFoundException(JwtAuthErrors::USER_NOT_FOUND);
+            throw new AuthenticatableNotFoundException(JwtAuthErrors::USER_NOT_FOUND);
         }
 
         return $this->guard($role)
@@ -139,7 +102,7 @@ class JwtAuth
 
     /**
      * @param string $role
-     * @return AbstractGuard|null
+     * @return AbstractGuard
      */
     public function guard($role = 'User')
     {
@@ -147,20 +110,6 @@ class JwtAuth
             return $this->adminGuard;
         }
 
-        if ($role === 'User') {
-            return $this->userGuard;
-        }
-
-        return null;
-    }
-
-    /**
-     * @return string
-     */
-    private function getTokenFromHeader()
-    {
-        $header = $this->request->header('Authorization','');
-        $token = preg_replace('/^Bearer /', '', $header);
-        return $token;
+        return $this->userGuard;
     }
 }

@@ -95,8 +95,9 @@ class JwtHelper
      * @throws InvalidTokenException
      * @throws InactiveTokenException
      * @throws ExpiredTokenException
+     * @throws InvalidPayloadException
      */
-    public function validateClaims(array $claims)
+    public function validateClaims(array $claims, array $expectedValues = [], array $expectedSet = [])
     {
         $payload = new JwtPayload();
 
@@ -117,15 +118,15 @@ class JwtHelper
         }
 
         if ($issuer !== $payload->issuer) {
-            throw new InvalidTokenException("Invalid Issuer (iss): got '$issuer', expected '{$payload->issuer}'");
+            throw new InvalidTokenException("Invalid Issuer (iss): expected '{$payload->issuer}', got '$issuer'");
         }
 
         if ($subject !== $payload->subject) {
-            throw new InvalidTokenException("Invalid Subject (sub): got '$subject', expected '{$payload->subject}'");
+            throw new InvalidTokenException("Invalid Subject (sub): expected '{$payload->subject}', got '$subject'");
         }
 
         if ($audience !== $payload->audience) {
-            throw new InvalidTokenException("Invalid Audience (aud): got '$audience', expected '{$payload->audience}'");
+            throw new InvalidTokenException("Invalid Audience (aud): expected '{$payload->audience}', got '$audience'");
         }
         
         if (isset($claims['nbf']) && $this->carbon->timestamp($claims['nbf'])->isFuture()) {
@@ -138,6 +139,18 @@ class JwtHelper
 
         if (!isset($claims['exp']) || $this->carbon->timestamp($claims['exp'])->isPast()) {
             throw new ExpiredTokenException('Token has expired (exp)');
+        }
+
+        foreach ($expectedValues as $claim => $value) {
+            if (!isset($claims[$claim]) || $claims[$claim] !== $value) {
+                throw new InvalidPayloadException("Claim ($claim) not set or value mismatch: expected '$value'");
+            }
+        }
+
+        foreach ($expectedSet as $claim) {
+            if (!isset($claims[$claim])) {
+                throw new InvalidPayloadException("Claim ($claim) not set");
+            }
         }
     }
 }

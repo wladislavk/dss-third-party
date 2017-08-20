@@ -11,7 +11,7 @@ use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
 use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
-use DentalSleepSolutions\Exceptions\Auth\UserNotFoundException;
+use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
 use DentalSleepSolutions\Structs\JwtMiddlewareErrors as MiddlewareErrors;
 use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware as Middleware;
 use Tests\TestCases\UnitTestCase;
@@ -211,11 +211,11 @@ class JwtUserAuthMiddlewareTest extends UnitTestCase
         $this->assertEquals(422, $response->getStatusCode());
     }
 
-    public function testHandleUserNotFoundException()
+    public function testHandleAuthenticatableNotFoundException()
     {
         $this->auth->shouldReceive('toUser')
             ->once()
-            ->andThrow(new UserNotFoundException())
+            ->andThrow(new AuthenticatableNotFoundException())
         ;
         $this->request->shouldReceive('admin')
             ->once()

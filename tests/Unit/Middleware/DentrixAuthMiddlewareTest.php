@@ -8,7 +8,7 @@ use DentalSleepSolutions\Auth\DentrixAuth as Auth;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\Exceptions\JWT\EmptyTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
-use DentalSleepSolutions\Exceptions\Auth\UserNotFoundException;
+use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
 use DentalSleepSolutions\Structs\DentrixAuthErrors as AuthErrors;
 use DentalSleepSolutions\Structs\DentrixMiddlewareErrors as MiddlewareErrors;
 use DentalSleepSolutions\Http\Middleware\DentrixAuthMiddleware as Middleware;
@@ -125,7 +125,7 @@ class DentrixAuthMiddlewareTest extends UnitTestCase
     {
         $this->auth->shouldReceive('toUser')
             ->once()
-            ->andThrow(new UserNotFoundException())
+            ->andThrow(new AuthenticatableNotFoundException())
         ;
         $response = $this->middleware->handle($this->request, $this->nextClosure);
 

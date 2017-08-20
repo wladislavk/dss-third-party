@@ -2,112 +2,118 @@
 
 namespace DentalSleepSolutions\Auth;
 
-use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalCompanyRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalUserRepository;
-use Illuminate\Contracts\Auth\Authenticatable;
-use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\Structs\DentrixAuthErrors;
+use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
 use DentalSleepSolutions\Exceptions\JWT\EmptyTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
-use DentalSleepSolutions\Exceptions\Auth\UserNotFoundException;
+use DentalSleepSolutions\Providers\Auth\AbstractGuard;
+use DentalSleepSolutions\Providers\Auth\DentrixUserGuard;
+use DentalSleepSolutions\Providers\Auth\DentrixCompanyGuard;
+use DentalSleepSolutions\Providers\Auth\UserGuard;
+use DentalSleepSolutions\Structs\DentrixAuthErrors;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class DentrixAuth
 {
-    const COMPANY_TOKEN_INDEX = 'api_key_company';
-    const USER_TOKEN_INDEX = 'api_key_user';
+    /** @var DentrixCompanyGuard */
+    private $dentrixCompanyGuard;
 
-    /** @var ExternalCompanyRepository */
-    private $externalCompanyRepository;
-
-    /** @var ExternalUserRepository */
-    private $externalUserRepository;
+    /** @var DentrixUserGuard */
+    private $dentrixUserGuard;
 
     /** @var UserGuard */
-    private $guard;
-
-    /** @var Request */
-    private $request;
+    private $userGuard;
 
     /**
-     * @param ExternalCompanyRepository $externalCompanyRepository
-     * @param ExternalUserRepository    $externalUserRepository
-     * @param UserGuard                 $guard
-     * @param Request                   $request
+     * @param DentrixCompanyGuard $dentrixCompanyGuard
+     * @param DentrixUserGuard    $dentrixUserGuard
+     * @param UserGuard           $userGuard
      */
     public function __construct(
-        ExternalCompanyRepository $externalCompanyRepository,
-        ExternalUserRepository $externalUserRepository,
-        UserGuard $guard,
-        Request $request
+        DentrixCompanyGuard $dentrixCompanyGuard,
+        DentrixUserGuard $dentrixUserGuard,
+        UserGuard $userGuard
     )
     {
-        $this->externalCompanyRepository = $externalCompanyRepository;
-        $this->externalUserRepository = $externalUserRepository;
-        $this->guard = $guard;
-        $this->request = $request;
+        $this->dentrixCompanyGuard = $dentrixCompanyGuard;
+        $this->dentrixUserGuard = $dentrixUserGuard;
+        $this->userGuard = $userGuard;
     }
 
     /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
-    }
-
-    /**
+     * @param string $role
+     * @param string $token
      * @return Authenticatable
      * @throws EmptyTokenException
      * @throws InvalidTokenException
-     * @throws UserNotFoundException
+     * @throws AuthenticatableNotFoundException
      */
-    public function toUser()
+    public function toRole($role, $token)
     {
-        $companyKey = $this->request->input(self::COMPANY_TOKEN_INDEX, '');
-        $userKey = $this->request->input(self::USER_TOKEN_INDEX, '');
-
-        if (!strlen($companyKey)) {
-            throw new EmptyTokenException(DentrixAuthErrors::COMPANY_TOKEN_MISSING);
+        if ($role === 'User') {
+            return $this->toUser($token);
         }
 
-        if (!strlen($userKey)) {
+        if (!strlen($token)) {
+            if ($role === 'Company') {
+                throw new EmptyTokenException(DentrixAuthErrors::COMPANY_TOKEN_MISSING);
+            }
+
             throw new EmptyTokenException(DentrixAuthErrors::USER_TOKEN_MISSING);
         }
 
-        $externalCompany = $this->externalCompanyRepository->findByApiKey($companyKey);
-
-        if (!$externalCompany) {
-            throw new InvalidTokenException(DentrixAuthErrors::COMPANY_TOKEN_INVALID);
-        }
-
-        $externalUser = $this->externalUserRepository->findByApiKey($userKey);
-
-        if (!$externalUser) {
-            throw new InvalidTokenException(DentrixAuthErrors::USER_TOKEN_INVALID);
-        }
-
-        $authenticated = $this->guard->once(['userid' => $externalUser->user_id]);
+        $authenticated = $this->guard($role)
+            ->once([
+                'api_key' => $token
+            ])
+        ;
 
         if (!$authenticated) {
-            throw new UserNotFoundException(DentrixAuthErrors::USER_NOT_FOUND);
+            if ($role === 'Company') {
+                throw new AuthenticatableNotFoundException(DentrixAuthErrors::COMPANY_TOKEN_INVALID);
+            }
+
+            throw new AuthenticatableNotFoundException(DentrixAuthErrors::USER_TOKEN_INVALID);
         }
 
-        return $this->guard->user();
+        return $this->guard($role)
+            ->user()
+            ;
     }
 
     /**
-     * @return null
+     * @param string $role
+     * @return AbstractGuard
      */
-    public function toAdmin()
+    public function guard($role = 'User')
     {
-        return null;
+        if ($role === 'DentrixCompany') {
+            return $this->dentrixCompanyGuard;
+        }
+
+        if ($role === 'DentrixUser') {
+            return $this->dentrixUserGuard;
+        }
+
+        return $this->userGuard;
     }
 
     /**
-     * @return UserGuard
+     * @param string|int $id
+     * @return Authenticatable
+     * @throws AuthenticatableNotFoundException
      */
-    public function guard()
+    private function toUser($id)
     {
-        return $this->guard;
+        $authenticated = $this->guard('User')
+            ->loginUsingId($id)
+        ;
+
+        if (!$authenticated) {
+            throw new AuthenticatableNotFoundException(DentrixAuthErrors::USER_TOKEN_INVALID);
+        }
+
+        return $this->guard('User')
+            ->user()
+            ;
     }
 }

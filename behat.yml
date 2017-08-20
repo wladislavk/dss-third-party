@@ -6,9 +6,11 @@ default:
             contexts:
                 - Contexts\Auth
                 - Contexts\Claims
+                - Contexts\ClinicalExam
                 - Contexts\Contacts
                 - Contexts\Dashboard
                 - Contexts\DeviceSelector
+                - Contexts\Education
                 - Contexts\Forms
                 - Contexts\Insurance
                 - Contexts\Ledger
@@ -18,9 +20,11 @@ default:
                 - Contexts\PatientScreener
                 - Contexts\PatientSummary
                 - Contexts\Profile
+                - Contexts\ProgressNotes
                 - Contexts\Staff
                 - Contexts\Support
                 - Contexts\Tasks
+                - Contexts\Tracker
     extensions:
         Behat\MinkExtension:
             base_url: "http://example.com"

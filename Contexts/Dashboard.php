@@ -58,6 +58,18 @@ class Dashboard extends BaseContext
     }
 
     /**
+     * @When I run mouse over :menuPoint submenu point
+     *
+     * @param string $menuPoint
+     */
+    public function runMouseOverSubmenu($menuPoint)
+    {
+        $menu = $this->findCss('ul#homemenu');
+        $nodeLink = $this->findElementWithText('a', $menuPoint, $menu);
+        $nodeLink->mouseOver();
+    }
+
+    /**
      * @Then I see right top bar with following links:
      *
      * @param TableNode $table

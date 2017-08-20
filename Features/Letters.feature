@@ -31,3 +31,20 @@ Feature: Manage Letters
     #When I click button with text "Send Letter" above page "1" of letter
     #Then I see letter preview frame
     #And I see button with text "Looks good! SEND!"
+
+  Scenario: Manage custom letters
+    Given I am logged in as "doc1f"
+    When I visit start page
+    And I run mouse over "Admin" menu point
+    Then I see "Text" link
+    When I run mouse over "Text" submenu point
+    Then I see "Custom Letters" link
+    When I click "Custom Letters" link
+    Then I see custom letter list:
+      | name                         |
+      | Nathan Custom 130701         |
+      | test custom dates in tracker |
+      | ALL VARIABLES                |
+    And I see add button with text "Add New Template"
+    When I click add button with text "Add New Template"
+    Then I see letter template list with "29" templates

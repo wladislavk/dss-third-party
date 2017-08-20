@@ -154,4 +154,34 @@ class Letters extends BaseContext
     {
         // @todo: add this method when it is possible to reverse the action
     }
+
+    /**
+     * @Then I see custom letter list:
+     *
+     * @param TableNode $table
+     */
+    public function testCustomLetterList(TableNode $table)
+    {
+        $expected = array_column($table->getHash(), 'name');
+        $rows = $this->findAllCss('form[name="sortfrm"] > table > tbody > tr');
+        foreach ($expected as $key => $name) {
+            $rowKey = $key + 1;
+            $cell = $this->findCss('td:nth-child(1)', $rows[$rowKey]);
+            $text = $this->sanitizeText($cell->getText());
+            Assert::assertEquals($name, $text);
+        }
+    }
+
+    /**
+     * @Then I see letter template list with :numberOfTemplates templates
+     *
+     * @param string $numberOfTemplates
+     */
+    public function testLetterTemplateList($numberOfTemplates)
+    {
+        $this->getCommonClient()->switchToIFrame('aj_pop');
+
+        $options = $this->findAllCss('select[name="template"] > option');
+        Assert::assertEquals(intval($numberOfTemplates), sizeof($options));
+    }
 }

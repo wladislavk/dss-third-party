@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Structs\JwtPayload;
 use Tymon\JWTAuth\Providers\JWT\JWTInterface;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
@@ -91,6 +90,8 @@ class JwtHelper
 
     /**
      * @param array $claims
+     * @param array $expectedValues
+     * @param array $expectedSet
      * @throws InvalidTokenException
      * @throws InactiveTokenException
      * @throws ExpiredTokenException

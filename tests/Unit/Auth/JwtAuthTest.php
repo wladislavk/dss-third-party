@@ -174,6 +174,24 @@ class JwtAuthTest extends UnitTestCase
         $this->assertEquals(self::USER_ID, $model->getAuthIdentifier());
     }
 
+    public function testGuardAdmin()
+    {
+        $result = $this->auth->guard('Admin');
+        $this->assertInstanceOf(AdminGuard::class, $result);
+    }
+
+    public function testGuardUser()
+    {
+        $result = $this->auth->guard('User');
+        $this->assertInstanceOf(UserGuard::class, $result);
+    }
+
+    public function testGuard()
+    {
+        $result = $this->auth->guard();
+        $this->assertInstanceOf(UserGuard::class, $result);
+    }
+
     private function mockUserGuard()
     {
         $mock = \Mockery::mock(UserGuard::class);

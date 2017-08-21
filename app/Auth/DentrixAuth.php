@@ -49,12 +49,12 @@ class DentrixAuth
      */
     public function toRole($role, $token)
     {
-        if ($role === 'User') {
+        if ($role !== 'DentrixCompany' && $role !== 'DentrixUser') {
             return $this->toUser($token);
         }
 
         if (!strlen($token)) {
-            if ($role === 'Company') {
+            if ($role === 'DentrixCompany') {
                 throw new EmptyTokenException(DentrixAuthErrors::COMPANY_TOKEN_MISSING);
             }
 
@@ -68,7 +68,7 @@ class DentrixAuth
         ;
 
         if (!$authenticated) {
-            if ($role === 'Company') {
+            if ($role === 'DentrixCompany') {
                 throw new AuthenticatableNotFoundException(DentrixAuthErrors::COMPANY_TOKEN_INVALID);
             }
 

@@ -79,18 +79,6 @@ class GenerateJwtTokenTest extends ApiTestCase
         $this->assertRegExp(self::TOKEN_REGEXP, $token);
     }
 
-    public function testJwtException()
-    {
-        $this->markTestSkipped('Unable to trigger InvalidPayloadException (underlying JWTException)');
-        return;
-
-        $id = self::USER_ID;
-        $this->expire = $this->date(-1);
-        $this->notBefore = $this->date(1);
-        $token = $this->runCommand($id, $this->expire, $this->notBefore);
-        $this->assertEquals('', $token);
-    }
-
     private function runCommand($id, $expire, $notBefore)
     {
         $options = ['id' => $id];

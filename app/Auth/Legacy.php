@@ -2,11 +2,13 @@
 
 namespace DentalSleepSolutions\Auth;
 
-use Illuminate\Auth\AuthManager;
-use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
-use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Helpers\PasswordGenerator;
+use DentalSleepSolutions\Structs\Password;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Support\Arr;
+use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
 
 /**
  * This class is used as Authentication provider implementation
@@ -20,13 +22,24 @@ class Legacy extends IlluminateAuthAdapter
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var PasswordGenerator */
+    private $passwordGenerator;
+
+    /**
+     * @param AuthManager       $auth
+     * @param UserRepository    $userRepository
+     * @param PasswordGenerator $passwordGenerator
+     */
     public function __construct(
         AuthManager $auth,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        PasswordGenerator $passwordGenerator
     )
     {
         parent::__construct($auth);
+
         $this->userRepository = $userRepository;
+        $this->passwordGenerator = $passwordGenerator;
     }
 
     /**
@@ -38,7 +51,11 @@ class Legacy extends IlluminateAuthAdapter
      */
     protected function check(User $user, $password)
     {
-        return $user->password === $this->hashPassword($password, $user->salt);
+        $passwordStruct = new Password();
+        $passwordStruct->setPassword($user->password);
+        $passwordStruct->setSalt($user->salt);
+
+        return $this->passwordGenerator->verify($password, $passwordStruct);
     }
 
     /**
@@ -74,15 +91,5 @@ class Legacy extends IlluminateAuthAdapter
         }
 
         return false;
-    }
-
-    /**
-     * @param string $password
-     * @param string $salt
-     * @return string
-     */
-    public function hashPassword($password, $salt)
-    {
-        return hash('sha256', $password . $salt);
     }
 }

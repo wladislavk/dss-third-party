@@ -80,9 +80,10 @@ class GenerateJwtToken extends Command
                     'id' => $id
                 ], $expire, $notBefore)
             ;
-            $this->info($token);
         } catch (JwtException $e) {
-            // Fall through
+            return;
         }
+
+        $this->info($token);
     }
 }

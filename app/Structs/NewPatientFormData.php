@@ -2,9 +2,10 @@
 
 namespace DentalSleepSolutions\Structs;
 
+use DentalSleepSolutions\Contracts\PasswordInterface;
 use Illuminate\Contracts\Support\Arrayable;
 
-class NewPatientFormData implements Arrayable
+class NewPatientFormData implements Arrayable, PasswordInterface
 {
     /** @var string */
     public $password = '';
@@ -27,6 +28,38 @@ class NewPatientFormData implements Arrayable
     public function __construct()
     {
         $this->patientName = new PatientName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * @param string $salt
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
     }
 
     public function toArray()

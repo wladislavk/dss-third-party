@@ -65,11 +65,10 @@ class JwtHelper
         $baseClaims = $payload->toArray();
         $claims = array_merge($customClaims, $baseClaims);
 
-        try {
-            $token = $this->jwtProvider->encode($claims);
-        } catch (JWTException $e) {
-            throw new InvalidPayloadException($e->getMessage());
-        }
+        /**
+         * @todo: Unreachable JWTException in NamshiAdapter::encode()
+         */
+        $token = $this->jwtProvider->encode($claims);
 
         return $token;
     }

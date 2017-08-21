@@ -131,7 +131,7 @@ class PatientCreatorTest extends PatientEditorTestCase
     {
         /** @var PasswordGenerator|MockInterface $passwordGenerator */
         $passwordGenerator = \Mockery::mock(PasswordGenerator::class);
-        $passwordGenerator->shouldReceive('generatePassword')
+        $passwordGenerator->shouldReceive('generateLegacyPassword')
             ->andReturnUsing([$this, 'generatePasswordCallback']);
         return $passwordGenerator;
     }

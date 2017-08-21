@@ -3,9 +3,11 @@
 namespace Tests\Unit\Auth;
 
 use DentalSleepSolutions\Auth\Legacy;
-use Illuminate\Auth\AuthManager;
-use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Contracts\PasswordInterface;
 use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
+use DentalSleepSolutions\Helpers\PasswordGenerator;
+use Illuminate\Auth\AuthManager;
 use Illuminate\Support\Arr;
 use Tests\TestCases\UnitTestCase;
 
@@ -13,9 +15,11 @@ class LegacyTest extends UnitTestCase
 {
     const USERNAME = 'username';
     const PASSWORD = 'password';
-    const SALT = '';
+    const SALT = 'salt';
+    const HASH = 'hash';
     const USER_ID = 'u_1';
     const INVALID_USER_ID = self::USER_ID . '2';
+    const PASSWORD_GENERATOR_VERIFY = 'verify';
 
     /** @var array */
     private $whereArguments;
@@ -27,7 +31,8 @@ class LegacyTest extends UnitTestCase
     {
         $authManager = $this->mockAuthManager();
         $userRepository = $this->mockUserRepository();
-        $this->legacy = new Legacy($authManager, $userRepository);
+        $passwordGenerator = $this->mockPasswordGenerator();
+        $this->legacy = new Legacy($authManager, $userRepository, $passwordGenerator);
     }
 
     public function testInvalidUsername()
@@ -60,12 +65,6 @@ class LegacyTest extends UnitTestCase
         $this->assertTrue($result);
     }
 
-    public function testHashPassword()
-    {
-        $result = $this->legacy->hashPassword(self::PASSWORD, self::SALT);
-        $this->assertEquals(hash('sha256', self::PASSWORD . self::SALT), $result);
-    }
-
     public function testByIdInvalidId()
     {
         $result = $this->legacy->byId(self::INVALID_USER_ID);
@@ -75,7 +74,7 @@ class LegacyTest extends UnitTestCase
     public function testByIdValidId()
     {
         $result = $this->legacy->byId(self::USER_ID);
-        $this->assertCount(1, $result);
+        $this->assertTrue($result);
     }
 
     private function mockAuthManager()
@@ -117,11 +116,30 @@ class LegacyTest extends UnitTestCase
         return $mock;
     }
 
+    private function mockPasswordGenerator()
+    {
+        $mock = \Mockery::mock(PasswordGenerator::class);
+        $mock->shouldReceive('verify')
+            ->andReturnUsing(function ($password, PasswordInterface $toVerify) {
+                if (
+                    $password === self::PASSWORD
+                    && $toVerify->getPassword() === self::HASH
+                ) {
+                    return true;
+                }
+
+                return false;
+            })
+        ;
+
+        return $mock;
+    }
+
     private function newUser()
     {
         $user = new User();
         $user->salt = self::SALT;
-        $user->password = hash('sha256', self::PASSWORD . self::SALT);
+        $user->password = self::HASH;
 
         return $user;
     }

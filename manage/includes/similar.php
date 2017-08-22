@@ -1,5 +1,7 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php
-include_once('/../admin/includes/main_include.php');
+<?php
+namespace Ds3\Libraries\Legacy;
+
+require_once __DIR__ . '/../admin/includes/main_include.php';
 
 function similar_doctors($id){
     $db = new Db();
@@ -180,7 +182,7 @@ function similar_insurance($id){
     $id = intval($id);
     $docId = intval($_SESSION['docid']);
 
-    $s = "SELECT company, add1, city, state, zip
+    $s = "SELECT company, address1, city, state, zip
         FROM dental_patient_insurance
         WHERE id = '$id'";
     $r = $db->getRow($s);

@@ -129,15 +129,15 @@ class JwtHelper
             throw new InvalidTokenException("Invalid Audience (aud): expected '{$payload->audience}', got '$audience'");
         }
         
-        if (isset($claims['nbf']) && $this->carbon->timestamp($claims['nbf'])->isFuture()) {
+        if (isset($claims['nbf']) && $this->carbon->setTimestamp($claims['nbf'])->isFuture()) {
             throw new InactiveTokenException('Not Before (nbf) timestamp cannot be in the future');
         }
 
-        if (isset($claims['iat']) && $this->carbon->timestamp($claims['iat'])->isFuture()) {
+        if (isset($claims['iat']) && $this->carbon->setTimestamp($claims['iat'])->isFuture()) {
             throw new InvalidTokenException('Issued At (iat) timestamp cannot be in the future');
         }
 
-        if (!isset($claims['exp']) || $this->carbon->timestamp($claims['exp'])->isPast()) {
+        if (!isset($claims['exp']) || $this->carbon->setTimestamp($claims['exp'])->isPast()) {
             throw new ExpiredTokenException('Token has expired (exp)');
         }
 

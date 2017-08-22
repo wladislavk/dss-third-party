@@ -17,33 +17,26 @@ use Tymon\JWTAuth\Providers\JWT\JWTInterface;
 
 class JwtHelperTest extends UnitTestCase
 {
-    const TOKEN = 'token';
-    const TTL = 60;
-    const PAYLOAD = ['ttl' => self::TTL];
     const EXPECTED_VALUES = ['foo' => 'bar'];
     const EXPECTED_SET = 'bar';
+    const TOKEN = 'token';
+    const TOKEN_FLAG = 'flag';
+    const TTL = 60;
+    const PAYLOAD = ['ttl' => self::TTL];
+    const TIMESTAMP_FLAG = 631152000;
 
-    /** @var Config */
-    private $config;
-
-    /** @var Carbon */
-    private $carbon;
-
-    /** @var JWTInterface */
-    private $jwtProvider;
-
-    /** @var JwtPayload */
-    private $claims;
+    /** @var string */
+    private $carbonState;
 
     /** @var JwtHelper */
     private $helper;
 
     public function setUp()
     {
-        $this->config = $this->mockConfig();
-        $this->carbon = $this->mockCarbon();
-        $this->jwtProvider = $this->mockJwtProvider();
-        $this->helper = new JwtHelper($this->config, $this->carbon, $this->jwtProvider);
+        $config = $this->mockConfig();
+        $carbon = $this->mockCarbon();
+        $jwtProvider = $this->mockJwtProvider();
+        $this->helper = new JwtHelper($config, $carbon, $jwtProvider);
     }
 
     public function testCreateToken()
@@ -84,26 +77,14 @@ class JwtHelperTest extends UnitTestCase
     
     public function testParseToken()
     {
-        $this->jwtProvider
-            ->shouldReceive('decode')
-            ->with(self::TOKEN)
-            ->andReturn(self::PAYLOAD)
-        ;
-
         $payload = $this->helper->parseToken(self::TOKEN);
         $this->assertEquals(self::PAYLOAD, $payload);
     }
 
     public function testParseTokenException()
     {
-        $this->jwtProvider
-            ->shouldReceive('decode')
-            ->with(self::TOKEN)
-            ->andThrow(new TokenInvalidException())
-        ;
-
         $this->expectException(InvalidTokenException::class);
-        $this->helper->parseToken(self::TOKEN);
+        $this->helper->parseToken(self::TOKEN_FLAG);
     }
 
     public function testValidateClaimsInvalidIssuer()
@@ -138,18 +119,8 @@ class JwtHelperTest extends UnitTestCase
 
     public function testValidateClaimsInvalidNotBefore()
     {
-        $this->carbon
-            ->shouldReceive('timestamp')
-            ->once()
-            ->andReturnSelf()
-        ;
-        $this->carbon
-            ->shouldReceive('isFuture')
-            ->once()
-            ->andReturn(true)
-        ;
-
         $payload = new JwtPayload();
+        $payload->notBefore = self::TIMESTAMP_FLAG;
 
         $this->expectException(InactiveTokenException::class);
         $this->expectExceptionMessageRegExp('/^Not Before \(nbf\)/');
@@ -158,18 +129,8 @@ class JwtHelperTest extends UnitTestCase
 
     public function testValidateClaimsInvalidIssuedAt()
     {
-        $this->carbon
-            ->shouldReceive('timestamp')
-            ->twice()
-            ->andReturnSelf()
-        ;
-        $this->carbon
-            ->shouldReceive('isFuture')
-            ->twice()
-            ->andReturnValues([false, true])
-        ;
-
         $payload = new JwtPayload();
+        $payload->issuedAt = self::TIMESTAMP_FLAG;
 
         $this->expectException(InvalidTokenException::class);
         $this->expectExceptionMessageRegExp('/^Issued At \(iat\)/');
@@ -178,23 +139,8 @@ class JwtHelperTest extends UnitTestCase
 
     public function testValidateClaimsInvalidExpireDate()
     {
-        $this->carbon
-            ->shouldReceive('timestamp')
-            ->times(3)
-            ->andReturnSelf()
-        ;
-        $this->carbon
-            ->shouldReceive('isFuture')
-            ->twice()
-            ->andReturn(false)
-        ;
-        $this->carbon
-            ->shouldReceive('isPast')
-            ->once()
-            ->andReturn(true)
-        ;
-
         $payload = new JwtPayload();
+        $payload->expiresAt = self::TIMESTAMP_FLAG;
 
         $this->expectException(ExpiredTokenException::class);
         $this->expectExceptionMessage('Token has expired (exp)');
@@ -203,22 +149,6 @@ class JwtHelperTest extends UnitTestCase
 
     public function testValidateClaimsInvalidExpectedValue()
     {
-        $this->carbon
-            ->shouldReceive('timestamp')
-            ->times(3)
-            ->andReturnSelf()
-        ;
-        $this->carbon
-            ->shouldReceive('isFuture')
-            ->twice()
-            ->andReturn(false)
-        ;
-        $this->carbon
-            ->shouldReceive('isPast')
-            ->once()
-            ->andReturn(false)
-        ;
-
         $payload = new JwtPayload();
 
         $this->expectException(InvalidPayloadException::class);
@@ -228,22 +158,6 @@ class JwtHelperTest extends UnitTestCase
 
     public function testValidateClaimsInvalidSetValues()
     {
-        $this->carbon
-            ->shouldReceive('timestamp')
-            ->times(3)
-            ->andReturnSelf()
-        ;
-        $this->carbon
-            ->shouldReceive('isFuture')
-            ->twice()
-            ->andReturn(false)
-        ;
-        $this->carbon
-            ->shouldReceive('isPast')
-            ->once()
-            ->andReturn(false)
-        ;
-
         $payload = new JwtPayload();
         $payload = array_merge($payload->toArray(), self::EXPECTED_VALUES);
 
@@ -254,22 +168,6 @@ class JwtHelperTest extends UnitTestCase
 
     public function testValidateClaims()
     {
-        $this->carbon
-            ->shouldReceive('timestamp')
-            ->times(3)
-            ->andReturnSelf()
-        ;
-        $this->carbon
-            ->shouldReceive('isFuture')
-            ->twice()
-            ->andReturn(false)
-        ;
-        $this->carbon
-            ->shouldReceive('isPast')
-            ->once()
-            ->andReturn(false)
-        ;
-
         $payload = new JwtPayload();
         $payload = array_merge($payload->toArray(), self::EXPECTED_VALUES);
         $payload[self::EXPECTED_SET] = 'foo';
@@ -317,6 +215,33 @@ class JwtHelperTest extends UnitTestCase
             ->atMost(1)
             ->andReturn(0)
         ;
+        $mock->shouldReceive('setTimestamp')
+            ->atMost(3)
+            ->andReturnUsing(function ($timestamp) use ($mock) {
+                $this->carbonState = $timestamp;
+                return $mock;
+            })
+        ;
+        $mock->shouldReceive('isFuture')
+            ->atMost(2)
+            ->andReturnUsing(function () {
+                if (self::TIMESTAMP_FLAG === $this->carbonState) {
+                    return true;
+                }
+
+                return false;
+            })
+        ;
+        $mock->shouldReceive('isPast')
+            ->atMost(1)
+            ->andReturnUsing(function () {
+                if (self::TIMESTAMP_FLAG === $this->carbonState) {
+                    return true;
+                }
+
+                return false;
+            })
+        ;
 
         return $mock;
     }
@@ -327,6 +252,17 @@ class JwtHelperTest extends UnitTestCase
         $mock->shouldReceive('encode')
             ->atMost(1)
             ->andReturn(self::TOKEN)
+        ;
+        $mock->shouldReceive('decode')
+            ->atMost(1)
+            ->withAnyArgs([self::TOKEN, self::TOKEN_FLAG])
+            ->andReturnUsing(function ($token) {
+                if (self::TOKEN_FLAG === $token) {
+                    throw new TokenInvalidException();
+                }
+
+                return self::PAYLOAD;
+            })
         ;
 
         return $mock;

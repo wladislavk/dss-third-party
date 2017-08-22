@@ -16,6 +16,12 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 class JwtAuth
 {
+    const CLAIM_ID_INDEX = 'id';
+    const CLAIM_ROLE_INDEX = 'role';
+    const MODEL_KEY = 'id';
+    const ROLE_ADMIN = 'Admin';
+    const ROLE_USER = 'User';
+
     /** @var UserGuard */
     private $userGuard;
 
@@ -83,11 +89,11 @@ class JwtAuth
     public function toRole($role, $token)
     {
         $claims = $this->jwtHelper->parseToken($token);
-        $this->jwtHelper->validateClaims($claims, ['role' => $role], ['id']);
+        $this->jwtHelper->validateClaims($claims, [self::CLAIM_ROLE_INDEX => $role], [self::CLAIM_ID_INDEX]);
 
         $authenticated = $this->guard($role)
             ->once([
-                'id' => $claims['id']
+                self::MODEL_KEY => $claims[self::CLAIM_ID_INDEX]
             ])
         ;
 
@@ -104,9 +110,9 @@ class JwtAuth
      * @param string $role
      * @return AbstractGuard
      */
-    public function guard($role = 'User')
+    public function guard($role = self::ROLE_USER)
     {
-        if ($role === 'Admin') {
+        if ($role === self::ROLE_ADMIN) {
             return $this->adminGuard;
         }
 

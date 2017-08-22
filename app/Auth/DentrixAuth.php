@@ -14,6 +14,11 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 class DentrixAuth
 {
+    const DENTRIX_MODEL_KEY = 'api_key';
+    const ROLE_DENTRIX_COMPANY = 'DentrixCompany';
+    const ROLE_DENTRIX_USER = 'DentrixUser';
+    const ROLE_USER = 'User';
+
     /** @var DentrixCompanyGuard */
     private $dentrixCompanyGuard;
 
@@ -49,12 +54,12 @@ class DentrixAuth
      */
     public function toRole($role, $token)
     {
-        if ($role !== 'DentrixCompany' && $role !== 'DentrixUser') {
+        if ($role !== self::ROLE_DENTRIX_COMPANY && $role !== self::ROLE_DENTRIX_USER) {
             return $this->toUser($token);
         }
 
         if (!strlen($token)) {
-            if ($role === 'DentrixCompany') {
+            if ($role === self::ROLE_DENTRIX_COMPANY) {
                 throw new EmptyTokenException(DentrixAuthErrors::COMPANY_TOKEN_MISSING);
             }
 
@@ -63,12 +68,12 @@ class DentrixAuth
 
         $authenticated = $this->guard($role)
             ->once([
-                'api_key' => $token
+                self::DENTRIX_MODEL_KEY => $token
             ])
         ;
 
         if (!$authenticated) {
-            if ($role === 'DentrixCompany') {
+            if ($role === self::ROLE_DENTRIX_COMPANY) {
                 throw new AuthenticatableNotFoundException(DentrixAuthErrors::COMPANY_TOKEN_INVALID);
             }
 
@@ -84,13 +89,13 @@ class DentrixAuth
      * @param string $role
      * @return AbstractGuard
      */
-    public function guard($role = 'User')
+    public function guard($role = self::ROLE_USER)
     {
-        if ($role === 'DentrixCompany') {
+        if ($role === self::ROLE_DENTRIX_COMPANY) {
             return $this->dentrixCompanyGuard;
         }
 
-        if ($role === 'DentrixUser') {
+        if ($role === self::ROLE_DENTRIX_USER) {
             return $this->dentrixUserGuard;
         }
 
@@ -104,7 +109,7 @@ class DentrixAuth
      */
     private function toUser($id)
     {
-        $authenticated = $this->guard('User')
+        $authenticated = $this->guard(self::ROLE_USER)
             ->loginUsingId($id)
         ;
 
@@ -112,7 +117,7 @@ class DentrixAuth
             throw new AuthenticatableNotFoundException(DentrixAuthErrors::USER_TOKEN_INVALID);
         }
 
-        return $this->guard('User')
+        return $this->guard(self::ROLE_USER)
             ->user()
             ;
     }

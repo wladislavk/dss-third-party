@@ -54,6 +54,7 @@ if(!empty($_GET['msg'])) {
 </style>
 
 <script type="text/javascript" charset="utf-8">
+var indexedCategories = <?= safeJsonEncode(indexBy($schedulerAppointmentTypes, 'classname')) ?>;
 var indexedProducers = <?= safeJsonEncode(indexBy($schedulerProducers, 'userid')) ?>;
 var indexedResources = <?= safeJsonEncode(indexBy($schedulerResources, 'id')) ?>;
 var indexedPatients = <?= safeJsonEncode(indexBy($schedulerPatients, 'patientid')) ?>;
@@ -73,8 +74,8 @@ function initCal() {
 	scheduler.config.start_on_monday = false;
 	scheduler.config.separate_short_events = true;
 	scheduler.config.show_loading = true;
-	scheduler.locale.labels.chairs_tab = "Resources"
-	scheduler.locale.labels.timeline_tab = "Timeline"
+	scheduler.locale.labels.chairs_tab = "Resources";
+	scheduler.locale.labels.timeline_tab = "Timeline";
 	scheduler.locale.labels.section_custom="Producer";
 	scheduler.locale.labels.section_custom="Resource";
 	scheduler.locale.labels.section_category = "Appt. Type";
@@ -110,7 +111,7 @@ function initCal() {
 		}
 	};
 
-	scheduler.templates.event_class=function(start, end, event){
+	scheduler.templates.event_class = function(start, end, event){
 		if (event.category) { // if event has subject property then special class should be assigned
             return "event_" + event.category.replace(/[^a-z0-9]+/ig, '');
         }
@@ -143,6 +144,10 @@ function initCal() {
 				cat = 'General';
 				break;
 		}
+
+        if (indexedCategories.hasOwnProperty(event.category)) {
+            cat = indexedCategories[event.category].name || '';
+        }
 
 		if (indexedProducers.hasOwnProperty(event.producer)) {
             prod = indexedProducers[event.producer].full_name || '';
@@ -221,11 +226,11 @@ function initCal() {
 
 	scheduler.attachEvent("onTemplatesReady",function(){
 		//work week
-		scheduler.date.workweek_start = function(date){ return scheduler.date.add(scheduler.date.week_start(date), 1, "day"); }
+		scheduler.date.workweek_start = function(date){ return scheduler.date.add(scheduler.date.week_start(date), 1, "day"); };
 		scheduler.templates.workweek_date = scheduler.templates.week_date;
 		scheduler.templates.workweek_scale_date = scheduler.templates.week_scale_date;
-		scheduler.date.add_workweek=function(date,inc){ return scheduler.date.add(date,inc*7,"day"); }
-		scheduler.date.get_workweek_end=function(date){ return scheduler.date.add(date,5,"day"); }
+		scheduler.date.add_workweek=function(date,inc){ return scheduler.date.add(date,inc*7,"day"); };
+		scheduler.date.get_workweek_end=function(date){ return scheduler.date.add(date,5,"day"); };
 	});
 
 	scheduler.config.lightbox.sections=[	
@@ -252,7 +257,7 @@ function initCal() {
 				}else{
 				}
 			},
-			failure: function(data){},
+			failure: function(data){}
 		});
 	}
 
@@ -268,7 +273,7 @@ function initCal() {
 				}else{
 				}
 			},
-			failure: function(data){},
+			failure: function(data){}
 		});
 	}
 
@@ -297,7 +302,7 @@ function initCal() {
 			data: {id: e_id, start_date: sd, end_date: ed, description: de, category: cat, producer: pi, patient: pid, rec_type: rec_type, rec_pattern: rec_pattern, epid: epid, elength: elength, resource: ri},
 			success: function(data){
 				var r = $.parseJSON(data);
-				_lookup_ptname(r.eventid, _add_event_ptname)
+				_lookup_ptname(r.eventid, _add_event_ptname);
 				_lookup_eventtype(r.eventid, _add_event_type);
 				if(r.error){
 				}else{

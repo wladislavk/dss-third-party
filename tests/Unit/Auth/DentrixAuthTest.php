@@ -16,27 +16,32 @@ use Tests\TestCases\UnitTestCase;
 
 class DentrixAuthTest extends UnitTestCase
 {
-    const TOKEN = 'token';
     const EMPTY_TOKEN = '';
+    const INVALID_TOKEN = 'invalid';
+    const TOKEN = 'token';
 
-    /** @var DentrixCompanyGuard */
-    private $dentrixCompanyGuard;
+    /** @var string */
+    private $dentrixCompanyState;
 
-    /** @var DentrixUserGuard */
-    private $dentrixUserGuard;
+    /** @var string */
+    private $dentrixUserState;
 
-    /** @var UserGuard */
-    private $userGuard;
+    /** @var string */
+    private $userState;
 
     /** @var Auth */
     private $auth;
 
     public function setUp()
     {
-        $this->dentrixCompanyGuard = $this->mockDentrixCompanyGuard();
-        $this->dentrixUserGuard = $this->mockDentrixUserGuard();
-        $this->userGuard = $this->mockUserGuard();
-        $this->auth = new Auth($this->dentrixCompanyGuard, $this->dentrixUserGuard, $this->userGuard);
+        $this->dentrixCompanyState = '';
+        $this->dentrixUserState = '';
+        $this->userState = '';
+
+        $dentrixCompanyGuard = $this->mockDentrixCompanyGuard();
+        $dentrixUserGuard = $this->mockDentrixUserGuard();
+        $userGuard = $this->mockUserGuard();
+        $this->auth = new Auth($dentrixCompanyGuard, $dentrixUserGuard, $userGuard);
     }
 
     public function testToRoleDentrixCompanyNoToken()
@@ -48,36 +53,13 @@ class DentrixAuthTest extends UnitTestCase
 
     public function testToRoleDentrixCompanyNoUser()
     {
-        $this->dentrixCompanyGuard
-            ->shouldReceive('once')
-            ->once()
-            ->with([
-                'api_key' => self::TOKEN
-            ])
-            ->andReturn(false)
-        ;
-
         $this->expectException(AuthenticatableNotFoundException::class);
         $this->expectExceptionMessage(DentrixAuthErrors::COMPANY_TOKEN_INVALID);
-        $this->auth->toRole('DentrixCompany', self::TOKEN);
+        $this->auth->toRole('DentrixCompany', self::INVALID_TOKEN);
     }
 
     public function testToRoleDentrixCompany()
     {
-        $this->dentrixCompanyGuard
-            ->shouldReceive('once')
-            ->once()
-            ->with([
-                'api_key' => self::TOKEN
-            ])
-            ->andReturn(true)
-        ;
-        $this->dentrixCompanyGuard
-            ->shouldReceive('user')
-            ->once()
-            ->andReturn(new DentrixCompany())
-        ;
-
         $model = $this->auth->toRole('DentrixCompany', self::TOKEN);
         $this->assertInstanceOf(DentrixCompany::class, $model);
     }
@@ -91,68 +73,26 @@ class DentrixAuthTest extends UnitTestCase
 
     public function testToRoleDentrixUserNoUser()
     {
-        $this->dentrixUserGuard
-            ->shouldReceive('once')
-            ->once()
-            ->with([
-                'api_key' => self::TOKEN
-            ])
-            ->andReturn(false)
-        ;
-
         $this->expectException(AuthenticatableNotFoundException::class);
         $this->expectExceptionMessage(DentrixAuthErrors::USER_TOKEN_INVALID);
-        $this->auth->toRole('DentrixUser', self::TOKEN);
+        $this->auth->toRole('DentrixUser', self::INVALID_TOKEN);
     }
 
     public function testToRoleDentrixUser()
     {
-        $this->dentrixUserGuard
-            ->shouldReceive('once')
-            ->once()
-            ->with([
-                'api_key' => self::TOKEN
-            ])
-            ->andReturn(true)
-        ;
-        $this->dentrixUserGuard
-            ->shouldReceive('user')
-            ->once()
-            ->andReturn(new DentrixUser())
-        ;
-
         $model = $this->auth->toRole('DentrixUser', self::TOKEN);
         $this->assertInstanceOf(DentrixUser::class, $model);
     }
 
     public function testToRoleUserNoUser()
     {
-        $this->userGuard
-            ->shouldReceive('loginUsingId')
-            ->once()
-            ->with(self::TOKEN)
-            ->andReturn(false)
-        ;
-
         $this->expectException(AuthenticatableNotFoundException::class);
         $this->expectExceptionMessage(DentrixAuthErrors::USER_TOKEN_INVALID);
-        $this->auth->toRole('User', self::TOKEN);
+        $this->auth->toRole('User', self::INVALID_TOKEN);
     }
 
     public function testToRoleUser()
     {
-        $this->userGuard
-            ->shouldReceive('loginUsingId')
-            ->once()
-            ->with(self::TOKEN)
-            ->andReturn(true)
-        ;
-        $this->userGuard
-            ->shouldReceive('user')
-            ->once()
-            ->andReturn(new User())
-        ;
-
         $model = $this->auth->toRole('User', self::TOKEN);
         $this->assertInstanceOf(User::class, $model);
     }
@@ -184,18 +124,98 @@ class DentrixAuthTest extends UnitTestCase
     private function mockDentrixCompanyGuard()
     {
         $mock = \Mockery::mock(DentrixCompanyGuard::class);
+        $mock->shouldReceive('once')
+            ->atMost(1)
+            ->withAnyArgs([
+                ['api_key' => self::INVALID_TOKEN],
+                ['api_key' => self::TOKEN],
+            ])
+            ->andReturnUsing(function ($token) {
+                $this->dentrixCompanyState = $token;
+
+                if (self::TOKEN === $token) {
+                    return true;
+                }
+
+                return false;
+            })
+        ;
+        $mock->shouldReceive('user')
+            ->atMost(1)
+            ->andReturnUsing(function () {
+                if (self::TOKEN === $this->dentrixCompanyState) {
+                    return new DentrixCompany();
+                }
+
+                return null;
+            })
+        ;
+
         return $mock;
     }
 
     private function mockDentrixUserGuard()
     {
         $mock = \Mockery::mock(DentrixUserGuard::class);
+        $mock->shouldReceive('once')
+            ->atMost(1)
+            ->withAnyArgs([
+                ['api_key' => self::INVALID_TOKEN],
+                ['api_key' => self::TOKEN],
+            ])
+            ->andReturnUsing(function ($token) {
+                $this->dentrixUserState = $token;
+
+                if (self::TOKEN === $token) {
+                    return true;
+                }
+
+                return false;
+            })
+        ;
+        $mock->shouldReceive('user')
+            ->atMost(1)
+            ->andReturnUsing(function () {
+                if (self::TOKEN === $this->dentrixUserState) {
+                    return new DentrixUser();
+                }
+
+                return null;
+            })
+        ;
+
         return $mock;
     }
 
     private function mockUserGuard()
     {
         $mock = \Mockery::mock(UserGuard::class);
+        $mock->shouldReceive('loginUsingId')
+            ->atMost(1)
+            ->withAnyArgs([
+                self::INVALID_TOKEN,
+                self::TOKEN
+            ])
+            ->andReturnUsing(function ($token) {
+                $this->userState = $token;
+
+                if (self::TOKEN === $token) {
+                    return true;
+                }
+
+                return false;
+            })
+        ;
+        $mock->shouldReceive('user')
+            ->atMost(1)
+            ->andReturnUsing(function () {
+                if (self::TOKEN === $this->userState) {
+                    return new User();
+                }
+
+                return null;
+            })
+        ;
         return $mock;
     }
 }

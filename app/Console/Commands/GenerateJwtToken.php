@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Console\Commands;
 
 use Carbon\Carbon;
+use DentalSleepSolutions\Auth\JwtAuth;
 use Illuminate\Console\Command;
 use DentalSleepSolutions\Helpers\JwtHelper;
 use DentalSleepSolutions\Eloquent\Models\User;
@@ -16,6 +17,7 @@ use DentalSleepSolutions\Exceptions\JwtException;
  */
 class GenerateJwtToken extends Command
 {
+    const ADMIN_PREFIX = 'a_';
     const DATE_FORMAT = 'Y-m-d H:i:s';
 
     /** @var string */
@@ -50,10 +52,10 @@ class GenerateJwtToken extends Command
         $notBefore = $this->option('not-before');
         $expire = $this->option('expire');
 
-        $role = 'User';
+        $role = JwtAuth::ROLE_USER;
 
-        if (substr($id, 0, 2) === 'a_') {
-            $role = 'Admin';
+        if (substr($id, 0, strlen(self::ADMIN_PREFIX)) === self::ADMIN_PREFIX) {
+            $role = JwtAuth::ROLE_ADMIN;
         }
 
         if (!is_null($notBefore)) {
@@ -76,8 +78,8 @@ class GenerateJwtToken extends Command
         try {
             $token = $this->jwtHelper
                 ->createToken([
-                    'role' => $role,
-                    'id' => $id
+                    JwtAuth::CLAIM_ROLE_INDEX => $role,
+                    JwtAuth::CLAIM_ID_INDEX => $id
                 ], $expire, $notBefore)
             ;
         } catch (JwtException $e) {

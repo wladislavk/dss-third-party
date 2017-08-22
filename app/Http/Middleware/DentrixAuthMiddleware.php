@@ -9,6 +9,7 @@ use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Structs\DentrixMiddlewareErrors as MiddlewareErrors;
+use Illuminate\Http\Response;
 
 class DentrixAuthMiddleware
 {
@@ -29,35 +30,37 @@ class DentrixAuthMiddleware
         $userToken = $request->input(self::USER_TOKEN_INDEX, '');
 
         try {
-            $this->auth->toRole('DentrixCompany', $companyToken);
+            $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_COMPANY, $companyToken);
         } catch (EmptyTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::COMPANY_TOKEN_MISSING, 400);
+            return ApiResponse::responseError(MiddlewareErrors::COMPANY_TOKEN_MISSING, Response::HTTP_BAD_REQUEST);
         } catch (InvalidTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::COMPANY_TOKEN_INVALID, 422);
+            return ApiResponse::responseError(
+                MiddlewareErrors::COMPANY_TOKEN_INVALID, Response::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
 
         try {
-            $this->auth->toRole('DentrixUser', $userToken);
+            $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_USER, $userToken);
         } catch (EmptyTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::USER_TOKEN_MISSING, 400);
+            return ApiResponse::responseError(MiddlewareErrors::USER_TOKEN_MISSING, Response::HTTP_BAD_REQUEST);
         } catch (InvalidTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::USER_TOKEN_INVALID, 422);
+            return ApiResponse::responseError(MiddlewareErrors::USER_TOKEN_INVALID, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $dentrixUser = $this->auth
-            ->guard('DentrixUser')
+            ->guard(DentrixAuth::ROLE_DENTRIX_USER)
             ->user()
         ;
 
         try {
-            $this->auth->roRole('User', $dentrixUser->user_id);
+            $this->auth->toRole(DentrixAuth::ROLE_USER, $dentrixUser->user_id);
         } catch (AuthenticatableNotFoundException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::USER_NOT_FOUND, 422);
+            return ApiResponse::responseError(MiddlewareErrors::USER_NOT_FOUND, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $request->setUserResolver(function () {
             $user = $this->auth
-                ->guard('User')
+                ->guard(DentrixAuth::ROLE_USER)
                 ->user()
             ;
             return $user;

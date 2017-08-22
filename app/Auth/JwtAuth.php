@@ -68,8 +68,8 @@ class JwtAuth
 
         $token = $this->jwtHelper
             ->createToken([
-                'role' => $role,
-                'id'  => $user->getAuthIdentifier(),
+                self::CLAIM_ROLE_INDEX => $role,
+                self::CLAIM_ID_INDEX  => $user->getAuthIdentifier(),
             ])
         ;
 

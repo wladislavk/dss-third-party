@@ -9,6 +9,7 @@ use DentalSleepSolutions\Exceptions\JwtException;
 
 class JwtAdminAuthMiddleware
 {
+    const AUTH_HEADER = 'Authorization';
     const AUTH_HEADER_START = 'Bearer ';
 
     /** @var JwtAuth */
@@ -29,17 +30,17 @@ class JwtAdminAuthMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $authHeader = $request->header('Authorization', '');
+        $authHeader = $request->header(self::AUTH_HEADER, '');
         $authHeaderStart = strlen(self::AUTH_HEADER_START);
 
-        if (!substr($authHeader, 0, $authHeaderStart) !== 'Bearer ') {
+        if (!substr($authHeader, 0, $authHeaderStart) !== self::AUTH_HEADER_START) {
             return $next($request);
         }
 
         $token = substr($authHeader, $authHeaderStart);
 
         try {
-            $this->auth->toRole('Admin', $token);
+            $this->auth->toRole(JwtAuth::ROLE_ADMIN, $token);
         } catch (JwtException $e) {
             // Fall through
         } catch (AuthException $e) {
@@ -48,7 +49,7 @@ class JwtAdminAuthMiddleware
 
         $request->setAdminResolver(function () {
             $user = $this->auth
-                ->guard('Admin')
+                ->guard(JwtAuth::ROLE_ADMIN)
                 ->user()
             ;
             return $user;

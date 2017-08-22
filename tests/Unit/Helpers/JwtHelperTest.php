@@ -33,6 +33,7 @@ class JwtHelperTest extends UnitTestCase
 
     public function setUp()
     {
+        $this->carbonState = 0;
         $config = $this->mockConfig();
         $carbon = $this->mockCarbon();
         $jwtProvider = $this->mockJwtProvider();

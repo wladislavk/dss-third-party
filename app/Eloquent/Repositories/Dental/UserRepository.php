@@ -49,7 +49,7 @@ class UserRepository extends AbstractRepository
 
     /**
      * @param int $docId
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return User|null
      */
     public function getLetterInfo($docId)
     {

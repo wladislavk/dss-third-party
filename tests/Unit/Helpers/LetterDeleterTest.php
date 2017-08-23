@@ -2,15 +2,16 @@
 
 namespace Tests\Unit\Helpers;
 
+use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Factories\LetterUpdaterFactory;
 use DentalSleepSolutions\Helpers\GeneralHelper;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Helpers\LetterDeleter;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Helpers\LetterUpdaters\PatientUpdater;
+use DentalSleepSolutions\Helpers\QueryComposers\LettersQueryComposer;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Structs\LetterData;
 use Mockery\MockInterface;
@@ -58,39 +59,46 @@ class LetterDeleterTest extends UnitTestCase
 
         $generalHelper = $this->mockGeneralHelper();
         $letterCreator = $this->mockLetterCreator();
+        $lettersQueryComposer = $this->mockLettersQueryComposer();
         $letterUpdaterFactory = $this->mockLetterUpdaterFactory();
-        $letterRepository = $this->mockLetterRepository();
         $faxRepository = $this->mockFaxRepository();
         $this->letterDeleter = new LetterDeleter(
-            $generalHelper, $letterCreator, $letterUpdaterFactory, $letterRepository, $faxRepository
+            $generalHelper,
+            $letterCreator,
+            $lettersQueryComposer,
+            $letterUpdaterFactory,
+            $faxRepository
         );
     }
 
     public function testWithSingleContact()
     {
         $this->contactData->setPatients([new Patient()]);
-        $letterId = 1;
+        $letter = new Letter();
+        $letter->letterid = 1;
         $type = 'foo';
         $recipientId = 2;
         $docId = 3;
         $userId = 4;
-        date_default_timezone_set('UTC');
-        $this->letterDeleter->deleteLetter($letterId, $type, $recipientId, $docId, $userId);
+        $this->letterDeleter->deleteLetter($letter, $type, $recipientId, $docId, $userId);
         $this->assertEquals([], $this->createdLetter);
         $expectedFirstData = new LetterData();
         $expectedFirstData->deleted = true;
         $expectedFirstData->deletedBy = 4;
-        $expectedFirstData->deletedOn = $this->updatedLetters[0]['data']->deletedOn;
+        $expectedFirstData->deletedOn = $this->updatedLetters[0]['updateArray']['deleted_on'];
         $expectedLetters = [
             [
                 'where' => ['letterid' => 1],
-                'data' => $expectedFirstData,
-                'fields' => ['parentid', 'deleted', 'deleted_by', 'deleted_on'],
+                'updateArray' => [
+                    'deleted' => true,
+                    'deleted_by' => 4,
+                    'deleted_on' => Carbon::now(),
+                ],
             ],
             [
                 'where' => ['parentid' => 1],
-                'data' => new LetterData(),
-                'fields' => ['parentid'],
+                'updateArray' => [
+                ],
             ],
         ];
         $this->assertEquals($expectedLetters, $this->updatedLetters);
@@ -106,25 +114,22 @@ class LetterDeleterTest extends UnitTestCase
     {
         $this->letter->topatient = true;
         $this->contactData->setPatients([new Patient()]);
-        $letterId = 1;
         $type = 'foo';
         $recipientId = 2;
         $docId = 3;
         $userId = 4;
-        date_default_timezone_set('UTC');
-        $this->letterDeleter->deleteLetter($letterId, $type, $recipientId, $docId, $userId);
+        $this->letterDeleter->deleteLetter($this->letter, $type, $recipientId, $docId, $userId);
         $this->assertEquals(5, $this->patientId);
     }
 
     public function testWithMultipleContacts()
     {
-        $letterId = 1;
         $type = 'foo';
         $recipientId = 2;
         $docId = 3;
         $userId = 4;
         $template = 'my_letter';
-        $this->letterDeleter->deleteLetter($letterId, $type, $recipientId, $docId, $userId, $template);
+        $this->letterDeleter->deleteLetter($this->letter, $type, $recipientId, $docId, $userId, $template);
 
         $expectedLetterData = new LetterData();
         $expectedLetterData->patientId = 5;
@@ -150,36 +155,21 @@ class LetterDeleterTest extends UnitTestCase
     public function testWithMultipleContactsAndNewLetterId()
     {
         $this->shouldCreateLetter = true;
-        $letterId = 1;
         $type = 'foo';
         $recipientId = 2;
         $docId = 3;
         $userId = 4;
         $template = 'my_letter';
-        $this->letterDeleter->deleteLetter($letterId, $type, $recipientId, $docId, $userId, $template);
-        $expectedUpdatedData = new LetterData();
-        $expectedUpdatedData->patientReferralList = '3,4';
+        $this->letterDeleter->deleteLetter($this->letter, $type, $recipientId, $docId, $userId, $template);
         $expectedUpdatedLetters = [
             [
                 'where' => ['letterid' => 1],
-                'data' => $expectedUpdatedData,
-                'fields' => ['foo', 'bar'],
+                'updateArray' => [
+
+                ],
             ],
         ];
         $this->assertEquals($expectedUpdatedLetters, $this->updatedLetters);
-    }
-
-    public function testWithoutLetter()
-    {
-        $letterId = 2;
-        $type = 'foo';
-        $recipientId = 2;
-        $docId = 3;
-        $userId = 4;
-        $this->letterDeleter->deleteLetter($letterId, $type, $recipientId, $docId, $userId);
-        $this->assertEquals([], $this->createdLetter);
-        $this->assertEquals([], $this->updatedLetters);
-        $this->assertEquals([], $this->updatedFax);
     }
 
     private function mockGeneralHelper()
@@ -209,16 +199,6 @@ class LetterDeleterTest extends UnitTestCase
         return $letterUpdaterFactory;
     }
 
-    private function mockLetterRepository()
-    {
-        /** @var LetterRepository|MockInterface $letterRepository */
-        $letterRepository = \Mockery::mock(LetterRepository::class);
-        $letterRepository->shouldReceive('find')->andReturnUsing([$this, 'findLetterCallback']);
-        $letterRepository->shouldReceive('updateLetterBy')
-            ->andReturnUsing([$this, 'updateLetterByCallback']);
-        return $letterRepository;
-    }
-
     private function mockFaxRepository()
     {
         /** @var FaxRepository|MockInterface $faxRepository */
@@ -235,8 +215,19 @@ class LetterDeleterTest extends UnitTestCase
         $patientUpdater->shouldReceive('updateDataBeforeDeleting')
             ->andReturnUsing([$this, 'updateDataBeforeDeletingCallback']);
         $patientUpdater->shouldReceive('getUpdatedFields')
-            ->andReturnUsing([$this, 'getUpdatedFieldsCallback']);
+            ->andReturnUsing(function () {
+                return ['foo', 'bar'];
+            });
         return $patientUpdater;
+    }
+
+    private function mockLettersQueryComposer()
+    {
+        /** @var LettersQueryComposer|MockInterface $lettersQueryComposer */
+        $lettersQueryComposer = \Mockery::mock(LettersQueryComposer::class);
+        $lettersQueryComposer->shouldReceive('updateLetterBy')
+            ->andReturnUsing([$this, 'updateLetterByCallback']);
+        return $lettersQueryComposer;
     }
 
     public function findLetterCallback($letterId)
@@ -253,12 +244,11 @@ class LetterDeleterTest extends UnitTestCase
         return $this->contactData;
     }
 
-    public function updateLetterByCallback(array $where, LetterData $data, array $fields)
+    public function updateLetterByCallback(array $where, array $updateArray)
     {
         $this->updatedLetters[] = [
             'where' => $where,
-            'data' => $data,
-            'fields' => $fields,
+            'updateArray' => $updateArray,
         ];
     }
 
@@ -293,10 +283,5 @@ class LetterDeleterTest extends UnitTestCase
     ) {
         $newLetterData->patientReferralList = '1,2';
         $dataForUpdate->patientReferralList = '3,4';
-    }
-
-    public function getUpdatedFieldsCallback()
-    {
-        return ['foo', 'bar'];
     }
 }

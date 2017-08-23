@@ -28,13 +28,14 @@ class QueryComposerTestCase extends UnitTestCase
         foreach ($methods as $method) {
             $repository->shouldReceive($method)->andReturnUsing(function () use ($repositoryName, $method) {
                 $args = func_get_args();
-                if ($args[0] instanceof Builder) {
+                if (isset($args[0]) && $args[0] instanceof Builder) {
                     array_shift($args);
                 }
                 $this->repositories[$repositoryName][$method][] = $args;
                 return $this->mockEloquentBuilder();
             });
         }
+
         return $repository;
     }
 

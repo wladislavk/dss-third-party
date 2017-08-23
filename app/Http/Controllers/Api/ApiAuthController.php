@@ -3,31 +3,40 @@
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Auth\JwtAuth;
-use Illuminate\Config\Repository as Config;
-use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Arr;
+use DentalSleepSolutions\Auth\Legacy as LegacyAuth;
 use DentalSleepSolutions\Exceptions\AuthException;
 use DentalSleepSolutions\Exceptions\JwtException;
+use DentalSleepSolutions\Http\Controllers\Controller;
+use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Illuminate\Config\Repository as Config;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use DentalSleepSolutions\Eloquent\Models\User;
 
 class ApiAuthController extends Controller
 {
-    /** @var JWTAuth */
-    private $auth;
+    const ADMIN_FLAG_INDEX = 'admin';
+
+    /** @var LegacyAuth */
+    private $legacyAuth;
+
+    /** @var JwtAuth */
+    private $jwtAuth;
 
     /** @var Request */
     private $request;
 
     public function __construct(
         Config $config,
-        JwtAuth $auth,
+        LegacyAuth $legacyAuth,
+        JwtAuth $jwtAuth,
         Request $request
     )
     {
         parent::__construct($config);
-        $this->auth = $auth;
+        $this->legacyAuth = $legacyAuth;
+        $this->jwtAuth = $jwtAuth;
         $this->request = $request;
     }
 
@@ -39,29 +48,34 @@ class ApiAuthController extends Controller
      */
     public function auth()
     {
-        $token = '';
         $credentials = $this->request->all();
+        $authenticated = $this->legacyAuth
+            ->byCredentials($credentials)
+        ;
 
-        $credentials = Arr::only($credentials, ['username', 'password', 'admin']);
-        $credentials['admin'] = Arr::get($credentials, 'admin', 0);
-
-        $role = 'User';
-
-        if ($credentials['admin']) {
-            $role = 'Admin';
+        if (!$authenticated) {
+            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $this->auth
+        $user = $this->legacyAuth->user();
+        $adminFlag = $user->getAttribute(self::ADMIN_FLAG_INDEX);
+        $role = JwtAuth::ROLE_USER;
+
+        if ($adminFlag) {
+            $role = JwtAuth::ROLE_ADMIN;
+        }
+
+        $this->jwtAuth
             ->guard($role)
-            ->attempt($credentials)
+            ->login($user)
         ;
 
         try {
-            $token = $this->auth->toToken($role);
+            $token = $this->jwtAuth->toToken($role);
         } catch (JwtException $e) {
-            return ApiResponse::responseError('Invalid credentials', 422);
+            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (AuthException $e) {
-            return ApiResponse::responseError('Invalid credentials', 422);
+            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         return ['status' => 'Authenticated', 'token' => $token];
@@ -73,7 +87,7 @@ class ApiAuthController extends Controller
     public function authHealth()
     {
         if (!$this->config->get('app.debug') || $this->config->get('app.env') === 'production') {
-            return ApiResponse::responseError('Not Found', 404);
+            return ApiResponse::responseError('Not Found', Response::HTTP_NOT_FOUND);
         }
 
         return [

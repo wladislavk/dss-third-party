@@ -2,7 +2,9 @@
 
 namespace Tests\TestCases;
 
+use DentalSleepSolutions\Console\Commands\Api\Model;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use DentalSleepSolutions\Structs\QueryCollections\AbstractQueryCollection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Mockery\MockInterface;
@@ -14,6 +16,9 @@ class QueryComposerTestCase extends UnitTestCase
 
     /** @var array|Collection */
     protected $queryResult = [];
+
+    /** @var Model */
+    protected $firstResult;
 
     /**
      * @param string $repositoryName
@@ -28,7 +33,7 @@ class QueryComposerTestCase extends UnitTestCase
         foreach ($methods as $method) {
             $repository->shouldReceive($method)->andReturnUsing(function () use ($repositoryName, $method) {
                 $args = func_get_args();
-                if (isset($args[0]) && $args[0] instanceof Builder) {
+                if (isset($args[0]) && ($args[0] instanceof Builder || $args[0] instanceof AbstractQueryCollection)) {
                     array_shift($args);
                 }
                 $this->repositories[$repositoryName][$method][] = $args;
@@ -43,12 +48,12 @@ class QueryComposerTestCase extends UnitTestCase
     {
         /** @var Builder|MockInterface $eloquentBuilder */
         $eloquentBuilder = \Mockery::mock(Builder::class);
-        $eloquentBuilder->shouldReceive('get')->andReturnUsing([$this, 'getQueryResultCallback']);
+        $eloquentBuilder->shouldReceive('get')->andReturnUsing(function () {
+            return $this->queryResult;
+        });
+        $eloquentBuilder->shouldReceive('first')->andReturnUsing(function () {
+            return $this->firstResult;
+        });
         return $eloquentBuilder;
-    }
-
-    public function getQueryResultCallback()
-    {
-        return $this->queryResult;
     }
 }

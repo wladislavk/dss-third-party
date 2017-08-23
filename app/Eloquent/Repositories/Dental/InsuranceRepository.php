@@ -7,6 +7,7 @@ use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Interfaces\BackOfficeConditionalInterface;
 use DentalSleepSolutions\Eloquent\Repositories\Interfaces\BackOfficeConditionalTrait;
 use DentalSleepSolutions\Libraries\ClaimFormData;
+use DentalSleepSolutions\Structs\LedgerReportData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -133,14 +134,10 @@ class InsuranceRepository extends AbstractRepository implements BackOfficeCondit
     }
 
     /**
-     * @param int $patientId
-     * @param int $page
-     * @param int $rowsPerPage
-     * @param string $sortColumn
-     * @param string $sortDir
+     * @param LedgerReportData $data
      * @return array|\Illuminate\Database\Eloquent\Collection
      */
-    public function getOpenClaims($patientId, $page, $rowsPerPage, $sortColumn, $sortDir)
+    public function getOpenClaims(LedgerReportData $data)
     {
         $query = $this->model
             ->select([
@@ -167,16 +164,16 @@ class InsuranceRepository extends AbstractRepository implements BackOfficeCondit
             ->from(\DB::raw('dental_insurance i'))
             ->leftJoin(\DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
             ->leftJoin(\DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')
-            ->where('i.patientid', $patientId)
+            ->where('i.patientid', $data->patientId)
             ->whereNotIn('i.status', [
                 Insurance::DSS_CLAIM_PAID_INSURANCE,
                 Insurance::DSS_CLAIM_PAID_SEC_INSURANCE,
                 Insurance::DSS_CLAIM_PAID_PATIENT,
             ])
             ->groupBy('i.insuranceid')
-            ->orderBy($sortColumn, $sortDir)
-            ->skip($page * $rowsPerPage)
-            ->take($rowsPerPage)
+            ->orderBy($data->sort, $data->sortDir)
+            ->skip($data->page * $data->rowsPerPage)
+            ->take($data->rowsPerPage)
         ;
 
         return $query->get();

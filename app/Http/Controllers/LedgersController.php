@@ -3,53 +3,23 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientSummaryRepository;
-use DentalSleepSolutions\Helpers\OpenClaimSorter;
+use DentalSleepSolutions\Helpers\LedgerReportDataRetriever;
+use DentalSleepSolutions\Helpers\LedgerReportTotalsRetriever;
+use DentalSleepSolutions\Helpers\LedgerRowsRetriever;
+use DentalSleepSolutions\Helpers\PatientSummaryUpdater;
+use DentalSleepSolutions\Helpers\QueryComposers\LedgersQueryComposer;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Structs\LedgerReportData;
 use Illuminate\Http\Request;
 
 class LedgersController extends BaseRestController
 {
-    // Transaction types (ledger)
-    const DSS_TRXN_TYPE_MED = 1;
-    const DSS_TRXN_TYPE_PATIENT = 2;
-    const DSS_TRXN_TYPE_INS = 3;
-    const DSS_TRXN_TYPE_DIAG = 4;
-    const DSS_TRXN_TYPE_ADJ = 6;
-
-    // Transaction Payment Types (ledger)
-    const DSS_TRXN_PYMT_CREDIT = 0;
-    const DSS_TRXN_PYMT_DEBIT = 1;
-    const DSS_TRXN_PYMT_CHECK = 2;
-    const DSS_TRXN_PYMT_CASH = 3;
-    const DSS_TRXN_PYMT_WRITEOFF = 4;
-    const DSS_TRXN_PYMT_EFT = 5;
-
-    // Transaction Payers (ledger)
-    const DSS_TRXN_PAYER_PRIMARY = 0;
-    const DSS_TRXN_PAYER_SECONDARY = 1;
-    const DSS_TRXN_PAYER_PATIENT = 2;
-    const DSS_TRXN_PAYER_WRITEOFF = 3;
-    const DSS_TRXN_PAYER_DISCOUNT = 4;
-
-    private $dssTransactionPaymentTypeLabels = [
-        self::DSS_TRXN_PYMT_CREDIT   => "Credit Card",
-        self::DSS_TRXN_PYMT_DEBIT    => "Debit",
-        self::DSS_TRXN_PYMT_CHECK    => "Check",
-        self::DSS_TRXN_PYMT_CASH     => "Cash",
-        self::DSS_TRXN_PYMT_WRITEOFF => "Write Off",
-        self::DSS_TRXN_PYMT_EFT      => "E-Funds Transfer (EFT)"
-    ];
-
-    private $dssTransactionPayerLabels = [
-        self::DSS_TRXN_PAYER_PRIMARY   => "Primary Insurance",
-        self::DSS_TRXN_PAYER_SECONDARY => "Secondary Insurance",
-        self::DSS_TRXN_PAYER_PATIENT   => "Patient",
-        self::DSS_TRXN_PAYER_WRITEOFF  => "Write Off",
-        self::DSS_TRXN_PAYER_DISCOUNT  => "Professional Discount",
+    const REPORT_TYPE_TODAY = 'today';
+    const REPORT_TYPE_FULL = 'full';
+    const REPORT_TYPES = [
+        self::REPORT_TYPE_TODAY,
+        self::REPORT_TYPE_FULL,
     ];
 
     /** @var LedgerRepository */
@@ -243,39 +213,25 @@ class LedgersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param PatientRepository $patientRepository
      * @param Request $request
+     * @param LedgerRowsRetriever $ledgerRowsRetriever
      * @return \Illuminate\Http\JsonResponse
      */
     public function getListOfLedgerRows(
-        PatientRepository $patientRepository,
-        Request $request
+        Request $request,
+        LedgerRowsRetriever $ledgerRowsRetriever
     ) {
-        $docId = $this->currentUser->docid ?: 0;
+        $ledgerReportData = new LedgerReportData();
 
-        $reportType = $request->input('report_type', 'today');
-        $page = $request->input('page', 0);
-        $rowsPerPage = $request->input('rows_per_page', 20);
-        $sort = $request->input('sort');
-        $sortDir = $request->input('sort_dir', 'asc');
+        $ledgerReportData->docId = $this->currentUser->getDocIdOrZero();
+        $ledgerReportData->page = $request->input('page', 0);
+        $ledgerReportData->rowsPerPage = $request->input('rows_per_page', 20);
+        $ledgerReportData->sort = $request->input('sort');
+        $ledgerReportData->sortDir = $request->input('sort_dir', 'asc');
 
-        if ($reportType === 'today') {
-            $ledgerRows = $this->repository->getTodayList($docId, $page, $rowsPerPage, $sort, $sortDir);
-        } else {
-            $ledgerRows = $this->repository->getFullList($docId, $page, $rowsPerPage, $sort, $sortDir);
-        }
+        $reportType = $request->input('report_type', self::REPORT_TYPE_TODAY);
 
-        if ($ledgerRows['total'] > 0) {
-            $ledgerRows['result']->map(function ($row) use ($patientRepository) {
-                $patients = $patientRepository->getWithFilter(['firstname', 'lastname'], [
-                    'patientid' => $row->patientid
-                ]);
-
-                $row['patient_info'] = count($patients) > 0 ? $patients[0] : null;
-
-                return $row;
-            });
-        }
+        $ledgerRows = $ledgerRowsRetriever->getLedgerRows($ledgerReportData, $reportType);
 
         return ApiResponse::responseOk('', $ledgerRows);
     }
@@ -287,69 +243,18 @@ class LedgersController extends BaseRestController
      * )
      *
      * @param Request $request
+     * @param LedgerReportTotalsRetriever $ledgerReportTotalsRetriever
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getReportTotals(Request $request)
+    public function getReportTotals(Request $request, LedgerReportTotalsRetriever $ledgerReportTotalsRetriever)
     {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $reportType = $request->input('report_type', 'today');
+        $docId = $this->currentUser->getDocIdOrZero();
         $patientId = $request->input('patient_id', 0);
+        $reportType = $request->input('report_type', self::REPORT_TYPE_TODAY);
 
-        $totals = [
-            'charges'     => $this->repository->getTotalCharges($docId, $reportType, $patientId),
-            'credits'     => $this->repository->getTotalCredits($docId, $reportType, $patientId),
-            'adjustments' => $this->repository->getTotalAdjustments($docId, $reportType, $patientId),
-        ];
+        $totals = $ledgerReportTotalsRetriever->getReportTotals($docId, $patientId, $reportType);
 
-        if ($reportType == 'full') {
-            $totals['credits']['type']->map(function ($row) {
-                $description = $this->dssTransactionPaymentTypeLabels[$row['payment_description']];
-
-                $description = preg_match('/^checks?$/i', $description) ? 'Checks' : $description;
-
-                switch ($row['payment_payer']) {
-                    case self::DSS_TRXN_PAYER_PRIMARY:
-                        // fall through
-                    case self::DSS_TRXN_PAYER_SECONDARY:
-                        $description = 'Ins. ' . $description;
-                        break;
-
-                    case self::DSS_TRXN_PAYER_PATIENT:
-                        $description = 'Pt. ' . $description;
-                        break;
-
-                    case self::DSS_TRXN_PAYER_WRITEOFF:
-                        $description = $this->dssTransactionPayerLabels[self::DSS_TRXN_PAYER_WRITEOFF];
-                        break;
-                }
-
-                $row['payment_description'] = $description;
-
-                return $row;
-            });
-
-            $totals['credits']['named']->map(function ($row) {
-                $description = strlen(trim($row['payment_description'])) ? trim($row['payment_description']) : 'Unlabelled transaction type';
-
-                $description = preg_match('/^checks?$/i', $description) ? 'Checks' : $description;
-
-                switch ($row['payment_type']) {
-                    case self::DSS_TRXN_TYPE_INS:
-                        $description = 'Ins. ' . $description;
-                        break;
-                    case self::DSS_TRXN_TYPE_PATIENT:
-                        $description = 'Pt. ' . $description;
-                        break;
-                }
-
-                $row['payment_description'] = $description;
-
-                return $row;
-            });
-        }
-
-        return ApiResponse::responseOk('', $totals);
+        return ApiResponse::responseOk('', $totals->toArray());
     }
 
     /**
@@ -359,45 +264,17 @@ class LedgersController extends BaseRestController
      * )
      *
      * @param Request $request
-     * @param PatientSummaryRepository $patientSummaryRepository
+     * @param PatientSummaryUpdater $patientSummaryUpdater
      * @return \Illuminate\Http\JsonResponse
      */
     public function updatePatientSummary(
         Request $request,
-        PatientSummaryRepository $patientSummaryRepository
+        PatientSummaryUpdater $patientSummaryUpdater
     ) {
-        $docId = $this->currentUser->docid ?: 0;
-
+        $docId = $this->currentUser->getDocIdOrZero();
         $patientId = $request->input('patient_id', 0);
 
-        $patientSummary = $patientSummaryRepository->getPatientInfo($patientId);
-
-        $ifPatientSummaryExists = false;
-        $ledgerBalance = 0;
-
-        if (!empty($patientSummary)) {
-            $rowsForCountingLedgerBalance = $this->repository->getRowsForCountingLedgerBalance($docId, $patientId);
-
-            if (count($rowsForCountingLedgerBalance)) {
-                foreach ($rowsForCountingLedgerBalance as $row) {
-                    $ledgerBalance -= !empty($row->amount) ? $row->amount : 0;
-                    $ledgerBalance += !empty($row->paid_amount) ? $row->paid_amount : 0;
-                }
-            }
-
-            $patientSummaryRepository->updatePatientSummary($patientId, ['ledger' => $ledgerBalance]);
-            $ifPatientSummaryExists = true;
-        } else {
-            $patientSummaryRepository->create([
-                'pid'    => $patientId,
-                'ledger' => $ledgerBalance,
-            ]);
-        }
-
-        $response = 'Patient Summary was successfully inserted.';
-        if ($ifPatientSummaryExists) {
-            $response = 'Patient Summary was successfully updated.';
-        }
+        $response = $patientSummaryUpdater->updatePatientSummary($docId, $patientId);
 
         return ApiResponse::responseOk($response);
     }
@@ -409,36 +286,25 @@ class LedgersController extends BaseRestController
      * )
      *
      * @param Request $request
-     * @param InsuranceRepository $insuranceRepository
+     * @param LedgerReportDataRetriever $ledgerReportDataRetriever
      * @return \Illuminate\Http\JsonResponse
      */
     public function getReportData(
         Request $request,
-        OpenClaimSorter $openClaimSorter,
-        InsuranceRepository $insuranceRepository
+        LedgerReportDataRetriever $ledgerReportDataRetriever
     ) {
-        $docId = $this->currentUser->docid ?: 0;
+        $ledgerReportData = new LedgerReportData();
 
-        $patientId = $request->input('patient_id', 0);
-        $page = $request->input('page', 0);
-        $rowsPerPage = $request->input('rows_per_page', 20);
-        $sort = $request->input('sort');
-        $sortDir = $request->input('sort_dir', 'asc');
+        $ledgerReportData->docId = $this->currentUser->getDocIdOrZero();
+        $ledgerReportData->patientId = $request->input('patient_id', 0);
+        $ledgerReportData->page = $request->input('page', 0);
+        $ledgerReportData->rowsPerPage = $request->input('rows_per_page', 20);
+        $ledgerReportData->sort = $request->input('sort', '');
+        $ledgerReportData->sortDir = $request->input('sort_dir', 'asc');
+
         $openClaims = $request->input('open_claims', false);
 
-        if ($openClaims) {
-            $sortColumn = $openClaimSorter->getSortColumnForList($sort);
-            $data = $insuranceRepository->getOpenClaims($patientId, $page, $rowsPerPage, $sortColumn, $sortDir);
-        } else {
-            $data = $this->repository->getReportData([
-                'doc_id'        => $docId,
-                'patient_id'    => $patientId,
-                'page'          => $page,
-                'rows_per_page' => $rowsPerPage,
-                'sort'          => $sort,
-                'sort_dir'      => $sortDir,
-            ]);
-        }
+        $data = $ledgerReportDataRetriever->getReportData($ledgerReportData, $openClaims);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -450,15 +316,16 @@ class LedgersController extends BaseRestController
      * )
      *
      * @param Request $request
+     * @param LedgersQueryComposer $ledgersQueryComposer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getReportRowsNumber(Request $request)
+    public function getReportRowsNumber(Request $request, LedgersQueryComposer $ledgersQueryComposer)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = $this->currentUser->getDocIdOrZero();
 
         $patientId = $request->input('patient_id', 0);
 
-        $number = $this->repository->getReportRowsNumber($docId, $patientId);
+        $number = $ledgersQueryComposer->getReportRowsNumber($docId, $patientId);
 
         return ApiResponse::responseOk('', ['number' => $number]);
     }

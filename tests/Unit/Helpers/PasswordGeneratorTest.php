@@ -72,19 +72,13 @@ class PasswordGeneratorTest extends UnitTestCase
 
     public function testVerifyBcrypt()
     {
-        $passwordStruct = new Password();
-        $passwordStruct->setPassword(self::BCRYPT_HASH);
-
-        $result = $this->passwordGenerator->verify(self::BASE_PASSWORD, $passwordStruct);
+        $result = $this->passwordGenerator->verify(self::BASE_PASSWORD, self::BCRYPT_HASH, '');
         $this->assertEquals(self::BCRYPT_VERIFY, $result);
     }
 
     public function testVerifyLegacy()
     {
-        $passwordStruct = new Password();
-        $passwordStruct->setPassword(self::LEGACY_HASH);
-
-        $result = $this->passwordGenerator->verify(self::BASE_PASSWORD, $passwordStruct);
+        $result = $this->passwordGenerator->verify(self::BASE_PASSWORD, self::LEGACY_HASH, '');
         $this->assertEquals(self::LEGACY_VERIFY, $result);
     }
 

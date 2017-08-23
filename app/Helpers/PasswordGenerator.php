@@ -93,14 +93,12 @@ class PasswordGenerator
 
     /**
      * @param string $password
-     * @param PasswordInterface $passwordStruct
+     * @param string $hashedPassword
+     * @param string $salt
      * @return bool
      */
-    public function verify($password, PasswordInterface $passwordStruct)
+    public function verify($password, $hashedPassword, $salt)
     {
-        $hashedPassword = $passwordStruct->getPassword();
-        $salt = $passwordStruct->getSalt();
-
         if (substr($hashedPassword, 0, 1) === '$') {
             return $this->bcryptHasher->check($password, $hashedPassword);
         }

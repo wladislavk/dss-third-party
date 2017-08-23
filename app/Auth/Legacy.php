@@ -5,7 +5,6 @@ namespace DentalSleepSolutions\Auth;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Helpers\PasswordGenerator;
-use DentalSleepSolutions\Structs\Password;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Support\Arr;
 use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
@@ -51,11 +50,9 @@ class Legacy extends IlluminateAuthAdapter
      */
     protected function check(User $user, $password)
     {
-        $passwordStruct = new Password();
-        $passwordStruct->setPassword($user->password);
-        $passwordStruct->setSalt($user->salt);
-
-        return $this->passwordGenerator->verify($password, $passwordStruct);
+        return $this->passwordGenerator
+            ->verify($password, $user->password, $user->salt)
+            ;
     }
 
     /**

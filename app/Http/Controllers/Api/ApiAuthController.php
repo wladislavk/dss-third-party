@@ -12,7 +12,6 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use DentalSleepSolutions\Eloquent\Models\User;
 
 class ApiAuthController extends Controller
 {
@@ -24,9 +23,6 @@ class ApiAuthController extends Controller
     /** @var JwtAuth */
     private $jwtAuth;
 
-    /** @var Request */
-    private $request;
-
     public function __construct(
         Config $config,
         LegacyAuth $legacyAuth,
@@ -34,10 +30,9 @@ class ApiAuthController extends Controller
         Request $request
     )
     {
-        parent::__construct($config);
+        parent::__construct($config, $request);
         $this->legacyAuth = $legacyAuth;
         $this->jwtAuth = $jwtAuth;
-        $this->request = $request;
     }
 
     /**

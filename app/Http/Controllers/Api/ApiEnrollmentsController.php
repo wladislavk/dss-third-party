@@ -5,12 +5,12 @@ namespace DentalSleepSolutions\Http\Controllers\Api;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserCompanyRepository;
 use DentalSleepSolutions\Eloquent\Repositories\EligibleResponseRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\EnrollmentRepository;
+use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\PayersListRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Enrollments\TransactionTypeRepository;
 use DentalSleepSolutions\Eloquent\Repositories\UserSignatureRepository;
 use Exception;
-use Illuminate\Http\Request;
 use DentalSleepSolutions\Eligible\Client;
 use DentalSleepSolutions\Helpers\InvoiceHelper;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
@@ -36,9 +36,10 @@ class ApiEnrollmentsController extends ApiBaseController
 
     public function __construct(
         Config $config,
+        Request $request,
         EnrollmentRepository $enrollmentRepository
     ) {
-        parent::__construct($config);
+        parent::__construct($config, $request);
         $this->repository = $enrollmentRepository;
     }
 

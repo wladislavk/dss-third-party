@@ -343,8 +343,17 @@ class UsersController extends BaseRestController
 
         $data = [];
 
-        if ($this->currentUser && in_array($this->currentUser->status, $accountStatuses)) {
-            $data['type'] = self::STATUS_LABELS[$this->currentUser->status];
+        $status = 0;
+
+        if ($this->request->user()) {
+            $status = $this->request
+                ->user()
+                ->status
+            ;
+        }
+
+        if (in_array($status, $accountStatuses)) {
+            $data['type'] = self::STATUS_LABELS[$status];
         }
 
         return ApiResponse::responseOk('', $data);
@@ -362,7 +371,7 @@ class UsersController extends BaseRestController
      */
     public function getCurrentUserInfo()
     {
-        return ApiResponse::responseOk('', $this->currentUser);
+        return ApiResponse::responseOk('', $this->request->user());
     }
 
     /**
@@ -377,7 +386,14 @@ class UsersController extends BaseRestController
      */
     public function getCourseStaff()
     {
-        $userId = $this->currentUser->userid ?: 0;
+        $userId = 0;
+
+        if ($this->request->user()) {
+            $userId = $this->request
+                ->user()
+                ->userid
+            ;
+        }
 
         $data = $this->repository->getCourseStaff($userId);
 
@@ -394,7 +410,14 @@ class UsersController extends BaseRestController
      */
     public function getPaymentReports()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $data = $this->repository->getPaymentReports($docId);
 
@@ -411,8 +434,15 @@ class UsersController extends BaseRestController
      */
     public function checkLogout()
     {
-        $userId = $this->currentUser->userid ?: 0;
         $logoutTime = 60 * 60;
+        $userId = 0;
+
+        if ($this->request->user()) {
+            $userId = $this->request
+                ->user()
+                ->userid
+            ;
+        }
 
         $data = $this->repository->getLastAccessedDate($userId);
 
@@ -439,7 +469,14 @@ class UsersController extends BaseRestController
      */
     public function getLetterInfo(Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
         $data = $this->repository->getLetterInfo($docId);
 
         return ApiResponse::responseOk('', $data);

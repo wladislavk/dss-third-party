@@ -209,7 +209,14 @@ class LedgerHistoriesController extends BaseRestController
      */
     public function getHistoriesForLedgerReport(Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $patientId = $request->input('patient_id', 0);
         $ledgerId = $request->input('ledger_id', 0);

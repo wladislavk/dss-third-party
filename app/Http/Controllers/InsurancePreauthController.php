@@ -329,7 +329,14 @@ class InsurancePreauthController extends BaseRestController
      */
     public function getByType($type)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         switch ($type) {
             case 'completed':
@@ -377,7 +384,14 @@ class InsurancePreauthController extends BaseRestController
      */
     public function find(Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $pageNumber = $request->input('page', 0);
         $vobsPerPage = $request->input('vobsPerPage', 20);

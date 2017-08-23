@@ -337,9 +337,21 @@ class InsurancesController extends BaseRestController
      */
     public function getFrontOfficeClaims($type)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+        $userType = 0;
 
-        $isUserTypeSoftware = ($this->currentUser->user_type == self::DSS_USER_TYPE_SOFTWARE);
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+            $userType = $this->request
+                ->user()
+                ->user_type
+            ;
+        }
+
+        $isUserTypeSoftware = ($userType == self::DSS_USER_TYPE_SOFTWARE);
 
         switch ($type) {
             case 'pending-claims':

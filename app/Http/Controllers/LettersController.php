@@ -195,7 +195,14 @@ class LettersController extends BaseRestController
      */
     public function getPending()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $data = $this->repository->getPending($docId);
 
@@ -212,7 +219,14 @@ class LettersController extends BaseRestController
      */
     public function getUnmailed()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $data = $this->repository->getUnmailed($docId);
 
@@ -273,7 +287,14 @@ class LettersController extends BaseRestController
         ContactTypeRepository $contactTypeRepository,
         Request $request
     ) {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $letterInfo = $userRepository->getLetterInfo($docId);
 
@@ -286,7 +307,16 @@ class LettersController extends BaseRestController
             $contactType = $contactTypeRepository->find($contactTypeId);
 
             if ($contactType && $contactType->physician == 1) {
-                if ($this->currentUser->user_type != self::DSS_USER_TYPE_SOFTWARE) {
+                $userType = 0;
+
+                if ($this->request->user()) {
+                    $userType = $this->request
+                        ->user()
+                        ->user_type
+                    ;
+                }
+
+                if ($userType != self::DSS_USER_TYPE_SOFTWARE) {
                     $this->repository->createWelcomeLetter(1, $templateId, $docId);
                 }
                 $this->repository->createWelcomeLetter(2, $templateId, $docId);

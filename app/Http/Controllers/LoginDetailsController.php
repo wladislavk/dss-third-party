@@ -82,13 +82,17 @@ class LoginDetailsController extends BaseRestController
      */
     public function store()
     {
+        /**
+         * @todo What does loginId mean?
+         */
         $loginId = 0;
         $userId = 0;
 
         if ($this->request->user()) {
             $loginId = (int)$this->request
                 ->user()
-                ->id;
+                ->id
+            ;
             $userId = (int)$this->request
                 ->user()
                 ->userid

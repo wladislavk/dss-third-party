@@ -65,11 +65,19 @@ class ExternalPatientController extends ExternalBaseController
         }
 
         $externalPatient->update($patientData);
-        $patient = $externalPatient->patient()->first();
+        $patient = $externalPatient->patient()
+            ->first()
+        ;
+
+        $docId = 0;
+
+        if ($request->user()) {
+            $docId = $request->user()->docid;
+        }
 
         if (!$patient) {
             $updateData = [
-                'docid' => $this->currentUser->docid,
+                'docid' => $docId,
                 'status' => 3, // Pending Active
                 'ip_address' => $request->ip(),
                 'adddate' => Carbon::now(),

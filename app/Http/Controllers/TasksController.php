@@ -146,7 +146,14 @@ class TasksController extends BaseRestController
      */
     public function getType($type)
     {
-        $userId = $this->currentUser->id ?: 0;
+        $userId = 0;
+
+        if ($this->request->user()) {
+            $userId = $this->request
+                ->user()
+                ->userid
+            ;
+        }
 
         switch ($type) {
             case 'all':
@@ -191,7 +198,14 @@ class TasksController extends BaseRestController
      */
     public function getTypeForPatient($type, $patientId)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         switch ($type) {
             case 'all':

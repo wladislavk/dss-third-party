@@ -250,7 +250,14 @@ class LedgersController extends BaseRestController
         PatientRepository $patientRepository,
         Request $request
     ) {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $reportType = $request->input('report_type', 'today');
         $page = $request->input('page', 0);
@@ -290,7 +297,14 @@ class LedgersController extends BaseRestController
      */
     public function getReportTotals(Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $reportType = $request->input('report_type', 'today');
         $patientId = $request->input('patient_id', 0);
@@ -365,7 +379,14 @@ class LedgersController extends BaseRestController
         Request $request,
         PatientSummaryRepository $patientSummaryRepository
     ) {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $patientId = $request->input('patient_id', 0);
 
@@ -415,7 +436,14 @@ class LedgersController extends BaseRestController
         Request $request,
         InsuranceRepository $insuranceRepository
     ) {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $patientId = $request->input('patient_id', 0);
         $page = $request->input('page', 0);
@@ -451,7 +479,14 @@ class LedgersController extends BaseRestController
      */
     public function getReportRowsNumber(Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $patientId = $request->input('patient_id', 0);
 

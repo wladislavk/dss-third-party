@@ -169,7 +169,14 @@ class SleeplabsController extends BaseRestController
         PatientRepository $patientRepository,
         Request $request
     ) {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $page = $request->input('page', 0);
         $rowsPerPage = $request->input('rows_per_page', 20);
@@ -208,7 +215,14 @@ class SleeplabsController extends BaseRestController
      */
     public function editSleeplab(Request $request, $sleeplabId = null)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $sleeplabFormData = $request->input('sleeplab_form_data', []);
 

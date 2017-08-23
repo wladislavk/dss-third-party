@@ -248,7 +248,14 @@ class ContactsController extends BaseRestController
      */
     public function getListContactsAndCompanies(Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $partial = '';
         if ($request->has('partial_name')) {
@@ -310,7 +317,14 @@ class ContactsController extends BaseRestController
      */
     public function getInsuranceContacts(Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
         $data = $this->repository->getInsuranceContacts($docId);
 
         return ApiResponse::responseOk('', $data);
@@ -328,7 +342,14 @@ class ContactsController extends BaseRestController
      */
     public function getReferredByContacts(PatientRepository $patientRepository, Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $page = $request->input('page', 0);
         $sort = $request->input('sort');

@@ -151,7 +151,14 @@ class PatientInsurancesController extends BaseRestController
     public function getCurrent(Request $request)
     {
         $patientId = $request->input('patientId', 0);
-        $docId     = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $data = $this->repository->getCurrent($docId, $patientId);
 
@@ -168,7 +175,14 @@ class PatientInsurancesController extends BaseRestController
      */
     public function getNumber()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $data = $this->repository->getNumber($docId);
 

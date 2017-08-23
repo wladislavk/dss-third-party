@@ -15,6 +15,11 @@ class QueryComposerTestCase extends UnitTestCase
     /** @var array|Collection */
     protected $queryResult = [];
 
+    /**
+     * @param string $repositoryName
+     * @param string[] $methods
+     * @return AbstractRepository|MockInterface
+     */
     protected function mockRepository($repositoryName, array $methods)
     {
         /** @var AbstractRepository|MockInterface $repository */

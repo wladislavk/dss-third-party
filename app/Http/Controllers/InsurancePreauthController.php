@@ -3,7 +3,9 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository;
+use DentalSleepSolutions\Helpers\QueryComposers\InsurancePreauthQueryComposer;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Structs\ListVOBQueryData;
 use Illuminate\Http\Request;
 
 class InsurancePreauthController extends BaseRestController
@@ -319,32 +321,51 @@ class InsurancePreauthController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/insurance-preauth/{type}",
-     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     path="/insurance-preauth/completed",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param string $type
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getByType($type)
+    public function getCompleted()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = $this->currentUser->getDocIdOrZero();
 
-        switch ($type) {
-            case 'completed':
-                $data = $this->repository->getCompleted($docId);
-                break;
-            case 'pending':
-                $data = $this->repository->getPending($docId);
-                break;
-            case 'rejected':
-                $data = $this->repository->getRejected($docId);
-                break;
-            default:
-                $data = [];
-                break;
-        }
+        $data = $this->repository->getCompleted($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/insurance-preauth/pending",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPending()
+    {
+        $docId = $this->currentUser->getDocIdOrZero();
+
+        $data = $this->repository->getPending($docId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/insurance-preauth/rejected",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRejected()
+    {
+        $docId = $this->currentUser->getDocIdOrZero();
+
+        $data = $this->repository->getRejected($docId);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -373,26 +394,25 @@ class InsurancePreauthController extends BaseRestController
      * )
      *
      * @param Request $request
+     * @param InsurancePreauthQueryComposer $queryComposer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function find(Request $request)
+    public function find(Request $request, InsurancePreauthQueryComposer $queryComposer)
     {
-        $docId = $this->currentUser->docid ?: 0;
-
         $pageNumber = $request->input('page', 0);
         $vobsPerPage = $request->input('vobsPerPage', 20);
-        $sortColumn = $request->input('sortColumn', 'status');
-        $sortDir = $request->input('sortDir', 'desc');
-        $viewed = $request->input('viewed');
 
-        $data = $this->repository->getListVobs(
-            $docId, 
-            $sortColumn,
-            $sortDir,
-            $vobsPerPage,
-            $pageNumber,
-            $viewed
-        );
+        $offset = $vobsPerPage * $pageNumber;
+
+        $listVOBQueryData = new ListVOBQueryData();
+        $listVOBQueryData->docId = $this->currentUser->getDocIdOrZero();
+        $listVOBQueryData->sortColumn = $request->input('sortColumn', 'status');
+        $listVOBQueryData->sortDir = $request->input('sortDir', 'desc');
+        $listVOBQueryData->vobsPerPage = $request->input('vobsPerPage', 20);
+        $listVOBQueryData->offset = $offset;
+        $listVOBQueryData->viewed = $request->input('viewed', null);
+
+        $data = $queryComposer->composeGetListVobsQuery($listVOBQueryData);
 
         return ApiResponse::responseOk('', $data);
     }

@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -171,5 +172,23 @@ abstract class AbstractRepository extends BaseRepository
         }
 
         return $this->parserResult($model);
+    }
+
+    /**
+     * @param Builder|QueryBuilder $query
+     * @param int $offset
+     * @param int $recordsPerPage
+     * @return array
+     */
+    public function getPagedResult($query, $offset, $recordsPerPage)
+    {
+        /** @var Collection $allResults */
+        $allResults = $query->get();
+        $numberOfResults = $allResults->count();
+        $paginatedQuery = $query->skip($offset)->take($recordsPerPage);
+        return [
+            'total'  => $numberOfResults,
+            'result' => $paginatedQuery->get(),
+        ];
     }
 }

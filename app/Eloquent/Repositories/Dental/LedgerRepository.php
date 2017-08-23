@@ -6,11 +6,15 @@ use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Insurance;
 use DentalSleepSolutions\Eloquent\Models\Dental\Ledger;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Interfaces\BackOfficeConditionalInterface;
+use DentalSleepSolutions\Eloquent\Repositories\Interfaces\BackOfficeConditionalTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 
-class LedgerRepository extends AbstractRepository
+class LedgerRepository extends AbstractRepository implements BackOfficeConditionalInterface
 {
+    use BackOfficeConditionalTrait;
+
     public function model()
     {
         return Ledger::class;
@@ -579,7 +583,7 @@ class LedgerRepository extends AbstractRepository
                 FROM dental_claim_notes
                 WHERE claim_id = i.insuranceid
                     AND create_type = '1')"),
-            \DB::raw(InsuranceRepository::filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
+            \DB::raw($this->filedByBackOfficeConditional($claimAlias = 'i') . ' as filed_by_bo')
         )->from(\DB::raw('dental_insurance i'))
             ->leftJoin(\DB::raw('dental_ledger dl'), 'dl.primary_claim_id', '=', 'i.insuranceid')
             ->leftJoin(\DB::raw('dental_ledger_payment pay'), 'dl.ledgerid', '=', 'pay.ledgerid')

@@ -129,10 +129,29 @@ class InsurancesApiTest extends ApiTestCase
         $this->assertEquals([], $this->getResponseData());
     }
 
-    public function testGetFrontOfficeClaims()
+    public function testGetPendingFrontOfficeClaims()
     {
-        $type = 'pending-claims';
-        $this->post(self::ROUTE_PREFIX . '/insurances/' . $type);
+        $this->post(self::ROUTE_PREFIX . '/insurances/pending-claims');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testGetUnmailedFrontOfficeClaims()
+    {
+        $this->post(self::ROUTE_PREFIX . '/insurances/unmailed-claims');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testGetRejectedFrontOfficeClaims()
+    {
+        $this->post(self::ROUTE_PREFIX . '/insurances/rejected-claims');
         $this->assertResponseOk();
         $expected = [
             'total' => 0,

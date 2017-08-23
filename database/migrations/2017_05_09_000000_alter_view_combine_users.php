@@ -19,7 +19,7 @@ class AlterViewCombineUsers extends Migration
                     u.userid,
                     0 AS adminid,
                     0 AS admin,
-                    IF(docid, docid, userid) AS docid,
+                    IF(u.docid, u.docid, u.userid) AS docid,
                     user_type,
                     email,
                     IF(name IS NULL, CONCAT(first_name,' ', last_name), name) AS name,

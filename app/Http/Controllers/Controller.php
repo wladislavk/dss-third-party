@@ -41,8 +41,11 @@ abstract class Controller extends BaseController
         $this->config = $config;
         $this->request = $request;
 
-        $this->user = new User(self::EMPTY_MODEL_ATTRIBUTES);
-        $this->admin = new User(self::EMPTY_MODEL_ATTRIBUTES);
+        $this->user = new User();
+        $this->admin = new User();
+
+        $this->user->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
+        $this->admin->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
 
         if ($request->user()) {
             $this->user = $request->user();

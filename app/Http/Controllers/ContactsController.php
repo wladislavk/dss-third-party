@@ -117,7 +117,14 @@ class ContactsController extends BaseRestController
      */
     public function store()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $data = array_merge($this->request->all(), [
             'ip_address' => $this->request->ip(),
@@ -199,7 +206,14 @@ class ContactsController extends BaseRestController
      */
     public function find(Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $docId = 0;
+
+        if ($this->request->user()) {
+            $docId = $this->request
+                ->user()
+                ->docid
+            ;
+        }
 
         $contactType     = $request->input('contacttype', 0);
         $status          = $request->input('status', 0);

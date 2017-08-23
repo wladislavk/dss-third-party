@@ -84,9 +84,15 @@ class LoginDetailsController extends BaseRestController
     {
         $loginId = 0;
         $userId = 0;
-        if ($this->currentUser) {
-            $loginId = intval($this->currentUser->loginid);
-            $userId = intval($this->currentUser->id);
+
+        if ($this->request->user()) {
+            $loginId = (int)$this->request
+                ->user()
+                ->id;
+            $userId = (int)$this->request
+                ->user()
+                ->userid
+            ;
         }
 
         $data = array_merge($this->request->all(), [

@@ -120,10 +120,10 @@ class LegacyTest extends UnitTestCase
     {
         $mock = \Mockery::mock(PasswordGenerator::class);
         $mock->shouldReceive('verify')
-            ->andReturnUsing(function ($password, PasswordInterface $toVerify) {
+            ->andReturnUsing(function ($password, $hashedPassword, $salt) {
                 if (
                     $password === self::PASSWORD
-                    && $toVerify->getPassword() === self::HASH
+                    && $hashedPassword === self::HASH
                 ) {
                     return true;
                 }

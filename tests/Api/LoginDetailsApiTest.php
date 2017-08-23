@@ -17,7 +17,7 @@ class LoginDetailsApiTest extends ApiTestCase
      */
     public function testAddLoginDetail()
     {
-        $data = factory(LoginDetail::class)->make()->toArray();
+        $data = factory(LoginDetail::class)->create()->toArray();
 
         $data['loginid'] = 100;
 

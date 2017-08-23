@@ -34,6 +34,8 @@ class DentrixAuthTest extends UnitTestCase
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->dentrixCompanyState = '';
         $this->dentrixUserState = '';
         $this->userState = '';

@@ -43,8 +43,11 @@ class JwtAuthTest extends UnitTestCase
 
     public function setUp()
     {
+        parent::setUp();
+
         $this->userGuardState = '';
         $this->adminGuardState = '';
+
         $userGuard = $this->mockUserGuard();
         $adminGuard = $this->mockAdminGuard();
         $jwtHelper = $this->mockJwtHelper();

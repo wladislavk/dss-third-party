@@ -91,17 +91,7 @@ class ExternalUsersController extends BaseRestController
     {
         $this->validate($this->request, $this->request->storeRules());
         $data = $this->request->all();
-
-        $adminId = 0;
-
-        if ($this->request->admin()) {
-            $adminId = $this->request
-                ->admin()
-                ->adminid
-            ;
-        }
-
-        $data['created_by'] = $adminId;
+        $data['created_by'] = $this->admin->adminid;
         $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
@@ -126,17 +116,7 @@ class ExternalUsersController extends BaseRestController
     {
         $resource = $this->repository->findFirstById($id);
         $data = $this->request->all();
-
-        $adminId = 0;
-
-        if ($this->request->admin()) {
-            $adminId = $this->request
-                ->admin()
-                ->adminid
-            ;
-        }
-
-        $data['updated_by'] = $adminId;
+        $data['updated_by'] = $this->admin->adminid;
         $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');

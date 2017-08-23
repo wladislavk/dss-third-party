@@ -143,16 +143,7 @@ class FaxesController extends BaseRestController
      */
     public function getAlerts()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $data = $this->repository->getAlerts($docId);
+        $data = $this->repository->getAlerts($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }

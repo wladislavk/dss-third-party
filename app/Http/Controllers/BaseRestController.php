@@ -99,17 +99,13 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     /** @var BaseRepository */
     protected $repository;
 
-    /** @var Request */
-    protected $request;
-
     public function __construct(
         Config $config,
         BaseRepository $repository,
         Request $request
     ) {
-        parent::__construct($config);
+        parent::__construct($config, $request);
         $this->repository = $repository;
-        $this->request = $request;
     }
 
     /**

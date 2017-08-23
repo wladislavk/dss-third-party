@@ -337,31 +337,17 @@ class InsurancesController extends BaseRestController
      */
     public function getFrontOfficeClaims($type)
     {
-        $docId = 0;
-        $userType = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-            $userType = $this->request
-                ->user()
-                ->user_type
-            ;
-        }
-
-        $isUserTypeSoftware = ($userType == self::DSS_USER_TYPE_SOFTWARE);
+        $isUserTypeSoftware = ($this->user->user_type == self::DSS_USER_TYPE_SOFTWARE);
 
         switch ($type) {
             case 'pending-claims':
-                $data = $this->repository->getPendingClaims($docId);
+                $data = $this->repository->getPendingClaims($this->user->docid);
                 break;
             case 'unmailed-claims':
-                $data = $this->repository->getUnmailedClaims($docId, $isUserTypeSoftware);
+                $data = $this->repository->getUnmailedClaims($this->user->docid, $isUserTypeSoftware);
                 break;
             case 'rejected-claims':
-                $data = $this->repository->getRejectedClaims($docId);
+                $data = $this->repository->getRejectedClaims($this->user->docid);
                 break;
             default:
                 $data = [];

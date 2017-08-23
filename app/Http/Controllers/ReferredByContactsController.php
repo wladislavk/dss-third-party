@@ -185,15 +185,6 @@ class ReferredByContactsController extends BaseRestController
         Request $request,
         $contactId = null
     ) {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $contactFormData = $request->input('contact_form_data', []);
 
         if ($contactId) {
@@ -217,7 +208,7 @@ class ReferredByContactsController extends BaseRestController
         // we have checked them during the validation above, so referredby_info -> 1
         $contactFormData = array_merge($contactFormData, [
             'referredby_info' => 1,
-            'docid'           => $docId,
+            'docid'           => $this->user->docid,
             'ip_address'      => $request->ip()
         ]);
 

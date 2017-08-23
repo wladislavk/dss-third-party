@@ -250,15 +250,6 @@ class LedgersController extends BaseRestController
         PatientRepository $patientRepository,
         Request $request
     ) {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $reportType = $request->input('report_type', 'today');
         $page = $request->input('page', 0);
         $rowsPerPage = $request->input('rows_per_page', 20);
@@ -266,9 +257,9 @@ class LedgersController extends BaseRestController
         $sortDir = $request->input('sort_dir', 'asc');
 
         if ($reportType === 'today') {
-            $ledgerRows = $this->repository->getTodayList($docId, $page, $rowsPerPage, $sort, $sortDir);
+            $ledgerRows = $this->repository->getTodayList($this->user->docid, $page, $rowsPerPage, $sort, $sortDir);
         } else {
-            $ledgerRows = $this->repository->getFullList($docId, $page, $rowsPerPage, $sort, $sortDir);
+            $ledgerRows = $this->repository->getFullList($this->user->docid, $page, $rowsPerPage, $sort, $sortDir);
         }
 
         if ($ledgerRows['total'] > 0) {
@@ -297,22 +288,13 @@ class LedgersController extends BaseRestController
      */
     public function getReportTotals(Request $request)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $reportType = $request->input('report_type', 'today');
         $patientId = $request->input('patient_id', 0);
 
         $totals = [
-            'charges'     => $this->repository->getTotalCharges($docId, $reportType, $patientId),
-            'credits'     => $this->repository->getTotalCredits($docId, $reportType, $patientId),
-            'adjustments' => $this->repository->getTotalAdjustments($docId, $reportType, $patientId),
+            'charges'     => $this->repository->getTotalCharges($this->user->docid, $reportType, $patientId),
+            'credits'     => $this->repository->getTotalCredits($this->user->docid, $reportType, $patientId),
+            'adjustments' => $this->repository->getTotalAdjustments($this->user->docid, $reportType, $patientId),
         ];
 
         if ($reportType == 'full') {
@@ -379,15 +361,6 @@ class LedgersController extends BaseRestController
         Request $request,
         PatientSummaryRepository $patientSummaryRepository
     ) {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $patientId = $request->input('patient_id', 0);
 
         $patientSummary = $patientSummaryRepository->getPatientInfo($patientId);
@@ -396,7 +369,7 @@ class LedgersController extends BaseRestController
         $ledgerBalance = 0;
 
         if (!empty($patientSummary)) {
-            $rowsForCountingLedgerBalance = $this->repository->getRowsForCountingLedgerBalance($docId, $patientId);
+            $rowsForCountingLedgerBalance = $this->repository->getRowsForCountingLedgerBalance($this->user->docid, $patientId);
 
             if (count($rowsForCountingLedgerBalance)) {
                 foreach ($rowsForCountingLedgerBalance as $row) {
@@ -436,15 +409,6 @@ class LedgersController extends BaseRestController
         Request $request,
         InsuranceRepository $insuranceRepository
     ) {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $patientId = $request->input('patient_id', 0);
         $page = $request->input('page', 0);
         $rowsPerPage = $request->input('rows_per_page', 20);
@@ -456,7 +420,7 @@ class LedgersController extends BaseRestController
             $data = $insuranceRepository->getOpenClaims($patientId, $page, $rowsPerPage, $sort, $sortDir);
         } else {
             $data = $this->repository->getReportData([
-                'doc_id'        => $docId,
+                'doc_id'        => $this->user->docid,
                 'patient_id'    => $patientId,
                 'page'          => $page,
                 'rows_per_page' => $rowsPerPage,
@@ -479,18 +443,9 @@ class LedgersController extends BaseRestController
      */
     public function getReportRowsNumber(Request $request)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $patientId = $request->input('patient_id', 0);
 
-        $number = $this->repository->getReportRowsNumber($docId, $patientId);
+        $number = $this->repository->getReportRowsNumber($this->user->docid, $patientId);
 
         return ApiResponse::responseOk('', ['number' => $number]);
     }

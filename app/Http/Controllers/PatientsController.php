@@ -493,16 +493,7 @@ class PatientsController extends BaseRestController
      */
     public function getNumber()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $data = $this->repository->getNumber($docId);
+        $data = $this->repository->getNumber($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -517,16 +508,7 @@ class PatientsController extends BaseRestController
      */
     public function getDuplicates()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $data = $this->repository->getDuplicates($docId);
+        $data = $this->repository->getDuplicates($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -541,16 +523,7 @@ class PatientsController extends BaseRestController
      */
     public function getBounces()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $data = $this->repository->getBounces($docId);
+        $data = $this->repository->getBounces($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -571,15 +544,7 @@ class PatientsController extends BaseRestController
         $partialName = preg_replace($regExp, '', $partialName);
 
         $names = explode(' ', $partialName);
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-        $data = $this->repository->getListPatients($docId, $names);
+        $data = $this->repository->getListPatients($this->user->docid, $names);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -596,15 +561,7 @@ class PatientsController extends BaseRestController
      */
     public function destroyForDoctor($patientId)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-        $this->repository->deleteForDoctor($patientId, $docId);
+        $this->repository->deleteForDoctor($patientId, $this->user->docid);
 
         return ApiResponse::responseOk('Resource deleted');
     }
@@ -620,20 +577,6 @@ class PatientsController extends BaseRestController
      */
     public function find(Request $request)
     {
-        $docId = 0;
-        $userType = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-            $userType = $this->request
-                ->user()
-                ->user_type
-            ;
-        }
-
         $patientId       = $request->input('patientId', 0);
         $type            = $request->input('type', 1);
         $pageNumber      = $request->input('page', 0);
@@ -643,8 +586,8 @@ class PatientsController extends BaseRestController
         $sortDir         = $request->input('sortDir', '');
 
         $data = $this->repository->findPatientBy(
-            $docId,
-            $userType,
+            $this->user->docid,
+            $this->user->user_type,
             $patientId,
             $type,
             $pageNumber,
@@ -719,19 +662,11 @@ class PatientsController extends BaseRestController
         Request $request,
         $patientId = 0
     ) {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
         // TODO: this block should be decoupled into a different controller action
         if ($request->has('tracker_notes')) {
             $trackerNotes = $request->input('tracker_notes');
             $this->validate($request, (new \DentalSleepSolutions\Http\Requests\PatientSummary())->updateRules());
-            $patientSummaryRepository->updateTrackerNotes($patientId, $docId, $trackerNotes);
+            $patientSummaryRepository->updateTrackerNotes($patientId, $this->user->docid, $trackerNotes);
             return ApiResponse::responseOk('', ['tracker_notes' => 'Tracker notes were successfully updated.']);
         }
 
@@ -763,7 +698,7 @@ class PatientsController extends BaseRestController
             $patientFormDataUpdater->setEmailBounce($unchangedPatient);
             $patientFormDataUpdater->modifyLogin($unchangedPatient->login);
         }
-        $requestData->hasPatientPortal = $patientFormDataUpdater->getHasPatientPortal($docId);
+        $requestData->hasPatientPortal = $patientFormDataUpdater->getHasPatientPortal($this->user->docid);
         $requestData->shouldSendIntroLetter = $patientFormDataUpdater->shouldSendIntroLetter();
         $requestData->patientName = $patientFormDataUpdater->getPatientName();
         $requestData->mdContacts = $patientFormDataUpdater->setMDContacts();
@@ -850,14 +785,6 @@ class PatientsController extends BaseRestController
      */
     public function getReferrers(NameSetter $nameSetter, Request $request)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
         $partial = '';
         if ($request->has('partial_name')) {
             $regExp = '/[^ A-Za-z\'\-]/';
@@ -866,7 +793,7 @@ class PatientsController extends BaseRestController
 
         $names = explode(' ', $partial);
 
-        $contacts = $this->repository->getReferrers($docId, $names);
+        $contacts = $this->repository->getReferrers($this->user->docid, $names);
 
         $response = [];
         if (!count($contacts)) {
@@ -953,15 +880,7 @@ class PatientsController extends BaseRestController
     ) {
         $url = '';
         if ($patientId) {
-            $docId = 0;
-
-            if ($this->request->user()) {
-                $docId = $this->request
-                    ->user()
-                    ->docid
-                ;
-            }
-            $url = $tempPinDocumentCreator->createDocument($patientId, $docId);
+            $url = $tempPinDocumentCreator->createDocument($patientId, $this->user->docid);
         }
 
         return ApiResponse::responseOk('', ['path_to_pdf' => $url]);

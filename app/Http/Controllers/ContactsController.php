@@ -117,18 +117,9 @@ class ContactsController extends BaseRestController
      */
     public function store()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $data = array_merge($this->request->all(), [
             'ip_address' => $this->request->ip(),
-            'docid' => $docId,
+            'docid' => $this->user->docid,
         ]);
 
         $resource = $this->repository->create($data);
@@ -206,15 +197,6 @@ class ContactsController extends BaseRestController
      */
     public function find(Request $request)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $contactType     = $request->input('contacttype', 0);
         $status          = $request->input('status', 0);
         $letter          = $request->input('letter', '');
@@ -226,7 +208,7 @@ class ContactsController extends BaseRestController
         $data = $this->repository->findContact(
             $contactType,
             $status,
-            $docId,
+            $this->user->docid,
             $letter,
             $sortBy,
             $sortDir,
@@ -248,15 +230,6 @@ class ContactsController extends BaseRestController
      */
     public function getListContactsAndCompanies(Request $request)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $partial = '';
         if ($request->has('partial_name')) {
             $partial = preg_replace("[^ A-Za-z'\-]", "", $request->input('partial_name'));
@@ -270,7 +243,7 @@ class ContactsController extends BaseRestController
         $names = explode(' ', $partial);
 
         $contactsAndCompanies = $this->repository->getListContactsAndCompanies(
-            $docId, $partial, $names, self::DSS_REFERRED_PHYSICIAN, $searchForCompanies
+            $this->user->docid, $partial, $names, self::DSS_REFERRED_PHYSICIAN, $searchForCompanies
         );
 
         $response = [
@@ -317,15 +290,7 @@ class ContactsController extends BaseRestController
      */
     public function getInsuranceContacts(Request $request)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-        $data = $this->repository->getInsuranceContacts($docId);
+        $data = $this->repository->getInsuranceContacts($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -342,22 +307,13 @@ class ContactsController extends BaseRestController
      */
     public function getReferredByContacts(PatientRepository $patientRepository, Request $request)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $page = $request->input('page', 0);
         $sort = $request->input('sort');
         $sortDir = $request->input('sortdir');
         $contactsPerPage = $request->input('contacts_per_page', 0);
         $isDetailed = $request->input('detailed', false);
 
-        $referredByContacts = $this->repository->getReferredByContacts($docId, $sort, $sortDir);
+        $referredByContacts = $this->repository->getReferredByContacts($this->user->docid, $sort, $sortDir);
 
         $referredByContactsTotalNumber = count($referredByContacts);
         if ($contactsPerPage > 0) {

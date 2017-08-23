@@ -152,16 +152,7 @@ class PatientSummariesController extends BaseRestController
 
         $notes = $request->input('tracker_notes', '');
         $patientId = $request->input('patient_id', 0);
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $this->repository->updateTrackerNotes($patientId, $docId, $notes);
+        $this->repository->updateTrackerNotes($patientId, $this->user->docid, $notes);
 
         return ApiResponse::responseOk('Resource updated');
     }

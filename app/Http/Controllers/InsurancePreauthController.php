@@ -329,24 +329,15 @@ class InsurancePreauthController extends BaseRestController
      */
     public function getByType($type)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         switch ($type) {
             case 'completed':
-                $data = $this->repository->getCompleted($docId);
+                $data = $this->repository->getCompleted($this->user->docid);
                 break;
             case 'pending':
-                $data = $this->repository->getPending($docId);
+                $data = $this->repository->getPending($this->user->docid);
                 break;
             case 'rejected':
-                $data = $this->repository->getRejected($docId);
+                $data = $this->repository->getRejected($this->user->docid);
                 break;
             default:
                 $data = [];
@@ -384,15 +375,6 @@ class InsurancePreauthController extends BaseRestController
      */
     public function find(Request $request)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $pageNumber = $request->input('page', 0);
         $vobsPerPage = $request->input('vobsPerPage', 20);
         $sortColumn = $request->input('sortColumn', 'status');
@@ -400,7 +382,7 @@ class InsurancePreauthController extends BaseRestController
         $viewed = $request->input('viewed');
 
         $data = $this->repository->getListVobs(
-            $docId, 
+            $this->user->docid,
             $sortColumn,
             $sortDir,
             $vobsPerPage,

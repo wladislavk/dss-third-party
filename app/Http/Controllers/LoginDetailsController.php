@@ -83,25 +83,11 @@ class LoginDetailsController extends BaseRestController
     public function store()
     {
         /**
-         * @todo What does loginId mean?
+         * @todo What does loginid mean?
          */
-        $loginId = 0;
-        $userId = 0;
-
-        if ($this->request->user()) {
-            $loginId = (int)$this->request
-                ->user()
-                ->id
-            ;
-            $userId = (int)$this->request
-                ->user()
-                ->userid
-            ;
-        }
-
         $data = array_merge($this->request->all(), [
-            'loginid'    => $loginId,
-            'userid'     => $userId,
+            'loginid'    => $this->user->id,
+            'userid'     => $this->user->userid,
             'ip_address' => $this->request->ip(),
         ]);
 

@@ -343,17 +343,8 @@ class UsersController extends BaseRestController
 
         $data = [];
 
-        $status = 0;
-
-        if ($this->request->user()) {
-            $status = $this->request
-                ->user()
-                ->status
-            ;
-        }
-
-        if (in_array($status, $accountStatuses)) {
-            $data['type'] = self::STATUS_LABELS[$status];
+        if (in_array($this->user->status, $accountStatuses)) {
+            $data['type'] = self::STATUS_LABELS[$this->user->status];
         }
 
         return ApiResponse::responseOk('', $data);
@@ -386,16 +377,7 @@ class UsersController extends BaseRestController
      */
     public function getCourseStaff()
     {
-        $userId = 0;
-
-        if ($this->request->user()) {
-            $userId = $this->request
-                ->user()
-                ->userid
-            ;
-        }
-
-        $data = $this->repository->getCourseStaff($userId);
+        $data = $this->repository->getCourseStaff($this->user->userid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -410,16 +392,7 @@ class UsersController extends BaseRestController
      */
     public function getPaymentReports()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $data = $this->repository->getPaymentReports($docId);
+        $data = $this->repository->getPaymentReports($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -435,16 +408,7 @@ class UsersController extends BaseRestController
     public function checkLogout()
     {
         $logoutTime = 60 * 60;
-        $userId = 0;
-
-        if ($this->request->user()) {
-            $userId = $this->request
-                ->user()
-                ->userid
-            ;
-        }
-
-        $data = $this->repository->getLastAccessedDate($userId);
+        $data = $this->repository->getLastAccessedDate($this->user->userid);
 
         $lastAccessedDate = strtotime($data->last_accessed_date);
         $now = strtotime(Carbon::now());
@@ -469,15 +433,7 @@ class UsersController extends BaseRestController
      */
     public function getLetterInfo(Request $request)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-        $data = $this->repository->getLetterInfo($docId);
+        $data = $this->repository->getLetterInfo($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }

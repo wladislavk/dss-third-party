@@ -195,16 +195,7 @@ class LettersController extends BaseRestController
      */
     public function getPending()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $data = $this->repository->getPending($docId);
+        $data = $this->repository->getPending($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -219,16 +210,7 @@ class LettersController extends BaseRestController
      */
     public function getUnmailed()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $data = $this->repository->getUnmailed($docId);
+        $data = $this->repository->getUnmailed($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -287,16 +269,7 @@ class LettersController extends BaseRestController
         ContactTypeRepository $contactTypeRepository,
         Request $request
     ) {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $letterInfo = $userRepository->getLetterInfo($docId);
+        $letterInfo = $userRepository->getLetterInfo($this->user->docid);
 
         $templateId = $request->input('template_id', 0);
         $contactTypeId = $request->input('contact_type_id', 0);
@@ -307,19 +280,10 @@ class LettersController extends BaseRestController
             $contactType = $contactTypeRepository->find($contactTypeId);
 
             if ($contactType && $contactType->physician == 1) {
-                $userType = 0;
-
-                if ($this->request->user()) {
-                    $userType = $this->request
-                        ->user()
-                        ->user_type
-                    ;
+                if ($this->user->user_type != self::DSS_USER_TYPE_SOFTWARE) {
+                    $this->repository->createWelcomeLetter(1, $templateId, $this->user->docid);
                 }
-
-                if ($userType != self::DSS_USER_TYPE_SOFTWARE) {
-                    $this->repository->createWelcomeLetter(1, $templateId, $docId);
-                }
-                $this->repository->createWelcomeLetter(2, $templateId, $docId);
+                $this->repository->createWelcomeLetter(2, $templateId, $this->user->docid);
 
                 $data = [
                     'message' => 'This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.'

@@ -169,22 +169,13 @@ class SleeplabsController extends BaseRestController
         PatientRepository $patientRepository,
         Request $request
     ) {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $page = $request->input('page', 0);
         $rowsPerPage = $request->input('rows_per_page', 20);
         $sort = $request->input('sort');
         $sortDir = $request->input('sort_dir', 'asc');
         $letter = $request->input('letter');
 
-        $sleeplabs = $this->repository->getList($docId, $page, $rowsPerPage, $sort, $sortDir, $letter);
+        $sleeplabs = $this->repository->getList($this->user->docid, $page, $rowsPerPage, $sort, $sortDir, $letter);
 
         if ($sleeplabs['total'] > 0) {
             $sleeplabs['result']->map(function ($sleeplab) use ($patientRepository) {
@@ -215,15 +206,6 @@ class SleeplabsController extends BaseRestController
      */
     public function editSleeplab(Request $request, $sleeplabId = null)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         $sleeplabFormData = $request->input('sleeplab_form_data', []);
 
         if ($sleeplabId) {
@@ -244,7 +226,7 @@ class SleeplabsController extends BaseRestController
         }
 
         $sleeplabFormData = array_merge($sleeplabFormData, [
-            'docid' => $docId,
+            'docid' => $this->user->docid,
             'ip_address' => $request->ip(),
         ]);
 

@@ -146,36 +146,27 @@ class TasksController extends BaseRestController
      */
     public function getType($type)
     {
-        $userId = 0;
-
-        if ($this->request->user()) {
-            $userId = $this->request
-                ->user()
-                ->userid
-            ;
-        }
-
         switch ($type) {
             case 'all':
-                $tasks = $this->repository->getAll($userId);
+                $tasks = $this->repository->getAll($this->user->userid);
                 break;
             case 'overdue':
-                $tasks = $this->repository->getOverdue($userId);
+                $tasks = $this->repository->getOverdue($this->user->userid);
                 break;
             case 'today':
-                $tasks = $this->repository->getToday($userId);
+                $tasks = $this->repository->getToday($this->user->userid);
                 break;
             case 'tomorrow':
-                $tasks = $this->repository->getTomorrow($userId);
+                $tasks = $this->repository->getTomorrow($this->user->userid);
                 break;
             case 'this-week':
-                $tasks = $this->repository->getThisWeek($userId);
+                $tasks = $this->repository->getThisWeek($this->user->userid);
                 break;
             case 'next-week':
-                $tasks = $this->repository->getNextWeek($userId);
+                $tasks = $this->repository->getNextWeek($this->user->userid);
                 break;
             case 'later':
-                $tasks = $this->repository->getLater($userId);
+                $tasks = $this->repository->getLater($this->user->userid);
                 break;
             default:
                 $tasks = [];
@@ -198,30 +189,21 @@ class TasksController extends BaseRestController
      */
     public function getTypeForPatient($type, $patientId)
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
         switch ($type) {
             case 'all':
-                $tasks = $this->repository->getAllForPatient($docId, $patientId);
+                $tasks = $this->repository->getAllForPatient($this->user->docid, $patientId);
                 break;
             case 'overdue':
-                $tasks = $this->repository->getOverdueForPatient($docId, $patientId);
+                $tasks = $this->repository->getOverdueForPatient($this->user->docid, $patientId);
                 break;
             case 'today':
-                $tasks = $this->repository->getTodayForPatient($docId, $patientId);
+                $tasks = $this->repository->getTodayForPatient($this->user->docid, $patientId);
                 break;
             case 'tomorrow':
-                $tasks = $this->repository->getTomorrowForPatient($docId, $patientId);
+                $tasks = $this->repository->getTomorrowForPatient($this->user->docid, $patientId);
                 break;
             case 'future':
-                $tasks = $this->repository->getFutureForPatient($docId, $patientId);
+                $tasks = $this->repository->getFutureForPatient($this->user->docid, $patientId);
                 break;
             default:
                 $tasks = [];

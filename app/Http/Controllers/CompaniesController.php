@@ -149,16 +149,7 @@ class CompaniesController extends BaseRestController
      */
     public function getCompanyLogo()
     {
-        $userId = 0;
-
-        if ($this->request->user()) {
-            $userId = $this->request
-                ->user()
-                ->userid
-            ;
-        }
-
-        $data = $this->repository->getCompanyLogo($userId);
+        $data = $this->repository->getCompanyLogo($this->user->userid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -173,16 +164,7 @@ class CompaniesController extends BaseRestController
      */
     public function getHomeSleepTestCompanies()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $data = $this->repository->getHomeSleepTestCompanies($docId);
+        $data = $this->repository->getHomeSleepTestCompanies($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -197,16 +179,7 @@ class CompaniesController extends BaseRestController
      */
     public function getBillingExclusiveCompany()
     {
-        $docId = 0;
-
-        if ($this->request->user()) {
-            $docId = $this->request
-                ->user()
-                ->docid
-            ;
-        }
-
-        $data = $this->repository->getBillingExclusiveCompany($docId);
+        $data = $this->repository->getBillingExclusiveCompany($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }

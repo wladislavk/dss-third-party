@@ -284,7 +284,4 @@ class PatientsApiTest extends ApiTestCase
         ];
         $this->assertEquals($expected, $this->getResponseData());
     }
-
-//Route::post('patients/edit/{patientId?}', 'PatientsController@editingPatient');
-
 }

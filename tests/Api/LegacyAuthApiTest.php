@@ -104,77 +104,6 @@ class LegacyAuthApiTest extends ApiTestCase
             ->assertResponseOk()
         ;
     }
-/*
-    public function testAuthHealthUserToken()
-    {
-        $this->enableDebug();
-        $this->json('get', '/auth-health', [], $this->userAuthHeader);
-        $this->seeJson([
-                'status' => 'Health',
-                'admin' => null,
-                'username' => $this->user->username,
-            ])
-            ->assertResponseOk()
-        ;
-    }
-
-    public function testAuthHealthAdminToken()
-    {
-        $this->enableDebug();
-        $this->json('get', '/auth-health', [], $this->adminAuthHeader);
-        $this->seeJson([
-                'status' => 'Health',
-                'user' => null,
-                'username' => $this->admin->username,
-            ])
-            ->assertResponseOk()
-        ;
-    }
-
-    public function testAuthAsUserToken()
-    {
-        $this->json('post', '/auth-as', [], $this->userAuthHeader);
-        $this->seeJson(['message' => 'Unauthorized'])
-            ->assertResponseStatus(Response::HTTP_UNAUTHORIZED)
-        ;
-    }
-
-    public function testAuthAsInvalidUser()
-    {
-        $this->json('post', '/auth-as', ['username' => self::INVALID_USERNAME], $this->adminAuthHeader);
-        $this->seeJson(['message' => 'Invalid credentials'])
-            ->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ;
-    }
-
-    public function testAuthAsValidUser()
-    {
-        $this->json('post', '/auth-as', ['username' => $this->user->username], $this->adminAuthHeader);
-        $this->seeJson(['status' => 'Authenticated'])
-            ->assertResponseOk()
-        ;
-    }
-
-    public function testAuthAsAuthHealth()
-    {
-        $this->json('post', '/auth-as', ['username' => $this->user->username], $this->adminAuthHeader);
-        $this->seeJson(['status' => 'Authenticated'])
-            ->assertResponseOk()
-        ;
-
-        $json = json_decode($this->response->getContent(), true);
-        $this->assertArrayHasKey('token', $json);
-
-        $this->hardRefreshApplication();
-        $this->enableDebug();
-
-        $this->json('get', '/auth-health', [], $this->generateAuthHeader('', $json['token']));
-        $this->seeJson(['status' => 'Health'])
-            ->seeJson(['username' => $this->admin->username])
-            ->seeJson(['username' => $this->user->username])
-            ->assertResponseOk()
-        ;
-    }
 
     public function testRefreshTokenNoToken()
     {
@@ -215,7 +144,7 @@ class LegacyAuthApiTest extends ApiTestCase
             ->assertResponseOk()
         ;
     }
-*/
+
     private function newAuthenticatable($class)
     {
         $passwordStruct = new Password();

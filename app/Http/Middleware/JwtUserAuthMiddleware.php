@@ -2,7 +2,6 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
-use DentalSleepSolutions\Exceptions\JWT\EmptyTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
@@ -56,8 +55,6 @@ class JwtUserAuthMiddleware
 
         try {
             $this->auth->toRole(JwtAuth::ROLE_USER, $token);
-        } catch (EmptyTokenException $e) {
-            return ApiResponse::responseError(MiddlewareErrors::TOKEN_MISSING, Response::HTTP_BAD_REQUEST);
         } catch (InvalidTokenException $e) {
             return ApiResponse::responseError(MiddlewareErrors::TOKEN_INVALID, Response::HTTP_BAD_REQUEST);
         } catch (InactiveTokenException $e) {

@@ -169,6 +169,7 @@ class EnrollmentApiTest extends BaseApiTestCase
                     'status_details' => 'Payer is working fine.',
                     'status_updated_at' => '2017-05-11T14:01:17Z',
                     'original_signature_pdf' => false,
+                    'credentials_required' => false,
                 ],
             ],
         ];
@@ -256,6 +257,7 @@ class EnrollmentApiTest extends BaseApiTestCase
                     'status_details' => 'Payer is working fine.',
                     'status_updated_at' => '2017-05-11T14:01:17Z',
                     'original_signature_pdf' => false,
+                    'credentials_required' => false,
                 ],
             ],
         ];
@@ -266,7 +268,7 @@ class EnrollmentApiTest extends BaseApiTestCase
     {
         if ($this->enrollmentId) {
             /** @var Enrollment|null $record */
-            $record = DB::table('dental_eligible_enrollment')
+            $record = \DB::table('dental_eligible_enrollment')
                 ->where('id', $this->enrollmentId);
             if ($record) {
                 $record->delete();

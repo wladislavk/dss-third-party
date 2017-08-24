@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Helpers;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\SummSleeplabRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummarySleeplabRepository;
 
 class PreauthHelper
 {
@@ -14,12 +14,12 @@ class PreauthHelper
     /** @var PatientRepository */
     private $patientRepository;
 
-    /** @var SummSleeplabRepository */
+    /** @var SummarySleeplabRepository */
     private $summSleeplabRepository;
 
     public function __construct(
         PatientRepository $patientRepository,
-        SummSleeplabRepository $summSleeplabRepository
+        SummarySleeplabRepository $summSleeplabRepository
     ) {
         $this->patientRepository = $patientRepository;
         $this->summSleeplabRepository = $summSleeplabRepository;

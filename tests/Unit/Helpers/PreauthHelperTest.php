@@ -3,12 +3,11 @@
 namespace Tests\Unit\Helpers;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Models\Dental\InsurancePreauth;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
-use DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab;
+use DentalSleepSolutions\Eloquent\Models\Dental\SummarySleeplab;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\SummSleeplabRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\SummarySleeplabRepository;
 use DentalSleepSolutions\Helpers\PreauthHelper;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
@@ -33,11 +32,11 @@ class PreauthHelperTest extends UnitTestCase
         $expected = [
             'patient_id' => 1,
             'diagnosis_code' => 'foo',
-            'front_office_request_date' => Carbon::now(),
             'status' => PreauthHelper::DSS_PREAUTH_PENDING,
             'userid' => 1,
             'viewed' => 1,
         ];
+        unset($newInsurancePreauth['front_office_request_date']);
         $this->assertEquals($expected, $newInsurancePreauth);
     }
 
@@ -49,11 +48,11 @@ class PreauthHelperTest extends UnitTestCase
         $expected = [
             'patient_id' => 2,
             'diagnosis_code' => '',
-            'front_office_request_date' => Carbon::now(),
             'status' => PreauthHelper::DSS_PREAUTH_PENDING,
             'userid' => 1,
             'viewed' => 1,
         ];
+        unset($newInsurancePreauth['front_office_request_date']);
         $this->assertEquals($expected, $newInsurancePreauth);
     }
 
@@ -96,8 +95,8 @@ class PreauthHelperTest extends UnitTestCase
 
     private function mockSummSleeplabRepository()
     {
-        /** @var SummSleeplabRepository|MockInterface $summSleeplabRepository */
-        $summSleeplabRepository = \Mockery::mock(SummSleeplabRepository::class);
+        /** @var SummarySleeplabRepository|MockInterface $summSleeplabRepository */
+        $summSleeplabRepository = \Mockery::mock(SummarySleeplabRepository::class);
         $summSleeplabRepository->shouldReceive('getPatientDiagnosis')
             ->andReturnUsing([$this, 'getPatientDiagnosisCallback']);
         return $summSleeplabRepository;
@@ -130,7 +129,7 @@ class PreauthHelperTest extends UnitTestCase
     public function getPatientDiagnosisCallback($patientId)
     {
         if ($patientId < 2) {
-            $result = new SummSleeplab();
+            $result = new SummarySleeplab();
             $result->diagnosis = 'foo';
             return $result;
         }

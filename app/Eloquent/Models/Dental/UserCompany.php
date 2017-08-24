@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Eloquent\Models\Company;
+use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
 /**
  * @SWG\Definition(
@@ -28,12 +29,14 @@ use DentalSleepSolutions\Eloquent\Models\Company;
  */
 class UserCompany extends AbstractModel
 {
+    use WithoutUpdatedTimestamp;
+
     /**
-     * Mass assignable attributes
+     * Guarded attributes
      *
      * @var array
      */
-    protected $fillable = ['userid', 'companyid', 'adddate', 'ip_address'];
+    protected $guarded = ['id'];
 
     /**
      * The table associated with the model.
@@ -43,9 +46,13 @@ class UserCompany extends AbstractModel
     protected $table = 'dental_user_company';
 
     /**
-     * @var bool
+     * The primary key for the model.
+     *
+     * @var string
      */
-    public $timestamps = false;
+    protected $primaryKey = 'id';
+
+    const CREATED_AT = 'adddate';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -57,7 +57,13 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('charges', 'ChargesController', ['except' => ['create', 'edit']]);
 
+    Route::resource('claim-notes', 'ClaimNotesController', ['except' => 'create', 'edit']);
+
     Route::resource('claim-note-attachments', 'ClaimNoteAttachmentsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('claims-electronic', 'ClaimsElectronicController', ['except' => ['create', 'edit']]);
+
+    Route::resource('claim-texts', 'ClaimTextsController', ['except' => ['create', 'edit']]);
 
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
     Route::post('companies/company-logo', 'CompaniesController@getCompanyLogo');
@@ -99,16 +105,34 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('document-categories', 'DocumentCategoriesController', ['except' => ['create', 'edit']]);
     Route::post('document-categories/active', 'DocumentCategoriesController@active');
 
+    Route::resource('edx-certificates', 'EdxCertificatesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('epworth-home-sleep-tests', 'EpworthHomeSleepTestsController', ['except' => ['create', 'edit']]);
+
     Route::resource('epworth-sleepiness-scale', 'EpworthSleepinessScaleController', ['except' => ['create', 'edit']]);
 
     Route::resource('external-companies', 'ExternalCompaniesController');
 
     Route::resource('external-user', 'ExternalUsersController');
 
+    Route::resource('extra-percase-invoices', 'ExtraPercaseInvoicesController', ['except' => ['create', 'edit']]);
+
     Route::resource('faxes', 'FaxesController', ['except' => ['create', 'edit']]);
     Route::post('faxes/alerts', 'FaxesController@getAlerts');
 
     Route::resource('fax-invoices', 'FaxInvoicesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('filemanager', 'FilemanagerController', ['except' => ['create', 'edit']]);
+
+    Route::resource('flowsheet-segments', 'FlowsheetSegmentsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('flowsheet-steps', 'FlowsheetStepsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('flowsheet-next-steps', 'FlowsheetNextStepsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('flowsheets', 'FlowsheetsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('forms', 'FormsController', ['except' => ['create', 'edit']]);
 
     Route::resource('gag-reflexes', 'GagReflexesController', ['except' => ['create', 'edit']]);
 
@@ -205,6 +229,14 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('medications', 'MedicationsController', ['except' => ['create', 'edit']]);
 
+    Route::resource('missing-teeth', 'MissingTeethController', ['except' => ['create', 'edit']]);
+
+    Route::resource('modifier-codes', 'ModifierCodesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('nasal-passages', 'NasalPassagesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('new-flowsheets', 'NewFlowsheetsController', ['except' => ['create', 'edit']]);
+
     Route::resource('notes', 'NotesController', ['except' => ['create', 'edit']]);
     Route::post('notes/unsigned', 'NotesController@getUnsigned');
 
@@ -249,9 +281,13 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::resource('payment-reports', 'PaymentReportsController', ['except' => ['create', 'edit']]);
     Route::post('payment-reports/number', 'PaymentReportsController@getNumber');
 
+    Route::resource('percase-invoices', 'PercaseInvoicesController', ['except' => ['create', 'edit']]);
+
     Route::resource('place-services', 'PlaceServicesController', ['except' => ['create', 'edit']]);
 
     Route::resource('plans', 'PlansController', ['except' => ['create', 'edit']]);
+
+    Route::resource('plan-texts', 'PlanTextsController', ['except' => ['create', 'edit']]);
 
     Route::resource('previous-treatments', 'PreviousTreatmentsController', ['except' => ['create', 'edit']]);
 
@@ -261,6 +297,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('qualifiers', 'QualifiersController', ['except' => ['create', 'edit']]);
     Route::post('qualifiers/active', 'QualifiersController@getActive');
+
+    Route::resource('q-page2-surgeries', 'QPage2SurgeriesController', ['except' => ['create', 'edit']]);
 
     Route::resource('recipients', 'RecipientsController', ['except' => ['create', 'edit']]);
 
@@ -287,6 +325,14 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
     Route::resource('summaries', 'SummariesController', ['except' => ['create', 'edit']]);
 
+    Route::resource('summary-sleeplabs', 'SummarySleeplabsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('support-attachments', 'SupportAttachmentsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('support-categories', 'SupportCategoriesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('support-responses', 'SupportResponsesController', ['except' => ['create', 'edit']]);
+
     Route::resource('support-tickets', 'SupportTicketsController', ['except' => ['create', 'edit']]);
     Route::post('support-tickets/number', 'SupportTicketsController@getNumber');
 
@@ -296,11 +342,21 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('tasks/{type}', 'TasksController@getType');
     Route::post('tasks/{type}/pid/{patientId}', 'TasksController@getTypeForPatient');
 
+    Route::resource('teeth-exams', 'TeethExamsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('thortons', 'ThortonsController', ['except' => ['create', 'edit']]);
+
     Route::resource('tmj-clinical-exams', 'TmjClinicalExamsController', ['except' => ['create', 'edit']]);
 
     Route::resource('tongue-clinical-exams', 'TongueClinicalExamsController', ['except' => ['create', 'edit']]);
 
+    Route::resource('tongues', 'TonguesController', ['except' => ['create', 'edit']]);
+
     Route::resource('tonsils-clinical-exams', 'TonsilsClinicalExamsController', ['except' => ['create', 'edit']]);
+
+    Route::resource('transaction-codes', 'TransactionCodesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('type-services', 'TypeServicesController', ['except' => ['create', 'edit']]);
 
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
     Route::post('users/current', 'UsersController@getCurrentUserInfo');
@@ -309,6 +365,14 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
     Route::post('users/payment-reports', 'UsersController@getPaymentReports');
     Route::post('users/check-logout', 'UsersController@checkLogout');
     Route::post('users/letter-info', 'UsersController@getLetterInfo');
+
+    Route::resource('user-companies', 'UserCompaniesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('user-hst-companies', 'UserHstCompaniesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('user-signatures', 'UserSignaturesController', ['except' => ['create', 'edit']]);
+
+    Route::resource('uvulas', 'UvulasController', ['except' => ['create', 'edit']]);
 
     Route::resource('memo', 'Api\ApiAdminMemoController', ['except' => ['create', 'edit']]);
     Route::post('memos/current', 'Api\ApiAdminMemoController@getCurrent');

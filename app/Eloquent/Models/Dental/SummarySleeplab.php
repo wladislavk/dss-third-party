@@ -6,7 +6,7 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 
 /**
  * @SWG\Definition(
- *     definition="SummSleeplab",
+ *     definition="SummarySleeplab",
  *     type="object",
  *     required={"id", "date", "sleeptesttype", "place", "apnea", "hypopnea", "ahi", "ahisupine", "rdi", "rdisupine", "o2nadir", "t9002", "sleepefficiency", "cpaplevel", "dentaldevice", "devicesetting", "diagnosis", "notes", "patiendid"},
  *     @SWG\Property(property="id", type="integer"),
@@ -75,7 +75,28 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
  * @property int|null $image_id
  * @mixin \Eloquent
  */
-class SummSleeplab extends AbstractModel
+class SummarySleeplab extends AbstractModel
 {
     protected $table = 'dental_summ_sleeplab';
+
+    /**
+     * Guarded attributes
+     *
+     * @var array
+     */
+    protected $guarded = ['id'];
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 }

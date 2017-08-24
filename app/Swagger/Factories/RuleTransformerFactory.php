@@ -8,8 +8,10 @@ use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\BooleanTransf
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\DateTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\EmailTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\IntegerTransformer;
+use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\JsonTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\RegexTransformer;
 use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\StringTransformer;
+use DentalSleepSolutions\Swagger\TypeTransformers\RuleTransformers\UrlTransformer;
 
 class RuleTransformerFactory extends AbstractTransformerFactory
 {
@@ -22,6 +24,8 @@ class RuleTransformerFactory extends AbstractTransformerFactory
         'regex' => RegexTransformer::class,
         'date' => DateTransformer::class,
         'boolean' => BooleanTransformer::class,
+        'json' => JsonTransformer::class,
+        'url' => UrlTransformer::class,
     ];
 
     /**

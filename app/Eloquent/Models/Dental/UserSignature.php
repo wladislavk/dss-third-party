@@ -1,8 +1,9 @@
 <?php
 
-namespace DentalSleepSolutions\Eloquent\Models;
+namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
 /**
  * @SWG\Definition(
@@ -25,8 +26,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $ip_address
  * @mixin \Eloquent
  */
-class UserSignature extends Model
+class UserSignature extends AbstractModel
 {
+    use WithoutUpdatedTimestamp;
+
     /**
      * The table associated with the model.
      *
@@ -35,14 +38,11 @@ class UserSignature extends Model
     protected $table = 'dental_user_signatures';
 
     /**
-     * Mass assignable attributes
+     * Guarded attributes
      *
      * @var array
      */
-    protected $fillable = ['id', 'user_id', 'signature_json', 'adddate', 'ip_address'];
+    protected $guarded = ['id'];
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+    const CREATED_AT = 'adddate';
 }

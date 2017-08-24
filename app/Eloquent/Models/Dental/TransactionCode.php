@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
 /**
  * @SWG\Definition(
@@ -49,6 +50,28 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
  */
 class TransactionCode extends AbstractModel
 {
+    use WithoutUpdatedTimestamp;
+
+    /**
+     * Guarded attributes
+     *
+     * @var array
+     */
+    protected $guarded = ['transaction_codeid'];
+
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
     protected $table = 'dental_transaction_code';
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
     protected $primaryKey = 'transaction_codeid';
+
+    const CREATED_AT = 'adddate';
 }

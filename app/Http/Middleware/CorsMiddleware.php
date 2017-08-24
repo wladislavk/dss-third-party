@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
 
-class ApiMiddleware
+class CorsMiddleware
 {
     /**
      * Handle an incoming request.

@@ -57,6 +57,12 @@ class BindingNamingConvention
         $config->shouldReceive('get')
             ->andReturnNull()
         ;
+        $request->shouldReceive('user')
+            ->once()
+        ;
+        $request->shouldReceive('admin')
+            ->once()
+        ;
 
         $this->controller = new $className($config, $repository, $request);
         if (!$this->controller instanceof BaseRestController) {

@@ -18,6 +18,7 @@ class DentrixAuth
     const ROLE_DENTRIX_COMPANY = 'DentrixCompany';
     const ROLE_DENTRIX_USER = 'DentrixUser';
     const ROLE_USER = 'User';
+    const USER_MODEL_KEY = 'userid';
 
     /** @var DentrixCompanyGuard */
     private $dentrixCompanyGuard;
@@ -110,7 +111,9 @@ class DentrixAuth
     private function toUser($id)
     {
         $authenticated = $this->guard(self::ROLE_USER)
-            ->loginUsingId($id)
+            ->once([
+                self::USER_MODEL_KEY => $id
+            ])
         ;
 
         if (!$authenticated) {

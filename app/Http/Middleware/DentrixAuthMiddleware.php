@@ -33,7 +33,7 @@ class DentrixAuthMiddleware
             $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_COMPANY, $companyToken);
         } catch (EmptyTokenException $e) {
             return ApiResponse::responseError(MiddlewareErrors::COMPANY_TOKEN_MISSING, Response::HTTP_BAD_REQUEST);
-        } catch (InvalidTokenException $e) {
+        } catch (AuthenticatableNotFoundException $e) {
             return ApiResponse::responseError(
                 MiddlewareErrors::COMPANY_TOKEN_INVALID, Response::HTTP_UNPROCESSABLE_ENTITY
             );
@@ -43,7 +43,7 @@ class DentrixAuthMiddleware
             $this->auth->toRole(DentrixAuth::ROLE_DENTRIX_USER, $userToken);
         } catch (EmptyTokenException $e) {
             return ApiResponse::responseError(MiddlewareErrors::USER_TOKEN_MISSING, Response::HTTP_BAD_REQUEST);
-        } catch (InvalidTokenException $e) {
+        } catch (AuthenticatableNotFoundException $e) {
             return ApiResponse::responseError(MiddlewareErrors::USER_TOKEN_INVALID, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

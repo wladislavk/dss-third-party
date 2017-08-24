@@ -43,8 +43,8 @@ class JwtUserAuthMiddleware
         $authHeader = $request->header(self::AUTH_HEADER, '');
         $authHeaderStart = strlen(self::AUTH_HEADER_START);
 
-        if (!substr($authHeader, 0, $authHeaderStart) !== self::AUTH_HEADER_START) {
-            return $next($request);
+        if (substr($authHeader, 0, $authHeaderStart) !== self::AUTH_HEADER_START) {
+            return ApiResponse::responseError(MiddlewareErrors::TOKEN_MISSING, Response::HTTP_BAD_REQUEST);
         }
 
         $token = substr($authHeader, $authHeaderStart);

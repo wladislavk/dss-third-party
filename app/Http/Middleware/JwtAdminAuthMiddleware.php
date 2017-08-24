@@ -33,7 +33,7 @@ class JwtAdminAuthMiddleware
         $authHeader = $request->header(self::AUTH_HEADER, '');
         $authHeaderStart = strlen(self::AUTH_HEADER_START);
 
-        if (!substr($authHeader, 0, $authHeaderStart) !== self::AUTH_HEADER_START) {
+        if (substr($authHeader, 0, $authHeaderStart) !== self::AUTH_HEADER_START) {
             return $next($request);
         }
 

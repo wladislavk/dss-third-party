@@ -629,7 +629,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\EpworthSleepinessSc
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany::class, function ($faker) {
     return [
-        'software' => $faker->word,
+        'software' => $faker->username,
         'api_key' => $faker->md5,
         'valid_from' => $faker->date() . ' ' . $faker->time(),
         'valid_to' => $faker->date() . ' ' . $faker->time(),

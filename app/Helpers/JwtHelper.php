@@ -62,7 +62,7 @@ class JwtHelper
         $payload->jwtUniqueId = md5($payload->issuer . '-' . $payload->issuedAt);
 
         $baseClaims = $payload->toArray();
-        $claims = array_merge($customClaims, $baseClaims);
+        $claims = array_merge($baseClaims, $customClaims);
 
         /**
          * @todo: Unreachable JWTException in NamshiAdapter::encode()

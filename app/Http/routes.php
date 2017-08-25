@@ -5,11 +5,11 @@
 |--------------------------------------------------------------------------
 */
 Route::get('health-check', 'Api\HealthCheckController@index');
-Route::post('auth', 'Api\ApiAuthController@auth');
+Route::post('auth', 'Auth\AuthController@auth');
 
 Route::group(['middleware' => ['jwt.auth.admin', 'jwt.auth.user']], function () {
-    Route::get('auth-health', 'Api\ApiAuthController@authHealth');
-    Route::post('refresh-token', 'Api\ApiAuthController@refreshToken');
+    Route::get('auth-health', 'Auth\AuthController@authHealth');
+    Route::post('refresh-token', 'Auth\AuthController@refreshToken');
 });
 
 

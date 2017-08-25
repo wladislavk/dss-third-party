@@ -75,16 +75,12 @@ class GenerateJwtToken extends Command
             return;
         }
 
-        try {
-            $token = $this->jwtHelper
-                ->createToken([
-                    JwtAuth::CLAIM_ROLE_INDEX => $role,
-                    JwtAuth::CLAIM_ID_INDEX => $id
-                ], $expire, $notBefore)
-            ;
-        } catch (JwtException $e) {
-            return;
-        }
+        $token = $this->jwtHelper
+            ->createToken([
+                JwtAuth::CLAIM_ROLE_INDEX => $role,
+                JwtAuth::CLAIM_ID_INDEX => $id
+            ], $expire, $notBefore)
+        ;
 
         $this->info($token);
     }

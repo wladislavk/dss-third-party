@@ -1,11 +1,12 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser;
-use Tests\TestCases\ApiTestCase;
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use Faker\Factory as Faker;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCases\ApiTestCase;
 
 class ExternalUsersApiTest extends ApiTestCase
 {
@@ -13,49 +14,73 @@ class ExternalUsersApiTest extends ApiTestCase
 
     use WithoutMiddleware, DatabaseTransactions;
 
-    public function testListExternalCompanies()
+    public function setUp()
     {
-        $this->get(self::ENDPOINT)
-            ->assertResponseOk();
+        parent::setUp();
+    }
+
+    public function testListExternalUsers()
+    {
+        $this->get(self::ENDPOINT);
+        $this->assertResponseOk();
     }
 
     public function testShowExternalUser()
     {
-        $record = factory(ExternalUser::class)->create();
-        $this->get(self::ENDPOINT . '/' . $record->user_id)
-            ->assertResponseOk();
+        $record = $this->createExternalUser();
+        $this->get(self::ENDPOINT . '/' . $record->user_id);
+        $this->assertResponseOk();
     }
 
     public function testStoreExternalUser()
     {
-        $record = factory(ExternalUser::class)->make();
+        $record = $this->createExternalUser(false);
         $data = $record->toArray();
 
-        $this->json('post', self::ENDPOINT, $data)
-            ->seeInDatabase($record->getTable(), ['api_key' => $record->api_key])
-            ->assertResponseOk()
-        ;
+        $this->json('post', self::ENDPOINT, $data);
+        $this->assertResponseOk();
+        $this->seeInDatabase($record->getTable(), [
+            'user_id' => $record->user_id,
+            'api_key' => $record->api_key,
+        ]);
     }
 
     public function testUpdateExternalUser()
     {
+        $record = $this->createExternalUser();
         $faker = Faker::create();
-        $record = factory(ExternalUser::class)->create();
+        $record->api_key = $faker->sha1;
         $data = $record->toArray();
-        $data['api_key'] = $faker->sha1;
 
-        $this->json('put', self::ENDPOINT . '/' . $record->user_id, $data)
-            ->seeInDatabase($record->getTable(), ['api_key' => $data['api_key']])
-            ->assertResponseOk()
-        ;
+        $this->json('put', self::ENDPOINT . '/' . $record->user_id, $data);
+        $this->assertResponseOk();
+        $this->seeInDatabase($record->getTable(), [
+            'user_id' => $record->user_id,
+            'api_key' => $record->api_key,
+        ]);
     }
 
     public function testDestroyExternalUser()
     {
-        $record = factory(ExternalUser::class)->create();
-        $this->delete(self::ENDPOINT . '/' . $record->user_id)
-            ->notSeeInDatabase($record->getTable(), ['id' => $record->id])
-            ->assertResponseOk()
-        ;
+        $record = $this->createExternalUser();
+        $this->delete(self::ENDPOINT . '/' . $record->user_id);
+        $this->assertResponseOk();
+        $this->notSeeInDatabase($record->getTable(), [
+            'user_id' => $record->user_id
+        ]);
+    }
+
+    private function createExternalUser($save = true)
+    {
+        $user = factory(User::class)->create();
+        $externalUser = factory(ExternalUser::class)->make([
+            'user_id' => $user->userid,
+        ]);
+
+        if ($save) {
+            $externalUser->save();
+        }
+
+        return $externalUser;
     }
 }

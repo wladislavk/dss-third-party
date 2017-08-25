@@ -650,8 +650,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany::cl
         'description' => $faker->catchPhrase,
         'status' => $faker->randomElement([1, 2, 3]),
         'reason' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-        'created_by' => $faker->randomDigit,
-        'updated_by' => $faker->randomDigit,
     ];
 });
 

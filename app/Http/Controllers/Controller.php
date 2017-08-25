@@ -13,6 +13,7 @@ abstract class Controller extends BaseController
 {
     const EMPTY_MODEL_ATTRIBUTES = [
         'id' => '',
+        'adminid' => 0,
         'userid' => 0,
         'docid' => 0,
         'user_type' => 0,

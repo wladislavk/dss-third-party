@@ -18,13 +18,12 @@ class ApiLogMiddlewareTest extends MiddlewareTestCase
         $testData = $this->dataFactory();
         $this->post(self::TEST_ROUTE, $testData);
 
-        $this
-            ->seeInDatabase('dental_api_logs', [
+        $this->assertResponseOk();
+        $this->seeInDatabase('dental_api_logs', [
                 'method' => 'post',
                 'route' => self::TEST_ROUTE,
                 'payload' => json_encode($testData),
             ])
-            ->assertResponseOk()
         ;
     }
 

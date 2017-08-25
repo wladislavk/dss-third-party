@@ -41,11 +41,10 @@ class JwtUserAuthMiddlewareTest extends MiddlewareTestCase
     {
         $this->get(self::TEST_ROUTE);
 
+        $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
         $this->seeJson([
             'message' => JwtMiddlewareErrors::TOKEN_INVALID
-        ])
-            ->assertResponseStatus(Response::HTTP_BAD_REQUEST)
-        ;
+        ]);
     }
 
     public function testInvalidToken()
@@ -55,11 +54,10 @@ class JwtUserAuthMiddlewareTest extends MiddlewareTestCase
             JwtUserAuthMiddleware::AUTH_HEADER => JwtUserAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
         $this->seeJson([
             'message' => JwtMiddlewareErrors::TOKEN_INVALID
-        ])
-            ->assertResponseStatus(Response::HTTP_BAD_REQUEST)
-        ;
+        ]);
     }
 
     public function testInactiveToken()
@@ -69,11 +67,10 @@ class JwtUserAuthMiddlewareTest extends MiddlewareTestCase
             JwtUserAuthMiddleware::AUTH_HEADER => JwtUserAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
             'message' => JwtMiddlewareErrors::TOKEN_INACTIVE
-        ])
-            ->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ;
+        ]);
     }
 
     public function testExpiredToken()
@@ -83,11 +80,10 @@ class JwtUserAuthMiddlewareTest extends MiddlewareTestCase
             JwtUserAuthMiddleware::AUTH_HEADER => JwtUserAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
             'message' => JwtMiddlewareErrors::TOKEN_EXPIRED
-        ])
-            ->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ;
+        ]);
     }
 
     public function testInvalidPayload()
@@ -97,11 +93,10 @@ class JwtUserAuthMiddlewareTest extends MiddlewareTestCase
             JwtUserAuthMiddleware::AUTH_HEADER => JwtUserAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
             'message' => JwtMiddlewareErrors::TOKEN_INVALID
-        ])
-            ->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ;
+        ]);
     }
 
     public function testUserNotFound()
@@ -113,11 +108,10 @@ class JwtUserAuthMiddlewareTest extends MiddlewareTestCase
             JwtUserAuthMiddleware::AUTH_HEADER => JwtUserAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
             'message' => JwtMiddlewareErrors::USER_NOT_FOUND
-        ])
-            ->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ;
+        ]);
     }
 
     public function testLoggedIn()
@@ -128,11 +122,10 @@ class JwtUserAuthMiddlewareTest extends MiddlewareTestCase
             JwtUserAuthMiddleware::AUTH_HEADER => JwtUserAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseOk();
         $this->seeJson([
             'username' => $this->user->username
-        ])
-            ->assertResponseOk()
-        ;
+        ]);
     }
 
     protected function requestHandler(Request $request)

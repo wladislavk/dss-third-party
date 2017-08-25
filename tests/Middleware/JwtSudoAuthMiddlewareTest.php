@@ -50,13 +50,13 @@ class JwtSudoAuthMiddlewareTest extends MiddlewareTestCase
             JwtUserAuthMiddleware::AUTH_HEADER => JwtUserAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseOk();
         $this->seeJson([
                 'username' => $this->admin->username
             ])
             ->dontSeeJson([
                 'username' => $this->user->username
             ])
-            ->assertResponseOk()
         ;
     }
 
@@ -72,13 +72,13 @@ class JwtSudoAuthMiddlewareTest extends MiddlewareTestCase
             JwtUserAuthMiddleware::AUTH_HEADER => JwtUserAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseOk();
         $this->seeJson([
                 'username' => $this->admin->username
             ])
             ->dontSeeJson([
                 'username' => $this->user->username
             ])
-            ->assertResponseOk()
         ;
     }
 
@@ -93,13 +93,13 @@ class JwtSudoAuthMiddlewareTest extends MiddlewareTestCase
             JwtUserAuthMiddleware::AUTH_HEADER => JwtUserAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseOk();
         $this->seeJson([
                 'username' => $this->admin->username
             ])
             ->seeJson([
                 'username' => $this->user->username
             ])
-            ->assertResponseOk()
         ;
     }
 

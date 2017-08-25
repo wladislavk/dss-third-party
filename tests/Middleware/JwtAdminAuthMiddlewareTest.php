@@ -39,11 +39,10 @@ class JwtAdminAuthMiddlewareTest extends MiddlewareTestCase
     {
         $this->get(self::TEST_ROUTE);
 
+        $this->assertResponseOk();
         $this->seeJson([
             'data' => null
-        ])
-            ->assertResponseOk()
-        ;
+        ]);
     }
 
     public function testInactiveToken()
@@ -53,11 +52,10 @@ class JwtAdminAuthMiddlewareTest extends MiddlewareTestCase
             JwtAdminAuthMiddleware::AUTH_HEADER => JwtAdminAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseOk();
         $this->seeJson([
             'data' => null
-        ])
-            ->assertResponseOk()
-        ;
+        ]);
     }
 
     public function testExpiredToken()
@@ -67,11 +65,10 @@ class JwtAdminAuthMiddlewareTest extends MiddlewareTestCase
             JwtAdminAuthMiddleware::AUTH_HEADER => JwtAdminAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseOk();
         $this->seeJson([
             'data' => null
-        ])
-            ->assertResponseOk()
-        ;
+        ]);
     }
 
     public function testUserNotFound()
@@ -83,11 +80,10 @@ class JwtAdminAuthMiddlewareTest extends MiddlewareTestCase
             JwtAdminAuthMiddleware::AUTH_HEADER => JwtAdminAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseOk();
         $this->seeJson([
             'data' => null
-        ])
-            ->assertResponseOk()
-        ;
+        ]);
     }
 
     public function testLoggedIn()
@@ -98,11 +94,10 @@ class JwtAdminAuthMiddlewareTest extends MiddlewareTestCase
             JwtAdminAuthMiddleware::AUTH_HEADER => JwtAdminAuthMiddleware::AUTH_HEADER_START . $token
         ]);
 
+        $this->assertResponseOk();
         $this->seeJson([
             'username' => $this->admin->username
-        ])
-            ->assertResponseOk()
-        ;
+        ]);
     }
 
     protected function requestHandler(Request $request)

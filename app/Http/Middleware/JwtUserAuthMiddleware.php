@@ -2,15 +2,15 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
+use DentalSleepSolutions\Auth\JwtAuth;
+use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
+use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
+use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
-use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
-use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
-use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Auth\JwtAuth;
-use DentalSleepSolutions\Structs\JwtMiddlewareErrors as MiddlewareErrors;
 use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Structs\JwtMiddlewareErrors as MiddlewareErrors;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 

@@ -15,11 +15,11 @@ class CorsMiddlewareTest extends MiddlewareTestCase
         $this->get(self::TEST_ROUTE);
 
         $hostname = parse_url($this->baseUrl, PHP_URL_HOST);
+        $this->assertResponseOk();
         $this
             ->seeHeader('Access-Control-Allow-Origin', $hostname)
             ->seeHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
             ->seeHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization')
-            ->assertResponseOk()
         ;
     }
 }

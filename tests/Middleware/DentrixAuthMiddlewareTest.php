@@ -44,11 +44,10 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
     {
         $this->post(self::TEST_ROUTE, []);
 
+        $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
         $this->seeJson([
-                'message' => DentrixMiddlewareErrors::COMPANY_TOKEN_MISSING
-            ])
-            ->assertResponseStatus(Response::HTTP_BAD_REQUEST)
-        ;
+            'message' => DentrixMiddlewareErrors::COMPANY_TOKEN_MISSING
+        ]);
     }
 
     public function testInvalidCompanyToken()
@@ -57,11 +56,10 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
             DentrixAuthMiddleware::COMPANY_TOKEN_INDEX => '.'
         ]);
 
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
-                'message' => DentrixMiddlewareErrors::COMPANY_TOKEN_INVALID
-            ])
-            ->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ;
+            'message' => DentrixMiddlewareErrors::COMPANY_TOKEN_INVALID
+        ]);
     }
 
     public function testNoUserToken()
@@ -70,11 +68,10 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
             DentrixAuthMiddleware::COMPANY_TOKEN_INDEX => $this->dentrixCompany->api_key,
         ]);
 
+        $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
         $this->seeJson([
-                'message' => DentrixMiddlewareErrors::USER_TOKEN_MISSING
-            ])
-            ->assertResponseStatus(Response::HTTP_BAD_REQUEST)
-        ;
+            'message' => DentrixMiddlewareErrors::USER_TOKEN_MISSING
+        ]);
     }
 
     public function testInvalidUserToken()
@@ -84,11 +81,10 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
             DentrixAuthMiddleware::USER_TOKEN_INDEX => '.',
         ]);
 
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
-                'message' => DentrixMiddlewareErrors::USER_TOKEN_INVALID
-            ])
-            ->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ;
+            'message' => DentrixMiddlewareErrors::USER_TOKEN_INVALID
+        ]);
     }
 
     public function testUserNotFound()
@@ -100,11 +96,10 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
             DentrixAuthMiddleware::USER_TOKEN_INDEX => $this->dentrixUser->api_key,
         ]);
 
+        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->seeJson([
-                'message' => DentrixMiddlewareErrors::USER_NOT_FOUND
-            ])
-            ->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-        ;
+            'message' => DentrixMiddlewareErrors::USER_NOT_FOUND
+        ]);
     }
 
     public function testLoggedIn()
@@ -114,11 +109,10 @@ class DentrixAuthMiddlewareTest extends MiddlewareTestCase
             DentrixAuthMiddleware::USER_TOKEN_INDEX => $this->dentrixUser->api_key,
         ]);
 
+        $this->assertResponseOk();
         $this->seeJson([
-                DentrixAuth::USER_MODEL_KEY => $this->user->{DentrixAuth::USER_MODEL_KEY}
-            ])
-            ->assertResponseOk()
-        ;
+            DentrixAuth::USER_MODEL_KEY => $this->user->{DentrixAuth::USER_MODEL_KEY}
+        ]);
     }
 
     protected function requestHandler(Request $request)

@@ -5,7 +5,6 @@ use Closure;
 use DentalSleepSolutions\Auth\DentrixAuth;
 use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
 use DentalSleepSolutions\Exceptions\JWT\EmptyTokenException;
-use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Structs\DentrixMiddlewareErrors as MiddlewareErrors;

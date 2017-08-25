@@ -2,8 +2,7 @@
 
 namespace Tests\Unit\Auth;
 
-use DentalSleepSolutions\Auth\Legacy;
-use DentalSleepSolutions\Contracts\PasswordInterface;
+use DentalSleepSolutions\Auth\LegacyAuth;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\UserRepository;
 use DentalSleepSolutions\Helpers\PasswordGenerator;
@@ -11,7 +10,7 @@ use Illuminate\Auth\AuthManager;
 use Illuminate\Support\Arr;
 use Tests\TestCases\UnitTestCase;
 
-class LegacyTest extends UnitTestCase
+class LegacyAuthTest extends UnitTestCase
 {
     const USERNAME = 'username';
     const PASSWORD = 'password';
@@ -21,18 +20,15 @@ class LegacyTest extends UnitTestCase
     const INVALID_USER_ID = self::USER_ID . '2';
     const PASSWORD_GENERATOR_VERIFY = 'verify';
 
-    /** @var array */
-    private $whereArguments;
-
-    /** @var Legacy */
-    private $legacy;
+    /** @var LegacyAuth */
+    private $legacyAuth;
 
     public function setUp()
     {
         $authManager = $this->mockAuthManager();
         $userRepository = $this->mockUserRepository();
         $passwordGenerator = $this->mockPasswordGenerator();
-        $this->legacy = new Legacy($authManager, $userRepository, $passwordGenerator);
+        $this->legacyAuth = new LegacyAuth($authManager, $userRepository, $passwordGenerator);
     }
 
     public function testInvalidUsername()
@@ -41,7 +37,7 @@ class LegacyTest extends UnitTestCase
             'username' => '',
             'password' => self::PASSWORD,
         ];
-        $result = $this->legacy->byCredentials($credentials);
+        $result = $this->legacyAuth->byCredentials($credentials);
         $this->assertFalse($result);
     }
 
@@ -51,7 +47,7 @@ class LegacyTest extends UnitTestCase
             'username' => self::USERNAME,
             'password' => '',
         ];
-        $result = $this->legacy->byCredentials($credentials);
+        $result = $this->legacyAuth->byCredentials($credentials);
         $this->assertFalse($result);
     }
 
@@ -61,19 +57,19 @@ class LegacyTest extends UnitTestCase
             'username' => self::USERNAME,
             'password' => self::PASSWORD,
         ];
-        $result = $this->legacy->byCredentials($credentials);
+        $result = $this->legacyAuth->byCredentials($credentials);
         $this->assertTrue($result);
     }
 
     public function testByIdInvalidId()
     {
-        $result = $this->legacy->byId(self::INVALID_USER_ID);
+        $result = $this->legacyAuth->byId(self::INVALID_USER_ID);
         $this->assertEmpty($result);
     }
 
     public function testByIdValidId()
     {
-        $result = $this->legacy->byId(self::USER_ID);
+        $result = $this->legacyAuth->byId(self::USER_ID);
         $this->assertTrue($result);
     }
 
@@ -89,8 +85,6 @@ class LegacyTest extends UnitTestCase
 
     private function mockUserRepository()
     {
-        $this->whereArguments = [];
-
         $mock = \Mockery::mock(UserRepository::class);
         $mock->shouldReceive('findByCredentials')
             ->atMost(1)

@@ -146,7 +146,7 @@ return [
         |
         */
 
-        'auth' => DentalSleepSolutions\Auth\Legacy::class,
+        'auth' => DentalSleepSolutions\Auth\LegacyAuth::class,
 
         /*
         |--------------------------------------------------------------------------

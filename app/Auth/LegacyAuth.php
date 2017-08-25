@@ -16,7 +16,7 @@ use Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter;
  *
  * @see self::check
  */
-class Legacy extends IlluminateAuthAdapter
+class LegacyAuth extends IlluminateAuthAdapter
 {
     /** @var UserRepository */
     private $userRepository;

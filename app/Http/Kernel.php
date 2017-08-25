@@ -24,7 +24,6 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'jwt.auth.admin' => \DentalSleepSolutions\Http\Middleware\JwtAdminAuthMiddleware::class,
         'jwt.auth.user' => \DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware::class,
-        'auth' => \DentalSleepSolutions\Http\Middleware\Authenticate::class,
         'dentrix.auth' => \DentalSleepSolutions\Http\Middleware\DentrixAuthMiddleware::class,
         'api.log' => \DentalSleepSolutions\Http\Middleware\ApiLogMiddleware::class,
     ];

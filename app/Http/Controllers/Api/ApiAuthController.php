@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use DentalSleepSolutions\Auth\JwtAuth;
-use DentalSleepSolutions\Auth\Legacy as LegacyAuth;
+use DentalSleepSolutions\Auth\LegacyAuth;
 use DentalSleepSolutions\Exceptions\AuthException;
 use DentalSleepSolutions\Exceptions\JwtException;
 use DentalSleepSolutions\Http\Controllers\Controller;

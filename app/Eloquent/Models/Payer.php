@@ -57,7 +57,7 @@ class Payer extends AbstractModel
      * @param string|null $endpoint
      * @return string[]
      */
-    public function requiredFields($endpoint)
+    public function requiredFields($endpoint = null)
     {
         $endpoints = collect((array)$this->supported_endpoints);
 

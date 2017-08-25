@@ -4,17 +4,13 @@
 | Authenticate user and get a token for subsequent requests
 |--------------------------------------------------------------------------
 */
+Route::get('health-check', 'Api\HealthCheckController@index');
 Route::post('auth', 'Api\ApiAuthController@auth');
 
 Route::group(['middleware' => ['jwt.auth.admin', 'jwt.auth.user']], function () {
     Route::get('auth-health', 'Api\ApiAuthController@authHealth');
-});
-
-Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('refresh-token', 'Api\ApiAuthController@refreshToken');
 });
-
-Route::get('health-check', 'Api\HealthCheckController@index');
 
 
 /*
@@ -37,7 +33,7 @@ Route::group(['prefix' => 'webhooks'], function () {
 |--------------------------------------------------------------------------
 */
 
-Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
+Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth.user']], function () {
 
     // routes are sorted by controller names with RESTful routes always coming first
 
@@ -373,6 +369,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () {
 
 });
 
-Route::group(['middleware' => ['api.log', 'external.validate']], function () {
+Route::group(['middleware' => ['api.log', 'dentrix.auth']], function () {
     Route::post('external-patient', 'Patient\ExternalPatientController@store');
 });

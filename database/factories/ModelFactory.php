@@ -17,28 +17,26 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Payer::class, function ($f
     $endpoints = ['coverage', 'cost estimate', 'fetch and append', 'proffessional claims'];
     $supported = [];
     foreach ($endpoints as $endpoint) {
-        if (rand(0,1)) {
-            $supported[] = [
-                'endpoint' => $endpoint,
-                'pass_through_fee' => 0,
-                'enrollment_required' => $faker->randomElement([true, false]),
-                'average_enrollment_process_time' => null,
-                'enrollment_mandatory_fields' => $faker->randomElements([
-                    'provider_name',
-                    'address',
-                    'npi',
-                    'city',
-                    'state',
-                    'zip',
-                ], rand(0,6)),
-                'signature_required' => $faker->randomElement(false, true),
-                'blue_ink_required' => $faker->randomElement(false, true),
-                'message' => null,
-                'status' => $status = $faker->randomElement(['available', 'unavailable']),
-                'status_details' => ($status == 'available') ? 'Payer is working fine.' : 'Payer is down for maintenance',
-                'status_updated_at' => $faker->dateTimeBetween($created),
-            ];
-        }
+        $supported[] = [
+            'endpoint' => $endpoint,
+            'pass_through_fee' => 0,
+            'enrollment_required' => $faker->randomElement([true, false]),
+            'average_enrollment_process_time' => null,
+            'enrollment_mandatory_fields' => $faker->randomElements([
+                'provider_name',
+                'address',
+                'npi',
+                'city',
+                'state',
+                'zip',
+            ], rand(1, 6)),
+            'signature_required' => $faker->randomElement(false, true),
+            'blue_ink_required' => $faker->randomElement(false, true),
+            'message' => null,
+            'status' => $status = $faker->randomElement(['available', 'unavailable']),
+            'status_details' => ($status == 'available') ? 'Payer is working fine.' : 'Payer is down for maintenance',
+            'status_updated_at' => $faker->dateTimeBetween($created),
+        ];
     }
 
     return [

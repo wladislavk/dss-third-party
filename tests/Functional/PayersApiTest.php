@@ -1,6 +1,8 @@
 <?php
 namespace Tests\Functional;
 
+use Illuminate\Support\Arr;
+use DentalSleepSolutions\Eloquent\Models\Payer;
 use DentalSleepSolutions\Eloquent\Repositories\PayerRepository;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -11,70 +13,39 @@ class PayersApiTest extends ApiTestCase
 {
     use DatabaseTransactions, WithoutMiddleware;
 
-    /** @test */
-    public function required_fields_for_all_endpoints()
+    /** @var PayerRepository */
+    private $payerRepository;
+
+    public function setUp()
     {
-        factory(PayerRepository::class, 5)->create();
+        parent::setUp();
+        $this->payerRepository = $this->app->make(PayerRepository::class);
+    }
 
-        PayerRepository::create($this->getPayerData());
+    public function testRequiredFieldsForAllEndpoints()
+    {
+        $payer = factory(Payer::class)->create();
+        $mandatoryFields = $payer->requiredFields();
 
-        $this->get('api/v1/payers/RIBLS/required-fields')
-             ->seeJson(['data' => ['provider_name', 'address', 'city', 'state', 'zip', 'npi']])
-             ->assertResponseOk();
+        $this->get("api/v1/payers/{$payer->payer_id}/required-fields");
+        $this->assertResponseOk();
+        $this->seeJson([
+            'data' => $mandatoryFields
+        ]);
     }
 
     /** @test */
-    public function required_fields_for_single_endpoint()
+    public function testRequiredFieldsForSingleEndpoint()
     {
-        factory(PayerRepository::class, 5)->create();
+        $payer = factory(Payer::class)->create();
+        $supportedEndpoints = $payer->supported_endpoints;
+        $firstEndpoint = $supportedEndpoints[0];
+        $mandatoryFields = $payer->requiredFields($firstEndpoint['endpoint']);
 
-        PayerRepository::create($this->getPayerData());
-
-        $this->get('api/v1/payers/RIBLS/required-fields?endpoint=coverage')
-             ->seeJson(['data' => ['npi']])
-             ->assertResponseOk();
-    }
-
-    protected function getPayerData()
-    {
-        return [
-            "payer_id" => "RIBLS",
-            "supported_endpoints" => [
-                [
-                    "endpoint" => "coverage",
-                    "pass_through_fee" => 0,
-                    "enrollment_required" => true,
-                    "average_enrollment_process_time" => null,
-                    "enrollment_mandatory_fields" => [
-                        "npi",
-                    ],
-                    "signature_required" => false,
-                    "blue_ink_required" => false,
-                    "message" => null,
-                    "status" => "available",
-                    "status_details" => "Payer is working fine.",
-                    "status_updated_at" => "2014-05-14T23:45:57Z",
-                ],
-                [
-                    "endpoint" => "payment reports",
-                    "pass_through_fee" => 0,
-                    "enrollment_required" => true,
-                    "average_enrollment_process_time" => null,
-                    "enrollment_mandatory_fields" => [
-                        "provider_name",
-                        "address",
-                        "city",
-                        "state",
-                        "zip",
-                    ],
-                    "signature_required" => true,
-                    "blue_ink_required" => false,
-                    "message" => null,
-                    "status" => "available",
-                    "status_details" => "Payer is working fine.",
-                    "status_updated_at" => "2014-05-14T23:45:57Z",
-                ],
-            ],
-        ];
+        $this->get("api/v1/payers/{$payer->payer_id}/required-fields?endpoint=" . urlencode($firstEndpoint['endpoint']));
+        $this->assertResponseOk();
+        $this->seeJson([
+            'data' => $mandatoryFields
+        ]);
     }
 }

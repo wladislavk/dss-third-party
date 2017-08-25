@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Functional;
 
-use DentalSleepSolutions\Eloquent\Models\PayerRepository;
+use DentalSleepSolutions\Eloquent\Repositories\PayerRepository;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\ApiTestCase;

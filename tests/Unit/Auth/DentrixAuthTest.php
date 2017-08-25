@@ -192,16 +192,16 @@ class DentrixAuthTest extends UnitTestCase
     private function mockUserGuard()
     {
         $mock = \Mockery::mock(UserGuard::class);
-        $mock->shouldReceive('loginUsingId')
+        $mock->shouldReceive('once')
             ->atMost(1)
             ->withAnyArgs([
-                self::INVALID_TOKEN,
-                self::TOKEN
+                [DentrixAuth::USER_MODEL_KEY => self::INVALID_TOKEN],
+                [DentrixAuth::USER_MODEL_KEY => self::TOKEN],
             ])
-            ->andReturnUsing(function ($token) {
-                $this->userState = $token;
+            ->andReturnUsing(function (array $credentials) {
+                $this->userState = $credentials[DentrixAuth::USER_MODEL_KEY];
 
-                if (self::TOKEN === $token) {
+                if (self::TOKEN === $this->userState) {
                     return true;
                 }
 

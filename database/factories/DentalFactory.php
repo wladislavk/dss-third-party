@@ -13,6 +13,17 @@ use Carbon\Carbon;
 |
 */
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiLog::class, function ($faker) {
+    return [
+        'method' => $faker->randomElement(['GET', 'PUT', 'POST', 'DELETE']),
+        'route' => $faker->slug,
+        'payload' => json_encode([
+            'test' => $faker->uuid,
+            'sha256' => $faker->sha256
+        ]),
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SummSleeplab::class, function ($faker) {
     return [
         'date' => $faker->word,

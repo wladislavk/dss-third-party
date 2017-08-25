@@ -43,7 +43,7 @@ class JwtUserAuthMiddlewareTest extends MiddlewareTestCase
 
         $this->assertResponseStatus(Response::HTTP_BAD_REQUEST);
         $this->seeJson([
-            'message' => JwtMiddlewareErrors::TOKEN_INVALID
+            'message' => JwtMiddlewareErrors::TOKEN_MISSING
         ]);
     }
 

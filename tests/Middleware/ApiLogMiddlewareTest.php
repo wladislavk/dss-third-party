@@ -1,40 +1,27 @@
 <?php
 namespace Tests\Api;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\ApiLog;
 use DentalSleepSolutions\Http\Middleware\ApiLogMiddleware;
-use Faker\Factory as Faker;
 use Tests\TestCases\MiddlewareTestCase;
 
 class ApiLogMiddlewareTest extends MiddlewareTestCase
 {
-    const DATA_KEY = 'key';
-
+    /** @var array */
     protected $testMiddleware = [
         ApiLogMiddleware::class
     ];
 
     public function testHandle()
     {
-        $testData = $this->dataFactory();
-        $this->post(self::TEST_ROUTE, $testData);
+        $record = factory(ApiLog::class)->make([
+            'route' => self::TEST_ROUTE
+        ]);
+        $payload = json_decode($record->payload, true);
+
+        $this->call($record->method, $record->route, $payload);
 
         $this->assertResponseOk();
-        $this->seeInDatabase('dental_api_logs', [
-                'method' => 'post',
-                'route' => self::TEST_ROUTE,
-                'payload' => json_encode($testData),
-            ])
-        ;
-    }
-
-    private function dataFactory()
-    {
-        $faker = Faker::create();
-
-        $data = [
-            self::DATA_KEY => $faker->sha256,
-        ];
-
-        return $data;
+        $this->seeInDatabase($record->getTable(), $record->toArray());
     }
 }

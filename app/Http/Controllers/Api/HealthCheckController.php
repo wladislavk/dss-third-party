@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers\Api;
 
 use Illuminate\Routing\Controller;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 
 class HealthCheckController extends Controller
 {

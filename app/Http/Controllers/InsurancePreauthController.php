@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsurancePreauthRepository;
 use DentalSleepSolutions\Helpers\QueryComposers\InsurancePreauthQueryComposer;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\ListVOBQueryData;
 use Illuminate\Http\Request;
 

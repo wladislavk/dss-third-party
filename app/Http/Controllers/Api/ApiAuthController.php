@@ -10,7 +10,7 @@ use Tymon\JWTAuth\JWTAuth;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use Illuminate\Support\Arr;
 use Exception;

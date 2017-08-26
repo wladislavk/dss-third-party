@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 
 class FaxesController extends BaseRestController
 {

@@ -2,7 +2,7 @@
 namespace DentalSleepSolutions\Http\Middleware;
 
 use Closure;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Helpers\ExternalAuthTokenParser;
 use DentalSleepSolutions\Structs\ExternalAuthTokenErrors as AuthErrors;
 use DentalSleepSolutions\Structs\ExternalCompanyMiddlewareErrors as MiddlewareErrors;

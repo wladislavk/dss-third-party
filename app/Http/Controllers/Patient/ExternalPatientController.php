@@ -6,7 +6,7 @@ use DentalSleepSolutions\Helpers\ExternalAuthTokenParser;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\ExternalBaseController;
 use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
 use EventHomes\Api\FractalHelper;

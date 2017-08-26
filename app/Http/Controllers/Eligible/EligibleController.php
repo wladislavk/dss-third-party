@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Eligible;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 

@@ -9,7 +9,7 @@ use DentalSleepSolutions\Helpers\LedgerReportTotalsRetriever;
 use DentalSleepSolutions\Helpers\LedgerRowsRetriever;
 use DentalSleepSolutions\Helpers\PatientSummaryUpdater;
 use DentalSleepSolutions\Helpers\QueryComposers\LedgersQueryComposer;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\LedgerReportData;
 use Illuminate\Http\Request;
 

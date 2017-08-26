@@ -7,7 +7,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Helpers\PendingClaimRemover;
 use DentalSleepSolutions\Helpers\UnmailedClaimsRetriever;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
 class InsurancesController extends BaseRestController

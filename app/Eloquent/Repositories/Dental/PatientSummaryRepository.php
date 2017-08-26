@@ -29,7 +29,7 @@ class PatientSummaryRepository extends AbstractRepository
 
     /**
      * @param int $patientId
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return PatientSummary|null
      */
     public function getPatientInfo($patientId)
     {
@@ -45,6 +45,9 @@ class PatientSummaryRepository extends AbstractRepository
      */
     public function updatePatientSummary($patientId, array $data)
     {
-        return $this->model->where('pid', $patientId)->update($data);
+        return $this->model
+            ->where('pid', $patientId)
+            ->update($data)
+        ;
     }
 }

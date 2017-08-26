@@ -1,65 +1,42 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\LedgerRecord;
 use Tests\TestCases\ApiTestCase;
 
 class LedgerRecordsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/ledger-records -> LedgerRecordsController@store method
-     * 
-     */
-    public function testAddLedgerRecord()
+    protected function getModel()
     {
-        $data = factory(LedgerRecord::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/ledger-records', $data)
-            ->seeInDatabase('dental_ledger_rec', ['patientid' => 100])
-            ->assertResponseOk();
+        return LedgerRecord::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/ledger-records/{id} -> LedgerRecordsController@update method
-     * 
-     */
-    public function testUpdateLedgerRecord()
+    protected function getRoute()
     {
-        $ledgerRecordTestRecord = factory(LedgerRecord::class)->create();
+        return '/ledger-records';
+    }
 
-        $data = [
-            'description' => 'updated ledger record',
-            'status'      => 8
+    protected function getStoreData()
+    {
+        return [
+            "formid" => 2,
+            "patientid" => 100,
+            "description" => "Voluptates voluptates cum voluptatem.",
+            "producer" => "suscipit",
+            "amount" => 811.75,
+            "transaction_type" => "None",
+            "userid" => 1,
+            "docid" => 8,
+            "status" => 0,
+            "transaction_code" => "U0863",
         ];
-
-        $this->put('/api/v1/ledger-records/' . $ledgerRecordTestRecord->ledgerid, $data)
-            ->seeInDatabase('dental_ledger_rec', [
-                'description' => 'updated ledger record'
-            ])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/ledger-records/{id} -> LedgerRecordsController@destroy method
-     * 
-     */
-    public function testDeleteLedgerRecord()
+    protected function getUpdateData()
     {
-        $ledgerRecordTestRecord = factory(LedgerRecord::class)->create();
-
-        $this->delete('/api/v1/ledger-records/' . $ledgerRecordTestRecord->ledgerid)
-            ->notSeeInDatabase('dental_ledger_rec', [
-                'ledgerid' => $ledgerRecordTestRecord->ledgerid
-            ])
-            ->assertResponseOk();
+        return [
+            'description' => 'updated ledger record',
+            'status'      => 8,
+        ];
     }
 }

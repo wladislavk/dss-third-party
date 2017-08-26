@@ -1,64 +1,46 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\PaymentReport;
 use Tests\TestCases\ApiTestCase;
 
 class PaymentReportsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/payment-reports -> PaymentReportsController@store method
-     * 
-     */
-    public function testAddPaymentReport()
+    protected function getModel()
     {
-        $data = factory(PaymentReport::class)->make()->toArray();
-
-        $data['claimid'] = 100;
-
-        $this->post('/api/v1/payment-reports', $data)
-            ->seeInDatabase('dental_payment_reports', ['claimid' => 100])
-            ->assertResponseOk();
+        return PaymentReport::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/payment-reports/{id} -> PaymentReportsController@update method
-     * 
-     */
-    public function testUpdatePaymentReport()
+    protected function getRoute()
     {
-        $paymentReportTestRecord = factory(PaymentReport::class)->create();
+        return '/payment-reports';
+    }
 
-        $data = [
+    protected function getStoreData()
+    {
+        return [
+            "claimid" => 100,
+            "reference_id" => "AE234N31351XAHH",
+            "viewed" => 1,
+        ];
+    }
+
+    protected function getUpdateData()
+    {
+        return [
             'claimid'      => 54,
             'reference_id' => 'ABC123DEF456',
-            'viewed'       => 1
+            'viewed'       => 1,
         ];
-
-        $this->put('/api/v1/payment-reports/' . $paymentReportTestRecord->payment_id, $data)
-            ->seeInDatabase('dental_payment_reports', ['claimid' => 54])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/payment-reports/{id} -> PaymentReportsController@destroy method
-     * 
-     */
-    public function testDeletePaymentReport()
+    public function testGetNumber()
     {
-        $paymentReportTestRecord = factory(PaymentReport::class)->create();
-
-        $this->delete('/api/v1/payment-reports/' . $paymentReportTestRecord->payment_id)
-            ->notSeeInDatabase('dental_payment_reports', [
-                'payment_id' => $paymentReportTestRecord->payment_id
-            ])
-            ->assertResponseOk();
+        $this->post(self::ROUTE_PREFIX . '/payment-reports/number');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 }

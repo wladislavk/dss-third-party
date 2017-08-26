@@ -17,12 +17,14 @@ use DentalSleepSolutions\Helpers\AccessCodeResetter;
 use DentalSleepSolutions\Helpers\EmailChecker;
 use DentalSleepSolutions\Helpers\FullNameComposer;
 use DentalSleepSolutions\Helpers\NameSetter;
+use DentalSleepSolutions\Helpers\PatientFinder;
 use DentalSleepSolutions\Helpers\PatientLocationRetriever;
 use DentalSleepSolutions\Helpers\PatientRuleRetriever;
 use DentalSleepSolutions\Helpers\TempPinDocumentCreator;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use DentalSleepSolutions\Structs\EditPatientIntendedActions;
 use DentalSleepSolutions\Structs\EditPatientRequestData;
+use DentalSleepSolutions\Structs\PatientFinderData;
 use DentalSleepSolutions\Structs\RequestedEmails;
 use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use Illuminate\Http\JsonResponse;
@@ -573,29 +575,23 @@ class PatientsController extends BaseRestController
      * )
      *
      * @param Request $request
+     * @param PatientFinder $patientFinder
      * @return JsonResponse
      */
-    public function find(Request $request)
+    public function find(Request $request, PatientFinder $patientFinder)
     {
-        $patientId       = $request->input('patientId', 0);
-        $type            = $request->input('type', 1);
-        $pageNumber      = $request->input('page', 0);
-        $patientsPerPage = $request->input('patientsPerPage', 30);
-        $letter          = $request->input('letter', '');
-        $sortColumn      = $request->input('sortColumn', 'name');
-        $sortDir         = $request->input('sortDir', '');
+        $patientFinderData = new PatientFinderData();
+        $patientFinderData->docId = $this->user->docid;
+        $patientFinderData->userType = $this->user->user_type;
+        $patientFinderData->patientId = $request->input('patientId', 0);
+        $patientFinderData->type = $request->input('type', 1);
+        $patientFinderData->pageNumber = $request->input('page', 0);
+        $patientFinderData->patientsPerPage = $request->input('patientsPerPage', 30);
+        $patientFinderData->letter = $request->input('letter', '');
+        $patientFinderData->sortColumn = $request->input('sortColumn', 'name');
+        $patientFinderData->sortDir = $request->input('sortDir', '');
 
-        $data = $this->repository->findPatientBy(
-            $this->user->docid,
-            $this->user->user_type,
-            $patientId,
-            $type,
-            $pageNumber,
-            $patientsPerPage,
-            $letter,
-            $sortColumn,
-            $sortDir
-        );
+        $data = $patientFinder->findPatientBy($patientFinderData);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -688,9 +684,9 @@ class PatientsController extends BaseRestController
             return ApiResponse::responseError('', 422, $validator->getMessageBag()->all());
         }
 
-        $unchangedPatient = null;
         try {
-            $unchangedPatient = $this->repository->getUnchangedPatient($patientId);
+            /** @var Patient|null $unchangedPatient */
+            $unchangedPatient = $this->repository->findByIdOrNull($patientId);
         } catch (GeneralException $e) {
             return ApiResponse::responseError($e->getMessage(), 422);
         }
@@ -712,7 +708,7 @@ class PatientsController extends BaseRestController
 
         $updatedFormData = $patientFormDataUpdater->getPatientFormData();
         $responseData = $patientEditor->editPatient(
-            $updatedFormData, $this->request->user(), $requestData, $unchangedPatient
+            $updatedFormData, $this->user, $requestData, $unchangedPatient
         );
 
         return ApiResponse::responseOk('', $responseData->toArray());
@@ -746,7 +742,7 @@ class PatientsController extends BaseRestController
     ) {
         $patientId = $request->input('patient_id', 0);
         /** @var Patient|null $foundPatient */
-        $foundPatient = $this->repository->find($patientId);
+        $foundPatient = $this->repository->findOrNull($patientId);
 
         if (!$foundPatient) {
             return ApiResponse::responseOk('', []);

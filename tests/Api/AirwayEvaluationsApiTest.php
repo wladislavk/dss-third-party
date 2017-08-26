@@ -1,23 +1,24 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\AirwayEvaluation;
 use Tests\TestCases\ApiTestCase;
 
 class AirwayEvaluationsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/airway-evaluations -> AirwayEvaluationsController@store method
-     * 
-     */
-    public function testAddAirwayEvaluation()
+    protected function getModel()
     {
-        $data = [
+        return AirwayEvaluation::class;
+    }
+
+    protected function getRoute()
+    {
+        return '/airway-evaluations';
+    }
+
+    protected function getStoreData()
+    {
+        return [
             'formid'               => 7,
             'patientid'            => 7,
             'maxilla'              => '~7~8~',
@@ -34,44 +35,15 @@ class AirwayEvaluationsApiTest extends ApiTestCase
             'other_nasal_passages' => 'test other nasal passages',
             'userid'               => 7,
             'docid'                => 7,
-            'status'               => 7
+            'status'               => 7,
         ];
-
-        $this->post('/api/v1/airway-evaluations', $data)
-            ->seeInDatabase('dental_ex_page3', ['other_mandible' => 'test other mandible'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/airway-evaluations/{id} -> AirwayEvaluationsController@update method
-     * 
-     */
-    public function testUpdateAirwayEvaluation()
+    protected function getUpdateData()
     {
-        $airwayEvaluationTestRecord = factory(AirwayEvaluation::class)->create();
-
-        $data = [
+        return [
             'other_mandible' => 'update test other mandible',
-            'status'         => 8
+            'status'         => 8,
         ];
-
-        $this->put('/api/v1/airway-evaluations/' . $airwayEvaluationTestRecord->ex_page3id, $data)
-            ->seeInDatabase('dental_ex_page3', ['other_mandible' => 'update test other mandible'])
-            ->assertResponseOk();
-    }
-
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/airway-evaluations/{id} -> AirwayEvaluationsController@destroy method
-     * 
-     */
-    public function testDeleteAirwayEvaluation()
-    {
-        $airwayEvaluationTestRecord = factory(AirwayEvaluation::class)->create();
-
-        $this->delete('/api/v1/airway-evaluations/' . $airwayEvaluationTestRecord->ex_page3id)
-            ->notSeeInDatabase('dental_ex_page3', ['ex_page3id' => $airwayEvaluationTestRecord->ex_page3id])
-            ->assertResponseOk();
     }
 }

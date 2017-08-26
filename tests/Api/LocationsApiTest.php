@@ -1,64 +1,51 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\Location;
 use Tests\TestCases\ApiTestCase;
 
 class LocationsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/locations -> LocationsController@store method
-     * 
-     */
-    public function testAddLocation()
+    protected function getModel()
     {
-        $data = factory(Location::class)->make()->toArray();
-
-        $data['docid'] = 100;
-
-        $this->post('/api/v1/locations', $data)
-            ->seeInDatabase('dental_locations', ['docid' => 100])
-            ->assertResponseOk();
+        return Location::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/locations/{id} -> LocationsController@update method
-     * 
-     */
-    public function testUpdateLocation()
+    protected function getRoute()
     {
-        $locationTestRecord = factory(Location::class)->create();
+        return '/locations';
+    }
 
-        $data = [
+    protected function getStoreData()
+    {
+        return [
+            "location" => "totam",
+            "docid" => 100,
+            "name" => "Lisa Greenfelder",
+            "address" => "786 Marina Forks\nBashirianmouth, MA 46917-9632",
+            "city" => "Nicolasville",
+            "state" => "NE",
+            "zip" => "35520",
+            "phone" => "9716618658",
+            "fax" => "9924761393",
+            "default_location" => 0,
+            "email" => "vdeckow@gmail.com",
+        ];
+    }
+
+    protected function getUpdateData()
+    {
+        return [
             'location' => 'test location',
             'docid'    => 33,
-            'name'     => 'John Doe'
+            'name'     => 'John Doe',
         ];
-
-        $this->put('/api/v1/locations/' . $locationTestRecord->id, $data)
-            ->seeInDatabase('dental_locations', ['docid' => 33])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/locations/{id} -> LocationsController@destroy method
-     * 
-     */
-    public function testDeleteLocation()
+    public function testGetDoctorLocations()
     {
-        $locationTestRecord = factory(Location::class)->create();
-
-        $this->delete('/api/v1/locations/' . $locationTestRecord->id)
-            ->notSeeInDatabase('dental_locations', [
-                'id' => $locationTestRecord->id
-            ])
-            ->assertResponseOk();
+        $this->post(self::ROUTE_PREFIX . '/locations/by-doctor');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
     }
 }

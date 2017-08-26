@@ -1,63 +1,53 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\Note;
 use Tests\TestCases\ApiTestCase;
 
 class NotesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/notes -> NotesController@store method
-     * 
-     */
-    public function testAddNote()
+    protected function getModel()
     {
-        $data = factory(Note::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/notes', $data)
-            ->seeInDatabase('dental_notes', ['patientid' => 100])
-            ->assertResponseOk();
+        return Note::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/notes/{id} -> NotesController@update method
-     * 
-     */
-    public function testUpdateNote()
+    protected function getRoute()
     {
-        $noteTestRecord = factory(Note::class)->create();
+        return '/notes';
+    }
 
-        $data = [
-            'notes'  => 'updated notes',
-            'userid' => 12
+    protected function getStoreData()
+    {
+        return [
+            "patientid" => 100,
+            "notes" => "Ut cupiditate et vel.",
+            "edited" => 1,
+            "editor_initials" => "distinctio",
+            "userid" => 9,
+            "docid" => 2,
+            "status" => 0,
+            "procedure_date" => "2017-07-27",
+            "signed_id" => 6,
+            "signed_on" => "1984-12-02 08:14:20",
+            "parentid" => 3,
         ];
-
-        $this->put('/api/v1/notes/' . $noteTestRecord->notesid, $data)
-            ->seeInDatabase('dental_notes', ['userid' => 12])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/notes/{id} -> NotesController@destroy method
-     * 
-     */
-    public function testDeleteNote()
+    protected function getUpdateData()
     {
-        $noteTestRecord = factory(Note::class)->create();
+        return [
+            'notes'  => 'updated notes',
+            'userid' => 12,
+        ];
+    }
 
-        $this->delete('/api/v1/notes/' . $noteTestRecord->notesid)
-            ->notSeeInDatabase('dental_notes', [
-                'notesid' => $noteTestRecord->notesid
-            ])
-            ->assertResponseOk();
+    public function testGetUnsigned()
+    {
+        $this->post(self::ROUTE_PREFIX . '/notes/unsigned');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 }

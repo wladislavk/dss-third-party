@@ -1,70 +1,40 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\SleepTest;
 use Tests\TestCases\ApiTestCase;
 
 class SleepTestsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/sleep-tests -> SleepTestsController@store method
-     * 
-     */
-    public function testAddSleepTest()
+    protected function getModel()
     {
-        $this->markTestSkipped('Column \'parent_patientid\' does not exist in the DB');
-        return;
-        $data = factory(SleepTest::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/sleep-tests', $data)
-            ->seeInDatabase('dental_q_sleep', ['patientid' => 100])
-            ->assertResponseOk();
+        return SleepTest::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/sleep-tests/{id} -> SleepTestsController@update method
-     * 
-     */
-    public function testUpdateSleepTest()
+    protected function getRoute()
     {
-        $this->markTestSkipped('Column \'parent_patientid\' does not exist in the DB');
-        return;
-        $sleepTestRecord = factory(SleepTest::class)->create();
+        return '/sleep-tests';
+    }
 
-        $data = [
-            'formid'   => 100,
-            'analysis' => 'updated sleep test'
+    protected function getStoreData()
+    {
+        return [
+            "formid" => 1,
+            "patientid" => 100,
+            "epworthid" => "1|3~2|2~3|2~4|3~5|3~6|3~7|3~8|2~",
+            "analysis" => "Accusantium autem exercitationem ex delectus architecto et.",
+            "userid" => 1,
+            "docid" => 8,
+            "status" => 5,
+            "adddate" => "1981-12-31 21:29:49",
         ];
-
-        $this->put('/api/v1/sleep-tests/' . $sleepTestRecord->q_sleepid, $data);
-        $this
-            ->seeInDatabase('dental_q_sleep', ['formid' => 100])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/sleep-tests/{id} -> SleepTestsController@destroy method
-     * 
-     */
-    public function testDeleteSleepTest()
+    protected function getUpdateData()
     {
-        $this->markTestSkipped('Column \'parent_patientid\' does not exist in the DB');
-        return;
-        $sleepTestRecord = factory(SleepTest::class)->create();
-
-        $this->delete('/api/v1/sleep-tests/' . $sleepTestRecord->q_sleepid)
-            ->notSeeInDatabase('dental_q_sleep', [
-                'q_sleepid' => $sleepTestRecord->q_sleepid
-            ])
-            ->assertResponseOk();
+        return [
+            'formid'   => 100,
+            'analysis' => 'updated sleep test',
+        ];
     }
 }

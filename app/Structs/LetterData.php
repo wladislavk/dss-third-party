@@ -8,10 +8,10 @@ use Illuminate\Contracts\Support\Arrayable;
 class LetterData implements Arrayable
 {
     /** @var int */
-    public $patientId;
+    public $patientId = 0;
 
     /** @var int */
-    public $infoId;
+    public $infoId = 0;
 
     /** @var bool */
     public $toPatient;
@@ -79,32 +79,66 @@ class LetterData implements Arrayable
     /** @var Carbon */
     public $deletedOn;
 
+    /** @var Carbon|string */
+    public $dateSent;
+
     public function toArray()
     {
         return [
-            'patientid' => $this->patientId,
-            'send_method' => $this->sendMethod,
-            'template' => $this->template,
-            'templateid' => $this->templateId,
-            'template_type' => $this->templateType,
-            'status' => $this->status,
+            'cc_md_list' => $this->ccMdList,
+            'cc_md_referral_list' => $this->ccMdReferralList,
+            'cc_pat_referral_list' => $this->ccPatientReferralList,
+            'cc_topatient' => $this->ccToPatient,
             'deleted' => $this->deleted,
             'deleted_by' => $this->deletedBy,
             'deleted_on' => $this->deletedOn,
-            'parentid' => $this->parentId,
-            'topatient' => $this->toPatient,
-            'cc_topatient' => $this->ccToPatient,
-            'md_list' => $this->mdList,
-            'md_referral_list' => $this->mdReferralList,
             'docid' => $this->docId,
-            'userid' => $this->userId,
-            'info_id' => $this->infoId,
-            'cc_md_list' => $this->ccMdList,
-            'cc_md_referral_list' => $this->ccMdReferralList,
             'font_family' => $this->fontFamily,
             'font_size' => $this->fontSize,
+            'info_id' => $this->infoId,
+            'md_list' => $this->mdList,
+            'md_referral_list' => $this->mdReferralList,
+            'parentid' => $this->parentId,
+            'patientid' => $this->patientId,
             'pat_referral_list' => $this->patientReferralList,
+            'send_method' => $this->sendMethod,
+            'status' => $this->status,
+            'template' => $this->template,
+            'templateid' => $this->templateId,
+            'template_type' => $this->templateType,
+            'topatient' => $this->toPatient,
+            'userid' => $this->userId,
+        ];
+    }
+
+    public function toUpdateArray()
+    {
+        return [
+            'cc_md_list'           => $this->ccMdList,
+            'cc_md_referral_list'  => $this->ccMdReferralList,
             'cc_pat_referral_list' => $this->ccPatientReferralList,
+            'cc_topatient' => $this->ccToPatient,
+            'date_sent'            => $this->dateSent,
+            'deleted'              => $this->deleted,
+            'deleted_by'           => $this->userId,
+            'deleted_on'           => Carbon::now(),
+            'delivered'            => '0',
+            'docid'                => $this->docId,
+            'font_family'          => $this->fontFamily,
+            'font_size'            => $this->fontSize,
+            'generated_date'       => Carbon::now(),
+            'info_id'              => $this->infoId,
+            'md_list'              => $this->mdList,
+            'md_referral_list'     => $this->mdReferralList,
+            'patientid'            => $this->patientId,
+            'pat_referral_list'    => $this->patientReferralList,
+            'send_method'          => $this->sendMethod,
+            'status'               => $this->status,
+            'template' => $this->template,
+            'templateid'           => $this->templateId,
+            'template_type'        => $this->templateType,
+            'topatient'            => $this->toPatient,
+            'userid'               => $this->userId,
         ];
     }
 }

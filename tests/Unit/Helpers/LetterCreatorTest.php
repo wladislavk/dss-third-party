@@ -6,6 +6,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use DentalSleepSolutions\Helpers\LetterComposer;
 use DentalSleepSolutions\Helpers\LetterCreationEvaluator;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;
@@ -26,10 +27,11 @@ class LetterCreatorTest extends UnitTestCase
     public function setUp()
     {
         $letterCreationEvaluator = $this->mockLetterCreationEvaluator();
-        $userRepository = $this->mockUserRepository();
+        $letterComposer = $this->mockLetterComposer();
         $letterRepository = $this->mockLetterRepository();
+        $userRepository = $this->mockUserRepository();
         $this->letterCreator = new LetterCreator(
-            $letterCreationEvaluator, $userRepository, $letterRepository
+            $letterCreationEvaluator, $letterComposer, $letterRepository, $userRepository
         );
     }
 
@@ -96,8 +98,21 @@ class LetterCreatorTest extends UnitTestCase
         /** @var LetterCreationEvaluator|MockInterface $letterCreationEvaluator */
         $letterCreationEvaluator = \Mockery::mock(LetterCreationEvaluator::class);
         $letterCreationEvaluator->shouldReceive('shouldLetterBeCreated')
-            ->andReturnUsing([$this, 'shouldLetterBeCreatedCallback']);
+            ->andReturnUsing(function () {
+                return $this->shouldBeCreated;
+            });
         return $letterCreationEvaluator;
+    }
+
+    private function mockLetterComposer()
+    {
+        /** @var LetterComposer|MockInterface $letterComposer */
+        $letterComposer = \Mockery::mock(LetterComposer::class);
+        $letterComposer->shouldReceive('composeLetter')
+            ->andReturnUsing(function (LetterData $letterData) {
+                return [];
+            });
+        return $letterComposer;
     }
 
     private function mockUserRepository()
@@ -113,14 +128,9 @@ class LetterCreatorTest extends UnitTestCase
     {
         /** @var LetterRepository|MockInterface $letterRepository */
         $letterRepository = \Mockery::mock(LetterRepository::class);
-        $letterRepository->shouldReceive('createLetter')
+        $letterRepository->shouldReceive('create')
             ->andReturnUsing([$this, 'createLetterCallback']);
         return $letterRepository;
-    }
-
-    public function shouldLetterBeCreatedCallback()
-    {
-        return $this->shouldBeCreated;
     }
 
     public function getUserWithFilterCallback(array $fields, array $where)

@@ -1,64 +1,56 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\ProfileImage;
 use Tests\TestCases\ApiTestCase;
 
 class ProfileImagesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/profile-images -> ProfileImagesController@store method
-     * 
-     */
-    public function testAddProfileImage()
+    protected function getModel()
     {
-        $data = factory(ProfileImage::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/profile-images', $data)
-            ->seeInDatabase('dental_q_image', ['patientid' => 100])
-            ->assertResponseOk();
+        return ProfileImage::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/profile-images/{id} -> ProfileImagesController@update method
-     * 
-     */
-    public function testUpdateProfileImage()
+    protected function getRoute()
     {
-        $profileImageTestRecord = factory(ProfileImage::class)->create();
+        return '/profile-images';
+    }
 
-        $data = [
+    protected function getStoreData()
+    {
+        return [
+            "formid" => 9,
+            "patientid" => 100,
+            "title" => "adipisci",
+            "image_file" => "le78EsJ8e2RJyW4.png",
+            "imagetypeid" => 5,
+            "userid" => 2,
+            "docid" => 5,
+            "status" => 0,
+            "adminid" => 5,
+        ];
+    }
+
+    protected function getUpdateData()
+    {
+        return [
             'formid'    => 133,
             'patientid' => 85,
-            'title'     => 'updated profile image'
+            'title'     => 'updated profile image',
         ];
-
-        $this->put('/api/v1/profile-images/' . $profileImageTestRecord->imageid, $data)
-            ->seeInDatabase('dental_q_image', ['patientid' => 85])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/profile-images/{id} -> ProfileImagesController@destroy method
-     * 
-     */
-    public function testDeleteProfileImage()
+    public function testGetProfilePhoto()
     {
-        $profileImageTestRecord = factory(ProfileImage::class)->create();
+        $this->post(self::ROUTE_PREFIX . '/profile-images/photo');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
 
-        $this->delete('/api/v1/profile-images/' . $profileImageTestRecord->imageid)
-            ->notSeeInDatabase('dental_q_image', [
-                'imageid' => $profileImageTestRecord->imageid
-            ])
-            ->assertResponseOk();
+    public function testGetInsuranceCardImage()
+    {
+        $this->post(self::ROUTE_PREFIX . '/profile-images/insurance-card-image');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
     }
 }

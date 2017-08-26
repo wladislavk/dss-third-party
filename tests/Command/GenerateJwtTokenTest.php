@@ -7,8 +7,9 @@ use DentalSleepSolutions\Console\Commands\GenerateJwtToken;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tests\TestCases\ApiTestCase;
+use Tests\TestCases\BaseApiTestCase;
 
-class GenerateJwtTokenTest extends ApiTestCase
+class GenerateJwtTokenTest extends BaseApiTestCase
 {
     const INVALID_ID = '-';
     const USER_ID = 'u_1';

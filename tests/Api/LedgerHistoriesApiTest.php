@@ -1,65 +1,72 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\LedgerHistory;
 use Tests\TestCases\ApiTestCase;
 
 class LedgerHistoriesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/ledger-histories -> LedgerHistoriesController@store method
-     * 
-     */
-    public function testAddLedgerHistory()
+    protected function getModel()
     {
-        $data = factory(LedgerHistory::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/ledger-histories', $data)
-            ->seeInDatabase('dental_ledger_history', ['patientid' => 100])
-            ->assertResponseOk();
+        return LedgerHistory::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/ledger-histories/{id} -> LedgerHistoriesController@update method
-     * 
-     */
-    public function testUpdateLedgerHistory()
+    protected function getRoute()
     {
-        $ledgerHistoryTestRecord = factory(LedgerHistory::class)->create();
+        return '/ledger-histories';
+    }
 
-        $data = [
-            'description' => 'updated ledger history',
-            'status'      => 5
+    protected function getStoreData()
+    {
+        return [
+            "ledgerid" => 9,
+            "formid" => 7,
+            "patientid" => 100,
+            "description" => "Soluta at quam dicta qui rerum est illo.",
+            "producer" => "Ivy Walter",
+            "transaction_type" => "Credit",
+            "userid" => 0,
+            "docid" => 1,
+            "status" => 3,
+            "transaction_code" => "E5629",
+            "placeofservice" => "84",
+            "emg" => "78",
+            "diagnosispointer" => "17",
+            "daysorunits" => "18",
+            "epsdt" => "89",
+            "idqual" => "42",
+            "modcode" => "45",
+            "producerid" => 7,
+            "primary_claim_id" => 7,
+            "primary_paper_claim_id" => "41",
+            "modcode2" => "atque",
+            "modcode3" => "quia",
+            "modcode4" => "ut",
+            "percase_date" => "2014-01-01 07:27:32",
+            "percase_name" => "Vivien Carter",
+            "percase_amount" => "42.03",
+            "percase_status" => 9,
+            "percase_invoice" => 2,
+            "percase_free" => 2,
+            "updated_by_user" => 5,
+            "updated_by_admin" => 2,
+            "primary_claim_history_id" => 7,
+            "secondary_claim_id" => 3,
         ];
-
-        $this->put('/api/v1/ledger-histories/' . $ledgerHistoryTestRecord->id, $data)
-            ->seeInDatabase('dental_ledger_history', [
-                'description' => 'updated ledger history'
-            ])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/ledger-histories/{id} -> LedgerHistoriesController@destroy method
-     * 
-     */
-    public function testDeleteLedgerHistory()
+    protected function getUpdateData()
     {
-        $ledgerHistoryTestRecord = factory(LedgerHistory::class)->create();
+        return [
+            'description' => 'updated ledger history',
+            'status'      => 5,
+        ];
+    }
 
-        $this->delete('/api/v1/ledger-histories/' . $ledgerHistoryTestRecord->id)
-            ->notSeeInDatabase('dental_ledger_history', [
-                'id' => $ledgerHistoryTestRecord->id
-            ])
-            ->assertResponseOk();
+    public function testGetHistoriesForLedgerReport()
+    {
+        $this->post(self::ROUTE_PREFIX . '/ledger-histories/ledger-report');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
     }
 }

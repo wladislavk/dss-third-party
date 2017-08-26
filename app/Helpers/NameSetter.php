@@ -2,6 +2,9 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
+use DentalSleepSolutions\Structs\ContactWithCompany;
+
 class NameSetter
 {
     /**
@@ -19,6 +22,49 @@ class NameSetter
         if ($label) {
             $name .= " - $label";
         }
+        return $name;
+    }
+
+    /**
+     * @param Contact $contact
+     * @return string
+     */
+    public function formNameWithSalutation(Contact $contact)
+    {
+        $name = '';
+        if ($contact->salutation) {
+            $name .= $contact->salutation . ' ';
+        }
+        if ($contact->firstname) {
+            $name .= $contact->firstname . ' ';
+        }
+        if ($contact->middlename) {
+            $name .= $contact->middlename . ' ';
+        }
+        if ($contact->lastname) {
+            $name .= $contact->lastname;
+        }
+        return trim($name);
+    }
+
+    /**
+     * @param ContactWithCompany $contact
+     * @param bool $withoutCompanies
+     * @return string
+     */
+    public function formNameWithContact(ContactWithCompany $contact, $withoutCompanies)
+    {
+        $name = '';
+        if (!$withoutCompanies) {
+            $name .= $contact->company . ' - ';
+        }
+        $name .= $contact->lastName;
+        $name .= ', ';
+        $name .= $contact->firstName;
+        $name .= ' ';
+        $name .= $contact->middleName;
+        $name .= ' - ';
+        $name .= $contact->contactType;
         return $name;
     }
 }

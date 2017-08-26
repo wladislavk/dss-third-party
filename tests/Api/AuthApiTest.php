@@ -12,9 +12,9 @@ use DentalSleepSolutions\Http\Middleware\JwtUserAuthMiddleware;
 use DentalSleepSolutions\Structs\Password;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Response;
-use Tests\TestCases\ApiTestCase;
+use Tests\TestCases\BaseApiTestCase;
 
-class AuthApiTest extends ApiTestCase
+class AuthApiTest extends BaseApiTestCase
 {
     const ENDPOINT = 'auth';
     const HEALTH_ENDPOINT = 'auth-health';

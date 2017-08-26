@@ -1,48 +1,105 @@
 <?php
 namespace Tests\TestCases;
 
-use DentalSleepSolutions\Http\Requests\Request;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
-class ApiTestCase extends BaseTestCase
+abstract class ApiTestCase extends BaseApiTestCase
 {
-    /**
-     * The base URL to use while testing the application.
-     *
-     * @var string
-     */
-    protected $baseUrl = 'http://localhost';
+    use WithoutMiddleware, DatabaseTransactions;
+
+    /** @var Model */
+    protected $model;
 
     /**
-     * Creates the application.
-     *
-     * @return \Illuminate\Foundation\Application
+     * @return string
      */
-    public function createApplication()
+    abstract protected function getModel();
+
+    /**
+     * @return string
+     */
+    abstract protected function getRoute();
+
+    /**
+     * @return array
+     */
+    abstract protected function getStoreData();
+
+    /**
+     * @return array
+     */
+    abstract protected function getUpdateData();
+
+    public function setUp()
     {
-        $app = require __DIR__.'/../../bootstrap/app.php';
-
-        $app->make(Kernel::class)->bootstrap();
-
-        return $app;
+        parent::setUp();
+        $modelClass = $this->getModel();
+        $this->model = new $modelClass();
     }
 
-    public function call($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+    public function testIndex()
     {
-        $kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
+        factory($this->getModel())->create();
+        $this->get(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
+        $this->assertResponseOk();
+        $this->assertGreaterThan(0, count($this->getResponseData()));
+    }
 
-        $this->currentUri = $this->prepareUrlForRequest($uri);
+    public function testShow()
+    {
+        $testRecord = factory($this->getModel())->create();
 
-        $request = Request::create(
-            $this->currentUri, $method, $parameters,
-            $cookies, $files, array_replace($this->serverVariables, $server), $content
-        );
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
+        $this->get($endpoint);
+        $this->assertResponseOk();
+        $data = $this->getResponseData();
+        $this->assertEquals($testRecord->$primaryKey, $data[$primaryKey]);
+    }
 
-        $response = $kernel->handle($request);
+    public function testStore()
+    {
+        $this->post(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
+        $this->assertResponseOk();
 
-        $kernel->terminate($request, $response);
+        // uncomment this line to debug the actual created record
+        //$this->verifyCreation(["foo" => "bar"]);
 
-        return $this->response = $response;
+        $this->seeInDatabase($this->model->getTable(), $this->getStoreData());
+    }
+
+    public function testUpdate()
+    {
+        $testRecord = factory($this->getModel())->create();
+
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
+
+        $this->put($endpoint, $this->getUpdateData());
+        $this->assertResponseOk();
+        $this->seeInDatabase($this->model->getTable(), $this->getUpdateData());
+    }
+
+    public function testDestroy()
+    {
+        $testRecord = factory($this->getModel())->create();
+
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
+
+        $this->delete($endpoint);
+        $this->assertResponseOk();
+        $this->notSeeInDatabase($this->model->getTable(), [$primaryKey => $testRecord->id]);
+    }
+
+    private function verifyCreation(array $where)
+    {
+        $database = $this->app->make('db');
+        $connection = $database->getDefaultConnection();
+        $new = $database->connection($connection)->table($this->model->getTable())
+            ->where($where)->first();
+        var_dump($new);
     }
 }

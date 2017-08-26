@@ -1,64 +1,77 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use DentalSleepSolutions\Eloquent\Models\Dental\PatientContact;
 use DentalSleepSolutions\Eloquent\Models\Dental\ReferredByContact;
 use Tests\TestCases\ApiTestCase;
 
 class ReferredByContactsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/referred-by-contacts -> ReferredByContactsController@store method
-     * 
-     */
-    public function testAddReferredByContact()
+    protected function getModel()
     {
-        $data = factory(ReferredByContact::class)->make()->toArray();
-
-        $data['docid'] = 1234;
-
-        $this->json('POST', '/api/v1/referred-by-contacts', $data);
-        $this
-            ->seeInDatabase('dental_referredby', ['docid' => 1234])
-            ->assertResponseOk();
+        return ReferredByContact::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/referred-by-contacts/{id} -> ReferredByContactsController@update method
-     * 
-     */
-    public function testUpdateReferredByContact()
+    protected function getRoute()
     {
-        $referredByContactTestRecord = factory(ReferredByContact::class)->create();
+        return '/referred-by-contacts';
+    }
 
-        $data = [
-            'company' => 'US Test Company',
-            'add1'    => 'Fake Street, 16'
+    protected function getStoreData()
+    {
+        return [
+            "docid" => 1234,
+            "salutation" => "Dr.",
+            "lastname" => "Hills",
+            "firstname" => "Shad",
+            "middlename" => "a",
+            "company" => "Howell, Rowe and Erdman",
+            "add1" => "5727 Klein Mill\nLake Corine, WI 46204-0362",
+            "add2" => "608 Martina Ville Suite 536\nPierrehaven, OR 46670",
+            "city" => "North Bonniemouth",
+            "state" => "Arizona",
+            "zip" => "71725",
+            "phone1" => "1268955373",
+            "phone2" => "1442633791",
+            "fax" => "1064302272",
+            "email" => "steuber.ila@gmail.com",
+            "national_provider_id" => "426330678",
+            "qualifier" => 8,
+            "qualifierid" => "porro",
+            "greeting" => "Mrs.",
+            "sincerely" => "Dr.",
+            "contacttypeid" => 1,
+            "notes" => "A sapiente dolorum delectus dolores id deserunt.",
+            "preferredcontact" => "ducimus",
+            "status" => 4,
+            "referredby_info" => 4,
         ];
-
-        $this->put('/api/v1/referred-by-contacts/' . $referredByContactTestRecord->referredbyid, $data)
-            ->seeInDatabase('dental_referredby', ['company' => 'US Test Company'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/referred-by-contacts/{id} -> ReferredByContactsController@destroy method
-     * 
-     */
-    public function testDeleteReferredByContact()
+    protected function getUpdateData()
     {
-        $referredByContactTestRecord = factory(ReferredByContact::class)->create();
+        return [
+            'company' => 'US Test Company',
+            'add1'    => 'Fake Street, 16',
+        ];
+    }
 
-        $this->delete('/api/v1/referred-by-contacts/' . $referredByContactTestRecord->referredbyid)
-            ->notSeeInDatabase('dental_referredby', [
-                'referredbyid' => $referredByContactTestRecord->referredbyid
-            ])
-            ->assertResponseOk();
+    public function testEditingContact()
+    {
+        /** @var PatientContact $contact */
+        $contact = factory($this->getModel())->create();
+        $primaryKey = $this->model->getKeyName();
+        $data = [
+            'contact_form_data' => [
+                'lastname' => 'updated lastname',
+            ],
+        ];
+        $this->post(self::ROUTE_PREFIX . '/referred-by-contacts/edit/' . $contact->$primaryKey, $data);
+        $this->assertResponseOk();
+        $expected = [
+            'status' => 'Edited Successfully',
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+        $this->seeInDatabase($this->model->getTable(), [$primaryKey => $contact->$primaryKey, 'lastname' => 'updated lastname']);
     }
 }

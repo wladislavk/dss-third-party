@@ -1,63 +1,54 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\DentalClinicalExam;
 use Tests\TestCases\ApiTestCase;
 
 class DentalClinicalExamsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/dental-clinical-exams -> DentalClinicalExamsController@store method
-     * 
-     */
-    public function testAddDentalClinicalExam()
+    protected function getModel()
     {
-        $data = factory(DentalClinicalExam::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/dental-clinical-exams', $data)
-            ->seeInDatabase('dental_ex_page4', ['patientid' => 100])
-            ->assertResponseOk();
+        return DentalClinicalExam::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/dental-clinical-exams/{id} -> DentalClinicalExamsController@update method
-     * 
-     */
-    public function testUpdateDentalClinicalExam()
+    protected function getRoute()
     {
-        $dentalClinicalExamTestRecord = factory(DentalClinicalExam::class)->create();
+        return '/dental-clinical-exams';
+    }
 
-        $data = [
-            'patientid' => 55,
-            'docid'     => 100
+    protected function getStoreData()
+    {
+        return [
+            "formid" => 8,
+            "patientid" => 100,
+            "exam_teeth" => "~7~6~",
+            "other_exam_teeth" => "Praesentium aut ex id.",
+            "caries" => "C, E, G, I, 10, 23, 24, 25",
+            "where_facets" => "01, 04, 07",
+            "cracked_fractured" => "01, 04, 07",
+            "old_worn_inadequate_restorations" => "A, B, C, 01, 02, 03, 17, 18, 19",
+            "dental_class_right" => "I (normal)",
+            "dental_division_right" => "9",
+            "dental_class_left" => "II (Retrognathic)(Retruded Lower Jaw)",
+            "dental_division_left" => "3",
+            "additional_paragraph" => "Iure excepturi placeat in delectus. Tempora deserunt sunt occaecati vel hic dolorem et. Sapiente maiores quo quo non repellat quo fugit. Voluptatum provident sit neque a explicabo qui recusandae.",
+            "initial_tooth" => "09\/10",
+            "open_proximal" => "09\/10",
+            "deistema" => "09\/25",
+            "userid" => 5,
+            "docid" => 0,
+            "status" => 3,
+            "adddate" => "2009-09-21 08:13:24",
+            "missing" => "04, 05, 20, 25",
+            "crossbite" => "09\/10",
         ];
-
-        $this->put('/api/v1/dental-clinical-exams/' . $dentalClinicalExamTestRecord->ex_page4id, $data)
-            ->seeInDatabase('dental_ex_page4', ['docid' => 100])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/dental-clinical-exams/{id} -> DentalClinicalExamsController@destroy method
-     * 
-     */
-    public function testDeleteDentalClinicalExam()
+    protected function getUpdateData()
     {
-        $dentalClinicalExamTestRecord = factory(DentalClinicalExam::class)->create();
-
-        $this->delete('/api/v1/dental-clinical-exams/' . $dentalClinicalExamTestRecord->ex_page4id)
-            ->notSeeInDatabase('dental_ex_page4', [
-                'ex_page4id' => $dentalClinicalExamTestRecord->ex_page4id
-            ])
-            ->assertResponseOk();
+        return [
+            'patientid' => 55,
+            'docid'     => 100,
+        ];
     }
 }

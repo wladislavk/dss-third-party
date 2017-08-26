@@ -1,63 +1,54 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\Qualifier;
 use Tests\TestCases\ApiTestCase;
 
 class QualifiersApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/qualifiers -> QualifiersController@store method
-     * 
-     */
-    public function testAddQualifier()
+    protected function getModel()
     {
-        $data = factory(Qualifier::class)->make()->toArray();
-
-        $data['sortby'] = 234;
-
-        $this->post('/api/v1/qualifiers', $data)
-            ->seeInDatabase('dental_qualifier', ['sortby' => 234])
-            ->assertResponseOk();
+        return Qualifier::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/qualifiers/{id} -> QualifiersController@update method
-     * 
-     */
-    public function testUpdateQualifier()
+    protected function getRoute()
     {
-        $qualifierTestRecord = factory(Qualifier::class)->create();
+        return '/qualifiers';
+    }
 
-        $data = [
-            'description' => 'updated qualifier',
-            'status'      => 5
+    protected function getStoreData()
+    {
+        return [
+            "qualifier" => "Ducimus voluptatem nulla quia accusantium maiores eaque.",
+            "description" => "Labore labore non hic dolorem.",
+            "sortby" => 234,
+            "status" => 2,
         ];
-
-        $this->put('/api/v1/qualifiers/' . $qualifierTestRecord->qualifierid, $data)
-            ->seeInDatabase('dental_qualifier', ['status' => 5])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/qualifiers/{id} -> QualifiersController@destroy method
-     * 
-     */
-    public function testDeleteQualifier()
+    protected function getUpdateData()
     {
-        $qualifierTestRecord = factory(Qualifier::class)->create();
+        return [
+            'description' => 'updated qualifier',
+            'status'      => 5,
+        ];
+    }
 
-        $this->delete('/api/v1/qualifiers/' . $qualifierTestRecord->qualifierid)
-            ->notSeeInDatabase('dental_qualifier', [
-                'qualifierid' => $qualifierTestRecord->qualifierid
-            ])
-            ->assertResponseOk();
+    public function testGetActive()
+    {
+        $this->post(self::ROUTE_PREFIX . '/qualifiers/active');
+        $this->assertResponseOk();
+        $this->assertEquals(8, count($this->getResponseData()));
+        $expectedFirst = [
+            'qualifierid' => 1,
+            'qualifier' => '0B State license number',
+            'description' => '',
+            'sortby' => 1,
+            'status' => 1,
+        ];
+        $first = $this->getResponseData()[0];
+        unset($first['adddate']);
+        unset($first['ip_address']);
+        $this->assertEquals($expectedFirst, $first);
     }
 }

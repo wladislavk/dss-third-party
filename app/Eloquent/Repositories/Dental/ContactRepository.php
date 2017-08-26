@@ -4,7 +4,11 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use DentalSleepSolutions\Http\Controllers\ContactsController;
+use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Query\JoinClause;
 
 class ContactRepository extends AbstractRepository
 {
@@ -15,57 +19,123 @@ class ContactRepository extends AbstractRepository
 
     /**
      * @param int $docId
-     * @param string $partial
-     * @param array $names
-     * @param int $referredPhysician
-     * @param bool $searchForCompanies
-     * @return mixed
+     * @return Builder
      */
-    public function getListContactsAndCompanies(
-        $docId,
-        $partial,
-        array $names,
-        $referredPhysician,
-        $searchForCompanies = true
-    ) {
-        $query = $this->model->select(
-            'c.contactid',
-            'c.lastname',
-            'c.firstname',
-            'c.middlename',
-            'c.company',
-            \DB::raw($referredPhysician . ' as referral_type'),
-            'ct.contacttype'
-        )->from(\DB::raw('dental_contact c'))
+    public function getListContactsAndCompaniesBaseQuery($docId)
+    {
+        $query = $this->model
+            ->select(
+                'c.contactid',
+                'c.lastname',
+                'c.firstname',
+                'c.middlename',
+                'c.company',
+                \DB::raw(ContactsController::DSS_REFERRED_PHYSICIAN . ' AS referral_type'),
+                'ct.contacttype'
+            )
+            ->from(\DB::raw('dental_contact c'))
             ->leftJoin(\DB::raw('dental_contacttype ct'), 'c.contacttypeid', '=', 'ct.contacttypeid')
-            ->where(function(Builder $query) use ($names, $partial, $searchForCompanies) {
-                $query->where(function(Builder $query) use ($names, $partial) {
-                    $query->where(function(Builder $query) use ($names) {
-                        $query->where('lastname', 'like', $names[0] . '%')
-                            ->orWhere('firstname', 'like', $names[0] . '%');
-                    })->where(function(Builder $query) use ($names) {
-                        $query->where('lastname', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
-                            ->orWhere('firstname', 'like', (!empty($names[1]) ? $names[1] : '') . '%');
-                    });
-                })->orWhere(function(Builder $query) use ($names) {
-                    $query->where('firstname', 'like', $names[0] . '%')
-                        ->where('middlename', 'like', (!empty($names[1]) ? $names[1] : '') . '%')
-                        ->where('lastname', 'like', (!empty($names[2]) ? $names[2] : '') . '%');
-                });
-
-                if ($searchForCompanies) {
-                    $query = $query->orWhere('company', 'like', $partial . '%');
-                }
-            })->whereNull('merge_id')
+            ->whereNull('merge_id')
             ->where('c.status', 1)
             ->where('docid', $docId)
+            ->orderBy('lastname')
         ;
+        return $query;
+    }
 
-        if (!$searchForCompanies) {
-            $query = $query->where('ct.physician', 1);
-        }
+    /**
+     * @param Builder $query
+     * @param string $partial
+     * @return Builder
+     */
+    public function getContactQueryWithConditionsForNamesOnly(
+        Builder $query,
+        $partial
+    ) {
+        $names = explode(' ', $partial);
+        $query
+            ->where(function (Builder $query) use ($names) {
+                $query
+                    ->where($this->getLambdaForFirstAndLastName($names))
+                    ->orWhere($this->getLambdaForFullName($names))
+                ;
+            })
+            ->where('ct.physician', 1);
+        ;
+        return $query;
+    }
 
-        return $query->orderBy('lastname')->get();
+    /**
+     * @param Builder $query
+     * @param string $partial
+     * @return Builder
+     */
+    public function getContactQueryWithConditionsForNamesAndCompanies(
+        Builder $query,
+        $partial
+    ) {
+        $names = explode(' ', $partial);
+        $query
+            ->where(function (Builder $query) use ($names, $partial) {
+                $query
+                    ->where($this->getLambdaForFirstAndLastName($names))
+                    ->orWhere($this->getLambdaForFullName($names))
+                    ->orWhere('company', 'LIKE', $partial . '%');
+                ;
+            })
+        ;
+        return $query;
+    }
+
+    /**
+     * @param array $names
+     * @return \Closure
+     */
+    public function getLambdaForFirstAndLastName(array $names)
+    {
+        return function (Builder $query) use ($names) {
+            $query
+                ->where(function (Builder $query) use ($names) {
+                    $query
+                        ->where('lastname', 'LIKE', $names[0] . '%')
+                        ->orWhere('firstname', 'LIKE', $names[0] . '%')
+                    ;
+                })
+                ->where(function (Builder $query) use ($names) {
+                    $firstName = '';
+                    if (isset($names[1])) {
+                        $firstName = $names[1];
+                    }
+                    $query
+                        ->where('lastname', 'LIKE', $firstName . '%')
+                        ->orWhere('firstname', 'LIKE', $firstName . '%')
+                    ;
+                })
+            ;
+        };
+    }
+
+    /**
+     * @param array $names
+     * @return \Closure
+     */
+    public function getLambdaForFullName(array $names)
+    {
+        return function (Builder $query) use ($names) {
+            $firstName = '';
+            if (isset($names[1])) {
+                $firstName = $names[1];
+            }
+            $secondName = '';
+            if (isset($names[2])) {
+                $secondName = $names[2];
+            }
+            $query
+                ->where('firstname', 'LIKE', $names[0] . '%')
+                ->where('middlename', 'LIKE', $firstName . '%')
+                ->where('lastname', 'LIKE', $secondName . '%')
+            ;
+        };
     }
 
     /**
@@ -74,11 +144,13 @@ class ContactRepository extends AbstractRepository
      */
     public function getWithContactType($contactId)
     {
-        return $this->model->select('c.*', 'ct.contacttype')
+        return $this->model
+            ->select('c.*', 'ct.contacttype')
             ->from(\DB::raw('dental_contact c'))
             ->leftJoin(\DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'c.contacttypeid')
             ->where('c.contactid', $contactId)
-            ->first();
+            ->first()
+        ;
     }
 
     /**
@@ -93,71 +165,65 @@ class ContactRepository extends AbstractRepository
             ->where('contacttypeid', 11)
             ->where('docid', $docId)
             ->orderBy('company')
-            ->get();
+            ->get()
+        ;
     }
 
     /**
      * @param int $docId
-     * @param string $sort
+     * @param array $orderByColumns
      * @param string $sortDir
-     * @return array|\Illuminate\Database\Eloquent\Collection
+     * @return Contact[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getReferredByContacts($docId, $sort, $sortDir = 'asc')
+    public function getReferredByContacts($docId, array $orderByColumns, $sortDir)
     {
-        $physicianContacts = $this->model->select(
-            'dc.contactid',
-            'dc.salutation',
-            'dc.firstname',
-            'dc.middlename',
-            'dc.lastname',
-            'p.referred_source',
-            'dc.referredby_notes',
-            \DB::raw('COUNT(p.patientid) AS num_ref'),
-            \DB::raw("GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list"),
-            \DB::raw(Contact::DSS_REFERRED_PHYSICIAN . ' as referral_type'),
-            'ct.contacttype'
-        )->from(\DB::raw('dental_contact dc'))
+        $physicianContacts = $this->model
+            ->select(
+                'dc.contactid',
+                'dc.salutation',
+                'dc.firstname',
+                'dc.middlename',
+                'dc.lastname',
+                'p.referred_source',
+                'dc.referredby_notes',
+                \DB::raw('COUNT(p.patientid) AS num_ref'),
+                \DB::raw("GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list"),
+                \DB::raw(Contact::DSS_REFERRED_PHYSICIAN . ' AS referral_type'),
+                'ct.contacttype'
+            )
+            ->from(\DB::raw('dental_contact dc'))
             ->join(\DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'dc.contacttypeid')
             ->join(\DB::raw('dental_patients p'), 'dc.contactid', '=', 'p.referred_by')
             ->where('dc.docid', $docId)
             ->where('p.referred_source', Contact::DSS_REFERRED_PHYSICIAN)
-            ->groupBy('dc.contactid');
+            ->groupBy('dc.contactid')
+        ;
 
-        $patientContacts = $this->model->select(
-            'dp.patientid',
-            'dp.salutation',
-            'dp.firstname',
-            'dp.middlename',
-            'dp.lastname',
-            'p.referred_source',
-            \DB::raw("''"),
-            \DB::raw('COUNT(p.patientid)'),
-            \DB::raw("GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list"),
-            \DB::raw(Contact::DSS_REFERRED_PATIENT),
-            \DB::raw("'Patient'")
-        )->from(\DB::raw('dental_patients dp'))
+        $patientContacts = $this->model
+            ->select(
+                'dp.patientid',
+                'dp.salutation',
+                'dp.firstname',
+                'dp.middlename',
+                'dp.lastname',
+                'p.referred_source',
+                \DB::raw("''"),
+                \DB::raw('COUNT(p.patientid)'),
+                \DB::raw("GROUP_CONCAT(CONCAT(p.firstname, ' ', p.lastname)) AS patients_list"),
+                \DB::raw(Contact::DSS_REFERRED_PATIENT),
+                \DB::raw("'Patient'")
+            )
+            ->from(\DB::raw('dental_patients dp'))
             ->join(\DB::raw('dental_patients p'), 'dp.patientid', '=', 'p.referred_by')
             ->where('p.docid', $docId)
             ->where('p.referred_source', Contact::DSS_REFERRED_PATIENT)
-            ->groupBy('dp.patientid');
+            ->groupBy('dp.patientid')
+        ;
 
         $resultSql = $physicianContacts->union($patientContacts);
 
-        if (!empty($sort)) {
-            switch ($sort) {
-                case 'contacttype':
-                    $resultSql = $resultSql->orderBy('contacttype', $sortDir);
-                    break;
-
-                case 'total':
-                    $resultSql = $resultSql->orderBy('num_ref', $sortDir);
-                    break;
-
-                case 'name':
-                    $resultSql = $resultSql->orderBy('lastname', $sortDir)
-                        ->orderBy('firstname', $sortDir);
-                    break;
-            }
+        foreach ($orderByColumns as $column) {
+            $resultSql = $resultSql->orderBy($column, $sortDir);
         }
 
         return $resultSql->get();
@@ -166,156 +232,136 @@ class ContactRepository extends AbstractRepository
     /**
      * @param int $page
      * @param int $rowsPerPage
-     * @param string $sort
+     * @param array $orderByColumns
      * @param string $sortDir
      * @return array
      */
-    public function getCorporate($page, $rowsPerPage, $sort, $sortDir = 'asc')
+    public function getCorporate($page, $rowsPerPage, array $orderByColumns, $sortDir)
     {
-        $query = $this->model->select('c.*', 'ct.contacttype')
+        $query = $this->model
+            ->select('c.*', 'ct.contacttype')
             ->from(\DB::raw('dental_contact c'))
             ->leftJoin(\DB::raw('dental_contacttype ct'), 'ct.contacttypeid', '=', 'c.contacttypeid')
-            ->where('c.corporate', 1);
+            ->where('c.corporate', 1)
+        ;
 
         $totalNumber = $query->count();
-
-        if (!empty($sort)) {
-            switch ($sort) {
-                case 'company':
-                    $query = $query->orderBy('company');
-                    break;
-
-                case 'type':
-                    $query = $query->orderBy('ct.contacttype', $sortDir);
-                    break;
-
-                default:
-                    $query = $query->orderBy('lastname', $sortDir)
-                        ->orderBy('firstname', $sortDir);
-                    break;
-            }
+        foreach ($orderByColumns as $column) {
+            $query = $query->orderBy($column, $sortDir);
         }
-
-        $resultQuery = $query->skip($page * $rowsPerPage)
-            ->take($rowsPerPage);
+        $resultQuery = $query
+            ->skip($page * $rowsPerPage)
+            ->take($rowsPerPage)
+        ;
 
         return [
-            'total'  => $totalNumber,
+            'total' => $totalNumber,
             'result' => $resultQuery->get(),
         ];
     }
 
     /**
-     * @param int $contactType
-     * @param int $status
      * @param int $docId
-     * @param string $letter
-     * @param string $sortBy
-     * @param string $sortDir
-     * @param int $page
-     * @param int $contactsPerPage
-     * @return array
+     * @param int $status
+     * @return Builder|QueryBuilder
      */
-    public function findContact(
-        $contactType     = 0,
-        $status          = 0,
-        $docId           = 0,
-        $letter          = '',
-        $sortBy          = '',
-        $sortDir         = '',
-        $page            = 0,
-        $contactsPerPage = 0
-    ) {
-        $contacts = $this->model->select(
-            'dc.*',
-            'dct.contacttype',
-            \DB::raw('COUNT(distinct dp_ref.patientid) as referrers'),
-            \DB::raw('COUNT(distinct dp_pat.patientid) as patients')
-        )
+    public function getFindContactBaseQuery($docId, $status)
+    {
+        $query = $this->model
+            ->select(
+                'dc.*',
+                'dct.contacttype',
+                \DB::raw('COUNT(DISTINCT dp_ref.patientid) AS referrers'),
+                \DB::raw('COUNT(DISTINCT dp_pat.patientid) AS patients')
+            )
             ->from(\DB::raw('dental_contact dc'))
             ->leftJoin(\DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
-            ->leftJoin(\DB::raw('dental_patients dp_ref'), function($join) {
-                $join->on('dp_ref.referred_by', '=', 'dc.contactid')
-                    ->where(function(Builder $query) {
-                        $query->whereNull('dp_ref.parent_patientid')
-                            ->orWhere('dp_ref.parent_patientid', '=', '');
+            ->leftJoin(\DB::raw('dental_patients dp_ref'), function (JoinClause $join) {
+                $join
+                    ->on('dp_ref.referred_by', '=', 'dc.contactid')
+                    ->where(function (JoinClause $query) {
+                        $query
+                            ->whereNull('dp_ref.parent_patientid')
+                            ->orWhere('dp_ref.parent_patientid', '=', '')
+                        ;
                     })
-                    ->where('dp_ref.referred_source', '=', 2);
+                    ->where('dp_ref.referred_source', '=', 2)
+                ;
             })
-            ->leftJoin(\DB::raw('dental_patients dp_pat'), function($join) {
-                $join->on(function(Builder $query) {
-                    $query->whereNull('dp_pat.parent_patientid')
-                        ->orWhere('dp_pat.parent_patientid', '=', '');
-                })->where(function(Builder $query) {
-                    $query->on('dp_pat.docpcp', '=', 'dc.contactid')
-                        ->orOn('dp_pat.docent', '=', 'dc.contactid')
-                        ->orOn('dp_pat.docsleep', '=', 'dc.contactid')
-                        ->orOn('dp_pat.docdentist', '=', 'dc.contactid')
-                        ->orOn('dp_pat.docmdother', '=', 'dc.contactid')
-                        ->orOn('dp_pat.docmdother2', '=', 'dc.contactid')
-                        ->orOn('dp_pat.docmdother3', '=', 'dc.contactid');
-                });
+            ->leftJoin(\DB::raw('dental_patients dp_pat'), function (JoinClause $join) {
+                $join
+                    ->on(function (JoinClause $query) {
+                        $query
+                            ->whereNull('dp_pat.parent_patientid')
+                            ->orWhere('dp_pat.parent_patientid', '=', '');
+                    })
+                    ->where(function (JoinClause $join) {
+                        $docFields = PatientFormDataUpdater::DOC_FIELDS;
+                        $firstId = array_shift($docFields);
+                        $join = $join->on('dp_pat.' . $firstId, '=', 'dc.contactid');
+                        foreach ($docFields as $docField) {
+                            $join = $join->orOn('dp_pat.' . $docField, '=', 'dc.contactid');
+                        }
+                    })
+                ;
             })
             ->where('dc.docid', $docId)
-            ->whereNull('merge_id');
+            ->whereNull('merge_id')
+            ->where('dc.status', $status)
+            ->groupBy('dc.contactid');
+        return $query;
+    }
 
-        if ($contactType) {
-            $contacts = $contacts->where('dct.contacttypeid', $contactType)
-                ->where('dc.status', 1);
-        } elseif ($status) {
-            $contacts = $contacts->where('dc.status', $status);
-        } else {
-            $contacts = $contacts->where('dc.status', 1);
-        }
+    /**
+     * @param Builder $query
+     * @param string $letter
+     * @return Builder|QueryBuilder
+     */
+    public function getContactQueryWhereLastNameOrCompanyLikeLetter(Builder $query, $letter)
+    {
+        return $query->where(function (Builder $query) use ($letter) {
+            $query
+                ->where('dc.lastname', 'LIKE', $letter . '%')
+                ->orWhere(function (Builder $query) use ($letter) {
+                    $query
+                        ->where('dc.lastname', '')
+                        ->where('dc.company', 'LIKE', $letter . '%')
+                    ;
+                })
+            ;
+        });
+    }
 
-        if ($letter) {
-            $contacts = $contacts->where(function($query) use ($letter) {
-                $query->where('dc.lastname', 'like', $letter . '%')
-                    ->orWhere(function($query) use ($letter) {
-                        $query->where('dc.lastname', '')
-                            ->where('dc.company', 'like', $letter . '%');
-                    });
-            });
-        }
+    /**
+     * @param Builder $query
+     * @param int $contactTypeId
+     * @return Builder
+     */
+    public function getContactQueryWhereContactTypeId(Builder $query, $contactTypeId)
+    {
+        return $query->where('dct.contacttypeid', $contactTypeId);
+    }
 
-        $contacts = $contacts->groupBy('dc.contactid');
+    /**
+     * @param Builder $query
+     * @param string $column
+     * @param string $direction
+     * @return Builder
+     */
+    public function getContactQueryOrderByColumnAndDirection(Builder $query, $column, $direction)
+    {
+        return $query->orderBy($column, $direction);
+    }
 
-        if ($sortBy) {
-            switch ($sortBy) {
-                case 'company':
-                    $contacts = $contacts->orderBy(\DB::raw("IF (company = '' OR company IS NULL, 1, 0)"), $sortDir)
-                        ->orderBy('company', $sortDir)
-                        ->orderBy('dc.lastname', 'asc')
-                        ->orderBy('firstname', 'asc')
-                        ->orderBy('dct.contacttype', 'asc');
-                    break;
-
-                case 'type':
-                    $contacts = $contacts->orderBy(DB::raw("IF (dct.contacttype = '' OR dct.contacttype IS NULL, 1, 0)"), $sortDir)
-                        ->orderBy('dct.contacttype', $sortDir)
-                        ->orderBy('dc.lastname', 'asc')
-                        ->orderBy('firstname', 'asc')
-                        ->orderBy('company', 'asc');
-                    break;
-
-                default:
-                    $contacts = $contacts->orderBy(\DB::raw("IF (dc.lastname = '' OR dc.lastname IS NULL, 1, 0)"), $sortDir)
-                        ->orderBy('dc.lastname', $sortDir)
-                        ->orderBy('firstname', $sortDir)
-                        ->orderBy('company', 'asc')
-                        ->orderBy('dct.contacttype', 'asc');
-                    break;
-            }
-        }
-
-        $contacts = $contacts->get()->toArray();
-        $totalCount = count($contacts);
-        $contacts = array_splice($contacts, $page * $contactsPerPage, $contactsPerPage);
-
-        return [
-            'totalCount' => $totalCount,
-            'result'     => $contacts,
-        ];
+    /**
+     * @param Builder $query
+     * @param string $column
+     * @param string $sortDir
+     * @return Builder
+     */
+    public function getContactQueryOrderByColumnOrNull(Builder $query, $column, $sortDir)
+    {
+        return $query->orderBy(\DB::raw("IF ($column = '' OR $column IS NULL, 1, 0)"), $sortDir);
     }
 
     /**
@@ -324,11 +370,13 @@ class ContactRepository extends AbstractRepository
      */
     public function getDocShortInfo($contactId)
     {
-        return $this->model->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
+        return $this->model
+            ->select('dc.lastname', 'dc.firstname', 'dc.middlename', 'dct.contacttype')
             ->from(\DB::raw('dental_contact dc'))
             ->leftJoin(\DB::raw('dental_contacttype dct'), 'dct.contacttypeid', '=', 'dc.contacttypeid')
             ->where('contactid', $contactId)
-            ->first();
+            ->first()
+        ;
     }
 
     /**
@@ -338,28 +386,32 @@ class ContactRepository extends AbstractRepository
      */
     public function getContactInfo($letterId, $mdList)
     {
-        return $this->model->select(
-            'dental_contact.contactid AS id',
-            'dental_contact.salutation',
-            'dental_contact.firstname',
-            'dental_contact.lastname',
-            'dental_contact.middlename',
-            'dental_contact.company',
-            'dental_contact.add1',
-            'dental_contact.add2',
-            'dental_contact.city',
-            'dental_contact.state',
-            'dental_contact.zip',
-            'dental_contact.email',
-            'dental_contact.fax',
-            'dental_contact.preferredcontact',
-            'dental_contacttype.contacttype',
-            'dental_contact.contacttypeid',
-            \DB::raw($letterId . ' AS letterid'),
-            'dental_contact.status'
-        )->leftJoin('dental_contacttype', 'dental_contact.contacttypeid', '=', 'dental_contacttype.contacttypeid')
+        return $this->model
+            ->select(
+                'dental_contact.contactid AS id',
+                'dental_contact.salutation',
+                'dental_contact.firstname',
+                'dental_contact.lastname',
+                'dental_contact.middlename',
+                'dental_contact.company',
+                'dental_contact.add1',
+                'dental_contact.add2',
+                'dental_contact.city',
+                'dental_contact.state',
+                'dental_contact.zip',
+                'dental_contact.email',
+                'dental_contact.fax',
+                'dental_contact.preferredcontact',
+                'dental_contacttype.contacttype',
+                'dental_contact.contacttypeid',
+                'dental_contact.status',
+                // @todo: integer cannot be aliased
+                \DB::raw($letterId . ' AS letterid')
+            )
+            ->leftJoin('dental_contacttype', 'dental_contact.contacttypeid', '=', 'dental_contacttype.contacttypeid')
             ->whereIn('dental_contact.contactid', $mdList)
-            ->get();
+            ->get()
+        ;
     }
 
     /**
@@ -368,8 +420,10 @@ class ContactRepository extends AbstractRepository
      */
     public function getActiveContact($contactId)
     {
-        return $this->model->where('contactid', $contactId)
+        return $this->model
+            ->where('contactid', $contactId)
             ->where('status', 1)
-            ->first();
+            ->first()
+        ;
     }
 }

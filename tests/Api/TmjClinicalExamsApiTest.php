@@ -1,64 +1,69 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use Tests\TestCases\ApiTestCase;
 
 class TmjClinicalExamsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/tmj-clinical-exams -> TmjClinicalExamsController@store method
-     * 
-     */
-    public function testAddTmjClinicalExam()
+    protected function getModel()
     {
-        $data = factory(TmjClinicalExam::class)->make()->toArray();
-
-        $data['formid'] = 100;
-
-        $this->post('/api/v1/tmj-clinical-exams', $data);
-        $this
-            ->seeInDatabase('dental_ex_page5', ['formid' => 100])
-            ->assertResponseOk();
+        return TmjClinicalExam::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/tmj-clinical-exams/{id} -> TmjClinicalExamsController@update method
-     * 
-     */
-    public function testUpdateTmjClinicalExam()
+    protected function getRoute()
     {
-        $tmjClinicalExamTestRecord = factory(TmjClinicalExam::class)->create();
+        return '/tmj-clinical-exams';
+    }
 
-        $data = [
-            'patientid'          => 100,
-            'other_range_motion' => 'test'
+    protected function getStoreData()
+    {
+        return [
+            "formid" => 100,
+            "patientid" => 5,
+            "palpationid" => "1|0~2|0~3|0~4|0~5|0~6|0~7|0~",
+            "palpationRid" => "1|1~3|4~5|0~",
+            "additional_paragraph_pal" => "Dolor rerum aut provident quod aspernatur atque ducimus. Et autem modi ipsum aut praesentium quis nulla. Laudantium facere ullam quasi mollitia. Ullam itaque harum fugit sint.",
+            "joint_exam" => "~6~1~3~3~8~",
+            "jointid" => "1|L~2|L~3|R~4|B~5|B~",
+            "i_opening_from" => "83",
+            "i_opening_to" => "68",
+            "i_opening_equal" => "94",
+            "protrusion_from" => "-8",
+            "protrusion_to" => "62",
+            "protrusion_equal" => "05",
+            "l_lateral_from" => "17",
+            "l_lateral_to" => "18",
+            "l_lateral_equal" => "90",
+            "r_lateral_from" => "21",
+            "r_lateral_to" => "76",
+            "r_lateral_equal" => "97",
+            "deviation_from" => "9",
+            "deviation_to" => "27",
+            "deviation_equal" => "83",
+            "deflection_from" => "84",
+            "deflection_to" => "39",
+            "deflection_equal" => "30",
+            "range_normal" => "2",
+            "normal" => "9",
+            "other_range_motion" => "Ratione culpa consequatur libero.",
+            "additional_paragraph_rm" => "Similique recusandae dolor voluptatibus repudiandae. Non rerum amet fuga et itaque sit. Ea odio sed accusantium repellendus. Facilis voluptatem id culpa adipisci qui assumenda commodi.",
+            "screening_aware" => "1",
+            "screening_normal" => "3",
+            "userid" => 4,
+            "docid" => 1,
+            "status" => 6,
+            "deviation_r_l" => "Left",
+            "deflection_r_l" => "Right",
+            "dentaldevice" => 5,
         ];
-        $this->put('/api/v1/tmj-clinical-exams/' . $tmjClinicalExamTestRecord->ex_page5id, $data);
-        $this
-            ->seeInDatabase('dental_ex_page5', ['patientid' => 100])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/tmj-clinical-exams/{id} -> TmjClinicalExamsController@destroy method
-     * 
-     */
-    public function testDeleteTmjClinicalExam()
+    protected function getUpdateData()
     {
-        $tmjClinicalExamTestRecord = factory(TmjClinicalExam::class)->create();
-
-        $this->delete('/api/v1/tmj-clinical-exams/' . $tmjClinicalExamTestRecord->ex_page5id);
-//        var_dump($this->response->getContent());
-        $this
-            ->notSeeInDatabase('dental_ex_page5', ['ex_page5id' => $tmjClinicalExamTestRecord->ex_page5id])
-            ->assertResponseOk();
+        return [
+            'patientid'          => 100,
+            'other_range_motion' => 'test',
+        ];
     }
 }

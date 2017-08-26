@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Repositories;
 
 use Carbon\Carbon;
-use DentalSleepSolutions\Eloquent\Models\UserSignature;
+use DentalSleepSolutions\Eloquent\Models\Dental\UserSignature;
 
 class UserSignatureRepository extends AbstractRepository
 {

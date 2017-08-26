@@ -1,58 +1,57 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\Fax;
 use Tests\TestCases\ApiTestCase;
 
 class FaxesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/faxes -> FaxesController@store method
-     * 
-     */
-    public function testAddFax()
+    protected function getModel()
     {
-        $data = factory(Fax::class)->make()->toArray();
-
-        $data['patientid'] = 10;
-
-        $this->post('/api/v1/faxes', $data)
-            ->seeInDatabase('dental_faxes', ['patientid' => 10])
-            ->assertResponseOk();
+        return Fax::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/faxes/{id} -> FaxesController@update method
-     * 
-     */
-    public function testUpdateFax()
+    protected function getRoute()
     {
-        $faxTestRecord = factory(Fax::class)->create();
-
-        $data = ['userid' => 100];
-
-        $this->put('/api/v1/faxes/' . $faxTestRecord->id, $data)
-            ->seeInDatabase('dental_faxes', ['userid' => 100])
-            ->assertResponseOk();
+        return '/faxes';
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/faxes/{id} -> FaxesController@destroy method
-     * 
-     */
-    public function testDeleteFax()
+    protected function getStoreData()
     {
-        $faxTestRecord = factory(Fax::class)->create();
+        return [
+            "patientid" => 10,
+            "userid" => 8,
+            "docid" => 3,
+            "pages" => 7,
+            "contactid" => 1,
+            "to_number" => "6380246714",
+            "to_name" => "Andreanne Zboncak",
+            "letterid" => 5,
+            "filename" => "f6_p35_u5_2017-07-20_05-12-15.pdf",
+            "status" => 6,
+            "adddate" => "2017-07-20 05:12:15",
+            "fax_invoice_id" => 5,
+            "sfax_transmission_id" => "9277320612255801160",
+            "sfax_completed" => 0,
+            "sfax_status" => 9,
+            "viewed" => 1,
+        ];
+    }
 
-        $this->delete('/api/v1/faxes/' . $faxTestRecord->id)
-            ->notSeeInDatabase('dental_faxes', ['id' => $faxTestRecord->id])
-            ->assertResponseOk();
+    protected function getUpdateData()
+    {
+        return [
+            'userid' => 100,
+        ];
+    }
+
+    public function testGetAlerts()
+    {
+        $this->post(self::ROUTE_PREFIX . '/faxes/alerts');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 }

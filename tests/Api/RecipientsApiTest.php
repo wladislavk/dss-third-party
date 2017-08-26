@@ -1,63 +1,51 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\Recipient;
 use Tests\TestCases\ApiTestCase;
 
 class RecipientsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/recipients -> RecipientsController@store method
-     * 
-     */
-    public function testAddRecipient()
+    protected function getModel()
     {
-        $data = factory(Recipient::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/recipients', $data)
-            ->seeInDatabase('dental_q_recipients', ['patientid' => 100])
-            ->assertResponseOk();
+        return Recipient::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/recipients/{id} -> RecipientsController@update method
-     * 
-     */
-    public function testUpdateRecipient()
+    protected function getRoute()
     {
-        $recipientTestRecord = factory(Recipient::class)->create();
+        return '/recipients';
+    }
 
-        $data = [
-            'formid'       => 100,
-            'patient_info' => 'updated patient info'
+    protected function getStoreData()
+    {
+        return [
+            "formid" => 9,
+            "patientid" => 100,
+            "referring_physician" => "Odio libero error nisi nemo.",
+            "dentist" => "Quia magni esse ratione nisi illo illo atque.",
+            "physicians_other" => "In voluptas deleniti vel eos iusto voluptatem recusandae.",
+            "patient_info" => "Impedit sed itaque quia et ratione atque.",
+            "q_file1" => "3ljeakee4cpo.gif",
+            "q_file2" => "c7hv24pkp961.png",
+            "q_file3" => "qtjxf7dr719i.png",
+            "q_file4" => "zxe7va72pq3e.gif",
+            "q_file5" => "ntn63z765v2a.jpg",
+            "userid" => 9,
+            "docid" => 0,
+            "status" => 0,
+            "q_file6" => "7a8ptmvhbb1s.png",
+            "q_file7" => "5zy6gzhpwdm1.jpg",
+            "q_file8" => "8mbm7brjgdp9.jpg",
+            "q_file9" => "e352y91b4no8.jpg",
+            "q_file10" => "utcrs7jxy6f8.gif",
         ];
-
-        $this->put('/api/v1/recipients/' . $recipientTestRecord->q_recipientsid, $data)
-            ->seeInDatabase('dental_q_recipients', ['formid' => 100])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/recipients/{id} -> RecipientsController@destroy method
-     * 
-     */
-    public function testDeleteRecipient()
+    protected function getUpdateData()
     {
-        $recipientTestRecord = factory(Recipient::class)->create();
-
-        $this->delete('/api/v1/recipients/' . $recipientTestRecord->q_recipientsid)
-            ->notSeeInDatabase('dental_q_recipients', [
-                'q_recipientsid' => $recipientTestRecord->q_recipientsid
-            ])
-            ->assertResponseOk();
+        return [
+            'formid' => 100,
+            'patient_info' => 'updated patient info',
+        ];
     }
 }

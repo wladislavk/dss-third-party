@@ -1,65 +1,38 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\LetterTemplate;
 use Tests\TestCases\ApiTestCase;
 
 class LetterTemplatesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/letter-templates -> LetterTemplatesController@store method
-     * 
-     */
-    public function testAddLetterTemplate()
+    protected function getModel()
     {
-        $data = factory(LetterTemplate::class)->make()->toArray();
-
-        $data['companyid'] = 100;
-
-        $this->post('/api/v1/letter-templates', $data)
-            ->seeInDatabase('dental_letter_templates', ['companyid' => 100])
-            ->assertResponseOk();
+        return LetterTemplate::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/letter-templates/{id} -> LetterTemplatesController@update method
-     * 
-     */
-    public function testUpdateLetterTemplate()
+    protected function getRoute()
     {
-        $letterTemplateTestRecord = factory(LetterTemplate::class)->create();
+        return '/letter-templates';
+    }
 
-        $data = [
-            'body'      => 'updated body',
-            'triggerid' => 8
+    protected function getStoreData()
+    {
+        return [
+            "name" => "Ut sequi cupiditate eum aut.",
+            "template" => "/manage/gy_h.php",
+            "body" => "Quia tenetur quos magni qui eos corrupti beatae.",
+            "default_letter" => 9,
+            "companyid" => 100,
+            "triggerid" => 0,
         ];
-
-        $this->put('/api/v1/letter-templates/' . $letterTemplateTestRecord->id, $data)
-            ->seeInDatabase('dental_letter_templates', [
-                'body' => 'updated body'
-            ])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/letter-templates/{id} -> LetterTemplatesController@destroy method
-     * 
-     */
-    public function testDeleteLetterTemplate()
+    protected function getUpdateData()
     {
-        $letterTemplateTestRecord = factory(LetterTemplate::class)->create();
-
-        $this->delete('/api/v1/letter-templates/' . $letterTemplateTestRecord->id)
-            ->notSeeInDatabase('dental_letter_templates', [
-                'id' => $letterTemplateTestRecord->id
-            ])
-            ->assertResponseOk();
+        return [
+            'body'      => 'updated body',
+            'triggerid' => 8,
+        ];
     }
 }

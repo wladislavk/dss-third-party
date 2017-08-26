@@ -1,63 +1,59 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use Tests\TestCases\ApiTestCase;
 
 class TasksApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/tasks -> TasksController@store method
-     * 
-     */
-    public function testAddTask()
+    protected function getModel()
     {
-        $data = factory(Task::class)->make()->toArray();
-
-        $data['userid'] = 100;
-
-        $this->post('/api/v1/tasks', $data)
-            ->seeInDatabase('dental_task', ['userid' => 100])
-            ->assertResponseOk();
+        return Task::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/tasks/{id} -> TasksController@update method
-     * 
-     */
-    public function testUpdateTask()
+    protected function getRoute()
     {
-        $taskTestRecord = factory(Task::class)->create();
+        return '/tasks';
+    }
 
-        $data = [
-            'patientid'   => 100,
-            'description' => 'updated task'
+    protected function getStoreData()
+    {
+        return [
+            "task" => "Sed necessitatibus quisquam delectus autem.",
+            "description" => "Sed soluta ut sed eos rerum et.",
+            "userid" => 100,
+            "responsibleid" => 4,
+            "status" => 8,
+            "recurring" => 8,
+            "recurring_unit" => 2,
+            "patientid" => 0,
         ];
-
-        $this->put('/api/v1/tasks/' . $taskTestRecord->id, $data)
-            ->seeInDatabase('dental_task', ['patientid' => 100])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/tasks/{id} -> TasksController@destroy method
-     * 
-     */
-    public function testDeleteTask()
+    protected function getUpdateData()
     {
-        $taskTestRecord = factory(Task::class)->create();
+        return [
+            'patientid'   => 100,
+            'description' => 'updated task',
+        ];
+    }
 
-        $this->delete('/api/v1/tasks/' . $taskTestRecord->id)
-            ->notSeeInDatabase('dental_task', [
-                'id' => $taskTestRecord->id
-            ])
-            ->assertResponseOk();
+    public function testGetType()
+    {
+        $type = 'all';
+        $this->post(self::ROUTE_PREFIX . '/tasks/' . $type);
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
+
+    public function testGetTypeForPatient()
+    {
+        /** @var Patient $patient */
+        $patient = factory(Patient::class)->create();
+        $type = 'all';
+        $this->post(self::ROUTE_PREFIX . '/tasks/' . $type . '/pid/' . $patient->patientid);
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
     }
 }

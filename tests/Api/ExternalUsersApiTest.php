@@ -1,22 +1,44 @@
 <?php
+
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use Faker\Factory as Faker;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCases\ApiTestCase;
 
 class ExternalUsersApiTest extends ApiTestCase
 {
     const ENDPOINT = '/api/v1/external-user';
 
-    use WithoutMiddleware, DatabaseTransactions;
-
-    public function setUp()
+    protected function getModel()
     {
-        parent::setUp();
+        return ExternalUser::class;
+    }
+
+    protected function getRoute()
+    {
+        return '/external-user';
+    }
+
+    protected function getStoreData()
+    {
+        return [
+            'user_id' => 100,
+            'api_key' => 'test api key',
+            'valid_from' => 'test valid from',
+            'valid_to' => 'test valid to',
+            'created_by' => 0,
+            'updated_by' => 1,
+            'enabled' => true,
+        ];
+    }
+
+    protected function getUpdateData()
+    {
+        return [
+            'api_key' => 'updated api key',
+        ];
     }
 
     public function testListExternalUsers()

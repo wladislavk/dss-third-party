@@ -1,65 +1,62 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\PatientInsurance;
 use Tests\TestCases\ApiTestCase;
 
 class PatientInsurancesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/patient-insurances -> PatientInsurancesController@store method
-     * 
-     */
-    public function testAddPatientInsurance()
+    protected function getModel()
     {
-        $data = factory(PatientInsurance::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/patient-insurances', $data)
-            ->seeInDatabase('dental_patient_insurance', ['patientid' => 100])
-            ->assertResponseOk();
+        return PatientInsurance::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/patient-insurances/{id} -> PatientInsurancesController@update method
-     * 
-     */
-    public function testUpdatePatientInsurance()
+    protected function getRoute()
     {
-        $patientInsuranceTestRecord = factory(PatientInsurance::class)->create();
+        return '/patient-insurances';
+    }
 
-        $data = [
+    protected function getStoreData()
+    {
+        return [
+            "patientid" => 100,
+            "insurancetype" => 6,
+            "company" => "Modi doloribus illo alias.",
+            "address1" => "9247 Kris Loaf\nSouth Gabriellebury, SC 02276",
+            "address2" => "892 Marie Glens\nNorth Rhiannon, MS 40966-6218",
+            "city" => "West Branson",
+            "state" => "AZ",
+            "zip" => "41427",
+            "phone" => "8859285131",
+            "fax" => "(203) 557-0545",
+            "email" => "jasmin.mcdermott@hotmail.com",
+        ];
+    }
+
+    protected function getUpdateData()
+    {
+        return [
             'patientid' => 85,
             'company'   => 'test company',
             'zip'       => 12345,
-            'email'     => 'test@mail.com'
+            'email'     => 'test@mail.com',
         ];
-
-        $this->put('/api/v1/patient-insurances/' . $patientInsuranceTestRecord->id, $data)
-            ->seeInDatabase('dental_patient_insurance', ['patientid' => 85])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/patient-insurances/{id} -> PatientInsurancesController@destroy method
-     * 
-     */
-    public function testDeletePatientInsurance()
+    public function testGetCurrent()
     {
-        $patientInsuranceTestRecord = factory(PatientInsurance::class)->create();
+        $this->post(self::ROUTE_PREFIX . '/patient-insurances/current');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
 
-        $this->delete('/api/v1/patient-insurances/' . $patientInsuranceTestRecord->id)
-            ->notSeeInDatabase('dental_patient_insurance', [
-                'id' => $patientInsuranceTestRecord->id
-            ])
-            ->assertResponseOk();
+    public function testGetNumber()
+    {
+        $this->post(self::ROUTE_PREFIX . '/patient-insurances/number');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 }

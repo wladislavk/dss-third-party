@@ -7,6 +7,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Helpers\LetterCreator;
 use DentalSleepSolutions\Structs\LetterData;
+use Illuminate\Database\Eloquent\Collection;
 
 class TreatmentCompleteTrigger extends AbstractLetterTrigger
 {
@@ -23,6 +24,10 @@ class TreatmentCompleteTrigger extends AbstractLetterTrigger
         'docmdother2',
         'docmdother3',
     ];
+
+    // @todo: eliminate magic numbers
+    const REFERRED_SOURCE_ONE = 1;
+    const REFERRED_SOURCE_TWO = 2;
 
     /** @var PatientRepository */
     private $patientRepository;
@@ -55,17 +60,44 @@ class TreatmentCompleteTrigger extends AbstractLetterTrigger
     protected function fillLetterData(LetterData $letterData, $patientId, $docId, array $params = [])
     {
         $currentPatient = $this->getCurrentPatient($patientId);
+        if (!$currentPatient) {
+            return false;
+        }
+        $patientReferredSource = $currentPatient->referred_source;
+        $contacts = $this->getPatientReferralIds($patientReferredSource, $patientId);
 
-        $patientReferralIds = $this->patientRepository->getPatientReferralIds($patientId, $currentPatient);
+        if (!isset($contacts[0]) || !isset($contacts[0]->ids)) {
+            return false;
+        }
+        $patientReferralIds = $contacts[0]->ids;
         if (!$patientReferralIds) {
             return false;
         }
+
         $letters = $this->letterRepository->getPatientTreatmentComplete($patientId, $patientReferralIds);
         if (count($letters)) {
             return false;
         }
         $letterData->patientReferralList = $patientReferralIds;
         return true;
+    }
+
+    /**
+     * @param int $patientReferredSource
+     * @param int $patientId
+     * @return array|Collection
+     */
+    private function getPatientReferralIds($patientReferredSource, $patientId)
+    {
+        if ($patientReferredSource == self::REFERRED_SOURCE_ONE) {
+            return $this->patientRepository
+                ->getPatientReferralIdsForReferredSourceOfOne($patientId);
+        }
+        if ($patientReferredSource == self::REFERRED_SOURCE_TWO) {
+            return $this->patientRepository
+                ->getPatientReferralIdsForReferredSourceOfTwo($patientId);
+        }
+        return [];
     }
 
     /**

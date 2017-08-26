@@ -6,21 +6,10 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactRepository;
 use DentalSleepSolutions\Factories\ReferredNameSetterFactory;
+use DentalSleepSolutions\Temporary\PatientFormDataUpdater;
 
 class FullNameComposer
 {
-    // TODO: deja vu... several similar-looking field array constants need a service for retrieving them
-    // TODO: ideally, these constants need to be replaced by a model interface
-    const DOC_FIELDS = [
-        'docsleep',
-        'docpcp',
-        'docdentist',
-        'docent',
-        'docmdother',
-        'docmdother2',
-        'docmdother3',
-    ];
-
     const VALUE_NOT_SET = 'Not Set';
 
     /** @var ReferredNameSetterFactory */
@@ -49,7 +38,7 @@ class FullNameComposer
     public function getFormedFullNames(Patient $foundPatient)
     {
         $formedFullNames = [];
-        foreach (self::DOC_FIELDS as $field) {
+        foreach (PatientFormDataUpdater::DOC_FIELDS as $field) {
             $nameField = $field . '_name';
             $name = $this->setNameForDocField($foundPatient, $field);
             $formedFullNames[$nameField] = $name;

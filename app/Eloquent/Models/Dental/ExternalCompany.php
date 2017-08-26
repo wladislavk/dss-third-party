@@ -15,6 +15,17 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  *
  * DentalSleepSolutions\Eloquent\Dental\ExternalCompany
  *
+ * @mixin \Eloquent
+ * @property int $id
+ * @property int $user_id
+ * @property string $api_key
+ * @property string $valid_from
+ * @property string $valid_to
+ * @property int $enabled
+ * @property int $created_by
+ * @property int $updated_by
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\DentalSleepSolutions\Eloquent\Models\Dental\User[] $users
  * @mixin \Eloquent
  */

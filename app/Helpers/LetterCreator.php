@@ -2,6 +2,8 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use Carbon\Carbon;
+use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Structs\LetterData;
@@ -11,20 +13,25 @@ class LetterCreator
     /** @var LetterCreationEvaluator */
     private $letterCreationEvaluator;
 
-    /** @var UserRepository */
-    private $userRepository;
+    /** @var LetterComposer */
+    private $letterComposer;
 
     /** @var LetterRepository */
     private $letterRepository;
 
+    /** @var UserRepository */
+    private $userRepository;
+
     public function __construct(
         LetterCreationEvaluator $letterCreationEvaluator,
-        UserRepository $userRepository,
-        LetterRepository $letterRepository
+        LetterComposer $letterComposer,
+        LetterRepository $letterRepository,
+        UserRepository $userRepository
     ) {
         $this->letterCreationEvaluator = $letterCreationEvaluator;
-        $this->userRepository = $userRepository;
+        $this->letterComposer = $letterComposer;
         $this->letterRepository = $letterRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -46,7 +53,10 @@ class LetterCreator
         $letterData->userId = $userId;
         $letterData->docId = $docId;
 
-        $createdLetter = $this->letterRepository->createLetter($letterData);
+        $newLetter = $this->letterComposer->composeLetter($letterData);
+
+        /** @var Letter|null $createdLetter */
+        $createdLetter = $this->letterRepository->create($newLetter);
 
         if ($createdLetter) {
             return $createdLetter->letterid;

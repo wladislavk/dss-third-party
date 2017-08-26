@@ -1,63 +1,36 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\PlaceService;
 use Tests\TestCases\ApiTestCase;
 
 class PlaceServicesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/place-services -> PlaceServicesController@store method
-     * 
-     */
-    public function testAddPlaceService()
+    protected function getModel()
     {
-        $data = factory(PlaceService::class)->make()->toArray();
-
-        $data['place_service'] = '123';
-
-        $this->post('/api/v1/place-services', $data)
-            ->seeInDatabase('dental_place_service', ['place_service' => '123'])
-            ->assertResponseOk();
+        return PlaceService::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/place-services/{id} -> PlaceServicesController@update method
-     * 
-     */
-    public function testUpdatePlaceService()
+    protected function getRoute()
     {
-        $placeServiceTestRecord = factory(PlaceService::class)->create();
+        return '/place-services';
+    }
 
-        $data = [
-            'description' => 'updated place service',
-            'status'      => 5
+    protected function getStoreData()
+    {
+        return [
+            "place_service" => "123",
+            "description" => "Labore quos sint quasi ut minima dolorum.",
+            "sortby" => 5,
+            "status" => 0,
         ];
-
-        $this->put('/api/v1/place-services/' . $placeServiceTestRecord->place_serviceid, $data)
-            ->seeInDatabase('dental_place_service', ['status' => 5])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/place-services/{id} -> PlaceServicesController@destroy method
-     * 
-     */
-    public function testDeletePlaceService()
+    protected function getUpdateData()
     {
-        $placeServiceTestRecord = factory(PlaceService::class)->create();
-
-        $this->delete('/api/v1/place-services/' . $placeServiceTestRecord->place_serviceid)
-            ->notSeeInDatabase('dental_place_service', [
-                'place_serviceid' => $placeServiceTestRecord->place_serviceid
-            ])
-            ->assertResponseOk();
+        return [
+            'description' => 'updated place service',
+            'status'      => 5,
+        ];
     }
 }

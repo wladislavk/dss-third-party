@@ -4,12 +4,13 @@ namespace Tests\Api;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
-use Tests\TestCases\ApiTestCase;
+use Tests\TestCases\BaseApiTestCase;
 
-class EnrollmentWebhooksApiTest extends ApiTestCase
+class EnrollmentWebhooksApiTest extends BaseApiTestCase
 {
     use WithoutMiddleware, DatabaseTransactions;
 
+    /** @var array */
     private $enrollmentStatusRequest = [
         'event' => 'enrollment_status',
         'details' => [
@@ -86,7 +87,7 @@ class EnrollmentWebhooksApiTest extends ApiTestCase
     ];
 
 
-    public function testWrongRequest()
+    public function testEnrollmentWrongRequest()
     {
         $this->json('POST', 'webhooks/enrollment');
 
@@ -131,7 +132,7 @@ class EnrollmentWebhooksApiTest extends ApiTestCase
         );
     }
 
-    public function testReceivedPdf()
+    public function testEnrollmentReceivedPdf()
     {
         $data = $this->receivedPdfRequest;
 
@@ -146,5 +147,20 @@ class EnrollmentWebhooksApiTest extends ApiTestCase
                 'status' => Enrollment::DSS_ENROLLMENT_PDF_RECEIVED,
             ]
         );
+    }
+
+    public function testClaims()
+    {
+        $this->markTestSkipped('Check how to form the request');
+    }
+
+    public function testPayment()
+    {
+        $this->markTestSkipped('Check how to form the request');
+    }
+
+    public function testPayers()
+    {
+        $this->markTestSkipped('Check how to form the request');
     }
 }

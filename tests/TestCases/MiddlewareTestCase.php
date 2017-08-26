@@ -7,7 +7,7 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\Dummies\Http\NoMiddlewareKernel;
 
-class MiddlewareTestCase extends ApiTestCase
+class MiddlewareTestCase extends BaseApiTestCase
 {
     use DatabaseTransactions;
 

@@ -91,7 +91,7 @@ abstract class ApiTestCase extends BaseApiTestCase
 
         $this->delete($endpoint);
         $this->assertResponseOk();
-        $this->notSeeInDatabase($this->model->getTable(), [$primaryKey => $testRecord->id]);
+        $this->notSeeInDatabase($this->model->getTable(), [$primaryKey => $testRecord->$primaryKey]);
     }
 
     private function verifyCreation(array $where)

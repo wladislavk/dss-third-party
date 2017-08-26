@@ -23,73 +23,75 @@ class ExternalUsersApiTest extends ApiTestCase
 
     protected function getStoreData()
     {
-        return [
-            'user_id' => 100,
-            'api_key' => 'test api key',
-            'valid_from' => 'test valid from',
-            'valid_to' => 'test valid to',
-            'created_by' => 0,
-            'updated_by' => 1,
-            'enabled' => true,
-        ];
+        $record = $this->createExternalUser(false);
+        unset($record['created_by']);
+        unset($record['updated_by']);
+
+        return $record->toArray();
     }
 
     protected function getUpdateData()
     {
+        $faker = Faker::create();
+
         return [
-            'api_key' => 'updated api key',
+            'api_key' => $faker->sha1,
         ];
     }
 
-    public function testListExternalUsers()
+    public function testIndex()
     {
-        $this->get(self::ENDPOINT);
+        $this->createExternalUser();
+
+        $this->get(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
         $this->assertResponseOk();
+        $this->assertGreaterThan(0, count($this->getResponseData()));
     }
 
-    public function testShowExternalUser()
+    public function testShow()
     {
-        $record = $this->createExternalUser();
-        $this->get(self::ENDPOINT . '/' . $record->user_id);
+        $testRecord = $this->createExternalUser();
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->user_id;
+
+        $this->get($endpoint);
         $this->assertResponseOk();
+        $data = $this->getResponseData();
+        $this->assertEquals($testRecord->$primaryKey, $data[$primaryKey]);
     }
 
-    public function testStoreExternalUser()
+    public function testStore()
     {
-        $record = $this->createExternalUser(false);
-        $data = $record->toArray();
+        $storeData = $this->getStoreData();
 
-        $this->json('post', self::ENDPOINT, $data);
+        $this->post(self::ROUTE_PREFIX . $this->getRoute(), $storeData);
         $this->assertResponseOk();
-        $this->seeInDatabase($record->getTable(), [
-            'user_id' => $record->user_id,
-            'api_key' => $record->api_key,
-        ]);
+        $this->seeInDatabase($this->model->getTable(), $storeData);
     }
 
-    public function testUpdateExternalUser()
+    public function testUpdate()
     {
-        $record = $this->createExternalUser();
-        $faker = Faker::create();
-        $record->api_key = $faker->sha1;
-        $data = $record->toArray();
+        $testRecord = $this->createExternalUser();
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->user_id;
+        $updateData = $this->getUpdateData();
 
-        $this->json('put', self::ENDPOINT . '/' . $record->user_id, $data);
+        $this->put($endpoint, $updateData);
         $this->assertResponseOk();
-        $this->seeInDatabase($record->getTable(), [
-            'user_id' => $record->user_id,
-            'api_key' => $record->api_key,
-        ]);
+        $this->seeInDatabase(
+            $this->model->getTable(), array_merge($updateData, [$primaryKey => $testRecord->$primaryKey])
+        );
     }
 
-    public function testDestroyExternalUser()
+    public function testDestroy()
     {
-        $record = $this->createExternalUser();
-        $this->delete(self::ENDPOINT . '/' . $record->user_id);
+        $testRecord = $this->createExternalUser();
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->user_id;
+
+        $this->delete($endpoint);
         $this->assertResponseOk();
-        $this->notSeeInDatabase($record->getTable(), [
-            'user_id' => $record->user_id
-        ]);
+        $this->notSeeInDatabase($this->model->getTable(), [$primaryKey => $testRecord->$primaryKey]);
     }
 
     private function createExternalUser($save = true)

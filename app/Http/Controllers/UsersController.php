@@ -362,7 +362,7 @@ class UsersController extends BaseRestController
      */
     public function getCurrentUserInfo()
     {
-        return ApiResponse::responseOk('', $this->request->user());
+        return ApiResponse::responseOk('', $this->user);
     }
 
     /**

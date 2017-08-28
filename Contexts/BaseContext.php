@@ -252,4 +252,17 @@ abstract class BaseContext extends RawMinkContext
         }
         return true;
     }
+
+    protected function executeQuery($sql)
+    {
+        $host = getenv('DB_HOST');
+        $dbName = getenv('DB_DATABASE');
+        $dsn = "mysql:dbname=$dbName;host=$host";
+        $user = getenv('DB_USERNAME');
+        $password = getenv('DB_PASSWORD');
+
+        $dbh = new \PDO($dsn, $user, $password);
+        $dbh->exec($sql);
+        unset($dbh);
+    }
 }

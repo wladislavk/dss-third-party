@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Http\Middleware;
 use Closure;
 use DentalSleepSolutions\Auth\JwtAuth;
 use DentalSleepSolutions\Exceptions\Auth\AuthenticatableNotFoundException;
+use DentalSleepSolutions\Exceptions\HttpMalformedHeaderException;
 use DentalSleepSolutions\Exceptions\JWT\ExpiredTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
@@ -14,23 +15,10 @@ use DentalSleepSolutions\Structs\JwtMiddlewareErrors as MiddlewareErrors;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
-class JwtUserAuthMiddleware
+class JwtUserAuthMiddleware extends JwtAdminAuthMiddleware
 {
-    const AUTH_HEADER = 'Authorization';
-    const AUTH_HEADER_START = 'Bearer ';
     const SUDO_FIELD = 'sudo_id';
     const SUDO_REFERENCE = 'userid';
-
-    /** @var JwtAuth */
-    private $auth;
-
-    /**
-     * @param JwtAuth $auth
-     */
-    public function __construct(JwtAuth $auth)
-    {
-        $this->auth = $auth;
-    }
 
     /**
      * @param Request $request
@@ -39,14 +27,11 @@ class JwtUserAuthMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $authHeader = $request->header(self::AUTH_HEADER, '');
-        $authHeaderStart = strlen(self::AUTH_HEADER_START);
-
-        if (substr($authHeader, 0, $authHeaderStart) !== self::AUTH_HEADER_START) {
+        try {
+            $token = $this->getAuthToken($request);
+        } catch (HttpMalformedHeaderException $e) {
             return ApiResponse::responseError(MiddlewareErrors::TOKEN_MISSING, Response::HTTP_BAD_REQUEST);
         }
-
-        $token = substr($authHeader, $authHeaderStart);
 
         if ($request->admin()) {
             $request = $this->handleSudo($request);

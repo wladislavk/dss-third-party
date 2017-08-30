@@ -329,9 +329,7 @@ class InsurancePreauthController extends BaseRestController
      */
     public function getCompleted()
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-
-        $data = $this->repository->getCompleted($docId);
+        $data = $this->repository->getCompleted($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -346,9 +344,7 @@ class InsurancePreauthController extends BaseRestController
      */
     public function getPending()
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-
-        $data = $this->repository->getPending($docId);
+        $data = $this->repository->getPending($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -363,9 +359,7 @@ class InsurancePreauthController extends BaseRestController
      */
     public function getRejected()
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-
-        $data = $this->repository->getRejected($docId);
+        $data = $this->repository->getRejected($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -405,7 +399,7 @@ class InsurancePreauthController extends BaseRestController
         $offset = $vobsPerPage * $pageNumber;
 
         $listVOBQueryData = new ListVOBQueryData();
-        $listVOBQueryData->docId = $this->currentUser->getDocIdOrZero();
+        $listVOBQueryData->docId = $this->user->docid;
         $listVOBQueryData->sortColumn = $request->input('sortColumn', 'status');
         $listVOBQueryData->sortDir = $request->input('sortDir', 'desc');
         $listVOBQueryData->vobsPerPage = $request->input('vobsPerPage', 20);

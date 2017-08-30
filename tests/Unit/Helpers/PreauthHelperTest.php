@@ -14,11 +14,14 @@ use Tests\TestCases\UnitTestCase;
 
 class PreauthHelperTest extends UnitTestCase
 {
+    const TIMEZONE = 'America/New_York';
+
     /** @var PreauthHelper */
     private $preauthHelper;
 
     public function setUp()
     {
+        date_default_timezone_set(self::TIMEZONE);
         $patientRepository = $this->mockPatientRepository();
         $summSleeplabRepository = $this->mockSummSleeplabRepository();
         $this->preauthHelper = new PreauthHelper($patientRepository, $summSleeplabRepository);

@@ -147,9 +147,7 @@ class NotesController extends BaseRestController
      */
     public function getUnsigned()
     {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $data = $this->repository->getUnsigned($docId);
+        $data = $this->repository->getUnsigned($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }

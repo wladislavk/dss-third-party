@@ -1,7 +1,6 @@
 <?php
 namespace Tests\TestCases;
 
-use DentalSleepSolutions\Eloquent\Models\Payer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -92,7 +91,7 @@ abstract class ApiTestCase extends BaseApiTestCase
 
         $this->delete($endpoint);
         $this->assertResponseOk();
-        $this->notSeeInDatabase($this->model->getTable(), [$primaryKey => $testRecord->id]);
+        $this->notSeeInDatabase($this->model->getTable(), [$primaryKey => $testRecord->$primaryKey]);
     }
 
     private function verifyCreation(array $where)

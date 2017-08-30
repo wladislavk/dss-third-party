@@ -343,8 +343,8 @@ class UsersController extends BaseRestController
 
         $data = [];
 
-        if ($this->currentUser && in_array($this->currentUser->status, $accountStatuses)) {
-            $data['type'] = self::STATUS_LABELS[$this->currentUser->status];
+        if (in_array($this->user->status, $accountStatuses)) {
+            $data['type'] = self::STATUS_LABELS[$this->user->status];
         }
 
         return ApiResponse::responseOk('', $data);
@@ -362,7 +362,7 @@ class UsersController extends BaseRestController
      */
     public function getCurrentUserInfo()
     {
-        return ApiResponse::responseOk('', $this->currentUser);
+        return ApiResponse::responseOk('', $this->user);
     }
 
     /**
@@ -377,9 +377,7 @@ class UsersController extends BaseRestController
      */
     public function getCourseStaff()
     {
-        $userId = $this->currentUser->userid ?: 0;
-
-        $data = $this->repository->getCourseStaff($userId);
+        $data = $this->repository->getCourseStaff($this->user->userid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -394,9 +392,7 @@ class UsersController extends BaseRestController
      */
     public function getPaymentReports()
     {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $data = $this->repository->getPaymentReports($docId);
+        $data = $this->repository->getPaymentReports($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -411,10 +407,8 @@ class UsersController extends BaseRestController
      */
     public function checkLogout()
     {
-        $userId = $this->currentUser->userid ?: 0;
         $logoutTime = 60 * 60;
-
-        $data = $this->repository->getLastAccessedDate($userId);
+        $data = $this->repository->getLastAccessedDate($this->user->userid);
         if (!$data) {
             return ApiResponse::responseOk('', ['logout' => true]);
         }
@@ -441,8 +435,7 @@ class UsersController extends BaseRestController
      */
     public function getLetterInfo(Request $request)
     {
-        $docId = $this->currentUser->docid ?: 0;
-        $data = $this->repository->getLetterInfo($docId);
+        $data = $this->repository->getLetterInfo($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }

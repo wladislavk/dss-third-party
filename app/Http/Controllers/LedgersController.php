@@ -223,7 +223,7 @@ class LedgersController extends BaseRestController
     ) {
         $ledgerReportData = new LedgerReportData();
 
-        $ledgerReportData->docId = $this->currentUser->getDocIdOrZero();
+        $ledgerReportData->docId = $this->user->docid;
         $ledgerReportData->page = $request->input('page', 0);
         $ledgerReportData->rowsPerPage = $request->input('rows_per_page', 20);
         $ledgerReportData->sort = $request->input('sort');
@@ -248,11 +248,10 @@ class LedgersController extends BaseRestController
      */
     public function getReportTotals(Request $request, LedgerReportTotalsRetriever $ledgerReportTotalsRetriever)
     {
-        $docId = $this->currentUser->getDocIdOrZero();
         $patientId = $request->input('patient_id', 0);
         $reportType = $request->input('report_type', self::REPORT_TYPE_TODAY);
 
-        $totals = $ledgerReportTotalsRetriever->getReportTotals($docId, $patientId, $reportType);
+        $totals = $ledgerReportTotalsRetriever->getReportTotals($this->user->docid, $patientId, $reportType);
 
         return ApiResponse::responseOk('', $totals->toArray());
     }
@@ -271,10 +270,9 @@ class LedgersController extends BaseRestController
         Request $request,
         PatientSummaryUpdater $patientSummaryUpdater
     ) {
-        $docId = $this->currentUser->getDocIdOrZero();
         $patientId = $request->input('patient_id', 0);
 
-        $response = $patientSummaryUpdater->updatePatientSummary($docId, $patientId);
+        $response = $patientSummaryUpdater->updatePatientSummary($this->user->docid, $patientId);
 
         return ApiResponse::responseOk($response);
     }
@@ -295,7 +293,7 @@ class LedgersController extends BaseRestController
     ) {
         $ledgerReportData = new LedgerReportData();
 
-        $ledgerReportData->docId = $this->currentUser->getDocIdOrZero();
+        $ledgerReportData->docId = $this->user->docid;
         $ledgerReportData->patientId = $request->input('patient_id', 0);
         $ledgerReportData->page = $request->input('page', 0);
         $ledgerReportData->rowsPerPage = $request->input('rows_per_page', 20);
@@ -321,11 +319,9 @@ class LedgersController extends BaseRestController
      */
     public function getReportRowsNumber(Request $request, LedgersQueryComposer $ledgersQueryComposer)
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-
         $patientId = $request->input('patient_id', 0);
 
-        $number = $ledgersQueryComposer->getReportRowsNumber($docId, $patientId);
+        $number = $ledgersQueryComposer->getReportRowsNumber($this->user->docid, $patientId);
 
         return ApiResponse::responseOk('', ['number' => $number]);
     }

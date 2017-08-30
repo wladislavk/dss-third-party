@@ -148,9 +148,7 @@ class SupportTicketsController extends BaseRestController
      */
     public function getNumber()
     {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $data = $this->repository->getNumber($docId);
+        $data = $this->repository->getNumber($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }

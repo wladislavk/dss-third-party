@@ -55,7 +55,8 @@ class PatientCreator extends AbstractPatientEditor
     ) {
         $newPatientFormData = new NewPatientFormData();
         if ($requestData->ssn) {
-            $this->passwordGenerator->generatePassword($requestData->ssn, $newPatientFormData);
+            $basePassword = preg_replace('/\D/', '', $requestData->ssn);
+            $this->passwordGenerator->generateLegacyPassword($basePassword, $newPatientFormData);
         }
         $newPatientFormData->userId = $currentUser->getUserIdOrZero();
         $newPatientFormData->docId = $currentUser->getDocIdOrZero();

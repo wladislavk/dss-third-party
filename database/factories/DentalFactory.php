@@ -13,6 +13,17 @@ use Carbon\Carbon;
 |
 */
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ApiLog::class, function ($faker) {
+    return [
+        'method' => $faker->randomElement(['GET', 'PUT', 'POST', 'DELETE']),
+        'route' => $faker->slug,
+        'payload' => json_encode([
+            'test' => $faker->uuid,
+            'sha256' => $faker->sha256
+        ]),
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\SummarySleeplab::class, function ($faker) {
     return [
         'date'             => $faker->dateTime->format('m/d/Y'),
@@ -679,7 +690,7 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\EpworthSleepinessSc
 
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany::class, function ($faker) {
     return [
-        'software' => $faker->word,
+        'software' => $faker->username,
         'api_key' => $faker->md5,
         'valid_from' => $faker->date() . ' ' . $faker->time(),
         'valid_to' => $faker->date() . ' ' . $faker->time(),
@@ -689,8 +700,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany::cl
         'description' => $faker->catchPhrase,
         'status' => $faker->randomElement([1, 2, 3]),
         'reason' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-        'created_by' => $faker->randomDigit,
-        'updated_by' => $faker->randomDigit,
     ];
 });
 
@@ -3090,39 +3099,6 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\Summary::class, fun
         'sleep_qual4'                      => $faker->word,
         'sleep_qual5'                      => $faker->word,
         'location'                         => $faker->randomDigit
-    ];
-});
-
-$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany::class, function ($faker) {
-    return [
-        'software' => $faker->word,
-        'api_key' => $faker->word,
-        'name' => $faker->word,
-        'short_name' => $faker->word,
-        'url' => $faker->word,
-        'description' => $faker->word,
-        'reason' => $faker->word,
-        'status'            => $faker->randomDigit,
-        'created_by'            => $faker->randomDigit,
-        'updated_by'            => $faker->randomDigit,
-        'valid_from' => $faker->dateTime(),
-        'valid_to' => $faker->dateTime(),
-        'created_at' => $faker->dateTime(),
-        'updated_at' => $faker->dateTime(),
-    ];
-});
-
-$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser::class, function ($faker) {
-    return [
-        'user_id' => $faker->randomDigit,
-        'api_key' => $faker->word,
-        'enabled'            => $faker->randomDigit,
-        'created_by'            => $faker->randomDigit,
-        'updated_by'            => $faker->randomDigit,
-        'valid_from' => $faker->dateTime(),
-        'valid_to' => $faker->dateTime(),
-        'created_at' => $faker->dateTime(),
-        'updated_at' => $faker->dateTime(),
     ];
 });
 

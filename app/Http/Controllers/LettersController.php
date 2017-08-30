@@ -193,9 +193,7 @@ class LettersController extends BaseRestController
      */
     public function getPending()
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-
-        $data = $this->repository->getPending($docId);
+        $data = $this->repository->getPending($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -210,9 +208,7 @@ class LettersController extends BaseRestController
      */
     public function getUnmailed()
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-
-        $data = $this->repository->getUnmailed($docId);
+        $data = $this->repository->getUnmailed($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -269,14 +265,11 @@ class LettersController extends BaseRestController
         WelcomeLetterCreator $welcomeLetterCreator,
         Request $request
     ) {
-        $docId = $this->currentUser->getDocIdOrZero();
-        $userType = $this->currentUser->getUserTypeOrZero();
-
         $templateId = $request->input('template_id', 0);
         $contactTypeId = $request->input('contact_type_id', 0);
 
         $data = $welcomeLetterCreator->createWelcomeLetter(
-            $docId, $templateId, $contactTypeId, $userType
+            $this->user->docid, $templateId, $contactTypeId, $this->user->user_type
         );
 
         return ApiResponse::responseOk('', $data);

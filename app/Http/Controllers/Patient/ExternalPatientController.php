@@ -2,7 +2,6 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Patient;
 
-use DentalSleepSolutions\Helpers\ExternalAuthTokenParser;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\Request;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
@@ -23,18 +22,17 @@ class ExternalPatientController extends ExternalBaseController
 
     public function __construct(
         Config $config,
-        ExternalAuthTokenParser $authTokenParser,
         Request $request,
         Transformer $transformer
     )
     {
-        parent::__construct($config, $authTokenParser, $request);
+        parent::__construct($config, $request);
         $this->transformer = $transformer;
     }
 
     /**
-     * @param \DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository $repository
-     * @param \DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore             $request
+     * @param ExternalPatientRepository $repository
+     * @param ExternalPatientStore      $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
@@ -67,11 +65,19 @@ class ExternalPatientController extends ExternalBaseController
         }
 
         $externalPatient->update($patientData);
-        $patient = $externalPatient->patient()->first();
+        $patient = $externalPatient->patient()
+            ->first()
+        ;
+
+        $docId = 0;
+
+        if ($request->user()) {
+            $docId = $request->user()->docid;
+        }
 
         if (!$patient) {
             $updateData = [
-                'docid' => $this->currentUser->docid,
+                'docid' => $docId,
                 'status' => 3, // Pending Active
                 'ip_address' => $request->ip(),
                 'adddate' => Carbon::now(),

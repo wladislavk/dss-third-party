@@ -1,7 +1,11 @@
 <?php
 namespace Tests\Api;
 
+use Illuminate\Support\Arr;
 use DentalSleepSolutions\Eloquent\Models\Payer;
+use DentalSleepSolutions\Eloquent\Repositories\PayerRepository;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCases\ApiTestCase;
 
 class PayersApiTest extends ApiTestCase
@@ -14,6 +18,15 @@ class PayersApiTest extends ApiTestCase
     protected function getRoute()
     {
         return '/payers';
+    }
+
+    /** @var PayerRepository */
+    private $payerRepository;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->payerRepository = $this->app->make(PayerRepository::class);
     }
 
     protected function getStoreData()
@@ -50,60 +63,29 @@ class PayersApiTest extends ApiTestCase
         $this->markTestSkipped('Model is incorrectly transformed to array');
     }
 
-    public function testRequiredFieldsForSingleEndpoint()
+    public function testRequiredFieldsForAllEndpoints()
     {
-        $this->markTestSkipped('Model is incorrectly transformed to array');
-        return;
+        $payer = factory(Payer::class)->create();
+        $mandatoryFields = $payer->requiredFields();
 
-        factory(Payer::class, 5)->create();
-
-        Payer::create($this->getPayerData());
-
-        $this->get('api/v1/payers/RIBLS/required-fields?endpoint=coverage');
+        $this->get("api/v1/payers/{$payer->payer_id}/required-fields");
         $this->assertResponseOk();
-        $this->seeJson(['data' => ['npi']]);
+        $this->seeJson([
+            'data' => $mandatoryFields
+        ]);
     }
 
-    private function getPayerData()
+    public function testRequiredFieldsForSingleEndpoint()
     {
-        return [
-            "payer_id" => "RIBLS",
-            "supported_endpoints" => [
-                [
-                    "endpoint" => "coverage",
-                    "pass_through_fee" => 0,
-                    "enrollment_required" => true,
-                    "average_enrollment_process_time" => null,
-                    "enrollment_mandatory_fields" => [
-                        "npi",
-                    ],
-                    "signature_required" => false,
-                    "blue_ink_required" => false,
-                    "message" => null,
-                    "status" => "available",
-                    "status_details" => "Payer is working fine.",
-                    "status_updated_at" => "2014-05-14T23:45:57Z",
-                ],
-                [
-                    "endpoint" => "payment reports",
-                    "pass_through_fee" => 0,
-                    "enrollment_required" => true,
-                    "average_enrollment_process_time" => null,
-                    "enrollment_mandatory_fields" => [
-                        "provider_name",
-                        "address",
-                        "city",
-                        "state",
-                        "zip",
-                    ],
-                    "signature_required" => true,
-                    "blue_ink_required" => false,
-                    "message" => null,
-                    "status" => "available",
-                    "status_details" => "Payer is working fine.",
-                    "status_updated_at" => "2014-05-14T23:45:57Z",
-                ],
-            ],
-        ];
+        $payer = factory(Payer::class)->create();
+        $supportedEndpoints = $payer->supported_endpoints;
+        $firstEndpoint = $supportedEndpoints[0];
+        $mandatoryFields = $payer->requiredFields($firstEndpoint['endpoint']);
+
+        $this->get("api/v1/payers/{$payer->payer_id}/required-fields?endpoint=" . urlencode($firstEndpoint['endpoint']));
+        $this->assertResponseOk();
+        $this->seeJson([
+            'data' => $mandatoryFields
+        ]);
     }
 }

@@ -244,17 +244,15 @@ class HomeSleepTestsController extends BaseRestController
      */
     public function getByType($type)
     {
-        $docId = $this->currentUser->docid ?: 0;
-
         switch ($type) {
             case 'completed':
-                $data = $this->repository->getCompleted($docId);
+                $data = $this->repository->getCompleted($this->user->docid);
                 break;
             case 'requested':
-                $data = $this->repository->getRequested($docId);
+                $data = $this->repository->getRequested($this->user->docid);
                 break;
             case 'rejected':
-                $data = $this->repository->getRejected($docId);
+                $data = $this->repository->getRejected($this->user->docid);
                 break;
             default:
                 $data = [];

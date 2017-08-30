@@ -2,6 +2,7 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
+use DentalSleepSolutions\Http\Controllers\Controller;
 use Tests\TestCases\ApiTestCase;
 
 class UsersApiTest extends ApiTestCase
@@ -138,10 +139,7 @@ class UsersApiTest extends ApiTestCase
     {
         $this->post(self::ROUTE_PREFIX . '/users/current');
         $this->assertResponseOk();
-        $expected = [
-            'id' => 0,
-            'userid' => 0,
-        ];
+        $expected = Controller::EMPTY_MODEL_ATTRIBUTES;
         $this->assertEquals($expected, $this->getResponseData());
     }
 

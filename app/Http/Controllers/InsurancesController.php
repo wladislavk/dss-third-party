@@ -339,9 +339,7 @@ class InsurancesController extends BaseRestController
      */
     public function getPendingFrontOfficeClaims()
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-
-        $data = $this->repository->getPendingClaims($docId);
+        $data = $this->repository->getPendingClaims($this->user->docid);
         return ApiResponse::responseOk('', $data);
     }
 
@@ -357,9 +355,7 @@ class InsurancesController extends BaseRestController
      */
     public function getUnmailedFrontOfficeClaims(UnmailedClaimsRetriever $unmailedClaimsRetriever)
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-
-        $data = $unmailedClaimsRetriever->getUnmailedClaims($docId, $this->currentUser->user_type);
+        $data = $unmailedClaimsRetriever->getUnmailedClaims($this->user->docid, $this->user->user_type);
         return ApiResponse::responseOk('', $data);
     }
 
@@ -374,9 +370,7 @@ class InsurancesController extends BaseRestController
      */
     public function getRejectedFrontOfficeClaims()
     {
-        $docId = $this->currentUser->getDocIdOrZero();
-
-        $data = $this->repository->getRejectedClaims($docId);
+        $data = $this->repository->getRejectedClaims($this->user->docid);
         return ApiResponse::responseOk('', $data);
     }
 

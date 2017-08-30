@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
-use DentalSleepSolutions\Eloquent\WithoutUpdatedTimestamp;
+use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
 /**
  * @SWG\Definition(

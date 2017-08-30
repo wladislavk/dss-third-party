@@ -149,9 +149,7 @@ class CompaniesController extends BaseRestController
      */
     public function getCompanyLogo()
     {
-        $userId = $this->currentUser->id ?: 0;
-
-        $data = $this->repository->getCompanyLogo($userId);
+        $data = $this->repository->getCompanyLogo($this->user->userid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -166,9 +164,7 @@ class CompaniesController extends BaseRestController
      */
     public function getHomeSleepTestCompanies()
     {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $data = $this->repository->getHomeSleepTestCompanies($docId);
+        $data = $this->repository->getHomeSleepTestCompanies($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -183,9 +179,7 @@ class CompaniesController extends BaseRestController
      */
     public function getBillingExclusiveCompany()
     {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $data = $this->repository->getBillingExclusiveCompany($docId);
+        $data = $this->repository->getBillingExclusiveCompany($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }

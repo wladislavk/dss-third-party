@@ -1,63 +1,53 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket;
 use Tests\TestCases\ApiTestCase;
 
 class SupportTicketsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/support-tickets -> SupportTicketsController@store method
-     * 
-     */
-    public function testAddSupportTicket()
+    protected function getModel()
     {
-        $data = factory(SupportTicket::class)->make()->toArray();
-
-        $data['userid'] = 100;
-
-        $this->post('/api/v1/support-tickets', $data)
-            ->seeInDatabase('dental_support_tickets', ['userid' => 100])
-            ->assertResponseOk();
+        return SupportTicket::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/support-tickets/{id} -> SupportTicketsController@update method
-     * 
-     */
-    public function testUpdateSupportTicket()
+    protected function getRoute()
     {
-        $supportTicketTestRecord = factory(SupportTicket::class)->create();
+        return '/support-tickets';
+    }
 
-        $data = [
-            'docid' => 100,
-            'body'  => 'updated support ticket'
+    protected function getStoreData()
+    {
+        return [
+            "title" => "Sed odit est dolorum praesentium.",
+            "userid" => 100,
+            "docid" => 3,
+            "body" => "Sint cumque impedit accusantium ullam in.",
+            "category_id" => 5,
+            "status" => 7,
+            "attachment" => "9ki2mxg9sl4u3_b6q.jpg",
+            "viewed" => 0,
+            "creator_id" => 3,
+            "create_type" => 7,
+            "company_id" => 8,
         ];
-
-        $this->put('/api/v1/support-tickets/' . $supportTicketTestRecord->id, $data)
-            ->seeInDatabase('dental_support_tickets', ['docid' => 100])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/support-tickets/{id} -> SupportTicketsController@destroy method
-     * 
-     */
-    public function testDeleteSupportTicket()
+    protected function getUpdateData()
     {
-        $supportTicketTestRecord = factory(SupportTicket::class)->create();
+        return [
+            'docid' => 100,
+            'body'  => 'updated support ticket',
+        ];
+    }
 
-        $this->delete('/api/v1/support-tickets/' . $supportTicketTestRecord->id)
-            ->notSeeInDatabase('dental_support_tickets', [
-                'id' => $supportTicketTestRecord->id
-            ])
-            ->assertResponseOk();
+    public function testGetNumber()
+    {
+        $this->post(self::ROUTE_PREFIX . '/support-tickets/number');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 }

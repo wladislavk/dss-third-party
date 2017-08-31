@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Storage;
 
@@ -20,8 +21,7 @@ class DisplayingFileController extends Controller
     public function getFile($filename)
     {
         // access only to own directory
-        $userId     = $this->currentUser->userid;
-        $pathToFile = 'user_' . $userId . '/' . $filename;
+        $pathToFile = 'user_' . $this->user->userid . '/' . $filename;
 
         if (Storage::has($pathToFile)) {
             $imageContent = Storage::get($pathToFile);

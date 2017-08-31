@@ -2,11 +2,16 @@
 
 namespace DentalSleepSolutions\Http\Requests;
 
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-abstract class Request extends FormRequest
+class Request extends FormRequest
 {
+    /** @var Closure */
+    protected $adminResolver;
+
     /** @var array */
     protected $rules = [];
 
@@ -34,7 +39,7 @@ abstract class Request extends FormRequest
      * Get the proper failed validation response for the request.
      *
      * @param array $errors
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function response(array $errors)
     {
@@ -46,6 +51,45 @@ abstract class Request extends FormRequest
             ];
         }
         return ApiResponse::responseError('Provided data is invalid.', 422, ['errors' => $transformed]);
+    }
+
+    /**
+     * Get the admin making the request.
+     *
+     * @return mixed
+     */
+    public function admin()
+    {
+        return call_user_func($this->getAdminResolver());
+    }
+
+    /**
+     * Get the admin resolver callback.
+     *
+     * @return Closure
+     */
+    public function getAdminResolver()
+    {
+        if ($this->adminResolver) {
+            return $this->adminResolver;
+        }
+
+        return function()
+        {
+            // noop
+        };
+    }
+
+    /**
+     * Set the admin resolver callback.
+     *
+     * @param Closure $callback
+     * @return $this
+     */
+    public function setAdminResolver(Closure $callback)
+    {
+        $this->adminResolver = $callback;
+        return $this;
     }
 
     /**
@@ -99,7 +143,7 @@ abstract class Request extends FormRequest
 
     /**
      * @param string|array $rule
-     * @return mixed
+     * @return string|array
      */
     private function addOptionalRequired($rule)
     {

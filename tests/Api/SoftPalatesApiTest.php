@@ -1,63 +1,36 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\SoftPalate;
 use Tests\TestCases\ApiTestCase;
 
 class SoftPalatesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/soft-palates -> SoftPalatesController@store method
-     * 
-     */
-    public function testAddSoftPalate()
+    protected function getModel()
     {
-        $data = factory(SoftPalate::class)->make()->toArray();
-
-        $data['sortby'] = 100;
-
-        $this->post('/api/v1/soft-palates', $data)
-            ->seeInDatabase('dental_soft_palate', ['sortby' => 100])
-            ->assertResponseOk();
+        return SoftPalate::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/soft-palates/{id} -> SoftPalatesController@update method
-     * 
-     */
-    public function testUpdateSoftPalate()
+    protected function getRoute()
     {
-        $softPalateTestRecord = factory(SoftPalate::class)->create();
+        return '/soft-palates';
+    }
 
-        $data = [
-            'description' => 'updated soft palate',
-            'status'      => 8
+    protected function getStoreData()
+    {
+        return [
+            "soft_palate" => "Corporis inventore rerum sed iure.",
+            "description" => "Soluta repellat maxime dolorem et voluptatem blanditiis vel velit molestiae.",
+            "sortby" => 100,
+            "status" => 8,
         ];
-
-        $this->put('/api/v1/soft-palates/' . $softPalateTestRecord->soft_palateid, $data)
-            ->seeInDatabase('dental_soft_palate', ['status' => 8])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/soft-palates/{id} -> SoftPalatesController@destroy method
-     * 
-     */
-    public function testDeleteSoftPalate()
+    protected function getUpdateData()
     {
-        $softPalateTestRecord = factory(SoftPalate::class)->create();
-
-        $this->delete('/api/v1/soft-palates/' . $softPalateTestRecord->soft_palateid)
-            ->notSeeInDatabase('dental_soft_palate', [
-                'soft_palateid' => $softPalateTestRecord->soft_palateid
-            ])
-            ->assertResponseOk();
+        return [
+            'description' => 'updated soft palate',
+            'status'      => 8,
+        ];
     }
 }

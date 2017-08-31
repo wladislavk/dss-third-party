@@ -20,8 +20,17 @@ trait WithComplexRelationship
      * @return array
      */
     public function complexMapping(array $data, $export, array $initialState = []) {
-        $mapped = $initialState ?: [];
-        $map = $export ? self::COMPLEX_MAP : self::INVERSE_COMPLEX_MAP;
+        $mapped = [];
+
+        if (count($initialState)) {
+            $mapped = $initialState;
+        }
+
+        $map = self::INVERSE_COMPLEX_MAP;
+
+        if ($export) {
+            $map = self::COMPLEX_MAP;
+        }
 
         foreach ($map as $destination=>$source) {
             $value = $this->applyTransformations($data, $source);
@@ -89,7 +98,7 @@ trait WithComplexRelationship
          * $array is an array of arrays. The first index in the chain should then be ignored to treat
          * each element as part of the same array
          */
-        foreach ($map as $path=>$value) {
+        foreach ($map as $path => $value) {
             $destination = preg_replace('/^\d+\./', '', $path);
             Arr::set($merged, $destination, $value);
         }

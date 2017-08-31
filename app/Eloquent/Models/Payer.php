@@ -14,6 +14,9 @@ namespace DentalSleepSolutions\Eloquent\Models;
  *
  * DentalSleepSolutions\Eloquent\Payer
  *
+ * @property int $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property string $payer_id           Eligible payer unique identifier.
  * @property array $names               Available names of a payer.
  * @property array $supported_endpoints Eligible endpoints supported by a payer.
@@ -28,14 +31,11 @@ class Payer extends AbstractModel
     const ERA_CODE = '835';
     const ERA_ENDPOINT = 'payment reports';
 
-    public static function eligibleEndpoints()
-    {
-        return [
-            self::ELIGIBILITY_CODE => self::ELIGIBILITY_ENDPOINT,
-            self::MEDICAL_CLAIMS_CODE => self::MEDICAL_CLAIMS_ENDPOINT,
-            self::ERA_CODE => self::ERA_ENDPOINT,
-        ];
-    }
+    const ELIGIBLE_ENDPOINTS = [
+        self::ELIGIBILITY_CODE => self::ELIGIBILITY_ENDPOINT,
+        self::MEDICAL_CLAIMS_CODE => self::MEDICAL_CLAIMS_ENDPOINT,
+        self::ERA_CODE => self::ERA_ENDPOINT,
+    ];
 
     /**
      * The database table used by the model.
@@ -57,11 +57,11 @@ class Payer extends AbstractModel
      * @param string|null $endpoint
      * @return string[]
      */
-    public function requiredFields($endpoint)
+    public function requiredFields($endpoint = null)
     {
         $endpoints = collect((array)$this->supported_endpoints);
 
-        if ($endpoint && in_array($endpoint, static::eligibleEndpoints())) {
+        if ($endpoint && in_array($endpoint, self::ELIGIBLE_ENDPOINTS)) {
             $endpoints = $endpoints->filter(function ($supported) use ($endpoint) {
                 return $supported['endpoint'] === $endpoint;
             });

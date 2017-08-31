@@ -1,64 +1,82 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\Sleeplab;
 use Tests\TestCases\ApiTestCase;
 
 class SleeplabsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/sleeplabs -> SleeplabsController@store method
-     * 
-     */
-    public function testAddSleeplab()
+    protected function getModel()
     {
-        $data = factory(Sleeplab::class)->make()->toArray();
-
-        $data['docid'] = 100;
-
-        $this->post('/api/v1/sleeplabs', $data)
-            ->seeInDatabase('dental_sleeplab', ['docid' => 100])
-            ->assertResponseOk();
+        return Sleeplab::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/sleeplabs/{id} -> SleeplabsController@update method
-     * 
-     */
-    public function testUpdateSleeplab()
+    protected function getRoute()
     {
-        $sleeplabTestRecord = factory(Sleeplab::class)->create();
+        return '/sleeplabs';
+    }
 
-        $data = [
+    protected function getStoreData()
+    {
+        return [
+            "docid" => 100,
+            "salutation" => "quod",
+            "lastname" => "Hauck",
+            "firstname" => "Arnulfo",
+            "middlename" => "A",
+            "company" => "Grimes, McKenzie and Goodwin",
+            "add1" => "2760 Sarai Rapid Apt. 169\nEast Demetriusborough, AL 39796",
+            "add2" => "17592 Witting Row\nPort Kristinville, OH 59307-3402",
+            "city" => "West Augustinetown",
+            "state" => "MO",
+            "zip" => "18796",
+            "phone1" => "8872933703",
+            "phone2" => "9584943125",
+            "fax" => "2271415283",
+            "email" => "rzieme@yahoo.com",
+            "greeting" => "et",
+            "sincerely" => "dolorum",
+            "notes" => "Iste adipisci aspernatur ut cum adipisci ut.",
+            "status" => 4,
+        ];
+    }
+
+    protected function getUpdateData()
+    {
+        return [
             'email'     => 'test@email.com',
             'lastname'  => 'Doe',
-            'firstname' => 'John'
+            'firstname' => 'John',
         ];
-
-        $this->put('/api/v1/sleeplabs/' . $sleeplabTestRecord->sleeplabid, $data)
-            ->seeInDatabase('dental_sleeplab', ['email' => 'test@email.com'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/sleeplabs/{id} -> SleeplabsController@destroy method
-     * 
-     */
-    public function testDeleteSleeplab()
+    public function testGetListOfSleeplabs()
     {
-        $sleeplabTestRecord = factory(Sleeplab::class)->create();
+        $this->post(self::ROUTE_PREFIX . '/sleeplabs/list');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+            'result' => [],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 
-        $this->delete('/api/v1/sleeplabs/' . $sleeplabTestRecord->sleeplabid)
-            ->notSeeInDatabase('dental_sleeplab', [
-                'sleeplabid' => $sleeplabTestRecord->sleeplabid
-            ])
-            ->assertResponseOk();
+    public function testEditSleeplab()
+    {
+        /** @var Sleeplab $sleeplab */
+        $sleeplab = factory($this->getModel())->create();
+        $primaryKey = $this->model->getKeyName();
+        $data = [
+            'sleeplab_form_data' => [
+                'lastname' => 'updated lastname',
+            ],
+        ];
+        $this->post(self::ROUTE_PREFIX . '/sleeplabs/edit/' . $sleeplab->$primaryKey, $data);
+        $this->assertResponseOk();
+        $expected = [
+            'status' => 'Edited Successfully',
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+        $this->seeInDatabase($this->model->getTable(), [$primaryKey => $sleeplab->$primaryKey, 'lastname' => 'updated lastname']);
     }
 }

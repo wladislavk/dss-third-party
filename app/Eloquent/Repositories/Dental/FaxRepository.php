@@ -18,11 +18,13 @@ class FaxRepository extends AbstractRepository
      */
     public function getAlerts($docId)
     {
-        return $this->model->select(\DB::raw('COUNT(id) AS total'))
+        return $this->model
+            ->select(\DB::raw('COUNT(id) AS total'))
             ->where('docid', $docId)
             ->whereRaw('COALESCE(viewed, 0) = 0')
             ->where('sfax_status', 2)
-            ->first();
+            ->first()
+        ;
     }
 
     /**
@@ -32,7 +34,9 @@ class FaxRepository extends AbstractRepository
      */
     public function updateByLetterId($letterId, array $data)
     {
-        return $this->model->where('letterid', $letterId)
-            ->update($data);
+        return $this->model
+            ->where('letterid', $letterId)
+            ->update($data)
+        ;
     }
 }

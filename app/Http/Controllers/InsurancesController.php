@@ -4,6 +4,9 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LedgerRepository;
+use DentalSleepSolutions\Exceptions\GeneralException;
+use DentalSleepSolutions\Helpers\PendingClaimRemover;
+use DentalSleepSolutions\Helpers\UnmailedClaimsRetriever;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -327,35 +330,47 @@ class InsurancesController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/insurances/{type}",
+     *     path="/insurances/pending-claims",
      *     @SWG\Parameter(name="type", in="path", type="string", required=true),
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param string $type
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getFrontOfficeClaims($type)
+    public function getPendingFrontOfficeClaims()
     {
-        $docId = $this->currentUser->docid ?: 0;
+        $data = $this->repository->getPendingClaims($this->user->docid);
+        return ApiResponse::responseOk('', $data);
+    }
 
-        $isUserTypeSoftware = ($this->currentUser->user_type == self::DSS_USER_TYPE_SOFTWARE);
+    /**
+     * @SWG\Post(
+     *     path="/insurances/unmailed-claims",
+     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param UnmailedClaimsRetriever $unmailedClaimsRetriever
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUnmailedFrontOfficeClaims(UnmailedClaimsRetriever $unmailedClaimsRetriever)
+    {
+        $data = $unmailedClaimsRetriever->getUnmailedClaims($this->user->docid, $this->user->user_type);
+        return ApiResponse::responseOk('', $data);
+    }
 
-        switch ($type) {
-            case 'pending-claims':
-                $data = $this->repository->getPendingClaims($docId);
-                break;
-            case 'unmailed-claims':
-                $data = $this->repository->getUnmailedClaims($docId, $isUserTypeSoftware);
-                break;
-            case 'rejected-claims':
-                $data = $this->repository->getRejectedClaims($docId);
-                break;
-            default:
-                $data = [];
-                break;
-        }
-
+    /**
+     * @SWG\Post(
+     *     path="/insurances/rejected-claims",
+     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getRejectedFrontOfficeClaims()
+    {
+        $data = $this->repository->getRejectedClaims($this->user->docid);
         return ApiResponse::responseOk('', $data);
     }
 
@@ -365,24 +380,19 @@ class InsurancesController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param LedgerRepository $ledgerRepository
+     * @param PendingClaimRemover $pendingClaimRemover
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function removeClaim(LedgerRepository $ledgerRepository, Request $request)
+    public function removeClaim(PendingClaimRemover $pendingClaimRemover, Request $request)
     {
         $claimId = $request->input('claim_id', 0);
 
-        $isSuccess = $this->repository->removePendingClaim($claimId);
-
-        if ($isSuccess) {
-            $ledgerRepository->updateWherePrimaryClaimId($claimId, [
-                'primary_claim_id' => null,
-                'status'           => self::DSS_TRXN_NA,
-            ]);
-
-            return ApiResponse::responseOk('Deleted Successfully');
+        try {
+            $pendingClaimRemover->removePendingClaim($claimId);
+        } catch (GeneralException $e) {
+            return ApiResponse::responseError('Error deleting');
         }
-        return ApiResponse::responseError('Error deleting');
+        return ApiResponse::responseOk('Deleted Successfully');
     }
 }

@@ -3,23 +3,34 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Eloquent\Traits\DentrixAuthenticatableTrait;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
 /**
  * @SWG\Definition(
  *     definition="ExternalUser",
  *     type="object",
- *     @SWG\Property(property="company", ref="#/definitions/ExternalCompany"),
  *     @SWG\Property(property="user", ref="#/definitions/User")
  * )
  *
  * DentalSleepSolutions\Eloquent\Dental\ExternalUser
  *
- * @property-read \DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany $company
+ * @property int $id
+ * @property int $user_id
+ * @property string $api_key
+ * @property string $valid_from
+ * @property string $valid_to
+ * @property int $enabled
+ * @property int $created_by
+ * @property int $updated_by
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @property-read \DentalSleepSolutions\Eloquent\Models\Dental\User $user
- * @mixin \Eloquent
  */
-class ExternalUser extends AbstractModel
+class ExternalUser extends AbstractModel implements AuthenticatableContract
 {
+    use DentrixAuthenticatableTrait;
+
     /**
      * Guarded attributes
      *
@@ -46,12 +57,5 @@ class ExternalUser extends AbstractModel
      */
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'userid');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function company() {
-        return $this->belongsTo(ExternalCompany::class, 'company_id', 'id');
     }
 }

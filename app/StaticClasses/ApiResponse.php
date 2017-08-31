@@ -2,13 +2,12 @@
 
 namespace DentalSleepSolutions\StaticClasses;
 
-use function is_object;
+use League\Fractal\Resource\Collection;
 use Traversable;
 use League\Fractal\Manager;
 use Illuminate\Support\Arr;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
-use League\Fractal\Resource\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -162,17 +161,19 @@ class ApiResponse
         $transformer = self::hasTransformer($data);
 
         if (self::isResource($data) && strlen($transformer)) {
-            $data = $fractal->createData(new Item($data, new $transformer))->toArray();
+            $data = $fractal->createData(new Item($data, new $transformer()))->toArray();
         }
 
         $transformer = '';
 
         if (self::isCollection($data) && self::isResource($data[0])) {
-            $transformer = self::hasTransformer($data);
+            $transformer = self::hasTransformer($data[0]);
         }
 
         if (strlen($transformer)) {
-            $data = $fractal->createData(new Collection($data, new $transformer()))->toArray();
+            $collection = new Collection($data, new $transformer());
+            $data = $fractal->createData($collection);
+            $data = $data->toArray();
         }
 
         return Arr::get($data, 'data', $data);
@@ -184,7 +185,7 @@ class ApiResponse
      */
     private static function hasTransformer($resource)
     {
-        if (!is_string($resource) || !is_object($resource)) {
+        if (!is_string($resource) && !is_object($resource)) {
             return '';
         }
 

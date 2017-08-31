@@ -124,7 +124,7 @@ return [
         |
         */
 
-        'user' => DentalSleepSolutions\Providers\JWT\EloquentUserAdapter::class,
+        'user' => Tymon\JWTAuth\Providers\User\EloquentUserAdapter::class,
 
         /*
         |--------------------------------------------------------------------------
@@ -146,7 +146,7 @@ return [
         |
         */
 
-        'auth' => DentalSleepSolutions\Auth\Legacy::class,
+        'auth' => DentalSleepSolutions\Auth\LegacyAuth::class,
 
         /*
         |--------------------------------------------------------------------------

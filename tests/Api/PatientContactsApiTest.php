@@ -1,65 +1,61 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\PatientContact;
 use Tests\TestCases\ApiTestCase;
 
 class PatientContactsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/patient-contacts -> PatientContactsController@store method
-     * 
-     */
-    public function testAddPatientContact()
+    protected function getModel()
     {
-        $data = factory(PatientContact::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/patient-contacts', $data)
-            ->seeInDatabase('dental_patient_contacts', ['patientid' => 100])
-            ->assertResponseOk();
+        return PatientContact::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/patient-contacts/{id} -> PatientContactsController@update method
-     * 
-     */
-    public function testUpdatePatientContact()
+    protected function getRoute()
     {
-        $patientContactTestRecord = factory(PatientContact::class)->create();
+        return '/patient-contacts';
+    }
 
-        $data = [
+    protected function getStoreData()
+    {
+        return [
+            "contacttype" => 2,
+            "patientid" => 100,
+            "firstname" => "Brandon",
+            "lastname" => "Sporer",
+            "address1" => "247 Bayer Mill Suite 813\nPort Aliyahville, NJ 42103",
+            "address2" => "30798 Israel Ridge Apt. 589\nLake Hershel, NV 04820-8664",
+            "city" => "Auerchester",
+            "state" => "OK",
+            "zip" => "33024",
+            "phone" => "6615579647",
+        ];
+    }
+
+    protected function getUpdateData()
+    {
+        return [
             'patientid' => 54,
             'firstname' => 'John',
             'lastname'  => 'Doe',
-            'zip'       => 12345
+            'zip'       => 12345,
         ];
-
-        $this->put('/api/v1/patient-contacts/' . $patientContactTestRecord->id, $data)
-            ->seeInDatabase('dental_patient_contacts', ['patientid' => 54])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/patient-contacts/{id} -> PatientContactsController@destroy method
-     * 
-     */
-    public function testDeletePatientContact()
+    public function testGetCurrent()
     {
-        $patientContactTestRecord = factory(PatientContact::class)->create();
+        $this->post(self::ROUTE_PREFIX . '/patient-contacts/current');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
 
-        $this->delete('/api/v1/patient-contacts/' . $patientContactTestRecord->id)
-            ->notSeeInDatabase('dental_patient_contacts', [
-                'id' => $patientContactTestRecord->id
-            ])
-            ->assertResponseOk();
+    public function testGetNumber()
+    {
+        $this->post(self::ROUTE_PREFIX . '/patient-contacts/number');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 }

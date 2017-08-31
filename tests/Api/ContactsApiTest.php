@@ -1,29 +1,25 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Arr;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCases\ApiTestCase;
 use DentalSleepSolutions\Eloquent\Models\Dental\Contact;
 
 class ContactsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware;
-    use DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/contacts -> Api/ApiContactsController@store method
-     * 
-     */
-    public function testAddContact()
+    protected function getModel()
     {
-        $statusOk = Arr::get(Response::$statusTexts, 200);
+        return Contact::class;
+    }
 
-        $data = [
-            'docid'         => 5,
+    protected function getRoute()
+    {
+        return '/contacts';
+    }
+
+    protected function getStoreData()
+    {
+        return [
+            'docid'         => 0,
             'lastname'      => 'John',
             'firstname'     => 'Doe',
             'company'       => 'Test company',
@@ -33,55 +29,112 @@ class ContactsApiTest extends ApiTestCase
             'zip'           => '12345',
             'phone1'        => '1234567890',
             'email'         => 'test@email.com',
-            'contacttypeid' => 5
+            'contacttypeid' => 5,
         ];
-
-        $this->post('/api/v1/contacts', $data);
-        $this
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_contact', ['company' => 'Test company'])
-        ;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/contacts/{id} -> Api/ApiContactsController@update method
-     * 
-     */
-    public function testUpdateContact()
+    protected function getUpdateData()
     {
-        $statusOk = Arr::get(Response::$statusTexts, 200);
-
-        $contactTestRecord = factory(Contact::class)->create();
-
-        $data = [
+        return [
             'docid'         => 5,
             'lastname'      => 'John',
             'firstname'     => 'Doe',
-            'company'       => 'Updated test company'
+            'company'       => 'Updated test company',
         ];
-
-        $this->put('/api/v1/contacts/' . $contactTestRecord->contactid, $data)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_contact', ['company' => 'Updated test company']);
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/contacts/{id} -> Api/ApiContactsController@destroy method
-     * 
-     */
-    public function testDeleteContact()
+    public function testFind()
     {
-        $statusOk = Arr::get(Response::$statusTexts, 200);
+        $this->post(self::ROUTE_PREFIX . '/contacts/find');
+        $this->assertResponseOk();
+        $expected = [
+            'totalCount' => 0,
+            'result' => [],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 
-        $contactTestRecord = factory(Contact::class)->create();
+    public function testGetListContactsAndCompanies()
+    {
+        $this->post(self::ROUTE_PREFIX . '/contacts/list-contacts-and-companies');
+        $this->assertResponseOk();
+        $expected = [
+            'error' => 'Error: No match found for this criteria.',
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 
-        $this->delete('/api/v1/contacts/' . $contactTestRecord->contactid)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => $statusOk])
-            ->notSeeInDatabase('dental_contact', ['contactid' => $contactTestRecord->contactid]);
+    public function testGetWithContactType()
+    {
+        $this->post(self::ROUTE_PREFIX . '/contacts/with-contact-type');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
+
+    public function testGetInsuranceContacts()
+    {
+        $this->post(self::ROUTE_PREFIX . '/contacts/insurance');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
+
+    public function testGetReferredByContacts()
+    {
+        $this->post(self::ROUTE_PREFIX . '/contacts/referred-by');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 0,
+            'contacts' => [],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testGetCorporateContacts()
+    {
+        $this->post(self::ROUTE_PREFIX . '/contacts/corporate');
+        $this->assertResponseOk();
+        $expected = [
+            'total' => 1,
+            'result' => [
+                [
+                    'contactid' => 146,
+                    'docid' => 1,
+                    'salutation' => '',
+                    'lastname' => 'corporate',
+                    'firstname' => 'test corp',
+                    'middlename' => '',
+                    'company' => 'corporate contact1',
+                    'add1' => '123 test',
+                    'add2' => '',
+                    'city' => 'city',
+                    'state' => 'state',
+                    'zip' => '12345',
+                    'phone1' => '5555555555',
+                    'phone2' => '5555555555',
+                    'fax' => '890898908',
+                    'email' => '',
+                    'national_provider_id' => '',
+                    'qualifier' => '0',
+                    'qualifierid' => '',
+                    'greeting' => '',
+                    'sincerely' => '',
+                    'contacttypeid' => 25,
+                    'notes' => '',
+                    'preferredcontact' => '',
+                    'status' => 1,
+                    'adddate' => '2014-03-18 23:08:35',
+                    'ip_address' => '68.253.133.237',
+                    'referredby_info' => null,
+                    'old_referredbyid' => null,
+                    'referredby_notes' => null,
+                    'merge_id' => null,
+                    'merge_date' => null,
+                    'corporate' => 1,
+                    'dea_number' => null,
+                    'contacttype' => 'test corporate type',
+                ],
+            ],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 }

@@ -1,63 +1,47 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\SocialHistory;
 use Tests\TestCases\ApiTestCase;
 
 class SocialHistoriesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/social-histories -> SocialHistoriesController@store method
-     * 
-     */
-    public function testAddSocialHistory()
+    protected function getModel()
     {
-        $data = factory(SocialHistory::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/social-histories', $data)
-            ->seeInDatabase('dental_q_page4', ['patientid' => 100])
-            ->assertResponseOk();
+        return SocialHistory::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/social-histories/{id} -> SocialHistoriesController@update method
-     * 
-     */
-    public function testUpdateSocialHistory()
+    protected function getRoute()
     {
-        $socialHistoryTestRecord = factory(SocialHistory::class)->create();
+        return '/social-histories';
+    }
 
-        $data = [
-            'formid'               => 100,
-            'additional_paragraph' => 'updated social history'
+    protected function getStoreData()
+    {
+        return [
+            "formid" => 5,
+            "patientid" => 100,
+            "family_had" => "Quis laboriosam ut id necessitatibus.",
+            "family_diagnosed" => "Yes",
+            "additional_paragraph" => "Ipsam ullam eligendi sint sequi dolore architecto maxime quaerat.",
+            "alcohol" => "optio",
+            "sedative" => "et",
+            "caffeine" => "harum",
+            "smoke" => "No",
+            "smoke_packs" => "9",
+            "tobacco" => "Yes",
+            "userid" => 1,
+            "docid" => 5,
+            "status" => 2,
+            "parent_patientid" => 3,
         ];
-
-        $this->put('/api/v1/social-histories/' . $socialHistoryTestRecord->q_page4id, $data)
-            ->seeInDatabase('dental_q_page4', ['formid' => 100])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/social-histories/{id} -> SocialHistoriesController@destroy method
-     * 
-     */
-    public function testDeleteSocialHistory()
+    protected function getUpdateData()
     {
-        $socialHistoryTestRecord = factory(SocialHistory::class)->create();
-
-        $this->delete('/api/v1/social-histories/' . $socialHistoryTestRecord->q_page4id)
-            ->notSeeInDatabase('dental_q_page4', [
-                'q_page4id' => $socialHistoryTestRecord->q_page4id
-            ])
-            ->assertResponseOk();
+        return [
+            'formid'               => 100,
+            'additional_paragraph' => 'updated social history',
+        ];
     }
 }

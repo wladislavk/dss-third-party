@@ -1,13 +1,13 @@
 <?php
 namespace DentalSleepSolutions\Http\Transformers;
 
+use Carbon\Carbon;
 use DentalSleepSolutions\Contracts\ComplexRelationshipInterface;
 use DentalSleepSolutions\Contracts\SimpleRelationshipInterface;
 use DentalSleepSolutions\Contracts\TransformerInterface;
 use Illuminate\Database\Eloquent\Model;
-use League\Fractal\TransformerAbstract;
-use Carbon\Carbon;
 use InvalidArgumentException;
+use League\Fractal\TransformerAbstract;
 
 /**
  * Map Dentrix API data into Patient/ExternalPatient data

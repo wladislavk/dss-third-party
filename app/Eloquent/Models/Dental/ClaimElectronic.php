@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Eloquent\Traits\WithoutUpdatedTimestamp;
 
 /**
  * @SWG\Definition(
@@ -41,6 +42,45 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
  */
 class ClaimElectronic extends AbstractModel
 {
+    use WithoutUpdatedTimestamp;
+
+    /**
+     * Mass assignable attributes
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'claimid',
+        'response',
+        'adddate',
+        'ip_address',
+        'reference_id',
+        'percase_date',
+        'percase_name',
+        'percase_amount',
+        'percase_status',
+        'percase_invoice',
+        'percase_free',
+    ];
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'dental_claim_electronic';
-    public $timestamps = false;
+
+    /**
+     * Primary key for the table
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+    const CREATED_AT = 'adddate';
+
+    public function getPlural()
+    {
+        return 'ClaimsElectronic';
+    }
 }

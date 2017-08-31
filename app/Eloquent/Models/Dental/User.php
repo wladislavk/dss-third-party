@@ -2,7 +2,9 @@
 
 namespace DentalSleepSolutions\Eloquent\Models\Dental;
 
+use DentalSleepSolutions\Contracts\UserInterface;
 use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use DentalSleepSolutions\Eloquent\Traits\UserTrait;
 
 /**
  * @SWG\Definition(
@@ -221,8 +223,10 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
  * @property-read \DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompanyUser $externalCompanyPivot
  * @mixin \Eloquent
  */
-class User extends AbstractModel
+class User extends AbstractModel implements UserInterface
 {
+    use UserTrait;
+
     /**
      * Guarded attributes
      *
@@ -277,39 +281,5 @@ class User extends AbstractModel
     public function externalCompany()
     {
         return $this->externalCompanyPivot->belongsTo(ExternalCompany::class, 'company_id', 'id');
-    }
-
-    /**
-     * @return int
-     */
-    public function getDocIdOrZero()
-    {
-        if ($this->docid) {
-            return $this->docid;
-        }
-        return 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getUserIdOrZero()
-    {
-        // TODO: there is no ID field by default on this model
-        if (property_exists($this, 'id') && $this->id) {
-            return $this->id;
-        }
-        return 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getUserTypeOrZero()
-    {
-        if ($this->user_type) {
-            return $this->user_type;
-        }
-        return 0;
     }
 }

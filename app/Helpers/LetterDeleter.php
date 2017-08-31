@@ -5,8 +5,8 @@ namespace DentalSleepSolutions\Helpers;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Dental\Letter;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\FaxRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Factories\LetterUpdaterFactory;
+use DentalSleepSolutions\Helpers\QueryComposers\LettersQueryComposer;
 use DentalSleepSolutions\Structs\ContactData;
 use DentalSleepSolutions\Structs\LetterData;
 
@@ -18,11 +18,11 @@ class LetterDeleter
     /** @var LetterCreator */
     private $letterCreator;
 
+    /** @var LettersQueryComposer */
+    private $lettersQueryComposer;
+
     /** @var LetterUpdaterFactory */
     private $letterUpdaterFactory;
-
-    /** @var LetterRepository */
-    private $letterRepository;
 
     /** @var FaxRepository */
     private $faxRepository;
@@ -30,34 +30,29 @@ class LetterDeleter
     public function __construct(
         GeneralHelper $generalHelper,
         LetterCreator $letterCreator,
+        LettersQueryComposer $lettersQueryComposer,
         LetterUpdaterFactory $letterUpdaterFactory,
-        LetterRepository $letterRepository,
         FaxRepository $faxRepository
     ) {
         $this->generalHelper = $generalHelper;
         $this->letterCreator = $letterCreator;
+        $this->lettersQueryComposer = $lettersQueryComposer;
         $this->letterUpdaterFactory = $letterUpdaterFactory;
-        $this->letterRepository = $letterRepository;
         $this->faxRepository = $faxRepository;
     }
 
     /**
      * TODO: check why we need the last argument
      *
-     * @param int $letterId
+     * @param Letter $letter
      * @param $type
      * @param int $recipientId
      * @param int $docId
      * @param int $userId
      * @param string|null $template
      */
-    public function deleteLetter($letterId, $type, $recipientId, $docId, $userId, $template = null)
+    public function deleteLetter(Letter $letter, $type, $recipientId, $docId, $userId, $template = null)
     {
-        /** @var Letter|null $letter */
-        $letter = $this->letterRepository->find($letterId);
-        if (!$letter) {
-            return;
-        }
         $patientId = $this->setPatientId($letter);
         $contactData = $this->generalHelper->getContactInfo(
             $patientId,
@@ -68,7 +63,7 @@ class LetterDeleter
         $totalContacts = $this->getTotalContacts($contactData);
         // TODO: check what should happen if totalContacts == 0
         if ($totalContacts == 1) {
-            $this->deleteLetterWithSingleContact($letterId, $userId);
+            $this->deleteLetterWithSingleContact($letter->letterid, $userId);
             return;
         }
         $this->deleteLetterWithMultipleContacts(
@@ -104,7 +99,8 @@ class LetterDeleter
         $data->deletedBy = $userId;
         $data->deletedOn = Carbon::now();
 
-        $this->letterRepository->updateLetterBy($where, $data, $updatedFields);
+        $firstUpdateArray = $this->composeUpdateData($data, $updatedFields);
+        $this->lettersQueryComposer->updateLetterBy($where, $firstUpdateArray);
 
         $data = ['viewed' => 1];
         $this->faxRepository->updateByLetterId($letterId, $data);
@@ -112,7 +108,8 @@ class LetterDeleter
         $where = ['parentid' => $letterId];
         $updatedFields = ['parentid'];
         $data = new LetterData();
-        $this->letterRepository->updateLetterBy($where, $data, $updatedFields);
+        $secondUpdateArray = $this->composeUpdateData($data, $updatedFields);
+        $this->lettersQueryComposer->updateLetterBy($where, $secondUpdateArray);
     }
 
     /**
@@ -140,7 +137,8 @@ class LetterDeleter
         if ($newLetterId > 0) {
             $where = ['letterid' => $letter->letterid];
             $updatedFields = $letterUpdater->getUpdatedFields();
-            $this->letterRepository->updateLetterBy($where, $dataForUpdate, $updatedFields);
+            $updateArray = $this->composeUpdateData($dataForUpdate, $updatedFields);
+            $this->lettersQueryComposer->updateLetterBy($where, $updateArray);
         }
     }
 
@@ -177,5 +175,22 @@ class LetterDeleter
         $newLetterData->status = false;
         $newLetterData->deleted = true;
         $newLetterData->checkRecipient = false;
+    }
+
+    /**
+     * @param LetterData $data
+     * @param array $fields
+     * @return array
+     */
+    private function composeUpdateData(LetterData $data, array $fields)
+    {
+        $dataArray = $data->toArray();
+        $updated = [];
+        foreach ($fields as $field) {
+            if (isset($dataArray[$field])) {
+                $updated[$field] = $dataArray[$field];
+            }
+        }
+        return $updated;
     }
 }

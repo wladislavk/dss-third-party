@@ -1,63 +1,36 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\Palpation;
 use Tests\TestCases\ApiTestCase;
 
 class PalpationApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/palpation -> PalpationController@store method
-     * 
-     */
-    public function testAddPalpation()
+    protected function getModel()
     {
-        $data = factory(Palpation::class)->make()->toArray();
-
-        $data['palpation'] = 'new palpation';
-
-        $this->post('/api/v1/palpation', $data)
-            ->seeInDatabase('dental_palpation', ['palpation' => 'new palpation'])
-            ->assertResponseOk();
+        return Palpation::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/palpation/{id} -> PalpationController@update method
-     * 
-     */
-    public function testUpdatePalpation()
+    protected function getRoute()
     {
-        $palpationTestRecord = factory(Palpation::class)->create();
+        return '/palpation';
+    }
 
-        $data = [
-            'description' => 'updated palpation',
-            'sortby'      => 333
+    protected function getStoreData()
+    {
+        return [
+            "palpation" => "new palpation",
+            "description" => "Blanditiis veniam atque minus voluptas autem.",
+            "sortby" => 5,
+            "status" => 2,
         ];
-
-        $this->put('/api/v1/palpation/' . $palpationTestRecord->palpationid, $data)
-            ->seeInDatabase('dental_palpation', ['sortby' => 333])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/palpation/{id} -> PalpationController@destroy method
-     * 
-     */
-    public function testDeletePalpation()
+    protected function getUpdateData()
     {
-        $palpationTestRecord = factory(Palpation::class)->create();
-
-        $this->delete('/api/v1/palpation/' . $palpationTestRecord->palpationid)
-            ->notSeeInDatabase('dental_palpation', [
-                'palpationid' => $palpationTestRecord->palpationid
-            ])
-            ->assertResponseOk();
+        return [
+            'description' => 'updated palpation',
+            'sortby'      => 333,
+        ];
     }
 }

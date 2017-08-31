@@ -147,9 +147,7 @@ class LocationsController extends BaseRestController
      */
     public function getDoctorLocations()
     {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $data = $this->repository->getDoctorLocations($docId);
+        $data = $this->repository->getDoctorLocations($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }

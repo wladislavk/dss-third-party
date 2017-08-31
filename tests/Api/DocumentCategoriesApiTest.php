@@ -1,63 +1,56 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\DocumentCategory;
 use Tests\TestCases\ApiTestCase;
 
 class DocumentCategoriesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/document-categories -> DocumentCategoriesController@store method
-     * 
-     */
-    public function testAddDocumentCategory()
+    protected function getModel()
     {
-        $data = [
+        return DocumentCategory::class;
+    }
+
+    protected function getRoute()
+    {
+        return '/document-categories';
+    }
+
+    protected function getStoreData()
+    {
+        return [
             'name'   => 'John Doe',
-            'status' => 5
+            'status' => 5,
         ];
-
-        $this->post('/api/v1/document-categories', $data)
-            ->seeInDatabase('dental_document_category', ['name' => 'John Doe'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/document-categories/{id} -> DocumentCategoriesController@update method
-     * 
-     */
-    public function testUpdateDocumentCategory()
+    protected function getUpdateData()
     {
-        $documentCategoryTestRecord = factory(DocumentCategory::class)->create();
-
-        $data = [
-            'status' => 7
+        return [
+            'status' => 7,
         ];
-
-        $this->put('/api/v1/document-categories/' . $documentCategoryTestRecord->categoryid, $data)
-            ->seeInDatabase('dental_document_category', ['status' => 7])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/document-categories/{id} -> DocumentCategoriesController@destroy method
-     * 
-     */
-    public function testDeleteDocumentCategory()
+    public function testActive()
     {
-        $documentCategoryTestRecord = factory(DocumentCategory::class)->create();
-
-        $this->delete('/api/v1/document-categories/' . $documentCategoryTestRecord->categoryid)
-            ->notSeeInDatabase('dental_document_category', [
-                'categoryid' => $documentCategoryTestRecord->categoryid
-            ])
-            ->assertResponseOk();
+        $this->post(self::ROUTE_PREFIX . '/document-categories/active');
+        $this->assertResponseOk();
+        $expected = [
+            [
+                'categoryid' => 23,
+                'name' => 'Final test',
+                'status' => 1,
+                'adddate' => '2011-06-23 15:50:25',
+                'ip_address' => '192.168.1.168',
+            ],
+            [
+                'categoryid' => 20,
+                'name' => 'test 2',
+                'status' => 1,
+                'adddate' => null,
+                'ip_address' => null,
+            ],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
     }
 }

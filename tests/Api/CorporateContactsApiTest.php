@@ -1,65 +1,53 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\CorporateContact;
 use Tests\TestCases\ApiTestCase;
 
 class CorporateContactsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/corporate-contacts -> CorporateContactsController@store method
-     */
-    public function testAddCorporateContact()
+    protected function getModel()
     {
-        $data = factory(CorporateContact::class)->make()->toArray();
-
-        $data['docid'] = 123;
-
-        $this->post('/api/v1/corporate-contacts', $data)
-            ->seeInDatabase('dental_fcontact', ['docid' => 123])
-            ->assertResponseOk();
+        return CorporateContact::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/corporate-contacts/{id} -> CorporateContactsController@update method
-     */
-    public function testUpdateCorporateContact()
+    protected function getRoute()
     {
-        $corporateContactTestRecord = factory(CorporateContact::class)->create();
+        return '/corporate-contacts';
+    }
 
-        $data = [
+    protected function getStoreData()
+    {
+        return [
+            "docid" => 123,
+            "salutation" => "Mr.",
+            "lastname" => "Abbott",
+            "firstname" => "Raymond",
+            "middlename" => "error",
+            "company" => "Cassin-Hudson",
+            "add1" => "330 Lenna Field\nNew Jessica, MN 21169",
+            "add2" => "6057 Lloyd Ramp Suite 220\nLinaborough, SD 36147-6282",
+            "city" => "Cassidychester",
+            "state" => "Idaho",
+            "zip" => "16610",
+            "phone1" => "1170354831",
+            "phone2" => "1141421399",
+            "fax" => "1984691824",
+            "email" => "nathan24@bradtke.biz",
+            "greeting" => "Mrs.",
+            "sincerely" => "Mr.",
+            "contacttypeid" => 7,
+            "notes" => "Voluptatem dicta alias ut incidunt error.",
+            "adddate" => "2000-01-08 07:59:13",
+        ];
+    }
+
+    protected function getUpdateData()
+    {
+        return [
             'docid'     => 123,
             'firstname' => 'John',
             'lastname'  => 'Doe',
         ];
-
-        $this->put('/api/v1/corporate-contacts/' . $corporateContactTestRecord->contactid, $data);
-        $this
-            ->seeInDatabase('dental_fcontact', ['docid' => 123])
-            ->assertResponseOk()
-        ;
-    }
-
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/corporate-contacts/{id} -> CorporateContactsController@destroy method
-     */
-    public function testDeleteCorporateContact()
-    {
-        $corporateContactTestRecord = factory(CorporateContact::class)->create();
-
-        $this->delete('/api/v1/corporate-contacts/' . $corporateContactTestRecord->contactid);
-        $this
-            ->notSeeInDatabase('dental_fcontact', [
-                'contactid' => $corporateContactTestRecord->contactid,
-            ])
-            ->assertResponseOk()
-        ;
     }
 }

@@ -3,17 +3,17 @@
 namespace DentalSleepSolutions\Http\Transformers;
 
 use DentalSleepSolutions\Contracts\TransformerInterface;
-use DentalSleepSolutions\Eloquent\Models\Payer as Resource;
+use DentalSleepSolutions\Eloquent\Models\Payer as Model;
 
 class Payer extends AbstractTransformer implements TransformerInterface
 {
     use WithTransformer;
 
     /**
-     * @param Resource $resource
+     * @param Model $resource
      * @return array
      */
-    public function transform(Resource $resource)
+    public function transform(Model $resource)
     {
         return $this->simpleTransform($resource);
     }

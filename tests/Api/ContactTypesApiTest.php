@@ -1,78 +1,135 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Arr;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCases\ApiTestCase;
 use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
 
 class ContactTypesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware;
-    use DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/contact-types -> Api/ApiContactTypesController@store method
-     * 
-     */
-    public function testAddContactType()
+    protected function getModel()
     {
-        $statusOk = Arr::get(Response::$statusTexts, 200);
+        return ContactType::class;
+    }
 
-        $data = [
+    protected function getRoute()
+    {
+        return '/contact-types';
+    }
+
+    protected function getStoreData()
+    {
+        return [
             'contacttype' => 'test',
             'description' => 'test description',
             'sortby'      => 10,
             'status'      => 10,
             'physician'   => 0,
-            'corporate'   => 0
+            'corporate'   => 0,
         ];
-
-        $this->post('/api/v1/contact-types', $data)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_contacttype', ['status' => 10]);
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/contact-types/{contacttypeid} -> Api/ApiContactTypesController@update method
-     * 
-     */
-    public function testUpdateContactType()
+    protected function getUpdateData()
     {
-        $statusOk = Arr::get(Response::$statusTexts, 200);
-
-        $contactTypeTestRecord = factory(ContactType::class)->create();
-
-        $data = [
+        return [
             'sortby'      => 10,
-            'contacttype' => 'updated contact type'
+            'contacttype' => 'updated contact type',
         ];
-
-        $this->put('/api/v1/contact-types/' . $contactTypeTestRecord->contacttypeid, $data)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => $statusOk])
-            ->seeInDatabase('dental_contacttype', ['contacttype' => 'updated contact type']);
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/contact-types/{contacttypeid} -> Api/ApiContactTypesController@destroy method
-     * 
-     */
-    public function testDeleteContactType()
+    public function testGetActiveNonCorporate()
     {
-        $statusOk = Arr::get(Response::$statusTexts, 200);
+        $this->post(self::ROUTE_PREFIX . '/contact-types/active-non-corporate');
+        $this->assertResponseOk();
+        $expected = [
+            [
+                'contacttypeid' => 20,
+                'contacttype' => 'Primary Care Physician',
+            ],
+            [
+                'contacttypeid' => 21,
+                'contacttype' => 'Sleep Physician',
+            ],
+            [
+                'contacttypeid' => 24,
+                'contacttype' => 'Dentist',
+            ],
+            [
+                'contacttypeid' => 22,
+                'contacttype' => 'ENT Physician',
+            ],
+            [
+                'contacttypeid' => 23,
+                'contacttype' => 'Other Physician',
+            ],
+            [
+                'contacttypeid' => 12,
+                'contacttype' => 'Other',
+            ],
+            [
+                'contacttypeid' => 19,
+                'contacttype' => 'Unknown',
+            ],
+            [
+                'contacttypeid' => 14,
+                'contacttype' => 'Patient',
+            ],
+            [
+                'contacttypeid' => 13,
+                'contacttype' => 'Parent',
+            ],
+            [
+                'contacttypeid' => 11,
+                'contacttype' => 'Insurance',
+            ],
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 
-        $contactTypeTestRecord = factory(ContactType::class)->create();
+    public function testGetPhysician()
+    {
+        $this->post(self::ROUTE_PREFIX . '/contact-types/physician');
+        $this->assertResponseOk();
+        $expected = [
+            'physician_types' => '20,21,22,23,24',
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 
-        $this->delete('/api/v1/contact-types/' . $contactTypeTestRecord->contacttypeid)
-            ->seeStatusCode(200)
-            ->seeJsonContains(['status' => $statusOk])
-            ->notSeeInDatabase('dental_contacttype', ['contacttypeid' => $contactTypeTestRecord->contacttypeid]);
+    public function testGetWithFilter()
+    {
+        $this->post(self::ROUTE_PREFIX . '/contact-types/with-filter');
+        $this->assertResponseOk();
+        $this->assertEquals(11, count($this->getResponseData()));
+        $expectedFirst = [
+            'contacttypeid' => 11,
+            'contacttype' => 'Insurance',
+            'description' => null,
+            'sortby' => 10,
+            'status' => 1,
+            'adddate' => '2011-05-14 20:47:43',
+            'ip_address' => '127.0.0.1',
+            'physician' => null,
+            'corporate' => 0,
+        ];
+        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
+    }
+
+    public function testGetSortedContactTypes()
+    {
+        $this->post(self::ROUTE_PREFIX . '/contact-types/sorted');
+        $this->assertResponseOk();
+        $this->assertEquals(11, count($this->getResponseData()));
+        $expectedFirst = [
+            'contacttypeid' => 20,
+            'contacttype' => 'Primary Care Physician',
+            'description' => '',
+            'sortby' => 1,
+            'status' => 1,
+            'adddate' => '2011-04-14 22:12:43',
+            'ip_address' => '72.77.128.163',
+            'physician' => 1,
+            'corporate' => 0,
+        ];
+        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
     }
 }

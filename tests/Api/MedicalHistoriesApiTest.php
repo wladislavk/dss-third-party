@@ -1,63 +1,36 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\MedicalHistory;
 use Tests\TestCases\ApiTestCase;
 
 class MedicalHistoriesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/medical-histories -> MedicalHistoriesController@store method
-     * 
-     */
-    public function testAddMedicalHistory()
+    protected function getModel()
     {
-        $data = factory(MedicalHistory::class)->make()->toArray();
-
-        $data['status'] = 7;
-
-        $this->post('/api/v1/medical-histories', $data)
-            ->seeInDatabase('dental_history', ['status' => 7])
-            ->assertResponseOk();
+        return MedicalHistory::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/medical-histories/{id} -> MedicalHistoriesController@update method
-     * 
-     */
-    public function testUpdateMedicalHistory()
+    protected function getRoute()
     {
-        $medicalHistoryTestRecord = factory(MedicalHistory::class)->create();
+        return '/medical-histories';
+    }
 
-        $data = [
-            'description' => 'updated medical history',
-            'sortby'      => 100
+    protected function getStoreData()
+    {
+        return [
+            "history" => "repudiandae",
+            "description" => "Nulla modi vel qui voluptatem.",
+            "sortby" => 9,
+            "status" => 7,
         ];
-
-        $this->put('/api/v1/medical-histories/' . $medicalHistoryTestRecord->historyid, $data)
-            ->seeInDatabase('dental_history', ['description' => 'updated medical history'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/medical-histories/{id} -> MedicalHistoriesController@destroy method
-     * 
-     */
-    public function testDeleteMedicalHistory()
+    protected function getUpdateData()
     {
-        $medicalHistoryTestRecord = factory(MedicalHistory::class)->create();
-
-        $this->delete('/api/v1/medical-histories/' . $medicalHistoryTestRecord->historyid)
-            ->notSeeInDatabase('dental_history', [
-                'historyid' => $medicalHistoryTestRecord->historyid
-            ])
-            ->assertResponseOk();
+        return [
+            'description' => 'updated medical history',
+            'sortby'      => 100,
+        ];
     }
 }

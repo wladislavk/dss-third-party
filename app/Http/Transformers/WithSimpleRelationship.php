@@ -20,19 +20,31 @@ trait WithSimpleRelationship
      * @return array
      */
     public function simpleMapping(array $data, $export, array $initialState = []) {
-        $mapped = $initialState ?: [];
+        $mapped = [];
 
-        foreach (self::SIMPLE_MAP as $dotted=>$dashed) {
+        if (count($initialState)) {
+            $mapped = $initialState;
+        }
+
+        foreach (self::SIMPLE_MAP as $dotted => $dashed) {
             if (is_numeric($dotted)) {
                 $dotted = $dashed;
                 $dashed = str_replace('.', '_', $dotted);
             }
 
-            $source = $export ? $dashed : $dotted;
-            $destination = $export ? $dotted : $dashed;
+            $source = $dotted;
+            $destination = $dashed;
+
+            if ($export) {
+                $source = $dashed;
+                $destination = $dotted;
+            }
 
             $value = Arr::get($data, $source, '');
-            $value = is_null($value) ? '' : $value;
+
+            if (is_null($value)) {
+                $value = '';
+            }
 
             Arr::set($mapped, $destination, $value);
         }

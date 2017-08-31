@@ -1,65 +1,38 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\LedgerNote;
 use Tests\TestCases\ApiTestCase;
 
 class LedgerNotesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/ledger-notes -> LedgerNotesController@store method
-     * 
-     */
-    public function testAddLedgerNote()
+    protected function getModel()
     {
-        $data = factory(LedgerNote::class)->make()->toArray();
-
-        $data['producerid'] = 100;
-
-        $this->post('/api/v1/ledger-notes', $data)
-            ->seeInDatabase('dental_ledger_note', ['producerid' => 100])
-            ->assertResponseOk();
+        return LedgerNote::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/ledger-notes/{id} -> LedgerNotesController@update method
-     * 
-     */
-    public function testUpdateLedgerNote()
+    protected function getRoute()
     {
-        $ledgerNoteTestRecord = factory(LedgerNote::class)->create();
+        return '/ledger-notes';
+    }
 
-        $data = [
-            'note'    => 'updated note',
-            'private' => 8
+    protected function getStoreData()
+    {
+        return [
+            "producerid" => 100,
+            "note" => "Commodi et accusamus.",
+            "private" => 2,
+            "patientid" => 5,
+            "docid" => 4,
+            "admin_producerid" => 7,
         ];
-
-        $this->put('/api/v1/ledger-notes/' . $ledgerNoteTestRecord->id, $data)
-            ->seeInDatabase('dental_ledger_note', [
-                'note' => 'updated note'
-            ])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/ledger-notes/{id} -> LedgerNotesController@destroy method
-     * 
-     */
-    public function testDeleteLedgerNote()
+    protected function getUpdateData()
     {
-        $ledgerNoteTestRecord = factory(LedgerNote::class)->create();
-
-        $this->delete('/api/v1/ledger-notes/' . $ledgerNoteTestRecord->id)
-            ->notSeeInDatabase('dental_ledger_note', [
-                'id' => $ledgerNoteTestRecord->id
-            ])
-            ->assertResponseOk();
+        return [
+            'note'    => 'updated note',
+            'private' => 8,
+        ];
     }
 }

@@ -2,29 +2,26 @@
 
 namespace DentalSleepSolutions\Http\Middleware;
 
-use Carbon\Carbon;
 use Closure;
-use DB;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ApiLogRepository;
+use DentalSleepSolutions\Http\Requests\Request;
 
 class ApiLogMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
+    /** @var ApiLogRepository */
+    private $apiLogRepository;
+
+    public function __construct(ApiLogRepository $apiLogRepository)
     {
-        /**
-         * @ToDo: refactor this
-         */
-        DB::table('dental_api_logs')->insert([
+        $this->apiLogRepository = $apiLogRepository;
+    }
+
+    public function handle(Request $request, Closure $next)
+    {
+        $this->apiLogRepository->create([
             'method' => $request->method(),
             'route' => $request->path(),
             'payload' => json_encode($request->all()),
-            'created_at' => Carbon::now(),
         ]);
 
         return $next($request);

@@ -1,65 +1,37 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\Joint;
 use Tests\TestCases\ApiTestCase;
 
 class JointsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/joints -> JointsController@store method
-     * 
-     */
-    public function testAddJoint()
+    protected function getModel()
     {
-        $data = factory(Joint::class)->make()->toArray();
-
-        $data['joint'] = 'test add joint';
-
-        $this->post('/api/v1/joints', $data)
-            ->seeInDatabase('dental_joint', ['joint' => 'test add joint'])
-            ->assertResponseOk();
+        return Joint::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/joints/{id} -> JointsController@update method
-     * 
-     */
-    public function testUpdateJoint()
+    protected function getRoute()
     {
-        $jointTestRecord = factory(Joint::class)->create();
+        return '/joints';
+    }
 
-        $data = [
-            'joint'  => 'test updated joint',
-            'status' => 8
+    protected function getStoreData()
+    {
+        return [
+            "joint" => "test add joint",
+            "description" => "Consequatur doloremque cupiditate.",
+            "sortby" => 3,
+            "status" => 4,
+            "adddate" => "1985-12-31 22:20:58",
         ];
-
-        $this->put('/api/v1/joints/' . $jointTestRecord->jointid, $data)
-            ->seeInDatabase('dental_joint', [
-                'joint' => 'test updated joint'
-            ])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/joints/{id} -> JointsController@destroy method
-     * 
-     */
-    public function testDeleteJoint()
+    protected function getUpdateData()
     {
-        $jointTestRecord = factory(Joint::class)->create();
-
-        $this->delete('/api/v1/joints/' . $jointTestRecord->jointid)
-            ->notSeeInDatabase('dental_joint', [
-                'jointid' => $jointTestRecord->jointid
-            ])
-            ->assertResponseOk();
+        return [
+            'joint'  => 'test updated joint',
+            'status' => 8,
+        ];
     }
 }

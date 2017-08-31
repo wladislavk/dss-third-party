@@ -1,64 +1,49 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideSettingOption;
 use Tests\TestCases\ApiTestCase;
 
 class GuideSettingOptionsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/guide-setting-options -> GuideSettingOptionsController@store method
-     * 
-     */
-    public function testAddGuideSettingOption()
+    protected function getModel()
     {
-        $data = [
+        return GuideSettingOption::class;
+    }
+
+    protected function getRoute()
+    {
+        return '/guide-setting-options';
+    }
+
+    protected function getStoreData()
+    {
+        return [
             'option_id'  => 10,
             'setting_id' => 10,
-            'label'      => 'test'
+            'label'      => 'test',
         ];
-
-        $this->post('/api/v1/guide-setting-options', $data)
-            ->seeInDatabase('dental_device_guide_setting_options', ['setting_id' => 10])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/guide-setting-options/{id} -> GuideSettingOptionsController@update method
-     * 
-     */
-    public function testUpdateGuideSettingOption()
+    protected function getUpdateData()
     {
-        $guideSettingOptionTestRecord = factory(GuideSettingOption::class)->create();
-
-        $data = [
-            'label' => 'updated test'
+        return [
+            'label' => 'updated test',
         ];
-
-        $this->put('/api/v1/guide-setting-options/' . $guideSettingOptionTestRecord->id, $data)
-            ->seeInDatabase('dental_device_guide_setting_options', ['label' => 'updated test'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/guide-setting-options/{id} -> GuideSettingOptionsController@destroy method
-     * 
-     */
-    public function testDeleteGuideSettingOption()
+    public function testGetOptionsForSettingIds()
     {
-        $guideSettingOptionTestRecord = factory(GuideSettingOption::class)->create();
-
-        $this->delete('/api/v1/guide-setting-options/' . $guideSettingOptionTestRecord->id)
-            ->notSeeInDatabase('dental_device_guide_setting_options', [
-                'id' => $guideSettingOptionTestRecord->id
-            ])
-            ->assertResponseOk();
+        $this->post(self::ROUTE_PREFIX . '/guide-setting-options/settingIds');
+        $this->assertResponseOk();
+        $this->assertEquals(10, count($this->getResponseData()));
+        $expectedFirst = [
+            'id' => 13,
+            'labels' => 'Not Important,Neutral,Very Important',
+            'name' => 'Comfort',
+            'setting_type' => 0,
+            'number' => 3,
+        ];
+        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
     }
 }

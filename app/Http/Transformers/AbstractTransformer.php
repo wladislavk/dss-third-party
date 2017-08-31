@@ -2,9 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Transformers;
 
-use League\Fractal\TransformerAbstract;
-use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use DentalSleepSolutions\Contracts\TransformerInterface;
+use DentalSleepSolutions\Eloquent\Models\AbstractModel;
+use League\Fractal\TransformerAbstract;
 
 abstract class AbstractTransformer extends TransformerAbstract implements TransformerInterface
 {

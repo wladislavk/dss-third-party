@@ -17,7 +17,7 @@ class ClassMetadataRetriever
         $namespace = '';
         foreach ($tokens as $index => $token) {
             $isClass = self::isCorrectToken($token, T_CLASS);
-            if ($isClass) {
+            if ($isClass && $classIndex == -1) {
                 $classIndex = $index;
             }
             $isNamespace = self::isCorrectToken($token, T_NAMESPACE);

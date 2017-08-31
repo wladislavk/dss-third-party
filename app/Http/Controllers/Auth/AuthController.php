@@ -2,62 +2,103 @@
 
 namespace DentalSleepSolutions\Http\Controllers\Auth;
 
-use DentalSleepSolutions\Eloquent\Models\User;
-use Validator;
+use DentalSleepSolutions\Auth\JwtAuth;
+use DentalSleepSolutions\Auth\LegacyAuth;
+use DentalSleepSolutions\Exceptions\AuthException;
+use DentalSleepSolutions\Exceptions\JwtException;
 use DentalSleepSolutions\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use Illuminate\Config\Repository as Config;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Registration & Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
-    | a simple trait to add these behaviors. Why don't you explore it?
-    |
-    */
+    const ADMIN_FLAG_INDEX = 'admin';
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    /** @var LegacyAuth */
+    private $legacyAuth;
 
-    /**
-     * Create a new authentication controller instance.
-     */
-    public function __construct()
+    /** @var JwtAuth */
+    private $jwtAuth;
+
+    public function __construct(
+        Config $config,
+        LegacyAuth $legacyAuth,
+        JwtAuth $jwtAuth,
+        Request $request
+    )
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        parent::__construct($config, $request);
+        $this->legacyAuth = $legacyAuth;
+        $this->jwtAuth = $jwtAuth;
     }
 
     /**
-     * Get a validator for an incoming registration request.
+     * Authenticate a user.
+     * If authentication is successful, then a token will be returned
      *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return array|JsonResponse
      */
-    protected function validator(array $data)
+    public function auth()
     {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
-        ]);
+        $credentials = $this->request->all();
+        $authenticated = $this->legacyAuth
+            ->byCredentials($credentials)
+        ;
+
+        if (!$authenticated) {
+            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $user = $this->legacyAuth->user();
+        $adminFlag = $user->getAttribute(self::ADMIN_FLAG_INDEX);
+        $role = JwtAuth::ROLE_USER;
+
+        if ($adminFlag) {
+            $role = JwtAuth::ROLE_ADMIN;
+        }
+
+        $this->jwtAuth
+            ->guard($role)
+            ->login($user)
+        ;
+
+        try {
+            $token = $this->jwtAuth->toToken($role);
+        } catch (JwtException $e) {
+            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (AuthException $e) {
+            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return ['status' => 'Authenticated', 'token' => $token];
     }
 
     /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
+     * @return array|JsonResponse
      */
-    protected function create(array $data)
+    public function authHealth()
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        if (!$this->config->get('app.debug') || $this->config->get('app.env') === 'production') {
+            return ApiResponse::responseError('Unauthorized', Response::HTTP_UNAUTHORIZED);
+        }
+
+        return [
+            'status' => 'Health',
+            'data' => [
+                'admin' => $this->request->admin(),
+                'user' => $this->request->user(),
+            ]
+        ];
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function refreshToken()
+    {
+        return ApiResponse::responseOk('');
     }
 }

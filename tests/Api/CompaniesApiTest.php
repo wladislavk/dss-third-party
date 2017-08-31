@@ -1,67 +1,60 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Company;
 use Tests\TestCases\ApiTestCase;
 
 class CompaniesApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/companies -> CompaniesController@store method
-     * 
-     */
-    public function testAddCompany()
+    protected function getModel()
     {
-        $data = [
+        return Company::class;
+    }
+
+    protected function getRoute()
+    {
+        return '/companies';
+    }
+
+    protected function getStoreData()
+    {
+        return [
             'name'   => 'testName',
             'add1'   => 'testAdd1',
             'add2'   => 'testAdd2',
             'city'   => 'testCity',
             'state'  => 'testState',
             'zip'    => '12345',
-            'status' => 0
+            'status' => 0,
         ];
-
-        $this->post('/api/v1/companies', $data)
-            ->seeInDatabase('companies', ['name' => 'testName'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/companies/{id} -> CompaniesController@update method
-     * 
-     */
-    public function testUpdateCompany()
+    protected function getUpdateData()
     {
-        $companyTestRecord = factory(Company::class)->create();
-
-        $data = [
+        return [
             'name'   => 'testNameUpdated',
-            'status' => 2
+            'status' => 2,
         ];
-
-        $this->put('/api/v1/companies/' . $companyTestRecord->id, $data)
-            ->seeInDatabase('companies', ['name' => 'testNameUpdated'])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/companies/{id} -> CompaniesController@destroy method
-     * 
-     */
-    public function testDeleteCompany()
+    public function testGetCompanyLogo()
     {
-        $companyTestRecord = factory(Company::class)->create();
+        $this->post(self::ROUTE_PREFIX . '/companies/company-logo');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
+    }
 
-        $this->delete('/api/v1/companies/' . $companyTestRecord->id)
-            ->notSeeInDatabase('companies', ['id' => $companyTestRecord->id])
-            ->assertResponseOk();
+    public function testGetHomeSleepTestCompanies()
+    {
+        $this->post(self::ROUTE_PREFIX . '/companies/home-sleep-test');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
+    }
+
+    public function testGetBillingExclusiveCompany()
+    {
+        $this->post(self::ROUTE_PREFIX . '/companies/billing-exclusive-company');
+        $this->assertResponseOk();
+        $this->assertNull($this->getResponseData());
     }
 }

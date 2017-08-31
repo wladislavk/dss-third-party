@@ -2,10 +2,8 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\ContactType;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\ContactTypeRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
+use DentalSleepSolutions\Helpers\WelcomeLetterCreator;
 use DentalSleepSolutions\StaticClasses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -195,9 +193,7 @@ class LettersController extends BaseRestController
      */
     public function getPending()
     {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $data = $this->repository->getPending($docId);
+        $data = $this->repository->getPending($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -212,9 +208,7 @@ class LettersController extends BaseRestController
      */
     public function getUnmailed()
     {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $data = $this->repository->getUnmailed($docId);
+        $data = $this->repository->getUnmailed($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -263,40 +257,21 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
-     * @param UserRepository $userRepository
-     * @param ContactTypeRepository $contactTypeRepository
+     * @param WelcomeLetterCreator $welcomeLetterCreator
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function createWelcomeLetter(
-        UserRepository $userRepository,
-        ContactTypeRepository $contactTypeRepository,
+        WelcomeLetterCreator $welcomeLetterCreator,
         Request $request
     ) {
-        $docId = $this->currentUser->docid ?: 0;
-
-        $letterInfo = $userRepository->getLetterInfo($docId);
-
         $templateId = $request->input('template_id', 0);
         $contactTypeId = $request->input('contact_type_id', 0);
 
-        $data = [];
-        if ($letterInfo && $letterInfo->use_letters && $letterInfo->intro_letters) {
-            /** @var ContactType|null $contactType */
-            $contactType = $contactTypeRepository->find($contactTypeId);
+        $data = $welcomeLetterCreator->createWelcomeLetter(
+            $this->user->docid, $templateId, $contactTypeId, $this->user->user_type
+        );
 
-            if ($contactType && $contactType->physician == 1) {
-                if ($this->currentUser->user_type != self::DSS_USER_TYPE_SOFTWARE) {
-                    $this->repository->createWelcomeLetter(1, $templateId, $docId);
-                }
-                $this->repository->createWelcomeLetter(2, $templateId, $docId);
-
-                $data = [
-                    'message' => 'This created an introduction letter. If you do not wish to send an introduction delete the letter from your Pending Letters queue.'
-                ];
-            }
-        }
-      
         return ApiResponse::responseOk('', $data);
     }
 

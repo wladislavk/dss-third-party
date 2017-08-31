@@ -1,63 +1,65 @@
 <?php
 namespace Tests\Api;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use DentalSleepSolutions\Eloquent\Models\Dental\Symptom;
 use Tests\TestCases\ApiTestCase;
 
 class SymptomsApiTest extends ApiTestCase
 {
-    use WithoutMiddleware, DatabaseTransactions;
-
-    /**
-     * Test the post method of the Dental Sleep Solutions API
-     * Post to /api/v1/symptoms -> SymptomsController@store method
-     * 
-     */
-    public function testAddSymptom()
+    protected function getModel()
     {
-        $data = factory(Symptom::class)->make()->toArray();
-
-        $data['patientid'] = 100;
-
-        $this->post('/api/v1/symptoms', $data)
-            ->seeInDatabase('dental_q_page1', ['patientid' => 100])
-            ->assertResponseOk();
+        return Symptom::class;
     }
 
-    /**
-     * Test the put method of the Dental Sleep Solutions API
-     * Put to /api/v1/symptoms/{id} -> SymptomsController@update method
-     * 
-     */
-    public function testUpdateSymptom()
+    protected function getRoute()
     {
-        $symptomTestRecord = factory(Symptom::class)->create();
+        return '/symptoms';
+    }
 
-        $data = [
-            'formid'  => 458,
-            'plan_no' => 'updated plan number'
+    protected function getStoreData()
+    {
+        return [
+            "formid" => 5,
+            "patientid" => 100,
+            "member_no" => "similique",
+            "group_no" => "fuga",
+            "plan_no" => "sint",
+            "primary_care_physician" => "ea",
+            "feet" => "20",
+            "inches" => "98",
+            "weight" => "04",
+            "bmi" => "511.74",
+            "sleep_qual" => "61",
+            "complaintid" => "1|5~10|6~11|2~12|19~13|4~14|18~15|17~16|1~0|1~",
+            "other_complaint" => "Saepe facilis voluptate nemo laudantium.",
+            "additional_paragraph" => "Rerum esse architecto quo deleniti ut.",
+            "energy_level" => "41",
+            "snoring_sound" => "45",
+            "wake_night" => "47",
+            "breathing_night" => "Rem omnis explicabo natus quod.",
+            "morning_headaches" => "Nemo doloremque tenetur mollitia molestias.",
+            "hours_sleep" => "46",
+            "userid" => 2,
+            "docid" => 1,
+            "status" => 0,
+            "quit_breathing" => "Quo quasi est ut consequatur quo officia.",
+            "bed_time_partner" => "Yes",
+            "sleep_same_room" => "Sometimes",
+            "told_you_snore" => "Yes",
+            "main_reason" => "Alias quasi et et sit aperiam.",
+            "main_reason_other" => "Repellendus neque vel omnis similique temporibus.",
+            "chief_complaint_text" => "Veritatis qui perspiciatis amet consectetur ad quae.",
+            "tss" => "22",
+            "ess" => "16",
+            "parent_patientid" => 8,
         ];
-
-        $this->put('/api/v1/symptoms/' . $symptomTestRecord->q_page1id, $data)
-            ->seeInDatabase('dental_q_page1', ['formid' => 458])
-            ->assertResponseOk();
     }
 
-    /**
-     * Test the delete method of the Dental Sleep Solutions API
-     * Delete to /api/v1/symptoms/{id} -> SymptomsController@destroy method
-     * 
-     */
-    public function testDeleteSymptom()
+    protected function getUpdateData()
     {
-        $symptomTestRecord = factory(Symptom::class)->create();
-
-        $this->delete('/api/v1/symptoms/' . $symptomTestRecord->q_page1id)
-            ->notSeeInDatabase('dental_q_page1', [
-                'q_page1id' => $symptomTestRecord->q_page1id
-            ])
-            ->assertResponseOk();
+        return [
+            'formid'  => 458,
+            'plan_no' => 'updated plan number',
+        ];
     }
 }

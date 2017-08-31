@@ -47,3 +47,8 @@
         1. What must be tested in API test?
         2. Working with the DB and cleaning up
 5. Swagger documentation
+6. DB guide
+    1. General information
+    2. Table and column definitions
+    3. Queries
+    

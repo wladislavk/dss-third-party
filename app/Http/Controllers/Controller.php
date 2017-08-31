@@ -2,54 +2,58 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Config\Repository as Config;
-use DentalSleepSolutions\Eloquent\Models\User;
-use DentalSleepSolutions\Helpers\AuthTokenParser;
 use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController
 {
+    const EMPTY_MODEL_ATTRIBUTES = [
+        'id' => '',
+        'adminid' => 0,
+        'userid' => 0,
+        'docid' => 0,
+        'user_type' => 0,
+        'status' => 0,
+    ];
+
     // TODO: this class should include common REST methods for all its children
-
     use DispatchesJobs, ValidatesRequests;
-
-    /** @var User|null */
-    protected $currentAdmin;
-
-    /** @var User|null */
-    protected $currentUser;
 
     /** @var Config */
     protected $config;
 
+    /** @var Request */
+    protected $request;
+
+    /** @var User */
+    protected $user;
+
+    /** @var User */
+    protected $admin;
+
     public function __construct(
         Config $config,
-        AuthTokenParser $authTokenParser
+        Request $request
     ) {
         $this->config = $config;
+        $this->request = $request;
 
-        /**
-         * @todo Generate tokens with $auth->fromUser($userModel)
-         * @todo Select user/admin data to inject in tests
-         */
-        if (
-            $config->get('app.env') === 'testing'
-            && $config->get('app.testing.tokens', false) !== true
-        ) {
-            $this->currentUser = new User();
-            $this->currentUser->id = 0;
-            $this->currentUser->userid = 0;
+        $this->user = new User();
+        $this->admin = new User();
 
-            $this->currentAdmin = new User();
-            $this->currentAdmin->id = 0;
-            $this->currentAdmin->adminid = 0;
+        $this->user->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
+        $this->admin->forceFill(self::EMPTY_MODEL_ATTRIBUTES);
 
-            return;
+        if ($request->user()) {
+            $this->user = $request->user();
         }
 
-        $this->currentAdmin = $authTokenParser->getAdminData();
-        $this->currentUser = $authTokenParser->getUserData();
+        if ($request->admin()) {
+            $this->admin = $request->admin();
+        }
     }
 }

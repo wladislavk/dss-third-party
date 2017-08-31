@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Illuminate\Config\Repository as Config;
-use DentalSleepSolutions\Helpers\AuthTokenParser;
 
 /**
  * @SWG\Swagger(
@@ -100,9 +99,6 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     /** @var BaseRepository */
     protected $repository;
 
-    /** @var Request */
-    protected $request;
-
     /** @var string */
     protected $ipAddressKey;
 
@@ -126,13 +122,11 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
 
     public function __construct(
         Config $config,
-        AuthTokenParser $authTokenParser,
         BaseRepository $repository,
         Request $request
     ) {
-        parent::__construct($config, $authTokenParser);
+        parent::__construct($config, $request);
         $this->repository = $repository;
-        $this->request = $request;
     }
 
     /**
@@ -163,8 +157,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @return JsonResponse
      */
     public function store()
     {
@@ -209,7 +202,6 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
      *
      * @param int $id
      * @return JsonResponse
-     * @throws \Exception
      */
     public function destroy($id)
     {
@@ -260,19 +252,19 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         }
 
         if ($this->doctorKey) {
-            $attributes[$this->doctorKey] = $this->getDoctorId();
+            $attributes[$this->doctorKey] = $this->user->docid;
         }
 
         if ($this->userKey) {
-            $attributes[$this->userKey] = $this->getUserId();
+            $attributes[$this->userKey] = $this->user->userid;
         }
 
         if ($this->createdByUserKey) {
-            $attributes[$this->createdByUserKey] = $this->getUserId();
+            $attributes[$this->createdByUserKey] = $this->user->userid;
         }
 
         if ($this->createdByAdminKey) {
-            $attributes[$this->createdByAdminKey] = $this->getAdminId();
+            $attributes[$this->createdByAdminKey] = $this->admin->adminid;
         }
 
         return $attributes;
@@ -286,49 +278,13 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
         $attributes = [];
 
         if ($this->updatedByUserKey) {
-            $attributes[$this->updatedByUserKey] = $this->getUserId();
+            $attributes[$this->updatedByUserKey] = $this->user->userid;
         }
 
         if ($this->updatedByAdminKey) {
-            $attributes[$this->updatedByAdminKey] = $this->getAdminId();
+            $attributes[$this->updatedByAdminKey] = $this->admin->adminid;
         }
 
         return $attributes;
-    }
-
-    /**
-     * @return int
-     */
-    protected function getUserId()
-    {
-        if (!$this->currentUser) {
-            return 0;
-        }
-
-        return $this->currentUser->userid;
-    }
-
-    /**
-     * @return int
-     */
-    protected function getDoctorId()
-    {
-        if (!$this->currentUser) {
-            return 0;
-        }
-
-        return $this->currentUser->docid;
-    }
-
-    /**
-     * @return int
-     */
-    protected function getAdminId()
-    {
-        if (!$this->currentAdmin) {
-            return 0;
-        }
-
-        return $this->currentAdmin->adminid;
     }
 }

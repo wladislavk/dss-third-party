@@ -5,7 +5,7 @@ trait WithTransformer
 {
     /**
      * @param array $data
-     * @return array+
+     * @return array
      */
     public function inverseTransform(array $data) {
         return $data;

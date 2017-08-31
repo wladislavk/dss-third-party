@@ -15,7 +15,7 @@ class Request extends FormRequest
     /** @var array */
     protected $rules = [];
 
-     /**
+    /**
      * Force JSON responses for all requests
      *
      * @return bool

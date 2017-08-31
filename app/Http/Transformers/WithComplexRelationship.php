@@ -32,9 +32,8 @@ trait WithComplexRelationship
             $map = self::COMPLEX_MAP;
         }
 
-        foreach ($map as $destination=>$source) {
+        foreach ($map as $destination => $source) {
             $value = $this->applyTransformations($data, $source);
-
             Arr::set($mapped, $destination, $value);
         }
 
@@ -55,7 +54,7 @@ trait WithComplexRelationship
 
         $buffer = [];
 
-        foreach ($source as $newSource=>$helper) {
+        foreach ($source as $newSource => $helper) {
             $this->applyTransformation($buffer, $data, $newSource, [$this, $helper]);
         }
 

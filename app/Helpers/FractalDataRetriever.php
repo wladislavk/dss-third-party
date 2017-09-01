@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Exceptions\GeneralException;
 use Illuminate\Database\Eloquent\Model;
 use League\Fractal\Manager;
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 
@@ -42,12 +43,25 @@ class FractalDataRetriever
      */
     private function createFractalData($resource, TransformerAbstract $transformer)
     {
-        $item = new Item($resource, $transformer);
-        $data = $this->fractalManager->createData($item)->toArray();
+        $newResource = $this->createResource($resource, $transformer);
+        $data = $this->fractalManager->createData($newResource)->toArray();
         if (!isset($data['data'])) {
             throw new GeneralException('Fractal result must have \'data\' property');
         }
         return $data['data'];
+    }
+
+    /**
+     * @param Model|array|\Traversable $resource
+     * @param TransformerAbstract $transformer
+     * @return Collection|Item
+     */
+    private function createResource($resource, TransformerAbstract $transformer)
+    {
+        if ($resource instanceof Model) {
+            return new Item($resource, $transformer);
+        }
+        return new Collection($resource, $transformer);
     }
 
     /**

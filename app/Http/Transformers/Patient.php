@@ -3,12 +3,13 @@
 namespace DentalSleepSolutions\Http\Transformers;
 
 use Illuminate\Database\Eloquent\Collection;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient as PatientModel;
 use League\Fractal\TransformerAbstract;
 
 class Patient extends TransformerAbstract
 {
     /**
-     * @param Collection|\DentalSleepSolutions\Eloquent\Models\Dental\Patient $patient
+     * @param Collection|PatientModel $patient
      * @return array
      */
     public function transform($patient)

@@ -6,7 +6,8 @@ Feature: Patient Ledger
   Scenario: File a claim
     Given I am logged in as "doc1f"
     When I visit start page
-    And I type "hav" into patient search form
+    Then I see patient search form
+    When I type "hav" into patient search form
     And I click on "Havell, John" in list of patients
     And I click on "Ledger" patient chart menu point
     Then I see ledger card for "Havell John"

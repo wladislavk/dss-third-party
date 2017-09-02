@@ -30,6 +30,7 @@ class DeviceSelector extends BaseContext
      */
     public function testDeviceList(TableNode $table)
     {
+        $this->wait(self::VERY_SHORT_WAIT_TIME);
         $results = $this->findAllCss('ul#results > li > a');
         $expected = $table->getHash();
         foreach ($expected as $key => $row) {

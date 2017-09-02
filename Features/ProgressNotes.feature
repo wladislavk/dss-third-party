@@ -3,7 +3,8 @@ Feature: Patient progress notes
   Scenario: Add progress note for patient
     Given I am logged in as "doc1f"
     When I visit start page
-    And I type "smi" into patient search form
+    Then I see patient search form
+    When I type "smi" into patient search form
     And I click on "Smith, Pat" in list of patients
     And I click on "Progress Notes" patient chart menu point
     Then I see add button with text "+ Add New Progress Note"

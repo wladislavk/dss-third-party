@@ -8,16 +8,6 @@ use PHPUnit\Framework\Assert;
 class PatientChart extends BaseContext
 {
     /**
-     * @When I type :name into patient search form
-     *
-     * @param string $name
-     */
-    public function fillPatientSearchForm($name)
-    {
-        $this->page->fillField('patient_search', $name);
-    }
-
-    /**
      * @When I click on :name in list of patients
      *
      * @param string $name
@@ -25,6 +15,7 @@ class PatientChart extends BaseContext
      */
     public function clickPatientInList($name)
     {
+        $this->wait(self::MEDIUM_WAIT_TIME);
         $patients = $this->findAllCss('ul#patient_list li.json_patient');
         foreach ($patients as $patient) {
             if ($this->sanitizeText($patient->getText()) == $name) {
@@ -68,7 +59,18 @@ class PatientChart extends BaseContext
      */
     public function testPatientSearchForm()
     {
-        $input = $this->findCss('input#patient_search');
+        $tries = 3;
+        $currentTry = 1;
+        $input = null;
+        while (!$input && $currentTry <= $tries) {
+            $this->wait(self::SHORT_WAIT_TIME);
+            $input = $this->findCss('input#patient_search');
+            if (!$input) {
+                var_dump($currentTry);
+                var_dump($this->page->getContent());
+            }
+            $currentTry++;
+        }
         Assert::assertNotNull($input);
     }
 
@@ -79,6 +81,7 @@ class PatientChart extends BaseContext
      */
     public function testPatientSearchList(TableNode $table)
     {
+        $this->wait(self::MEDIUM_WAIT_TIME);
         $list = $this->findCss('ul#patient_list');
         Assert::assertNotNull($list);
         $patients = $this->findAllCss('li.json_patient', $list);

@@ -3,7 +3,9 @@
 namespace Contexts;
 
 use Behat\Behat\Context\Environment\InitializedContextEnvironment;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
@@ -44,6 +46,9 @@ abstract class BaseContext extends RawMinkContext
      */
     protected $common;
 
+    /** @var \PDO */
+    private $dbh;
+
     /** @BeforeScenario
      *
      * @param BeforeScenarioScope $scope
@@ -56,6 +61,15 @@ abstract class BaseContext extends RawMinkContext
         $environment = $scope->getEnvironment();
         $this->common = $environment->getContext($this->getCommonContext());
         $this->client = $this->getMink()->getSession();
+
+        $host = getenv('DB_HOST');
+        $dbName = getenv('DB_DATABASE');
+        $dsn = "mysql:dbname=$dbName;host=$host";
+        $user = getenv('DB_USERNAME');
+        $password = getenv('DB_PASSWORD');
+
+        $this->dbh = new \PDO($dsn, $user, $password);
+        $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     /**
@@ -66,13 +80,14 @@ abstract class BaseContext extends RawMinkContext
         return Main::class;
     }
 
-    /** @BeforeStep
-     *
+    /**
+     * @BeforeStep
      */
     public function beforeStep()
     {
-        $this->getCommonClient()->wait(self::SHORT_WAIT_TIME);
-        $this->page = $this->getCommonClient()->getPage();
+        if (!$this->page) {
+            $this->page = $this->getCommonClient()->getPage();
+        }
     }
 
     /**
@@ -81,6 +96,15 @@ abstract class BaseContext extends RawMinkContext
     protected function getCommonClient()
     {
         return $this->common->getClient();
+    }
+
+    /**
+     * @param int $time
+     */
+    protected function wait($time)
+    {
+        $this->getSession()->wait($time);
+        $this->page = $this->getCommonClient()->getPage();
     }
 
     /**
@@ -253,16 +277,32 @@ abstract class BaseContext extends RawMinkContext
         return true;
     }
 
+    /**
+     * @param string $sql
+     * @throws BehatException
+     */
     protected function executeQuery($sql)
     {
-        $host = getenv('DB_HOST');
-        $dbName = getenv('DB_DATABASE');
-        $dsn = "mysql:dbname=$dbName;host=$host";
-        $user = getenv('DB_USERNAME');
-        $password = getenv('DB_PASSWORD');
+        $this->dbh->exec($sql);
+    }
 
-        $dbh = new \PDO($dsn, $user, $password);
-        $dbh->exec($sql);
-        unset($dbh);
+    /**
+     * @return \WebDriver\Session
+     */
+    protected function getDriverSession()
+    {
+        /** @var Selenium2Driver $driver */
+        $driver = $this->getSession()->getDriver();
+        $driverSession = $driver->getWebDriverSession();
+        return $driverSession;
+    }
+
+    protected function prepareAlert()
+    {
+        // otherwise confirm dialog will not be accepted
+        if (BROWSER == 'phantomjs' || BROWSER == 'chrome') {
+            $script = "window.confirm = function() { return true; };";
+            $this->getSession()->getDriver()->executeScript($script);
+        }
     }
 }

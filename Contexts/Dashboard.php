@@ -34,6 +34,7 @@ class Dashboard extends BaseContext
      */
     public function clickNotifications($menuPoint)
     {
+        $this->wait(self::VERY_SHORT_WAIT_TIME);
         $spans = $this->findAllCss('a.notification > span.label');
         foreach ($spans as $span) {
             if ($span->getText() == $menuPoint) {

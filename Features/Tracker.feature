@@ -3,7 +3,8 @@ Feature: Patient Tracker
   Scenario: View patient tracker
     Given I am logged in as "doc1f"
     When I visit start page
-    And I type "smi" into patient search form
+    Then I see patient search form
+    When I type "smi" into patient search form
     And I click on "Smith, Pat" in list of patients
     Then today tracker section has the list of treatments:
       | name                  | color | link |

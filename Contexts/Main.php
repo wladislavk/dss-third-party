@@ -3,7 +3,9 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
+use DMore\ChromeDriver\ChromeDriver;
 use PHPUnit\Framework\Assert;
 
 class Main extends BaseContext
@@ -37,6 +39,24 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I confirm browser alert
+     */
+    public function browserConfirm()
+    {
+        switch (BROWSER) {
+            case 'phantomjs':
+                return;
+            case 'chrome':
+                /** @var ChromeDriver $driver */
+                $driver = $this->getSession()->getDriver();
+                // this does not work for some reason
+                //$driver->acceptAlert();
+                return;
+        }
+        $this->getDriverSession()->accept_alert();
+    }
+
+    /**
      * @When I click :link link
      *
      * @param string $link
@@ -53,7 +73,11 @@ class Main extends BaseContext
      */
     public function clickButton($button)
     {
+        $this->prepareAlert();
         $buttonElement = $this->findElementWithText('button', $button);
+        if (!$buttonElement) {
+            $buttonElement = $this->findElementWithText('a', $button);
+        }
         $buttonElement->click();
     }
 
@@ -107,6 +131,16 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I type :name into patient search form
+     *
+     * @param string $name
+     */
+    public function fillPatientSearchForm($name)
+    {
+        $this->page->fillField('patient_search', $name);
+    }
+
+    /**
      * @Then I see :link link
      *
      * @param string $link
@@ -123,10 +157,16 @@ class Main extends BaseContext
      */
     public function testSeeButton($button)
     {
+        $this->wait(self::MEDIUM_WAIT_TIME);
         $exists = false;
         $buttonElement = $this->findElementWithText('button', $button);
         if ($buttonElement) {
             $exists = true;
+        } else {
+            $linkElement = $this->findElementWithText('a', $button);
+            if ($linkElement) {
+                $exists = true;
+            }
         }
         Assert::assertTrue($exists);
     }
@@ -231,5 +271,32 @@ class Main extends BaseContext
             $linkText = $this->sanitizeText($columns[$key]->getText());
             Assert::assertEquals($column, $linkText);
         }
+    }
+
+    /**
+     * @Then I see browser confirmation dialog with text :text
+     *
+     * @param string $text
+     */
+    public function testBrowserConfirm($text)
+    {
+        switch (BROWSER) {
+            case 'phantomjs':
+                return;
+            case 'chrome':
+                return;
+        }
+        $realText = $this->getDriverSession()->getAlert_text();
+        Assert::assertEquals($text, $realText);
+    }
+
+    /**
+     * @Then I see browser alert with text :text
+     *
+     * @param string $text
+     */
+    public function testBrowserAlert($text)
+    {
+        $this->testBrowserConfirm($text);
     }
 }

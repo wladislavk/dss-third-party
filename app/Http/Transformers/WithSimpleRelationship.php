@@ -16,16 +16,10 @@ trait WithSimpleRelationship
      *
      * @param array $data
      * @param bool  $export
-     * @param array $initialState
+     * @param array $mapped
      * @return array
      */
-    public function simpleMapping(array $data, $export, array $initialState = []) {
-        $mapped = [];
-
-        if (count($initialState)) {
-            $mapped = $initialState;
-        }
-
+    public function simpleMapping(array $data, $export, array $mapped = []) {
         foreach (self::SIMPLE_MAP as $dotted => $dashed) {
             if (is_numeric($dotted)) {
                 $dotted = $dashed;

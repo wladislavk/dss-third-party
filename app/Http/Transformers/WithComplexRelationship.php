@@ -16,16 +16,10 @@ trait WithComplexRelationship
      *
      * @param array $data
      * @param bool  $export
-     * @param array $initialState
+     * @param array $mapped
      * @return array
      */
-    public function complexMapping(array $data, $export, array $initialState = []) {
-        $mapped = [];
-
-        if (count($initialState)) {
-            $mapped = $initialState;
-        }
-
+    public function complexMapping(array $data, $export, array $mapped = []) {
         $map = self::INVERSE_COMPLEX_MAP;
 
         if ($export) {

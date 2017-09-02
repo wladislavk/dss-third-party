@@ -167,21 +167,10 @@ class BindingNamingConvention
             return null;
         }
 
-        if (!$this->implementsInterface($transformer, TransformerInterface::class)) {
+        if (!is_subclass_of($transformer, TransformerInterface::class)) {
             throw new NamingConventionException("$transformer must implement " . TransformerInterface::class);
         }
 
         return $transformer;
-    }
-
-    /**
-     * @param string $class
-     * @param string $interface
-     * @return bool
-     */
-    private function implementsInterface($class, $interface)
-    {
-        $interfaces = class_implements($class);
-        return in_array($interface, $interfaces);
     }
 }

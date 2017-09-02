@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use DentalSleepSolutions\Contracts\ComplexRelationshipInterface;
 use DentalSleepSolutions\Contracts\SimpleRelationshipInterface;
 use DentalSleepSolutions\Contracts\TransformerInterface;
-use Illuminate\Database\Eloquent\Model;
+use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 use InvalidArgumentException;
 use League\Fractal\TransformerAbstract;
 
@@ -137,10 +137,10 @@ class ExternalPatient
     /**
      * Transform model data into an array, for output
      *
-     * @param Model $resource
+     * @param AbstractModel $resource
      * @return array
      */
-    public function transform(Model $resource) {
+    public function transform(AbstractModel $resource) {
         $mapped = $this->simpleMapping($resource->toArray(), true);
         $mapped = $this->complexMapping($resource->toArray(), true, $mapped);
 

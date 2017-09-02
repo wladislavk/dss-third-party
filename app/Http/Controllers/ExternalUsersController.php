@@ -7,6 +7,15 @@ use DentalSleepSolutions\StaticClasses\ApiResponse;
 
 class ExternalUsersController extends BaseRestController
 {
+    /** @var bool */
+    protected $hasIp = false;
+
+    /** @var string */
+    protected $createdByAdminKey = 'created_by';
+
+    /** @var string */
+    protected $updatedByAdminKey = 'updated_by';
+
     /** @var ExternalUserRepository */
     protected $repository;
 
@@ -91,12 +100,7 @@ class ExternalUsersController extends BaseRestController
      */
     public function store()
     {
-        $this->validate($this->request, $this->request->storeRules());
-        $data = $this->request->all();
-        $data['created_by'] = $this->admin->adminid;
-        $resource = $this->repository->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
@@ -118,9 +122,15 @@ class ExternalUsersController extends BaseRestController
      */
     public function update($id)
     {
-        $resource = $this->repository->findFirstById($id);
+        $this->validate($this->request, $this->request->updateRules());
         $data = $this->request->all();
-        $data['updated_by'] = $this->admin->adminid;
+        $updateData = $this->getUpdateAttributes();
+
+        if (count($updateData)) {
+            $data = array_merge($data, $updateData);
+        }
+
+        $resource = $this->repository->findFirstById($id);
         $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');

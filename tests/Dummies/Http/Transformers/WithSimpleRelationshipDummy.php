@@ -10,7 +10,6 @@ class WithSimpleRelationshipDummy implements SimpleRelationshipInterface
     use WithSimpleRelationship;
 
     const SIMPLE_MAP = [
-        'external_representation.first.anything',
         'external_representation.first.company_name' => 'internal_representation.company',
         'external_representation.first.address1' => 'internal_representation.address',
         'external_representation.second.lastname' => 'internal_representation.name.last',

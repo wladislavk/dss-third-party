@@ -10,8 +10,8 @@ class WithComplexRelationshipTest extends UnitTestCase
     const ARRAYS = [
         'both' => [
             1 => 1,
-            2 => 2,
             3 => 3,
+            2 => 2,
             4 => 4,
         ],
         'odd' => [
@@ -21,6 +21,49 @@ class WithComplexRelationshipTest extends UnitTestCase
         'even' => [
             2 => 2,
             4 => 4,
+        ],
+    ];
+    const FIRST_ARRAY_FOR_MERGE = [
+        'color' => [
+            'favorite' => 'green',
+            'blue',
+        ],
+        'sequence' => [
+            [
+                'left' => 'left-0',
+            ],
+            [
+                'left' => 'left-1',
+            ],
+        ]
+    ];
+    const SECOND_ARRAY_FOR_MERGE = [
+        'color' => [
+            'favorite' => 'red',
+        ],
+        'sequence' => [
+            [
+                'right' => 'right-0',
+            ],
+            [
+                'right' => 'right-1',
+            ],
+        ]
+    ];
+    const DEEP_MERGED_ARRAYS = [
+        'color' => [
+            'favorite' => 'red',
+            'blue',
+        ],
+        'sequence' => [
+            [
+                'left' => 'left-0',
+                'right' => 'right-0',
+            ],
+            [
+                'left' => 'left-1',
+                'right' => 'right-1',
+            ],
         ],
     ];
     const STRINGS = [
@@ -92,5 +135,14 @@ class WithComplexRelationshipTest extends UnitTestCase
         $mapped = $transformer->complexMapping($toMap, false, self::INITIAL_STATE);
 
         $this->assertEquals(self::INTERNAL_REPRESENTATION_WITH_STATE, $mapped);
+    }
+
+    public function testDeepMerge()
+    {
+        $toMerge = [self::FIRST_ARRAY_FOR_MERGE, self::SECOND_ARRAY_FOR_MERGE];
+        $transformer = new WithComplexRelationshipDummy();
+        $merged = $transformer->deepMerge($toMerge);
+
+        $this->assertEquals(self::DEEP_MERGED_ARRAYS, $merged);
     }
 }

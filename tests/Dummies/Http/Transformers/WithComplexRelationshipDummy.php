@@ -53,7 +53,7 @@ class WithComplexRelationshipDummy implements ComplexRelationshipInterface
     private function importOddCallback(array $values)
     {
         $return = array_filter($values, function ($value) {
-            if ($value & 1) {
+            if ($value % 2 === 1) {
                 return true;
             }
 
@@ -66,11 +66,11 @@ class WithComplexRelationshipDummy implements ComplexRelationshipInterface
     private function importEvenCallback(array $values)
     {
         $return = array_filter($values, function ($value) {
-            if ($value & 1) {
-                return false;
+            if ($value % 2 !== 1) {
+                return true;
             }
 
-            return true;
+            return false;
         });
 
         return $return;

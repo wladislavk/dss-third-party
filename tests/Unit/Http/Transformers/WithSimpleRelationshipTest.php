@@ -8,7 +8,6 @@ use Tests\TestCases\UnitTestCase;
 class WithSimpleRelationshipTest extends UnitTestCase
 {
     const STRINGS = [
-        'anything' => 'Anything',
         'company' => 'Company',
         'address' => 'Address',
         'first' => 'First',
@@ -19,7 +18,6 @@ class WithSimpleRelationshipTest extends UnitTestCase
     const EXTERNAL_REPRESENTATION = [
         'external_representation' => [
             'first' => [
-                'anything' => self::STRINGS['anything'],
                 'company_name' => self::STRINGS['company'],
                 'address1' => self::STRINGS['address'],
             ],
@@ -32,7 +30,6 @@ class WithSimpleRelationshipTest extends UnitTestCase
         ],
     ];
     const INTERNAL_REPRESENTATION = [
-        'external_representation_first_anything' => self::STRINGS['anything'],
         'internal_representation' => [
             'company' => self::STRINGS['company'],
             'address' => self::STRINGS['address'],
@@ -50,7 +47,6 @@ class WithSimpleRelationshipTest extends UnitTestCase
         ],
     ];
     const INTERNAL_REPRESENTATION_WITH_STATE = [
-        'external_representation_first_anything' => self::STRINGS['anything'],
         'internal_representation' => [
             'initial' => self::STRINGS['initial'],
             'company' => self::STRINGS['company'],

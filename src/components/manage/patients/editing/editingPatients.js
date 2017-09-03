@@ -375,7 +375,7 @@ export default {
     },
     removeNotification: function (id) {
       this.removeNotificationInDb(id)
-        .then(function (response) {
+        .then(function () {
           this.patientNotifications.$remove(
             this.searchItemById(this.patientNotifications, id)
           )
@@ -437,6 +437,7 @@ export default {
       this.fillForm(this.routeParameters.patientId)
     },
     submitAddingOrEditingPatient: function () {
+      const self = this
       if (this.validatePatientData(this.patient, null, this.formedFullNames.referred_name)) {
         this.checkEmail(this.patient.email, this.routeParameters.patientId)
           .then(function (response) {
@@ -450,7 +451,7 @@ export default {
             }
 
             if (isReadyForProcessing) {
-              this.editPatient(this.routeParameters.patientId, this.patient, this.formedFullNames)
+              this.editPatient(self.routeParameters.patientId, self.patient, self.formedFullNames)
                 .then(function (response) {
                   this.parseSuccessfulResponseOnEditingPatient(response.data.data)
                 }, function (response) {
@@ -541,6 +542,9 @@ export default {
       clearTimeout(this.typingTimer)
 
       const requiredName = this.formedFullNames[type + '_name'].trim()
+
+      // @todo: check why this block is needed
+      /*
       let arrName = ''
       switch (type) {
         case 'docpcp':
@@ -565,6 +569,7 @@ export default {
           arrName = 'foundOtherMd3ByName'
           break
       }
+      */
 
       const self = this
       this.typingTimer = setTimeout(function () {
@@ -660,15 +665,17 @@ export default {
     onKeyUpSearchEligiblePayers: function (type) {
       clearTimeout(this.typingTimer)
 
-      let insPayerName, arrName, elementName
+      let insPayerName, elementName
+      // @todo: check why this variable is needed
+      // let arrName
 
       if (type === 'primary') {
         insPayerName = this.formedFullNames.ins_payer_name.trim()
-        arrName = 'eligiblePayers'
+        // arrName = 'eligiblePayers'
         elementName = 'insPayerName'
       } else {
         insPayerName = this.formedFullNames.s_m_ins_payer_name.trim()
-        arrName = 'secondaryEligiblePayers'
+        // arrName = 'secondaryEligiblePayers'
         elementName = 'secondaryInsPayerName'
       }
 

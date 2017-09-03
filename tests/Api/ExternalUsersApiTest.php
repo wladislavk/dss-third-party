@@ -44,21 +44,19 @@ class ExternalUsersApiTest extends ApiTestCase
 
     protected function modelFactory($count = 1)
     {
-        // OneToOne dependency
-        $user = factory(User::class)->create();
-        $userId = $user->userid;
-
         if ($count === 1) {
+            $user = factory(User::class)->create();
             return factory($this->getModel())->create([
-                $this->getModelKey() => $userId
+                $this->getModelKey() => $user->userid
             ]);
         }
 
         $collection = [];
 
         for ($n = 0; $n < $count; $n++) {
+            $user = factory(User::class)->create();
             $collection[] = factory($this->getModel())->create([
-                $this->getModelKey() => $userId + $n
+                $this->getModelKey() => $user->userid
             ]);
         }
 

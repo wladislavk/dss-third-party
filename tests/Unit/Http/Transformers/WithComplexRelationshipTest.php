@@ -8,9 +8,20 @@ use Tests\TestCases\UnitTestCase;
 class WithComplexRelationshipTest extends UnitTestCase
 {
     const ARRAYS = [
-        'both' => [3, 4, 11, 36, 51, 100],
-        'odd' => '0|3~2|11~4|51',
-        'even' => '1|4~3|36~5|100',
+        'both' => [
+            1 => 1,
+            2 => 2,
+            3 => 3,
+            4 => 4,
+        ],
+        'odd' => [
+            1 => 1,
+            3 => 3,
+        ],
+        'even' => [
+            2 => 2,
+            4 => 4,
+        ],
     ];
     const STRINGS = [
         'flag' => 'Flag',

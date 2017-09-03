@@ -32,8 +32,6 @@ class WithComplexRelationshipDummy implements ComplexRelationshipInterface
             'external_representation.list.both' => 'importEvenCallback',
         ],
     ];
-    const ELEMENT_DELIMITER = '~';
-    const PAIR_DELIMITER = '|';
     const MARKER = '::exportFlag';
 
     private function exportFlagCallback($value)
@@ -46,42 +44,35 @@ class WithComplexRelationshipDummy implements ComplexRelationshipInterface
         return str_replace(self::MARKER, '', $value);
     }
 
-    private function exportListCallback($serializedValues)
+    private function exportListCallback(array $values)
     {
-        $return = [];
-        $values = explode(self::ELEMENT_DELIMITER, $serializedValues);
-
-        foreach ($values as $each) {
-            if (strpos($each, self::PAIR_DELIMITER) !== false) {
-                list($key, $value) = explode(self::PAIR_DELIMITER, $each, 2);
-                $return[$key] = $value;
-            }
-        }
-
+        $return = array_combine($values, $values);
         return $return;
     }
 
     private function importOddCallback(array $values)
     {
-        return $this->importOddEvenCallback($values, true);
+        $return = array_filter($values, function ($value) {
+            if ($value & 1) {
+                return true;
+            }
+
+            return false;
+        });
+
+        return $return;
     }
 
     private function importEvenCallback(array $values)
     {
-        return $this->importOddEvenCallback($values, false);
-    }
-
-    private function importOddEvenCallback(array $values, $oddOnly)
-    {
-        $return = [];
-
-        foreach ($values as $key => $value) {
-            if ((bool)($value & 1) === $oddOnly) {
-                $return[] = $key . self::PAIR_DELIMITER . $value;
+        $return = array_filter($values, function ($value) {
+            if ($value & 1) {
+                return false;
             }
-        }
 
-        $return = join(self::ELEMENT_DELIMITER, $return);
+            return true;
+        });
+
         return $return;
     }
 }

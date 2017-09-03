@@ -131,6 +131,9 @@ class ExternalPatient
         'internal' => 'm/d/Y',
     ];
 
+    const ADDRESS_INDEX = 'p_m_address';
+    const AUXILIARY_ADDRESS_INDEX = 'p_m_address2';
+
     /**
      * Transform model data into an array, for output
      *
@@ -153,6 +156,21 @@ class ExternalPatient
     public function inverseTransform(array $resource) {
         $mapped = $this->simpleMapping($resource, false);
         $mapped = $this->complexMapping($resource, false, $mapped);
+
+        if (isset($mapped[self::AUXILIARY_ADDRESS_INDEX])) {
+            $address = [
+                $mapped[self::AUXILIARY_ADDRESS_INDEX]
+            ];
+
+            if (isset($mapped[self::ADDRESS_INDEX])) {
+                array_unshift($address, $mapped[self::ADDRESS_INDEX]);
+            }
+
+            $address = join(' ', $address);
+            $address = trim($address);
+            $mapped[self::ADDRESS_INDEX] = $address;
+            unset($mapped[self::AUXILIARY_ADDRESS_INDEX]);
+        }
 
         return $mapped;
     }

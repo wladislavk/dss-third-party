@@ -1,6 +1,7 @@
 export default {
   created () {
     // http://stackoverflow.com/a/15829686
+    // @todo: this is not gonna work
     String.toCamelCase = function () {
       return this.replace(/^([A-Z])|[\s-_](\w)/g, function (match, p1, p2) {
         if (p2) return p2.toUpperCase()
@@ -10,7 +11,7 @@ export default {
   },
   methods: {
     walkThroughMessages (messages, patient) {
-      for (var property in messages) {
+      for (let property in messages) {
         if (messages.hasOwnProperty(property)) {
           if (patient[property] === undefined || patient[property].trim() === '') {
             alert(messages[property])
@@ -24,7 +25,7 @@ export default {
       return true
     },
     walkThroughComplexMessages (messages, patient) {
-      for (var property in messages) {
+      for (let property in messages) {
         if (messages.hasOwnProperty(property)) {
           if (patient.hasOwnProperty(property) && patient[property].length > 0 && patient[messages[property].connect_to] === '') {
             alert(messages[property].message)
@@ -40,7 +41,7 @@ export default {
     validatePatientData (patient, requestedEmails, referredName) {
       referredName = referredName || ''
 
-      var messages = {
+      let messages = {
         firstname: 'First Name is Required',
         lastname: 'Last Name is Required',
         email: 'Email is Required',
@@ -186,7 +187,7 @@ export default {
         }
       }
 
-      var messageAboutChangingReferredBy = 'The referrer has been updated. Existing pending letters to the referrer may be updated or deleted and previous changes lost. Proceed?'
+      const messageAboutChangingReferredBy = 'The referrer has been updated. Existing pending letters to the referrer may be updated or deleted and previous changes lost. Proceed?'
 
       if (this.isReferredByChanged && !confirm(messageAboutChangingReferredBy)) {
         return false
@@ -240,12 +241,8 @@ export default {
       return true
     },
     isValidDate (date) {
-      var dateObject = new Date(date)
-      if (dateObject instanceof Date && !isNaN(dateObject.valueOf())) {
-        return true
-      } else {
-        return false
-      }
+      const dateObject = new Date(date)
+      return (dateObject instanceof Date && !isNaN(dateObject.valueOf()))
     }
   }
 }

@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
   data () {
@@ -40,7 +40,7 @@ export default {
         'Impressions', 'Delaying Tx / Waiting', 'Refused Treatment',
         'Device Delivery', 'Check / Follow Up', 'Pt. Non-Compliant',
         'Home Sleep Test', 'Treatment Complete', 'Annual Recall',
-        'Termination', 'Not a Candidate', 'Baseline Sleep Test',
+        'Termination', 'Not a Candidate', 'Baseline Sleep Test'
       ]
     }
   },
@@ -48,7 +48,7 @@ export default {
   watch: {
     '$route.query.sh': function () {
       if (this.$route.query.sh) {
-        var foundOption = this.patientTypeSelect.find(el => el.value == this.$route.query.sh)
+        const foundOption = this.patientTypeSelect.find(el => el.value === this.$route.query.sh)
 
         if (foundOption) {
           this.$set(this.routeParameters, 'selectedPatientType', this.$route.query.sh)
@@ -75,7 +75,7 @@ export default {
     },
     '$route.query.sortdir': function () {
       if (this.$route.query.sortdir) {
-        if (this.$route.query.sortdir.toLowerCase() == 'desc') {
+        if (this.$route.query.sortdir.toLowerCase() === 'desc') {
           this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
         } else {
           this.$set(this.routeParameters, 'sortDirection', 'asc')
@@ -119,22 +119,22 @@ export default {
   methods: {
     onChangePatientTypeSelect () {
       this.$router.push({
-        name  : this.$route.name,
-        query : {
+        name: this.$route.name,
+        query: {
           sh: this.routeParameters.selectedPatientType
         }
       })
     },
     onDeletePatient (patientId) {
       this.deletePatient(patientId)
-        .then(function (response) {
+        .then(function () {
           this.message = 'Deleted Successfully'
         }, function (response) {
           this.handleErrors('deletePatient', response)
         })
     },
     getRxLomn (value) {
-      var title = ''
+      let title = ''
 
       switch (+value) {
         case 3:
@@ -154,29 +154,25 @@ export default {
       return title
     },
     formatLedger (value) {
-      return accounting.formatMoney(value, '$')
+      return window.accounting.formatMoney(value, '$')
     },
     checkIfThisWeek (value) {
-      var totalDays = moment(value).diff(moment(), 'days')
-      var negative  = (moment(value) - moment()) < 0
+      const totalDays = window.moment(value).diff(window.moment(), 'days')
+      const negative = (window.moment(value) - window.moment()) < 0
 
-      if (totalDays >= 0 && $totalDays <= 7 && !negative) {
-        return true
-      } else {
-        return false
-      }
+      return (totalDays >= 0 && totalDays <= 7 && !negative)
     },
     isNegativeTime (value) {
-      return (moment(value) - moment()) < 0
+      return (window.moment(value) - window.moment()) < 0
     },
     readyForTx (insuranceNoError, numSleepStudy) {
-      return +insuranceNoError && numSleepStudy != 0
+      return +insuranceNoError && numSleepStudy !== 0
     },
     getCurrentDirection (sort) {
-      if (this.routeParameters.sortColumn == sort) {
+      if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
       } else {
-        return sort === 'name' ? 'asc': 'desc'
+        return sort === 'name' ? 'asc' : 'desc'
       }
     },
     getPatients () {
@@ -189,16 +185,16 @@ export default {
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection
       ).then(function (response) {
-          var data = response.data.data
+        const data = response.data.data
 
-          var totalCount = data.count[0].total
-          var patients   = data.results
+        const totalCount = data.count[0].total
+        const patients = data.results
 
-          this.patientsTotalNumber = totalCount
-          this.patients = patients
-        }, function (response) {
-          this.handleErrors('findPatients', response)
-        })
+        this.patientsTotalNumber = totalCount
+        this.patients = patients
+      }, function (response) {
+        this.handleErrors('findPatients', response)
+      })
     },
     deletePatient (patientId) {
       patientId = patientId || 0
@@ -214,14 +210,14 @@ export default {
       sortColumn,
       sortDir
     ) {
-      var data = {
-        patientId     : patientId || 0,
-        type      : type || 0,
-        page      : pageNumber || 0,
-        patientsPerPage : patientsPerPage || 0,
-        letter      : letter || '',
-        sortColumn    : sortColumn || '',
-        sortDir     : sortDir || ''
+      let data = {
+        patientId: patientId || 0,
+        type: type || 0,
+        page: pageNumber || 0,
+        patientsPerPage: patientsPerPage || 0,
+        letter: letter || '',
+        sortColumn: sortColumn || '',
+        sortDir: sortDir || ''
       }
 
       return this.$http.post(process.env.API_PATH + 'patients/find', data)

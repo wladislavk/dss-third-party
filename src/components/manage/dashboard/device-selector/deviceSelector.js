@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
 export default {
   data () {
@@ -32,7 +32,7 @@ export default {
     if (this.patientId > 0) {
       this.getPatientById(this.patientId)
         .then(function (response) {
-          var data = response.data.data
+          const data = response.data.data
 
           if (data) {
             this.currentPatient = data
@@ -44,7 +44,7 @@ export default {
 
     this.getDeviceGuideSettingOptions()
       .then(function (response) {
-        var data = response.data.data
+        const data = response.data.data
 
         if (data) {
           data.forEach(function (element) {
@@ -75,12 +75,12 @@ export default {
   },
   methods: {
     onDeviceSubmit () {
-      var data = {
+      const data = {
         settings: {}
       }
 
       this.deviceGuideSettingOptions.forEach(function (element) {
-        var settingObj = {}
+        const settingObj = {}
 
         if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
           settingObj['checked'] = element.checkedOption + 1
@@ -97,7 +97,7 @@ export default {
 
       this.getDeviceGuideResults(data)
         .then(function (response) {
-          var data = response.data.data
+          const data = response.data.data
 
           if (data) {
             this.deviceGuideResults = data
@@ -111,7 +111,7 @@ export default {
         if (confirm('Do you want to select ' + name + ' for ' + this.currentPatient.firstname + ' ' + this.currentPatient.lastname)) {
           this.updateFlowDevice(device)
             .then(function (response) {
-              var data = response.data.data
+              const data = response.data.data
 
               if (data) {
                 // parent.updateDentalDevice(valId, device)
@@ -158,7 +158,7 @@ export default {
       return this.$http.post(process.env.API_PATH + 'guide-devices/with-images', data)
     },
     updateFlowDevice (device) {
-      var data = {
+      const data = {
         id: this.id,
         device: device,
         pid: this.patientId

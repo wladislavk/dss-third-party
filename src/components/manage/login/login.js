@@ -1,5 +1,5 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
-var scriptLoaderMixin = require('../../../modules/loader/ScriptLoaderMixin.js')
+const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+const scriptLoaderMixin = require('../../../modules/loader/ScriptLoaderMixin.js')
 
 export default {
   name: 'login',
@@ -15,7 +15,7 @@ export default {
   mixins: [handlerMixin, scriptLoaderMixin],
   mounted () {
     if (window.storage.get('token')) {
-      var data = {
+      const data = {
         cur_page: this.$route.path
       }
 
@@ -53,7 +53,7 @@ export default {
 
       this.getToken(this.credentials)
         .then(function (response) {
-          var data = response.data
+          const data = response.data
 
           if (data.token) {
             window.storage.save('token', data.token)
@@ -61,7 +61,7 @@ export default {
 
           this.getAccountStatus()
             .then(function (response) {
-              var data = response.data.data
+              const data = response.data.data
 
               if (data.type.toLowerCase() === 'suspended') {
                 this.message = 'This account has been suspended.'

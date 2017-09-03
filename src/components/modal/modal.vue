@@ -54,12 +54,12 @@
         })
       },
       centering () {
-        var windowWidth = document.documentElement.clientWidth
-        var windowHeight = document.documentElement.clientHeight
-        var popupHeight = window.$('#popupContact').height()
-        var popupWidth = window.$('#popupContact').width()
-        var topPos = (windowHeight / 2 - popupHeight / 2 + window.pageYOffset) + 'px'
-        var leftPos = windowWidth / 2 - popupWidth / 2
+        const windowWidth = document.documentElement.clientWidth
+        const windowHeight = document.documentElement.clientHeight
+        const popupHeight = window.$('#popupContact').height()
+        const popupWidth = window.$('#popupContact').width()
+        const topPos = (windowHeight / 2 - popupHeight / 2 + window.pageYOffset) + 'px'
+        let leftPos = windowWidth / 2 - popupWidth / 2
         if (leftPos < 0) {
           leftPos = 10
         }
@@ -94,7 +94,7 @@
         }
       },
       disable () {
-        var answer = false
+        let answer = false
         // disables popup only if it is enabled
         if (this.popupStatus === 1) {
           if (this.popupEdit) {
@@ -118,13 +118,9 @@
         }
       },
       hasComponent (component) {
-        var existedComponents = Object.keys(this.$options.components)
+        const existedComponents = Object.keys(this.$options.components)
 
-        if (existedComponents.indexOf(component) > -1) {
-          return true
-        } else {
-          return false
-        }
+        return (existedComponents.indexOf(component) > -1)
       },
       updateParentData (data) {
         window.eventHub.$emit('setting-data-from-modal', data)

@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
 export default {
   data () {
@@ -12,10 +12,10 @@ export default {
   },
   mixins: [handlerMixin],
   created () {
-    eventHub.$on('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
   },
   beforeDestroy () {
-    eventHub.$off('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   methods: {
     onSettingComponentParams (parameters) {
@@ -23,12 +23,12 @@ export default {
 
       this.getPatientById(this.componentParams.patientId)
         .then(function (response) {
-          var data = response.data.data
+          const data = response.data.data
 
           if (data) {
             this.patient = data
 
-            var accessCode = data.hasOwnProperty('access_code') && data.access_code > 0
+            const accessCode = data.hasOwnProperty('access_code') && data.access_code > 0
             if (!accessCode) {
               this.resetPinCode(this.componentParams.patientId)
             }
@@ -45,7 +45,7 @@ export default {
 
       this.resetPatientAccessCode(patientId)
         .then(function (response) {
-          var data = response.data.data
+          const data = response.data.data
 
           if (data.hasOwnProperty('access_code') && data.access_code > 0) {
             this.$set(this.patient, 'access_code', data.access_code)
@@ -61,7 +61,7 @@ export default {
     onSubmit () {
       this.createTempPinDocument(this.componentParams.patientId)
         .then(function (response) {
-          var data = response.data.data
+          const data = response.data.data
 
           if (data.hasOwnProperty('path_to_pdf') && data.path_to_pdf.length > 0) {
             alert('Temporary PIN document created and email sent to patient.')

@@ -2,20 +2,20 @@ module.exports = {
   methods: {
     onMouseEnterTaskItem (event) {
       // get id from .task_status element
-      var id = event.target.children[1].value || 0
+      const id = event.target.children[1].value || 0
 
       event.target.children['task_extra_' + id].style.display = 'block'
     },
     onMouseLeaveTaskItem (event) {
       // get id from .task_status element
-      var id = event.target.children[1].value || 0
+      const id = event.target.children[1].value || 0
 
       event.target.children['task_extra_' + id].style.display = 'none'
     },
     onClickTaskStatus (event) {
-      var id = event.target.value || 0
-      var taskType = ''
-      var isDashboardTaskList = (
+      const id = event.target.value || 0
+      let taskType = ''
+      const isDashboardTaskList = (
           event.target.parentElement.parentElement.parentElement.id === 'index_task_list'
         )
 
@@ -35,8 +35,8 @@ module.exports = {
     onClickDeleteTask (id, event) {
       event.preventDefault()
 
-      var taskType = ''
-      var isDashboardTaskList = (
+      let taskType = ''
+      const isDashboardTaskList = (
           event.target.parentElement.parentElement.parentElement.parentElement.id === 'index_task_list'
         )
 
@@ -60,7 +60,7 @@ module.exports = {
     updateTaskToActive (id) {
       id = id || 0
 
-      var data = {
+      const data = {
         status: 1
       }
 
@@ -72,7 +72,7 @@ module.exports = {
       return this.$http.delete(process.env.API_PATH + 'tasks/' + id)
     },
     removeItemFromTaskList (type, id, isDashboardTaskList) {
-      var patientTask = false
+      let patientTask = false
       id = id || 0
       isDashboardTaskList = isDashboardTaskList || false
 
@@ -162,8 +162,6 @@ module.exports = {
           )
           patientTask = true
           break
-        default:
-          break
       }
 
       if (!patientTask) {
@@ -174,7 +172,7 @@ module.exports = {
     },
     searchItemById (data, id) {
       id = id || 0
-      var removeId = -1
+      let removeId = -1
 
       // need to optimize: if we find removeId then will break from the loop
       data.forEach(function (task, index) {
@@ -185,9 +183,8 @@ module.exports = {
 
       if (removeId >= 0) {
         return data[removeId]
-      } else {
-        return null
       }
+      return null
     }
   }
 }

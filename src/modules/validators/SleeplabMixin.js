@@ -4,7 +4,7 @@ export default {
       return email && email.match(/^[\w.+-]+@\w+\.\w+$/)
     },
     walkThroughMessages (messages, contact) {
-      for (var property in messages) {
+      for (let property in messages) {
         if (messages.hasOwnProperty(property)) {
           if (contact[property] === undefined || contact[property].trim() === '') {
             alert(messages[property])
@@ -18,7 +18,7 @@ export default {
       return true
     },
     validateSleeplabData (sleeplab) {
-      var messages = {
+      const messages = {
         company: 'Lab Name is Required',
         firstname: 'Firstname is Required',
         lastname: 'Lastname is Required',

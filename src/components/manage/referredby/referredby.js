@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
   name: 'referredby',
@@ -54,7 +54,7 @@ export default {
     },
     '$route.query.sortdir': function () {
       if (this.$route.query.sortdir) {
-        if (this.$route.query.sortdir.toLowerCase() == 'desc') {
+        if (this.$route.query.sortdir.toLowerCase() === 'desc') {
           this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
         } else {
           this.$set(this.routeParameters, 'sortDirection', 'asc')
@@ -79,20 +79,20 @@ export default {
     }
   },
   created () {
-    eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
+    window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
   },
   mounted () {
     this.getContacts()
   },
   beforeDestroy () {
-    eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
+    window.eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
   },
   methods: {
     onSettingDataFromModal (data) {
-      this.message = data.message;
+      this.message = data.message
 
       this.$nextTick(() => {
-        var self = this
+        const self = this
 
         setTimeout(() => {
           self.message = ''
@@ -113,7 +113,7 @@ export default {
     removeContact (id) {
       this.deleteReferredByContact(id)
         .then(function () {
-          this.message = 'Deleted Successfull';
+          this.message = 'Deleted Successfull'
         }, function (response) {
           this.handleErrors('deleteReferredByContact', response)
         })
@@ -125,7 +125,7 @@ export default {
         this.routeParameters.sortDirection,
         this.contactsPerPage
       ).then(function (response) {
-        var data = response.data.data
+        const data = response.data.data
 
         if (data.total > 0) {
           this.contactsTotalNumber = data.total
@@ -136,14 +136,14 @@ export default {
       })
     },
     getCurrentDirection (sort) {
-      if (this.routeParameters.sortColumn == sort) {
+      if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
       } else {
         return 'asc'
       }
     },
     getReferredByContacts (sort, pageNumber, sortDir, contactsPerPage) {
-      var data = {
+      const data = {
         sort: sort,
         page: pageNumber,
         sortdir: sortDir,

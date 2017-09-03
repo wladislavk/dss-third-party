@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
   data () {
@@ -27,14 +27,19 @@ export default {
   mixins: [handlerMixin],
   computed: {
     googleLink () {
-      var link = 'http://google.com/search?q='
-      var requiredFields = [
-        'firstname', 'lastname', 'company',
-        'add1', 'city', 'state', 'zip'
+      const link = 'http://google.com/search?q='
+      const requiredFields = [
+        'firstname',
+        'lastname',
+        'company',
+        'add1',
+        'city',
+        'state',
+        'zip'
       ]
 
-      var notEmptyRequiredFields = []
-      var self = this
+      const notEmptyRequiredFields = []
+      const self = this
       requiredFields.forEach(function (el) {
         if (self.contact[el]) {
           notEmptyRequiredFields.push(self.contact[el])
@@ -49,7 +54,7 @@ export default {
       if (!this.pendingVOB.length) {
         this.getContactSentLetters(this.contact.contactid)
           .then(function (response) {
-            var data = response.data.data
+            const data = response.data.data
 
             if (data.length) {
               this.contactSentLetters = data
@@ -60,7 +65,7 @@ export default {
 
         this.getContactPendingLetters(this.contact.contactid)
           .then(function (response) {
-            var data = response.data.data
+            const data = response.data.data
 
             if (data.length) {
               this.contactPendingLetters = data
@@ -104,15 +109,15 @@ export default {
     }
   },
   created () {
-    eventHub.$on('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
   },
   beforeDestroy () {
-    eventHub.$off('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   mounted () {
     this.getContactTypesOfPhysician()
       .then(function (response) {
-        var data = response.data.data
+        const data = response.data.data
 
         if (data.physician_types) {
           this.$set(this, 'contactTypesOfPhysician', data.physician_types.split(','))
@@ -123,7 +128,7 @@ export default {
 
     this.getActiveNonCorporateContactTypes()
       .then(function (response) {
-        var data = response.data.data
+        const data = response.data.data
 
         if (data.length) {
           this.activeNonCorporateContactTypes = data
@@ -134,7 +139,7 @@ export default {
 
     this.getActiveQualifiers()
       .then(function (response) {
-        var data = response.data.data
+        const data = response.data.data
 
         if (data.length) {
           this.activeQualifiers = data
@@ -150,7 +155,7 @@ export default {
       if (this.componentParams.contactId > 0) {
         this.getContact(this.componentParams.contactId)
           .then(function (response) {
-            var data = response.data.data
+            const data = response.data.data
 
             if (data) {
               this.contact = data
@@ -165,7 +170,7 @@ export default {
 
         this.getPendingVOBsByContactId(this.componentParams.contactId)
           .then(function (response) {
-            var data = response.data.data
+            const data = response.data.data
 
             if (data.length) {
               this.pendingVOB = data
@@ -196,12 +201,12 @@ export default {
       } else {
         this.insertContact(this.contact)
           .then(function (response) {
-            var data = response.data.data
+            const data = response.data.data
 
             if (data) {
               this.createWelcomeLetter(data.contactid, this.contact.contacttypeid)
                 .then(function (response) {
-                  var data = response.data.data
+                  const data = response.data.data
 
                   if (data.message) {
                     window.swal({
@@ -243,10 +248,12 @@ export default {
       }
     },
     displayErrorResponseFromAPI (data) {
-      var message = '<ul style="text-align: left">'
+      let message = '<ul style="text-align: left">'
 
-      for (var key in data.errors) {
-        message += '<li>' + key + ': ' + data.errors[key].join(' ') + '</li>'
+      for (let key in data.errors) {
+        if (data.errors.hasOwnProperty(key)) {
+          message += '<li>' + key + ': ' + data.errors[key].join(' ') + '</li>'
+        }
       }
 
       message += '</ul>'
@@ -259,8 +266,8 @@ export default {
       })
     },
     onClickConfirm (type, contactId) {
-      var message = ''
-      var query = {}
+      let message = ''
+      let query = {}
       contactId = contactId || 0
 
       switch (type) {
@@ -306,24 +313,24 @@ export default {
     },
     getContactPendingLetters (contactId) {
       // gets letters that were not delivered for contact
-      var data = { contact_id: contactId }
+      const data = { contact_id: contactId }
 
       return this.$http.post(process.env.API_PATH + 'letters/not-delivered-for-contact', data)
     },
     getContactSentLetters (contactId) {
       // gets letters that were delivered for contact
-      var data = { contact_id: contactId }
+      const data = { contact_id: contactId }
 
       return this.$http.post(process.env.API_PATH + 'letters/delivered-for-contact', data)
     },
     getFullName (contact) {
-      var middlename = contact.middlename ? contact.middlename + ' ' : ''
-      var fullname = contact.firstname + ' ' + middlename + contact.lastname
+      const middlename = contact.middlename ? contact.middlename + ' ' : ''
+      const fullname = contact.firstname + ' ' + middlename + contact.lastname
 
       return fullname
     },
     updateContact (contact) {
-      var phoneFields = ['phone1', 'phone2', 'fax']
+      const phoneFields = ['phone1', 'phone2', 'fax']
 
       phoneFields.forEach(el => {
         if (this.contact.hasOwnProperty(el)) {
@@ -334,7 +341,7 @@ export default {
       return this.$http.put(process.env.API_PATH + 'contacts/' + contact.contactid, contact)
     },
     insertContact (contact) {
-      var phoneFields = ['phone1', 'phone2', 'fax']
+      const phoneFields = ['phone1', 'phone2', 'fax']
 
       phoneFields.forEach(el => {
         if (this.contact.hasOwnProperty(el)) {
@@ -363,12 +370,12 @@ export default {
       return this.$http.post(process.env.API_PATH + 'qualifiers/active')
     },
     getPendingVOBsByContactId (contactId) {
-      var data = { contact_id: contactId }
+      const data = { contact_id: contactId }
 
       return this.$http.post(process.env.API_PATH + 'insurance-preauth/pending-VOB', data)
     },
     createWelcomeLetter (templateId, contactTypeId) {
-      var data = {
+      const data = {
         template_id: templateId,
         contact_type_id: contactTypeId
       }

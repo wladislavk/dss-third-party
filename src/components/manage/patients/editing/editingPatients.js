@@ -1,8 +1,8 @@
-var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
-var patientValidator = require('../../../../modules/validators/PatientMixin.js')
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+const patientValidator = require('../../../../modules/validators/PatientMixin.js')
 
 export default {
-  data: function() {
+  data: function () {
     return {
       consts: window.constants,
       headerInfo: {
@@ -85,12 +85,12 @@ export default {
   },
   mixins: [handlerMixin, patientValidator],
   watch: {
-    '$route.query.pid': function() {
+    '$route.query.pid': function () {
       if (this.$route.query.pid > 0) {
         this.$set(this.routeParameters, 'patientId', this.$route.query.pid)
 
         // if patient data need to be updated - check local storage, it may contain status message about created patient
-        var message = window.storage.get('message')
+        const message = window.storage.get('message')
         if (message && message.length > 0) {
           this.message = message
           window.storage.remove('message')
@@ -102,204 +102,200 @@ export default {
         this.cleanPatientData()
       }
     },
-    'patient.home_phone': function() {
+    'patient.home_phone': function () {
       this.$set(this.patient, 'home_phone', this.phone(this.patient.home_phone))
     },
-    'patient.cell_phone': function() {
+    'patient.cell_phone': function () {
       this.$set(this.patient, 'cell_phone', this.phone(this.patient.cell_phone))
     },
-    'patient.work_phone': function() {
+    'patient.work_phone': function () {
       this.$set(this.patient, 'work_phone', this.phone(this.patient.work_phone))
     },
-    'patient.emergency_number': function() {
+    'patient.emergency_number': function () {
       this.$set(this.patient, 'emergency_number', this.phone(this.patient.emergency_number))
     },
-    'patient.ssn': function() {
+    'patient.ssn': function () {
       this.$set(this.patient, 'ssn', this.ssn(this.patient.ssn))
     },
-    'patient.dob': function() {
+    'patient.dob': function () {
       this.$set(this.patient, 'dob', this.date(this.patient.dob))
     },
-    'patient.feet': function() {
+    'patient.feet': function () {
       this.calculateBmi()
     },
-    'patient.inches': function() {
+    'patient.inches': function () {
       this.calculateBmi()
     },
-    'patient.weight': function() {
+    'patient.weight': function () {
       this.calculateBmi()
     }
   },
   computed: {
-    showSendingEmails: function() {
+    showSendingEmails: function () {
       return this.headerInfo.docInfo.use_patient_portal && this.patient.use_patient_portal
     },
-    inches: function() {
-      var result = []
+    inches: function () {
+      const result = []
 
-      for (var i = 0; i < 12; i++) {
+      for (let i = 0; i < 12; i++) {
         result.push(i)
       }
 
       return result
     },
-    weight: function() {
-      var result = []
+    weight: function () {
+      const result = []
 
-      for (var i = 80; i <= 500; i++) {
+      for (let i = 80; i <= 500; i++) {
         result.push(i)
       }
 
       return result
     },
-    buttonText: function() {
+    buttonText: function () {
       return this.patient.userid > 0 ? 'Save/Update ' : 'Add '
     },
-    portalStatus: function() {
-      var status = 'Patient Portal In-active'
+    portalStatus: function () {
+      let status = 'Patient Portal In-active'
 
-      if (this.patient.use_patient_portal == 1) {
+      if (this.patient.use_patient_portal === 1) {
+        status = ''
         switch (+this.patient.registration_status) {
           case 0:
             status = 'Unregistered'
             break
-
           case 1:
-            status = 'Registration Emailed ' + moment(this.patient.registration_senton).format('MM/DD/YYYY hh:mm a') + ' ET'
+            status = 'Registration Emailed ' + window.moment(this.patient.registration_senton).format('MM/DD/YYYY hh:mm a') + ' ET'
             break
-
           case 2:
             status = 'Registered'
-            break
-
-          default:
-            status = ''
             break
         }
       }
 
       return status
     },
-    showReferredPerson: function() {
+    showReferredPerson: function () {
       if (
-        this.patient.referred_source == window.constants.DSS_REFERRED_PATIENT ||
-        this.patient.referred_source == window.constants.DSS_REFERRED_PHYSICIAN
+        this.patient.referred_source === window.constants.DSS_REFERRED_PATIENT ||
+        this.patient.referred_source === window.constants.DSS_REFERRED_PHYSICIAN
       ) {
         return true
       } else {
         return false
       }
     },
-    insCompanyContactInfo: function() {
-      var foundCompany = this.insuranceContacts.find((el) => {
-        return el.contactid == this.patient.p_m_ins_co
+    insCompanyContactInfo: function () {
+      const foundCompany = this.insuranceContacts.find((el) => {
+        return el.contactid === this.patient.p_m_ins_co
       })
 
       if (foundCompany) {
-        return foundCompany.add1 + "\n"
-          + (foundCompany.add2 ? foundCompany.add2 + "\n" : '')
-          + foundCompany.city + ' ' + foundCompany.state + ' ' + foundCompany.zip + "\n"
-          + this.phone(foundCompany.phone1)
+        return foundCompany.add1 + '\n' +
+          (foundCompany.add2 ? foundCompany.add2 + '\n' : '') +
+          foundCompany.city + ' ' + foundCompany.state + ' ' + foundCompany.zip + '\n' +
+          this.phone(foundCompany.phone1)
       } else {
         return ''
       }
     },
-    secondaryInsCompanyContactInfo: function() {
-      var foundCompany = this.insuranceContacts.find((el) => {
-        return el.contactid == this.patient.s_m_ins_co
+    secondaryInsCompanyContactInfo: function () {
+      const foundCompany = this.insuranceContacts.find((el) => {
+        return el.contactid === this.patient.s_m_ins_co
       })
 
       if (foundCompany) {
-        return foundCompany.add1 + "\n"
-          + (foundCompany.add2 ? foundCompany.add2 + "\n" : '')
-          + foundCompany.city + ' ' + foundCompany.state + ' ' + foundCompany.zip + "\n"
-          + this.phone(foundCompany.phone1)
+        return foundCompany.add1 + '\n' +
+          (foundCompany.add2 ? foundCompany.add2 + '\n' : '') +
+          foundCompany.city + ' ' + foundCompany.state + ' ' + foundCompany.zip + '\n' +
+          this.phone(foundCompany.phone1)
       } else {
         return ''
       }
     }
   },
-  created: function() {
-    eventHub.$emit('get-header-info')
+  created: function () {
+    const self = this
+    window.eventHub.$emit('get-header-info')
 
-    eventHub.$on('update-header-info', this.onUpdateHeaderInfo)
-    eventHub.$on('setting-component-params', this.onSettingComponentParams)
-    eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
+    window.eventHub.$on('update-header-info', this.onUpdateHeaderInfo)
+    window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
 
     this.fillForm(this.routeParameters.patientId)
 
     this.getHomeSleepTestCompanies()
-      .then(function(response) {
-        var data = response.data.data
+      .then(function (response) {
+        const data = response.data.data
 
         if (data) {
           this.homeSleepTestCompanies = data
         }
-      }, function(response) {
+      }, function (response) {
         this.handleErrors('getHomeSleepTestCompanies', response)
       })
 
     this.getDocLocations()
-      .then(function(response) {
-        var data = response.data.data
+      .then(function (response) {
+        const data = response.data.data
 
         if (data) {
           this.docLocations = data
         }
-      }, function(response) {
+      }, function (response) {
         this.handleErrors('getDocLocations', response)
       })
 
     this.getBillingCompany()
-      .then(function(response) {
-        var data = response.data.data
+      .then(function (response) {
+        const data = response.data.data
 
         if (data) {
           this.billingCompany = data
         }
-      }, function(response) {
+      }, function (response) {
         this.handleErrors('getBillingCompany', response)
       })
 
     this.getEligiblePayerSource()
-      .then(function(response) {
-        var data = response.data.data
+      .then(function (response) {
+        let data = response.data.data
 
         if (data.length) {
           data = this.populateEligiblePayerSource(data)
           this.eligiblePayerSource = data
         }
-      }, function(response) {
+      }, function (response) {
         this.handleErrors('getEligiblePayerSource', response)
 
         this.getStaticEligiblePayerSource()
-          .then(function(response) {
-            var data = response.data.data
+          .then(function (response) {
+            let data = response.data.data
 
             if (data.length) {
               data = this.populateEligiblePayerSource(data)
               this.eligiblePayerSource = data
             }
-          }, function(response) {
-            this.handleErrors('getStaticEligiblePayerSource', response)
+          }, function (response) {
+            self.handleErrors('getStaticEligiblePayerSource', response)
           })
       })
 
     this.getInsuranceContacts()
-      .then(function(response) {
-        var data = response.data.data
+      .then(function (response) {
+        const data = response.data.data
 
         if (data.length) {
           this.insuranceContacts = data
         }
-      }, function(response) {
+      }, function (response) {
         this.handleErrors('getInsuranceContacts', response)
       })
   },
   beforeDestroy () {
-    eventHub.$off('update-header-info', this.onUpdateHeaderInfo)
-    eventHub.$off('setting-component-params', this.onSettingComponentParams)
-    eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
+    window.eventHub.$off('update-header-info', this.onUpdateHeaderInfo)
+    window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
   },
   methods: {
     onSettingDataFromModal (data) {
@@ -311,45 +307,45 @@ export default {
     onUpdateHeaderInfo (headerInfo) {
       this.headerInfo = headerInfo
     },
-    checkMedicare: function() {
-      if (this.patient.s_m_ins_type == 1) {
+    checkMedicare: function () {
+      if (this.patient.s_m_ins_type === 1) {
         alert(
-          'Warning! It is very rare that Medicare is listed as a patient’s \
-          Secondary Insurance.  Please verify that Medicare is the secondary \
-          payer for this patient before proceeding.'
+          'Warning! It is very rare that Medicare is listed as a patient’s ' +
+          'Secondary Insurance.  Please verify that Medicare is the secondary ' +
+          'payer for this patient before proceeding.'
         )
       }
     },
-    onClickQuickViewContact: function(id) {
+    onClickQuickViewContact: function (id) {
       // loadPopup('view_contact.php?ed=' + id)
     },
-    onClickDisplayFile: function() {
+    onClickDisplayFile: function () {
       // window.open('display_file.php?f=<?= rawurlencode($image['image_file']) ?>','welcome','width=800,height=400,scrollbars=yes') return false
     },
-    onClickCreateNewContact: function() {
+    onClickCreateNewContact: function () {
       // TODO: implement displaying the popup for creating a new contact
       // loadPopupRefer('add_contact.php?addtopat={{ routeParameters.patientId }}&from=add_patient')
     },
-    validateDate: function(el) {
+    validateDate: function (el) {
       if (!this.isValidDate(this.patient[el])) {
         alert('Invalid Day, Month, or Year range detected. Please correct.')
         this.$refs[el].focus()
       }
     },
-    calculateBmi: function() {
-      if (this.patient.feet != 0 && this.patient.inches != -1 && this.patient.weight != 0) {
-        var inc = (this.patient.feet * 12) + this.patient.inches
-        var incSqr = inc * inc
+    calculateBmi: function () {
+      if (this.patient.feet !== 0 && this.patient.inches !== -1 && this.patient.weight !== 0) {
+        const inc = (this.patient.feet * 12) + this.patient.inches
+        const incSqr = inc * inc
 
-        var wei = this.patient.weight * 703
-        var bmi = wei / incSqr
+        const wei = this.patient.weight * 703
+        const bmi = wei / incSqr
 
         this.$set(this.patient, 'bmi', bmi.toFixed(1))
       } else {
         this.$set(this.patient, 'bmi', '')
       }
     },
-    onClickAddImage: function(type) {
+    onClickAddImage: function (type) {
       // TODO: implement it when certain popup is finished
 
       switch (type) {
@@ -362,55 +358,54 @@ export default {
         case 'secondary-insurance-card-image':
           // loadPopup('add_image.php?pid=<?php echo (!empty($_GET['pid']) ? $_GET['pid'] : '')?>&sh=<?php echo (isset($_GET['sh']))?$_GET['sh']:''?>&it=12&return=patinfo')
           break
-        default:
-          break
       }
     },
-    onClickOrderHst: function() {
-      alert('Patient has existing HST with status '
-        + this.headerInfo.patientHomeSleepTestStatus
-        + '. Only one HST can be requested at a time.'
+    onClickOrderHst: function () {
+      alert(
+        'Patient has existing HST with status ' +
+        this.headerInfo.patientHomeSleepTestStatus +
+        '. Only one HST can be requested at a time.'
       )
     },
-    searchItemById: function(data, id) {
+    searchItemById: function (data, id) {
       id = id || 0
-      var removeId = data.findIndex((el) => el.id == id)
+      const removeId = data.findIndex((el) => el.id === id)
 
       return removeId >= 0 ? data[removeId] : null
     },
-    removeNotification: function(id) {
+    removeNotification: function (id) {
       this.removeNotificationInDb(id)
-        .then(function(response) {
+        .then(function (response) {
           this.patientNotifications.$remove(
             this.searchItemById(this.patientNotifications, id)
           )
-        }, function(response) {
+        }, function (response) {
           this.handleErrors('removeNotificationInDb', response)
         })
     },
-    onClickCreatingNewInsuranceCompany: function(fromId) {
+    onClickCreatingNewInsuranceCompany: function (fromId) {
       // TODO: implement loading a popup for creating new insurance company
 
       // loadPopupRefer('add_contact.php?from=add_patient&from_id= + fromId + &ctype=ins{{ routeParameters.patientId ? '&pid=' + routeParameters.patientId + '&type=11&ctypeeq=1&activePat=' + routeParameters.patientId }}')
     },
-    handleChangingInsuranceInfo: function() {
+    handleChangingInsuranceInfo: function () {
       this.isInsuranceInfoChanged = true
     },
-    parseFailedResponseOnEditingPatient: function(data) {
-      var errors = data.errors.shift()
+    parseFailedResponseOnEditingPatient: function (data) {
+      const errors = data.errors.shift()
 
-      if (errors != undefined) {
-        var objKeys = Object.keys(errors)
+      if (errors !== undefined) {
+        const objKeys = Object.keys(errors)
 
-        var arrOfMessages = objKeys.map((el) => {
+        const arrOfMessages = objKeys.map((el) => {
           return el + ':' + errors[el].join('|').toLowerCase()
         })
 
         // TODO: create more readable format
-        alert(arrOfMessages.join("\n"))
+        alert(arrOfMessages.join('\n'))
       }
     },
-    parseSuccessfulResponseOnEditingPatient: function(data) {
+    parseSuccessfulResponseOnEditingPatient: function (data) {
       if (data.hasOwnProperty('redirect_to') && data.redirect_to.length > 0) {
         this.$router.push(data.redirect_to)
       }
@@ -425,7 +420,7 @@ export default {
       }
 
       if (data.hasOwnProperty('mails')) {
-        var mails = data.mails
+        const mails = data.mails
 
         mails.forEach((el) => {
           if (mails[el] && mails[el].length > 0) {
@@ -441,13 +436,13 @@ export default {
 
       this.fillForm(this.routeParameters.patientId)
     },
-    submitAddingOrEditingPatient: function() {
+    submitAddingOrEditingPatient: function () {
       if (this.validatePatientData(this.patient, null, this.formedFullNames.referred_name)) {
         this.checkEmail(this.patient.email, this.routeParameters.patientId)
-          .then(function(response) {
-            var data = response.data.data
+          .then(function (response) {
+            const data = response.data.data
 
-            var isReadyForProcessing = false
+            let isReadyForProcessing = false
             if (data.confirm_message.length > 0) {
               isReadyForProcessing = confirm(data.confirm_message)
             } else {
@@ -456,21 +451,21 @@ export default {
 
             if (isReadyForProcessing) {
               this.editPatient(this.routeParameters.patientId, this.patient, this.formedFullNames)
-                .then(function(response) {
+                .then(function (response) {
                   this.parseSuccessfulResponseOnEditingPatient(response.data.data)
-                }, function(response) {
+                }, function (response) {
                   this.parseFailedResponseOnEditingPatient(response.data.data)
 
                   this.handleErrors('editPatient', response)
                 })
             }
-          }, function(response) {
+          }, function (response) {
             alert(response.data.message)
             this.handleErrors('checkEmail', response)
           })
       }
     },
-    submitSendingPinCode: function() {
+    submitSendingPinCode: function () {
       if (this.validatePatientData(this.patient)) {
         this.pressedButtons.send_pin_code = true
 
@@ -479,16 +474,16 @@ export default {
           this.patient,
           this.formedFullNames,
           this.pressedButtons
-        ).then(function(response) {
+        ).then(function (response) {
           this.parseSuccessfulResponseOnEditingPatient(response.data.data)
-        }, function(response) {
+        }, function (response) {
           this.parseFailedResponseOnEditingPatient(response.data.data)
 
           this.handleErrors('editPatient', response)
         })
       }
     },
-    submitSendingRegistrationEmail: function() {
+    submitSendingRegistrationEmail: function () {
       this.requestedEmails.registration = true
 
       if (this.validatePatientData(this.patient, this.requestedEmails)) {
@@ -498,16 +493,16 @@ export default {
           this.formedFullNames,
           null,
           this.requestedEmails
-        ).then(function(response) {
+        ).then(function (response) {
           this.parseSuccessfulResponseOnEditingPatient(response.data.data)
-        }, function(response) {
+        }, function (response) {
           this.parseFailedResponseOnEditingPatient(response.data.data)
 
           this.handleErrors('editPatient', response)
         })
       }
     },
-    submitSendingReminderEmail: function() {
+    submitSendingReminderEmail: function () {
       this.requestedEmails.reminder = true
 
       if (this.validatePatientData(this.patient, this.requestedEmails)) {
@@ -520,13 +515,13 @@ export default {
         )
       }
     },
-    submitSendingHst: function() {
+    submitSendingHst: function () {
       if (
         confirm(
-          'Click OK to initiate a Home Sleep Test request. \
-          The HST request must be electronically signed by an authorized \
-          provider before it can be transmitted. You can view and save/update \
-          the request on the next screen.'
+          'Click OK to initiate a Home Sleep Test request. ' +
+          'The HST request must be electronically signed by an authorized ' +
+          'provider before it can be transmitted. You can view and save/update ' +
+          'the request on the next screen.'
         ) && this.validatePatientData(this.patient)
       ) {
         this.pressedButtons.send_hst = true
@@ -539,14 +534,14 @@ export default {
         )
       }
     },
-    setContact: function(type, id) {
+    setContact: function (type, id) {
       this.$set(this.patient, type, id)
     },
-    onKeyUpSearchContacts: function(type) {
+    onKeyUpSearchContacts: function (type) {
       clearTimeout(this.typingTimer)
 
-      var requiredName = this.formedFullNames[type + '_name'].trim()
-      var arrName = ''
+      const requiredName = this.formedFullNames[type + '_name'].trim()
+      let arrName = ''
       switch (type) {
         case 'docpcp':
           arrName = 'foundPrimaryCareMdByName'
@@ -569,19 +564,17 @@ export default {
         case 'docmdother3':
           arrName = 'foundOtherMd3ByName'
           break
-        default:
-          break
       }
 
-      var self = this
-      this.typingTimer = setTimeout(function() {
+      const self = this
+      this.typingTimer = setTimeout(function () {
         if (requiredName.length > 1) {
-          if (self.autoCompleteSearchValue != requiredName) {
+          if (self.autoCompleteSearchValue !== requiredName) {
             self.autoCompleteSearchValue = requiredName
 
             self.getListContactsAndCompanies(requiredName)
-              .then(function(response) {
-                var data = response.data.data
+              .then(function (response) {
+                const data = response.data.data
 
                 if (data.length) {
                   self.arrName = data
@@ -589,7 +582,7 @@ export default {
                   self.arrName = []
                   alert(data.error)
                 }
-              }, function(response) {
+              }, function (response) {
                 self.handleErrors('getListContactsAndCompanies', response)
               })
           }
@@ -598,10 +591,10 @@ export default {
         }
       }, this.doneTypingInterval)
     },
-    setEligiblePayer: function(id, name, type) {
-      var idField, nameField, fullNameField
+    setEligiblePayer: function (id, name, type) {
+      let idField, nameField, fullNameField
 
-      if (type == 'primary') {
+      if (type === 'primary') {
         idField = 'p_m_eligible_payer_id'
         nameField = 'p_m_eligible_payer_name'
         fullNameField = 'ins_payer_name'
@@ -615,28 +608,28 @@ export default {
       this.$set(this.patient, nameField, name)
       this.$set(this.formedFullNames, fullNameField, id + ' - ' + name)
     },
-    searchEligiblePayersByName: function(name) {
+    searchEligiblePayersByName: function (name) {
       const LIMIT_RECORDS_TO_DISPLAY = 5
-      var partsOfRequiredName = name.toLowerCase().split(' ')
+      const partsOfRequiredName = name.toLowerCase().split(' ')
       // the description of it is here: http://stackoverflow.com/a/4389683
-      var regRequiredName = new RegExp("(?=.*\\b.*" + partsOfRequiredName.join('.*\\b)(?=.*\\b.*') + ".*\\b).*", 'i')
+      const regRequiredName = new RegExp('(?=.*\\b.*' + partsOfRequiredName.join('.*\\b)(?=.*\\b.*') + '.*\\b).*', 'i')
 
-      var foundPayers = []
-      var recordsToDisplay = 0
+      const foundPayers = []
+      let recordsToDisplay = 0
       this.eligiblePayerSource.some((el) => {
-        var payerId = el.payer_id.replace(/(\r\n|\n|\r)/gm, '')
+        const payerId = el.payer_id.replace(/(\r\n|\n|\r)/gm, '')
         // check unique id
-        var foundPayerId = foundPayers.find((el) => {
-          return el.id == payerId
+        const foundPayerId = foundPayers.find((el) => {
+          return el.id === payerId
         })
 
-        if (el.payer_name.toLowerCase().search(regRequiredName) != -1 && !foundPayerId) {
+        if (el.payer_name.toLowerCase().search(regRequiredName) !== -1 && !foundPayerId) {
           foundPayers.push({
-            id   : payerId,
-            name : el.payer_name.replace(/(\r\n|\n|\r)/gm, '')
+            id: payerId,
+            name: el.payer_name.replace(/(\r\n|\n|\r)/gm, '')
           })
 
-          if (++recordsToDisplay == LIMIT_RECORDS_TO_DISPLAY) {
+          if (++recordsToDisplay === LIMIT_RECORDS_TO_DISPLAY) {
             return true
           }
         }
@@ -644,8 +637,8 @@ export default {
 
       return foundPayers
     },
-    populateEligiblePayerSource: function(source) {
-      var data = []
+    populateEligiblePayerSource: function (source) {
+      const data = []
 
       source.forEach((el) => {
         if (typeof el['names'] === 'undefined' || el['names'].length === 0) {
@@ -664,12 +657,12 @@ export default {
 
       return data
     },
-    onKeyUpSearchEligiblePayers: function(type) {
+    onKeyUpSearchEligiblePayers: function (type) {
       clearTimeout(this.typingTimer)
 
-      var insPayerName, arrName, elementName
+      let insPayerName, arrName, elementName
 
-      if (type == 'primary') {
+      if (type === 'primary') {
         insPayerName = this.formedFullNames.ins_payer_name.trim()
         arrName = 'eligiblePayers'
         elementName = 'insPayerName'
@@ -679,12 +672,12 @@ export default {
         elementName = 'secondaryInsPayerName'
       }
 
-      var self = this
-      this.typingTimer = setTimeout(function() {
+      const self = this
+      this.typingTimer = setTimeout(function () {
         if (insPayerName.length > 1) {
-          if (self.autoCompleteSearchValue != insPayerName) {
+          if (self.autoCompleteSearchValue !== insPayerName) {
             self.autoCompleteSearchValue = insPayerName
-            var foundPayers = self.searchEligiblePayersByName(insPayerName)
+            const foundPayers = self.searchEligiblePayersByName(insPayerName)
 
             if (foundPayers.length > 0) {
               self.arrName = foundPayers
@@ -700,24 +693,24 @@ export default {
         }
       }, this.doneTypingInterval)
     },
-    setReferredBy: function(id, referredType) {
-      if (this.patient.referred_by != id || this.patient.referred_source != referredType) {
+    setReferredBy: function (id, referredType) {
+      if (this.patient.referred_by !== id || this.patient.referred_source !== referredType) {
         this.isReferredByChanged = true
       }
 
       this.$set(this.patient, 'referred_by', id)
       this.$set(this.patient, 'referred_source', referredType)
     },
-    onKeyUpSearchReferrers: function(event) {
+    onKeyUpSearchReferrers: function (event) {
       clearTimeout(this.typingTimer)
 
-      var self = this
-      this.typingTimer = setTimeout(function() {
-        if (self.formedFullNames.referred_name.trim() != '') {
+      const self = this
+      this.typingTimer = setTimeout(function () {
+        if (self.formedFullNames.referred_name.trim() !== '') {
           if (self.formedFullNames.referred_name.trim().length > 1) {
             self.getReferrers(self.formedFullNames.referred_name.trim())
-              .then(function(response) {
-                var data = response.data.data
+              .then(function (response) {
+                const data = response.data.data
 
                 if (data.length) {
                   self.foundReferrersByName = data
@@ -726,7 +719,7 @@ export default {
                   self.foundReferrersByName = []
                   alert(data.error)
                 }
-              }, function(response) {
+              }, function (response) {
                 self.handleErrors('getReferrers', response)
               })
           } else {
@@ -735,8 +728,8 @@ export default {
         }
       }, this.doneTypingInterval)
     },
-    showReferredBy: function(type, referredSource) {
-      if (type == 'person') {
+    showReferredBy: function (type, referredSource) {
+      if (type === 'person') {
         this.showReferredNotes = false
         this.showReferredPerson = true
       } else {
@@ -745,19 +738,19 @@ export default {
       }
       this.$set(this.patient, 'referred_source', referredSource)
     },
-    getBillingCompany: function() {
+    getBillingCompany: function () {
       return this.$http.post(process.env.API_PATH + 'companies/billing-exclusive-company')
     },
-    updateTrackerNotes: function(patientId, notes) {
-      var data = {
-        patient_id  : patientId || 0,
-        tracker_notes : notes
+    updateTrackerNotes: function (patientId, notes) {
+      const data = {
+        patient_id: patientId || 0,
+        tracker_notes: notes
       }
 
       return this.$http.post(process.env.API_PATH + 'patient-summaries/update-tracker-notes', data)
     },
-    cleanPatientData: function() {
-      var patient = {}
+    cleanPatientData: function () {
+      const patient = {}
 
       this.setDefaultValues(patient)
 
@@ -772,7 +765,7 @@ export default {
       this.patientLocation = ''
 
       // update patient name in the header
-      eventHub.$emit('update-from-child', {
+      window.eventHub.$emit('update-from-child', {
         patientName: '',
         medicare: 0,
         premedCheck: 0,
@@ -781,12 +774,12 @@ export default {
         displayAlert: false
       })
     },
-    fillForm: function(patientId) {
+    fillForm: function (patientId) {
       this.getDataForFillingPatientForm(patientId)
-        .then(function(response) {
-          var data = response.data.data
+        .then(function (response) {
+          const data = response.data.data
 
-          if (data.length != 0) {
+          if (data.length !== 0) {
             this.filterPhoneFields(data.patient)
             this.filterSsnField(data.patient)
             this.setDefaultValues(data.patient)
@@ -802,28 +795,26 @@ export default {
             this.patientLocation = data.patient_location
 
             // update patient name in the header
-            eventHub.$emit('update-from-child', {
+            window.eventHub.$emit('update-from-child', {
               patientName: data.patient.firstname + ' ' + data.patient.lastname,
-              medicare: (data.patient.p_m_ins_type == 1),
+              medicare: (data.patient.p_m_ins_type === 1),
               premedCheck: data.patient.premedcheck,
               title: 'Pre-medication: ' + data.patient.premed + '\n',
               alertText: data.patient.alert_text,
               displayAlert: data.patient.display_alert
             })
           }
-        }, function(response) {
+        }, function (response) {
           this.handleErrors('getDataForFillingPatientForm', response)
         })
     },
-    onChangeRelations: function(type) {
-      // need to test this function
-
-      if (this.value != 'Self') {
+    onChangeRelations: function (type) {
+      if (this.value !== 'Self') {
         return
       }
 
-      var resultFields = []
-      var sourceFields = [
+      let resultFields = []
+      const sourceFields = [
         this.patient.dob,
         this.patient.firstname,
         this.patient.middlename,
@@ -831,57 +822,57 @@ export default {
         this.patient.gender
       ]
 
-      if (type == 'primary_insurance') {
+      if (type === 'primary_insurance') {
         resultFields = [
           'ins_dob', 'p_m_partyfname', 'p_m_partymname', 'p_m_partylname', 'p_m_gender'
         ]
-      } else if (type == 'secondary_insurance') {
+      } else if (type === 'secondary_insurance') {
         resultFields = [
           'ins2_dob', 's_m_partyfname', 's_m_partymname', 's_m_partylname', 's_m_gender'
         ]
       }
 
-      var self = this
+      const self = this
       resultFields.forEach((el, index) => {
         self.$set(self.patient, el, sourceFields[index])
       })
     },
-    onPreferredContactChange: function() {
+    onPreferredContactChange: function () {
       // need to test this function
-      if (this.patient.preferredcontact == 'email' && this.patient.email.length == 0) {
-        alert("You must enter an email address to use email as the preferred contact method.")
+      if (this.patient.preferredcontact === 'email' && this.patient.email.length === 0) {
+        alert('You must enter an email address to use email as the preferred contact method.')
 
         this.$set(this.patient, 'preferredcontact', '')
         this.$refs.email.focus()
-      } else if (this.patient.preferredcontact == 'fax' && this.patient.fax.length == 0) {
-        alert("You must enter a fax number to use email as the preferred contact method.")
+      } else if (this.patient.preferredcontact === 'fax' && this.patient.fax.length === 0) {
+        alert('You must enter a fax number to use email as the preferred contact method.')
 
         this.$set(this.patient, 'preferredcontact', '')
         this.$refs.fax.focus()
       }
     },
-    filterPhoneFields: function(patient) {
-      var fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number']
+    filterPhoneFields: function (patient) {
+      const fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number']
 
-      var self = this
+      const self = this
       fields.forEach((el) => {
         patient[el] = self.phone(patient[el])
       })
     },
-    filterSsnField: function(patient) {
+    filterSsnField: function (patient) {
       patient.ssn = this.ssn(patient.ssn)
     },
-    setDefaultValues: function(patient) {
-      var values = {
-        copyreqdate    : moment().format('DD/MM/YYYY'),
-        salutation     : 'Mr.',
-        preferredcontact : 'paper',
-        display_alert  : 0,
-        p_m_same_address : 1,
-        has_s_m_ins    : 'No'
+    setDefaultValues: function (patient) {
+      const values = {
+        copyreqdate: window.moment().format('DD/MM/YYYY'),
+        salutation: 'Mr.',
+        preferredcontact: 'paper',
+        display_alert: 0,
+        p_m_same_address: 1,
+        has_s_m_ins: 'No'
       }
 
-      var fields = Object.keys(values)
+      const fields = Object.keys(values)
 
       fields.forEach((el) => {
         if (!patient[el]) {
@@ -889,99 +880,99 @@ export default {
         }
       })
     },
-    phone: function(value) {
+    phone: function (value) {
       value = value || ''
       return value.replace(/\D/g, '')
         .replace(/^(\d{3})(\d{3})(\d{4})$/, '($1) $2-$3')
     },
-    ssn: function(value) {
+    ssn: function (value) {
       value = value || ''
       return value.replace(/\D/g, '')
         .replace(/^(\d{3})(\d{2})(\d{4})$/, '$1-$2-$3')
     },
-    date: function(value) {
+    date: function (value) {
       value = value || ''
       return value.replace(/\D/g, '')
         .replace(/^(\d{2})(\d{2})(\d{4})$/, '$1/$2/$3')
     },
-    number: function(value) {
+    number: function (value) {
       value = value || ''
       return value.replace(/\D/g, '')
     },
-    getUncompletedHomeSleepTests: function(patientId) {
-      var data = { patientId: patientId || 0}
+    getUncompletedHomeSleepTests: function (patientId) {
+      const data = { patientId: patientId || 0 }
 
       return this.$http.post(process.env.API_PATH + 'home-sleep-tests/uncompleted', data)
     },
-    getGeneratedDateOfIntroLetter: function(patientId) {
-      var data = { patient_id: patientId || 0}
+    getGeneratedDateOfIntroLetter: function (patientId) {
+      const data = { patient_id: patientId || 0 }
 
       return this.$http.post(process.env.API_PATH + 'letters/gen-date-of-intro', data)
     },
-    getDocLocations: function() {
+    getDocLocations: function () {
       return this.$http.post(process.env.API_PATH + 'locations/by-doctor')
     },
-    getProfilePhoto: function(patientId) {
-      var data = { patient_id: patientId || 0}
+    getProfilePhoto: function (patientId) {
+      const data = { patient_id: patientId || 0 }
 
       return this.$http.post(process.env.API_PATH + 'profile-images/photo', data)
     },
-    getInsuranceCardImage: function(patientId) {
-      var data = { patient_id: patientId || 0 }
+    getInsuranceCardImage: function (patientId) {
+      const data = { patient_id: patientId || 0 }
 
       return this.$http.post(process.env.API_PATH + 'profile-images/insurance-card-image', data)
     },
-    getHomeSleepTestCompanies: function() {
+    getHomeSleepTestCompanies: function () {
       return this.$http.post(process.env.API_PATH + 'companies/home-sleep-test')
     },
-    getPatientById: function(patientId) {
+    getPatientById: function (patientId) {
       patientId = patientId || 0
 
       return this.$http.get(process.env.API_PATH + 'patients/' + patientId)
     },
-    findPatientNotifications: function(patientId) {
-      var data = {
+    findPatientNotifications: function (patientId) {
+      const data = {
         where: {
-          patientid : patientId || 0,
-          status : 1
+          patientid: patientId || 0,
+          status: 1
         }
       }
 
       return this.$http.post(process.env.API_PATH + 'notifications/with-filter', data)
     },
-    addNewPatient: function() {
-      var data = {}
+    addNewPatient: function () {
+      const data = {}
 
       return this.$http.post(process.env.API_PATH + 'patients/add-new-patient', data)
     },
-    getDataForFillingPatientForm: function(patientId) {
-      var data = { 'patient_id': patientId || 0 }
+    getDataForFillingPatientForm: function (patientId) {
+      const data = { 'patient_id': patientId || 0 }
 
       return this.$http.post(process.env.API_PATH + 'patients/filling-form', data)
     },
-    getReferrers: function(requestedName) {
-      var data = { partial_name: requestedName }
+    getReferrers: function (requestedName) {
+      const data = { partial_name: requestedName }
 
       return this.$http.post(process.env.API_PATH + 'patients/referrers', data)
     },
-    getEligiblePayerSource: function() {
+    getEligiblePayerSource: function () {
       return this.$http.get('https://eligibleapi.com/resources/payers/claims/medical.json')
     },
-    getStaticEligiblePayerSource: function() {
+    getStaticEligiblePayerSource: function () {
       return this.$http.get(process.env.API_PATH + 'eligible/payers')
     },
-    getInsuranceContacts: function() {
+    getInsuranceContacts: function () {
       return this.$http.post(process.env.API_PATH + 'contacts/insurance')
     },
-    getListContactsAndCompanies: function(requestedName) {
-      var data = {
-        partial_name    : requestedName,
-        without_companies : true
+    getListContactsAndCompanies: function (requestedName) {
+      const data = {
+        partial_name: requestedName,
+        without_companies: true
       }
 
       return this.$http.post(process.env.API_PATH + 'contacts/list-contacts-and-companies', data)
     },
-    editPatient: function(
+    editPatient: function (
       patientId,
       patientFormData,
       formedFullNames,
@@ -994,30 +985,30 @@ export default {
         location: this.patientLocation
       })
 
-      var fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number', 'ssn']
+      const fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number', 'ssn']
 
-      var self = this
+      const self = this
       fields.forEach((el) => {
         patientFormData[el] = self.number(patientFormData[el])
       })
 
-      var data = {
-        patient_form_data  : patientFormData,
-        pressed_buttons  : pressedButtons ? pressedButtons : undefined,
-        requested_emails   : requestedEmails ? requestedEmails : undefined,
-        tracker_notes    : trackerNotes ? trackerNotes : undefined
+      const data = {
+        patient_form_data: patientFormData,
+        pressed_buttons: pressedButtons || undefined,
+        requested_emails: requestedEmails || undefined,
+        tracker_notes: trackerNotes || undefined
       }
 
       return this.$http.post(process.env.API_PATH + 'patients/edit/' + patientId, data)
     },
-    checkEmail: function(email, patientId) {
-      var data = { email: email || '', patient_id: patientId || 0 }
+    checkEmail: function (email, patientId) {
+      const data = { email: email || '', patient_id: patientId || 0 }
 
       return this.$http.post(process.env.API_PATH + 'patients/check-email', data)
     },
-    removeNotificationInDb: function(id) {
+    removeNotificationInDb: function (id) {
       id = id || 0
-      var data = { status: 2 }
+      const data = { status: 2 }
 
       return this.$http.put(process.env.API_PATH + 'notifications/' + id, data)
     }

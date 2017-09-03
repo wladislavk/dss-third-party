@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
 import phoneMasks from '../../../../modules/masks/PhoneMixin.js'
 import phoneFilters from '../../../../modules/filters/phoneMixin.js'
@@ -45,14 +45,19 @@ export default {
       return this.sleeplab.sleeplabid > 0 ? 'Edit' : 'Add'
     },
     googleLink () {
-      var link = 'http://google.com/search?q='
-      var requiredFields = [
-        'firstname', 'lastname', 'company',
-        'add1', 'city', 'state', 'zip'
+      const link = 'http://google.com/search?q='
+      const requiredFields = [
+        'firstname',
+        'lastname',
+        'company',
+        'add1',
+        'city',
+        'state',
+        'zip'
       ]
 
-      var notEmptyRequiredFields = []
-      var self = this
+      const notEmptyRequiredFields = []
+      const self = this
       requiredFields.forEach(function (el) {
         if (self.sleeplab[el]) {
           notEmptyRequiredFields.push(self.sleeplab[el])
@@ -63,12 +68,12 @@ export default {
     }
   },
   created () {
-    eventHub.$on('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
     // no one field was edited
     this.$parent.popupEdit = false
   },
   beforeDestroy () {
-    eventHub.$off('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   methods: {
     onClickDeleteSleeplab (sleeplabId) {
@@ -87,7 +92,7 @@ export default {
       if (this.validateSleeplabData(this.sleeplab)) {
         this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab)
           .then(function (response) {
-            var data = response.data.data
+            const data = response.data.data
 
             this.$parent.popupEdit = false
 
@@ -103,17 +108,17 @@ export default {
       }
     },
     parseFailedResponseOnEditingSleeplab (data) {
-      var errors = data.errors.shift()
+      const errors = data.errors.shift()
 
-      if (errors != undefined) {
-        var objKeys = Object.keys(errors)
+      if (errors !== undefined) {
+        const objKeys = Object.keys(errors)
 
-        var arrOfMessages = objKeys.map((el) => {
+        const arrOfMessages = objKeys.map((el) => {
           return el + ':' + errors[el].join('|').toLowerCase()
         })
 
         // TODO: create more readable format
-        alert(arrOfMessages.join("\n"))
+        alert(arrOfMessages.join('\n'))
       }
     },
     onSettingComponentParams (parameters) {
@@ -124,12 +129,12 @@ export default {
     fetchSleeplab (id) {
       this.getSleeplab(id)
         .then(function (response) {
-          var data = response.data.data
+          const data = response.data.data
 
           if (data) {
-            this.fullName = (data.firstname ? data.firstname + ' ' : '')
-              + (data.middlename ? data.middlename + ' ' : '')
-              + (data.lastname || '')
+            this.fullName = (data.firstname ? data.firstname + ' ' : '') +
+              (data.middlename ? data.middlename + ' ' : '') +
+              (data.lastname || '')
 
             this.phoneFields.forEach(el => {
               if (data.hasOwnProperty(el)) {
@@ -150,14 +155,14 @@ export default {
     },
     editSleeplab (sleeplabId, sleeplabFormData) {
       // convert phone fields before storing
-      var self = this
+      const self = this
       this.phoneFields.forEach(el => {
         if (sleeplabFormData.hasOwnProperty(el)) {
           sleeplabFormData[el] = self.phoneForStoring(sleeplabFormData[el])
         }
       })
 
-      var data = {
+      const data = {
         sleeplab_form_data: sleeplabFormData
       }
 

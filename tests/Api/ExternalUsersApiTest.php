@@ -5,9 +5,9 @@ namespace Tests\Api;
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser;
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use Illuminate\Database\Eloquent\Collection;
-use Tests\TestCases\ApiTestCase;
+use Tests\TestCases\ModelAwareApiTestCase;
 
-class ExternalUsersApiTest extends ApiTestCase
+class ExternalUsersApiTest extends ModelAwareApiTestCase
 {
     protected function getModel()
     {

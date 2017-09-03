@@ -3,10 +3,8 @@
 namespace Tests\TestCases;
 
 use DentalSleepSolutions\Http\Requests\Request;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Contracts\Console\Kernel;
 
-class BaseApiTestCase extends BaseTestCase
+class BaseApiTestCase extends BaseIntegrationTestCase
 {
     const ROUTE_PREFIX = '/api/v1';
 
@@ -16,20 +14,6 @@ class BaseApiTestCase extends BaseTestCase
      * @var string
      */
     protected $baseUrl = 'http://localhost';
-
-    /**
-     * Creates the application.
-     *
-     * @return \Illuminate\Foundation\Application
-     */
-    public function createApplication()
-    {
-        $app = require __DIR__.'/../../bootstrap/app.php';
-
-        $app->make(Kernel::class)->bootstrap();
-
-        return $app;
-    }
 
     protected function getResponseData()
     {

@@ -3,9 +3,9 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany;
-use Tests\TestCases\ApiTestCase;
+use Tests\TestCases\ModelAwareApiTestCase;
 
-class ExternalCompaniesApiTest extends ApiTestCase
+class ExternalCompaniesApiTest extends ModelAwareApiTestCase
 {
     protected function getModel()
     {

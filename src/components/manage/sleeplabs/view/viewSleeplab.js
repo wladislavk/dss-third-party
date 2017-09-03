@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
 export default {
   data () {
@@ -11,12 +11,12 @@ export default {
   },
   mixins: [handlerMixin],
   created () {
-    eventHub.$on('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
 
     this.$parent.popupEdit = false
   },
   beforeDestroy () {
-    eventHub.$off('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   methods: {
     onClickEditSleeplab () {
@@ -31,12 +31,12 @@ export default {
     fetchSleeplab (id) {
       this.getSleeplab(id)
         .then(function (response) {
-          var data = response.data.data
+          const data = response.data.data
 
           if (data) {
             data['name'] = data.salutation + ' ' + data.firstname + ' ' + data.middlename + ' ' + data.lastname
 
-            var phoneFields = ['phone1', 'phone2', 'fax']
+            const phoneFields = ['phone1', 'phone2', 'fax']
 
             phoneFields.forEach(el => {
               if (data.hasOwnProperty(el)) {

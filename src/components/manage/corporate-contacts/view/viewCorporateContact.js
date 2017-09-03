@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
 export default {
   name: 'view-corporate-contact',
@@ -12,17 +12,17 @@ export default {
   },
   mixins: [handlerMixin],
   created () {
-    eventHub.$on('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
     // this popup has only readonly input fields - set the flag to false
     this.$parent.popupEdit = false
   },
   mounted () {
     // set all form's fields disabled
-    $('form :input').attr('readonly', true)
-    $('form select').attr('disabled', 'disabled')
+    window.$('form :input').attr('readonly', true)
+    window.$('form select').attr('disabled', 'disabled')
   },
   beforeDestroy () {
-    eventHub.$off('setting-component-params', this.onSettingComponentParams)
+    window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   methods: {
     onSettingComponentParams (parameters) {
@@ -30,9 +30,7 @@ export default {
 
       this.getContactType()
         .then(function (response) {
-          var data = response.data.data
-
-          this.contactTypes = data
+          this.contactTypes = response.data.data
 
           this.fetchContact(this.componentParams.contactId)
         }, function (response) {
@@ -42,11 +40,11 @@ export default {
     fetchContact (contactId) {
       this.getContactById(contactId)
         .then(function (response) {
-          var data = response.data.data
+          const data = response.data.data
 
-          data['name'] = (data['firstname'] ? data['firstname'] + ' ' : '')
-            + (data['middlename'] ? data['middlename'] + ' ' : '')
-            + (data['lastname'] || '')
+          data['name'] = (data['firstname'] ? data['firstname'] + ' ' : '') +
+            (data['middlename'] ? data['middlename'] + ' ' : '') +
+            (data['lastname'] || '')
 
           this.contact = data
         }, function (response) {

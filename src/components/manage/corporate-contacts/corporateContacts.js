@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
   name: 'corporate-contacts',
@@ -39,7 +39,7 @@ export default {
   mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
-      if (this.$route.query.page != undefined && this.$route.query.page <= this.totalPages) {
+      if (this.$route.query.page !== undefined && this.$route.query.page <= this.totalPages) {
         this.$set(this.routeParameters, 'currentPageNumber', +this.$route.query.page)
       }
     },
@@ -51,7 +51,7 @@ export default {
       }
     },
     '$route.query.sortdir': function () {
-      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() == 'desc') {
+      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() === 'desc') {
         this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
       } else {
         this.$set(this.routeParameters, 'sortDirection', 'asc')
@@ -87,7 +87,7 @@ export default {
       this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
     },
     getCurrentDirection (sort) {
-      if (this.routeParameters.sortColumn == sort) {
+      if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
       } else {
         return 'asc'
@@ -96,10 +96,10 @@ export default {
     removeContact (id) {
       this.deleteContact(id)
         .then(function () {
-          this.message = 'Deleted Successfully';
+          this.message = 'Deleted Successfully'
 
           this.$nextTick(() => {
-            var self = this
+            const self = this
 
             setTimeout(() => {
               self.message = ''
@@ -116,24 +116,24 @@ export default {
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection
       ).then(function (response) {
-          var data = response.data.data
+        const data = response.data.data
 
-          data.result = data.result.map((value) => {
-            value['name'] = (value.lastname ? value.lastname + (!value.middlename ? ', ' : ' ') : '')
-              + (value.middlename ? value.middlename + ', ' : '')
-              + (value.firstname || '')
+        data.result = data.result.map((value) => {
+          value['name'] = (value.lastname ? value.lastname + (!value.middlename ? ', ' : ' ') : '') +
+            (value.middlename ? value.middlename + ', ' : '') +
+            (value.firstname || '')
 
-            return value
-          })
-
-          this.contacts = data.result
-          this.contactsTotalNumber = data.total
-        }, function (response) {
-          this.handleErrors('getCorporateContacts', response)
+          return value
         })
+
+        this.contacts = data.result
+        this.contactsTotalNumber = data.total
+      }, function (response) {
+        this.handleErrors('getCorporateContacts', response)
+      })
     },
     getCorporateContacts (pageNumber, rowsPerPage, sort, sortDir) {
-      var data = {
+      const data = {
         page: pageNumber,
         rows_per_page: rowsPerPage,
         sort: sort,

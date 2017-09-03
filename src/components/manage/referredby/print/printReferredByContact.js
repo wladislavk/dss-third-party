@@ -1,10 +1,10 @@
-var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
 export default {
   name: 'print-referred-by-contact',
   data () {
     return {
-      title: 'Referral Source Printout - ' + moment().format('MM/DD/YYYY'),
+      title: 'Referral Source Printout - ' + window.moment().format('MM/DD/YYYY'),
       contacts: [],
       routeParameters: {
         sortColumn: '',
@@ -55,7 +55,7 @@ export default {
     },
     '$route.query.sortdir': function () {
       if (this.$route.query.sortdir) {
-        if (this.$route.query.sortdir.toLowerCase() == 'desc') {
+        if (this.$route.query.sortdir.toLowerCase() === 'desc') {
           this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
         } else {
           this.$set(this.routeParameters, 'sortDirection', 'asc')
@@ -70,13 +70,13 @@ export default {
     }
   },
   created () {
-    $('body').removeClass('main-template')
+    window.$('body').removeClass('main-template')
   },
   mounted () {
     this.getContacts()
   },
   beforeDestroy () {
-    $('body').addClass('main-template')
+    window.$('body').addClass('main-template')
   },
   methods: {
     getContacts () {
@@ -84,7 +84,7 @@ export default {
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection
       ).then(function (response) {
-        var data = response.data.data
+        const data = response.data.data
 
         if (data.total > 0) {
           this.contacts = data.contacts
@@ -94,7 +94,7 @@ export default {
       })
     },
     getReferredByContacts (sort, sortDir) {
-      var data = {
+      const data = {
         sort: sort,
         sortdir: sortDir,
         detailed: true

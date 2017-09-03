@@ -1,5 +1,5 @@
-var handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
-var ledgerSummaryReportFull = require('../summary-report-full/ledgerSummaryReportFull.vue')
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+const ledgerSummaryReportFull = require('../summary-report-full/ledgerSummaryReportFull.vue')
 
 export default {
   name: 'ledger-report-full',
@@ -74,7 +74,7 @@ export default {
   mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
-      if (this.$route.query.page != undefined && this.$route.query.page <= this.totalPages) {
+      if (this.$route.query.page !== undefined && this.$route.query.page <= this.totalPages) {
         this.$set(this.routeParameters, 'currentPageNumber', +this.$route.query.page)
       }
     },
@@ -86,7 +86,7 @@ export default {
       }
     },
     '$route.query.sortdir': function () {
-      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() == 'desc') {
+      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() === 'desc') {
         this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
       } else {
         this.$set(this.routeParameters, 'sortDirection', 'asc')
@@ -104,18 +104,18 @@ export default {
       return new Date()
     },
     totalPageCharges () {
-      var total = this.ledgerRows.reduce((sum, currentRow) => {
+      const total = this.ledgerRows.reduce((sum, currentRow) => {
         return sum + (currentRow.ledger === 'ledger' && currentRow.amount > 0 ? +currentRow.amount : 0)
       }, 0)
 
       return total
     },
     totalPageCredits () {
-      var total = this.ledgerRows.reduce((sum, currentRow) => {
-        var isNotLedgerPaidAndAdjustment = !(currentRow.ledger === 'ledger_paid' && currentRow.payer == constants.DSS_TRXN_TYPE_ADJ)
+      const total = this.ledgerRows.reduce((sum, currentRow) => {
+        const isNotLedgerPaidAndAdjustment = !(currentRow.ledger === 'ledger_paid' && currentRow.payer === window.constants.DSS_TRXN_TYPE_ADJ)
 
         return sum + (
-          isNotLedgerPaidAndAdjustment && currentRow.ledger != 'claim' && currentRow.paid_amount > 0
+          isNotLedgerPaidAndAdjustment && currentRow.ledger !== 'claim' && currentRow.paid_amount > 0
           ? +currentRow.paid_amount : 0
         )
       }, 0)
@@ -123,8 +123,8 @@ export default {
       return total
     },
     totalPageAdjustments () {
-      var total = this.ledgerRows.reduce((sum, currentRow) => {
-        var isLedgerPaidAndAdjustment = (currentRow.ledger === 'ledger_paid' && currentRow.payer == constants.DSS_TRXN_TYPE_ADJ)
+      const total = this.ledgerRows.reduce((sum, currentRow) => {
+        const isLedgerPaidAndAdjustment = (currentRow.ledger === 'ledger_paid' && currentRow.payer === window.constants.DSS_TRXN_TYPE_ADJ)
 
         return sum + (isLedgerPaidAndAdjustment && currentRow.paid_amount > 0 ? +currentRow.paid_amount : 0)
       }, 0)
@@ -136,36 +136,38 @@ export default {
     }
   },
   created () {
-    eventHub.$on('setting-totals-from-summary-block', this.onSetTotalsFromSummaryBlock)
+    window.eventHub.$on('setting-totals-from-summary-block', this.onSetTotalsFromSummaryBlock)
   },
   mounted () {
     this.getLedgerData()
   },
   beforeDestroy () {
-    eventHub.$off('setting-totals-from-summary-block', this.onSetTotalsFromSummaryBlock)
+    window.eventHub.$off('setting-totals-from-summary-block', this.onSetTotalsFromSummaryBlock)
   },
   methods: {
-    isCredit(row) {
-      return (!(row.ledger == 'ledger_paid' && row.payer == constants.DSS_TRXN_TYPE_ADJ))
+    isCredit (row) {
+      return (!(row.ledger === 'ledger_paid' && row.payer === window.constants.DSS_TRXN_TYPE_ADJ))
     },
     isAdjustment (row) {
-      return (row.ledger == 'ledger_paid' && row.payer == constants.DSS_TRXN_TYPE_ADJ)
+      return (row.ledger === 'ledger_paid' && row.payer === window.constants.DSS_TRXN_TYPE_ADJ)
     },
     onSetTotalsFromSummaryBlock (totals) {
       this.totalCharges = totals.charges
       this.totalCredits = totals.credits
       this.totalAdjustments = totals.adjustments
     },
-    getPatientFullName(patientInfo) {
-        return patientInfo ? (patientInfo.lastname + ', ' + patientInfo.firstname) : ''
+    getPatientFullName (patientInfo) {
+      return patientInfo ? (patientInfo.lastname + ', ' + patientInfo.firstname) : ''
     },
     getDescription (ledgerRow) {
-      var description;
+      let description
 
       switch (ledgerRow.ledger) {
         case 'ledger_payment':
-          description = constants.dssTransactionPayerLabels(+ledgerRow.payer) + ' Payment - '
-            + constants.dssTransactionPaymentTypeLabels(+ledgerRow.payment_type) + ' '
+          description = window.constants.dssTransactionPayerLabels(+ledgerRow.payer) +
+            ' Payment - ' +
+            window.constants.dssTransactionPaymentTypeLabels(+ledgerRow.payment_type) +
+            ' '
           break
 
         default:
@@ -185,26 +187,26 @@ export default {
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection
       ).then(function (response) {
-          var data = response.data.data
+        const data = response.data.data
 
-          this.ledgerRowsTotalNumber = data.total
-          this.ledgerRows = data.result
-        }, function (response) {
-          this.handleErrors('getLedgerRows', response)
-        })
+        this.ledgerRowsTotalNumber = data.total
+        this.ledgerRows = data.result
+      }, function (response) {
+        this.handleErrors('getLedgerRows', response)
+      })
     },
     formatLedger (value) {
-      return accounting.formatMoney(value, '$')
+      return window.accounting.formatMoney(value, '$')
     },
     getCurrentDirection (sort) {
-      if (this.routeParameters.sortColumn == sort) {
+      if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
       } else {
         return 'asc'
       }
     },
     getLedgerRows (reportType, pageNumber, rowsPerPage, sortColumn, sortDir) {
-      var data = {
+      const data = {
         report_type: reportType,
         page: pageNumber,
         rows_per_page: rowsPerPage,

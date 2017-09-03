@@ -1,7 +1,7 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
-  data: function() {
+  data: function () {
     return {
       contactTypes: [],
       routeParameters: {
@@ -31,10 +31,10 @@ export default {
   },
   mixins: [handlerMixin],
   watch: {
-    '$route.query.contacttype': function() {
+    '$route.query.contacttype': function () {
       if (this.$route.query.contacttype) {
-        var foundOption = this.contactTypes.find(
-          el => el.contacttypeid == this.$route.query.contacttype
+        const foundOption = this.contactTypes.find(
+          el => el.contacttypeid === this.$route.query.contacttype
         )
 
         if (foundOption) {
@@ -46,14 +46,14 @@ export default {
         this.$set(this.routeParameters, 'selectedContactType', 0)
       }
     },
-    '$route.query.page': function() {
+    '$route.query.page': function () {
       if (this.$route.query.page) {
         if (this.$route.query.page <= this.totalPages) {
           this.$set(this.routeParameters, 'currentPageNumber', this.$route.query.page)
         }
       }
     },
-    '$route.query.sort': function() {
+    '$route.query.sort': function () {
       if (this.$route.query.sort) {
         if (this.$route.query.sort in this.tableHeaders) {
           this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort)
@@ -64,9 +64,9 @@ export default {
         this.$set(this.routeParameters, 'sortColumn', 'name')
       }
     },
-    '$route.query.sortdir': function() {
+    '$route.query.sortdir': function () {
       if (this.$route.query.sortdir) {
-        if (this.$route.query.sortdir.toLowerCase() == 'desc') {
+        if (this.$route.query.sortdir.toLowerCase() === 'desc') {
           this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
         } else {
           this.$set(this.routeParameters, 'sortDirection', 'asc')
@@ -75,46 +75,46 @@ export default {
         this.$set(this.routeParameters, 'sortDirection', 'asc')
       }
     },
-    '$route.query.letter': function() {
+    '$route.query.letter': function () {
       if (this.letters.indexOf(this.$route.query.letter) > -1) {
         this.$set(this.routeParameters, 'currentLetter', this.$route.query.letter)
       } else {
         this.$set(this.routeParameters, 'currentLetter', null)
       }
     },
-    '$route.query.delid': function() {
+    '$route.query.delid': function () {
       if (this.$route.query.delid > 0) {
         this.onDeleteContact(this.$route.query.delid)
       }
     },
-    '$route.query.inactiveid': function() {
+    '$route.query.inactiveid': function () {
       if (this.$route.query.inactiveid > 0) {
         this.onInactiveContact(this.$route.query.inactiveid)
       }
     },
     'routeParameters': {
-      handler: function() {
+      handler: function () {
         this.getContacts()
       },
       deep: true
     }
   },
   computed: {
-    totalPages: function() {
+    totalPages: function () {
       return Math.ceil(this.contactsTotalNumber / this.contactsPerPage)
     }
   },
   created () {
-    eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
+    window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
 
     this.getActiveNonCorporateContactTypes()
-      .then(function(response) {
-        var data = response.data.data
+      .then(function (response) {
+        const data = response.data.data
 
         if (data) {
           this.contactTypes = data
         }
-      }, function(response) {
+      }, function (response) {
         this.handleErrors('getActiveNonCorporateContactTypes', response)
       })
 
@@ -124,52 +124,51 @@ export default {
     this.showActions = true
   },
   beforeDestroy () {
-    eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
+    window.eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
   },
   methods: {
     onSettingDataFromModal () {
+      // @todo: this will not work
       this.message = data.message
-      this.$nextTick(function() {
-        var self = this
+      this.$nextTick(function () {
+        const self = this
 
-        setTimeout(function() {
+        setTimeout(function () {
           self.message = ''
         }, 3000)
       })
     },
-    onKeyUpSearchContacts (event) {
+    onKeyUpSearchContacts () {
       clearTimeout(this.typingTimer)
 
-      var self = this
-      this.typingTimer = setTimeout(function() {
-        if (self.requiredContactName.trim() != '') {
-          // console.log(event.keyCode)
-
+      const self = this
+      this.typingTimer = setTimeout(function () {
+        if (self.requiredContactName.trim() !== '') {
           if (self.requiredContactName.trim().length > 1) {
             self.getListContactsAndCompanies(self.requiredContactName.trim())
-              .then(function(response) {
-                var data = response.data.data
+              .then(function (response) {
+                const data = response.data.data
 
                 if (data.length) {
                   self.foundContactsByName = data
-                  $('#contact_hints').show()
+                  window.$('#contact_hints').show()
                 } else if (data.error) {
                   self.foundContactsByName = []
                   alert(data.error)
                 }
-              }, function(response) {
+              }, function (response) {
                 self.handleErrors('getListContactsAndCompanies', response)
               })
           } else {
-            $('#contact_hints').hide()
+            window.$('#contact_hints').hide()
           }
         } else {
-            self.foundContactsByName = []
+          self.foundContactsByName = []
         }
       }, this.doneTypingInterval)
     },
     onClickPatients (contactId) {
-      $('#ref_pat_' + contactId).toggle()
+      window.$('#ref_pat_' + contactId).toggle()
     },
     onClickAddNewContact () {
       this.$parent.$refs.modal.display('edit-contact')
@@ -184,21 +183,22 @@ export default {
     },
     onClickInActive () {
       this.$router.push({
-        name  : this.$route.name,
-        query : {
+        name: this.$route.name,
+        query: {
           status: 2
         }
       })
     },
     onChangeContactType () {
       this.$router.push({
-        name  : this.$route.name,
-        query : {
+        name: this.$route.name,
+        query: {
           contacttype: this.routeParameters.selectedContactType
         }
       })
     },
     getContacts () {
+      const self = this
       this.findContacts(
         this.routeParameters.selectedContactType,
         this.routeParameters.status,
@@ -207,33 +207,33 @@ export default {
         this.routeParameters.sortDirection,
         this.routeParameters.currentPageNumber,
         this.contactsPerPage
-      ).then(function(response) {
-        var data = response.data.data
+      ).then(function (response) {
+        const data = response.data.data
 
         if (data) {
           this.contactsTotalNumber = data.totalCount
           this.contacts = data.result
         }
-      }, function(response) {
+      }, function (response) {
         this.handleErrors('findContacts', response)
-      }).then(function() {
-        var contactsHaveReferrers = this.contacts.map(el => el.referrers > 0 ? el.contactid : 0)
-        var contactsHavePatients  = this.contacts.map(el => el.patients > 0 ? el.contactid : 0)
+      }).then(function () {
+        const contactsHaveReferrers = this.contacts.map(el => el.referrers > 0 ? el.contactid : 0)
+        const contactsHavePatients = this.contacts.map(el => el.patients > 0 ? el.contactid : 0)
 
         contactsHaveReferrers.forEach((contactId, index) => {
           if (contactId > 0) {
             this.findReferrersByContactId(contactId)
-              .then(function(response) {
-                var data = response.data.data
+              .then(function (response) {
+                const data = response.data.data
 
                 if (data.length) {
-                  var updatedContact = Object.assign({
+                  const updatedContact = Object.assign({
                     referrers_data: data
-                  }, this.contacts[index])
+                  }, self.contacts[index])
 
-                  this.$set(this.contacts, index, updatedContact)
+                  this.$set(self.contacts, index, updatedContact)
                 }
-              }, function(response) {
+              }, function (response) {
                 this.handleErrors('findReferrersByContactId', response)
               })
           }
@@ -242,17 +242,17 @@ export default {
         contactsHavePatients.forEach((contactId, index) => {
           if (contactId > 0) {
             this.findPatientsByContactId(contactId)
-              .then(function(response) {
-                var data = response.data.data
+              .then(function (response) {
+                const data = response.data.data
 
                 if (data.length) {
-                  var updatedContact = Object.assign({
+                  const updatedContact = Object.assign({
                     patients_data: data
-                  }, this.contacts[index])
+                  }, self.contacts[index])
 
-                  this.$set(this.contacts, index, updatedContact)
+                  this.$set(self.contacts, index, updatedContact)
                 }
-              }, function(response) {
+              }, function (response) {
                 this.handleErrors('findPatientsByContactId', response)
               })
           }
@@ -260,17 +260,17 @@ export default {
       })
     },
     findReferrersByContactId (contactId) {
-      var data = { contact_id: contactId }
+      const data = { contact_id: contactId }
 
       return this.$http.post(process.env.API_PATH + 'patients/referred-by-contact', data)
     },
     findPatientsByContactId (contactId) {
-      var data = { contact_id: contactId }
+      const data = { contact_id: contactId }
 
       return this.$http.post(process.env.API_PATH + 'patients/by-contact', data)
     },
     getCurrentDirection (sort) {
-      if (this.routeParameters.sortColumn == sort) {
+      if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
       } else {
         return 'asc'
@@ -285,14 +285,14 @@ export default {
       pageNumber,
       contactsPerPage
     ) {
-      var data = {
-        contacttype     : contactType,
-        status      : status,
-        letter      : currentLetter,
-        sort_column     : sortColumn,
-        sort_direction  : sortDirection,
-        page        : pageNumber,
-        contacts_per_page : contactsPerPage
+      const data = {
+        contacttype: contactType,
+        status: status,
+        letter: currentLetter,
+        sort_column: sortColumn,
+        sort_direction: sortDirection,
+        page: pageNumber,
+        contacts_per_page: contactsPerPage
       }
 
       return this.$http.post(process.env.API_PATH + 'contacts/find', data)
@@ -301,7 +301,7 @@ export default {
       return this.$http.post(process.env.API_PATH + 'contact-types/active-non-corporate')
     },
     getListContactsAndCompanies (requestedName) {
-      var data = { partial_name: requestedName }
+      const data = { partial_name: requestedName }
 
       return this.$http.post(process.env.API_PATH + 'contacts/list-contacts-and-companies', data)
     }

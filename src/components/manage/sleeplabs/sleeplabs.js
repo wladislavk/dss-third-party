@@ -1,4 +1,4 @@
-var handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
   name: 'sleeplabs',
@@ -40,7 +40,7 @@ export default {
   mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
-      if (this.$route.query.page != undefined && this.$route.query.page <= this.totalPages) {
+      if (this.$route.query.page !== undefined && this.$route.query.page <= this.totalPages) {
         this.$set(this.routeParameters, 'currentPageNumber', +this.$route.query.page)
       }
     },
@@ -52,7 +52,7 @@ export default {
       }
     },
     '$route.query.sortdir': function () {
-      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() == 'desc') {
+      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() === 'desc') {
         this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
       } else {
         this.$set(this.routeParameters, 'sortDirection', 'asc')
@@ -83,20 +83,20 @@ export default {
     }
   },
   created () {
-    eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
+    window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
   },
   mounted () {
     this.getListOfSleeplabs()
   },
   beforeDestroy () {
-    eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
+    window.eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
   },
   methods: {
     onSettingDataFromModal (data) {
-      this.message = data.message;
+      this.message = data.message
 
       this.$nextTick(() => {
-        var self = this
+        const self = this
 
         setTimeout(() => {
           self.message = ''
@@ -114,10 +114,10 @@ export default {
     removeSleeplab (id) {
       this.deleteSleeplab(id)
         .then(function () {
-          this.message = 'Deleted Successfully';
+          this.message = 'Deleted Successfully'
 
           this.$nextTick(() => {
-            var self = this
+            const self = this
 
             setTimeout(() => {
               self.message = ''
@@ -135,34 +135,34 @@ export default {
         this.routeParameters.sortDirection,
         this.routeParameters.currentLetter
       ).then(function (response) {
-          var data = response.data.data;
+        const data = response.data.data
 
-          data.result = data.result.map((value) => {
-            value['name'] = (value.salutation ? value.salutation + ' ' : '')
-              + (value.firstname ? value.firstname + ' ' : '')
-              + (value.middlename ? value.middlename + ' ' : '')
-              + (value.lastname || '')
+        data.result = data.result.map((value) => {
+          value['name'] = (value.salutation ? value.salutation + ' ' : '') +
+            (value.firstname ? value.firstname + ' ' : '') +
+            (value.middlename ? value.middlename + ' ' : '') +
+            (value.lastname || '')
 
-            value['show_patients'] = false
+          value['show_patients'] = false
 
-            return value
-          })
-
-          this.sleeplabs = data.result
-          this.sleeplabsTotalNumber = data.total
-        }, function (response) {
-          this.handleErrors('getSleeplabs', response)
+          return value
         })
+
+        this.sleeplabs = data.result
+        this.sleeplabsTotalNumber = data.total
+      }, function (response) {
+        this.handleErrors('getSleeplabs', response)
+      })
     },
     getCurrentDirection (sort) {
-      if (this.routeParameters.sortColumn == sort) {
+      if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
       } else {
         return 'asc'
       }
     },
     getSleeplabs (pageNumber, rowsPerPage, sort, sortDir, letter) {
-      var data = {
+      const data = {
         page: pageNumber,
         rows_per_page: rowsPerPage,
         sort: sort,

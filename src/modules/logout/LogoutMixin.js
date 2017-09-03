@@ -3,7 +3,7 @@ module.exports = {
     logout () {
       this.invalidateToken()
         .then(function () {
-          var vm = this
+          const vm = this
 
           window.swal({
             title: '',

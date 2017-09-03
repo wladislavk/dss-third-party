@@ -48,10 +48,10 @@ module.exports = {
       this.lastActivity = this.currentTime()
     },
     displayTimer () {
-      var now = this.currentTime()
-      var inactiveTime = now - this.lastActivity
-      var timeBeforeModal = this.modalWait - inactiveTime
-      var timeBeforeLogout = this.logoutWait - inactiveTime
+      const now = this.currentTime()
+      const inactiveTime = now - this.lastActivity
+      let timeBeforeModal = this.modalWait - inactiveTime
+      let timeBeforeLogout = this.logoutWait - inactiveTime
 
       timeBeforeModal = timeBeforeModal > 0 ? timeBeforeModal : 0
       timeBeforeLogout = timeBeforeLogout > 0 ? timeBeforeLogout : 0
@@ -67,9 +67,9 @@ module.exports = {
 
         this.checkLogout()
           .then(function (response) {
-            var data = response.data
+            const data = response.data
 
-            var newLast = this.currentTime() + (data.resetTime || 0) - this.logoutWait
+            const newLast = this.currentTime() + (data.resetTime || 0) - this.logoutWait
 
             if (data.resetTime) {
               this.lastActivity = newLast > this.lastActivity ? newLast : this.lastActivity
@@ -92,9 +92,9 @@ module.exports = {
       return (new Date()).getTime()
     },
     formatTime (time) {
-      var h = Math.floor(time / this.hours)
-      var m = Math.floor((time - h * this.hours) / this.minutes)
-      var s = Math.floor((time - h * this.hours - m * this.minutes) / this.seconds)
+      const h = Math.floor(time / this.hours)
+      const m = Math.floor((time - h * this.hours) / this.minutes)
+      const s = Math.floor((time - h * this.hours - m * this.minutes) / this.seconds)
 
       if (h) {
         time = this.plural(h, 'hour')

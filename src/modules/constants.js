@@ -20,17 +20,26 @@ export default {
   dssPreauthStatusLabels: ['Pending', 'Complete', 'Pre-Auth Pending', 'Rejected'],
 
   dssHstStatusLabels (status) {
-    var labels = [
-      'Canceled', 'Unsent', 'Pending', 'Scheduled',
-      'Complete', 'Rejected', 'Contacted'
+    const labels = [
+      'Canceled',
+      'Unsent',
+      'Pending',
+      'Scheduled',
+      'Complete',
+      'Rejected',
+      'Contacted'
     ]
-    var statuses = [
-      this.DSS_HST_CANCELED, this.DSS_HST_REQUESTED, this.DSS_HST_PENDING,
-      this.DSS_HST_SCHEDULED, this.DSS_HST_COMPLETE, this.DSS_HST_REJECTED,
+    const statuses = [
+      this.DSS_HST_CANCELED,
+      this.DSS_HST_REQUESTED,
+      this.DSS_HST_PENDING,
+      this.DSS_HST_SCHEDULED,
+      this.DSS_HST_COMPLETE,
+      this.DSS_HST_REJECTED,
       this.DSS_HST_CONTACTED
     ]
 
-    var foundIndex = statuses.findIndex((el) => el === status)
+    const foundIndex = statuses.findIndex((el) => el === status)
 
     return foundIndex >= 0 ? labels[foundIndex] : null
   },
@@ -56,10 +65,13 @@ export default {
 
   // A convenience array to get trxn payment labels
   dssTransactionPayerLabels (status) {
-    var propertyNameTemplate = 'DSS_TRXN_PAYER_'
-    var labels = [
-      'Primary Insurance', 'Secondary Insurance', 'Patient',
-      'Write Off', 'Professional Discount'
+    const propertyNameTemplate = 'DSS_TRXN_PAYER_'
+    const labels = [
+      'Primary Insurance',
+      'Secondary Insurance',
+      'Patient',
+      'Write Off',
+      'Professional Discount'
     ]
 
     return this.getTitle(propertyNameTemplate, labels, status)
@@ -75,10 +87,14 @@ export default {
 
   // A convenience array to get trxn payment type labels
   dssTransactionPaymentTypeLabels (status) {
-    var propertyNameTemplate = 'DSS_TRXN_PYMT_'
-    var labels = [
-      'Credit Card', 'Debit', 'Check',
-      'Cash', 'Write Off', 'E-Funds Transfer (EFT)'
+    const propertyNameTemplate = 'DSS_TRXN_PYMT_'
+    const labels = [
+      'Credit Card',
+      'Debit',
+      'Check',
+      'Cash',
+      'Write Off',
+      'E-Funds Transfer (EFT)'
     ]
 
     return this.getTitle(propertyNameTemplate, labels, status)
@@ -93,18 +109,21 @@ export default {
 
   // A convenience array to get trxn type labels
   dssTransactionTypeLabels (status) {
-    var propertyNameTemplate = 'DSS_TRXN_TYPE_'
-    var labels = [
-      'Medical Code', 'Patient Payment Code', 'Insurance Payment Code',
-      'Dianostic Code', 'Adjustment Code'
+    const propertyNameTemplate = 'DSS_TRXN_TYPE_'
+    const labels = [
+      'Medical Code',
+      'Patient Payment Code',
+      'Insurance Payment Code',
+      'Dianostic Code',
+      'Adjustment Code'
     ]
 
     return this.getTitle(propertyNameTemplate, labels, status)
   },
 
   getTitle (propertyNameTemplate, labels, status) {
-    // get certain integer contants (the object properties) and find a requered status
-    var foundIndex = Object.getOwnPropertyNames(this).filter((property) => {
+    // get certain integer constants (the object properties) and find a required status
+    const foundIndex = Object.getOwnPropertyNames(this).filter((property) => {
       return property.indexOf(propertyNameTemplate) === 0
     }).map((property) => {
       return this[property]

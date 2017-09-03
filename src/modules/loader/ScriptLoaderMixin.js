@@ -6,7 +6,7 @@ module.exports = {
       }
 
       if (!requiredFunction) {
-        var scriptElement = document.createElement('script')
+        const scriptElement = document.createElement('script')
         scriptElement.type = 'text/javascript'
         scriptElement.src = path
         scriptElement.async = true

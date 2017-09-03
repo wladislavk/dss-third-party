@@ -1,19 +1,18 @@
 <?php
 
-namespace DentalSleepSolutions\Http\Controllers\Patient;
+namespace DentalSleepSolutions\Http\Controllers;
 
-use Illuminate\Config\Repository as Config;
-use Illuminate\Http\Request;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use DentalSleepSolutions\Http\Controllers\ExternalBaseController;
-use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
-use EventHomes\Api\FractalHelper;
-use DentalSleepSolutions\Http\Transformers\ExternalPatient as Transformer;
 use Carbon\Carbon;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
+use DentalSleepSolutions\Http\Requests\Patient\ExternalPatientStore;
+use DentalSleepSolutions\Http\Requests\Request;
+use DentalSleepSolutions\Http\Transformers\ExternalPatient as Transformer;
+use DentalSleepSolutions\StaticClasses\ApiResponse;
+use EventHomes\Api\FractalHelper;
+use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Arr;
 
-class ExternalPatientController extends ExternalBaseController
+class ExternalPatientsController extends Controller
 {
     use FractalHelper;
 
@@ -36,32 +35,52 @@ class ExternalPatientController extends ExternalBaseController
      * @return \Illuminate\Http\JsonResponse
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store(ExternalPatientRepository $repository, ExternalPatientStore $request) {
-        $data = $this->transformer->inverseTransform($request->all());
-
-        $created = false;
-
-        $patientData = Arr::get($data, 'patient');
-        $externalPatientData = Arr::get($data, 'external_patient');
-        $externalCompanyId = Arr::get($externalPatientData, 'software');
-        $externalPatientId = Arr::get($externalPatientData, 'external_id');
+    public function store(
+        ExternalPatientRepository $repository,
+        ExternalPatientStore $request
+    )
+    {
+        $externalPatientData = $this->transformer->inverseTransform($request->all());
+        $patientData = Arr::except($externalPatientData, [
+            'software',
+            'external_id',
+            'patient_id',
+            'dirty',
+            'payer_name',
+            'payer_address1',
+            'payer_address2',
+            'payer_city',
+            'payer_state',
+            'payer_zip',
+            'payer_phone',
+            'payer_fax',
+            'subscriber_phone',
+            'dependent_phone',
+        ]);
+        $externalCompanyId = Arr::get($externalPatientData, 'software', '');
+        $externalPatientId = Arr::get($externalPatientData, 'external_id', '');
 
         /**
          * Concatenate patient address
          */
-        if (isset($patientData['p_m_address'])) {
-            $address = $patientData['p_m_address'] . ' ' . Arr::get($patientData, 'p_m_address2');
-            $patientData['p_m_address'] = trim($address);
+        if (isset($externalPatientData['p_m_address'])) {
+            $address = $externalPatientData['p_m_address'] . ' ' . Arr::get($externalPatientData, 'p_m_address2');
+            $address = trim($address);
+            $externalPatientData['p_m_address'] = $address;
+            $patientData['p_m_address'] = $address;
+            unset($externalPatientData['p_m_address2']);
             unset($patientData['p_m_address2']);
         }
 
         $externalPatient = $repository->findByExternalCompanyAndPatient($externalCompanyId, $externalPatientId);
 
-        if (!$externalPatient) {
-            $externalPatient = $repository->create($externalPatientData);
-        } else {
+        if ($externalPatient) {
             $externalPatient->update($externalPatientData);
             $externalPatient->update(['dirty' => 1]);
+        }
+
+        if (!$externalPatient) {
+            $externalPatient = $repository->create($externalPatientData);
         }
 
         $externalPatient->update($patientData);
@@ -69,15 +88,11 @@ class ExternalPatientController extends ExternalBaseController
             ->first()
         ;
 
-        $docId = 0;
-
-        if ($request->user()) {
-            $docId = $request->user()->docid;
-        }
+        $created = false;
 
         if (!$patient) {
             $updateData = [
-                'docid' => $docId,
+                'docid' => $this->user->userid,
                 'status' => 3, // Pending Active
                 'ip_address' => $request->ip(),
                 'adddate' => Carbon::now(),
@@ -104,8 +119,8 @@ class ExternalPatientController extends ExternalBaseController
             $this->config->get('app.external_patient.redirect_uri'),
             '?',
             http_build_query([
-                'sw' => Arr::get($data, 'external_patient.software'),
-                'id' => Arr::get($data, 'external_patient.external_id'),
+                'sw' => Arr::get($externalPatientData, 'software'),
+                'id' => Arr::get($externalPatientData, 'external_id'),
             ])
         ]);
 

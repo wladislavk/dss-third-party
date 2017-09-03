@@ -171,6 +171,7 @@ class BindingSetter
 
     /**
      * @return Bindings[]
+     * @throws \DentalSleepSolutions\Exceptions\NamingConventionException
      */
     public static function setExternalBindings()
     {

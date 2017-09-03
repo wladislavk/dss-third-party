@@ -703,6 +703,58 @@ $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalCompany::cl
     ];
 });
 
+$factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalPatient::class, function ($faker) {
+    return [
+        'software' => $faker->username,
+        'external_id' => $faker->regexify('[a-zA-Z]{2}-\d{1,2}'),
+        'patient_id' => $faker->randomDigit,
+        'dirty' => 0,
+        'payer_name' => $faker->company,
+        'payer_address1' => $faker->address,
+        'payer_address2' => $faker->address,
+        'payer_city' => $faker->city,
+        'payer_state' => $faker->stateAbbr,
+        'payer_zip' => $faker->numerify('#####'),
+        'payer_phone' => $faker->numerify('#######'),
+        'payer_fax' => $faker->numerify('#######'),
+        'subscriber_phone' => $faker->numerify('#######'),
+        'dependent_phone' => $faker->numerify('#######'),
+        'lastname' => $faker->lastName,
+        'firstname' => $faker->firstName,
+        'middlename' => $faker->suffix,
+        'salutation' => $faker->title,
+        'dob' => $faker->dateTime()->format('m/d/Y'),
+        'ssn' => $faker->numerify('#########'),
+        'gender' => $faker->randomElement(['F', 'M']),
+        'marital_status' => $faker->randomElement([1, 2, 3, 4]),
+        'feet' => $faker->numberBetween(1, 8),
+        'inches' => $faker->numberBetween(0, 11),
+        'weight' => $faker->numberBetween(1, 250),
+        'add1' => $faker->address,
+        'add2' => $faker->address,
+        'city' => $faker->city,
+        'state' => $faker->stateAbbr,
+        'zip' => $faker->numerify('#####'),
+        'home_phone' => $faker->numerify('#######'),
+        'work_phone' => $faker->numerify('#######'),
+        'cell_phone' => $faker->numerify('#######'),
+        'email' => $faker->email,
+        'p_m_relation' => $faker->randomElement(['self', 'spouse', 'child', 'other']),
+        'p_m_ins_id' => $faker->word,
+        'p_m_partyfname' => $faker->firstName,
+        'p_m_partylname' => $faker->lastName,
+        'p_m_partymname' => $faker->suffix,
+        'p_m_address' => $faker->address,
+        'p_m_city' => $faker->city,
+        'p_m_state' => $faker->stateAbbr,
+        'p_m_zip' => $faker->numerify('#####'),
+        'ins_dob' => $faker->dateTime()->format('m/d/Y'),
+        'p_m_gender' => $faker->randomElement(['F', 'M']),
+        'p_m_ins_grp' => $faker->word,
+        'p_m_ins_plan' => $faker->word,
+    ];
+});
+
 $factory->define(DentalSleepSolutions\Eloquent\Models\Dental\ExternalUser::class, function ($faker) {
     return [
         'user_id' => $faker->randomDigit,

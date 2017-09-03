@@ -9,8 +9,6 @@ use Tests\TestCases\ApiTestCase;
 
 class ExternalUsersApiTest extends ApiTestCase
 {
-    const ENDPOINT = '/api/v1/external-user';
-
     protected function getModel()
     {
         return ExternalUser::class;

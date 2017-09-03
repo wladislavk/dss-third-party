@@ -439,5 +439,5 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 });
 
 Route::group(['middleware' => ['api.log', 'dentrix.auth']], function () {
-    Route::post('external-patient', 'Patient\ExternalPatientController@store');
+    Route::post('external-patient', 'ExternalPatientsController@store');
 });

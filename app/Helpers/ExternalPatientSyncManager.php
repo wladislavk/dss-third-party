@@ -3,12 +3,17 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\ExternalPatient;
-use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
+use Illuminate\Database\Eloquent\Model;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\ExternalPatientRepository;
 use Illuminate\Support\Arr;
 
 class ExternalPatientSyncManager
 {
+    const EXTERNAL_COMPANY_KEY = 'software';
+    const EXTERNAL_PATIENT_KEY = 'external_id';
+    const MODEL_KEY = 'patient_id';
+    const MODEL_DIRTY_KEY = 'dirty';
+
     /** @var ExternalPatientRepository */
     private $repository;
 
@@ -35,8 +40,8 @@ class ExternalPatientSyncManager
         $externalPatientData = $this->dataRetriever->toExternalPatientData($requestData);
         $patientData = $this->dataRetriever->toPatientData($requestData);
 
-        $externalCompanyId = Arr::get($externalPatientData, 'software', '');
-        $externalPatientId = Arr::get($externalPatientData, 'external_id', '');
+        $externalCompanyId = Arr::get($externalPatientData, self::EXTERNAL_COMPANY_KEY, '');
+        $externalPatientId = Arr::get($externalPatientData, self::EXTERNAL_PATIENT_KEY, '');
 
         $externalPatient = $this->findByExternalCompanyAndPatient(
             $externalCompanyId, $externalPatientId, $externalPatientData, $patientData
@@ -45,9 +50,9 @@ class ExternalPatientSyncManager
 
         if ($externalPatient->wasRecentlyCreated || $patient->wasRecentlyCreated) {
             $externalPatient->update([
-                'software' => $externalCompanyId,
-                'external_id' => $externalPatientId,
-                'patient_id' => $patient->getKey(),
+                self::EXTERNAL_COMPANY_KEY=> $externalCompanyId,
+                self::EXTERNAL_PATIENT_KEY=> $externalPatientId,
+                self::MODEL_KEY => $patient->getKey(),
             ]);
             $externalPatient->wasRecentlyCreated = true;
         }
@@ -70,16 +75,22 @@ class ExternalPatientSyncManager
         array $patientData
     )
     {
-        $externalPatient = $this->repository->findByExternalCompanyAndPatient($externalCompanyId, $externalPatientId);
+        $externalPatient = $this->repository
+            ->findByExternalCompanyAndPatient($externalCompanyId, $externalPatientId)
+        ;
 
         if ($externalPatient) {
             $externalPatient->update($externalPatientData);
             $externalPatient->update($patientData);
-            $externalPatient->update(['dirty' => 1]);
+            $externalPatient->update([
+                self::MODEL_DIRTY_KEY => 1,
+            ]);
             return $externalPatient;
         }
 
-        $externalPatient = $this->repository->create($externalPatientData);
+        $externalPatient = $this->repository
+            ->create($externalPatientData)
+        ;
         $externalPatient->update($patientData);
         return $externalPatient;
     }
@@ -88,7 +99,7 @@ class ExternalPatientSyncManager
      * @param ExternalPatient $externalPatient
      * @param array           $patientData
      * @param array           $createAttributes
-     * @return Patient
+     * @return Model
      */
     private function getLinkedPatient(
         ExternalPatient $externalPatient,

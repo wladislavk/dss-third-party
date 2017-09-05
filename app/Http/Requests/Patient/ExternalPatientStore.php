@@ -13,9 +13,6 @@ class ExternalPatientStore extends AbstractNonRestRequest
     public function rules()
     {
         return [
-            'api_key_company' => 'required|string',
-            'api_key_user'    => 'sometimes|string',
-
             'patient.last_name'       => 'sometimes|string',
             'patient.middle_name'     => 'sometimes|string',
             'patient.first_name'      => 'sometimes|string',
@@ -71,19 +68,6 @@ class ExternalPatientStore extends AbstractNonRestRequest
             'patient.insurance_primary.insured_info.subscriber.gender'      => 'sometimes|alpha|in:m,f,M,F',
             'patient.insurance_primary.insured_info.subscriber.group_id'    => 'sometimes|string',
             'patient.insurance_primary.insured_info.subscriber.group_name'  => 'sometimes|string',
-
-            'patient.insurance_primary.insured_info.dependent.id'          => 'sometimes|string',
-            'patient.insurance_primary.insured_info.dependent.first_name'  => 'present_with:patient.insurance_primary.insured_info.dependent|string',
-            'patient.insurance_primary.insured_info.dependent.last_name'   => 'present_with:patient.insurance_primary.insured_info.dependent|string',
-            'patient.insurance_primary.insured_info.dependent.middle_name' => 'sometimes|string',
-            'patient.insurance_primary.insured_info.dependent.address1'    => 'sometimes|string',
-            'patient.insurance_primary.insured_info.dependent.address2'    => 'sometimes|string',
-            'patient.insurance_primary.insured_info.dependent.city'        => 'sometimes|string',
-            'patient.insurance_primary.insured_info.dependent.state'       => 'sometimes|alpha|size:2',
-            'patient.insurance_primary.insured_info.dependent.zip'         => ['sometimes', 'numeric', 'regex:/^(|\d{5}|\d{9})$/'],
-            'patient.insurance_primary.insured_info.dependent.phone'       => ['sometimes', 'numeric', 'regex:/^(|\d{7}|\d{10})$/'],
-            'patient.insurance_primary.insured_info.dependent.dob'         => 'present_with:patient.insurance_primary.insured_info.dependent|date_format:Y-m-d',
-            'patient.insurance_primary.insured_info.dependent.gender'      => 'sometimes|alpha|in:m,f,M,F',
         ];
     }
 }

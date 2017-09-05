@@ -15,42 +15,83 @@ trait WithComplexRelationship
      * Method to map, transform, and merge, data. The new fields are merged recursively into $initialState.
      *
      * @param array $data
-     * @param bool  $export
-     * @param array $initialState
+     * @param bool  $fromModelToResponse
+     * @param array $mapped
      * @return array
      */
-    public function complexMapping(array $data, $export, array $initialState=[]) {
-        $mapped = $initialState ?: [];
-        $map = $export ? self::COMPLEX_MAP : self::INVERSE_COMPLEX_MAP;
+    public function complexMapping(array $data, $fromModelToResponse, array $mapped = []) {
+        $map = $this->mapFromResponseToModel();
 
-        foreach ($map as $destination=>$source) {
-            $value = $this->applyTransformations($data, $source);
+        if ($fromModelToResponse) {
+            $map = $this->mapFromModelToResponse();
+        }
 
-            Arr::set($mapped, $destination, $value);
+        foreach ($map as $sendTo => $readFrom) {
+            $value = $this->applyTransformations($data, $readFrom);
+            Arr::set($mapped, $sendTo, $value);
         }
 
         return $mapped;
     }
 
     /**
+     * Merge arrays in array_merge_recursive fashion. Doesn't append nested elements to arrays, it overwrites them
+     * if the index is already defined.
+     *
+     * @param array $array
+     * @return array
+     */
+    public function deepMerge(array $array) {
+        $map = Arr::dot($array);
+        $merged = [];
+
+        /**
+         * $array is an array of arrays. The first index in the chain should then be ignored to treat
+         * each element as part of the same array
+         */
+        foreach ($map as $path => $value) {
+            $destination = preg_replace('/^\d+\./', '', $path);
+            Arr::set($merged, $destination, $value);
+        }
+
+        return $merged;
+    }
+
+    /**
+     * @return array
+     */
+    private function mapFromResponseToModel()
+    {
+        return self::INVERSE_COMPLEX_MAP;
+    }
+
+    /**
+     * @return array
+     */
+    private function mapFromModelToResponse()
+    {
+        return self::COMPLEX_MAP;
+    }
+
+    /**
      * Read the map, and apply the helper functions over the given array indexes
      *
-     * @param $data
-     * @param $source
+     * @param array $data
+     * @param array|string $readFrom
      * @return array|string|mixed
      */
-    private function applyTransformations($data, $source) {
-        if (!is_array($source)) {
-            return Arr::get($data, $source);
+    private function applyTransformations(array $data, $readFrom) {
+        if (!is_array($readFrom)) {
+            return Arr::get($data, $readFrom);
         }
 
         $buffer = [];
 
-        foreach ($source as $newSource=>$helper) {
-            $this->applyTransformation($buffer, $data, $newSource, [$this, $helper]);
+        foreach ($readFrom as $readFromIndex => $helperCallback) {
+            $buffer[] = $this->applyTransformation($data, $readFromIndex, [$this, $helperCallback]);
         }
 
-        if (!$buffer) {
+        if (!count($buffer)) {
             return '';
         }
 
@@ -64,36 +105,14 @@ trait WithComplexRelationship
     /**
      * Apply a method over the $data[$index] value, and append the return value to $buffer.
      *
-     * @param array    $buffer
      * @param array    $data
-     * @param string   $index
-     * @param callable $helper
+     * @param string   $readFromIndex
+     * @param callable $helperCallback
+     * @return mixed
      */
-    private function applyTransformation(array &$buffer, array $data, $index, callable $helper) {
-        $argument = Arr::get($data, $index);
-        $value = call_user_func($helper, $argument);
-        array_push($buffer, $value);
-    }
-
-    /**
-     * Set array values using dot notation. This makes easier to merge arrays.
-     *
-     * @param array $array
-     * @return array
-     */
-    public function deepMerge(array $array) {
-        $map = Arr::dot($array);
-        $merged = [];
-
-        /**
-         * $array is an array of arrays. The first index in the chain should then be ignored to treat
-         * each element as part of the same array
-         */
-        foreach ($map as $path=>$value) {
-            $destination = preg_replace('/^\d+\./', '', $path);
-            Arr::set($merged, $destination, $value);
-        }
-
-        return $merged;
+    private function applyTransformation(array $data, $readFromIndex, callable $helperCallback) {
+        $argument = Arr::get($data, $readFromIndex);
+        $value = call_user_func($helperCallback, $argument);
+        return $value;
     }
 }

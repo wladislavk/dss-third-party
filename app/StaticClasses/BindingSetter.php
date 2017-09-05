@@ -145,6 +145,7 @@ class BindingSetter
 
     /**
      * @return Bindings[]
+     * @throws \DentalSleepSolutions\Exceptions\NamingConventionException
      */
     public static function setBindings()
     {
@@ -158,6 +159,11 @@ class BindingSetter
                 ->setRepository($namingConvention->getRepository())
                 ->setRequest($namingConvention->getRequest())
             ;
+
+            if ($namingConvention->getRequestTransformer()) {
+                $bindingObject->setTransformer($namingConvention->getRequestTransformer());
+            }
+
             $bindingObjects[] = $bindingObject;
         }
         return $bindingObjects;
@@ -165,6 +171,7 @@ class BindingSetter
 
     /**
      * @return Bindings[]
+     * @throws \DentalSleepSolutions\Exceptions\NamingConventionException
      */
     public static function setExternalBindings()
     {

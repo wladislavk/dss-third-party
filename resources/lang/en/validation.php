@@ -85,6 +85,8 @@ return [
     | specify a specific custom language line for a given attribute rule.
     |
     */
+    'present' => 'The :attribute field must be set.',
+    'present_with' => 'The :attribute field must be set when :values is present.',
 
     'custom' => [
         'attribute-name' => [

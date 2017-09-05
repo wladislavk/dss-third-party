@@ -2,10 +2,18 @@
 namespace DentalSleepSolutions\Services;
 
 use Illuminate\Validation\Validator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomValidator extends Validator
 {
-    public function __construct($translator, $data, $rules, $messages=[], $customAttributes=[]) {
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $data
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
+     */
+    public function __construct($translator, $data, $rules, $messages = [], $customAttributes = []) {
         parent::__construct($translator, $data, $rules, $messages, $customAttributes);
 
         $this->implicitRules[] = 'Present';
@@ -33,6 +41,22 @@ class CustomValidator extends Validator
             $anySet = $anySet || array_has($this->data, $each);
         }
 
-        return $anySet ? array_has($this->data, $attribute) : true;
+        if ($anySet) {
+            return array_has($this->data, $attribute);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param  string  $message
+     * @param  string  $attribute
+     * @param  string  $rule
+     * @param  array   $parameters
+     * @return string
+     */
+    protected function replacePresentWith($message, $attribute, $rule, $parameters)
+    {
+        return $this->replaceRequiredWith($message, $attribute, $rule, $parameters);
     }
 }

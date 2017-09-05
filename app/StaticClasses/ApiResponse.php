@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\StaticClasses;
 
+use League\Fractal\Resource\Collection;
 use Traversable;
 use League\Fractal\Manager;
 use Illuminate\Support\Arr;
@@ -160,7 +161,7 @@ class ApiResponse
         $transformer = self::hasTransformer($data);
 
         if (self::isResource($data) && strlen($transformer)) {
-            $data = $fractal->createData(new Item($data, new $transformer))->toArray();
+            $data = $fractal->createData(new Item($data, new $transformer()))->toArray();
         }
 
         $transformer = '';
@@ -170,8 +171,8 @@ class ApiResponse
         }
 
         if (strlen($transformer)) {
-            $item = new Item($data, new $transformer());
-            $data = $fractal->createData($item);
+            $collection = new Collection($data, new $transformer());
+            $data = $fractal->createData($collection);
             $data = $data->toArray();
         }
 

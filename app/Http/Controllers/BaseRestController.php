@@ -99,6 +99,27 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     /** @var BaseRepository */
     protected $repository;
 
+    /** @var string */
+    protected $ipAddressKey;
+
+    /** @var string */
+    protected $doctorKey;
+
+    /** @var string */
+    protected $userKey;
+
+    /** @var string */
+    protected $createdByUserKey;
+
+    /** @var string */
+    protected $createdByAdminKey;
+
+    /** @var string */
+    protected $updatedByUserKey;
+
+    /** @var string */
+    protected $updatedByAdminKey;
+
     public function __construct(
         Config $config,
         BaseRepository $repository,
@@ -142,9 +163,12 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     {
         $this->validate($this->request, $this->request->storeRules());
         $data = $this->request->all();
-        if ($this->hasIp) {
-            $data = array_merge($this->request->all(), ['ip_address' => $this->request->ip()]);
+        $createData = $this->getCreateAttributes();
+
+        if (count($createData)) {
+            $data = array_merge($data, $createData);
         }
+
         $resource = $this->repository->create($data);
 
         return ApiResponse::responseOk('Resource created', $resource);
@@ -159,9 +183,16 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     public function update($id)
     {
         $this->validate($this->request, $this->request->updateRules());
+        $data = $this->request->all();
+        $updateData = $this->getUpdateAttributes();
+
+        if (count($updateData)) {
+            $data = array_merge($data, $updateData);
+        }
+
         /** @var Model $resource */
         $resource = $this->repository->find($id);
-        $resource->update($this->request->all());
+        $resource->update($data);
 
         return ApiResponse::responseOk('Resource updated');
     }
@@ -207,5 +238,53 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
     public function getModelNamespace()
     {
         return self::DEFAULT_MODEL_NAMESPACE;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getCreateAttributes()
+    {
+        $attributes = [];
+
+        if ($this->hasIp) {
+            $attributes['ip_address'] = $this->request->ip();
+        }
+
+        if ($this->doctorKey) {
+            $attributes[$this->doctorKey] = $this->user->docid;
+        }
+
+        if ($this->userKey) {
+            $attributes[$this->userKey] = $this->user->userid;
+        }
+
+        if ($this->createdByUserKey) {
+            $attributes[$this->createdByUserKey] = $this->user->userid;
+        }
+
+        if ($this->createdByAdminKey) {
+            $attributes[$this->createdByAdminKey] = $this->admin->adminid;
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getUpdateAttributes()
+    {
+        $attributes = [];
+
+        if ($this->updatedByUserKey) {
+            $attributes[$this->updatedByUserKey] = $this->user->userid;
+        }
+
+        if ($this->updatedByAdminKey) {
+            $attributes[$this->updatedByAdminKey] = $this->admin->adminid;
+        }
+
+        return $attributes;
     }
 }

@@ -15,26 +15,27 @@ trait WithSimpleRelationship
      * Numeric indexes indicate translation from dot notation (field.nested) to snake case (field_nested).
      *
      * @param array $data
-     * @param bool  $export
-     * @param array $initialState
+     * @param bool  $fromModelToResponse
+     * @param array $mapped
      * @return array
      */
-    public function simpleMapping(array $data, $export, array $initialState=[]) {
-        $mapped = $initialState ?: [];
+    public function simpleMapping(array $data, $fromModelToResponse, array $mapped = []) {
+        foreach (self::SIMPLE_MAP as $requestElement => $modelProperty) {
+            $readFrom = $requestElement;
+            $sendTo = $modelProperty;
 
-        foreach (self::SIMPLE_MAP as $dotted=>$dashed) {
-            if (is_numeric($dotted)) {
-                $dotted = $dashed;
-                $dashed = str_replace('.', '_', $dotted);
+            if ($fromModelToResponse) {
+                $readFrom = $modelProperty;
+                $sendTo = $requestElement;
             }
 
-            $source = $export ? $dashed : $dotted;
-            $destination = $export ? $dotted : $dashed;
+            $value = Arr::get($data, $readFrom, '');
 
-            $value = Arr::get($data, $source, '');
-            $value = is_null($value) ? '' : $value;
+            if (is_null($value)) {
+                $value = '';
+            }
 
-            Arr::set($mapped, $destination, $value);
+            Arr::set($mapped, $sendTo, $value);
         }
 
         return $mapped;

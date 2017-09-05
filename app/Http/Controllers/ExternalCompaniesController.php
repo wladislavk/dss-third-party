@@ -7,6 +7,15 @@ use DentalSleepSolutions\Facades\ApiResponse;
 
 class ExternalCompaniesController extends BaseRestController
 {
+    /** @var bool */
+    protected $hasIp = false;
+
+    /** @var string */
+    protected $createdByAdminKey = 'created_by';
+
+    /** @var string */
+    protected $updatedByAdminKey = 'updated_by';
+
     /**
      * @SWG\Get(
      *     path="/external-companies",
@@ -90,12 +99,7 @@ class ExternalCompaniesController extends BaseRestController
      */
     public function store()
     {
-        $this->validate($this->request, $this->request->storeRules());
-        $data = $this->request->all();
-        $data['created_by'] = $this->admin->adminid;
-        $resource = $this->repository->create($data);
-
-        return ApiResponse::responseOk('Resource created', $resource);
+        return parent::store();
     }
 
     /**
@@ -120,14 +124,7 @@ class ExternalCompaniesController extends BaseRestController
      */
     public function update($id)
     {
-        $this->validate($this->request, $this->request->updateRules());
-        /** @var ExternalCompany $resource */
-        $resource = $this->repository->find($id);
-        $data = $this->request->all();
-        $data['updated_by'] = $this->admin->adminid;
-        $resource->update($data);
-
-        return ApiResponse::responseOk('Resource updated');
+        return parent::update($id);
     }
 
     /**

@@ -8,6 +8,7 @@ use DentalSleepSolutions\Http\Controllers\BaseRestController;
 use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Contracts\TransformerInterface;
 
 class BindingNamingConvention
 {
@@ -149,5 +150,27 @@ class BindingNamingConvention
             throw new NamingConventionException("$request must exist and extend " . Request::class);
         }
         return $request;
+    }
+
+    /**
+     * @param string $namespace
+     * @return string
+     * @throws NamingConventionException
+     */
+    public function getRequestTransformer($namespace = self::HTTP_NAMESPACE)
+    {
+        $name = $this->model->getSingular();
+        $namespace = $namespace . '\\Transformers';
+        $transformer = $namespace . '\\' . $name;
+
+        if (!class_exists($transformer)) {
+            return null;
+        }
+
+        if (!is_subclass_of($transformer, TransformerInterface::class)) {
+            throw new NamingConventionException("$transformer must implement " . TransformerInterface::class);
+        }
+
+        return $transformer;
     }
 }

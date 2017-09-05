@@ -3,7 +3,6 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Exceptions\GeneralException;
-use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Symfony\Component\HttpFoundation\Response;

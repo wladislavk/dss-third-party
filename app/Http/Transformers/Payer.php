@@ -2,19 +2,19 @@
 
 namespace DentalSleepSolutions\Http\Transformers;
 
-use Illuminate\Database\Eloquent\Collection;
-use League\Fractal\TransformerAbstract;
+use DentalSleepSolutions\Contracts\TransformerInterface;
+use DentalSleepSolutions\Eloquent\Models\AbstractModel;
 
-class Payer extends TransformerAbstract
+class Payer extends AbstractTransformer implements TransformerInterface
 {
+    use WithTransformer;
+
     /**
-     * @param Collection|\DentalSleepSolutions\Eloquent\Models\Payer $payer
+     * @param AbstractModel $resource
      * @return array
      */
-	public function transform($payer)
-	{
-	    return [
-            //
-	    ];
-	}
+    public function transform(AbstractModel $resource)
+    {
+        return $this->simpleTransform($resource);
+    }
 }

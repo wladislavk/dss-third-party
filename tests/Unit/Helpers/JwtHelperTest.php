@@ -11,6 +11,7 @@ use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
 use DentalSleepSolutions\Helpers\JwtHelper;
 use DentalSleepSolutions\Structs\JwtPayload;
 use Illuminate\Config\Repository as Config;
+use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Providers\JWT\JWTInterface;
@@ -167,6 +168,8 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload, self::EXPECTED_VALUES, [self::EXPECTED_SET]);
     }
 
+    // @todo: provide assertions for this test
+    /*
     public function testValidateClaims()
     {
         $payload = new JwtPayload();
@@ -174,10 +177,11 @@ class JwtHelperTest extends UnitTestCase
         $payload[self::EXPECTED_SET] = 'foo';
 
         $this->helper->validateClaims($payload, self::EXPECTED_VALUES, [self::EXPECTED_SET]);
-    }
+    }*/
 
     private function mockConfig()
     {
+        /** @var Config|MockInterface $mock */
         $mock = \Mockery::mock(Config::class);
         $mock->shouldReceive('get')
             ->atMost(1)
@@ -200,6 +204,7 @@ class JwtHelperTest extends UnitTestCase
 
     public function mockCarbon()
     {
+        /** @var Carbon|MockInterface $mock */
         $mock = \Mockery::mock(Carbon::class);
         $mock->shouldReceive('now')
             ->atMost(1)
@@ -249,6 +254,7 @@ class JwtHelperTest extends UnitTestCase
 
     private function mockJwtProvider()
     {
+        /** @var JWTInterface|MockInterface $mock */
         $mock = \Mockery::mock(JWTInterface::class);
         $mock->shouldReceive('encode')
             ->atMost(1)

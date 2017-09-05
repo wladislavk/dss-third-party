@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Providers;
 
+use DentalSleepSolutions\Contracts\TransformerInterface;
 use DentalSleepSolutions\Http\Requests\Request;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +25,14 @@ class ControllerServiceProvider extends ServiceProvider
                 ->needs(Request::class)
                 ->give($binding->getRequest())
             ;
+
+            if ($binding->getTransformer()) {
+                $this->app
+                    ->when($binding->getController())
+                    ->needs(TransformerInterface::class)
+                    ->give($binding->getTransformer())
+                ;
+            }
         }
         $externalBindings = BindingSetter::setExternalBindings();
         foreach ($externalBindings as $externalBinding) {

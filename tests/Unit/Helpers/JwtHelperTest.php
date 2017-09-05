@@ -168,8 +168,6 @@ class JwtHelperTest extends UnitTestCase
         $this->helper->validateClaims($payload, self::EXPECTED_VALUES, [self::EXPECTED_SET]);
     }
 
-    // @todo: provide assertions for this test
-    /*
     public function testValidateClaims()
     {
         $payload = new JwtPayload();
@@ -177,7 +175,9 @@ class JwtHelperTest extends UnitTestCase
         $payload[self::EXPECTED_SET] = 'foo';
 
         $this->helper->validateClaims($payload, self::EXPECTED_VALUES, [self::EXPECTED_SET]);
-    }*/
+        // assert no exception was raised
+        $this->assertTrue(true);
+    }
 
     private function mockConfig()
     {

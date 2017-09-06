@@ -36,11 +36,22 @@ export default {
         'ledger': 'Ledger'
       },
       segments: [
-        '', 'Initial Contact', 'Consult', 'Sleep Study',
-        'Impressions', 'Delaying Tx / Waiting', 'Refused Treatment',
-        'Device Delivery', 'Check / Follow Up', 'Pt. Non-Compliant',
-        'Home Sleep Test', 'Treatment Complete', 'Annual Recall',
-        'Termination', 'Not a Candidate', 'Baseline Sleep Test'
+        '',
+        'Initial Contact',
+        'Consult',
+        'Sleep Study',
+        'Impressions',
+        'Delaying Tx / Waiting',
+        'Refused Treatment',
+        'Device Delivery',
+        'Check / Follow Up',
+        'Pt. Non-Compliant',
+        'Home Sleep Test',
+        'Treatment Complete',
+        'Annual Recall',
+        'Termination',
+        'Not a Candidate',
+        'Baseline Sleep Test'
       ]
     }
   },
@@ -83,18 +94,20 @@ export default {
       }
     },
     '$route.query.pid': function () {
-      if (this.$route.query.pid > 0) {
-        this.$set(this.routeParameters, 'patientId', this.$route.query.pid)
-      } else {
-        this.$set(this.routeParameters, 'patientId', null)
+      const queryPatientId = this.$route.query.pid
+      let patientId = null
+      if (queryPatientId > 0) {
+        patientId = queryPatientId
       }
+      this.$set(this.routeParameters, 'patientId', patientId)
     },
     '$route.query.letter': function () {
-      if (this.letters.indexOf(this.$route.query.letter) > -1) {
-        this.$set(this.routeParameters, 'currentLetter', this.$route.query.letter)
-      } else {
-        this.$set(this.routeParameters, 'currentLetter', null)
+      const queryLetter = this.$route.query.letter
+      let letter = null
+      if (this.letters.indexOf(queryLetter) > -1) {
+        letter = queryLetter
       }
+      this.$set(this.routeParameters, 'currentLetter', letter)
     },
     '$route.query.delid': function () {
       if (this.$route.query.delid > 0) {
@@ -134,24 +147,15 @@ export default {
         })
     },
     getRxLomn (value) {
-      let title = ''
-
       switch (+value) {
         case 3:
-          title = 'Yes'
-          break
+          return 'Yes'
         case 2:
-          title = 'Yes/No'
-          break
+          return 'Yes/No'
         case 1:
-          title = 'No/Yes'
-          break
-        default:
-          title = 'No'
-          break
+          return 'No/Yes'
       }
-
-      return title
+      return 'No'
     },
     formatLedger (value) {
       return window.accounting.formatMoney(value, '$')
@@ -171,9 +175,8 @@ export default {
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
-      } else {
-        return sort === 'name' ? 'asc' : 'desc'
       }
+      return sort === 'name' ? 'asc' : 'desc'
     },
     getPatients () {
       this.findPatients(

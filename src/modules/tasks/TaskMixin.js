@@ -16,13 +16,13 @@ module.exports = {
       const id = event.target.value || 0
       let taskType = ''
       const isDashboardTaskList = (
-          event.target.parentElement.parentElement.parentElement.id === 'index_task_list'
-        )
+        event.target.parentElement.parentElement.parentElement.id === 'index_task_list'
+      )
 
+      const grandparent = event.target.parentElement.parentElement
+      taskType = grandparent.id
       if (isDashboardTaskList) {
-        taskType = event.target.parentElement.parentElement.className
-      } else {
-        taskType = event.target.parentElement.parentElement.id
+        taskType = grandparent.className
       }
 
       this.updateTaskToActive(id)
@@ -37,24 +37,28 @@ module.exports = {
 
       let taskType = ''
       const isDashboardTaskList = (
-          event.target.parentElement.parentElement.parentElement.parentElement.id === 'index_task_list'
-        )
+        event.target.parentElement.parentElement.parentElement.parentElement.id === 'index_task_list'
+      )
 
+      const greatGrandparent = event.target.parentElement.parentElement
+      taskType = greatGrandparent.id
       if (isDashboardTaskList) {
-        taskType = event.target.parentElement.parentElement.parentElement.className
-      } else {
-        taskType = event.target.parentElement.parentElement.parentElement.id
+        taskType = greatGrandparent.className
       }
 
-      if (confirm('Are you sure you want to delete this task?')) {
+      const confirmText = 'Are you sure you want to delete this task?'
+      if (confirm(confirmText)) {
         id = id || 0
 
         this.deleteTask(id)
-          .then(function () {
-            this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
-          }, function (response) {
-            console.error('deleteTask [status]: ', response.status)
-          })
+          .then(
+            function () {
+              this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
+            },
+            function (response) {
+              console.error('deleteTask [status]: ', response.status)
+            }
+          )
       }
     },
     updateTaskToActive (id) {

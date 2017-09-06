@@ -138,9 +138,8 @@ export default {
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
-      } else {
-        return 'asc'
       }
+      return 'asc'
     },
     getReferredByContacts (sort, pageNumber, sortDir, contactsPerPage) {
       const data = {

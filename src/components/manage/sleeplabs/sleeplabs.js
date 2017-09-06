@@ -40,34 +40,39 @@ export default {
   mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
-      if (this.$route.query.page !== undefined && this.$route.query.page <= this.totalPages) {
-        this.$set(this.routeParameters, 'currentPageNumber', +this.$route.query.page)
+      const queryPage = this.$route.query.page
+      if (queryPage !== undefined && queryPage <= this.totalPages) {
+        this.$set(this.routeParameters, 'currentPageNumber', +queryPage)
       }
     },
     '$route.query.sort': function () {
-      if (this.$route.query.sort in this.tableHeaders) {
-        this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort)
-      } else {
-        this.$set(this.routeParameters, 'sortColumn', 'lab')
+      const querySortColumn = this.$route.query.sort
+      let sortColumn = 'lab'
+      if (querySortColumn in this.tableHeaders) {
+        sortColumn = querySortColumn
       }
+      this.$set(this.routeParameters, 'sortColumn', sortColumn)
     },
     '$route.query.sortdir': function () {
-      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() === 'desc') {
-        this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
-      } else {
-        this.$set(this.routeParameters, 'sortDirection', 'asc')
+      const querySortDir = this.$route.query.sortdir
+      let sortDir = 'asc'
+      if (querySortDir && querySortDir.toLowerCase() === 'desc') {
+        sortDir = 'desc'
       }
+      this.$set(this.routeParameters, 'sortDirection', sortDir)
     },
     '$route.query.letter': function () {
-      if (this.letters.indexOf(this.$route.query.letter) > -1) {
-        this.$set(this.routeParameters, 'currentLetter', this.$route.query.letter)
-      } else {
-        this.$set(this.routeParameters, 'currentLetter', null)
+      const queryLetter = this.$route.query.letter
+      let letter = null
+      if (this.letters.indexOf(queryLetter) > -1) {
+        letter = queryLetter
       }
+      this.$set(this.routeParameters, 'currentLetter', letter)
     },
     '$route.query.delid': function () {
-      if (this.$route.query.delid > 0) {
-        this.removeSleeplab(this.$route.query.delid)
+      const queryDelId = this.$route.query.delid
+      if (queryDelId > 0) {
+        this.removeSleeplab(queryDelId)
       }
     },
     'routeParameters': {
@@ -157,9 +162,8 @@ export default {
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
-      } else {
-        return 'asc'
       }
+      return 'asc'
     },
     getSleeplabs (pageNumber, rowsPerPage, sort, sortDir, letter) {
       const data = {

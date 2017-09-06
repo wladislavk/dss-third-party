@@ -1,8 +1,8 @@
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
-
 import phoneMasks from '../../../../modules/masks/PhoneMixin.js'
 import phoneFilters from '../../../../modules/filters/phoneMixin.js'
 import sleeplabValidator from '../../../../modules/validators/SleeplabMixin.js'
+
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
 export default {
   name: 'edit-sleeplab',
@@ -77,7 +77,8 @@ export default {
   },
   methods: {
     onClickDeleteSleeplab (sleeplabId) {
-      if (confirm('Do Your Really want to Delete?')) {
+      const confirmText = 'Do Your Really want to Delete?'
+      if (confirm(confirmText)) {
         this.$parent.disable()
 
         this.$router.push({

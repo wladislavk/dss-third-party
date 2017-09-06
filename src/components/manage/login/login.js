@@ -35,9 +35,11 @@ export default {
   },
   methods: {
     submitForm () {
+      let alertText
       // username is a required field
       if (this.credentials.username.trim() === '') {
-        alert('Username is Required')
+        alertText = 'Username is Required'
+        alert(alertText)
         this.$refs.username.focus()
 
         return false
@@ -45,7 +47,8 @@ export default {
 
       // password is a required field
       if (this.credentials.password.trim() === '') {
-        alert('Password is Required')
+        alertText = 'Password is Required'
+        alert(alertText)
         this.$refs.password.focus()
 
         return false

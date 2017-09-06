@@ -1,4 +1,4 @@
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+import handlerMixin from '../../../modules/handler/HandlerMixin'
 
 export default {
   data () {
@@ -14,7 +14,9 @@ export default {
 
       phoneFields.forEach(el => {
         if (this.contact.hasOwnProperty(el)) {
-          this.contact[el] = this.contact[el].replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')
+          this.contact[el] = this.contact[el]
+            .replace(/[^0-9]/g, '')
+            .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')
         }
       })
 
@@ -38,15 +40,18 @@ export default {
     },
     setCurrentContact (contactId) {
       this.getContactById(contactId)
-        .then(function (response) {
-          const data = response.data.data
+        .then(
+          (response) => {
+            const data = response.data.data
 
-          if (data) {
-            this.contact = data
+            if (data) {
+              this.contact = data
+            }
+          },
+          (response) => {
+            this.handleErrors('getContactById', response)
           }
-        }, function (response) {
-          this.handleErrors('getContactById', response)
-        })
+        )
     },
     getPhysicianContactTypes () {
       return this.$http.post(process.env.API_PATH + 'contact-types/physician')
@@ -54,7 +59,8 @@ export default {
     getContactById (contactId) {
       const data = { contact_id: contactId }
 
-      return this.$http.post(process.env.API_PATH + 'contacts/with-contact-type', data)
+      const result = this.$http.post(process.env.API_PATH + 'contacts/with-contact-type', data)
+      return result
     }
   }
 }

@@ -1,4 +1,4 @@
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+import handlerMixin from '../../../modules/handler/HandlerMixin'
 
 export default {
   data: function () {
@@ -32,64 +32,61 @@ export default {
   mixins: [handlerMixin],
   watch: {
     '$route.query.contacttype': function () {
-      if (this.$route.query.contacttype) {
+      const queryContactType = this.$route.query.contacttype
+      let selectedContactType = 0
+      if (queryContactType) {
         const foundOption = this.contactTypes.find(
-          el => el.contacttypeid === this.$route.query.contacttype
+          el => el.contacttypeid === queryContactType
         )
-
         if (foundOption) {
-          this.$set(this.routeParameters, 'selectedContactType', this.$route.query.contacttype)
-        } else {
-          this.$set(this.routeParameters, 'selectedContactType', 0)
+          selectedContactType = queryContactType
         }
-      } else {
-        this.$set(this.routeParameters, 'selectedContactType', 0)
       }
+      this.$set(this.routeParameters, 'selectedContactType', selectedContactType)
     },
     '$route.query.page': function () {
-      if (this.$route.query.page) {
-        if (this.$route.query.page <= this.totalPages) {
-          this.$set(this.routeParameters, 'currentPageNumber', this.$route.query.page)
-        }
+      const queryPage = this.$route.query.page
+      if (queryPage && queryPage <= this.totalPages) {
+        this.$set(this.routeParameters, 'currentPageNumber', queryPage)
       }
     },
     '$route.query.sort': function () {
-      if (this.$route.query.sort) {
-        if (this.$route.query.sort in this.tableHeaders) {
-          this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort)
-        } else {
-          this.$set(this.routeParameters, 'sortColumn', null)
+      const querySort = this.$route.query.sort
+      let sortColumn = 'name'
+      if (querySort) {
+        sortColumn = null
+        if (querySort in this.tableHeaders) {
+          sortColumn = querySort
         }
-      } else {
-        this.$set(this.routeParameters, 'sortColumn', 'name')
       }
+      this.$set(this.routeParameters, 'sortColumn', sortColumn)
     },
     '$route.query.sortdir': function () {
-      if (this.$route.query.sortdir) {
-        if (this.$route.query.sortdir.toLowerCase() === 'desc') {
-          this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
-        } else {
-          this.$set(this.routeParameters, 'sortDirection', 'asc')
-        }
-      } else {
-        this.$set(this.routeParameters, 'sortDirection', 'asc')
+      const querySortDir = this.$route.query.sortdir
+      let sortDir = 'asc'
+      if (querySortDir && querySortDir.toLowerCase() === 'desc') {
+        sortDir = 'desc'
       }
+      this.$set(this.routeParameters, 'sortDirection', sortDir)
     },
     '$route.query.letter': function () {
-      if (this.letters.indexOf(this.$route.query.letter) > -1) {
-        this.$set(this.routeParameters, 'currentLetter', this.$route.query.letter)
-      } else {
-        this.$set(this.routeParameters, 'currentLetter', null)
+      const queryLetter = this.$route.query.letter
+      let letter = null
+      if (this.letters.indexOf(queryLetter) > -1) {
+        letter = queryLetter
       }
+      this.$set(this.routeParameters, 'currentLetter', letter)
     },
     '$route.query.delid': function () {
-      if (this.$route.query.delid > 0) {
-        this.onDeleteContact(this.$route.query.delid)
+      const queryDelId = this.$route.query.delid
+      if (queryDelId > 0) {
+        this.onDeleteContact(queryDelId)
       }
     },
     '$route.query.inactiveid': function () {
-      if (this.$route.query.inactiveid > 0) {
-        this.onInactiveContact(this.$route.query.inactiveid)
+      const queryInactiveId = this.$route.query.inactiveid
+      if (queryInactiveId > 0) {
+        this.onInactiveContact(queryInactiveId)
       }
     },
     'routeParameters': {
@@ -108,15 +105,18 @@ export default {
     window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
 
     this.getActiveNonCorporateContactTypes()
-      .then(function (response) {
-        const data = response.data.data
+      .then(
+        function (response) {
+          const data = response.data.data
 
-        if (data) {
-          this.contactTypes = data
+          if (data) {
+            this.contactTypes = data
+          }
+        },
+        function (response) {
+          this.handleErrors('getActiveNonCorporateContactTypes', response)
         }
-      }, function (response) {
-        this.handleErrors('getActiveNonCorporateContactTypes', response)
-      })
+      )
 
     this.getContacts()
   },
@@ -146,19 +146,22 @@ export default {
         if (self.requiredContactName.trim() !== '') {
           if (self.requiredContactName.trim().length > 1) {
             self.getListContactsAndCompanies(self.requiredContactName.trim())
-              .then(function (response) {
-                const data = response.data.data
+              .then(
+                function (response) {
+                  const data = response.data.data
 
-                if (data.length) {
-                  self.foundContactsByName = data
-                  window.$('#contact_hints').show()
-                } else if (data.error) {
-                  self.foundContactsByName = []
-                  alert(data.error)
+                  if (data.length) {
+                    self.foundContactsByName = data
+                    window.$('#contact_hints').show()
+                  } else if (data.error) {
+                    self.foundContactsByName = []
+                    alert(data.error)
+                  }
+                },
+                function (response) {
+                  self.handleErrors('getListContactsAndCompanies', response)
                 }
-              }, function (response) {
-                self.handleErrors('getListContactsAndCompanies', response)
-              })
+              )
           } else {
             window.$('#contact_hints').hide()
           }
@@ -207,57 +210,68 @@ export default {
         this.routeParameters.sortDirection,
         this.routeParameters.currentPageNumber,
         this.contactsPerPage
-      ).then(function (response) {
-        const data = response.data.data
+      ).then(
+        function (response) {
+          const data = response.data.data
 
-        if (data) {
-          this.contactsTotalNumber = data.totalCount
-          this.contacts = data.result
+          if (data) {
+            this.contactsTotalNumber = data.totalCount
+            this.contacts = data.result
+          }
+        },
+        function (response) {
+          this.handleErrors('findContacts', response)
         }
-      }, function (response) {
-        this.handleErrors('findContacts', response)
-      }).then(function () {
-        const contactsHaveReferrers = this.contacts.map(el => el.referrers > 0 ? el.contactid : 0)
-        const contactsHavePatients = this.contacts.map(el => el.patients > 0 ? el.contactid : 0)
+      ).then(
+        function () {
+          const contactsHaveReferrers = this.contacts.map(el => el.referrers > 0 ? el.contactid : 0)
+          const contactsHavePatients = this.contacts.map(el => el.patients > 0 ? el.contactid : 0)
 
-        contactsHaveReferrers.forEach((contactId, index) => {
-          if (contactId > 0) {
-            this.findReferrersByContactId(contactId)
-              .then(function (response) {
-                const data = response.data.data
+          contactsHaveReferrers.forEach((contactId, index) => {
+            if (contactId > 0) {
+              this.findReferrersByContactId(contactId)
+                .then(
+                  function (response) {
+                    const data = response.data.data
 
-                if (data.length) {
-                  const updatedContact = Object.assign({
-                    referrers_data: data
-                  }, self.contacts[index])
+                    if (data.length) {
+                      const updatedContact = Object.assign({
+                        referrers_data: data
+                      }, self.contacts[index])
 
-                  this.$set(self.contacts, index, updatedContact)
-                }
-              }, function (response) {
-                this.handleErrors('findReferrersByContactId', response)
-              })
-          }
-        })
+                      this.$set(self.contacts, index, updatedContact)
+                    }
+                  },
+                  function (response) {
+                    this.handleErrors('findReferrersByContactId', response)
+                  }
+                )
+            }
+          })
 
-        contactsHavePatients.forEach((contactId, index) => {
-          if (contactId > 0) {
-            this.findPatientsByContactId(contactId)
-              .then(function (response) {
-                const data = response.data.data
+          contactsHavePatients.forEach((contactId, index) => {
+            if (contactId > 0) {
+              this.findPatientsByContactId(contactId)
+                .then(
+                  function (response) {
+                    const data = response.data.data
 
-                if (data.length) {
-                  const updatedContact = Object.assign({
-                    patients_data: data
-                  }, self.contacts[index])
+                    if (data.length) {
+                      const updatedContact = Object.assign({
+                        patients_data: data
+                      }, self.contacts[index])
 
-                  this.$set(self.contacts, index, updatedContact)
-                }
-              }, function (response) {
-                this.handleErrors('findPatientsByContactId', response)
-              })
-          }
-        })
-      })
+                      this.$set(self.contacts, index, updatedContact)
+                    }
+                  },
+                  function (response) {
+                    this.handleErrors('findPatientsByContactId', response)
+                  }
+                )
+            }
+          })
+        }
+      )
     },
     findReferrersByContactId (contactId) {
       const data = { contact_id: contactId }
@@ -272,9 +286,8 @@ export default {
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
-      } else {
-        return 'asc'
       }
+      return 'asc'
     },
     findContacts (
       contactType,

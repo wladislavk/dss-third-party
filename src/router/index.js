@@ -1,21 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import VueResource from 'vue-resource'
 import VueMoment from 'vue-moment'
 import MintUI from 'mint-ui'
 import MaskedInput from 'vue-masked-input'
-
-Vue.use(Router)
-Vue.use(VueResource)
-Vue.use(VueMoment)
-Vue.use(MintUI)
-
-// include the main template
 import ManageTemplate from 'components/header/header.vue'
-Vue.component('manage-template', ManageTemplate)
-Vue.component('masked-input', MaskedInput)
-
-// components for routing
 import Login from 'components/manage/login/login.vue'
 import Index from 'components/manage/dashboard/dashboard.vue'
 import Patients from 'components/manage/patients/patients.vue'
@@ -27,9 +15,14 @@ import PrintReferredByContact from 'components/manage/referredby/print/printRefe
 import Sleeplabs from 'components/manage/sleeplabs/sleeplabs.vue'
 import CorporateContacts from 'components/manage/corporate-contacts/corporateContacts.vue'
 import LedgerReportFull from 'components/manage/ledgers/report-full/ledgerReportFull.vue'
-
-// service routes
 import PageNotFound from 'components/services/pageNotFound.vue'
+
+Vue.use(Router)
+Vue.use(VueMoment)
+Vue.use(MintUI)
+
+Vue.component('manage-template', ManageTemplate)
+Vue.component('masked-input', MaskedInput)
 
 const router = new Router({
   routes: [

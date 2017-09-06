@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import axios from 'axios'
 
 // global variables
 import constants from './modules/constants.js'
@@ -17,6 +18,8 @@ window.accounting = require('accounting')
 
 // centralized event hub
 window.eventHub = new Vue()
+
+Vue.prototype.$http = axios
 
 /* eslint-disable no-new */
 new Vue({

@@ -54,25 +54,19 @@
 7. Frontend / Javascript guide
     1. Styling
         1. Sources of truth for JS styling
-        2. Concerns regarding newer EcmaScript features
-        3. Handling constants
-        4. Length limitations
-        5. Unwanted operators and expressions
-        6. Privacy emulation
-        7. Directory structure and file naming conventions
+        2. Constants and symbols
+        3. Length limitations
+        4. Unwanted operators and expressions
+        5. Privacy emulation
+        6. Directory structure and file naming conventions
     2. Coding
         1. Components
         2. Mixins
-        3. Plain JS classes and objectsJavascript / VueJS
+        3. Services
         4. Templates
-        5. Globals and true constants
-        6. Directives and plugins
-        7. State-related concerns
-        8. Third-party code and decoupled legacy JS
-    3. Markup
-        1. HTML
-        2. CSS
-    4. JS tests
+        5. Vuex modules
+        6. Promises
+    3. JS tests
         1. What should be tested
-        2. Running unit tests
-        3. Running browser tests
+        2. Writing unit tests
+        3. Writing browser tests

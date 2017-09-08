@@ -1,4 +1,5 @@
 import handlerMixin from '../../../modules/handler/HandlerMixin'
+import symbols from '../../../symbols'
 
 export default {
   data: function () {
@@ -178,11 +179,11 @@ export default {
     },
     onClickQuickView (contactId) {
       this.$parent.$refs.modal.display('view-contact')
-      this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
+      this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     onClickEditContact (contactId) {
       this.$parent.$refs.modal.display('edit-contact')
-      this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
+      this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     onClickInActive () {
       this.$router.push({

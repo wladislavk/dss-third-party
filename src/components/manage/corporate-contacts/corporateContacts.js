@@ -1,3 +1,5 @@
+import symbols from '../../../symbols'
+
 const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
@@ -84,11 +86,12 @@ export default {
   methods: {
     onClickViewFull (contactId) {
       this.$parent.$refs.modal.display('view-corporate-contact')
-      this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
+
+      this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     onClickQuickView (contactId) {
       this.$parent.$refs.modal.display('view-contact')
-      this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
+      this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {

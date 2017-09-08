@@ -1,16 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import axios from 'axios'
+import store from '../../src/store'
 
 export default {
-  init () {
-    Vue.use(VueRouter)
-    Vue.prototype.$http = axios
-    window.eventHub = new Vue()
-  },
-
   getVue (options, routes) {
+    Vue.use(VueRouter)
     options = Object.assign({
+      store,
       router: this.getRouter(routes)
     }, options)
     return new Vue(options)

@@ -1,23 +1,25 @@
 import moxios from 'moxios'
+import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
 
 const ViewContactComponent = require('../../../../src/components/manage/contacts/ViewContact.vue').default
 
 describe('ViewContact', () => {
   beforeAll(function () {
-    TestCase.init()
-    this.vm = TestCase.getVue({
+    this.vue = TestCase.getVue({
       template: '<div><view-contact></view-contact></div>',
       components: {
         'viewContact': ViewContactComponent
       }
-    }).$mount()
+    })
+    this.vm = this.vue.$mount()
   })
 
   beforeEach(function () {
     moxios.install()
 
     this.mockData = {
+      contactid: 1,
       salutation: 'Mr',
       firstname: 'John',
       middlename: 'M',
@@ -50,9 +52,7 @@ describe('ViewContact', () => {
       }
     })
 
-    window.eventHub.$emit('setting-component-params', {
-      contactId: 1
-    })
+    this.vue.$store.dispatch(symbols.actions.setCurrentContact, { contactId: 1 })
 
     const getSpan = (number) => {
       const css = `div#view-contact > div > div.info:nth-child(${number}) > span.value`
@@ -87,9 +87,7 @@ describe('ViewContact', () => {
       }
     })
 
-    window.eventHub.$emit('setting-component-params', {
-      contactId: 1
-    })
+    this.vue.$store.dispatch(symbols.actions.setCurrentContact, { contactId: 1 })
 
     moxios.wait(() => {
       const link = this.vm.$el.querySelector('div#view-contact > div > a')

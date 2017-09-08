@@ -35,8 +35,8 @@ services:
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/loader
     env_file: ../ds3-private02/.env.example
     environment:
-      APP_URL: https://loader.docker.localhost/
-      API_URL: https://api.docker.localhost/
+      APP_URL: "https://loader.docker.localhost/"
+      API_URL: "https://api.docker.localhost/"
       LEGACY_PATH: /opt/rh/httpd24/root/var/www/html/legacy
       API_PATH: /opt/rh/httpd24/root/var/www/html/api
       PHP_PATH: /opt/rh/rh-php56/root/bin/php
@@ -89,6 +89,10 @@ services:
     environment:
       NODE_ENV: development
       PORT: 80
+      DB_HOST: db
+      DB_DATABASE: homestead
+      DB_USERNAME: homestead
+      DB_PASSWORD: secret
     command: tail -f /dev/null
     volumes:
       - "${ROOT_PATH:-..}/ds3-private08-acceptance:/opt/app/acceptance"

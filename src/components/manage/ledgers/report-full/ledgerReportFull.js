@@ -74,23 +74,26 @@ export default {
   mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
-      if (this.$route.query.page !== undefined && this.$route.query.page <= this.totalPages) {
-        this.$set(this.routeParameters, 'currentPageNumber', +this.$route.query.page)
+      const queryPage = this.$route.query.page
+      if (queryPage !== undefined && queryPage <= this.totalPages) {
+        this.$set(this.routeParameters, 'currentPageNumber', +queryPage)
       }
     },
     '$route.query.sort': function () {
-      if (this.$route.query.sort in this.tableHeaders) {
-        this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort)
-      } else {
-        this.$set(this.routeParameters, 'sortColumn', 'service_date')
+      const querySort = this.$route.query.sort
+      let sortColumn = 'service_date'
+      if (querySort in this.tableHeaders) {
+        sortColumn = querySort
       }
+      this.$set(this.routeParameters, 'sortColumn', sortColumn)
     },
     '$route.query.sortdir': function () {
-      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() === 'desc') {
-        this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
-      } else {
-        this.$set(this.routeParameters, 'sortDirection', 'asc')
+      const querySortDir = this.$route.query.sortdir
+      let sortDir = 'asc'
+      if (querySortDir && querySortDir.toLowerCase() === 'desc') {
+        sortDir = 'asc'
       }
+      this.$set(this.routeParameters, 'sortDirection', sortDir)
     },
     'routeParameters': {
       handler: function () {
@@ -115,8 +118,7 @@ export default {
         const isNotLedgerPaidAndAdjustment = !(currentRow.ledger === 'ledger_paid' && currentRow.payer === window.constants.DSS_TRXN_TYPE_ADJ)
 
         return sum + (
-          isNotLedgerPaidAndAdjustment && currentRow.ledger !== 'claim' && currentRow.paid_amount > 0
-          ? +currentRow.paid_amount : 0
+          isNotLedgerPaidAndAdjustment && currentRow.ledger !== 'claim' && currentRow.paid_amount > 0 ? +currentRow.paid_amount : 0
         )
       }, 0)
 

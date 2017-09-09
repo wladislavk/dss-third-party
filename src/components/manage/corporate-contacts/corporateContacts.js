@@ -1,3 +1,5 @@
+import symbols from '../../../symbols'
+
 const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
@@ -39,27 +41,31 @@ export default {
   mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
-      if (this.$route.query.page !== undefined && this.$route.query.page <= this.totalPages) {
-        this.$set(this.routeParameters, 'currentPageNumber', +this.$route.query.page)
+      const queryPage = this.$route.query.page
+      if (queryPage !== undefined && queryPage <= this.totalPages) {
+        this.$set(this.routeParameters, 'currentPageNumber', +queryPage)
       }
     },
     '$route.query.sort': function () {
-      if (this.$route.query.sort in this.tableHeaders) {
-        this.$set(this.routeParameters, 'sortColumn', this.$route.query.sort)
-      } else {
-        this.$set(this.routeParameters, 'sortColumn', '')
+      const querySort = this.$route.query.sort
+      let sortColumn = ''
+      if (querySort in this.tableHeaders) {
+        sortColumn = querySort
       }
+      this.$set(this.routeParameters, 'sortColumn', sortColumn)
     },
     '$route.query.sortdir': function () {
-      if (this.$route.query.sortdir && this.$route.query.sortdir.toLowerCase() === 'desc') {
-        this.$set(this.routeParameters, 'sortDirection', this.$route.query.sortdir.toLowerCase())
-      } else {
-        this.$set(this.routeParameters, 'sortDirection', 'asc')
+      const querySortDir = this.$route.query.sortdir
+      let sortDir = 'asc'
+      if (querySortDir && querySortDir.toLowerCase() === 'desc') {
+        sortDir = 'desc'
       }
+      this.$set(this.routeParameters, 'sortDirection', sortDir)
     },
     '$route.query.delid': function () {
-      if (this.$route.query.delid > 0) {
-        this.removeContact(this.$route.query.delid)
+      const queryDelId = this.$route.query.delid
+      if (queryDelId > 0) {
+        this.removeContact(queryDelId)
       }
     },
     'routeParameters': {
@@ -80,11 +86,12 @@ export default {
   methods: {
     onClickViewFull (contactId) {
       this.$parent.$refs.modal.display('view-corporate-contact')
-      this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
+
+      this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     onClickQuickView (contactId) {
       this.$parent.$refs.modal.display('view-contact')
-      this.$parent.$refs.modal.setComponentParameters({ contactId: contactId })
+      this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {

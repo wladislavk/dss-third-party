@@ -53,26 +53,32 @@ export default {
     pendingVOB: function () {
       if (!this.pendingVOB.length) {
         this.getContactSentLetters(this.contact.contactid)
-          .then(function (response) {
-            const data = response.data.data
+          .then(
+            function (response) {
+              const data = response.data.data
 
-            if (data.length) {
-              this.contactSentLetters = data
+              if (data.length) {
+                this.contactSentLetters = data
+              }
+            },
+            function (response) {
+              this.handleErrors('getContactSentLetters', response)
             }
-          }, function (response) {
-            this.handleErrors('getContactSentLetters', response)
-          })
+          )
 
         this.getContactPendingLetters(this.contact.contactid)
-          .then(function (response) {
-            const data = response.data.data
+          .then(
+            function (response) {
+              const data = response.data.data
 
-            if (data.length) {
-              this.contactPendingLetters = data
+              if (data.length) {
+                this.contactPendingLetters = data
+              }
+            },
+            function (response) {
+              this.handleErrors('getContactPendingLetters', response)
             }
-          }, function (response) {
-            this.handleErrors('getContactPendingLetters', response)
-          })
+          )
       }
     },
     'contact.contacttypeid': function () {
@@ -80,6 +86,7 @@ export default {
         this.$set(this.contact, 'salutation', 'Dr.')
         this.showName = true
         this.showNationalProviderId = true
+        // @todo: what is 11?
       } else if (this.contact.contacttypeid === 11) {
         this.$set(this.contact, 'firstname', '')
         this.$set(this.contact, 'lastname', '')
@@ -91,13 +98,22 @@ export default {
       }
     },
     'contact.phone1': function () {
-      this.$set(this.contact, 'phone1', this.contact.phone1.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'))
+      const phone1 = this.contact.phone1
+        .replace(/[^0-9]/g, '')
+        .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')
+      this.$set(this.contact, 'phone1', phone1)
     },
     'contact.phone2': function () {
-      this.$set(this.contact, 'phone2', this.contact.phone2.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'))
+      const phone2 = this.contact.phone2
+        .replace(/[^0-9]/g, '')
+        .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')
+      this.$set(this.contact, 'phone2', phone2)
     },
     'contact.fax': function () {
-      this.$set(this.contact, 'fax', this.contact.fax.replace(/[^0-9]/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3'))
+      const fax = this.contact.fax
+        .replace(/[^0-9]/g, '')
+        .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')
+      this.$set(this.contact, 'fax', fax)
     },
     'contact': {
       handler: function () {
@@ -287,8 +303,6 @@ export default {
           message = 'Warning: There are pending letters associated with this contact.  When you delete the contact the pending letters will also be deleted. Proceed?'
           query = { delid: contactId }
           break
-        default:
-          break
       }
 
       if (confirm(message)) {
@@ -299,13 +313,16 @@ export default {
       }
     },
     onPreferredContactChange () {
+      let alertText
       if (this.contact.preferredcontact === 'email' && this.contact.email.length === 0) {
-        alert('You must enter an email address to use email as the preferred contact method.')
+        alertText = 'You must enter an email address to use email as the preferred contact method.'
+        alert(alertText)
 
         this.$set(this.contact, 'preferredcontact', '')
         this.$refs.email.focus()
       } else if (this.contact.preferredcontact === 'fax' && this.contact.fax.length === 0) {
-        alert('You must enter a fax number to use email as the preferred contact method.')
+        alertText = 'You must enter a fax number to use email as the preferred contact method.'
+        alert(alertText)
 
         this.$set(this.contact, 'preferredcontact', '')
         this.$refs.fax.focus()

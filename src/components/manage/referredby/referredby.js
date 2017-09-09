@@ -1,3 +1,5 @@
+import symbols from '../../../symbols'
+
 const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
@@ -105,7 +107,7 @@ export default {
     },
     onClickViewContact (id) {
       this.$parent.$refs.modal.display('view-contact')
-      this.$parent.$refs.modal.setComponentParameters({ contactId: id })
+      this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: id })
     },
     onClickAddNewReferredBy () {
       this.$parent.$refs.modal.display('edit-referred-by-contact')
@@ -138,9 +140,8 @@ export default {
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
-      } else {
-        return 'asc'
       }
+      return 'asc'
     },
     getReferredByContacts (sort, pageNumber, sortDir, contactsPerPage) {
       const data = {

@@ -97,10 +97,9 @@
         let answer = false
         // disables popup only if it is enabled
         if (this.popupStatus === 1) {
-          if (this.popupEdit) {
+          answer = true
+          if (this.$store.popupEdit) {
             answer = confirm('Are you sure you want to exit without saving?')
-          } else {
-            answer = true
           }
 
           if (answer) {

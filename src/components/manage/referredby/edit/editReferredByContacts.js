@@ -1,6 +1,6 @@
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
-
 import referredByContactValidatorMixin from '../../../../modules/validators/ReferredByContactMixin.js'
+
+const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
 
 export default {
   name: 'edit-referred-by-contacts',

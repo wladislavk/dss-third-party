@@ -70,12 +70,12 @@
 
       <router-link
         v-if="filteredContact.corporate == '1'"
-        :to="'view_fcontact.php?ed=' + componentParams.contactId"
+        :to="'view_fcontact.php?ed=' + filteredContact.contactid"
         style="margin-right:10px;float:right;"
       >View Full</router-link>
       <router-link
         v-else
-        :to="'add_contact.php?ed=' + componentParams.contactId"
+        :to="'add_contact.php?ed=' + filteredContact.contactid"
         style="margin-right:10px;float:right;"
       >Edit</router-link>
     </div>

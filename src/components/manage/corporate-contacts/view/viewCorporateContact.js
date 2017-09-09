@@ -39,17 +39,20 @@ export default {
     },
     fetchContact (contactId) {
       this.getContactById(contactId)
-        .then(function (response) {
-          const data = response.data.data
+        .then(
+          function (response) {
+            const data = response.data.data
 
-          data['name'] = (data['firstname'] ? data['firstname'] + ' ' : '') +
-            (data['middlename'] ? data['middlename'] + ' ' : '') +
-            (data['lastname'] || '')
+            data['name'] = (data['firstname'] ? data['firstname'] + ' ' : '') +
+              (data['middlename'] ? data['middlename'] + ' ' : '') +
+              (data['lastname'] || '')
 
-          this.contact = data
-        }, function (response) {
-          this.handleErrors('getContactById', response)
-        })
+            this.contact = data
+          },
+          function (response) {
+            this.handleErrors('getContactById', response)
+          }
+        )
     },
     getContactById (contactId) {
       contactId = contactId || 0

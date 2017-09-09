@@ -9,7 +9,6 @@ export default {
           if (contact[property] === undefined || contact[property].trim() === '') {
             alert(messages[property])
             this.$refs[property].focus()
-
             return false
           }
         }
@@ -33,9 +32,9 @@ export default {
       }
 
       if (!this.isEmail(sleeplab.email)) {
-        alert('In-Valid Email')
+        const alertText = 'In-Valid Email'
+        alert(alertText)
         this.$refs.email.focus()
-
         return false
       }
 

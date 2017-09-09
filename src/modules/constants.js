@@ -130,5 +130,7 @@ export default {
     }).findIndex((el) => el === status)
 
     return foundIndex >= 0 ? labels[foundIndex] : null
-  }
+  },
+
+  PHONE_FIELDS: ['phone1', 'phone2', 'fax']
 }

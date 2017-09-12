@@ -51,4 +51,22 @@
     1. General information
     2. Table and column definitions
     3. Queries
-    
+7. Frontend / Javascript guide
+    1. Styling
+        1. Sources of truth for JS styling
+        2. Constants and symbols
+        3. Length limitations
+        4. Unwanted operators and expressions
+        5. Privacy emulation
+        6. Directory structure and file naming conventions
+    2. Coding
+        1. Components
+        2. Mixins
+        3. Services
+        4. Templates
+        5. Vuex modules
+        6. Promises
+    3. JS tests
+        1. What should be tested
+        2. Writing unit tests
+        3. Writing browser tests

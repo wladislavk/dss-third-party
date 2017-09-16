@@ -4,16 +4,7 @@ export default {
   data: function () {
     return {
       nextDisabled: false,
-      errors: {
-        first_name: false,
-        last_name: false,
-        phone: false
-      },
-      nameFieldValues: {
-        first_name: '',
-        last_name: '',
-        phone: ''
-      }
+      contactData: this.$store.state[symbols.state.contactData]
     }
   },
   methods: {
@@ -24,13 +15,12 @@ export default {
 
       let returnVal = true
 
-      const contactData = this.$store.state[symbols.state.contactData]
-      for (let nameField of contactData) {
-        if (this.nameFieldValues[nameField.name] === '') {
-          this.errors[nameField.name] = true
+      for (let nameField of this.contactData) {
+        if (nameField.firstPage && nameField.value === '') {
+          nameField.error = true
           returnVal = false
         } else {
-          this.errors[nameField.name] = false
+          nameField.error = false
         }
       }
 
@@ -39,15 +29,7 @@ export default {
         return
       }
 
-      const contactProperties = {
-        firstName: this.nameFieldValues.first_name,
-        last_name: this.nameFieldValues.last_name,
-        phone: this.nameFieldValues.phone
-      }
-      this.$store.commit(symbols.mutations.contactProperties, contactProperties)
-
-      const fullName = this.nameFieldValues.first_name + ' ' + this.nameFieldValues.last_name
-      this.$store.commit(symbols.mutations.setAssessmentName, fullName)
+      this.$store.commit(symbols.mutations.contactData, this.contactData)
 
       this.$router.push({ name: 'screener-epworth' })
     }

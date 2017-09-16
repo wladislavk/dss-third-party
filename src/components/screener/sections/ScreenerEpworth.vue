@@ -1,6 +1,5 @@
 <template>
     <form class="formEl_a screener">
-        <hidden-fields></hidden-fields>
         <div class="sect" id="sect2">
             <health-assessment></health-assessment>
             <h3>Epworth Sleepiness Scale</h3>
@@ -9,11 +8,11 @@
             <div class="formEl_a">
                 <div class="dp66">
                     <div class="msg_box msg_error" id="epworth_error_box" v-show="hasError">
-                        <div v-for="element in epworth" v-if="element.error" class="error">
+                        <div v-for="element in epworthProps" v-if="element.error" class="error">
                             <strong>{{ element.epworth }}</strong>: Please provide an answer
                         </div>
                     </div>
-                    <div v-for="element in epworth" id="epworth_{{ element.id }}_div" class="sepH_b clear" v-bind:class="{error: epworthErrors[element.id]}">
+                    <div v-for="element in epworthProps" id="epworth_{{ element.id }}_div" class="sepH_b clear" v-bind:class="{error: element.error}">
                         <select class="inpt_in epworth_select" id="epworth_{{ element.id }}" name="epworth_{{ element.id }}" v-model="element.selected">
                             <option value="">Select an answer</option>
                             <option v-for="answer in epworthOptions" v-bind:value="answer.option">{{ answer.option }} - {{ answer.label }}</option>

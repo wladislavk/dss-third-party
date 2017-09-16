@@ -4,13 +4,16 @@ export default {
   data: function () {
     return {
       nextDisabled: false,
-      hasError: false
+      hasError: false,
+      epworthProps: [],
+      epworthOptions: this.$store.state[symbols.state.epworthOptions]
     }
   },
   created () {
-    if (!this.$store.state[symbols.epworthProps.length]) {
+    if (!this.$store.state[symbols.state.epworthProps].length) {
       this.$store.dispatch(symbols.actions.setEpworthProps)
     }
+    this.epworthProps = this.$store.state[symbols.state.epworthProps]
   },
   methods: {
     onSubmit (e) {
@@ -18,8 +21,7 @@ export default {
 
       this.nextDisabled = true
 
-      const epworthProps = this.$store.state[symbols.state.epworthProps]
-      for (let epworth of epworthProps) {
+      for (let epworth of this.epworthProps) {
         if (epworth.selected === '') {
           epworth.error = true
           this.nextDisabled = false
@@ -28,6 +30,12 @@ export default {
           epworth.error = false
         }
       }
+
+      if (this.hasError) {
+        return
+      }
+
+      this.$store.commit(symbols.mutations.setEpworthProps, this.epworthProps)
 
       this.$router.push({ name: 'screener-symptoms' })
     }

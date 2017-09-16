@@ -1,6 +1,5 @@
 <template>
     <form class="formEl_a screener">
-        <hidden-fields></hidden-fields>
         <div class="sect" id="sect3">
             <health-assessment></health-assessment>
             <h3>Health Symptoms</h3>
@@ -12,9 +11,9 @@
             </div>
             <div v-for="symptom in symptoms" class="sepH_b" id="{{ symptom.name }}_div">
                 <div class="buttonset">
-                    <input type="radio" id="{{ symptom.name }}1" name="{{ symptom.name }}" value="{{ symptom.weight }}" v-model="symptom.checked" />
+                    <input type="radio" id="{{ symptom.name }}1" name="{{ symptom.name }}" value="{{ symptom.weight }}" v-model="symptom.selected" />
                     <label for="{{ symptom.name }}1">Yes</label>
-                    <input type="radio" id="{{ symptom.name }}2" name="{{ symptom.name }}" value="0" v-model="symptom.checked" />
+                    <input type="radio" id="{{ symptom.name }}2" name="{{ symptom.name }}" value="0" v-model="symptom.selected" />
                     <label for="{{ symptom.name }}2">No</label>
                 </div>
                 <label class="question">{{ symptom.label }}</label>
@@ -23,3 +22,5 @@
         </div>
     </form>
 </template>
+
+<script src="./ScreenerSymptoms.js"></script>

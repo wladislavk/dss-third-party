@@ -1,6 +1,5 @@
 <template>
     <form class="formEl_a screener">
-        <hidden-fields></hidden-fields>
         <div class="sect" id="sect0">
             <div class="dp50">
                 <h3 class="sepH_a">Dental Sleep Solutions - Patient Health Assessment</h3>
@@ -13,9 +12,9 @@
                 <p>Please enter your contact information to complete this brief health assessment.</p>
                 <br />
                 <div class="clear"></div>
-                <div v-for="contact in contactData" v-if="contact.firstPage" id="{{ contact.name }}_div" v-bind:key="contact.name" class="sepH_b" v-bind:class="{error: errors[contact.name]}">
+                <div v-for="contact in contactData" v-if="contact.firstPage" id="{{ contact.name }}_div" v-bind:key="contact.name" class="sepH_b" v-bind:class="{error: contact.error}">
                     <label class="lbl_a" for="{{ contact.name }}">{{ contact.label }}</label>
-                    <input class="inpt_a {{ contact.class }}" type="text" id="{{ contact.name }}" name="{{ contact.name }}" v-model="nameFieldValues[contact.name]" />
+                    <input class="inpt_a {{ contact.class }}" type="text" id="{{ contact.name }}" name="{{ contact.name }}" v-model="contact.value" />
                 </div>
             </div>
             <div class="dp50">

@@ -5,7 +5,7 @@
             <h3 class="sepH_a">Dental Sleep Solutions - Summary of Results</h3>
             <p>Please choose from the options below. You may view the patient results, finish this screener and allow a new patient to be screened, or request a Home Sleep Test for the patient by clicking the buttons below.</p>
             <br />
-            <div id="risk_image_doc"><img src="~assets/images/screener-{{ riskLevel }}_risk.png" /></div>
+            <div id="risk_image_doc"><img v-bind:src="'~assets/images/screener-' + riskLevel + '_risk.png'" /></div>
 
             <a href="#results" id="sect_results_next" class="fl next btn btn_medium btn_d" v-on:click="showResults()">View Results</a>
             <a style="margin-left:20px;" href="#" id="sect6_next" class="fr next btn btn_medium btn_d" v-on:click="requestHst()">Request HST (Doctor Only) &raquo;</a>
@@ -23,7 +23,7 @@
                 <div style="width:58%; float:left;">
                     <div v-for="contact in contactData" class="check" v-if="contact.value">
                         <label>{{ contact.label }}</label>
-                        <span id="r_{{ contact.name }}">{{ contact.value }}</span>
+                        <span v-bind:id="'r_' + contact.name">{{ contact.value }}</span>
                     </div>
                     <div><strong>Epworth Sleepiness Scale</strong></div>
                     <div>
@@ -31,14 +31,14 @@
                         <label>Epworth Sleepiness Scale Total</label>
                     </div>
                     <div class="check" v-for="element in epworthProps" v-if="element.selected">
-                        <span id="r_epworth_{{ element.id }}">{{ element.selected }}</span> -
+                        <span v-bind:id="'r_epworth_' + element.id">{{ element.selected }}</span> -
                         <label>{{ element.epworth }}</label>
                     </div>
                 </div>
                 <div style="width:38%;float:left;">
                     <div><strong>Health Symptoms</strong></div>
                     <div v-for="symptom in symptoms" class="check">
-                        <span id="r_{{ symptom.name }}">{{ symptom.selected ? 'Yes' : 'No' }}</span>
+                        <span v-bind:id="'r_' + symptom.name">{{ symptom.selected ? 'Yes' : 'No' }}</span>
                         <label>{{ symptom.label }}</label>
                     </div>
                     <div class="check">

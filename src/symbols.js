@@ -2,6 +2,7 @@ export default {
   state: {
     coMorbidityData: 'CO_MORBIDITY_DATA',
     companyData: 'COMPANY_DATA',
+    contact: 'CONTACT',
     contactData: 'CONTACT_DATA',
     doctorName: 'DOCTOR_NAME',
     epworthOptions: 'EPWORTH_OPTIONS',
@@ -25,6 +26,8 @@ export default {
     doctorName: 'DOCTOR_NAME',
     epworthWeight: 'EPWORTH_WEIGHT',
     popupEdit: 'POPUP_EDIT',
+    restoreInitialScreener: 'RESTORE_INITIAL_SCREENER',
+    setContact: 'SET_CONTACT',
     setEpworthProps: 'SET_EPWORTH_PROPS',
     surveyWeight: 'SURVEY_WEIGHT',
     symptoms: 'SYMPTOMS',

@@ -1,22 +1,18 @@
 import moxios from 'moxios'
-import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
 
 const ViewContactComponent = require('../../../../src/components/manage/contacts/ViewContact.vue').default
 
 describe('ViewContact', () => {
-  beforeAll(function () {
-    this.vue = TestCase.getVue({
-      template: '<div><view-contact></view-contact></div>',
+  beforeEach(function () {
+    moxios.install()
+
+    this.vueOptions = {
+      template: '<div><view-contact contactid="1"></view-contact></div>',
       components: {
         'viewContact': ViewContactComponent
       }
-    })
-    this.vm = this.vue.$mount()
-  })
-
-  beforeEach(function () {
-    moxios.install()
+    }
 
     this.mockData = {
       contactid: 1,
@@ -52,11 +48,11 @@ describe('ViewContact', () => {
       }
     })
 
-    this.vue.$store.dispatch(symbols.actions.setCurrentContact, { contactId: 1 })
+    const vm = TestCase.getVue(this.vueOptions).$mount()
 
     const getSpan = (number) => {
       const css = `div#view-contact > div > div.info:nth-child(${number}) > span.value`
-      return this.vm.$el.querySelector(css).textContent.trim()
+      return vm.$el.querySelector(css).textContent.trim()
     }
 
     moxios.wait(() => {
@@ -71,7 +67,7 @@ describe('ViewContact', () => {
       expect(getSpan(9)).toBe('')
       expect(getSpan(10)).toBe('foo@bar.com')
       expect(getSpan(11)).toBe('ddd')
-      const link = this.vm.$el.querySelector('div#view-contact > div > a')
+      const link = vm.$el.querySelector('div#view-contact > div > a')
       expect(link.getAttribute('href')).toBe('#/view_fcontact.php?ed=1')
       expect(link.textContent).toBe('View Full')
       done()
@@ -87,10 +83,10 @@ describe('ViewContact', () => {
       }
     })
 
-    this.vue.$store.dispatch(symbols.actions.setCurrentContact, { contactId: 1 })
+    const vm = TestCase.getVue(this.vueOptions).$mount()
 
     moxios.wait(() => {
-      const link = this.vm.$el.querySelector('div#view-contact > div > a')
+      const link = vm.$el.querySelector('div#view-contact > div > a')
       expect(link.getAttribute('href')).toBe('#/add_contact.php?ed=1')
       expect(link.textContent).toBe('Edit')
       done()

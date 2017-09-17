@@ -12,16 +12,16 @@
                 <p>Please enter your contact information to complete this brief health assessment.</p>
                 <br />
                 <div class="clear"></div>
-                <div v-for="contact in contactData" v-if="contact.firstPage" id="{{ contact.name }}_div" v-bind:key="contact.name" class="sepH_b" v-bind:class="{error: contact.error}">
-                    <label class="lbl_a" for="{{ contact.name }}">{{ contact.label }}</label>
-                    <input class="inpt_a {{ contact.class }}" type="text" id="{{ contact.name }}" name="{{ contact.name }}" v-model="contact.value" />
+                <div v-for="contact in contactData" v-if="contact.firstPage" v-bind:id="contact.name + '_div'" v-bind:key="contact.name" class="sepH_b" v-bind:class="{error: contact.error}">
+                    <label class="lbl_a" v-bind:for="contact.name">{{ contact.label }}</label>
+                    <input class="inpt_a" v-bind:class="contact.class" type="text" v-bind:id="contact.name" v-bind:name="contact.name" v-bind:value="contact.value" v-on:change="updateValue($event)" />
                 </div>
             </div>
             <div class="dp50">
                 <img src="~assets/images/sleeping_couple.png" style="float:right;" />
                 <br />
                 <div class="cf">
-                    <a href="#" id="sect1_next" class="fr next btn btn_large btn_d" v-bind:class="{disabled: nextDisabled}" v-on:click="onSubmit()">Proceed &raquo;</a>
+                    <a href="#" id="sect1_next" class="fr next btn btn_large btn_d" v-bind:class="{disabled: nextDisabled}" v-on:click.prevent="onSubmit">Proceed &raquo;</a>
                 </div>
             </div>
             <div class="clear"></div>

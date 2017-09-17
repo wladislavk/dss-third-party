@@ -5,14 +5,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'app',
-  created () {
-    // add main template style
-    window.$('body').addClass('main-template')
-  }
-}
-</script>
+<script src="./App.js"></script>
 
 <style src="assets/css/manage/main.css"></style>

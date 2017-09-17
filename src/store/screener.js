@@ -2,36 +2,38 @@ import http from '../services/http'
 import symbols from '../symbols'
 import * as constants from '../constants'
 
-export default {
-  state: {
-    [symbols.state.sessionData]: {
-      screenerId: 0,
-      docId: 0,
-      userId: 0
-    },
-    [symbols.state.companyData]: {
-      id: 0,
-      name: '',
-      logo: ''
-    },
-    [symbols.state.doctorName]: '',
-    [symbols.state.screenerWeights]: {
-      coMorbidity: 0,
-      epworth: 0,
-      survey: 0
-    },
-    [symbols.state.contactData]: constants.INITIAL_CONTACT_DATA,
-    [symbols.state.epworthProps]: [],
-    [symbols.state.epworthOptions]: constants.EPWORTH_OPTIONS,
-    [symbols.state.symptoms]: constants.INITIAL_SYMPTOMS,
-    [symbols.state.coMorbidityData]: constants.INITIAL_CO_MORBIDITY,
-    [symbols.state.cpap]: {
-      name: 'rx_cpap',
-      label: 'Have you ever used CPAP before?',
-      weight: 4,
-      selected: false
-    }
+const initialState = {
+  [symbols.state.sessionData]: {
+    screenerId: 0,
+    docId: 0,
+    userId: 0
   },
+  [symbols.state.companyData]: {
+    id: 0,
+    name: '',
+    logo: ''
+  },
+  [symbols.state.doctorName]: '',
+  [symbols.state.screenerWeights]: {
+    coMorbidity: 0,
+    epworth: 0,
+    survey: 0
+  },
+  [symbols.state.contactData]: constants.INITIAL_CONTACT_DATA,
+  [symbols.state.epworthProps]: [],
+  [symbols.state.epworthOptions]: constants.EPWORTH_OPTIONS,
+  [symbols.state.symptoms]: constants.INITIAL_SYMPTOMS,
+  [symbols.state.coMorbidityData]: constants.INITIAL_CO_MORBIDITY,
+  [symbols.state.cpap]: {
+    name: 'rx_cpap',
+    label: 'Have you ever used CPAP before?',
+    weight: 4,
+    selected: false
+  }
+}
+
+export default {
+  state: JSON.parse(JSON.stringify(initialState)),
   getters: {
     [symbols.getters.fullName] (state) {
       const contactData = state[symbols.state.contactData]
@@ -49,7 +51,7 @@ export default {
     },
     [symbols.getters.fullContactData] (state) {
       const contactData = state[symbols.state.contactData]
-      const contactProperties = state[symbols.state.contactProperties]
+      const contactProperties = state.screener[symbols.state.contactProperties]
       for (let contactElement of contactData) {
         if (contactProperties.hasOwnProperty(contactElement.camelName)) {
           contactData.value = contactProperties[contactElement.camelName]
@@ -77,6 +79,12 @@ export default {
     }
   },
   mutations: {
+    [symbols.mutations.restoreInitialScreener] (state) {
+      const initialStateCopy = JSON.parse(JSON.stringify(initialState))
+      for (let property in initialState) {
+        state[property] = initialStateCopy[property]
+      }
+    },
     [symbols.mutations.contactData] (state, contactData) {
       state[symbols.state.contactData] = contactData
     },
@@ -109,12 +117,12 @@ export default {
     }
   },
   actions: {
-    [symbols.actions.getDoctorData] ({ commit }, { userId }) {
+    [symbols.actions.getDoctorData] ({ commit }) {
       // @todo: add ajax request
       const doctorName = ''
       commit(symbols.mutations.doctorName, doctorName)
     },
-    [symbols.actions.getCompanyData] ({ commit }, { userId }) {
+    [symbols.actions.getCompanyData] ({ commit }) {
       // @todo: add ajax request
       const companyData = {}
       commit(symbols.mutations.companyData, companyData)
@@ -156,7 +164,7 @@ export default {
       return http.request('post', 'script/submit_screener.php', screenerData)
     },
 
-    [symbols.actions.parseScreenerResults] ({ state, commit }, { data }) {
+    [symbols.actions.parseScreenerResults] ({ state, commit }) {
       let epworthWeight = 0
       for (let epworth of state[symbols.state.epworthProps]) {
         epworthWeight += epworth.selected
@@ -190,9 +198,9 @@ export default {
       this.$router.push({ name: 'screener-results' })
     },
     [symbols.actions.setEpworthProps] ({ commit }) {
-      http.get('/epworth-sleepiness-scale/sorted-with-status').then(
+      http.get('epworth-sleepiness-scale/sorted-with-status').then(
         (response) => {
-          const data = response.data
+          const data = response.data.data
           for (let element of data) {
             element.error = false
             element.selected = ''

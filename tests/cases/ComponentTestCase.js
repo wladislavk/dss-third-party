@@ -6,7 +6,7 @@ export default {
   getVue (options, routes) {
     Vue.use(VueRouter)
     options = Object.assign({
-      store,
+      store: store,
       router: this.getRouter(routes)
     }, options)
     return new Vue(options)

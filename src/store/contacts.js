@@ -4,11 +4,16 @@ import symbols from '../symbols'
 
 export default {
   state: {
-    contact: {}
+    [symbols.state.contact]: {
+      contactid: 0,
+      phone1: '',
+      phone2: '',
+      fax: ''
+    }
   },
   getters: {
     [symbols.getters.filteredContact] (state) {
-      const contact = state.contact
+      const contact = state[symbols.state.contact]
       constants.PHONE_FIELDS.forEach(el => {
         if (contact.hasOwnProperty(el)) {
           contact[el] = contact[el]
@@ -22,7 +27,7 @@ export default {
   },
   mutations: {
     [symbols.mutations.setContact] (state, { data }) {
-      state.contact = data
+      state[symbols.state.contact] = data
     }
   },
   actions: {

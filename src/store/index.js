@@ -6,10 +6,10 @@ import screenerModule from './screener'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  modules: {
-    main: mainModule,
-    contacts: contactModule,
-    screener: screenerModule
-  }
-})
+const modules = {
+  main: mainModule,
+  contacts: contactModule,
+  screener: screenerModule
+}
+
+export default new Vuex.Store({ modules: modules })

@@ -14,8 +14,12 @@ describe('HealthAssessment', () => {
     this.vm = this.vue.$mount()
   })
 
-  it('should display full name taken from Vuex', function () {
-    const contactData = this.vue.$store[symbols.state.contactData]
+  afterEach(function () {
+    this.vue.$store.commit(symbols.mutations.restoreInitialScreener)
+  })
+
+  it('should display full name taken from Vuex', function (done) {
+    const contactData = this.vue.$store.state.screener[symbols.state.contactData]
     for (let element of contactData) {
       if (element.camelName === 'firstName') {
         element.value = 'John'
@@ -26,8 +30,11 @@ describe('HealthAssessment', () => {
     }
     this.vue.$store.commit(symbols.mutations.contactData, contactData)
 
-    const contents = this.vm.$el.querySelector('h5').textContent
-    const expected = 'Health Assessment - John Doe'
-    expect(contents).toBe(expected)
+    this.vue.$nextTick(() => {
+      const contents = this.vm.$el.querySelector('h5').textContent
+      const expected = 'Health Assessment - John Doe'
+      expect(contents).toBe(expected)
+      done()
+    })
   })
 })

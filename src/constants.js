@@ -75,73 +75,85 @@ export const INITIAL_SYMPTOMS = [
     name: 'breathing',
     label: 'Have you ever been told you stop breathing while asleep?',
     weight: 8,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'driving',
     label: 'Have you ever fallen asleep or nodded off while driving?',
     weight: 6,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'gasping',
     label: 'Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?',
     weight: 6,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'sleepy',
     label: 'Do you feel excessively sleepy during the day?',
     weight: 4,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'snore',
     label: 'Do you snore or have you ever been told that you snore?',
     weight: 4,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'weight_gain',
     label: 'Have you had weight gain and found it difficult to lose?',
     weight: 2,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'blood_pressure',
     label: 'Have you taken medication for, or been diagnosed with high blood pressure?',
     weight: 2,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'jerk',
     label: 'Do you kick or jerk your legs while sleeping?',
     weight: 3,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'burning',
     label: 'Do you feel burning, tingling or crawling sensations in your legs when you wake up?',
     weight: 3,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'headaches',
     label: 'Do you wake up with headaches during the night or in the morning?',
     weight: 3,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'falling_asleep',
     label: 'Do you have trouble falling asleep?',
     weight: 4,
-    selected: false
+    selected: false,
+    error: false
   },
   {
     name: 'staying_asleep',
     label: 'Do you have trouble staying asleep once you fall asleep?',
     weight: 4,
-    selected: false
+    selected: false,
+    error: false
   }
 ]
 

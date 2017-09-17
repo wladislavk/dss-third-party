@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import 'jquery-ui/ui/widgets/button'
 import symbols from '../../../symbols'
 
 export default {
@@ -6,25 +7,29 @@ export default {
     return {
       nextDisabled: false,
       hasError: false,
-      symptoms: []
+      symptoms: this.$store.state.screener[symbols.state.symptoms]
     }
   },
   created () {
     $(function () {
       $('.buttonset').buttonset()
     })
-    this.symptoms = this.$store.state[symbols.state.symptoms]
   },
   methods: {
-    onSubmit (e) {
-      e.preventDefault()
-
+    updateValue (event) {
+      for (let symptom of this.symptoms) {
+        if (event.target.name === symptom.name) {
+          symptom.selected = event.target.value
+          return
+        }
+      }
+    },
+    onSubmit () {
       this.nextDisabled = true
 
       for (let symptom of this.symptoms) {
         if (symptom.selected === false) {
           symptom.error = true
-          this.nextDisabled = false
           this.hasError = true
         } else {
           symptom.error = false
@@ -32,6 +37,7 @@ export default {
       }
 
       if (this.hasError) {
+        this.nextDisabled = false
         return
       }
 

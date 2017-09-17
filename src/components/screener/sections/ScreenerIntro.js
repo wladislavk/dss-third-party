@@ -4,13 +4,19 @@ export default {
   data: function () {
     return {
       nextDisabled: false,
-      contactData: this.$store.state[symbols.state.contactData]
+      contactData: this.$store.state.screener[symbols.state.contactData]
     }
   },
   methods: {
-    onSubmit (e) {
-      e.preventDefault()
-
+    updateValue (event) {
+      for (let nameField of this.contactData) {
+        if (nameField.name === event.target.id) {
+          nameField.value = event.target.value
+          return
+        }
+      }
+    },
+    onSubmit () {
       this.nextDisabled = true
 
       let returnVal = true

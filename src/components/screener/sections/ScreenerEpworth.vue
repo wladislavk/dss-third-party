@@ -12,12 +12,12 @@
                             <strong>{{ element.epworth }}</strong>: Please provide an answer
                         </div>
                     </div>
-                    <div v-for="element in epworthProps" id="epworth_{{ element.id }}_div" class="sepH_b clear" v-bind:class="{error: element.error}">
-                        <select class="inpt_in epworth_select" id="epworth_{{ element.id }}" name="epworth_{{ element.id }}" v-model="element.selected">
+                    <div v-for="element in epworthProps" v-bind:id="'epworth_' + element.id + '_div'" class="sepH_b clear" v-bind:class="{error: element.error}">
+                        <select class="inpt_in epworth_select" v-bind:id="'epworth_' + element.id" v-bind:name="'epworth_' + element.id" v-on:change="updateValue($event)">
                             <option value="">Select an answer</option>
                             <option v-for="answer in epworthOptions" v-bind:value="answer.option">{{ answer.option }} - {{ answer.label }}</option>
                         </select>
-                        <label class="lbl_in" for="epworth_{{ element.id }}">{{ element.epworth }}</label>
+                        <label class="lbl_in" v-bind:for="'epworth_' + element.id">{{ element.epworth }}</label>
                     </div>
                 </div>
                 <div class="legend dp33">
@@ -27,7 +27,7 @@
                 </div>
                 <div style="clear:both;"></div>
             </div>
-            <a href="#" id="sect2_next" class="fr next btn btn_medium btn_d" v-bind:class="{disabled: nextDisabled}" v-on:click="onSubmit()">Next</a>
+            <a href="#" id="sect2_next" class="fr next btn btn_medium btn_d" v-bind:class="{disabled: nextDisabled}" v-on:click.prevent="onSubmit()">Next</a>
         </div>
     </form>
 </template>

@@ -10,7 +10,7 @@ describe('Contacts Module', () => {
   describe('filteredContact getter', () => {
     it('should modify phone fields', function () {
       const state = {
-        contact: {
+        [symbols.state.contact]: {
           id: 1,
           phone1: '1234567890',
           fax: 'fre123i$R&456cfdkm7890'
@@ -29,11 +29,11 @@ describe('Contacts Module', () => {
   describe('setContact mutation', () => {
     it('should modify contact', function () {
       const state = {
-        contact: 'foo'
+        [symbols.state.contact]: 'foo'
       }
       const payload = {data: 'bar'}
       ContactModule.mutations[symbols.mutations.setContact](state, payload)
-      expect(state.contact).toBe('bar')
+      expect(state[symbols.state.contact]).toBe('bar')
     })
   })
 

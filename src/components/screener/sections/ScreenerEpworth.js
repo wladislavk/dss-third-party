@@ -5,26 +5,35 @@ export default {
     return {
       nextDisabled: false,
       hasError: false,
-      epworthProps: [],
-      epworthOptions: this.$store.state[symbols.state.epworthOptions]
+      epworthOptions: this.$store.state.screener[symbols.state.epworthOptions]
+    }
+  },
+  computed: {
+    epworthProps: function () {
+      return this.$store.state.screener[symbols.state.epworthProps]
     }
   },
   created () {
-    if (!this.$store.state[symbols.state.epworthProps].length) {
+    if (!this.$store.state.screener[symbols.state.epworthProps].length) {
       this.$store.dispatch(symbols.actions.setEpworthProps)
     }
-    this.epworthProps = this.$store.state[symbols.state.epworthProps]
   },
   methods: {
-    onSubmit (e) {
-      e.preventDefault()
-
+    updateValue (event) {
+      for (let epworth of this.epworthProps) {
+        const propId = 'epworth_' + epworth.id
+        if (event.target.id === propId) {
+          epworth.selected = event.target.value
+          return
+        }
+      }
+    },
+    onSubmit () {
       this.nextDisabled = true
 
       for (let epworth of this.epworthProps) {
         if (epworth.selected === '') {
           epworth.error = true
-          this.nextDisabled = false
           this.hasError = true
         } else {
           epworth.error = false
@@ -32,6 +41,7 @@ export default {
       }
 
       if (this.hasError) {
+        this.nextDisabled = false
         return
       }
 

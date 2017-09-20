@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
-
-const ScreenerSymptomsComponent = require('../../../../src/components/screener/sections/ScreenerSymptoms.vue').default
+import ScreenerSymptomsComponent from '../../../../src/components/screener/sections/ScreenerSymptoms.vue'
 
 describe('ScreenerSymptoms', () => {
   beforeEach(function () {
@@ -63,7 +62,7 @@ describe('ScreenerSymptoms', () => {
     this.vue.$store.commit(symbols.mutations.restoreInitialScreener)
   })
 
-  it('should display existing fields', function (done) {
+  it('should display existing fields', function () {
     const allLabels = this.vm.$el.querySelectorAll('div#sect3 > div.sepH_b')
     expect(allLabels.length).toBe(12)
 
@@ -75,8 +74,6 @@ describe('ScreenerSymptoms', () => {
 
     expect(getLabel(1)).toBe('Have you ever been told you stop breathing while asleep?')
     expect(getLabel(2)).toBe('Have you ever fallen asleep or nodded off while driving?')
-
-    done()
   })
 
   it('should update data when all fields are set', function (done) {

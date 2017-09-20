@@ -1,7 +1,6 @@
 import moxios from 'moxios'
 import TestCase from '../../../cases/ComponentTestCase'
-
-const ViewContactComponent = require('../../../../src/components/manage/contacts/ViewContact.vue').default
+import ViewContactComponent from '../../../../src/components/manage/contacts/ViewContact.vue'
 
 describe('ViewContact', () => {
   beforeEach(function () {

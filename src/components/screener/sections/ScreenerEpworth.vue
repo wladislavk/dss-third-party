@@ -7,9 +7,9 @@
             <p>How likely are you to sleep or doze in each of the following situations?</p>
             <div class="formEl_a">
                 <div class="dp66">
-                    <div class="msg_box msg_error" id="epworth_error_box" v-show="hasError">
-                        <div v-for="element in epworthProps" v-if="element.error" class="error">
-                            <strong>{{ element.epworth }}</strong>: Please provide an answer
+                    <div class="msg_box msg_error" id="epworth_error_box" v-show="errors.length">
+                        <div v-for="error in errors" class="error">
+                            <strong>{{ error }}</strong>: Please provide an answer
                         </div>
                     </div>
                     <div v-for="element in epworthProps" v-bind:id="'epworth_' + element.id + '_div'" class="sepH_b clear" v-bind:class="{error: element.error}">

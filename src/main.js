@@ -5,9 +5,7 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import store from './store'
-
-// global variables
-import constants from './modules/constants.js'
+import constants from './modules/constants'
 
 window.constants = constants
 window.storage = require('./modules/storage.js')

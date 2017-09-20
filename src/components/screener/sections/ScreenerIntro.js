@@ -4,38 +4,38 @@ export default {
   data: function () {
     return {
       nextDisabled: false,
-      contactData: this.$store.state.screener[symbols.state.contactData]
+      contactData: this.$store.state.screener[symbols.state.contactData],
+      storedContacts: {},
+      errors: {}
     }
   },
   methods: {
     updateValue (event) {
-      for (let nameField of this.contactData) {
-        if (nameField.name === event.target.id) {
-          nameField.value = event.target.value
-          return
-        }
-      }
+      this.storedContacts[event.target.id] = event.target.value
     },
     onSubmit () {
       this.nextDisabled = true
 
-      let returnVal = true
+      let hasError = false
 
       for (let nameField of this.contactData) {
-        if (nameField.firstPage && nameField.value === '') {
-          nameField.error = true
-          returnVal = false
+        if (
+          nameField.firstPage &&
+          (!this.storedContacts.hasOwnProperty(nameField.name) || this.storedContacts[nameField.name] === '')
+        ) {
+          this.errors[nameField.name] = true
+          hasError = true
         } else {
-          nameField.error = false
+          this.errors[nameField.name] = false
         }
       }
 
-      if (!returnVal) {
+      if (hasError) {
         this.nextDisabled = false
         return
       }
 
-      this.$store.commit(symbols.mutations.contactData, this.contactData)
+      this.$store.commit(symbols.mutations.contactData, this.storedContacts)
 
       this.$router.push({ name: 'screener-epworth' })
     }

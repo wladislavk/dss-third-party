@@ -4,6 +4,10 @@ import axios from 'axios'
 import store from '../../store'
 import ScreenerApp from './ScreenerApp'
 
+window.$ = require('jquery/dist/jquery.min.js')
+window.jQuery = window.$
+window.fancybox = require('assets/js/screener/jquery.fancybox')
+
 Vue.prototype.$http = axios
 
 /* eslint-disable no-new */

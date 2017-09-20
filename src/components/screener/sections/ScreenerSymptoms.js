@@ -1,13 +1,16 @@
 import $ from 'jquery'
 import 'jquery-ui/ui/widgets/button'
 import symbols from '../../../symbols'
+import helpers from '../../../services/helpers'
 
 export default {
   data: function () {
     return {
       nextDisabled: false,
       hasError: false,
-      symptoms: this.$store.state.screener[symbols.state.symptoms]
+      symptoms: this.$store.state.screener[symbols.state.symptoms],
+      storedSymptoms: {},
+      errors: []
     }
   },
   created () {
@@ -17,22 +20,17 @@ export default {
   },
   methods: {
     updateValue (event) {
-      for (let symptom of this.symptoms) {
-        if (event.target.name === symptom.name) {
-          symptom.selected = event.target.value
-          return
-        }
-      }
+      this.storedSymptoms[event.target.name] = event.target.value
     },
     onSubmit () {
       this.nextDisabled = true
 
       for (let symptom of this.symptoms) {
-        if (symptom.selected === false) {
-          symptom.error = true
-          this.hasError = true
+        if (this.storedSymptoms.hasOwnProperty(symptom.name)) {
+          this.errors = helpers.arrayRemove(this.errors, symptom.label)
         } else {
-          symptom.error = false
+          this.errors = helpers.arrayAddUnique(this.errors, symptom.label)
+          this.hasError = true
         }
       }
 
@@ -41,7 +39,7 @@ export default {
         return
       }
 
-      this.$store.commit(symbols.mutations.symptoms, this.symptoms)
+      this.$store.commit(symbols.mutations.symptoms, this.storedSymptoms)
 
       this.$router.push({ name: 'screener-diagnoses' })
     }

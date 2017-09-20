@@ -12,7 +12,7 @@
                 <p>Please enter your contact information to complete this brief health assessment.</p>
                 <br />
                 <div class="clear"></div>
-                <div v-for="contact in contactData" v-if="contact.firstPage" v-bind:id="contact.name + '_div'" v-bind:key="contact.name" class="sepH_b" v-bind:class="{error: contact.error}">
+                <div v-for="contact in contactData" v-if="contact.firstPage" v-bind:id="contact.name + '_div'" v-bind:key="contact.name" class="sepH_b" v-bind:class="{error: errors[contact.name]}">
                     <label class="lbl_a" v-bind:for="contact.name">{{ contact.label }}</label>
                     <input class="inpt_a" v-bind:class="contact.class" type="text" v-bind:id="contact.name" v-bind:name="contact.name" v-bind:value="contact.value" v-on:change="updateValue($event)" />
                 </div>

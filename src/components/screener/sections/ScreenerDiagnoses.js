@@ -1,3 +1,4 @@
+import alerter from '../../../services/alerter'
 import symbols from '../../../symbols'
 
 export default {
@@ -5,23 +6,27 @@ export default {
     return {
       nextDisabled: false,
       communicationError: false,
-      cpap: this.$store.state[symbols.state.cpap],
-      conditions: this.$store.state[symbols.state.coMorbidityData]
-    }
-  },
-  created () {
-    if (!this.$store.state[symbols.epworthProps.length]) {
-      this.$store.dispatch(symbols.actions.setEpworthProps)
+      cpap: this.$store.state.screener[symbols.state.cpap],
+      storedCpap: 0,
+      conditions: this.$store.state.screener[symbols.state.coMorbidityData],
+      storedConditions: {}
     }
   },
   methods: {
-    onSubmit (e) {
-      e.preventDefault()
-
+    updateValue (event) {
+      this.storedConditions[event.target.name] = false
+      if (event.target.checked) {
+        this.storedConditions[event.target.name] = true
+      }
+    },
+    updateCpap (event) {
+      this.storedCpap = event.target.value
+    },
+    onSubmit () {
       this.nextDisabled = true
 
-      this.$store.commit(symbols.mutations.coMorbidity, this.conditions)
-      this.$store.commit(symbols.mutations.cpap, this.cpap)
+      this.$store.commit(symbols.mutations.coMorbidity, this.storedConditions)
+      this.$store.commit(symbols.mutations.cpap, this.storedCpap)
 
       this.$store.dispatch(symbols.actions.submitScreener).then(
         (response) => {
@@ -30,7 +35,8 @@ export default {
         },
         () => {
           this.nextDisabled = false
-          alert('There was an error communicating with the server, please try again in a few minutes')
+          const alertText = 'There was an error communicating with the server, please try again in a few minutes'
+          alerter.alert(alertText)
         }
       )
     }

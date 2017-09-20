@@ -1,11 +1,14 @@
 import symbols from '../../../symbols'
+import helpers from '../../../services/helpers'
 
 export default {
   data: function () {
     return {
       nextDisabled: false,
       hasError: false,
-      epworthOptions: this.$store.state.screener[symbols.state.epworthOptions]
+      epworthOptions: this.$store.state.screener[symbols.state.epworthOptions],
+      storedProps: {},
+      errors: []
     }
   },
   computed: {
@@ -20,32 +23,29 @@ export default {
   },
   methods: {
     updateValue (event) {
-      for (let epworth of this.epworthProps) {
-        const propId = 'epworth_' + epworth.id
-        if (event.target.id === propId) {
-          epworth.selected = event.target.value
-          return
-        }
-      }
+      const fieldId = event.target.id.replace('epworth_', '')
+      this.storedProps[fieldId] = event.target.value
     },
     onSubmit () {
       this.nextDisabled = true
+      this.hasError = false
 
       for (let epworth of this.epworthProps) {
-        if (epworth.selected === '') {
-          epworth.error = true
-          this.hasError = true
+        if (this.storedProps.hasOwnProperty(epworth.id)) {
+          this.errors = helpers.arrayRemove(this.errors, epworth.epworth)
         } else {
-          epworth.error = false
+          this.errors = helpers.arrayAddUnique(this.errors, epworth.epworth)
+          this.hasError = true
         }
       }
 
       if (this.hasError) {
         this.nextDisabled = false
+        this.$store.commit(symbols.mutations.setEpworthErrors, this.errors)
         return
       }
 
-      this.$store.commit(symbols.mutations.setEpworthProps, this.epworthProps)
+      this.$store.commit(symbols.mutations.modifyEpworthProps, this.storedProps)
 
       this.$router.push({ name: 'screener-symptoms' })
     }

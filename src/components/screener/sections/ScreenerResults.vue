@@ -24,7 +24,7 @@
             <div id="risk_image"><img v-bind:src="'~assets/images/screener-' + riskLevel + '_risk.png'" /></div>
 
             <h2>Thank you for completing the survey. Please return the device to your provider.</h2>
-            <a href="#" id="sect5_next" class="fr next btn btn_medium btn_d" v-on:click="onSubmit()">Dentist Only - Click Here &raquo;</a>
+            <router-link v-bind:to="{ name: 'screener-doctor' }" id="sect5_next" class="fr next btn btn_medium btn_d">Dentist Only - Click Here &raquo;</router-link>
         </div>
     </form>
 </template>

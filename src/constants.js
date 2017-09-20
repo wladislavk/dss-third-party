@@ -6,8 +6,7 @@ export const INITIAL_CONTACT_DATA = [
     class: '',
     firstPage: true,
     hstColumn: 'left',
-    value: '',
-    error: false
+    value: ''
   },
   {
     name: 'last_name',
@@ -16,8 +15,7 @@ export const INITIAL_CONTACT_DATA = [
     class: '',
     firstPage: true,
     hstColumn: 'left',
-    value: '',
-    error: false
+    value: ''
   },
   {
     name: 'dob',
@@ -26,8 +24,7 @@ export const INITIAL_CONTACT_DATA = [
     class: 'datemask',
     firstPage: false,
     hstColumn: 'left',
-    value: '',
-    error: false
+    value: ''
   },
   {
     name: 'phone',
@@ -36,8 +33,7 @@ export const INITIAL_CONTACT_DATA = [
     class: 'phonemask',
     firstPage: true,
     hstColumn: 'right',
-    value: '',
-    error: false
+    value: ''
   },
   {
     name: 'email',
@@ -46,8 +42,7 @@ export const INITIAL_CONTACT_DATA = [
     class: '',
     firstPage: false,
     hstColumn: 'right',
-    value: '',
-    error: false
+    value: ''
   }
 ]
 
@@ -75,85 +70,73 @@ export const INITIAL_SYMPTOMS = [
     name: 'breathing',
     label: 'Have you ever been told you stop breathing while asleep?',
     weight: 8,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'driving',
     label: 'Have you ever fallen asleep or nodded off while driving?',
     weight: 6,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'gasping',
     label: 'Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?',
     weight: 6,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'sleepy',
     label: 'Do you feel excessively sleepy during the day?',
     weight: 4,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'snore',
     label: 'Do you snore or have you ever been told that you snore?',
     weight: 4,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'weight_gain',
     label: 'Have you had weight gain and found it difficult to lose?',
     weight: 2,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'blood_pressure',
     label: 'Have you taken medication for, or been diagnosed with high blood pressure?',
     weight: 2,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'jerk',
     label: 'Do you kick or jerk your legs while sleeping?',
     weight: 3,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'burning',
     label: 'Do you feel burning, tingling or crawling sensations in your legs when you wake up?',
     weight: 3,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'headaches',
     label: 'Do you wake up with headaches during the night or in the morning?',
     weight: 3,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'falling_asleep',
     label: 'Do you have trouble falling asleep?',
     weight: 4,
-    selected: false,
-    error: false
+    selected: false
   },
   {
     name: 'staying_asleep',
     label: 'Do you have trouble staying asleep once you fall asleep?',
     weight: 4,
-    selected: false,
-    error: false
+    selected: false
   }
 ]
 

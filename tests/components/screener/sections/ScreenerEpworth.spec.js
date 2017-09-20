@@ -2,8 +2,7 @@ import Vue from 'vue'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
-
-const ScreenerEpworthComponent = require('../../../../src/components/screener/sections/ScreenerEpworth.vue').default
+import ScreenerEpworthComponent from '../../../../src/components/screener/sections/ScreenerEpworth.vue'
 
 describe('ScreenerEpworth', () => {
   beforeEach(function () {

@@ -1,7 +1,6 @@
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
-
-const ScreenerIntroComponent = require('../../../../src/components/screener/sections/ScreenerIntro.vue').default
+import ScreenerIntroComponent from '../../../../src/components/screener/sections/ScreenerIntro.vue'
 
 describe('ScreenerIntro', () => {
   beforeEach(function () {

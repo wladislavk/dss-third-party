@@ -124,8 +124,9 @@ $sql = "SELECT
         d.address AS doc_address,
         d.phone AS doc_phone,
         p.home_phone AS 'patient_phone',
-        p.work_phone,
-        p.cell_phone
+        p.work_phone AS patient_work_phone,
+        p.cell_phone AS patient_cell_phone,
+        p.email AS patient_email
     FROM dental_patients p
         LEFT JOIN dental_contact r ON p.referred_by = r.contactid
         JOIN dental_contact i ON p.p_m_ins_co = i.contactid
@@ -272,20 +273,38 @@ if ($disabled) { ?>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Patient's Phone #
+                Patient's Contact Phone #
             </td>
             <td valign="top" class="frmdata">
-		<?php
-		   if($preauth['patient_phone']!=''){
-			$patient_phone = $preauth['patient_phone'];
-		   }elseif($preauth['cell_phone']!=''){
-                        $patient_phone = $preauth['cell_phone'];
-                   }else{
-                        $patient_phone = $preauth['work_phone'];
-                   }
-		?>
-                <input type="text" name="patient_phone" value="<?=$patient_phone?>" class="tbox readonly" readonly /> 
+                <input type="text" name="patient_phone" value="<?= e($preauth['patient_phone']) ?>" class="tbox readonly" readonly />
                 <span class="red">*</span>				
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient's Celll Phone #
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="cell_phone" value="<?= e($preauth['cell_phone']) ?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient's Work Phone #
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="work_phone" value="<?= e($preauth['work_phone']) ?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr bgcolor="#FFFFFF">
+            <td valign="top" class="frmhead" width="30%">
+                Patient's Email
+            </td>
+            <td valign="top" class="frmdata">
+                <input type="text" name="patient_email" value="<?= e($preauth['patient_email']) ?>" class="tbox readonly" readonly />
+                <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">

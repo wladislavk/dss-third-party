@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\CompanyRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 
 class CompaniesController extends BaseRestController
 {

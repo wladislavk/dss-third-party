@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\HomeSleepTestRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
 class HomeSleepTestsController extends BaseRestController

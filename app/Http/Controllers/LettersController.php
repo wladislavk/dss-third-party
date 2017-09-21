@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Helpers\WelcomeLetterCreator;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
 class LettersController extends BaseRestController

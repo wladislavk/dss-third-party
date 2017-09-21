@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Exceptions;
 
 use Exception;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;

@@ -4,8 +4,8 @@ namespace DentalSleepSolutions\Http\Requests;
 
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
-use Symfony\Component\HttpFoundation\Response;
+use DentalSleepSolutions\Facades\ApiResponse;
+use Illuminate\Http\JsonResponse;
 
 class Request extends FormRequest
 {
@@ -39,7 +39,7 @@ class Request extends FormRequest
      * Get the proper failed validation response for the request.
      *
      * @param array $errors
-     * @return Response
+     * @return JsonResponse
      */
     public function response(array $errors)
     {

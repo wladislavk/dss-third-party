@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Providers;
 
 use DentalSleepSolutions\Eloquent;
+use DentalSleepSolutions\Helpers\ApiResponseHelper;
 use DentalSleepSolutions\Helpers\ClassRetriever;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use DentalSleepSolutions\Swagger\ClassRetrieverInterface;
@@ -37,5 +38,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->app->bind(ClassRetrieverInterface::class, ClassRetriever::class);
+
+        $this->app->bind('apiresponse', ApiResponseHelper::class);
     }
 }

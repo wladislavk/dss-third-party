@@ -13,12 +13,13 @@ use DentalSleepSolutions\Eloquent\Repositories\UserSignatureRepository;
 use Exception;
 use DentalSleepSolutions\Eligible\Client;
 use DentalSleepSolutions\Helpers\InvoiceHelper;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Http\Requests\Enrollments\Create;
 use DentalSleepSolutions\Http\Requests\ApiEligibleEnrollmentRequest;
 use DentalSleepSolutions\Http\Requests\Enrollments\OriginalSignature;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use DentalSleepSolutions\Eligible\Webhooks\EnrollmentsHandler;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ApiEnrollmentsController extends ApiBaseController
 {
@@ -63,15 +64,16 @@ class ApiEnrollmentsController extends ApiBaseController
      */
     public function listEnrollments(Request $request, $userId = 0)
     {
+        $numRows = $request->get('num_rows', false);
         $result = $this->repository->getList(
             $userId,
-            $request->get('num_rows', false),
+            $numRows,
             $request->get('search', false),
             $request->get('sort', 'transaction_type'),
             $request->get('sort_type', 'asc')
         );
 
-        if ($request->get('num_rows', false)) {
+        if ($result instanceof LengthAwarePaginator) {
             $result = ApiResponse::getPaginateStructure($result);
         }
 
@@ -173,7 +175,7 @@ class ApiEnrollmentsController extends ApiBaseController
             }
         }
 
-        return ApiResponse::response($response->getResponse(), "Enrollments is created.", "Error creating enrollment.");
+        return ApiResponse::response($response->getResponse(), "Enrollments are created.", "Error creating enrollment.");
     }
 
     /**

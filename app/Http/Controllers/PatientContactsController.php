@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientContactRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
 class PatientContactsController extends BaseRestController

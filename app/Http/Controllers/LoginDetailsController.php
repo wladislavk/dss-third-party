@@ -2,7 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 
 class LoginDetailsController extends BaseRestController
 {

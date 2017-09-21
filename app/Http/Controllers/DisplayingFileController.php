@@ -2,8 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Storage;
 
 class DisplayingFileController extends Controller

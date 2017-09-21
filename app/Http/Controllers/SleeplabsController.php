@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\SleeplabRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
 class SleeplabsController extends BaseRestController

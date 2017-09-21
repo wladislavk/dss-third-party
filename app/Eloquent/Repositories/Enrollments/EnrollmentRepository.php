@@ -5,7 +5,12 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Enrollments;
 use Carbon\Carbon;
 use DentalSleepSolutions\Eloquent\Models\Enrollments\Enrollment;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorInterface;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 
 class EnrollmentRepository extends AbstractRepository
 {
@@ -55,34 +60,38 @@ class EnrollmentRepository extends AbstractRepository
 
     /**
      * @param int $userId
-     * @param bool $pagination
+     * @param int|bool $pagination
      * @param bool $search
      * @param string $sort
      * @param string $sortType
-     * @return mixed
+     * @return Collection|LengthAwarePaginator|LengthAwarePaginatorInterface
      */
     public function getList($userId, $pagination, $search, $sort, $sortType)
     {
-        $query = $this->model->select([
-            "dental_eligible_enrollment.*",
-            \DB::raw("CONCAT(types.transaction_type,' - ',types.description) as transaction_type")
-        ])
-            ->join('dental_enrollment_transaction_type as types', function ($q) {
+        $query = $this->model
+            ->select([
+                "dental_eligible_enrollment.*",
+                \DB::raw("CONCAT(types.transaction_type,' - ',types.description) as transaction_type")
+            ])
+            ->join('dental_enrollment_transaction_type as types', function (JoinClause $q) {
                 $q->on('dental_eligible_enrollment.transaction_type_id', '=', 'types.id');
             })
-            ->orderBy($sort, $sortType);
+            ->orderBy($sort, $sortType)
+        ;
 
         $query->where(\DB::raw('dental_eligible_enrollment.user_id'), '=', $userId);
 
         if ($search && $search != '') {
             $query->where(function (Builder $q) use ($search) {
-                $q->where('dental_eligible_enrollment.provider_name', 'like', "%$search%")
+                $q
+                    ->where('dental_eligible_enrollment.provider_name', 'like', "%$search%")
                     ->orWhere('types.transaction_type', 'like', "%$search%")
                     ->orWhere('types.description', 'like', "%$search%")
                     ->orWhere('dental_eligible_enrollment.npi', 'like', "%$search%")
                     ->orWhere('dental_eligible_enrollment.payer_id', 'like', "%$search%")
                     ->orWhere('dental_eligible_enrollment.payer_name', 'like', "%$search%")
-                    ->orWhere('dental_eligible_enrollment.adddate', 'adddate', "%$search%");
+                    ->orWhere('dental_eligible_enrollment.adddate', 'adddate', "%$search%")
+                ;
             });
         }
 

@@ -3,7 +3,7 @@
 namespace DentalSleepSolutions\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 
 abstract class AbstractNonRestRequest extends FormRequest
 {

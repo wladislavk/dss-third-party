@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\SupportTicket;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\SupportTicketRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 
 class SupportTicketsController extends BaseRestController
 {

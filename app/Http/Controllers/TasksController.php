@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TaskRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 
 class TasksController extends BaseRestController
 {

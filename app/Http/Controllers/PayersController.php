@@ -5,7 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Models\Payer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 
 class PayersController extends BaseRestController
 {

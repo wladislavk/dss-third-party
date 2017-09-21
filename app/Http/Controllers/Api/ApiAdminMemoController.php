@@ -7,7 +7,7 @@ use DentalSleepSolutions\Http\Requests\Request;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 
 class ApiAdminMemoController extends ApiBaseController
 {

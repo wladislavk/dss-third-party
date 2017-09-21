@@ -8,7 +8,7 @@ use DentalSleepSolutions\Helpers\ContactsAndCompaniesRetriever;
 use DentalSleepSolutions\Helpers\Paginator;
 use DentalSleepSolutions\Helpers\QueryComposers\ContactsQueryComposer;
 use DentalSleepSolutions\Helpers\ReferredContactParser;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
 class ContactsController extends BaseRestController

@@ -8,7 +8,7 @@ use DentalSleepSolutions\Exceptions\AuthException;
 use DentalSleepSolutions\Exceptions\JwtException;
 use DentalSleepSolutions\Http\Controllers\Controller;
 use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;

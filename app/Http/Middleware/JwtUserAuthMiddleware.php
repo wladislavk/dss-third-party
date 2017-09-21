@@ -10,7 +10,7 @@ use DentalSleepSolutions\Exceptions\JWT\InactiveTokenException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidPayloadException;
 use DentalSleepSolutions\Exceptions\JWT\InvalidTokenException;
 use DentalSleepSolutions\Http\Requests\Request;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\JwtMiddlewareErrors as MiddlewareErrors;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;

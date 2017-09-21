@@ -30,4 +30,15 @@ class ClaimNoteAttachmentsApiTest extends ApiTestCase
             'filename' => 'updatedTestFilename',
         ];
     }
+
+    public function testIndexWithMultipleModels()
+    {
+        // Truncate, compatible with transactions
+        $this->model->newQuery()->delete();
+        // List more than one model
+        factory($this->getModel(), 5)->create();
+        $this->get(self::ROUTE_PREFIX . $this->getRoute());
+        $this->assertResponseOk();
+        $this->assertEquals(5, count($this->getResponseData()));
+    }
 }

@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
-use DentalSleepSolutions\StaticClasses\ApiResponse;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
 class GuideDevicesController extends BaseRestController

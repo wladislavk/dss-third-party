@@ -1,3 +1,6 @@
+import endpoints from '../../endpoints'
+import http from '../../services/http'
+
 module.exports = {
   data () {
     return {
@@ -65,8 +68,8 @@ module.exports = {
 
         this.waitingForResponse = true
 
-        this.checkLogout()
-          .then(function (response) {
+        http.post(endpoints.users.checkLogout).then(
+          function (response) {
             const data = response.data
 
             const newLast = this.currentTime() + (data.resetTime || 0) - this.logoutWait
@@ -79,9 +82,11 @@ module.exports = {
             }
 
             this.waitingForResponse = false
-          }, function (response) {
+          },
+          function (response) {
             this.handleErrors('checkLogout', response)
-          })
+          }
+        )
       }
 
       if (timeBeforeModal <= 0 && !this.modalWindow.is(':visible')) {
@@ -120,9 +125,6 @@ module.exports = {
     },
     plural (n, text) {
       return n + ' ' + (n === 1 ? text : text + 's')
-    },
-    checkLogout () {
-      return this.$http.post(process.env.API_PATH + 'users/check-logout')
     }
   }
 }

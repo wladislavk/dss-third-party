@@ -1,8 +1,9 @@
-import phoneMasks from '../../../../modules/masks/PhoneMixin.js'
-import phoneFilters from '../../../../modules/filters/phoneMixin.js'
-import sleeplabValidator from '../../../../modules/validators/SleeplabMixin.js'
-
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../../endpoints'
+import handlerMixin from '../../../../modules/handler/HandlerMixin'
+import http from '../../../../services/http'
+import phoneMasks from '../../../../modules/masks/PhoneMixin'
+import phoneFilters from '../../../../modules/filters/phoneMixin'
+import sleeplabValidator from '../../../../modules/validators/SleeplabMixin'
 
 export default {
   name: 'edit-sleeplab',
@@ -91,8 +92,8 @@ export default {
     },
     onSubmit () {
       if (this.validateSleeplabData(this.sleeplab)) {
-        this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab)
-          .then(function (response) {
+        this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab).then(
+          function (response) {
             const data = response.data.data
 
             this.$parent.popupEdit = false
@@ -101,11 +102,13 @@ export default {
               this.$parent.updateParentData({ message: data.status })
               this.$parent.disable()
             }
-          }, function (response) {
+          },
+          function (response) {
             this.parseFailedResponseOnEditingSleeplab(response.data.data)
 
             this.handleErrors('editSleeplab', response)
-          })
+          }
+        )
       }
     },
     parseFailedResponseOnEditingSleeplab (data) {
@@ -128,8 +131,8 @@ export default {
       this.fetchSleeplab(this.componentParams.sleeplabId)
     },
     fetchSleeplab (id) {
-      this.getSleeplab(id)
-        .then(function (response) {
+      this.getSleeplab(id).then(
+        function (response) {
           const data = response.data.data
 
           if (data) {
@@ -145,14 +148,16 @@ export default {
 
             this.sleeplab = data
           }
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('getSleeplab', response)
-        })
+        }
+      )
     },
     getSleeplab (id) {
       id = id || 0
 
-      return this.$http.get(process.env.API_PATH + 'sleeplabs/' + id)
+      return http.get(endpoints.sleeplabs.show + '/' + id)
     },
     editSleeplab (sleeplabId, sleeplabFormData) {
       // convert phone fields before storing
@@ -167,7 +172,7 @@ export default {
         sleeplab_form_data: sleeplabFormData
       }
 
-      return this.$http.post(process.env.API_PATH + 'sleeplabs/edit/' + sleeplabId, data)
+      return http.post(endpoints.sleeplabs.edit + '/' + sleeplabId, data)
     }
   }
 }

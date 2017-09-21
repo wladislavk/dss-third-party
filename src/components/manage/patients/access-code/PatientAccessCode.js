@@ -1,4 +1,6 @@
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../../endpoints'
+import handlerMixin from '../../../../modules/handler/HandlerMixin'
+import http from '../../../../services/http'
 
 export default {
   data () {
@@ -21,8 +23,8 @@ export default {
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
-      this.getPatientById(this.componentParams.patientId)
-        .then(function (response) {
+      this.getPatientById(this.componentParams.patientId).then(
+        function (response) {
           const data = response.data.data
 
           if (data) {
@@ -33,9 +35,11 @@ export default {
               this.resetPinCode(this.componentParams.patientId)
             }
           }
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('getPatientById', response)
-        })
+        }
+      )
 
       // this popup doesn't have any input fields - set the flag to false
       this.$parent.popupEdit = false
@@ -43,24 +47,26 @@ export default {
     resetPinCode (patientId) {
       patientId = patientId || 0
 
-      this.resetPatientAccessCode(patientId)
-        .then(function (response) {
+      this.resetPatientAccessCode(patientId).then(
+        function (response) {
           const data = response.data.data
 
           if (data.hasOwnProperty('access_code') && data.access_code > 0) {
             this.$set(this.patient, 'access_code', data.access_code)
             this.isResetAccessCode = true
           }
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('resetPatientAccessCode', response)
-        })
+        }
+      )
     },
     onClickReset () {
       this.resetPinCode(this.componentParams.patientId)
     },
     onSubmit () {
-      this.createTempPinDocument(this.componentParams.patientId)
-        .then(function (response) {
+      this.createTempPinDocument(this.componentParams.patientId).then(
+        function (response) {
           const data = response.data.data
 
           if (data.hasOwnProperty('path_to_pdf') && data.path_to_pdf.length > 0) {
@@ -72,24 +78,26 @@ export default {
             // close the popup
             this.$parent.disable()
           }
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('createTempPinDocument', response)
-        })
+        }
+      )
     },
     getPatientById (patientId) {
       patientId = patientId || 0
 
-      return this.$http.get(process.env.API_PATH + 'patients/' + patientId)
+      return http.get(endpoints.patients.show + '/' + patientId)
     },
     resetPatientAccessCode (patientId) {
       patientId = patientId || 0
 
-      return this.$http.post(process.env.API_PATH + 'patients/reset-access-code/' + patientId)
+      return http.post(endpoints.patients.resetAccessCode + '/' + patientId)
     },
     createTempPinDocument (patientId) {
       patientId = patientId || 0
 
-      return this.$http.post(process.env.API_PATH + 'patients/temp-pin-document/' + patientId)
+      return http.post(endpoints.patients.temporaryPinDocument + '/' + patientId)
     }
   }
 }

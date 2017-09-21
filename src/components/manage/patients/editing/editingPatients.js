@@ -1,5 +1,7 @@
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
-const patientValidator = require('../../../../modules/validators/PatientMixin.js')
+import endpoints from '../../../../endpoints'
+import handlerMixin from '../../../../modules/handler/HandlerMixin'
+import http from '../../../../services/http'
+import patientValidator from '../../../../modules/validators/PatientMixin'
 
 export default {
   data: function () {
@@ -224,73 +226,85 @@ export default {
 
     this.fillForm(this.routeParameters.patientId)
 
-    this.getHomeSleepTestCompanies()
-      .then(function (response) {
+    http.post(endpoints.companies.homeSleepTest).then(
+      function (response) {
         const data = response.data.data
 
         if (data) {
           this.homeSleepTestCompanies = data
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getHomeSleepTestCompanies', response)
-      })
+      }
+    )
 
-    this.getDocLocations()
-      .then(function (response) {
+    http.post(endpoints.locations.byDoctor).then(
+      function (response) {
         const data = response.data.data
 
         if (data) {
           this.docLocations = data
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getDocLocations', response)
-      })
+      }
+    )
 
-    this.getBillingCompany()
-      .then(function (response) {
+    http.post(endpoints.companies.billingExclusiveCompany).then(
+      function (response) {
         const data = response.data.data
 
         if (data) {
           this.billingCompany = data
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getBillingCompany', response)
-      })
+      }
+    )
 
-    this.getEligiblePayerSource()
-      .then(function (response) {
+    this.getEligiblePayerSource().then(
+      function (response) {
         let data = response.data.data
 
         if (data.length) {
           data = this.populateEligiblePayerSource(data)
           this.eligiblePayerSource = data
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getEligiblePayerSource', response)
 
-        this.getStaticEligiblePayerSource()
-          .then(function (response) {
+        http.get(endpoints.eligible.payers).then(
+          function (response) {
             let data = response.data.data
 
             if (data.length) {
               data = this.populateEligiblePayerSource(data)
               this.eligiblePayerSource = data
             }
-          }, function (response) {
+          },
+          function (response) {
             self.handleErrors('getStaticEligiblePayerSource', response)
-          })
-      })
+          }
+        )
+      }
+    )
 
-    this.getInsuranceContacts()
-      .then(function (response) {
+    http.post(endpoints.contacts.insurance).then(
+      function (response) {
         const data = response.data.data
 
         if (data.length) {
           this.insuranceContacts = data
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getInsuranceContacts', response)
-      })
+      }
+    )
   },
   beforeDestroy () {
     window.eventHub.$off('update-header-info', this.onUpdateHeaderInfo)
@@ -708,7 +722,7 @@ export default {
       this.$set(this.patient, 'referred_by', id)
       this.$set(this.patient, 'referred_source', referredType)
     },
-    onKeyUpSearchReferrers: function (event) {
+    onKeyUpSearchReferrers: function () {
       clearTimeout(this.typingTimer)
 
       const self = this
@@ -745,16 +759,13 @@ export default {
       }
       this.$set(this.patient, 'referred_source', referredSource)
     },
-    getBillingCompany: function () {
-      return this.$http.post(process.env.API_PATH + 'companies/billing-exclusive-company')
-    },
     updateTrackerNotes: function (patientId, notes) {
       const data = {
         patient_id: patientId || 0,
         tracker_notes: notes
       }
 
-      return this.$http.post(process.env.API_PATH + 'patient-summaries/update-tracker-notes', data)
+      return http.post(endpoints.patientSummaries.updateTrackerNotes, data)
     },
     cleanPatientData: function () {
       const patient = {}
@@ -909,33 +920,27 @@ export default {
     getUncompletedHomeSleepTests: function (patientId) {
       const data = { patientId: patientId || 0 }
 
-      return this.$http.post(process.env.API_PATH + 'home-sleep-tests/uncompleted', data)
+      return http.post(endpoints.homeSleepTests.uncompleted, data)
     },
     getGeneratedDateOfIntroLetter: function (patientId) {
       const data = { patient_id: patientId || 0 }
 
-      return this.$http.post(process.env.API_PATH + 'letters/gen-date-of-intro', data)
-    },
-    getDocLocations: function () {
-      return this.$http.post(process.env.API_PATH + 'locations/by-doctor')
+      return http.post(endpoints.letters.generateDateOfIntro, data)
     },
     getProfilePhoto: function (patientId) {
       const data = { patient_id: patientId || 0 }
 
-      return this.$http.post(process.env.API_PATH + 'profile-images/photo', data)
+      return http.post(endpoints.profileImages.photo, data)
     },
     getInsuranceCardImage: function (patientId) {
       const data = { patient_id: patientId || 0 }
 
-      return this.$http.post(process.env.API_PATH + 'profile-images/insurance-card-image', data)
-    },
-    getHomeSleepTestCompanies: function () {
-      return this.$http.post(process.env.API_PATH + 'companies/home-sleep-test')
+      return http.post(endpoints.profileImages.insuranceCardImage, data)
     },
     getPatientById: function (patientId) {
       patientId = patientId || 0
 
-      return this.$http.get(process.env.API_PATH + 'patients/' + patientId)
+      return http.get(endpoints.patients.show + '/' + patientId)
     },
     findPatientNotifications: function (patientId) {
       const data = {
@@ -945,31 +950,26 @@ export default {
         }
       }
 
-      return this.$http.post(process.env.API_PATH + 'notifications/with-filter', data)
+      return http.post(endpoints.notifications.withFilter, data)
     },
     addNewPatient: function () {
       const data = {}
 
-      return this.$http.post(process.env.API_PATH + 'patients/add-new-patient', data)
+      // @todo: this endpoint does not exist
+      return http.post('/patients/add-new-patient', data)
     },
     getDataForFillingPatientForm: function (patientId) {
       const data = { 'patient_id': patientId || 0 }
 
-      return this.$http.post(process.env.API_PATH + 'patients/filling-form', data)
+      return http.post(endpoints.patients.fillingForm, data)
     },
     getReferrers: function (requestedName) {
       const data = { partial_name: requestedName }
 
-      return this.$http.post(process.env.API_PATH + 'patients/referrers', data)
+      return http.post(endpoints.patients.referrers, data)
     },
     getEligiblePayerSource: function () {
       return this.$http.get('https://eligibleapi.com/resources/payers/claims/medical.json')
-    },
-    getStaticEligiblePayerSource: function () {
-      return this.$http.get(process.env.API_PATH + 'eligible/payers')
-    },
-    getInsuranceContacts: function () {
-      return this.$http.post(process.env.API_PATH + 'contacts/insurance')
     },
     getListContactsAndCompanies: function (requestedName) {
       const data = {
@@ -977,7 +977,7 @@ export default {
         without_companies: true
       }
 
-      return this.$http.post(process.env.API_PATH + 'contacts/list-contacts-and-companies', data)
+      return http.post(endpoints.contacts.listContactsAndCompanies, data)
     },
     editPatient: function (
       patientId,
@@ -1006,18 +1006,21 @@ export default {
         tracker_notes: trackerNotes || undefined
       }
 
-      return this.$http.post(process.env.API_PATH + 'patients/edit/' + patientId, data)
+      return http.post(endpoints.patients.edit + '/' + patientId, data)
     },
     checkEmail: function (email, patientId) {
-      const data = { email: email || '', patient_id: patientId || 0 }
+      const data = {
+        email: email || '',
+        patient_id: patientId || 0
+      }
 
-      return this.$http.post(process.env.API_PATH + 'patients/check-email', data)
+      return http.post(endpoints.patients.checkEmail, data)
     },
     removeNotificationInDb: function (id) {
       id = id || 0
       const data = { status: 2 }
 
-      return this.$http.put(process.env.API_PATH + 'notifications/' + id, data)
+      return http.put(endpoints.notifications.update + '/' + id, data)
     }
   }
 }

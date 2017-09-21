@@ -1,3 +1,6 @@
+import endpoints from '../../endpoints'
+import http from '../../services/http'
+
 module.exports = {
   methods: {
     onMouseEnterTaskItem (event) {
@@ -50,15 +53,14 @@ module.exports = {
       if (confirm(confirmText)) {
         id = id || 0
 
-        this.deleteTask(id)
-          .then(
-            function () {
-              this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
-            },
-            function (response) {
-              console.error('deleteTask [status]: ', response.status)
-            }
-          )
+        this.deleteTask(id).then(
+          function () {
+            this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
+          },
+          function (response) {
+            console.error('deleteTask [status]: ', response.status)
+          }
+        )
       }
     },
     updateTaskToActive (id) {
@@ -68,12 +70,12 @@ module.exports = {
         status: 1
       }
 
-      return this.$http.put(process.env.API_PATH + 'tasks/' + id, data)
+      return http.put(endpoints.tasks.update + '/' + id, data)
     },
     deleteTask (id) {
       id = id || 0
 
-      return this.$http.delete(process.env.API_PATH + 'tasks/' + id)
+      return http.delete(endpoints.tasks.destroy + '/' + id)
     },
     removeItemFromTaskList (type, id, isDashboardTaskList) {
       let patientTask = false

@@ -1,4 +1,6 @@
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../endpoints'
+import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
 
 export default {
   data () {
@@ -80,8 +82,8 @@ export default {
     setViewStatus (vob) {
       const data = { viewed: vob.viewed === 0 ? 1 : 0 }
 
-      this.updateVob(vob.id, data)
-        .then(function () {
+      this.updateVob(vob.id, data).then(
+        function () {
           this.$router.push({
             name: this.$route.name,
             query: {
@@ -91,9 +93,11 @@ export default {
 
           const foundVob = this.vobs.find(el => el.id === vob.id)
           foundVob.viewed = data.viewed
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('updateVob', response)
-        })
+        }
+      )
     },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
@@ -109,16 +113,19 @@ export default {
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection,
         this.routeParameters.viewed
-      ).then(function (response) {
-        const data = response.data.data
+      ).then(
+        function (response) {
+          const data = response.data.data
 
-        if (data.result.length) {
-          this.vobs = data.result
-          this.totalVobs = data.total
+          if (data.result.length) {
+            this.vobs = data.result
+            this.totalVobs = data.total
+          }
+        },
+        function (response) {
+          this.handleErrors('findVobs', response)
         }
-      }, function (response) {
-        this.handleErrors('findVobs', response)
-      })
+      )
     },
     findVobs (
       vobsPerPage,
@@ -135,12 +142,12 @@ export default {
         viewed: viewed
       }
 
-      return this.$http.post(process.env.API_PATH + 'insurance-preauth/vobs/find', data)
+      return http.post(endpoints.insurancePreauth.findVobs, data)
     },
     updateVob (id, data) {
       id = id || 0
 
-      return this.$http.put(process.env.API_PATH + 'insurance-preauth/' + id, data)
+      return http.put(endpoints.insurancePreauth.update + '/' + id, data)
     }
   }
 }

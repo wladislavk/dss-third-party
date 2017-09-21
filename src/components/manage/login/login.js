@@ -1,5 +1,7 @@
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
-const scriptLoaderMixin = require('../../../modules/loader/ScriptLoaderMixin.js')
+import endpoints from '../../../endpoints'
+import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
+import scriptLoaderMixin from '../../../modules/loader/ScriptLoaderMixin'
 
 export default {
   name: 'login',
@@ -19,7 +21,7 @@ export default {
         cur_page: this.$route.path
       }
 
-      this.setLoginDetails(data)
+      http.post(endpoints.loginDetails.store, data)
 
       this.$router.push('/manage/index')
     }
@@ -54,8 +56,8 @@ export default {
         return false
       }
 
-      this.getToken(this.credentials)
-        .then(function (response) {
+      this.getToken(this.credentials).then(
+        function (response) {
           const data = response.data
 
           if (data.token) {
@@ -74,22 +76,21 @@ export default {
             }, function (response) {
               this.handleErrors('getAccountStatus', response)
             })
-        }, function (response) {
+        },
+        function (response) {
           if (response.status === 422) {
             this.message = 'Wrong username or password'
           } else {
             this.handleErrors('getToken', response)
           }
-        })
+        }
+      )
     },
     getToken (data) {
       return this.$http.post(process.env.API_ROOT + 'auth', data)
     },
-    setLoginDetails (data) {
-      return this.$http.post(process.env.API_PATH + 'login-details', data)
-    },
     getAccountStatus () {
-      return this.$http.post(process.env.API_PATH + 'users/check', {}, {
+      return http.post(endpoints.users.check, {}, {
         headers: {
           Authorization: 'Bearer ' + window.storage.get('token')
         }

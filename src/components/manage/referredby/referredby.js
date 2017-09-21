@@ -1,6 +1,7 @@
+import endpoints from '../../../endpoints'
+import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
 import symbols from '../../../symbols'
-
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
   name: 'referredby',
@@ -113,12 +114,14 @@ export default {
       this.$parent.$refs.modal.display('edit-referred-by-contact')
     },
     removeContact (id) {
-      this.deleteReferredByContact(id)
-        .then(function () {
+      this.deleteReferredByContact(id).then(
+        function () {
           this.message = 'Deleted Successfull'
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('deleteReferredByContact', response)
-        })
+        }
+      )
     },
     getContacts () {
       this.getReferredByContacts(
@@ -126,16 +129,19 @@ export default {
         this.routeParameters.currentPageNumber,
         this.routeParameters.sortDirection,
         this.contactsPerPage
-      ).then(function (response) {
-        const data = response.data.data
+      ).then(
+        function (response) {
+          const data = response.data.data
 
-        if (data.total > 0) {
-          this.contactsTotalNumber = data.total
-          this.contacts = data.contacts
+          if (data.total > 0) {
+            this.contactsTotalNumber = data.total
+            this.contacts = data.contacts
+          }
+        },
+        function (response) {
+          this.handleErrors('getReferredByContacts', response)
         }
-      }, function (response) {
-        this.handleErrors('getReferredByContacts', response)
-      })
+      )
     },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
@@ -151,10 +157,10 @@ export default {
         contacts_per_page: contactsPerPage
       }
 
-      return this.$http.post(process.env.API_PATH + 'contacts/referred-by', data)
+      return http.post(endpoints.contacts.referredBy, data)
     },
     deleteReferredByContact (id) {
-      return this.$http.delete(process.env.API_PATH + 'referred-by-contacts/' + id)
+      return http.delete(endpoints.referredByContacts.destroy + '/' + id)
     }
   }
 }

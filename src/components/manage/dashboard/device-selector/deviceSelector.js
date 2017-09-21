@@ -1,4 +1,6 @@
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../../endpoints'
+import handlerMixin from '../../../../modules/handler/HandlerMixin'
+import http from '../../../../services/http'
 
 export default {
   data () {
@@ -30,20 +32,22 @@ export default {
   },
   created () {
     if (this.patientId > 0) {
-      this.getPatientById(this.patientId)
-        .then(function (response) {
+      this.getPatientById(this.patientId).then(
+        function (response) {
           const data = response.data.data
 
           if (data) {
             this.currentPatient = data
           }
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('getPatientById', response)
-        })
+        }
+      )
     }
 
-    this.getDeviceGuideSettingOptions()
-      .then(function (response) {
+    http.post(endpoints.guideSettingOptions.settingIds).then(
+      function (response) {
         const data = response.data.data
 
         if (data) {
@@ -60,9 +64,11 @@ export default {
 
           this.deviceGuideSettingOptions = data
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getDeviceGuideSettingOptions', response)
-      })
+      }
+    )
   },
   mounted () {
     window.$('.imp_chk').click(function () {
@@ -149,13 +155,10 @@ export default {
     getPatientById (patientId) {
       patientId = patientId || 0
 
-      return this.$http.get(process.env.API_PATH + 'patients/' + patientId)
-    },
-    getDeviceGuideSettingOptions () {
-      return this.$http.post(process.env.API_PATH + 'guide-setting-options/settingIds')
+      return http.get(endpoints.patients.show + '/' + patientId)
     },
     getDeviceGuideResults (data) {
-      return this.$http.post(process.env.API_PATH + 'guide-devices/with-images', data)
+      return http.post(endpoints.guideDevices.withImages, data)
     },
     updateFlowDevice (device) {
       const data = {
@@ -164,7 +167,8 @@ export default {
         pid: this.patientId
       }
 
-      return this.$http.post(process.env.API_PATH + '', data)
+      // @todo: check the endpoint
+      return http.post('/', data)
     }
   }
 }

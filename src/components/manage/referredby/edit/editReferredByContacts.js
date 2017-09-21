@@ -1,6 +1,7 @@
-import referredByContactValidatorMixin from '../../../../modules/validators/ReferredByContactMixin.js'
-
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../../endpoints'
+import handlerMixin from '../../../../modules/handler/HandlerMixin'
+import http from '../../../../services/http'
+import referredByContactValidatorMixin from '../../../../modules/validators/ReferredByContactMixin'
 
 export default {
   name: 'edit-referred-by-contacts',
@@ -53,16 +54,18 @@ export default {
     this.$parent.popupEdit = false
   },
   mounted () {
-    this.getActiveQualifiers()
-      .then(function (response) {
+    http.post(endpoints.qualifiers.active).then(
+      function (response) {
         const data = response.data.data
 
         if (data.length) {
           this.qualifiers = data
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getActiveQualifiers', response)
-      })
+      }
+    )
   },
   beforeDestroy () {
     window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
@@ -71,8 +74,8 @@ export default {
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
-      this.getReferredByContact(this.componentParams.contactId)
-        .then(function (response) {
+      this.getReferredByContact(this.componentParams.contactId).then(
+        function (response) {
           const data = response.data.data
 
           if (data) {
@@ -82,9 +85,11 @@ export default {
 
             this.contact = response.data.data
           }
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('getReferredByContact', response)
-        })
+        }
+      )
     },
     onSubmit () {
       if (this.validateContactData(this.contact)) {
@@ -131,10 +136,7 @@ export default {
       }
     },
     getReferredByContact (id) {
-      return this.$http.get(process.env.API_PATH + 'referred-by-contacts/' + id)
-    },
-    getActiveQualifiers () {
-      return this.$http.post(process.env.API_PATH + 'qualifiers/active')
+      return http.get(endpoints.referredByContacts.show + '/' + id)
     },
     editContact (contactId, contactFormData) {
       contactId = contactId || 0
@@ -143,7 +145,7 @@ export default {
         contact_form_data: contactFormData
       }
 
-      return this.$http.post(process.env.API_PATH + 'referred-by-contacts/edit/' + contactId, data)
+      return http.post(endpoints.referredByContacts.edit + '/' + contactId, data)
     }
   }
 }

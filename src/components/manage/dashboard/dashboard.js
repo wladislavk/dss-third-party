@@ -1,8 +1,10 @@
+import endpoints from '../../../endpoints'
+import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
+import taskMixin from '../../../modules/tasks/TaskMixin'
+
 // include static libs
 require('../../../../static/third-party/sucker-tree-horizontal-menu/sucker_tree_home.js')
-
-const taskMixin = require('../../../modules/tasks/TaskMixin.js')
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
   data: function () {
@@ -69,19 +71,23 @@ export default {
     window.eventHub.$on('update-header-info', this.onUpdateHeaderInfo)
     window.eventHub.$emit('get-header-info')
 
-    this.getDocumentCategories()
-      .then(function (response) {
+    http.post(endpoints.documentCategories.active).then(
+      function (response) {
         this.documentCategories = response.data.data
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getDocumentCategories', response)
-      })
+      }
+    )
 
-    this.getCurrentMemos()
-      .then(function (response) {
+    http.post(endpoints.memos.current).then(
+      function (response) {
         this.memos = response.data.data
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getCurrentMemos', response)
-      })
+      }
+    )
   },
   beforeDestroy () {
     window.eventHub.$off('update-header-info', this.onUpdateHeaderInfo)
@@ -134,13 +140,7 @@ export default {
     },
     getManageStaffOfCurrentUser: function (userId) {
       userId = userId || 0
-      return this.$http.get(process.env.API_PATH + 'users/' + userId)
-    },
-    getDocumentCategories: function () {
-      return this.$http.post(process.env.API_PATH + 'document-categories/active')
-    },
-    getCurrentMemos: function () {
-      return this.$http.post(process.env.API_PATH + 'memos/current')
+      return http.get(endpoints.users.show + '/' + userId)
     },
     onClickExportMD: function () {
       window.swal({

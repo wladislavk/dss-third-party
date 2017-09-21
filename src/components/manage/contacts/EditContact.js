@@ -1,4 +1,6 @@
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../endpoints'
+import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
 
 export default {
   data () {
@@ -131,46 +133,52 @@ export default {
     window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   mounted () {
-    this.getContactTypesOfPhysician()
-      .then(function (response) {
+    http.post(endpoints.contactTypes.physician).then(
+      function (response) {
         const data = response.data.data
 
         if (data.physician_types) {
           this.$set(this, 'contactTypesOfPhysician', data.physician_types.split(','))
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getContactTypesOfPhysician', response)
-      })
+      }
+    )
 
-    this.getActiveNonCorporateContactTypes()
-      .then(function (response) {
+    http.post(endpoints.contactTypes.activeNonCorporate).then(
+      function (response) {
         const data = response.data.data
 
         if (data.length) {
           this.activeNonCorporateContactTypes = data
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getActiveNonCorporateContactTypes', response)
-      })
+      }
+    )
 
-    this.getActiveQualifiers()
-      .then(function (response) {
+    http.post(endpoints.qualifiers.active).then(
+      function (response) {
         const data = response.data.data
 
         if (data.length) {
           this.activeQualifiers = data
         }
-      }, function (response) {
+      },
+      function (response) {
         this.handleErrors('getActiveQualifiers', response)
-      })
+      }
+    )
   },
   methods: {
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
       if (this.componentParams.contactId > 0) {
-        this.getContact(this.componentParams.contactId)
-          .then(function (response) {
+        this.getContact(this.componentParams.contactId).then(
+          function (response) {
             const data = response.data.data
 
             if (data) {
@@ -180,48 +188,54 @@ export default {
                 this.wasContactDataReceived = true
               })
             }
-          }, function (response) {
+          },
+          function (response) {
             this.handleErrors('getContact', response)
-          })
+          }
+        )
 
-        this.getPendingVOBsByContactId(this.componentParams.contactId)
-          .then(function (response) {
+        this.getPendingVOBsByContactId(this.componentParams.contactId).then(
+          function (response) {
             const data = response.data.data
 
             if (data.length) {
               this.pendingVOB = data
             }
-          }, function (response) {
+          },
+          function (response) {
             this.handleErrors('getPendingVOBsByContactId', response)
-          })
+          }
+        )
       }
     },
     onClickSubmit () {
       this.message = ''
 
       if (this.componentParams.contactId > 0) {
-        this.updateContact(this.contact)
-          .then(function () {
+        this.updateContact(this.contact).then(
+          function () {
             // pass message to parent component
             this.$parent.updateParentData({ message: 'Edited Successfully' })
             this.$parent.$parent.$refs.modal.popupEdit = false
             this.$parent.$parent.$refs.modal.disable()
             this.$router.push('/manage/contacts')
-          }, function (response) {
+          },
+          function (response) {
             if (response.status === 422) {
               this.displayErrorResponseFromAPI(response.data.data)
             } else {
               this.handleErrors('updateContact', response)
             }
-          })
+          }
+        )
       } else {
-        this.insertContact(this.contact)
-          .then(function (response) {
+        this.insertContact(this.contact).then(
+          function (response) {
             const data = response.data.data
 
             if (data) {
-              this.createWelcomeLetter(data.contactid, this.contact.contacttypeid)
-                .then(function (response) {
+              this.createWelcomeLetter(data.contactid, this.contact.contacttypeid).then(
+                function (response) {
                   const data = response.data.data
 
                   if (data.message) {
@@ -231,9 +245,11 @@ export default {
                       type: 'info'
                     })
                   }
-                }, function (response) {
+                },
+                function (response) {
                   this.handleErrors('createWelcomeLetter', response)
-                })
+                }
+              )
 
               if (this.componentParams.activePat) {
                 this.$router.push({
@@ -254,13 +270,15 @@ export default {
               this.$parent.$parent.$refs.modal.popupEdit = false
               this.$parent.$parent.$refs.modal.disable()
             }
-          }, function (response) {
+          },
+          function (response) {
             if (response.status === 422) {
               this.displayErrorResponseFromAPI(response.data.data)
             } else {
               this.handleErrors('updateContact', response)
             }
-          })
+          }
+        )
       }
     },
     displayErrorResponseFromAPI (data) {
@@ -332,13 +350,13 @@ export default {
       // gets letters that were not delivered for contact
       const data = { contact_id: contactId }
 
-      return this.$http.post(process.env.API_PATH + 'letters/not-delivered-for-contact', data)
+      return http.post(endpoints.letters.notDeliveredForContact, data)
     },
     getContactSentLetters (contactId) {
       // gets letters that were delivered for contact
       const data = { contact_id: contactId }
 
-      return this.$http.post(process.env.API_PATH + 'letters/delivered-for-contact', data)
+      return http.post(endpoints.letters.deliveredForContact, data)
     },
     getFullName (contact) {
       const middlename = contact.middlename ? contact.middlename + ' ' : ''
@@ -355,7 +373,7 @@ export default {
         }
       })
 
-      return this.$http.put(process.env.API_PATH + 'contacts/' + contact.contactid, contact)
+      return http.put(endpoints.contacts.update + '/' + contact.contactid, contact)
     },
     insertContact (contact) {
       const phoneFields = ['phone1', 'phone2', 'fax']
@@ -366,30 +384,21 @@ export default {
         }
       })
 
-      return this.$http.post(process.env.API_PATH + 'contacts', contact)
+      return http.post(endpoints.contacts.store, contact)
     },
     getLetterInfoByDocId () {
-      return this.$http.post(process.env.API_PATH + 'users/letter-info')
+      return http.post(endpoints.users.letterInfo)
     },
     getContactType (contactTypeId) {
-      return this.$http.get(process.env.API_PATH + 'contact-types/' + contactTypeId)
-    },
-    getContactTypesOfPhysician () {
-      return this.$http.post(process.env.API_PATH + 'contact-types/physician')
+      return http.get(endpoints.contactTypes.show + '/' + contactTypeId)
     },
     getContact (contactId) {
-      return this.$http.get(process.env.API_PATH + 'contacts/' + contactId)
-    },
-    getActiveNonCorporateContactTypes () {
-      return this.$http.post(process.env.API_PATH + 'contact-types/active-non-corporate')
-    },
-    getActiveQualifiers () {
-      return this.$http.post(process.env.API_PATH + 'qualifiers/active')
+      return http.get(endpoints.contacts.show + '/' + contactId)
     },
     getPendingVOBsByContactId (contactId) {
       const data = { contact_id: contactId }
 
-      return this.$http.post(process.env.API_PATH + 'insurance-preauth/pending-VOB', data)
+      return http.post(endpoints.insurancePreauth.pendingVob, data)
     },
     createWelcomeLetter (templateId, contactTypeId) {
       const data = {
@@ -397,7 +406,7 @@ export default {
         contact_type_id: contactTypeId
       }
 
-      return this.$http.post(process.env.API_PATH + 'letters/create-welcome-letter', data)
+      return http.post(endpoints.letters.createWelcomeLetter, data)
     }
   }
 }

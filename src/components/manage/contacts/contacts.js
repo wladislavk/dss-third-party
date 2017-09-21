@@ -1,4 +1,6 @@
+import endpoints from '../../../endpoints'
 import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
 import symbols from '../../../symbols'
 
 export default {
@@ -105,19 +107,18 @@ export default {
   created () {
     window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
 
-    this.getActiveNonCorporateContactTypes()
-      .then(
-        function (response) {
-          const data = response.data.data
+    http.post(endpoints.contactTypes.activeNonCorporate).then(
+      function (response) {
+        const data = response.data.data
 
-          if (data) {
-            this.contactTypes = data
-          }
-        },
-        function (response) {
-          this.handleErrors('getActiveNonCorporateContactTypes', response)
+        if (data) {
+          this.contactTypes = data
         }
-      )
+      },
+      function (response) {
+        this.handleErrors('getActiveNonCorporateContactTypes', response)
+      }
+    )
 
     this.getContacts()
   },
@@ -277,12 +278,12 @@ export default {
     findReferrersByContactId (contactId) {
       const data = { contact_id: contactId }
 
-      return this.$http.post(process.env.API_PATH + 'patients/referred-by-contact', data)
+      return http.post(endpoints.patients.referredByContact, data)
     },
     findPatientsByContactId (contactId) {
       const data = { contact_id: contactId }
 
-      return this.$http.post(process.env.API_PATH + 'patients/by-contact', data)
+      return http.post(endpoints.patients.byContact, data)
     },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
@@ -309,15 +310,12 @@ export default {
         contacts_per_page: contactsPerPage
       }
 
-      return this.$http.post(process.env.API_PATH + 'contacts/find', data)
-    },
-    getActiveNonCorporateContactTypes () {
-      return this.$http.post(process.env.API_PATH + 'contact-types/active-non-corporate')
+      return http.post(endpoints.contacts.find, data)
     },
     getListContactsAndCompanies (requestedName) {
       const data = { partial_name: requestedName }
 
-      return this.$http.post(process.env.API_PATH + 'contacts/list-contacts-and-companies', data)
+      return http.post(endpoints.contacts.listContactsAndCompanies, data)
     }
   }
 }

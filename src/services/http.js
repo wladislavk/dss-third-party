@@ -29,7 +29,19 @@ export default {
     return axios.post(this._formUrl(path), data)
   },
 
+  put (path, data) {
+    return axios.put(this._formUrl(path), data)
+  },
+
+  delete (path, data) {
+    return axios.delete(this._formUrl(path), data)
+  },
+
   _formUrl (path) {
-    return process.env.API_PATH + path
+    const apiPath = process.env.API_PATH
+    if (apiPath.charAt(apiPath.length - 1) === '/' && path.charAt(0) === '/') {
+      path = path.substr(1)
+    }
+    return apiPath + path
   }
 }

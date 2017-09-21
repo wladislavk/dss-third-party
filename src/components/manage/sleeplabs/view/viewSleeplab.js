@@ -1,4 +1,6 @@
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../../endpoints'
+import handlerMixin from '../../../../modules/handler/HandlerMixin'
+import http from '../../../../services/http'
 
 export default {
   data () {
@@ -29,8 +31,8 @@ export default {
       this.fetchSleeplab(this.componentParams.sleeplabId)
     },
     fetchSleeplab (id) {
-      this.getSleeplab(id)
-        .then(function (response) {
+      this.getSleeplab(id).then(
+        function (response) {
           const data = response.data.data
 
           if (data) {
@@ -48,12 +50,14 @@ export default {
 
             this.sleeplab = data
           }
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('getSleeplab', response)
-        })
+        }
+      )
     },
     getSleeplab (id) {
-      return this.$http.get(process.env.API_PATH + 'sleeplabs/' + id)
+      return http.get(endpoints.sleeplabs.show + '/' + id)
     }
   }
 }

@@ -1,4 +1,6 @@
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../../endpoints'
+import handlerMixin from '../../../../modules/handler/HandlerMixin'
+import http from '../../../../services/http'
 
 export default {
   name: 'print-referred-by-contact',
@@ -100,7 +102,7 @@ export default {
         detailed: true
       }
 
-      return this.$http.post(process.env.API_PATH + 'contacts/referred-by', data)
+      return http.post(endpoints.contacts.referredBy, data)
     }
   }
 }

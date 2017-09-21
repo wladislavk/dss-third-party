@@ -1,6 +1,7 @@
+import endpoints from '../../../endpoints'
+import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
 import symbols from '../../../symbols'
-
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
 
 export default {
   name: 'corporate-contacts',
@@ -147,12 +148,12 @@ export default {
         sort_dir: sortDir
       }
 
-      return this.$http.post(process.env.API_PATH + 'contacts/corporate', data)
+      return http.post(endpoints.contacts.corporate, data)
     },
     deleteContact (id) {
       id = id || 0
 
-      return this.$http.delete(process.env.API_PATH + 'corporate-contacts/' + id)
+      return http.delete(endpoints.corporateContacts.destroy + '/' + id)
     }
   }
 }

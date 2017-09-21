@@ -1,4 +1,6 @@
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../endpoints'
+import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
 
 export default {
   name: 'sleeplabs',
@@ -117,8 +119,8 @@ export default {
       this.$parent.$refs.modal.setComponentParameters({ sleeplabId: id })
     },
     removeSleeplab (id) {
-      this.deleteSleeplab(id)
-        .then(function () {
+      this.deleteSleeplab(id).then(
+        function () {
           this.message = 'Deleted Successfully'
 
           this.$nextTick(() => {
@@ -128,9 +130,11 @@ export default {
               self.message = ''
             }, 3000)
           })
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('deleteSleeplab', response)
-        })
+        }
+      )
     },
     getListOfSleeplabs () {
       this.getSleeplabs(
@@ -139,25 +143,28 @@ export default {
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection,
         this.routeParameters.currentLetter
-      ).then(function (response) {
-        const data = response.data.data
+      ).then(
+        function (response) {
+          const data = response.data.data
 
-        data.result = data.result.map((value) => {
-          value['name'] = (value.salutation ? value.salutation + ' ' : '') +
-            (value.firstname ? value.firstname + ' ' : '') +
-            (value.middlename ? value.middlename + ' ' : '') +
-            (value.lastname || '')
+          data.result = data.result.map((value) => {
+            value['name'] = (value.salutation ? value.salutation + ' ' : '') +
+              (value.firstname ? value.firstname + ' ' : '') +
+              (value.middlename ? value.middlename + ' ' : '') +
+              (value.lastname || '')
 
-          value['show_patients'] = false
+            value['show_patients'] = false
 
-          return value
-        })
+            return value
+          })
 
-        this.sleeplabs = data.result
-        this.sleeplabsTotalNumber = data.total
-      }, function (response) {
-        this.handleErrors('getSleeplabs', response)
-      })
+          this.sleeplabs = data.result
+          this.sleeplabsTotalNumber = data.total
+        },
+        function (response) {
+          this.handleErrors('getSleeplabs', response)
+        }
+      )
     },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
@@ -174,12 +181,12 @@ export default {
         letter: letter
       }
 
-      return this.$http.post(process.env.API_PATH + 'sleeplabs/list', data)
+      return http.post(endpoints.sleeplabs.list, data)
     },
     deleteSleeplab (id) {
       id = id || 0
 
-      return this.$http.delete(process.env.API_PATH + 'sleeplabs/' + id)
+      return http.delete(endpoints.sleeplabs.destroy + '/' + id)
     }
   }
 }

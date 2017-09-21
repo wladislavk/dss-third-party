@@ -1,4 +1,6 @@
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../../endpoints'
+import handlerMixin from '../../../../modules/handler/HandlerMixin'
+import http from '../../../../services/http'
 
 export default {
   name: 'view-corporate-contact',
@@ -57,10 +59,10 @@ export default {
     getContactById (contactId) {
       contactId = contactId || 0
 
-      return this.$http.get(process.env.API_PATH + 'contacts/' + contactId)
+      return http.get(endpoints.contacts.show + '/' + contactId)
     },
     getContactType () {
-      return this.$http.post(process.env.API_PATH + 'contact-types/sorted')
+      return http.post(endpoints.contactTypes.sorted)
     }
   }
 }

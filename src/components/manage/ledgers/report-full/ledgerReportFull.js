@@ -1,5 +1,7 @@
-const handlerMixin = require('../../../../modules/handler/HandlerMixin.js')
-const ledgerSummaryReportFull = require('../summary-report-full/ledgerSummaryReportFull.vue')
+import endpoints from '../../../../endpoints'
+import handlerMixin from '../../../../modules/handler/HandlerMixin'
+import http from '../../../../services/http'
+import ledgerSummaryReportFull from '../summary-report-full/ledgerSummaryReportFull.vue'
 
 export default {
   name: 'ledger-report-full',
@@ -216,7 +218,7 @@ export default {
         sort_dir: sortDir
       }
 
-      return this.$http.post(process.env.API_PATH + 'ledgers/list', data)
+      return http.post(endpoints.ledgers.list, data)
     }
   }
 }

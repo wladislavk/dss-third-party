@@ -1,8 +1,11 @@
+import endpoints from '../../endpoints'
+import http from '../../services/http'
+
 module.exports = {
   methods: {
     logout () {
-      this.invalidateToken()
-        .then(function () {
+      this.invalidateToken().then(
+        function () {
           const vm = this
 
           window.swal({
@@ -13,12 +16,14 @@ module.exports = {
             window.storage.remove('token')
             vm.$router.push('/manage/login')
           })
-        }, function (response) {
+        },
+        function (response) {
           console.error('invalidateToken [status]: ', response.status)
-        })
+        }
+      )
     },
     invalidateToken () {
-      return this.$http.post(process.env.API_PATH + 'logout')
+      return http.post(endpoints.logout)
     }
   }
 }

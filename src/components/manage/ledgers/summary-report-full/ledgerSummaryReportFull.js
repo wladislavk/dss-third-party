@@ -1,3 +1,6 @@
+import endpoints from '../../../../endpoints'
+import http from '../../../../services/http'
+
 export default {
   name: 'ledger-summary-report-full',
   props: {
@@ -52,21 +55,23 @@ export default {
   },
   methods: {
     formReportTotals () {
-      this.getLedgerTotals(this.reportType)
-        .then(function (response) {
+      this.getLedgerTotals(this.reportType).then(
+        function (response) {
           const data = response.data.data
 
           this.charges = data.charges
           this.credits = data.credits.hasOwnProperty('type') ? data.credits['type'].concat(data.credits['named']) : data.credits
           this.adjustments = data.adjustments
-        }, function (response) {
+        },
+        function (response) {
           this.handleErrors('getLedgerTotals', response)
-        })
+        }
+      )
     },
     getLedgerTotals (reportType) {
       const data = { report_type: reportType }
 
-      return this.$http.post(process.env.API_PATH + 'ledgers/totals', data)
+      return http.post(endpoints.ledgers.totals, data)
     },
     formatLedger (value) {
       return window.accounting.formatMoney(value, '$')

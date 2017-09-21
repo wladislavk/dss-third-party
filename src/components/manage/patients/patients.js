@@ -1,4 +1,6 @@
-const handlerMixin = require('../../../modules/handler/HandlerMixin.js')
+import endpoints from '../../../endpoints'
+import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
 
 export default {
   data () {
@@ -202,7 +204,7 @@ export default {
     deletePatient (patientId) {
       patientId = patientId || 0
 
-      return this.$http.delete(process.env.API_PATH + 'patients-by-doctor/' + patientId)
+      return http.delete(endpoints.patients.destroyForDoctor + '/' + patientId)
     },
     findPatients (
       patientId,
@@ -223,7 +225,7 @@ export default {
         sortDir: sortDir || ''
       }
 
-      return this.$http.post(process.env.API_PATH + 'patients/find', data)
+      return http.post(endpoints.patients.find, data)
     }
   }
 }

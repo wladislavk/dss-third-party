@@ -154,10 +154,11 @@ if (!empty($_POST['save_vob']) && $canEdit) {
     if (!isset($_POST['reject_but'])) {
         update_patient_summary($pid, 'vob', $vobData['status']);
     }
-    
+
+    $vobStatus = $vobData['status'];
     $vobData = $db->escapeAssignmentList($vobData);
     
-    if ($vobData['status'] === DSS_PREAUTH_COMPLETE) {
+    if ($vobStatus === DSS_PREAUTH_COMPLETE) {
         $vobData .= ', date_completed = NOW()';
     }
     

@@ -235,7 +235,8 @@ $api_r = $db->getRow($api_sql);
 
 <?php 
     $vob_sql = "SELECT * FROM dental_insurance_preauth WHERE doc_id='".mysqli_real_escape_string($con,$_SESSION['docid'])."'
-                  AND patient_id='".mysqli_real_escape_string($con,$_GET['pid'])."'";
+                  AND patient_id='".mysqli_real_escape_string($con,$_GET['pid'])."'
+                  ORDER BY front_office_request_date DESC";
     $vob_q = $db->getResults($vob_sql);
     $num_vob = count($vob_q);
     if($num_vob>1){ ?>

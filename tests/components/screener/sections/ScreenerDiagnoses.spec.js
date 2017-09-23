@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import endpoints from '../../../../src/endpoints'
+import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
@@ -49,7 +51,23 @@ describe('ScreenerDiagnoses', () => {
   })
 
   it('should update data when form is submitted', function (done) {
-    moxios.stubRequest(process.env.API_PATH + 'script/submit_screener.php', {
+    const epworthProps = [
+      {
+        id: 1,
+        selected: 0
+      },
+      {
+        id: 2,
+        selected: 1
+      },
+      {
+        id: 3,
+        selected: 2
+      }
+    ]
+    this.vue.$store.commit(symbols.mutations.setEpworthProps, epworthProps)
+
+    moxios.stubRequest(http.formUrl(endpoints.screeners.store), {
       status: 200,
       responseText: {
         data: {}
@@ -70,6 +88,51 @@ describe('ScreenerDiagnoses', () => {
     nextButton.click()
 
     moxios.wait(() => {
+      const request = moxios.requests.mostRecent()
+      const expectedRequest = {
+        docid: 0,
+        userid: 0,
+        epworth: [
+          {
+            id: 1,
+            selected: 0
+          },
+          {
+            id: 2,
+            selected: 1
+          },
+          {
+            id: 3,
+            selected: 2
+          }
+        ],
+        first_name: '',
+        last_name: '',
+        phone: '',
+        breathing: false,
+        driving: false,
+        gasping: false,
+        sleepy: false,
+        snore: false,
+        weight_gain: false,
+        blood_pressure: false,
+        jerk: false,
+        burning: false,
+        headaches: false,
+        falling_asleep: false,
+        staying_asleep: false,
+        rx_cpap: '4',
+        rx_heart_disease: 2,
+        rx_stroke: 0,
+        rx_hypertension: 1,
+        rx_diabetes: 0,
+        rx_metabolic_syndrome: 0,
+        rx_obesity: 0,
+        rx_heartburn: 0,
+        rx_afib: 0
+      }
+      expect(JSON.parse(request.config.data)).toEqual(expectedRequest)
+
       expect(nextButton.classList.contains('disabled')).toBe(true)
       expect(this.vue.$router.currentRoute.name).toBe('screener-results')
       expect(this.vue.$store.state.screener[symbols.state.screenerWeights].coMorbidity).toBe(7)
@@ -78,7 +141,7 @@ describe('ScreenerDiagnoses', () => {
   })
 
   it('should throw error when server returns 400', function (done) {
-    moxios.stubRequest(process.env.API_PATH + 'script/submit_screener.php', {
+    moxios.stubRequest(http.formUrl(endpoints.screeners.store), {
       status: 400,
       responseText: {
         errors: {}

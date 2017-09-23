@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import endpoints from '../../../../src/endpoints'
+import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
@@ -30,41 +32,16 @@ describe('ScreenerHST', () => {
       }
     }
 
-    const epworthMockData = [
-      {
-        id: 1,
-        epworth: 'foo',
-        selected: 1
-      },
-      {
-        id: 2,
-        epworth: 'bar',
-        selected: 0
-      },
-      {
-        id: 3,
-        epworth: 'baz',
-        selected: 4
-      }
-    ]
-
-    moxios.stubRequest(process.env.API_PATH + 'epworth-sleepiness-scale/sorted-with-status', {
-      status: 200,
-      responseText: {
-        data: epworthMockData
-      }
-    })
-
     this.vue = TestCase.getVue(vueOptions, routes)
     this.vm = this.vue.$mount()
     this.vue.$router.push({name: 'start'})
 
     const sessionData = {
-      screenerId: 1,
       docId: 2,
       userId: 3
     }
     this.vue.$store.commit(symbols.mutations.sessionData, sessionData)
+    this.vue.$store.commit(symbols.mutations.screenerId, 1)
 
     const contactData = {
       first_name: 'John',
@@ -73,19 +50,23 @@ describe('ScreenerHST', () => {
     }
     this.vue.$store.commit(symbols.mutations.contactData, contactData)
 
-    const companyData = [
-      {
-        id: 1,
-        name: 'First',
-        logo: 'first.png'
-      },
-      {
-        id: 2,
-        name: 'Second',
-        logo: ''
+    moxios.stubRequest(http.formUrl(endpoints.companies.companyByUser), {
+      status: 200,
+      responseText: {
+        data: [
+          {
+            id: 1,
+            name: 'First',
+            logo: 'first.png'
+          },
+          {
+            id: 2,
+            name: 'Second',
+            logo: ''
+          }
+        ]
       }
-    ]
-    this.vue.$store.commit(symbols.mutations.companyData, companyData)
+    })
   })
 
   afterEach(function () {
@@ -116,12 +97,13 @@ describe('ScreenerHST', () => {
       expect(rightContactDivs[0].querySelector('input').value).toBe('2233223223')
       expect(rightContactDivs[1].querySelector('label').textContent).toBe('Email')
       expect(rightContactDivs[1].querySelector('input').value).toBe('')
+
       done()
     })
   })
 
   it('should send HST request', function (done) {
-    moxios.stubRequest(process.env.API_PATH + 'submit-hst', {
+    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 200,
       responseText: {
         data: {}
@@ -148,12 +130,12 @@ describe('ScreenerHST', () => {
       moxios.wait(() => {
         const request = moxios.requests.mostRecent()
         const expectedData = {
-          screenerid: 1,
-          docid: 2,
-          userid: 3,
-          companyid: '2',
-          patient_first_name: 'Jane',
-          patient_last_name: 'Doe',
+          screener_id: 1,
+          doc_id: 2,
+          user_id: 3,
+          company_id: '2',
+          patient_firstname: 'Jane',
+          patient_lastname: 'Doe',
           patient_cell_phone: '2233223223',
           patient_email: 'foo@bar.com',
           patient_dob: '08/25/1985'
@@ -169,7 +151,7 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if company is not set', function (done) {
-    moxios.stubRequest(process.env.API_PATH + 'submit-hst', {
+    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 200,
       responseText: {
         data: {}
@@ -198,7 +180,7 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if contact data is not set', function (done) {
-    moxios.stubRequest(process.env.API_PATH + 'submit-hst', {
+    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 200,
       responseText: {
         data: {}
@@ -227,7 +209,7 @@ describe('ScreenerHST', () => {
   })
 
   it('should give error if ajax request returned 400', function (done) {
-    moxios.stubRequest(process.env.API_PATH + 'submit-hst', {
+    moxios.stubRequest(http.formUrl(endpoints.homeSleepTests.store), {
       status: 400,
       responseText: {
         data: {}

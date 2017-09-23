@@ -1,7 +1,7 @@
 export default {
   companies: {
     billingExclusiveCompany: '/companies/billing-exclusive-company',
-    companyLogo: '/companies/company-logo',
+    companyByUser: '/companies/company-by-user',
     homeSleepTest: '/companies/home-sleep-test'
   },
   contacts: {
@@ -12,7 +12,8 @@ export default {
     referredBy: '/contacts/referred-by',
     show: '/contacts',
     store: '/contacts',
-    update: '/contacts'
+    update: '/contacts',
+    withContactType: '/contacts/with-contact-type'
   },
   contactTypes: {
     activeNonCorporate: '/contact-types/active-non-corporate',
@@ -30,6 +31,9 @@ export default {
   eligible: {
     payers: '/eligible/payers'
   },
+  epworthSleepinessScale: {
+    index: '/epworth-sleepiness-scale'
+  },
   faxes: {
     alerts: '/faxes/alerts'
   },
@@ -46,6 +50,7 @@ export default {
     completed: '/home-sleep-tests/completed',
     rejected: '/home-sleep-tests/rejected',
     requested: '/home-sleep-tests/requested',
+    store: '/home-sleep-tests',
     uncompleted: '/home-sleep-tests/uncompleted'
   },
   insurances: {
@@ -133,6 +138,9 @@ export default {
     destroy: '/referred-by-contacts',
     edit: '/referred-by-contacts/edit',
     show: '/referred-by-contacts'
+  },
+  screeners: {
+    store: '/screeners'
   },
   sleeplabs: {
     destroy: '/sleeplabs',

@@ -533,7 +533,7 @@ export default {
       }
     ).then(
       function () {
-        http.post(endpoints.companies.companyLogo).then(
+        http.get(endpoints.companies.companyByUser).then(
           function (response) {
             const data = response.data.data
             if (data) {
@@ -549,7 +549,7 @@ export default {
             }
           },
           function (response) {
-            this.handleErrors('getCompanyLogo', response)
+            this.handleErrors('getCompanyByUser', response)
           }
         )
       }

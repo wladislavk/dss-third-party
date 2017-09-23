@@ -3,7 +3,6 @@ import * as constants from '../../constants'
 
 export default {
   [symbols.state.sessionData]: {
-    screenerId: 0,
     docId: 0,
     userId: 0
   },

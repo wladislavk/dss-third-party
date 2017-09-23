@@ -4,13 +4,14 @@ export default {
     companyData: 'COMPANY_DATA',
     contact: 'CONTACT',
     contactData: 'CONTACT_DATA',
+    cpap: 'CPAP',
     doctorName: 'DOCTOR_NAME',
     epworthOptions: 'EPWORTH_OPTIONS',
     epworthProps: 'EPWORTH_PROPS',
+    screenerId: 'SCREENER_ID',
     screenerWeights: 'SCREENER_WEIGHTS',
-    symptoms: 'SYMPTOMS',
-    cpap: 'CPAP',
-    sessionData: 'SESSION_DATA'
+    sessionData: 'SESSION_DATA',
+    symptoms: 'SYMPTOMS'
   },
   getters: {
     calculateRisk: 'CALCULATE_RISK',
@@ -23,18 +24,19 @@ export default {
     coMorbidityWeight: 'CO_MORBIDITY_WEIGHT',
     companyData: 'COMPANY_DATA',
     contactData: 'CONTACT_DATA',
+    cpap: 'CPAP',
     doctorName: 'DOCTOR_NAME',
     epworthWeight: 'EPWORTH_WEIGHT',
     modifyEpworthProps: 'MODIFY_EPWORTH_PROPS',
     popupEdit: 'POPUP_EDIT',
     restoreInitialScreener: 'RESTORE_INITIAL_SCREENER',
+    screenerId: 'SCREENER_ID',
     sessionData: 'SESSION_DATA',
     setContact: 'SET_CONTACT',
     setEpworthErrors: 'SET_EPWORTH_ERRORS',
     setEpworthProps: 'SET_EPWORTH_PROPS',
     surveyWeight: 'SURVEY_WEIGHT',
-    symptoms: 'SYMPTOMS',
-    cpap: 'CPAP'
+    symptoms: 'SYMPTOMS'
   },
   actions: {
     disablePopupEdit: 'DISABLE_POPUP_EDIT',

@@ -1,29 +1,38 @@
 import http from '../../services/http'
 import symbols from '../../symbols'
+import endpoints from '../../endpoints'
 
 export default {
-  [symbols.actions.getDoctorData] ({ commit }) {
-    // @todo: add ajax request
-    const doctorName = 'Jane'
-    commit(symbols.mutations.doctorName, doctorName)
+  [symbols.actions.getDoctorData] ({ state, commit }) {
+    const doctorId = state[symbols.state.sessionData].docId
+    http.get(endpoints.users.show + '/' + doctorId).then(
+      function (response) {
+        const data = response.data.data
+        commit(symbols.mutations.doctorName, data.first_name)
+      }
+    )
   },
   [symbols.actions.getCompanyData] ({ commit }) {
-    // @todo: add ajax request
-    const companyData = []
-    commit(symbols.mutations.companyData, companyData)
+    http.get(endpoints.companies.companyByUser).then(
+      function (response) {
+        const data = response.data.data
+        commit(symbols.mutations.companyData, data)
+      }
+    )
   },
   [symbols.actions.submitScreener] ({ state }) {
     const contactData = state[symbols.state.contactData]
     const symptoms = state[symbols.state.symptoms]
     const coMorbidityData = state[symbols.state.coMorbidityData]
     const cpap = state[symbols.state.cpap]
-    const epworthProps = state[symbols.state.epworthProps]
     const sessionData = state[symbols.state.sessionData]
+    const epworthProps = state[symbols.state.epworthProps]
 
     const screenerData = {
       docid: sessionData.docId,
       userid: sessionData.userId,
-      cpap: cpap.selected
+      rx_cpap: cpap.selected,
+      epworth: []
     }
 
     for (let contactProperty of contactData) {
@@ -40,10 +49,8 @@ export default {
       }
     }
 
-    let epworthPropertyName = ''
     for (let epworth of epworthProps) {
-      epworthPropertyName = 'epworth_' + epworth.id
-      screenerData[epworthPropertyName] = epworth.selected
+      screenerData.epworth.push(epworth)
     }
 
     for (let symptom of symptoms) {
@@ -57,10 +64,12 @@ export default {
       }
     }
 
-    return http.request('post', 'script/submit_screener.php', { data: screenerData })
+    return http.request('post', endpoints.screeners.store, screenerData)
   },
 
-  [symbols.actions.parseScreenerResults] ({ state, commit }) {
+  [symbols.actions.parseScreenerResults] ({ state, commit }, { id }) {
+    commit(symbols.mutations.screenerId, id)
+
     let epworthWeight = 0
     for (let epworth of state[symbols.state.epworthProps]) {
       epworthWeight += epworth.selected
@@ -92,7 +101,7 @@ export default {
     commit(symbols.mutations.surveyWeight, surveyWeight)
   },
   [symbols.actions.setEpworthProps] ({ commit }) {
-    http.get('epworth-sleepiness-scale/sorted-with-status').then(
+    http.get(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby').then(
       (response) => {
         const data = response.data.data
         for (let element of data) {
@@ -105,6 +114,7 @@ export default {
   },
   [symbols.actions.submitHst] ({ state }, { companyId, contactData }) {
     const sessionData = state[symbols.state.sessionData]
+    const screenerId = state[symbols.state.screenerId]
 
     function getContactValue (propertyName) {
       for (let element of contactData) {
@@ -116,22 +126,17 @@ export default {
     }
 
     const ajaxData = {
-      screenerid: sessionData.screenerId,
-      docid: sessionData.docId,
-      userid: sessionData.userId,
-      companyid: companyId,
-      patient_first_name: getContactValue('firstName'),
-      patient_last_name: getContactValue('lastName'),
+      screener_id: screenerId,
+      doc_id: sessionData.docId,
+      user_id: sessionData.userId,
+      company_id: companyId,
+      patient_firstname: getContactValue('firstName'),
+      patient_lastname: getContactValue('lastName'),
       patient_cell_phone: getContactValue('phone'),
       patient_email: getContactValue('email'),
       patient_dob: getContactValue('dob')
     }
 
-    for (let epworth of state[symbols.state.epworthProps]) {
-      let ajaxProperty = 'epworth_' + epworth.id
-      ajaxData[ajaxProperty] = epworth.value
-    }
-
-    return http.request('post', 'submit-hst', ajaxData)
+    return http.request('post', endpoints.homeSleepTests.store, ajaxData)
   }
 }

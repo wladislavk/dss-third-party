@@ -1,10 +1,15 @@
 import Vue from 'vue'
+import endpoints from '../../../../src/endpoints'
+import http from '../../../../src/services/http'
+import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
 import ScreenerResultsComponent from '../../../../src/components/screener/sections/ScreenerResults.vue'
 
 describe('ScreenerResults', () => {
   beforeEach(function () {
+    moxios.install()
+
     Vue.component('health-assessment', {
       template: '<div></div>'
     })
@@ -29,13 +34,23 @@ describe('ScreenerResults', () => {
 
   afterEach(function () {
     this.vue.$store.commit(symbols.mutations.restoreInitialScreener)
+    moxios.uninstall()
   })
 
   it('should display results', function (done) {
+    moxios.stubRequest(http.formUrl(endpoints.users.show + '/1'), {
+      status: 200,
+      responseText: {
+        data: { first_name: 'Jane' }
+      }
+    })
+
+    this.vue.$store.commit(symbols.mutations.sessionData, { docId: 1 })
     this.vue.$store.commit(symbols.mutations.surveyWeight, 12)
     this.vue.$store.commit(symbols.mutations.contactData, { first_name: 'John' })
+    this.vue.$store.dispatch(symbols.actions.getDoctorData)
 
-    this.vm.$nextTick(() => {
+    moxios.wait(() => {
       const riskDiv = this.vm.$el.querySelector('div.risk_desc')
       expect(riskDiv.id).toBe('risk_high')
       const riskImage = this.vm.$el.querySelector('div#risk_image > img').getAttribute('src')

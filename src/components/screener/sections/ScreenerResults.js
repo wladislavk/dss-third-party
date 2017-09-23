@@ -20,8 +20,7 @@ export default {
   },
   created () {
     if (!this.$store.state.screener[symbols.state.doctorName]) {
-      const userId = 0
-      this.$store.dispatch(symbols.actions.getDoctorData, { userId: userId })
+      this.$store.dispatch(symbols.actions.getDoctorData)
     }
   }
 }

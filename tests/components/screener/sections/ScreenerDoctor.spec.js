@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import endpoints from '../../../../src/endpoints'
+import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
@@ -54,7 +56,7 @@ describe('ScreenerDoctor', () => {
       }
     ]
 
-    moxios.stubRequest(process.env.API_PATH + 'epworth-sleepiness-scale/sorted-with-status', {
+    moxios.stubRequest(http.formUrl(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby'), {
       status: 200,
       responseText: {
         data: this.epworthMockData

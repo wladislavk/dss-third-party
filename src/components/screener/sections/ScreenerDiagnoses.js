@@ -30,7 +30,8 @@ export default {
 
       this.$store.dispatch(symbols.actions.submitScreener).then(
         (response) => {
-          this.$store.dispatch(symbols.actions.parseScreenerResults, response)
+          const data = response.data.data
+          this.$store.dispatch(symbols.actions.parseScreenerResults, data)
           this.$router.push({ name: 'screener-results' })
         },
         () => {

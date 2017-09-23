@@ -1,4 +1,5 @@
 import constants from '../modules/constants'
+import endpoints from '../endpoints'
 import http from '../services/http'
 import symbols from '../symbols'
 
@@ -34,7 +35,7 @@ export default {
     [symbols.actions.setCurrentContact] ({ commit, dispatch }, payload) {
       const requestData = { contact_id: payload.contactId }
 
-      http.post('contacts/with-contact-type', requestData).then(
+      http.post(endpoints.contacts.withContactType, requestData).then(
         (response) => {
           const data = response.data.data
 

@@ -38,7 +38,6 @@ export default {
   methods: {
     submitForm () {
       let alertText
-      // username is a required field
       if (this.credentials.username.trim() === '') {
         alertText = 'Username is Required'
         alert(alertText)
@@ -47,7 +46,6 @@ export default {
         return false
       }
 
-      // password is a required field
       if (this.credentials.password.trim() === '') {
         alertText = 'Password is Required'
         alert(alertText)

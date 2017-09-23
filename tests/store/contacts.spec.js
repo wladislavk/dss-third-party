@@ -1,5 +1,6 @@
 import ContactModule from '../../src/store/contacts'
 import TestCase from '../cases/StoreTestCase'
+import endpoints from '../../src/endpoints'
 import http from '../../src/services/http'
 import sinon from 'sinon'
 import symbols from '../../src/symbols'
@@ -92,7 +93,7 @@ describe('Contacts Module', () => {
 
       const expectedHttp = [
         {
-          path: 'contacts/with-contact-type',
+          path: endpoints.contacts.withContactType,
           payload: { contact_id: 1 }
         }
       ]

@@ -1,3 +1,5 @@
+import endpoints from '../../../../src/endpoints'
+import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import TestCase from '../../../cases/ComponentTestCase'
 import ViewContactComponent from '../../../../src/components/manage/contacts/ViewContact.vue'
@@ -40,7 +42,7 @@ describe('ViewContact', () => {
   })
 
   it('should render with API success and corporate', function (done) {
-    moxios.stubRequest(process.env.API_PATH + 'contacts/with-contact-type', {
+    moxios.stubRequest(http.formUrl(endpoints.contacts.withContactType), {
       status: 200,
       responseText: {
         data: this.mockData
@@ -75,7 +77,7 @@ describe('ViewContact', () => {
 
   it('should render with API success and non-corporate', function (done) {
     this.mockData.corporate = 0
-    moxios.stubRequest(process.env.API_PATH + 'contacts/with-contact-type', {
+    moxios.stubRequest(http.formUrl(endpoints.contacts.withContactType), {
       status: 200,
       responseText: {
         data: this.mockData

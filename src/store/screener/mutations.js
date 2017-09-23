@@ -66,5 +66,8 @@ export default {
   },
   [symbols.mutations.sessionData] (state, sessionData) {
     state[symbols.state.sessionData] = sessionData
+  },
+  [symbols.mutations.screenerId] (state, screenerId) {
+    state[symbols.state.screenerId] = screenerId
   }
 }

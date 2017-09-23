@@ -15,9 +15,6 @@ export default {
   },
   created () {
     this.$store.dispatch(symbols.actions.getCompanyData)
-    if (!this.$store.state.screener[symbols.state.epworthProps.length]) {
-      this.$store.dispatch(symbols.actions.setEpworthProps)
-    }
   },
   methods: {
     updateCompany (event) {

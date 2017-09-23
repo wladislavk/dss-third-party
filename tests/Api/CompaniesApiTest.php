@@ -38,12 +38,12 @@ class CompaniesApiTest extends ApiTestCase
         ];
     }
 
-    public function testGetCompanyLogo()
+    public function testGetCompanyByUser()
     {
         /** @var User $user */
         $user = User::find('u_23');
         $this->be($user);
-        $this->post(self::ROUTE_PREFIX . '/companies/company-by-user');
+        $this->get(self::ROUTE_PREFIX . '/companies/company-by-user');
         $this->assertResponseOk();
         $expected = [
             'id' => 1,

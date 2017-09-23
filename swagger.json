@@ -3082,8 +3082,8 @@
                 }
             }
         },
-        "/companies/company-logo": {
-            "post": {
+        "/companies/company-by-user": {
+            "get": {
                 "responses": {
                     "200": {
                         "description": "TODO: specify the response"

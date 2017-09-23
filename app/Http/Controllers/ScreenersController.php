@@ -2,8 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ScreenerRepository;
+use DentalSleepSolutions\Facades\ApiResponse;
+
 class ScreenersController extends BaseRestController
 {
+    /** @var ScreenerRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/screeners",
@@ -127,7 +133,19 @@ class ScreenersController extends BaseRestController
      */
     public function store()
     {
-        return parent::store();
+        $this->validate($this->request, $this->request->storeRules());
+        $data = $this->request->all();
+        $epworthData = $data['epworth'];
+        unset($data['epworth']);
+        $createData = $this->getCreateAttributes();
+
+        if (count($createData)) {
+            $data = array_merge($data, $createData);
+        }
+
+        $screener = $this->repository->createWithEpworth($data, $epworthData);
+
+        return ApiResponse::responseOk('Resource created', $screener);
     }
 
     /**

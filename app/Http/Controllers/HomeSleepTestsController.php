@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\ScreenerEpworth;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\HomeSleepTestRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
@@ -133,7 +134,19 @@ class HomeSleepTestsController extends BaseRestController
      */
     public function store()
     {
-        return parent::store();
+        $this->validate($this->request, $this->request->storeRules());
+        $data = $this->request->all();
+        $createData = $this->getCreateAttributes();
+
+        if (count($createData)) {
+            $data = array_merge($data, $createData);
+        }
+
+        $screenerId = $data['screener_id'];
+        $epworthData = ScreenerEpworth::where('screener_id', $screenerId)->get()->toArray();
+        $hst = $this->repository->createWithEpworth($data, $epworthData);
+
+        return ApiResponse::responseOk('Resource created', $hst);
     }
 
     /**

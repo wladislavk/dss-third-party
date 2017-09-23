@@ -1,7 +1,11 @@
 <?php
 namespace Tests\Api;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\EpworthHomeSleepTest;
+use DentalSleepSolutions\Eloquent\Models\Dental\EpworthSleepinessScale;
 use DentalSleepSolutions\Eloquent\Models\Dental\HomeSleepTest;
+use DentalSleepSolutions\Eloquent\Models\Dental\Screener;
+use DentalSleepSolutions\Eloquent\Models\Dental\ScreenerEpworth;
 use Tests\TestCases\ApiTestCase;
 
 class HomeSleepTestsApiTest extends ApiTestCase
@@ -56,7 +60,6 @@ class HomeSleepTestsApiTest extends ApiTestCase
             "snore_4" => 6,
             "snore_5" => 2,
             "viewed" => 7,
-            "status" => 2,
             "adddate" => "2004-06-25 15:07:30",
             "office_notes" => "Eveniet doloremque quia ipsam exercitationem consequatur.",
             "sleep_study_id" => 5,
@@ -70,6 +73,34 @@ class HomeSleepTestsApiTest extends ApiTestCase
             "hst_nights" => 6,
             "hst_positions" => "Nam minima.",
         ];
+    }
+
+    public function testStore()
+    {
+        /** @var Screener $screener */
+        $screener = factory(Screener::class)->create();
+        /** @var EpworthSleepinessScale[] $epworthTypes */
+        $epworthTypes = EpworthSleepinessScale::all();
+        foreach ($epworthTypes as $epworth) {
+            $screenerEpworth = new ScreenerEpworth();
+            $screenerEpworth->epworth_id = $epworth->epworthid;
+            $screenerEpworth->screener_id = $screener->id;
+            $screenerEpworth->response = 1;
+            $screenerEpworth->save();
+        }
+
+        $recordData = $this->getStoreData();
+        $recordData['screener_id'] = $screener->id;
+        $this->post(self::ROUTE_PREFIX . $this->getRoute(), $recordData);
+        $this->assertResponseOk();
+        $this->seeInDatabase($this->model->getTable(), $recordData);
+
+        /** @var HomeSleepTest $newRecord */
+        $newRecord = HomeSleepTest::where('patient_email', 'jraynor@gottlieb.com')->first();
+        /** @var EpworthHomeSleepTest[] $epworthRecords */
+        $epworthRecords = EpworthHomeSleepTest::where('hst_id', $newRecord->id)->get();
+        $this->assertEquals(11, sizeof($epworthRecords));
+        $this->assertEquals(1, $epworthRecords[0]->response);
     }
 
     protected function getUpdateData()

@@ -2,6 +2,7 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Screener;
+use DentalSleepSolutions\Eloquent\Models\Dental\ScreenerEpworth;
 use Tests\TestCases\ApiTestCase;
 
 class ScreenersApiTest extends ApiTestCase
@@ -24,18 +25,6 @@ class ScreenersApiTest extends ApiTestCase
             "first_name" => "Murray",
             "last_name" => "Dicki",
             "email" => "caesar.bednar@gmail.com",
-            "epworth_reading" => 9,
-            "epworth_public" => 1,
-            "epworth_passenger" => 2,
-            "epworth_lying" => 5,
-            "epworth_talking" => 4,
-            "epworth_lunch" => 4,
-            "epworth_traffic" => 3,
-            "snore_1" => 6,
-            "snore_2" => 8,
-            "snore_3" => 9,
-            "snore_4" => 5,
-            "snore_5" => 7,
             "breathing" => 4,
             "driving" => 1,
             "gasping" => 0,
@@ -63,13 +52,73 @@ class ScreenersApiTest extends ApiTestCase
             "rx_headaches" => 9,
             "rx_heartburn" => 3,
             "rx_cpap" => 4,
-            "phone" => "(858) 413-0773",
-            "contacted" => 1,
-            "patient_id" => 6,
             "rx_metabolic_syndrome" => 4,
             "rx_obesity" => 7,
             "rx_afib" => 3,
+            "phone" => "(858) 413-0773",
+            "contacted" => 1,
+            "patient_id" => 6,
+            'epworth' => [
+                [
+                    'id' => 1,
+                    'selected' => 0,
+                ],
+                [
+                    'id' => 2,
+                    'selected' => 1,
+                ],
+                [
+                    'id' => 3,
+                    'selected' => 2,
+                ],
+                [
+                    'id' => 4,
+                    'selected' => 3,
+                ],
+                [
+                    'id' => 5,
+                    'selected' => 0,
+                ],
+                [
+                    'id' => 6,
+                    'selected' => 0,
+                ],
+                [
+                    'id' => 7,
+                    'selected' => 1,
+                ],
+                [
+                    'id' => 8,
+                    'selected' => 1,
+                ],
+                [
+                    'id' => 9,
+                    'selected' => 2,
+                ],
+                [
+                    'id' => 10,
+                    'selected' => 3,
+                ],
+                [
+                    'id' => 11,
+                    'selected' => 2,
+                ],
+            ],
         ];
+    }
+
+    public function testStore()
+    {
+        $this->post(self::ROUTE_PREFIX . $this->getRoute(), $this->getStoreData());
+        $this->assertResponseOk();
+
+        $recordData = $this->getStoreData();
+        unset($recordData['epworth']);
+        $this->seeInDatabase($this->model->getTable(), $recordData);
+        /** @var Screener $newRecord */
+        $newRecord = Screener::where('email', 'caesar.bednar@gmail.com')->first();
+        $epworthRecords = ScreenerEpworth::where('screener_id', $newRecord->id)->get();
+        $this->assertEquals(11, sizeof($epworthRecords));
     }
 
     protected function getUpdateData()

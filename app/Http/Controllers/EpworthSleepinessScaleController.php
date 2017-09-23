@@ -2,6 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Http\Requests\Request;
+
 class EpworthSleepinessScaleController extends BaseRestController
 {
     /**
@@ -28,7 +31,17 @@ class EpworthSleepinessScaleController extends BaseRestController
      */
     public function index()
     {
-        return parent::index();
+        $order = $this->request->get('order', '');
+        if ($order) {
+            $this->repository->orderBy($order);
+        }
+        $conditions = [];
+        if ($this->request->has('status')) {
+            $conditions['status'] = $this->request->get('status');
+        }
+        $data = $this->repository->findWhere($conditions);
+
+        return ApiResponse::responseOk('', $data);
     }
 
     /**

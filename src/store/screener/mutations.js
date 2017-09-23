@@ -69,5 +69,8 @@ export default {
   },
   [symbols.mutations.screenerId] (state, screenerId) {
     state[symbols.state.screenerId] = screenerId
+  },
+  [symbols.mutations.screenerToken] (state, screenerToken) {
+    state[symbols.state.screenerToken] = screenerToken
   }
 }

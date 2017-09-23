@@ -1,7 +1,6 @@
 import endpoints from '../../../endpoints'
 import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
-import scriptLoaderMixin from '../../../modules/loader/ScriptLoaderMixin'
 
 export default {
   name: 'login',
@@ -14,7 +13,7 @@ export default {
       }
     }
   },
-  mixins: [handlerMixin, scriptLoaderMixin],
+  mixins: [handlerMixin],
   mounted () {
     if (window.storage.get('token')) {
       const data = {
@@ -25,15 +24,6 @@ export default {
 
       this.$router.push('/manage/index')
     }
-
-    this.$nextTick(() => {
-      this.loadScriptFrom(
-        'https://seal.godaddy.com/getSeal?sealID=3b7qIyHRrOjVQ3mCq2GohOZtQjzgc1JF4ccCXdR6VzEhui2863QRhf',
-        '#siteseal',
-        window.verifySeal,
-        window.seal_installSeal
-      )
-    })
   },
   methods: {
     submitForm () {
@@ -62,8 +52,8 @@ export default {
             window.storage.save('token', data.token)
           }
 
-          this.getAccountStatus()
-            .then(function (response) {
+          this.getAccountStatus().then(
+            function (response) {
               const data = response.data.data
 
               if (data.type.toLowerCase() === 'suspended') {
@@ -71,9 +61,11 @@ export default {
               } else {
                 this.$router.push('/manage/index')
               }
-            }, function (response) {
+            },
+            function (response) {
               this.handleErrors('getAccountStatus', response)
-            })
+            }
+          )
         },
         function (response) {
           if (response.status === 422) {
@@ -85,7 +77,7 @@ export default {
       )
     },
     getToken (data) {
-      return this.$http.post(process.env.API_ROOT + 'auth', data)
+      return http.post(endpoints.auth, data)
     },
     getAccountStatus () {
       return http.post(endpoints.users.check, {}, {

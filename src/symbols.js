@@ -9,6 +9,7 @@ export default {
     epworthOptions: 'EPWORTH_OPTIONS',
     epworthProps: 'EPWORTH_PROPS',
     screenerId: 'SCREENER_ID',
+    screenerToken: 'SCREENER_TOKEN',
     screenerWeights: 'SCREENER_WEIGHTS',
     sessionData: 'SESSION_DATA',
     symptoms: 'SYMPTOMS'
@@ -31,6 +32,7 @@ export default {
     popupEdit: 'POPUP_EDIT',
     restoreInitialScreener: 'RESTORE_INITIAL_SCREENER',
     screenerId: 'SCREENER_ID',
+    screenerToken: 'SCREENER_TOKEN',
     sessionData: 'SESSION_DATA',
     setContact: 'SET_CONTACT',
     setEpworthErrors: 'SET_EPWORTH_ERRORS',
@@ -39,6 +41,7 @@ export default {
     symptoms: 'SYMPTOMS'
   },
   actions: {
+    authenticateScreener: 'AUTHENTICATE_SCREENER',
     disablePopupEdit: 'DISABLE_POPUP_EDIT',
     getCompanyData: 'GET_COMPANY_DATA',
     getDoctorData: 'GET_DOCTOR_DATA',
@@ -46,6 +49,7 @@ export default {
     parseScreenerResults: 'PARSE_SCREENER_RESULTS',
     setCurrentContact: 'SET_CURRENT_CONTACT',
     setEpworthProps: 'SET_EPWORTH_PROPS',
+    setSessionData: 'SET_SESSION_DATA',
     submitScreener: 'SUBMIT_SCREENER',
     submitHst: 'SUBMIT_HST'
   }

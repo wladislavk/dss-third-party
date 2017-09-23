@@ -23,5 +23,6 @@ export default {
     label: 'Have you ever used CPAP before?',
     weight: 4,
     selected: 0
-  }
+  },
+  [symbols.state.screenerToken]: ''
 }

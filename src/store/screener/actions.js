@@ -138,5 +138,41 @@ export default {
     }
 
     return http.request('post', endpoints.homeSleepTests.store, ajaxData)
+  },
+  [symbols.actions.authenticateScreener] ({ commit, dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      http.post(endpoints.auth, payload).then(
+        (response) => {
+          const data = response.data
+          if (!data.token) {
+            reject(new Error('No token retrieved'))
+          }
+          commit(symbols.mutations.screenerToken, data.token)
+          return dispatch(symbols.actions.setSessionData)
+        },
+        () => {
+          reject(new Error('Authentication failed'))
+        }
+      ).then(
+        () => {
+          resolve()
+        },
+        () => {
+          reject(new Error('No user ID retrieved'))
+        }
+      )
+    })
+  },
+  [symbols.actions.setSessionData] ({ commit }) {
+    return http.request('post', endpoints.users.current).then(
+      (response) => {
+        const data = response.data.data
+        const sessionData = {
+          userId: data.userid,
+          docId: data.docid
+        }
+        commit(symbols.mutations.sessionData, sessionData)
+      }
+    )
   }
 }

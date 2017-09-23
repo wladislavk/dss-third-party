@@ -4,14 +4,10 @@
             <form name="loginfrm" id="loginForm" v-on:submit.prevent="submitForm">
                 <table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
                     <tr bgcolor="#FFFFFF">
-                        <td colspan="2" class="t_head">
-                            Please Enter Your Login Information
-                        </td>
+                        <td colspan="2" class="t_head">Please Enter Your Login Information</td>
                     </tr>
                     <tr v-if="message" bgcolor="#FFFFFF">
-                        <td colspan="2" >
-                            <span class="red">{{ message }}</span>
-                        </td>
+                        <td colspan="2"><span class="red">{{ message }}</span></td>
                     </tr>
                     <tr bgcolor="#FFFFFF">
                         <td class="t_data">User name</td>
@@ -35,7 +31,7 @@
                         </td>
                     </tr>
                     <tr bgcolor="#FFFFFF">
-                        <td colspan="2" align="center" >
+                        <td colspan="2" align="center">
                             <input type="submit" name="btnsubmit" value=" Login " class="addButton">
                             <span style="float:right;">
                                 <a href="/manage/register/new.php">Register</a>
@@ -49,10 +45,7 @@
             </form>
         </div>
 
-        <span style="clear:both;" class="siteseal">
-            <span id="siteseal"></span>
-            <br/><a style="font-family: arial; font-size: 9px" href="http://www.godaddy.com/ssl/ssl-certificates.aspx" target="_blank">secure website</a>
-        </span>
+        <site-seal></site-seal>
         <div style="clear:both;"></div>
     </div>
 </template>

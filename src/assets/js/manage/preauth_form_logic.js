@@ -2,15 +2,18 @@ import $ from 'jquery'
 
 $(function () {
   function calc_amount_left_to_meet () {
-    var deductible = $('#patient_deductible').val()
-    var amountMet = $('#patient_amount_met').val()
+    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
+      return
+    }
+    let deductible = $('#patient_deductible').val()
+    let amountMet = $('#patient_amount_met').val()
     if (isNaN(deductible)) {
       deductible = 0
     }
     if (isNaN(amountMet)) {
       amountMet = 0
     }
-    var leftToMeet = deductible - amountMet
+    let leftToMeet = deductible - amountMet
     if (leftToMeet < 0) {
       leftToMeet = 0
     }
@@ -31,15 +34,18 @@ $(function () {
   }
 
   function calc_amount_left_to_meet_family () {
-    var deductible = $('#family_deductible').val()
-    var amountMet = $('#family_amount_met').val()
+    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
+      return
+    }
+    let deductible = $('#family_deductible').val()
+    let amountMet = $('#family_amount_met').val()
     if (isNaN(deductible)) {
       deductible = 0
     }
     if (isNaN(amountMet)) {
       amountMet = 0
     }
-    var leftToMeet = deductible - amountMet
+    let leftToMeet = deductible - amountMet
     if (leftToMeet < 0) {
       leftToMeet = 0
     }
@@ -60,23 +66,27 @@ $(function () {
   }
 
   function calc_expected_payments () {
+    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
+      return
+    }
     // OUT OF NETWORK BENEFITS
-    var debug = true
+    let debug = true
     if (debug) {
       console.log('calc_expected_payments')
     }
-    var deductibleFrom = $("input[name='deductible_from']:checked").val()
-    var deviceAmount = $('#trxn_code_amount2').val()
+    let deductibleFrom = $("input[name='deductible_from']:checked").val()
+    let deviceAmount = $('#trxn_code_amount2').val()
+    let amountLeftToMeet
     if (deductibleFrom === '1') {
-      var amountLeftToMeet = $('#patient_amount_left_to_meet').val()
+      amountLeftToMeet = $('#patient_amount_left_to_meet').val()
     } else {
-      var amountLeftToMeet = $('#family_amount_left_to_meet').val()
+      amountLeftToMeet = $('#family_amount_left_to_meet').val()
     }
-    var hasOutOfNetwork = $("input[name='has_out_of_network_benefits']:checked").val()
-    var isHmo = $("input[name='is_hmo']:checked").val()
-    var outOfPocketMet = $("input[name='out_of_pocket_met']:checked").val()
-    var benefits = $("input[name='network_benefits']:checked").val()
-    var percentagePaid = 0
+    const hasOutOfNetwork = $("input[name='has_out_of_network_benefits']:checked").val()
+    let isHmo = $("input[name='is_hmo']:checked").val()
+    let outOfPocketMet = $("input[name='out_of_pocket_met']:checked").val()
+    let benefits = $("input[name='network_benefits']:checked").val()
+    let percentagePaid = 0
 
     if (debug) {
       console.log('amountLeftToMeet: ' + amountLeftToMeet)
@@ -113,12 +123,12 @@ $(function () {
         console.log('expected_patient_payment: ' + 0.00)
       }
     } else {
-      var expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid / 100)
+      let expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid / 100)
       if (expectedInsurancePayment < 0) {
         expectedInsurancePayment = 0
       }
 
-      var expectedPatientPayment = deviceAmount - expectedInsurancePayment
+      let expectedPatientPayment = deviceAmount - expectedInsurancePayment
       if (expectedPatientPayment < 0) {
         expectedPatientPayment = 0
       }
@@ -146,10 +156,10 @@ $(function () {
     } else {
       amountLeftToMeet = $('#in_family_amount_left_to_meet').val()
     }
-    var hasInNetwork = $("input[name='has_in_network_benefits']:checked").val()
-    isHmo = $("input[name='is_hmo']:checked").val()
+    const hasInNetwork = $("input[name='has_in_network_benefits']:checked").val()
+    isHmo = $('input[name="is_hmo"]:checked').val()
     outOfPocketMet = $("input[name='in_out_of_pocket_met']:checked").val()
-    benefits = $("input[name='network_benefits']:checked").val()
+    benefits = $('input[name="network_benefits"]:checked').val()
     percentagePaid = 0
 
     if (debug) {
@@ -187,12 +197,12 @@ $(function () {
         console.log('in_expected_patient_payment: ' + 0.00)
       }
     } else {
-      expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid / 100)
+      let expectedInsurancePayment = (deviceAmount - amountLeftToMeet) * (percentagePaid / 100)
       if (expectedInsurancePayment < 0) {
         expectedInsurancePayment = 0
       }
 
-      expectedPatientPayment = deviceAmount - expectedInsurancePayment
+      let expectedPatientPayment = deviceAmount - expectedInsurancePayment
       if (expectedPatientPayment < 0) {
         expectedPatientPayment = 0
       }
@@ -208,12 +218,6 @@ $(function () {
     if (debug) {
       console.log('-----------------------')
     }
-  }
-
-  if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
-    function calc_amount_left_to_meet () {}
-    function calc_amount_left_to_meet_family () {}
-    function calc_expected_payments () {}
   }
 
   $("input[name='has_out_of_network_benefits']").bind('click', function () {
@@ -275,32 +279,33 @@ $(function () {
   })
   $("input[name='in_is_pre_auth_required']:checked").click()
 
-  $('#ins_cal_year_end').bind('focus blur click', function () {
+  const insCalYearEnd = $('#ins_cal_year_end')
+  insCalYearEnd.bind('focus blur click', function () {
     if ($(this).val() !== '') {
       const myDate = new Date($(this).val())
       myDate.setDate(myDate.getDate() + 1)
-      $("#deductible_reset_date").val(parseInt(myDate.getMonth() + 1, 10) + "/" + myDate.getDate() + "/" + myDate.getFullYear())
-      $("#in_deductible_reset_date").val(parseInt(myDate.getMonth() + 1, 10) + "/" + myDate.getDate() + "/" + myDate.getFullYear())
+      $('#deductible_reset_date').val(parseInt(myDate.getMonth() + 1, 10) + '/' + myDate.getDate() + '/' + myDate.getFullYear())
+      $('#in_deductible_reset_date').val(parseInt(myDate.getMonth() + 1, 10) + '/' + myDate.getDate() + '/' + myDate.getFullYear())
     } else {
       $('#deductible_reset_date').val('')
       $('#in_deductible_reset_date').val('')
     }
   })
-  $('#ins_cal_year_end').blur()
+  insCalYearEnd.blur()
 
   $('#ins_cal_year').bind('click', function () {
-    if ($('#ins_cal_year_end').val() !== '') {
+    if (insCalYearEnd.val() !== '') {
       const myDate = new Date($('#ins_cal_year_end').val())
       myDate.setDate(myDate.getDate() + 1)
-      $("#deductible_reset_date").val(parseInt(myDate.getMonth() + 1, 10) + "/" + myDate.getDate() + "/" + myDate.getFullYear())
-      $("#in_deductible_reset_date").val(parseInt(myDate.getMonth() + 1, 10) + "/" + myDate.getDate() + "/" + myDate.getFullYear())
+      $('#deductible_reset_date').val(parseInt(myDate.getMonth() + 1, 10) + '/' + myDate.getDate() + '/' + myDate.getFullYear())
+      $('#in_deductible_reset_date').val(parseInt(myDate.getMonth() + 1, 10) + '/' + myDate.getDate() + '/' + myDate.getFullYear())
     } else {
       $('#deductible_reset_date').val('')
       $('#in_deductible_reset_date').val('')
     }
   })
 
-  $("#patient_deductible, #patient_amount_met, #in_patient_deductible, #in_patient_amount_met").bind("focus blur click", function () {
+  $('#patient_deductible, #patient_amount_met, #in_patient_deductible, #in_patient_amount_met').bind('focus blur click', function () {
     calc_amount_left_to_meet()
     calc_expected_payments()
   })
@@ -310,28 +315,29 @@ $(function () {
   })
 
   $('#family_deductible, #family_amount_met, #in_family_deductible, #in_family_amount_met').bind('focus blur click', function () {
-    calc_amount_left_to_meet_family();
-    calc_expected_payments();
-  });
+    calc_amount_left_to_meet_family()
+    calc_expected_payments()
+  })
 
+  const fields = $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met, #in_patient_deductible, #in_patient_amount_met, #in_family_deductible, #in_family_amount_met')
   // Fields that should be clear on focus if value is 0
-  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met, #in_patient_deductible, #in_patient_amount_met, #in_family_deductible, #in_family_amount_met').bind('focus', function () {
-    var value = $(this).val()
+  fields.bind('focus', function () {
+    const value = $(this).val()
     if (isNaN(value) || (value === 0)) {
       $(this).val('')
     }
   })
 
   // Fields that should display two decimal places on blur
-  $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met, #in_patient_deductible, #in_patient_amount_met, #in_family_deductible, #in_family_amount_met').bind('blur', function() {
-    var value = parseFloat($(this).val())
+  fields.bind('blur', function () {
+    const value = parseFloat($(this).val())
     if (!isNaN(value)) {
       $(this).val(value.toFixed(2))
     }
   })
 
   // Fields that should trigger calculations
-  $('#out_of_network_percentage, #in_network_percentage, #patient_deductible, #patient_amount_met').bind("mouseup keyup", function () {
+  $('#out_of_network_percentage, #in_network_percentage, #patient_deductible, #patient_amount_met').bind('mouseup keyup', function () {
     calc_expected_payments()
   })
   $("[name='has_out_of_network_benefits'], [name='has_in_network_benefits'], [name='network_benefits'], [name='is_hmo'], [name='out_of_pocket_met']").bind('change', function () {

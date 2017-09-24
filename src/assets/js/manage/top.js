@@ -379,16 +379,18 @@ function handleResults (data, $reference) {
     $('.no_matches').remove()
 
     for (let i in data) {
-      const newLi = template.clone(true)
-        .removeClass('template')
-        .addClass('json_patient')
-        .data('number', parseInt(i) + 1)
-        .data('patientid', data[i].patientid)
-        .data('patient_info', data[i].patient_info)
+      if (data.hasOwnProperty(i)) {
+        const newLi = template.clone(true)
+          .removeClass('template')
+          .addClass('json_patient')
+          .data('number', parseInt(i) + 1)
+          .data('patientid', data[i].patientid)
+          .data('patient_info', data[i].patient_info)
 
-      template_list(newLi, data[i])
-        .appendTo($target)
-        .fadeIn()
+        template_list(newLi, data[i])
+          .appendTo($target)
+          .fadeIn()
+      }
     }
   }
 }

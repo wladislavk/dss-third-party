@@ -1,7 +1,7 @@
 import endpoints from '../../endpoints'
 import http from '../../services/http'
 
-module.exports = {
+export default {
   methods: {
     onMouseEnterTaskItem (event) {
       // get id from .task_status element

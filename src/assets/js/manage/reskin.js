@@ -13,7 +13,7 @@ $(function () {
   /**
    * Add breadcrumb
    */
-  var $container = $('<div class="row hidden-print" style="text-transform: capitalize;">' +
+  const $container = $('<div class="row hidden-print" style="text-transform: capitalize;">' +
           '<div class="col-md-12">' +
               '<h3 class="page-title"></h3>' +
               '<ul class="page-breadcrumb breadcrumb">' +
@@ -25,17 +25,17 @@ $(function () {
               '</ul>' +
           '</div>' +
       '</div>')
-  var $breadcrumb = $container.find('ul')
-  var path = window.location.href.replace(/^.+?\/([^\/]+)$/, '$1')
+  const $breadcrumb = $container.find('ul')
+  let path = window.location.href.replace(/^.+?\/([^/]+)$/, '$1')
 
   if (path.indexOf('?') >= 0) {
     path = path.substr(0, path.indexOf('?'))
   }
 
   $('.page-sidebar-menu').find('li a[href*="' + path + '"]').parents('li').find('>a:nth-child(1)').each(function () {
-    var $this = $(this)
-    var $source = $this.find('span.title')
-    var text = ($source.length ? $source : $this).text().trim().toLowerCase()
+    const $this = $(this)
+    const $source = $this.find('span.title')
+    const text = ($source.length ? $source : $this).text().trim().toLowerCase()
 
     if ($this.is('[href$="#"], [href^="javascript"]')) {
       $breadcrumb.append('<li><span/><i class="fa fa-angle-right"></i></li>')
@@ -51,7 +51,7 @@ $(function () {
 
   // Convert the last breadcrumb link into a text node, and set the title
   $breadcrumb.find('li:last').each(function () {
-    var $this = $(this)
+    const $this = $(this)
     $this.text($this.text())
     $container.find('.page-title').append($this.text())
   })
@@ -63,10 +63,10 @@ $(function () {
    */
   $('[onclick*=loadPopup]')
     .each(function () {
-      var $this = $(this)
-      var legend = $this.text().trim()
-      var click = $this.attr('onclick')
-      var popup = click.replace(/(javascript: *)?loadPopup\(['"](.+?)['"]\).*/i, '$2')
+      const $this = $(this)
+      const legend = $this.text().trim()
+      const click = $this.attr('onclick')
+      const popup = click.replace(/(javascript: *)?loadPopup\(['"](.+?)['"]\).*/i, '$2')
 
       $this.removeAttr('onclick')
       $this.data('legend', legend)
@@ -76,11 +76,11 @@ $(function () {
     .on('click', function (e) {
       e.preventDefault()
 
-      var $this = $(this)
-      var legend = $this.data('legend')
-      var popup = $this.data('popup')
-      var modal = $('#popup-window')
-      var iframe = modal.find('iframe')
+      const $this = $(this)
+      const legend = $this.data('legend')
+      const popup = $this.data('popup')
+      const modal = $('#popup-window')
+      const iframe = modal.find('iframe')
 
       iframe.attr('src', popup)
       modal.find('.modal-title').text(legend)
@@ -89,14 +89,16 @@ $(function () {
       return false
     })
 
+  const datepickerCalendar = $('.datepicker, .calendar')
+
   /**
    * Datepicker
    */
   if (typeof $.fn.datepicker !== 'undefined') {
-    $('.datepicker, .calendar').datepicker()
+    datepickerCalendar.datepicker()
   }
 
-  $('.datepicker, .calendar').keypress(function () {
+  datepickerCalendar.keypress(function () {
     return false
   })
 
@@ -104,9 +106,9 @@ $(function () {
    * File input
    */
   $(':file:not(.no-file-input)').each(function () {
-    var $file = $(this)
-    var id = $file.attr('id')
-    var $replacement
+    const $file = $(this)
+    const id = $file.attr('id')
+    let $replacement
 
     $file.filestyle({
       classButton: 'btn btn-primary btn-xs',
@@ -155,13 +157,13 @@ $(function () {
    * Table with fixed column
    */
   $('.table-responsive table.table').each(function () {
-    var $table = $(this)
-    var $fixedColumn = $table.clone().insertBefore($table).addClass('fixed-column')
+    const $table = $(this)
+    const $fixedColumn = $table.clone().insertBefore($table).addClass('fixed-column')
 
     $fixedColumn.removeAttr('id')
     $fixedColumn.find('th:not(:first-child),td:not(:first-child)').remove()
 
-    $fixedColumn.find('tr').each(function (i, elem) {
+    $fixedColumn.find('tr').each(function (i) {
       $(this).height($table.find('tr:eq(' + i + ')').height())
     })
   })

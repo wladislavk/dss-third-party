@@ -8,6 +8,14 @@ export default {
       state[property] = initialStateCopy[property]
     }
   },
+  [symbols.mutations.restoreInitialScreenerKeepSession] (state) {
+    const initialStateCopy = JSON.parse(JSON.stringify(initialState))
+    for (let property in initialState) {
+      if (property !== symbols.state.sessionData && property !== symbols.state.screenerToken) {
+        state[property] = initialStateCopy[property]
+      }
+    }
+  },
   [symbols.mutations.contactData] (state, storedContacts) {
     for (let field of state[symbols.state.contactData]) {
       if (storedContacts.hasOwnProperty(field.name)) {

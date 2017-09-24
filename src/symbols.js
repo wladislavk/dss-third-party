@@ -31,6 +31,7 @@ export default {
     modifyEpworthProps: 'MODIFY_EPWORTH_PROPS',
     popupEdit: 'POPUP_EDIT',
     restoreInitialScreener: 'RESTORE_INITIAL_SCREENER',
+    restoreInitialScreenerKeepSession: 'RESTORE_INITIAL_SCREENER_KEEP_SESSION',
     screenerId: 'SCREENER_ID',
     screenerToken: 'SCREENER_TOKEN',
     sessionData: 'SESSION_DATA',

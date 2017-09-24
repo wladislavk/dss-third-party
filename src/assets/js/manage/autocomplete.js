@@ -64,27 +64,29 @@ function sendValueRef (partialName, inField, hint, idField, source, file, hintty
           $('.create_new').remove()
           $('.no_matches').remove()
           for (let i in data) {
-            const name = data[i].name
-            if (inField === 'contact_name') {
-              newLi = $('#' + hint + ' ul .template')
-                .clone(true)
-                .removeClass('template')
-                .addClass('json_patient')
-                .data('rowid', data[i].id)
-                .data('rowsource', data[i].id)
-                .attr('onclick', 'loadPopup(\'view_contact.php?ed=' + data[i].id + '\')')
-            } else {
-              newLi = $('#' + hint + ' ul .template')
-                .clone(true)
-                .removeClass('template')
-                .addClass('json_patient')
-                .data('rowid', data[i].id)
-                .data('rowsource', data[i].id)
-                .attr('onclick', "update_referredby('" + inField + "','" + (name.replace(/'/g, "\\'")) + "', '" + idField + "', '" + data[i].id + "', '" + source + "', '" + data[i].source + "','" + hint + "')")
+            if (data.hasOwnProperty(i)) {
+              const name = data[i].name
+              if (inField === 'contact_name') {
+                newLi = $('#' + hint + ' ul .template')
+                  .clone(true)
+                  .removeClass('template')
+                  .addClass('json_patient')
+                  .data('rowid', data[i].id)
+                  .data('rowsource', data[i].id)
+                  .attr('onclick', 'loadPopup(\'view_contact.php?ed=' + data[i].id + '\')')
+              } else {
+                newLi = $('#' + hint + ' ul .template')
+                  .clone(true)
+                  .removeClass('template')
+                  .addClass('json_patient')
+                  .data('rowid', data[i].id)
+                  .data('rowsource', data[i].id)
+                  .attr('onclick', "update_referredby('" + inField + "','" + (name.replace(/'/g, "\\'")) + "', '" + idField + "', '" + data[i].id + "', '" + source + "', '" + data[i].source + "','" + hint + "')")
+              }
+              template_list_ref(newLi, name)
+                .appendTo('#' + hint + ' ul')
+                .fadeIn()
             }
-            template_list_ref(newLi, name)
-              .appendTo('#' + hint + ' ul')
-              .fadeIn()
           }
         }
       }
@@ -120,7 +122,7 @@ function updateval (t) {
 }
 
 function getParameterByName (name) {
-  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]')
+  name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]')
   const regex = new RegExp('[\\?&]' + name + '=([^&#]*)')
   const results = regex.exec(location.search)
   return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '))

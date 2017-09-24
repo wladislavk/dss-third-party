@@ -1,11 +1,17 @@
 import $ from 'jquery'
+import alerter from '../../services/alerter'
 import symbols from '../../symbols'
-import HealthAssessment from 'common/HealthAssessment.vue'
+import HealthAssessment from './common/HealthAssessment.vue'
 
 export default {
   data: function () {
     return {
       currentYear: (new Date()).getFullYear()
+    }
+  },
+  computed: {
+    isIntro: function () {
+      return this.$router.currentRoute.name === 'screener-intro'
     }
   },
   created () {
@@ -21,5 +27,19 @@ export default {
   },
   components: {
     'health-assessment': HealthAssessment
+  },
+  methods: {
+    onLogout () {
+      if (alerter.isConfirmed('Are you sure you want to logout?')) {
+        this.$store.commit(symbols.mutations.screenerToken, '')
+        this.$router.push({ name: 'screener-login' })
+      }
+    },
+    onReset () {
+      if (alerter.isConfirmed('Are you sure? All current progress will be lost.')) {
+        this.$store.commit(symbols.mutations.restoreInitialScreenerKeepSession)
+        this.$router.push({ name: 'screener-intro' })
+      }
+    }
   }
 }

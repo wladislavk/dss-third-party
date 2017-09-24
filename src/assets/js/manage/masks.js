@@ -14,7 +14,7 @@ $(document).ready(function () {
   $('.zipmask').mask('99999?-9999')
   $('.dollarmask').mask('%%%%%%%')
   $('.numbermask').mask('?9999999999')
-  $.mask.definitions['%'] = '[A-Za-z\.]'
+  $.mask.definitions['%'] = '[A-Za-z\\.]'
   $('.statemask').mask('?%%')
 })
 

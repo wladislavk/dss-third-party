@@ -129,8 +129,7 @@ export default {
     window.eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
   },
   methods: {
-    onSettingDataFromModal () {
-      // @todo: this will not work
+    onSettingDataFromModal (data) {
       this.message = data.message
       this.$nextTick(function () {
         const self = this

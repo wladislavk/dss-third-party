@@ -5,7 +5,7 @@ function is_email (email) {
   return true
 }
 
-function trim (inputString) {
+export function trim (inputString) {
   // Removes leading and trailing spaces from the passed string. Also removes
   // consecutive spaces and replaces it with one space. If something besides
   // a string is passed in (null, custom object, etc.) then return the input.

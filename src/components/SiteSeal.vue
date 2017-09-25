@@ -6,4 +6,4 @@
     </span>
 </template>
 
-<script src="./site-seal.js"></script>
+<script src="./SiteSeal.js"></script>

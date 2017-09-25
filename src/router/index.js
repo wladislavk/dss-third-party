@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import VueMoment from 'vue-moment'
 import MintUI from 'mint-ui'
 import MaskedInput from 'vue-masked-input'
+import axios from 'axios'
 import ManageTemplate from 'components/header/header.vue'
 import Login from 'components/manage/login/login.vue'
 import Index from 'components/manage/dashboard/dashboard.vue'
@@ -24,7 +25,7 @@ Vue.use(MintUI)
 Vue.component('manage-template', ManageTemplate)
 Vue.component('masked-input', MaskedInput)
 
-const router = new Router({
+export default new Router({
   routes: [
     {
       path: '/manage/login',
@@ -124,17 +125,13 @@ const router = new Router({
       path: '*',
       component: PageNotFound
     }
-  ]
-})
-
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth) && !window.storage.get('token')) {
-    next({ name: 'login' })
-  } else {
-    Vue.http.headers.common['Authorization'] = 'Bearer ' + window.storage.get('token')
-
-    next()
+  ],
+  beforeEach (to, from, next) {
+    if (to.matched.some(record => record.meta.requiresAuth) && !window.storage.get('token')) {
+      next({ name: 'login' })
+    } else {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.storage.get('token')
+      next()
+    }
   }
 })
-
-export { router as default }

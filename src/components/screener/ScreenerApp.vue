@@ -1,4 +1,4 @@
-<template>
+<template v-bind:key="$route.name">
     <div>
         <div id="header">
             <div class="wrapper cf">
@@ -6,14 +6,14 @@
                     <h1>Dental Sleep Solutions</h1>
                 </div>
                 <ul id="main_nav" class="fr">
-                    <li class="nav_item lgutipT" title="start over" id="restart_nav" v-if="!this.isIntro">
-                        <a href="#" v-on:click.prevent="onReset()" class="main_link">
+                    <li class="nav_item lgutipT" title="start over" id="reset_nav" v-show="showReset">
+                        <a href="#" v-on:click.prevent="onReset()" class="main_link" id="reset_link">
                             <img class="img_holder" style="background-image: url(~assets/images/icons/refresh.png)" alt="" src="~assets/images/blank.gif" />
                             <span>Reset and Start Over</span>
                         </a>
                     </li>
                     <li class="nav_item lgutipT" title="Log Out">
-                        <a href="#" v-on:click.prevent="onLogout()" class="main_link">
+                        <a href="#" v-on:click.prevent="onLogout()" class="main_link" id="logout_link">
                             <img class="img_holder" style="background-image: url(~assets/images/icons/locked2.png)" alt="" src="~assets/images/blank.gif" />
                             <span>Log Out</span>
                         </a>

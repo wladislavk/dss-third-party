@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import alerter from '../../services/alerter'
 import symbols from '../../symbols'
 import HealthAssessment from './common/HealthAssessment.vue'
@@ -10,20 +9,22 @@ export default {
     }
   },
   computed: {
-    isIntro: function () {
-      return this.$router.currentRoute.name === 'screener-intro'
+    showReset: function () {
+      return this.$route.name !== 'screener-intro'
     }
   },
-  created () {
+  mounted () {
     if (!this.$store.state.screener[symbols.state.screenerToken]) {
       this.$router.push({ name: 'screener-login' })
-      return
     }
+    // @todo: remake for Vue
+    /*
     $.mask.definitions['~'] = '[2-9]'
     $('.extphonemask').mask('(~99) 999-9999? ext99999')
     $('.phonemask').mask('(~99) 999-9999')
     $('.ssnmask').mask('999-99-9999')
     $('.datemask').mask('99/99/9999')
+    */
   },
   components: {
     'health-assessment': HealthAssessment

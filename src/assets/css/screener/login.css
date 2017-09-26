@@ -10,15 +10,17 @@
 .hide {
   display: none;
 }
-body {
+body, .login_body {
   background: #5aaae3;
   font-family: sans-serif;
   color: #fff;
+  height: 100vh;
 }
 #login_container {
   height: 300px;
   width: 960px;
-  margin: 100px auto 0 auto;
+  margin: 0 auto 0 auto;
+  padding-top: 100px;
 }
 #login_container h1 {
   text-indent: -99999px;

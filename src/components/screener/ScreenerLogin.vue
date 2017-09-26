@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="login_body">
         <div id="login_container">
             <h1>Dental Sleep Solutions</h1>
             <div class="login_content" id="login_sect">
@@ -28,3 +28,5 @@
 </template>
 
 <script src="./ScreenerLogin.js"></script>
+
+<style src="../../assets/css/screener/login.css" scoped></style>

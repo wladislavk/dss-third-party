@@ -1,5 +1,5 @@
 <template v-bind:key="$route.name">
-    <div>
+    <div class="screener_body">
         <div id="header">
             <div class="wrapper cf">
                 <div class="logo fl">
@@ -8,13 +8,13 @@
                 <ul id="main_nav" class="fr">
                     <li class="nav_item lgutipT" title="start over" id="reset_nav" v-show="showReset">
                         <a href="#" v-on:click.prevent="onReset()" class="main_link" id="reset_link">
-                            <img class="img_holder" style="background-image: url(~assets/images/icons/refresh.png)" alt="" src="~assets/images/blank.gif" />
+                            <img class="img_holder refresh_image" alt="Refresh" src="../../assets/images/blank.gif" />
                             <span>Reset and Start Over</span>
                         </a>
                     </li>
                     <li class="nav_item lgutipT" title="Log Out">
                         <a href="#" v-on:click.prevent="onLogout()" class="main_link" id="logout_link">
-                            <img class="img_holder" style="background-image: url(~assets/images/icons/locked2.png)" alt="" src="~assets/images/blank.gif" />
+                            <img class="img_holder logout_image" alt="Logout" src="../../assets/images/blank.gif" />
                             <span>Log Out</span>
                         </a>
                     </li>
@@ -41,8 +41,8 @@
 
 <script src="./ScreenerApp.js"></script>
 
-<style src="../../assets/css/screener/lagu.css" scoped></style>
-<style src="../../assets/css/screener/screener.css" scoped></style>
+<style src="../../assets/css/screener/lagu.css"></style>
+<style src="../../assets/css/screener/screener.css"></style>
 <!--[if IE]>
-<style src="../../assets/css/screener/style_ie.css" scoped></style>
+<style src="../../assets/css/screener/style_ie.css"></style>
 <![endif]-->

@@ -15,6 +15,7 @@ window.jQuery = window.$
 window.swal = require('sweetalert')
 window.moment = require('moment')
 window.accounting = require('accounting')
+// window.fancybox = require('../static/third-party/jquery.fancybox')
 
 // centralized event hub
 window.eventHub = new Vue()

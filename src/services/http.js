@@ -1,12 +1,13 @@
 import axios from 'axios'
 
 export default {
-  request (method, path, data, headers) {
+  token: '',
+  request (method, path, data, config) {
     if (!this.hasOwnProperty(method)) {
       throw new Error(`HTTP method ${method} not found`)
     }
     return new Promise((resolve, reject) => {
-      this[method](path, data, headers).then(
+      this[method](path, data, config).then(
         (response) => {
           if (response.error) {
             reject(new Error())
@@ -21,20 +22,24 @@ export default {
     })
   },
 
-  get (path, data, headers) {
-    return axios.get(this.formUrl(path), data, headers)
+  get (path, data, config) {
+    config = config || {}
+    return axios.get(this.formUrl(path), this._addToken(config))
   },
 
-  post (path, data, headers) {
-    return axios.post(this.formUrl(path), data, headers)
+  post (path, data, config) {
+    config = config || {}
+    return axios.post(this.formUrl(path), data, this._addToken(config))
   },
 
-  put (path, data, headers) {
-    return axios.put(this.formUrl(path), data, headers)
+  put (path, data, config) {
+    config = config || {}
+    return axios.put(this.formUrl(path), data, this._addToken(config))
   },
 
-  delete (path, data, headers) {
-    return axios.delete(this.formUrl(path), data, headers)
+  delete (path, data, config) {
+    config = config || {}
+    return axios.delete(this.formUrl(path), this._addToken(config))
   },
 
   formUrl (path) {
@@ -43,5 +48,10 @@ export default {
       path = path.substr(1)
     }
     return apiPath + path
+  },
+
+  _addToken (config) {
+    config.headers = config.headers || {}
+    config.headers.Authorization = 'Bearer ' + this.token
   }
 }

@@ -1,9 +1,11 @@
+import axios from 'axios'
 import http from '../../services/http'
 import symbols from '../../symbols'
 import endpoints from '../../endpoints'
 
 export default {
   [symbols.actions.getDoctorData] ({ state, commit }) {
+    http.token = state[symbols.state.screenerToken]
     const doctorId = state[symbols.state.sessionData].docId
     http.get(endpoints.users.show + '/' + doctorId).then(
       function (response) {
@@ -12,7 +14,8 @@ export default {
       }
     )
   },
-  [symbols.actions.getCompanyData] ({ commit }) {
+  [symbols.actions.getCompanyData] ({ state, commit }) {
+    http.token = state[symbols.state.screenerToken]
     http.get(endpoints.companies.companyByUser).then(
       function (response) {
         const data = response.data.data
@@ -64,6 +67,7 @@ export default {
       }
     }
 
+    http.token = state[symbols.state.screenerToken]
     return http.request('post', endpoints.screeners.store, screenerData)
   },
 
@@ -100,7 +104,8 @@ export default {
     }
     commit(symbols.mutations.surveyWeight, surveyWeight)
   },
-  [symbols.actions.setEpworthProps] ({ commit }) {
+  [symbols.actions.setEpworthProps] ({ state, commit }) {
+    http.token = state[symbols.state.screenerToken]
     http.get(endpoints.epworthSleepinessScale.index + '?status=1&order=sortby').then(
       (response) => {
         const data = response.data.data
@@ -113,6 +118,7 @@ export default {
     )
   },
   [symbols.actions.submitHst] ({ state }, { companyId, contactData }) {
+    http.token = state[symbols.state.screenerToken]
     const sessionData = state[symbols.state.sessionData]
     const screenerId = state[symbols.state.screenerId]
 
@@ -141,7 +147,7 @@ export default {
   },
   [symbols.actions.authenticateScreener] ({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
-      http.post(endpoints.auth, payload).then(
+      axios.post(process.env.API_ROOT + 'auth', payload).then(
         (response) => {
           const data = response.data
           if (!data.token) {
@@ -163,7 +169,8 @@ export default {
       )
     })
   },
-  [symbols.actions.setSessionData] ({ commit }) {
+  [symbols.actions.setSessionData] ({ state, commit }) {
+    http.token = state[symbols.state.screenerToken]
     return http.request('post', endpoints.users.current).then(
       (response) => {
         const data = response.data.data
@@ -172,6 +179,10 @@ export default {
           docId: data.docid
         }
         commit(symbols.mutations.sessionData, sessionData)
+      }
+    ).catch(
+      (error) => {
+        console.log(JSON.stringify(error))
       }
     )
   }

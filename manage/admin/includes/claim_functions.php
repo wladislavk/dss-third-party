@@ -1869,7 +1869,7 @@ function backOfficeClaimsConditional ($aliases=[]) {
 
     $claimAlias = $db->escape(array_get($aliases, 'claim', 'claim'));
     $patientAlias = $db->escape(array_get($aliases, 'patient', 'p'));
-    $companyAlias = $db->escape(array_get($aliases, 'company', 'c'));
+    $billingPivotAlias = $db->escape(array_get($aliases, 'dental_user_billing_exclusive', 'billing_exclusive'));
 
     $filedByBackOfficeConditional = filedByBackOfficeConditional($claimAlias);
 
@@ -1883,9 +1883,12 @@ function backOfficeClaimsConditional ($aliases=[]) {
                 $claimAlias.status IN ($actionableStatusList)
                 AND (
                     -- Doctor BO exclusivity
-                    COALESCE($companyAlias.exclusive, 0)
+                    IFNULL($billingPivotAlias.exclusive, 0)
                     -- Patient's BO filing permission
-                    OR COALESCE(IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file), 0) = 1
+                    OR IFNULL(
+                        IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file),
+                        0
+                    ) = 1
                 )
             )
         )";

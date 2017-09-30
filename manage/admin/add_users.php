@@ -105,6 +105,12 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
 	{
 		if($_POST["ed"] != "")
 		{
+		    $docId = (int)$_POST['ed'];
+		    $isExclusive = (bool)$_POST['billing_exclusive'];
+            $db->query("INSERT INTO dental_user_billing_exclusive (user_id, exclusive)
+                VALUES ('$docId', '$isExclusive')
+                ON DUPLICATE KEY UPDATE user_id = '$docId', exclusive = '$isExclusive'
+                ");
 
 			$old_sql = "SELECT status, username, recover_hash FROM dental_users WHERE userid='".$db->escape($_POST["ed"])."'";
                         $old_q = mysqli_query($con,$old_sql);
@@ -192,7 +198,7 @@ if (!empty($_POST["usersub"]) && $_POST["usersub"] == 1) {
                         if(is_super($_SESSION['admin_access'])){
                           $cid = $_POST["companyid"];
                         }else{
-                          $cid = $SESSION["companyid"];
+                          $cid = $_SESSION["companyid"];
                         }
                         $cname_sql = "SELECT name from companies WHERE id='".$db->escape($cid)."'";
                         $cname_q = mysqli_query($con,$cname_sql);
@@ -349,7 +355,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         if(is_super($_SESSION['admin_access'])){
                           $cid = $_POST["companyid"];
                         }else{
-                          $cid = $SESSION["companyid"];
+                          $cid = $_SESSION["companyid"];
                         }
 
 			$cname_sql = "SELECT name from companies WHERE id='".$db->escape($cid)."'";
@@ -360,6 +366,15 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		}
 
 		$userid = intval($userid);
+            $docId = $userid;
+            $billingCompanyId = (int)$_POST['billing_company_id'];
+            $db->query("INSERT INTO dental_user_billing_exclusive (user_id, exclusive)
+                SELECT user.userid, IFNULL(company.exclusive, 0)
+                FROM dental_users user
+                    LEFT JOIN companies company ON company.id = '$billingCompanyId'
+                WHERE user.userid = '$docId'
+                ON DUPLICATE KEY UPDATE user_id = '$docId', exclusive = IFNULL(company.exclusive, 0)
+                ");
 
 
 			mysqli_query($con,"INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('General', 'FFF9CF', 'general', ".$userid.")");
@@ -441,12 +456,27 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 
 <?php require_once dirname(__FILE__) . '/includes/popup_top.htm'; ?>
 <input type="hidden" id="dom-api-token" value="<?= adminApiToken() ?>">
+<?php
 
-    <?
-    $thesql = "select u.*, c.companyid, l.name mailing_name, l.address mailing_address, l.location mailing_practice, l.city mailing_city, l.state mailing_state, l.zip as mailing_zip, l.email as mailing_email, l.phone as mailing_phone, l.fax as mailing_fax from dental_users u 
+$thesql = "SELECT
+        u.*,
+        ube.exclusive,
+        c.companyid,
+        l.name AS mailing_name,
+        l.address AS mailing_address,
+        l.location AS mailing_practice,
+        l.city AS mailing_city,
+        l.state AS mailing_state,
+        l.zip AS mailing_zip,
+        l.email AS mailing_email,
+        l.phone AS mailing_phone,
+        l.fax AS mailing_fax
+    FROM dental_users u 
+		LEFT JOIN dental_user_billing_exclusive ube ON u.userid = ube.user_id
 		LEFT JOIN dental_user_company c ON u.userid = c.userid
-		LEFT JOIN dental_locations l ON l.docid = u.userid AND l.default_location=1
-		where u.userid='".$db->escape($_REQUEST["ed"])."'";
+		LEFT JOIN dental_locations l ON l.docid = u.userid
+		    AND l.default_location = 1
+		WHERE u.userid = '".$db->escape($_REQUEST["ed"])."'";
 	$themy = mysqli_query($con,$thesql);
 	$themyarray = mysqli_fetch_array($themy);
 	
@@ -498,6 +528,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$companyid = $_POST['companyid'];
 		$user_type = $_POST['user_type'];
 		$billing_company_id = $_POST['billing_company_id'];
+		$billing_exclusive = $_POST['exclusive'];
 		$hst_company_id = (!empty($_POST['hst_company_id']) ? $_POST['hst_company_id'] : '');
 		$access_code_id = $_POST['access_code_id'];
 		$plan_id = $_POST['plan_id'];
@@ -567,6 +598,7 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		$companyid = st($themyarray['companyid']);
                 $user_type = st($themyarray['user_type']);
 		$billing_company_id = $themyarray['billing_company_id'];
+		$billing_exclusive = $themyarray['exclusive'];
 		$hst_company_id = (!empty($themyarray['hst_company_id']) ? $themyarray['hst_company_id'] : '');
 		$plan_id = $themyarray['plan_id'];
 		$billing_plan_id = $themyarray['billing_plan_id'];
@@ -1064,6 +1096,11 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
                         <option value="<?php echo  $bu_r['id']; ?>" <?php echo  ($bu_r['id'] == $billing_company_id)?'selected="selected"':''; ?>><?php echo  $bu_r['name']; ?></option>
                         <?php } ?>
                     </select>
+                </div>
+                <label for="billing_exclusive" class="col-md-3 control-label">Exclusive?</label>
+                <div class="col-md-9">
+                    <input type="checkbox" name="billing_exclusive" id="billing_exclusive" class="form-control"
+                           value="1" <?= $billing_exclusive ? 'checked' : '' ?>>
                 </div>
             </div>
             <div class="form-group">

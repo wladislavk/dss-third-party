@@ -50,7 +50,7 @@ describe('ScreenerHST', () => {
     }
     this.vue.$store.commit(symbols.mutations.contactData, contactData)
 
-    moxios.stubRequest(http.formUrl(endpoints.companies.companyByUser), {
+    moxios.stubRequest(http.formUrl(endpoints.companies.homeSleepTest), {
       status: 200,
       responseText: {
         data: [

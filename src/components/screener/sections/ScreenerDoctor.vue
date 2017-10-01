@@ -9,7 +9,7 @@
 
             <a href="#results" id="sect_results_next" class="fl next btn btn_medium btn_d" v-on:click="showResults()">View Results</a>
             <router-link v-bind:to="{ name: 'screener-hst' }" style="margin-left:20px;" id="sect6_next" class="fr next btn btn_medium btn_d">Request HST (Doctor Only) &raquo;</router-link>
-            <a rel="fancyReg" href="#" v-on:click.prevent="openFancybox()" class="fr next btn btn_medium btn_d">Finish/Screen New Patient</a>
+            <a rel="fancyReg" href="#" id="fancy-reg" v-on:click.prevent="openFancybox()" class="fr next btn btn_medium btn_d">Finish/Screen New Patient</a>
             <a name="results"></a>
             <div id="results_div" style="clear:both;" v-show="resultsShown">
                 <h4>Results</h4>

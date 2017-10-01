@@ -18,7 +18,7 @@ describe('HTTP Service', () => {
     const data = { name: 'value' }
     http.post(path, data)
     const expected = {
-      path: 'https://api.docker.localhost/api/v1/bar',
+      path: 'http://api/api/v1/bar',
       data: { name: 'value' }
     }
     expect(this.post).toEqual(expected)

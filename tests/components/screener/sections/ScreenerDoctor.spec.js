@@ -16,8 +16,6 @@ describe('ScreenerDoctor', () => {
     window.jQuery = $
     const buttonUI = require('jquery-ui/button')
     window.$.fn.extend = buttonUI
-    const fancybox = require('../../../../static/third-party/jquery.fancybox')
-    window.$.fn.extend = fancybox
 
     moxios.install()
 
@@ -45,17 +43,17 @@ describe('ScreenerDoctor', () => {
 
     this.epworthMockData = [
       {
-        id: 1,
+        epworthid: 1,
         epworth: 'foo',
         selected: 1
       },
       {
-        id: 2,
+        epworthid: 2,
         epworth: 'bar',
         selected: 0
       },
       {
-        id: 3,
+        epworthid: 3,
         epworth: 'baz',
         selected: 4
       }
@@ -122,11 +120,11 @@ describe('ScreenerDoctor', () => {
 
         const contactDivs = this.vm.$el.querySelectorAll('div.contact_div')
         expect(contactDivs.length).toBe(3)
-        expect(contactDivs[0].querySelector('label').textContent).toBe('First Name')
+        expect(contactDivs[0].querySelector('label').textContent).toBe('First name:')
         expect(contactDivs[0].querySelector('span').textContent).toBe('John')
-        expect(contactDivs[1].querySelector('label').textContent).toBe('Last Name')
+        expect(contactDivs[1].querySelector('label').textContent).toBe('Last name:')
         expect(contactDivs[1].querySelector('span').textContent).toBe('Doe')
-        expect(contactDivs[2].querySelector('label').textContent).toBe('Phone Number')
+        expect(contactDivs[2].querySelector('label').textContent).toBe('Phone:')
         expect(contactDivs[2].querySelector('span').textContent).toBe('2233223223')
 
         const epworthWeight = this.vm.$el.querySelector('span#r_ep_total').textContent
@@ -138,13 +136,9 @@ describe('ScreenerDoctor', () => {
         expect(epworthDivs[1].querySelector('label').textContent).toBe('baz')
 
         const symptomDivs = this.vm.$el.querySelectorAll('div.symptom_div')
-        expect(symptomDivs.length).toBe(12)
-        expect(symptomDivs[0].querySelector('span').textContent).toBe('No')
-        expect(symptomDivs[0].querySelector('label').textContent).toBe('Have you ever been told you stop breathing while asleep?')
-        expect(symptomDivs[1].querySelector('span').textContent).toBe('Yes')
-        expect(symptomDivs[1].querySelector('label').textContent).toBe('Have you ever fallen asleep or nodded off while driving?')
-        expect(symptomDivs[2].querySelector('span').textContent).toBe('No')
-        expect(symptomDivs[2].querySelector('label').textContent).toBe('Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?')
+        expect(symptomDivs.length).toBe(1)
+        expect(symptomDivs[0].querySelector('span').textContent).toBe('Yes')
+        expect(symptomDivs[0].querySelector('label').textContent).toBe('Have you ever fallen asleep or nodded off while driving?')
 
         const cpap = this.vm.$el.querySelector('span#r_rx_cpap')
         expect(cpap.textContent).toBe('Yes')
@@ -160,9 +154,10 @@ describe('ScreenerDoctor', () => {
   })
 
   it('should route to intro', function () {
-    const link = this.vm.$el.querySelector('a#finish_ok')
+    expect(this.vue.$store.state.screener[symbols.state.showFancybox]).toBe(false)
+    const link = this.vm.$el.querySelector('a#fancy-reg')
     link.click()
-    expect(this.vue.$router.currentRoute.name).toBe('screener-intro')
+    expect(this.vue.$store.state.screener[symbols.state.showFancybox]).toBe(true)
   })
 
   it('should route to HST', function () {

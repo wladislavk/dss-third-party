@@ -127,7 +127,7 @@ describe('ScreenerDiagnoses', () => {
         headaches: false,
         falling_asleep: false,
         staying_asleep: false,
-        rx_cpap: '4',
+        rx_cpap: 4,
         rx_heart_disease: 2,
         rx_stroke: 0,
         rx_hypertension: 1,

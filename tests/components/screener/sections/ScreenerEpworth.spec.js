@@ -30,15 +30,15 @@ describe('ScreenerEpworth', () => {
 
     this.mockData = [
       {
-        id: 1,
+        epworthid: 1,
         epworth: 'foo'
       },
       {
-        id: 2,
+        epworthid: 2,
         epworth: 'bar'
       },
       {
-        id: 3,
+        epworthid: 3,
         epworth: 'baz'
       }
     ]
@@ -112,19 +112,19 @@ describe('ScreenerEpworth', () => {
         const epworthProps = this.vue.$store.state.screener[symbols.state.epworthProps]
         const expectedProps = [
           {
-            id: 1,
+            epworthid: 1,
             epworth: 'foo',
             selected: '0',
             error: false
           },
           {
-            id: 2,
+            epworthid: 2,
             epworth: 'bar',
             selected: '1',
             error: false
           },
           {
-            id: 3,
+            epworthid: 3,
             epworth: 'baz',
             selected: '2',
             error: false

@@ -38,7 +38,7 @@ describe('ScreenerLogin', () => {
   })
 
   it('should log in properly', function (done) {
-    moxios.stubRequest(process.env.API_ROOT + 'auth', {
+    moxios.stubRequest(process.env.HEADLESS_API_ROOT + 'auth', {
       status: 200,
       responseText: {
         token: 'token'
@@ -77,7 +77,7 @@ describe('ScreenerLogin', () => {
   })
 
   it('should log in unsuccessfully', function (done) {
-    moxios.stubRequest(process.env.API_ROOT + 'auth', {
+    moxios.stubRequest(process.env.HEADLESS_API_ROOT + 'auth', {
       status: 403,
       responseText: {
         error: 'error'

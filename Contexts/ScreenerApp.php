@@ -9,13 +9,13 @@ use PHPUnit\Framework\Assert;
 
 class ScreenerApp extends BaseContext
 {
-    const SCREENER_URL = 'http://loader/screener';
+    const SCREENER_URL = 'http://' . SUT_HOST . '/screener';
 
     /** @var bool */
     private $formsFilled = false;
 
     /**
-     * @Given I am logged in as :user into screener app
+     * @When I log in as :user to screener app page
      *
      * @param string $user
      */
@@ -117,6 +117,7 @@ class ScreenerApp extends BaseContext
      */
     public function fillEpworthForm(TableNode $table)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $data = $table->getHash();
         $labels = $this->findAllCss('div.dp66 > div.sepH_b > label');
         foreach ($data as $key => $select) {
@@ -190,6 +191,27 @@ class ScreenerApp extends BaseContext
     }
 
     /**
+     * @When I choose :company as company for home sleep test request
+     *
+     * @param string $company
+     * @throws BehatException
+     */
+    public function chooseHSTCompany($company)
+    {
+        $elementDivs = $this->findAllCss('div#secthst div.sepH_b');
+        $radios = $this->findAllCss('input', $elementDivs[0]);
+        preg_match_all('/<input.*?>(.*?)<br/sm', $elementDivs[0]->getHtml(), $matches);
+        foreach ($matches[1] as $key => $label) {
+            $labelWithoutTags = strip_tags(trim($label));
+            if ($labelWithoutTags == $company) {
+                $radios[$key]->click();
+                return;
+            }
+        }
+        throw new BehatException("Company with label $company not found");
+    }
+
+    /**
      * @When I fill home sleep test request form with data:
      *
      * @param TableNode $table
@@ -199,23 +221,24 @@ class ScreenerApp extends BaseContext
     {
         $expected = $table->getHash();
         $elementDivs = $this->findAllCss('div#secthst div.sepH_b');
+        array_shift($elementDivs);
         foreach ($expected as $key => $element) {
             $label = $this->findCss('label', $elementDivs[$key]);
             if ($element['field'] != $label->getText()) {
                 throw new BehatException("Element with label {$element['field']} not found");
             }
             $input = $this->findCss('input', $elementDivs[$key]);
-            switch ($element['type']) {
-                case 'text':
-                    $input->setValue($element['value']);
-                    break;
-                case 'radio':
-                    if ($element['value'] == 'checked') {
-                        $input->click();
-                    }
-                    break;
-            }
+            $input->setValue($element['value']);
         }
+    }
+
+    /**
+     * @When I close the modal window
+     */
+    public function closeModalWindow()
+    {
+        $closeButton = $this->findCss('a#fancybox-close');
+        $closeButton->click();
     }
 
     /**
@@ -293,6 +316,7 @@ class ScreenerApp extends BaseContext
      */
     public function testContactInformationForm(TableNode $table)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $expected = array_column($table->getHash(), 'name');
         $form = $this->findCss('form');
         $elements = $this->findAllCss('div.sepH_b', $form);
@@ -413,9 +437,14 @@ class ScreenerApp extends BaseContext
     public function testArrowImage($level)
     {
         $name = strtolower($level) . '_risk';
-        $image = $this->findCss('div#risk_image > img');
-        Assert::assertNotNull($image);
-        Assert::assertContains($name, $image->getAttribute('src'));
+        $images = $this->findAllCss('img');
+        $found = false;
+        foreach ($images as $image) {
+            if ($image->isVisible() && strstr($image->getAttribute('src'), $name)) {
+                $found = true;
+            }
+        }
+        Assert::assertTrue($found);
     }
 
     /**
@@ -463,22 +492,53 @@ class ScreenerApp extends BaseContext
     }
 
     /**
+     * @Then I see a modal window with heading :heading
+     *
+     * @param string $heading
+     */
+    public function testSeeModalWindow($heading)
+    {
+        $modalContent = $this->findCss('div#fancybox-content');
+        Assert::assertNotNull($modalContent);
+        Assert::assertTrue($modalContent->isVisible());
+        $modalHeading = $this->findCss('h4', $modalContent);
+        Assert::assertEquals($heading, $modalHeading->getText());
+    }
+
+    /**
+     * @Then I see company list in home sleep test request form:
+     *
+     * @param TableNode $table
+     */
+    public function testHSTCompanyList(TableNode $table)
+    {
+        $this->wait(self::MEDIUM_WAIT_TIME);
+        $elementDivs = $this->findAllCss('div#secthst div.sepH_b');
+        $companyDiv = $elementDivs[0];
+        $companyDivContent = str_replace('<label class="lbl_a">HST Company</label>', '', $companyDiv->getHtml());
+        $expected = array_column($table->getHash(), 'company');
+        foreach ($expected as $company) {
+            Assert::assertContains($company, $companyDivContent);
+        }
+    }
+
+    /**
      * @Then I see home sleep test request form pre-populated with data:
      *
      * @param TableNode $table
      */
     public function testHSTForm(TableNode $table)
     {
+        $this->wait(self::MEDIUM_WAIT_TIME);
         $expected = $table->getHash();
         $elementDivs = $this->findAllCss('div#secthst div.sepH_b');
+        array_shift($elementDivs);
         foreach ($expected as $key => $element) {
             $label = $this->findCss('label', $elementDivs[$key]);
             Assert::assertEquals($element['field'], $label->getText());
             $input = $this->findCss('input', $elementDivs[$key]);
-            Assert::assertEquals($element['type'], $input->getAttribute('type'));
-            if ($element['type'] == 'text') {
-                Assert::assertEquals($element['value'], $input->getValue());
-            }
+            Assert::assertNotNull($input);
+            Assert::assertEquals($element['value'], $input->getValue());
         }
     }
 

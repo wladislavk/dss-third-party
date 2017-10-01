@@ -301,7 +301,7 @@ abstract class BaseContext extends RawMinkContext
     {
         // otherwise confirm dialog will not be accepted
         if (BROWSER == 'phantomjs' || BROWSER == 'chrome') {
-            $script = "window.confirm = function() { return true; };";
+            $script = "window.confirm = function () { return true; }; window.alert = function () { return true; };";
             $this->getSession()->getDriver()->executeScript($script);
         }
     }

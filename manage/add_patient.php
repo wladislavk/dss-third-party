@@ -71,14 +71,15 @@ require_once 'includes/hst_functions.php';
 
 $db = new Db();
 $docId = (int)$_SESSION['docid'];
-$b_sql = "SELECT c.name, u.billing_exclusive
+$b_sql = "SELECT c.name, ube.exclusive
     FROM companies c
         JOIN dental_users u ON c.id = u.billing_company_id
+        LEFT JOIN dental_user_billing_exclusive ube ON ube.user_id = u.userid
     WHERE u.userid = '$docId'
     ";
 $b_r = $db->getRow($b_sql);
 if($b_r){
-  $exclusive_billing = (!empty($b_r['billing_exclusive']) ? $b_r['billing_exclusive'] : '');
+  $exclusive_billing = (!empty($b_r['exclusive']) ? $b_r['exclusive'] : '');
   $billing_co = (!empty($b_r['name']) ? $b_r['name'] : '');
 }else{
   $exclusive_billing = 0;

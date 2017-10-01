@@ -113,6 +113,15 @@ if ($isHistoricView) {
     $claimData = ClaimFormData::storedDataForClaim($claimId, $patientId);
 }
 
+$isBackOffice = !empty($is_back_office) || empty($is_front_office);
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+$belongsToBackOffice = (bool)$db->getColumn("SELECT $backOfficeClaimsConditional AS belongs_to_bo
+    FROM dental_insurance claim
+        LEFT JOIN dental_patients p ON claim.patientid = p.patientid
+        LEFT JOIN dental_users user ON claim.docid = p.docid
+        LEFT JOIN dental_user_billing_exclusive billing_exclusive ON billing_exclusive.user_id = user.userid
+", 'belongs_to_bo');
+
 $referencedClaimId = intval($claimData['primary_claim_id']);
 $fdf_file = !empty($claimData['primary_fdf']) ? $claimData['primary_fdf'] : '';
 $p_m_eligible_payer_id = !empty($claimData['p_m_eligible_payer_id']) ? $claimData['p_m_eligible_payer_id'] : '';
@@ -2415,7 +2424,7 @@ onclick="return confirm('This claim has been rejected. By printing this claim th
 </div>
 <div id="backgroundPopup"></div>
 <script>
-<?php if ($isHistoricView) { ?>
+<?php if ($isHistoricView || ($belongsToBackOffice !== $isBackOffice)) { ?>
 jQuery(function($){
     $('form#claim-form').find('input, select, button').prop('disabled', true);
 });

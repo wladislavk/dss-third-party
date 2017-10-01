@@ -1883,7 +1883,7 @@ function backOfficeClaimsConditional ($aliases=[]) {
                 $claimAlias.status IN ($actionableStatusList)
                 AND (
                     -- Doctor BO exclusivity
-                    IFNULL($billingPivotAlias.exclusive, 0)
+                    IFNULL($billingPivotAlias.exclusive, 0) = 1
                     -- Patient's BO filing permission
                     OR IFNULL(
                         IF($claimAlias.primary_claim_id, $patientAlias.s_m_dss_file, $patientAlias.p_m_dss_file),

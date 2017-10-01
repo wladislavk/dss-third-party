@@ -11,6 +11,7 @@ export default {
     screenerId: 'SCREENER_ID',
     screenerToken: 'SCREENER_TOKEN',
     screenerWeights: 'SCREENER_WEIGHTS',
+    showFancybox: 'SHOW_FANCYBOX',
     sessionData: 'SESSION_DATA',
     symptoms: 'SYMPTOMS'
   },
@@ -28,6 +29,7 @@ export default {
     cpap: 'CPAP',
     doctorName: 'DOCTOR_NAME',
     epworthWeight: 'EPWORTH_WEIGHT',
+    hideFancybox: 'HIDE_FANCYBOX',
     modifyEpworthProps: 'MODIFY_EPWORTH_PROPS',
     popupEdit: 'POPUP_EDIT',
     restoreInitialScreener: 'RESTORE_INITIAL_SCREENER',
@@ -38,6 +40,7 @@ export default {
     setContact: 'SET_CONTACT',
     setEpworthErrors: 'SET_EPWORTH_ERRORS',
     setEpworthProps: 'SET_EPWORTH_PROPS',
+    showFancybox: 'SHOW_FANCYBOX',
     surveyWeight: 'SURVEY_WEIGHT',
     symptoms: 'SYMPTOMS'
   },

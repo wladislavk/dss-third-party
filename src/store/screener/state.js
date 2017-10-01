@@ -24,5 +24,6 @@ export default {
     weight: 4,
     selected: 0
   },
-  [symbols.state.screenerToken]: ''
+  [symbols.state.screenerToken]: '',
+  [symbols.state.showFancybox]: false
 }

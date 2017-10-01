@@ -1,4 +1,5 @@
 import symbols from '../../../symbols'
+import HealthAssessmentComponent from '../common/HealthAssessment.vue'
 
 export default {
   data: function () {
@@ -12,6 +13,9 @@ export default {
     companies: function () {
       return this.$store.state.screener[symbols.state.companyData]
     }
+  },
+  components: {
+    'health-assessment': HealthAssessmentComponent
   },
   created () {
     this.$store.dispatch(symbols.actions.getCompanyData)

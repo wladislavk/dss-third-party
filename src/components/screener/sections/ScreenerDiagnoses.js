@@ -1,5 +1,6 @@
 import alerter from '../../../services/alerter'
 import symbols from '../../../symbols'
+import HealthAssessmentComponent from '../common/HealthAssessment.vue'
 
 export default {
   data () {
@@ -12,6 +13,14 @@ export default {
       storedConditions: {}
     }
   },
+  mounted () {
+    window.$(function () {
+      window.$('.buttonset').buttonset()
+    })
+  },
+  components: {
+    'health-assessment': HealthAssessmentComponent
+  },
   methods: {
     updateValue (event) {
       this.storedConditions[event.target.name] = false
@@ -20,7 +29,7 @@ export default {
       }
     },
     updateCpap (event) {
-      this.storedCpap = event.target.value
+      this.storedCpap = parseInt(event.target.value)
     },
     onSubmit () {
       this.nextDisabled = true

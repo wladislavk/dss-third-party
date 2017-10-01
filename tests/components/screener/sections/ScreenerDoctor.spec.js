@@ -6,13 +6,18 @@ import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
 import ScreenerDoctorComponent from '../../../../src/components/screener/sections/ScreenerDoctor.vue'
 import sinon from 'sinon'
-import fancybox from '../../../../src/services/fancybox'
+import $ from 'jquery'
 
 describe('ScreenerDoctor', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
 
-    this.sandbox.stub(fancybox, 'screenerDoctor').callsFake(() => {})
+    window.$ = $
+    window.jQuery = $
+    const buttonUI = require('jquery-ui/button')
+    window.$.fn.extend = buttonUI
+    const fancybox = require('../../../../static/third-party/jquery.fancybox')
+    window.$.fn.extend = fancybox
 
     moxios.install()
 
@@ -106,7 +111,7 @@ describe('ScreenerDoctor', () => {
       this.vue.$store.commit(symbols.mutations.modifyEpworthProps, epworthProps)
 
       const riskImage = this.vm.$el.querySelector('div#risk_image_doc > img').getAttribute('src')
-      expect(riskImage).toBe('~assets/images/screener-high_risk.png')
+      expect(riskImage).toContain('screener-high_risk')
 
       const resultsDiv = this.vm.$el.querySelector('div#results_div')
       expect(resultsDiv.style.display).toBe('none')

@@ -7,15 +7,17 @@ import router from './router'
 import axios from 'axios'
 import store from './store'
 import constants from './modules/constants'
+import $ from 'jquery'
 
 window.constants = constants
 window.storage = require('./modules/storage.js')
-window.$ = require('jquery/dist/jquery.min.js')
-window.jQuery = window.$
+window.$ = $
+window.jQuery = $
+const buttonUI = require('jquery-ui/button')
+window.$.fn.extend = buttonUI
 window.swal = require('sweetalert')
 window.moment = require('moment')
 window.accounting = require('accounting')
-// window.fancybox = require('../static/third-party/jquery.fancybox')
 
 // centralized event hub
 window.eventHub = new Vue()

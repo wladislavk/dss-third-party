@@ -21,7 +21,7 @@
                 Sleep apnea is a life-threatening disease. Please mention this during your visit - we would love to help you learn more. Due to your SEVERE risk of sleep apnea, it is IMPORTANT that you discuss sleep apnea and treatment options with us. We're here to help!
             </div>
 
-            <div id="risk_image"><img v-bind:src="'~assets/images/screener-' + riskLevel + '_risk.png'" /></div>
+            <div id="risk_image"><img v-bind:src="riskLevelImage" v-bind:alt="riskLevel + ' risk'" v-bind:title="riskLevel + ' risk'" /></div>
 
             <h2>Thank you for completing the survey. Please return the device to your provider.</h2>
             <router-link v-bind:to="{ name: 'screener-doctor' }" id="sect5_next" class="fr next btn btn_medium btn_d">Dentist Only - Click Here &raquo;</router-link>

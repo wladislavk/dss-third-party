@@ -12,7 +12,7 @@
                     </div>
                     <div class="field">
                         <label for="password">Password</label>
-                        <input type="password" tabindex="2" id="password" name="password" v-model="password" />
+                        <input type="password" tabindex="2" id="password" name="password" v-model="password" v-on:change="setPassword($event)" />
                     </div>
                     <div class="field">
                         <button type="submit" name="loginbut" id="loginbut" class="large" v-on:click.prevent="onSubmit()">Log In</button>

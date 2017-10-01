@@ -16,7 +16,7 @@ export default {
   },
   [symbols.actions.getCompanyData] ({ state, commit }) {
     http.token = state[symbols.state.screenerToken]
-    http.get(endpoints.companies.companyByUser).then(
+    http.post(endpoints.companies.homeSleepTest).then(
       function (response) {
         const data = response.data.data
         commit(symbols.mutations.companyData, data)
@@ -76,7 +76,7 @@ export default {
 
     let epworthWeight = 0
     for (let epworth of state[symbols.state.epworthProps]) {
-      epworthWeight += epworth.selected
+      epworthWeight += parseInt(epworth.selected)
     }
     commit(symbols.mutations.epworthWeight, epworthWeight)
 
@@ -85,13 +85,13 @@ export default {
     let coMorbidityWeight = 0
     for (let coMorbidity of coMorbidityData) {
       if (coMorbidity.checked) {
-        coMorbidityWeight += coMorbidity.weight
+        coMorbidityWeight += parseInt(coMorbidity.weight)
       }
     }
 
     const cpap = state[symbols.state.cpap]
     if (cpap.selected) {
-      coMorbidityWeight += cpap.weight
+      coMorbidityWeight += parseInt(cpap.weight)
     }
     commit(symbols.mutations.coMorbidityWeight, coMorbidityWeight)
 
@@ -99,7 +99,7 @@ export default {
     let surveyWeight = 0
     for (let symptom of symptoms) {
       if (symptom.selected) {
-        surveyWeight += parseInt(symptom.selected, 10)
+        surveyWeight += parseInt(symptom.selected)
       }
     }
     commit(symbols.mutations.surveyWeight, surveyWeight)
@@ -147,7 +147,11 @@ export default {
   },
   [symbols.actions.authenticateScreener] ({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
-      axios.post(process.env.API_ROOT + 'auth', payload).then(
+      let apiRoot = process.env.API_ROOT
+      if (window.location.protocol === 'http:') {
+        apiRoot = process.env.HEADLESS_API_ROOT
+      }
+      axios.post(apiRoot + 'auth', payload).then(
         (response) => {
           const data = response.data
           if (!data.token) {
@@ -181,9 +185,7 @@ export default {
         commit(symbols.mutations.sessionData, sessionData)
       }
     ).catch(
-      (error) => {
-        console.log(JSON.stringify(error))
-      }
+      () => {}
     )
   }
 }

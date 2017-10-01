@@ -2,6 +2,7 @@ export default {
   name: 'app',
   computed: {
     loadManageTemplate: function () {
+      // @todo: this does not work with screener and should be rewritten using nested routes
       // const load = this.$route.matched.some(record => record.meta.requiresManageTemplate)
       return false
     }

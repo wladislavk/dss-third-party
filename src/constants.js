@@ -3,7 +3,8 @@ export const INITIAL_CONTACT_DATA = [
     name: 'first_name',
     camelName: 'firstName',
     label: 'First Name',
-    class: '',
+    resultLabel: 'First name',
+    mask: '',
     firstPage: true,
     hstColumn: 'left',
     value: ''
@@ -12,7 +13,8 @@ export const INITIAL_CONTACT_DATA = [
     name: 'last_name',
     camelName: 'lastName',
     label: 'Last Name',
-    class: '',
+    resultLabel: 'Last name',
+    mask: '',
     firstPage: true,
     hstColumn: 'left',
     value: ''
@@ -21,7 +23,8 @@ export const INITIAL_CONTACT_DATA = [
     name: 'dob',
     camelName: 'dob',
     label: 'Date of Birth',
-    class: 'datemask',
+    resultLabel: '',
+    mask: '99/99/9999',
     firstPage: false,
     hstColumn: 'left',
     value: ''
@@ -30,7 +33,8 @@ export const INITIAL_CONTACT_DATA = [
     name: 'phone',
     camelName: 'phone',
     label: 'Phone Number',
-    class: 'phonemask',
+    resultLabel: 'Phone',
+    mask: '(999) 999-9999',
     firstPage: true,
     hstColumn: 'right',
     value: ''
@@ -39,7 +43,8 @@ export const INITIAL_CONTACT_DATA = [
     name: 'email',
     camelName: 'email',
     label: 'Email',
-    class: '',
+    resultLabel: '',
+    mask: '',
     firstPage: false,
     hstColumn: 'right',
     value: ''

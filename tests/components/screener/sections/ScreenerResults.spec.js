@@ -54,7 +54,7 @@ describe('ScreenerResults', () => {
       const riskDiv = this.vm.$el.querySelector('div.risk_desc')
       expect(riskDiv.id).toBe('risk_high')
       const riskImage = this.vm.$el.querySelector('div#risk_image > img').getAttribute('src')
-      expect(riskImage).toBe('~assets/images/screener-high_risk.png')
+      expect(riskImage).toContain('screener-high_risk')
       const expectedText = 'John, thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at high risk for sleep apnea, indicating that your symptoms are likely signs of Obstructive Sleep Apnea (OSA) and excessive sleepiness, and medical attention should be sought. Please talk to Jane or any of our staff to find out about our advanced tools for diagnosing sleep apnea.'
       expect(riskDiv.textContent).toContain(expectedText)
       done()

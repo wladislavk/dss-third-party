@@ -1,7 +1,6 @@
-import $ from 'jquery'
-import 'jquery-ui/ui/widgets/button'
 import symbols from '../../../symbols'
 import helpers from '../../../services/helpers'
+import HealthAssessmentComponent from '../common/HealthAssessment.vue'
 
 export default {
   data: function () {
@@ -13,16 +12,20 @@ export default {
       errors: []
     }
   },
-  created () {
-    $(function () {
-      $('.buttonset').buttonset()
+  mounted () {
+    window.$(function () {
+      window.$('.buttonset').buttonset()
     })
+  },
+  components: {
+    'health-assessment': HealthAssessmentComponent
   },
   methods: {
     updateValue (event) {
       this.storedSymptoms[event.target.name] = event.target.value
     },
     onSubmit () {
+      this.hasError = false
       this.nextDisabled = true
 
       for (let symptom of this.symptoms) {

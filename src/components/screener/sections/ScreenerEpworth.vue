@@ -12,12 +12,12 @@
                             <strong>{{ error }}</strong>: Please provide an answer
                         </div>
                     </div>
-                    <div v-for="element in epworthProps" v-bind:id="'epworth_' + element.id + '_div'" class="sepH_b clear" v-bind:class="{error: element.error}">
-                        <select class="inpt_in epworth_select" v-bind:id="'epworth_' + element.id" v-bind:name="'epworth_' + element.id" v-on:change="updateValue($event)">
+                    <div v-for="element in epworthProps" v-bind:id="'epworth_' + element.epworthid + '_div'" class="sepH_b clear" v-bind:class="{error: element.error}">
+                        <select class="inpt_in epworth_select" v-bind:id="'epworth_' + element.epworthid" v-bind:name="'epworth_' + element.epworthid" v-on:change="updateValue($event)">
                             <option value="">Select an answer</option>
                             <option v-for="answer in epworthOptions" v-bind:value="answer.option">{{ answer.option }} - {{ answer.label }}</option>
                         </select>
-                        <label class="lbl_in" v-bind:for="'epworth_' + element.id">{{ element.epworth }}</label>
+                        <label class="lbl_in" v-bind:for="'epworth_' + element.epworthid">{{ element.epworth }}</label>
                     </div>
                 </div>
                 <div class="legend dp33">

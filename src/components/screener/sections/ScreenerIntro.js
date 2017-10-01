@@ -1,4 +1,5 @@
 import symbols from '../../../symbols'
+import AwesomeMask from 'awesome-mask'
 
 export default {
   data: function () {
@@ -8,6 +9,9 @@ export default {
       storedContacts: {},
       errors: {}
     }
+  },
+  directives: {
+    mask: AwesomeMask
   },
   methods: {
     updateValue (event) {

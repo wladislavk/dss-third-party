@@ -14,6 +14,10 @@ export default {
     }
   },
   methods: {
+    // this method is needed to capture input for password in Headless Chrome
+    setPassword (event) {
+      this.password = event.target.value
+    },
     onSubmit () {
       if (!this.username) {
         alert('Username is Required')

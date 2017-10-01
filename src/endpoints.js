@@ -2,7 +2,6 @@ export default {
   auth: '/auth',
   companies: {
     billingExclusiveCompany: '/companies/billing-exclusive-company',
-    companyByUser: '/companies/company-by-user',
     homeSleepTest: '/companies/home-sleep-test'
   },
   contacts: {

@@ -24,3 +24,5 @@
 </template>
 
 <script src="./ScreenerSymptoms.js"></script>
+
+<style src="../../../../node_modules/jquery-ui/themes/ui-lightness/jquery-ui.css"></style>

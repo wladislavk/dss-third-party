@@ -24,6 +24,11 @@ export default {
     }
   },
   [symbols.mutations.companyData] (state, companyData) {
+    for (let company of companyData) {
+      if (company.hasOwnProperty('logo') && company.logo) {
+        company.logo = process.env.IMAGE_PATH + company.logo
+      }
+    }
     state[symbols.state.companyData] = companyData
   },
   [symbols.mutations.coMorbidityWeight] (state, weight) {
@@ -47,8 +52,8 @@ export default {
   [symbols.mutations.modifyEpworthProps] (state, storedProps) {
     for (let prop of state[symbols.state.epworthProps]) {
       prop.error = false
-      if (storedProps.hasOwnProperty(prop.id)) {
-        prop.selected = storedProps[prop.id]
+      if (storedProps.hasOwnProperty(prop.epworthid)) {
+        prop.selected = storedProps[prop.epworthid]
       }
     }
   },
@@ -80,5 +85,11 @@ export default {
   },
   [symbols.mutations.screenerToken] (state, screenerToken) {
     state[symbols.state.screenerToken] = screenerToken
+  },
+  [symbols.mutations.showFancybox] (state) {
+    state[symbols.state.showFancybox] = true
+  },
+  [symbols.mutations.hideFancybox] (state) {
+    state[symbols.state.showFancybox] = false
   }
 }

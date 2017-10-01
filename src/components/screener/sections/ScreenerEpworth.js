@@ -1,5 +1,6 @@
 import symbols from '../../../symbols'
 import helpers from '../../../services/helpers'
+import HealthAssessmentComponent from '../common/HealthAssessment.vue'
 
 export default {
   data: function () {
@@ -16,6 +17,9 @@ export default {
       return this.$store.state.screener[symbols.state.epworthProps]
     }
   },
+  components: {
+    'health-assessment': HealthAssessmentComponent
+  },
   created () {
     if (!this.$store.state.screener[symbols.state.epworthProps].length) {
       this.$store.dispatch(symbols.actions.setEpworthProps)
@@ -31,7 +35,7 @@ export default {
       this.hasError = false
 
       for (let epworth of this.epworthProps) {
-        if (this.storedProps.hasOwnProperty(epworth.id)) {
+        if (this.storedProps.hasOwnProperty(epworth.epworthid)) {
           this.errors = helpers.arrayRemove(this.errors, epworth.epworth)
         } else {
           this.errors = helpers.arrayAddUnique(this.errors, epworth.epworth)

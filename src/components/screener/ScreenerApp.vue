@@ -1,5 +1,5 @@
 <template v-bind:key="$route.name">
-    <div class="screener_body">
+    <div class="screener_body fixed">
         <div id="header">
             <div class="wrapper cf">
                 <div class="logo fl">
@@ -36,6 +36,7 @@
                 </div>
             </div>
         </div>
+        <fancybox-screener v-show="showFancybox"></fancybox-screener>
     </div>
 </template>
 
@@ -46,3 +47,4 @@
 <!--[if IE]>
 <style src="../../assets/css/screener/style_ie.css"></style>
 <![endif]-->
+<style src="../../../static/third-party/jquery.fancybox.css"></style>

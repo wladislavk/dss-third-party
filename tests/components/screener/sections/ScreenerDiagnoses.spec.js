@@ -5,9 +5,15 @@ import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
 import TestCase from '../../../cases/ComponentTestCase'
 import ScreenerDiagnosesComponent from '../../../../src/components/screener/sections/ScreenerDiagnoses.vue'
+import $ from 'jquery'
 
 describe('ScreenerDiagnoses', () => {
   beforeEach(function () {
+    window.$ = $
+    window.jQuery = $
+    const buttonUI = require('jquery-ui/button')
+    window.$.fn.extend = buttonUI
+
     moxios.install()
 
     Vue.component('health-assessment', {

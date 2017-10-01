@@ -24,26 +24,33 @@ export default {
 
   get (path, data, config) {
     config = config || {}
-    return axios.get(this.formUrl(path), this._addToken(config))
+    this._addToken(config)
+    return axios.get(this.formUrl(path), config)
   },
 
   post (path, data, config) {
     config = config || {}
-    return axios.post(this.formUrl(path), data, this._addToken(config))
+    this._addToken(config)
+    return axios.post(this.formUrl(path), data, config)
   },
 
   put (path, data, config) {
     config = config || {}
-    return axios.put(this.formUrl(path), data, this._addToken(config))
+    this._addToken(config)
+    return axios.put(this.formUrl(path), data, config)
   },
 
   delete (path, data, config) {
     config = config || {}
-    return axios.delete(this.formUrl(path), this._addToken(config))
+    this._addToken(config)
+    return axios.delete(this.formUrl(path), config)
   },
 
   formUrl (path) {
-    const apiPath = process.env.API_PATH
+    let apiPath = process.env.API_PATH
+    if (window.location.protocol === 'http:') {
+      apiPath = process.env.HEADLESS_API_PATH
+    }
     if (apiPath.charAt(apiPath.length - 1) === '/' && path.charAt(0) === '/') {
       path = path.substr(1)
     }

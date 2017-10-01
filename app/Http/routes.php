@@ -63,7 +63,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('claim-texts', 'ClaimTextsController', ['except' => ['create', 'edit']]);
 
-    Route::get('companies/company-by-user', 'CompaniesController@getCompanyByUser');
     Route::post('companies/home-sleep-test', 'CompaniesController@getHomeSleepTestCompanies');
     Route::post('companies/billing-exclusive-company', 'CompaniesController@getBillingExclusiveCompany');
     Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);

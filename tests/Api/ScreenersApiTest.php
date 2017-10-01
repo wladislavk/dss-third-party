@@ -60,47 +60,47 @@ class ScreenersApiTest extends ApiTestCase
             "patient_id" => 6,
             'epworth' => [
                 [
-                    'id' => 1,
+                    'epworthid' => 1,
                     'selected' => 0,
                 ],
                 [
-                    'id' => 2,
+                    'epworthid' => 2,
                     'selected' => 1,
                 ],
                 [
-                    'id' => 3,
+                    'epworthid' => 3,
                     'selected' => 2,
                 ],
                 [
-                    'id' => 4,
+                    'epworthid' => 4,
                     'selected' => 3,
                 ],
                 [
-                    'id' => 5,
+                    'epworthid' => 5,
                     'selected' => 0,
                 ],
                 [
-                    'id' => 6,
+                    'epworthid' => 6,
                     'selected' => 0,
                 ],
                 [
-                    'id' => 7,
+                    'epworthid' => 7,
                     'selected' => 1,
                 ],
                 [
-                    'id' => 8,
+                    'epworthid' => 8,
                     'selected' => 1,
                 ],
                 [
-                    'id' => 9,
+                    'epworthid' => 9,
                     'selected' => 2,
                 ],
                 [
-                    'id' => 10,
+                    'epworthid' => 10,
                     'selected' => 3,
                 ],
                 [
-                    'id' => 11,
+                    'epworthid' => 11,
                     'selected' => 2,
                 ],
             ],

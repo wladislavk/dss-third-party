@@ -25,7 +25,7 @@ class ScreenerRepository extends AbstractRepository
         foreach ($epworthData as $epworthElement) {
             $epworthRecord = new ScreenerEpworth();
             $epworthRecord->screener_id = $screener->id;
-            $epworthRecord->epworth_id = $epworthElement['id'];
+            $epworthRecord->epworth_id = $epworthElement['epworthid'];
             $epworthRecord->response = $epworthElement['selected'];
             $epworthRecord->adddate = $screener->adddate;
             $epworthRecord->ip_address = $screener->ip_address;

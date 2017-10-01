@@ -44,12 +44,10 @@ class AuthController extends Controller
     public function auth()
     {
         $credentials = $this->request->all();
-        $authenticated = $this->legacyAuth
-            ->byCredentials($credentials)
-        ;
+        $authenticated = $this->legacyAuth->byCredentials($credentials);
 
         if (!$authenticated) {
-            return ApiResponse::responseError('Invalid credentials', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return ApiResponse::responseError('Invalid credentials', Response::HTTP_FORBIDDEN);
         }
 
         $user = $this->legacyAuth->user();

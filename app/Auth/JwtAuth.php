@@ -101,9 +101,7 @@ class JwtAuth
             throw new AuthenticatableNotFoundException(JwtAuthErrors::USER_NOT_FOUND);
         }
 
-        return $this->guard($role)
-            ->user()
-            ;
+        return $this->guard($role)->user();
     }
 
     /**

@@ -1,49 +1,168 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?
-include "includes/top.htm";
+<?php
+namespace Ds3\Libraries\Legacy;
 
-if(isset($_POST['user_sub'])){
-  $d_sql = "UPDATE dental_users SET billing_company_id=NULL WHERE billing_company_id='".mysqli_real_escape_string($con,$_POST['id'])."'";
-  mysqli_query($con,$d_sql);
-  $u = implode(',',$_POST['user']);
-  $up_sql = "UPDATE dental_users set billing_company_id='".mysqli_real_escape_string($con,$_POST['id'])."' WHERE userid IN (".$u.")";
-  mysqli_query($con,$up_sql);
-  ?>
-  <script type="text/javascript">
-    window.location='manage_companies.php';
-  </script>
-  <?php
+require_once __DIR__ . '/includes/top.htm';
+
+$db = new Db();
+$companyId = (int)$_GET['id'];
+$companyType = $db->escape(DSS_COMPANY_TYPE_BILLING);
+
+$companyDetails = $db->getRow("SELECT name
+    FROM companies
+    WHERE id = '$companyId'
+        AND company_type = '$companyType'
+    ");
+$companyExists = false;
+$companyName = '<Invalid Billing Company>';
+$listUpdated = false;
+
+if (isset($companyDetails['name'])) {
+    $companyExists = true;
+    $companyName = $companyDetails['name'];
 }
-?>
 
+if (isset($_POST['user_sub']) && $companyExists) {
+    $listUpdated = true;
+    $users = $_POST['user'];
+    $exclusives = $_POST['exclusive'];
+    $exclusives = array_intersect($exclusives, $users);
+
+    $db->query("UPDATE dental_users
+        SET billing_company_id = NULL
+        WHERE billing_company_id = '$companyId'
+    ");
+
+    if (count($users)) {
+        $userIds = $db->escapeList($users);
+
+        $db->query("UPDATE dental_users
+            SET billing_company_id = '$companyId'
+            WHERE userid IN ($userIds)
+        ");
+
+        $db->query("UPDATE dental_user_billing_exclusive
+            SET exclusive = 0
+            WHERE user_id IN ($userIds)
+        ");
+    }
+
+    if (count($exclusives)) {
+        $exclusiveIds = $db->escapeList($exclusives);
+
+        $db->query("INSERT INTO dental_user_billing_exclusive (user_id, exclusive)
+            SELECT userid, 1
+            FROM dental_users user
+            WHERE user.userid IN ($exclusiveIds)
+            ON DUPLICATE KEY UPDATE user_id = user.userid, exclusive = 1
+        ");
+    }
+}
+
+$sql = "SELECT
+        user.userid,
+        user.username,
+        user.first_name,
+        user.last_name,
+        user.billing_company_id,
+        company.name AS billing_company,
+        billing_exclusive.exclusive AS exclusive,
+        user.billing_company_id = '$companyId' AS company_client,
+        user.billing_company_id != '$companyId' && user.billing_company_id != 0 AS other_client
+    FROM dental_users user
+		LEFT JOIN companies company ON company.id = user.billing_company_id
+            AND company.company_type = '$companyType'
+		LEFT JOIN dental_user_billing_exclusive billing_exclusive ON billing_exclusive.user_id = user.userid
+	WHERE user.docid = 0
+	ORDER BY user.billing_company_id = '$companyId' DESC,
+	    user.billing_company_id = 0 ASC,
+	    user.last_name ASC,
+	    user.first_name ASC,
+	    user.username ASC
+	";
+
+$users = $db->getResults($sql);
+
+?>
+<div class="page-header">
+    <?= e($companyName) ?> Company Users
+</div>
+<?php if ($listUpdated) { ?>
+    <div class="text-center">
+        <div class="well inline-block">User list updated</div>
+    </div>
+<?php } ?>
 <form method="post">
-
-<?php
-$u_sql = "SELECT u.*, c.name as billing_company FROM dental_users u 
-		LEFT JOIN companies c on c.id=u.billing_company_id
-		WHERE
-		u.docid=0
-		ORDER BY u.first_name ASC, u.last_name ASC, u.username ASC";
-$u_q = mysqli_query($con,$u_sql);
-while($user = mysqli_fetch_assoc($u_q)){
-?>
-
-  <input type="checkbox" value="<?= $user['userid'];?>" name="user[]" <?= ($user['billing_company_id']==$_REQUEST['id'])?'checked="checked"':''; ?> <?= ($user['billing_company_id']!='' && $user['billing_company_id']!='0' && $user['billing_company_id']!=$_REQUEST['id'])?'disabled="disabled"':''; ?> />
-  <?= $user['first_name']. " " .$user['last_name'] . " - " . $user['username'] ." - ".$user['billing_company']; ?><br />
-<?php
-  }
-?>
-<input type="hidden" name="id" value="<?= $_REQUEST['id']; ?>" />
-<input type="submit" name="user_sub" value="Update" class="btn btn-primary">
+    <table class="table table-bordered table-striped">
+        <colgroup>
+            <col width="8%" />
+            <col width="8%" />
+            <col width="54%" />
+            <col width="30%" />
+        </colgroup>
+        <tr>
+            <th>
+                Client
+            </th>
+            <th>
+                Exclusive
+            </th>
+            <th>
+                User
+            </th>
+            <th>
+                Username
+            </th>
+        </tr>
+        <?php foreach ($users as $user) {
+            $isClient = $user['company_client'];
+            $isOtherClient = $user['other_client'];
+            ?>
+            <tr class="<?= $isClient ? 'text-success' : '' ?> <?= $isOtherClient ? 'text-muted' : '' ?>">
+                <td>
+                    <input type="checkbox" name="user[]" value="<?= $user['userid'] ?>"
+                        <?= $isClient ? 'checked' : '' ?>
+                        <?= !$companyExists || $isOtherClient ? 'disabled' : '' ?>
+                        <?= $isOtherClient ? 'title="User is associated to a different company"' : '' ?>
+                    />
+                </td>
+                <td>
+                    <?php if ($isClient || !$isOtherClient) { ?>
+                        <input type="checkbox" name="exclusive[]" value="<?= $user['userid'] ?>"
+                            <?= $user['exclusive'] ? 'checked' : '' ?>
+                            <?= !$companyExists || !$isClient ? 'disabled' : '' ?>
+                        />
+                    <?php } ?>
+                </td>
+                <td>
+                    <?= e("{$user['last_name']}, {$user['first_name']}") ?>
+                </td>
+                <td>
+                    <?= e($user['username']) ?>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
+    <input type="submit" name="user_sub" value="Update" class="btn btn-primary">
 </form>
+<script>
+    jQuery(function($) {
+        var $client = $(':checkbox[name^=user]');
 
+        $client.on('change', function () {
+            var $this = $(this),
+                isChecked = $this.is(':checked'),
+                $exclusive = $this
+                    .closest('tr')
+                    .find(':checkbox[name^=exclusive]')
+            ;
 
-
-
-
-
-
-
-
+            $exclusive.prop('disabled', !isChecked)
+                .closest('.checker')
+                .toggleClass('disabled', !isChecked)
+            ;
+        })
+    });
+</script>
 <?php
-include 'includes/bottom.htm';
-?>
+
+require_once __DIR__ . '/includes/bottom.htm';

@@ -510,6 +510,23 @@ $num_pending_claims = $db->getColumn($sql, 'total', 0);
 									<a href="/manage/admin/manage_companies.php" id="click_users_a">
 										<i class="fa fa-user"></i>Companies
 									</a>
+                                    <ul class="hidden">
+                                        <li>
+                                            <a href="/manage/admin/software_company_users.php">
+                                                <i class="fa fa-list"></i> Software Company Users
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/manage/admin/billing_company_users.php">
+                                                <i class="fa fa-list"></i> Billing Company Users
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/manage/admin/hst_company_users.php">
+                                                <i class="fa fa-list"></i> HST Company Users
+                                            </a>
+                                        </li>
+                                    </ul>
 								</li>
 								<?php } ?>
 								 <?php if (is_super($_SESSION['admin_access']) || is_admin($_SESSION['admin_access']) || is_billing_admin($_SESSION['admin_access']) || is_hst_admin($_SESSION['admin_access'])) { ?>

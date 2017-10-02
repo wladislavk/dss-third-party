@@ -118,7 +118,7 @@ $backOfficeClaimsConditional = backOfficeClaimsConditional();
 $belongsToBackOffice = (bool)$db->getColumn("SELECT $backOfficeClaimsConditional AS belongs_to_bo
     FROM dental_insurance claim
         LEFT JOIN dental_patients p ON claim.patientid = p.patientid
-        LEFT JOIN dental_users user ON claim.docid = user.userid
+        LEFT JOIN dental_users users ON claim.docid = users.userid
     WHERE claim.insuranceid = '$claimId'
 ", 'belongs_to_bo');
 

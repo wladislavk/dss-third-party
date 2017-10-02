@@ -71,6 +71,7 @@ require_once 'includes/hst_functions.php';
 
 $db = new Db();
 $docId = (int)$_SESSION['docid'];
+$b_sql = "SELECT c.name, u.is_billing_exclusive AS exclusive
     FROM companies c
         JOIN dental_users u ON c.id = u.billing_company_id
     WHERE u.userid = '$docId'

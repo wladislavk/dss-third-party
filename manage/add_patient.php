@@ -71,10 +71,8 @@ require_once 'includes/hst_functions.php';
 
 $db = new Db();
 $docId = (int)$_SESSION['docid'];
-$b_sql = "SELECT c.name, ube.exclusive
     FROM companies c
         JOIN dental_users u ON c.id = u.billing_company_id
-        LEFT JOIN dental_user_billing_exclusive ube ON ube.user_id = u.userid
     WHERE u.userid = '$docId'
     ";
 $b_r = $db->getRow($b_sql);

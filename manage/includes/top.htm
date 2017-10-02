@@ -105,7 +105,6 @@ if( $r['homepage'] != '1') {
         FROM dental_insurance claim
             LEFT JOIN dental_patients patient ON patient.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
-            LEFT JOIN dental_user_billing_exclusive billing_exclusive ON users.userid = billing_exclusive.user_id
             LEFT JOIN companies company ON company.id = users.billing_company_id
         WHERE $frontOfficeClaimsConditional
             AND claim.docid = '$docid'

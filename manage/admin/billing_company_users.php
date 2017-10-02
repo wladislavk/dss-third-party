@@ -36,24 +36,17 @@ if (isset($_POST['user_sub']) && $companyExists) {
         $userIds = $db->escapeList($users);
 
         $db->query("UPDATE dental_users
-            SET billing_company_id = '$companyId'
+            SET billing_company_id = '$companyId', is_billing_exclusive = 0
             WHERE userid IN ($userIds)
-        ");
-
-        $db->query("UPDATE dental_user_billing_exclusive
-            SET exclusive = 0
-            WHERE user_id IN ($userIds)
         ");
     }
 
     if (count($exclusives)) {
         $exclusiveIds = $db->escapeList($exclusives);
 
-        $db->query("INSERT INTO dental_user_billing_exclusive (user_id, exclusive)
-            SELECT userid, 1
-            FROM dental_users user
-            WHERE user.userid IN ($exclusiveIds)
-            ON DUPLICATE KEY UPDATE user_id = user.userid, exclusive = 1
+        $db->query("UPDATE dental_users
+            SET is_billing_exclusive = 1
+            WHERE userid IN ($exclusiveIds)
         ");
     }
 }
@@ -65,13 +58,12 @@ $sql = "SELECT
         user.last_name,
         user.billing_company_id,
         company.name AS billing_company,
-        billing_exclusive.exclusive AS exclusive,
+        user.is_billing_exclusive AS exclusive,
         user.billing_company_id = '$companyId' AS company_client,
         user.billing_company_id != '$companyId' && user.billing_company_id != 0 AS other_client
     FROM dental_users user
 		LEFT JOIN companies company ON company.id = user.billing_company_id
             AND company.company_type = '$companyType'
-		LEFT JOIN dental_user_billing_exclusive billing_exclusive ON billing_exclusive.user_id = user.userid
 	WHERE user.docid = 0
 	ORDER BY user.billing_company_id = '$companyId' DESC,
 	    user.billing_company_id = 0 ASC,

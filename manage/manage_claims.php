@@ -136,7 +136,6 @@ $pend_sql = "SELECT
     FROM dental_insurance claim
         LEFT JOIN dental_patients p ON claim.patientid = p.patientid
         JOIN dental_users users ON claim.docid = users.userid
-        LEFT JOIN dental_user_billing_exclusive billing_exclusive ON users.userid = billing_exclusive.user_id
         LEFT JOIN companies c ON c.id = users.billing_company_id
         LEFT JOIN (
             SELECT claim_id, COUNT(id) num_notes
@@ -199,7 +198,6 @@ $sql = "SELECT
     FROM dental_insurance claim
         LEFT JOIN dental_patients p ON claim.patientid = p.patientid
         JOIN dental_users users ON claim.docid = users.userid
-        LEFT JOIN dental_user_billing_exclusive billing_exclusive ON users.userid = billing_exclusive.user_id
         LEFT JOIN companies c ON c.id = users.billing_company_id
         LEFT JOIN (
             SELECT claim_id, COUNT(id) AS num_notes

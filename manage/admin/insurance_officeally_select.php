@@ -60,7 +60,6 @@ if (is_super($_SESSION['admin_access'])) {
         FROM dental_insurance claim
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
-            LEFT JOIN dental_user_billing_exclusive billing_exclusive ON users.userid = billing_exclusive.user_id
             JOIN dental_users users2 ON claim.userid = users2.userid
             LEFT JOIN companies c ON c.id = users.billing_company_id
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co
@@ -92,7 +91,6 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_patients p ON p.patientid = claim.patientid
             JOIN dental_users users ON claim.docid = users.userid
                 AND users.billing_company_id = '" . $db->escape($_SESSION['admincompanyid']) . "'
-            LEFT JOIN dental_user_billing_exclusive billing_exclusive ON users.userid = billing_exclusive.user_id
             JOIN dental_user_company uc ON uc.userid = claim.docid
             JOIN dental_users users2 ON claim.userid = users2.userid
             LEFT JOIN companies c ON c.id = users.billing_company_id
@@ -115,7 +113,6 @@ if (is_super($_SESSION['admin_access'])) {
             JOIN dental_users users ON claim.docid = users.userid
             JOIN dental_user_company uc ON uc.userid = claim.docid
                 AND uc.companyid = '" . $db->escape($_SESSION['admincompanyid']) . "'
-            LEFT JOIN dental_user_billing_exclusive billing_exclusive ON users.userid = billing_exclusive.user_id
             JOIN dental_users users2 ON claim.userid = users2.userid
             LEFT JOIN companies c ON c.id = users.billing_company_id
             LEFT JOIN dental_contact co ON co.contactid = p.p_m_ins_co

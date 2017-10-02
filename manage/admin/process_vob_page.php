@@ -285,7 +285,7 @@ if ($disabled) { ?>
                 Patient's Celll Phone #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="cell_phone" value="<?= e($preauth['cell_phone']) ?>" class="tbox readonly" readonly />
+                <input type="text" name="patient_cell_phone" value="<?= e($preauth['patient_cell_phone']) ?>" class="tbox readonly" readonly />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -294,7 +294,7 @@ if ($disabled) { ?>
                 Patient's Work Phone #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="work_phone" value="<?= e($preauth['work_phone']) ?>" class="tbox readonly" readonly />
+                <input type="text" name="patient_work_phone" value="<?= e($preauth['patient_work_phone']) ?>" class="tbox readonly" readonly />
                 <span class="red">*</span>
             </td>
         </tr>
@@ -1040,6 +1040,9 @@ function processVobInput (Array $input, $adminId) {
         'doc_tax_id_or_ssn',
         'trxn_code_amount',
         'patient_phone',
+        'patient_work_phone',
+        'patient_cell_phone',
+        'patient_email',
         'date_of_call',
         'insurance_rep',
         'call_reference_num',

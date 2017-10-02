@@ -3,5 +3,5 @@
 define('START_URL', 'http://loader/manage');
 define('API_URL', 'https://api.docker.localhost/api/v1');
 
-define('BROWSER', 'phantomjs');
+define('BROWSER', getenv('BEHAT_BROWSER'));
 define('SUT_HOST', getenv('SUT_HOST'));

@@ -16,7 +16,8 @@ RUN set -xe \
         fontconfig \
         wget \
         mesa-libOSMesa-devel \
-        gnu-free-sans-fonts
+        gnu-free-sans-fonts \
+        https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 
 RUN rpm -ivh https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm && yum -y install nodejs
 
@@ -30,9 +31,3 @@ RUN wget http://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 RUN yum localinstall -y mysql57-community-release-el7-11.noarch.rpm
 
 RUN yum install -y mysql-community-client
-
-RUN wget http://chrome.richardlloyd.org.uk/install_chrome.sh
-
-RUN chmod +x install_chrome.sh
-
-RUN ./install_chrome.sh -f

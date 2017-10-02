@@ -231,7 +231,11 @@ if ($customDateRange && !$validCustomDates) {
                     <?= number_format($each['90+'], 0, '.', ',') ?>
                 </td>
                 <td valign="top" class="text-right">
-                    <?= number_format($each['lifetime'], 0, '.', ',') ?>
+                    <?php if ($customDateRange && $validCustomDates) { ?>
+                        <?= number_format($each['custom_range'], 0, '.', ',') ?>
+                    <?php } else { ?>
+                        <?= number_format($each['lifetime'], 0, '.', ',') ?>
+                    <?php } ?>
                 </td>
             </tr>
             <tr>
@@ -251,7 +255,11 @@ if ($customDateRange && !$validCustomDates) {
                     <?= number_format($alternate['90+'], 0, '.', ',') ?>
                 </td>
                 <td valign="top" class="text-right">
-                    <?= number_format($alternate['lifetime'], 0, '.', ',') ?>
+                    <?php if ($customDateRange && $validCustomDates) { ?>
+                        <?= number_format($alternate['custom_range'], 0, '.', ',') ?>
+                    <?php } else { ?>
+                        <?= number_format($alternate['lifetime'], 0, '.', ',') ?>
+                    <?php } ?>
                 </td>
             </tr>
         <?php } ?>
@@ -321,7 +329,8 @@ function hstQuery(array $options, array $statuses = [])
     $interval_0_30 = hstInterval(0, 30);
     $interval_30_60 = hstInterval(30, 60);
     $interval_60_90 = hstInterval(60, 90);
-    $interval_90_0 = hstInterval($lastDateRange[0], $lastDateRange[1]);
+    $interval_90_0 = hstInterval(90, 0);
+    $customInterval = hstInterval($lastDateRange[0], $lastDateRange[1]);
 
     $sql = "SELECT
             company.id AS company_id,
@@ -332,6 +341,7 @@ function hstQuery(array $options, array $statuses = [])
             $interval_30_60 AS '31-60',
             $interval_60_90 AS '61-90',
             $interval_90_0 AS '90+',
+            $customInterval AS 'custom_range',
             SUM(IF(hst.id, 1, 0)) AS 'lifetime'
         FROM dental_users doctor
             LEFT JOIN dental_hst hst ON hst.doc_id = doctor.userid

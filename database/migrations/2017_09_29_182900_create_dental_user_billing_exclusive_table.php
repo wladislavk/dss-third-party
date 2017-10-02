@@ -14,20 +14,21 @@ class CreateDentalUserBillingExclusiveTable extends Migration
             $table->tinyInteger('exclusive');
         });
 
-        Schema::table('dental_user_billing_exclusive', function (Blueprint $table) {
-            $table->unique('user_id');
+        Schema::table('dental_users', function (Blueprint $table) {
+            $table->tinyInteger('is_billing_exclusive');
         });
 
-        DB::insert("INSERT INTO dental_user_billing_exclusive (user_id, exclusive)
-            SELECT user.userid, IFNULL(company.exclusive, 0)
-            FROM dental_users user
+        DB::update("UPDATE dental_users user
                 LEFT JOIN companies company ON company.id = user.billing_company_id
+            SET user.is_billing_exclusive = IFNULL(company.exclusive, 0)
             WHERE user.docid > 0
         ");
     }
 
     public function down()
     {
-        Schema::dropIfExists('dental_user_billing_exclusive');
+        Schema::table('dental_users', function (Blueprint $table) {
+            $table->dropColumn('is_billing_exclusive');
+        });
     }
 }

@@ -282,19 +282,19 @@ if ($disabled) { ?>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Patient's Celll Phone #
+                Patient's Work Phone #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_cell_phone" value="<?= e($preauth['patient_cell_phone']) ?>" class="tbox readonly" readonly />
+                <input type="text" name="patient_work_phone" value="<?= e($preauth['patient_work_phone']) ?>" class="tbox readonly" readonly />
                 <span class="red">*</span>
             </td>
         </tr>
         <tr bgcolor="#FFFFFF">
             <td valign="top" class="frmhead" width="30%">
-                Patient's Work Phone #
+                Patient's Celll Phone #
             </td>
             <td valign="top" class="frmdata">
-                <input type="text" name="patient_work_phone" value="<?= e($preauth['patient_work_phone']) ?>" class="tbox readonly" readonly />
+                <input type="text" name="patient_cell_phone" value="<?= e($preauth['patient_cell_phone']) ?>" class="tbox readonly" readonly />
                 <span class="red">*</span>
             </td>
         </tr>

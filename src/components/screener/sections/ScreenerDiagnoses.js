@@ -37,18 +37,15 @@ export default {
       this.$store.commit(symbols.mutations.coMorbidity, this.storedConditions)
       this.$store.commit(symbols.mutations.cpap, this.storedCpap)
 
-      this.$store.dispatch(symbols.actions.submitScreener).then(
-        (response) => {
-          const data = response.data.data
-          this.$store.dispatch(symbols.actions.parseScreenerResults, data)
-          this.$router.push({ name: 'screener-results' })
-        },
-        () => {
-          this.nextDisabled = false
-          const alertText = 'There was an error communicating with the server, please try again in a few minutes'
-          alerter.alert(alertText)
-        }
-      )
+      this.$store.dispatch(symbols.actions.submitScreener).then((response) => {
+        const data = response.data.data
+        this.$store.dispatch(symbols.actions.parseScreenerResults, data)
+        this.$router.push({ name: 'screener-results' })
+      }).catch(() => {
+        this.nextDisabled = false
+        const alertText = 'There was an error communicating with the server, please try again in a few minutes'
+        alerter.alert(alertText)
+      })
     }
   }
 }

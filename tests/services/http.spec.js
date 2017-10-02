@@ -2,15 +2,17 @@ import axios from 'axios'
 import http from '../../src/services/http'
 import sinon from 'sinon'
 
-const sandbox = sinon.createSandbox()
-
 describe('HTTP Service', () => {
   beforeEach(function () {
     this.post = {}
-    sandbox.stub(axios, 'post').callsFake((path, data) => {
+    this.sandbox = sinon.createSandbox()
+    this.sandbox.stub(axios, 'post').callsFake((path, data) => {
       this.post.path = path
       this.post.data = data
     })
+  })
+  afterEach(function () {
+    this.sandbox.restore()
   })
 
   it('makes POST request', function () {

@@ -2,6 +2,7 @@ import axios from 'axios'
 import http from '../../services/http'
 import symbols from '../../symbols'
 import endpoints from '../../endpoints'
+import ProcessWrapper from '../../wrappers/ProcessWrapper'
 
 export default {
   [symbols.actions.getDoctorData] ({ state, commit }) {
@@ -147,45 +148,34 @@ export default {
   },
   [symbols.actions.authenticateScreener] ({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
-      let apiRoot = process.env.API_ROOT
-      if (window.location.protocol === 'http:') {
-        apiRoot = process.env.HEADLESS_API_ROOT
-      }
-      axios.post(apiRoot + 'auth', payload).then(
-        (response) => {
-          const data = response.data
-          if (!data.token) {
-            reject(new Error('No token retrieved'))
-          }
-          commit(symbols.mutations.screenerToken, data.token)
-          return dispatch(symbols.actions.setSessionData)
-        },
-        () => {
-          reject(new Error('Authentication failed'))
+      axios.post(ProcessWrapper.getApiRoot() + 'auth', payload).then((response) => {
+        const data = response.data
+        if (!data.hasOwnProperty('token') || !data.token) {
+          throw new Error('No token retrieved')
         }
-      ).then(
-        () => {
-          resolve()
-        },
-        () => {
-          reject(new Error('No user ID retrieved'))
+        commit(symbols.mutations.screenerToken, data.token)
+        dispatch(symbols.actions.setSessionData)
+        resolve()
+      }).catch((reason) => {
+        let newReason = 'Authentication failed'
+        if (reason instanceof Error && reason.message) {
+          newReason = reason.message
         }
-      )
+        reject(new Error(newReason))
+      })
     })
   },
   [symbols.actions.setSessionData] ({ state, commit }) {
     http.token = state[symbols.state.screenerToken]
-    return http.request('post', endpoints.users.current).then(
-      (response) => {
-        const data = response.data.data
-        const sessionData = {
-          userId: data.userid,
-          docId: data.docid
-        }
-        commit(symbols.mutations.sessionData, sessionData)
+    return http.request('post', endpoints.users.current).then((response) => {
+      const data = response.data.data
+      const sessionData = {
+        userId: data.userid,
+        docId: data.docid
       }
-    ).catch(
-      () => {}
-    )
+      commit(symbols.mutations.sessionData, sessionData)
+    }).catch(() => {
+      throw new Error('No user ID retrieved')
+    })
   }
 }

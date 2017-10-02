@@ -1,3 +1,4 @@
+import alerter from '../../../services/alerter'
 import symbols from '../../../symbols'
 import HealthAssessmentComponent from '../common/HealthAssessment.vue'
 
@@ -47,16 +48,14 @@ export default {
         companyId: this.currentCompanyId,
         contactData: this.contactData
       }
-      this.$store.dispatch(symbols.actions.submitHst, payload).then(
-        () => {
-          alert('HST submitted for approval and is in your Pending HST queue.')
-          this.$store.commit(symbols.mutations.restoreInitialScreener)
-          this.$router.push({ name: 'screener-intro' })
-        },
-        () => {
-          alert('There was an error communicating with the server, please try again in a few minutes')
-        }
-      )
+      this.$store.dispatch(symbols.actions.submitHst, payload).then(() => {
+        alert('HST submitted for approval and is in your Pending HST queue.')
+        this.$store.commit(symbols.mutations.restoreInitialScreener)
+        this.$router.push({ name: 'screener-intro' })
+      }).catch(() => {
+        const alertText = 'There was an error communicating with the server, please try again in a few minutes'
+        alerter.alert(alertText)
+      })
     }
   }
 }

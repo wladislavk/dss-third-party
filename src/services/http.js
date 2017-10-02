@@ -1,4 +1,5 @@
 import axios from 'axios'
+import ProcessWrapper from '../wrappers/ProcessWrapper'
 
 export default {
   token: '',
@@ -7,18 +8,14 @@ export default {
       throw new Error(`HTTP method ${method} not found`)
     }
     return new Promise((resolve, reject) => {
-      this[method](path, data, config).then(
-        (response) => {
-          if (response.error) {
-            reject(new Error())
-            return
-          }
-          resolve(response)
-        },
-        () => {
-          reject(new Error())
+      this[method](path, data, config).then((response) => {
+        if (response.error) {
+          throw new Error()
         }
-      )
+        resolve(response)
+      }).catch(() => {
+        reject(new Error())
+      })
     })
   },
 
@@ -47,10 +44,7 @@ export default {
   },
 
   formUrl (path) {
-    let apiPath = process.env.API_PATH
-    if (window.location.protocol === 'http:') {
-      apiPath = process.env.HEADLESS_API_PATH
-    }
+    let apiPath = ProcessWrapper.getApiPath()
     if (apiPath.charAt(apiPath.length - 1) === '/' && path.charAt(0) === '/') {
       path = path.substr(1)
     }

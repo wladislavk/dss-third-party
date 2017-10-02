@@ -1,5 +1,6 @@
 import initialState from './state'
 import symbols from '../../symbols'
+import ProcessWrapper from '../../wrappers/ProcessWrapper'
 
 export default {
   [symbols.mutations.restoreInitialScreener] (state) {
@@ -26,7 +27,7 @@ export default {
   [symbols.mutations.companyData] (state, companyData) {
     for (let company of companyData) {
       if (company.hasOwnProperty('logo') && company.logo) {
-        company.logo = process.env.IMAGE_PATH + company.logo
+        company.logo = ProcessWrapper.getImagePath() + company.logo
       }
     }
     state[symbols.state.companyData] = companyData

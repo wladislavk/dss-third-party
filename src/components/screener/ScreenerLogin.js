@@ -32,14 +32,11 @@ export default {
         username: this.username,
         password: this.password
       }
-      this.$store.dispatch(symbols.actions.authenticateScreener, data).then(
-        () => {
-          this.$router.push({ name: 'screener-intro' })
-        },
-        () => {
-          this.loginError = true
-        }
-      )
+      this.$store.dispatch(symbols.actions.authenticateScreener, data).then(() => {
+        this.$router.push({ name: 'screener-intro' })
+      }).catch(() => {
+        this.loginError = true
+      })
     }
   }
 }

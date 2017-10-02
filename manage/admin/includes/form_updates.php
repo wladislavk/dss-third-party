@@ -2465,6 +2465,14 @@ function update_ess_tss_form($id, $backoffice)
                 </tr>
                 <tr>
                     <td>
+                        My snoring causes my partner to be irritable or tired
+                    </td>
+                    <td>
+                        _________
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         My snoring requires us to sleep in separate rooms
                     </td>
                     <td>

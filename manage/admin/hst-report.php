@@ -1,9 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-use function array_combine;
-use function date_parse_from_format;
-
 require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/../includes/constants.inc';
 require_once __DIR__ . '/includes/general.htm';

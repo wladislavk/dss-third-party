@@ -4,7 +4,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class CreateDentalUserBillingExclusiveTable extends Migration
+class AlterDentalUsersTable extends Migration
 {
     public function up()
     {

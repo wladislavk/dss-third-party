@@ -8,12 +8,6 @@ class AlterDentalUsersTable extends Migration
 {
     public function up()
     {
-        Schema::create('dental_user_billing_exclusive', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->tinyInteger('exclusive');
-        });
-
         Schema::table('dental_users', function (Blueprint $table) {
             $table->tinyInteger('is_billing_exclusive');
         });

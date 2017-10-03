@@ -10,6 +10,7 @@ default:
                 - Contexts\Contacts
                 - Contexts\Dashboard
                 - Contexts\DeviceSelector
+                - Contexts\DualApp
                 - Contexts\Education
                 - Contexts\Forms
                 - Contexts\Insurance

@@ -5,6 +5,7 @@ namespace Contexts;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
+use Data\Pages;
 use DMore\ChromeDriver\ChromeDriver;
 use PHPUnit\Framework\Assert;
 
@@ -31,11 +32,22 @@ class Main extends BaseContext
     }
 
     /**
-     * @When I visit start page
+     * @When I go to start page
      */
     public function goToStart()
     {
-        // do nothing
+        $this->visitStartPage();
+    }
+
+    /**
+     * @When I go to :page page
+     *
+     * @param string $page
+     */
+    public function goToCustomPage($page)
+    {
+        $url = Pages::getUrl($page);
+        $this->getCommonClient()->visit($url);
     }
 
     /**

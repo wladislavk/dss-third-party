@@ -8,7 +8,7 @@ Feature: User login
     When I go to start page
     Then I see login form
     When I type in "doc1f" as login and "cr3at1vItY" as password
-    Then I see welcome text for user "doc1f"
+    Then I see main page with welcome text for user "doc1f"
 
   Scenario: Incorrect login
     Given user "foo" does not exist

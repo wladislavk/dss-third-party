@@ -28,14 +28,6 @@ class Auth extends BaseContext
     }
 
     /**
-     * @When I go to start page
-     */
-    public function goToStart()
-    {
-        $this->visitStartPage();
-    }
-
-    /**
      * @When I type in :user as login and :password as password
      *
      * @param string $user
@@ -55,7 +47,7 @@ class Auth extends BaseContext
     }
 
     /**
-     * @Then I see welcome text for user :user
+     * @Then I see main page with welcome text for user :user
      *
      * @param string $user
      */

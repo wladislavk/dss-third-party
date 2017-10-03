@@ -1,17 +1,160 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php 
-	include "includes/top.htm";
-	include_once "includes/constants.inc";
+<?php
+namespace Ds3\Libraries\Legacy;
 
-	
-	$sql = "select i.*, p.firstname, p.lastname from dental_insurance i left join dental_patients p on i.patientid=p.patientid 
-	where i.docid='".$_SESSION['docid']."' ";
-	$sql .= " AND i.status IN (".DSS_CLAIM_REJECTED.", ".DSS_CLAIM_SEC_REJECTED.")";
+require_once __DIR__ . '/includes/top.htm';
+require_once __DIR__ . '/includes/constants.inc';
 
-	$my = $db->getResults($sql);
+$db = new Db();
+
+$specialFilter = '';
+$isDefaultFilter = false;
+
+if (isset($_GET['filed_by'])) {
+    switch ($_GET['filed_by']) {
+        case 'back':
+        case 'both':
+            $specialFilter = $_GET['filed_by'];
+            break;
+    }
+}
+
+if(!isset($_GET['sort1'])){
+    $isDefaultFilter = true;
+    $_GET['sort1']='oldest';
+    $_GET['dir1']='ASC';
+}
+if(!isset($_GET['sort2'])){
+    $_GET['sort2']='adddate';
+    $_GET['dir2']='ASC';
+}
+if(!isset($_GET['filter'])){
+    $_GET['filter']=100;
+}
+if (isset($_GET['sort2'])) {
+    if ($_GET['sort2'] == 'patient') {
+        $sort = "p.lastname ".$_GET['dir2'].", p.firstname ".$_GET['dir2'];
+    } else {
+        $sort = $_GET['sort2']." ".$_GET['dir2'];
+    }
+}
+
+/**
+ * @see DSS-142
+ * @see CS-73
+ *
+ * Filter BO claims by actionable claims.
+ * This query might appear at some other places, please search this "@see DSS-142" tag.
+ *
+ * The old logic checks the p_m_dss_file and s_m_dss_file columns, which are copies of the options set from the
+ * patient's table. This logic does not really set if the claim is filed in the BO.
+ *
+ * The legacy values are: YES = 1, NO = 2. Thus, if the option is NOT 1 THEN the value is NOT YES.
+ *
+ * The new indicator will only be the p_m_dss_file column. To avoid conflicts with the previous set of values, the
+ * YES indicator will be 3.
+ */
+$frontOfficeClaimsConditional = frontOfficeClaimsConditional();
+$backOfficeClaimsConditional = backOfficeClaimsConditional();
+
+switch ($specialFilter) {
+    case 'both':
+        $whichOfficeConditional = '(TRUE)';
+        break;
+    case 'back':
+        $whichOfficeConditional = $backOfficeClaimsConditional;
+        break;
+    default:
+        $whichOfficeConditional = $frontOfficeClaimsConditional;
+}
+
+$sql = "SELECT
+        claim.*,
+        p.firstname,
+        p.lastname,
+        p.p_m_dss_file,
+        p.docid,
+        COALESCE(notes.num_notes, 0) num_notes,
+        (
+            SELECT e.adddate
+            FROM dental_claim_electronic e
+            WHERE e.claimid = claim.insuranceid
+            ORDER by e.adddate DESC
+            LIMIT 1
+        ) AS electronic_adddate,
+        $backOfficeClaimsConditional AS belongs_to_bo
+    FROM dental_insurance claim
+        LEFT JOIN dental_patients p ON claim.patientid = p.patientid
+        JOIN dental_users users ON claim.docid = users.userid
+        LEFT JOIN companies c ON c.id = users.billing_company_id
+        LEFT JOIN (
+            SELECT claim_id, COUNT(id) num_notes
+            FROM dental_claim_notes
+            GROUP BY claim_id
+        ) notes ON notes.claim_id = claim.insuranceid
+    WHERE claim.docid = '{$_SESSION['docid']}'
+        AND $whichOfficeConditional
+        ";
+
+$sql .= "
+        AND (
+            claim.status IN (" . $db->escapeList(ClaimFormData::statusListByName('rejected')) . ")
+        )
+        ";
+
+if ($isDefaultFilter) {
+    $sort = " claim.adddate DESC, p.lastname ASC, p.firstname ASC";
+} elseif (isset($_GET['sort2'])) {
+    if ($_GET['sort2'] == 'patient') {
+        $sort = "p.lastname ".$_GET['dir2'].", p.firstname ".$_GET['dir2'];
+    } else {
+        $sort = $_GET['sort2']." ".$_GET['dir2'];
+    }
+}
+
+$sql .= " ORDER BY " . $db->escape($sort);
+$my = $db->getResults($sql);
+
 ?>
 	<link rel="stylesheet" href="admin/popup/popup.css" type="text/css" media="screen" />
 	<script src="admin/popup/popup.js" type="text/javascript"></script>
-
+<style type="text/css">
+    #contentMain > br:first-of-type {
+        display: none;
+    }
+    #patient_nav {
+        width: 98.6%;
+        margin: auto;
+        padding-top: 15px;
+        margin-bottom: 15px;
+    }
+    #patient_nav > ul > li:last-child {
+        padding-right: 15px;
+        float: right;
+    }
+    #patient_nav > ul > li:last-child mark {
+        background-color: #b7b7b7;
+    }
+</style>
+<div id="patient_nav">
+    <ul>
+        <li>
+            <a class="<?= !$specialFilter ? 'nav_active' : '' ?>" href="/manage/manage_rejected_claims.php">
+                My Claims
+            </a>
+        </li>
+        <li>
+            <a class="<?= $specialFilter == 'back' ? 'nav_active' : '' ?>" href="/manage/manage_rejected_claims.php?filed_by=back">
+                External Billing Claims
+            </a>
+        </li>
+        <li>
+            <a class="<?= $specialFilter == 'both' ? 'nav_active' : '' ?>" href="/manage/manage_rejected_claims.php?filed_by=both">
+                All Claims
+            </a>
+        </li>
+        <li>Note: Claims sent via <mark>3rd party billing service</mark> are visible in "External Billing Claims"</li>
+    </ul>
+</div>
 	<br />
 <?php
 	if (isset($_GET['msg'])) {

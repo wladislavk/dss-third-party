@@ -8,7 +8,7 @@ require_once __DIR__ . '/../admin/includes/claim-status-switcher.inc';
 
 $isHistoricView = !empty($isHistoricView) || isset($_GET['history_id']);
 $historyId = intval($_GET['history_id']);
-$isDebug = config('app.debug');
+$isDebug = config('app.debug') && config('app.debugClaims');
 
 $claimId = intval($_GET['insid']);
 $patientId = intval($_GET['pid']);

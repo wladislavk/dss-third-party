@@ -2335,23 +2335,28 @@ function update_ess_tss_form($id, $backoffice)
                     "\'font-size:11.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\'">
                 Use the following scale to choose the most appropriate
                 number for each situation:</span>
-            </p>
-            <p class="MsoNormal" style="\'border:none;padding:0in\'">
-                <strong><span style="\'font-size:">0 = Would never doze 1 =
-                Slight chance of dozing</span></strong>
-            </p>
-            <p class="MsoNormal" style="\'border:none;padding:0in\'">
-                <strong><span style="\'font-size:">2 = Moderate chance of
-                dozing 3 = High chance of dozing</span></strong>
-            </p>
-            <p class="MsoNormal" style="\'border:none;padding:0in\'">
-                <strong><u><span style=
-                    "\'font-size:11.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\'">
-                SITUATION</span></u></strong>
+                
+                <span style="\'border:none;padding:0in;margin:0;text-align:center;\'">
+                    <br>
+                    <strong>0 = Would never doze</strong><br>
+                    <strong>1 = Slight chance of dozing</strong><br>
+                    <strong>2 = Moderate chance of dozing</strong><br>
+                    <strong>3 = High chance of dozing</strong>
+                </span>
             </p>
             <table>
                 <tr>
                     <td width="500px">
+                        <strong><span style=
+                            "\'font-size:11.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\'">
+                            <u>SITUATION</u>
+                        </span></strong>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         Sitting and reading
                     </td>
                     <td>
@@ -2416,43 +2421,39 @@ function update_ess_tss_form($id, $backoffice)
                 </tr>
                 <tr>
                     <td style="text-align:right;">
-                        &nbsp;<br />
                         <strong>TOTAL
-                        SCORE</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        SCORE</strong>&nbsp;
                     </td>
                     <td>
-                        &nbsp;<br />
                         _________
                     </td>
                 </tr>
             </table>
-            <p class="MsoNormal" style="\'border:none;padding:0in\'">
+            <p class="MsoNormal" style="\'border:none;padding:0in;text-align:center;\'">
                 <span style="\'font-size:11.0pt;">A score of 8 or greater
                 indicates the possibility of sleep disordered
                 breathing.</span>
             </p>
-            <h2 align="center" style=
-                "\'text-align:center;border:none;padding:0in\'">
-                <span style=
-                    "\'font-size:14.0pt;color:windowtext;font-weight:normal\'">THORNTON
+            <h2 class="MsoTitle" align="center" style=
+                "\'margin-bottom:0in;margin-bottom:.0001pt;">
+                <span style="\'font-size:14.0pt;">THORNTON
                 SNORING SCALE</span>
             </h2>
-            <p class="MsoBodyText" style="\'border:none;padding:0in\'">
+            <p class="MsoNormal" style="\'border:none;padding:0in\'">
                 <span style="\'font-size:">Snoring has a significant effect
                 on the quality of life for many people. Snoring can affect
                 the person snoring and those around him/her, both
                 physically and emotionally. Use the following scale to
                 choose the most appropriate number for each situation. (Go
                 to the 4th statement if you have no bed partner.)</span>
-            </p>
-            <p class="MsoNormal" style="\'border:none;padding:0in\'">
-                <strong><span style="\'font-size:">0 = Never 1 =
-                Infrequently (1 night per week)</span></strong>
-            </p>
-            <p class="MsoNormal" style="\'border:none;padding:0in;">
-                <strong><span style="\'font-size:">2 = Frequently (2-3
-                nights per week) 3 = Most of the time (4 or more nights per
-                week)</span></strong>
+                
+                <span style="\'border:none;padding:0in;margin:0;text-align:center;\'">
+                    <br>
+                    <strong>0 = Never</strong><br>
+                    <strong>1 = Infrequently (1 night per week)</strong><br>
+                    <strong>2 = Frequently (2-3 nights per week)</strong><br>
+                    <strong>3 = Most of the time (4 or more nights per week)</strong>
+                </span>
             </p>
             <table>
                 <tr>
@@ -2493,23 +2494,20 @@ function update_ess_tss_form($id, $backoffice)
                         away from home (i.e. hotel, camping, etc.)
                     </td>
                     <td>
-                        &nbsp;<br />
                         _________
                     </td>
                 </tr>
                 <tr>
                     <td style="text-align:right;">
-                        &nbsp;<br />
                         <strong>TOTAL
-                        SCORE</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        SCORE</strong>&nbsp;
                     </td>
                     <td>
-                        &nbsp;<br />
                         _________
                     </td>
                 </tr>
             </table>
-            <p class="MsoNormal" style="\'border:none;padding:0in\'">
+            <p class="MsoNormal" style="\'border:none;padding:0in;text-align:center;\'">
                 <span style="\'font-size:11.0pt;">A score of 5 or greater
                 indicates your snoring may be significantly affecting your
                 quality of life.</span>
@@ -2519,7 +2517,7 @@ function update_ess_tss_form($id, $backoffice)
                     "\'font-size:11.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\'">
                 PATIENT NAME</span></strong> <span style=
                     "\'font-size:11.0pt;font-family:&quot;Arial&quot;,&quot;sans-serif&quot;\'">
-                __________________________________________________
+                _______________________________________
                 <strong>DATE:</strong> _____________</span>
             </p>
             <p style="width:100%; text-align:right;">

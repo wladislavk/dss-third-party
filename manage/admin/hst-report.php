@@ -555,6 +555,15 @@ function hstSortBy($sortBy, $direction, array $customLimit = []) {
     return "ORDER BY $orderCompany, $orderUser";
 }
 
+/**
+ * Generate a query string for sorting
+ *
+ * @param array  $sortQueryValues
+ * @param string $sortField
+ * @param string $sortDir
+ * @param string $currentField
+ * @return string
+ */
 function sortQueryString(array $sortQueryValues, $sortField, $sortDir, $currentField)
 {
     $currentDir = get_sort_dir($currentField, $sortField, $sortDir);

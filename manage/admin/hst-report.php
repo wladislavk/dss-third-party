@@ -5,8 +5,8 @@ require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/../includes/constants.inc';
 require_once __DIR__ . '/includes/general.htm';
 
+$db = new Db();
 $isSuperAdmin = is_super($_SESSION['admin_access']);
-$adminCompanyId = (int)$_SESSION['admincompanyid'];
 
 $userId = (int)array_get($_GET, 'uid', 0);
 $companyId = (int)array_get($_GET, 'cid', 0);
@@ -19,56 +19,27 @@ $companyName = $db->getColumn("SELECT name
     FROM companies
     WHERE id = '$companyId'", 'name', '');
 
-$sortField = hstSortField(array_get($_GET, 'sort', 'company'));
-$sortDir = hstSortDirection(array_get($_GET, 'dir', 'asc'));
+$fullResults = hstQuery($_GET);
+$total = $fullResults['total'];
+$results = $fullResults['results'];
+$sortField = $fullResults['sortField'];
+$sortDir = $fullResults['sortDir'];
+$count = $fullResults['count'];
+$page = $fullResults['page'];
+$customDateRange = $fullResults['customDateRange'];
+$validCustomDates = $fullResults['validCustomDates'];
 
-$whereConditionals = hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId);
-$groupBy = 'GROUP BY company.id, doctor.userid';
-$sortBy = hstSortBy($sortField, $sortDir);
-
-if ($groupedByCompany) {
-    $groupBy = 'GROUP BY company.id';
-}
-
-$count = (int)array_get($_GET, 'count', 20);
-$page = (int)array_get($_GET, 'page', 0);
-$offset = $page*$count;
-
-$interval_0_30 = hstInterval(0, 30);
-$interval_30_60 = hstInterval(30, 60);
-$interval_60_90 = hstInterval(60, 90);
-$interval_90_0 = hstInterval(90, 0);
-
-$sql = "SELECT
-        company.id AS company_id,
-        company.name AS company_name,
-        doctor.userid AS doctor_id,
-        CONCAT(doctor.last_name, ', ', doctor.first_name) AS doctor_name,
-        $interval_0_30 AS '0-30',
-        $interval_30_60 AS '31-60',
-        $interval_60_90 AS '61-90',
-        $interval_90_0 AS '90+',
-        SUM(IF(hst.id, 1, 0)) AS 'lifetime'
-    FROM dental_users doctor
-        LEFT JOIN dental_hst hst ON hst.doc_id = doctor.userid
-        LEFT JOIN companies company ON company.id = hst.company_id
-    $whereConditionals
-    $groupBy
-    HAVING SUM(IF(hst.id, 1, 0)) > 0
-    ";
-
-$total = $db->getColumn("SELECT COUNT(company_id) AS total
-    FROM ($sql) subquery", 'total', 0);
-
-$sql = "$sql $sortBy
-    LIMIT $offset, $count";
-
-$results = $db->getResults($sql);
+$completedResults = hstQuery($_GET, [DSS_HST_COMPLETE]);
+$completedResults = $completedResults['results'];
+$completedResults = array_combine(
+    array_pluck($completedResults, 'company_id'),
+    $completedResults
+);
 
 $queryString = '';
 $sortQueryString = '?sort=%s&dir=%s';
 
-$queryValues = array_only($_GET, ['page', 'count', 'grouped', 'cid', 'uid', 'sort', 'dir']);
+$queryValues = array_only($_GET, ['page', 'count', 'grouped', 'cid', 'uid', 'from', 'to', 'sort', 'dir']);
 $sortQueryValues = array_except($queryValues, ['sort', 'dir']);
 
 if (count($queryValues)) {
@@ -85,6 +56,20 @@ if ($groupedByCompany) {
     $hiddenByGroup = 'hidden';
 }
 
+$msg = array_get($_GET, 'msg', '');
+
+if ($customDateRange && !$validCustomDates) {
+    $msg .= ' The date format from one of the date filters is invalid.';
+}
+
+$lastRange = 'lifetime';
+$rangeLabel = 'Lifetime';
+
+if ($customDateRange && $validCustomDates) {
+    $lastRange = 'custom_range';
+    $rangeLabel = 'Custom Range';
+}
+
 ?>
 <script>
     $(document).ready(function(){
@@ -97,15 +82,16 @@ if ($groupedByCompany) {
 <div class="page-header">
     HST Report
 </div>
-<div align="center" class="red">
-    <strong><?= e(array_get($_GET, 'msg', '')) ?></strong>
+<div class="text-center bg-danger text-danger">
+    <p><?= e($msg) ?></p>
 </div>
 
 <div style="width:98%;margin:auto;">
-    <form action="<?= $queryString ?>" method="get">
+    <form action="<?= $queryString ?>" method="get" class="form form-inline">
         <?php if ($isSuperAdmin) { ?>
             Company:
-            <input type="text" id="company_name" onclick="updateval(this)" autocomplete="off" name="company_name"
+            <input type="text" id="company_name" class="form-control"
+                   onclick="updateval(this)" autocomplete="off" name="company_name"
                    value="<?= $companyName ?>" placeholder="Type company name" />
             <div id="company_hints" class="search_hints" style="display:none;">
                 <ul id="company_list" class="search_list">
@@ -114,9 +100,10 @@ if ($groupedByCompany) {
             </div>
             <input type="hidden" name="cid" id="cid" value="<?= $companyId ?>" />
         <?php } ?>
-
+        &nbsp;
         Account:
-        <input type="text" id="account_name" onclick="updateval(this)" autocomplete="off" name="account_name"
+        <input type="text" id="account_name" class="form-control"
+               onclick="updateval(this)" autocomplete="off" name="account_name"
                value="<?= $doctorName ?>" placeholder="Type contact name" />
         <div id="account_hints" class="search_hints" style="display:none;">
             <ul id="account_list" class="search_list">
@@ -124,6 +111,18 @@ if ($groupedByCompany) {
             </ul>
         </div>
         <input type="hidden" name="uid" id="uid" value="<?= $userId ?>" />
+        &nbsp;
+        From:
+        <span>
+            <input type="text" class="form-control date datepicker" data-date-format="mm/dd/yyyy"
+                   name="from" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'from')) ?>" />
+        </span>
+        &nbsp;
+        To:
+        <span>
+            <input type="text" class="form-control date datepicker" data-date-format="mm/dd/yyyy"
+                   name="to" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'to')) ?>" />
+        </span>
 
         <input type="hidden" name="sort" value="<?= $sortField ?>" />
         <input type="hidden" name="dir" value="<?= $sortDir ?> "/>
@@ -141,14 +140,15 @@ if ($groupedByCompany) {
     </form>
 </div>
 <br>
-<table class="table table-bordered table-hover">
+<table class="table table-bordered table-hover table-striped">
     <colgroup>
         <?php if ($groupedByCompany) { ?>
-            <col width="60%" />
+            <col width="52%" />
         <?php } else { ?>
-            <col width="30%" />
-            <col width="30%" />
+            <col width="26%" />
+            <col width="26%" />
         <?php } ?>
+        <col width="8%" />
         <col width="8%" />
         <col width="8%" />
         <col width="8%" />
@@ -166,29 +166,35 @@ if ($groupedByCompany) {
         <?php } ?>
         <tr class="tr_bg_h">
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'company', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, 'company', get_sort_dir($sortField, 'company', $sortDir))?>">HST Company</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, 'company') ?>">HST Company</a>
             </th>
             <th valign="top" class="col_head <?= $hiddenByGroup ?> <?= get_sort_arrow_class($sortField, 'user', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, 'user', get_sort_dir($sortField, 'user', $sortDir))?>">Doctor</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, 'user') ?>">Doctor</a>
+            </th>
+            <th class="col_head">
+                Status
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '0', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, '0', get_sort_dir($sortField, '0', $sortDir))?>">0 - 30</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '0') ?>">0 - 30</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '30', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, '30', get_sort_dir($sortField, '30', $sortDir))?>">31 - 60</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '30') ?>">31 - 60</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '60', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, '60', get_sort_dir($sortField, '60', $sortDir))?>">61 - 90</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '60') ?>">61 - 90</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '90', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, '90', get_sort_dir($sortField, '90', $sortDir))?>">90+</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '90') ?>">90+</a>
             </th>
-            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'lifetime', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, 'lifetime', get_sort_dir($sortField, 'lifetime', $sortDir))?>">Lifetime</a>
+            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, $lastRange, $sortDir) ?>">
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, $lastRange) ?>">
+                    <?= e($rangeLabel) ?>
+                </a>
             </th>
         </tr>
     </thead>
     <tbody>
+        <tr class="hidden"><td colspan="15"></tr>
         <?php if (!count($results)) { ?>
             <tr class="tr_bg">
                 <td valign="top" class="col_head" colspan="6" align="center">
@@ -196,19 +202,29 @@ if ($groupedByCompany) {
                 </td>
             </tr>
         <?php } ?>
-        <?php foreach ($results as $each) { ?>
+        <?php foreach ($results as $each) {
+            $alternate = [];
+
+            if (isset($completedResults[$each['company_id']])) {
+                $alternate = $completedResults[$each['company_id']];
+            }
+
+            ?>
             <tr>
-                <td valign="top">
+                <td valign="top" rowspan="2">
                     <?php if ($each['company_id']) { ?>
                         <?= e($each['company_name']) ?>
                     <?php } else { ?>
                         <i>No company</i>
                     <?php } ?>
                 </td>
-                <td valign="top" class="<?= $hiddenByGroup ?>">
+                <td valign="top" class="<?= $hiddenByGroup ?>" rowspan="2">
                     <a href="/manage/admin/view_user.php?ed=<?= $each['doctor_id'] ?>">
                         <?= e($each['doctor_name']) ?>
                     </a>
+                </td>
+                <td valign="top" class="text-right">
+                    Any
                 </td>
                 <td valign="top" class="text-right">
                     <?= number_format($each['0-30'], 0, '.', ',') ?>
@@ -223,7 +239,35 @@ if ($groupedByCompany) {
                     <?= number_format($each['90+'], 0, '.', ',') ?>
                 </td>
                 <td valign="top" class="text-right">
-                    <?= number_format($each['lifetime'], 0, '.', ',') ?>
+                    <?php if ($customDateRange && $validCustomDates) { ?>
+                        <?= number_format($each['custom_range'], 0, '.', ',') ?>
+                    <?php } else { ?>
+                        <?= number_format($each['lifetime'], 0, '.', ',') ?>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" class="text-right">
+                    Completed
+                </td>
+                <td valign="top" class="text-right">
+                    <?= number_format($alternate['0-30'], 0, '.', ',') ?>
+                </td>
+                <td valign="top" class="text-right">
+                    <?= number_format($alternate['31-60'], 0, '.', ',') ?>
+                </td>
+                <td valign="top" class="text-right">
+                    <?= number_format($alternate['61-90'], 0, '.', ',') ?>
+                </td>
+                <td valign="top" class="text-right">
+                    <?= number_format($alternate['90+'], 0, '.', ',') ?>
+                </td>
+                <td valign="top" class="text-right">
+                    <?php if ($customDateRange && $validCustomDates) { ?>
+                        <?= number_format($alternate['custom_range'], 0, '.', ',') ?>
+                    <?php } else { ?>
+                        <?= number_format($alternate['lifetime'], 0, '.', ',') ?>
+                    <?php } ?>
                 </td>
             </tr>
         <?php } ?>
@@ -235,16 +279,140 @@ require_once __DIR__ . '/includes/bottom.htm';
 
 
 /**
+ * Perform the main query
+ *
+ * @param array $options
+ * @param array $statuses
+ * @return array
+ */
+function hstQuery(array $options, array $statuses = [])
+{
+    $db = new Db();
+    $isSuperAdmin = is_super($_SESSION['admin_access']);
+    $adminCompanyId = (int)$_SESSION['admincompanyid'];
+
+    $userId = (int)array_get($options, 'uid', 0);
+    $companyId = (int)array_get($options, 'cid', 0);
+    $groupedByCompany = (bool)array_get($options, 'grouped', false);
+
+    $sortField = hstSortField(array_get($options, 'sort', 'company'));
+    $sortDir = hstSortDirection(array_get($options, 'dir', 'asc'));
+
+    $customDateRange = false;
+    $validCustomDates = false;
+    $lastDateRange = [
+        'upper' => 90,
+        'lower' => 0,
+    ];
+
+    if (!empty($options['from']) || !empty($options['to'])) {
+        $customDateRange = true;
+
+        $now = new \DateTime();
+        $lowerLimit = hstDayDiff($options['from'], $now);
+        $upperLimit = hstDayDiff($options['to'], $now);
+
+        $validCustomDates = !is_null($upperLimit) && !is_null($lowerLimit);
+
+        if ($validCustomDates) {
+            $lastDateRange = [
+                'upper' => $upperLimit,
+                'lower' => $lowerLimit,
+            ];
+        }
+    }
+
+    $whereConditionals = hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId, $statuses);
+    $groupBy = 'GROUP BY company.id, doctor.userid';
+    $sortBy = hstSortBy($sortField, $sortDir, $lastDateRange);
+
+    if ($groupedByCompany) {
+        $groupBy = 'GROUP BY company.id';
+    }
+
+    $count = (int)array_get($options, 'count', 20);
+    $page = (int)array_get($options, 'page', 0);
+    $offset = $page*$count;
+
+    $interval_0_30 = hstInterval(0, 30);
+    $interval_30_60 = hstInterval(30, 60);
+    $interval_60_90 = hstInterval(60, 90);
+    $interval_90_0 = hstInterval(90, 0);
+    $customInterval = hstInterval($lastDateRange['upper'], $lastDateRange['lower']);
+
+    $sql = "SELECT
+            company.id AS company_id,
+            company.name AS company_name,
+            doctor.userid AS doctor_id,
+            CONCAT(doctor.last_name, ', ', doctor.first_name) AS doctor_name,
+            $interval_0_30 AS '0-30',
+            $interval_30_60 AS '31-60',
+            $interval_60_90 AS '61-90',
+            $interval_90_0 AS '90+',
+            $customInterval AS 'custom_range',
+            SUM(IF(hst.id, 1, 0)) AS 'lifetime'
+        FROM dental_users doctor
+            LEFT JOIN dental_hst hst ON hst.doc_id = doctor.userid
+            LEFT JOIN companies company ON company.id = hst.company_id
+        $whereConditionals
+        $groupBy
+        HAVING SUM(IF(hst.id, 1, 0)) > 0
+    ";
+
+    $total = $db->getColumn("SELECT COUNT(company_id) AS total
+        FROM ($sql) subquery", 'total', 0);
+
+    $sql = "$sql $sortBy
+        LIMIT $offset, $count";
+
+    $results = $db->getResults($sql);
+
+    return [
+        'total' => $total,
+        'results' => $results,
+        'sortField' => $sortField,
+        'sortDir' => $sortDir,
+        'count' => $count,
+        'page' => $page,
+        'customDateRange' => $customDateRange,
+        'validCustomDates' => $validCustomDates,
+    ];
+}
+
+/**
+ * @param string    $stringDate
+ * @param \DateTime $referenceDate
+ * @return int|null
+ */
+function hstDayDiff($stringDate, \DateTime $referenceDate)
+{
+    if ($stringDate === '') {
+        return 0;
+    }
+
+    try {
+        $date = \DateTime::createFromFormat('m/d/Y', $stringDate);
+        return +$date->diff($referenceDate)
+            ->format('%a')
+        ;
+    } catch (\Exception $e) {
+        return null;
+    }
+}
+
+/**
  * Return a formatted WHERE string, "WHERE" included
  *
- * @param bool $isSuperAdmin
- * @param int  $adminCompanyId
- * @param int  $companyId
- * @param int  $userId
+ * @param bool  $isSuperAdmin
+ * @param int   $adminCompanyId
+ * @param int   $companyId
+ * @param int   $userId
+ * @param array $statuses
  * @return string
  */
-function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId)
+function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId, array $statuses = [])
 {
+    $db = new Db();
     $conditionals = [];
     $whereConditionals = '';
 
@@ -258,6 +426,11 @@ function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId)
 
     if ($userId) {
         $conditionals[] = "doctor.userid = '$userId'";
+    }
+
+    if (count($statuses)) {
+        $statuses = $db->escapeList($statuses);
+        $conditionals[] = "hst.status IN ($statuses)";
     }
 
     if (count($conditionals)) {
@@ -276,7 +449,7 @@ function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId)
 function hstSortField($sortBy) {
     $sortBy = strtolower($sortBy);
 
-    if (in_array($sortBy, ['company', 'user', '0', '30', '60', '90', 'lifetime'])) {
+    if (in_array($sortBy, ['company', 'user', '0', '30', '60', '90', 'lifetime', 'custom_range'])) {
         return $sortBy;
     }
 
@@ -343,9 +516,10 @@ function hstInterval($lowerLimit, $upperLimit) {
  *
  * @param string $sortBy
  * @param string $direction
+ * @param array  $customLimit
  * @return string
  */
-function hstSortBy($sortBy, $direction) {
+function hstSortBy($sortBy, $direction, array $customLimit = []) {
     $orderCompany = "company.name $direction";
     $orderUser = "doctor.last_name $direction, doctor.first_name $direction";
 
@@ -361,6 +535,11 @@ function hstSortBy($sortBy, $direction) {
         return "ORDER BY SUM(IF(hst.id, 1, 0)) $direction, $orderCompany, $orderUser";
     }
 
+    if ($sortBy === 'custom_range') {
+        $interval = hstInterval($customLimit['lower'], $customLimit['upper']);
+        return "ORDER BY $interval $direction, $orderCompany, $orderUser";
+    }
+
     if (in_array($sortBy, ['0', '30', '60', '90'])) {
         $lowerLimit = (int)$sortBy;
         $upperLimit = $lowerLimit + 30;
@@ -374,4 +553,21 @@ function hstSortBy($sortBy, $direction) {
     }
 
     return "ORDER BY $orderCompany, $orderUser";
+}
+
+/**
+ * Generate a query string for sorting
+ *
+ * @param array  $sortQueryValues
+ * @param string $sortField
+ * @param string $sortDir
+ * @param string $currentField
+ * @return string
+ */
+function sortQueryString(array $sortQueryValues, $sortField, $sortDir, $currentField)
+{
+    $currentDir = get_sort_dir($currentField, $sortField, $sortDir);
+    $sortQueryValues['sort'] = $currentField;
+    $sortQueryValues['dir'] = $currentDir;
+    return '?' . http_build_query($sortQueryValues);
 }

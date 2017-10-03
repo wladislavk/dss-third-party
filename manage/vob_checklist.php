@@ -114,7 +114,7 @@ if ($patient_info) {
   $b_sql = "SELECT * FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,(!empty($_SESSION['docid']) ? $_SESSION['docid'] : ''))."'";
   $b_q = $db->getRow($b_sql);
   if(!empty($b_q) && !empty($b_q['exclusive'])){
-    $exclusive_billing = $b_r['exclusive'];
+    $exclusive_billing = $b_q['exclusive'];
   }else{
     $exclusive_billing = 0;
   }
@@ -171,7 +171,7 @@ if ($patient_info) {
 <?php
   if($ins_error || $vob_study_error){?>
 
-  <span class="sub_text">The follwing items are <span class="highlight">INCOMPLETE</span> (click to finish)*</span>
+  <span class="sub_text">The following items are <span class="highlight">INCOMPLETE</span> (click to finish)*</span>
 <?php
   }?>
 </div>
@@ -288,7 +288,7 @@ $api_r = $db->getRow($api_sql);
     Insurance Claim
 <?php
   if($ins_error || $study_error || ((!$rx || !$lomn) && !$rxlomn)){?>
-    <span class="sub_text">The follwing items are <span class="highlight">INCOMPLETE</span> (click to finish)*</span>
+    <span class="sub_text">The following items are <span class="highlight">INCOMPLETE</span> (click to finish)*</span>
 <?php
   }?>
 

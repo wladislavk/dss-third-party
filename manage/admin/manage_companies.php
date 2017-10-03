@@ -129,21 +129,21 @@ $num_users=mysqli_num_rows($my);
 				<td valign="top">
 				  <?php 
 					if($myarray['company_type']==DSS_COMPANY_TYPE_BILLING){
-					$u_sql = "SELECT userid FROM dental_users WHERE billing_company_id='".mysqli_real_escape_string($con,$myarray["id"])."'";
+					$u_sql = "SELECT userid FROM dental_users WHERE docid = 0 AND billing_company_id='".mysqli_real_escape_string($con,$myarray["id"])."'";
 					$u_q = mysqli_query($con,$u_sql);
 					$num_users = mysqli_num_rows($u_q);
 					?>
 					<a href="billing_company_users.php?id=<?php echo  $myarray['id']; ?>"><?php echo  $num_users; ?></a>
 					<?php
 					}elseif($myarray['company_type']==DSS_COMPANY_TYPE_HST){
-                                        $u_sql = "SELECT u.userid FROM dental_users u join dental_user_hst_company uhc ON uhc.userid=u.userid WHERE uhc.companyid='".mysqli_real_escape_string($con,$myarray["id"])."'";
+                                        $u_sql = "SELECT u.userid FROM dental_users u join dental_user_hst_company uhc ON uhc.userid=u.userid WHERE u.docid = 0 AND uhc.companyid='".mysqli_real_escape_string($con,$myarray["id"])."'";
                                         $u_q = mysqli_query($con,$u_sql);
                                         $num_users = mysqli_num_rows($u_q);
                                         ?>
                                         <a href="hst_company_users.php?id=<?php echo  $myarray['id']; ?>"><?php echo  $num_users; ?></a>
                                         <?php
                                         }else{
-                                        $u_sql = "SELECT id FROM dental_user_company WHERE companyid='".mysqli_real_escape_string($con,$myarray["id"])."'";
+                                        $u_sql = "SELECT u.userid FROM dental_users u join dental_user_company uc ON uc.userid=u.userid WHERE u.docid = 0 AND uc.companyid='".mysqli_real_escape_string($con,$myarray["id"])."'";
                                         $u_q = mysqli_query($con,$u_sql);
                                         $num_users = mysqli_num_rows($u_q);
                                         ?>

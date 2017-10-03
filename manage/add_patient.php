@@ -69,7 +69,13 @@ require_once('admin/includes/password.php');
 require_once('includes/preauth_functions.php');
 require_once 'includes/hst_functions.php';
 
-$b_sql = "SELECT c.name/*, c.exclusive*/ FROM companies c JOIN dental_users u ON c.id=u.billing_company_id WHERE u.userid='".mysqli_real_escape_string($con,$_SESSION['docid'])."'";
+$db = new Db();
+$docId = (int)$_SESSION['docid'];
+$b_sql = "SELECT c.name, u.is_billing_exclusive AS exclusive
+    FROM companies c
+        JOIN dental_users u ON c.id = u.billing_company_id
+    WHERE u.userid = '$docId'
+    ";
 $b_r = $db->getRow($b_sql);
 if($b_r){
   $exclusive_billing = (!empty($b_r['exclusive']) ? $b_r['exclusive'] : '');

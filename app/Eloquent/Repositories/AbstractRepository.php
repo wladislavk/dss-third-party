@@ -35,10 +35,8 @@ abstract class AbstractRepository extends BaseRepository
             $object = $object->select($fields);
         }
 
-        if (count($where)) {
-            foreach ($where as $key => $value) {
-                $object = $object->where($key, $value);
-            }
+        foreach ($where as $key => $value) {
+            $object = $object->where($key, $value);
         }
 
         return $object->get();

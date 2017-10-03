@@ -31,7 +31,10 @@ class HomeSleepTestRepository extends AbstractRepository
                         $query
                             ->where('status', HomeSleepTest::DSS_HST_REJECTED)
                             ->where(function (Builder $query) {
-                                $query->whereNull('viewed')->orWhere('viewed', 0);
+                                $query
+                                    ->whereNull('viewed')
+                                    ->orWhere('viewed', 0)
+                                ;
                             });
                     })
                 ;

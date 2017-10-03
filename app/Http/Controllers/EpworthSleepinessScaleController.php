@@ -3,10 +3,27 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Helpers\EpworthFinder;
 use DentalSleepSolutions\Http\Requests\Request;
+use Illuminate\Config\Repository as Config;
+use Illuminate\Http\JsonResponse;
+use Prettus\Repository\Eloquent\BaseRepository;
 
 class EpworthSleepinessScaleController extends BaseRestController
 {
+    /** @var EpworthFinder */
+    private $epworthFinder;
+
+    public function __construct(
+        Config $config,
+        BaseRepository $repository,
+        Request $request,
+        EpworthFinder $epworthFinder
+    ) {
+        parent::__construct($config, $repository, $request);
+        $this->epworthFinder = $epworthFinder;
+    }
+
     /**
      * @SWG\Get(
      *     path="/epworth-sleepiness-scale",
@@ -31,15 +48,9 @@ class EpworthSleepinessScaleController extends BaseRestController
      */
     public function index()
     {
+        $status = $this->request->get('status', '');
         $order = $this->request->get('order', '');
-        if ($order) {
-            $this->repository->orderBy($order);
-        }
-        $conditions = [];
-        if ($this->request->has('status')) {
-            $conditions['status'] = $this->request->get('status');
-        }
-        $data = $this->repository->findWhere($conditions);
+        $data = $this->epworthFinder->findEpworth($status, $order);
 
         return ApiResponse::responseOk('', $data);
     }
@@ -63,6 +74,9 @@ class EpworthSleepinessScaleController extends BaseRestController
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @param int $id
+     * @return JsonResponse
      */
     public function show($id)
     {
@@ -110,6 +124,9 @@ class EpworthSleepinessScaleController extends BaseRestController
      *     @SWG\Response(response="422", ref="#/responses/422_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @param int $id
+     * @return JsonResponse
      */
     public function update($id)
     {
@@ -124,6 +141,9 @@ class EpworthSleepinessScaleController extends BaseRestController
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @param int $id
+     * @return JsonResponse
      */
     public function destroy($id)
     {

@@ -43,7 +43,7 @@ class AuthApiTest extends BaseApiTestCase
     public function testAuthInvalidCredentials()
     {
         $this->post(self::ENDPOINT);
-        $this->assertResponseStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertResponseStatus(Response::HTTP_FORBIDDEN);
     }
 
     public function testAuthUserCredentials()

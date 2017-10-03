@@ -27,7 +27,6 @@ class JwtUserAuthMiddleware extends JwtAdminAuthMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $assumedToken = $request->header(self::AUTH_HEADER, '');
         try {
             $token = $this->getAuthToken($request);
         } catch (HttpMalformedHeaderException $e) {

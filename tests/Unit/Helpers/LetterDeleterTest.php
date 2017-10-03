@@ -86,13 +86,13 @@ class LetterDeleterTest extends UnitTestCase
         $expectedFirstData->deleted = true;
         $expectedFirstData->deletedBy = 4;
         $expectedFirstData->deletedOn = $this->updatedLetters[0]['updateArray']['deleted_on'];
+        unset($this->updatedLetters[0]['updateArray']['deleted_on']);
         $expectedLetters = [
             [
                 'where' => ['letterid' => 1],
                 'updateArray' => [
                     'deleted' => true,
                     'deleted_by' => 4,
-                    'deleted_on' => Carbon::now(),
                 ],
             ],
             [

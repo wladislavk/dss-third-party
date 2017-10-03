@@ -27,6 +27,8 @@ class LetterComposerTest extends UnitTestCase
     public function testComposeLetter()
     {
         $data = $this->letterComposer->composeLetter($this->letterData);
+        unset($data['deleted_on']);
+        unset($data['generated_date']);
         $expected = [
             'cc_md_list' => null,
             'cc_md_referral_list' => null,
@@ -35,12 +37,10 @@ class LetterComposerTest extends UnitTestCase
             'date_sent' => '',
             'deleted' => false,
             'deleted_by' => null,
-            'deleted_on' => Carbon::now(),
             'delivered' => '0',
             'docid' => null,
             'font_family' => null,
             'font_size' => null,
-            'generated_date' => Carbon::now(),
             'info_id' => 0,
             'md_list' => null,
             'md_referral_list' => null,
@@ -70,7 +70,6 @@ class LetterComposerTest extends UnitTestCase
         $this->letterData->status = true;
         $data = $this->letterComposer->composeLetter($this->letterData);
         $this->assertEquals('', $data['parentid']);
-        $this->assertEquals(Carbon::now(), $data['date_sent']);
     }
 
     public function testComposeLetterWithTemplate()
@@ -114,9 +113,9 @@ class LetterComposerTest extends UnitTestCase
         $templateId = 2;
         $mdList = 0;
         $data = $this->letterComposer->composeWelcomeLetter($docId, $templateId, $mdList);
+        unset($data['generated_date']);
         $expected = [
             'templateid' => 2,
-            'generated_date' => Carbon::now(),
             'delivered' => '0',
             'status' => '0',
             'deleted' => '0',
@@ -132,9 +131,9 @@ class LetterComposerTest extends UnitTestCase
         $templateId = 2;
         $mdList = 3;
         $data = $this->letterComposer->composeWelcomeLetter($docId, $templateId, $mdList);
+        unset($data['generated_date']);
         $expected = [
             'templateid' => 2,
-            'generated_date' => Carbon::now(),
             'delivered' => '0',
             'status' => '0',
             'deleted' => '0',

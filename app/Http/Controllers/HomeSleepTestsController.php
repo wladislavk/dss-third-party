@@ -2,15 +2,30 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\ScreenerEpworth;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\HomeSleepTestRepository;
+use DentalSleepSolutions\Eloquent\Repositories\Dental\ScreenerEpworthRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
-use Illuminate\Http\Request;
+use DentalSleepSolutions\Http\Requests\Request;
+use Prettus\Repository\Eloquent\BaseRepository;
+use Illuminate\Config\Repository as Config;
 
 class HomeSleepTestsController extends BaseRestController
 {
     /** @var HomeSleepTestRepository */
     protected $repository;
+
+    /** @var ScreenerEpworthRepository */
+    private $screenerEpworthRepository;
+
+    public function __construct(
+        Config $config,
+        BaseRepository $repository,
+        Request $request,
+        ScreenerEpworthRepository $screenerEpworthRepository
+    ) {
+        parent::__construct($config, $repository, $request);
+        $this->screenerEpworthRepository = $screenerEpworthRepository;
+    }
 
     /**
      * @SWG\Get(
@@ -143,8 +158,8 @@ class HomeSleepTestsController extends BaseRestController
         }
 
         $screenerId = $data['screener_id'];
-        $epworthData = ScreenerEpworth::where('screener_id', $screenerId)->get()->toArray();
-        $hst = $this->repository->createWithEpworth($data, $epworthData);
+        $epworthData = $this->screenerEpworthRepository->getWithFilter([], ['screener_id' => $screenerId]);
+        $hst = $this->repository->createWithEpworth($data, $epworthData->toArray());
 
         return ApiResponse::responseOk('Resource created', $hst);
     }

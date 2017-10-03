@@ -39,7 +39,7 @@ $completedResults = array_combine(
 $queryString = '';
 $sortQueryString = '?sort=%s&dir=%s';
 
-$queryValues = array_only($_GET, ['page', 'count', 'grouped', 'cid', 'uid', 'sort', 'dir']);
+$queryValues = array_only($_GET, ['page', 'count', 'grouped', 'cid', 'uid', 'from', 'to', 'sort', 'dir']);
 $sortQueryValues = array_except($queryValues, ['sort', 'dir']);
 
 if (count($queryValues)) {
@@ -166,28 +166,28 @@ if ($customDateRange && $validCustomDates) {
         <?php } ?>
         <tr class="tr_bg_h">
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'company', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, 'company', get_sort_dir($sortField, 'company', $sortDir))?>">HST Company</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, 'company') ?>">HST Company</a>
             </th>
             <th valign="top" class="col_head <?= $hiddenByGroup ?> <?= get_sort_arrow_class($sortField, 'user', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, 'user', get_sort_dir($sortField, 'user', $sortDir))?>">Doctor</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, 'user') ?>">Doctor</a>
             </th>
             <th class="col_head">
                 Status
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '0', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, '0', get_sort_dir($sortField, '0', $sortDir))?>">0 - 30</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '0') ?>">0 - 30</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '30', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, '30', get_sort_dir($sortField, '30', $sortDir))?>">31 - 60</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '30') ?>">31 - 60</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '60', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, '60', get_sort_dir($sortField, '60', $sortDir))?>">61 - 90</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '60') ?>">61 - 90</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '90', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, '90', get_sort_dir($sortField, '90', $sortDir))?>">90+</a>
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '90') ?>">90+</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, $lastRange, $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, $lastRange, get_sort_dir($sortField, $lastRange, $sortDir))?>">
+                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, $lastRange) ?>">
                     <?= e($rangeLabel) ?>
                 </a>
             </th>
@@ -300,7 +300,10 @@ function hstQuery(array $options, array $statuses = [])
 
     $customDateRange = false;
     $validCustomDates = false;
-    $lastDateRange = [90, 0];
+    $lastDateRange = [
+        'upper' => 90,
+        'lower' => 0,
+    ];
 
     if (!empty($options['from']) || !empty($options['to'])) {
         $customDateRange = true;
@@ -313,15 +316,15 @@ function hstQuery(array $options, array $statuses = [])
 
         if ($validCustomDates) {
             $lastDateRange = [
-                $upperLimit,
-                $lowerLimit,
+                'upper' => $upperLimit,
+                'lower' => $lowerLimit,
             ];
         }
     }
 
     $whereConditionals = hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId, $statuses);
     $groupBy = 'GROUP BY company.id, doctor.userid';
-    $sortBy = hstSortBy($sortField, $sortDir);
+    $sortBy = hstSortBy($sortField, $sortDir, $lastDateRange);
 
     if ($groupedByCompany) {
         $groupBy = 'GROUP BY company.id';
@@ -335,7 +338,7 @@ function hstQuery(array $options, array $statuses = [])
     $interval_30_60 = hstInterval(30, 60);
     $interval_60_90 = hstInterval(60, 90);
     $interval_90_0 = hstInterval(90, 0);
-    $customInterval = hstInterval($lastDateRange[0], $lastDateRange[1]);
+    $customInterval = hstInterval($lastDateRange['upper'], $lastDateRange['lower']);
 
     $sql = "SELECT
             company.id AS company_id,
@@ -532,7 +535,7 @@ function hstSortBy($sortBy, $direction, array $customLimit = []) {
         return "ORDER BY SUM(IF(hst.id, 1, 0)) $direction, $orderCompany, $orderUser";
     }
 
-    if ($sortBy === 'custom' && count($customLimit)) {
+    if ($sortBy === 'custom_range') {
         $interval = hstInterval($customLimit['lower'], $customLimit['upper']);
         return "ORDER BY $interval $direction, $orderCompany, $orderUser";
     }
@@ -550,4 +553,12 @@ function hstSortBy($sortBy, $direction, array $customLimit = []) {
     }
 
     return "ORDER BY $orderCompany, $orderUser";
+}
+
+function sortQueryString(array $sortQueryValues, $sortField, $sortDir, $currentField)
+{
+    $currentDir = get_sort_dir($currentField, $sortField, $sortDir);
+    $sortQueryValues['sort'] = $currentField;
+    $sortQueryValues['dir'] = $currentDir;
+    return '?' . http_build_query($sortQueryValues);
 }

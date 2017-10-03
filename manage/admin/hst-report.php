@@ -62,6 +62,14 @@ if ($customDateRange && !$validCustomDates) {
     $msg .= ' The date format from one of the date filters is invalid.';
 }
 
+$lastRange = 'lifetime';
+$rangeLabel = 'Lifetime';
+
+if ($customDateRange && $validCustomDates) {
+    $lastRange = 'custom_range';
+    $rangeLabel = 'Custom Range';
+}
+
 ?>
 <script>
     $(document).ready(function(){
@@ -178,9 +186,9 @@ if ($customDateRange && !$validCustomDates) {
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '90', $sortDir) ?>">
                 <a href="<?= sprintf($sortQueryString, '90', get_sort_dir($sortField, '90', $sortDir))?>">90+</a>
             </th>
-            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'lifetime', $sortDir) ?>">
-                <a href="<?= sprintf($sortQueryString, 'lifetime', get_sort_dir($sortField, 'lifetime', $sortDir))?>">
-                    <?= $customDateRange && $validCustomDates ? 'Custom Range' : 'Lifetime' ?>
+            <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, $lastRange, $sortDir) ?>">
+                <a href="<?= sprintf($sortQueryString, $lastRange, get_sort_dir($sortField, $lastRange, $sortDir))?>">
+                    <?= e($rangeLabel) ?>
                 </a>
             </th>
         </tr>
@@ -294,23 +302,20 @@ function hstQuery(array $options, array $statuses = [])
     $validCustomDates = false;
     $lastDateRange = [90, 0];
 
-    if (isset($options['from'])) {
+    if (!empty($options['from']) || !empty($options['to'])) {
         $customDateRange = true;
 
-        try {
-            $now = new \DateTime();
-            $upperLimit = \DateTime::createFromFormat('m/d/Y', $options['to']);
-            $lowerLimit = \DateTime::createFromFormat('m/d/Y', $options['from']);
-            $validCustomDates = $upperLimit && $lowerLimit;
+        $now = new \DateTime();
+        $lowerLimit = hstDayDiff($options['from'], $now);
+        $upperLimit = hstDayDiff($options['to'], $now);
 
-            if ($validCustomDates) {
-                $lastDateRange = [
-                    $upperLimit->diff($now)->format('%a'),
-                    $lowerLimit->diff($now)->format('%a'),
-                ];
-            }
-        } catch (\Exception $e) {
-            $validCustomDates = true;
+        $validCustomDates = !is_null($upperLimit) && !is_null($lowerLimit);
+
+        if ($validCustomDates) {
+            $lastDateRange = [
+                $upperLimit,
+                $lowerLimit,
+            ];
         }
     }
 
@@ -372,6 +377,27 @@ function hstQuery(array $options, array $statuses = [])
 }
 
 /**
+ * @param string    $stringDate
+ * @param \DateTime $referenceDate
+ * @return int|null
+ */
+function hstDayDiff($stringDate, \DateTime $referenceDate)
+{
+    if ($stringDate === '') {
+        return 0;
+    }
+
+    try {
+        $date = \DateTime::createFromFormat('m/d/Y', $stringDate);
+        return +$date->diff($referenceDate)
+            ->format('%a')
+        ;
+    } catch (\Exception $e) {
+        return null;
+    }
+}
+
+/**
  * Return a formatted WHERE string, "WHERE" included
  *
  * @param bool  $isSuperAdmin
@@ -420,7 +446,7 @@ function hstConditionals($isSuperAdmin, $adminCompanyId, $companyId, $userId, ar
 function hstSortField($sortBy) {
     $sortBy = strtolower($sortBy);
 
-    if (in_array($sortBy, ['company', 'user', '0', '30', '60', '90', 'lifetime'])) {
+    if (in_array($sortBy, ['company', 'user', '0', '30', '60', '90', 'lifetime', 'custom_range'])) {
         return $sortBy;
     }
 
@@ -487,9 +513,10 @@ function hstInterval($lowerLimit, $upperLimit) {
  *
  * @param string $sortBy
  * @param string $direction
+ * @param array  $customLimit
  * @return string
  */
-function hstSortBy($sortBy, $direction) {
+function hstSortBy($sortBy, $direction, array $customLimit = []) {
     $orderCompany = "company.name $direction";
     $orderUser = "doctor.last_name $direction, doctor.first_name $direction";
 
@@ -503,6 +530,11 @@ function hstSortBy($sortBy, $direction) {
 
     if ($sortBy === 'lifetime') {
         return "ORDER BY SUM(IF(hst.id, 1, 0)) $direction, $orderCompany, $orderUser";
+    }
+
+    if ($sortBy === 'custom' && count($customLimit)) {
+        $interval = hstInterval($customLimit['lower'], $customLimit['upper']);
+        return "ORDER BY $interval $direction, $orderCompany, $orderUser";
     }
 
     if (in_array($sortBy, ['0', '30', '60', '90'])) {

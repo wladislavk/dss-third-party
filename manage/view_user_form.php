@@ -28,7 +28,7 @@ $r = $db->getRow($sql);
  * $last_form_update = time();
  * if you want to immediately regenerate the forms (for testing)
  */
-$last_form_update = new \DateTime("2017-06-28 12:00:00");
+$last_form_update = new \DateTime("2017-10-03 06:00:00");
 
 if (
     file_exists($filename)

@@ -262,6 +262,14 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 
                         $recover_hash = hash('sha256', $r['patientid'].$_POST['email'].rand());
 
+            /**
+             * @see DSS-632 Inherit setting from Billing Company
+             */
+            $billingCompanyId = (int)$_POST['billing_company_id'];
+            $isExclusive = $db->getColumn("SELECT exclusive
+                FROM companies
+                WHERE id = '$billingCompanyId'", 'exclusive', 0);
+
 			$ins_sql = "insert into dental_users set user_access=2,
 				username = '".$db->escape($_POST["username"])."',
 				npi = '".$db->escape($_POST["npi"])."',
@@ -363,16 +371,6 @@ $headers = 'From: support@dentalsleepsolutions.com' . "\r\n" .
 		}
 
 		$userid = intval($userid);
-            $docId = $userid;
-            $billingCompanyId = (int)$_POST['billing_company_id'];
-            $db->query("INSERT INTO dental_user_billing_exclusive (user_id, exclusive)
-                SELECT user.userid, IFNULL(company.exclusive, 0)
-                FROM dental_users user
-                    LEFT JOIN companies company ON company.id = '$billingCompanyId'
-                WHERE user.userid = '$docId'
-                ON DUPLICATE KEY UPDATE user_id = '$docId', exclusive = IFNULL(company.exclusive, 0)
-                ");
-
 
 			mysqli_query($con,"INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('General', 'FFF9CF', 'general', ".$userid.")");
 			mysqli_query($con,"INSERT INTO `dental_appt_types` (name, color, classname, docid) VALUES ('Follow-up', 'D6CFFF', 'follow-up', ".$userid.")");

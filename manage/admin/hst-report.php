@@ -1,6 +1,8 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
+use function http_build_query;
+
 require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/../includes/constants.inc';
 require_once __DIR__ . '/includes/general.htm';
@@ -10,7 +12,7 @@ $isSuperAdmin = is_super($_SESSION['admin_access']);
 
 $userId = (int)array_get($_GET, 'uid', 0);
 $companyId = (int)array_get($_GET, 'cid', 0);
-$groupedByCompany = (bool)array_get($_GET, 'grouped', false);
+$groupedByCompany = !array_get($_GET, 'detailed', false);
 
 $doctorName = $db->getColumn("SELECT CONCAT(last_name, ', ', first_name) AS name
     FROM dental_users
@@ -36,19 +38,8 @@ $completedResults = array_combine(
     $completedResults
 );
 
-$queryString = '';
-$sortQueryString = '?sort=%s&dir=%s';
-
-$queryValues = array_only($_GET, ['page', 'count', 'grouped', 'cid', 'uid', 'from', 'to', 'sort', 'dir']);
-$sortQueryValues = array_except($queryValues, ['sort', 'dir']);
-
-if (count($queryValues)) {
-    $queryString = '?' . http_build_query($queryValues);
-}
-
-if (count($sortQueryValues)) {
-    $sortQueryString = '?' . http_build_query($sortQueryValues) . '&sort=%s&dir=%s';
-}
+$queryValues = array_only($_GET, ['page', 'count', 'detailed', 'cid', 'uid', 'from', 'to', 'sort', 'dir']);
+$queryString = http_build_query($queryValues);
 
 $hiddenByGroup = '';
 
@@ -87,7 +78,7 @@ if ($customDateRange && $validCustomDates) {
 </div>
 
 <div style="width:98%;margin:auto;">
-    <form action="<?= $queryString ?>" method="get" class="form form-inline">
+    <form action="?<?= $queryString ?>" method="get" class="form form-inline">
         <?php if ($isSuperAdmin) { ?>
             Company:
             <input type="text" id="company_name" class="form-control"
@@ -115,26 +106,27 @@ if ($customDateRange && $validCustomDates) {
         From:
         <span>
             <input type="text" class="form-control date datepicker" data-date-format="mm/dd/yyyy"
-                   name="from" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'from')) ?>" />
+                   name="from" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'from')) ?>" size="12" />
         </span>
         &nbsp;
         To:
         <span>
             <input type="text" class="form-control date datepicker" data-date-format="mm/dd/yyyy"
-                   name="to" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'to')) ?>" />
+                   name="to" placeholder="mm/dd/yyyy" value="<?= e(array_get($_GET, 'to')) ?>" size="12" />
         </span>
-
+        &nbsp;
         <input type="hidden" name="sort" value="<?= $sortField ?>" />
-        <input type="hidden" name="dir" value="<?= $sortDir ?> "/>
+        <input type="hidden" name="dir" value="<?= $sortDir ?>"/>
         <input type="submit" value="Filter List" class="btn btn-primary">
         <input type="button" value="Reset" onclick="window.location='<?= $_SERVER['PHP_SELF'] ?>'"
                class="btn btn-primary">
 
         <?php if ($isSuperAdmin) { ?>
+            &nbsp;
             <?php if ($groupedByCompany) { ?>
-                <a class="btn btn-success pull-right" href="?grouped=0">List by Company and Doctor</a>
+                <a class="btn btn-success pull-right" href="?detailed=1">List by Company and Doctor</a>
             <?php } else { ?>
-                <a class="btn btn-success pull-right" href="?grouped=1">List by Company</a>
+                <a class="btn btn-success pull-right" href="?detailed=0">List by Company</a>
             <?php } ?>
         <?php } ?>
     </form>
@@ -160,34 +152,34 @@ if ($customDateRange && $validCustomDates) {
             <tr bgColor="#ffffff">
                 <td  align="right" colspan="15" class="bp">
                     Pages:
-                    <?php paging(floor($total/$count), $page, $queryString); ?>
+                    <?php hstPaging($queryValues, $total, $count, $page); ?>
                 </td>
             </tr>
         <?php } ?>
         <tr class="tr_bg_h">
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'company', $sortDir) ?>">
-                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, 'company') ?>">HST Company</a>
+                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, 'company') ?>">HST Company</a>
             </th>
             <th valign="top" class="col_head <?= $hiddenByGroup ?> <?= get_sort_arrow_class($sortField, 'user', $sortDir) ?>">
-                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, 'user') ?>">Doctor</a>
+                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, 'user') ?>">Doctor</a>
             </th>
             <th class="col_head">
                 Status
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '0', $sortDir) ?>">
-                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '0') ?>">0 - 30</a>
+                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, '0') ?>">0 - 30</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '30', $sortDir) ?>">
-                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '30') ?>">31 - 60</a>
+                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, '30') ?>">31 - 60</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '60', $sortDir) ?>">
-                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '60') ?>">61 - 90</a>
+                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, '60') ?>">61 - 90</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '90', $sortDir) ?>">
-                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, '90') ?>">90+</a>
+                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, '90') ?>">90+</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, $lastRange, $sortDir) ?>">
-                <a href="<?= sortQueryString($sortQueryValues, $sortField, $sortDir, $lastRange) ?>">
+                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, $lastRange) ?>">
                     <?= e($rangeLabel) ?>
                 </a>
             </th>
@@ -359,7 +351,7 @@ function hstQuery(array $options, array $statuses = [])
         HAVING SUM(IF(hst.id, 1, 0)) > 0
     ";
 
-    $total = $db->getColumn("SELECT COUNT(company_id) AS total
+    $total = $db->getColumn("SELECT COUNT(IFNULL(company_id, 0)) AS total
         FROM ($sql) subquery", 'total', 0);
 
     $sql = "$sql $sortBy
@@ -558,16 +550,29 @@ function hstSortBy($sortBy, $direction, array $customLimit = []) {
 /**
  * Generate a query string for sorting
  *
- * @param array  $sortQueryValues
+ * @param array  $queryValues
  * @param string $sortField
  * @param string $sortDir
  * @param string $currentField
  * @return string
  */
-function sortQueryString(array $sortQueryValues, $sortField, $sortDir, $currentField)
+function sortQueryString(array $queryValues, $sortField, $sortDir, $currentField)
 {
     $currentDir = get_sort_dir($currentField, $sortField, $sortDir);
-    $sortQueryValues['sort'] = $currentField;
-    $sortQueryValues['dir'] = $currentDir;
-    return '?' . http_build_query($sortQueryValues);
+    $queryValues['sort'] = $currentField;
+    $queryValues['dir'] = $currentDir;
+    return '?' . http_build_query($queryValues);
+}
+
+/**
+ * @param array $queryValues
+ * @param int   $total
+ * @param int   $count
+ * @param int   $page
+ */
+function hstPaging(array $queryValues, $total, $count, $page)
+{
+    unset($queryValues['page']);
+    $queryString = http_build_query($queryValues);
+    paging(floor($total/$count), $page, $queryString);
 }

@@ -64,6 +64,71 @@ if ($customDateRange && $validCustomDates) {
             setup_autocomplete('company_name', 'company_hints', 'cid', '', 'list_companies.php', 'contact', getParameterByName('pid'));
         } catch (e) {}
         setup_autocomplete('account_name', 'account_hints', 'uid', '', 'list_accounts.php', 'contact', getParameterByName('pid'));
+
+        $(document).ready(function(){
+            var $header = $('table.table thead tr.tr_bg_h'),
+                $navbar = $('form.navbar-form'),
+                $window = $(window),
+                heightOffset = 0;
+
+            if ($navbar.length) {
+                heightOffset = $navbar.outerHeight()
+                    + parseInt($navbar.css('marginTop'))
+                    + parseInt($navbar.css('marginBottom'))
+                ;
+            }
+
+            $header.each(function(){
+                var $this = $(this),
+                    $clone = $this.clone();
+
+                $clone
+                    .find('th')
+                    .each(function(index){
+                        $(this).width(
+                            $this
+                                .find('th:eq(' + index + ')')
+                                .outerWidth()
+                        );
+                    })
+                ;
+
+                $clone
+                    .addClass('fixed-header')
+                    .css({
+                        position: 'fixed',
+                        top: heightOffset,
+                        backgroundColor: '#fff',
+                        borderBottom: '1px solid #ddd',
+                        display: 'none'
+                    })
+                    .insertBefore($this)
+                ;
+            });
+
+            function onChange () {
+                $header.each(function(){
+                    var $this = $(this),
+                        $table = $this.closest('table'),
+                        $fixed = $this.closest('table').find('.fixed-header');
+
+                    if (!$fixed.length) {
+                        return;
+                    }
+
+                    $fixed.toggle(
+                        // The window scrolled past the header
+                        ($this.offset().top - heightOffset <= $window.scrollTop())
+                        &&
+                        // The window has not scrolled past the table
+                        ($table.offset().top - heightOffset + $table.outerHeight() - $this.outerHeight() > $window.scrollTop())
+                    );
+                });
+            }
+
+            $window.bind('resize scroll', onChange);
+            onChange();
+        });
     });
 </script>
 <div class="page-header">

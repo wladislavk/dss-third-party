@@ -1,8 +1,6 @@
 <?php
 namespace Ds3\Libraries\Legacy;
 
-use function http_build_query;
-
 require_once __DIR__ . '/includes/top.htm';
 require_once __DIR__ . '/../includes/constants.inc';
 require_once __DIR__ . '/includes/general.htm';
@@ -39,8 +37,6 @@ $completedResults = array_combine(
 );
 
 $queryValues = array_only($_GET, ['page', 'count', 'detailed', 'cid', 'uid', 'from', 'to', 'sort', 'dir']);
-$queryString = http_build_query($queryValues);
-
 $hiddenByGroup = '';
 
 if ($groupedByCompany) {
@@ -78,7 +74,7 @@ if ($customDateRange && $validCustomDates) {
 </div>
 
 <div style="width:98%;margin:auto;">
-    <form action="?<?= $queryString ?>" method="get" class="form form-inline">
+    <form action="<?= queryString($queryValues, '') ?>" method="get" class="form form-inline">
         <?php if ($isSuperAdmin) { ?>
             Company:
             <input type="text" id="company_name" class="form-control"
@@ -124,9 +120,9 @@ if ($customDateRange && $validCustomDates) {
         <?php if ($isSuperAdmin) { ?>
             &nbsp;
             <?php if ($groupedByCompany) { ?>
-                <a class="btn btn-success pull-right" href="?detailed=1">List by Company and Doctor</a>
+                <a class="btn btn-success pull-right" href="<?= queryString($queryValues, '', ['detailed' => 1]) ?>">List by Company and Doctor</a>
             <?php } else { ?>
-                <a class="btn btn-success pull-right" href="?detailed=0">List by Company</a>
+                <a class="btn btn-success pull-right" href="<?= queryString($queryValues, '', ['detailed' => 1]) ?>">List by Company</a>
             <?php } ?>
         <?php } ?>
     </form>
@@ -158,28 +154,28 @@ if ($customDateRange && $validCustomDates) {
         <?php } ?>
         <tr class="tr_bg_h">
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, 'company', $sortDir) ?>">
-                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, 'company') ?>">HST Company</a>
+                <a href="<?= queryString($queryValues, 'company') ?>">HST Company</a>
             </th>
             <th valign="top" class="col_head <?= $hiddenByGroup ?> <?= get_sort_arrow_class($sortField, 'user', $sortDir) ?>">
-                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, 'user') ?>">Doctor</a>
+                <a href="<?= queryString($queryValues, 'user') ?>">Doctor</a>
             </th>
             <th class="col_head">
                 Status
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '0', $sortDir) ?>">
-                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, '0') ?>">0 - 30</a>
+                <a href="<?= queryString($queryValues, '0') ?>">0 - 30</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '30', $sortDir) ?>">
-                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, '30') ?>">31 - 60</a>
+                <a href="<?= queryString($queryValues, '30') ?>">31 - 60</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '60', $sortDir) ?>">
-                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, '60') ?>">61 - 90</a>
+                <a href="<?= queryString($queryValues, '60') ?>">61 - 90</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, '90', $sortDir) ?>">
-                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, '90') ?>">90+</a>
+                <a href="<?= queryString($queryValues, '90') ?>">90+</a>
             </th>
             <th valign="top" class="col_head <?= get_sort_arrow_class($sortField, $lastRange, $sortDir) ?>">
-                <a href="<?= sortQueryString($queryValues, $sortField, $sortDir, $lastRange) ?>">
+                <a href="<?= queryString($queryValues, $lastRange) ?>">
                     <?= e($rangeLabel) ?>
                 </a>
             </th>
@@ -551,16 +547,20 @@ function hstSortBy($sortBy, $direction, array $customLimit = []) {
  * Generate a query string for sorting
  *
  * @param array  $queryValues
- * @param string $sortField
- * @param string $sortDir
  * @param string $currentField
+ * @param array  $replacementValues
  * @return string
  */
-function sortQueryString(array $queryValues, $sortField, $sortDir, $currentField)
+function queryString(array $queryValues, $currentField, array $replacementValues = [])
 {
-    $currentDir = get_sort_dir($currentField, $sortField, $sortDir);
-    $queryValues['sort'] = $currentField;
-    $queryValues['dir'] = $currentDir;
+    $queryValues += $replacementValues;
+    
+    if ($currentField !== '') {
+        $currentDir = get_sort_dir($currentField, $queryValues['sort'], $queryValues['dir']);
+        $queryValues['sort'] = $currentField;
+        $queryValues['dir'] = $currentDir;
+    }
+    
     return '?' . http_build_query($queryValues);
 }
 

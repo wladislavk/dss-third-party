@@ -26,13 +26,15 @@ export default {
   },
   methods: {
     onLogout () {
-      if (alerter.isConfirmed('Are you sure you want to logout?')) {
+      const logoutAlert = 'Are you sure you want to logout?'
+      if (alerter.isConfirmed(logoutAlert)) {
         this.$store.commit(symbols.mutations.screenerToken, '')
         this.$router.push({ name: 'screener-login' })
       }
     },
     onReset () {
-      if (alerter.isConfirmed('Are you sure? All current progress will be lost.')) {
+      const resetAlert = 'Are you sure? All current progress will be lost.'
+      if (alerter.isConfirmed(resetAlert)) {
         this.$store.commit(symbols.mutations.restoreInitialScreenerKeepSession)
         this.$router.push({ name: 'screener-intro' })
       }

@@ -1,4 +1,4 @@
-.notification{
+.notification {
   width: 274px;
   height: 59px;
   line-height: 43px;
@@ -6,38 +6,38 @@
   margin: 5px 0 0 20px;
   font-size: 18px;
   text-decoration: none;
-  }
-.notification:hover{
+}
+.notification:hover {
   text-decoration: none;
 }
 
-a.notification.count_0{
-  display:none; 
+a.notification.count_0 {
+  display: none;
 }
 
-.notification{
+.notification {
   width: 217px;
   height: 53px;
-  text-align:center;
+  text-align: center;
   line-height: 53px;
   display: block;
   margin: 5px 0 0 20px;
   font-size: 18px;
   text-decoration: none;
-  }
-.notification:hover{
+}
+.notification:hover {
   text-decoration: none;
   color: #095D81;
 }
-.notification .count{
-  padding-right:5px;
+.notification .count {
+  padding-right: 5px;
 }
-.notification.good_count{
-  background: url(~assets/images/count_blue.png) no-repeat 0 0;
-  }
-.notification.bad_count{
-  background: url(~assets/images/count_red.png) no-repeat 0 0;
-  }
-.notification.great_count{
-  background: url(~assets/images/count_green.png) no-repeat 0 0;
-  }
+.notification.good_count {
+  background: url(../../images/count_blue.png) no-repeat 0 0;
+}
+.notification.bad_count {
+  background: url(../../images/count_red.png) no-repeat 0 0;
+}
+.notification.great_count {
+  background: url(../../images/count_green.png) no-repeat 0 0;
+}

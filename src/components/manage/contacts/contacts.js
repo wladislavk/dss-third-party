@@ -107,18 +107,15 @@ export default {
   created () {
     window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
 
-    http.post(endpoints.contactTypes.activeNonCorporate).then(
-      function (response) {
-        const data = response.data.data
+    http.post(endpoints.contactTypes.activeNonCorporate).then(function (response) {
+      const data = response.data.data
 
-        if (data) {
-          this.contactTypes = data
-        }
-      },
-      function (response) {
-        this.handleErrors('getActiveNonCorporateContactTypes', response)
+      if (data) {
+        this.contactTypes = data
       }
-    )
+    }).catch(function (response) {
+      this.handleErrors('getActiveNonCorporateContactTypes', response)
+    })
 
     this.getContacts()
   },
@@ -147,22 +144,19 @@ export default {
         if (self.requiredContactName.trim() !== '') {
           if (self.requiredContactName.trim().length > 1) {
             self.getListContactsAndCompanies(self.requiredContactName.trim())
-              .then(
-                function (response) {
-                  const data = response.data.data
+              .then(function (response) {
+                const data = response.data.data
 
-                  if (data.length) {
-                    self.foundContactsByName = data
-                    window.$('#contact_hints').show()
-                  } else if (data.error) {
-                    self.foundContactsByName = []
-                    alert(data.error)
-                  }
-                },
-                function (response) {
-                  self.handleErrors('getListContactsAndCompanies', response)
+                if (data.length) {
+                  self.foundContactsByName = data
+                  window.$('#contact_hints').show()
+                } else if (data.error) {
+                  self.foundContactsByName = []
+                  alert(data.error)
                 }
-              )
+              }).catch(function (response) {
+                self.handleErrors('getListContactsAndCompanies', response)
+              })
           } else {
             window.$('#contact_hints').hide()
           }
@@ -211,68 +205,55 @@ export default {
         this.routeParameters.sortDirection,
         this.routeParameters.currentPageNumber,
         this.contactsPerPage
-      ).then(
-        function (response) {
-          const data = response.data.data
+      ).then(function (response) {
+        const data = response.data.data
 
-          if (data) {
-            this.contactsTotalNumber = data.totalCount
-            this.contacts = data.result
+        if (data) {
+          this.contactsTotalNumber = data.totalCount
+          this.contacts = data.result
+        }
+      }).then(function () {
+        const contactsHaveReferrers = this.contacts.map(el => el.referrers > 0 ? el.contactid : 0)
+        const contactsHavePatients = this.contacts.map(el => el.patients > 0 ? el.contactid : 0)
+
+        contactsHaveReferrers.forEach((contactId, index) => {
+          if (contactId > 0) {
+            this.findReferrersByContactId(contactId).then(function (response) {
+              const data = response.data.data
+
+              if (data.length) {
+                const updatedContact = Object.assign({
+                  referrers_data: data
+                }, self.contacts[index])
+
+                this.$set(self.contacts, index, updatedContact)
+              }
+            }).catch(function (response) {
+              this.handleErrors('findReferrersByContactId', response)
+            })
           }
-        },
-        function (response) {
-          this.handleErrors('findContacts', response)
-        }
-      ).then(
-        function () {
-          const contactsHaveReferrers = this.contacts.map(el => el.referrers > 0 ? el.contactid : 0)
-          const contactsHavePatients = this.contacts.map(el => el.patients > 0 ? el.contactid : 0)
+        })
 
-          contactsHaveReferrers.forEach((contactId, index) => {
-            if (contactId > 0) {
-              this.findReferrersByContactId(contactId)
-                .then(
-                  function (response) {
-                    const data = response.data.data
+        contactsHavePatients.forEach((contactId, index) => {
+          if (contactId > 0) {
+            this.findPatientsByContactId(contactId).then(function (response) {
+              const data = response.data.data
 
-                    if (data.length) {
-                      const updatedContact = Object.assign({
-                        referrers_data: data
-                      }, self.contacts[index])
+              if (data.length) {
+                const updatedContact = Object.assign({
+                  patients_data: data
+                }, self.contacts[index])
 
-                      this.$set(self.contacts, index, updatedContact)
-                    }
-                  },
-                  function (response) {
-                    this.handleErrors('findReferrersByContactId', response)
-                  }
-                )
-            }
-          })
-
-          contactsHavePatients.forEach((contactId, index) => {
-            if (contactId > 0) {
-              this.findPatientsByContactId(contactId)
-                .then(
-                  function (response) {
-                    const data = response.data.data
-
-                    if (data.length) {
-                      const updatedContact = Object.assign({
-                        patients_data: data
-                      }, self.contacts[index])
-
-                      this.$set(self.contacts, index, updatedContact)
-                    }
-                  },
-                  function (response) {
-                    this.handleErrors('findPatientsByContactId', response)
-                  }
-                )
-            }
-          })
-        }
-      )
+                this.$set(self.contacts, index, updatedContact)
+              }
+            }).catch(function (response) {
+              this.handleErrors('findPatientsByContactId', response)
+            })
+          }
+        })
+      }).catch(function (response) {
+        this.handleErrors('findContacts', response)
+      })
     },
     findReferrersByContactId (contactId) {
       const data = { contact_id: contactId }

@@ -1,8 +1,6 @@
 <template>
     <div>
-        <span class="admin_head">
-            Manage Referred By
-        </span>
+        <span class="admin_head">Manage Referred By</span>
         <br /><br />&nbsp;
 
         <div align="right">
@@ -85,46 +83,44 @@
                         >{{ contact.name }}</a>
                         <template v-else>{{ contact.name }}</template>
                     </td>
-                    <td valign="top" width="30%">
-                        {{ contact.contacttype }}
-                    </td>
+                    <td valign="top" width="30%">{{ contact.contacttype }}</td>
                     <td valign="top" width="10%">
-                        <router-link
-                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
+                        <a
+                            v-bind:href="legacyUrl + 'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
-                        >{{ contact.num_ref }}</router-link>
+                        >{{ contact.num_ref }}</a>
                     </td>
                     <td valign="top" width="10%">
-                        <router-link
-                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
+                        <a
+                            v-bind:href="legacyUrl + 'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
                         >
                             <span class="num_ref30">{{ contact.num_ref30 }}</span>
-                        </router-link>
+                        </a>
                     </td>
                     <td valign="top" width="10%">
-                        <router-link
-                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
+                        <a
+                            v-bind:href="legacyUrl + 'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
                         >
                             <span class="num_ref60">{{ contact.num_ref60 }}</span>
-                        </router-link>
+                        </a>
                     </td>
                     <td valign="top" width="10%">
-                        <router-link
-                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
+                        <a
+                            v-bind:href="legacyUrl + 'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
                         >
                             <span class="num_ref90">{{ contact.num_ref90 }}</span>
-                        </router-link>
+                        </a>
                     </td>
                     <td valign="top" width="10%">
-                        <router-link
-                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
+                        <a
+                            v-bind:href="legacyUrl + 'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
                         >
                             <span class="num_ref90plus">{{ contact.num_ref90plus }}</span>
-                        </router-link>
+                        </a>
                     </td>
                     <td valign="top" width="10%">
                         <a
@@ -136,14 +132,14 @@
                             View
                         </a>
                     </td>
-                    <td valign="top"> 
-                        <router-link
-                            :to="'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
+                    <td valign="top">
+                        <a
+                            v-bind:href="legacyUrl + 'referredby_patient.php?rid=' + contact.contactid + '&rsource=' + contact.referral_type"
                             class="editlink"
                             :title="contact.patients_list"
                         >
                             List
-                        </router-link>
+                        </a>
                     </td>
                 </tr>
             </table>

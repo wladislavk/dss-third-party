@@ -44,37 +44,31 @@ export default {
         return false
       }
 
-      this.getToken(this.credentials).then(
-        function (response) {
-          const data = response.data
+      this.getToken(this.credentials).then(function (response) {
+        const data = response.data
 
-          if (data.token) {
-            window.storage.save('token', data.token)
-          }
-
-          this.getAccountStatus().then(
-            function (response) {
-              const data = response.data.data
-
-              if (data.type.toLowerCase() === 'suspended') {
-                this.message = 'This account has been suspended.'
-              } else {
-                this.$router.push('/manage/index')
-              }
-            },
-            function (response) {
-              this.handleErrors('getAccountStatus', response)
-            }
-          )
-        },
-        function (response) {
-          if (response.status === 422) {
-            this.message = 'Wrong username or password'
-          } else {
-            this.handleErrors('getToken', response)
-          }
+        if (data.token) {
+          window.storage.save('token', data.token)
         }
-      )
+
+        this.getAccountStatus().then(function (response) {
+          const data = response.data.data
+
+          if (data.type.toLowerCase() === 'suspended') {
+            this.message = 'This account has been suspended.'
+          } else {
+            this.$router.push('/manage/index')
+          }
+        }).catch(function (response) {
+          this.handleErrors('getAccountStatus', response)
+        })
+      }).catch(function (response) {
+        if (response.status === 422) {
+          this.message = 'Wrong username or password'
+        } else {
+          this.handleErrors('getToken', response)
+        }
+      })
     },
     getToken (data) {
       return http.post(endpoints.auth, data)

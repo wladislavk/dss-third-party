@@ -34,14 +34,14 @@
                         <td colspan="2" align="center">
                             <input type="submit" name="btnsubmit" value=" Login " class="addButton">
                             <span style="float:right;">
-                                <a href="/manage/register/new.php">Register</a>
+                                <a v-bind:href="legacyUrl + '/manage/register/new.php'">Register</a>
                                 |
-                                <a href="forgot_password.php">Forgot Password</a>
+                                <a v-bind:href="legacyUrl + 'forgot_password.php'">Forgot Password</a>
                             </span>
                         </td>
                     </tr>
                 </table>
-                <span style="float:right; margin-top:4px;" class="screener">Looking for the screener? <a href="../screener">Click Here</a></span>
+                <span style="float:right; margin-top:4px;" class="screener">Looking for the screener? <a v-bind:href="screenerUrl">Click Here</a></span>
             </form>
         </div>
 

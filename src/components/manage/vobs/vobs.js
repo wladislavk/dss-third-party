@@ -82,22 +82,19 @@ export default {
     setViewStatus (vob) {
       const data = { viewed: vob.viewed === 0 ? 1 : 0 }
 
-      this.updateVob(vob.id, data).then(
-        function () {
-          this.$router.push({
-            name: this.$route.name,
-            query: {
-              pid: vob.patient_id || 0
-            }
-          })
+      this.updateVob(vob.id, data).then(function () {
+        this.$router.push({
+          name: this.$route.name,
+          query: {
+            pid: vob.patient_id || 0
+          }
+        })
 
-          const foundVob = this.vobs.find(el => el.id === vob.id)
-          foundVob.viewed = data.viewed
-        },
-        function (response) {
-          this.handleErrors('updateVob', response)
-        }
-      )
+        const foundVob = this.vobs.find(el => el.id === vob.id)
+        foundVob.viewed = data.viewed
+      }).catch(function (response) {
+        this.handleErrors('updateVob', response)
+      })
     },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
@@ -113,19 +110,16 @@ export default {
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection,
         this.routeParameters.viewed
-      ).then(
-        function (response) {
-          const data = response.data.data
+      ).then(function (response) {
+        const data = response.data.data
 
-          if (data.result.length) {
-            this.vobs = data.result
-            this.totalVobs = data.total
-          }
-        },
-        function (response) {
-          this.handleErrors('findVobs', response)
+        if (data.result.length) {
+          this.vobs = data.result
+          this.totalVobs = data.total
         }
-      )
+      }).catch(function (response) {
+        this.handleErrors('findVobs', response)
+      })
     },
     findVobs (
       vobsPerPage,

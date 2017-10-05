@@ -1,7 +1,34 @@
+import alerter from '../../services/alerter'
 import endpoints from '../../endpoints'
 import http from '../../services/http'
 
 export default {
+  props: {
+    tasks: {
+      type: Array,
+      required: true
+    },
+    taskCode: {
+      type: String,
+      required: true
+    },
+    taskType: {
+      type: String,
+      required: true
+    },
+    redHeader: {
+      type: Boolean,
+      default: false
+    },
+    dueDate: {
+      type: Boolean,
+      default: false
+    },
+    isPatient: {
+      type: Boolean,
+      required: true
+    }
+  },
   methods: {
     onMouseEnterTaskItem (event) {
       // get id from .task_status element
@@ -28,12 +55,11 @@ export default {
         taskType = grandparent.className
       }
 
-      this.updateTaskToActive(id)
-        .then(function () {
-          this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
-        }, function (response) {
-          console.error('updateTaskToActive [status]: ', response.status)
-        })
+      this.updateTaskToActive(id).then(() => {
+        this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
+      }).catch((response) => {
+        console.error('updateTaskToActive [status]: ', response.status)
+      })
     },
     onClickDeleteTask (id, event) {
       event.preventDefault()
@@ -50,17 +76,14 @@ export default {
       }
 
       const confirmText = 'Are you sure you want to delete this task?'
-      if (confirm(confirmText)) {
+      if (alerter.isConfirmed(confirmText)) {
         id = id || 0
 
-        this.deleteTask(id).then(
-          function () {
-            this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
-          },
-          function (response) {
-            console.error('deleteTask [status]: ', response.status)
-          }
-        )
+        this.deleteTask(id).then(() => {
+          this.removeItemFromTaskList(taskType, id, isDashboardTaskList)
+        }).catch((response) => {
+          console.error('deleteTask [status]: ', response.status)
+        })
       }
     },
     updateTaskToActive (id) {
@@ -170,10 +193,10 @@ export default {
           break
       }
 
-      if (!patientTask) {
-        this.$set(this.headerInfo, 'tasksNumber', --this.headerInfo.tasksNumber)
-      } else {
+      if (patientTask) {
         this.$set(this.headerInfo, 'patientTaskNumber', --this.headerInfo.patientTaskNumber)
+      } else {
+        this.$set(this.headerInfo, 'tasksNumber', --this.headerInfo.tasksNumber)
       }
     },
     searchItemById (data, id) {

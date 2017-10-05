@@ -68,25 +68,22 @@ export default {
 
         this.waitingForResponse = true
 
-        http.post(endpoints.users.checkLogout).then(
-          function (response) {
-            const data = response.data
+        http.post(endpoints.users.checkLogout).then(function (response) {
+          const data = response.data
 
-            const newLast = this.currentTime() + (data.resetTime || 0) - this.logoutWait
+          const newLast = this.currentTime() + (data.resetTime || 0) - this.logoutWait
 
-            if (data.resetTime) {
-              this.lastActivity = newLast > this.lastActivity ? newLast : this.lastActivity
-            } else {
-              clearInterval(this.interval)
-              this.logout()
-            }
-
-            this.waitingForResponse = false
-          },
-          function (response) {
-            this.handleErrors('checkLogout', response)
+          if (data.resetTime) {
+            this.lastActivity = newLast > this.lastActivity ? newLast : this.lastActivity
+          } else {
+            clearInterval(this.interval)
+            this.logout()
           }
-        )
+
+          this.waitingForResponse = false
+        }).catch(function (response) {
+          this.handleErrors('checkLogout', response)
+        })
       }
 
       if (timeBeforeModal <= 0 && !this.modalWindow.is(':visible')) {

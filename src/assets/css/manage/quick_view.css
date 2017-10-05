@@ -1,7 +1,7 @@
 .info {
 	height: 20px;
 }
-.info label{
+.info label {
 	line-height: 20px;
 	width: 150px;
 	display: block;
@@ -9,15 +9,15 @@
 	text-align: right;
 	margin-right: 10px;
 }
-.info .value{
+.info .value {
 	line-height: 20px;
 }
 
 #view-contact {
-    background: url(~assets/images/tall.jpg);
-    background-repeat: repeat-x;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    padding-top: 3px;
-    padding-bottom: 1%;
+  background: url(../../images/tall.jpg);
+  background-repeat: repeat-x;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  padding-top: 3px;
+  padding-bottom: 1%;
 }

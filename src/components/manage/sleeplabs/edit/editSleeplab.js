@@ -92,23 +92,20 @@ export default {
     },
     onSubmit () {
       if (this.validateSleeplabData(this.sleeplab)) {
-        this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab).then(
-          function (response) {
-            const data = response.data.data
+        this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab).then(function (response) {
+          const data = response.data.data
 
-            this.$parent.popupEdit = false
+          this.$parent.popupEdit = false
 
-            if (data.status) {
-              this.$parent.updateParentData({ message: data.status })
-              this.$parent.disable()
-            }
-          },
-          function (response) {
-            this.parseFailedResponseOnEditingSleeplab(response.data.data)
-
-            this.handleErrors('editSleeplab', response)
+          if (data.status) {
+            this.$parent.updateParentData({ message: data.status })
+            this.$parent.disable()
           }
-        )
+        }).catch(function (response) {
+          this.parseFailedResponseOnEditingSleeplab(response.data.data)
+
+          this.handleErrors('editSleeplab', response)
+        })
       }
     },
     parseFailedResponseOnEditingSleeplab (data) {
@@ -131,28 +128,25 @@ export default {
       this.fetchSleeplab(this.componentParams.sleeplabId)
     },
     fetchSleeplab (id) {
-      this.getSleeplab(id).then(
-        function (response) {
-          const data = response.data.data
+      this.getSleeplab(id).then(function (response) {
+        const data = response.data.data
 
-          if (data) {
-            this.fullName = (data.firstname ? data.firstname + ' ' : '') +
-              (data.middlename ? data.middlename + ' ' : '') +
-              (data.lastname || '')
+        if (data) {
+          this.fullName = (data.firstname ? data.firstname + ' ' : '') +
+            (data.middlename ? data.middlename + ' ' : '') +
+            (data.lastname || '')
 
-            this.phoneFields.forEach(el => {
-              if (data.hasOwnProperty(el)) {
-                data[el] = this.phoneForDisplaying(data[el])
-              }
-            })
+          this.phoneFields.forEach(el => {
+            if (data.hasOwnProperty(el)) {
+              data[el] = this.phoneForDisplaying(data[el])
+            }
+          })
 
-            this.sleeplab = data
-          }
-        },
-        function (response) {
-          this.handleErrors('getSleeplab', response)
+          this.sleeplab = data
         }
-      )
+      }).catch(function (response) {
+        this.handleErrors('getSleeplab', response)
+      })
     },
     getSleeplab (id) {
       id = id || 0

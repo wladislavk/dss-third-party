@@ -1,21 +1,21 @@
 #alert_text {
-    margin-top: 10px;
-    width: 410px;
+  margin-top: 10px;
+  width: 410px;
 }
 
-#referred_source div{ 
-    float:left;
+#referred_source div {
+  float: left;
 }
 
 .alert-text {
-    margin-bottom: 10px;
-    width: 420px;
+  margin-bottom: 10px;
+  width: 420px;
 }
 
 .show-alert-text {
-    display: inline;
+  display: inline;
 }
 
 .hide-alert-text {
-    display: none;
+  display: none;
 }

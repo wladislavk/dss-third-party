@@ -31,30 +31,27 @@ export default {
       this.fetchSleeplab(this.componentParams.sleeplabId)
     },
     fetchSleeplab (id) {
-      this.getSleeplab(id).then(
-        function (response) {
-          const data = response.data.data
+      this.getSleeplab(id).then(function (response) {
+        const data = response.data.data
 
-          if (data) {
-            data['name'] = data.salutation + ' ' + data.firstname + ' ' + data.middlename + ' ' + data.lastname
+        if (data) {
+          data['name'] = data.salutation + ' ' + data.firstname + ' ' + data.middlename + ' ' + data.lastname
 
-            const phoneFields = ['phone1', 'phone2', 'fax']
+          const phoneFields = ['phone1', 'phone2', 'fax']
 
-            phoneFields.forEach(el => {
-              if (data.hasOwnProperty(el)) {
-                data[el] = data[el]
-                  .replace(/[^0-9]/g, '')
-                  .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')
-              }
-            })
+          phoneFields.forEach(el => {
+            if (data.hasOwnProperty(el)) {
+              data[el] = data[el]
+                .replace(/[^0-9]/g, '')
+                .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')
+            }
+          })
 
-            this.sleeplab = data
-          }
-        },
-        function (response) {
-          this.handleErrors('getSleeplab', response)
+          this.sleeplab = data
         }
-      )
+      }).catch(function (response) {
+        this.handleErrors('getSleeplab', response)
+      })
     },
     getSleeplab (id) {
       return http.get(endpoints.sleeplabs.show + '/' + id)

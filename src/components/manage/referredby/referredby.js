@@ -114,14 +114,11 @@ export default {
       this.$parent.$refs.modal.display('edit-referred-by-contact')
     },
     removeContact (id) {
-      this.deleteReferredByContact(id).then(
-        function () {
-          this.message = 'Deleted Successfull'
-        },
-        function (response) {
-          this.handleErrors('deleteReferredByContact', response)
-        }
-      )
+      this.deleteReferredByContact(id).then(function () {
+        this.message = 'Deleted Successfull'
+      }).catch(function (response) {
+        this.handleErrors('deleteReferredByContact', response)
+      })
     },
     getContacts () {
       this.getReferredByContacts(
@@ -129,19 +126,16 @@ export default {
         this.routeParameters.currentPageNumber,
         this.routeParameters.sortDirection,
         this.contactsPerPage
-      ).then(
-        function (response) {
-          const data = response.data.data
+      ).then(function (response) {
+        const data = response.data.data
 
-          if (data.total > 0) {
-            this.contactsTotalNumber = data.total
-            this.contacts = data.contacts
-          }
-        },
-        function (response) {
-          this.handleErrors('getReferredByContacts', response)
+        if (data.total > 0) {
+          this.contactsTotalNumber = data.total
+          this.contacts = data.contacts
         }
-      )
+      }).catch(function (response) {
+        this.handleErrors('getReferredByContacts', response)
+      })
     },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {

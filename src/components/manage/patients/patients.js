@@ -141,12 +141,11 @@ export default {
       })
     },
     onDeletePatient (patientId) {
-      this.deletePatient(patientId)
-        .then(function () {
-          this.message = 'Deleted Successfully'
-        }, function (response) {
-          this.handleErrors('deletePatient', response)
-        })
+      this.deletePatient(patientId).then(function () {
+        this.message = 'Deleted Successfully'
+      }).catch(function (response) {
+        this.handleErrors('deletePatient', response)
+      })
     },
     getRxLomn (value) {
       switch (+value) {
@@ -197,7 +196,7 @@ export default {
 
         this.patientsTotalNumber = totalCount
         this.patients = patients
-      }, function (response) {
+      }).catch(function (response) {
         this.handleErrors('findPatients', response)
       })
     },

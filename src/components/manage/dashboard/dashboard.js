@@ -11,6 +11,7 @@ export default {
     return {
       // need to change logic for global values
       constants: window.constants,
+      legacyUrl: '',
       headerInfo: {
         unmailedLettersNumber: 0,
         pendingClaimsNumber: 0,
@@ -56,38 +57,31 @@ export default {
     'headerInfo.docInfo.homepage': 'redirectToIndex2',
     'headerInfo.user.id': function () {
       const self = this
-      this.getManageStaffOfCurrentUser(this.headerInfo.user.id)
-        .then(function (response) {
-          const data = response.data.data
-          if (data) {
-            self.headerInfo.user['manage_staff'] = data.manage_staff || 0
-          }
-        }, function (response) {
-          this.handleErrors('getManageStaffOfCurrentUser', response)
-        })
+      this.getManageStaffOfCurrentUser(this.headerInfo.user.id).then(function (response) {
+        const data = response.data.data
+        if (data) {
+          self.headerInfo.user['manage_staff'] = data.manage_staff || 0
+        }
+      }).catch(function (response) {
+        this.handleErrors('getManageStaffOfCurrentUser', response)
+      })
     }
   },
   created () {
     window.eventHub.$on('update-header-info', this.onUpdateHeaderInfo)
     window.eventHub.$emit('get-header-info')
 
-    http.post(endpoints.documentCategories.active).then(
-      function (response) {
-        this.documentCategories = response.data.data
-      },
-      function (response) {
-        this.handleErrors('getDocumentCategories', response)
-      }
-    )
+    http.post(endpoints.documentCategories.active).then(function (response) {
+      this.documentCategories = response.data.data
+    }).catch(function (response) {
+      this.handleErrors('getDocumentCategories', response)
+    })
 
-    http.post(endpoints.memos.current).then(
-      function (response) {
-        this.memos = response.data.data
-      },
-      function (response) {
-        this.handleErrors('getCurrentMemos', response)
-      }
-    )
+    http.post(endpoints.memos.current).then(function (response) {
+      this.memos = response.data.data
+    }).catch(function (response) {
+      this.handleErrors('getCurrentMemos', response)
+    })
   },
   beforeDestroy () {
     window.eventHub.$off('update-header-info', this.onUpdateHeaderInfo)

@@ -1,15 +1,15 @@
 #contentMain tr:hover {
-    background:#cccccc;
+  background: #cccccc;
 }
 
 #contentMain td:hover {
-    background:#999999;
+  background: #999999;
 }
 
 .arrow_asc, .arrow_desc {
-    background-color: rgb(0, 39, 94);
+  background-color: rgb(0, 39, 94);
 }
 
 .letters, .page_numbers {
-    margin-right: 4px
+  margin-right: 4px;
 }

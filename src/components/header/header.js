@@ -68,6 +68,50 @@ export default {
       showAllWarnings: true
     }
   },
+  computed: {
+    patientId () {
+      return parseInt(this.$route.query.pid)
+    },
+    notificationsNumber: function () {
+      let notificationsNumber = +this.headerInfo.pendingLetters.length +
+        +this.headerInfo.preauthNumber +
+        +this.headerInfo.rejectedPreAuthNumber +
+        +this.headerInfo.patientContactsNumber +
+        +this.headerInfo.patientInsurancesNumber +
+        +this.headerInfo.patientChangesNumber +
+        +this.headerInfo.emailBouncesNumber +
+        +this.headerInfo.unsignedNotesNumber +
+        +this.headerInfo.pendingDuplicatesNumber
+      if (parseInt(this.headerInfo.user.user_type) === window.constants.DSS_USER_TYPE_SOFTWARE) {
+        notificationsNumber += +this.headerInfo.unmailedClaimsNumber + +this.headerInfo.pendingNodssClaimsNumber
+      } else {
+        notificationsNumber += +this.headerInfo.pendingClaimsNumber
+      }
+      return notificationsNumber
+    },
+    isUserDoctor: function () {
+      return (this.headerInfo.user.docid === this.headerInfo.user.id)
+    },
+    showOnlineCEAndSnoozleHelp: function () {
+      return (
+        (this.isUserDoctor && parseInt(this.headerInfo.user.use_course) === 1) ||
+        (
+          !this.isUserDoctor &&
+          parseInt(this.headerInfo.courseStaff.use_course) === 1 &&
+          parseInt(this.headerInfo.courseStaff.use_course_staff) === 1
+        )
+      )
+    },
+    showWarningAboutPatientChanges: function () {
+      return ((this.childrenPatients.length + this.totalContacts + this.totalInsurances) > 0)
+    },
+    showWarningAboutQuestionnaireChanges: function () {
+      return (parseInt(this.questionnaireStatuses.symptoms_status) === 2 || parseInt(this.questionnaireStatuses.treatments_status) === 2 || parseInt(this.questionnaireStatuses.history_status) === 2)
+    },
+    showWarningAboutBouncedEmails: function () {
+      return this.bouncedEmailsNumberForCurrentPatient
+    }
+  },
   components: {
     modal: modal,
     taskMenu: TaskMenuComponent,
@@ -445,47 +489,6 @@ export default {
         status = window.constants.dssHstStatusLabels[lastElement.status]
       }
       this.$set(this.headerInfo, 'patientHomeSleepTestStatus', status)
-    }
-  },
-  computed: {
-    notificationsNumber: function () {
-      let notificationsNumber = +this.headerInfo.pendingLetters.length +
-        +this.headerInfo.preauthNumber +
-        +this.headerInfo.rejectedPreAuthNumber +
-        +this.headerInfo.patientContactsNumber +
-        +this.headerInfo.patientInsurancesNumber +
-        +this.headerInfo.patientChangesNumber +
-        +this.headerInfo.emailBouncesNumber +
-        +this.headerInfo.unsignedNotesNumber +
-        +this.headerInfo.pendingDuplicatesNumber
-      if (parseInt(this.headerInfo.user.user_type) === window.constants.DSS_USER_TYPE_SOFTWARE) {
-        notificationsNumber += +this.headerInfo.unmailedClaimsNumber + +this.headerInfo.pendingNodssClaimsNumber
-      } else {
-        notificationsNumber += +this.headerInfo.pendingClaimsNumber
-      }
-      return notificationsNumber
-    },
-    isUserDoctor: function () {
-      return (this.headerInfo.user.docid === this.headerInfo.user.id)
-    },
-    showOnlineCEAndSnoozleHelp: function () {
-      return (
-        (this.isUserDoctor && parseInt(this.headerInfo.user.use_course) === 1) ||
-        (
-          !this.isUserDoctor &&
-          parseInt(this.headerInfo.courseStaff.use_course) === 1 &&
-          parseInt(this.headerInfo.courseStaff.use_course_staff) === 1
-        )
-      )
-    },
-    showWarningAboutPatientChanges: function () {
-      return ((this.childrenPatients.length + this.totalContacts + this.totalInsurances) > 0)
-    },
-    showWarningAboutQuestionnaireChanges: function () {
-      return (parseInt(this.questionnaireStatuses.symptoms_status) === 2 || parseInt(this.questionnaireStatuses.treatments_status) === 2 || parseInt(this.questionnaireStatuses.history_status) === 2)
-    },
-    showWarningAboutBouncedEmails: function () {
-      return this.bouncedEmailsNumberForCurrentPatient
     }
   },
   methods: {

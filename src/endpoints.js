@@ -156,6 +156,8 @@ export default {
     allForPatient: '/tasks/all/pid',
     destroy: '/tasks',
     futureForPatient: '/tasks/future/pid',
+    index: '/tasks',
+    indexForPatient: '/tasks-for-patient',
     later: '/tasks/later',
     nextWeek: '/tasks/next-week',
     overdue: '/tasks/overdue',

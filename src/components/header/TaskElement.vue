@@ -5,11 +5,11 @@
         v-bind:class="'task_item task_' + task.id"
     >
         <div class="task_extra" v-bind:id="'task_extra_' + task.id" v-show="isVisible">
-            <a href="#" v-on:click="onClickDeleteTask($event)" class="task_delete"></a>
+            <a href="#" v-on:click.prevent="onClickDeleteTask()" class="task_delete"></a>
             <a href="#" v-bind:replace-onlick="'loadPopup ' + legacyUrl + 'add_task.php?id=' + task.id" class="task_edit">Edit</a>
         </div>
         <input
-            v-on:click="onClickTaskStatus($event)"
+            v-on:click="onClickTaskStatus()"
             type="checkbox"
             v-bind:class="'task_status' + (isPatient ? '' : ' task_status_general')"
             v-bind:value="task.id"

@@ -13,13 +13,19 @@ export default {
     screenerWeights: 'SCREENER_WEIGHTS',
     showFancybox: 'SHOW_FANCYBOX',
     sessionData: 'SESSION_DATA',
-    symptoms: 'SYMPTOMS'
+    symptoms: 'SYMPTOMS',
+    tasks: 'TASKS',
+    tasksForPatient: 'TASKS_FOR_PATIENT'
   },
   getters: {
     calculateRisk: 'CALCULATE_RISK',
     filteredContact: 'FILTERED_CONTACT',
     fullContactData: 'FULL_CONTACT_DATA',
-    fullName: 'FULL_NAME'
+    fullName: 'FULL_NAME',
+    tasksByType: 'TASKS_BY_TYPE',
+    tasksNumber: 'TASKS_NUMBER',
+    tasksPatientByType: 'TASKS_PATIENT_BY_TYPE',
+    tasksPatientNumber: 'TASKS_PATIENT_NUMBER'
   },
   mutations: {
     coMorbidity: 'CO_MORBIDITY',
@@ -32,6 +38,8 @@ export default {
     hideFancybox: 'HIDE_FANCYBOX',
     modifyEpworthProps: 'MODIFY_EPWORTH_PROPS',
     popupEdit: 'POPUP_EDIT',
+    removeTask: 'REMOVE_TASK',
+    removeTaskForPatient: 'REMOVE_TASK_FOR_PATIENT',
     restoreInitialScreener: 'RESTORE_INITIAL_SCREENER',
     restoreInitialScreenerKeepSession: 'RESTORE_INITIAL_SCREENER_KEEP_SESSION',
     screenerId: 'SCREENER_ID',
@@ -40,6 +48,8 @@ export default {
     setContact: 'SET_CONTACT',
     setEpworthErrors: 'SET_EPWORTH_ERRORS',
     setEpworthProps: 'SET_EPWORTH_PROPS',
+    setTasks: 'SET_TASKS',
+    setTasksForPatient: 'SET_TASKS_FOR_PATIENT',
     showFancybox: 'SHOW_FANCYBOX',
     surveyWeight: 'SURVEY_WEIGHT',
     symptoms: 'SYMPTOMS'
@@ -51,6 +61,8 @@ export default {
     getDoctorData: 'GET_DOCTOR_DATA',
     handleErrors: 'HANDLE_ERRORS',
     parseScreenerResults: 'PARSE_SCREENER_RESULTS',
+    retrieveTasks: 'RETRIEVE_TASKS',
+    retrieveTasksForPatient: 'RETRIEVE_TASKS_FOR_PATIENT',
     setCurrentContact: 'SET_CURRENT_CONTACT',
     setEpworthProps: 'SET_EPWORTH_PROPS',
     setSessionData: 'SET_SESSION_DATA',

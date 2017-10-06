@@ -1,16 +1,16 @@
 <template>
     <div
-        v-on:mouseleave="onMouseLeavePatientTaskMenu"
-        v-if="$route.query.pid && headerInfo.patientTaskNumber > 0"
+        v-on:mouseleave="showTaskList = false"
+        v-show="tasksNumber"
         class="task_menu task_menu_patient"
         id="pat_task_menu"
     >
         <span
-            v-on:mouseover="onMouseOverPatientTaskHeader"
+            v-on:mouseover="showTaskList = true"
             id="pat_task_header"
             class="task_header_patient"
-        >Tasks({{ headerInfo.patientTaskNumber }})</span>
-        <div class="task_list" id="pat_task_list">
+        >Tasks({{ tasksNumber }})</span>
+        <div v-show="showTaskList" class="task_list" id="pat_task_list">
             <task-data
                 v-bind:tasks="overdueTasks"
                 task-code="od"

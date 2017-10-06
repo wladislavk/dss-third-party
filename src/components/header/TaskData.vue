@@ -5,6 +5,7 @@
             <task-element
                 v-for="task in tasks"
                 v-bind:task="task"
+                v-bind:task-code="taskCode"
                 v-bind:due-date="dueDate"
                 v-bind:is-patient="isPatient"
             >

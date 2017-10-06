@@ -23,14 +23,14 @@
 
                     <task-menu></task-menu>
                     <div v-if="showOnlineCEAndSnoozleHelp">
-                        <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" v-bind:href="legacyUrl + 'edx_login.php'" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
-                        <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" v-bind:href="legacyUrl + 'help_login.php'" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
+                        <a style="display:block; margin-right:20px; margin-top:8px; float:right;" v-bind:href="legacyUrl + 'edx_login.php'" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
+                        <a style="display:block; margin-right:20px; margin-top:8px; float:right;" v-bind:href="legacyUrl + 'help_login.php'" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
                     </div>
-                    <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" v-bind:href="legacyUrl + 'calendar.php'">Scheduler</a>
+                    <a style="display:block; margin-right:20px; margin-top:8px; float:right;" v-bind:href="legacyUrl + 'calendar.php'">Scheduler</a>
 
                     <div class="bottom-image">
                         <div style="margin-top:10px; margin-left:20px; float:left;">
-                            <router-link to="/manage/index" id="logo">Dashboard</router-link>
+                            <router-link v-bind:to="'/manage/index'" id="logo">Dashboard</router-link>
                         </div>
                         <div style="float:left; width:68%;">
                             <form>
@@ -45,7 +45,7 @@
                             </form>
 
                             <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
-                            <button :replace-onclick="'loadPopup add_task.php?pid=' + ($route.query.pid || 0)" style="padding: 3px; margin-top:27px;">+ Add Task</button>
+                            <button v-bind:replace-onclick="'loadPopup add_task.php?pid=' + patientId" style="padding: 3px; margin-top:27px;">+ Add Task</button>
                         </div>
                         <div v-if="companyLogo" style="float:right;margin:13px 15px 0 0;">
                             <img v-bind:src="companyLogo" />
@@ -55,23 +55,26 @@
                     <div class="body-image">
                         <div style="width:98.6%; background:#00457c;margin:0 auto;">
                             <div
-                                v-if="$route.query.pid"
+                                v-if="patientId"
                                 id="patient_name_div"
-                                :style="headerInfo.patientName.length > 20 ? 'font-size:14px' : ''"
+                                v-bind:style="headerInfo.patientName.length > 20 ? 'font-size:14px' : ''"
                             >
                                 <div id="patient_name_inner">
                                     <img v-if="headerInfo.medicare" src="~assets/images/medicare_logo_small.png" />
-                                    <span :class="{ 'medicare_name': headerInfo.medicare, 'name': !headerInfo.medicare }">
+                                    <span v-bind:class="{ 'medicare_name': headerInfo.medicare, 'name': !headerInfo.medicare }">
                                         {{ headerInfo.patientName }}
                                         <a v-if="headerInfo.displayAlert && headerInfo.alertText.length > 0" href="#" :title="'Notes: ' + headerInfo.alertText" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>
-                                        <a v-if="headerInfo.premedCheck == 1 || alergen == 1" v-bind:href="legacyUrl + 'q_page3.php?pid=' + ($route.query.pid || 0)" :title="headerInfo.title" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
+                                        <a v-if="headerInfo.premedCheck == 1 || alergen == 1" v-bind:href="legacyUrl + 'q_page3.php?pid=' + patientId" :title="headerInfo.title" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
                                     </span>
                                 </div>
                             </div>
 
-                            <patient-task-menu></patient-task-menu>
+                            <patient-task-menu
+                                v-if="patientId"
+                                v-bind:patient-id="patientId"
+                            ></patient-task-menu>
 
-                            <template v-if="$route.query.pid">
+                            <template v-if="patientId">
                                 <a
                                     v-show="!showAllWarnings"
                                     href="#"
@@ -96,39 +99,39 @@
                                 </span>
                             </div>
 
-                            <div v-if="$route.query.pid" id="patient_nav">
+                            <div v-if="patientId" id="patient_nav">
                                 <ul>
                                     <li>
-                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'manage_flowsheet3.php?pid=' + $route.query.pid + '&addtopat=1'">Tracker</a>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'manage_flowsheet3.php?pid=' + patientId + '&addtopat=1'">Tracker</a>
                                     </li>
                                     <li>
-                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'dss_summ.php?pid=' + $route.query.pid + '&addtopat=1'">Summary Sheet</a>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'dss_summ.php?pid=' + patientId + '&addtopat=1'">Summary Sheet</a>
                                     </li>
                                     <li>
-                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'manage_ledger.php?pid=' + $route.query.pid + '&addtopat=1'">Ledger</a>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'manage_ledger.php?pid=' + patientId + '&addtopat=1'">Ledger</a>
                                     </li>
                                     <li>
-                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'manage_insurance.php?pid=' + $route.query.pid + '&addtopat=1'">Insurance</a>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'manage_insurance.php?pid=' + patientId + '&addtopat=1'">Insurance</a>
                                     </li>
                                     <li>
-                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'dss_summ.php?sect=notes&pid=' + $route.query.pid + '&addtopat=1'">Progress Notes</a>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'dss_summ.php?sect=notes&pid=' + patientId + '&addtopat=1'">Progress Notes</a>
                                     </li>
                                     <li>
-                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'dss_summ.php?sect=letters&pid=' + $route.query.pid + '&addtopat=1'">Letters</a>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'dss_summ.php?sect=letters&pid=' + patientId + '&addtopat=1'">Letters</a>
                                     </li>
                                     <li>
-                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'q_image.php?pid=' + $route.query.pid">Images</a>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'q_image.php?pid=' + patientId">Images</a>
                                     </li>
                                     <li>
-                                        <a class="<?php echo (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" v-bind:href="legacyUrl + 'q_page1.php?pid=' + $route.query.pid + '&addtopat=1'">Questionnaire</a>
+                                        <a class="<?php echo (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" v-bind:href="legacyUrl + 'q_page1.php?pid=' + patientId + '&addtopat=1'">Questionnaire</a>
                                     </li>
                                     <li>
-                                        <a class="<?php echo (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" v-bind:href="legacyUrl + 'ex_page4.php?pid=' + $route.query.pid + '&addtopat=1'">Clinical Exam</a>
+                                        <a class="<?php echo (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" v-bind:href="legacyUrl + 'ex_page4.php?pid=' + patientId + '&addtopat=1'">Clinical Exam</a>
                                     </li>
                                     <li class="last">
                                         <a
-                                            :class="$route.name == 'edit-patient' ? 'nav_active' : ''"
-                                            v-bind:href="legacyUrl + 'add_patient.php?ed=' + $route.query.pid + '&addtopat=1&pid=' + $route.query.pid"
+                                            v-bind:class="$route.name == 'edit-patient' ? 'nav_active' : ''"
+                                            v-bind:href="legacyUrl + 'add_patient.php?ed=' + patientId + '&addtopat=1&pid=' + patientId"
                                         >Patient Info</a>
                                     </li>
                                 </ul>
@@ -140,30 +143,30 @@
                     <div id="contentMain">
                         <div style="clear:both;"></div>
 
-                        <div v-if="$route.query.pid" style="margin-left:20px;float:left;width:400px;display:none;">
+                        <div v-if="patientId" style="margin-left:20px;float:left;width:400px;display:none;">
                             You are currently in a patient chart -
                             <a v-bind:href="legacyUrl + 'manage_patient.php'" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a>
                         </div>
-                        <div v-if="$route.query.pid" style="float:right;width:300px;"></div>
+                        <div v-if="patientId" style="float:right;width:300px;"></div>
                         <br />
 
                         <div
-                            v-if="$route.query.pid"
+                            v-if="patientId"
                             v-show="showAllWarnings"
                             id="patient_warnings"
                         >
-                            <a v-if="showWarningAboutPatientChanges" class="warning" v-bind:href="legacyUrl + 'patient_changes.php?pid=' + $route.query.pid">
+                            <a v-if="showWarningAboutPatientChanges" class="warning" v-bind:href="legacyUrl + 'patient_changes.php?pid=' + patientId">
                                 <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
                             </a>
-                            <a v-if="showWarningAboutQuestionnaireChanges" class="warning" v-bind:href="legacyUrl + 'q_page1.php?pid=' + $route.query.pid + '&addtopat=1'" >
+                            <a v-if="showWarningAboutQuestionnaireChanges" class="warning" v-bind:href="legacyUrl + 'q_page1.php?pid=' + patientId + '&addtopat=1'" >
                                 <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
                             </a>
-                            <a v-if="showWarningAboutBouncedEmails" class="warning" v-bind:href="legacyUrl + 'add_patient.php?ed=' + $route.query.pid + '&pid=' + $route.query.pid + '&addtopat=1'" >
+                            <a v-if="showWarningAboutBouncedEmails" class="warning" v-bind:href="legacyUrl + 'add_patient.php?ed=' + patientId + '&pid=' + patientId + '&addtopat=1'" >
                                 <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
                             </a>
                             <span v-if="rejectedClaimsForCurrentPatient.length > 0" class="warning">Warning! Patient has the following rejected claims: <br />
                                 <template v-for="claim in rejectedClaimsForCurrentPatient">
-                                    <a v-bind:href="legacyUrl + 'view_claim.php?claimid=' + claim.insuranceid + '&pid=' + $route.query.pid">
+                                    <a v-bind:href="legacyUrl + 'view_claim.php?claimid=' + claim.insuranceid + '&pid=' + patientId">
                                         {{ claim.insuranceid }} - {{ claim.adddate | moment("MM/DD/YYYY") }}
                                     </a>
                                     <br />
@@ -172,7 +175,7 @@
                             <span v-if="uncompletedHomeSleepTests.length > 0" class="warning">Patient has the following Home Sleep Tests: <br />
                                 <span v-for="test in uncompletedHomeSleepTests">
                                     <a v-bind:href="legacyUrl + '/manage/hst_request.php?pid=' + test.patient_id + '&amp;hst_id=' + test.id">HST was requested {{ test.adddate | moment("MM/DD/YYYY") }}</a>
-                                        and is currently
+                                    and is currently
                                     <a v-if="test.status == window.constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">{{ window.constants.preAuthLabels[test.status] }}</a>
                                     <span v-else>{{ window.constants.preAuthLabels[test.status] }}</span>
                                     <span v-if="test.status == window.constants.DSS_HST_SCHEDULED"> - {{ test.office_notes }}</span>

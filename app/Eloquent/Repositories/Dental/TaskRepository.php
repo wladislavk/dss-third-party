@@ -16,7 +16,7 @@ class TaskRepository extends AbstractRepository
 
     /**
      * @param int $responsibleId
-     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     * @return Task[]|\Illuminate\Database\Eloquent\Collection|static[]
      */
     public function getAll($responsibleId)
     {

@@ -5,11 +5,29 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TaskRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Helpers\TaskRetriever;
+use Illuminate\Http\JsonResponse;
+use Prettus\Repository\Eloquent\BaseRepository;
+use DentalSleepSolutions\Http\Requests\Request;
+use Illuminate\Config\Repository as Config;
 
 class TasksController extends BaseRestController
 {
     /** @var TaskRepository */
     protected $repository;
+
+    /** @var TaskRetriever */
+    private $taskRetriever;
+
+    public function __construct(
+        Config $config,
+        BaseRepository $repository,
+        Request $request,
+        TaskRetriever $taskRetriever
+    ) {
+        parent::__construct($config, $repository, $request);
+        $this->taskRetriever = $taskRetriever;
+    }
 
     /**
      * @SWG\Get(
@@ -35,7 +53,43 @@ class TasksController extends BaseRestController
      */
     public function index()
     {
-        return parent::index();
+        $tasks = $this->taskRetriever->getTasksWithType($this->user);
+        return ApiResponse::responseOk('', $tasks);
+    }
+
+    /**
+     * @SWG\Manual
+     * @todo: this method should be moved to GET /patients/{id}/tasks
+     *
+     * @SWG\Get(
+     *     path="/tasks-for-patient/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Resources retrieved",
+     *         @SWG\Schema(
+     *             allOf={
+     *                 @SWG\Schema(ref="#/definitions/common_response_fields"),
+     *                 @SWG\Schema(
+     *                     @SWG\Property(
+     *                         property="data",
+     *                         type="array",
+     *                         @SWG\Items(ref="#/definitions/Task")
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
+     * )
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function indexForPatient($id)
+    {
+        $tasks = $this->taskRetriever->getTasksWithType($this->user, $id);
+        return ApiResponse::responseOk('', $tasks);
     }
 
     /**
@@ -133,6 +187,8 @@ class TasksController extends BaseRestController
     {
         return parent::destroy($id);
     }
+
+    // @todo: these methods are possibly obsolete
 
     /**
      * @SWG\Post(

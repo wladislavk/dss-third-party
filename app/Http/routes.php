@@ -335,6 +335,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('symptoms', 'SymptomsController', ['except' => ['create', 'edit']]);
 
+    Route::get('tasks-for-patient/{id}', 'TasksController@indexForPatient');
     Route::post('tasks/{type}', 'TasksController@getType');
     Route::post('tasks/{type}/pid/{patientId}', 'TasksController@getTypeForPatient');
     Route::resource('tasks', 'TasksController', ['except' => ['create', 'edit']]);

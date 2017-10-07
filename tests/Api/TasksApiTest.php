@@ -3,6 +3,8 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
+use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Helpers\TaskRetriever;
 use Tests\TestCases\ApiTestCase;
 
 class TasksApiTest extends ApiTestCase
@@ -37,6 +39,34 @@ class TasksApiTest extends ApiTestCase
             'patientid'   => 100,
             'description' => 'updated task',
         ];
+    }
+
+    public function testIndex()
+    {
+        /** @var User $user */
+        $user = User::find('u_1');
+        $this->be($user);
+        $this->get(self::ROUTE_PREFIX . $this->getRoute());
+        $this->assertResponseOk();
+        $this->assertEquals(3, count($this->getResponseData()));
+        $this->assertEquals(82, $this->getResponseData()[0]['id']);
+        $this->assertEquals(94, $this->getResponseData()[1]['id']);
+        $this->assertEquals(97, $this->getResponseData()[2]['id']);
+        $this->assertEquals(TaskRetriever::OVERDUE, $this->getResponseData()[0]['type']);
+    }
+
+    public function testIndexForPatient()
+    {
+        /** @var User $user */
+        $user = User::find('u_1');
+        $this->be($user);
+        $patientId = 112;
+        $this->get(self::ROUTE_PREFIX . '/tasks-for-patient/' . $patientId);
+        $this->assertResponseOk();
+        $this->assertEquals(2, count($this->getResponseData()));
+        $this->assertEquals(94, $this->getResponseData()[0]['id']);
+        $this->assertEquals(95, $this->getResponseData()[1]['id']);
+        $this->assertEquals(TaskRetriever::OVERDUE, $this->getResponseData()[0]['type']);
     }
 
     public function testGetType()

@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Helpers;
 
 use Carbon\Carbon;
+use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TaskRepository;
 use Illuminate\Database\Eloquent\Collection;
@@ -28,15 +29,24 @@ class TaskRetriever
     /**
      * @param User $user
      * @param int $patientId
+     * @param Carbon|null $now
      * @return array
      */
-    public function getTasksWithType(User $user, $patientId = 0)
+    public function getTasksWithType(User $user, $patientId = 0, Carbon $now = null)
     {
-        $tasks = $this->getTasks($user, $patientId)->toArray();
+        if (!$now) {
+            $now = Carbon::now();
+        }
+        $tasks = $this->getTasks($user, $patientId);
         $modifiedTasks = [];
         foreach ($tasks as $task) {
-            $task['type'] = $this->getTypeByDate($task['due_date'], $patientId);
-            $modifiedTasks[] = $task;
+            $date = $task->due_date;
+            if (!$task->due_date instanceof \DateTime) {
+                $date = new \DateTime($task->due_date);
+            }
+            $modifiedTask = $task->toArray();
+            $modifiedTask['type'] = $this->getTypeByDate($date, $patientId, clone($now));
+            $modifiedTasks[] = $modifiedTask;
         }
         return $modifiedTasks;
     }
@@ -44,24 +54,25 @@ class TaskRetriever
     /**
      * @param User $user
      * @param int $patientId
-     * @return Collection
+     * @return Collection|Task[]
      */
     private function getTasks(User $user, $patientId)
     {
         if ($patientId) {
             return $this->taskRepository->getAllForPatient($user->getDocIdOrZero(), $patientId);
         }
-        return $this->taskRepository->getAll($user->getUserIdOrZero());
+        return $this->taskRepository->getAll($user->userid);
     }
 
     /**
      * @param \DateTime $taskDateTime
      * @param int $patientId
+     * @param Carbon $now
      * @return string
      */
-    private function getTypeByDate(\DateTime $taskDateTime, $patientId)
+    private function getTypeByDate(\DateTime $taskDateTime, $patientId, Carbon $now)
     {
-        $nowCarbon = Carbon::now()->startOfDay();
+        $nowCarbon = $now->startOfDay();
         $taskCarbon = Carbon::instance($taskDateTime)->startOfDay();
         $diff = $nowCarbon->diffInDays($taskCarbon, false);
         if ($diff < 0) {

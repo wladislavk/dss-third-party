@@ -11,10 +11,10 @@
                        {{ buttonText }} Sleep Lab{{ fullName ? (' &quot;' + fullName + '&quot;') : '' }}
                     </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     <span>
                                         <span style="color:#000000">Lab Name</span>
@@ -39,7 +39,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Name
                                 </label>
@@ -109,7 +109,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Address
                                     <span id="req_0" class="req">*</span>
@@ -194,12 +194,12 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <div>
                                     <span>
-                                        <masked-input
+                                        <input
                                             v-model="sleeplab.phone1"
-                                            :mask="phoneMask()"
+                                            v-mask="phoneMask"
                                             id="phone1"
                                             name="phone1"
                                             type="text"
@@ -211,9 +211,9 @@
                                         <label for="phone1">Phone 1</label>
                                     </span>
                                     <span>
-                                        <masked-input
+                                        <input
                                             v-model="sleeplab.phone2"
-                                            :mask="phoneMask()"
+                                            v-mask="phoneMask"
                                             id="phone2"
                                             name="phone2"
                                             type="text"
@@ -225,9 +225,9 @@
                                         <label for="phone2">Phone 2</label>
                                     </span>
                                     <span>
-                                        <masked-input
+                                        <input
                                             v-model="sleeplab.fax"
-                                            :mask="phoneMask()"
+                                            v-mask="phoneMask"
                                             id="fax"
                                             name="fax"
                                             type="text"
@@ -259,10 +259,10 @@
                         </ul>
                     </td>
                 </tr>
-                 <tr> 
+                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                  <label class="desc" id="title0" for="Field0">
                                     Notes:
                                 </label>

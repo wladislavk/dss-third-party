@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import VueMoment from 'vue-moment'
 import MintUI from 'mint-ui'
-import MaskedInput from 'vue-masked-input'
 import axios from 'axios'
 import ManageTemplate from 'components/header/header.vue'
 import Login from 'components/manage/login/login.vue'
@@ -33,7 +32,6 @@ Vue.use(VueMoment)
 Vue.use(MintUI)
 
 Vue.component('manage-template', ManageTemplate)
-Vue.component('masked-input', MaskedInput)
 
 export default new Router({
   mode: 'history',

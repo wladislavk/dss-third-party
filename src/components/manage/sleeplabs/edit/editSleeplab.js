@@ -1,14 +1,15 @@
 import endpoints from '../../../../endpoints'
 import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
-import phoneMasks from '../../../../modules/masks/PhoneMixin'
 import phoneFilters from '../../../../modules/filters/phoneMixin'
 import sleeplabValidator from '../../../../modules/validators/SleeplabMixin'
+import AwesomeMask from 'awesome-mask'
 
 export default {
   name: 'edit-sleeplab',
   data () {
     return {
+      phoneMask: '(999) 999-9999',
       componentParams: {
         sleeplabId: 0
       },
@@ -22,7 +23,10 @@ export default {
       phoneFields: ['phone1', 'phone2', 'fax']
     }
   },
-  mixins: [handlerMixin, phoneMasks, phoneFilters, sleeplabValidator],
+  mixins: [handlerMixin, phoneFilters, sleeplabValidator],
+  directives: {
+    mask: AwesomeMask
+  },
   watch: {
     'sleeplab': {
       handler: function () {

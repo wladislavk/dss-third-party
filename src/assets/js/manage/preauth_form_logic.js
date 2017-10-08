@@ -1,7 +1,7 @@
 import $ from 'jquery'
 
 $(function () {
-  function calc_amount_left_to_meet () {
+  function calcAmountLeftToMeet () {
     if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
       return
     }
@@ -33,7 +33,7 @@ $(function () {
     $('#in_patient_amount_left_to_meet').val(leftToMeet.toFixed(2))
   }
 
-  function calc_amount_left_to_meet_family () {
+  function calcAmountLeftToMeetFamily () {
     if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
       return
     }
@@ -65,7 +65,7 @@ $(function () {
     $('#in_family_amount_left_to_meet').val(leftToMeet.toFixed(2))
   }
 
-  function calc_expected_payments () {
+  function calcExpectedPayments () {
     if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
       return
     }
@@ -281,42 +281,42 @@ $(function () {
 
   const insCalYearEnd = $('#ins_cal_year_end')
   insCalYearEnd.bind('focus blur click', function () {
-    if ($(this).val() !== '') {
+    if ($(this).val() === '') {
+      $('#deductible_reset_date').val('')
+      $('#in_deductible_reset_date').val('')
+    } else {
       const myDate = new Date($(this).val())
       myDate.setDate(myDate.getDate() + 1)
       $('#deductible_reset_date').val(parseInt(myDate.getMonth() + 1, 10) + '/' + myDate.getDate() + '/' + myDate.getFullYear())
       $('#in_deductible_reset_date').val(parseInt(myDate.getMonth() + 1, 10) + '/' + myDate.getDate() + '/' + myDate.getFullYear())
-    } else {
-      $('#deductible_reset_date').val('')
-      $('#in_deductible_reset_date').val('')
     }
   })
   insCalYearEnd.blur()
 
   $('#ins_cal_year').bind('click', function () {
-    if (insCalYearEnd.val() !== '') {
+    if (insCalYearEnd.val() === '') {
+      $('#deductible_reset_date').val('')
+      $('#in_deductible_reset_date').val('')
+    } else {
       const myDate = new Date($('#ins_cal_year_end').val())
       myDate.setDate(myDate.getDate() + 1)
       $('#deductible_reset_date').val(parseInt(myDate.getMonth() + 1, 10) + '/' + myDate.getDate() + '/' + myDate.getFullYear())
       $('#in_deductible_reset_date').val(parseInt(myDate.getMonth() + 1, 10) + '/' + myDate.getDate() + '/' + myDate.getFullYear())
-    } else {
-      $('#deductible_reset_date').val('')
-      $('#in_deductible_reset_date').val('')
     }
   })
 
   $('#patient_deductible, #patient_amount_met, #in_patient_deductible, #in_patient_amount_met').bind('focus blur click', function () {
-    calc_amount_left_to_meet()
-    calc_expected_payments()
+    calcAmountLeftToMeet()
+    calcExpectedPayments()
   })
 
   $("input[name='deductible_from'], input[name='in_deductible_from']").bind('focus blur click', function () {
-    calc_expected_payments()
+    calcExpectedPayments()
   })
 
   $('#family_deductible, #family_amount_met, #in_family_deductible, #in_family_amount_met').bind('focus blur click', function () {
-    calc_amount_left_to_meet_family()
-    calc_expected_payments()
+    calcAmountLeftToMeetFamily()
+    calcExpectedPayments()
   })
 
   const fields = $('#patient_deductible, #patient_amount_met, #family_deductible, #family_amount_met, #in_patient_deductible, #in_patient_amount_met, #in_family_deductible, #in_family_amount_met')
@@ -338,10 +338,10 @@ $(function () {
 
   // Fields that should trigger calculations
   $('#out_of_network_percentage, #in_network_percentage, #patient_deductible, #patient_amount_met').bind('mouseup keyup', function () {
-    calc_expected_payments()
+    calcExpectedPayments()
   })
   $("[name='has_out_of_network_benefits'], [name='has_in_network_benefits'], [name='network_benefits'], [name='is_hmo'], [name='out_of_pocket_met']").bind('change', function () {
-    calc_expected_payments()
+    calcExpectedPayments()
   })
 
   // Fields where the user shouldn't be able to gain focus
@@ -362,7 +362,7 @@ $(function () {
       $('.covered-row').show()
 
       // update expected payments
-      calc_expected_payments()
+      calcExpectedPayments()
     } else {
       // hide all the "covered-row" elements
       $('.covered-row').hide()

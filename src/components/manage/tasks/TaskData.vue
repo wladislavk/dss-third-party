@@ -5,7 +5,6 @@
             <task-element
                 v-for="task in tasks"
                 v-bind:task="task"
-                v-bind:task-code="taskCode"
                 v-bind:due-date="dueDate"
                 v-bind:is-patient="isPatient"
             >
@@ -14,6 +13,6 @@
     </div>
 </template>
 
-<script src="./TaskData.js"></script>
+<script src="TaskData.js"></script>
 
 <style src="../../assets/css/manage/task-data.css" scoped></style>

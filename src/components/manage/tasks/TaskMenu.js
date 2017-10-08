@@ -1,5 +1,5 @@
-import { TASK_TYPES } from '../../constants'
-import symbols from '../../symbols'
+import { TASK_TYPES } from '../../../constants'
+import symbols from '../../../symbols'
 import TaskDataComponent from './TaskData.vue'
 
 export default {

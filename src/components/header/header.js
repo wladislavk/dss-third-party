@@ -4,8 +4,8 @@ import http from '../../services/http'
 import logoutMixin from '../../modules/logout/LogoutMixin'
 import logoutTimerMixin from '../../modules/logout/LogoutTimerMixin'
 import modal from '../modal/modal.vue'
-import PatientTaskMenuComponent from './PatientTaskMenu.vue'
-import TaskMenuComponent from './TaskMenu.vue'
+import PatientTaskMenuComponent from '../manage/tasks/PatientTaskMenu.vue'
+import TaskMenuComponent from '../manage/tasks/TaskMenu.vue'
 
 // include static libs
 require('../../../static/third-party/dynamic-drive-dhtml/ddlevelsmenu.js')

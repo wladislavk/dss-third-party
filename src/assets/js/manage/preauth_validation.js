@@ -4,9 +4,7 @@ function validateDate (dtControl) {
   const input = document.getElementById(dtControl)
   const validformat = /^\d{1,2}\/\d{1,2}\/\d{4}$/ // Basic check for format validity
   let returnval = false
-  if (!validformat.test(input.value)) {
-    alert('Invalid Day, Month, or Year range detected. Please correct. Must be xx/xx/xxxx')
-  } else { // Detailed check for valid date ranges
+  if (validformat.test(input.value)) {
     const monthfield = input.value.split('/')[0]
     const dayfield = input.value.split('/')[1]
     const yearfield = input.value.split('/')[2]
@@ -16,6 +14,8 @@ function validateDate (dtControl) {
     } else {
       returnval = true
     }
+  } else { // Detailed check for valid date ranges
+    alert('Invalid Day, Month, or Year range detected. Please correct. Must be xx/xx/xxxx')
   }
 
   if (!validformat.test(input.value)) {

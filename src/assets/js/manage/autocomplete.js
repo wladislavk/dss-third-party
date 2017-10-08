@@ -5,7 +5,7 @@ let selectionref = 1
 let selectedrefUrl = ''
 let searchrefVal = '' // global variable to hold the last valid search string
 
-function setup_autocomplete (inField, hint, idField, source, file, hinttype, pid) {
+function setupAutocomplete (inField, hint, idField, source, file, hinttype, pid) {
   $('#' + inField).keyup(function (e) {
     $('#' + idField).val('')
     if (source !== '') {
@@ -38,7 +38,7 @@ function sendValueRef (partialName, inField, hint, idField, source, file, hintty
         $('.no_matches').remove()
         const template = $('#' + hint + ' ul .template')
         newLi = template.clone(true).removeClass('template').addClass('no_matches')
-        template_list_ref(newLi, 'No Matches')
+        templateListRef(newLi, 'No Matches')
           .appendTo('#' + hint + ' ul')
           .fadeIn()
         let label
@@ -52,7 +52,7 @@ function sendValueRef (partialName, inField, hint, idField, source, file, hintty
         if (hinttype !== 'eligibility' && hinttype !== 'ins_payer') {
           newLi = template.clone(true).removeClass('template').addClass('create_new')
             .attr('onclick', 'loadPopupRefer(\'add_contact.php?addtopat=' + pid + '&from=add_patient&in_field=' + inField + '&id_field=' + idField + '&search=' + (partialName.replace(/'/g, '\\\'')) + '\')')
-          template_list_ref(newLi, 'Add ' + label + ' with this name&#8230;')
+          templateListRef(newLi, 'Add ' + label + ' with this name&#8230;')
             .appendTo('#' + hint + ' ul')
             .fadeIn()
         }
@@ -83,7 +83,7 @@ function sendValueRef (partialName, inField, hint, idField, source, file, hintty
                   .data('rowsource', data[i].id)
                   .attr('onclick', "update_referredby('" + inField + "','" + (name.replace(/'/g, "\\'")) + "', '" + idField + "', '" + data[i].id + "', '" + source + "', '" + data[i].source + "','" + hint + "')")
               }
-              template_list_ref(newLi, name)
+              templateListRef(newLi, name)
                 .appendTo('#' + hint + ' ul')
                 .fadeIn()
             }
@@ -95,12 +95,12 @@ function sendValueRef (partialName, inField, hint, idField, source, file, hintty
   )
 }
 
-function template_list_ref (li, val) {
+function templateListRef (li, val) {
   li.html(val)
   return li
 }
 
-function update_referredby (inField, name, idField, id, source, t, hint) {
+function updateReferredby (inField, name, idField, id, source, t, hint) {
   $('#' + inField).val(name)
   $('#' + idField).val(id)
   if (source !== '') {

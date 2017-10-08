@@ -54,6 +54,6 @@
     </div>
 </template>
 
-<script src="./TaskMenu.js"></script>
+<script src="TaskMenu.js"></script>
 
 <style src="../../assets/css/manage/task-menu.css" scoped></style>

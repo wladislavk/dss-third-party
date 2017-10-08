@@ -1,6 +1,6 @@
 import $ from 'jquery'
 
-function reset_interval () {
+function resetInterval () {
 
 }
 

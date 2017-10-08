@@ -40,6 +40,6 @@
     </div>
 </template>
 
-<script src="./PatientTaskMenu.js"></script>
+<script src="PatientTaskMenu.js"></script>
 
-<style src="../../assets/css/manage/task.css" scoped></style>
+<style src="../../assets/css/manage/task-menu.css" scoped></style>

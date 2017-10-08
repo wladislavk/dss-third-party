@@ -1,16 +1,13 @@
-import alerter from '../../services/alerter'
-import endpoints from '../../endpoints'
-import http from '../../services/http'
-import symbols from '../../symbols'
+import alerter from '../../../services/alerter'
+import endpoints from '../../../endpoints'
+import http from '../../../services/http'
+import symbols from '../../../symbols'
+import { LEGACY_URL } from '../../../constants'
 
 export default {
   props: {
     task: {
       type: Object,
-      required: true
-    },
-    taskCode: {
-      type: String,
       required: true
     },
     dueDate: {
@@ -24,6 +21,7 @@ export default {
   },
   data () {
     return {
+      legacyUrl: LEGACY_URL,
       isVisible: false
     }
   },
@@ -34,11 +32,21 @@ export default {
     onMouseLeaveTaskItem () {
       this.isVisible = false
     },
-    onClickTaskStatus () {
+    onClickTaskStatus (event) {
+      if (!event.target.checked) {
+        // normally, component should not exist at this point but these lines are needed for
+        // handling non-standard behavior and testing
+        event.target.checked = true
+        return
+      }
+      const checkbox = event.target
       this.updateTaskToActive().then(() => {
         this.removeItemFromTaskList()
+        // component should be destroyed as a result of re-computing tasks on parent
       }).catch((response) => {
-        console.error('updateTaskToActive [status]: ', response.status)
+        console.error('updateTaskToActive [status]: ' + response.response.status)
+        // allow to try again; preventDefault() cannot be used because of async
+        checkbox.checked = false
       })
     },
     onClickDeleteTask () {
@@ -46,14 +54,11 @@ export default {
       if (!alerter.isConfirmed(confirmText)) {
         return
       }
-      this.deleteTask().then(() => {
+      http.delete(endpoints.tasks.destroy + '/' + this.task.id).then(() => {
         this.removeItemFromTaskList()
       }).catch((response) => {
-        console.error('deleteTask [status]: ', response.status)
+        console.error('deleteTask [status]: ' + response.response.status)
       })
-    },
-    deleteTask () {
-      return http.delete(endpoints.tasks.destroy + '/' + this.task.id)
     },
     updateTaskToActive () {
       const data = {

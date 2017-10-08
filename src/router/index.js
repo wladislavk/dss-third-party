@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import VueMoment from 'vue-moment'
 import MintUI from 'mint-ui'
 import axios from 'axios'
 import ManageTemplate from 'components/header/header.vue'
@@ -28,7 +27,6 @@ import ScreenerHst from '../components/screener/sections/ScreenerHst.vue'
 import PageNotFound from 'components/services/pageNotFound.vue'
 
 Vue.use(Router)
-Vue.use(VueMoment)
 Vue.use(MintUI)
 
 Vue.component('manage-template', ManageTemplate)

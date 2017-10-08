@@ -8,6 +8,7 @@ export default {
     doctorName: 'DOCTOR_NAME',
     epworthOptions: 'EPWORTH_OPTIONS',
     epworthProps: 'EPWORTH_PROPS',
+    popupEdit: 'POPUP_EDIT',
     screenerId: 'SCREENER_ID',
     screenerToken: 'SCREENER_TOKEN',
     screenerWeights: 'SCREENER_WEIGHTS',

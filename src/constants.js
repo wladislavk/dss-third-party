@@ -205,3 +205,5 @@ export const TASK_TYPES = {
   LATER: 'later',
   FUTURE: 'future'
 }
+
+export const LEGACY_URL = 'http://legacy/'

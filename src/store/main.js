@@ -3,11 +3,11 @@ import symbols from '../symbols'
 
 export default {
   state: {
-    popupEdit: false
+    [symbols.state.popupEdit]: false
   },
   mutations: {
     [symbols.mutations.popupEdit] (state, { value }) {
-      state.popupEdit = value
+      state[symbols.state.popupEdit] = value
     }
   },
   actions: {

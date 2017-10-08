@@ -127,6 +127,7 @@ let ddlevelsmenu = {
     } else if (action === 'add' && !needle.test(el.className)) {
       el.className += ' ' + targetclass
     }
+    return null
   },
 
   addshimmy: function (target) {

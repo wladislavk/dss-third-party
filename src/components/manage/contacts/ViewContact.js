@@ -1,3 +1,4 @@
+import { LEGACY_URL } from '../../../constants'
 import { mapGetters } from 'vuex'
 import symbols from '../../../symbols'
 
@@ -5,6 +6,11 @@ export default {
   props: [
     'contactid'
   ],
+  data () {
+    return {
+      legacyUrl: LEGACY_URL
+    }
+  },
   computed: {
     ...mapGetters({
       filteredContact: symbols.getters.filteredContact

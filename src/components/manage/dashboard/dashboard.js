@@ -1,7 +1,7 @@
 import endpoints from '../../../endpoints'
 import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
-import taskMixin from '../../../modules/tasks/TaskMixin'
+import DashboardTaskMenuComponent from '../tasks/DashboardTaskMenu.vue'
 
 // include static libs
 require('../../../../static/third-party/sucker-tree-horizontal-menu/sucker_tree_home.js')
@@ -35,12 +35,6 @@ export default {
         usePaymentReports: false,
         useLetters: false,
         pendingLetters: [],
-        overdueTasks: [],
-        todayTasks: [],
-        tomorrowTasks: [],
-        thisWeekTasks: [],
-        nextWeekTasks: [],
-        laterTasks: [],
         user: {},
         docInfo: {},
         courseStaff: {
@@ -52,7 +46,10 @@ export default {
       memos: []
     }
   },
-  mixins: [taskMixin, handlerMixin],
+  components: {
+    dashboardTaskMenu: DashboardTaskMenuComponent
+  },
+  mixins: [handlerMixin],
   watch: {
     'headerInfo.docInfo.homepage': 'redirectToIndex2',
     'headerInfo.user.id': function () {
@@ -87,27 +84,27 @@ export default {
     window.eventHub.$off('update-header-info', this.onUpdateHeaderInfo)
   },
   computed: {
-    notificationsNumber: function () {
+    notificationsNumber: () => {
       return +this.headerInfo.patientContactsNumber +
         +this.headerInfo.patientInsurancesNumber +
         +this.headerInfo.patientChangesNumber
     },
-    isUserDoctor: function () {
+    isUserDoctor: () => {
       return (this.headerInfo.user.docid === this.headerInfo.user.id)
     },
-    showInvoices: function () {
+    showInvoices: () => {
       return (this.headerInfo.user.docid === this.headerInfo.user.id || this.headerInfo.docInfo.manage_staff === 1)
     },
-    showTransactionCode: function () {
+    showTransactionCode: () => {
       return (this.headerInfo.user.id === this.headerInfo.user.docid || this.headerInfo.user.manage_staff === 1)
     },
-    showEnrollments: function () {
+    showEnrollments: () => {
       return (this.headerInfo.docInfo.use_eligible_api === 1)
     },
-    showDSSFranchiseOperationsManual: function () {
-      return (this.headerInfo.user.user_type === window.constants.DSS_USER_TYPE_FRANCHISEE)
+    showDSSFranchiseOperationsManual: () => {
+      return (this.headerInfo.user.user_type === this.constants.DSS_USER_TYPE_FRANCHISEE)
     },
-    showGetCE: function () {
+    showGetCE: () => {
       return (
         (this.isUserDoctor && this.headerInfo.docInfo.use_course === 1) ||
         (
@@ -116,11 +113,11 @@ export default {
         )
       )
     },
-    showUnmailedLettersNumber: function () {
+    showUnmailedLettersNumber: () => {
       return (this.headerInfo.useLetters && this.headerInfo.user.user_type === window.constants.DSS_USER_TYPE_SOFTWARE)
     },
-    showUnmailedClaims: function () {
-      return (this.headerInfo.user.user_type === window.constants.DSS_USER_TYPE_SOFTWARE)
+    showUnmailedClaims: () => {
+      return (this.headerInfo.user.user_type === this.constants.DSS_USER_TYPE_SOFTWARE)
     }
   },
   methods: {
@@ -159,6 +156,7 @@ export default {
           window.swal('Oops...', 'Wrong password!', 'error')
           return false
         }
+        return true
       })
     },
     onClickDataImport: function () {

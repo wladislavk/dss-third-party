@@ -152,16 +152,16 @@
       clearTimeout(mouseLeaveTimeout)
       mouseLeaveTimeout = false
 
-      if (typeof e.changedTouches !== 'undefined') {
-        newX = Math.floor(e.changedTouches[0].pageX - offset.left)
-        newY = Math.floor(e.changedTouches[0].pageY - offset.top)
-      } else {
+      if (typeof e.changedTouches === 'undefined') {
         newX = Math.floor(e.pageX - offset.left)
         newY = Math.floor(e.pageY - offset.top)
+      } else {
+        newX = Math.floor(e.changedTouches[0].pageX - offset.left)
+        newY = Math.floor(e.changedTouches[0].pageY - offset.top)
       }
 
       if (previous.x === newX && previous.y === newY) {
-        return true
+        return
       }
 
       if (previous.x === null) {
@@ -234,6 +234,7 @@
       canvasContext.lineTo(element.width - settings.lineMargin, settings.lineTop)
       canvasContext.stroke()
       canvasContext.closePath()
+      return true
     }
 
     /**
@@ -356,6 +357,7 @@
           this.ontouchstart = null
         })
       }
+      return true
     }
 
     /**
@@ -762,13 +764,13 @@
     let api = null
 
     this.each(function () {
-      if (!$.data(this, 'plugin-signaturePad')) {
+      if ($.data(this, 'plugin-signaturePad')) {
+        api = $.data(this, 'plugin-signaturePad')
+        api.updateOptions(options)
+      } else {
         api = new SignaturePad(this, options)
         api.init()
         $.data(this, 'plugin-signaturePad', api)
-      } else {
-        api = $.data(this, 'plugin-signaturePad')
-        api.updateOptions(options)
       }
     })
 

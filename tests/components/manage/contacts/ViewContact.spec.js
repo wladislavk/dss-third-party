@@ -69,7 +69,7 @@ describe('ViewContact', () => {
       expect(getSpan(10)).toBe('foo@bar.com')
       expect(getSpan(11)).toBe('ddd')
       const link = vm.$el.querySelector('div#view-contact > div > a')
-      expect(link.getAttribute('href')).toBe('#/view_fcontact.php?ed=1')
+      expect(link.getAttribute('href')).toBe('http://legacy/view_fcontact.php?ed=1')
       expect(link.textContent).toBe('View Full')
       done()
     })
@@ -88,7 +88,7 @@ describe('ViewContact', () => {
 
     moxios.wait(() => {
       const link = vm.$el.querySelector('div#view-contact > div > a')
-      expect(link.getAttribute('href')).toBe('#/add_contact.php?ed=1')
+      expect(link.getAttribute('href')).toBe('http://legacy/add_contact.php?ed=1')
       expect(link.textContent).toBe('Edit')
       done()
     })

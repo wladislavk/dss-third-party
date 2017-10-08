@@ -50,6 +50,7 @@ class TasksApiTest extends ApiTestCase
         $this->assertResponseOk();
         $this->assertEquals(3, count($this->getResponseData()));
         $this->assertEquals(82, $this->getResponseData()[0]['id']);
+        $this->assertEquals('2014-01-10 00:00:00', $this->getResponseData()[0]['due_date']);
         $this->assertEquals(94, $this->getResponseData()[1]['id']);
         $this->assertEquals(97, $this->getResponseData()[2]['id']);
         $this->assertEquals(TaskRetriever::OVERDUE, $this->getResponseData()[0]['type']);

@@ -1,7 +1,7 @@
 <template>
     <div id="task_menu" class="task_menu task_menu_general">
         <span
-            v-on:mouseover="showTaskList = true"
+            v-on:mouseenter="showTaskList = true"
             v-on:mouseleave="showTaskList = false"
             id="task_header"
         >
@@ -54,6 +54,6 @@
     </div>
 </template>
 
-<script src="TaskMenu.js"></script>
+<script src="./TaskMenu.js"></script>
 
-<style src="../../assets/css/manage/task-menu.css" scoped></style>
+<style src="../../../assets/css/manage/task-menu.css" scoped></style>

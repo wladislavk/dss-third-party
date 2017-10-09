@@ -69,8 +69,8 @@ export default {
         ErrorHandler.methods.handleErrors('getTasks', response)
       })
     },
-    [symbols.actions.retrieveTasksForPatient] ({ commit }) {
-      http.get(endpoints.tasks.indexForPatient).then((response) => {
+    [symbols.actions.retrieveTasksForPatient] ({ commit }, patientId) {
+      http.get(endpoints.tasks.indexForPatient + '/' + patientId).then((response) => {
         const data = response.data.data
         commit(symbols.mutations.setTasksForPatient, data)
       }).catch((response) => {

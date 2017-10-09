@@ -5,9 +5,16 @@ import http from '../../src/services/http'
 import sinon from 'sinon'
 import symbols from '../../src/symbols'
 
-const sandbox = sinon.createSandbox()
-
 describe('Contacts Module', () => {
+  beforeEach(function () {
+    this.sandbox = sinon.createSandbox()
+    this.testCase = new TestCase()
+  })
+
+  afterEach(function () {
+    this.sandbox.restore()
+  })
+
   describe('filteredContact getter', () => {
     it('should modify phone fields', function () {
       const state = {
@@ -46,7 +53,7 @@ describe('Contacts Module', () => {
       }
 
       this.postData = []
-      sandbox.stub(http, 'post').callsFake((path, payload) => {
+      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
         this.postData.push({
           path: path,
           payload: payload
@@ -59,10 +66,6 @@ describe('Contacts Module', () => {
         const error = new Error({ status: 404 })
         return Promise.reject(error)
       })
-    })
-
-    afterEach(function () {
-      sandbox.restore()
     })
 
     it('should set contact if promise resolves', function (done) {

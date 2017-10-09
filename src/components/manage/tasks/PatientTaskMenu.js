@@ -33,5 +33,13 @@ export default {
   },
   components: {
     taskData: TaskDataComponent
+  },
+  mounted () {
+    this.$store.dispatch(symbols.actions.retrieveTasksForPatient, this.patientId)
+  },
+  watch: {
+    patientId: function (value) {
+      this.$store.dispatch(symbols.actions.retrieveTasksForPatient, value)
+    }
   }
 }

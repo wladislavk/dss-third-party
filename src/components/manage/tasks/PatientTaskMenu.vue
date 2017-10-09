@@ -1,12 +1,12 @@
 <template>
     <div
+        v-on:mouseenter="showTaskList = true"
         v-on:mouseleave="showTaskList = false"
         v-show="tasksNumber"
         class="task_menu task_menu_patient"
         id="pat_task_menu"
     >
         <span
-            v-on:mouseover="showTaskList = true"
             id="pat_task_header"
             class="task_header_patient"
         >Tasks({{ tasksNumber }})</span>
@@ -40,6 +40,6 @@
     </div>
 </template>
 
-<script src="PatientTaskMenu.js"></script>
+<script src="./PatientTaskMenu.js"></script>
 
-<style src="../../assets/css/manage/task-menu.css" scoped></style>
+<style src="../../../assets/css/manage/task-menu.css" scoped></style>

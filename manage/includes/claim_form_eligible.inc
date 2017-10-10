@@ -6,7 +6,7 @@ require_once __DIR__ . '/../admin/includes/claim-status-switcher.inc';
 
 $isHistoricView = !empty($isHistoricView) || isset($_GET['history_id']);
 $historyId = intval($_GET['history_id']);
-$isDebug = config('app.debug');
+$isDebug = config('app.debug') && config('app.debugClaims');
 
 $eligiblePublicKey = $isDebug ? '-a7xWM5Kn7V9sciZtT4zV92dlpp_RWvnpHS-' : 'E1q20FOFf0-DcsrnQdltikaQrVI4nwwfhgXZ';
 

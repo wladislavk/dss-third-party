@@ -27,8 +27,14 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 docker build -t ds3-vue --build-arg NODE_ENV=development .
 
 # run a container, mount sources directory (use absolute path at Windows)
-docker run --name ds3-client -d -p 8080:8080 -v src:/opt/app/src ds3-vue
+docker run --privileged --name ds3-client -d -p 8080:8080 -p 9222:9222 -v src:/opt/app/src ds3-vue
 
 # cleanup
 docker stop ds3-client && docker rm ds3-client
+```
+
+## Chromium Usage
+```
+xpra start :99
+DISPLAY=:99 chromium-browser --headless --disable-gpu --remote-debugging-port=9222 https://www.chromestatus.com
 ```

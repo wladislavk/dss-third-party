@@ -398,12 +398,12 @@ function hstQuery(array $options, array $statuses = [])
             company.name AS company_name,
             doctor.userid AS doctor_id,
             CONCAT(doctor.last_name, ', ', doctor.first_name) AS doctor_name,
-            $interval_0_30 AS '0-30',
-            $interval_30_60 AS '31-60',
-            $interval_60_90 AS '61-90',
-            $interval_90_0 AS '90+',
-            $customInterval AS 'custom_range',
-            SUM(IF(hst.id, 1, 0)) AS 'lifetime'
+            $interval_0_30 AS `0-30`,
+            $interval_30_60 AS `31-60`,
+            $interval_60_90 AS `61-90`,
+            $interval_90_0 AS `90+`,
+            $customInterval AS `custom_range`,
+            SUM(IF(hst.id, 1, 0)) AS `lifetime`
         FROM dental_users doctor
             LEFT JOIN dental_hst hst ON hst.doc_id = doctor.userid
             LEFT JOIN companies company ON company.id = hst.company_id
@@ -584,25 +584,24 @@ function hstSortBy($sortBy, $direction, array $customLimit = []) {
         return "ORDER BY $orderUser, $orderCompany";
     }
 
-    if ($sortBy === 'lifetime') {
-        return "ORDER BY SUM(IF(hst.id, 1, 0)) $direction, $orderCompany, $orderUser";
+    if ($sortBy === 'lifetime' || $sortBy === 'custom_range') {
+        return "ORDER BY `$sortBy` $direction, $orderCompany, $orderUser";
     }
 
-    if ($sortBy === 'custom_range') {
-        $interval = hstInterval($customLimit['lower'], $customLimit['upper']);
-        return "ORDER BY $interval $direction, $orderCompany, $orderUser";
-    }
+    if (in_array($sortBy, ['0', '30', '60'], true)) {
+        $limit = (int)$sortBy;
+        $offset = 1;
 
-    if (in_array($sortBy, ['0', '30', '60', '90'])) {
-        $lowerLimit = (int)$sortBy;
-        $upperLimit = $lowerLimit + 30;
-
-        if ($upperLimit > 90) {
-            $upperLimit = 0;
+        if ($limit === 0) {
+            $offset = 0;
         }
 
-        $interval = hstInterval($lowerLimit, $upperLimit);
-        return "ORDER BY $interval $direction, $orderCompany, $orderUser";
+        $interval = ($limit + $offset) . '-' . ($limit + 30);
+        return "ORDER BY `$interval` $direction, $orderCompany, $orderUser";
+    }
+
+    if ($sortBy === '90') {
+        return "ORDER BY `90+` $direction, $orderCompany, $orderUser";
     }
 
     return "ORDER BY $orderCompany, $orderUser";

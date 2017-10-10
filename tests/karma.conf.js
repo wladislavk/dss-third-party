@@ -27,7 +27,7 @@ module.exports = function (config) {
 
     customLaunchers: {
       ChromeNoSandboxHeadless: {
-        base: 'Chrome',
+        base: 'Chromium',
         flags: [
           '--no-sandbox',
           // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md

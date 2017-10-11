@@ -24,7 +24,7 @@ body, .login_body {
 }
 #login_container h1 {
   text-indent: -99999px;
-  background: url(~assets/images/login_logo.gif) no-repeat 0 0;
+  background: url(../../images/login_logo.gif) no-repeat 0 0;
   height: 278px;
   width: 343px;
   display: block;

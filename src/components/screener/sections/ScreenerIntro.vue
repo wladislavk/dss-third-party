@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="dp50">
-                <img src="~assets/images/sleeping_couple.png" style="float:right;" />
+                <img src="../../../assets/images/sleeping_couple.png" style="float:right;" />
                 <br />
                 <div class="cf">
                     <a href="#" id="sect1_next" class="fr next btn btn_large btn_d" v-bind:class="{disabled: nextDisabled}" v-on:click.prevent="onSubmit">Proceed &raquo;</a>

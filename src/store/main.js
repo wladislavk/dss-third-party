@@ -17,6 +17,7 @@ export default {
       })
     },
     [symbols.actions.handleErrors] ({title, response}) {
+      // @todo: use wrappers to make this action testable
       // token expired
       if (response.status === 401) {
         window.storage.remove('token')

@@ -230,4 +230,3 @@
 <style src="../../../assets/css/manage/homesuckertreemenu.css" scoped></style>
 <style src="../../../assets/css/manage/dashboard-notifications.css" scoped></style>
 <style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/task.css" scoped></style>

@@ -2134,10 +2134,6 @@
 <script src="./editingPatients.js"></script>
 
 <style src="../../../../assets/css/manage/admin.css" scoped></style>
-<!-- <style src="../../../../../assets/css/manage/task.css" scoped></style> -->
-<!-- <style src="../../../../../assets/css/manage/notifications.css" scoped></style> -->
 <style src="../../../../assets/css/manage/search-hints.css" scoped></style>
-<!-- <style src="../../../../../assets/css/manage/top.css" scoped></style> -->
-<!-- <style src="../../../../../assets/css/manage/letter-form.css" scoped></style> -->
 <style src="../../../../assets/css/manage/form.css" scoped></style>
 <style src="../../../../assets/css/manage/add_patient.css" scoped></style>

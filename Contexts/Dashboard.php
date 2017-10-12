@@ -146,27 +146,6 @@ class Dashboard extends BaseContext
     }
 
     /**
-     * @Then I see checkboxes with these tasks under :section section:
-     *
-     * @param string $section
-     * @param TableNode $table
-     */
-    public function testTasks($section, TableNode $table)
-    {
-        $taskMenu = $this->findAllCss('div.task_menu')[1];
-        Assert::assertNotNull($this->findElementWithText('h4', $section, $taskMenu));
-        $taskList = $this->findAllCss('ul.task_od_list li div:last-child');
-        $taskTexts = [];
-        foreach ($taskList as $task) {
-            $taskTexts[] = trim($task->getText());
-        }
-        $taskNames = array_column($table->getHash(), 'task');
-        foreach ($taskNames as $taskName) {
-            Assert::assertNotFalse(array_search($taskName, $taskTexts));
-        }
-    }
-
-    /**
      * @Then I see these messages:
      *
      * @param TableNode $table

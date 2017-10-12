@@ -141,6 +141,14 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I close the iframe
+     */
+    public function closeIFrame()
+    {
+        // @todo: add method body
+    }
+
+    /**
      * @Then I see :link link
      *
      * @param string $link
@@ -159,11 +167,11 @@ class Main extends BaseContext
     {
         $this->wait(self::MEDIUM_WAIT_TIME);
         $exists = false;
-        $buttonElement = $this->findElementWithText('button', $button);
+        $buttonElement = $this->findElementWithText('button', $button, null, true);
         if ($buttonElement) {
             $exists = true;
         } else {
-            $linkElement = $this->findElementWithText('a', $button);
+            $linkElement = $this->findElementWithText('a', $button, null, true);
             if ($linkElement) {
                 $exists = true;
             }
@@ -298,5 +306,15 @@ class Main extends BaseContext
     public function testBrowserAlert($text)
     {
         $this->testBrowserConfirm($text);
+    }
+
+    /**
+     * @Then I see :header table
+     *
+     * @param string $header
+     */
+    public function testTableHeader($header)
+    {
+        // @todo: add method body
     }
 }

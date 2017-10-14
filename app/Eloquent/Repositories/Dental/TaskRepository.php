@@ -216,4 +216,15 @@ class TaskRepository extends AbstractRepository
                     ->orWhereNull('dt.status');
             });
     }
+
+    /**
+     * @param int $id
+     */
+    public function deleteTask($id)
+    {
+        /** @var Task $task */
+        $task = $this->find($id);
+        $task->status = Task::STATUS_DELETED;
+        $task->save();
+    }
 }

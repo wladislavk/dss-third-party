@@ -182,10 +182,14 @@ class TasksController extends BaseRestController
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @param int $id
+     * @return JsonResponse
      */
     public function destroy($id)
     {
-        return parent::destroy($id);
+        $this->repository->deleteTask($id);
+        return ApiResponse::responseOk('Resource deleted');
     }
 
     // @todo: these methods are possibly obsolete

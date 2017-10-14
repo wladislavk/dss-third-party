@@ -152,9 +152,9 @@ class EnrollmentApiTest extends BaseApiTestCase
             'names' => [
                 'Medicare Part B of Maryland',
                 'Medicare of Maryland',
+                'Medicare of Maryland Jurisdiction A',
             ],
             'created_at' => '2014-07-20T07:17:21Z',
-            'updated_at' => '2017-01-03T21:32:25Z',
             'supported_endpoints' => [
                 [
                     'endpoint' => 'coverage',
@@ -173,6 +173,7 @@ class EnrollmentApiTest extends BaseApiTestCase
                 ],
             ],
         ];
+        unset($result[0]['updated_at']);
         $this->assertEquals($expectedFirst, $result[0]);
     }
 
@@ -240,9 +241,9 @@ class EnrollmentApiTest extends BaseApiTestCase
             'names' => [
                 'Medicare Part B of Maryland',
                 'Medicare of Maryland',
+                'Medicare of Maryland Jurisdiction A',
             ],
             'created_at' => '2014-07-20T07:17:21Z',
-            'updated_at' => '2017-01-03T21:32:25Z',
             'supported_endpoints' => [
                 [
                     'endpoint' => 'coverage',
@@ -261,7 +262,9 @@ class EnrollmentApiTest extends BaseApiTestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
+        $first = $this->getResponseData()[0];
+        unset($first['updated_at']);
+        $this->assertEquals($expectedFirst, $first);
     }
 
     public function tearDown()

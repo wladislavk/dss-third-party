@@ -1,5 +1,6 @@
 import endpoints from '../../endpoints'
 import http from '../../services/http'
+import symbols from '../../symbols'
 
 export default {
   data () {
@@ -68,7 +69,8 @@ export default {
 
         this.waitingForResponse = true
 
-        http.post(endpoints.users.checkLogout).then(function (response) {
+        http.token = this.$store.state.main[symbols.state.mainToken]
+        http.post(endpoints.users.checkLogout).then((response) => {
           const data = response.data
 
           const newLast = this.currentTime() + (data.resetTime || 0) - this.logoutWait
@@ -81,7 +83,7 @@ export default {
           }
 
           this.waitingForResponse = false
-        }).catch(function (response) {
+        }).catch((response) => {
           this.handleErrors('checkLogout', response)
         })
       }

@@ -3,9 +3,13 @@ import symbols from '../symbols'
 
 export default {
   state: {
+    [symbols.state.mainToken]: '',
     [symbols.state.popupEdit]: false
   },
   mutations: {
+    [symbols.mutations.mainToken] (state, token) {
+      state[symbols.state.mainToken] = token
+    },
     [symbols.mutations.popupEdit] (state, { value }) {
       state[symbols.state.popupEdit] = value
     }

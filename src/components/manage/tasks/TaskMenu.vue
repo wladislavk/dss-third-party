@@ -1,10 +1,11 @@
 <template>
-    <div id="task_menu" class="task_menu task_menu_general">
-        <span
-            v-on:mouseenter="showTaskList = true"
-            v-on:mouseleave="showTaskList = false"
-            id="task_header"
-        >
+    <div
+        id="task_menu"
+        class="task_menu task_menu_general"
+        v-on:mouseenter="showTaskList = true"
+        v-on:mouseleave="showTaskList = false"
+    >
+        <span id="task_header">
             My Tasks (<span id="task_count">{{ tasksNumber }}</span>)
         </span>
         <div v-show="showTaskList" id="task_list" class="task_list_general">
@@ -56,4 +57,5 @@
 
 <script src="./TaskMenu.js"></script>
 
+<style src="../../../assets/css/manage/admin.css" scoped></style>
 <style src="../../../assets/css/manage/task-menu.css" scoped></style>

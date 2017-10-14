@@ -10,13 +10,13 @@
                     <div class="suckertreemenu2">
                         <ul id="topmenu2">
                             <li>
-                                <router-link to="/manage/index"> Notifications({{ notificationsNumber || 0 }})</router-link>
+                                <router-link v-bind:to="{name: 'dashboard'}"> Notifications({{ notificationsNumber || 0 }})</router-link>
                             </li>
                             <li id="header_support" v-bind:class="{'pending': supportTicketsNumber}">
                                 <a v-bind:href="legacyUrl + 'support.php'">Support {{ (supportTicketsNumber > 0) ? ('(' + supportTicketsNumber + ')'): '' }}</a>
                             </li>
                             <li>
-                                <a href="#" v-on:click.prevent="logout">Sign Out</a>
+                                <a href="#" v-on:click.prevent="logout()">Sign Out</a>
                             </li>
                         </ul>
                     </div>
@@ -60,7 +60,7 @@
                                 v-bind:style="headerInfo.patientName.length > 20 ? 'font-size:14px' : ''"
                             >
                                 <div id="patient_name_inner">
-                                    <img v-if="headerInfo.medicare" src="~assets/images/medicare_logo_small.png" />
+                                    <img v-if="headerInfo.medicare" src="../../assets/images/medicare_logo_small.png" />
                                     <span v-bind:class="{ 'medicare_name': headerInfo.medicare, 'name': !headerInfo.medicare }">
                                         {{ headerInfo.patientName }}
                                         <a v-if="headerInfo.displayAlert && headerInfo.alertText.length > 0" href="#" :title="'Notes: ' + headerInfo.alertText" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>

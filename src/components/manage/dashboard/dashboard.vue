@@ -1,5 +1,6 @@
 <template>
     <div>
+        <header-component></header-component>
         <table id="dashboard">
             <tr>
                 <td valign="top" style="border-right:1px solid #00457c;width:980px;">

@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import symbols from '../../../symbols'
 
 const hasVB = false
 
@@ -413,12 +414,15 @@ function sendValue (searchTerm, $reference) {
   }
 
   searchTimeout = setTimeout(function () {
+    const token = this.$store.state.main[symbols.state.mainToken]
     searchRequest = $.ajax({
       type: 'post',
       dataType: 'json',
       // @todo: this endpoint does not exist
       url: window.config.API_PATH + 'patients/list',
-      headers: {'Authorization': 'Bearer ' + window.storage.get('token')},
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
       data: { partial_name: searchTerm },
       success: function (data) {
         handleResults(data.data, $reference)

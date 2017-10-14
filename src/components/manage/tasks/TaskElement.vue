@@ -11,6 +11,7 @@
         <input
             v-on:click="onClickTaskStatus($event)"
             type="checkbox"
+            v-bind:id="'task_checkbox_' + task.id"
             v-bind:class="'task_status' + (isPatient ? '' : ' task_status_general')"
             v-bind:value="task.id"
         />

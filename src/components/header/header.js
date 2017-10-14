@@ -1,11 +1,12 @@
 import endpoints from '../../endpoints'
 import handlerMixin from '../../modules/handler/HandlerMixin'
 import http from '../../services/http'
-import logoutMixin from '../../modules/logout/LogoutMixin'
 import logoutTimerMixin from '../../modules/logout/LogoutTimerMixin'
 import modal from '../modal/modal.vue'
+import symbols from '../../symbols'
 import PatientTaskMenuComponent from '../manage/tasks/PatientTaskMenu.vue'
 import TaskMenuComponent from '../manage/tasks/TaskMenu.vue'
+import { LEGACY_URL } from '../../constants'
 
 // include static libs
 require('../../../static/third-party/dynamic-drive-dhtml/ddlevelsmenu.js')
@@ -15,6 +16,7 @@ const moment = require('moment')
 export default {
   data () {
     return {
+      legacyUrl: LEGACY_URL,
       headerInfo: {
         unmailedLettersNumber: 0,
         pendingClaimsNumber: 0,
@@ -117,12 +119,14 @@ export default {
     taskMenu: TaskMenuComponent,
     patientTaskMenu: PatientTaskMenuComponent
   },
-  mixins: [logoutMixin, handlerMixin, logoutTimerMixin],
+  mixins: [handlerMixin, logoutTimerMixin],
   created () {
     window.eventHub.$on('get-header-info', this.onGetHeaderInfo)
     window.eventHub.$on('update-from-child', this.onUpdateFromChild)
 
     this.setLogoutTimer()
+    http.token = this.$store.state.main[symbols.state.mainToken]
+
     http.post(endpoints.users.current).then((response) => {
       const data = response.data.data
       if (data) {
@@ -144,12 +148,13 @@ export default {
         }
       }).then(() => {
         if (this.headerInfo.docInfo.homepage !== '1') {
+          // @todo: rewrite legacy
           // include_once 'includes/top2.htm'
         } else {
           if (this.headerInfo.user.loginid) {
             const currentPage = this.$route.query
             this.setLoginDetails(currentPage).then(() => {
-              // if success
+              // @todo: add handler
             }).catch((response) => {
               this.handleErrors('setLoginDetails', response)
             })
@@ -369,7 +374,8 @@ export default {
         })
       }
     }).then(() => {
-      this.getUserById(this.headerInfo.user.id).then((response) => {
+      const userId = this.headerInfo.user.id.replace('u_', '')
+      this.getUserById(userId).then((response) => {
         const data = response.data.data
         if (data) {
           this.$set(this.headerInfo.user, 'use_course', data.use_course)
@@ -600,6 +606,21 @@ export default {
     },
     hideWarnings: function () {
       this.showAllWarnings = false
+    },
+    logout () {
+      http.token = this.$store.state.main[symbols.state.mainToken]
+      http.post(endpoints.logout).then(() => {
+        window.swal({
+          title: '',
+          text: 'Logout Successfully!',
+          type: 'success'
+        }, () => {
+          this.$store.commit(symbols.mutations.mainToken, '')
+          this.$router.push({ name: 'login' })
+        })
+      }).catch((response) => {
+        console.error('invalidateToken [status]: ', response.status)
+      })
     }
   }
 }

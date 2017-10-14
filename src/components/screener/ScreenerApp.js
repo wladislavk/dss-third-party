@@ -5,7 +5,7 @@ import FancyboxScreenerComponent from './common/FancyboxScreener.vue'
 export default {
   data: function () {
     return {
-      currentYear: (new Date()).getFullYear(),
+      currentYear: (new Date()).getFullYear()
     }
   },
   computed: {

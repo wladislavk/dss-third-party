@@ -101,14 +101,10 @@ body, .login_body {
 .login_content a:hover { color:#00457c; }
 
 .pass_valid {
-  background-image: url(../../images/ok_ico.png);
-  background-position: 480px 13px;
-  background-repeat: no-repeat;
+  background: url(../../images/ok_ico.png) no-repeat 480px 13px;
 }
 .pass_invalid {
-  background-image: url(../../images/error_ico.png);
-  background-position: 480px 13px;
-  background-repeat: no-repeat;
+  background: url(../../images/error_ico.png) no-repeat 480px 13px;
 }
 
 .error {

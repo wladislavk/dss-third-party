@@ -57,15 +57,15 @@ describe('TaskMenu component', () => {
   it('should fire onMouseEnter and onMouseLeave', function (done) {
     const vm = this.mount()
     moxios.wait(function () {
-      const taskHeader = vm.$el.querySelector('span#task_header')
+      const taskMenu = vm.$el
       const taskList = vm.$el.querySelector('div#task_list')
       expect(taskList.style.display).toBe('none')
       const mouseEnterEvent = new Event('mouseenter')
       const mouseLeaveEvent = new Event('mouseleave')
-      taskHeader.dispatchEvent(mouseEnterEvent)
+      taskMenu.dispatchEvent(mouseEnterEvent)
       vm.$nextTick(() => {
         expect(taskList.style.display).toBe('')
-        taskHeader.dispatchEvent(mouseLeaveEvent)
+        taskMenu.dispatchEvent(mouseLeaveEvent)
         vm.$nextTick(() => {
           expect(taskList.style.display).toBe('none')
           done()

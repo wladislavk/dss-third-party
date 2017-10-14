@@ -93,6 +93,7 @@ class Dashboard extends BaseContext
      */
     public function testDashboardSection($section)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         Assert::assertNotNull($this->findElementWithText('h3', $section));
     }
 

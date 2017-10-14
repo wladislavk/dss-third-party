@@ -23,6 +23,7 @@ Feature: Show and edit tasks in dashboard and header
     Then I see "delete" button next to task "asdasdasd" in "dashboard"
     And I see "edit" button next to task "asdasdasd" in "dashboard"
     When I click "delete" button next to task "asdasdasd" in "dashboard"
+    # this line turns out to be highly volatile in legacy for no apparent reason, no problem in Vue
     Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
       | task                                        |
       | call for fu (John Drake)                    |

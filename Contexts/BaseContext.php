@@ -15,6 +15,8 @@ require_once __DIR__ . '/../config.php';
 
 abstract class BaseContext extends RawMinkContext
 {
+    const START_URL = 'http://' . SUT_HOST . '/manage';
+
     const REALLY_LONG_WAIT_TIME = 30000;
     const RATHER_LONG_WAIT_TIME = 10000;
     const LONG_WAIT_TIME = 5000;
@@ -181,7 +183,7 @@ abstract class BaseContext extends RawMinkContext
 
     protected function visitStartPage()
     {
-        $this->getCommonClient()->visit(START_URL);
+        $this->getCommonClient()->visit(self::START_URL);
     }
 
     protected function login($user, $password = '')

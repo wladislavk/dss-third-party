@@ -72,10 +72,10 @@ class Tasks extends BaseContext
                 }
                 $extra = $extraList[$index];
                 $button = $this->findCss("a:nth-child($typeIndex)", $extra);
-                $button->click();
                 if ($type == 'delete') {
                     $this->taskDeleted = $task;
                 }
+                $button->click();
                 return;
             }
         }
@@ -162,7 +162,19 @@ class Tasks extends BaseContext
      */
     public function testAddTaskFormFieldData($field, $value)
     {
-        // @todo: add method body
+        $this->wait(self::SHORT_WAIT_TIME);
+        $cells = $this->findAllCss('td.frmhead');
+
+        $realValue = '';
+        foreach ($cells as $cell) {
+            $label = $this->findCss('label', $cell);
+            if ($label && $label->getText() == $field) {
+                $input = $this->findCss('input', $cell);
+                $realValue = $input->getValue();
+                break;
+            }
+        }
+        Assert::assertEquals($value, $realValue);
     }
 
     /**

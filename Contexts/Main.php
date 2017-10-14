@@ -27,6 +27,10 @@ class Main extends BaseContext
     {
         $this->visitStartPage();
         $this->login($user);
+        if (SUT_HOST == 'vue') {
+            $this->wait(self::SHORT_WAIT_TIME);
+            return;
+        }
         $this->visitStartPage();
     }
 
@@ -74,7 +78,7 @@ class Main extends BaseContext
     public function clickButton($button)
     {
         $this->prepareAlert();
-        $buttonElement = $this->findElementWithText('button', $button);
+        $buttonElement = $this->findElementWithText('button', $button, null, true);
         if (!$buttonElement) {
             $buttonElement = $this->findElementWithText('a', $button);
         }
@@ -145,7 +149,10 @@ class Main extends BaseContext
      */
     public function closeIFrame()
     {
-        // @todo: add method body
+        $this->getCommonClient()->switchToIFrame();
+        $closeButton = $this->findCss('a#popupContactClose');
+        $closeButton->click();
+        $this->wait(self::MEDIUM_WAIT_TIME);
     }
 
     /**
@@ -315,6 +322,7 @@ class Main extends BaseContext
      */
     public function testTableHeader($header)
     {
-        // @todo: add method body
+        $spanHeader = $this->findCss('span.admin_head');
+        Assert::assertEquals($header, trim($spanHeader->getText()));
     }
 }

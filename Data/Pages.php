@@ -17,12 +17,12 @@ class Pages
         [
             'name' => 'Main',
             'url' => '/',
-            'vue' => true,
+            'vue' => false,
         ],
         [
             'name' => 'Pending Claims',
             'url' => '/login',
-            'vue' => true,
+            'vue' => false,
         ],
         [
             'name' => 'Device Selector',

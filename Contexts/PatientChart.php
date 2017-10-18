@@ -135,7 +135,7 @@ class PatientChart extends BaseContext
     }
 
     /**
-     * @Then I see :text button
+     * @Then I see send registration email button
      *
      * @param string $text
      */

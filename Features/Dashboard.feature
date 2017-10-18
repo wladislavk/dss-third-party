@@ -60,12 +60,6 @@ Feature: Dashboard
       | 0 Email Bounces      | blue  |
       | 1 Payment Reports    | red   |
     And I see "Show Active" link
-    And I see "Tasks" dashboard section
-    And I see checkboxes with these tasks under "Overdue" section:
-      | task                                        |
-      | Set up webinar for Dr. X software training. |
-      | call for fu (John Drake)                    |
-      | asdasdasd                                   |
     And I see "Messages" dashboard section
     And I see these messages:
       | message       |

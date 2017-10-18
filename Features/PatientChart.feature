@@ -69,4 +69,4 @@ Feature: Patient Chart
 #      | First Name | Susie          |
 #      | Last Name  | Test           |
 #      | Cell Phone | (941) 254-1111 |
-#    And I see "Send Registration Email" button
+#    And I see send registration email button

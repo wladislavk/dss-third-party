@@ -28,6 +28,10 @@ class Main extends BaseContext
     {
         $this->visitStartPage();
         $this->login($user);
+        if (SUT_HOST == 'vue') {
+            $this->wait(self::SHORT_WAIT_TIME);
+            return;
+        }
         $this->visitStartPage();
     }
 
@@ -86,7 +90,7 @@ class Main extends BaseContext
     public function clickButton($button)
     {
         $this->prepareAlert();
-        $buttonElement = $this->findElementWithText('button', $button);
+        $buttonElement = $this->findElementWithText('button', $button, null, true);
         if (!$buttonElement) {
             $buttonElement = $this->findElementWithText('a', $button);
         }
@@ -153,6 +157,17 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I close the iframe
+     */
+    public function closeIFrame()
+    {
+        $this->getCommonClient()->switchToIFrame();
+        $closeButton = $this->findCss('a#popupContactClose');
+        $closeButton->click();
+        $this->wait(self::MEDIUM_WAIT_TIME);
+    }
+
+    /**
      * @Then I see :link link
      *
      * @param string $link
@@ -171,11 +186,11 @@ class Main extends BaseContext
     {
         $this->wait(self::MEDIUM_WAIT_TIME);
         $exists = false;
-        $buttonElement = $this->findElementWithText('button', $button);
+        $buttonElement = $this->findElementWithText('button', $button, null, true);
         if ($buttonElement) {
             $exists = true;
         } else {
-            $linkElement = $this->findElementWithText('a', $button);
+            $linkElement = $this->findElementWithText('a', $button, null, true);
             if ($linkElement) {
                 $exists = true;
             }
@@ -310,5 +325,16 @@ class Main extends BaseContext
     public function testBrowserAlert($text)
     {
         $this->testBrowserConfirm($text);
+    }
+
+    /**
+     * @Then I see :header table
+     *
+     * @param string $header
+     */
+    public function testTableHeader($header)
+    {
+        $spanHeader = $this->findCss('span.admin_head');
+        Assert::assertEquals($header, trim($spanHeader->getText()));
     }
 }

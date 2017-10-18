@@ -264,7 +264,7 @@ class EnrollmentApiTest extends BaseApiTestCase
         ];
         $first = $this->getResponseData()[0];
         unset($first['updated_at']);
-        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
+        $this->assertEquals($expectedFirst, $first);
     }
 
     public function tearDown()

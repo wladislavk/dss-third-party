@@ -16,7 +16,7 @@ class TaskRepository extends AbstractRepository
 
     /**
      * @param int $responsibleId
-     * @return array|\Illuminate\Database\Eloquent\Collection|static[]
+     * @return Task[]|\Illuminate\Database\Eloquent\Collection|static[]
      */
     public function getAll($responsibleId)
     {
@@ -215,5 +215,16 @@ class TaskRepository extends AbstractRepository
                 $query->where('dt.status', '0')
                     ->orWhereNull('dt.status');
             });
+    }
+
+    /**
+     * @param int $id
+     */
+    public function deleteTask($id)
+    {
+        /** @var Task $task */
+        $task = $this->find($id);
+        $task->status = Task::STATUS_DELETED;
+        $task->save();
     }
 }

@@ -54,18 +54,15 @@ export default {
     this.$parent.popupEdit = false
   },
   mounted () {
-    http.post(endpoints.qualifiers.active).then(
-      function (response) {
-        const data = response.data.data
+    http.post(endpoints.qualifiers.active).then(function (response) {
+      const data = response.data.data
 
-        if (data.length) {
-          this.qualifiers = data
-        }
-      },
-      function (response) {
-        this.handleErrors('getActiveQualifiers', response)
+      if (data.length) {
+        this.qualifiers = data
       }
-    )
+    }).catch(function (response) {
+      this.handleErrors('getActiveQualifiers', response)
+    })
   },
   beforeDestroy () {
     window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
@@ -74,51 +71,47 @@ export default {
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
-      this.getReferredByContact(this.componentParams.contactId).then(
-        function (response) {
-          const data = response.data.data
+      this.getReferredByContact(this.componentParams.contactId).then(function (response) {
+        const data = response.data.data
 
-          if (data) {
-            this.contactFullName = (data.firstname ? data.firstname + ' ' : '') +
-              (data.middlename ? data.middlename + ' ' : '') +
-              (data.lastname || '')
+        if (data) {
+          this.contactFullName = (data.firstname ? data.firstname + ' ' : '') +
+            (data.middlename ? data.middlename + ' ' : '') +
+            (data.lastname || '')
 
-            this.contact = response.data.data
-          }
-        },
-        function (response) {
-          this.handleErrors('getReferredByContact', response)
+          this.contact = response.data.data
         }
-      )
+      }).catch(function (response) {
+        this.handleErrors('getReferredByContact', response)
+      })
     },
     onSubmit () {
       if (this.validateContactData(this.contact)) {
-        this.editContact(this.componentParams.contactId, this.contact)
-          .then(function (response) {
-            const data = response.data.data
+        this.editContact(this.componentParams.contactId, this.contact).then(function (response) {
+          const data = response.data.data
 
-            this.$parent.popupEdit = false
+          this.$parent.popupEdit = false
 
-            if (this.componentParams.addToPatient) {
-              this.$router.push({
-                name: 'edit-patient',
-                query: { pid: this.componentParams.addToPatient }
-              })
-            } else {
-              if (data.status) {
-                this.$parent.updateParentData({ message: data.status })
-                this.$parent.disable()
-              }
+          if (this.componentParams.addToPatient) {
+            this.$router.push({
+              name: 'edit-patient',
+              query: { pid: this.componentParams.addToPatient }
+            })
+          } else {
+            if (data.status) {
+              this.$parent.updateParentData({ message: data.status })
+              this.$parent.disable()
             }
+          }
 
-            if (this.componentParams.from === 'flowsheet3') {
-              // redirect to "/manage/manage_flowsheet3.php?pid=<?php echo $addedtopat; ?>&refid=<?php echo $rid; ?>"
-            }
-          }, function (response) {
-            this.parseFailedResponseOnEditingContact(response.data.data)
+          if (this.componentParams.from === 'flowsheet3') {
+            // redirect to "/manage/manage_flowsheet3.php?pid=<?php echo $addedtopat; ?>&refid=<?php echo $rid; ?>"
+          }
+        }).catch(function (response) {
+          this.parseFailedResponseOnEditingContact(response.data.data)
 
-            this.handleErrors('editContact', response)
-          })
+          this.handleErrors('editContact', response)
+        })
       }
     },
     parseFailedResponseOnEditingContact (data) {

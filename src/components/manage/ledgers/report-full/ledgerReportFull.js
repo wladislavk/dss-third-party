@@ -195,7 +195,7 @@ export default {
 
         this.ledgerRowsTotalNumber = data.total
         this.ledgerRows = data.result
-      }, function (response) {
+      }).catch(function (response) {
         this.handleErrors('getLedgerRows', response)
       })
     },

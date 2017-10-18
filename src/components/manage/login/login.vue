@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="login_container">
-            <form name="loginfrm" id="loginForm" v-on:submit.prevent="submitForm">
+            <form name="loginfrm" id="loginForm" v-on:submit.prevent="submitForm()">
                 <table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">
                     <tr bgcolor="#FFFFFF">
                         <td colspan="2" class="t_head">Please Enter Your Login Information</td>
@@ -10,38 +10,48 @@
                         <td colspan="2"><span class="red">{{ message }}</span></td>
                     </tr>
                     <tr bgcolor="#FFFFFF">
-                        <td class="t_data">User name</td>
+                        <td class="t_data"><label for="username">User name</label></td>
                         <td class="t_data">
                             <input
+                                id="username"
+                                name="username"
                                 type="text"
                                 v-model="credentials.username"
-                                ref="username"
+                                v-focus="focusUser"
+                                v-on:focus="focusUser = true"
+                                v-on:blur="focusUser = false"
                                 autofocus
-                            >
+                                v-on:change="setUsername($event)"
+                            />
                         </td>
                     </tr>
                     <tr bgcolor="#FFFFFF">
-                        <td class="t_data">Password</td>
+                        <td class="t_data"><label for="password">Password</label></td>
                         <td class="t_data">
                             <input
+                                id="password"
+                                name="password"
                                 type="password"
                                 v-model="credentials.password"
-                                ref="password"
-                            >
+                                v-focus="focusPassword"
+                                v-on:focus="focusPassword = true"
+                                v-on:blur="focusPassword = false"
+                                v-on:change="setPassword($event)"
+                            />
                         </td>
                     </tr>
                     <tr bgcolor="#FFFFFF">
                         <td colspan="2" align="center">
                             <input type="submit" name="btnsubmit" value=" Login " class="addButton">
                             <span style="float:right;">
-                                <a href="/manage/register/new.php">Register</a>
+                                <a v-bind:href="legacyUrl + '/manage/register/new.php'">Register</a>
                                 |
-                                <a href="forgot_password.php">Forgot Password</a>
+                                <a v-bind:href="legacyUrl + 'forgot_password.php'">Forgot Password</a>
                             </span>
                         </td>
                     </tr>
                 </table>
-                <span style="float:right; margin-top:4px;" class="screener">Looking for the screener? <a href="../screener">Click Here</a></span>
+                <span style="float:right; margin-top:4px;" class="screener">Looking for the screener? <router-link v-bind:to="{name: 'screener-root'}">Click Here</router-link></span>
             </form>
         </div>
 

@@ -3,11 +3,15 @@ import symbols from '../symbols'
 
 export default {
   state: {
-    popupEdit: false
+    [symbols.state.mainToken]: '',
+    [symbols.state.popupEdit]: false
   },
   mutations: {
+    [symbols.mutations.mainToken] (state, token) {
+      state[symbols.state.mainToken] = token
+    },
     [symbols.mutations.popupEdit] (state, { value }) {
-      state.popupEdit = value
+      state[symbols.state.popupEdit] = value
     }
   },
   actions: {
@@ -17,6 +21,7 @@ export default {
       })
     },
     [symbols.actions.handleErrors] ({title, response}) {
+      // @todo: use wrappers to make this action testable
       // token expired
       if (response.status === 401) {
         window.storage.remove('token')

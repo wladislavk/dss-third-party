@@ -73,7 +73,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <div id="profile_image" style="float:right; width:270px;">
                                     <span style="float:right">
                                         <a
@@ -276,7 +276,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Address
                                     <span id="req_0" class="req">*</span>
@@ -368,7 +368,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <div>
                                     <span>
                                         <input
@@ -576,7 +576,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     In case of an emergency
                                 </label>
@@ -627,10 +627,10 @@
                         <font style="color:#0a5da0; font-weight:bold; font-size:16px;">REFERRED BY</font>
                     </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">&nbsp;</label>
                                 <div>
                                     <div style="float:left;">
@@ -1096,7 +1096,6 @@
                                             id="p_m_ins_type"
                                             name="p_m_ins_type"
                                             class="field text addr tbox"
-                                            maxlength="255"
                                             style="width:200px;"
                                         >
                                             <option value="default" disabled>Insurance Type</option>
@@ -1151,7 +1150,7 @@
                             </li>
                         </ul>
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <div>
                                     <span>
                                         <select
@@ -1161,7 +1160,6 @@
                                             id="p_m_ins_co"
                                             name="p_m_ins_co"
                                             class="field text addr tbox"
-                                            maxlength="255"
                                             style="width:200px;"
                                         >
                                             <option value="default" disabled>Select Insurance Company</option>
@@ -1245,7 +1243,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <div style="height:40px;display:block;">
                                     <span>
                                         <label style="display:inline;">Does patient have secondary insurance?</label>
@@ -1303,7 +1301,7 @@
                 <tr v-show="patient.has_s_m_ins == 'Yes'">
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc s_m_ins_div" id="title0" for="Field0">
                                     Secondary Medical  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <template v-if="+billingCompany.exclusive">
@@ -1312,6 +1310,7 @@
                                     <a
                                         v-else
                                         onclick="return false;"
+                                        href="#"
                                         class="plain"
                                         :title="'Select YES if you would like ' + billingCompany.name + ' to file insurance claims for this patient. Select NO only if you intend to file your own claims (not recommended).'"
                                     >{{ billingCompany.name }} filing insurance?</a>
@@ -1334,6 +1333,7 @@
                                     <a
                                         onclick="return false"
                                         class="plain"
+                                        href="#"
                                         title="Select YES if the address you listed in the patient address section is the same address on file with the patient's insurance company. It is uncommon to select NO."
                                     >Insured Address same as Pt. address?</a>
                                     <input
@@ -1372,7 +1372,7 @@
                                         <input
                                             v-model="patient.s_m_partyfname"
                                             ref="s_m_partyfname"
-                                            id="s_m_partyfname" 
+                                            id="s_m_partyfname"
                                             name="s_m_partyfname"
                                             type="text"
                                             class="field text addr tbox"
@@ -1503,7 +1503,6 @@
                                             id="s_m_ins_type"
                                             name="s_m_ins_type"
                                             class="field text addr tbox"
-                                            maxlength="255"
                                             style="width:200px;"
                                         >
                                             <option value="default" disabled></option>
@@ -1566,7 +1565,6 @@
                                             id="s_m_ins_co"
                                             name="s_m_ins_co"
                                             class="field text addr tbox"
-                                            maxlength="255"
                                             style="width:200px;"
                                         >
                                             <option value="default" disabled>Select Insurance Company</option>
@@ -1626,7 +1624,6 @@
                                         <textarea
                                             id="s_m_ins_phone"
                                             name="s_m_ins_phone"
-                                            type="text"
                                             class="field text addr tbox"
                                             disabled="disabled"
                                             style="width:190px;height:60px;background:#ccc;"
@@ -1656,7 +1653,7 @@
                                             type="button"
                                             class="button"
                                             style="float:left; width:150px;"
-                                            value="+ Create New Contact" 
+                                            value="+ Create New Contact"
                                         />
                                     </span>
                                     <ul>
@@ -1727,7 +1724,7 @@
                                                     style="width:300px;"
                                                 >{{ formedFullNames.docent_name }}</span>
                                                 <a
-                                                    v-on:click="onClickQuickViewContact(patient.docent)"
+                                                    v-on:click.prevent="onClickQuickViewContact(patient.docent)"
                                                     href="#"
                                                     class="addButton"
                                                 >Quick View</a>
@@ -1782,7 +1779,7 @@
                                                     style="width:300px;"
                                                 >{{ formedFullNames.docsleep_name }}</span>
                                                 <a
-                                                    v-on:click="onClickQuickViewContact(patient.docsleep)"
+                                                    v-on:click.prevent="onClickQuickViewContact(patient.docsleep)"
                                                     href="#"
                                                     class="addButton"
                                                 >Quick View</a>
@@ -1822,7 +1819,7 @@
                                     </ul>
                                 </td>
                             </tr>
-                            <tr height="35"> 
+                            <tr height="35">
                                 <td>
                                     <ul>
                                         <li id="foli8" class="complex">
@@ -1837,7 +1834,7 @@
                                                     style="width:300px;"
                                                 >{{ formedFullNames.docdentist_name }}</span>
                                                 <a
-                                                    v-on:click="onClickQuickViewContact(patient.docdentist)"
+                                                    v-on:click.prevent="onClickQuickViewContact(patient.docdentist)"
                                                     href="#"
                                                     class="addButton"
                                                 >Quick View</a>
@@ -1893,7 +1890,7 @@
                                                     style="width:300px;"
                                                 >{{ formedFullNames.docmdother_name }}</span>
                                                 <a
-                                                    v-on:click="onClickQuickViewContact(patient.docmdother)"
+                                                    v-on:click.prevent="onClickQuickViewContact(patient.docmdother)"
                                                     href="#"
                                                     class="addButton"
                                                 >Quick View</a>
@@ -1959,7 +1956,7 @@
                                                     style="width:300px;"
                                                 >{{ formedFullNames.docmdother2_name }}</span>
                                                 <a
-                                                    v-on:click="onClickQuickViewContact(patient.docmdother2)"
+                                                    v-on:click.prevent="onClickQuickViewContact(patient.docmdother2)"
                                                     href="#"
                                                     class="addButton"
                                                 >Quick View</a>
@@ -2017,7 +2014,7 @@
                                                     style="width:300px;"
                                                 >{{ formedFullNames.docmdother3_name }}</span>
                                                 <a
-                                                    v-on:click="onClickQuickViewContact(patient.docmdother3)"
+                                                    v-on:click.prevent="onClickQuickViewContact(patient.docmdother3)"
                                                     href="#"
                                                     class="addButton"
                                                 >Quick View</a>
@@ -2137,10 +2134,6 @@
 <script src="./editingPatients.js"></script>
 
 <style src="../../../../assets/css/manage/admin.css" scoped></style>
-<!-- <style src="../../../../../assets/css/manage/task.css" scoped></style> -->
-<!-- <style src="../../../../../assets/css/manage/notifications.css" scoped></style> -->
 <style src="../../../../assets/css/manage/search-hints.css" scoped></style>
-<!-- <style src="../../../../../assets/css/manage/top.css" scoped></style> -->
-<!-- <style src="../../../../../assets/css/manage/letter-form.css" scoped></style> -->
 <style src="../../../../assets/css/manage/form.css" scoped></style>
 <style src="../../../../assets/css/manage/add_patient.css" scoped></style>

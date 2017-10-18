@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import symbols from '../../../symbols'
 
 const hasVB = false
 
@@ -12,7 +13,7 @@ if (typeof String.prototype.trim !== 'function') {
 const selection = 1
 const selectedUrl = ''
 const searchVal = '' // global variable to hold the last valid search string
-const local_pat_data = []
+const localPatData = []
 
 function consoleLog () {
   if (typeof console !== 'undefined' && typeof console.log === 'function') {
@@ -53,10 +54,10 @@ $(document).ready(function () {
   $(document).keyup(function (e) {
     switch (e.which) {
       case 38:
-        move_selection('up')
+        moveSelection('up')
         break
       case 40:
-        move_selection('down')
+        moveSelection('down')
         break
       case 13:
         if ($('.search_hints').is(':visible')) {
@@ -84,7 +85,7 @@ $(document).ready(function () {
       $this.css('cursor', 'pointer')
     }
     window.selection = $this.data('number')
-    set_selected(window.selection)
+    setSelected(window.selection)
   }, function () {
     const $this = $(this)
 
@@ -356,7 +357,7 @@ function handleResults (data, $reference) {
       .addClass('no_matches')
       .data('pattype', 'no')
 
-    template_list_new(newLi, 'No Matches')
+    templateListNew(newLi, 'No Matches')
       .appendTo($target)
       .fadeIn()
 
@@ -365,7 +366,7 @@ function handleResults (data, $reference) {
       .addClass('create_new')
       .data('pattype', 'new')
 
-    template_list_new(newLi, 'Add patient with this name&#8230;')
+    templateListNew(newLi, 'Add patient with this name&#8230;')
       .appendTo($target)
       .fadeIn()
   } else if (data.error) {
@@ -387,7 +388,7 @@ function handleResults (data, $reference) {
           .data('patientid', data[i].patientid)
           .data('patient_info', data[i].patient_info)
 
-        template_list(newLi, data[i])
+        templateList(newLi, data[i])
           .appendTo($target)
           .fadeIn()
       }
@@ -413,12 +414,15 @@ function sendValue (searchTerm, $reference) {
   }
 
   searchTimeout = setTimeout(function () {
+    const token = this.$store.state.main[symbols.state.mainToken]
     searchRequest = $.ajax({
       type: 'post',
       dataType: 'json',
       // @todo: this endpoint does not exist
       url: window.config.API_PATH + 'patients/list',
-      headers: {'Authorization': 'Bearer ' + window.storage.get('token')},
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
       data: { partial_name: searchTerm },
       success: function (data) {
         handleResults(data.data, $reference)
@@ -431,7 +435,7 @@ function sendValue (searchTerm, $reference) {
   }, searchBounce)
 }
 
-function move_selection (direction) {
+function moveSelection (direction) {
   if ($('#patient_list:visible > li.list_hover, .search_list:visible > li.list_hover').size() === 0) {
     window.selection = 0
   }
@@ -446,10 +450,10 @@ function move_selection (direction) {
     }
   }
 
-  set_selected(window.selection)
+  setSelected(window.selection)
 }
 
-function set_selected (menuitem) {
+function setSelected (menuitem) {
   const $item = $('#patient_list:visible li, .search_list:visible li').eq(menuitem)
   const $parent = $item.closest('.search_hints').parent()
   const $search = $parent.find('input[type=text]')
@@ -483,7 +487,7 @@ function set_selected (menuitem) {
   }
 }
 
-function template_list (li, patient) {
+function templateList (li, patient) {
   let mid = ''
   if (patient.middlename !== null) {
     mid = patient.middlename
@@ -494,12 +498,12 @@ function template_list (li, patient) {
   return li
 }
 
-function template_list_new (li, str) {
+function templateListNew (li, str) {
   li.html(str)
   return li
 }
 
-function task_function () {
+function taskFunction () {
   $(document).ready(function () {
     $('#task_header').mouseover(function () {
       $('#task_list').show()

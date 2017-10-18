@@ -3,7 +3,7 @@
 
 let menuids = ['homemenu', 'notmenu']
 
-function buildsubmenus_horizontal () {
+function buildsubmenusHorizontal () {
   for (let i = 0; i < menuids.length; i++) {
     let el = document.getElementById(menuids[i])
 
@@ -35,7 +35,7 @@ function buildsubmenus_horizontal () {
 }
 
 if (window.addEventListener) {
-  window.addEventListener('load', buildsubmenus_horizontal, false)
+  window.addEventListener('load', buildsubmenusHorizontal, false)
 } else if (window.attachEvent) {
-  window.attachEvent('onload', buildsubmenus_horizontal)
+  window.attachEvent('onload', buildsubmenusHorizontal)
 }

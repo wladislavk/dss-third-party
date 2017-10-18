@@ -1,9 +1,7 @@
 <template>
     <div>
         <br />
-        <div v-if="message" align="center" class="red">
-            {{ message }}
-        </div>
+        <div v-if="message" align="center" class="red">{{ message }}</div>
         <form name="referredbyfrm">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
@@ -14,7 +12,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Name
                                     <span id="req_0" class="req">*</span>
@@ -85,10 +83,10 @@
                         </ul>
                     </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     <span>
                                         <span style="color:#000000">Company</span>
@@ -109,10 +107,10 @@
                         </ul>
                     </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Address
                                     <span id="req_0" class="req">*</span>
@@ -194,10 +192,10 @@
                         </ul>
                     </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <div>
                                     <span>
                                         <input
@@ -263,94 +261,90 @@
                         </ul>
                     </td>
                 </tr>
-                <tr>
-                    <tr bgcolor="#FFFFFF">
-                        <td valign="top" class="frmhead" width="30%">
-                            Preferred Contact Method
-                        </td>
-                        <td valign="top" class="frmdata" width="70%">
-                            <select
-                                v-model="contact.preferredcontact"
-                                id="preferredcontact"
-                                name="preferredcontact"
-                                class="tbox"
-                                tabindex="22"
-                            >
-                                <option value="paper">Paper Mail</option>
-                                <option value="fax">Fax</option>
-                                <option value="email">Email</option>
-                            </select>
-                            <br />&nbsp;
-                        </td>
-                    </tr>
-                    <tr> 
-                        <td valign="top" colspan="2" class="frmhead">
-                            <ul>
-                                <li id="foli8" class="complex"> 
-                                    <div>
-                                        <span>
-                                            National Provider ID
-                                            <input
-                                                v-model="contact.national_provider_id"
-                                                id="national_provider_id"
-                                                name="national_provider_id"
-                                                type="text"
-                                                class="field text addr tbox"
-                                                tabindex="15"
-                                                maxlength="255"
-                                                style="width:200px;"
-                                                placeholder="National Provider Id"
-                                            />
-                                        </span>
-                                    </div>
-                                </li>
-                                <li id="foli8" class="complex"> 
-                                    <label class="desc" id="title0" for="Field0">
-                                        Other ID For Claim Forms
-                                    </label>
-                                    <div>
-                                        <span>
-                                            <select
-                                                v-model="contact.qualifier"
-                                                id="qualifier"
-                                                name="qualifier"
-                                                class="field text addr tbox"
-                                                tabindex="16"
-                                            >
-                                                <option value="0" disabled></option>
-                                                <option
-                                                    v-for="qualifier in qualifiers"
-                                                    :value="qualifier.qualifierid"
-                                                >
-                                                    {{ qualifier.qualifier }}
-                                                </option>
-                                            </select>
-                                            <label for="qualifier">Qualifier</label>
-                                        </span>
-                                        <span>
-                                            <input
-                                                v-model="contact.qualifierid"
-                                                id="qualifierid"
-                                                name="qualifierid"
-                                                type="text"
-                                                class="field text addr tbox"
-                                                tabindex="17"
-                                                maxlength="255"
-                                                style="width:200px;"
-                                                placeholder="Qualifier"
-                                            />
-                                            <label for="qualifierid">ID</label>
-                                        </span>
-                                    </div>
-                               </li>     
-                            </ul>
-                        </td>
-                    </tr>
+                <tr bgcolor="#FFFFFF">
+                    <td valign="top" class="frmhead" width="30%">
+                        Preferred Contact Method
+                    </td>
+                    <td valign="top" class="frmdata" width="70%">
+                        <select
+                            v-model="contact.preferredcontact"
+                            id="preferredcontact"
+                            name="preferredcontact"
+                            class="tbox"
+                            tabindex="22"
+                        >
+                            <option value="paper">Paper Mail</option>
+                            <option value="fax">Fax</option>
+                            <option value="email">Email</option>
+                        </select>
+                        <br />&nbsp;
+                    </td>
                 </tr>
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
+                                <div>
+                                    <span>
+                                        National Provider ID
+                                        <input
+                                            v-model="contact.national_provider_id"
+                                            id="national_provider_id"
+                                            name="national_provider_id"
+                                            type="text"
+                                            class="field text addr tbox"
+                                            tabindex="15"
+                                            maxlength="255"
+                                            style="width:200px;"
+                                            placeholder="National Provider Id"
+                                        />
+                                    </span>
+                                </div>
+                            </li>
+                            <li id="foli8" class="complex">
+                                <label class="desc" id="title0" for="Field0">Other ID For Claim Forms</label>
+                                <div>
+                                    <span>
+                                        <select
+                                            v-model="contact.qualifier"
+                                            id="qualifier"
+                                            name="qualifier"
+                                            class="field text addr tbox"
+                                            tabindex="16"
+                                        >
+                                            <option value="0" disabled></option>
+                                            <option
+                                                v-for="qualifier in qualifiers"
+                                                :value="qualifier.qualifierid"
+                                            >
+                                                {{ qualifier.qualifier }}
+                                            </option>
+                                        </select>
+                                        <label for="qualifier">Qualifier</label>
+                                    </span>
+                                    <span>
+                                        <input
+                                            v-model="contact.qualifierid"
+                                            id="qualifierid"
+                                            name="qualifierid"
+                                            type="text"
+                                            class="field text addr tbox"
+                                            tabindex="17"
+                                            maxlength="255"
+                                            style="width:200px;"
+                                            placeholder="Qualifier"
+                                        />
+                                        <label for="qualifierid">ID</label>
+                                    </span>
+                                </div>
+                           </li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top" colspan="2" class="frmhead">
+                        <ul>
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Notes:
                                 </label>

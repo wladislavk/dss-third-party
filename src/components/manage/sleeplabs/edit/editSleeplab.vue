@@ -1,9 +1,7 @@
 <template>
     <div>
         <br>
-        <div v-if="message" align="center" class="red">
-            {{ message }}
-        </div>
+        <div v-if="message" align="center" class="red">{{ message }}</div>
         <form name="sleeplabfrm" onSubmit="return sleeplababc(this)">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
@@ -40,9 +38,7 @@
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
                             <li id="foli8" class="complex">
-                                <label class="desc" id="title0" for="Field0">
-                                    Name
-                                </label>
+                                <label class="desc" id="title0" for="Field0">Name</label>
                                 <div>
                                     <span>
                                         <select
@@ -300,7 +296,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td  colspan="2" align="center">
+                    <td colspan="2" align="center">
                         <span class="red">
                             * Required Fields
                         </span><br />

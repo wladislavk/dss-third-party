@@ -1,0 +1,51 @@
+li {
+  margin-left: 0;
+}
+
+.task_item {
+  height: 20px;
+  clear: both;
+}
+
+.task_item input {
+  margin-left: 10px;
+}
+
+.task_extra {
+  margin-left: -50px;
+  position: absolute;
+  background: #fff;
+  float: left;
+  padding: 3px;
+}
+
+.task_edit {
+  margin: 0 10px 0 5px;
+}
+
+.task_content_general {
+  float: left;
+  width: 170px;
+}
+
+.task_content_patient {
+  display: inline;
+}
+
+.task_status_general {
+  float:left;
+}
+
+.task_delete {
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: url(../../images/delete.png) no-repeat 0 0;
+  float: left;
+  margin-right: 4px;
+  margin-top: 1px;
+}
+
+a.task_view_all {
+  padding: 2px 10px;
+}

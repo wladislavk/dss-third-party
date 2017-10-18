@@ -9,7 +9,7 @@
                     v-model="routeParameters.selectedContactType"
                     v-on:change="onChangeContactType"
                 >
-                    <option :value="0">Display All</option>
+                    <option value="0">Display All</option>
                     <option
                         v-for="option in contactTypes"
                         :value="option.contacttypeid"
@@ -59,7 +59,8 @@
                                 v-for="letter in letters"
                                 :key="letter.id"
                                 :class="{ 'selected_letter': letter == routeParameters.currentLetter }"
-                                :to="{ name: $route.name,
+                                :to="{
+                                    name: $route.name,
                                     query: {
                                         letter      : letter,
                                         status      : routeParameters.status,
@@ -72,7 +73,8 @@
                             >{{ letter }}</router-link>
                             <router-link
                                 v-if="routeParameters.currentLetter"
-                                :to="{ name: $route.name,
+                                :to="{
+                                    name: $route.name,
                                     query: {
                                         status      : routeParameters.status,
                                         sort        : routeParameters.sortColumn,
@@ -207,9 +209,7 @@
                             <template
                                 v-for="referrer in contact.referrers_data"
                             >
-                                <router-link
-                                    :to="'add_patient.php?pid=' + referrer.patientid + '&ed=' + referrer.patientid"
-                                >{{ referrer.firstname }} {{ referrer.lastname }}</router-link><br />
+                                <a v-bind:href="legacyUrl + 'add_patient.php?pid=' + referrer.patientid + '&ed=' + referrer.patientid">{{ referrer.firstname }} {{ referrer.lastname }}</a><br />
                             </template>
                         </td>
                         <td colspan="4" valign="top">
@@ -217,9 +217,7 @@
                             <template
                                 v-for="patient in contact.patients_data"
                             >
-                                <router-link
-                                    :to="'add_patient.php?pid=' + patient.patientid  + '&ed=' + patient.patientid"
-                                >{{ patient.firstname }} {{ patient.lastname }}</router-link><br />
+                                <a v-bind:href="legacyUrl + 'add_patient.php?pid=' + patient.patientid  + '&ed=' + patient.patientid">{{ patient.firstname }} {{ patient.lastname }}</a><br />
                             </template>
                         </td>
                     </tr>

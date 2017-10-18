@@ -32,43 +32,37 @@ export default {
   },
   created () {
     if (this.patientId > 0) {
-      this.getPatientById(this.patientId).then(
-        function (response) {
-          const data = response.data.data
-
-          if (data) {
-            this.currentPatient = data
-          }
-        },
-        function (response) {
-          this.handleErrors('getPatientById', response)
-        }
-      )
-    }
-
-    http.post(endpoints.guideSettingOptions.settingIds).then(
-      function (response) {
+      this.getPatientById(this.patientId).then(function (response) {
         const data = response.data.data
 
         if (data) {
-          data.forEach(function (element) {
-            element.labels = element.labels.split(',')
-            element.checkedOption = 0
-
-            if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
-              element.checkedImp = 0
-            } else {
-              element.checked = 0
-            }
-          })
-
-          this.deviceGuideSettingOptions = data
+          this.currentPatient = data
         }
-      },
-      function (response) {
-        this.handleErrors('getDeviceGuideSettingOptions', response)
+      }).catch(function (response) {
+        this.handleErrors('getPatientById', response)
+      })
+    }
+
+    http.post(endpoints.guideSettingOptions.settingIds).then(function (response) {
+      const data = response.data.data
+
+      if (data) {
+        data.forEach(function (element) {
+          element.labels = element.labels.split(',')
+          element.checkedOption = 0
+
+          if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+            element.checkedImp = 0
+          } else {
+            element.checked = 0
+          }
+        })
+
+        this.deviceGuideSettingOptions = data
       }
-    )
+    }).catch(function (response) {
+      this.handleErrors('getDeviceGuideSettingOptions', response)
+    })
   },
   mounted () {
     window.$('.imp_chk').click(function () {
@@ -101,33 +95,31 @@ export default {
         data.settings[element.id] = settingObj
       })
 
-      this.getDeviceGuideResults(data)
-        .then(function (response) {
-          const data = response.data.data
+      this.getDeviceGuideResults(data).then(function (response) {
+        const data = response.data.data
 
-          if (data) {
-            this.deviceGuideResults = data
-          }
-        }, function (response) {
-          this.handleErrors('getDeviceGuideResults', response)
-        })
+        if (data) {
+          this.deviceGuideResults = data
+        }
+      }).catch(function (response) {
+        this.handleErrors('getDeviceGuideResults', response)
+      })
     },
     updateDevice (device, name) {
       if (this.id && this.patientId) {
         if (confirm('Do you want to select ' + name + ' for ' + this.currentPatient.firstname + ' ' + this.currentPatient.lastname)) {
-          this.updateFlowDevice(device)
-            .then(function (response) {
-              const data = response.data.data
+          this.updateFlowDevice(device).then(function (response) {
+            const data = response.data.data
 
-              if (data) {
-                // parent.updateDentalDevice(valId, device)
-                // TODO: need find out what is valId
-                parent.updateDentalDevice(0, device)
-                parent.disablePopupClean()
-              }
-            }, function (response) {
-              this.handleErrors('updateFlowDevice', response)
-            })
+            if (data) {
+              // parent.updateDentalDevice(valId, device)
+              // TODO: need find out what is valId
+              parent.updateDentalDevice(0, device)
+              parent.disablePopupClean()
+            }
+          }).catch(function (response) {
+            this.handleErrors('updateFlowDevice', response)
+          })
         }
       }
     },

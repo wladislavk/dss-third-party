@@ -1,7 +1,10 @@
 import endpoints from '../../../endpoints'
 import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
-import taskMixin from '../../../modules/tasks/TaskMixin'
+import symbols from '../../../symbols'
+import { LEGACY_URL } from '../../../constants'
+import HeaderComponent from '../../header/header.vue'
+import DashboardTaskMenuComponent from '../tasks/DashboardTaskMenu.vue'
 
 // include static libs
 require('../../../../static/third-party/sucker-tree-horizontal-menu/sucker_tree_home.js')
@@ -11,6 +14,8 @@ export default {
     return {
       // need to change logic for global values
       constants: window.constants,
+      legacyUrl: LEGACY_URL,
+      screenerUrl: '/screener',
       headerInfo: {
         unmailedLettersNumber: 0,
         pendingClaimsNumber: 0,
@@ -34,12 +39,6 @@ export default {
         usePaymentReports: false,
         useLetters: false,
         pendingLetters: [],
-        overdueTasks: [],
-        todayTasks: [],
-        tomorrowTasks: [],
-        thisWeekTasks: [],
-        nextWeekTasks: [],
-        laterTasks: [],
         user: {},
         docInfo: {},
         courseStaff: {
@@ -51,69 +50,75 @@ export default {
       memos: []
     }
   },
-  mixins: [taskMixin, handlerMixin],
+  components: {
+    headerComponent: HeaderComponent,
+    dashboardTaskMenu: DashboardTaskMenuComponent
+  },
+  mixins: [handlerMixin],
   watch: {
     'headerInfo.docInfo.homepage': 'redirectToIndex2',
     'headerInfo.user.id': function () {
-      const self = this
-      this.getManageStaffOfCurrentUser(this.headerInfo.user.id)
-        .then(function (response) {
-          const data = response.data.data
-          if (data) {
-            self.headerInfo.user['manage_staff'] = data.manage_staff || 0
-          }
-        }, function (response) {
-          this.handleErrors('getManageStaffOfCurrentUser', response)
-        })
+      http.token = this.$store.state.main[symbols.state.mainToken]
+      const userId = this.headerInfo.user.id.replace('u_', '') || '0'
+      http.get(endpoints.users.show + '/' + userId).then((response) => {
+        const data = response.data.data
+        if (data) {
+          this.headerInfo.user['manage_staff'] = data.manage_staff || 0
+        }
+      }).catch((response) => {
+        this.handleErrors('getManageStaffOfCurrentUser', response)
+      })
     }
   },
   created () {
     window.eventHub.$on('update-header-info', this.onUpdateHeaderInfo)
     window.eventHub.$emit('get-header-info')
 
-    http.post(endpoints.documentCategories.active).then(
-      function (response) {
-        this.documentCategories = response.data.data
-      },
-      function (response) {
-        this.handleErrors('getDocumentCategories', response)
-      }
-    )
+    const token = this.$store.state.main[symbols.state.mainToken]
+    if (!token) {
+      this.$router.push({ name: 'login' })
+      return
+    }
 
-    http.post(endpoints.memos.current).then(
-      function (response) {
-        this.memos = response.data.data
-      },
-      function (response) {
-        this.handleErrors('getCurrentMemos', response)
-      }
-    )
+    http.token = token
+
+    http.post(endpoints.documentCategories.active).then((response) => {
+      this.documentCategories = response.data.data
+    }).catch((response) => {
+      this.handleErrors('getDocumentCategories', response)
+    })
+
+    http.post(endpoints.memos.current).then((response) => {
+      this.memos = response.data.data
+    }).catch((response) => {
+      this.handleErrors('getCurrentMemos', response)
+    })
   },
   beforeDestroy () {
     window.eventHub.$off('update-header-info', this.onUpdateHeaderInfo)
   },
   computed: {
-    notificationsNumber: function () {
+    notificationsNumber () {
       return +this.headerInfo.patientContactsNumber +
         +this.headerInfo.patientInsurancesNumber +
         +this.headerInfo.patientChangesNumber
     },
-    isUserDoctor: function () {
+    isUserDoctor () {
       return (this.headerInfo.user.docid === this.headerInfo.user.id)
     },
-    showInvoices: function () {
+    showInvoices () {
       return (this.headerInfo.user.docid === this.headerInfo.user.id || this.headerInfo.docInfo.manage_staff === 1)
     },
-    showTransactionCode: function () {
+    showTransactionCode () {
       return (this.headerInfo.user.id === this.headerInfo.user.docid || this.headerInfo.user.manage_staff === 1)
     },
-    showEnrollments: function () {
+    showEnrollments () {
       return (this.headerInfo.docInfo.use_eligible_api === 1)
     },
-    showDSSFranchiseOperationsManual: function () {
-      return (this.headerInfo.user.user_type === window.constants.DSS_USER_TYPE_FRANCHISEE)
+    showDSSFranchiseOperationsManual () {
+      return (this.headerInfo.user.user_type === this.constants.DSS_USER_TYPE_FRANCHISEE)
     },
-    showGetCE: function () {
+    showGetCE () {
       return (
         (this.isUserDoctor && this.headerInfo.docInfo.use_course === 1) ||
         (
@@ -122,27 +127,24 @@ export default {
         )
       )
     },
-    showUnmailedLettersNumber: function () {
+    showUnmailedLettersNumber () {
       return (this.headerInfo.useLetters && this.headerInfo.user.user_type === window.constants.DSS_USER_TYPE_SOFTWARE)
     },
-    showUnmailedClaims: function () {
-      return (this.headerInfo.user.user_type === window.constants.DSS_USER_TYPE_SOFTWARE)
+    showUnmailedClaims () {
+      return (this.headerInfo.user.user_type === this.constants.DSS_USER_TYPE_SOFTWARE)
     }
   },
   methods: {
     onUpdateHeaderInfo (headerInfo) {
       this.headerInfo = headerInfo
     },
-    redirectToIndex2: function () {
+    redirectToIndex2 () {
       if (this.headerInfo.docInfo.homepage !== 1) {
-        this.$route.router.push('/manage/index2')
+        // @todo: there is no such route
+        // this.$router.push('/manage/index2')
       }
     },
-    getManageStaffOfCurrentUser: function (userId) {
-      userId = userId || 0
-      return http.get(endpoints.users.show + '/' + userId)
-    },
-    onClickExportMD: function () {
+    onClickExportMD () {
       window.swal({
         title: '',
         text: 'Enter your password',
@@ -160,14 +162,15 @@ export default {
 
         if (inputValue === '1234') {
           window.swal.close()
-          window.location.href = '/manage/export_md.php'
+          window.location.href = this.legacyUrl + '/manage/export_md.php'
         } else if (inputValue.length > 0) {
           window.swal('Oops...', 'Wrong password!', 'error')
           return false
         }
+        return true
       })
     },
-    onClickDataImport: function () {
+    onClickDataImport () {
       window.swal(
         {
           title: '',
@@ -182,7 +185,7 @@ export default {
         },
         function (isConfirm) {
           if (isConfirm) {
-            window.location.href = '/manage/data_import.php'
+            window.location.href = this.legacyUrl + '/manage/data_import.php'
           }
         }
       )

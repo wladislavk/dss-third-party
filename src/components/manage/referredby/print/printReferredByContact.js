@@ -91,7 +91,7 @@ export default {
         if (data.total > 0) {
           this.contacts = data.contacts
         }
-      }, function (response) {
+      }).catch(function (response) {
         this.handleErrors('getReferredByContacts', response)
       })
     },

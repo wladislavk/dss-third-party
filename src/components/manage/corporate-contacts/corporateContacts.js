@@ -102,20 +102,19 @@ export default {
       }
     },
     removeContact (id) {
-      this.deleteContact(id)
-        .then(function () {
-          this.message = 'Deleted Successfully'
+      this.deleteContact(id).then(function () {
+        this.message = 'Deleted Successfully'
 
-          this.$nextTick(() => {
-            const self = this
+        this.$nextTick(() => {
+          const self = this
 
-            setTimeout(() => {
-              self.message = ''
-            }, 3000)
-          })
-        }, function (response) {
-          this.handleErrors('deleteContact', response)
+          setTimeout(() => {
+            self.message = ''
+          }, 3000)
         })
+      }).catch(function (response) {
+        this.handleErrors('deleteContact', response)
+      })
     },
     getListOfContacts () {
       this.getCorporateContacts(
@@ -136,7 +135,7 @@ export default {
 
         this.contacts = data.result
         this.contactsTotalNumber = data.total
-      }, function (response) {
+      }).catch(function (response) {
         this.handleErrors('getCorporateContacts', response)
       })
     },

@@ -195,3 +195,15 @@ export const INITIAL_CO_MORBIDITY = [
     checked: false
   }
 ]
+
+export const TASK_TYPES = {
+  OVERDUE: 'overdue',
+  TODAY: 'today',
+  TOMORROW: 'tomorrow',
+  THIS_WEEK: 'thisWeek',
+  NEXT_WEEK: 'nextWeek',
+  LATER: 'later',
+  FUTURE: 'future'
+}
+
+export const LEGACY_URL = 'http://legacy/'

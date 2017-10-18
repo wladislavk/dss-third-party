@@ -4,22 +4,22 @@ let fff = 0
 let selectionref = 1
 let selectedrefUrl = ''
 let searchrefVal = '' // global variable to hold the last valid search string
-let local_data = ''
+let localData = ''
 
-function setup_autocomplete_local (inField, hint, idField, source, file, hinttype, pid, idOnly, checkEnrollment, npi, officeType) {
+function setupAutocompleteLocal (inField, hint, idField, source, file, hinttype, pid, idOnly, checkEnrollment, npi, officeType) {
   $.getJSON(file).done(function (data) {
-    local_data = []
+    localData = []
     let cpl = data
     let arrayIndex = 0
     for (let i = 0; i < cpl.length; i++) {
       if (typeof cpl[i]['names'] !== 'undefined' && cpl[i]['names'].length > 0) {
         for (let nameIndex = 0; nameIndex < cpl[i]['names'].length; nameIndex++) {
           if (cpl[i]['names'][nameIndex]) {
-            local_data[arrayIndex] = []
-            local_data[arrayIndex]['payer_id'] = cpl[i]['payer_id']
-            local_data[arrayIndex]['payer_name'] = cpl[i]['names'][nameIndex]
-            local_data[arrayIndex]['enrollment_required'] = cpl[i]['enrollment_required']
-            local_data[arrayIndex]['enrollment_mandatory_fields'] = cpl[i]['enrollment_mandatory_fields']
+            localData[arrayIndex] = []
+            localData[arrayIndex]['payer_id'] = cpl[i]['payer_id']
+            localData[arrayIndex]['payer_name'] = cpl[i]['names'][nameIndex]
+            localData[arrayIndex]['enrollment_required'] = cpl[i]['enrollment_required']
+            localData[arrayIndex]['enrollment_mandatory_fields'] = cpl[i]['enrollment_mandatory_fields']
             arrayIndex++
           }
         }
@@ -38,7 +38,7 @@ function setup_autocomplete_local (inField, hint, idField, source, file, hinttyp
       $('#' + hint).css('display', 'none')
     } else if ((stringSize > 1 || (listSize > 2 && stringSize > 1) || ($(this).val() === window.searchVal)) && ((a >= 39 && a <= 122 && a !== 40) || a === 8)) { // (greater than apostrophe and less than z and not down arrow) or backspace
       $('#' + hint).css('display', 'inline')
-      sendValueRef_local($('#' + inField).val(), inField, hint, idField, source, file, hinttype, pid, idOnly, checkEnrollment, npi, officeType)
+      sendValueRefLocal($('#' + inField).val(), inField, hint, idField, source, file, hinttype, pid, idOnly, checkEnrollment, npi, officeType)
       if ($(this).val() > 2) {
         window.searchVal = $(this).val().replace(/(\s+)?.$/, '') // strip last character to match last positive result
       }
@@ -46,12 +46,12 @@ function setup_autocomplete_local (inField, hint, idField, source, file, hinttyp
   })
 }
 
-function sendValueRef_local (partialName, inField, hint, idField, source, file, hinttype, pid, idOnly, checkEnrollment, npi, officeType) {
+function sendValueRefLocal (partialName, inField, hint, idField, source, file, hinttype, pid, idOnly, checkEnrollment, npi, officeType) {
   const data = []
   const ld = []
   let r = 0
-  for (let i = 0; i < local_data.length; i++) {
-    ld[i] = local_data[i].payer_name.toLowerCase().split(' ')
+  for (let i = 0; i < localData.length; i++) {
+    ld[i] = localData[i].payer_name.toLowerCase().split(' ')
   }
   const pn = partialName.toLowerCase().split(' ')
 
@@ -75,13 +75,13 @@ function sendValueRef_local (partialName, inField, hint, idField, source, file, 
     if (fail === 0) {
       data[r] = []
       if (idOnly) {
-        data[r][0] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm, '')
+        data[r][0] = localData[j].payer_id.replace(/(\r\n|\n|\r)/gm, '')
       } else {
-        data[r][0] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm, '') + '-' + local_data[j].payer_name.replace(/(\r\n|\n|\r)/gm, '')
+        data[r][0] = localData[j].payer_id.replace(/(\r\n|\n|\r)/gm, '') + '-' + localData[j].payer_name.replace(/(\r\n|\n|\r)/gm, '')
       }
-      data[r][1] = local_data[j].payer_id.replace(/(\r\n|\n|\r)/gm, '') + ' - ' + local_data[j].payer_name.replace(/(\r\n|\n|\r)/gm, '')
-      data[r][2] = local_data[j].enrollment_required
-      data[r][3] = local_data[j].enrollment_mandatory_fields
+      data[r][1] = localData[j].payer_id.replace(/(\r\n|\n|\r)/gm, '') + ' - ' + localData[j].payer_name.replace(/(\r\n|\n|\r)/gm, '')
+      data[r][2] = localData[j].enrollment_required
+      data[r][3] = localData[j].enrollment_mandatory_fields
       r++
     }
   }
@@ -95,7 +95,7 @@ function sendValueRef_local (partialName, inField, hint, idField, source, file, 
       .clone(true)
       .removeClass('template')
       .addClass('no_matches')
-    template_list_ref_local(newLi, 'No Matches')
+    templateListRefLocal(newLi, 'No Matches')
       .appendTo('#' + hint + ' ul')
       .fadeIn()
     let label = 'person'
@@ -110,7 +110,7 @@ function sendValueRef_local (partialName, inField, hint, idField, source, file, 
         .removeClass('template')
         .addClass('create_new')
         .attr('onclick', 'loadPopupRefer(\'add_contact.php?addtopat=' + pid + '&from=add_patient&in_field=' + inField + '&id_field=' + idField + '&search=' + (partialName.replace(/'/g, "\\'")) + '\')')
-      template_list_ref_local(newLi, 'Add ' + label + ' with this name&#8230;')
+      templateListRefLocal(newLi, 'Add ' + label + ' with this name&#8230;')
         .appendTo('#' + hint + ' ul')
         .fadeIn()
     }
@@ -138,19 +138,19 @@ function sendValueRef_local (partialName, inField, hint, idField, source, file, 
           .data('rowsource', data[i][0])
           .attr('onclick', "update_referredby_local('" + inField + "','" + (name.replace(/'/g, "\\'")) + "', '" + idField + "', '" + data[i][0] + "', '" + source + "', '" + data[i][1] + "','" + hint + "','" + data[i][2] + "', '" + checkEnrollment + "', '" + npi + "','" + officeType + "', '" + data[i][3] + "')")
       }
-      template_list_ref_local(newLi, name)
+      templateListRefLocal(newLi, name)
         .appendTo('#' + hint + ' ul')
         .fadeIn()
     }
   }
 }
 
-function template_list_ref_local (li, val) {
+function templateListRefLocal (li, val) {
   li.html(val)
   return li
 }
 
-function update_referredby_local (inField, name, idField, id, source, t, hint, enrollment, checkEnrollment, npi, officeType, enrollmentMandatoryFields) {
+function updateReferredbyLocal (inField, name, idField, id, source, t, hint, enrollment, checkEnrollment, npi, officeType, enrollmentMandatoryFields) {
   if (enrollmentMandatoryFields !== '') {
     const emf = enrollmentMandatoryFields.split(',')
     $('.formControl').removeClass('required')
@@ -201,7 +201,7 @@ $('.autocomplete_search').click(function () {
   }
 })
 
-function updateval_local (t) {
+function updatevalLocal (t) {
   if (t.value === 'Type referral name' || t.value === 'Type contact name' || t.value === 'Type insurance payer name') {
     t.value = ''
   }

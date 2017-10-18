@@ -140,19 +140,13 @@
                     <b>Page Totals</b>
                 </td>
                 <td valign="top" align="right">
-                    <b>
-                        {{ formatLedger(totalPageCharges) }}
-                    </b>
+                    <b>{{ formatLedger(totalPageCharges) }}</b>
                 </td>
                 <td valign="top" align="right">
-                    <b>
-                        {{ formatLedger(totalPageCredits) }}
-                    </b>
+                    <b>{{ formatLedger(totalPageCredits) }}</b>
                 </td>
                 <td valign="top" align="right">
-                    <b>
-                        {{ formatLedger(totalPageAdjustments) }}
-                    </b>
+                    <b>{{ formatLedger(totalPageAdjustments) }}</b>
                 </td>
                 <td valign="top"></td>
             </tr>
@@ -177,19 +171,13 @@
                     <b>Totals</b>
                 </td>
                 <td valign="top" align="right">
-                    <b>
-                        {{ formatLedger(totalCharges) }}
-                    </b>
+                    <b>{{ formatLedger(totalCharges) }}</b>
                 </td>
                 <td valign="top" align="right">
-                    <b>
-                        {{ formatLedger(totalCredits) }}
-                    </b>
+                    <b>{{ formatLedger(totalCredits) }}</b>
                 </td>
                 <td valign="top" align="right">
-                    <b>
-                        {{ formatLedger(totalAdjustments) }}
-                    </b>
+                    <b>{{ formatLedger(totalAdjustments) }}</b>
                 </td>
                 <td valign="top"></td>
             </tr>
@@ -198,12 +186,9 @@
                     <b>Balance</b>
                 </td>
                 <td align="right">
-                    <b>
-                        {{ formatLedger(totalCharges - totalCredits - totalAdjustments) }}
-                    </b>
+                    <b>{{ formatLedger(totalCharges - totalCredits - totalAdjustments) }}</b>
                 </td>
-                <td colspan="2">
-                </td>
+                <td colspan="2"></td>
             </tr>
         </table>
 

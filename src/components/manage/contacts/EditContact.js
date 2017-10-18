@@ -54,33 +54,25 @@ export default {
   watch: {
     pendingVOB: function () {
       if (!this.pendingVOB.length) {
-        this.getContactSentLetters(this.contact.contactid)
-          .then(
-            function (response) {
-              const data = response.data.data
+        this.getContactSentLetters(this.contact.contactid).then(function (response) {
+          const data = response.data.data
 
-              if (data.length) {
-                this.contactSentLetters = data
-              }
-            },
-            function (response) {
-              this.handleErrors('getContactSentLetters', response)
-            }
-          )
+          if (data.length) {
+            this.contactSentLetters = data
+          }
+        }).catch(function (response) {
+          this.handleErrors('getContactSentLetters', response)
+        })
 
-        this.getContactPendingLetters(this.contact.contactid)
-          .then(
-            function (response) {
-              const data = response.data.data
+        this.getContactPendingLetters(this.contact.contactid).then(function (response) {
+          const data = response.data.data
 
-              if (data.length) {
-                this.contactPendingLetters = data
-              }
-            },
-            function (response) {
-              this.handleErrors('getContactPendingLetters', response)
-            }
-          )
+          if (data.length) {
+            this.contactPendingLetters = data
+          }
+        }).catch(function (response) {
+          this.handleErrors('getContactPendingLetters', response)
+        })
       }
     },
     'contact.contacttypeid': function () {
@@ -133,152 +125,128 @@ export default {
     window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   mounted () {
-    http.post(endpoints.contactTypes.physician).then(
-      function (response) {
-        const data = response.data.data
+    http.post(endpoints.contactTypes.physician).then(function (response) {
+      const data = response.data.data
 
-        if (data.physician_types) {
-          this.$set(this, 'contactTypesOfPhysician', data.physician_types.split(','))
-        }
-      },
-      function (response) {
-        this.handleErrors('getContactTypesOfPhysician', response)
+      if (data.physician_types) {
+        this.$set(this, 'contactTypesOfPhysician', data.physician_types.split(','))
       }
-    )
+    }).catch(function (response) {
+      this.handleErrors('getContactTypesOfPhysician', response)
+    })
 
-    http.post(endpoints.contactTypes.activeNonCorporate).then(
-      function (response) {
-        const data = response.data.data
+    http.post(endpoints.contactTypes.activeNonCorporate).then(function (response) {
+      const data = response.data.data
 
-        if (data.length) {
-          this.activeNonCorporateContactTypes = data
-        }
-      },
-      function (response) {
-        this.handleErrors('getActiveNonCorporateContactTypes', response)
+      if (data.length) {
+        this.activeNonCorporateContactTypes = data
       }
-    )
+    }).catch(function (response) {
+      this.handleErrors('getActiveNonCorporateContactTypes', response)
+    })
 
-    http.post(endpoints.qualifiers.active).then(
-      function (response) {
-        const data = response.data.data
+    http.post(endpoints.qualifiers.active).then(function (response) {
+      const data = response.data.data
 
-        if (data.length) {
-          this.activeQualifiers = data
-        }
-      },
-      function (response) {
-        this.handleErrors('getActiveQualifiers', response)
+      if (data.length) {
+        this.activeQualifiers = data
       }
-    )
+    }).catch(function (response) {
+      this.handleErrors('getActiveQualifiers', response)
+    })
   },
   methods: {
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
       if (this.componentParams.contactId > 0) {
-        this.getContact(this.componentParams.contactId).then(
-          function (response) {
-            const data = response.data.data
+        this.getContact(this.componentParams.contactId).then(function (response) {
+          const data = response.data.data
 
-            if (data) {
-              this.contact = data
+          if (data) {
+            this.contact = data
 
-              this.$nextTick(function () {
-                this.wasContactDataReceived = true
-              })
-            }
-          },
-          function (response) {
-            this.handleErrors('getContact', response)
+            this.$nextTick(function () {
+              this.wasContactDataReceived = true
+            })
           }
-        )
+        }).catch(function (response) {
+          this.handleErrors('getContact', response)
+        })
 
-        this.getPendingVOBsByContactId(this.componentParams.contactId).then(
-          function (response) {
-            const data = response.data.data
+        this.getPendingVOBsByContactId(this.componentParams.contactId).then(function (response) {
+          const data = response.data.data
 
-            if (data.length) {
-              this.pendingVOB = data
-            }
-          },
-          function (response) {
-            this.handleErrors('getPendingVOBsByContactId', response)
+          if (data.length) {
+            this.pendingVOB = data
           }
-        )
+        }).catch(function (response) {
+          this.handleErrors('getPendingVOBsByContactId', response)
+        })
       }
     },
     onClickSubmit () {
       this.message = ''
 
       if (this.componentParams.contactId > 0) {
-        this.updateContact(this.contact).then(
-          function () {
-            // pass message to parent component
-            this.$parent.updateParentData({ message: 'Edited Successfully' })
+        this.updateContact(this.contact).then(function () {
+          // pass message to parent component
+          this.$parent.updateParentData({ message: 'Edited Successfully' })
+          this.$parent.$parent.$refs.modal.popupEdit = false
+          this.$parent.$parent.$refs.modal.disable()
+          this.$router.push('/manage/contacts')
+        }).catch(function (response) {
+          if (response.status === 422) {
+            this.displayErrorResponseFromAPI(response.data.data)
+          } else {
+            this.handleErrors('updateContact', response)
+          }
+        })
+      } else {
+        this.insertContact(this.contact).then(function (response) {
+          const data = response.data.data
+
+          if (data) {
+            this.createWelcomeLetter(data.contactid, this.contact.contacttypeid).then(function (response) {
+              const data = response.data.data
+
+              if (data.message) {
+                window.swal({
+                  title: '',
+                  text: data.message,
+                  type: 'info'
+                })
+              }
+            }).catch(function (response) {
+              this.handleErrors('createWelcomeLetter', response)
+            })
+
+            if (this.componentParams.activePat) {
+              this.$router.push({
+                path: '/add/patient',
+                query: {
+                  ed: this.componentParams.activePat,
+                  preview: 1,
+                  addtopat: 1,
+                  pid: this.componentParams.activePat
+                }
+              })
+            } else {
+              this.$parent.passDataToComponents({ message: 'Added Successfully' })
+              this.$router.push('/manage/contacts')
+            }
+
+            // this popup doesn't have any input fields - then set the flag to false
             this.$parent.$parent.$refs.modal.popupEdit = false
             this.$parent.$parent.$refs.modal.disable()
-            this.$router.push('/manage/contacts')
-          },
-          function (response) {
-            if (response.status === 422) {
-              this.displayErrorResponseFromAPI(response.data.data)
-            } else {
-              this.handleErrors('updateContact', response)
-            }
           }
-        )
-      } else {
-        this.insertContact(this.contact).then(
-          function (response) {
-            const data = response.data.data
-
-            if (data) {
-              this.createWelcomeLetter(data.contactid, this.contact.contacttypeid).then(
-                function (response) {
-                  const data = response.data.data
-
-                  if (data.message) {
-                    window.swal({
-                      title: '',
-                      text: data.message,
-                      type: 'info'
-                    })
-                  }
-                },
-                function (response) {
-                  this.handleErrors('createWelcomeLetter', response)
-                }
-              )
-
-              if (this.componentParams.activePat) {
-                this.$router.push({
-                  path: '/add/patient',
-                  query: {
-                    ed: this.componentParams.activePat,
-                    preview: 1,
-                    addtopat: 1,
-                    pid: this.componentParams.activePat
-                  }
-                })
-              } else {
-                this.$parent.passDataToComponents({ message: 'Added Successfully' })
-                this.$router.push('/manage/contacts')
-              }
-
-              // this popup doesn't have any input fields - then set the flag to false
-              this.$parent.$parent.$refs.modal.popupEdit = false
-              this.$parent.$parent.$refs.modal.disable()
-            }
-          },
-          function (response) {
-            if (response.status === 422) {
-              this.displayErrorResponseFromAPI(response.data.data)
-            } else {
-              this.handleErrors('updateContact', response)
-            }
+        }).catch(function (response) {
+          if (response.status === 422) {
+            this.displayErrorResponseFromAPI(response.data.data)
+          } else {
+            this.handleErrors('updateContact', response)
           }
-        )
+        })
       }
     },
     displayErrorResponseFromAPI (data) {

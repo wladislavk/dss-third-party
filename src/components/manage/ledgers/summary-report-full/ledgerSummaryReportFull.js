@@ -55,18 +55,15 @@ export default {
   },
   methods: {
     formReportTotals () {
-      this.getLedgerTotals(this.reportType).then(
-        function (response) {
-          const data = response.data.data
+      this.getLedgerTotals(this.reportType).then(function (response) {
+        const data = response.data.data
 
-          this.charges = data.charges
-          this.credits = data.credits.hasOwnProperty('type') ? data.credits['type'].concat(data.credits['named']) : data.credits
-          this.adjustments = data.adjustments
-        },
-        function (response) {
-          this.handleErrors('getLedgerTotals', response)
-        }
-      )
+        this.charges = data.charges
+        this.credits = data.credits.hasOwnProperty('type') ? data.credits['type'].concat(data.credits['named']) : data.credits
+        this.adjustments = data.adjustments
+      }).catch(function (response) {
+        this.handleErrors('getLedgerTotals', response)
+      })
     },
     getLedgerTotals (reportType) {
       const data = { report_type: reportType }

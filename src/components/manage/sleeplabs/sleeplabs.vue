@@ -31,7 +31,7 @@
         <form name="sortfrm">
             <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
                 <tr v-if="sleeplabsTotalNumber > sleeplabsPerPage" bgColor="#ffffff">
-                    <td  align="right" colspan="15" class="bp">
+                    <td align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages" class="page_numbers">
                             <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
@@ -118,9 +118,9 @@
                         <td colspan="4">
                             <h3>Patients</h3>
                             <template v-for="patient in sleeplab.patients">
-                                <router-link
-                                    :to="'dss_summ.php?sect=sleep&pid=' + patient.patientid"
-                                >{{ patient.firstname }} {{ patient.lastname }}</router-link>
+                                <a
+                                    v-bind:href="legacyUrl + 'dss_summ.php?sect=sleep&pid=' + patient.patientid"
+                                >{{ patient.firstname }} {{ patient.lastname }}</a>
                                 <br>
                             </template>
                         </td>

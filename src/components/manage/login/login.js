@@ -1,11 +1,20 @@
+import axios from 'axios'
 import endpoints from '../../../endpoints'
+import { LEGACY_URL } from '../../../constants'
 import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
+import symbols from '../../../symbols'
+import alerter from '../../../services/alerter'
+import { focus as focusDirective } from 'vue-focus'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   name: 'login',
   data () {
     return {
+      focusUser: false,
+      focusPassword: false,
+      legacyUrl: LEGACY_URL,
       message: '',
       credentials: {
         username: '',
@@ -13,76 +22,77 @@ export default {
       }
     }
   },
+  directives: {
+    focus: focusDirective
+  },
   mixins: [handlerMixin],
   mounted () {
-    if (window.storage.get('token')) {
+    const token = this.$store.state.main[symbols.state.mainToken]
+    if (token) {
       const data = {
         cur_page: this.$route.path
       }
 
+      http.token = token
       http.post(endpoints.loginDetails.store, data)
 
-      this.$router.push('/manage/index')
+      this.$router.push({ name: 'dashboard' })
     }
   },
   methods: {
+    setUsername (event) {
+      this.credentials.username = event.target.value
+    },
+    setPassword (event) {
+      this.credentials.password = event.target.value
+    },
     submitForm () {
       let alertText
       if (this.credentials.username.trim() === '') {
         alertText = 'Username is Required'
-        alert(alertText)
-        this.$refs.username.focus()
+        alerter.alert(alertText)
+        this.focusUser = true
 
         return false
       }
+      this.focusUser = false
 
       if (this.credentials.password.trim() === '') {
         alertText = 'Password is Required'
-        alert(alertText)
-        this.$refs.password.focus()
+        alerter.alert(alertText)
+        this.focusPassword = true
 
         return false
       }
+      this.focusPassword = false
 
-      this.getToken(this.credentials).then(
-        function (response) {
-          const data = response.data
+      axios.post(ProcessWrapper.getApiRoot() + 'auth', this.credentials).then((response) => {
+        const data = response.data
 
-          if (data.token) {
-            window.storage.save('token', data.token)
-          }
-
-          this.getAccountStatus().then(
-            function (response) {
-              const data = response.data.data
-
-              if (data.type.toLowerCase() === 'suspended') {
-                this.message = 'This account has been suspended.'
-              } else {
-                this.$router.push('/manage/index')
-              }
-            },
-            function (response) {
-              this.handleErrors('getAccountStatus', response)
-            }
-          )
-        },
-        function (response) {
-          if (response.status === 422) {
-            this.message = 'Wrong username or password'
-          } else {
-            this.handleErrors('getToken', response)
-          }
+        if (!data.hasOwnProperty('token') || !data.token) {
+          throw new Error('No token retrieved')
         }
-      )
-    },
-    getToken (data) {
-      return http.post(endpoints.auth, data)
-    },
-    getAccountStatus () {
-      return http.post(endpoints.users.check, {}, {
-        headers: {
-          Authorization: 'Bearer ' + window.storage.get('token')
+
+        this.$store.commit(symbols.mutations.mainToken, data.token)
+        http.token = data.token
+
+        return http.post(endpoints.users.check).then((response) => {
+          const data = response.data.data
+
+          // @todo: the token was already set, so it is possible to change route manually for suspended user
+          if (data.type.toLowerCase() === 'suspended') {
+            this.message = 'This account has been suspended.'
+            return
+          }
+          this.$router.push({ name: 'dashboard' })
+        }).catch((response) => {
+          this.handleErrors('getAccountStatus', response)
+        })
+      }).catch((response) => {
+        if (response.status === 422) {
+          this.message = 'Wrong username or password'
+        } else {
+          this.handleErrors('getToken', response)
         }
       })
     }

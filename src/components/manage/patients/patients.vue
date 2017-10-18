@@ -27,7 +27,7 @@
                     :to="{ name: $route.name, query: { sh: routeParameters.selectedPatientType }}"
                 >View All</router-link>
             </div>
-            </br>
+            <br />
             <div v-if="message" align="center" class="red">
                 <b>{{ message }}</b>
             </div>

@@ -8,6 +8,7 @@ import axios from 'axios'
 import store from './store'
 import constants from './modules/constants'
 import $ from 'jquery'
+import VueMoment from 'vue-moment'
 
 window.constants = constants
 window.storage = require('./modules/storage.js')
@@ -25,6 +26,8 @@ window.eventHub = new Vue()
 Vue.prototype.$http = axios
 
 Vue.component('site-seal', SiteSealComponent)
+
+Vue.use(VueMoment)
 
 /* eslint-disable no-new */
 new Vue({

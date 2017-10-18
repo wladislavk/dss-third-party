@@ -10,7 +10,7 @@
         <form name="sortfrm">
             <table width="98%" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center" >
                 <tr v-if="contactsTotalNumber > contactsPerPage" bgColor="#ffffff">
-                    <td  align="right" colspan="15" class="bp">
+                    <td align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages" class="page_numbers">
                             <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>

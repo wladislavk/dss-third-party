@@ -10,216 +10,27 @@
                     <div class="suckertreemenu2">
                         <ul id="topmenu2">
                             <li>
-                                <router-link to="/manage/index"> Notifications({{ notificationsNumber || 0 }})</router-link>
+                                <router-link v-bind:to="{name: 'dashboard'}"> Notifications({{ notificationsNumber || 0 }})</router-link>
                             </li>
                             <li id="header_support" v-bind:class="{'pending': supportTicketsNumber}">
-                                <a href="support.php">Support {{ (supportTicketsNumber > 0) ? ('(' + supportTicketsNumber + ')'): '' }}</a>
+                                <a v-bind:href="legacyUrl + 'support.php'">Support {{ (supportTicketsNumber > 0) ? ('(' + supportTicketsNumber + ')'): '' }}</a>
                             </li>
                             <li>
-                                <a href="#" v-on:click.prevent="logout">Sign Out</a>
+                                <a href="#" v-on:click.prevent="logout()">Sign Out</a>
                             </li>
                         </ul>
                     </div>
 
-                    <div id="task_menu" class="task_menu" style="margin-top:8px;float:right">
-                        <span
-                            v-on:mouseover="showTaskList = true"
-                            v-on:mouseleave="showTaskList = false"
-                            id="task_header"
-                        >
-                            My Tasks (<span id="task_count">{{ headerInfo.tasksNumber }}</span>)
-                        </span>
-                        <div v-show="showTaskList" id="task_list" style="border: solid 1px #000; position: absolute; z-index:20;background:#fff;padding:10px;display:none;">
-                            <h4 v-if="overdueTasks.length > 0" id="task_od_header" style="color:red;" class="task_od_header">Overdue</h4>
-                            <ul v-if="overdueTasks.length > 0" id="task_od_list">
-                                <li
-                                    v-on:mouseenter="onMouseEnterTaskItem"
-                                    v-on:mouseleave="onMouseLeaveTaskItem"
-                                    v-for="task in overdueTasks"
-                                    :class="'task_item task_' + task.id"
-                                    style="clear:both;"
-                                >
-                                    <div class="task_extra" :id="'task_extra_' + task.id" >
-                                        <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                        <a href="#" :replace-onlick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                    </div>
-                                    <input
-                                        v-on:click="onClickTaskStatus"
-                                        type="checkbox"
-                                        class="task_status"
-                                        style="float:left;"
-                                        :value="task.id"
-                                    />
-                                    <div style="float:left; width:170px;">
-                                        {{ task.task }}
-                                        <span v-if="task.firstname && task.lastname">
-                                            (<router-link :to="'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>)
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-
-                            <h4 v-if="todayTasks.length > 0" id="task_tod_header" class="task_tod_header">Today</h4>
-                            <ul v-if="todayTasks.length > 0" id="task_tod_list">
-                                <li
-                                    v-on:mouseenter="onMouseEnterTaskItem"
-                                    v-on:mouseleave="onMouseLeaveTaskItem"
-                                    v-for="task in todayTasks"
-                                    :class="'task_item task_' + task.id"
-                                    style="clear:both;"
-                                >
-                                    <div class="task_extra" :id="'task_extra_' + task.id" >
-                                        <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                        <a href="#" :replace-onclick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                    </div>
-                                    <input
-                                        v-on:click="onClickTaskStatus"
-                                        type="checkbox"
-                                        class="task_status"
-                                        style="float:left;"
-                                        :value="task.id"
-                                    />
-                                    <div style="float:left; width:170px;">
-                                        {{ task.task }}
-                                        <span v-if="task.firstname && task.lastname">
-                                            (<router-link :to="'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>)
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-
-                            <h4 v-if="tomorrowTasks.length > 0" id="task_tom_header" class="task_tom_header">Tomorrow</h4>
-                            <ul v-if="tomorrowTasks.length > 0" id="task_tom_list">
-                                <li
-                                    v-on:mouseenter="onMouseEnterTaskItem"
-                                    v-on:mouseleave="onMouseLeaveTaskItem"
-                                    v-for="task in tomorrowTasks"
-                                    :class="'task_item task_' + task.id"
-                                    style="clear:both;"
-                                >
-                                    <div class="task_extra" :id="'task_extra_' + task.id" >
-                                        <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                        <a href="#" :replace-onclick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                    </div>
-                                    <input
-                                        v-on:click="onClickTaskStatus"
-                                        type="checkbox"
-                                        class="task_status"
-                                        style="float:left;"
-                                        :value="task.id"
-                                    />
-                                    <div style="float:left; width:170px;">
-                                        {{ task.task }}
-                                        <span v-if="task.firstname && task.lastname">
-                                            (<router-link :to="'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>)
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-
-                            <h4 v-if="headerInfo.thisWeekTasks.length > 0" id="task_tw_header" class="task_tw_header">This Week</h4>
-                            <ul v-if="headerInfo.thisWeekTasks.length > 0" id="task_tw_list">
-                                <li
-                                    v-on:mouseenter="onMouseEnterTaskItem"
-                                    v-on:mouseleave="onMouseLeaveTaskItem"
-                                    v-for="task in headerInfo.thisWeekTasks"
-                                    :class="'task_item task_' + task.id"
-                                    style="clear:both;"
-                                >
-                                    <div class="task_extra" :id="'task_extra_' + task.id" >
-                                        <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                        <a href="#" :replace-onclick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                    </div>
-                                    <input
-                                        v-on:click="onClickTaskStatus"
-                                        type="checkbox"
-                                        class="task_status"
-                                        style="float:left;"
-                                        :value="task.id"
-                                    />
-                                    <div style="float:left; width:170px;">
-                                        {{ task.task }}
-                                        <span v-if="task.firstname && task.lastname">
-                                            (<router-link :to="'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>)
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-
-                            <h4 v-if="headerInfo.nextWeekTasks.length > 0" id="task_nw_header" class="task_nw_header">Next Week</h4>
-                            <ul v-if="headerInfo.nextWeekTasks.length > 0" id="task_nw_list">
-                                <li
-                                    v-on:mouseenter="onMouseEnterTaskItem"
-                                    v-on:mouseleave="onMouseLeaveTaskItem"
-                                    v-for="task in headerInfo.nextWeekTasks"
-                                    :class="'task_item task_' + task.id"
-                                    style="clear:both;"
-                                >
-                                    <div class="task_extra" :id="'task_extra_' + task.id" >
-                                        <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                        <a href="#" :replace-onclick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                    </div>
-                                    <input
-                                        v-on:click="onClickTaskStatus"
-                                        type="checkbox"
-                                        class="task_status"
-                                        style="float:left;"
-                                        :value="task.id"
-                                    />
-                                    <div style="float:left; width:170px;">
-                                        {{ task.task }}
-                                        <span v-if="task.firstname && task.lastname">
-                                            (<router-link :to="'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>)
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-
-                            <h4 v-if="headerInfo.laterTasks.length > 0" id="task_lat_header" class="task_lat_header">Later</h4>
-                            <ul v-if="headerInfo.laterTasks.length > 0" id="task_lat_list">
-                                <li
-                                    v-on:mouseenter="onMouseEnterTaskItem"
-                                    v-on:mouseleave="onMouseLeaveTaskItem"
-                                    v-for="task in headerInfo.laterTasks"
-                                    :class="'task_item task_' + task.id"
-                                    style="clear:both;"
-                                >
-                                    <div class="task_extra" :id="'task_extra_' + task.id" >
-                                        <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                        <a href="#" :replace-onclick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                    </div>
-                                    <input
-                                        v-on:click="onClickTaskStatus"
-                                        type="checkbox"
-                                        class="task_status"
-                                        style="float:left;"
-                                        :value="task.id"
-                                    />
-                                    <div style="float:left; width:170px;">
-                                        {{ task.due_date | moment("MM DD") }}
-                                        -
-                                        {{ task.task }}
-                                        <span v-if="task.firstname && task.lastname">
-                                            (<router-link :to="'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>)
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-
-                            <br /><br />
-
-                            <a href="manage_tasks.php" class="button" style="padding:2px 10px;">View All</a>
-                        </div>
-                    </div>
+                    <task-menu></task-menu>
                     <div v-if="showOnlineCEAndSnoozleHelp">
-                        <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="edx_login.php" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
-                        <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="help_login.php" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
+                        <a style="display:block; margin-right:20px; margin-top:8px; float:right;" v-bind:href="legacyUrl + 'edx_login.php'" target="_blank" onclick="removeCECookies(); return true;">Online CE</a>
+                        <a style="display:block; margin-right:20px; margin-top:8px; float:right;" v-bind:href="legacyUrl + 'help_login.php'" target="_blank" onclick="removeCECookies(); return true;">Snoozle/Help</a>
                     </div>
-                    <a style="display:block; margin-right:20px;  margin-top:8px; float:right;" href="calendar.php">Scheduler</a>
+                    <a style="display:block; margin-right:20px; margin-top:8px; float:right;" v-bind:href="legacyUrl + 'calendar.php'">Scheduler</a>
 
-                    <div class="bottom-image"> 
+                    <div class="bottom-image">
                         <div style="margin-top:10px; margin-left:20px; float:left;">
-                            <router-link to="/manage/index" id="logo">Dashboard</router-link>
+                            <router-link v-bind:to="'/manage/index'" id="logo">Dashboard</router-link>
                         </div>
                         <div style="float:left; width:68%;">
                             <form>
@@ -230,11 +41,11 @@
                                             <li class="template" style="display:none">Doe, John S</li>
                                         </ul>
                                     </div>
-                                </div> 
+                                </div>
                             </form>
 
                             <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
-                            <button :replace-onclick="'loadPopup add_task.php?pid=' + ($route.query.pid || 0)" style="padding: 3px; margin-top:27px;">+ Add Task</button>
+                            <button v-bind:replace-onclick="'loadPopup add_task.php?pid=' + patientId" style="padding: 3px; margin-top:27px;">+ Add Task</button>
                         </div>
                         <div v-if="companyLogo" style="float:right;margin:13px 15px 0 0;">
                             <img v-bind:src="companyLogo" />
@@ -244,135 +55,26 @@
                     <div class="body-image">
                         <div style="width:98.6%; background:#00457c;margin:0 auto;">
                             <div
-                                v-if="$route.query.pid"
+                                v-if="patientId"
                                 id="patient_name_div"
-                                :style="headerInfo.patientName.length > 20 ? 'font-size:14px' : ''"
+                                v-bind:style="headerInfo.patientName.length > 20 ? 'font-size:14px' : ''"
                             >
                                 <div id="patient_name_inner">
-                                    <img v-if="headerInfo.medicare" src="~assets/images/medicare_logo_small.png" /> 
-                                    <span :class="{ 'medicare_name': headerInfo.medicare, 'name': !headerInfo.medicare }">
+                                    <img v-if="headerInfo.medicare" src="../../assets/images/medicare_logo_small.png" />
+                                    <span v-bind:class="{ 'medicare_name': headerInfo.medicare, 'name': !headerInfo.medicare }">
                                         {{ headerInfo.patientName }}
                                         <a v-if="headerInfo.displayAlert && headerInfo.alertText.length > 0" href="#" :title="'Notes: ' + headerInfo.alertText" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>
-                                        <router-link v-if="headerInfo.premedCheck == 1 || alergen == 1" :to="'q_page3.php?pid=' + ($route.query.pid || 0)" :title="headerInfo.title" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</router-link>
+                                        <a v-if="headerInfo.premedCheck == 1 || alergen == 1" v-bind:href="legacyUrl + 'q_page3.php?pid=' + patientId" :title="headerInfo.title" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
                                     </span>
                                 </div>
                             </div>
-                            <div
-                                v-on:mouseleave="onMouseLeavePatientTaskMenu"
-                                v-if="$route.query.pid && headerInfo.patientTaskNumber > 0"
-                                class="task_menu"
-                                id="pat_task_menu"
-                                style="float:left; margin:10px 0 0 10px;"
-                            >
-                                <span
-                                    v-on:mouseover="onMouseOverPatientTaskHeader"
-                                    id="pat_task_header"
-                                    style="font-size:14px; font-weight:normal; color:#fff;"
-                                >Tasks({{ headerInfo.patientTaskNumber }})</span>
-                                <div class="task_list" id="pat_task_list" style="display:none;">
-                                    <h4 v-if="headerInfo.overdueTasks.length > 0" id="pat_task_od_header" style="color:red" class="task_od_header">Overdue</h4>
-                                    <ul v-if="headerInfo.overdueTasks.length > 0" id="pat_task_od_list">
-                                        <li
-                                            v-on:mouseenter="onMouseEnterTaskItem"
-                                            v-on:mouseleave="onMouseLeaveTaskItem"
-                                            v-for="task in headerInfo.overdueTasks"
-                                            :class="'task_item task_' + task.id"
-                                            style="clear:both;"
-                                        >
-                                            <div class="task_extra" :id="'task_extra_' + task.id" >
-                                                <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                                <a href="#" :repalce-onclick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                            </div>
-                                            <input
-                                                v-on:click="onClickTaskStatus"
-                                                type="checkbox"
-                                                class="task_status"
-                                                :value="task.id"
-                                            />
-                                            {{ task.task }}
 
-                                            <router-link v-if="task.firstname && task.lastname" :to="'add_patient.php?ed=' + task.patientid +'&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>
-                                        </li>
-                                    </ul>
+                            <patient-task-menu
+                                v-if="patientId"
+                                v-bind:patient-id="patientId"
+                            ></patient-task-menu>
 
-                                    <h4 v-if="headerInfo.todayTasks.length > 0" id="pat_task_tod_header" class="task_tod_header">Today</h4>
-                                    <ul v-if="headerInfo.todayTasks.length > 0" id="pat_task_tod_list">
-                                        <li
-                                            v-on:mouseenter="onMouseEnterTaskItem"
-                                            v-on:mouseleave="onMouseLeaveTaskItem"
-                                            v-for="task in headerInfo.todayTasks"
-                                            :class="'task_item task_' + task.id"
-                                            style="clear:both;"
-                                        >
-                                            <div class="task_extra" :id="'task_extra_' + task.id" >
-                                                <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                                <a href="#" :replace-onclick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                            </div>
-                                            <input
-                                                v-on:click="onClickTaskStatus"
-                                                type="checkbox"
-                                                class="task_status"
-                                                :value="task.id"
-                                            />
-                                            {{ task.task }}
-
-                                            <router-link v-if="task.firstname && task.lastname" :to="'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>
-                                        </li>
-                                    </ul>
-
-                                    <h4 v-if="headerInfo.tomorrowTasks.length > 0" id="pat_task_tom_header" class="task_tom_header">Tomorrow</h4>
-                                    <ul v-if="headerInfo.tomorrowTasks.length > 0" id="pat_task_tom_list">
-                                        <li
-                                            v-on:mouseenter="onMouseEnterTaskItem"
-                                            v-on:mouseleave="onMouseLeaveTaskItem"
-                                            v-for="task in headerInfo.tomorrowTasks"
-                                            :class="'task_item task_' + task.id"
-                                            style="clear:both;"
-                                        >
-                                            <div class="task_extra" :id="'task_extra_' + task.id" >
-                                                <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                                <a href="#" :replace-onclick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                            </div>
-                                            <input
-                                                v-on:click="onClickTaskStatus"
-                                                type="checkbox"
-                                                class="task_status"
-                                                :value="task.id"
-                                            />
-                                            {{ task.task }}
-
-                                            <router-link v-if="task.firstname && task.lastname" :to="'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>
-                                        </li>
-                                    </ul>
-
-                                    <h4 v-if="futureTasks.length > 0" id="pat_task_fut_header" class="task_fut_header">Future</h4>
-                                    <ul v-if="futureTasks.length > 0" id="pat_task_fut_list">
-                                        <li
-                                            v-on:mouseenter="onMouseEnterTaskItem"
-                                            v-on:mouseleave="onMouseLeaveTaskItem"
-                                            v-for="task in futureTasks"
-                                            :class="'task_item task_' + task.id"
-                                            style="clear:both;"
-                                        >
-                                            <div class="task_extra" :id="'task_extra_' + task.id" >
-                                                <a href="#" v-on:click="onClickDeleteTask(task.id, $event)" class="task_delete"></a>
-                                                <a href="#" :replace-onclick="'loadPopup add_task.php?id=' + task.id" class="task_edit">Edit</a>
-                                            </div>
-                                            <input
-                                                v-on:click="onClickTaskStatus"
-                                                type="checkbox"
-                                                class="task_status"
-                                                :value="task.id"
-                                            />
-                                            {{ task.task }}
-
-                                            <router-link v-if="task.firstname && task.lastname" :to="'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</router-link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <template v-if="$route.query.pid">
+                            <template v-if="patientId">
                                 <a
                                     v-show="!showAllWarnings"
                                     href="#"
@@ -397,40 +99,40 @@
                                 </span>
                             </div>
 
-                            <div v-if="$route.query.pid" id="patient_nav">
+                            <div v-if="patientId" id="patient_nav">
                                 <ul>
                                     <li>
-                                        <router-link class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" :to="'manage_flowsheet3.php?pid=' + $route.query.pid + '&addtopat=1'">Tracker</router-link>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_flowsheet3.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'manage_flowsheet3.php?pid=' + patientId + '&addtopat=1'">Tracker</a>
                                     </li>
                                     <li>
-                                        <router-link class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" :to="'dss_summ.php?pid=' + $route.query.pid + '&addtopat=1'">Summary Sheet</router-link>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/dss_summ.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'dss_summ.php?pid=' + patientId + '&addtopat=1'">Summary Sheet</a>
                                     </li>
                                     <li>
-                                        <router-link class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" :to="'manage_ledger.php?pid=' + $route.query.pid + '&addtopat=1'">Ledger</router-link>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_ledger.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'manage_ledger.php?pid=' + patientId + '&addtopat=1'">Ledger</a>
                                     </li>
                                     <li>
-                                        <router-link class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" :to="'manage_insurance.php?pid=' + $route.query.pid + '&addtopat=1'">Insurance</router-link>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_insurance.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'manage_insurance.php?pid=' + patientId + '&addtopat=1'">Insurance</a>
                                     </li>
                                     <li>
-                                        <router-link class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" :to="'dss_summ.php?sect=notes&pid=' + $route.query.pid + '&addtopat=1'">Progress Notes</router-link>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/manage_progress_notes.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'dss_summ.php?sect=notes&pid=' + patientId + '&addtopat=1'">Progress Notes</a>
                                     </li>
                                     <li>
-                                        <router-link class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" :to="'dss_summ.php?sect=letters&pid=' + $route.query.pid + '&addtopat=1'">Letters</router-link>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/patient_letters.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'dss_summ.php?sect=letters&pid=' + patientId + '&addtopat=1'">Letters</a>
                                     </li>
                                     <li>
-                                        <router-link class="<?php echo  ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" :to="'q_image.php?pid=' + $route.query.pid">Images</router-link>
+                                        <a class="<?php echo ($_SERVER['PHP_SELF']=='/manage/q_image.php')?'nav_active':'';?>" v-bind:href="legacyUrl + 'q_image.php?pid=' + patientId">Images</a>
                                     </li>
                                     <li>
-                                        <router-link class="<?php echo  (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" :to="'q_page1.php?pid=' + $route.query.pid + '&addtopat=1'">Questionnaire</router-link>
+                                        <a class="<?php echo (strpos($_SERVER['PHP_SELF'],'q_page') || strpos($_SERVER['PHP_SELF'],'q_sleep'))?'nav_active':'';?>" v-bind:href="legacyUrl + 'q_page1.php?pid=' + patientId + '&addtopat=1'">Questionnaire</a>
                                     </li>
                                     <li>
-                                        <router-link class="<?php echo  (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" :to="'ex_page4.php?pid=' + $route.query.pid + '&addtopat=1'">Clinical Exam</router-link>
+                                        <a class="<?php echo (strpos($_SERVER['PHP_SELF'],'ex_page'))?'nav_active':'';?>" v-bind:href="legacyUrl + 'ex_page4.php?pid=' + patientId + '&addtopat=1'">Clinical Exam</a>
                                     </li>
                                     <li class="last">
-                                        <router-link
-                                            :class="$route.name == 'edit-patient' ? 'nav_active' : ''"
-                                            :to="'add_patient.php?ed=' + $route.query.pid + '&addtopat=1&pid=' + $route.query.pid"
-                                        >Patient Info</router-link>
+                                        <a
+                                            v-bind:class="$route.name == 'edit-patient' ? 'nav_active' : ''"
+                                            v-bind:href="legacyUrl + 'add_patient.php?ed=' + patientId + '&addtopat=1&pid=' + patientId"
+                                        >Patient Info</a>
                                     </li>
                                 </ul>
                             </div>
@@ -441,46 +143,46 @@
                     <div id="contentMain">
                         <div style="clear:both;"></div>
 
-                        <div v-if="$route.query.pid" style="margin-left:20px;float:left;width:400px;display:none;">
-                            You are currently in a patient chart - 
-                            <a href="manage_patient.php" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a>
+                        <div v-if="patientId" style="margin-left:20px;float:left;width:400px;display:none;">
+                            You are currently in a patient chart -
+                            <a v-bind:href="legacyUrl + 'manage_patient.php'" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a>
                         </div>
-                        <div v-if="$route.query.pid" style="float:right;width:300px;"></div>
+                        <div v-if="patientId" style="float:right;width:300px;"></div>
                         <br />
 
                         <div
-                            v-if="$route.query.pid"
+                            v-if="patientId"
                             v-show="showAllWarnings"
                             id="patient_warnings"
                         >
-                            <router-link v-if="showWarningAboutPatientChanges" class="warning" :to="'patient_changes.php?pid=' + $route.query.pid">
+                            <a v-if="showWarningAboutPatientChanges" class="warning" v-bind:href="legacyUrl + 'patient_changes.php?pid=' + patientId">
                                 <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
-                            </router-link>
-                            <router-link v-if="showWarningAboutQuestionnaireChanges" class="warning" :to="'q_page1.php?pid=' + $route.query.pid + '&addtopat=1'" >
+                            </a>
+                            <a v-if="showWarningAboutQuestionnaireChanges" class="warning" v-bind:href="legacyUrl + 'q_page1.php?pid=' + patientId + '&addtopat=1'" >
                                 <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
-                            </router-link>
-                            <router-link v-if="showWarningAboutBouncedEmails" class="warning" :to="'add_patient.php?ed=' + $route.query.pid + '&pid=' + $route.query.pid + '&addtopat=1'" >
+                            </a>
+                            <a v-if="showWarningAboutBouncedEmails" class="warning" v-bind:href="legacyUrl + 'add_patient.php?ed=' + patientId + '&pid=' + patientId + '&addtopat=1'" >
                                 <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
-                            </router-link>
+                            </a>
                             <span v-if="rejectedClaimsForCurrentPatient.length > 0" class="warning">Warning! Patient has the following rejected claims: <br />
                                 <template v-for="claim in rejectedClaimsForCurrentPatient">
-                                    <router-link :to="'view_claim.php?claimid=' + claim.insuranceid + '&pid=' + $route.query.pid">
+                                    <a v-bind:href="legacyUrl + 'view_claim.php?claimid=' + claim.insuranceid + '&pid=' + patientId">
                                         {{ claim.insuranceid }} - {{ claim.adddate | moment("MM/DD/YYYY") }}
-                                    </router-link>
+                                    </a>
                                     <br />
                                 </template>
                             </span>
                             <span v-if="uncompletedHomeSleepTests.length > 0" class="warning">Patient has the following Home Sleep Tests: <br />
                                 <span v-for="test in uncompletedHomeSleepTests">
-                                    <router-link :to="'/manage/hst_request.php?pid=' + test.patient_id + '&amp;hst_id=' + test.id">HST was requested {{ test.adddate | moment("MM/DD/YYYY") }}</router-link>
-                                        and is currently 
-                                    <a v-if="test.status == window.constants.DSS_HST_REJECTED" href="manage_hst.php?status=4&viewed=0">{{ window.constants.preAuthLabels[test.status] }}</a>
+                                    <a v-bind:href="legacyUrl + '/manage/hst_request.php?pid=' + test.patient_id + '&amp;hst_id=' + test.id">HST was requested {{ test.adddate | moment("MM/DD/YYYY") }}</a>
+                                    and is currently
+                                    <a v-if="test.status == window.constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">{{ window.constants.preAuthLabels[test.status] }}</a>
                                     <span v-else>{{ window.constants.preAuthLabels[test.status] }}</span>
                                     <span v-if="test.status == window.constants.DSS_HST_SCHEDULED"> - {{ test.office_notes }}</span>
                                     <span v-if="test.status == window.constants.DSS_HST_REJECTED"> - {{ test.rejected_reason }}</span>
                                     <span v-if="test.status == window.constants.DSS_HST_REJECTED && test.rejecteddate"> - {{ test.rejecteddate | moment("MM/DD/YYYY hh:mm a") }}</span>
                                     <br />
-                                    <a v-if="test.status == window.constants.DSS_HST_REJECTED" href="manage_hst.php?status=4&viewed=0">Click here</a> to remove this error
+                                    <a v-if="test.status == window.constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">Click here</a> to remove this error
                                 </span>
                             </span>
                         </div>
@@ -519,7 +221,6 @@
 <script src="./header.js"></script>
 
 <style src="../../assets/css/manage/admin.css" scoped></style>
-<style src="../../assets/css/manage/task.css" scoped></style>
 <style src="../../assets/css/manage/notifications.css" scoped></style>
 <style src="../../assets/css/manage/search-hints.css" scoped></style>
 <style src="../../assets/css/manage/top.css" scoped></style>

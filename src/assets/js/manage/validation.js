@@ -1,5 +1,5 @@
-function is_email (email) {
-  if (!email.match(/^[A-Za-z0-9\._\-+]+@[A-Za-z0-9_\-+]+(\.[A-Za-z0-9_\-+]+)+$/)) {
+function isEmail (email) {
+  if (!email.match(/^[A-Za-z0-9._\-+]+@[A-Za-z0-9_\-+]+(\.[A-Za-z0-9_\-+]+)+$/)) {
     return false
   }
   return true
@@ -29,11 +29,11 @@ export function trim (inputString) {
   return retValue
 }
 
-function is_date (d) {
-  if (d.search(/^(\d){1,2}[-\/\\](\d){1,2}[-\/\\]\d{4}$/) !== 0) {
+function isDate (d) {
+  if (d.search(/^(\d){1,2}[-/\\](\d){1,2}[-/\\]\d{4}$/) !== 0) {
     return -1 // Bad Date Format
   }
-  const T = d.split(/[-\/]/)
+  const T = d.split(/[-/]/)
   const M = T[0]
   const D = T[1]
   const Y = T[2]
@@ -202,7 +202,7 @@ function userregabc (fa) {
   return true
 }
 
-function userabc_warn (fa) {
+function userabcWarn (fa) {
   const errors = []
   if (trim(fa.username.value) === '') {
     errors.push('Username is Required')
@@ -243,7 +243,7 @@ function userabc_warn (fa) {
   if (trim(fa.email.value) === '') {
     errors.push('Email is Required')
   }
-  if (!is_email(trim(fa.email.value))) {
+  if (!isEmail(trim(fa.email.value))) {
     errors.push('In-Valid Email ')
   }
   if (trim(fa.address.value) === '') {
@@ -331,7 +331,7 @@ function userabc (fa) {
     fa.email.focus()
     return false
   }
-  if (!is_email(trim(fa.email.value))) {
+  if (!isEmail(trim(fa.email.value))) {
     alert('In-Valid Email ')
     fa.email.focus()
     return false
@@ -381,14 +381,12 @@ function staffabc (fa) {
     fa.name.focus()
     return false
   }
-  if (trim(fa.email.value) !== '') {
-    if (!is_email(trim(fa.email.value))) {
-      alert('In-Valid Email ')
-      fa.email.focus()
-      return false
-    }
-  } else {
+  if (trim(fa.email.value) === '') {
     alert('Email is Required')
+    fa.email.focus()
+    return false
+  } else if (!isEmail(trim(fa.email.value))) {
+    alert('In-Valid Email ')
     fa.email.focus()
     return false
   }
@@ -465,7 +463,7 @@ function patientabc (fa) {
   }
 
   if (trim(fa.email.value) !== '') {
-    if (!is_email(trim(fa.email.value))) {
+    if (!isEmail(trim(fa.email.value))) {
       alert('In-Valid Email')
       fa.email.focus()
       return false
@@ -501,7 +499,7 @@ function allergensabc (fa) {
 
 function medicationsabc (fa) {
   if (trim(fa.medications.value) === '') {
-    alert("Medications is Required")
+    alert('Medications is Required')
     fa.medications.focus()
     return false
   }
@@ -531,7 +529,7 @@ function uvulaabc (fa) {
   }
 }
 
-function soft_palateabc (fa) {
+function softPalateabc (fa) {
   if (trim(fa.soft_palate.value) === '') {
     alert('Soft Palate is Required')
     fa.soft_palate.focus()
@@ -539,7 +537,7 @@ function soft_palateabc (fa) {
   }
 }
 
-function gag_reflexabc (fa) {
+function gagReflexabc (fa) {
   if (trim(fa.gag_reflex.value) === '') {
     alert('Gag Reflex is Required')
     fa.gag_reflex.focus()
@@ -547,7 +545,7 @@ function gag_reflexabc (fa) {
   }
 }
 
-function nasal_passagesabc (fa) {
+function nasalPassagesabc (fa) {
   if (trim(fa.nasal_passages.value) === '') {
     alert('Nasal Passages is Required')
     fa.nasal_passages.focus()
@@ -571,7 +569,7 @@ function mandibleabc (fa) {
   }
 }
 
-function exam_teethabc (fa) {
+function examTeethabc (fa) {
   if (trim(fa.exam_teeth.value) === '') {
     alert('Teeth Examination is Required')
     fa.exam_teeth.focus()
@@ -595,7 +593,7 @@ function assessmentabc (fa) {
   }
 }
 
-function assess_additionabc (fa) {
+function assessAdditionabc (fa) {
   if (trim(fa.assess_addition.value) === '') {
     alert('Assessment Addition is Required')
     fa.assess_addition.focus()
@@ -611,7 +609,7 @@ function consultationabc (fa) {
   }
 }
 
-function evaluation_newabc (fa) {
+function evaluationNewabc (fa) {
   if (trim(fa.evaluation_new.value) === '') {
     alert('Evaluation New is Required')
     fa.evaluation_new.focus()
@@ -619,7 +617,7 @@ function evaluation_newabc (fa) {
   }
 }
 
-function evaluation_estabc (fa) {
+function evaluationEstabc (fa) {
   if (trim(fa.evaluation_est.value) === '') {
     alert('Evaluation Established is Required')
     fa.evaluation_est.focus()
@@ -675,7 +673,7 @@ function palpationabc (fa) {
   }
 }
 
-function joint_examabc (fa) {
+function jointExamabc (fa) {
   if (trim(fa.joint_exam.value) === '') {
     alert('Joint Examination is Required')
     fa.joint_exam.focus()
@@ -691,7 +689,7 @@ function jointabc (fa) {
   }
 }
 
-function range_motionabc (fa) {
+function rangeMotionabc (fa) {
   if (trim(fa.range_motion.value) === '') {
     alert('Range Motion is Required')
     fa.range_motion.focus()
@@ -723,7 +721,7 @@ function followupabc (fa) {
   }
 }
 
-function ins_diagnosisabc (fa) {
+function insDiagnosisabc (fa) {
   if (trim(fa.ins_diagnosis.value) === '') {
     alert('Insurance Diagnosis is Required')
     fa.ins_diagnosis.focus()
@@ -731,7 +729,7 @@ function ins_diagnosisabc (fa) {
   }
 }
 
-function place_serviceabc (fa) {
+function placeServiceabc (fa) {
   if (trim(fa.place_service.value) === '') {
     alert('Place of Service is Required')
     fa.place_service.focus()
@@ -739,7 +737,7 @@ function place_serviceabc (fa) {
   }
 }
 
-function type_serviceabc (fa) {
+function typeServiceabc (fa) {
   if (trim(fa.type_service.value) === '') {
     alert('Type of Service is Required')
     fa.type_service.focus()
@@ -747,7 +745,7 @@ function type_serviceabc (fa) {
   }
 }
 
-function cpt_codeabc (fa) {
+function cptCodeabc (fa) {
   if (trim(fa.cpt_code.value) === '') {
     alert('CPT Code is Required')
     fa.cpt_code.focus()
@@ -755,7 +753,7 @@ function cpt_codeabc (fa) {
   }
 }
 
-function modifier_codeabc (fa) {
+function modifierCodeabc (fa) {
   if (trim(fa.modifier_code.value) === '') {
     alert('Modifier Code is Required')
     fa.modifier_code.focus()
@@ -763,7 +761,7 @@ function modifier_codeabc (fa) {
   }
 }
 
-function ins_typeabc (fa) {
+function insTypeabc (fa) {
   if (trim(fa.ins_type.value) === '') {
     alert('Insurance Type is Required')
     fa.ins_type.focus()
@@ -771,7 +769,7 @@ function ins_typeabc (fa) {
   }
 }
 
-function doc_welcomeabc (fa) {
+function docWelcomeabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -793,7 +791,7 @@ function doc_welcomeabc (fa) {
   }
 }
 
-function doc_educationalabc (fa) {
+function docEducationalabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -815,7 +813,7 @@ function doc_educationalabc (fa) {
   }
 }
 
-function doc_marketingabc (fa) {
+function docMarketingabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -837,7 +835,7 @@ function doc_marketingabc (fa) {
   }
 }
 
-function doc_dvdabc (fa) {
+function docDvdabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -859,7 +857,7 @@ function doc_dvdabc (fa) {
   }
 }
 
-function doc_lababc (fa) {
+function docLababc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -881,7 +879,7 @@ function doc_lababc (fa) {
   }
 }
 
-function doc_newabc (fa) {
+function docNewabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -903,7 +901,7 @@ function doc_newabc (fa) {
   }
 }
 
-function doc_insuranceabc (fa) {
+function docInsuranceabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -925,7 +923,7 @@ function doc_insuranceabc (fa) {
   }
 }
 
-function transaction_codeabc (fa) {
+function transactionCodeabc (fa) {
   if (trim(fa.transaction_code.value) === '') {
     alert('Transaction Code is Required')
     fa.transaction_code.focus()

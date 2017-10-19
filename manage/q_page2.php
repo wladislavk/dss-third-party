@@ -694,6 +694,3 @@ $docId = intval($_SESSION['docid']);
 ?>
 
 <?php include "includes/bottom.htm";?>
-
-<!-- zahidirfan360@gmail.com -->
-<!-- 0341-5688844 -->

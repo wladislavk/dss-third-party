@@ -756,20 +756,20 @@ if (isset($_POST['submit'])) {
 	}
   function template_div(div, index, contact) {
 		if (contact.type == "patient") {
-			div.html("<input class=\"patient_checkbox\" type=\"checkbox\" name=\"contacts[patient]\" value=\"" + contact.id + "\" />Patient: " + contact.name);
+			div.html("<input id=\"contact"+contact.id+"\" class=\"patient_checkbox\" type=\"checkbox\" name=\"contacts[patient]\" value=\"" + contact.id + "\" />Patient: " + contact.name);
     }
 		if (contact.type == "md_referral") {
                         if(contact.status==2){
                                 div.html("Referring MD: " + contact.name + " (INACTIVE CONTACT - UNABLE TO SEND LETTERS)");
                         }else{
-				div.html("<input class=\"md_referral_checkbox\" type=\"checkbox\" name=\"contacts[md_referrals][" + index + "]\" value=\"" + contact.id + "\" />Referring MD: " + contact.name);
+				div.html("<input id=\"contact"+contact.id+"\" class=\"md_referral_checkbox\" type=\"checkbox\" name=\"contacts[md_referrals][" + index + "]\" value=\"" + contact.id + "\" />Referring MD: " + contact.name);
 			}
 		}
 		if (contact.type == "md") {
 			if(contact.status==2){
 				div.html(contact.label+": " + contact.name + " (INACTIVE CONTACT - UNABLE TO SEND LETTERS)");	
 			}else{
-				div.html("<input class=\"md_checkbox\" type=\"checkbox\" name=\"contacts[mds][" + index + "]\" value=\"" + contact.id + "\" />"+contact.label+": " + contact.name);
+				div.html("<input id=\"contact"+contact.id+"\" class=\"md_checkbox\" type=\"checkbox\" name=\"contacts[mds][" + index + "]\" value=\"" + contact.id + "\" />"+contact.label+": " + contact.name);
 			}
 		}
 		return div;

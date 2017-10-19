@@ -203,7 +203,7 @@
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <input type="text" name="missing" value="<?php echo $missing?>" class="field text addr tbox" readonly="readonly" />
-                                    <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=missing&fval='+document.ex_page4frm.missing.value); return false;">Change</button>
+                                    <button id="missing_tooth" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=missing&fval='+document.ex_page4frm.missing.value); return false;">Change</button>
                                     <button onclick="toggle_perio(); return false;">Perio Chart</button>
                                 </span>
                             </div>
@@ -222,7 +222,7 @@
                                         $exam_teeth_my = $db->getResults($exam_teeth_sql);
                                         foreach ($exam_teeth_my as $exam_teeth_myarray) {
                                     ?>
-                                            <input type="checkbox" id="exam_teeth" name="exam_teeth[]" value="<?php echo st($exam_teeth_myarray['exam_teethid'])?>" <?php  if(strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {} else { echo " checked";}?> />
+                                            <input type="checkbox"  id="exam_teeth<?php echo st($exam_teeth_myarray['exam_teethid'])?>" name="exam_teeth[]" value="<?php echo st($exam_teeth_myarray['exam_teethid'])?>" <?php  if(strpos($exam_teeth,'~'.st($exam_teeth_myarray['exam_teethid']).'~') === false) {} else { echo " checked";}?> />
                                             &nbsp;&nbsp;
                                             <?php echo st($exam_teeth_myarray['exam_teeth']);?><br />
                                     <?php
@@ -244,7 +244,7 @@
                                 <span style="color:#000000;">
                                     <label class="exam_label">Caries Tooth #</label>
                                     <input type="text" name="caries" value="<?php echo $caries?>" class="field text addr tbox" readonly="readonly" />
-                                    <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=caries&fval='+document.ex_page4frm.caries.value); return false;">Change</button>
+                                    <button id="caries_tooth" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=caries&fval='+document.ex_page4frm.caries.value); return false;">Change</button>
                                 </span>
                             </div>
                             <br />
@@ -252,7 +252,7 @@
                                 <span style="color:#000000;">
                                     <label class="exam_label">Wear Facets Tooth #</label>
                                     <input type="text" name="wear_facets" value="<?php echo $where_facets?>" class="field text addr tbox" readonly="readonly" />
-                                    <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=wear_facets&fval='+document.ex_page4frm.wear_facets.value); return false;">Change</button>
+                                    <button id="wearFacetsTooth" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=wear_facets&fval='+document.ex_page4frm.wear_facets.value); return false;">Change</button>
                                     <button onclick="Javascript: loadPopupRefer('select_general.php?tx=wear_facets&fval='+document.ex_page4frm.wear_facets.value); return false;">Generalized</button>
                                 </span>
                             </div>
@@ -261,7 +261,7 @@
                                 <span style="color:#000000;">
                                     <label class="exam_label">Cracked or Fractured Tooth #</label>
                                     <input type="text" name="cracked_fractured" value="<?php echo $cracked_fractured?>" class="field text addr tbox" readonly="readonly" />
-                                    <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=cracked_fractured&fval='+document.ex_page4frm.cracked_fractured.value); return false;">Change</button>
+                                    <button id="cr_frac_tooth" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=cracked_fractured&fval='+document.ex_page4frm.cracked_fractured.value); return false;">Change</button>
                                 </span>
                             </div>
                             <br />
@@ -269,7 +269,7 @@
                                 <span style="color:#000000;">
                                     <label class="exam_label">Old, Worn or Inadequate Restorations Tooth #</label>
                                     <input type="text" name="old_worn_inadequate_restorations" value="<?php echo $old_worn_inadequate_restorations?>" class="field text addr tbox" readonly="readonly" />
-                                    <button onclick="Javascript: loadPopupRefer('select_teeth.php?tx=old_worn_inadequate_restorations&fval='+document.ex_page4frm.old_worn_inadequate_restorations.value); return false;">Change</button>
+                                    <button id="owirt" onclick="Javascript: loadPopupRefer('select_teeth.php?tx=old_worn_inadequate_restorations&fval='+document.ex_page4frm.old_worn_inadequate_restorations.value); return false;">Change</button>
                                 </span>
                             </div>
                             <br />
@@ -300,11 +300,11 @@
                                         </tr>
                                         <tr>
                                             <td valign="top">
-                                                <input type="radio" name="dental_class_right" value="I (normal)" <?php  if($dental_class_right == 'I (normal)') echo " checked";?> style="width:10px;" />
+                                                <input type="radio" id="dental_class_right" name="dental_class_right" value="I (normal)" <?php  if($dental_class_right == 'I (normal)') echo " checked";?> style="width:10px;" />
                                                 I (normal)
                                             </td>
                                             <td valign="top">
-                                                <input type="radio" name="dental_division_right" value="1" <?php  if($dental_division_right == '1') echo " checked";?> style="width:10px;" />
+                                                <input type="radio" id="dental_division_right" name="dental_division_right" value="1" <?php  if($dental_division_right == '1') echo " checked";?> style="width:10px;" />
                                                 1
                                             </td>
                                         </tr>
@@ -351,11 +351,11 @@
                                         </tr>
                                         <tr>
                                             <td valign="top">
-                                                <input type="radio" name="dental_class_left" value="I (normal)" <?php  if($dental_class_left == 'I (normal)') echo " checked";?> style="width:10px;" />
+                                                <input type="radio" id="dental_class_left" name="dental_class_left" value="I (normal)" <?php  if($dental_class_left == 'I (normal)') echo " checked";?> style="width:10px;" />
                                                 I (normal)
                                             </td>
                                             <td valign="top">
-                                                <input type="radio" name="dental_division_left" value="1" <?php  if($dental_division_left == '1') echo " checked";?> style="width:10px;" />
+                                                <input type="radio" id="dental_division_left" name="dental_division_left" value="1" <?php  if($dental_division_left == '1') echo " checked";?> style="width:10px;" />
                                                 1
                                             </td>
                                         </tr>

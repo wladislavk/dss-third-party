@@ -392,7 +392,7 @@ $docId = intval($_SESSION['docid']);
 		                    <div>
 		                        <span>
 		                        	Have you tried CPAP?
-		                            <input type="radio" class="cpap_radio" name="cpap" value="Yes" <?php if($cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
+		                            <input type="radio" class="cpap_radio" id="cpap" name="cpap" value="Yes" <?php if($cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
 		                            Yes
 		                            <input type="radio" class="cpap_radio" name="cpap" value="No" <?php if($cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
 		                            No
@@ -404,7 +404,7 @@ $docId = intval($_SESSION['docid']);
 		                    <div class="cpap_options">
 		                        <span>
 		                            Are you currently using CPAP?
-		                            <input type="radio" class="cur_cpap_radio" name="cur_cpap" value="Yes" <?php if($cur_cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
+		                            <input type="radio" class="cur_cpap_radio" id="cur_cpap" name="cur_cpap" value="Yes" <?php if($cur_cpap == 'Yes') echo " checked";?> onclick="chk_cpap()"  />
 		                            	Yes
 									<input type="radio" class="cur_cpap_radio" name="cur_cpap" value="No" <?php if($cur_cpap == 'No') echo " checked";?> onclick="chk_cpap()"  />
 		                            	No
@@ -445,7 +445,7 @@ $docId = intval($_SESSION['docid']);
 										$intolerance_my = $db->getResults($intolerance_sql);
 										foreach ($intolerance_my as $intolerance_myarray) {
 									?>
-											<input type="checkbox" id="intolerance" name="intolerance[]" value="<?php echo st($intolerance_myarray['intoleranceid'])?>" <?php if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
+											<input type="checkbox" id="intolerance<?php echo st($intolerance_myarray['intoleranceid'])?>" name="intolerance[]" value="<?php echo st($intolerance_myarray['intoleranceid'])?>" <?php if(strpos($intolerance,'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
 											<?php if($intolerance != $pat_row['intolerance'] && $showEdits){ ?>
 		  										<input type="checkbox" disabled="disabled" <?php if(strpos($pat_row['intolerance'],'~'.st($intolerance_myarray['intoleranceid']).'~') === false) {} else { echo " checked";}?> />
 											<?php } ?>
@@ -488,7 +488,7 @@ $docId = intval($_SESSION['docid']);
 		                    <div>
 								<span>
 									Are you currently wearing a dental device specifically designed to treat sleep apnea?
-		                            <input type="radio" class="dd_wearing_radio" name="dd_wearing" value="Yes" <?php if($dd_wearing == 'Yes') echo " checked";?> onclick="chk_dd()"  />
+		                            <input type="radio" class="dd_wearing_radio" id="dd_wearing" name="dd_wearing" value="Yes" <?php if($dd_wearing == 'Yes') echo " checked";?> onclick="chk_dd()"  />
 		                            	Yes
 									<input type="radio" class="dd_wearing_radio" name="dd_wearing" value="No" <?php if($dd_wearing == 'No') echo " checked";?> onclick="chk_dd()"  />
 		                            	No
@@ -497,10 +497,10 @@ $docId = intval($_SESSION['docid']);
 		                            ?>
 								</span>
 			    			</div>
-			    			<div>
+			    			<div> 
 								<span>
 					 			 	Have you previously tried a dental device for sleep apnea treatment?		
-		                            <input type="radio" class="dd_prev_radio" name="dd_prev" value="Yes" <?php if($dd_prev == 'Yes') echo " checked";?> onclick="chk_dd()"  />
+		                            <input type="radio" class="dd_prev_radio" id="dd_prev" name="dd_prev" value="Yes" <?php if($dd_prev == 'Yes') echo " checked";?> onclick="chk_dd()"  />
 		                            	Yes
 									<input type="radio" class="dd_prev_radio" name="dd_prev" value="No" <?php if($dd_prev == 'No') echo " checked";?> onclick="chk_dd()"  />
 		                            	No
@@ -512,7 +512,7 @@ $docId = intval($_SESSION['docid']);
 						    <div class="dd_options">
 								<span>
 									Was it over-the-counter (OTC)? 	
-		                            <input type="radio" class="dd_otc_radio" name="dd_otc" value="Yes" <?php if($dd_otc == 'Yes') echo " checked";?> />
+		                            <input type="radio" class="dd_otc_radio" id="dd_otc" name="dd_otc" value="Yes" <?php if($dd_otc == 'Yes') echo " checked";?> />
 		                            	Yes
 									<input type="radio" class="dd_otc_radio" name="dd_otc" value="No" <?php if($dd_otc == 'No') echo " checked";?> />
 		                            	No
@@ -524,7 +524,7 @@ $docId = intval($_SESSION['docid']);
 						    <div class="dd_options">
 								<span>
 									Was it fabricated by a dentist?
-		                            <input type="radio" class="dd_fab_radio" name="dd_fab" value="Yes" <?php if($dd_fab == 'Yes') echo " checked";?> />
+		                            <input type="radio" class="dd_fab_radio" id="dd_fab" name="dd_fab" value="Yes" <?php if($dd_fab == 'Yes') echo " checked";?> />
 		                            	Yes
 									<input type="radio" class="dd_fab_radio" name="dd_fab" value="No" <?php if($dd_fab == 'No') echo " checked";?> />
 		                            	No
@@ -562,7 +562,7 @@ $docId = intval($_SESSION['docid']);
 		                    <div>
 		                        <span>
 									Have you had surgery for snoring or sleep apnea?
-		                            <input type="radio" class="surgery_radio" name="surgery" value="Yes" <?php if($surgery == 'Yes') echo " checked";?> onclick="chk_s()" />
+		                            <input type="radio" class="surgery_radio" id="surgery" name="surgery" value="Yes" <?php if($surgery == 'Yes') echo " checked";?> onclick="chk_s()" />
 		                            	Yes
 									<input type="radio" class="surgery_radio" name="surgery" value="No" <?php if($surgery == 'No') echo " checked";?> onclick="chk_s()" />
 		                            	No
@@ -694,3 +694,6 @@ $docId = intval($_SESSION['docid']);
 ?>
 
 <?php include "includes/bottom.htm";?>
+
+<!-- zahidirfan360@gmail.com -->
+<!-- 0341-5688844 -->

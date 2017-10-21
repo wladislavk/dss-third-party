@@ -5,7 +5,7 @@ Feature: Patient Summary
 
   Scenario: View patient summary
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     And I type "test" into patient search form
     And I click on "PATIENT, TEST" in list of patients
     And I click on "Summary Sheet" patient chart menu point

@@ -5,7 +5,7 @@ Feature: Forms
 
 Scenario: Download forms
   Given I am logged in as "doc1f"
-  When I visit start page
+  When I go to "start" page
   And I click on "Forms" menu point
   Then I see "Manage Forms" page
   And I can see following forms:

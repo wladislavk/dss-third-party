@@ -28,19 +28,6 @@ class Main extends BaseContext
     {
         $this->visitStartPage();
         $this->login($user);
-        if (SUT_HOST == 'vue') {
-            $this->wait(self::SHORT_WAIT_TIME);
-            return;
-        }
-        $this->visitStartPage();
-    }
-
-    /**
-     * @When I go to start page
-     */
-    public function goToStart()
-    {
-        $this->visitStartPage();
     }
 
     /**
@@ -50,6 +37,16 @@ class Main extends BaseContext
      */
     public function goToCustomPage($page)
     {
+        if (SUT_HOST == 'vue') {
+            $this->wait(self::SHORT_WAIT_TIME);
+        }
+        if ($page == 'start') {
+            if (SUT_HOST == 'vue') {
+                return;
+            }
+            $this->visitStartPage();
+            return;
+        }
         $url = Pages::getUrl($page);
         $this->getCommonClient()->visit($url);
     }

@@ -5,7 +5,7 @@ Feature: Patient Ledger
 
   Scenario: File a claim
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     Then I see patient search form
     When I type "hav" into patient search form
     And I click on "Havell, John" in list of patients
@@ -37,7 +37,7 @@ Feature: Patient Ledger
 
   Scenario: Ledger Reports
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     And I run mouse over "Reports" menu point
     Then I see "Ledger" link
     When I click "Ledger" link

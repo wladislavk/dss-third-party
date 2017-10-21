@@ -5,7 +5,7 @@ Feature: Contacts
 
   Scenario: View contacts
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     And I run mouse over "Directory" menu point
     Then I see "Contacts" link
     When I click "Contacts" link

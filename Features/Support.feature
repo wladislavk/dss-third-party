@@ -5,7 +5,7 @@ Feature: Support page
 
   Scenario: View and manage tickets
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     And I click on support link in top right bar
     Then I see "Open Tickets" support section that contains "3" pages and I am on page "1"
     And I see the following tickets in "Open Tickets" support section:

@@ -2,7 +2,7 @@ Feature: Show and edit tasks in dashboard and header
 
   Scenario: Dashboard tasks
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     Then I see "Tasks" dashboard section
     And I see these task sub-sections in "dashboard":
       | section |
@@ -39,7 +39,7 @@ Feature: Show and edit tasks in dashboard and header
 
   Scenario: View header tasks
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     Then I see "My Tasks (3)" bullet in top menu
     When I run mouse over "My Tasks (3)" bullet in top menu
     Then I see these task sub-sections in "top menu":

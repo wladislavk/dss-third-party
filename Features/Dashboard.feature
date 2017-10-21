@@ -7,12 +7,12 @@ Feature: Dashboard
     Given I am logged in as "doc1f"
     When I go to "start" page
     # todo: move this to header test
-    Then I see right top bar with following links:
-      | text               |
-      | Notifications(354) |
-      | Support (5)        |
-      | Sign Out           |
-    And I see "Navigation" dashboard section
+    # Then I see right top bar with following links:
+    #  | text               |
+    #  | Notifications(354) |
+    #  | Support (5)        |
+    #  | Sign Out           |
+    Then I see "Navigation" dashboard section
     And navigation menu contains the following links:
       | name             |
       | Directory        |
@@ -98,7 +98,7 @@ Feature: Dashboard
       | 6 Pending Claims     | red   |
       | 71 Unmailed Claims   | red   |
       | 3 Rejected Claims    | red   |
-      | 7 Unsigned Notes     | red   |
+      | 8 Unsigned Notes     | red   |
       | 9 Pending Duplicates | red   |
       | 1 Payment Reports    | red   |
     And I see "Show All" link
@@ -115,7 +115,7 @@ Feature: Dashboard
       | 6 Pending Claims     | red   |
       | 71 Unmailed Claims   | red   |
       | 3 Rejected Claims    | red   |
-      | 7 Unsigned Notes     | red   |
+      | 8 Unsigned Notes     | red   |
       | 0 Alerts             | red   |
       | 0 Failed Faxes       | blue  |
       | 9 Pending Duplicates | red   |
@@ -123,8 +123,9 @@ Feature: Dashboard
       | 1 Payment Reports    | red   |
     And I see "Show Active" link
     When I run mouse over "5 Web Portal" notification
-    Then I see notification sub-list with the following data:
+    Then I see notification sub-list for "5 Web Portal" with the following data:
       | text           | color |
+      | 0 Pt Contacts  | red   |
       | 1 Pt Insurance | red   |
       | 4 Pt Changes   | red   |
 

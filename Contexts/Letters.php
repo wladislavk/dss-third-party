@@ -48,6 +48,18 @@ class Letters extends BaseContext
     }
 
     /**
+     * @When I run mouse over :menuPoint submenu point
+     *
+     * @param string $menuPoint
+     */
+    public function runMouseOverSubmenu($menuPoint)
+    {
+        $menu = $this->findCss('ul#homemenu');
+        $nodeLink = $this->findElementWithText('a', $menuPoint, $menu);
+        $nodeLink->mouseOver();
+    }
+
+    /**
      * @Then I see list of :numberOfLetters pending letters
      *
      * @param string $numberOfLetters

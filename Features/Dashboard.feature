@@ -75,7 +75,7 @@ Feature: Dashboard
       | test 2     |
     When I run mouse over "Education" navigation point
     Then I see navigation sub-menu for "Education" with the following links:
-      | name |
+      | name                                     |
       | Dental Sleep Solutions Procedures Manual |
       | Dental Sleep Medicine Manual             |
       | Quick Facts Reference                    |

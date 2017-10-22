@@ -151,6 +151,7 @@ class Letters extends BaseContext
      */
     public function testEditor($page)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $index = intval($page) - 1;
         $baseDivs = $this->findAllCss('div.single-letter');
         Assert::assertArrayHasKey($index, $baseDivs);

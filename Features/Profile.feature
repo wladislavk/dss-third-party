@@ -2,7 +2,7 @@ Feature: Manage Profile
 
   Scenario: Check practice profile
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     And I run mouse over "Admin" menu point
     Then I see "Profile" link
     When I click "Profile" link

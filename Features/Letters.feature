@@ -5,7 +5,7 @@ Feature: Manage Letters
 
   Scenario: Manage letters
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     And I click on "Letters" in notifications menu
     Then I see list of "285" pending letters
     And I see that I have "415" letters to review
@@ -34,7 +34,7 @@ Feature: Manage Letters
 
   Scenario: Manage custom letters
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     And I run mouse over "Admin" menu point
     Then I see "Text" link
     When I run mouse over "Text" submenu point

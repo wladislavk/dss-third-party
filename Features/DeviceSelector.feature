@@ -2,7 +2,7 @@ Feature: Device Selector
 
   Scenario: Select device
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     And I click on "Device Selector" menu point
     Then I see device selection sliders:
       | name               |

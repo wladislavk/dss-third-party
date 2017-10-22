@@ -2,7 +2,7 @@ Feature: Clinical Exam
 
   Scenario: View patient clinical exam
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     Then I see patient search form
     When I type "smi" into patient search form
     And I click on "Smith, Pat" in list of patients

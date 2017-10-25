@@ -5,7 +5,7 @@ Feature: Patient Chart
 
   Scenario: View patient chart
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     Then I see patient search form
     When I type "smi" into patient search form
     Then I see list of patients in search form:
@@ -47,7 +47,7 @@ Feature: Patient Chart
 
   Scenario: Add patient
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     Then I see button with text "+ Add Patient"
     When I click button with text "+ Add Patient"
     Then I see add patient form

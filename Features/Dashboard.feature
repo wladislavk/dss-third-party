@@ -5,7 +5,7 @@ Feature: Dashboard
 
   Scenario: View dashboard
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     Then I see right top bar with following links:
       | text               |
       | Notifications(354) |

@@ -5,7 +5,7 @@ Feature: Patient Screener
 
   Scenario: View patient screeners
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     And I run mouse over "Reports" menu point
     Then I see "Pt. Screener" link
     When I click "Pt. Screener" link

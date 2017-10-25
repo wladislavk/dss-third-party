@@ -5,7 +5,7 @@ Feature: Task Management
 
   Scenario: Add base task
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     Then I see button with text "+ Add Task"
     When I click button with text "+ Add Task"
     Then I see add task form with header "Add new task"
@@ -18,7 +18,7 @@ Feature: Task Management
 
   Scenario: Add task for patient
     Given I am logged in as "doc1f"
-    When I visit start page
+    When I go to "start" page
     Then I see patient search form
     When I type "smi" into patient search form
     And I click on "Smith, Pat" in list of patients

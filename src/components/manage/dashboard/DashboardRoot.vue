@@ -3,7 +3,7 @@
         <header-component></header-component>
         <table id="dashboard">
             <tr>
-                <td valign="top" style="border-right:1px solid #00457c;width:980px;">
+                <td valign="top" class="main_cell">
                     <div class="home_third first">
                         <dashboard-navigation></dashboard-navigation>
                     </div>
@@ -24,7 +24,6 @@
     </div>
 </template>
 
-<script src="./dashboard.js"></script>
+<script src="./DashboardRoot.js"></script>
 
-<style src="../../../assets/css/manage/index.css" scoped></style>
-<style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/dashboard/DashboardRoot.css" scoped></style>

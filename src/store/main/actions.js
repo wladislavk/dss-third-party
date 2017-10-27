@@ -2,9 +2,28 @@ import Vue from 'vue'
 import endpoints from '../../endpoints'
 import http from '../../services/http'
 import symbols from '../../symbols'
+import storage from '../../modules/storage'
 import ErrorHandler from '../../modules/handler/HandlerMixin'
 
 export default {
+  [symbols.actions.userInfo] ({commit, dispatch}) {
+    http.post(endpoints.users.current).then((response) => {
+      const data = response.data.data
+      const userInfo = {
+        userId: data.id,
+        docId: data.docid,
+        manageStaff: data.manage_staff,
+        userType: parseInt(data.user_type),
+        useCourse: parseInt(data.use_course),
+        loginId: data.loginid,
+        username: data.username
+      }
+      commit(symbols.mutations.userInfo, userInfo)
+      dispatch(symbols.actions.docInfo, data.id)
+    }).catch((response) => {
+      this.handleErrors('getCurrentUser', response)
+    })
+  },
   [symbols.actions.docInfo] ({commit}, userId) {
     http.get(endpoints.users.show + '/' + userId).then((response) => {
       const data = response.data.data
@@ -19,23 +38,6 @@ export default {
       this.handleErrors('getUser', response)
     })
   },
-  [symbols.actions.userInfo] ({commit}) {
-    http.post(endpoints.users.current).then((response) => {
-      const data = response.data.data
-      const userInfo = {
-        userId: data.id,
-        docId: data.docid,
-        manageStaff: data.manage_staff,
-        userType: parseInt(data.user_type),
-        useCourse: parseInt(data.use_course),
-        loginId: data.loginid,
-        username: data.username
-      }
-      commit(symbols.mutations.userInfo, userInfo)
-    }).catch((response) => {
-      this.handleErrors('getCurrentUser', response)
-    })
-  },
   [symbols.actions.disablePopupEdit] ({commit}) {
     commit(symbols.mutations.popupEdit, {
       value: false
@@ -45,7 +47,7 @@ export default {
     // @todo: use wrappers to make this action testable
     // token expired
     if (response.status === 401) {
-      window.storage.remove('token')
+      storage.remove('token')
       Vue.$router.push('/manage/login')
     } else {
       if (process.env.NODE_ENV === 'development') {
@@ -54,17 +56,6 @@ export default {
         // TODO if prod
       }
     }
-  },
-  [symbols.actions.pendingClaimsNumber] ({commit}) {
-    http.post(endpoints.insurances.pendingClaims).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.pendingClaimsNumber, data.total)
-        this.headerInfo.pendingNodssClaimsNumber = data.total
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getPendingClaimsNumber', response)
-    })
   },
   [symbols.actions.courseStaff] ({commit}) {
     http.post(endpoints.users.courseStaff).then((response) => {
@@ -100,6 +91,16 @@ export default {
       }
     }).catch((response) => {
       ErrorHandler.handleErrors('getPaymentReportsNumber', response)
+    })
+  },
+  [symbols.actions.pendingClaimsNumber] ({commit}) {
+    http.post(endpoints.insurances.pendingClaims).then((response) => {
+      const data = response.data.data
+      if (data.hasOwnProperty('total')) {
+        commit(symbols.mutations.pendingClaimsNumber, data.total)
+      }
+    }).catch((response) => {
+      ErrorHandler.handleErrors('getPendingClaimsNumber', response)
     })
   },
   [symbols.actions.patientContactsNumber] ({commit}) {
@@ -166,9 +167,7 @@ export default {
     http.post(endpoints.insurancePreauth.rejected).then((response) => {
       const data = response.data.data
       if (data.hasOwnProperty('total')) {
-        // @todo: check why we need two
         commit(symbols.mutations.rejectedPreauthNumber, data.total)
-        commit(symbols.mutations.alertsNumber, data.total)
       }
     }).catch((response) => {
       ErrorHandler.handleErrors('getRejectedPreauthNumber', response)

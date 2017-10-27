@@ -412,7 +412,6 @@ export const NAVIGATION_MENU = [
 ]
 
 export const NOTIFICATION_NUMBERS = {
-  alerts: 'ALERTS',
   emailBounces: 'EMAIL_BOUNCES',
   faxAlerts: 'FAX_ALERTS',
   hst: 'HST',
@@ -604,3 +603,8 @@ export const NOTIFICATIONS = [
     countNonZero: 'bad_count'
   }
 ]
+
+export const STANDARD_META = {
+  requiresAuth: true,
+  requiresManageTemplate: true
+}

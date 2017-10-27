@@ -73,7 +73,7 @@
             <ul id="results" style="border:solid 2px #a7cefa;">
                 <li
                     v-for="deviceResult in deviceGuideResults"
-                    :class="{ 'box_go' : deviceResult.imagePath}"
+                    :class="{ 'box_go': deviceResult.imagePath }"
                 >
                     <div v-if="deviceResult.imagePath" class='ico'>
                         <img :src="deviceResult.imagePath" />
@@ -89,7 +89,7 @@
     </div>
 </template>
 
-<script src="./deviceSelector.js"></script>
+<script src="./DeviceSelector.js"></script>
 
 <style src="../../../../assets/css/manage/admin.css" scoped></style>
 <style src="../../../../assets/css/manage/form.css" scoped></style>

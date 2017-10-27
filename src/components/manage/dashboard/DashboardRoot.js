@@ -1,5 +1,5 @@
 import symbols from '../../../symbols'
-import HeaderComponent from '../../header/header.vue'
+import HeaderComponent from '../common/CommonHeader.vue'
 import DashboardMessagesComponent from './DashboardMessages.vue'
 import DashboardNavigationComponent from './DashboardNavigation.vue'
 import DashboardNotificationsComponent from './DashboardNotifications.vue'

@@ -1,8 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import AppComponent from './App.vue'
-import SiteSealComponent from './components/SiteSeal.vue'
+import AppComponent from './components/App.vue'
 import router from './router'
 import axios from 'axios'
 import store from './store'
@@ -11,7 +10,6 @@ import $ from 'jquery'
 import VueMoment from 'vue-moment'
 
 window.constants = constants
-window.storage = require('./modules/storage.js')
 window.$ = $
 window.jQuery = $
 const buttonUI = require('jquery-ui/button')
@@ -24,8 +22,6 @@ window.accounting = require('accounting')
 window.eventHub = new Vue()
 
 Vue.prototype.$http = axios
-
-Vue.component('site-seal', SiteSealComponent)
 
 Vue.use(VueMoment)
 

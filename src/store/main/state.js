@@ -3,8 +3,8 @@ import { NOTIFICATION_NUMBERS } from '../../constants'
 
 export default {
   [symbols.state.mainToken]: '',
+  [symbols.state.modal]: '',
   [symbols.state.popupEdit]: false,
-  [symbols.state.pendingClaimsNumber]: 0,
   [symbols.state.courseStaff]: {
     useCourse: 0,
     useCourseStaff: 0

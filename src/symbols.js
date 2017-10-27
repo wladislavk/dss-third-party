@@ -13,8 +13,8 @@ export default {
     epworthProps: 'EPWORTH_PROPS',
     mainToken: 'MAIN_TOKEN',
     memos: 'MEMOS',
+    modal: 'MODAL',
     notificationNumbers: 'NOTIFICATION_NUMBERS',
-    pendingClaimsNumber: 'PENDING_CLAIMS_NUMBER',
     popupEdit: 'POPUP_EDIT',
     screenerId: 'SCREENER_ID',
     screenerToken: 'SCREENER_TOKEN',
@@ -52,7 +52,6 @@ export default {
     tasksPatientNumber: 'TASKS_PATIENT_NUMBER'
   },
   mutations: {
-    alertsNumber: 'ALERTS_NUMBER',
     coMorbidity: 'CO_MORBIDITY',
     coMorbidityWeight: 'CO_MORBIDITY_WEIGHT',
     companyData: 'COMPANY_DATA',
@@ -69,6 +68,7 @@ export default {
     hstNumber: 'HST_NUMBER',
     mainToken: 'MAIN_TOKEN',
     memos: 'MEMOS',
+    modal: 'MODAL',
     modifyEpworthProps: 'MODIFY_EPWORTH_PROPS',
     notificationNumbers: 'NOTIFICATION_NUMBERS',
     patientChangesNumber: 'PATIENT_CHANGES_NUMBER',
@@ -108,7 +108,6 @@ export default {
     userInfo: 'USER_INFO'
   },
   actions: {
-    alertsNumber: 'ALERTS_NUMBER',
     authenticateScreener: 'AUTHENTICATE_SCREENER',
     courseStaff: 'COURSE_STAFF',
     dataImportModal: 'DATA_IMPORT_MODAL',

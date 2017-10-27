@@ -197,9 +197,6 @@
             <!-- Stick Footer Section Here -->
         </table>
 
-        <!-- Popup global template -->
-        <modal ref="modal"></modal>
-
         <div id="warn_logout" ref="warning-logout">
             <br /><br />
 
@@ -218,14 +215,13 @@
 <!-- TODO: rewrite legacy scripts to the new structure -->
 <!-- <script src="../../assets/js/manage/top.js"></script> -->
 
-<script src="./header.js"></script>
+<script src="./CommonHeader.js"></script>
 
-<style src="../../assets/css/manage/admin.css" scoped></style>
-<style src="../../assets/css/manage/notifications.css" scoped></style>
-<style src="../../assets/css/manage/search-hints.css" scoped></style>
-<style src="../../assets/css/manage/top.css" scoped></style>
-<style src="../../assets/css/manage/letter-form.css" scoped></style>
-<style src="../../assets/css/manage/form.css" scoped></style>
-<!-- <style src="../../assets/css/jscal/border-radius.css" scoped></style> -->
-<style src="../../../node_modules/sweetalert/dist/sweetalert.css" scoped></style>
-<style src="../../../node_modules/mint-ui/lib/style.css" scoped></style>
+<style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/notifications.css" scoped></style>
+<style src="../../../assets/css/manage/search-hints.css" scoped></style>
+<style src="../../../assets/css/manage/top.css" scoped></style>
+<style src="../../../assets/css/manage/letter-form.css" scoped></style>
+<style src="../../../assets/css/manage/form.css" scoped></style>
+<style src="../../../../node_modules/sweetalert/dist/sweetalert.css" scoped></style>
+<style src="../../../../node_modules/mint-ui/lib/style.css" scoped></style>

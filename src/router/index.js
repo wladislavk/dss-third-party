@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MintUI from 'mint-ui'
 import axios from 'axios'
-import ManageTemplate from '../components/header/header.vue'
+import ManageRoot from '../components/manage/ManageRoot.vue'
 import Login from '../components/manage/login/login.vue'
-import Index from '../components/manage/dashboard/dashboard.vue'
+import Index from '../components/manage/dashboard/DashboardRoot.vue'
 import Patients from '../components/manage/patients/patients.vue'
 import Contacts from '../components/manage/contacts/contacts.vue'
 import EditingPatients from '../components/manage/patients/editing/editingPatients.vue'
@@ -24,109 +24,89 @@ import ScreenerDiagnoses from '../components/screener/sections/ScreenerDiagnoses
 import ScreenerResults from '../components/screener/sections/ScreenerResults.vue'
 import ScreenerDoctor from '../components/screener/sections/ScreenerDoctor.vue'
 import ScreenerHst from '../components/screener/sections/ScreenerHst.vue'
-import PageNotFound from '../components/services/pageNotFound.vue'
+import PageNotFound from '../components/errors/pageNotFound.vue'
+import storage from '../modules/storage'
+import { STANDARD_META } from '../constants'
 
 Vue.use(Router)
 Vue.use(MintUI)
-
-Vue.component('manage-template', ManageTemplate)
 
 export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/manage/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/manage/index',
-      name: 'dashboard',
-      component: Index,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/patients',
-      name: 'patients',
-      component: Patients,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/contacts',
-      name: 'contacts',
-      component: Contacts,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/edit-patient',
-      name: 'edit-patient',
-      component: EditingPatients,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/vobs',
-      name: 'vobs',
-      component: Vobs,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/referredby',
-      name: 'referredby',
-      component: ReferredBy,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/sleeplabs',
-      name: 'sleeplabs',
-      component: Sleeplabs,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/corporate-contacts',
-      name: 'corporate-contacts',
-      component: CorporateContacts,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/ledger-report-full',
-      name: 'ledger-report-full',
-      component: LedgerReportFull,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/print-referred-by-contact',
-      name: 'print-referred-by-contact',
-      component: PrintReferredByContact,
-      meta: {
-        requiresAuth: true
-      }
+      path: '/manage',
+      name: 'manage-root',
+      component: ManageRoot,
+      children: [
+        {
+          path: 'login',
+          name: 'login',
+          component: Login
+        },
+        {
+          path: 'index',
+          name: 'dashboard',
+          component: Index,
+          meta: STANDARD_META
+        },
+        {
+          path: 'patients',
+          name: 'patients',
+          component: Patients,
+          meta: STANDARD_META
+        },
+        {
+          path: 'contacts',
+          name: 'contacts',
+          component: Contacts,
+          meta: STANDARD_META
+        },
+        {
+          path: 'edit-patient',
+          name: 'edit-patient',
+          component: EditingPatients,
+          meta: STANDARD_META
+        },
+        {
+          path: 'vobs',
+          name: 'vobs',
+          component: Vobs,
+          meta: STANDARD_META
+        },
+        {
+          path: 'referredby',
+          name: 'referredby',
+          component: ReferredBy,
+          meta: STANDARD_META
+        },
+        {
+          path: 'sleeplabs',
+          name: 'sleeplabs',
+          component: Sleeplabs,
+          meta: STANDARD_META
+        },
+        {
+          path: 'corporate-contacts',
+          name: 'corporate-contacts',
+          component: CorporateContacts,
+          meta: STANDARD_META
+        },
+        {
+          path: 'ledger-report-full',
+          name: 'ledger-report-full',
+          component: LedgerReportFull,
+          meta: STANDARD_META
+        },
+        {
+          path: 'print-referred-by-contact',
+          name: 'print-referred-by-contact',
+          component: PrintReferredByContact,
+          meta: {
+            requiresAuth: true
+          }
+        }
+      ]
     },
     {
       path: '/screener',
@@ -179,10 +159,7 @@ export default new Router({
               component: ScreenerHst
             }
           ],
-          meta: {
-            requiresAuth: true,
-            requiresManageTemplate: true
-          }
+          meta: STANDARD_META
         }
       ]
     },
@@ -192,10 +169,10 @@ export default new Router({
     }
   ],
   beforeEach (to, from, next) {
-    if (to.matched.some(record => record.meta.requiresAuth) && !window.storage.get('token')) {
+    if (to.matched.some(record => record.meta.requiresAuth) && !storage.get('token')) {
       next({ name: 'login' })
     } else {
-      axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.storage.get('token')
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + storage.get('token')
       next()
     }
   }

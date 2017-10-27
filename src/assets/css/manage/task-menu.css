@@ -13,7 +13,7 @@
   color: #00457C;
 }
 
-div.task_menu_general {
+div.task_menu, div.task_menu_general {
   margin-top: 8px;
   float: right;
 }

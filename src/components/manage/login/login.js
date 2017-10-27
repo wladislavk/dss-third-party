@@ -7,6 +7,7 @@ import symbols from '../../../symbols'
 import alerter from '../../../services/alerter'
 import { focus as focusDirective } from 'vue-focus'
 import ProcessWrapper from '../../../wrappers/ProcessWrapper'
+import SiteSealComponent from '../../SiteSeal.vue'
 
 export default {
   name: 'login',
@@ -21,6 +22,9 @@ export default {
         password: ''
       }
     }
+  },
+  components: {
+    siteSeal: SiteSealComponent
   },
   directives: {
     focus: focusDirective

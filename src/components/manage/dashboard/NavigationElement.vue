@@ -29,3 +29,5 @@
 </template>
 
 <script src="./NavigationElement.js"></script>
+
+<style src="../../../assets/css/manage/homesuckertreemenu.css" scoped></style>

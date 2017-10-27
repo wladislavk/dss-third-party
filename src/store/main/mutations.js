@@ -9,7 +9,7 @@ export default {
     state[symbols.state.popupEdit] = value
   },
   [symbols.mutations.pendingClaimsNumber] (state, number) {
-    state[symbols.state.pendingClaimsNumber] = parseInt(number)
+    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingClaims] = parseInt(number)
   },
   [symbols.mutations.paymentReportsNumber] (state, number) {
     state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.paymentReports] = parseInt(number)
@@ -34,9 +34,6 @@ export default {
   },
   [symbols.mutations.rejectedPreauthNumber] (state, number) {
     state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.rejectedPreAuth] = parseInt(number)
-  },
-  [symbols.mutations.alertsNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.alerts] = parseInt(number)
   },
   [symbols.mutations.supportTicketsNumber] (state, number) {
     state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.supportTickets] = parseInt(number)
@@ -82,5 +79,8 @@ export default {
   },
   [symbols.mutations.usePaymentReports] ({state}, data) {
     state[symbols.state.usePaymentReports] = data
+  },
+  [symbols.mutations.modal] ({state}, component) {
+    state[symbols.state.modal] = component
   }
 }

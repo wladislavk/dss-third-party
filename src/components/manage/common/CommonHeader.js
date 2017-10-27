@@ -1,15 +1,14 @@
-import endpoints from '../../endpoints'
-import handlerMixin from '../../modules/handler/HandlerMixin'
-import http from '../../services/http'
-import logoutTimerMixin from '../../modules/logout/LogoutTimerMixin'
-import modal from '../modal/modal.vue'
-import symbols from '../../symbols'
-import PatientTaskMenuComponent from '../manage/tasks/PatientTaskMenu.vue'
-import TaskMenuComponent from '../manage/tasks/TaskMenu.vue'
-import { LEGACY_URL } from '../../constants'
+import endpoints from '../../../endpoints'
+import handlerMixin from '../../../modules/handler/HandlerMixin'
+import http from '../../../services/http'
+import logoutTimerMixin from '../../../modules/logout/LogoutTimerMixin'
+import symbols from '../../../symbols'
+import PatientTaskMenuComponent from '../../manage/tasks/PatientTaskMenu.vue'
+import TaskMenuComponent from '../../manage/tasks/TaskMenu.vue'
+import { LEGACY_URL } from '../../../constants'
 
 // include static libs
-require('../../../static/third-party/dynamic-drive-dhtml/ddlevelsmenu.js')
+require('../../../../static/third-party/dynamic-drive-dhtml/ddlevelsmenu.js')
 
 export default {
   data () {
@@ -71,7 +70,6 @@ export default {
     }
   },
   components: {
-    modal: modal,
     taskMenu: TaskMenuComponent,
     patientTaskMenu: PatientTaskMenuComponent
   },

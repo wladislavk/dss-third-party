@@ -10,3 +10,5 @@
 </template>
 
 <script src="./NotificationLink.js"></script>
+
+<style src="../../../assets/css/manage/dashboard/notification-link.css" scoped></style>

@@ -96,3 +96,10 @@ br.both {
   width: 750px;
   opacity: 0.7;
 }
+
+.v-enter-active, .v-leave-active {
+  transition: opacity 250ms ease-in-out;
+}
+.v-enter, .v-leave-to {
+  opacity: 0;
+}

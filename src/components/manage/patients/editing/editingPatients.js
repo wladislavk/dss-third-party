@@ -2,6 +2,7 @@ import endpoints from '../../../../endpoints'
 import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
 import patientValidator from '../../../../modules/validators/PatientMixin'
+import storage from '../../../../modules/storage'
 
 export default {
   data: function () {
@@ -92,10 +93,10 @@ export default {
         this.$set(this.routeParameters, 'patientId', this.$route.query.pid)
 
         // if patient data need to be updated - check local storage, it may contain status message about created patient
-        const message = window.storage.get('message')
+        const message = storage.get('message')
         if (message && message.length > 0) {
           this.message = message
-          window.storage.remove('message')
+          storage.remove('message')
         }
 
         this.fillForm(this.$route.query.pid)
@@ -406,7 +407,7 @@ export default {
       }
 
       if (data.hasOwnProperty('created_patient_id') && data.created_patient_id > 0) {
-        window.storage.save('message', data.status)
+        storage.save('message', data.status)
         this.$router.push(this.$route.path + '?pid=' + data.created_patient_id)
       }
 

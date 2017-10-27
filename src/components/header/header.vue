@@ -95,7 +95,7 @@
 
                             <div class="suckertreemenu">
                                 <span style="line-height:38px; margin-right:10px;font-size:20px; color:#fff; float:right;">
-                                    Welcome {{ headerInfo.user.username }}
+                                    Welcome {{ username }}
                                 </span>
                             </div>
 
@@ -227,5 +227,5 @@
 <style src="../../assets/css/manage/letter-form.css" scoped></style>
 <style src="../../assets/css/manage/form.css" scoped></style>
 <!-- <style src="../../assets/css/jscal/border-radius.css" scoped></style> -->
-<style src="../../../node_modules/sweetalert/dist/sweetalert.css"></style>
-<style src="../../../node_modules/mint-ui/lib/style.css"></style>
+<style src="../../../node_modules/sweetalert/dist/sweetalert.css" scoped></style>
+<style src="../../../node_modules/mint-ui/lib/style.css" scoped></style>

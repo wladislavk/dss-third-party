@@ -1,18 +1,21 @@
-import deviceSelector from '../manage/dashboard/device-selector/deviceSelector.vue'
-import viewContact from '../manage/contacts/ViewContact.vue'
-import patientAccessCode from '../manage/patients/access-code/PatientAccessCode.vue'
-import editContact from '../manage/contacts/EditContact.vue'
-import editReferredByContact from '../manage/referredby/edit/editReferredByContacts.vue'
-import viewSleeplab from '../manage/sleeplabs/view/viewSleeplab.vue'
-import editSleeplab from '../manage/sleeplabs/edit/editSleeplab.vue'
-import viewCorporateContact from '../manage/corporate-contacts/view/viewCorporateContact.vue'
+import alerter from '../../services/alerter'
+import DeviceSelectorComponent from '../manage/dashboard/device-selector/deviceSelector.vue'
+import ViewContactComponent from '../manage/contacts/ViewContact.vue'
+import PatientAccessCodeComponent from '../manage/patients/access-code/PatientAccessCode.vue'
+import EditContactComponent from '../manage/contacts/EditContact.vue'
+import EditReferredByContactComponent from '../manage/referredby/edit/editReferredByContacts.vue'
+import ViewSleeplabComponent from '../manage/sleeplabs/view/viewSleeplab.vue'
+import EditSleeplabComponent from '../manage/sleeplabs/edit/editSleeplab.vue'
+import ViewCorporateContactComponent from '../manage/corporate-contacts/view/viewCorporateContact.vue'
 
 export default {
   data () {
     return {
-      popupStatus: 0, // 0 - disabled, 1 - enabled
+      popupEnabled: false,
       popupEdit: false,
-      currentView: 'empty'
+      currentView: 'empty',
+      topPosition: 0,
+      leftPosition: 0
     }
   },
   created () {
@@ -22,42 +25,38 @@ export default {
     this.$off('keyup')
   },
   components: {
-    'empty': { name: 'empty-template', template: '<p></p>' },
-    'device-selector': deviceSelector,
-    'view-contact': viewContact,
-    'patient-access-code': patientAccessCode,
-    'edit-contact': editContact,
-    'edit-referred-by-contact': editReferredByContact,
-    'view-sleeplab': viewSleeplab,
-    'edit-sleeplab': editSleeplab,
-    'view-corporate-contact': viewCorporateContact
+    'empty': {
+      name: 'empty-template',
+      template: '<p></p>'
+    },
+    deviceSelector: DeviceSelectorComponent,
+    viewContact: ViewContactComponent,
+    patientAccessCode: PatientAccessCodeComponent,
+    editContact: EditContactComponent,
+    editReferredByContact: EditReferredByContactComponent,
+    viewSleeplab: ViewSleeplabComponent,
+    editSleeplab: EditSleeplabComponent,
+    viewCorporateContact: ViewCorporateContactComponent
   },
   methods: {
     setComponentParameters (parameters) {
-      this.$nextTick(function () {
+      this.$nextTick(() => {
         window.eventHub.$emit('setting-component-params', parameters)
       })
     },
     centering () {
       const windowWidth = document.documentElement.clientWidth
       const windowHeight = document.documentElement.clientHeight
-      const popupHeight = window.$('#popupContact').height()
-      const popupWidth = window.$('#popupContact').width()
-      const topPos = (windowHeight / 2 - popupHeight / 2 + window.pageYOffset) + 'px'
+      const popupHeight = document.getElementById('popupContact').height()
+      const popupWidth = document.getElementById('popupContact').width()
+
+      const topPos = (windowHeight / 2 - popupHeight / 2 + window.pageYOffset)
       let leftPos = windowWidth / 2 - popupWidth / 2
       if (leftPos < 0) {
         leftPos = 10
       }
-      // centering
-      window.$('#popupContact').css({
-        'position': 'absolute',
-        'top': topPos,
-        'left': leftPos
-      })
-      // only need force for IE6
-      window.$('#backgroundPopup').css({
-        'height': windowHeight
-      })
+      this.topPosition = topPos + 'px'
+      this.leftPosition = leftPos + 'px'
     },
     display (component) {
       if (this.hasComponent(component)) {
@@ -66,38 +65,35 @@ export default {
         this.currentView = component
         this.popupEdit = true
 
-        // loads popup only if it is disabled
-        if (this.popupStatus === 0) {
-          window.$('#backgroundPopup').css({
-            'opacity': '0.7'
-          })
+        if (!this.popupEnabled) {
           window.$('#backgroundPopup').fadeIn('slow')
           window.$('#popupContact').fadeIn('slow')
 
-          this.popupStatus = 1
+          this.popupEnabled = true
         }
       }
     },
     disable () {
-      let answer = false
-      // disables popup only if it is enabled
-      if (this.popupStatus === 1) {
-        answer = true
-        if (this.$store.popupEdit) {
-          answer = confirm('Are you sure you want to exit without saving?')
-        }
+      if (!this.popupEnabled) {
+        return
+      }
 
-        if (answer) {
-          window.$('#backgroundPopup').fadeOut('slow')
-          window.$('#popupContact').fadeOut('slow')
-          this.popupStatus = 0
-          this.popupEdit = false
-          this.currentView = 'empty'
-        }
+      let answer = true
+      if (this.$store.popupEdit) {
+        const confirmText = 'Are you sure you want to exit without saving?'
+        answer = alerter.isConfirmed(confirmText)
+      }
+
+      if (answer) {
+        window.$('#backgroundPopup').fadeOut('slow')
+        window.$('#popupContact').fadeOut('slow')
+        this.popupEnabled = false
+        this.popupEdit = false
+        this.currentView = 'empty'
       }
     },
     onKeyUp (e) {
-      if (e.keyCode === 27 && this.popupStatus === 1) {
+      if (e.keyCode === 27 && this.popupEnabled) {
         this.disable()
       }
     },

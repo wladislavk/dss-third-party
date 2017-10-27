@@ -1,17 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import mainModule from './main'
-import contactModule from './contacts'
-import screenerModule from './screener'
-import tasksModule from './tasks'
+import MainModule from './main'
+import DashboardModule from './dashboard'
+import ContactModule from './contacts'
+import ScreenerModule from './screener'
+import TasksModule from './tasks'
 
 Vue.use(Vuex)
 
 const modules = {
-  main: mainModule,
-  contacts: contactModule,
-  screener: screenerModule,
-  tasks: tasksModule
+  main: MainModule,
+  contacts: ContactModule,
+  dashboard: DashboardModule,
+  screener: ScreenerModule,
+  tasks: TasksModule
 }
 
 export default new Vuex.Store({ modules: modules })

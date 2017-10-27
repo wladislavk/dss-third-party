@@ -17,6 +17,11 @@ export default {
     const token = this.$store.state.main[symbols.state.mainToken]
     if (!token) {
       this.$router.push({ name: 'login' })
+      return
+    }
+    if (this.$store.state[symbols.state.docInfo].homepage !== '1') {
+      // @todo: rewrite legacy
+      // include_once 'includes/top2.htm'
     }
   }
 }

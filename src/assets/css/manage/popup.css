@@ -1,6 +1,7 @@
 br.both {
   clear: both;
 }
+
 #backgroundPopup, #backgroundPopup2, #backgroundPopupRef, #backgroundPopupClean {
   display: none;
   position: fixed;
@@ -12,6 +13,7 @@ br.both {
   border: 1px solid #cecece;
   z-index: 701;
 }
+
 #popupContact, #popupContact2, #popupRefer, #popupClean {
   display: none;
   position: fixed;
@@ -23,6 +25,7 @@ br.both {
   padding: 12px;
   font-size: 13px;
 }
+
 #popupContactClose, #popupReferClose, #popupCleanClose {
   font-size: 14px;
   line-height: 14px;
@@ -33,6 +36,7 @@ br.both {
   font-weight: 700;
   display: block;
 }
+
 #button {
   text-align: center;
   margin: 100px;
@@ -49,6 +53,7 @@ br.both {
   border: 1px solid #cecece;
   z-index: 1;
 }
+
 #popupContact1 {
   display: none;
   position: fixed;
@@ -60,6 +65,7 @@ br.both {
   padding: 12px;
   font-size: 13px;
 }
+
 #popupContactClose1 {
   font-size: 14px;
   line-height: 14px;
@@ -70,7 +76,23 @@ br.both {
   font-weight: 700;
   display: block;
 }
+
 #button1 {
   text-align: center;
   margin: 100px;
+}
+
+#modal-content {
+  background: rgb(191, 207, 220) url(../../images/tall.jpg) repeat-x;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+#popupContact {
+  position: absolute;
+  width: 750px;
+  opacity: 0.7;
 }

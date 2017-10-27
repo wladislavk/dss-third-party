@@ -1,0 +1,45 @@
+import { LEGACY_URL } from '../../../constants'
+import symbols from '../../../symbols'
+
+export default {
+  props: {
+    linkCount: {
+      type: String,
+      required: true
+    },
+    linkLabel: {
+      type: String,
+      required: true
+    },
+    linkUrl: {
+      type: String,
+      default: ''
+    },
+    countZeroClass: {
+      type: String,
+      default: 'good_count'
+    },
+    countNonZeroClass: {
+      type: String,
+      default: 'bad_count'
+    },
+    hasChildren: {
+      type: Boolean,
+      default: false
+    },
+    showAll: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data () {
+    return {
+      legacyUrl: LEGACY_URL
+    }
+  },
+  computed: {
+    linkNumber () {
+      return this.$store.state[symbols.state.notificationNumbers][this.linkCount]
+    }
+  }
+}

@@ -1,9 +1,12 @@
 <template>
-    <a
-      v-bind:href="legacyUrl + 'manage_hst.php?status=' + constants.DSS_HST_COMPLETE + '&viewed=0'"
-      :class="'count_' + headerInfo.hstNumber + ' notification ' + (headerInfo.hstNumber == 0 ? 'good_count' : 'great_count')"
+    <a v-show="showAll || linkNumber"
+        v-bind:href="hasChildren ? (legacyUrl + linkUrl) : '#'"
+        v-bind:class="'notification count_' + linkNumber + ' ' + (linkNumber === 0 ? countZeroClass : countNonZeroClass)"
     >
-        <span class="count">{{ linkCount }}</span>
+        <span class="count">{{ linkNumber }}</span>
         <span class="label">{{ linkLabel }}</span>
+        <div class="arrow_right" v-if="hasChildren"></div>
     </a>
 </template>
+
+<script src="./NotificationLink.js"></script>

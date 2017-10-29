@@ -114,36 +114,6 @@ class PatientsApiTest extends ApiTestCase
         $this->assertEquals(1, $this->getResponseData()[0]['patientid']);
     }
 
-    public function testGetNumber()
-    {
-        $this->post(self::ROUTE_PREFIX . '/patients/number');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
-
-    public function testGetDuplicates()
-    {
-        $this->post(self::ROUTE_PREFIX . '/patients/duplicates');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
-
-    public function testGetBounces()
-    {
-        $this->post(self::ROUTE_PREFIX . '/patients/bounces');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
-
     public function testGetListPatients()
     {
         $this->post(self::ROUTE_PREFIX . '/patients/list');

@@ -185,36 +185,6 @@ class LettersController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/letters/pending",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getPending()
-    {
-        $data = $this->repository->getPending($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/letters/unmailed",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getUnmailed()
-    {
-        $data = $this->repository->getUnmailed($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
      *     path="/letters/delivered-for-contact",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )

@@ -137,19 +137,4 @@ class SupportTicketsController extends BaseRestController
     {
         return parent::destroy($id);
     }
-
-    /**
-     * @SWG\Post(
-     *     path="/support-tickets/number",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getNumber()
-    {
-        $data = $this->repository->getNumber($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
 }

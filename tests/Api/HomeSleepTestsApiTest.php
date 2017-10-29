@@ -119,15 +119,4 @@ class HomeSleepTestsApiTest extends ApiTestCase
         $expected = [20, 21];
         $this->assertEquals($expected, $ids);
     }
-
-    public function testGetByType()
-    {
-        $type = 'completed';
-        $this->post(self::ROUTE_PREFIX . '/home-sleep-tests/' . $type);
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
 }

@@ -259,33 +259,4 @@ class HomeSleepTestsController extends BaseRestController
 
         return ApiResponse::responseOk('', $data);
     }
-
-    /**
-     * @SWG\Post(
-     *     path="/home-sleep-tests/{type}",
-     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @param string $type
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getByType($type)
-    {
-        switch ($type) {
-            case 'completed':
-                $data = $this->repository->getCompleted($this->user->docid);
-                break;
-            case 'requested':
-                $data = $this->repository->getRequested($this->user->docid);
-                break;
-            case 'rejected':
-                $data = $this->repository->getRejected($this->user->docid);
-                break;
-            default:
-                $data = [];
-        }
-
-        return ApiResponse::responseOk('', $data);
-    }
 }

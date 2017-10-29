@@ -41,6 +41,7 @@ class NoteRepository extends AbstractRepository
                 "))
             ->addBinding($docId, 'select')
             ->whereRaw("COALESCE(m.signed_on, '') = ''")
-            ->first();
+            ->first()
+        ;
     }
 }

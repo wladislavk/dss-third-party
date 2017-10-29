@@ -40,14 +40,4 @@ class SupportTicketsApiTest extends ApiTestCase
             'body'  => 'updated support ticket',
         ];
     }
-
-    public function testGetNumber()
-    {
-        $this->post(self::ROUTE_PREFIX . '/support-tickets/number');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
 }

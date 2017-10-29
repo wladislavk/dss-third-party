@@ -40,14 +40,4 @@ class NotesApiTest extends ApiTestCase
             'userid' => 12,
         ];
     }
-
-    public function testGetUnsigned()
-    {
-        $this->post(self::ROUTE_PREFIX . '/notes/unsigned');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
 }

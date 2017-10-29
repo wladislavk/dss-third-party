@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\User;
-use DentalSleepSolutions\Http\Controllers\Controller;
+use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 use Tests\TestCases\ApiTestCase;
 
 class UsersApiTest extends ApiTestCase
@@ -137,22 +137,58 @@ class UsersApiTest extends ApiTestCase
 
     public function testGetCurrentUserInfo()
     {
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
         $this->post(self::ROUTE_PREFIX . '/users/current');
         $this->assertResponseOk();
-        $expected = Controller::EMPTY_MODEL_ATTRIBUTES;
+        $expected = [
+            'id' => 'u_1',
+            'adminid' => 0,
+            'userid' => 1,
+            'docid' => 1,
+            'user_type' => 2,
+            'status' => 1,
+            'admin' => 0,
+            'email' => 'email1@email.com',
+            'name' => 'DOCTOR !',
+            'first_name' => 'Doctor',
+            'last_name' => '1',
+            'username' => 'doc1f',
+            'ip_address' => '192.168.1.55',
+            'access' => 2,
+            'companyid' => 3,
+            'adddate' => '2010-03-05 18:53:39',
+            'numbers' => [
+                'patient_contacts' => 0,
+                'patient_insurances' => 1,
+                'payment_reports' => 1,
+                'support_tickets' => 5,
+                'patient_changes' => 4,
+                'pending_duplicates' => 9,
+                'email_bounces' => 0,
+                'completed_preauth' => 6,
+                'pending_preauth' => 2,
+                'rejected_preauth' => 0,
+                'completed_hst' => 4,
+                'requested_hst' => 1,
+                'rejected_hst' => 0,
+                'pending_claims' => 6,
+                'rejected_claims' => 3,
+                'unmailed_claims' => 71,
+                'unmailed_claims_software' => 71,
+                'fax_alerts' => 0,
+                'pending_letters' => 250,
+                'unmailed_letters' => 130,
+                'unsigned_notes' => 7,
+            ],
+        ];
         $this->assertEquals($expected, $this->getResponseData());
     }
 
     public function testGetCourseStaff()
     {
         $this->post(self::ROUTE_PREFIX . '/users/course-staff');
-        $this->assertResponseOk();
-        $this->assertNull($this->getResponseData());
-    }
-
-    public function testGetPaymentReports()
-    {
-        $this->post(self::ROUTE_PREFIX . '/users/payment-reports');
         $this->assertResponseOk();
         $this->assertNull($this->getResponseData());
     }

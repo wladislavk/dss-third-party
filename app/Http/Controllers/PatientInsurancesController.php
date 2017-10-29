@@ -155,19 +155,4 @@ class PatientInsurancesController extends BaseRestController
 
         return ApiResponse::responseOk('', $data);
     }
-
-    /**
-     * @SWG\Post(
-     *     path="/patient-insurances/number",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getNumber()
-    {
-        $data = $this->repository->getNumber($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
 }

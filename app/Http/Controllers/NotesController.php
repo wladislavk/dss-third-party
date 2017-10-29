@@ -136,19 +136,4 @@ class NotesController extends BaseRestController
     {
         return parent::destroy($id);
     }
-
-    /**
-     * @SWG\Post(
-     *     path="/notes/unsigned",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getUnsigned()
-    {
-        $data = $this->repository->getUnsigned($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
 }

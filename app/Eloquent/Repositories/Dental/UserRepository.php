@@ -26,17 +26,6 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * @param int $docId
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-    public function getPaymentReports($docId)
-    {
-        return $this->model->select('use_payment_reports')
-            ->where('userid', $docId)
-            ->first();
-    }
-
-    /**
      * @param int $userId
      * @return \Illuminate\Database\Eloquent\Model|null
      */

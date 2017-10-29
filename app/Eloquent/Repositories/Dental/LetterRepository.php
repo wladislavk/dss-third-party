@@ -51,6 +51,32 @@ class LetterRepository extends AbstractRepository
      * @param int $docId
      * @return Model|null
      */
+    public function getPendingNumber($docId)
+    {
+        return $this->model
+            ->select(\DB::raw('COUNT(letterid) AS total'))
+            ->leftJoin('dental_patients', 'dental_letters.patientid', '=', 'dental_patients.patientid')
+            ->where('dental_letters.status', 0)
+            ->where('dental_letters.delivered', 0)
+            ->where('dental_letters.deleted', 0)
+            ->where('dental_letters.docid', $docId)
+            ->where(function (Builder $query) {
+                /** @var Builder|QueryBuilder $builder */
+                $builder = $query;
+                return $builder
+                    ->whereNull('dental_letters.parentid')
+                    ->orWhere('dental_letters.parentid', 0)
+                    ;
+            })
+            ->orderBy('generated_date')
+            ->first()
+        ;
+    }
+
+    /**
+     * @param int $docId
+     * @return Model|null
+     */
     public function getUnmailed($docId)
     {
         return $this->model

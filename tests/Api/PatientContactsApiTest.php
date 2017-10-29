@@ -48,14 +48,4 @@ class PatientContactsApiTest extends ApiTestCase
         $this->assertResponseOk();
         $this->assertEquals([], $this->getResponseData());
     }
-
-    public function testGetNumber()
-    {
-        $this->post(self::ROUTE_PREFIX . '/patient-contacts/number');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
 }

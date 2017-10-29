@@ -63,31 +63,6 @@ class LettersApiTest extends ApiTestCase
         ];
     }
 
-    public function testGetPending()
-    {
-        $this->post(self::ROUTE_PREFIX . '/letters/pending');
-        $this->assertResponseOk();
-        $expected = [
-            [
-                'generated_date' => '2011-07-14 20:41:32',
-            ],
-            [
-                'generated_date' => '2011-07-14 20:41:32',
-            ],
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
-
-    public function testGetUnmailed()
-    {
-        $this->post(self::ROUTE_PREFIX . '/letters/unmailed');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
-
     public function testGetContactSentLetters()
     {
         $this->post(self::ROUTE_PREFIX . '/letters/delivered-for-contact');

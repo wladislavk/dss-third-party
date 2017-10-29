@@ -33,14 +33,4 @@ class PaymentReportsApiTest extends ApiTestCase
             'viewed'       => 1,
         ];
     }
-
-    public function testGetNumber()
-    {
-        $this->post(self::ROUTE_PREFIX . '/payment-reports/number');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
 }

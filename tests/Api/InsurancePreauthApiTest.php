@@ -149,34 +149,4 @@ class InsurancePreauthApiTest extends ApiTestCase
         $this->assertResponseOk();
         $this->assertNull($this->getResponseData());
     }
-
-    public function testGetCompleted()
-    {
-        $this->post(self::ROUTE_PREFIX . '/insurance-preauth/completed');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
-
-    public function testGetPending()
-    {
-        $this->post(self::ROUTE_PREFIX . '/insurance-preauth/pending');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
-
-    public function testGetRejected()
-    {
-        $this->post(self::ROUTE_PREFIX . '/insurance-preauth/rejected');
-        $this->assertResponseOk();
-        $expected = [
-            'total' => 0,
-        ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
 }

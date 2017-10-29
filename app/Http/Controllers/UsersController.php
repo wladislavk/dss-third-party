@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Helpers\UserNumberRetriever;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -358,11 +359,13 @@ class UsersController extends BaseRestController
      *
      * Get info about current logged in user
      *
+     * @param UserNumberRetriever $userNumberRetriever
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCurrentUserInfo()
+    public function getCurrentUserInfo(UserNumberRetriever $userNumberRetriever)
     {
-        return ApiResponse::responseOk('', $this->user);
+        $userData = $userNumberRetriever->addUserNumbers($this->user);
+        return ApiResponse::responseOk('', $userData);
     }
 
     /**
@@ -378,21 +381,6 @@ class UsersController extends BaseRestController
     public function getCourseStaff()
     {
         $data = $this->repository->getCourseStaff($this->user->userid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/users/payment-reports",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getPaymentReports()
-    {
-        $data = $this->repository->getPaymentReports($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
     }

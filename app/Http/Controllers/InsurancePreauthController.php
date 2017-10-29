@@ -321,51 +321,6 @@ class InsurancePreauthController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/insurance-preauth/completed",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getCompleted()
-    {
-        $data = $this->repository->getCompleted($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/insurance-preauth/pending",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getPending()
-    {
-        $data = $this->repository->getPending($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/insurance-preauth/rejected",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getRejected()
-    {
-        $data = $this->repository->getRejected($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
      *     path="/insurance-preauth/pending-VOB",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )

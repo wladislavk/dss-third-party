@@ -330,52 +330,6 @@ class InsurancesController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/insurances/pending-claims",
-     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getPendingFrontOfficeClaims()
-    {
-        $data = $this->repository->getPendingClaims($this->user->docid);
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/insurances/unmailed-claims",
-     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @param UnmailedClaimsRetriever $unmailedClaimsRetriever
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getUnmailedFrontOfficeClaims(UnmailedClaimsRetriever $unmailedClaimsRetriever)
-    {
-        $data = $unmailedClaimsRetriever->getUnmailedClaims($this->user->docid, $this->user->user_type);
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/insurances/rejected-claims",
-     *     @SWG\Parameter(name="type", in="path", type="string", required=true),
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getRejectedFrontOfficeClaims()
-    {
-        $data = $this->repository->getRejectedClaims($this->user->docid);
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
      *     path="/insurances/remove-claim",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )

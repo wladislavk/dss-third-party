@@ -487,51 +487,6 @@ class PatientsController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/patients/number",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getNumber()
-    {
-        $data = $this->repository->getNumber($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/patients/duplicates",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getDuplicates()
-    {
-        $data = $this->repository->getDuplicates($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/patients/bounces",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getBounces()
-    {
-        $data = $this->repository->getBounces($this->user->docid);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
      *     path="/patients/list",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )

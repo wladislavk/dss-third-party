@@ -43,7 +43,7 @@ class InsuranceRepository extends AbstractRepository implements BackOfficeCondit
 
     /**
      * @param int $docId
-     * @return \Illuminate\Database\Eloquent\Model|mixed|null
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function getPendingClaims($docId)
     {

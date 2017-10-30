@@ -3,8 +3,10 @@ export default class {
     this.mutations = []
     this.actions = []
     this.state = {}
+    this.rootState = {}
     this.mocks = {
       state: this.state,
+      rootState: this.rootState,
       commit: this._commit.bind(this),
       dispatch: this._dispatch.bind(this)
     }
@@ -12,6 +14,10 @@ export default class {
 
   setState (state) {
     this.mocks.state = state
+  }
+
+  setRootState (state) {
+    this.mocks.rootState = state
   }
 
   _commit (type, payload) {

@@ -13,7 +13,8 @@ export default {
     homepage: '',
     manageStaff: 0,
     useEligibleApi: 0,
-    useLetters: 0
+    useLetters: 0,
+    usePatientPortal: 0
   },
   [symbols.state.userInfo]: {
     userId: 0,
@@ -24,7 +25,6 @@ export default {
     useCourse: 0,
     username: ''
   },
-  [symbols.state.usePaymentReports]: false,
   [symbols.state.notificationNumbers]: {
     [NOTIFICATION_NUMBERS.alerts]: 0,
     [NOTIFICATION_NUMBERS.emailBounces]: 0,
@@ -46,5 +46,14 @@ export default {
     [NOTIFICATION_NUMBERS.unmailedClaims]: 0,
     [NOTIFICATION_NUMBERS.unmailedLetters]: 0,
     [NOTIFICATION_NUMBERS.unsignedNotes]: 0
-  }
+  },
+  [symbols.state.patientName]: '',
+  [symbols.state.patientHomeSleepTestStatus]: '',
+  [symbols.state.medicare]: 0,
+  [symbols.state.premedCheck]: 0,
+  [symbols.state.headerTitle]: '',
+  [symbols.state.headerAlertText]: '',
+  [symbols.state.displayAlert]: false,
+  [symbols.state.allergen]: 0,
+  [symbols.state.incompleteHomeSleepTests]: []
 }

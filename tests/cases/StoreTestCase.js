@@ -15,12 +15,16 @@ export default class {
   }
 
   _commit (type, payload) {
-    payload = payload || {}
+    if (payload === undefined) {
+      payload = {}
+    }
     this.mutations.push({type: type, payload: payload})
   }
 
   _dispatch (type, payload) {
-    payload = payload || {}
+    if (payload === undefined) {
+      payload = {}
+    }
     this.actions.push({ type: type, payload: payload })
   }
 }

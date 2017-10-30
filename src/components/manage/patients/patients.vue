@@ -18,7 +18,7 @@
                 <router-link
                     v-for="letter in letters"
                     :key="letter.id"
-                    :class="'letters ' + (letter == routeParameters.currentLetter ? 'selected_letter' : '')"
+                    :class="'letters ' + (letter === routeParameters.currentLetter ? 'selected_letter' : '')"
                     :to="{ name: $route.name, query: { letter: letter, sh: routeParameters.selectedPatientType }}"
                 >{{ letter }}</router-link>
 
@@ -38,17 +38,17 @@
                     <td  align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages" class="page_numbers">
-                            <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
+                            <strong v-if="routeParameters.currentPageNumber === (index - 1)">{{ index }}</strong>
                             <router-link
                                 v-else
                                 :to="{
                                     name: $route.name,
                                     query: {
-                                        page    : index - 1,
-                                        letter  : routeParameters.currentLetter,
-                                        sort    : routeParameters.sortColumn,
-                                        sortdir : routeParameters.sortDirection,
-                                        sh      : routeParameters.selectedPatientType
+                                        page: index - 1,
+                                        letter: routeParameters.currentLetter,
+                                        sort: routeParameters.sortColumn,
+                                        sortdir: routeParameters.sortDirection,
+                                        sh: routeParameters.selectedPatientType
                                     }
                                 }"
                                 class="fp"
@@ -89,7 +89,7 @@
                     <td class="rxlomn">N/A</td>
                     <td class="ledger">($435.75)</td>
                 </tr>
-                <tr v-if="patients.length == 0" class="tr_bg">
+                <tr v-if="patients.length === 0" class="tr_bg">
                     <td valign="top" class="col_head" colspan="10" align="center">
                         No Records
                     </td>
@@ -97,7 +97,7 @@
                 <tr
                     v-else
                     v-for="patient in patients"
-                    :class="(patient.status == 1 ? 'tr_active' : 'tr_inactive') + ' initial_list'"
+                    :class="(patient.status === 1 ? 'tr_active' : 'tr_inactive') + ' initial_list'"
                 >
                     <td valign="top">
                         <router-link
@@ -110,11 +110,11 @@
                             {{ patient.firstname }}&nbsp;
                             {{ patient.middlename }}
                         </router-link>
-                        <span v-if="patient.premedcheck == 1 || patient.allergenscheck == 1">
+                        <span v-if="patient.premedcheck === 1 || patient.allergenscheck === 1">
                             &nbsp;&nbsp;&nbsp;<span style="font-weight:bold; color:#ff0000;">*Med</span>
                         </span>
                     </td>
-                    <template v-if="patient.patient_info != 1">
+                    <template v-if="patient.patient_info !== 1">
                         <td colspan="9" align="center" class="pat_incomplete">-- Patient Incomplete --</td>
                     </template>
                     <template v-else>
@@ -141,7 +141,7 @@
                                 }"
                             >
                                 <template
-                                    v-if="!patient.date_scheduled || patient.date_scheduled == '0000-00-00'"
+                                    v-if="!patient.date_scheduled || patient.date_scheduled === '0000-00-00'"
                                 >
                                     <span>N/A</span>
                                 </template>
@@ -171,7 +171,7 @@
                                 }"
                             >
                                 <template
-                                    v-if="!patient.date_completed || patient.date_completed == '0000-00-00'"
+                                    v-if="!patient.date_completed || patient.date_completed === '0000-00-00'"
                                 >
                                     <span>N/A</span>
                                 </template>
@@ -220,7 +220,7 @@
                                 }"
                             >
                                 <template
-                                    v-if="!patient.dentaldevice_date || patient.dentaldevice_date == '0000-00-00'"
+                                    v-if="!patient.dentaldevice_date || patient.dentaldevice_date === '0000-00-00'"
                                 >
                                     <span>N/A</span>
                                 </template>
@@ -248,7 +248,7 @@
                                     }
                                 }"
                             >
-                                <template v-if="patient.vob == null || patient.vob == ''">
+                                <template v-if="patient.vob === null || patient.vob === ''">
                                     <span>No</span>
                                 </template>
                                 <template v-else>
@@ -278,7 +278,7 @@
                                     }
                                 }"
                             >
-                                <span v-if="patient.ledger == null">N/A</span>
+                                <span v-if="patient.ledger === null">N/A</span>
                                 <template v-else>
                                     <span v-if="patient.total > 0" class="red">
                                         ({{ formatLedger(patient.total) }})

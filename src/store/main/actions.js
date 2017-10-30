@@ -1,12 +1,15 @@
-import Vue from 'vue'
 import endpoints from '../../endpoints'
 import http from '../../services/http'
 import symbols from '../../symbols'
 import storage from '../../modules/storage'
-import ErrorHandler from '../../modules/handler/HandlerMixin'
+import ProcessWrapper from '../../wrappers/ProcessWrapper'
+import SwalWrapper from '../../wrappers/SwalWrapper'
+import RouterKeeper from '../../services/RouterKeeper'
+import {HST_STATUSES} from '../../constants'
 
 export default {
-  [symbols.actions.userInfo] ({commit, dispatch}) {
+  [symbols.actions.userInfo] ({state, commit, dispatch}) {
+    http.token = state[symbols.state.mainToken]
     http.post(endpoints.users.current).then((response) => {
       const data = response.data.data
       const userInfo = {
@@ -19,23 +22,27 @@ export default {
         username: data.username
       }
       commit(symbols.mutations.userInfo, userInfo)
-      dispatch(symbols.actions.docInfo, data.id)
+      commit(symbols.mutations.notificationNumbers, data.numbers)
+      dispatch(symbols.actions.docInfo, data.docid)
     }).catch((response) => {
-      this.handleErrors('getCurrentUser', response)
+      dispatch(symbols.actions.handleErrors, { title: 'getCurrentUser', response: response })
     })
   },
-  [symbols.actions.docInfo] ({commit}, userId) {
+  [symbols.actions.docInfo] ({state, commit, dispatch}, userId) {
+    http.token = state[symbols.state.mainToken]
     http.get(endpoints.users.show + '/' + userId).then((response) => {
       const data = response.data.data
       const docInfo = {
         homepage: data.homepage,
         manageStaff: data.manage_staff,
         useEligibleApi: data.use_eligible_api,
-        useLetters: parseInt(data.use_letters)
+        useLetters: parseInt(data.use_letters),
+        usePatientPortal: data.use_patient_portal,
+        usePaymentReports: data.use_payment_reports
       }
       commit(symbols.mutations.docInfo, docInfo)
     }).catch((response) => {
-      this.handleErrors('getUser', response)
+      dispatch(symbols.actions.handleErrors, { title: 'getUser', response: response })
     })
   },
   [symbols.actions.disablePopupEdit] ({commit}) {
@@ -43,21 +50,22 @@ export default {
       value: false
     })
   },
-  [symbols.actions.handleErrors] ({title, response}) {
-    // @todo: use wrappers to make this action testable
+  [symbols.actions.handleErrors] (data, {title, response}) {
     // token expired
     if (response.status === 401) {
       storage.remove('token')
-      Vue.$router.push('/manage/login')
+      const router = RouterKeeper.getRouter()
+      router.push('/manage/login')
+      return
+    }
+    if (ProcessWrapper.getNodeEnv() === 'development') {
+      console.error(title + ' [status]: ' + response.status)
     } else {
-      if (process.env.NODE_ENV === 'development') {
-        console.error(title + ' [status]: ', response.status)
-      } else {
-        // TODO if prod
-      }
+      // TODO if prod
     }
   },
-  [symbols.actions.courseStaff] ({commit}) {
+  [symbols.actions.courseStaff] ({state, commit, dispatch}) {
+    http.token = state[symbols.state.mainToken]
     http.post(endpoints.users.courseStaff).then((response) => {
       const data = response.data.data
       const courseStaffData = {
@@ -66,219 +74,103 @@ export default {
       }
       commit(symbols.mutations.courseStaff, courseStaffData)
     }).catch((response) => {
-      ErrorHandler.handleErrors('getCourseStaff', response)
+      dispatch(symbols.actions.handleErrors, { title: 'getCourseStaff', response: response })
     })
   },
-  [symbols.actions.usePaymentReports] ({commit, dispatch}) {
-    http.post(endpoints.users.paymentReports).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('use_payment_reports')) {
-        commit(symbols.mutations.usePaymentReports, !!data.use_payment_reports)
-        dispatch(symbols.actions.paymentReportsNumber)
+  [symbols.actions.patientData] ({state, commit, dispatch}, patientId) {
+    const queryData = {
+      where: {
+        docid: state[symbols.state.userInfo].docId,
+        patientid: patientId
       }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getUsingPaymentReports', response)
-    })
-  },
-  [symbols.actions.paymentReportsNumber] ({state, commit}) {
-    if (!state[symbols.state.usePaymentReports]) {
-      return
     }
-    http.post(endpoints.paymentReports.number).then((response) => {
+    http.token = state[symbols.state.mainToken]
+    http.post(endpoints.patients.withFilter, queryData).then((response) => {
       const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.paymentReportsNumber, data.total)
+      if (!(data instanceof Array) || !data.length) {
+        return
       }
+      const firstElement = data[0]
+      const insuranceType = parseInt(firstElement.p_m_ins_type)
+      let hasMedicare = false
+      if (insuranceType === 1) {
+        hasMedicare = true
+      }
+      commit(symbols.mutations.medicare, hasMedicare)
+      const premedCheck = parseInt(firstElement.premedcheck)
+      commit(symbols.mutations.premedCheck, premedCheck)
+      if (premedCheck) {
+        let title = state[symbols.state.headerTitle]
+        title += 'Pre-medication: ' + firstElement.premed + '\n'
+        commit(symbols.mutations.headerTitle, title)
+      }
+      commit(symbols.mutations.headerAlertText, firstElement.alert_text)
+      commit(symbols.mutations.displayAlert, firstElement.display_alert)
+      const patientName = {
+        firstName: firstElement.firstname,
+        lastName: firstElement.lastname
+      }
+      commit(symbols.mutations.patientName, patientName)
     }).catch((response) => {
-      ErrorHandler.handleErrors('getPaymentReportsNumber', response)
+      dispatch(symbols.actions.handleErrors, { title: 'getPatientByIdAndDocId', response: response })
     })
   },
-  [symbols.actions.pendingClaimsNumber] ({commit}) {
-    http.post(endpoints.insurances.pendingClaims).then((response) => {
+  [symbols.actions.healthHistoryForPatient] ({state, commit, dispatch}, patientId) {
+    const queryData = {
+      fields: ['other_allergens', 'allergenscheck'],
+      where: { patientid: patientId }
+    }
+    http.token = state[symbols.state.mainToken]
+    http.post(endpoints.healthHistories.withFilter, queryData).then((response) => {
       const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.pendingClaimsNumber, data.total)
+      if (data instanceof Array && data.length) {
+        const allergen = data[0].allergenscheck
+        commit(symbols.mutations.allergen, allergen)
+        if (allergen) {
+          let title = state[symbols.state.headerTitle]
+          title += 'Allergens: ' + data[0].other_allergens
+          commit(symbols.mutations.headerTitle, title)
+        }
       }
     }).catch((response) => {
-      ErrorHandler.handleErrors('getPendingClaimsNumber', response)
+      dispatch(symbols.actions.handleErrors, { title: 'getHealthHistoryByPatientId', response: response })
     })
   },
-  [symbols.actions.patientContactsNumber] ({commit}) {
-    http.post(endpoints.patientContacts.number).then((response) => {
+  [symbols.actions.incompleteHomeSleepTests] ({state, commit, dispatch}, patientId) {
+    const queryData = {
+      patientId: patientId || 0
+    }
+    http.token = state[symbols.state.mainToken]
+    http.post(endpoints.homeSleepTests.incomplete, queryData).then((response) => {
       const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.patientContactsNumber, data.total)
+      commit(symbols.mutations.incompleteHomeSleepTests, data)
+      let status = ''
+      if (data instanceof Array && data.length > 0) {
+        const lastElement = data[data.length - 1]
+        if (HST_STATUSES.hasOwnProperty(lastElement.status)) {
+          status = HST_STATUSES[lastElement.status]
+        }
       }
+      commit(symbols.mutations.patientHomeSleepTestStatus, status)
     }).catch((response) => {
-      ErrorHandler.handleErrors('getPatientContactsNumber', response)
+      dispatch(symbols.actions.handleErrors, { title: 'getIncompleteHomeSleepTests', response: response })
     })
   },
-  [symbols.actions.unmailedLettersNumber] ({commit}) {
-    http.post(endpoints.letters.unmailed).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.unmailedLettersNumber, data.total)
-      }
+  [symbols.actions.logout] ({state, commit}) {
+    http.token = state[symbols.state.mainToken]
+    http.post(endpoints.logout).then(() => {
+      SwalWrapper.callSwal(
+        {
+          title: '',
+          text: 'Logout Successfully!',
+          type: 'success'
+        },
+        () => {
+          commit(symbols.mutations.mainToken, '')
+        }
+      )
     }).catch((response) => {
-      ErrorHandler.handleErrors('getUnmailedLettersNumber', response)
-    })
-  },
-  [symbols.actions.unmailedClaimsNumber] ({commit}) {
-    http.post(endpoints.insurances.unmailedClaims).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.unmailedClaimsNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getUnmailedClaimsNumber', response)
-    })
-  },
-  [symbols.actions.rejectedClaimsNumber] ({commit}) {
-    http.post(endpoints.insurances.rejectedClaims).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.rejectedClaimsNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getRejectedClaimsNumber', response)
-    })
-  },
-  [symbols.actions.preauthNumber] ({commit}) {
-    http.post(endpoints.insurancePreauth.completed).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.preauthNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getPreauthNumber', response)
-    })
-  },
-  [symbols.actions.pendingPreauthNumber] ({commit}) {
-    http.post(endpoints.insurancePreauth.pending).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.pendingPreauthNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getPendingPreauthNumber', response)
-    })
-  },
-  [symbols.actions.rejectedPreauthNumber] ({commit}) {
-    http.post(endpoints.insurancePreauth.rejected).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.rejectedPreauthNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getRejectedPreauthNumber', response)
-    })
-  },
-  [symbols.actions.supportTicketsNumber] ({commit}) {
-    http.post(endpoints.supportTickets.number).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.supportTicketsNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getSupportTicketsNumber', response)
-    })
-  },
-  [symbols.actions.faxAlertsNumber] ({commit}) {
-    http.post(endpoints.faxes.alerts).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.faxAlertsNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getFaxAlertsNumber', response)
-    })
-  },
-  [symbols.actions.unsignedNotesNumber] ({commit}) {
-    http.post(endpoints.notes.unsigned).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.unsignedNotesNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getUnsignedNotesNumber', response)
-    })
-  },
-  [symbols.actions.emailBouncesNumber] ({commit}) {
-    http.post(endpoints.patients.bounces).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.emailBouncesNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getBouncesNumber', response)
-    })
-  },
-  [symbols.actions.pendingDuplicatesNumber] ({commit}) {
-    http.post(endpoints.patients.duplicates).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.pendingDuplicatesNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getPendingDuplicatesNumber', response)
-    })
-  },
-  [symbols.actions.patientChangesNumber] ({commit}) {
-    http.post(endpoints.patients.number).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.patientChangesNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getPatientChangesNumber', response)
-    })
-  },
-  [symbols.actions.hstNumber] ({commit}) {
-    http.post(endpoints.homeSleepTests.completed).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.hstNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getHSTNumber', response)
-    })
-  },
-  [symbols.actions.requestedHstNumber] ({commit}) {
-    http.post(endpoints.homeSleepTests.requested).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.requestedHstNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getRequestedHSTNumber', response)
-    })
-  },
-  [symbols.actions.rejectedHstNumber] ({commit}) {
-    http.post(endpoints.homeSleepTests.rejected).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.rejectedHstNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getRejectedHSTNumber', response)
-    })
-  },
-  [symbols.actions.patientInsurancesNumber] ({commit}) {
-    http.post(endpoints.patientInsurances.number).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('total')) {
-        commit(symbols.mutations.patientInsurancesNumber, data.total)
-      }
-    }).catch((response) => {
-      ErrorHandler.handleErrors('getPatientInsurancesNumber', response)
-    })
-  },
-  [symbols.actions.pendingLettersNumber] ({commit}) {
-    http.post(endpoints.letters.pending).then((response) => {
-      const data = response.data.data
-      commit(symbols.mutations.pendingLettersNumber, data.length)
-    }).catch((response) => {
-      this.handleErrors('getPendingLetters', response)
+      console.error('invalidateToken [status]: ' + response.status)
     })
   }
 }

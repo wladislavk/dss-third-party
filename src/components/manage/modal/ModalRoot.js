@@ -73,7 +73,7 @@ export default {
         answer = alerter.isConfirmed(confirmText)
       }
       if (answer) {
-        this.currentView = ''
+        this.$store.commit(symbols.state.modal, '')
       }
     },
     onKeyUp (e) {

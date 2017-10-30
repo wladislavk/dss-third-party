@@ -1,32 +1,5 @@
-import { DSS_CONSTANTS } from '../constants'
-
 export default {
   dssPreauthStatusLabels: ['Pending', 'Complete', 'Pre-Auth Pending', 'Rejected'],
-
-  dssHstStatusLabels (status) {
-    const labels = [
-      'Canceled',
-      'Unsent',
-      'Pending',
-      'Scheduled',
-      'Complete',
-      'Rejected',
-      'Contacted'
-    ]
-    const statuses = [
-      DSS_CONSTANTS.DSS_HST_CANCELED,
-      DSS_CONSTANTS.DSS_HST_REQUESTED,
-      DSS_CONSTANTS.DSS_HST_PENDING,
-      DSS_CONSTANTS.DSS_HST_SCHEDULED,
-      DSS_CONSTANTS.DSS_HST_COMPLETE,
-      DSS_CONSTANTS.DSS_HST_REJECTED,
-      DSS_CONSTANTS.DSS_HST_CONTACTED
-    ]
-
-    const foundIndex = statuses.findIndex((el) => el === status)
-
-    return foundIndex >= 0 ? labels[foundIndex] : null
-  },
 
   DSS_DEVICE_SETTING_TYPE_RANGE: 0,
   DSS_DEVICE_SETTING_TYPE_FLAG: 1,

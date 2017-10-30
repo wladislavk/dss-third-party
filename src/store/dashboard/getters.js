@@ -57,13 +57,13 @@ export default {
     if (state[symbols.state.userInfo].userType !== DSS_CONSTANTS.DSS_USER_TYPE_SOFTWARE) {
       return false
     }
-    if (!this.headerInfo.useLetters) {
+    if (!state[symbols.state.docInfo].useLetters) {
       return false
     }
     return true
   },
   [symbols.getters.shouldShowPaymentReportsNumber] (state) {
-    return state[symbols.state.usePaymentReports]
+    return !!state[symbols.state.docInfo].usePaymentReports
   },
   [symbols.getters.shouldShowRejectedPreauthNumber] (state) {
     const rejectedNumber = state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.rejectedPreAuth]

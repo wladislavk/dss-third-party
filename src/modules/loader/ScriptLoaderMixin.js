@@ -1,3 +1,5 @@
+import jquery from 'jquery'
+
 module.exports = {
   methods: {
     loadScriptFrom (path, toElement, requiredFunction, externalFunction) {
@@ -11,7 +13,7 @@ module.exports = {
         scriptElement.src = path
         scriptElement.async = true
 
-        window.$(this.$el).find(toElement).append(scriptElement)
+        jquery(this.$el).find(toElement).append(scriptElement)
       } else {
         externalFunction()
       }

@@ -3,16 +3,13 @@ import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
 import patientValidator from '../../../../modules/validators/PatientMixin'
 import storage from '../../../../modules/storage'
+import symbols from '../../../../symbols'
+import alerter from '../../../../services/alerter'
 
 export default {
   data: function () {
     return {
       consts: window.constants,
-      headerInfo: {
-        docInfo: {},
-        patientName: '',
-        patientHomeSleepTestStatus: ''
-      },
       routeParameters: {
         patientId: this.$route.query.pid > 0 ? this.$route.query.pid : null
       },
@@ -83,7 +80,8 @@ export default {
       autoCompleteSearchValue: '',
       eligiblePayerSource: [],
       eligiblePayers: [],
-      secondaryEligiblePayers: []
+      secondaryEligiblePayers: [],
+      docInfo: this.$store.state.main[symbols.state.docInfo]
     }
   },
   mixins: [handlerMixin, patientValidator],
@@ -135,7 +133,7 @@ export default {
   },
   computed: {
     showSendingEmails: function () {
-      return this.headerInfo.docInfo.use_patient_portal && this.patient.use_patient_portal
+      return this.$store.state.main[symbols.state.docInfo].use_patient_portal && this.patient.use_patient_portal
     },
     inches: function () {
       const result = []
@@ -218,79 +216,74 @@ export default {
     }
   },
   created: function () {
-    const self = this
-    window.eventHub.$emit('get-header-info')
-
-    window.eventHub.$on('update-header-info', this.onUpdateHeaderInfo)
     window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
     window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
 
     this.fillForm(this.routeParameters.patientId)
 
-    http.post(endpoints.companies.homeSleepTest).then(function (response) {
+    http.post(endpoints.companies.homeSleepTest).then((response) => {
       const data = response.data.data
 
       if (data) {
         this.homeSleepTestCompanies = data
       }
-    }).catch(function (response) {
+    }).catch((response) => {
       this.handleErrors('getHomeSleepTestCompanies', response)
     })
 
-    http.post(endpoints.locations.byDoctor).then(function (response) {
+    http.post(endpoints.locations.byDoctor).then((response) => {
       const data = response.data.data
 
       if (data) {
         this.docLocations = data
       }
-    }).catch(function (response) {
+    }).catch((response) => {
       this.handleErrors('getDocLocations', response)
     })
 
-    http.post(endpoints.companies.billingExclusiveCompany).then(function (response) {
+    http.post(endpoints.companies.billingExclusiveCompany).then((response) => {
       const data = response.data.data
 
       if (data) {
         this.billingCompany = data
       }
-    }).catch(function (response) {
+    }).catch((response) => {
       this.handleErrors('getBillingCompany', response)
     })
 
-    this.getEligiblePayerSource().then(function (response) {
+    this.getEligiblePayerSource().then((response) => {
       let data = response.data.data
 
       if (data.length) {
         data = this.populateEligiblePayerSource(data)
         this.eligiblePayerSource = data
       }
-    }).catch(function (response) {
+    }).catch((response) => {
       this.handleErrors('getEligiblePayerSource', response)
 
-      http.get(endpoints.eligible.payers).then(function (response) {
+      http.get(endpoints.eligible.payers).then((response) => {
         let data = response.data.data
 
         if (data.length) {
           data = this.populateEligiblePayerSource(data)
           this.eligiblePayerSource = data
         }
-      }).catch(function (response) {
-        self.handleErrors('getStaticEligiblePayerSource', response)
+      }).catch((response) => {
+        this.handleErrors('getStaticEligiblePayerSource', response)
       })
     })
 
-    http.post(endpoints.contacts.insurance).then(function (response) {
+    http.post(endpoints.contacts.insurance).then((response) => {
       const data = response.data.data
 
       if (data.length) {
         this.insuranceContacts = data
       }
-    }).catch(function (response) {
+    }).catch((response) => {
       this.handleErrors('getInsuranceContacts', response)
     })
   },
   beforeDestroy () {
-    window.eventHub.$off('update-header-info', this.onUpdateHeaderInfo)
     window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
     window.eventHub.$off('setting-data-from-modal', this.onSettingDataFromModal)
   },
@@ -301,12 +294,9 @@ export default {
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
     },
-    onUpdateHeaderInfo (headerInfo) {
-      this.headerInfo = headerInfo
-    },
     checkMedicare: function () {
       if (this.patient.s_m_ins_type === 1) {
-        alert(
+        alerter.alert(
           'Warning! It is very rare that Medicare is listed as a patient’s ' +
           'Secondary Insurance.  Please verify that Medicare is the secondary ' +
           'payer for this patient before proceeding.'
@@ -325,7 +315,7 @@ export default {
     },
     validateDate: function (el) {
       if (!this.isValidDate(this.patient[el])) {
-        alert('Invalid Day, Month, or Year range detected. Please correct.')
+        alerter.alert('Invalid Day, Month, or Year range detected. Please correct.')
         this.$refs[el].focus()
       }
     },
@@ -358,9 +348,9 @@ export default {
       }
     },
     onClickOrderHst: function () {
-      alert(
+      alerter.alert(
         'Patient has existing HST with status ' +
-        this.headerInfo.patientHomeSleepTestStatus +
+        this.$store.state.main[symbols.state.patientHomeSleepTestStatus] +
         '. Only one HST can be requested at a time.'
       )
     },
@@ -398,7 +388,7 @@ export default {
         })
 
         // TODO: create more readable format
-        alert(arrOfMessages.join('\n'))
+        alerter.alert(arrOfMessages.join('\n'))
       }
     },
     parseSuccessfulResponseOnEditingPatient: function (data) {
@@ -420,13 +410,13 @@ export default {
 
         mails.forEach((el) => {
           if (mails[el] && mails[el].length > 0) {
-            alert(mails[el])
+            alerter.alert(mails[el])
           }
         })
       }
 
       if (data.send_pin_code) {
-        this.$parent.$refs.modal.display('patient-access-code')
+        this.$store.commit(symbols.mutations.modal, 'patient-access-code')
         this.$parent.$refs.modal.setComponentParameters({ patientId: this.routeParameters.patientId })
       }
 
@@ -455,7 +445,7 @@ export default {
             })
           }
         }).catch(function (response) {
-          alert(response.data.message)
+          alerter.alert(response.data.message)
           this.handleErrors('checkEmail', response)
         })
       }

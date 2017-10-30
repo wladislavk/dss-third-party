@@ -8,13 +8,13 @@
                     pid     : routeParameters.patientId,
                     sort    : routeParameters.sortColumn,
                     sortdir : routeParameters.sortDirection,
-                    viewed  : routeParameters.viewed == 0 ? null : 0
+                    viewed  : routeParameters.viewed === 0 ? null : 0
                 }
             }"
-            style="float:right; margin-right:10px;" 
+            style="float:right; margin-right:10px;"
             class="addButton"
         >
-            {{ routeParameters.viewed == 0 ? 'Show All' : 'Show Unread' }}
+            {{ routeParameters.viewed === 0 ? 'Show All' : 'Show Unread' }}
         </router-link>
         <br /><br /><br />
         <div align="center" class="red">
@@ -26,7 +26,7 @@
                     <td align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages" class="page_numbers">
-                            <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
+                            <strong v-if="routeParameters.currentPageNumber === (index - 1)">{{ index }}</strong>
                             <router-link
                                 v-else
                                 :to="{
@@ -46,7 +46,7 @@
                 <tr class="tr_bg_h">
                     <td
                         v-for="(label, sort) in tableHeaders"
-                        :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
+                        :class="'col_head ' + (routeParameters.sortColumn === sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
                         :width="sort == 'comments' ? '40%' : '15%'"
                     >
@@ -73,7 +73,7 @@
                 <tr
                     v-else
                     v-for="vob in vobs"
-                    :class="{ unviewed: !(vob.viewed == 1 || vob.status == constants.DSS_PREAUTH_PENDING) }"
+                    :class="{ unviewed: !(vob.viewed === 1 || vob.status === constants.DSS_PREAUTH_PENDING) }"
                 >
                     <td valign="top">
                         {{ vob.front_office_request_date }}
@@ -85,7 +85,7 @@
                         {{ constants.dssPreauthStatusLabels[vob.status] }}
                     </td>
                     <td valign="top">
-                        {{ vob.status == constants.DSS_PREAUTH_REJECTED ? vob.reject_reason : '' }}
+                        {{ vob.status === constants.DSS_PREAUTH_REJECTED ? vob.reject_reason : '' }}
                     </td>
                     <td valign="top">
                         <router-link
@@ -108,7 +108,7 @@
                             class="editlink"
                             title="EDIT"
                         >
-                            {{ vob.viewed == 1 ? 'Mark Unread' : 'Mark Read' }}
+                            {{ vob.viewed === 1 ? 'Mark Unread' : 'Mark Read' }}
                         </a>
                     </td>
                 </tr>

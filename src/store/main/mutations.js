@@ -8,65 +8,29 @@ export default {
   [symbols.mutations.popupEdit] (state, { value }) {
     state[symbols.state.popupEdit] = value
   },
-  [symbols.mutations.pendingClaimsNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingClaims] = parseInt(number)
-  },
-  [symbols.mutations.paymentReportsNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.paymentReports] = parseInt(number)
-  },
-  [symbols.mutations.patientContactsNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.patientContacts] = parseInt(number)
-  },
-  [symbols.mutations.unmailedClaimsNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.unmailedClaims] = parseInt(number)
-  },
-  [symbols.mutations.unmailedLettersNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.unmailedLetters] = parseInt(number)
-  },
-  [symbols.mutations.rejectedClaimsNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.rejectedClaims] = parseInt(number)
-  },
-  [symbols.mutations.preauthNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.preAuth] = parseInt(number)
-  },
-  [symbols.mutations.pendingPreauthNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingPreAuth] = parseInt(number)
-  },
-  [symbols.mutations.rejectedPreauthNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.rejectedPreAuth] = parseInt(number)
-  },
-  [symbols.mutations.supportTicketsNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.supportTickets] = parseInt(number)
-  },
-  [symbols.mutations.faxAlertsNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.faxAlerts] = parseInt(number)
-  },
-  [symbols.mutations.unsignedNotesNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.unsignedNotes] = parseInt(number)
-  },
-  [symbols.mutations.emailBouncesNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.emailBounces] = parseInt(number)
-  },
-  [symbols.mutations.pendingDuplicatesNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingDuplicates] = parseInt(number)
-  },
-  [symbols.mutations.patientChangesNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.patientChanges] = parseInt(number)
-  },
-  [symbols.mutations.hstNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.hst] = parseInt(number)
-  },
-  [symbols.mutations.requestedHstNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.requestedHst] = parseInt(number)
-  },
-  [symbols.mutations.rejectedHstNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.rejectedHst] = parseInt(number)
-  },
-  [symbols.mutations.patientInsurancesNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.patientInsurances] = parseInt(number)
-  },
-  [symbols.mutations.pendingLettersNumber] (state, number) {
-    state[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingLetters] = number
+  [symbols.mutations.notificationNumbers] (state, numbers) {
+    state[symbols.state.notificationNumbers] = {
+      [NOTIFICATION_NUMBERS.pendingClaims]: parseInt(numbers.pending_claims),
+      [NOTIFICATION_NUMBERS.paymentReports]: parseInt(numbers.payment_reports),
+      [NOTIFICATION_NUMBERS.patientContacts]: parseInt(numbers.patient_contacts),
+      [NOTIFICATION_NUMBERS.unmailedClaims]: parseInt(numbers.unmailed_claims),
+      [NOTIFICATION_NUMBERS.unmailedLetters]: parseInt(numbers.unmailed_letters),
+      [NOTIFICATION_NUMBERS.rejectedClaims]: parseInt(numbers.rejected_claims),
+      [NOTIFICATION_NUMBERS.preAuth]: parseInt(numbers.completed_preauth),
+      [NOTIFICATION_NUMBERS.pendingPreAuth]: parseInt(numbers.pending_preauth),
+      [NOTIFICATION_NUMBERS.rejectedPreAuth]: parseInt(numbers.rejected_preauth),
+      [NOTIFICATION_NUMBERS.supportTickets]: parseInt(numbers.support_tickets),
+      [NOTIFICATION_NUMBERS.faxAlerts]: parseInt(numbers.fax_alerts),
+      [NOTIFICATION_NUMBERS.unsignedNotes]: parseInt(numbers.unsigned_notes),
+      [NOTIFICATION_NUMBERS.emailBounces]: parseInt(numbers.email_bounces),
+      [NOTIFICATION_NUMBERS.pendingDuplicates]: parseInt(numbers.pending_duplicates),
+      [NOTIFICATION_NUMBERS.patientChanges]: parseInt(numbers.patient_changes),
+      [NOTIFICATION_NUMBERS.hst]: parseInt(numbers.completed_hst),
+      [NOTIFICATION_NUMBERS.requestedHst]: parseInt(numbers.requested_hst),
+      [NOTIFICATION_NUMBERS.rejectedHst]: parseInt(numbers.rejected_hst),
+      [NOTIFICATION_NUMBERS.patientInsurances]: parseInt(numbers.patient_insurances),
+      [NOTIFICATION_NUMBERS.pendingLetters]: parseInt(numbers.pending_letters)
+    }
   },
   [symbols.mutations.courseStaff] ({state}, courseStaffData) {
     state[symbols.state.courseStaff] = courseStaffData
@@ -77,10 +41,34 @@ export default {
   [symbols.mutations.userInfo] ({state}, userInfo) {
     state[symbols.state.userInfo] = userInfo
   },
-  [symbols.mutations.usePaymentReports] ({state}, data) {
-    state[symbols.state.usePaymentReports] = data
-  },
   [symbols.mutations.modal] ({state}, component) {
     state[symbols.state.modal] = component
+  },
+  [symbols.mutations.medicare] ({state}, data) {
+    state[symbols.state.medicare] = data
+  },
+  [symbols.mutations.premedCheck] ({state}, data) {
+    state[symbols.state.premedCheck] = parseInt(data)
+  },
+  [symbols.mutations.headerAlertText] ({state}, data) {
+    state[symbols.state.headerAlertText] = data
+  },
+  [symbols.mutations.headerTitle] ({state}, data) {
+    state[symbols.state.headerTitle] = data
+  },
+  [symbols.mutations.patientName] ({state}, {firstName, lastName}) {
+    state[symbols.mutations.patientName] = firstName + ' ' + lastName
+  },
+  [symbols.mutations.displayAlert] ({state}, data) {
+    state[symbols.state.displayAlert] = !!data
+  },
+  [symbols.mutations.allergen] ({state}, data) {
+    state[symbols.state.allergen] = data
+  },
+  [symbols.mutations.patientHomeSleepTestStatus] ({state}, data) {
+    state[symbols.state.patientHomeSleepTestStatus] = data
+  },
+  [symbols.mutations.incompleteHomeSleepTests] ({state}, data) {
+    state[symbols.state.incompleteHomeSleepTests] = data
   }
 }

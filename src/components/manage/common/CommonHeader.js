@@ -5,7 +5,7 @@ import logoutTimerMixin from '../../../modules/logout/LogoutTimerMixin'
 import symbols from '../../../symbols'
 import PatientTaskMenuComponent from '../../manage/tasks/PatientTaskMenu.vue'
 import TaskMenuComponent from '../../manage/tasks/TaskMenu.vue'
-import { LEGACY_URL } from '../../../constants'
+import { LEGACY_URL, NOTIFICATION_NUMBERS } from '../../../constants'
 
 // include static libs
 require('../../../../static/third-party/dynamic-drive-dhtml/ddlevelsmenu.js')
@@ -14,20 +14,10 @@ export default {
   data () {
     return {
       legacyUrl: LEGACY_URL,
-      username: this.$store.state[symbols.state.userInfo].username,
-      headerInfo: {
-        patientName: '',
-        patientHomeSleepTestStatus: '',
-        medicare: 0,
-        premedCheck: 0,
-        title: '',
-        alertText: '',
-        displayAlert: false
-      },
+      username: this.$store.state.main[symbols.state.userInfo].username,
       secondsPerDay: 86400,
-      pendingPreauthNumber: 0,
-      supportTicketsNumber: 0,
-      alergen: 0,
+      supportTicketsNumber: this.$store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.supportTickets],
+      allergen: this.$store.state.main[symbols.state.allergen],
       companyLogo: '',
       childrenPatients: [],
       totalContacts: 0,
@@ -35,8 +25,14 @@ export default {
       questionnaireStatuses: [],
       bouncedEmailsNumberForCurrentPatient: 0,
       rejectedClaimsForCurrentPatient: [],
-      uncompletedHomeSleepTests: [],
+      incompleteHomeSleepTests: this.$store.state.main[symbols.state.incompleteHomeSleepTests],
       showAllWarnings: true,
+      patientName: this.$store.state.main[symbols.state.patientName],
+      medicare: this.$store.state.main[symbols.state.medicare],
+      displayAlert: this.$store.state.main[symbols.state.displayAlert],
+      headerTitle: this.$store.state.main[symbols.state.headerTitle],
+      alertText: this.$store.state.main[symbols.state.headerAlertText],
+      premedCheck: this.$store.state.main[symbols.state.premedCheck]
     }
   },
   computed: {
@@ -86,43 +82,6 @@ export default {
         this.handleErrors('setLoginDetails', response)
       })
     }
-    if (this.$route.query.pid) {
-      this.getPatientByIdAndDocId(this.$store.state[symbols.state.userInfo].docId, this.$route.query.pid).then((response) => {
-        const data = response.data.data
-        if (data.length) {
-          this.$set(this.headerInfo, 'medicare', (parseInt(data[0].p_m_ins_type) === 1))
-          this.$set(this.headerInfo, 'premedCheck', data[0].premedcheck)
-          this.$set(this.headerInfo, 'alertText', data[0].alert_text)
-          this.$set(this.headerInfo, 'displayAlert', data[0].display_alert)
-          if (this.headerInfo.premedCheck) {
-            this.headerInfo.title += 'Pre-medication: ' + data[0].premed + '\n'
-          }
-          this.$set(this.headerInfo, 'patientName', data[0].firstname + ' ' + data[0].lastname)
-        }
-      }).catch((response) => {
-        this.handleErrors('getPatientByIdAndDocId', response)
-      })
-      this.getHealthHistoryByPatientId(this.$route.query.pid).then((response) => {
-        const data = response.data.data
-        if (data.length) {
-          this.alergen = data[0].allergenscheck
-          if (this.alergen) {
-            this.headerInfo.title += 'Allergens: ' + data[0].other_allergens
-          }
-        }
-      }).catch((response) => {
-        this.handleErrors('getHealthHistoryByPatientId', response)
-      })
-    }
-    const userId = this.$store.state[symbols.state.userInfo].userId.replace('u_', '')
-    http.get(endpoints.users.show + '/' + userId).then((response) => {
-      const data = response.data.data
-      if (data) {
-        this.$set(this.headerInfo.user, 'use_course', data.use_course)
-      }
-    }).catch((response) => {
-      this.handleErrors('getUserById', response)
-    })
     http.get(endpoints.companies.companyByUser).then((response) => {
       const data = response.data.data
       if (data) {
@@ -190,24 +149,6 @@ export default {
         this.handleErrors('getRejectedClaimsForCurrentPatient', response)
       })
     }
-    this.getUncompletedHomeSleepTests().then((response) => {
-      const data = response.data.data
-      if (data) {
-        this.uncompletedHomeSleepTests = data
-      }
-    }).catch((response) => {
-      this.handleErrors('getUncompletedHomeSleepTests', response)
-    })
-  },
-  watch: {
-    'uncompletedHomeSleepTests': function () {
-      let status = ''
-      if (this.uncompletedHomeSleepTests.length > 0) {
-        const lastElement = this.uncompletedHomeSleepTests[this.uncompletedHomeSleepTests.length - 1]
-        status = window.constants.dssHstStatusLabels[lastElement.status]
-      }
-      this.$set(this.headerInfo, 'patientHomeSleepTestStatus', status)
-    }
   },
   methods: {
     setLoginDetails: function (currentPage) {
@@ -217,22 +158,6 @@ export default {
         cur_page: currentPage || ''
       }
       return http.post(endpoints.loginDetails.store, data)
-    },
-    getPatientByIdAndDocId: function (docId, patientId) {
-      const data = {
-        where: {
-          docid: docId || 0,
-          patientid: patientId || 0
-        }
-      }
-      return http.post(endpoints.patients.withFilter, data)
-    },
-    getHealthHistoryByPatientId: function (patientId) {
-      const data = {
-        fields: ['other_allergens', 'allergenscheck'],
-        where: { patientid: patientId || 0 }
-      }
-      return http.post(endpoints.healthHistories.withFilter, data)
     },
     getPatientsByParentId: function (parentPatientId) {
       const data = {
@@ -283,13 +208,6 @@ export default {
 
       return http.post(endpoints.insurances.rejected, data)
     },
-    getUncompletedHomeSleepTests: function (patientId) {
-      const data = {
-        patientId: patientId || 0
-      }
-
-      return http.post(endpoints.homeSleepTests.uncompleted, data)
-    },
     getFileForDisplaying: function (filename) {
       filename = filename || ''
 
@@ -302,19 +220,8 @@ export default {
       this.showAllWarnings = false
     },
     logout () {
-      http.token = this.$store.state.main[symbols.state.mainToken]
-      http.post(endpoints.logout).then(() => {
-        window.swal({
-          title: '',
-          text: 'Logout Successfully!',
-          type: 'success'
-        }, () => {
-          this.$store.commit(symbols.mutations.mainToken, '')
-          this.$router.push({ name: 'login' })
-        })
-      }).catch((response) => {
-        console.error('invalidateToken [status]: ', response.status)
-      })
+      this.$store.dispatch(symbols.actions.logout)
+      this.$router.push({ name: 'login' })
     }
   }
 }

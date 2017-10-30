@@ -538,7 +538,7 @@ export const NOTIFICATIONS = [
     countNonZero: 'bad_count'
   },
   {
-    number: this.$store.state[symbols.state.pendingClaimsNumber],
+    number: NOTIFICATION_NUMBERS.pendingClaims,
     label: 'Pending Claims',
     link: 'manage_claims.php',
     countZero: 'good_count',
@@ -567,7 +567,7 @@ export const NOTIFICATIONS = [
     countNonZero: 'bad_count'
   },
   {
-    number: NOTIFICATION_NUMBERS.alerts,
+    number: NOTIFICATION_NUMBERS.rejectedPreAuth,
     label: 'Alerts',
     link: 'manage_vobs.php?status=' + DSS_CONSTANTS.DSS_PREAUTH_REJECTED + '&viewed=0',
     countZero: 'bad_count',
@@ -607,4 +607,14 @@ export const NOTIFICATIONS = [
 export const STANDARD_META = {
   requiresAuth: true,
   requiresManageTemplate: true
+}
+
+export const HST_STATUSES = {
+  [DSS_CONSTANTS.DSS_HST_CANCELED]: 'Cancelled',
+  [DSS_CONSTANTS.DSS_HST_REQUESTED]: 'Unsent',
+  [DSS_CONSTANTS.DSS_HST_PENDING]: 'Pending',
+  [DSS_CONSTANTS.DSS_HST_SCHEDULED]: 'Scheduled',
+  [DSS_CONSTANTS.DSS_HST_COMPLETE]: 'Complete',
+  [DSS_CONSTANTS.DSS_HST_REJECTED]: 'Rejected',
+  [DSS_CONSTANTS.DSS_HST_CONTACTED]: 'Contacted'
 }

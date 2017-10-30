@@ -1,7 +1,6 @@
 <template>
     <div>
         <table width="980" border="0" cellpadding="0" cellspacing="0" align="center">
-        <!-- Header and nav goes here -->
             <tr>
                 <td colspan="2" align="right" ></td>
             </tr>
@@ -44,8 +43,8 @@
                                 </div>
                             </form>
 
-                            <button onclick="window.location='add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
-                            <button v-bind:replace-onclick="'loadPopup add_task.php?pid=' + patientId" style="padding: 3px; margin-top:27px;">+ Add Task</button>
+                            <button onclick="window.location.href=legacyUrl + 'add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
+                            <button v-bind:replace-onclick="loadPopup( + legacyUrl + 'add_task.php?pid=' + patientId)" style="padding: 3px; margin-top:27px;">+ Add Task</button>
                         </div>
                         <div v-if="companyLogo" style="float:right;margin:13px 15px 0 0;">
                             <img v-bind:src="companyLogo" />
@@ -57,14 +56,25 @@
                             <div
                                 v-if="patientId"
                                 id="patient_name_div"
-                                v-bind:style="headerInfo.patientName.length > 20 ? 'font-size:14px' : ''"
+                                v-bind:style="patientName.length > 20 ? 'font-size:14px' : ''"
                             >
                                 <div id="patient_name_inner">
-                                    <img v-if="headerInfo.medicare" src="../../assets/images/medicare_logo_small.png" />
-                                    <span v-bind:class="{ 'medicare_name': headerInfo.medicare, 'name': !headerInfo.medicare }">
-                                        {{ headerInfo.patientName }}
-                                        <a v-if="headerInfo.displayAlert && headerInfo.alertText.length > 0" href="#" :title="'Notes: ' + headerInfo.alertText" onclick="return false" style="font-weight:bold; font-size:18px; color:#FF0000;">Notes</a>
-                                        <a v-if="headerInfo.premedCheck == 1 || alergen == 1" v-bind:href="legacyUrl + 'q_page3.php?pid=' + patientId" :title="headerInfo.title" style="font-weight:bold; font-size:18px; color:#FF0000;">*Med</a>
+                                    <img v-if="medicare" src="../../../assets/images/medicare_logo_small.png" />
+                                    <span v-bind:class="{ 'medicare_name': medicare, 'name': !medicare }">
+                                        {{ patientName }}
+                                        <a
+                                            v-if="displayAlert && alertText.length > 0"
+                                            href="#"
+                                            v-bind:title="'Notes: ' + alertText"
+                                            onclick="return false"
+                                            style="font-weight:bold; font-size:18px; color:#FF0000;"
+                                        >Notes</a>
+                                        <a
+                                            v-if="premedCheck === 1 || allergen === 1"
+                                            v-bind:href="legacyUrl + 'q_page3.php?pid=' + patientId"
+                                            v-bind:title="headerTitle"
+                                            style="font-weight:bold; font-size:18px; color:#FF0000;"
+                                        >*Med</a>
                                     </span>
                                 </div>
                             </div>
@@ -172,17 +182,17 @@
                                     <br />
                                 </template>
                             </span>
-                            <span v-if="uncompletedHomeSleepTests.length > 0" class="warning">Patient has the following Home Sleep Tests: <br />
-                                <span v-for="test in uncompletedHomeSleepTests">
-                                    <a v-bind:href="legacyUrl + '/manage/hst_request.php?pid=' + test.patient_id + '&amp;hst_id=' + test.id">HST was requested {{ test.adddate | moment("MM/DD/YYYY") }}</a>
+                            <span v-if="incompleteHomeSleepTests.length" class="warning">Patient has the following Home Sleep Tests: <br />
+                                <span v-for="incompleteTest in incompleteHomeSleepTests">
+                                    <a v-bind:href="legacyUrl + '/manage/hst_request.php?pid=' + incompleteTest.patient_id + '&amp;hst_id=' + incompleteTest.id">HST was requested {{ incompleteTest.adddate | moment("MM/DD/YYYY") }}</a>
                                     and is currently
-                                    <a v-if="test.status == window.constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">{{ window.constants.preAuthLabels[test.status] }}</a>
-                                    <span v-else>{{ window.constants.preAuthLabels[test.status] }}</span>
-                                    <span v-if="test.status == window.constants.DSS_HST_SCHEDULED"> - {{ test.office_notes }}</span>
-                                    <span v-if="test.status == window.constants.DSS_HST_REJECTED"> - {{ test.rejected_reason }}</span>
-                                    <span v-if="test.status == window.constants.DSS_HST_REJECTED && test.rejecteddate"> - {{ test.rejecteddate | moment("MM/DD/YYYY hh:mm a") }}</span>
+                                    <a v-if="incompleteTest.status === constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">{{ constants.preAuthLabels[incompleteTest.status] }}</a>
+                                    <span v-else>{{ constants.preAuthLabels[incompleteTest.status] }}</span>
+                                    <span v-if="incompleteTest.status === constants.DSS_HST_SCHEDULED"> - {{ incompleteTest.office_notes }}</span>
+                                    <span v-if="incompleteTest.status === constants.DSS_HST_REJECTED"> - {{ incompleteTest.rejected_reason }}</span>
+                                    <span v-if="incompleteTest.status === constants.DSS_HST_REJECTED && incompleteTest.rejecteddate"> - {{ incompleteTest.rejecteddate | moment("MM/DD/YYYY hh:mm a") }}</span>
                                     <br />
-                                    <a v-if="test.status == window.constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">Click here</a> to remove this error
+                                    <a v-if="incompleteTest.status == constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">Click here</a> to remove this error
                                 </span>
                             </span>
                         </div>
@@ -200,7 +210,7 @@
         <div id="warn_logout" ref="warning-logout">
             <br /><br />
 
-            <img src="~assets/images/logo.gif" /><br />
+            <img src="../../../assets/images/logo.gif" /><br />
             <h1>Your screen has been locked for privacy due to inactivity.<br />Click to reopen your Dental Sleep Solutions software.</h1>
             <p style="color:#fff;font-size:20px;">Log out in <span id="logout_time_remaining" ref="logout-timer"></span>!</p>
 

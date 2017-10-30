@@ -32,43 +32,43 @@ export default {
       [NOTIFICATION_NUMBERS.pendingLetters]: parseInt(numbers.pending_letters)
     }
   },
-  [symbols.mutations.courseStaff] ({state}, courseStaffData) {
+  [symbols.mutations.courseStaff] (state, courseStaffData) {
     state[symbols.state.courseStaff] = courseStaffData
   },
-  [symbols.mutations.docInfo] ({state}, docInfo) {
+  [symbols.mutations.docInfo] (state, docInfo) {
     state[symbols.state.docInfo] = docInfo
   },
-  [symbols.mutations.userInfo] ({state}, userInfo) {
+  [symbols.mutations.userInfo] (state, userInfo) {
     state[symbols.state.userInfo] = userInfo
   },
-  [symbols.mutations.modal] ({state}, component) {
+  [symbols.mutations.modal] (state, component) {
     state[symbols.state.modal] = component
   },
-  [symbols.mutations.medicare] ({state}, data) {
+  [symbols.mutations.medicare] (state, data) {
     state[symbols.state.medicare] = data
   },
-  [symbols.mutations.premedCheck] ({state}, data) {
+  [symbols.mutations.premedCheck] (state, data) {
     state[symbols.state.premedCheck] = parseInt(data)
   },
-  [symbols.mutations.headerAlertText] ({state}, data) {
+  [symbols.mutations.headerAlertText] (state, data) {
     state[symbols.state.headerAlertText] = data
   },
-  [symbols.mutations.headerTitle] ({state}, data) {
+  [symbols.mutations.headerTitle] (state, data) {
     state[symbols.state.headerTitle] = data
   },
-  [symbols.mutations.patientName] ({state}, {firstName, lastName}) {
-    state[symbols.mutations.patientName] = firstName + ' ' + lastName
+  [symbols.mutations.patientName] (state, {firstName, lastName}) {
+    state[symbols.state.patientName] = firstName + ' ' + lastName
   },
-  [symbols.mutations.displayAlert] ({state}, data) {
+  [symbols.mutations.displayAlert] (state, data) {
     state[symbols.state.displayAlert] = !!data
   },
-  [symbols.mutations.allergen] ({state}, data) {
+  [symbols.mutations.allergen] (state, data) {
     state[symbols.state.allergen] = data
   },
-  [symbols.mutations.patientHomeSleepTestStatus] ({state}, data) {
+  [symbols.mutations.patientHomeSleepTestStatus] (state, data) {
     state[symbols.state.patientHomeSleepTestStatus] = data
   },
-  [symbols.mutations.incompleteHomeSleepTests] ({state}, data) {
+  [symbols.mutations.incompleteHomeSleepTests] (state, data) {
     state[symbols.state.incompleteHomeSleepTests] = data
   }
 }

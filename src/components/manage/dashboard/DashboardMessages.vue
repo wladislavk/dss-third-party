@@ -3,7 +3,7 @@
         <h3>Messages</h3>
         <div class="task_menu index_task">
             <ul>
-                <li v-for="memo in memos" v-html="memo.memo"></li>
+                <li v-for="memo in memos" v-html="memo.memo" v-bind:key="memo.id"></li>
             </ul>
         </div>
     </div>

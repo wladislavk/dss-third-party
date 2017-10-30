@@ -1,6 +1,6 @@
 import jquery from 'jquery'
 
-module.exports = {
+export default {
   methods: {
     loadScriptFrom (path, toElement, requiredFunction, externalFunction) {
       if (externalFunction === undefined) {

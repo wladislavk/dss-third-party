@@ -1,9 +1,9 @@
 import symbols from '../../../symbols'
 
 export default {
-  data () {
-    return {
-      memos: this.$store.state.dashboard[symbols.state.memos]
+  computed: {
+    memos () {
+      return this.$store.state.dashboard[symbols.state.memos]
     }
   },
   created () {

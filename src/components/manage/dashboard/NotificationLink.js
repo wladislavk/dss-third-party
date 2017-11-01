@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     linkNumber () {
-      return this.$store.state[symbols.state.notificationNumbers][this.linkCount]
+      return this.$store.state.main[symbols.state.notificationNumbers][this.linkCount]
     }
   }
 }

@@ -2,12 +2,13 @@
     <div>
         <h3>Notifications</h3>
         <template v-for="notification in notifications" v-if="resolveCondition(notification.if)">
-            <div class="notsuckertreemenu" v-if="notification.children.length">
+            <div class="notsuckertreemenu" v-if="notification.hasOwnProperty('children') && notification.children.length">
                 <ul id="notmenu">
                     <li>
                         <notification-link
                             v-bind:link-count="notification.number"
                             v-bind:link-label="notification.label"
+                            v-bind:link-url="notification.link"
                             v-bind:count-zero-class="notification.countZero"
                             v-bind:count-non-zero-class="notification.countNonZero"
                             v-bind:has-children="true"
@@ -23,6 +24,7 @@
                                     v-bind:link-url="notificationChild.link"
                                     v-bind:count-zero-class="notificationChild.countZero"
                                     v-bind:count-non-zero-class="notificationChild.countNonZero"
+                                    v-bind:show-all="showAll"
                                 ></notification-link>
                             </li>
                         </ul>

@@ -1,5 +1,3 @@
-import handlerMixin from '../../../modules/handler/HandlerMixin'
-import symbols from '../../../symbols'
 import { LEGACY_URL, NOTIFICATIONS } from '../../../constants'
 import NotificationLinkComponent from './NotificationLink.vue'
 
@@ -11,15 +9,9 @@ export default {
       showAll: false
     }
   },
-  computed: {
-    patientNotificationsNumber () {
-      return this.$store.getters[symbols.getters.patientNotificationsNumber]
-    }
-  },
   components: {
     notificationLink: NotificationLinkComponent
   },
-  mixins: [handlerMixin],
   methods: {
     showAllNotifications () {
       this.showAll = true
@@ -31,7 +23,7 @@ export default {
       if (!getterName) {
         return true
       }
-      return this.$store.getters[getterName](this.$store.state.dashboard)
+      return this.$store.getters[getterName]
     }
   }
 }

@@ -21,7 +21,7 @@ export default {
       if (!getterName) {
         return true
       }
-      return this.$store.getters[getterName](this.$store.state.dashboard)
+      return this.$store.getters[getterName]
     }
   }
 }

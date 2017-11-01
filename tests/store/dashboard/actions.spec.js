@@ -5,7 +5,7 @@ import symbols from '../../../src/symbols'
 import SwalWrapper from '../../../src/wrappers/SwalWrapper'
 import DashboardModule from '../../../src/store/dashboard'
 import TestCase from '../../cases/StoreTestCase'
-import { LEGACY_URL, NOTIFICATION_NUMBERS } from '../../../src/constants'
+import { LEGACY_URL } from '../../../src/constants'
 import LocationWrapper from '../../../src/wrappers/LocationWrapper'
 
 describe('Dashboard module actions', () => {
@@ -76,24 +76,6 @@ describe('Dashboard module actions', () => {
         expect(this.testCase.actions).toEqual(expectedActions)
         done()
       }, 100)
-    })
-  })
-
-  describe('populateClaims action', () => {
-    it('populates claims', function () {
-      this.testCase.setRootState({
-        main: {
-          [symbols.state.notificationNumbers]: {
-            [NOTIFICATION_NUMBERS.pendingClaims]: 5
-          }
-        }
-      })
-      const element = {
-        name: 'foo'
-      }
-      DashboardModule.actions[symbols.actions.populateClaims](this.testCase.mocks, element)
-
-      expect(element.name).toBe('foo (5)')
     })
   })
 

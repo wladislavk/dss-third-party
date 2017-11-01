@@ -7,8 +7,6 @@ export default {
   },
   created () {
     document.body.className += ' main-template'
-    this.$store.dispatch(symbols.actions.userInfo)
-    this.$store.dispatch(symbols.actions.courseStaff)
   },
   watch: {
     '$route.query.pid': function () {

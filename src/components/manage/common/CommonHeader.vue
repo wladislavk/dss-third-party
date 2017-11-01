@@ -44,7 +44,7 @@
                             </form>
 
                             <button onclick="window.location.href=legacyUrl + 'add_patient.php'" style="padding: 3px; margin-top:27px;">+ Add Patient</button>
-                            <button v-bind:replace-onclick="loadPopup( + legacyUrl + 'add_task.php?pid=' + patientId)" style="padding: 3px; margin-top:27px;">+ Add Task</button>
+                            <button v-bind:onclick="loadPopup( + legacyUrl + 'add_task.php?pid=' + patientId)" style="padding: 3px; margin-top:27px;">+ Add Task</button>
                         </div>
                         <div v-if="companyLogo" style="float:right;margin:13px 15px 0 0;">
                             <img v-bind:src="companyLogo" />

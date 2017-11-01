@@ -1,13 +1,13 @@
 import axios from 'axios'
-import endpoints from '../../../endpoints'
-import { LEGACY_URL } from '../../../constants'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
-import http from '../../../services/http'
-import symbols from '../../../symbols'
-import alerter from '../../../services/alerter'
+import endpoints from '../../endpoints'
+import { LEGACY_URL } from '../../constants'
+import handlerMixin from '../../modules/handler/HandlerMixin'
+import http from '../../services/http'
+import symbols from '../../symbols'
+import alerter from '../../services/alerter'
 import { focus as focusDirective } from 'vue-focus'
-import ProcessWrapper from '../../../wrappers/ProcessWrapper'
-import SiteSealComponent from '../../SiteSeal.vue'
+import ProcessWrapper from '../../wrappers/ProcessWrapper'
+import SiteSealComponent from '../SiteSeal.vue'
 
 export default {
   name: 'login',

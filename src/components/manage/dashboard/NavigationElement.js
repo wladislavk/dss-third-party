@@ -1,3 +1,4 @@
+import populators from '../../../services/populators'
 import { LEGACY_URL } from '../../../constants'
 
 export default {
@@ -17,7 +18,8 @@ export default {
     return {
       legacyUrl: LEGACY_URL,
       showChildren: false,
-      initialOffset: 0
+      initialOffset: 0,
+      elementName: ''
     }
   },
   computed: {
@@ -44,9 +46,11 @@ export default {
     }
   },
   created () {
-    if (this.menuItem.hasOwnProperty('populator')) {
-      this.$store.dispatch(this.menuItem.populator, this.menuItem)
+    let elementName = this.menuItem.name
+    if (this.menuItem.hasOwnProperty('populator') && this.menuItem.populator) {
+      elementName = populators[this.menuItem.populator](this.$store.state, elementName)
     }
+    this.elementName = elementName
   },
   mounted () {
     // root element is not set before mounting

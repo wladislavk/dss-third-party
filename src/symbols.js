@@ -121,7 +121,6 @@ export default {
     memos: 'MEMOS',
     parseScreenerResults: 'PARSE_SCREENER_RESULTS',
     patientData: 'PATIENT_DATA',
-    populateClaims: 'POPULATE_CLAIMS',
     retrieveTasks: 'RETRIEVE_TASKS',
     retrieveTasksForPatient: 'RETRIEVE_TASKS_FOR_PATIENT',
     setCurrentContact: 'SET_CURRENT_CONTACT',
@@ -130,5 +129,8 @@ export default {
     submitScreener: 'SUBMIT_SCREENER',
     submitHst: 'SUBMIT_HST',
     userInfo: 'USER_INFO'
+  },
+  populators: {
+    populateClaims: 'POPULATE_CLAIMS'
   }
 }

@@ -242,7 +242,7 @@ export const NAVIGATION_MENU = [
       {
         name: 'Claims',
         link: 'manage/manage_claims.php',
-        populator: symbols.actions.populateClaims
+        populator: symbols.populators.populateClaims
       },
       {
         name: 'Performance',

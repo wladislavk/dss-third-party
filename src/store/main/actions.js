@@ -10,7 +10,7 @@ import {HST_STATUSES} from '../../constants'
 export default {
   [symbols.actions.userInfo] ({state, commit, dispatch}) {
     http.token = state[symbols.state.mainToken]
-    http.post(endpoints.users.current).then((response) => {
+    return http.request('post', endpoints.users.current).then((response) => {
       const data = response.data.data
       const userInfo = {
         userId: data.id,
@@ -23,12 +23,12 @@ export default {
       }
       commit(symbols.mutations.userInfo, userInfo)
       commit(symbols.mutations.notificationNumbers, data.numbers)
-      dispatch(symbols.actions.docInfo, data.docid)
     }).catch((response) => {
-      dispatch(symbols.actions.handleErrors, { title: 'getCurrentUser', response: response })
+      dispatch(symbols.actions.handleErrors, {title: 'getCurrentUser', response: response})
     })
   },
-  [symbols.actions.docInfo] ({state, commit, dispatch}, userId) {
+  [symbols.actions.docInfo] ({state, commit, dispatch}) {
+    const userId = state[symbols.state.userInfo].docId
     http.token = state[symbols.state.mainToken]
     http.get(endpoints.users.show + '/' + userId).then((response) => {
       const data = response.data.data
@@ -42,7 +42,7 @@ export default {
       }
       commit(symbols.mutations.docInfo, docInfo)
     }).catch((response) => {
-      dispatch(symbols.actions.handleErrors, { title: 'getUser', response: response })
+      dispatch(symbols.actions.handleErrors, {title: 'getUser', response: response})
     })
   },
   [symbols.actions.disablePopupEdit] ({commit}) {

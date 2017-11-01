@@ -91,6 +91,6 @@
 
 <script src="./DeviceSelector.js"></script>
 
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../../assets/css/manage/form.css" scoped></style>
-<style src="../../../../assets/css/manage/device_guide.css"></style>
+<style src="../../../assets/css/manage/admin.css" scoped></style>
+<style src="../../../assets/css/manage/form.css" scoped></style>
+<style src="../../../assets/css/manage/device_guide.css"></style>

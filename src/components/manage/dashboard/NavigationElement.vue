@@ -11,7 +11,7 @@
             v-bind:href="menuItemLink"
             v-on:click="clickLink($event)"
             v-bind:target="menuItemBlank ? '_blank' : '_self'"
-        >{{ menuItem.name }}</a>
+        >{{ elementName }}</a>
         <ul v-if="menuItemChildren.length" v-show="showChildren" v-bind:style="{ left: initialOffset + 'px' }">
             <navigation-element
                 v-for="childItem in menuItemChildren"

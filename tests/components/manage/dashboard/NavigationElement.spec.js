@@ -203,7 +203,7 @@ describe('NavigationElement component', () => {
     const props = {
       menuItem: {
         name: 'Element name',
-        populator: symbols.actions.populateClaims
+        populator: symbols.populators.populateClaims
       }
     }
     const vm = this.mount(props)

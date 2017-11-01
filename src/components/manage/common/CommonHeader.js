@@ -47,11 +47,11 @@ export default {
     },
     showOnlineCEAndSnoozleHelp: function () {
       return (
-        (this.isUserDoctor && this.$store.state[symbols.state.userInfo].useCourse === 1) ||
+        (this.isUserDoctor && this.$store.state.main[symbols.state.userInfo].useCourse === 1) ||
         (
           !this.isUserDoctor &&
-          this.$store.state[symbols.state.courseStaff].useCourse === 1 &&
-          this.$store.state[symbols.state.courseStaff].useCourseStaff === 1
+          this.$store.state.main[symbols.state.courseStaff].useCourse === 1 &&
+          this.$store.state.main[symbols.state.courseStaff].useCourseStaff === 1
         )
       )
     },
@@ -74,7 +74,7 @@ export default {
     this.setLogoutTimer()
     http.token = this.$store.state.main[symbols.state.mainToken]
 
-    if (this.$store.state[symbols.state.userInfo].loginId) {
+    if (this.$store.state.main[symbols.state.userInfo].hasOwnProperty('loginId') && this.$store.state.main[symbols.state.userInfo].loginId) {
       const currentPage = this.$route.query
       this.setLoginDetails(currentPage).then(() => {
         // @todo: add handler

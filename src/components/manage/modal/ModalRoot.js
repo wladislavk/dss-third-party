@@ -52,8 +52,13 @@ export default {
     centering () {
       const windowWidth = document.documentElement.clientWidth
       const windowHeight = document.documentElement.clientHeight
-      const popupHeight = document.getElementById('popupContact').height()
-      const popupWidth = document.getElementById('popupContact').width()
+      let popupHeight = 0
+      let popupWidth = 0
+      const popupContact = document.getElementById('popupContact')
+      if (popupContact) {
+        popupHeight = popupContact.height()
+        popupWidth = popupContact.width()
+      }
 
       const topPos = (windowHeight / 2 - popupHeight / 2 + window.pageYOffset)
       let leftPos = windowWidth / 2 - popupWidth / 2

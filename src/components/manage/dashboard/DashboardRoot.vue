@@ -1,6 +1,5 @@
 <template>
     <div>
-        <header-component></header-component>
         <table id="dashboard">
             <tr>
                 <td valign="top" class="main_cell">
@@ -26,4 +25,4 @@
 
 <script src="./DashboardRoot.js"></script>
 
-<style src="../../../assets/css/manage/dashboard/DashboardRoot.css" scoped></style>
+<style src="../../../assets/css/manage/dashboard/dashboard-root.css" scoped></style>

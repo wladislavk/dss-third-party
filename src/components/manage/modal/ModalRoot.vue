@@ -14,4 +14,4 @@
 
 <script src="./ModalRoot.js"></script>
 
-<style src="../../assets/css/manage/popup.css" scoped></style>
+<style src="../../../assets/css/manage/popup.css" scoped></style>

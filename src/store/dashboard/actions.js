@@ -3,7 +3,7 @@ import http from '../../services/http'
 import symbols from '../../symbols'
 import LocationWrapper from '../../wrappers/LocationWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
-import { LEGACY_URL, NOTIFICATION_NUMBERS } from '../../constants'
+import { LEGACY_URL } from '../../constants'
 
 export default {
   [symbols.actions.documentCategories] ({state, commit, dispatch}) {
@@ -13,10 +13,6 @@ export default {
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getDocumentCategories', response: response})
     })
-  },
-  [symbols.actions.populateClaims] ({rootState}, element) {
-    const pendingClaimsNumber = rootState.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingClaims]
-    element.name += ` (${pendingClaimsNumber})`
   },
   [symbols.actions.deviceSelectorModal] ({commit}) {
     commit(symbols.mutations.modal, 'device-selector')

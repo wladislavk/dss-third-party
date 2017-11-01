@@ -40,7 +40,7 @@ describe('Main module actions', () => {
           }
         }
       }
-      this.sandbox.stub(http, 'post').callsFake((path) => {
+      this.sandbox.stub(http, 'request').callsFake((method, path) => {
         postData.push({
           path: path
         })
@@ -69,15 +69,8 @@ describe('Main module actions', () => {
           }
         }
       ]
-      const expectedActions = [
-        {
-          type: symbols.actions.docInfo,
-          payload: 2
-        }
-      ]
       setTimeout(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
-        expect(this.testCase.actions).toEqual(expectedActions)
         const expectedHttp = [
           {
             path: endpoints.users.current
@@ -111,6 +104,14 @@ describe('Main module actions', () => {
   })
 
   describe('docInfo action', () => {
+    beforeEach(function () {
+      this.testCase.setState({
+        [symbols.state.userInfo]: {
+          docId: 1
+        }
+      })
+    })
+
     it('should set doc info', function (done) {
       const postData = []
       const result = {
@@ -132,8 +133,7 @@ describe('Main module actions', () => {
         return Promise.resolve(result)
       })
 
-      const userId = 1
-      MainModule.actions[symbols.actions.docInfo](this.testCase.mocks, userId)
+      MainModule.actions[symbols.actions.docInfo](this.testCase.mocks)
       const expectedMutations = [
         {
           type: symbols.mutations.docInfo,

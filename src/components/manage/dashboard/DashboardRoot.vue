@@ -1,6 +1,6 @@
 <template>
     <div>
-        <table id="dashboard">
+        <table id="dashboard" v-if="homepage === 1">
             <tr>
                 <td valign="top" class="main_cell">
                     <div class="home_third first">
@@ -18,6 +18,8 @@
                 </td>
             </tr>
         </table>
+        <!-- @todo: add second dashboard -->
+        <!--<div v-else><second-dashboard></second-dashboard></div>-->
 
         <br /><br />
     </div>

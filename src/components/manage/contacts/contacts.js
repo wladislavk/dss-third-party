@@ -1,5 +1,4 @@
 import endpoints from '../../../endpoints'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
 
@@ -32,7 +31,6 @@ export default {
       doneTypingInterval: 600
     }
   },
-  mixins: [handlerMixin],
   watch: {
     '$route.query.contacttype': function () {
       const queryContactType = this.$route.query.contacttype
@@ -107,14 +105,14 @@ export default {
   created () {
     window.eventHub.$on('setting-data-from-modal', this.onSettingDataFromModal)
 
-    http.post(endpoints.contactTypes.activeNonCorporate).then(function (response) {
+    http.post(endpoints.contactTypes.activeNonCorporate).then((response) => {
       const data = response.data.data
 
       if (data) {
         this.contactTypes = data
       }
-    }).catch(function (response) {
-      this.handleErrors('getActiveNonCorporateContactTypes', response)
+    }).catch((response) => {
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getActiveNonCorporateContactTypes', response: response})
     })
 
     this.getContacts()
@@ -128,40 +126,36 @@ export default {
   methods: {
     onSettingDataFromModal (data) {
       this.message = data.message
-      this.$nextTick(function () {
-        const self = this
-
-        setTimeout(function () {
-          self.message = ''
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.message = ''
         }, 3000)
       })
     },
     onKeyUpSearchContacts () {
       clearTimeout(this.typingTimer)
 
-      const self = this
-      this.typingTimer = setTimeout(function () {
-        if (self.requiredContactName.trim() !== '') {
-          if (self.requiredContactName.trim().length > 1) {
-            self.getListContactsAndCompanies(self.requiredContactName.trim())
-              .then(function (response) {
-                const data = response.data.data
+      this.typingTimer = setTimeout(() => {
+        if (this.requiredContactName.trim() !== '') {
+          if (this.requiredContactName.trim().length > 1) {
+            this.getListContactsAndCompanies(this.requiredContactName.trim()).then((response) => {
+              const data = response.data.data
 
-                if (data.length) {
-                  self.foundContactsByName = data
-                  window.$('#contact_hints').show()
-                } else if (data.error) {
-                  self.foundContactsByName = []
-                  alert(data.error)
-                }
-              }).catch(function (response) {
-                self.handleErrors('getListContactsAndCompanies', response)
-              })
+              if (data.length) {
+                this.foundContactsByName = data
+                window.$('#contact_hints').show()
+              } else if (data.error) {
+                this.foundContactsByName = []
+                alert(data.error)
+              }
+            }).catch((response) => {
+              this.$store.dispatch(symbols.actions.handleErrors, {title: 'getListContactsAndCompanies', response: response})
+            })
           } else {
             window.$('#contact_hints').hide()
           }
         } else {
-          self.foundContactsByName = []
+          this.foundContactsByName = []
         }
       }, this.doneTypingInterval)
     },
@@ -196,7 +190,6 @@ export default {
       })
     },
     getContacts () {
-      const self = this
       this.findContacts(
         this.routeParameters.selectedContactType,
         this.routeParameters.status,
@@ -205,54 +198,54 @@ export default {
         this.routeParameters.sortDirection,
         this.routeParameters.currentPageNumber,
         this.contactsPerPage
-      ).then(function (response) {
+      ).then((response) => {
         const data = response.data.data
 
         if (data) {
           this.contactsTotalNumber = data.totalCount
           this.contacts = data.result
         }
-      }).then(function () {
+      }).then(() => {
         const contactsHaveReferrers = this.contacts.map(el => el.referrers > 0 ? el.contactid : 0)
         const contactsHavePatients = this.contacts.map(el => el.patients > 0 ? el.contactid : 0)
 
         contactsHaveReferrers.forEach((contactId, index) => {
           if (contactId > 0) {
-            this.findReferrersByContactId(contactId).then(function (response) {
+            this.findReferrersByContactId(contactId).then((response) => {
               const data = response.data.data
 
               if (data.length) {
                 const updatedContact = Object.assign({
                   referrers_data: data
-                }, self.contacts[index])
+                }, this.contacts[index])
 
-                this.$set(self.contacts, index, updatedContact)
+                this.$set(this.contacts, index, updatedContact)
               }
-            }).catch(function (response) {
-              this.handleErrors('findReferrersByContactId', response)
+            }).catch((response) => {
+              this.$store.dispatch(symbols.actions.handleErrors, {title: 'findReferrersByContactId', response: response})
             })
           }
         })
 
         contactsHavePatients.forEach((contactId, index) => {
           if (contactId > 0) {
-            this.findPatientsByContactId(contactId).then(function (response) {
+            this.findPatientsByContactId(contactId).then((response) => {
               const data = response.data.data
 
               if (data.length) {
                 const updatedContact = Object.assign({
                   patients_data: data
-                }, self.contacts[index])
+                }, this.contacts[index])
 
-                this.$set(self.contacts, index, updatedContact)
+                this.$set(this.contacts, index, updatedContact)
               }
-            }).catch(function (response) {
-              this.handleErrors('findPatientsByContactId', response)
+            }).catch((response) => {
+              this.$store.dispatch(symbols.actions.handleErrors, {title: 'findPatientsByContactId', response: response})
             })
           }
         })
-      }).catch(function (response) {
-        this.handleErrors('findContacts', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'findContacts', response: response})
       })
     },
     findReferrersByContactId (contactId) {

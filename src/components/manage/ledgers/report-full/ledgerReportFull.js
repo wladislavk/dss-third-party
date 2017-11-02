@@ -1,7 +1,7 @@
 import endpoints from '../../../../endpoints'
-import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
 import ledgerSummaryReportFull from '../summary-report-full/ledgerSummaryReportFull.vue'
+import symbols from '../../../../symbols'
 
 export default {
   name: 'ledger-report-full',
@@ -73,7 +73,6 @@ export default {
   components: {
     'ledger-summary-report-full': ledgerSummaryReportFull
   },
-  mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
       const queryPage = this.$route.query.page
@@ -190,13 +189,13 @@ export default {
         this.ledgerRowsPerPage,
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection
-      ).then(function (response) {
+      ).then((response) => {
         const data = response.data.data
 
         this.ledgerRowsTotalNumber = data.total
         this.ledgerRows = data.result
-      }).catch(function (response) {
-        this.handleErrors('getLedgerRows', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getLedgerRows', response: response})
       })
     },
     formatLedger (value) {
@@ -205,9 +204,8 @@ export default {
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
-      } else {
-        return 'asc'
       }
+      return 'asc'
     },
     getLedgerRows (reportType, pageNumber, rowsPerPage, sortColumn, sortDir) {
       const data = {

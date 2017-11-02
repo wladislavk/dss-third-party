@@ -8,6 +8,7 @@ import store from './store'
 import constants from './modules/constants'
 import $ from 'jquery'
 import VueMoment from 'vue-moment'
+import VueVisible from 'vue-visible'
 
 window.constants = constants
 window.$ = $
@@ -24,6 +25,7 @@ window.eventHub = new Vue()
 Vue.prototype.$http = axios
 
 Vue.use(VueMoment)
+Vue.use(VueVisible)
 
 /* eslint-disable no-new */
 new Vue({

@@ -73,7 +73,8 @@ describe('Main module mutations', () => {
           [NOTIFICATION_NUMBERS.requestedHst]: 17,
           [NOTIFICATION_NUMBERS.rejectedHst]: 18,
           [NOTIFICATION_NUMBERS.patientInsurances]: 19,
-          [NOTIFICATION_NUMBERS.pendingLetters]: 20
+          [NOTIFICATION_NUMBERS.pendingLetters]: 20,
+          [NOTIFICATION_NUMBERS.patientNotifications]: 37
         }
       }
       expect(state).toEqual(expectedState)

@@ -1,7 +1,7 @@
 import endpoints from '../../../../endpoints'
-import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
 import referredByContactValidatorMixin from '../../../../modules/validators/ReferredByContactMixin'
+import symbols from '../../../../symbols'
 
 export default {
   name: 'edit-referred-by-contacts',
@@ -24,7 +24,7 @@ export default {
       isContactDataFetched: false
     }
   },
-  mixins: [handlerMixin, referredByContactValidatorMixin],
+  mixins: [referredByContactValidatorMixin],
   watch: {
     'contact': {
       handler: function () {
@@ -51,17 +51,17 @@ export default {
   created () {
     window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
     // no one field was edited
-    this.$parent.popupEdit = false
+    this.$store.dispatch(symbols.actions.disablePopupEdit)
   },
   mounted () {
-    http.post(endpoints.qualifiers.active).then(function (response) {
+    http.post(endpoints.qualifiers.active).then((response) => {
       const data = response.data.data
 
       if (data.length) {
         this.qualifiers = data
       }
-    }).catch(function (response) {
-      this.handleErrors('getActiveQualifiers', response)
+    }).catch((response) => {
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getActiveQualifiers', response: response})
     })
   },
   beforeDestroy () {
@@ -71,7 +71,7 @@ export default {
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
-      this.getReferredByContact(this.componentParams.contactId).then(function (response) {
+      this.getReferredByContact(this.componentParams.contactId).then((response) => {
         const data = response.data.data
 
         if (data) {
@@ -81,13 +81,13 @@ export default {
 
           this.contact = response.data.data
         }
-      }).catch(function (response) {
-        this.handleErrors('getReferredByContact', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getReferredByContact', response: response})
       })
     },
     onSubmit () {
       if (this.validateContactData(this.contact)) {
-        this.editContact(this.componentParams.contactId, this.contact).then(function (response) {
+        this.editContact(this.componentParams.contactId, this.contact).then((response) => {
           const data = response.data.data
 
           this.$parent.popupEdit = false
@@ -107,10 +107,10 @@ export default {
           if (this.componentParams.from === 'flowsheet3') {
             // redirect to "/manage/manage_flowsheet3.php?pid=<?php echo $addedtopat; ?>&refid=<?php echo $rid; ?>"
           }
-        }).catch(function (response) {
+        }).catch((response) => {
           this.parseFailedResponseOnEditingContact(response.data.data)
 
-          this.handleErrors('editContact', response)
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'editContact', response: response})
         })
       }
     },

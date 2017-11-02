@@ -1,5 +1,6 @@
 import endpoints from '../../../../endpoints'
 import http from '../../../../services/http'
+import symbols from '../../../../symbols'
 
 export default {
   name: 'ledger-summary-report-full',
@@ -55,14 +56,14 @@ export default {
   },
   methods: {
     formReportTotals () {
-      this.getLedgerTotals(this.reportType).then(function (response) {
+      this.getLedgerTotals(this.reportType).then((response) => {
         const data = response.data.data
 
         this.charges = data.charges
         this.credits = data.credits.hasOwnProperty('type') ? data.credits['type'].concat(data.credits['named']) : data.credits
         this.adjustments = data.adjustments
-      }).catch(function (response) {
-        this.handleErrors('getLedgerTotals', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getLedgerTotals', response: response})
       })
     },
     getLedgerTotals (reportType) {

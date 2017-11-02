@@ -1,6 +1,6 @@
 import endpoints from '../../../endpoints'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
+import symbols from '../../../symbols'
 
 export default {
   data () {
@@ -57,7 +57,6 @@ export default {
       ]
     }
   },
-  mixins: [handlerMixin],
   watch: {
     '$route.query.sh': function () {
       if (this.$route.query.sh) {
@@ -141,10 +140,10 @@ export default {
       })
     },
     onDeletePatient (patientId) {
-      this.deletePatient(patientId).then(function () {
+      this.deletePatient(patientId).then(() => {
         this.message = 'Deleted Successfully'
-      }).catch(function (response) {
-        this.handleErrors('deletePatient', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'deletePatient', response: response})
       })
     },
     getRxLomn (value) {
@@ -188,7 +187,7 @@ export default {
         this.routeParameters.currentLetter,
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection
-      ).then(function (response) {
+      ).then((response) => {
         const data = response.data.data
 
         const totalCount = data.count[0].total
@@ -196,8 +195,8 @@ export default {
 
         this.patientsTotalNumber = totalCount
         this.patients = patients
-      }).catch(function (response) {
-        this.handleErrors('findPatients', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'findPatients', response: response})
       })
     },
     deletePatient (patientId) {

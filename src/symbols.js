@@ -43,7 +43,6 @@ export default {
     fullName: 'FULL_NAME',
     isUserDoctor: 'IS_USER_DOCTOR',
     notificationsNumber: 'NOTIFICATIONS_NUMBER',
-    patientNotificationsNumber: 'PATIENT_NOTIFICATIONS_NUMBER',
     shouldShowEnrollments: 'SHOULD_SHOW_ENROLLMENTS',
     shouldShowFranchiseManual: 'SHOULD_SHOW_FRANCHISE_MANUAL',
     shouldShowGetCE: 'SHOULD_SHOW_GET_CE',

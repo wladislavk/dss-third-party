@@ -5,14 +5,14 @@
     >
         <a
             v-bind:class="{
-                'mainfoldericon': menuItemChildren.length && firstLevel,
-                'subfoldericon': menuItemChildren.length && !firstLevel
+                'mainfoldericon': linkClass === 'main',
+                'subfoldericon': linkClass === 'sub'
             }"
             v-bind:href="menuItemLink"
             v-on:click="clickLink($event)"
             v-bind:target="menuItemBlank ? '_blank' : '_self'"
         >{{ elementName }}</a>
-        <ul v-if="menuItemChildren.length" v-show="showChildren" v-bind:style="{ left: initialOffset + 'px' }">
+        <ul v-if="menuItemChildren.length" v-visible="showChildren">
             <navigation-element
                 v-for="childItem in menuItemChildren"
                 v-if="resolveCondition(childItem.if)"
@@ -21,7 +21,7 @@
                 v-bind:key="childItem.name"
             ></navigation-element>
         </ul>
-        <ul v-else-if="menuItem.childrenFrom" v-show="showChildren" v-bind:style="{ left: initialOffset + 'px' }">
+        <ul v-else-if="menuItem.childrenFrom" v-visible="showChildren">
             <li v-for="childFrom in getChildrenFrom(menuItem.childrenFrom)">
                 <a class="submenu_item" v-bind:href="menuItemLink + '/' + childFrom[menuItem.childId]">{{ childFrom[menuItem.childName] }}</a>
             </li>

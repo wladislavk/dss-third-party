@@ -13,7 +13,7 @@ export default {
     return false
   },
   [symbols.getters.shouldShowInvoices] (state, getters, rootState) {
-    const userId = rootState.main[symbols.state.userInfo].userId
+    const userId = rootState.main[symbols.state.userInfo].plainUserId
     const docId = rootState.main[symbols.state.userInfo].docId
     if (userId === docId) {
       return true
@@ -25,7 +25,7 @@ export default {
     return false
   },
   [symbols.getters.shouldShowGetCE] (state, getters, rootState) {
-    const userId = rootState.main[symbols.state.userInfo].userId
+    const userId = rootState.main[symbols.state.userInfo].plainUserId
     const docId = rootState.main[symbols.state.userInfo].docId
     if (userId === docId) {
       return true
@@ -48,7 +48,7 @@ export default {
     return false
   },
   [symbols.getters.shouldShowTransactionCode] (state, getters, rootState) {
-    const userId = rootState.main[symbols.state.userInfo].userId
+    const userId = rootState.main[symbols.state.userInfo].plainUserId
     const docId = rootState.main[symbols.state.userInfo].docId
     if (userId === docId) {
       return true
@@ -86,13 +86,5 @@ export default {
       return true
     }
     return false
-  },
-  [symbols.getters.patientNotificationsNumber] (state, getters, rootState) {
-    const stateNotifications = rootState.main[symbols.state.notificationNumbers]
-    const number =
-      stateNotifications[NOTIFICATION_NUMBERS.patientContacts] +
-      stateNotifications[NOTIFICATION_NUMBERS.patientInsurances] +
-      stateNotifications[NOTIFICATION_NUMBERS.patientChanges]
-    return number
   }
 }

@@ -4,7 +4,7 @@ import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import store from '../../../../src/store'
-import DashboardTaskMenuComponent from '../../../../src/components/manage/tasks/DashboardTaskMenu.vue'
+import DashboardTaskMenuComponent from '../../../../src/components/manage/dashboard/DashboardTaskMenu.vue'
 
 describe('DashboardTaskMenu component', () => {
   beforeEach(function () {

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import VueVisible from 'vue-visible'
 import store from '../../../../src/store'
 import NavigationElementComponent from '../../../../src/components/manage/dashboard/NavigationElement.vue'
 import symbols from '../../../../src/symbols'
@@ -6,6 +7,7 @@ import { NOTIFICATION_NUMBERS } from '../../../../src/constants'
 
 describe('NavigationElement component', () => {
   beforeEach(function () {
+    Vue.use(VueVisible)
     const Component = Vue.extend(NavigationElementComponent)
     this.mount = function (propsData) {
       return new Component({
@@ -167,15 +169,15 @@ describe('NavigationElement component', () => {
     }
     const vm = this.mount(props)
     const list = vm.$el.querySelector('ul')
-    expect(list.style.display).toBe('none')
+    expect(list.style.visibility).toBe('hidden')
     const mouseOverEvent = new Event('mouseover')
     const mouseOutEvent = new Event('mouseout')
     vm.$el.dispatchEvent(mouseOverEvent)
     vm.$nextTick(() => {
-      expect(list.style.display).toBe('')
+      expect(list.style.visibility).toBe('visible')
       vm.$el.dispatchEvent(mouseOutEvent)
       vm.$nextTick(() => {
-        expect(list.style.display).toBe('none')
+        expect(list.style.visibility).toBe('hidden')
         done()
       })
     })

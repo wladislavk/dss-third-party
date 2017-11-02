@@ -1,7 +1,5 @@
 import endpoints from '../../../endpoints'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
-import logoutTimerMixin from '../../../modules/logout/LogoutTimerMixin'
 import symbols from '../../../symbols'
 import PatientTaskMenuComponent from '../../manage/tasks/PatientTaskMenu.vue'
 import TaskMenuComponent from '../../manage/tasks/TaskMenu.vue'
@@ -69,9 +67,7 @@ export default {
     taskMenu: TaskMenuComponent,
     patientTaskMenu: PatientTaskMenuComponent
   },
-  mixins: [handlerMixin, logoutTimerMixin],
   created () {
-    this.setLogoutTimer()
     http.token = this.$store.state.main[symbols.state.mainToken]
 
     if (this.$store.state.main[symbols.state.userInfo].hasOwnProperty('loginId') && this.$store.state.main[symbols.state.userInfo].loginId) {
@@ -79,7 +75,7 @@ export default {
       this.setLoginDetails(currentPage).then(() => {
         // @todo: add handler
       }).catch((response) => {
-        this.handleErrors('setLoginDetails', response)
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'setLoginDetails', response: response})
       })
     }
     http.get(endpoints.companies.companyByUser).then((response) => {
@@ -89,11 +85,11 @@ export default {
           const data = response.data.data
           this.companyLogo = data.image
         }).catch((response) => {
-          this.handleErrors('getFileForDisplaying', response)
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getFileForDisplaying', response: response})
         })
       }
     }).catch((response) => {
-      this.handleErrors('getCompanyByUser', response)
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getCompanyByUser', response: response})
     })
     if (this.$route.query.pid) {
       this.getPatientsByParentId(this.$route.query.pid).then((response) => {
@@ -102,7 +98,7 @@ export default {
           this.childrenPatients = data
         }
       }).catch((response) => {
-        this.handleErrors('getPatientsByParentId', response)
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getPatientsByParentId', response: response})
       })
       this.getCurrentPatientContacts(this.$route.query.pid).then((response) => {
         const data = response.data.data
@@ -110,7 +106,7 @@ export default {
           this.totalContacts = data.length
         }
       }).catch((response) => {
-        this.handleErrors('getCurrentPatientContacts', response)
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getCurrentPatientContacts', response: response})
       })
       this.getCurrentPatientInsurances(this.$route.query.pid).then((response) => {
         const data = response.data.data
@@ -118,7 +114,7 @@ export default {
           this.totalInsurances = data.length
         }
       }).catch((response) => {
-        this.handleErrors('getCurrentPatientInsurances', response)
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getCurrentPatientInsurances', response: response})
       })
       this.getQuestionnaireStatuses(this.$route.query.pid).then((response) => {
         const data = response.data.data
@@ -130,7 +126,7 @@ export default {
           }
         }
       }).catch((response) => {
-        this.handleErrors('getQuestionnaireStatuses', response)
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getQuestionnaireStatuses', response: response})
       })
       this.getBouncedEmailsNumberForCurrentPatient(this.$route.query.pid).then((response) => {
         const data = response.data.data
@@ -138,7 +134,7 @@ export default {
           this.bouncedEmailsNumberForCurrentPatient = data.length
         }
       }).catch((response) => {
-        this.handleErrors('getBouncedEmailsNumberForCurrentPatient', response)
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getBouncedEmailsNumberForCurrentPatient', response: response})
       })
       this.getRejectedClaimsForCurrentPatient(this.$route.query.pid).then((response) => {
         const data = response.data.data
@@ -146,7 +142,7 @@ export default {
           this.rejectedClaimsForCurrentPatient = data
         }
       }).catch((response) => {
-        this.handleErrors('getRejectedClaimsForCurrentPatient', response)
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getRejectedClaimsForCurrentPatient', response: response})
       })
     }
   },
@@ -221,7 +217,7 @@ export default {
     },
     logout () {
       this.$store.dispatch(symbols.actions.logout)
-      this.$router.push({ name: 'login' })
+      this.$router.push({ name: 'main-login' })
     }
   }
 }

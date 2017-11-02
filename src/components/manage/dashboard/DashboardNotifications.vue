@@ -49,4 +49,7 @@
 
 <script src="./DashboardNotifications.js"></script>
 
+<style src="../../../assets/css/manage/admin.css" scoped></style>
 <style src="../../../assets/css/manage/homesuckertreemenu.css" scoped></style>
+<style src="../../../assets/css/manage/notifications.css" scoped></style>
+<style src="../../../assets/css/manage/dashboard/dashboard-root.css" scoped></style>

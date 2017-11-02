@@ -1,7 +1,6 @@
 import axios from 'axios'
 import endpoints from '../../endpoints'
 import { LEGACY_URL } from '../../constants'
-import handlerMixin from '../../modules/handler/HandlerMixin'
 import http from '../../services/http'
 import symbols from '../../symbols'
 import alerter from '../../services/alerter'
@@ -10,7 +9,7 @@ import ProcessWrapper from '../../wrappers/ProcessWrapper'
 import SiteSealComponent from '../SiteSeal.vue'
 
 export default {
-  name: 'login',
+  name: 'main-login',
   data () {
     return {
       focusUser: false,
@@ -29,7 +28,6 @@ export default {
   directives: {
     focus: focusDirective
   },
-  mixins: [handlerMixin],
   mounted () {
     const token = this.$store.state.main[symbols.state.mainToken]
     if (token) {
@@ -90,13 +88,13 @@ export default {
           }
           this.$router.push({ name: 'dashboard' })
         }).catch((response) => {
-          this.handleErrors('getAccountStatus', response)
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getAccountStatus', response: response})
         })
       }).catch((response) => {
         if (response.status === 422) {
           this.message = 'Wrong username or password'
         } else {
-          this.handleErrors('getToken', response)
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getToken', response: response})
         }
       })
     }

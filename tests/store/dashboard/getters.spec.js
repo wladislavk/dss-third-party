@@ -46,7 +46,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 1
           },
           [symbols.state.docInfo]: {
@@ -61,7 +61,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 2
           },
           [symbols.state.docInfo]: {
@@ -76,7 +76,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 2
           },
           [symbols.state.docInfo]: {
@@ -94,7 +94,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 1
           },
           [symbols.state.courseStaff]: {
@@ -110,7 +110,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 2
           },
           [symbols.state.courseStaff]: {
@@ -126,7 +126,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 2
           },
           [symbols.state.courseStaff]: {
@@ -142,7 +142,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 2
           },
           [symbols.state.courseStaff]: {
@@ -186,7 +186,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 1,
             manageStaff: false
           }
@@ -199,7 +199,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 2,
             manageStaff: true
           }
@@ -212,7 +212,7 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            userId: 1,
+            plainUserId: 1,
             docId: 2,
             manageStaff: false
           }
@@ -343,22 +343,6 @@ describe('Dashboard module getters', () => {
       }
       const result = DashboardModule.getters[symbols.getters.shouldUseLetters]({}, {}, rootState)
       expect(result).toBe(false)
-    })
-  })
-
-  describe('patientNotificationsNumber getter', () => {
-    it('gets patient notifications number', function () {
-      const rootState = {
-        main: {
-          [symbols.state.notificationNumbers]: {
-            [NOTIFICATION_NUMBERS.patientContacts]: 1,
-            [NOTIFICATION_NUMBERS.patientInsurances]: 2,
-            [NOTIFICATION_NUMBERS.patientChanges]: 3
-          }
-        }
-      }
-      const result = DashboardModule.getters[symbols.getters.patientNotificationsNumber]({}, {}, rootState)
-      expect(result).toBe(6)
     })
   })
 })

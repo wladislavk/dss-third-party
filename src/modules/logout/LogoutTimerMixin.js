@@ -84,7 +84,7 @@ export default {
 
           this.waitingForResponse = false
         }).catch((response) => {
-          this.handleErrors('checkLogout', response)
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'checkLogout', response: response})
         })
       }
 

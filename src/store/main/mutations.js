@@ -9,10 +9,13 @@ export default {
     state[symbols.state.popupEdit] = value
   },
   [symbols.mutations.notificationNumbers] (state, numbers) {
+    const patientContacts = parseInt(numbers.patient_contacts)
+    const patientInsurances = parseInt(numbers.patient_insurances)
+    const patientChanges = parseInt(numbers.patient_changes)
+    const patientNotifications = patientContacts + patientInsurances + patientChanges
     state[symbols.state.notificationNumbers] = {
       [NOTIFICATION_NUMBERS.pendingClaims]: parseInt(numbers.pending_claims),
       [NOTIFICATION_NUMBERS.paymentReports]: parseInt(numbers.payment_reports),
-      [NOTIFICATION_NUMBERS.patientContacts]: parseInt(numbers.patient_contacts),
       [NOTIFICATION_NUMBERS.unmailedClaims]: parseInt(numbers.unmailed_claims),
       [NOTIFICATION_NUMBERS.unmailedLetters]: parseInt(numbers.unmailed_letters),
       [NOTIFICATION_NUMBERS.rejectedClaims]: parseInt(numbers.rejected_claims),
@@ -24,12 +27,14 @@ export default {
       [NOTIFICATION_NUMBERS.unsignedNotes]: parseInt(numbers.unsigned_notes),
       [NOTIFICATION_NUMBERS.emailBounces]: parseInt(numbers.email_bounces),
       [NOTIFICATION_NUMBERS.pendingDuplicates]: parseInt(numbers.pending_duplicates),
-      [NOTIFICATION_NUMBERS.patientChanges]: parseInt(numbers.patient_changes),
       [NOTIFICATION_NUMBERS.hst]: parseInt(numbers.completed_hst),
       [NOTIFICATION_NUMBERS.requestedHst]: parseInt(numbers.requested_hst),
       [NOTIFICATION_NUMBERS.rejectedHst]: parseInt(numbers.rejected_hst),
-      [NOTIFICATION_NUMBERS.patientInsurances]: parseInt(numbers.patient_insurances),
-      [NOTIFICATION_NUMBERS.pendingLetters]: parseInt(numbers.pending_letters)
+      [NOTIFICATION_NUMBERS.pendingLetters]: parseInt(numbers.pending_letters),
+      [NOTIFICATION_NUMBERS.patientContacts]: patientContacts,
+      [NOTIFICATION_NUMBERS.patientInsurances]: patientInsurances,
+      [NOTIFICATION_NUMBERS.patientChanges]: patientChanges,
+      [NOTIFICATION_NUMBERS.patientNotifications]: patientNotifications
     }
   },
   [symbols.mutations.courseStaff] (state, courseStaffData) {

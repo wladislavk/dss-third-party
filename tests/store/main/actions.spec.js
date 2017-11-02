@@ -26,7 +26,7 @@ describe('Main module actions', () => {
       const result = {
         data: {
           data: {
-            id: 1,
+            id: 'u_1',
             docid: 2,
             manage_staff: 3,
             user_type: '4',
@@ -52,7 +52,8 @@ describe('Main module actions', () => {
         {
           type: symbols.mutations.userInfo,
           payload: {
-            userId: 1,
+            userId: 'u_1',
+            plainUserId: 1,
             docId: 2,
             manageStaff: 3,
             userType: 4,

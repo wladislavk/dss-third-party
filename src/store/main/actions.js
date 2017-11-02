@@ -14,6 +14,7 @@ export default {
       const data = response.data.data
       const userInfo = {
         userId: data.id,
+        plainUserId: parseInt(data.id.replace('u_', '').replace('a_', '')),
         docId: data.docid,
         manageStaff: data.manage_staff,
         userType: parseInt(data.user_type),
@@ -59,7 +60,11 @@ export default {
       return
     }
     if (ProcessWrapper.getNodeEnv() === 'development') {
-      console.error(title + ' [status]: ' + response.status)
+      if (response.hasOwnProperty('status')) {
+        console.error(title + ' [status]: ' + response.status)
+      } else {
+        console.error(title)
+      }
     } else {
       // TODO if prod
     }
@@ -68,6 +73,9 @@ export default {
     http.token = state[symbols.state.mainToken]
     http.post(endpoints.users.courseStaff).then((response) => {
       const data = response.data.data
+      if (!data || !data.hasOwnProperty('use_course') || !data.hasOwnProperty('use_course_staff')) {
+        return
+      }
       const courseStaffData = {
         useCourse: parseInt(data.use_course),
         useCourseStaff: parseInt(data.use_course_staff)

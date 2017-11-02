@@ -6,8 +6,8 @@ import SwalWrapper from '../../wrappers/SwalWrapper'
 import { LEGACY_URL } from '../../constants'
 
 export default {
-  [symbols.actions.documentCategories] ({state, commit, dispatch}) {
-    http.token = state[symbols.state.mainToken]
+  [symbols.actions.documentCategories] ({rootState, commit, dispatch}) {
+    http.token = rootState.main[symbols.state.mainToken]
     http.post(endpoints.documentCategories.active).then((response) => {
       commit(symbols.mutations.documentCategories, response.data.data)
     }).catch((response) => {
@@ -71,8 +71,8 @@ export default {
       }
     )
   },
-  [symbols.actions.memos] ({state, commit, dispatch}) {
-    http.token = state[symbols.state.mainToken]
+  [symbols.actions.memos] ({rootState, commit, dispatch}) {
+    http.token = rootState.main[symbols.state.mainToken]
     http.post(endpoints.memos.current).then((response) => {
       commit(symbols.mutations.memos, response.data.data)
     }).catch((response) => {

@@ -1,5 +1,5 @@
+import axios from 'axios'
 import endpoints from '../../../../endpoints'
-import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
 import patientValidator from '../../../../modules/validators/PatientMixin'
 import storage from '../../../../modules/storage'
@@ -84,7 +84,7 @@ export default {
       docInfo: this.$store.state.main[symbols.state.docInfo]
     }
   },
-  mixins: [handlerMixin, patientValidator],
+  mixins: [patientValidator],
   watch: {
     '$route.query.pid': function () {
       if (this.$route.query.pid > 0) {
@@ -228,7 +228,7 @@ export default {
         this.homeSleepTestCompanies = data
       }
     }).catch((response) => {
-      this.handleErrors('getHomeSleepTestCompanies', response)
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getHomeSleepTestCompanies', response: response})
     })
 
     http.post(endpoints.locations.byDoctor).then((response) => {
@@ -238,7 +238,7 @@ export default {
         this.docLocations = data
       }
     }).catch((response) => {
-      this.handleErrors('getDocLocations', response)
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getDocLocations', response: response})
     })
 
     http.post(endpoints.companies.billingExclusiveCompany).then((response) => {
@@ -248,7 +248,7 @@ export default {
         this.billingCompany = data
       }
     }).catch((response) => {
-      this.handleErrors('getBillingCompany', response)
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getBillingCompany', response: response})
     })
 
     this.getEligiblePayerSource().then((response) => {
@@ -259,7 +259,7 @@ export default {
         this.eligiblePayerSource = data
       }
     }).catch((response) => {
-      this.handleErrors('getEligiblePayerSource', response)
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getEligiblePayerSource', response: response})
 
       http.get(endpoints.eligible.payers).then((response) => {
         let data = response.data.data
@@ -269,7 +269,7 @@ export default {
           this.eligiblePayerSource = data
         }
       }).catch((response) => {
-        this.handleErrors('getStaticEligiblePayerSource', response)
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getStaticEligiblePayerSource', response: response})
       })
     })
 
@@ -280,7 +280,7 @@ export default {
         this.insuranceContacts = data
       }
     }).catch((response) => {
-      this.handleErrors('getInsuranceContacts', response)
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getInsuranceContacts', response: response})
     })
   },
   beforeDestroy () {
@@ -361,12 +361,12 @@ export default {
       return removeId >= 0 ? data[removeId] : null
     },
     removeNotification: function (id) {
-      this.removeNotificationInDb(id).then(function () {
+      this.removeNotificationInDb(id).then(() => {
         this.patientNotifications.$remove(
           this.searchItemById(this.patientNotifications, id)
         )
-      }).catch(function (response) {
-        this.handleErrors('removeNotificationInDb', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'removeNotificationInDb', response: response})
       })
     },
     onClickCreatingNewInsuranceCompany: function (fromId) {
@@ -423,9 +423,8 @@ export default {
       this.fillForm(this.routeParameters.patientId)
     },
     submitAddingOrEditingPatient: function () {
-      const self = this
       if (this.validatePatientData(this.patient, null, this.formedFullNames.referred_name)) {
-        this.checkEmail(this.patient.email, this.routeParameters.patientId).then(function (response) {
+        this.checkEmail(this.patient.email, this.routeParameters.patientId).then((response) => {
           const data = response.data.data
 
           let isReadyForProcessing = false
@@ -436,17 +435,17 @@ export default {
           }
 
           if (isReadyForProcessing) {
-            this.editPatient(self.routeParameters.patientId, self.patient, self.formedFullNames).then(function (response) {
+            this.editPatient(this.routeParameters.patientId, this.patient, this.formedFullNames).then((response) => {
               this.parseSuccessfulResponseOnEditingPatient(response.data.data)
-            }).catch(function (response) {
+            }).catch((response) => {
               this.parseFailedResponseOnEditingPatient(response.data.data)
 
-              this.handleErrors('editPatient', response)
+              this.$store.dispatch(symbols.actions.handleErrors, {title: 'editPatient', response: response})
             })
           }
-        }).catch(function (response) {
+        }).catch((response) => {
           alerter.alert(response.data.message)
-          this.handleErrors('checkEmail', response)
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'checkEmail', response: response})
         })
       }
     },
@@ -459,12 +458,12 @@ export default {
           this.patient,
           this.formedFullNames,
           this.pressedButtons
-        ).then(function (response) {
+        ).then((response) => {
           this.parseSuccessfulResponseOnEditingPatient(response.data.data)
-        }).catch(function (response) {
+        }).catch((response) => {
           this.parseFailedResponseOnEditingPatient(response.data.data)
 
-          this.handleErrors('editPatient', response)
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'editPatient', response: response})
         })
       }
     },
@@ -478,12 +477,12 @@ export default {
           this.formedFullNames,
           null,
           this.requestedEmails
-        ).then(function (response) {
+        ).then((response) => {
           this.parseSuccessfulResponseOnEditingPatient(response.data.data)
-        }).catch(function (response) {
+        }).catch((response) => {
           this.parseFailedResponseOnEditingPatient(response.data.data)
 
-          this.handleErrors('editPatient', response)
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'editPatient', response: response})
         })
       }
     },
@@ -555,27 +554,26 @@ export default {
       }
       */
 
-      const self = this
-      this.typingTimer = setTimeout(function () {
+      this.typingTimer = setTimeout(() => {
         if (requiredName.length > 1) {
-          if (self.autoCompleteSearchValue !== requiredName) {
-            self.autoCompleteSearchValue = requiredName
+          if (this.autoCompleteSearchValue !== requiredName) {
+            this.autoCompleteSearchValue = requiredName
 
-            self.getListContactsAndCompanies(requiredName).then(function (response) {
+            this.getListContactsAndCompanies(requiredName).then((response) => {
               const data = response.data.data
 
               if (data.length) {
-                self.arrName = data
+                this.arrName = data
               } else if (data.error) {
-                self.arrName = []
+                this.arrName = []
                 alert(data.error)
               }
-            }).catch(function (response) {
-              self.handleErrors('getListContactsAndCompanies', response)
+            }).catch((response) => {
+              this.$store.dispatch(symbols.actions.handleErrors, {title: 'getListContactsAndCompanies', response: response})
             })
           }
         } else {
-          self.arrName = []
+          this.arrName = []
         }
       }, this.doneTypingInterval)
     },
@@ -662,24 +660,23 @@ export default {
         elementName = 'secondaryInsPayerName'
       }
 
-      const self = this
-      this.typingTimer = setTimeout(function () {
+      this.typingTimer = setTimeout(() => {
         if (insPayerName.length > 1) {
-          if (self.autoCompleteSearchValue !== insPayerName) {
-            self.autoCompleteSearchValue = insPayerName
-            const foundPayers = self.searchEligiblePayersByName(insPayerName)
+          if (this.autoCompleteSearchValue !== insPayerName) {
+            this.autoCompleteSearchValue = insPayerName
+            const foundPayers = this.searchEligiblePayersByName(insPayerName)
 
             if (foundPayers.length > 0) {
-              self.arrName = foundPayers
+              this.arrName = foundPayers
             } else {
-              self.arrName = []
-              self.$refs[elementName].focus()
+              this.arrName = []
+              this.$refs[elementName].focus()
 
               alert('Error: No match found for this criteria.')
             }
           }
         } else {
-          self.arrName = []
+          this.arrName = []
         }
       }, this.doneTypingInterval)
     },
@@ -694,25 +691,24 @@ export default {
     onKeyUpSearchReferrers: function () {
       clearTimeout(this.typingTimer)
 
-      const self = this
-      this.typingTimer = setTimeout(function () {
-        if (self.formedFullNames.referred_name.trim() !== '') {
-          if (self.formedFullNames.referred_name.trim().length > 1) {
-            self.getReferrers(self.formedFullNames.referred_name.trim()).then(function (response) {
+      this.typingTimer = setTimeout(() => {
+        if (this.formedFullNames.referred_name.trim() !== '') {
+          if (this.formedFullNames.referred_name.trim().length > 1) {
+            this.getReferrers(this.formedFullNames.referred_name.trim()).then((response) => {
               const data = response.data.data
 
               if (data.length) {
-                self.foundReferrersByName = data
-                self.showReferredbyHints = true
+                this.foundReferrersByName = data
+                this.showReferredbyHints = true
               } else if (data.error) {
-                self.foundReferrersByName = []
+                this.foundReferrersByName = []
                 alert(data.error)
               }
-            }).catch(function (response) {
-              self.handleErrors('getReferrers', response)
+            }).catch((response) => {
+              this.$store.dispatch(symbols.actions.handleErrors, {title: 'getReferrers', response: response})
             })
           } else {
-            self.showReferredbyHints = false
+            this.showReferredbyHints = false
           }
         }
       }, this.doneTypingInterval)
@@ -761,7 +757,7 @@ export default {
       })
     },
     fillForm: function (patientId) {
-      this.getDataForFillingPatientForm(patientId).then(function (response) {
+      this.getDataForFillingPatientForm(patientId).then((response) => {
         const data = response.data.data
 
         if (data.length !== 0) {
@@ -789,8 +785,8 @@ export default {
             displayAlert: data.patient.display_alert
           })
         }
-      }).catch(function (response) {
-        this.handleErrors('getDataForFillingPatientForm', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getDataForFillingPatientForm', response: response})
       })
     },
     onChangeRelations: function (type) {
@@ -817,9 +813,8 @@ export default {
         ]
       }
 
-      const self = this
       resultFields.forEach((el, index) => {
-        self.$set(self.patient, el, sourceFields[index])
+        this.$set(this.patient, el, sourceFields[index])
       })
     },
     onPreferredContactChange: function () {
@@ -839,9 +834,8 @@ export default {
     filterPhoneFields: function (patient) {
       const fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number']
 
-      const self = this
       fields.forEach((el) => {
-        patient[el] = self.phone(patient[el])
+        patient[el] = this.phone(patient[el])
       })
     },
     filterSsnField: function (patient) {
@@ -936,7 +930,7 @@ export default {
       return http.post(endpoints.patients.referrers, data)
     },
     getEligiblePayerSource: function () {
-      return this.$http.get('https://eligibleapi.com/resources/payers/claims/medical.json')
+      return axios.get('https://eligibleapi.com/resources/payers/claims/medical.json')
     },
     getListContactsAndCompanies: function (requestedName) {
       const data = {
@@ -961,9 +955,8 @@ export default {
 
       const fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number', 'ssn']
 
-      const self = this
       fields.forEach((el) => {
-        patientFormData[el] = self.number(patientFormData[el])
+        patientFormData[el] = this.number(patientFormData[el])
       })
 
       const data = {

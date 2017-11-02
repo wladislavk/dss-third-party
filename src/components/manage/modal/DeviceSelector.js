@@ -1,6 +1,7 @@
 import endpoints from '../../../endpoints'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
+import symbols from '../../../symbols'
+import alerter from '../../../services/alerter'
 
 export default {
   data () {
@@ -13,7 +14,6 @@ export default {
       patientId: 0
     }
   },
-  mixins: [handlerMixin],
   watch: {
     '$route.query.id': function () {
       if (this.$route.query.id) {
@@ -32,18 +32,18 @@ export default {
   },
   created () {
     if (this.patientId > 0) {
-      this.getPatientById(this.patientId).then(function (response) {
+      this.getPatientById(this.patientId).then((response) => {
         const data = response.data.data
 
         if (data) {
           this.currentPatient = data
         }
-      }).catch(function (response) {
-        this.handleErrors('getPatientById', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getPatientById', response: response})
       })
     }
 
-    http.post(endpoints.guideSettingOptions.settingIds).then(function (response) {
+    http.post(endpoints.guideSettingOptions.settingIds).then((response) => {
       const data = response.data.data
 
       if (data) {
@@ -60,12 +60,13 @@ export default {
 
         this.deviceGuideSettingOptions = data
       }
-    }).catch(function (response) {
-      this.handleErrors('getDeviceGuideSettingOptions', response)
+    }).catch((response) => {
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideSettingOptions', response: response})
     })
   },
   mounted () {
     window.$('.imp_chk').click(function () {
+      // @todo: what does "this" refer to?
       if (window.$(this).is(':checked')) {
         if (window.$('.imp_chk:checked').length > 3) {
           window.$(this).prop('checked', false)
@@ -79,7 +80,7 @@ export default {
         settings: {}
       }
 
-      this.deviceGuideSettingOptions.forEach(function (element) {
+      this.deviceGuideSettingOptions.forEach((element) => {
         const settingObj = {}
 
         if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
@@ -95,20 +96,21 @@ export default {
         data.settings[element.id] = settingObj
       })
 
-      this.getDeviceGuideResults(data).then(function (response) {
+      this.getDeviceGuideResults(data).then((response) => {
         const data = response.data.data
 
         if (data) {
           this.deviceGuideResults = data
         }
-      }).catch(function (response) {
-        this.handleErrors('getDeviceGuideResults', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideResults', response: response})
       })
     },
     updateDevice (device, name) {
       if (this.id && this.patientId) {
-        if (confirm('Do you want to select ' + name + ' for ' + this.currentPatient.firstname + ' ' + this.currentPatient.lastname)) {
-          this.updateFlowDevice(device).then(function (response) {
+        const confirmText = 'Do you want to select ' + name + ' for ' + this.currentPatient.firstname + ' ' + this.currentPatient.lastname
+        if (alerter.isConfirmed(confirmText)) {
+          this.updateFlowDevice(device).then((response) => {
             const data = response.data.data
 
             if (data) {
@@ -117,8 +119,8 @@ export default {
               parent.updateDentalDevice(0, device)
               parent.disablePopupClean()
             }
-          }).catch(function (response) {
-            this.handleErrors('updateFlowDevice', response)
+          }).catch((response) => {
+            this.$store.dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
           })
         }
       }

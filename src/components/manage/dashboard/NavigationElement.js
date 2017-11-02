@@ -18,7 +18,6 @@ export default {
     return {
       legacyUrl: LEGACY_URL,
       showChildren: false,
-      initialOffset: 0,
       elementName: ''
     }
   },
@@ -43,6 +42,15 @@ export default {
         return this.menuItem.blank
       }
       return false
+    },
+    linkClass () {
+      if (this.menuItemChildren.length && this.firstLevel) {
+        return 'main'
+      }
+      if ((this.menuItemChildren.length || this.menuItem.childrenFrom) && !this.firstLevel) {
+        return 'sub'
+      }
+      return ''
     }
   },
   created () {
@@ -51,10 +59,6 @@ export default {
       elementName = populators[this.menuItem.populator](this.$store.state, elementName)
     }
     this.elementName = elementName
-  },
-  mounted () {
-    // root element is not set before mounting
-    this.initialOffset = this.$el.offsetWidth
   },
   methods: {
     clickLink (event) {

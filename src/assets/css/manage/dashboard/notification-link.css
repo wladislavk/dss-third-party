@@ -39,3 +39,7 @@
   border-bottom: 10px solid transparent;
   border-left: 10px solid #666;
 }
+
+a, a:hover {
+  color: #095D81;
+}

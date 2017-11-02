@@ -1,5 +1,4 @@
 import endpoints from '../../../endpoints'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
 
@@ -39,7 +38,6 @@ export default {
       }
     }
   },
-  mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
       const queryPage = this.$route.query.page
@@ -102,18 +100,16 @@ export default {
       }
     },
     removeContact (id) {
-      this.deleteContact(id).then(function () {
+      this.deleteContact(id).then(() => {
         this.message = 'Deleted Successfully'
 
         this.$nextTick(() => {
-          const self = this
-
           setTimeout(() => {
-            self.message = ''
+            this.message = ''
           }, 3000)
         })
-      }).catch(function (response) {
-        this.handleErrors('deleteContact', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'deleteContact', response: response})
       })
     },
     getListOfContacts () {
@@ -122,7 +118,7 @@ export default {
         this.contactsPerPage,
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection
-      ).then(function (response) {
+      ).then((response) => {
         const data = response.data.data
 
         data.result = data.result.map((value) => {
@@ -135,8 +131,8 @@ export default {
 
         this.contacts = data.result
         this.contactsTotalNumber = data.total
-      }).catch(function (response) {
-        this.handleErrors('getCorporateContacts', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getCorporateContacts', response: response})
       })
     },
     getCorporateContacts (pageNumber, rowsPerPage, sort, sortDir) {

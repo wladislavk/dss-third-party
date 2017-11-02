@@ -14,7 +14,7 @@ class UserRepository extends AbstractRepository
 
     /**
      * @param int $userId
-     * @return User
+     * @return User|null
      */
     public function getCourseStaff($userId)
     {

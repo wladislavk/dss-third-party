@@ -188,6 +188,9 @@ class UsersApiTest extends ApiTestCase
 
     public function testGetCourseStaff()
     {
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
         $this->post(self::ROUTE_PREFIX . '/users/course-staff');
         $this->assertResponseOk();
         $this->assertNull($this->getResponseData());

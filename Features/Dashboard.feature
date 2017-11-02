@@ -98,7 +98,7 @@ Feature: Dashboard
       | 6 Pending Claims     | red   |
       | 71 Unmailed Claims   | red   |
       | 3 Rejected Claims    | red   |
-      | 8 Unsigned Notes     | red   |
+      | 7 Unsigned Notes     | red   |
       | 9 Pending Duplicates | red   |
       | 1 Payment Reports    | red   |
     And I see "Show All" link
@@ -115,7 +115,7 @@ Feature: Dashboard
       | 6 Pending Claims     | red   |
       | 71 Unmailed Claims   | red   |
       | 3 Rejected Claims    | red   |
-      | 8 Unsigned Notes     | red   |
+      | 7 Unsigned Notes     | red   |
       | 0 Alerts             | red   |
       | 0 Failed Faxes       | blue  |
       | 9 Pending Duplicates | red   |
@@ -128,6 +128,37 @@ Feature: Dashboard
       | 0 Pt Contacts  | red   |
       | 1 Pt Insurance | red   |
       | 4 Pt Changes   | red   |
+
+  Scenario: View tasks
+    Given I am logged in as "doc1f"
+    When I go to "start" page
+    Then I see "Tasks" dashboard section
+    And I see these task sub-sections in "dashboard":
+      | section |
+      | Overdue |
+    And I see checkboxes with these tasks under "Overdue" section in "dashboard":
+      | task                                        |
+      | Set up webinar for Dr. X software training. |
+      | call for fu (John Drake)                    |
+      | asdasdasd                                   |
+    And I see button with text "View All"
+    When I click on task "Set up webinar for Dr. X software training." checkbox in "dashboard"
+    Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
+      | task                                        |
+      | call for fu (John Drake)                    |
+      | asdasdasd                                   |
+    # @todo: the line below will not work in Vue until header is migrated
+    # And I see "My Tasks (2)" bullet in top menu
+    When I run mouse over task "asdasdasd" in "dashboard"
+    Then I see "delete" button next to task "asdasdasd" in "dashboard"
+    And I see "edit" button next to task "asdasdasd" in "dashboard"
+    When I click "delete" button next to task "asdasdasd" in "dashboard"
+    # this line turns out to be highly volatile in legacy for no apparent reason, no problem in Vue
+    Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
+      | task                                        |
+      | call for fu (John Drake)                    |
+    # @todo: the line below will not work in Vue until header is migrated
+    # And I see "My Tasks (1)" bullet in top menu
 
   Scenario: View messages
     Given I am logged in as "doc1f"

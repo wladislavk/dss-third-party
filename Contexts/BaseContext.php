@@ -183,7 +183,11 @@ abstract class BaseContext extends RawMinkContext
 
     protected function visitStartPage()
     {
-        $this->getCommonClient()->visit(self::START_URL);
+        $url = self::START_URL;
+        if (SUT_HOST == 'vue') {
+            $url .= '/main';
+        }
+        $this->getCommonClient()->visit($url);
     }
 
     protected function login($user, $password = '')
@@ -191,6 +195,7 @@ abstract class BaseContext extends RawMinkContext
         if (!$password && array_key_exists($user, self::PASSWORDS)) {
             $password = self::PASSWORDS[$user];
         }
+        var_dump($this->page->getContent());
         $this->page->fillField('username', $user);
         $this->page->fillField('password', $password);
         $loginButton = $this->findCss('input[value=" Login "]');

@@ -223,7 +223,8 @@ class Dashboard extends BaseContext
      */
     public function testMessages(TableNode $table)
     {
-        $messageList = $this->findAllCss('div.task_menu')[2];
+        $taskLists = $this->findAllCss('div.task_menu');
+        $messageList = $taskLists[count($taskLists) - 1];
         $messages = $this->findAllCss('li', $messageList);
         $messageTexts = [];
         foreach ($messages as $message) {

@@ -10,7 +10,7 @@ class Tasks extends BaseContext
 {
     const TASK_MENUS = [
         'top menu' => 0,
-        'dashboard' => 1,
+        'dashboard' => -2,
     ];
 
     const TASK_BUTTONS = [
@@ -33,8 +33,8 @@ class Tasks extends BaseContext
      */
     public function clickOnTask($task, $area)
     {
-        $areaIndex = self::TASK_MENUS[$area];
-        $taskMenu = $this->findAllCss('div.task_menu')[$areaIndex];
+        $taskMenus = $this->findAllCss('div.task_menu');
+        $taskMenu = $this->getTaskMenu($area, $taskMenus);
         $checkboxList = $this->findAllCss('input[type="checkbox"]', $taskMenu);
         $taskList = $this->findAllCss('ul li div:last-child', $taskMenu);
         foreach ($taskList as $index => $taskElement) {
@@ -58,9 +58,9 @@ class Tasks extends BaseContext
      */
     public function clickOnButton($type, $task, $area)
     {
-        $areaIndex = self::TASK_MENUS[$area];
         $typeIndex = self::TASK_BUTTONS[$type];
-        $taskMenu = $this->findAllCss('div.task_menu')[$areaIndex];
+        $taskMenus = $this->findAllCss('div.task_menu');
+        $taskMenu = $this->getTaskMenu($area, $taskMenus);
         $taskList = $this->findAllCss('ul li div:last-child', $taskMenu);
         $extraList = $this->findAllCss('ul li div:first-child', $taskMenu);
         $button = null;
@@ -91,8 +91,8 @@ class Tasks extends BaseContext
      */
     public function runMouseOverTask($task, $area)
     {
-        $areaIndex = self::TASK_MENUS[$area];
-        $taskMenu = $this->findAllCss('div.task_menu')[$areaIndex];
+        $taskMenus = $this->findAllCss('div.task_menu');
+        $taskMenu = $this->getTaskMenu($area, $taskMenus);
         $taskList = $this->findAllCss('ul li div:last-child', $taskMenu);
         foreach ($taskList as $index => $taskElement) {
             $taskText = trim($taskElement->getText());
@@ -185,8 +185,8 @@ class Tasks extends BaseContext
      */
     public function testSubsections($area, TableNode $table)
     {
-        $areaIndex = self::TASK_MENUS[$area];
-        $taskMenu = $this->findAllCss('div.task_menu')[$areaIndex];
+        $taskMenus = $this->findAllCss('div.task_menu');
+        $taskMenu = $this->getTaskMenu($area, $taskMenus);
         $subsectionHeaders = $this->findAllCss('h4', $taskMenu);
         if ($area == 'dashboard') {
             array_shift($subsectionHeaders);
@@ -195,6 +195,15 @@ class Tasks extends BaseContext
         foreach ($expected as $index => $text) {
             Assert::assertEquals($text, $subsectionHeaders[$index]->getText());
         }
+    }
+
+    private function getTaskMenu($area, array $menus)
+    {
+        $areaIndex = self::TASK_MENUS[$area];
+        if ($areaIndex >= 0) {
+            return $menus[$areaIndex];
+        }
+        return $menus[count($menus) + $areaIndex];
     }
 
     /**
@@ -207,8 +216,8 @@ class Tasks extends BaseContext
     public function testTasks($section, $area, TableNode $table)
     {
         $this->wait(self::MEDIUM_WAIT_TIME);
-        $areaIndex = self::TASK_MENUS[$area];
-        $taskMenu = $this->findAllCss('div.task_menu')[$areaIndex];
+        $taskMenus = $this->findAllCss('div.task_menu');
+        $taskMenu = $this->getTaskMenu($area, $taskMenus);
         Assert::assertNotNull($this->findElementWithText('h4', $section, $taskMenu));
         $taskList = $this->findAllCss('ul li div:last-child', $taskMenu);
         $taskNames = array_column($table->getHash(), 'task');
@@ -234,9 +243,9 @@ class Tasks extends BaseContext
      */
     public function testButton($type, $task, $area)
     {
-        $areaIndex = self::TASK_MENUS[$area];
         $typeIndex = self::TASK_BUTTONS[$type];
-        $taskMenu = $this->findAllCss('div.task_menu')[$areaIndex];
+        $taskMenus = $this->findAllCss('div.task_menu');
+        $taskMenu = $this->getTaskMenu($area, $taskMenus);
         $taskList = $this->findAllCss('ul li div:last-child', $taskMenu);
         $extraList = $this->findAllCss('ul li div:first-child', $taskMenu);
         $button = null;

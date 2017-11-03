@@ -195,7 +195,6 @@ abstract class BaseContext extends RawMinkContext
         if (!$password && array_key_exists($user, self::PASSWORDS)) {
             $password = self::PASSWORDS[$user];
         }
-        var_dump($this->page->getContent());
         $this->page->fillField('username', $user);
         $this->page->fillField('password', $password);
         $loginButton = $this->findCss('input[value=" Login "]');

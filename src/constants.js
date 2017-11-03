@@ -259,7 +259,7 @@ export const NAVIGATION_MENU = [
       {
         name: 'Invoices',
         link: 'manage/invoice_history.php',
-        if: symbols.getters.shouldShowInvoices
+        shouldParse: symbols.getters.shouldShowInvoices
       },
       {
         name: 'Fax History',
@@ -302,7 +302,7 @@ export const NAVIGATION_MENU = [
       {
         name: 'Transaction Code',
         link: 'manage/manage_transaction_code.php',
-        if: symbols.getters.shouldShowTransactionCode
+        shouldParse: symbols.getters.shouldShowTransactionCode
       },
       {
         name: 'Staff',
@@ -343,7 +343,7 @@ export const NAVIGATION_MENU = [
       {
         name: 'Enrollments',
         link: 'manage/manage_enrollment.php',
-        if: symbols.getters.shouldShowEnrollments
+        shouldParse: symbols.getters.shouldShowEnrollments
       }
     ]
   },
@@ -371,7 +371,7 @@ export const NAVIGATION_MENU = [
       {
         name: 'DSS Franchise Operations Manual',
         link: 'manage/operations_manual.php',
-        if: symbols.getters.shouldShowFranchiseManual
+        shouldParse: symbols.getters.shouldShowFranchiseManual
       },
       {
         name: 'Quick Facts Reference',
@@ -384,7 +384,7 @@ export const NAVIGATION_MENU = [
       {
         name: 'Get C.E.',
         link: 'manage/edx_login.php',
-        if: symbols.getters.shouldShowGetCE,
+        shouldParse: symbols.getters.shouldShowGetCE,
         blank: true
       },
       {
@@ -489,7 +489,7 @@ export const NOTIFICATIONS = [
     number: NOTIFICATION_NUMBERS.pendingLetters,
     label: 'Letters',
     link: 'letters.php?status=pending',
-    if: symbols.getters.shouldUseLetters,
+    shouldParse: symbols.getters.shouldUseLetters,
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
@@ -497,7 +497,7 @@ export const NOTIFICATIONS = [
     number: NOTIFICATION_NUMBERS.unmailedLetters,
     label: 'Unmailed Letters',
     link: 'letters.php?status=sent&mailed=0',
-    if: symbols.getters.shouldShowUnmailedLettersNumber,
+    shouldParse: symbols.getters.shouldShowUnmailedLettersNumber,
     countZero: 'bad_count',
     countNonZero: 'bad_count'
   },
@@ -512,7 +512,7 @@ export const NOTIFICATIONS = [
     number: NOTIFICATION_NUMBERS.rejectedPreAuth,
     label: 'Rejected VOBs',
     link: 'manage_vobs.php?status=' + DSS_CONSTANTS.DSS_PREAUTH_REJECTED + '&viewed=0',
-    if: symbols.getters.shouldShowRejectedPreauthNumber,
+    shouldParse: symbols.getters.shouldShowRejectedPreauthNumber,
     countZero: 'bad_count',
     countNonZero: 'bad_count'
   },
@@ -548,7 +548,7 @@ export const NOTIFICATIONS = [
     number: NOTIFICATION_NUMBERS.unmailedClaims,
     label: 'Unmailed Claims',
     link: 'manage_claims.php?unmailed=1',
-    if: symbols.getters.shouldShowUnmailedClaims,
+    shouldParse: symbols.getters.shouldShowUnmailedClaims,
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
@@ -598,7 +598,7 @@ export const NOTIFICATIONS = [
     number: NOTIFICATION_NUMBERS.paymentReports,
     label: 'Payment Reports',
     link: 'payment_reports_list.php?unviewed=1',
-    if: symbols.getters.shouldShowPaymentReportsNumber,
+    shouldParse: symbols.getters.shouldShowPaymentReportsNumber,
     countZero: 'good_count',
     countNonZero: 'bad_count'
   }

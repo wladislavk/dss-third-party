@@ -1,4 +1,4 @@
-import alerter from '../../../services/alerter'
+import Alerter from '../../../services/Alerter'
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
@@ -51,7 +51,7 @@ export default {
     },
     onClickDeleteTask () {
       const confirmText = 'Are you sure you want to delete this task?'
-      if (!alerter.isConfirmed(confirmText)) {
+      if (!Alerter.isConfirmed(confirmText)) {
         return
       }
       http.delete(endpoints.tasks.destroy + '/' + this.task.id).then(() => {

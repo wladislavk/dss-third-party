@@ -4,7 +4,7 @@ import phoneFilters from '../../../../modules/filters/phoneMixin'
 import sleeplabValidator from '../../../../modules/validators/SleeplabMixin'
 import AwesomeMask from 'awesome-mask'
 import symbols from '../../../../symbols'
-import alerter from '../../../../services/alerter'
+import Alerter from '../../../../services/Alerter'
 
 export default {
   name: 'edit-sleeplab',
@@ -123,7 +123,7 @@ export default {
         })
 
         // TODO: create more readable format
-        alerter.alert(arrOfMessages.join('\n'))
+        Alerter.alert(arrOfMessages.join('\n'))
       }
     },
     onSettingComponentParams (parameters) {

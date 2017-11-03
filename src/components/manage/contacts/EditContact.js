@@ -1,4 +1,4 @@
-import alerter from '../../../services/alerter'
+import Alerter from '../../../services/Alerter'
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
@@ -302,13 +302,13 @@ export default {
       let alertText
       if (this.contact.preferredcontact === 'email' && this.contact.email.length === 0) {
         alertText = 'You must enter an email address to use email as the preferred contact method.'
-        alerter.alert(alertText)
+        Alerter.alert(alertText)
 
         this.$set(this.contact, 'preferredcontact', '')
         this.$refs.email.focus()
       } else if (this.contact.preferredcontact === 'fax' && this.contact.fax.length === 0) {
         alertText = 'You must enter a fax number to use email as the preferred contact method.'
-        alerter.alert(alertText)
+        Alerter.alert(alertText)
 
         this.$set(this.contact, 'preferredcontact', '')
         this.$refs.fax.focus()

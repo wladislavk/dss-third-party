@@ -82,7 +82,7 @@ describe('NavigationElement component', () => {
           },
           {
             name: 'Child 2',
-            if: symbols.getters.shouldShowEnrollments
+            shouldParse: symbols.getters.shouldShowEnrollments
           }
         ]
       }

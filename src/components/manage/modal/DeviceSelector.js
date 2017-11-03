@@ -1,7 +1,7 @@
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
-import alerter from '../../../services/alerter'
+import Alerter from '../../../services/Alerter'
 
 export default {
   data () {
@@ -109,7 +109,7 @@ export default {
     updateDevice (device, name) {
       if (this.id && this.patientId) {
         const confirmText = 'Do you want to select ' + name + ' for ' + this.currentPatient.firstname + ' ' + this.currentPatient.lastname
-        if (alerter.isConfirmed(confirmText)) {
+        if (Alerter.isConfirmed(confirmText)) {
           this.updateFlowDevice(device).then((response) => {
             const data = response.data.data
 

@@ -1,4 +1,4 @@
-import alerter from '../../../services/alerter'
+import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
 import DeviceSelectorComponent from '../modal/DeviceSelector.vue'
 import ViewContactComponent from '../contacts/ViewContact.vue'
@@ -75,7 +75,7 @@ export default {
       let answer = true
       if (this.$store.state.main[symbols.state.popupEdit]) {
         const confirmText = 'Are you sure you want to exit without saving?'
-        answer = alerter.isConfirmed(confirmText)
+        answer = Alerter.isConfirmed(confirmText)
       }
       if (answer) {
         this.$store.commit(symbols.state.modal, '')

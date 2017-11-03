@@ -4,7 +4,7 @@ import http from '../../../../services/http'
 import patientValidator from '../../../../modules/validators/PatientMixin'
 import storage from '../../../../modules/storage'
 import symbols from '../../../../symbols'
-import alerter from '../../../../services/alerter'
+import Alerter from '../../../../services/Alerter'
 
 export default {
   data: function () {
@@ -296,11 +296,8 @@ export default {
     },
     checkMedicare: function () {
       if (this.patient.s_m_ins_type === 1) {
-        alerter.alert(
-          'Warning! It is very rare that Medicare is listed as a patient’s ' +
-          'Secondary Insurance.  Please verify that Medicare is the secondary ' +
-          'payer for this patient before proceeding.'
-        )
+        const alertText = 'Warning! It is very rare that Medicare is listed as a patient’s Secondary Insurance.  Please verify that Medicare is the secondary payer for this patient before proceeding.'
+        Alerter.alert(alertText)
       }
     },
     onClickQuickViewContact: function (id) {
@@ -315,7 +312,8 @@ export default {
     },
     validateDate: function (el) {
       if (!this.isValidDate(this.patient[el])) {
-        alerter.alert('Invalid Day, Month, or Year range detected. Please correct.')
+        const alertText = 'Invalid Day, Month, or Year range detected. Please correct.'
+        Alerter.alert(alertText)
         this.$refs[el].focus()
       }
     },
@@ -348,11 +346,8 @@ export default {
       }
     },
     onClickOrderHst: function () {
-      alerter.alert(
-        'Patient has existing HST with status ' +
-        this.$store.state.main[symbols.state.patientHomeSleepTestStatus] +
-        '. Only one HST can be requested at a time.'
-      )
+      const alertText = 'Patient has existing HST with status %s. Only one HST can be requested at a time.'
+      Alerter.alert(alertText.replace('%s', this.$store.state.main[symbols.state.patientHomeSleepTestStatus]))
     },
     searchItemById: function (data, id) {
       id = id || 0
@@ -388,7 +383,7 @@ export default {
         })
 
         // TODO: create more readable format
-        alerter.alert(arrOfMessages.join('\n'))
+        Alerter.alert(arrOfMessages.join('\n'))
       }
     },
     parseSuccessfulResponseOnEditingPatient: function (data) {
@@ -410,7 +405,7 @@ export default {
 
         mails.forEach((el) => {
           if (mails[el] && mails[el].length > 0) {
-            alerter.alert(mails[el])
+            Alerter.alert(mails[el])
           }
         })
       }
@@ -444,7 +439,7 @@ export default {
             })
           }
         }).catch((response) => {
-          alerter.alert(response.data.message)
+          Alerter.alert(response.data.message)
           this.$store.dispatch(symbols.actions.handleErrors, {title: 'checkEmail', response: response})
         })
       }

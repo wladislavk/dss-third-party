@@ -5,7 +5,7 @@
             <ul id="homemenu">
                 <navigation-element
                     v-for="menuItem in menu"
-                    v-if="resolveCondition(menuItem.if)"
+                    v-if="resolveCondition(menuItem.shouldParse)"
                     v-bind:menu-item="menuItem"
                     v-bind:key="menuItem.name"
                 ></navigation-element>

@@ -15,7 +15,7 @@
         <ul v-if="menuItemChildren.length" v-visible="showChildren">
             <navigation-element
                 v-for="childItem in menuItemChildren"
-                v-if="resolveCondition(childItem.if)"
+                v-if="resolveCondition(childItem.shouldParse)"
                 v-bind:menu-item="childItem"
                 v-bind:first-level="false"
                 v-bind:key="childItem.name"

@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3>Notifications</h3>
-        <template v-for="notification in notifications" v-if="resolveCondition(notification.if)">
+        <template v-for="notification in notifications" v-if="resolveCondition(notification.shouldParse)">
             <div class="notsuckertreemenu" v-if="notification.hasOwnProperty('children') && notification.children.length">
                 <ul id="notmenu">
                     <li>
@@ -16,7 +16,7 @@
                         <ul>
                             <li
                                 v-for="notificationChild in notification.children"
-                                v-if="resolveCondition(notificationChild.if)"
+                                v-if="resolveCondition(notificationChild.shouldParse)"
                             >
                                 <notification-link
                                     v-bind:link-count="notificationChild.number"

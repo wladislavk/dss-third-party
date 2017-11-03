@@ -3,7 +3,7 @@ import endpoints from '../../endpoints'
 import { LEGACY_URL } from '../../constants'
 import http from '../../services/http'
 import symbols from '../../symbols'
-import alerter from '../../services/alerter'
+import Alerter from '../../services/Alerter'
 import { focus as focusDirective } from 'vue-focus'
 import ProcessWrapper from '../../wrappers/ProcessWrapper'
 import SiteSealComponent from '../SiteSeal.vue'
@@ -52,7 +52,7 @@ export default {
       let alertText
       if (this.credentials.username.trim() === '') {
         alertText = 'Username is Required'
-        alerter.alert(alertText)
+        Alerter.alert(alertText)
         this.focusUser = true
 
         return false
@@ -61,7 +61,7 @@ export default {
 
       if (this.credentials.password.trim() === '') {
         alertText = 'Password is Required'
-        alerter.alert(alertText)
+        Alerter.alert(alertText)
         this.focusPassword = true
 
         return false

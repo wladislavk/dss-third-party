@@ -47,6 +47,7 @@ export default {
     [NOTIFICATION_NUMBERS.unmailedLetters]: 0,
     [NOTIFICATION_NUMBERS.unsignedNotes]: 0
   },
+  [symbols.state.patientId]: 0,
   [symbols.state.patientName]: '',
   [symbols.state.patientHomeSleepTestStatus]: '',
   [symbols.state.medicare]: 0,

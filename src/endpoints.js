@@ -2,6 +2,7 @@ export default {
   auth: '/auth',
   companies: {
     billingExclusiveCompany: '/companies/billing-exclusive-company',
+    companyByUser: '/companies/by-user',
     homeSleepTest: '/companies/home-sleep-test'
   },
   contacts: {
@@ -91,6 +92,7 @@ export default {
     edit: '/patients/edit',
     fillingForm: '/patients/filling-form',
     find: '/patients/find',
+    list: '/patients/list',
     referredByContact: '/patients/referred-by-contact',
     referrers: '/patients/referrers',
     resetAccessCode: '/patients/reset-access-code',

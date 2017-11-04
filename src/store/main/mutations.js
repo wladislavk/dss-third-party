@@ -75,5 +75,8 @@ export default {
   },
   [symbols.mutations.incompleteHomeSleepTests] (state, data) {
     state[symbols.state.incompleteHomeSleepTests] = data
+  },
+  [symbols.mutations.patientId] (state, data) {
+    state[symbols.state.patientId] = parseInt(data)
   }
 }

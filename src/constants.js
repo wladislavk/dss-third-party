@@ -618,3 +618,61 @@ export const HST_STATUSES = {
   [DSS_CONSTANTS.DSS_HST_REJECTED]: 'Rejected',
   [DSS_CONSTANTS.DSS_HST_CONTACTED]: 'Contacted'
 }
+
+export const PATIENT_MENU = [
+  {
+    link: 'manage/manage_flowsheet3.php?pid=%d&addtopat=1',
+    name: 'Tracker',
+    active: 'manage/manage_flowsheet3.php'
+  },
+  {
+    link: 'manage/dss_summ.php?pid=%d&addtopat=1',
+    name: 'Summary Sheet',
+    active: 'manage/dss_summ.php'
+  },
+  {
+    link: 'manage/manage_ledger.php?pid=%d&addtopat=1',
+    name: 'Ledger',
+    active: 'manage/manage_ledger.php'
+  },
+  {
+    link: 'manage/manage_insurance.php?pid=%d&addtopat=1',
+    name: 'Insurance',
+    active: 'manage/manage_insurance.php'
+  },
+  {
+    link: 'manage/dss_summ.php?sect=notes&pid=%d&addtopat=1',
+    name: 'Progress Notes',
+    active: 'manage/manage_progress_notes.php'
+  },
+  {
+    link: 'manage/dss_summ.php?sect=letters&pid=%d&addtopat=1',
+    name: 'Letters',
+    active: 'manage/patient_letters.php'
+  },
+  {
+    link: 'manage/q_image.php?pid=%d',
+    name: 'Images',
+    active: 'manage/q_image.php'
+  },
+  {
+    link: 'manage/q_page1.php?pid=%d&addtopat=1',
+    name: 'Questionnaire',
+    activeLike: [
+      'q_page',
+      'q_sleep'
+    ]
+  },
+  {
+    link: 'manage/ex_page4.php?pid=%d&addtopat=1',
+    name: 'Clinical Exam',
+    activeLike: [
+      'ex_page'
+    ]
+  },
+  {
+    link: 'manage/add_patient.php?ed=%d&addtopat=1&pid=%d',
+    name: 'Patient Info',
+    active: 'edit-patient'
+  }
+]

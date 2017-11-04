@@ -22,5 +22,8 @@ export default {
   },
   [symbols.getters.isUserDoctor] (state) {
     return (state[symbols.state.userInfo].docId === state[symbols.state.userInfo].userId)
+  },
+  [symbols.getters.patientId] (state) {
+    return state[symbols.state.patientId]
   }
 }

@@ -94,6 +94,7 @@ export default {
     }
     http.token = state[symbols.state.mainToken]
     http.post(endpoints.patients.withFilter, queryData).then((response) => {
+      commit(symbols.mutations.patientId, patientId)
       const data = response.data.data
       if (!(data instanceof Array) || !data.length) {
         return

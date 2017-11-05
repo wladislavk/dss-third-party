@@ -56,5 +56,6 @@ export default {
   [symbols.state.headerAlertText]: '',
   [symbols.state.displayAlert]: false,
   [symbols.state.allergen]: 0,
-  [symbols.state.incompleteHomeSleepTests]: []
+  [symbols.state.incompleteHomeSleepTests]: [],
+  [symbols.state.showAllWarnings]: true
 }

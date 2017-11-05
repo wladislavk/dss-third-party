@@ -22,12 +22,12 @@
                 <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
             </a>
             <span v-if="rejectedClaimsForCurrentPatient.length > 0" class="warning">Warning! Patient has the following rejected claims: <br />
-                <template v-for="claim in rejectedClaimsForCurrentPatient">
+                <span v-for="claim in rejectedClaimsForCurrentPatient">
                     <a v-bind:href="legacyUrl + 'view_claim.php?claimid=' + claim.insuranceid + '&pid=' + patientId">
                         {{ claim.insuranceid }} - {{ claim.adddate | moment("MM/DD/YYYY") }}
                     </a>
                     <br />
-                </template>
+                </span>
             </span>
             <span v-if="incompleteHomeSleepTests.length" class="warning">Patient has the following Home Sleep Tests: <br />
                 <span v-for="incompleteTest in incompleteHomeSleepTests">
@@ -39,7 +39,7 @@
                     <span v-if="incompleteTest.status === constants.DSS_HST_REJECTED"> - {{ incompleteTest.rejected_reason }}</span>
                     <span v-if="incompleteTest.status === constants.DSS_HST_REJECTED && incompleteTest.rejecteddate"> - {{ incompleteTest.rejecteddate | moment("MM/DD/YYYY hh:mm a") }}</span>
                     <br />
-                    <a v-if="incompleteTest.status == constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">Click here</a> to remove this error
+                    <a v-if="incompleteTest.status === constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">Click here</a> to remove this error
                 </span>
             </span>
         </div>

@@ -2,9 +2,6 @@ import $ from 'jquery'
 
 $(function () {
   function calcAmountLeftToMeet () {
-    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
-      return
-    }
     let deductible = $('#patient_deductible').val()
     let amountMet = $('#patient_amount_met').val()
     if (isNaN(deductible)) {
@@ -34,9 +31,6 @@ $(function () {
   }
 
   function calcAmountLeftToMeetFamily () {
-    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
-      return
-    }
     let deductible = $('#family_deductible').val()
     let amountMet = $('#family_amount_met').val()
     if (isNaN(deductible)) {
@@ -66,9 +60,6 @@ $(function () {
   }
 
   function calcExpectedPayments () {
-    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
-      return
-    }
     // OUT OF NETWORK BENEFITS
     let debug = true
     if (debug) {

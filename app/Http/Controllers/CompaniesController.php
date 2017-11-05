@@ -140,6 +140,22 @@ class CompaniesController extends BaseRestController
     }
 
     /**
+     * @SWG\Get(
+     *     path="/companies/by-user",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUserCompanies()
+    {
+        $userId = $this->user->getUserIdOrZero();
+        $data = $this->repository->getCompanyByUser($userId);
+
+        return ApiResponse::responseOk('', $data);
+    }
+
+    /**
      * @SWG\Post(
      *     path="/companies/home-sleep-test",
      *     @SWG\Response(response="200", description="TODO: specify the response")

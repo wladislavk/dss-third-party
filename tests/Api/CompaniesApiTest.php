@@ -2,7 +2,7 @@
 namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Company;
-use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 use Tests\TestCases\ApiTestCase;
 
 class CompaniesApiTest extends ApiTestCase
@@ -36,6 +36,16 @@ class CompaniesApiTest extends ApiTestCase
             'name'   => 'testNameUpdated',
             'status' => 2,
         ];
+    }
+
+    public function testGetUserCompanies()
+    {
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        $this->get(self::ROUTE_PREFIX . '/companies/by-user');
+        $this->assertResponseOk();
+        $this->assertEquals([], $this->getResponseData());
     }
 
     public function testGetHomeSleepTestCompanies()

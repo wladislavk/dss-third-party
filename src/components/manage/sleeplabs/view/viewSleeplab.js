@@ -1,6 +1,6 @@
 import endpoints from '../../../../endpoints'
-import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
+import symbols from '../../../../symbols'
 
 export default {
   data () {
@@ -11,7 +11,6 @@ export default {
       sleeplab: {}
     }
   },
-  mixins: [handlerMixin],
   created () {
     window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
 
@@ -31,7 +30,7 @@ export default {
       this.fetchSleeplab(this.componentParams.sleeplabId)
     },
     fetchSleeplab (id) {
-      this.getSleeplab(id).then(function (response) {
+      this.getSleeplab(id).then((response) => {
         const data = response.data.data
 
         if (data) {
@@ -49,8 +48,8 @@ export default {
 
           this.sleeplab = data
         }
-      }).catch(function (response) {
-        this.handleErrors('getSleeplab', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getSleeplab', response: response})
       })
     },
     getSleeplab (id) {

@@ -1,4 +1,5 @@
 import symbols from '../../symbols'
+import SiteSealComponent from '../SiteSeal.vue'
 
 export default {
   data: function () {
@@ -7,6 +8,9 @@ export default {
       password: '',
       loginError: false
     }
+  },
+  components: {
+    siteSeal: SiteSealComponent
   },
   mounted () {
     if (this.$store.state.screener[symbols.state.screenerToken]) {

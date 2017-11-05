@@ -1,4 +1,6 @@
-module.exports = {
+import jquery from 'jquery'
+
+export default {
   methods: {
     loadScriptFrom (path, toElement, requiredFunction, externalFunction) {
       if (externalFunction === undefined) {
@@ -11,7 +13,7 @@ module.exports = {
         scriptElement.src = path
         scriptElement.async = true
 
-        window.$(this.$el).find(toElement).append(scriptElement)
+        jquery(this.$el).find(toElement).append(scriptElement)
       } else {
         externalFunction()
       }

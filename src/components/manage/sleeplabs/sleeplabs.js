@@ -1,6 +1,6 @@
 import endpoints from '../../../endpoints'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
+import symbols from '../../../symbols'
 
 export default {
   name: 'sleeplabs',
@@ -39,7 +39,6 @@ export default {
       }
     }
   },
-  mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
       const queryPage = this.$route.query.page
@@ -103,10 +102,8 @@ export default {
       this.message = data.message
 
       this.$nextTick(() => {
-        const self = this
-
         setTimeout(() => {
-          self.message = ''
+          this.message = ''
         }, 3000)
       })
     },
@@ -119,18 +116,16 @@ export default {
       this.$parent.$refs.modal.setComponentParameters({ sleeplabId: id })
     },
     removeSleeplab (id) {
-      this.deleteSleeplab(id).then(function () {
+      this.deleteSleeplab(id).then(() => {
         this.message = 'Deleted Successfully'
 
         this.$nextTick(() => {
-          const self = this
-
           setTimeout(() => {
-            self.message = ''
+            this.message = ''
           }, 3000)
         })
-      }).catch(function (response) {
-        this.handleErrors('deleteSleeplab', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'deleteSleeplab', response: response})
       })
     },
     getListOfSleeplabs () {
@@ -140,7 +135,7 @@ export default {
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection,
         this.routeParameters.currentLetter
-      ).then(function (response) {
+      ).then((response) => {
         const data = response.data.data
 
         data.result = data.result.map((value) => {
@@ -156,8 +151,8 @@ export default {
 
         this.sleeplabs = data.result
         this.sleeplabsTotalNumber = data.total
-      }).catch(function (response) {
-        this.handleErrors('getSleeplabs', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getSleeplabs', response: response})
       })
     },
     getCurrentDirection (sort) {

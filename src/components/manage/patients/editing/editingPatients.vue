@@ -859,7 +859,7 @@
                         <font style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</font>
                     </td>
                 </tr>
-                <template v-if="headerInfo.docInfo.use_eligible_api == 1">
+                <template v-if="docInfo.use_eligible_api == 1">
                     <tr>
                         <td valign="top" colspan="2" class="frmhead">
                             Insurance Co.
@@ -1265,7 +1265,7 @@
                         </ul>
                     </td>
                 </tr>
-                <template v-if="headerInfo.docInfo.use_eligible_api == 1">
+                <template v-if="docInfo.use_eligible_api === 1">
                     <tr>
                         <td valign="top" colspan="2" class="frmhead">
                             Insurance Co.
@@ -2073,7 +2073,7 @@
                         <br />&nbsp;
                     </td>
                 </tr>
-                <template v-if="headerInfo.docInfo.use_patient_portal">
+                <template v-if="docInfo.use_patient_portal">
                     <tr bgcolor="#FFFFFF">
                         <td valign="top" class="frmhead">
                             Portal Status

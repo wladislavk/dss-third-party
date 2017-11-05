@@ -1,6 +1,6 @@
 import endpoints from '../../../../endpoints'
-import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
+import symbols from '../../../../symbols'
 
 export default {
   data () {
@@ -12,7 +12,6 @@ export default {
       isResetAccessCode: false
     }
   },
-  mixins: [handlerMixin],
   created () {
     window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
   },
@@ -23,7 +22,7 @@ export default {
     onSettingComponentParams (parameters) {
       this.componentParams = parameters
 
-      this.getPatientById(this.componentParams.patientId).then(function (response) {
+      this.getPatientById(this.componentParams.patientId).then((response) => {
         const data = response.data.data
 
         if (data) {
@@ -34,8 +33,8 @@ export default {
             this.resetPinCode(this.componentParams.patientId)
           }
         }
-      }).catch(function (response) {
-        this.handleErrors('getPatientById', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getPatientById', response: response})
       })
 
       // this popup doesn't have any input fields - set the flag to false
@@ -44,22 +43,22 @@ export default {
     resetPinCode (patientId) {
       patientId = patientId || 0
 
-      this.resetPatientAccessCode(patientId).then(function (response) {
+      this.resetPatientAccessCode(patientId).then((response) => {
         const data = response.data.data
 
         if (data.hasOwnProperty('access_code') && data.access_code > 0) {
           this.$set(this.patient, 'access_code', data.access_code)
           this.isResetAccessCode = true
         }
-      }).catch(function (response) {
-        this.handleErrors('resetPatientAccessCode', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'resetPatientAccessCode', response: response})
       })
     },
     onClickReset () {
       this.resetPinCode(this.componentParams.patientId)
     },
     onSubmit () {
-      this.createTempPinDocument(this.componentParams.patientId).then(function (response) {
+      this.createTempPinDocument(this.componentParams.patientId).then((response) => {
         const data = response.data.data
 
         if (data.hasOwnProperty('path_to_pdf') && data.path_to_pdf.length > 0) {
@@ -71,8 +70,8 @@ export default {
           // close the popup
           this.$parent.disable()
         }
-      }).catch(function (response) {
-        this.handleErrors('createTempPinDocument', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'createTempPinDocument', response: response})
       })
     },
     getPatientById (patientId) {

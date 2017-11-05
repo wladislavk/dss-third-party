@@ -1,4 +1,4 @@
-import alerter from '../../../services/alerter'
+import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
 import HealthAssessmentComponent from '../common/HealthAssessment.vue'
 
@@ -44,7 +44,7 @@ export default {
       }).catch(() => {
         this.nextDisabled = false
         const alertText = 'There was an error communicating with the server, please try again in a few minutes'
-        alerter.alert(alertText)
+        Alerter.alert(alertText)
       })
     }
   }

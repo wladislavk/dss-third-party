@@ -1,6 +1,6 @@
 import endpoints from '../../../../endpoints'
-import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
+import symbols from '../../../../symbols'
 
 export default {
   name: 'print-referred-by-contact',
@@ -44,7 +44,6 @@ export default {
       }
     }
   },
-  mixins: [handlerMixin],
   watch: {
     '$route.query.sort': function () {
       if (this.$route.query.sort) {
@@ -85,14 +84,14 @@ export default {
       this.getReferredByContacts(
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection
-      ).then(function (response) {
+      ).then((response) => {
         const data = response.data.data
 
         if (data.total > 0) {
           this.contacts = data.contacts
         }
-      }).catch(function (response) {
-        this.handleErrors('getReferredByContacts', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getReferredByContacts', response: response})
       })
     },
     getReferredByContacts (sort, sortDir) {

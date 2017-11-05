@@ -1,6 +1,8 @@
+import Alerter from '../../../services/Alerter'
 import endpoints from '../../../endpoints'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
+import symbols from '../../../symbols'
+import SwalWrapper from '../../../wrappers/SwalWrapper'
 
 export default {
   data () {
@@ -26,7 +28,6 @@ export default {
       showName: true
     }
   },
-  mixins: [handlerMixin],
   computed: {
     googleLink () {
       const link = 'http://google.com/search?q='
@@ -41,10 +42,9 @@ export default {
       ]
 
       const notEmptyRequiredFields = []
-      const self = this
-      requiredFields.forEach(function (el) {
-        if (self.contact[el]) {
-          notEmptyRequiredFields.push(self.contact[el])
+      requiredFields.forEach((el) => {
+        if (this.contact[el]) {
+          notEmptyRequiredFields.push(this.contact[el])
         }
       })
 
@@ -54,24 +54,24 @@ export default {
   watch: {
     pendingVOB: function () {
       if (!this.pendingVOB.length) {
-        this.getContactSentLetters(this.contact.contactid).then(function (response) {
+        this.getContactSentLetters(this.contact.contactid).then((response) => {
           const data = response.data.data
 
           if (data.length) {
             this.contactSentLetters = data
           }
-        }).catch(function (response) {
-          this.handleErrors('getContactSentLetters', response)
+        }).catch((response) => {
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getContactSentLetters', response: response})
         })
 
-        this.getContactPendingLetters(this.contact.contactid).then(function (response) {
+        this.getContactPendingLetters(this.contact.contactid).then((response) => {
           const data = response.data.data
 
           if (data.length) {
             this.contactPendingLetters = data
           }
-        }).catch(function (response) {
-          this.handleErrors('getContactPendingLetters', response)
+        }).catch((response) => {
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getContactPendingLetters', response: response})
         })
       }
     },
@@ -125,34 +125,34 @@ export default {
     window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   mounted () {
-    http.post(endpoints.contactTypes.physician).then(function (response) {
+    http.post(endpoints.contactTypes.physician).then((response) => {
       const data = response.data.data
 
       if (data.physician_types) {
         this.$set(this, 'contactTypesOfPhysician', data.physician_types.split(','))
       }
-    }).catch(function (response) {
-      this.handleErrors('getContactTypesOfPhysician', response)
+    }).catch((response) => {
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getContactTypesOfPhysician', response: response})
     })
 
-    http.post(endpoints.contactTypes.activeNonCorporate).then(function (response) {
+    http.post(endpoints.contactTypes.activeNonCorporate).then((response) => {
       const data = response.data.data
 
       if (data.length) {
         this.activeNonCorporateContactTypes = data
       }
-    }).catch(function (response) {
-      this.handleErrors('getActiveNonCorporateContactTypes', response)
+    }).catch((response) => {
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getActiveNonCorporateContactTypes', response: response})
     })
 
-    http.post(endpoints.qualifiers.active).then(function (response) {
+    http.post(endpoints.qualifiers.active).then((response) => {
       const data = response.data.data
 
       if (data.length) {
         this.activeQualifiers = data
       }
-    }).catch(function (response) {
-      this.handleErrors('getActiveQualifiers', response)
+    }).catch((response) => {
+      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getActiveQualifiers', response: response})
     })
   },
   methods: {
@@ -160,28 +160,28 @@ export default {
       this.componentParams = parameters
 
       if (this.componentParams.contactId > 0) {
-        this.getContact(this.componentParams.contactId).then(function (response) {
+        this.getContact(this.componentParams.contactId).then((response) => {
           const data = response.data.data
 
           if (data) {
             this.contact = data
 
-            this.$nextTick(function () {
+            this.$nextTick(() => {
               this.wasContactDataReceived = true
             })
           }
-        }).catch(function (response) {
-          this.handleErrors('getContact', response)
+        }).catch((response) => {
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getContact', response: response})
         })
 
-        this.getPendingVOBsByContactId(this.componentParams.contactId).then(function (response) {
+        this.getPendingVOBsByContactId(this.componentParams.contactId).then((response) => {
           const data = response.data.data
 
           if (data.length) {
             this.pendingVOB = data
           }
-        }).catch(function (response) {
-          this.handleErrors('getPendingVOBsByContactId', response)
+        }).catch((response) => {
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getPendingVOBsByContactId', response: response})
         })
       }
     },
@@ -189,36 +189,36 @@ export default {
       this.message = ''
 
       if (this.componentParams.contactId > 0) {
-        this.updateContact(this.contact).then(function () {
+        this.updateContact(this.contact).then(() => {
           // pass message to parent component
           this.$parent.updateParentData({ message: 'Edited Successfully' })
           this.$parent.$parent.$refs.modal.popupEdit = false
           this.$parent.$parent.$refs.modal.disable()
           this.$router.push('/manage/contacts')
-        }).catch(function (response) {
+        }).catch((response) => {
           if (response.status === 422) {
             this.displayErrorResponseFromAPI(response.data.data)
-          } else {
-            this.handleErrors('updateContact', response)
+            return
           }
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'updateContact', response: response})
         })
       } else {
-        this.insertContact(this.contact).then(function (response) {
+        this.insertContact(this.contact).then((response) => {
           const data = response.data.data
 
           if (data) {
-            this.createWelcomeLetter(data.contactid, this.contact.contacttypeid).then(function (response) {
+            this.createWelcomeLetter(data.contactid, this.contact.contacttypeid).then((response) => {
               const data = response.data.data
 
               if (data.message) {
-                window.swal({
+                SwalWrapper.callSwal({
                   title: '',
                   text: data.message,
                   type: 'info'
                 })
               }
-            }).catch(function (response) {
-              this.handleErrors('createWelcomeLetter', response)
+            }).catch((response) => {
+              this.$store.dispatch(symbols.actions.handleErrors, {title: 'createWelcomeLetter', response: response})
             })
 
             if (this.componentParams.activePat) {
@@ -240,12 +240,12 @@ export default {
             this.$parent.$parent.$refs.modal.popupEdit = false
             this.$parent.$parent.$refs.modal.disable()
           }
-        }).catch(function (response) {
+        }).catch((response) => {
           if (response.status === 422) {
             this.displayErrorResponseFromAPI(response.data.data)
-          } else {
-            this.handleErrors('updateContact', response)
+            return
           }
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'updateContact', response: response})
         })
       }
     },
@@ -260,7 +260,7 @@ export default {
 
       message += '</ul>'
 
-      window.swal({
+      SwalWrapper.callSwal({
         title: 'Wrong data!',
         text: message,
         html: true,
@@ -302,13 +302,13 @@ export default {
       let alertText
       if (this.contact.preferredcontact === 'email' && this.contact.email.length === 0) {
         alertText = 'You must enter an email address to use email as the preferred contact method.'
-        alert(alertText)
+        Alerter.alert(alertText)
 
         this.$set(this.contact, 'preferredcontact', '')
         this.$refs.email.focus()
       } else if (this.contact.preferredcontact === 'fax' && this.contact.fax.length === 0) {
         alertText = 'You must enter a fax number to use email as the preferred contact method.'
-        alert(alertText)
+        Alerter.alert(alertText)
 
         this.$set(this.contact, 'preferredcontact', '')
         this.$refs.fax.focus()

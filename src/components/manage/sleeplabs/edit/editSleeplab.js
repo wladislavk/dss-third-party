@@ -1,9 +1,10 @@
 import endpoints from '../../../../endpoints'
-import handlerMixin from '../../../../modules/handler/HandlerMixin'
 import http from '../../../../services/http'
 import phoneFilters from '../../../../modules/filters/phoneMixin'
 import sleeplabValidator from '../../../../modules/validators/SleeplabMixin'
 import AwesomeMask from 'awesome-mask'
+import symbols from '../../../../symbols'
+import Alerter from '../../../../services/Alerter'
 
 export default {
   name: 'edit-sleeplab',
@@ -23,7 +24,7 @@ export default {
       phoneFields: ['phone1', 'phone2', 'fax']
     }
   },
-  mixins: [handlerMixin, phoneFilters, sleeplabValidator],
+  mixins: [phoneFilters, sleeplabValidator],
   directives: {
     mask: AwesomeMask
   },
@@ -62,10 +63,9 @@ export default {
       ]
 
       const notEmptyRequiredFields = []
-      const self = this
-      requiredFields.forEach(function (el) {
-        if (self.sleeplab[el]) {
-          notEmptyRequiredFields.push(self.sleeplab[el])
+      requiredFields.forEach((el) => {
+        if (this.sleeplab[el]) {
+          notEmptyRequiredFields.push(this.sleeplab[el])
         }
       })
 
@@ -96,7 +96,7 @@ export default {
     },
     onSubmit () {
       if (this.validateSleeplabData(this.sleeplab)) {
-        this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab).then(function (response) {
+        this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab).then((response) => {
           const data = response.data.data
 
           this.$parent.popupEdit = false
@@ -105,10 +105,10 @@ export default {
             this.$parent.updateParentData({ message: data.status })
             this.$parent.disable()
           }
-        }).catch(function (response) {
+        }).catch((response) => {
           this.parseFailedResponseOnEditingSleeplab(response.data.data)
 
-          this.handleErrors('editSleeplab', response)
+          this.$store.dispatch(symbols.actions.handleErrors, {title: 'editSleeplab', response: response})
         })
       }
     },
@@ -123,7 +123,7 @@ export default {
         })
 
         // TODO: create more readable format
-        alert(arrOfMessages.join('\n'))
+        Alerter.alert(arrOfMessages.join('\n'))
       }
     },
     onSettingComponentParams (parameters) {
@@ -132,7 +132,7 @@ export default {
       this.fetchSleeplab(this.componentParams.sleeplabId)
     },
     fetchSleeplab (id) {
-      this.getSleeplab(id).then(function (response) {
+      this.getSleeplab(id).then((response) => {
         const data = response.data.data
 
         if (data) {
@@ -148,8 +148,8 @@ export default {
 
           this.sleeplab = data
         }
-      }).catch(function (response) {
-        this.handleErrors('getSleeplab', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getSleeplab', response: response})
       })
     },
     getSleeplab (id) {
@@ -159,10 +159,9 @@ export default {
     },
     editSleeplab (sleeplabId, sleeplabFormData) {
       // convert phone fields before storing
-      const self = this
       this.phoneFields.forEach(el => {
         if (sleeplabFormData.hasOwnProperty(el)) {
-          sleeplabFormData[el] = self.phoneForStoring(sleeplabFormData[el])
+          sleeplabFormData[el] = this.phoneForStoring(sleeplabFormData[el])
         }
       })
 

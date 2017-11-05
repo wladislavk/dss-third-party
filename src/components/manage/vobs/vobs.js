@@ -1,6 +1,6 @@
 import endpoints from '../../../endpoints'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
+import symbols from '../../../symbols'
 
 export default {
   data () {
@@ -26,7 +26,6 @@ export default {
       }
     }
   },
-  mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
       if (this.$route.query.page) {
@@ -82,7 +81,7 @@ export default {
     setViewStatus (vob) {
       const data = { viewed: vob.viewed === 0 ? 1 : 0 }
 
-      this.updateVob(vob.id, data).then(function () {
+      this.updateVob(vob.id, data).then(() => {
         this.$router.push({
           name: this.$route.name,
           query: {
@@ -92,8 +91,8 @@ export default {
 
         const foundVob = this.vobs.find(el => el.id === vob.id)
         foundVob.viewed = data.viewed
-      }).catch(function (response) {
-        this.handleErrors('updateVob', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'updateVob', response: response})
       })
     },
     getCurrentDirection (sort) {
@@ -110,15 +109,15 @@ export default {
         this.routeParameters.sortColumn,
         this.routeParameters.sortDirection,
         this.routeParameters.viewed
-      ).then(function (response) {
+      ).then((response) => {
         const data = response.data.data
 
         if (data.result.length) {
           this.vobs = data.result
           this.totalVobs = data.total
         }
-      }).catch(function (response) {
-        this.handleErrors('findVobs', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'findVobs', response: response})
       })
     },
     findVobs (

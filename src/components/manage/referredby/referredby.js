@@ -1,5 +1,4 @@
 import endpoints from '../../../endpoints'
-import handlerMixin from '../../../modules/handler/HandlerMixin'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
 
@@ -39,7 +38,6 @@ export default {
       }
     }
   },
-  mixins: [handlerMixin],
   watch: {
     '$route.query.page': function () {
       if (this.$route.query.page <= this.totalPages) {
@@ -95,10 +93,8 @@ export default {
       this.message = data.message
 
       this.$nextTick(() => {
-        const self = this
-
         setTimeout(() => {
-          self.message = ''
+          this.message = ''
         }, 3000)
       })
     },
@@ -114,10 +110,10 @@ export default {
       this.$parent.$refs.modal.display('edit-referred-by-contact')
     },
     removeContact (id) {
-      this.deleteReferredByContact(id).then(function () {
-        this.message = 'Deleted Successfull'
-      }).catch(function (response) {
-        this.handleErrors('deleteReferredByContact', response)
+      this.deleteReferredByContact(id).then(() => {
+        this.message = 'Deleted Successfully'
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'deleteReferredByContact', response: response})
       })
     },
     getContacts () {
@@ -126,15 +122,15 @@ export default {
         this.routeParameters.currentPageNumber,
         this.routeParameters.sortDirection,
         this.contactsPerPage
-      ).then(function (response) {
+      ).then((response) => {
         const data = response.data.data
 
         if (data.total > 0) {
           this.contactsTotalNumber = data.total
           this.contacts = data.contacts
         }
-      }).catch(function (response) {
-        this.handleErrors('getReferredByContacts', response)
+      }).catch((response) => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getReferredByContacts', response: response})
       })
     },
     getCurrentDirection (sort) {

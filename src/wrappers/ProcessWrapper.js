@@ -16,6 +16,9 @@ export default {
   getImagePath: function () {
     return process.env.IMAGE_PATH
   },
+  getNodeEnv: function () {
+    return process.env.NODE_ENV
+  },
   _checkForHeadless: function () {
     return (window.location.protocol === 'http:')
   }

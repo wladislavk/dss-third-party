@@ -47,24 +47,15 @@ export default {
     withFilter: '/health-histories/with-filter'
   },
   homeSleepTests: {
-    completed: '/home-sleep-tests/completed',
-    rejected: '/home-sleep-tests/rejected',
-    requested: '/home-sleep-tests/requested',
     store: '/home-sleep-tests',
-    uncompleted: '/home-sleep-tests/uncompleted'
+    incomplete: '/home-sleep-tests/uncompleted'
   },
   insurances: {
-    pendingClaims: '/insurances/pending-claims',
-    rejected: '/insurances/rejected',
-    rejectedClaims: '/insurances/rejected-claims',
-    unmailedClaims: '/insurances/unmailed-claims'
+    rejected: '/insurances/rejected'
   },
   insurancePreauth: {
-    completed: '/insurance-preauth/completed',
     findVobs: '/insurance-preauth/vobs/find',
-    pending: '/insurance-preauth/pending',
     pendingVob: '/insurance-preauth/pending-VOB',
-    rejected: '/insurance-preauth/rejected',
     update: '/insurance-preauth'
   },
   ledgers: {
@@ -89,23 +80,17 @@ export default {
   memos: {
     current: '/memos/current'
   },
-  notes: {
-    unsigned: '/notes/unsigned'
-  },
   notifications: {
     update: '/notifications',
     withFilter: '/notifications/with-filter'
   },
   patients: {
-    bounces: '/patients/bounces',
     byContact: '/patients/by-contact',
     checkEmail: '/patients/check-email',
     destroyForDoctor: '/patients-by-doctor',
-    duplicates: '/patients/duplicates',
     edit: '/patients/edit',
     fillingForm: '/patients/filling-form',
     find: '/patients/find',
-    number: '/patients/number',
     referredByContact: '/patients/referred-by-contact',
     referrers: '/patients/referrers',
     resetAccessCode: '/patients/reset-access-code',
@@ -114,18 +99,13 @@ export default {
     withFilter: '/patients/with-filter'
   },
   patientContacts: {
-    current: '/patient-contacts/current',
-    number: '/patient-contacts/number'
+    current: '/patient-contacts/current'
   },
   patientInsurances: {
-    current: '/patient-insurances/current',
-    number: '/patient-insurances/number'
+    current: '/patient-insurances/current'
   },
   patientSummaries: {
     updateTrackerNotes: '/patient-summaries/update-tracker-notes'
-  },
-  paymentReports: {
-    number: '/payment-reports/number'
   },
   profileImages: {
     insuranceCardImage: '/profile-images/insurance-card-image',
@@ -147,9 +127,6 @@ export default {
     edit: '/sleeplabs/edit',
     list: '/sleeplabs/list',
     show: '/sleeplabs'
-  },
-  supportTickets: {
-    number: '/support-tickets/number'
   },
   tasks: {
     all: '/tasks/all',
@@ -175,7 +152,6 @@ export default {
     courseStaff: '/users/course-staff',
     current: '/users/current',
     letterInfo: '/users/letter-info',
-    paymentReports: '/users/payment-reports',
     show: '/users'
   }
 }

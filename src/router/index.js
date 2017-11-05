@@ -2,9 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MintUI from 'mint-ui'
 import axios from 'axios'
-import ManageTemplate from '../components/header/header.vue'
-import Login from '../components/manage/login/login.vue'
-import Index from '../components/manage/dashboard/dashboard.vue'
+import ManageRootComponent from '../components/manage/ManageRoot.vue'
+import ManageLoginComponent from '../components/manage/ManageLogin.vue'
+import ManageAppComponent from '../components/manage/ManageApp.vue'
+import DashboardRootComponent from '../components/manage/dashboard/DashboardRoot.vue'
 import Patients from '../components/manage/patients/patients.vue'
 import Contacts from '../components/manage/contacts/contacts.vue'
 import EditingPatients from '../components/manage/patients/editing/editingPatients.vue'
@@ -14,175 +15,159 @@ import PrintReferredByContact from '../components/manage/referredby/print/printR
 import Sleeplabs from '../components/manage/sleeplabs/sleeplabs.vue'
 import CorporateContacts from '../components/manage/corporate-contacts/corporateContacts.vue'
 import LedgerReportFull from '../components/manage/ledgers/report-full/ledgerReportFull.vue'
-import ScreenerRoot from '../components/screener/ScreenerRoot.vue'
-import ScreenerLogin from '../components/screener/ScreenerLogin.vue'
-import ScreenerApp from '../components/screener/ScreenerApp.vue'
-import ScreenerIntro from '../components/screener/sections/ScreenerIntro.vue'
-import ScreenerEpworth from '../components/screener/sections/ScreenerEpworth.vue'
-import ScreenerSymptoms from '../components/screener/sections/ScreenerSymptoms.vue'
-import ScreenerDiagnoses from '../components/screener/sections/ScreenerDiagnoses.vue'
-import ScreenerResults from '../components/screener/sections/ScreenerResults.vue'
-import ScreenerDoctor from '../components/screener/sections/ScreenerDoctor.vue'
-import ScreenerHst from '../components/screener/sections/ScreenerHst.vue'
-import PageNotFound from '../components/services/pageNotFound.vue'
+import ScreenerRootComponent from '../components/screener/ScreenerRoot.vue'
+import ScreenerLoginComponent from '../components/screener/ScreenerLogin.vue'
+import ScreenerAppComponent from '../components/screener/ScreenerApp.vue'
+import ScreenerIntroComponent from '../components/screener/sections/ScreenerIntro.vue'
+import ScreenerEpworthComponent from '../components/screener/sections/ScreenerEpworth.vue'
+import ScreenerSymptomsComponent from '../components/screener/sections/ScreenerSymptoms.vue'
+import ScreenerDiagnosesComponent from '../components/screener/sections/ScreenerDiagnoses.vue'
+import ScreenerResultsComponent from '../components/screener/sections/ScreenerResults.vue'
+import ScreenerDoctorComponent from '../components/screener/sections/ScreenerDoctor.vue'
+import ScreenerHstComponent from '../components/screener/sections/ScreenerHst.vue'
+import PageNotFound from '../components/errors/pageNotFound.vue'
+import storage from '../modules/storage'
+import { STANDARD_META } from '../constants'
 
 Vue.use(Router)
 Vue.use(MintUI)
-
-Vue.component('manage-template', ManageTemplate)
 
 export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/manage/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/manage/index',
-      name: 'dashboard',
-      component: Index,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/patients',
-      name: 'patients',
-      component: Patients,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/contacts',
-      name: 'contacts',
-      component: Contacts,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/edit-patient',
-      name: 'edit-patient',
-      component: EditingPatients,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/vobs',
-      name: 'vobs',
-      component: Vobs,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/referredby',
-      name: 'referredby',
-      component: ReferredBy,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/sleeplabs',
-      name: 'sleeplabs',
-      component: Sleeplabs,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/corporate-contacts',
-      name: 'corporate-contacts',
-      component: CorporateContacts,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/ledger-report-full',
-      name: 'ledger-report-full',
-      component: LedgerReportFull,
-      meta: {
-        requiresAuth: true,
-        requiresManageTemplate: true
-      }
-    },
-    {
-      path: '/manage/print-referred-by-contact',
-      name: 'print-referred-by-contact',
-      component: PrintReferredByContact,
-      meta: {
-        requiresAuth: true
-      }
+      path: '/manage',
+      name: 'manage-root',
+      component: ManageRootComponent,
+      children: [
+        {
+          path: 'login',
+          name: 'main-login',
+          component: ManageLoginComponent
+        },
+        {
+          path: 'main',
+          name: 'manage-main',
+          component: ManageAppComponent,
+          children: [
+            {
+              path: 'index',
+              name: 'dashboard',
+              component: DashboardRootComponent,
+              meta: STANDARD_META
+            },
+            {
+              path: 'patients',
+              name: 'patients',
+              component: Patients,
+              meta: STANDARD_META
+            },
+            {
+              path: 'contacts',
+              name: 'contacts',
+              component: Contacts,
+              meta: STANDARD_META
+            },
+            {
+              path: 'edit-patient',
+              name: 'edit-patient',
+              component: EditingPatients,
+              meta: STANDARD_META
+            },
+            {
+              path: 'vobs',
+              name: 'vobs',
+              component: Vobs,
+              meta: STANDARD_META
+            },
+            {
+              path: 'referredby',
+              name: 'referredby',
+              component: ReferredBy,
+              meta: STANDARD_META
+            },
+            {
+              path: 'sleeplabs',
+              name: 'sleeplabs',
+              component: Sleeplabs,
+              meta: STANDARD_META
+            },
+            {
+              path: 'corporate-contacts',
+              name: 'corporate-contacts',
+              component: CorporateContacts,
+              meta: STANDARD_META
+            },
+            {
+              path: 'ledger-report-full',
+              name: 'ledger-report-full',
+              component: LedgerReportFull,
+              meta: STANDARD_META
+            },
+            {
+              path: 'print-referred-by-contact',
+              name: 'print-referred-by-contact',
+              component: PrintReferredByContact,
+              meta: {
+                requiresAuth: true
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       path: '/screener',
       name: 'screener-root',
-      component: ScreenerRoot,
+      component: ScreenerRootComponent,
       children: [
         {
           path: 'login',
           name: 'screener-login',
-          component: ScreenerLogin
+          component: ScreenerLoginComponent
         },
         {
           path: 'main',
           name: 'screener-main',
-          component: ScreenerApp,
+          component: ScreenerAppComponent,
           children: [
             {
               path: 'intro',
               name: 'screener-intro',
-              component: ScreenerIntro
+              component: ScreenerIntroComponent
             },
             {
               path: 'epworth',
               name: 'screener-epworth',
-              component: ScreenerEpworth
+              component: ScreenerEpworthComponent
             },
             {
               path: 'symptoms',
               name: 'screener-symptoms',
-              component: ScreenerSymptoms
+              component: ScreenerSymptomsComponent
             },
             {
               path: 'diagnoses',
               name: 'screener-diagnoses',
-              component: ScreenerDiagnoses
+              component: ScreenerDiagnosesComponent
             },
             {
               path: 'results',
               name: 'screener-results',
-              component: ScreenerResults
+              component: ScreenerResultsComponent
             },
             {
               path: 'doctor',
               name: 'screener-doctor',
-              component: ScreenerDoctor
+              component: ScreenerDoctorComponent
             },
             {
               path: 'hst',
               name: 'screener-hst',
-              component: ScreenerHst
+              component: ScreenerHstComponent
             }
           ],
-          meta: {
-            requiresAuth: true,
-            requiresManageTemplate: true
-          }
+          meta: STANDARD_META
         }
       ]
     },
@@ -192,10 +177,10 @@ export default new Router({
     }
   ],
   beforeEach (to, from, next) {
-    if (to.matched.some(record => record.meta.requiresAuth) && !window.storage.get('token')) {
-      next({ name: 'login' })
+    if (to.matched.some(record => record.meta.requiresAuth) && !storage.get('token')) {
+      // next({ name: 'login' })
     } else {
-      axios.defaults.headers.common['Authorization'] = 'Bearer ' + window.storage.get('token')
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + storage.get('token')
       next()
     }
   }

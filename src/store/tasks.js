@@ -1,7 +1,6 @@
 import endpoints from '../endpoints'
 import http from '../services/http'
 import symbols from '../symbols'
-import ErrorHandler from '../modules/handler/HandlerMixin'
 
 export default {
   state: {
@@ -61,20 +60,20 @@ export default {
     }
   },
   actions: {
-    [symbols.actions.retrieveTasks] ({ commit }) {
+    [symbols.actions.retrieveTasks] ({ commit, dispatch }) {
       http.get(endpoints.tasks.index).then((response) => {
         const data = response.data.data
         commit(symbols.mutations.setTasks, data)
       }).catch((response) => {
-        ErrorHandler.methods.handleErrors('getTasks', response)
+        dispatch(symbols.actions.handleErrors, {title: 'getTasks', response: response})
       })
     },
-    [symbols.actions.retrieveTasksForPatient] ({ commit }, patientId) {
+    [symbols.actions.retrieveTasksForPatient] ({ commit, dispatch }, patientId) {
       http.get(endpoints.tasks.indexForPatient + '/' + patientId).then((response) => {
         const data = response.data.data
         commit(symbols.mutations.setTasksForPatient, data)
       }).catch((response) => {
-        ErrorHandler.methods.handleErrors('getPatientTasks', response)
+        dispatch(symbols.actions.handleErrors, {title: 'getPatientTasks', response: response})
       })
     }
   }

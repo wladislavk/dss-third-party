@@ -165,6 +165,19 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I run mouse over :menuPoint menu point
+     *
+     * @param string $menuPoint
+     */
+    public function runMouseOverMenu($menuPoint)
+    {
+        $menu = $this->findCss('ul#homemenu');
+        $parentNodeLink = $this->findElementWithText('a', $menuPoint, $menu);
+        $parentNode = $parentNodeLink->getParent();
+        $parentNode->mouseOver();
+    }
+
+    /**
      * @Then I see :link link
      *
      * @param string $link

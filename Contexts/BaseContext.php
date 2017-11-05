@@ -183,7 +183,11 @@ abstract class BaseContext extends RawMinkContext
 
     protected function visitStartPage()
     {
-        $this->getCommonClient()->visit(self::START_URL);
+        $url = self::START_URL;
+        if (SUT_HOST == 'vue') {
+            $url .= '/main';
+        }
+        $this->getCommonClient()->visit($url);
     }
 
     protected function login($user, $password = '')

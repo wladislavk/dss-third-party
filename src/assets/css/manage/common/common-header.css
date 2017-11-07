@@ -42,3 +42,28 @@ span.welcome-text {
 div.clear {
   clear: both;
 }
+
+.bottom-image {
+  height: 89px;
+  width: 100%;
+  background: url(../../../images/dss_01.png) #0b5c82 no-repeat top left;
+}
+
+.body-image {
+  background: url(../../../images/dss_03.jpg) #0b5c82 repeat-y top left;
+  width: 100%;
+}
+
+a.logo-link {
+  width: 96px;
+  height: 77px;
+  background: url(../../../images/logo.png) no-repeat 0 0;
+  display: block;
+  float: left;
+  padding-left: 100px;
+  color: #fff;
+}
+
+.suckertreemenu {
+  height: 27px;
+}

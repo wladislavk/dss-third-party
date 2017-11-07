@@ -15,10 +15,9 @@
                         <!-- Router content -->
                         <router-view></router-view>
                     </div>
-                    <div class="footer-image"></div>
+                    <common-footer></common-footer>
                 </td>
             </tr>
-          <!-- Stick Footer Section Here -->
         </table>
         <!-- @todo: re-enable the component after refactoring and testing -->
         <!--<logout-warning></logout-warning>-->

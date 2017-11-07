@@ -1,27 +1,25 @@
 <template>
     <div>
-        <div v-if="patientId" style="margin-left:20px;float:left;width:400px;display:none;">
+        <div v-if="patientId" class="patient-chart">
             You are currently in a patient chart -
-            <a v-bind:href="legacyUrl + 'manage_patient.php'" target="_self" style="font-weight:bold;">BACK TO PATIENT LIST</a>
+            <a v-bind:href="legacyUrl + 'manage_patient.php'" target="_self" class="back-to-list">Back to patient list</a>
         </div>
+        <!-- @todo: why need this div? -->
         <div v-if="patientId" style="float:right;width:300px;"></div>
         <br />
 
-        <div
-            v-if="patientId"
-            v-show="showAllWarnings"
-            id="patient_warnings"
-        >
-            <a v-if="showWarningAboutPatientChanges" class="warning" v-bind:href="legacyUrl + 'patient_changes.php?pid=' + patientId">
+        <div v-if="patientId" v-show="showAllWarnings" class="warning-div">
+            <a v-if="showWarningAboutPatientChanges" v-bind:href="legacyUrl + 'patient_changes.php?pid=' + patientId">
                 <span>Warning! Patient has updated their PROFILE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
             </a>
-            <a v-if="showWarningAboutQuestionnaireChanges" class="warning" v-bind:href="legacyUrl + 'q_page1.php?pid=' + patientId + '&addtopat=1'" >
+            <a v-if="showWarningAboutQuestionnaireChanges" v-bind:href="legacyUrl + 'q_page1.php?pid=' + patientId + '&addtopat=1'" >
                 <span>Warning! Patient has updated their QUESTIONNAIRE via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.</span>
             </a>
-            <a v-if="showWarningAboutBouncedEmails" class="warning" v-bind:href="legacyUrl + 'add_patient.php?ed=' + patientId + '&pid=' + patientId + '&addtopat=1'" >
+            <a v-if="showWarningAboutBouncedEmails" v-bind:href="legacyUrl + 'add_patient.php?ed=' + patientId + '&pid=' + patientId + '&addtopat=1'" >
                 <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
             </a>
-            <span v-if="rejectedClaimsForCurrentPatient.length > 0" class="warning">Warning! Patient has the following rejected claims: <br />
+            <span v-if="rejectedClaimsForCurrentPatient.length > 0">
+                Warning! Patient has the following rejected claims: <br />
                 <span v-for="claim in rejectedClaimsForCurrentPatient">
                     <a v-bind:href="legacyUrl + 'view_claim.php?claimid=' + claim.insuranceid + '&pid=' + patientId">
                         {{ claim.insuranceid }} - {{ claim.adddate | moment("MM/DD/YYYY") }}
@@ -29,7 +27,7 @@
                     <br />
                 </span>
             </span>
-            <span v-if="incompleteHomeSleepTests.length" class="warning">Patient has the following Home Sleep Tests: <br />
+            <span v-if="incompleteHomeSleepTests.length">Patient has the following Home Sleep Tests: <br />
                 <span v-for="incompleteTest in incompleteHomeSleepTests">
                     <a v-bind:href="legacyUrl + '/manage/hst_request.php?pid=' + incompleteTest.patient_id + '&amp;hst_id=' + incompleteTest.id">HST was requested {{ incompleteTest.adddate | moment("MM/DD/YYYY") }}</a>
                     and is currently
@@ -47,3 +45,5 @@
 </template>
 
 <script src="./PatientData.js"></script>
+
+<style src="../../../assets/css/manage/common/patient-data.css" scoped></style>

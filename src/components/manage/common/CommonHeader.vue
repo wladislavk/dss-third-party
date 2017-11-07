@@ -6,7 +6,7 @@
 
         <div class="bottom-image">
             <div class="dashboard-link">
-                <router-link v-bind:to="{name: 'dashboard'}" id="logo">Dashboard</router-link>
+                <router-link v-bind:to="{name: 'dashboard'}" class="logo-link">Dashboard</router-link>
             </div>
             <div class="patient-search">
                 <patient-search></patient-search>
@@ -56,11 +56,12 @@
 
 <script src="./CommonHeader.js"></script>
 
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/notifications.css" scoped></style>
+<style src="../../../assets/css/manage/common/common-header.css" scoped></style>
+<!--
 <style src="../../../assets/css/manage/search-hints.css" scoped></style>
 <style src="../../../assets/css/manage/top.css" scoped></style>
 <style src="../../../assets/css/manage/letter-form.css" scoped></style>
 <style src="../../../assets/css/manage/form.css" scoped></style>
 <style src="../../../../node_modules/sweetalert/dist/sweetalert.css" scoped></style>
 <style src="../../../../node_modules/mint-ui/lib/style.css" scoped></style>
+-->

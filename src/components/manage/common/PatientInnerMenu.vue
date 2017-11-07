@@ -27,3 +27,5 @@
 </template>
 
 <script src="./PatientInnerMenu.js"></script>
+
+<style src="../../../assets/css/manage/common/patient-inner-menu.css" scoped></style>

@@ -5,9 +5,6 @@ import PatientTaskMenuComponent from '../../manage/tasks/PatientTaskMenu.vue'
 import TaskMenuComponent from '../../manage/tasks/TaskMenu.vue'
 import { LEGACY_URL, NOTIFICATION_NUMBERS } from '../../../constants'
 
-// include static libs
-require('../../../../static/third-party/dynamic-drive-dhtml/ddlevelsmenu.js')
-
 export default {
   data () {
     return {

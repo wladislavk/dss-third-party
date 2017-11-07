@@ -29,7 +29,7 @@
 // 1) Added ability to disable the arrow images from the top level items (see option "showarrow")
 // 2) For Top Level Menu items containing a SPAN element (for sliding doors technique), arrow images are inserted inside SPAN.
 
-let ddlevelsmenu = {
+export default {
   enableshim: true, // enable IFRAME shim to prevent drop down menus from being hidden below SELECT or FLASH elements? (tip: disable if not in use, for efficiency)
 
   arrowpointers: {
@@ -50,23 +50,24 @@ let ddlevelsmenu = {
   hidetimers: {}, // object array timer
   shimadded: false,
   nonFF: !/Firefox[/\s](\d+\.\d+)/.test(navigator.userAgent), // detect non FF browsers
-  getoffset: function (what, offsettype) {
+
+  getoffset (what, offsettype) {
     return (what.offsetParent) ? what[offsettype] + this.getoffset(what.offsetParent, offsettype) : what[offsettype]
   },
 
-  getoffsetof: function (el) {
+  getoffsetof (el) {
     el._offsets = {
       left: this.getoffset(el, 'offsetLeft'),
       top: this.getoffset(el, 'offsetTop')
     }
   },
 
-  getwindowsize: function () {
+  getwindowsize () {
     this.docwidth = window.innerWidth ? window.innerWidth - 10 : this.standardbody.clientWidth - 10
     this.docheight = window.innerHeight ? window.innerHeight - 15 : this.standardbody.clientHeight - 18
   },
 
-  gettopitemsdimensions: function () {
+  gettopitemsdimensions () {
     for (let m = 0; m < this.topmenuids.length; m++) {
       let topmenuid = this.topmenuids[m]
       for (let i = 0; i < this.topitems[topmenuid].length; i++) {
@@ -82,7 +83,7 @@ let ddlevelsmenu = {
     }
   },
 
-  isContained: function (m, e) {
+  isContained (m, e) {
     e = window.event || e
     let c = e.relatedTarget || ((e.type === 'mouseover') ? e.fromElement : e.toElement)
     while (c && c !== m) {
@@ -98,7 +99,7 @@ let ddlevelsmenu = {
     return false
   },
 
-  addpointer: function (target, imgclass, imginfo, BeforeorAfter) {
+  addpointer (target, imgclass, imginfo, BeforeorAfter) {
     let pointer = document.createElement('img')
     pointer.src = imginfo[0]
     pointer.style.width = imginfo[1] + 'px'
@@ -118,7 +119,7 @@ let ddlevelsmenu = {
     }
   },
 
-  css: function (el, targetclass, action) {
+  css (el, targetclass, action) {
     let needle = new RegExp('(^|\\s+)' + targetclass + '($|\\s+)', 'ig')
     if (action === 'check') {
       return needle.test(el.className)
@@ -130,8 +131,8 @@ let ddlevelsmenu = {
     return null
   },
 
-  addshimmy: function (target) {
-    let shim = (!window.opera) ? document.createElement('iframe') : document.createElement('div') // Opera 9.24 doesnt seem to support transparent IFRAMEs
+  addshimmy (target) {
+    let shim = (!window.opera) ? document.createElement('iframe') : document.createElement('div') // Opera 9.24 doesn't seem to support transparent iframes
     shim.className = 'ddiframeshim'
     shim.setAttribute('src', location.protocol === 'https:' ? this.httpsiframesrc : 'about:blank')
     shim.setAttribute('frameborder', '0')
@@ -142,7 +143,7 @@ let ddlevelsmenu = {
     return shim
   },
 
-  positionshim: function (header, submenu, dir, scrollX, scrollY) {
+  positionshim (header, scrollX, scrollY) {
     if (header._istoplevel) {
       scrollY = window.pageYOffset ? window.pageYOffset : this.standardbody.scrollTop
       let topgap = header._offsets.top - scrollY
@@ -162,18 +163,18 @@ let ddlevelsmenu = {
     }
   },
 
-  hideshim: function () {
+  hideshim () {
     this.shimmy.topshim.style.width = this.shimmy.bottomshim.style.width = 0
     this.shimmy.topshim.style.height = this.shimmy.bottomshim.style.height = 0
   },
 
-  buildmenu: function (mainmenuid, header, submenu, submenupos, istoplevel, dir) {
+  buildmenu (mainmenuid, header, submenu, submenupos, istoplevel, dir) {
     header._master = mainmenuid // Indicate which top menu this header is associated with
     header._pos = submenupos // Indicate pos of sub menu this header is associated with
     header._istoplevel = istoplevel
     if (istoplevel) {
-      this.addEvent(header, function () {
-        ddlevelsmenu.hidemenu(ddlevelsmenu.subuls[this._master][parseInt(this._pos)])
+      this.addEvent(header, () => {
+        this.hidemenu(this.subuls[this._master][parseInt(this._pos)])
       }, 'click')
     }
     this.subuls[mainmenuid][submenupos] = submenu
@@ -187,27 +188,27 @@ let ddlevelsmenu = {
     submenu.style.left = 0
     submenu.style.top = 0
     submenu.style.visibility = 'hidden'
-    this.addEvent(header, function (e) { // mouseover event
-      if (!ddlevelsmenu.isContained(this, e)) {
-        let submenu = ddlevelsmenu.subuls[this._master][parseInt(this._pos)]
+    this.addEvent(header, (e) => { // mouseover event
+      if (!this.isContained(this, e)) {
+        let submenu = this.subuls[this._master][parseInt(this._pos)]
         if (this._istoplevel) {
-          ddlevelsmenu.css(this, 'selected', 'add')
-          clearTimeout(ddlevelsmenu.hidetimers[this._master][this._pos])
+          this.css(this, 'selected', 'add')
+          clearTimeout(this.hidetimers[this._master][this._pos])
         }
-        ddlevelsmenu.getoffsetof(header)
-        let scrollX = window.pageXOffset ? window.pageXOffset : ddlevelsmenu.standardbody.scrollLeft
-        let scrollY = window.pageYOffset ? window.pageYOffset : ddlevelsmenu.standardbody.scrollTop
+        this.getoffsetof(header)
+        let scrollX = window.pageXOffset ? window.pageXOffset : this.standardbody.scrollLeft
+        let scrollY = window.pageYOffset ? window.pageYOffset : this.standardbody.scrollTop
         let submenurightedge = this._offsets.left + this._dimensions.submenuw + (this._istoplevel && dir === 'topbar' ? 0 : this._dimensions.w)
         let submenubottomedge = this._offsets.top + this._dimensions.submenuh
         // Sub menu starting left position
         let menuleft = (this._istoplevel ? this._offsets.left + (dir === 'sidebar' ? this._dimensions.w : 0) : this._dimensions.w)
-        if (submenurightedge - scrollX > ddlevelsmenu.docwidth) {
+        if (submenurightedge - scrollX > this.docwidth) {
           menuleft += -this._dimensions.submenuw + (this._istoplevel && dir === 'topbar' ? this._dimensions.w : -this._dimensions.w)
         }
         submenu.style.left = menuleft + 'px'
         // Sub menu starting top position
         let menutop = (this._istoplevel ? this._offsets.top + (dir === 'sidebar' ? 0 : this._dimensions.h) : this.offsetTop)
-        if (submenubottomedge - scrollY > ddlevelsmenu.docheight) { // no room downwards?
+        if (submenubottomedge - scrollY > this.docheight) { // no room downwards?
           if (this._dimensions.submenuh < this._offsets.top + (dir === 'sidebar' ? this._dimensions.h : 0) - scrollY) { // move up?
             menutop += -this._dimensions.submenuh + (this._istoplevel && dir === 'topbar' ? -this._dimensions.h : this._dimensions.h)
           } else { // top of window edge
@@ -215,30 +216,30 @@ let ddlevelsmenu = {
           }
         }
         submenu.style.top = menutop + 'px'
-        if (ddlevelsmenu.enableshim && (ddlevelsmenu.effects.enableswipe === false || ddlevelsmenu.nonFF)) { // apply shim immediately only if animation is turned off, or if on, in non FF2.x browsers
-          ddlevelsmenu.positionshim(header, submenu, dir, scrollX, scrollY)
+        if (this.enableshim && (this.effects.enableswipe === false || this.nonFF)) { // apply shim immediately only if animation is turned off, or if on, in non FF2.x browsers
+          this.positionshim(header, scrollX, scrollY)
         } else {
           submenu.FFscrollInfo = {
             x: scrollX,
             y: scrollY
           }
         }
-        ddlevelsmenu.showmenu(header, submenu, dir)
+        this.showmenu(header, submenu, dir)
       }
     }, 'mouseover')
-    this.addEvent(header, function (e) { // mouseout event
-      let submenu = ddlevelsmenu.subuls[this._master][parseInt(this._pos)]
+    this.addEvent(header, (e) => { // mouseout event
+      let submenu = this.subuls[this._master][parseInt(this._pos)]
       if (this._istoplevel) {
-        if (!ddlevelsmenu.isContained(this, e) && !ddlevelsmenu.isContained(submenu, e)) { // hide drop down ul if mouse moves out of menu bar item but not into drop down ul itself
-          ddlevelsmenu.hidemenu(submenu)
+        if (!this.isContained(this, e) && !this.isContained(submenu, e)) { // hide drop down ul if mouse moves out of menu bar item but not into drop down ul itself
+          this.hidemenu(submenu)
         }
-      } else if (!this._istoplevel && !ddlevelsmenu.isContained(this, e)) {
-        ddlevelsmenu.hidemenu(submenu)
+      } else if (!this._istoplevel && !this.isContained(this, e)) {
+        this.hidemenu(submenu)
       }
     }, 'mouseout')
   },
 
-  setopacity: function (el, value) {
+  setopacity (el, value) {
     el.style.opacity = value
     if (typeof el.style.opacity !== 'string') { // if it's not a string (ie: number instead), it means property not supported
       el.style.MozOpacity = value
@@ -248,7 +249,7 @@ let ddlevelsmenu = {
     }
   },
 
-  showmenu: function (header, submenu, dir) {
+  showmenu (header, submenu, dir) {
     if (this.effects.enableswipe || this.effects.enablefade) {
       let endpoint
       if (this.effects.enableswipe) {
@@ -263,15 +264,15 @@ let ddlevelsmenu = {
       submenu.style.visibility = 'visible'
       clearInterval(submenu._animatetimer)
       submenu._starttime = new Date().getTime() // get time just before animation is run
-      submenu._animatetimer = setInterval(function () {
-        ddlevelsmenu.revealmenu(header, submenu, endpoint, dir)
+      submenu._animatetimer = setInterval(() => {
+        this.revealmenu(header, submenu, endpoint, dir)
       }, 10)
     } else {
       submenu.style.visibility = 'visible'
     }
   },
 
-  revealmenu: function (header, submenu, endpoint, dir) {
+  revealmenu (header, submenu, endpoint, dir) {
     let elapsed = new Date().getTime() - submenu._starttime // get time animation has run
     if (elapsed < this.effects.duration) {
       if (this.effects.enableswipe) {
@@ -295,13 +296,13 @@ let ddlevelsmenu = {
         submenu.style.filter = ''
       }
       if (this.enableshim && submenu.FFscrollInfo) { // if this is FF browser (meaning shim hasn't been applied yet
-        this.positionshim(header, submenu, dir, submenu.FFscrollInfo.x, submenu.FFscrollInfo.y)
+        this.positionshim(header, submenu.FFscrollInfo.x, submenu.FFscrollInfo.y)
       }
     }
     submenu._curanimatedegree = (1 - Math.cos((elapsed / this.effects.duration) * Math.PI)) / 2
   },
 
-  hidemenu: function (submenu) {
+  hidemenu (submenu) {
     if (typeof submenu._pos !== 'undefined') { // if submenu is outermost UL drop down menu
       this.css(this.topitems[submenu._master][parseInt(submenu._pos)], 'selected', 'remove')
       if (this.enableshim) {
@@ -314,17 +315,17 @@ let ddlevelsmenu = {
     submenu.style.visibility = 'hidden'
   },
 
-  addEvent: function (target, functionref, tasktype) {
+  addEvent (target, funcref, tasktype) {
     if (target.addEventListener) {
-      target.addEventListener(tasktype, functionref, false)
+      target.addEventListener(tasktype, funcref, false)
     } else if (target.attachEvent) {
-      target.attachEvent('on' + tasktype, function () {
-        return functionref.call(target, window.event)
+      target.attachEvent('on' + tasktype, () => {
+        return funcref.call(target, window.event)
       })
     }
   },
 
-  init: function (mainmenuid, dir) {
+  init (mainmenuid, dir) {
     this.standardbody = (document.compatMode === 'CSS1Compat') ? document.documentElement : document.body
     this.topitemsindex = -1
     this.ulindex = -1
@@ -352,8 +353,8 @@ let ddlevelsmenu = {
         dropul.style.zIndex = 2000 // give drop down menus a high z-index
         dropul._master = mainmenuid // Indicate which main menu this main UL is associated with
         dropul._pos = this.topitemsindex // Indicate which main menu item this main UL is associated with
-        this.addEvent(dropul, function () {
-          ddlevelsmenu.hidemenu(this)
+        this.addEvent(dropul, () => {
+          this.hidemenu(this)
         }, 'click')
         let arrowclass = (dir === 'sidebar') ? 'rightarrowpointer' : 'downarrowpointer'
         let arrowpointer = (dir === 'sidebar') ? this.arrowpointers.rightarrow : this.arrowpointers.downarrow
@@ -361,18 +362,18 @@ let ddlevelsmenu = {
           this.addpointer(menuitem, arrowclass, arrowpointer, (dir === 'sidebar') ? 'before' : 'after')
         }
         this.buildmenu(mainmenuid, menuitem, dropul, this.ulindex, true, dir) // build top level menu
-        dropul.onmouseover = function () {
-          clearTimeout(ddlevelsmenu.hidetimers[this._master][this._pos])
+        dropul.onmouseover = () => {
+          clearTimeout(this.hidetimers[this._master][this._pos])
         }
-        this.addEvent(dropul, function (e) { // hide menu if mouse moves out of main UL element into open space
-          if (!ddlevelsmenu.isContained(this, e) && !ddlevelsmenu.isContained(ddlevelsmenu.topitems[this._master][parseInt(this._pos)], e)) {
+        this.addEvent(dropul, (e) => { // hide menu if mouse moves out of main UL element into open space
+          if (!this.isContained(this, e) && !this.isContained(this.topitems[this._master][parseInt(this._pos)], e)) {
             let dropul = this
-            if (ddlevelsmenu.enableshim) {
-              ddlevelsmenu.hideshim()
+            if (this.enableshim) {
+              this.hideshim()
             }
-            ddlevelsmenu.hidetimers[this._master][this._pos] = setTimeout(function () {
-              ddlevelsmenu.hidemenu(dropul)
-            }, ddlevelsmenu.hideinterval)
+            this.hidetimers[this._master][this._pos] = setTimeout(() => {
+              this.hidemenu(dropul)
+            }, this.hideinterval)
           }
         }, 'mouseout')
         let subuls = dropul.getElementsByTagName('ul')
@@ -386,15 +387,15 @@ let ddlevelsmenu = {
         }
       }
     } // end for loop
-    this.addEvent(window, function () {
-      ddlevelsmenu.getwindowsize()
-      ddlevelsmenu.gettopitemsdimensions()
+    this.addEvent(window, () => {
+      this.getwindowsize()
+      this.gettopitemsdimensions()
     }, 'resize')
   },
 
-  setup: function (mainmenuid, dir) {
-    this.addEvent(window, function () {
-      ddlevelsmenu.init(mainmenuid, dir)
+  setup (mainmenuid, dir) {
+    this.addEvent(window, () => {
+      this.init(mainmenuid, dir)
     }, 'load')
   }
 }

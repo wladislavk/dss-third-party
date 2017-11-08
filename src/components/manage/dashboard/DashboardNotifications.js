@@ -1,4 +1,5 @@
-import { LEGACY_URL, NOTIFICATIONS } from '../../../constants'
+import { LEGACY_URL } from '../../../constants/main'
+import { NOTIFICATIONS } from '../../../constants/dashboard'
 import NotificationLinkComponent from './NotificationLink.vue'
 
 export default {

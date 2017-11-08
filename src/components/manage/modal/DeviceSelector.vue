@@ -18,16 +18,14 @@
         <form v-bind:action="legacyUrl + 'device_guide_results.php'" method="post" id="device_form" style="border:solid 2px #cce3fc;padding:0 10px 0 25px; width:24%; margin-left:2%; float:left;">
             <input type="hidden" name="id" :value="$route.query.id" />
             <input type="hidden" name="pid" :value="$route.query.pid" />
-
             <div
-                v-if="deviceGuideSettingOptions.length > 0"
                 v-for="deviceGuideSetting in deviceGuideSettingOptions"
                 class="setting"
                 :id="'setting_' + deviceGuideSetting.id"
                 style="padding: 5px 0;"
             >
                 <strong style="padding: 5px 0;display:block;">{{ deviceGuideSetting.name }}</strong>
-                <template v-if="deviceGuideSetting.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE">
+                <template v-if="deviceGuideSetting.setting_type === deviceTypeRange">
                     <mt-range
                         v-model="deviceGuideSetting.checkedOption"
                         :min="0"

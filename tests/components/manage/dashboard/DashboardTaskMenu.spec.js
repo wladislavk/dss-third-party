@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { TASK_TYPES } from '../../../../src/constants'
+import { TASK_TYPES } from '../../../../src/constants/main'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'

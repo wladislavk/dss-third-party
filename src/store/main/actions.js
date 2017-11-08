@@ -1,11 +1,11 @@
 import endpoints from '../../endpoints'
 import http from '../../services/http'
 import symbols from '../../symbols'
-import storage from '../../modules/storage'
+import LocalStorageManager from '../../services/LocalStorageManager'
 import ProcessWrapper from '../../wrappers/ProcessWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
 import RouterKeeper from '../../services/RouterKeeper'
-import {HST_STATUSES} from '../../constants'
+import { HST_STATUSES } from '../../constants/main'
 
 export default {
   [symbols.actions.userInfo] ({state, commit, dispatch}) {
@@ -54,7 +54,7 @@ export default {
   [symbols.actions.handleErrors] (data, {title, response}) {
     // token expired
     if (response.status === 401) {
-      storage.remove('token')
+      LocalStorageManager.remove('token')
       const router = RouterKeeper.getRouter()
       router.push('/manage/login')
       return

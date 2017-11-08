@@ -1,9 +1,12 @@
 import symbols from '../../symbols'
-import { NOTIFICATION_NUMBERS } from '../../constants'
+import { NOTIFICATION_NUMBERS } from '../../constants/main'
 
 export default {
   [symbols.state.mainToken]: '',
-  [symbols.state.modal]: '',
+  [symbols.state.modal]: {
+    name: '',
+    params: {}
+  },
   [symbols.state.popupEdit]: false,
   [symbols.state.courseStaff]: {
     useCourse: 0,

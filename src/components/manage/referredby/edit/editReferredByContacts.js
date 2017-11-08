@@ -1,6 +1,5 @@
 import endpoints from '../../../../endpoints'
 import http from '../../../../services/http'
-import referredByContactValidatorMixin from '../../../../modules/validators/ReferredByContactMixin'
 import symbols from '../../../../symbols'
 
 export default {
@@ -24,7 +23,6 @@ export default {
       isContactDataFetched: false
     }
   },
-  mixins: [referredByContactValidatorMixin],
   watch: {
     'contact': {
       handler: function () {
@@ -139,6 +137,51 @@ export default {
       }
 
       return http.post(endpoints.referredByContacts.edit + '/' + contactId, data)
+    },
+    isEmail (email) {
+      return email && email.match(/^[\w.+-]+@\w+\.\w+$/)
+    },
+    walkThroughMessages (messages, contact) {
+      for (let property in messages) {
+        if (messages.hasOwnProperty(property)) {
+          if (contact[property] === undefined || contact[property].trim() === '') {
+            alert(messages[property])
+            this.$refs[property].focus()
+            return false
+          }
+        }
+      }
+      return true
+    },
+    validateContactData (contact) {
+      const messages = {
+        firstname: 'First Name is Required',
+        lastname: 'Last Name is Required'
+      }
+
+      if (!this.walkThroughMessages(messages, contact)) {
+        return false
+      }
+
+      if (!this.isEmail(contact.email)) {
+        const alertText = 'In-Valid Email'
+        alert(alertText)
+        this.$refs.email.focus()
+        return false
+      }
+
+      if (contact.preferredcontact === 'fax' && contact.fax === '') {
+        const alertText = 'A fax number must be entered if preferred contact method is fax.'
+        alert(alertText)
+        return false
+      }
+
+      if (!contact.add1 && !contact.city && !contact.state && !contact.zip) {
+        const confirmText = 'Warning! You have not entered an address for this contact. This contact will NOT receive correspondence from DSS. Are you sure you want to save without an address?'
+        return confirm(confirmText)
+      }
+
+      return true
     }
   }
 }

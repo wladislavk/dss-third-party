@@ -19,10 +19,14 @@ export default {
   computed: {
     currentView () {
       const component = this.$store.state.main[symbols.state.modal]
-      if (this.hasComponent(component)) {
-        return component
+      if (this.hasComponent(component.name)) {
+        return component.name
       }
       return ''
+    },
+    currentProperties () {
+      const component = this.$store.state.main[symbols.state.modal]
+      return component.params
     },
     popupEnabled () {
       if (this.currentView) {

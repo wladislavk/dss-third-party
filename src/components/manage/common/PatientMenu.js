@@ -1,4 +1,4 @@
-import { PATIENT_MENU } from '../../../constants'
+import { PATIENT_MENU } from '../../../constants/main'
 import PatientMenuElementComponent from './PatientMenuElement.vue'
 
 export default {

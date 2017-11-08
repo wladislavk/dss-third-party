@@ -4,7 +4,7 @@
             <div id="popupContact" v-bind:style="{ top: topPosition, left: leftPosition }">
                 <a id="popupContactClose" v-on:click="disable()"><button>X</button></a>
                 <div id="modal-content">
-                    <component v-bind:is="currentView"></component>
+                    <component v-bind:is="currentView" v-bind="currentProperties"></component>
                 </div>
             </div>
             <div id="backgroundPopup" v-on:click="disable()"></div>

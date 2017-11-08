@@ -2,7 +2,7 @@ import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
 import Alerter from '../../../services/Alerter'
-import { LEGACY_URL } from '../../../constants'
+import { LEGACY_URL } from '../../../constants/main'
 
 export default {
   data () {

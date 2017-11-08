@@ -1,6 +1,6 @@
 import axios from 'axios'
 import endpoints from '../../endpoints'
-import { LEGACY_URL } from '../../constants'
+import { LEGACY_URL } from '../../constants/main'
 import http from '../../services/http'
 import symbols from '../../symbols'
 import Alerter from '../../services/Alerter'

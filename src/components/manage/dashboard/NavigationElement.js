@@ -1,5 +1,5 @@
 import populators from '../../../services/populators'
-import { LEGACY_URL } from '../../../constants'
+import { LEGACY_URL } from '../../../constants/main'
 
 export default {
   // name must be set explicitly to allow self-references

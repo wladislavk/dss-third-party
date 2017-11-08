@@ -3,7 +3,7 @@ import http from '../../services/http'
 import symbols from '../../symbols'
 import LocationWrapper from '../../wrappers/LocationWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
-import { LEGACY_URL } from '../../constants'
+import { LEGACY_URL } from '../../constants/main'
 
 export default {
   [symbols.actions.documentCategories] ({rootState, commit, dispatch}) {
@@ -15,7 +15,7 @@ export default {
     })
   },
   [symbols.actions.deviceSelectorModal] ({commit}) {
-    commit(symbols.mutations.modal, 'device-selector')
+    commit(symbols.mutations.modal, { name: 'device-selector' })
   },
   [symbols.actions.exportMDModal] () {
     SwalWrapper.callSwal(

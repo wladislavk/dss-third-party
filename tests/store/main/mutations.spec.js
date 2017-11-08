@@ -1,4 +1,4 @@
-import { NOTIFICATION_NUMBERS } from '../../../src/constants'
+import { NOTIFICATION_NUMBERS } from '../../../src/constants/main'
 import MainModule from '../../../src/store/main'
 import symbols from '../../../src/symbols'
 

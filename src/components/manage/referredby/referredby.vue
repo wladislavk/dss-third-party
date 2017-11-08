@@ -77,7 +77,7 @@
                 >
                     <td valign="top" width="20%">
                         <a
-                            v-if="contact.referred_source == constants.DSS_REFERRED_PHYSICIAN"
+                            v-if="contact.referred_source == referredPhysician"
                             v-on:click.prevent="onClickViewContact(contact.contactid)"
                             href="#"
                         >{{ contact.name }}</a>

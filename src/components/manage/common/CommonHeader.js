@@ -3,10 +3,7 @@ import http from '../../../services/http'
 import symbols from '../../../symbols'
 import PatientTaskMenuComponent from '../../manage/tasks/PatientTaskMenu.vue'
 import TaskMenuComponent from '../../manage/tasks/TaskMenu.vue'
-import { LEGACY_URL } from '../../../constants'
-
-// include static libs
-require('../../../../static/third-party/dynamic-drive-dhtml/ddlevelsmenu.js')
+import { LEGACY_URL } from '../../../constants/main'
 
 export default {
   data () {
@@ -32,7 +29,7 @@ export default {
         cur_page: this.$route.query || ''
       }
       http.post(endpoints.loginDetails.store, loginData).then(() => {
-        // @todo: add handler
+        // do nothing
       }).catch((response) => {
         this.$store.dispatch(symbols.actions.handleErrors, {title: 'setLoginDetails', response: response})
       })
@@ -63,7 +60,10 @@ export default {
       window.location.href = LEGACY_URL + 'add_patient.php'
     },
     addTaskPopup () {
-      loadPopup(LEGACY_URL + 'add_task.php?pid=' + this.patientId)
+      const props = {
+        patientId: this.patientId
+      }
+      this.$store.commit(symbols.mutations.modal, { name: 'add-task', params: props })
     }
   }
 }

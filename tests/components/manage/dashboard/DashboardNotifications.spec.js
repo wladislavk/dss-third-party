@@ -3,7 +3,7 @@ import store from '../../../../src/store'
 import DashboardNotificationsComponent from '../../../../src/components/manage/dashboard/DashboardNotifications.vue'
 import NotificationLinkData from '../../../../src/components/manage/dashboard/NotificationLink'
 import symbols from '../../../../src/symbols'
-import { DSS_CONSTANTS } from '../../../../src/constants'
+import { DSS_CONSTANTS } from '../../../../src/constants/main'
 
 describe('DashboardNotifications component', () => {
   beforeEach(function () {

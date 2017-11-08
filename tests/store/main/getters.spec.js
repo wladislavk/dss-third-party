@@ -1,6 +1,6 @@
 import symbols from '../../../src/symbols'
 import MainModule from '../../../src/store/main'
-import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../../src/constants'
+import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../../src/constants/main'
 
 describe('Main module getters', () => {
   describe('notificationsNumber getter', () => {

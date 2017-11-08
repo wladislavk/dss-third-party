@@ -1,5 +1,5 @@
 import symbols from '../../symbols'
-import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../constants'
+import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../constants/main'
 
 export default {
   [symbols.getters.documentCategories] (state) {

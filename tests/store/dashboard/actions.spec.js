@@ -5,7 +5,7 @@ import symbols from '../../../src/symbols'
 import SwalWrapper from '../../../src/wrappers/SwalWrapper'
 import DashboardModule from '../../../src/store/dashboard'
 import TestCase from '../../cases/StoreTestCase'
-import { LEGACY_URL } from '../../../src/constants'
+import { LEGACY_URL } from '../../../src/constants/main'
 import LocationWrapper from '../../../src/wrappers/LocationWrapper'
 
 describe('Dashboard module actions', () => {

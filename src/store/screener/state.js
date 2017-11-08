@@ -1,5 +1,5 @@
 import symbols from '../../symbols'
-import * as constants from '../../constants'
+import { INITIAL_CO_MORBIDITY, INITIAL_CONTACT_DATA, EPWORTH_OPTIONS, INITIAL_SYMPTOMS } from '../../constants/screener'
 
 export default {
   [symbols.state.sessionData]: {
@@ -13,11 +13,11 @@ export default {
     epworth: 0,
     survey: 0
   },
-  [symbols.state.contactData]: constants.INITIAL_CONTACT_DATA,
+  [symbols.state.contactData]: INITIAL_CONTACT_DATA,
   [symbols.state.epworthProps]: [],
-  [symbols.state.epworthOptions]: constants.EPWORTH_OPTIONS,
-  [symbols.state.symptoms]: constants.INITIAL_SYMPTOMS,
-  [symbols.state.coMorbidityData]: constants.INITIAL_CO_MORBIDITY,
+  [symbols.state.epworthOptions]: EPWORTH_OPTIONS,
+  [symbols.state.symptoms]: INITIAL_SYMPTOMS,
+  [symbols.state.coMorbidityData]: INITIAL_CO_MORBIDITY,
   [symbols.state.cpap]: {
     name: 'rx_cpap',
     label: 'Have you ever used CPAP before?',

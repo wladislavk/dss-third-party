@@ -253,7 +253,7 @@
                                 </template>
                                 <template v-else>
                                     <span v-if="patient.vob == 1">Yes</span>
-                                    <span v-else="">{{ constants.dssPreauthStatusLabels[patient.vob] }}</span>
+                                    <span v-else>{{ preauthLabels[patient.vob] }}</span>
                                 </template>
                             </router-link>
                         </td>

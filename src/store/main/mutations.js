@@ -1,5 +1,5 @@
 import symbols from '../../symbols'
-import { NOTIFICATION_NUMBERS } from '../../constants'
+import { NOTIFICATION_NUMBERS } from '../../constants/main'
 
 export default {
   [symbols.mutations.mainToken] (state, token) {
@@ -46,8 +46,16 @@ export default {
   [symbols.mutations.userInfo] (state, userInfo) {
     state[symbols.state.userInfo] = userInfo
   },
-  [symbols.mutations.modal] (state, component) {
-    state[symbols.state.modal] = component
+  [symbols.mutations.modal] (state, payload) {
+    const componentName = payload.name
+    let params = {}
+    if (payload.hasOwnProperty('params')) {
+      params = payload.params
+    }
+    state[symbols.state.modal] = {
+      name: componentName,
+      params: params
+    }
   },
   [symbols.mutations.medicare] (state, data) {
     state[symbols.state.medicare] = data

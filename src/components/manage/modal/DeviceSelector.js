@@ -2,16 +2,17 @@ import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
 import Alerter from '../../../services/Alerter'
+import { DSS_CONSTANTS } from '../../../constants/main'
 
 export default {
   data () {
     return {
-      constants: window.constants,
       currentPatient: {},
       deviceGuideSettingOptions: [],
       deviceGuideResults: [],
       id: 0,
-      patientId: 0
+      patientId: 0,
+      deviceTypeRange: DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE
     }
   },
   watch: {
@@ -51,7 +52,7 @@ export default {
           element.labels = element.labels.split(',')
           element.checkedOption = 0
 
-          if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+          if (parseInt(element.setting_type) === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {
             element.checkedImp = 0
           } else {
             element.checked = 0
@@ -83,7 +84,7 @@ export default {
       this.deviceGuideSettingOptions.forEach((element) => {
         const settingObj = {}
 
-        if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+        if (parseInt(element.setting_type) === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {
           settingObj['checked'] = element.checkedOption + 1
         } else {
           settingObj['checked'] = element.checked
@@ -137,7 +138,7 @@ export default {
       this.deviceGuideSettingOptions.forEach((element) => {
         element.checkedOption = 0
 
-        if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
+        if (parseInt(element.setting_type) === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {
           element.checkedImp = 0
         } else {
           element.checked = 0

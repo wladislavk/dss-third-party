@@ -2,6 +2,8 @@ import endpoints from '../../../../endpoints'
 import http from '../../../../services/http'
 import ledgerSummaryReportFull from '../summary-report-full/ledgerSummaryReportFull.vue'
 import symbols from '../../../../symbols'
+import { DSS_CONSTANTS } from '../../../../constants/main'
+import ConstantTitleGetter from '../../../../services/ConstantTitleGetter'
 
 export default {
   name: 'ledger-report-full',
@@ -116,7 +118,7 @@ export default {
     },
     totalPageCredits () {
       const total = this.ledgerRows.reduce((sum, currentRow) => {
-        const isNotLedgerPaidAndAdjustment = !(currentRow.ledger === 'ledger_paid' && currentRow.payer === window.constants.DSS_TRXN_TYPE_ADJ)
+        const isNotLedgerPaidAndAdjustment = !(currentRow.ledger === 'ledger_paid' && currentRow.payer === DSS_CONSTANTS.DSS_TRXN_TYPE_ADJ)
 
         return sum + (
           isNotLedgerPaidAndAdjustment && currentRow.ledger !== 'claim' && currentRow.paid_amount > 0 ? +currentRow.paid_amount : 0
@@ -127,7 +129,7 @@ export default {
     },
     totalPageAdjustments () {
       const total = this.ledgerRows.reduce((sum, currentRow) => {
-        const isLedgerPaidAndAdjustment = (currentRow.ledger === 'ledger_paid' && currentRow.payer === window.constants.DSS_TRXN_TYPE_ADJ)
+        const isLedgerPaidAndAdjustment = (currentRow.ledger === 'ledger_paid' && currentRow.payer === DSS_CONSTANTS.DSS_TRXN_TYPE_ADJ)
 
         return sum + (isLedgerPaidAndAdjustment && currentRow.paid_amount > 0 ? +currentRow.paid_amount : 0)
       }, 0)
@@ -149,10 +151,10 @@ export default {
   },
   methods: {
     isCredit (row) {
-      return (!(row.ledger === 'ledger_paid' && row.payer === window.constants.DSS_TRXN_TYPE_ADJ))
+      return (!(row.ledger === 'ledger_paid' && row.payer === DSS_CONSTANTS.DSS_TRXN_TYPE_ADJ))
     },
     isAdjustment (row) {
-      return (row.ledger === 'ledger_paid' && row.payer === window.constants.DSS_TRXN_TYPE_ADJ)
+      return (row.ledger === 'ledger_paid' && row.payer === DSS_CONSTANTS.DSS_TRXN_TYPE_ADJ)
     },
     onSetTotalsFromSummaryBlock (totals) {
       this.totalCharges = totals.charges
@@ -167,9 +169,9 @@ export default {
 
       switch (ledgerRow.ledger) {
         case 'ledger_payment':
-          description = window.constants.dssTransactionPayerLabels(+ledgerRow.payer) +
+          description = ConstantTitleGetter.dssTransactionPayerLabels(+ledgerRow.payer) +
             ' Payment - ' +
-            window.constants.dssTransactionPaymentTypeLabels(+ledgerRow.payment_type) +
+            ConstantTitleGetter.dssTransactionPaymentTypeLabels(+ledgerRow.payment_type) +
             ' '
           break
 

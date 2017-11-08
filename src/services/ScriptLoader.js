@@ -2,7 +2,7 @@ import jquery from 'jquery'
 
 export default {
   methods: {
-    loadScriptFrom (path, toElement, requiredFunction, externalFunction) {
+    loadScriptFrom (path, toElement, requiredFunction, externalFunction, currentElement) {
       if (externalFunction === undefined) {
         externalFunction = () => {}
       }
@@ -13,7 +13,7 @@ export default {
         scriptElement.src = path
         scriptElement.async = true
 
-        jquery(this.$el).find(toElement).append(scriptElement)
+        jquery(currentElement).find(toElement).append(scriptElement)
       } else {
         externalFunction()
       }

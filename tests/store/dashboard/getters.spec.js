@@ -1,6 +1,6 @@
 import symbols from '../../../src/symbols'
 import DashboardModule from '../../../src/store/dashboard'
-import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../../src/constants'
+import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../../src/constants/main'
 
 describe('Dashboard module getters', () => {
   describe('documentCategories getter', () => {

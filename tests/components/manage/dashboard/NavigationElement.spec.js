@@ -3,7 +3,7 @@ import VueVisible from 'vue-visible'
 import store from '../../../../src/store'
 import NavigationElementComponent from '../../../../src/components/manage/dashboard/NavigationElement.vue'
 import symbols from '../../../../src/symbols'
-import { NOTIFICATION_NUMBERS } from '../../../../src/constants'
+import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
 
 describe('NavigationElement component', () => {
   beforeEach(function () {

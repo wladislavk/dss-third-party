@@ -31,13 +31,13 @@
                 <span v-for="incompleteTest in incompleteHomeSleepTests">
                     <a v-bind:href="legacyUrl + '/manage/hst_request.php?pid=' + incompleteTest.patient_id + '&amp;hst_id=' + incompleteTest.id">HST was requested {{ incompleteTest.adddate | moment("MM/DD/YYYY") }}</a>
                     and is currently
-                    <a v-if="incompleteTest.status === constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">{{ constants.preAuthLabels[incompleteTest.status] }}</a>
-                    <span v-else>{{ constants.preAuthLabels[incompleteTest.status] }}</span>
-                    <span v-if="incompleteTest.status === constants.DSS_HST_SCHEDULED"> - {{ incompleteTest.office_notes }}</span>
-                    <span v-if="incompleteTest.status === constants.DSS_HST_REJECTED"> - {{ incompleteTest.rejected_reason }}</span>
-                    <span v-if="incompleteTest.status === constants.DSS_HST_REJECTED && incompleteTest.rejecteddate"> - {{ incompleteTest.rejecteddate | moment("MM/DD/YYYY hh:mm a") }}</span>
+                    <a v-if="incompleteTest.status === rejectedHst" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">{{ preauthLabels[incompleteTest.status] }}</a>
+                    <span v-else>{{ preAuthLabels[incompleteTest.status] }}</span>
+                    <span v-if="incompleteTest.status === scheduledHst"> - {{ incompleteTest.office_notes }}</span>
+                    <span v-if="incompleteTest.status === rejectedHst"> - {{ incompleteTest.rejected_reason }}</span>
+                    <span v-if="incompleteTest.status === rejectedHst && incompleteTest.rejecteddate"> - {{ incompleteTest.rejecteddate | moment("MM/DD/YYYY hh:mm a") }}</span>
                     <br />
-                    <a v-if="incompleteTest.status === constants.DSS_HST_REJECTED" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">Click here</a> to remove this error
+                    <a v-if="incompleteTest.status === rejectedHst" v-bind:href="legacyUrl + 'manage_hst.php?status=4&viewed=0'">Click here</a> to remove this error
                 </span>
             </span>
         </div>

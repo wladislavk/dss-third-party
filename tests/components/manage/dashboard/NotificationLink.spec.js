@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import store from '../../../../src/store'
 import NotificationLinkComponent from '../../../../src/components/manage/dashboard/NotificationLink.vue'
-import { NOTIFICATION_NUMBERS } from '../../../../src/constants'
+import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
 import symbols from '../../../../src/symbols'
 
 describe('NotificationLink component', () => {

@@ -1,7 +1,7 @@
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
-import { LEGACY_URL } from '../../../constants'
+import { LEGACY_URL, DSS_CONSTANTS, PREAUTH_STATUS_LABELS } from '../../../constants/main'
 
 export default {
   props: {
@@ -20,7 +20,10 @@ export default {
       totalContacts: 0,
       totalInsurances: 0,
       questionnaireStatuses: [],
-      childrenPatients: []
+      childrenPatients: [],
+      scheduledHst: DSS_CONSTANTS.DSS_HST_SCHEDULED,
+      rejectedHst: DSS_CONSTANTS.DSS_HST_REJECTED,
+      preauthLabels: PREAUTH_STATUS_LABELS
     }
   },
   computed: {

@@ -1,11 +1,11 @@
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
+import { PREAUTH_STATUS_LABELS } from '../../../constants/main'
 
 export default {
   data () {
     return {
-      constants: window.constants,
       patientInfo: '',
       routeParameters: {
         patientId: null,
@@ -54,7 +54,8 @@ export default {
         'Termination',
         'Not a Candidate',
         'Baseline Sleep Test'
-      ]
+      ],
+      preauthLabels: PREAUTH_STATUS_LABELS
     }
   },
   watch: {

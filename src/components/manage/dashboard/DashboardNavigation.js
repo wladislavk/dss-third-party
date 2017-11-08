@@ -1,5 +1,6 @@
 import symbols from '../../../symbols'
-import { LEGACY_URL, NAVIGATION_MENU } from '../../../constants'
+import { LEGACY_URL } from '../../../constants/main'
+import { NAVIGATION_MENU } from '../../../constants/dashboard'
 import NavigationElementComponent from './NavigationElement.vue'
 
 export default {

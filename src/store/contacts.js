@@ -1,4 +1,4 @@
-import constants from '../modules/constants'
+import { PHONE_FIELDS } from '../constants/main'
 import endpoints from '../endpoints'
 import http from '../services/http'
 import symbols from '../symbols'
@@ -15,7 +15,7 @@ export default {
   getters: {
     [symbols.getters.filteredContact] (state) {
       const contact = state[symbols.state.contact]
-      constants.PHONE_FIELDS.forEach(el => {
+      PHONE_FIELDS.forEach(el => {
         if (contact.hasOwnProperty(el)) {
           contact[el] = contact[el]
             .replace(/[^0-9]/g, '')

@@ -9,14 +9,13 @@ export default {
   },
   computed: {
     showOnlineCEAndSnoozleHelp: function () {
-      if (
-        this.$store.getters[symbols.getters.isUserDoctor] &&
-        this.$store.state.main[symbols.state.userInfo].useCourse === 1
-      ) {
-        return true
+      if (this.$store.getters[symbols.getters.isUserDoctor]) {
+        if (this.$store.state.main[symbols.state.userInfo].useCourse === 1) {
+          return true
+        }
+        return false
       }
       if (
-        !this.$store.getters[symbols.getters.isUserDoctor] &&
         this.$store.state.main[symbols.state.courseStaff].useCourse === 1 &&
         this.$store.state.main[symbols.state.courseStaff].useCourseStaff === 1
       ) {
@@ -26,8 +25,6 @@ export default {
     }
   },
   methods: {
-    // @todo: check why these are needed
-    /*
     removeCECookies () {
       this.removeCookie('edxloggin')
       this.removeCookie('sessionid')
@@ -35,6 +32,5 @@ export default {
     removeCookie (name) {
       document.cookie = encodeURIComponent(name) + '=; domain=dentalsleepsolutions.com; path=/; max-age=0; expires=Mon, 03 Jul 2006 21:44:38 GMT'
     }
-    */
   }
 }

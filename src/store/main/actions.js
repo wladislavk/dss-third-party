@@ -6,6 +6,8 @@ import ProcessWrapper from '../../wrappers/ProcessWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
 import RouterKeeper from '../../services/RouterKeeper'
 import { HST_STATUSES } from '../../constants/main'
+import MediaFileRetriever from '../../services/MediaFileRetriever'
+import FileRetrievalError from '../../exceptions/FileRetrievalError'
 
 export default {
   [symbols.actions.userInfo] ({state, commit, dispatch}) {
@@ -180,6 +182,131 @@ export default {
       )
     }).catch((response) => {
       console.error('invalidateToken [status]: ' + response.status)
+    })
+  },
+  [symbols.actions.storeLoginDetails] ({state, dispatch}, queryString) {
+    if (!state[symbols.state.userInfo].loginId) {
+      return
+    }
+    http.token = state[symbols.state.mainToken]
+    const loginData = {
+      loginid: state[symbols.state.userInfo].loginId,
+      userid: state[symbols.state.userInfo].plainUserId,
+      cur_page: queryString
+    }
+    http.post(endpoints.loginDetails.store, loginData).then(() => {
+      // do nothing
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'setLoginDetails', response: response})
+    })
+  },
+  [symbols.actions.companyLogo] ({state, commit, dispatch}) {
+    http.token = state[symbols.state.mainToken]
+    http.get(endpoints.companies.companyByUser).then((response) => {
+      const data = response.data.data
+      if (data.hasOwnProperty('logo') && data.logo) {
+        MediaFileRetriever.getMediaFile(data.logo).then((image) => {
+          commit(symbols.mutations.companyLogo, image)
+        })
+      }
+    }).catch((response) => {
+      let title = 'getCompanyByUser'
+      if (response instanceof FileRetrievalError) {
+        title = response.title
+      }
+      dispatch(symbols.actions.handleErrors, {title: title, response: response})
+    })
+  },
+  [symbols.actions.questionnaireStatuses] ({state, commit, dispatch}, patientId) {
+    http.token = state[symbols.state.mainToken]
+    const questionnaireData = {
+      fields: [
+        'symptoms_status',
+        'treatments_status',
+        'history_status'
+      ],
+      where: {
+        patientid: patientId
+      }
+    }
+    http.post(endpoints.patients.withFilter, questionnaireData).then((response) => {
+      const data = response.data.data
+      const statuses = {
+        symptoms: parseInt(data.symptoms_status),
+        treatments: parseInt(data.treatments_status),
+        history: parseInt(data.history_status)
+      }
+      commit(symbols.mutations.questionnaireStatuses, statuses)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getQuestionnaireStatuses', response: response})
+    })
+  },
+  [symbols.actions.bouncedEmailsNumber] ({state, commit, dispatch}, patientId) {
+    http.token = state[symbols.state.mainToken]
+    const bouncedData = {
+      fields: [
+        'patientid'
+      ],
+      where: {
+        email_bounce: 1,
+        patientId: patientId
+      }
+    }
+    http.post(endpoints.patients.withFilter, bouncedData).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.bouncedEmailsNumberForCurrentPatient, data.length)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getBouncedEmailsNumberForCurrentPatient', response: response})
+    })
+  },
+  [symbols.actions.patientContacts] ({state, commit, dispatch}, patientId) {
+    http.token = state[symbols.state.mainToken]
+    const queryData = {
+      patientId: patientId
+    }
+    http.post(endpoints.patientContacts.current, queryData).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.totalPatientContacts, data.length)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getCurrentPatientContacts', response: response})
+    })
+  },
+  [symbols.actions.patientInsurances] ({state, commit, dispatch}, patientId) {
+    http.token = state[symbols.state.mainToken]
+    const queryData = {
+      patientId: patientId
+    }
+    http.post(endpoints.patientInsurances.current, queryData).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.totalPatientInsurances, data.length)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getCurrentPatientInsurances', response: response})
+    })
+  },
+  [symbols.actions.subPatients] ({state, commit, dispatch}, patientId) {
+    http.token = state[symbols.state.mainToken]
+    const parentQueryData = {
+      where: {
+        parent_patientid: patientId
+      }
+    }
+    http.post(endpoints.patients.withFilter, parentQueryData).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.subPatients, data.length)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getPatientsByParentId', response: response})
+    })
+  },
+  [symbols.actions.rejectedClaimsForCurrentPatient] ({state, commit, dispatch}, patientId) {
+    http.token = state[symbols.state.mainToken]
+    const queryData = {
+      patientId: patientId
+    }
+    http.post(endpoints.insurances.rejected, queryData).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.rejectedClaimsForCurrentPatient, data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getRejectedClaimsForCurrentPatient', response: response})
     })
   }
 }

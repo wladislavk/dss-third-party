@@ -3,6 +3,7 @@ import http from '../../../services/http'
 import symbols from '../../../symbols'
 import Alerter from '../../../services/Alerter'
 import { LEGACY_URL } from '../../../constants/main'
+import LocationWrapper from '../../../wrappers/LocationWrapper'
 
 export default {
   data () {
@@ -37,7 +38,7 @@ export default {
         return
       }
       if (event.which === enterCode && this.showSearchHints && link) {
-        window.location = LEGACY_URL + link
+        LocationWrapper.goToPage(LEGACY_URL + link)
       }
     },
     patientListMouseOver (index, patientType) {
@@ -58,7 +59,7 @@ export default {
         return
       }
       if (listElement.link) {
-        window.location = LEGACY_URL + listElement.link
+        LocationWrapper.goToPage(LEGACY_URL + listElement.link)
         return
       }
       this.inputValue = listElement.name

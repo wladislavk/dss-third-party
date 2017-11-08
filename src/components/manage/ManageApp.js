@@ -16,4 +16,25 @@ export default {
       this.$router.push({ name: 'main-login' })
     }
   },
+  beforeRouteEnter (to, from, next) {
+    next((vm) => {
+      vm.$store.dispatch(symbols.actions.storeLoginDetails, this.$route.query)
+    })
+  },
+  beforeRouteUpdate (to, from, next) {
+    let toPatientId = 0
+    if (to.params.hasOwnProperty('pid')) {
+      toPatientId = parseInt(to.params.pid)
+    }
+    let fromPatientId = 0
+    if (from.params.hasOwnProperty('pid')) {
+      fromPatientId = parseInt(from.params.pid)
+    }
+    if (toPatientId !== fromPatientId) {
+      this.$store.dispatch(symbols.actions.patientData, toPatientId)
+      this.$store.dispatch(symbols.actions.healthHistoryForPatient, toPatientId)
+      this.$store.dispatch(symbols.actions.incompleteHomeSleepTests, toPatientId)
+    }
+    next()
+  }
 }

@@ -1,7 +1,9 @@
+import accounting from 'accounting'
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
 import { PREAUTH_STATUS_LABELS } from '../../../constants/main'
+import MomentWrapper from '../../../wrappers/MomentWrapper'
 
 export default {
   data () {
@@ -159,16 +161,16 @@ export default {
       return 'No'
     },
     formatLedger (value) {
-      return window.accounting.formatMoney(value, '$')
+      return accounting.formatMoney(value, '$')
     },
     checkIfThisWeek (value) {
-      const totalDays = window.moment(value).diff(window.moment(), 'days')
-      const negative = (window.moment(value) - window.moment()) < 0
+      const totalDays = MomentWrapper.create(value).diff(MomentWrapper.create(), 'days')
+      const negative = (MomentWrapper.create(value) - MomentWrapper.create()) < 0
 
       return (totalDays >= 0 && totalDays <= 7 && !negative)
     },
     isNegativeTime (value) {
-      return (window.moment(value) - window.moment()) < 0
+      return (MomentWrapper.create(value) - MomentWrapper.create()) < 0
     },
     readyForTx (insuranceNoError, numSleepStudy) {
       return +insuranceNoError && numSleepStudy !== 0

@@ -13,9 +13,6 @@ window.$ = $
 window.jQuery = $
 const buttonUI = require('jquery-ui/button')
 window.$.fn.extend = buttonUI
-window.swal = require('sweetalert')
-window.moment = require('moment')
-window.accounting = require('accounting')
 
 // centralized event hub
 window.eventHub = new Vue()

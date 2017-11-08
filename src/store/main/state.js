@@ -60,5 +60,15 @@ export default {
   [symbols.state.displayAlert]: false,
   [symbols.state.allergen]: 0,
   [symbols.state.incompleteHomeSleepTests]: [],
-  [symbols.state.showAllWarnings]: true
+  [symbols.state.showAllWarnings]: true,
+  [symbols.state.companyLogo]: '',
+  [symbols.state.questionnaireStatuses]: {
+    symptoms: 0,
+    treatments: 0,
+    history: 0
+  },
+  [symbols.state.bouncedEmailsNumberForCurrentPatient]: 0,
+  [symbols.state.totalPatientContacts]: 0,
+  [symbols.state.totalPatientInsurances]: 0,
+  [symbols.state.rejectedClaimsForCurrentPatient]: []
 }

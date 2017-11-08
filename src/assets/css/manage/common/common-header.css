@@ -67,3 +67,7 @@ a.logo-link {
 .suckertreemenu {
   height: 27px;
 }
+
+div.patient-data-wrapper {
+  background: url(../../../images/dss_03.jpg) repeat-y top left #FFFFFF;
+}

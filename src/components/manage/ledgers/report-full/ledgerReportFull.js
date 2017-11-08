@@ -1,3 +1,4 @@
+import accounting from 'accounting'
 import endpoints from '../../../../endpoints'
 import http from '../../../../services/http'
 import ledgerSummaryReportFull from '../summary-report-full/ledgerSummaryReportFull.vue'
@@ -201,7 +202,7 @@ export default {
       })
     },
     formatLedger (value) {
-      return window.accounting.formatMoney(value, '$')
+      return accounting.formatMoney(value, '$')
     },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {

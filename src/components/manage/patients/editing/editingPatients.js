@@ -5,6 +5,7 @@ import LocalStorageManager from '../../../../services/LocalStorageManager'
 import symbols from '../../../../symbols'
 import Alerter from '../../../../services/Alerter'
 import { DSS_CONSTANTS } from '../../../../constants/main'
+import MomentWrapper from '../../../../wrappers/MomentWrapper'
 
 export default {
   data: function () {
@@ -164,7 +165,7 @@ export default {
             status = 'Unregistered'
             break
           case 1:
-            status = 'Registration Emailed ' + window.moment(this.patient.registration_senton).format('MM/DD/YYYY hh:mm a') + ' ET'
+            status = 'Registration Emailed ' + MomentWrapper.create(this.patient.registration_senton).format('MM/DD/YYYY hh:mm a') + ' ET'
             break
           case 2:
             status = 'Registered'
@@ -836,7 +837,7 @@ export default {
     },
     setDefaultValues: function (patient) {
       const values = {
-        copyreqdate: window.moment().format('DD/MM/YYYY'),
+        copyreqdate: MomentWrapper.create().format('DD/MM/YYYY'),
         salutation: 'Mr.',
         preferredcontact: 'paper',
         display_alert: 0,

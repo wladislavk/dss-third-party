@@ -92,5 +92,26 @@ export default {
   },
   [symbols.mutations.hideAllWarnings] (state) {
     state[symbols.state.showAllWarnings] = false
+  },
+  [symbols.mutations.companyLogo] (state, image) {
+    state[symbols.state.companyLogo] = image
+  },
+  [symbols.mutations.questionnaireStatuses] (state, data) {
+    state[symbols.state.questionnaireStatuses] = data
+  },
+  [symbols.mutations.bouncedEmailsNumberForCurrentPatient] (state, number) {
+    state[symbols.state.bouncedEmailsNumberForCurrentPatient] = number
+  },
+  [symbols.mutations.totalPatientContacts] (state, number) {
+    state[symbols.state.totalPatientContacts] = number
+  },
+  [symbols.mutations.totalPatientInsurances] (state, number) {
+    state[symbols.state.totalPatientInsurances] = number
+  },
+  [symbols.mutations.totalSubPatients] (state, number) {
+    state[symbols.state.totalSubPatients] = number
+  },
+  [symbols.mutations.rejectedClaimsForCurrentPatient] (state, data) {
+    state[symbols.state.rejectedClaimsForCurrentPatient] = data
   }
 }

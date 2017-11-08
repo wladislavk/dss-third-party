@@ -206,3 +206,5 @@ export const PHONE_FIELDS = [
   'phone2',
   'fax'
 ]
+
+export const NOT_ACCEPTED_UPDATE = 'Warning! Patient has updated their %s via the online patient portal, and you have not yet accepted these changes. Please click this box to review patient changes.'

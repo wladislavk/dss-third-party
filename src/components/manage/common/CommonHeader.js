@@ -1,53 +1,31 @@
-import endpoints from '../../../endpoints'
-import http from '../../../services/http'
 import symbols from '../../../symbols'
-import PatientTaskMenuComponent from '../../manage/tasks/PatientTaskMenu.vue'
-import TaskMenuComponent from '../../manage/tasks/TaskMenu.vue'
+import PatientTaskMenuComponent from '../tasks/PatientTaskMenu.vue'
+import TaskMenuComponent from '../tasks/TaskMenu.vue'
+import PatientDataComponent from './PatientData.vue'
 import { LEGACY_URL } from '../../../constants/main'
+import LocationWrapper from '../../../wrappers/LocationWrapper'
 
 export default {
   data () {
     return {
       legacyUrl: LEGACY_URL,
       username: this.$store.state.main[symbols.state.userInfo].username,
-      companyLogo: '',
       patientId: this.$store.state.main[symbols.state.patientId],
       showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings]
     }
   },
+  computed: {
+    companyLogo () {
+      return this.$store.state.main[symbols.state.companyLogo]
+    }
+  },
   components: {
     taskMenu: TaskMenuComponent,
-    patientTaskMenu: PatientTaskMenuComponent
+    patientTaskMenu: PatientTaskMenuComponent,
+    patientData: PatientDataComponent
   },
   created () {
-    http.token = this.$store.state.main[symbols.state.mainToken]
-
-    if (this.$store.state.main[symbols.state.userInfo].hasOwnProperty('loginId') && this.$store.state.main[symbols.state.userInfo].loginId) {
-      const loginData = {
-        loginid: this.$store.state.main[symbols.state.userInfo].loginId,
-        userid: this.$store.state.main[symbols.state.userInfo].userId,
-        cur_page: this.$route.query || ''
-      }
-      http.post(endpoints.loginDetails.store, loginData).then(() => {
-        // do nothing
-      }).catch((response) => {
-        this.$store.dispatch(symbols.actions.handleErrors, {title: 'setLoginDetails', response: response})
-      })
-    }
-
-    http.get(endpoints.companies.companyByUser).then((response) => {
-      const data = response.data.data
-      if (data) {
-        http.get(endpoints.displayFile + '/' + data.logo).then((response) => {
-          const data = response.data.data
-          this.companyLogo = data.image
-        }).catch((response) => {
-          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getFileForDisplaying', response: response})
-        })
-      }
-    }).catch((response) => {
-      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getCompanyByUser', response: response})
-    })
+    this.$store.dispatch(symbols.actions.companyLogo)
   },
   methods: {
     showWarnings () {
@@ -57,7 +35,7 @@ export default {
       this.$store.commit(symbols.mutations.hideAllWarnings)
     },
     goToAddPatient () {
-      window.location.href = LEGACY_URL + 'add_patient.php'
+      LocationWrapper.goToPage(LEGACY_URL + 'add_patient.php')
     },
     addTaskPopup () {
       const props = {

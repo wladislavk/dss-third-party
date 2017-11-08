@@ -49,7 +49,11 @@
                 <patient-menu v-if="patientId"></patient-menu>
                 <div class="clear" v-if="!patientId"></div>
             </div>
-          <div class="clear"></div>
+            <div class="clear"></div>
+        </div>
+        <div class="patient-data-wrapper" id="contentMain">
+            <div class="clear"></div>
+            <patient-data v-if="patientId" v-bind:patient-id="patientId"></patient-data>
         </div>
     </div>
 </template>

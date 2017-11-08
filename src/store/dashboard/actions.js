@@ -3,7 +3,7 @@ import http from '../../services/http'
 import symbols from '../../symbols'
 import LocationWrapper from '../../wrappers/LocationWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
-import { LEGACY_URL } from '../../constants'
+import { LEGACY_URL, DSS_CONSTANTS } from '../../constants'
 
 export default {
   [symbols.actions.documentCategories] ({rootState, commit, dispatch}) {
@@ -77,6 +77,26 @@ export default {
       commit(symbols.mutations.memos, response.data.data)
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getCurrentMemos', response: response})
+    })
+  },
+  [symbols.actions.getDeviceGuideSettingOptions] ({commit, rootState}) {
+    http.token = rootState.main[symbols.state.mainToken]
+    return http.post(endpoints.guideSettingOptions.settingIds).then(response => {
+      const data = response.data.data
+
+      data.forEach(el => {
+        el.labels = el.labels.split(',')
+        el.checkedOption = 0
+
+        if (+el.setting_type === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {
+          el.checkedImp = 0
+          return
+        }
+
+        el.checked = 0
+      })
+
+      commit(symbols.mutations.deviceGuideSettingOptions, data)
     })
   }
 }

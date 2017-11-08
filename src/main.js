@@ -9,6 +9,7 @@ import constants from './modules/constants'
 import $ from 'jquery'
 import VueMoment from 'vue-moment'
 import VueVisible from 'vue-visible'
+import MintUI from 'mint-ui'
 
 window.constants = constants
 window.$ = $
@@ -26,6 +27,7 @@ Vue.prototype.$http = axios
 
 Vue.use(VueMoment)
 Vue.use(VueVisible)
+Vue.use(MintUI)
 
 /* eslint-disable no-new */
 new Vue({

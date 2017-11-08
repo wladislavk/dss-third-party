@@ -1,6 +1,6 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
-import DeviceSelectorComponent from '../modal/DeviceSelector.vue'
+import DeviceSelectorComponent from './DeviceSelector.vue'
 import ViewContactComponent from '../contacts/ViewContact.vue'
 import PatientAccessCodeComponent from '../patients/access-code/PatientAccessCode.vue'
 import EditContactComponent from '../contacts/EditContact.vue'
@@ -19,9 +19,11 @@ export default {
   computed: {
     currentView () {
       const component = this.$store.state.main[symbols.state.modal]
+
       if (this.hasComponent(component)) {
         return component
       }
+
       return ''
     },
     popupEnabled () {
@@ -92,7 +94,9 @@ export default {
     },
     hasComponent (component) {
       const existedComponents = Object.keys(this.$options.components)
-      return (existedComponents.indexOf(component) > -1)
+      const snakeToCamel = s => s.replace(/(\-\w)/g, m => m[1].toUpperCase())
+
+      return existedComponents.includes(snakeToCamel(component))
     }
   }
 }

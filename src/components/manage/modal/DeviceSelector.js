@@ -1,68 +1,39 @@
-import endpoints from '../../../endpoints'
-import http from '../../../services/http'
-import symbols from '../../../symbols'
-import Alerter from '../../../services/Alerter'
+import endpoints from 'endpoints'
+import http from 'services/http'
+import symbols from 'symbols'
+import { LEGACY_URL, DEVICE_SELECTOR_INSTRUCTIONS, DSS_CONSTANTS } from '../../../constants'
+import Alerter from 'services/Alerter'
 
 export default {
   data () {
     return {
-      constants: window.constants,
-      currentPatient: {},
-      deviceGuideSettingOptions: [],
-      deviceGuideResults: [],
-      id: 0,
-      patientId: 0
+      legacyUrl: LEGACY_URL,
+      showInstructions: false,
+      instructions: DEVICE_SELECTOR_INSTRUCTIONS
     }
   },
-  watch: {
-    '$route.query.id': function () {
-      if (this.$route.query.id) {
-        this.id = this.$route.query.id
-      } else {
-        this.id = 0
-      }
+  computed: {
+    patientName () {
+      return this.$store.state.main[symbols.state.patientName]
     },
-    '$route.query.pid': function () {
-      if (this.$route.query.pid) {
-        this.patientId = this.$route.query.pid
-      } else {
-        this.patientId = 0
-      }
+    deviceSelectorTitle () {
+      return `Device C-Lect for ${this.patientName}?`
+    },
+    deviceGuideSettingOptions () {
+      return this.$store.state.dashboard[symbols.state.deviceGuideSettingOptions]
+    },
+    deviceGuideResults () {
+      return this.$store.state.dashboard[symbols.state.deviceGuideResults]
     }
   },
   created () {
-    if (this.patientId > 0) {
-      this.getPatientById(this.patientId).then((response) => {
-        const data = response.data.data
-
-        if (data) {
-          this.currentPatient = data
-        }
-      }).catch((response) => {
-        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getPatientById', response: response})
+    this.$store.dispatch(symbols.actions.getDeviceGuideSettingOptions)
+      .catch((response) => {
+        this.$store.dispatch(
+          symbols.actions.handleErrors,
+          {title: 'getDeviceGuideSettingOptions', response: response}
+        )
       })
-    }
-
-    http.post(endpoints.guideSettingOptions.settingIds).then((response) => {
-      const data = response.data.data
-
-      if (data) {
-        data.forEach(function (element) {
-          element.labels = element.labels.split(',')
-          element.checkedOption = 0
-
-          if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
-            element.checkedImp = 0
-          } else {
-            element.checked = 0
-          }
-        })
-
-        this.deviceGuideSettingOptions = data
-      }
-    }).catch((response) => {
-      this.$store.dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideSettingOptions', response: response})
-    })
   },
   mounted () {
     window.$('.imp_chk').click(function () {
@@ -75,6 +46,18 @@ export default {
     })
   },
   methods: {
+    isSettingTypeRange (type) {
+      return type === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE
+    },
+    getDeviceSettingMaxNumber (number) {
+      return number - 1
+    },
+    onClickInstructions () {
+      this.showInstructions = true
+    },
+    onClickHide () {
+      this.showInstructions = false
+    },
     onDeviceSubmit () {
       const data = {
         settings: {}
@@ -125,14 +108,6 @@ export default {
         }
       }
     },
-    onClickInstructions () {
-      window.$('#instructions').show('200')
-      window.$('#ins_show').hide()
-    },
-    onClickHide () {
-      window.$('#instructions').hide('200')
-      window.$('#ins_show').show()
-    },
     onClickReset () {
       this.deviceGuideSettingOptions.forEach((element) => {
         element.checkedOption = 0
@@ -145,11 +120,6 @@ export default {
       })
 
       this.deviceGuideResults = []
-    },
-    getPatientById (patientId) {
-      patientId = patientId || 0
-
-      return http.get(endpoints.patients.show + '/' + patientId)
     },
     getDeviceGuideResults (data) {
       return http.post(endpoints.guideDevices.withImages, data)

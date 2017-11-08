@@ -452,7 +452,10 @@ export const DSS_CONSTANTS = {
   DSS_HST_SCHEDULED: 2,
   DSS_HST_COMPLETE: 3,
   DSS_HST_REJECTED: 4,
-  DSS_HST_CONTACTED: 5
+  DSS_HST_CONTACTED: 5,
+
+  DSS_DEVICE_SETTING_TYPE_RANGE: 0,
+  DSS_DEVICE_SETTING_TYPE_FLAG: 1
 }
 
 export const NOTIFICATIONS = [
@@ -618,3 +621,10 @@ export const HST_STATUSES = {
   [DSS_CONSTANTS.DSS_HST_REJECTED]: 'Rejected',
   [DSS_CONSTANTS.DSS_HST_CONTACTED]: 'Contacted'
 }
+
+export const DEVICE_SELECTOR_INSTRUCTIONS = [
+  'Evaluate pt for each category using sliding bar',
+  'Choose the three most important categories (if needed)',
+  'Click on Sort Devices',
+  'Click the device to add to Pt chart, or click "Reset" to start over.'
+]

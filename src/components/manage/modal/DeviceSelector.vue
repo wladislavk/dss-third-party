@@ -1,89 +1,91 @@
 <template>
     <div id="device-selector">
         <div style="margin-left: 30px;">
-            <a href="#" v-on:click.prevent="onClickInstructions" id="ins_show">Instructions</a>
-            <div id="instructions" style="display:none;">
-                <strong>Instructions</strong> <a href="#" v-on:click.prevent="onClickHide">hide</a>
+            <a
+                v-show="!showInstructions"
+                v-on:click.prevent="onClickInstructions"
+                id="ins_show"
+                href="#"
+            >Instructions</a>
+            <div v-show="showInstructions" id="instructions">
+                <strong>Instructions</strong>
+                <a v-on:click.prevent="onClickHide" href="#">hide</a>
                 <ol>
-                    <li>Evaluate pt for each category using sliding bar</li>
-                    <li>Choose the three most important categories (if needed)</li>
-                    <li>Click on Sort Devices</li>
-                    <li>Click the device to add to Pt chart, or click "Reset" to start over.</li>
+                    <li v-for="item in instructions">{{ item }}</li>
                 </ol>
             </div>
         </div>
-
-        <h2 style="margin-top:20px;">Device C-Lect for {{ currentPatient.firstname }} {{ currentPatient.lastname }}?</h2>
-
-        <form v-bind:action="legacyUrl + 'device_guide_results.php'" method="post" id="device_form" style="border:solid 2px #cce3fc;padding:0 10px 0 25px; width:24%; margin-left:2%; float:left;">
-            <input type="hidden" name="id" :value="$route.query.id" />
-            <input type="hidden" name="pid" :value="$route.query.pid" />
-
+        <h2 id="device-selector-title">{{ deviceSelectorTitle }}</h2>
+        <form
+            v-bind:action="legacyUrl + 'device_guide_results.php'"
+            method="post"
+            id="device_form"
+        >
+            <!-- TODO: need remove hidden fields when `device_guide_results` is migrated -->
+            <input v-bind:value="$route.query.id" type="hidden" name="id">
+            <input v-bind:value="$route.query.pid" type="hidden" name="pid">
             <div
-                v-if="deviceGuideSettingOptions.length > 0"
                 v-for="deviceGuideSetting in deviceGuideSettingOptions"
+                v-bind:id="'setting_' + deviceGuideSetting.id"
                 class="setting"
-                :id="'setting_' + deviceGuideSetting.id"
-                style="padding: 5px 0;"
             >
-                <strong style="padding: 5px 0;display:block;">{{ deviceGuideSetting.name }}</strong>
-                <template v-if="deviceGuideSetting.setting_type == constants.DSS_DEVICE_SETTING_TYPE_RANGE">
+                <strong style="device-guide-setting-name">{{ deviceGuideSetting.name }}</strong>
+                <template v-if="isSettingTypeRange(deviceGuideSetting.setting_type)">
                     <mt-range
                         v-model="deviceGuideSetting.checkedOption"
-                        :min="0"
-                        :max="deviceGuideSetting.number - 1"
+                        v-bind:min="0"
+                        v-bind:max="getDeviceSettingMaxNumber(deviceGuideSetting.number)"
                         class="slider"
                     ></mt-range>
                     <input
                         v-model="deviceGuideSetting.checkedImp"
+                        v-bind:name="'setting_imp_' + deviceGuideSetting.id"
+                        v-bind:id="'setting_imp_' + deviceGuideSetting.id"
                         type="checkbox"
                         class="imp_chk"
                         value="1"
-                        :name="'setting_imp_' + deviceGuideSetting.id"
-                        :id="'setting_imp_' + deviceGuideSetting.id"
                     />
                     <div style="clear:both;"></div>
                     <div
+                        v-bind:id="'label_' + deviceGuideSetting.id"
                         class="label"
-                        :id="'label_' + deviceGuideSetting.id"
-                        style="padding: 5px 0;display: block;"
                     >{{ deviceGuideSetting.labels[deviceGuideSetting.checkedOption] }}</div>
                 </template>
                 <template v-else>
                     <input
+                        v-bind:name="'setting' + deviceGuideSetting.id"
                         v-model="deviceGuideSetting.checked"
                         type="checkbox"
-                        :name="'setting' + deviceGuideSetting.id"
                         value="1"
                     />
                 </template>
             </div>
         </form>
-
-        <div style="float:left; width: 13%; margin-left:2%;">
+        <div id="sort-devices-button">
             <a
+                v-on:click.prevent="onDeviceSubmit"
                 href="#"
-                v-on:click="onDeviceSubmit"
-                style="border:1px solid #000; padding: 5px;"
                 class="addButton"
             >Sort Devices</a>
         </div>
-
-        <div style="float:left; width:50%;">
-            <ul id="results" style="border:solid 2px #a7cefa;">
+        <div id="device-results-div">
+            <ul>
                 <li
                     v-for="deviceResult in deviceGuideResults"
-                    :class="{ 'box_go': deviceResult.imagePath }"
+                    v-bind:class="{ 'box_go': deviceResult.imagePath }"
                 >
                     <div v-if="deviceResult.imagePath" class='ico'>
-                        <img :src="deviceResult.imagePath" />
+                        <img v-bind:src="deviceResult.imagePath" />
                     </div>
-                    <a href="#" v-on:click.prevent="updateDevice(deviceResult.id, deviceResult.name)">
+                    <a
+                        v-on:click.prevent="updateDevice(deviceResult.id, deviceResult.name)"
+                        href="#"
+                    >
                         {{ deviceResult.name }} ({{ deviceResult.value }})
                     </a>
                 </li>
             </ul>
-            <a class="addButton" href="#" v-on:click.prevent="onClickReset">Reset</a>
+            <a v-on:click.prevent="onClickReset" class="addButton" href="#">Reset</a>
         </div>
         <div style="clear: both;"></div>
     </div>
@@ -93,4 +95,4 @@
 
 <style src="../../../assets/css/manage/admin.css" scoped></style>
 <style src="../../../assets/css/manage/form.css" scoped></style>
-<style src="../../../assets/css/manage/device_guide.css"></style>
+<style src="../../../assets/css/manage/device_guide.css" scoped></style>

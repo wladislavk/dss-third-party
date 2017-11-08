@@ -6,5 +6,8 @@ export default {
   },
   [symbols.mutations.memos] (state, data) {
     state[symbols.state.memos] = data
+  },
+  [symbols.mutations.deviceGuideSettingOptions] (state, data) {
+    state[symbols.state.deviceGuideSettingOptions] = data
   }
 }

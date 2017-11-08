@@ -4,6 +4,47 @@
   margin-right: 5%;
 }
 
+.device-guide-setting-name, #device_form > .setting > .label {
+  padding: 5px 0;
+  display: block;
+}
+
 #device-selector {
   background: #fff !important;
+}
+
+#device-selector-title {
+  margin-top: 20px;
+}
+
+#device_form {
+  border: solid 2px #cce3fc;
+  padding: 0 10px 0 25px;
+  width: 24%;
+  margin-left: 2%;
+  float: left;
+}
+
+#device_form > .setting {
+  padding: 5px 0;
+}
+
+#device-results-div {
+  float: left;
+  width: 50%;
+}
+
+#device-results-div ul {
+  border: solid 2px #a7cefa;
+}
+
+#sort-devices-button {
+  float: left;
+  width: 13%;
+  margin-left: 2%;
+}
+
+#sort-devices-button.addButton {
+  border: 1px solid #000;
+  padding: 5px;
 }

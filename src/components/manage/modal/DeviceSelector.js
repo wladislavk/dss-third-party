@@ -46,14 +46,16 @@ export default {
   },
   methods: {
     updateGuideSettingStatus (event, id) {
-      const MAX_NUMBER_OF_CHECKED_IMPS = 3
-      const checkedImps = this.$store.state.dashboard[symbols.state.deviceGuideSettingOptions]
-        .map(el => el.checkedImp)
-        .filter(el => el === 1)
+      if (+event.target.checked === 1) {
+        const MAX_NUMBER_OF_CHECKED_IMPS = 3
+        const checkedImps = this.$store.state.dashboard[symbols.state.deviceGuideSettingOptions]
+          .map(el => el.checkedImp)
+          .filter(el => el === 1)
 
-      if (checkedImps.length === MAX_NUMBER_OF_CHECKED_IMPS) {
-        event.target.checked = 0
-        return
+        if (checkedImps.length === MAX_NUMBER_OF_CHECKED_IMPS) {
+          event.target.checked = 0
+          return
+        }
       }
 
       const data = {

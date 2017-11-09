@@ -12,6 +12,15 @@ export default {
       instructions: DEVICE_SELECTOR_INSTRUCTIONS
     }
   },
+  watch: {
+    deviceGuideSettingOptions () {
+      this.$nextTick(() => {
+        this.deviceGuideSettingOptions.forEach(el => {
+          this.setSlider(el.id, 0, el.number - 1, 1)
+        })
+      })
+    }
+  },
   computed: {
     patientName () {
       return this.$store.state.main[symbols.state.patientName]
@@ -35,22 +44,53 @@ export default {
         )
       })
   },
-  mounted () {
-    window.$('.imp_chk').click(function () {
-      // @todo: what does "this" refer to?
-      if (window.$(this).is(':checked')) {
-        if (window.$('.imp_chk:checked').length > 3) {
-          window.$(this).prop('checked', false)
+  methods: {
+    updateGuideSettingStatus (event, id) {
+      const MAX_NUMBER_OF_CHECKED_IMPS = 3
+      const checkedImps = this.$store.state.dashboard[symbols.state.deviceGuideSettingOptions]
+        .map(el => el.checkedImp)
+        .filter(el => el === 1)
+
+      if (checkedImps.length === MAX_NUMBER_OF_CHECKED_IMPS) {
+        event.target.checked = 0
+        return
+      }
+
+      const data = {
+        id: id,
+        values: {
+          checkedImp: +event.target.checked
         }
       }
-    })
-  },
-  methods: {
+
+      this.$store.commit(symbols.mutations.updateGuideSetting, data)
+    },
+    updateGuideSettingOption (id, value) {
+      const data = {
+        id: id,
+        values: {
+          checkedOption: value
+        }
+      }
+
+      this.$store.commit(symbols.mutations.updateGuideSetting, data)
+    },
+    getSliderDivId (id) {
+      return 'slider_' + id
+    },
+    setSlider (id, start, end, step) {
+      $('#' + this.getSliderDivId(id)).slider({
+        value: start,
+        min: start,
+        max: end,
+        step: step,
+        slide: (event, ui) => {
+          this.updateGuideSettingOption(id, ui.value)
+        }
+      })
+    },
     isSettingTypeRange (type) {
       return type === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE
-    },
-    getDeviceSettingMaxNumber (number) {
-      return number - 1
     },
     onClickInstructions () {
       this.showInstructions = true

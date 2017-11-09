@@ -9,13 +9,14 @@ import constants from './modules/constants'
 import $ from 'jquery'
 import VueMoment from 'vue-moment'
 import VueVisible from 'vue-visible'
-import MintUI from 'mint-ui'
 
 window.constants = constants
 window.$ = $
 window.jQuery = $
 const buttonUI = require('jquery-ui/button')
+const sliderUI = require('jquery-ui/slider')
 window.$.fn.extend = buttonUI
+window.$.fn.extend = sliderUI
 window.swal = require('sweetalert')
 window.moment = require('moment')
 window.accounting = require('accounting')
@@ -27,7 +28,6 @@ Vue.prototype.$http = axios
 
 Vue.use(VueMoment)
 Vue.use(VueVisible)
-Vue.use(MintUI)
 
 /* eslint-disable no-new */
 new Vue({

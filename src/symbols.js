@@ -103,7 +103,8 @@ export default {
     showFancybox: 'SHOW_FANCYBOX',
     surveyWeight: 'SURVEY_WEIGHT',
     symptoms: 'SYMPTOMS',
-    userInfo: 'USER_INFO'
+    userInfo: 'USER_INFO',
+    updateGuideSetting: 'UPDATE_GUIDE_SETTING'
   },
   actions: {
     authenticateScreener: 'AUTHENTICATE_SCREENER',

@@ -29,23 +29,18 @@
                 v-bind:id="'setting_' + deviceGuideSetting.id"
                 class="setting"
             >
-                <strong style="device-guide-setting-name">{{ deviceGuideSetting.name }}</strong>
+                <strong class="device-guide-setting-name">{{ deviceGuideSetting.name }}</strong>
                 <template v-if="isSettingTypeRange(deviceGuideSetting.setting_type)">
-                    <mt-range
-                        v-model="deviceGuideSetting.checkedOption"
-                        v-bind:min="0"
-                        v-bind:max="getDeviceSettingMaxNumber(deviceGuideSetting.number)"
-                        class="slider"
-                    ></mt-range>
+                    <div v-bind:id="getSliderDivId(deviceGuideSetting.id)" class="slider"></div>
                     <input
-                        v-model="deviceGuideSetting.checkedImp"
-                        v-bind:name="'setting_imp_' + deviceGuideSetting.id"
                         v-bind:id="'setting_imp_' + deviceGuideSetting.id"
+                        v-bind:name="'setting_imp_' + deviceGuideSetting.id"
+                        v-bind:checked="deviceGuideSetting.checkedImp == 1"
+                        v-on:change="updateGuideSettingStatus($event, deviceGuideSetting.id)"
                         type="checkbox"
                         class="imp_chk"
                         value="1"
                     />
-                    <div style="clear:both;"></div>
                     <div
                         v-bind:id="'label_' + deviceGuideSetting.id"
                         class="label"
@@ -93,6 +88,8 @@
 
 <script src="./DeviceSelector.js"></script>
 
+<style src="jquery-ui/themes/ui-lightness/jquery-ui.css"></style>
 <style src="../../../assets/css/manage/admin.css" scoped></style>
 <style src="../../../assets/css/manage/form.css" scoped></style>
 <style src="../../../assets/css/manage/device_guide.css" scoped></style>
+

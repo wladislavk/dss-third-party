@@ -101,22 +101,6 @@ class Dashboard extends BaseContext
     }
 
     /**
-     * @Then I see right top bar with following links:
-     *
-     * @param TableNode $table
-     */
-    public function testRightTopBar(TableNode $table)
-    {
-        $topBar = $this->findCss('ul#topmenu2');
-        $expectedLinks = array_column($table->getHash(), 'text');
-        $links = $this->findAllCss('li', $topBar);
-        foreach ($expectedLinks as $key => $expectedLink) {
-            $realLink = trim($this->findCss('a', $links[$key])->getText());
-            Assert::assertEquals($expectedLink, $realLink);
-        }
-    }
-
-    /**
      * @Then I see :section dashboard section
      *
      * @param string $section

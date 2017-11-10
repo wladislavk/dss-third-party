@@ -6,12 +6,6 @@ Feature: Dashboard
   Scenario: View navigation
     Given I am logged in as "doc1f"
     When I go to "start" page
-    # todo: move this to header test
-    # Then I see right top bar with following links:
-    #  | text               |
-    #  | Notifications(354) |
-    #  | Support (5)        |
-    #  | Sign Out           |
     Then I see "Navigation" dashboard section
     And navigation menu contains the following links:
       | name             |

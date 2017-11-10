@@ -8,25 +8,6 @@ use PHPUnit\Framework\Assert;
 class PatientChart extends BaseContext
 {
     /**
-     * @When I click on :name in list of patients
-     *
-     * @param string $name
-     * @throws BehatException
-     */
-    public function clickPatientInList($name)
-    {
-        $this->wait(self::MEDIUM_WAIT_TIME);
-        $patients = $this->findAllCss('ul#patient_list li.json_patient');
-        foreach ($patients as $patient) {
-            if ($this->sanitizeText($patient->getText()) == $name) {
-                $patient->click();
-                return;
-            }
-        }
-        throw new BehatException("Patient with name $name not found");
-    }
-
-    /**
      * @When I fill add patient form with values:
      *
      * @param TableNode $table
@@ -55,44 +36,6 @@ class PatientChart extends BaseContext
     }
 
     /**
-     * @Then I see patient search form
-     */
-    public function testPatientSearchForm()
-    {
-        $tries = 3;
-        $currentTry = 1;
-        $input = null;
-        while (!$input && $currentTry <= $tries) {
-            $this->wait(self::SHORT_WAIT_TIME);
-            $input = $this->findCss('input#patient_search');
-            if (!$input) {
-                var_dump($currentTry);
-                var_dump($this->page->getContent());
-            }
-            $currentTry++;
-        }
-        Assert::assertNotNull($input);
-    }
-
-    /**
-     * @Then I see list of patients in search form:
-     *
-     * @param TableNode $table
-     */
-    public function testPatientSearchList(TableNode $table)
-    {
-        $this->wait(self::MEDIUM_WAIT_TIME);
-        $list = $this->findCss('ul#patient_list');
-        Assert::assertNotNull($list);
-        $patients = $this->findAllCss('li.json_patient', $list);
-        $expectedPatients = array_column($table->getHash(), 'name');
-        foreach ($expectedPatients as $key => $expectedPatient) {
-            $patient = $this->sanitizeText($patients[$key]->getText());
-            Assert::assertEquals($expectedPatient, $patient);
-        }
-    }
-
-    /**
      * @Then I see patient chart for :name
      *
      * @param string $name
@@ -102,20 +45,6 @@ class PatientChart extends BaseContext
         $span = $this->findCss('div#patient_name_inner span.name');
         Assert::assertNotNull($span);
         Assert::assertContains($name, $span->getText());
-    }
-
-    /**
-     * @Then patient chart has menu with following points:
-     *
-     * @param TableNode $table
-     */
-    public function testPatientChartMenu(TableNode $table)
-    {
-        $menuPoints = $this->findAllCss('div#patient_nav > ul > li');
-        $expectedPoints = array_column($table->getHash(), 'name');
-        foreach ($expectedPoints as $key => $expectedPoint) {
-            Assert::assertEquals($expectedPoint, $menuPoints[$key]->getText());
-        }
     }
 
     /**

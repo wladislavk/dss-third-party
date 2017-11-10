@@ -2,7 +2,8 @@ import { STANDARD_META } from '../constants/main'
 import ManageLoginComponent from '../components/manage/ManageLogin.vue'
 import ManageAppComponent from '../components/manage/ManageApp.vue'
 import DashboardRootComponent from '../components/manage/dashboard/DashboardRoot.vue'
-import Patients from '../components/manage/patients/patients.vue'
+import PatientRootComponent from '../components/manage/patients/PatientRoot.vue'
+import ManagePatientComponent from '../components/manage/patients/patients.vue'
 import Contacts from '../components/manage/contacts/contacts.vue'
 import EditingPatients from '../components/manage/patients/editing/editingPatients.vue'
 import Vobs from '../components/manage/vobs/vobs.vue'
@@ -32,19 +33,26 @@ export default [
       {
         path: 'patients',
         name: 'patients',
-        component: Patients,
-        meta: STANDARD_META
+        component: PatientRootComponent,
+        children: [
+          {
+            path: 'manage',
+            name: 'manage-patients',
+            component: ManagePatientComponent,
+            meta: STANDARD_META
+          },
+          {
+            path: 'edit-patient',
+            name: 'edit-patient',
+            component: EditingPatients,
+            meta: STANDARD_META
+          }
+        ]
       },
       {
         path: 'contacts',
         name: 'contacts',
         component: Contacts,
-        meta: STANDARD_META
-      },
-      {
-        path: 'edit-patient',
-        name: 'edit-patient',
-        component: EditingPatients,
         meta: STANDARD_META
       },
       {

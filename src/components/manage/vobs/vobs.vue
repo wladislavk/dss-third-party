@@ -69,6 +69,7 @@
                     <single-vob
                         v-for="vob in vobs"
                         v-bind:vob="vob"
+                        v-bind:key="vob.id"
                     ></single-vob>
                 </template>
                 <tr class="tr_bg" v-else>

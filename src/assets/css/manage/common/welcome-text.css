@@ -1,0 +1,11 @@
+.suckertreemenu {
+  height: 27px;
+}
+
+span.welcome-text {
+  line-height: 38px;
+  margin-right: 10px;
+  font-size: 20px;
+  color: #fff;
+  float: right;
+}

@@ -67,7 +67,7 @@ export default {
     treatments: 0,
     history: 0
   },
-  [symbols.state.bouncedEmailsNumberForCurrentPatient]: 0,
+  [symbols.state.isEmailBounced]: false,
   [symbols.state.totalPatientContacts]: 0,
   [symbols.state.totalPatientInsurances]: 0,
   [symbols.state.rejectedClaimsForCurrentPatient]: []

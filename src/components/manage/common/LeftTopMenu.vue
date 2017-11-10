@@ -1,11 +1,11 @@
 <template>
-    <div class="left-top-menu">
-        <div v-if="showOnlineCEAndSnoozleHelp">
+    <span class="left-top-menu">
+        <span v-if="showOnlineCEAndSnoozleHelp">
             <a v-bind:href="legacyUrl + 'edx_login.php'" target="_blank" v-on:click="removeCECookies()">Online CE</a>
             <a v-bind:href="legacyUrl + 'help_login.php'" target="_blank" v-on:click="removeCECookies()">Snoozle/Help</a>
-        </div>
+        </span>
         <a v-bind:href="legacyUrl + 'calendar.php'">Scheduler</a>
-    </div>
+    </span>
 </template>
 
 <script src="./LeftTopMenu.js"></script>

@@ -1,5 +1,5 @@
 import symbols from '../../symbols'
-import { NOTIFICATION_NUMBERS } from '../../constants/main'
+import { NOTIFICATION_NUMBERS, HST_STATUSES } from '../../constants/main'
 
 export default {
   [symbols.mutations.mainToken] (state, token) {
@@ -57,33 +57,6 @@ export default {
       params: params
     }
   },
-  [symbols.mutations.medicare] (state, data) {
-    state[symbols.state.medicare] = data
-  },
-  [symbols.mutations.premedCheck] (state, data) {
-    state[symbols.state.premedCheck] = parseInt(data)
-  },
-  [symbols.mutations.headerAlertText] (state, data) {
-    state[symbols.state.headerAlertText] = data
-  },
-  [symbols.mutations.headerTitle] (state, data) {
-    state[symbols.state.headerTitle] = data
-  },
-  [symbols.mutations.patientName] (state, {firstName, lastName}) {
-    state[symbols.state.patientName] = firstName + ' ' + lastName
-  },
-  [symbols.mutations.displayAlert] (state, data) {
-    state[symbols.state.displayAlert] = !!data
-  },
-  [symbols.mutations.allergen] (state, data) {
-    state[symbols.state.allergen] = data
-  },
-  [symbols.mutations.patientHomeSleepTestStatus] (state, data) {
-    state[symbols.state.patientHomeSleepTestStatus] = data
-  },
-  [symbols.mutations.incompleteHomeSleepTests] (state, data) {
-    state[symbols.state.incompleteHomeSleepTests] = data
-  },
   [symbols.mutations.patientId] (state, data) {
     state[symbols.state.patientId] = parseInt(data)
   },
@@ -96,22 +69,65 @@ export default {
   [symbols.mutations.companyLogo] (state, image) {
     state[symbols.state.companyLogo] = image
   },
-  [symbols.mutations.questionnaireStatuses] (state, data) {
-    state[symbols.state.questionnaireStatuses] = data
+  [symbols.mutations.patientData] (state, data) {
+    const insuranceType = parseInt(data.insuranceType)
+    let hasMedicare = false
+    if (insuranceType === 1) {
+      hasMedicare = true
+    }
+    const premedCheck = parseInt(data.preMedCheck)
+    const allergen = !!data.hasAllergen
+    let title = state[symbols.state.headerTitle]
+    if (premedCheck) {
+      title += 'Pre-medication: ' + data.preMed + '\n'
+    }
+    if (allergen) {
+      title += 'Allergens: ' + data.otherAllergens + '\n'
+    }
+    let hstStatus = ''
+    const dataStatus = parseInt(data.hstStatus)
+    if (HST_STATUSES.hasOwnProperty(dataStatus)) {
+      hstStatus = HST_STATUSES[dataStatus]
+    }
+    state[symbols.mutations.allergen] = allergen
+    state[symbols.state.medicare] = hasMedicare
+    state[symbols.state.premedCheck] = premedCheck
+    state[symbols.state.patientName] = data.firstName + ' ' + data.lastName
+    state[symbols.state.displayAlert] = !!data.displayAlert
+    state[symbols.state.headerTitle] = title
+    state[symbols.state.headerAlertText] = data.alertText
+    state[symbols.state.questionnaireStatuses] = {
+      symptoms: parseInt(data.questionnaireData.symptomsStatus),
+      treatments: parseInt(data.questionnaireData.treatmentsStatus),
+      history: parseInt(data.questionnaireData.historyStatus)
+    }
+    state[symbols.state.isEmailBounced] = !!data.isEmailBounced
+    state[symbols.state.totalPatientContacts] = parseInt(data.patientContactsNumber)
+    state[symbols.state.totalPatientInsurances] = parseInt(data.patientInsurancesNumber)
+    state[symbols.state.totalSubPatients] = parseInt(data.subPatientsNumber)
+    state[symbols.state.rejectedClaimsForCurrentPatient] = data.rejectedClaims
+    state[symbols.state.patientHomeSleepTestStatus] = hstStatus
+    state[symbols.state.incompleteHomeSleepTests] = data.incompleteHomeSleepTests
   },
-  [symbols.mutations.bouncedEmailsNumberForCurrentPatient] (state, number) {
-    state[symbols.state.bouncedEmailsNumberForCurrentPatient] = number
-  },
-  [symbols.mutations.totalPatientContacts] (state, number) {
-    state[symbols.state.totalPatientContacts] = number
-  },
-  [symbols.mutations.totalPatientInsurances] (state, number) {
-    state[symbols.state.totalPatientInsurances] = number
-  },
-  [symbols.mutations.totalSubPatients] (state, number) {
-    state[symbols.state.totalSubPatients] = number
-  },
-  [symbols.mutations.rejectedClaimsForCurrentPatient] (state, data) {
-    state[symbols.state.rejectedClaimsForCurrentPatient] = data
+  [symbols.mutations.clearPatientData] (state) {
+    state[symbols.mutations.allergen] = 0
+    state[symbols.state.medicare] = 0
+    state[symbols.state.premedCheck] = 0
+    state[symbols.state.patientName] = ''
+    state[symbols.state.displayAlert] = false
+    state[symbols.state.headerTitle] = ''
+    state[symbols.state.headerAlertText] = ''
+    state[symbols.state.questionnaireStatuses] = {
+      symptoms: 0,
+      treatments: 0,
+      history: 0
+    }
+    state[symbols.state.isEmailBounced] = false
+    state[symbols.state.totalPatientContacts] = 0
+    state[symbols.state.totalPatientInsurances] = 0
+    state[symbols.state.totalSubPatients] = 0
+    state[symbols.state.rejectedClaimsForCurrentPatient] = []
+    state[symbols.state.patientHomeSleepTestStatus] = ''
+    state[symbols.state.incompleteHomeSleepTests] = []
   }
 }

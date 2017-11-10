@@ -1,15 +1,14 @@
 import symbols from '../../../symbols'
-import PatientTaskMenuComponent from '../tasks/PatientTaskMenu.vue'
-import TaskMenuComponent from '../tasks/TaskMenu.vue'
-import PatientDataComponent from './PatientData.vue'
 import { LEGACY_URL } from '../../../constants/main'
 import LocationWrapper from '../../../wrappers/LocationWrapper'
+import PatientHeaderComponent from '../patients/PatientHeader.vue'
+import TaskMenuComponent from '../tasks/TaskMenu.vue'
+import WelcomeTextComponent from './WelcomeText.vue'
 
 export default {
   data () {
     return {
       legacyUrl: LEGACY_URL,
-      username: this.$store.state.main[symbols.state.userInfo].username,
       patientId: this.$store.state.main[symbols.state.patientId],
       showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings]
     }
@@ -20,9 +19,9 @@ export default {
     }
   },
   components: {
+    patientHeader: PatientHeaderComponent,
     taskMenu: TaskMenuComponent,
-    patientTaskMenu: PatientTaskMenuComponent,
-    patientData: PatientDataComponent
+    welcomeText: WelcomeTextComponent
   },
   created () {
     this.$store.dispatch(symbols.actions.companyLogo)

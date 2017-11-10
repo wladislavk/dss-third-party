@@ -26,15 +26,25 @@ export default {
     if (to.params.hasOwnProperty('pid')) {
       toPatientId = parseInt(to.params.pid)
     }
+    if (!toPatientId) {
+      this.clearPatientData()
+      return
+    }
     let fromPatientId = 0
     if (from.params.hasOwnProperty('pid')) {
       fromPatientId = parseInt(from.params.pid)
     }
     if (toPatientId !== fromPatientId) {
-      this.$store.dispatch(symbols.actions.patientData, toPatientId)
-      this.$store.dispatch(symbols.actions.healthHistoryForPatient, toPatientId)
-      this.$store.dispatch(symbols.actions.incompleteHomeSleepTests, toPatientId)
+      this.updatePatientData(toPatientId)
     }
     next()
+  },
+  methods: {
+    updatePatientData (patientId) {
+      this.$store.dispatch(symbols.actions.patientData, patientId)
+    },
+    clearPatientData () {
+      this.$store.dispatch(symbols.actions.clearPatientData)
+    }
   }
 }

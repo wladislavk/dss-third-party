@@ -5,7 +5,7 @@ import MainModule from '../../../src/store/main'
 import TestCase from '../../cases/StoreTestCase'
 import SwalWrapper from '../../../src/wrappers/SwalWrapper'
 import http from '../../../src/services/http'
-import storage from '../../../src/modules/storage'
+import LocalStorageManager from '../../../src/services/LocalStorageManager'
 import endpoints from '../../../src/endpoints'
 import RouterKeeper from '../../../src/services/RouterKeeper'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
@@ -202,7 +202,7 @@ describe('Main module actions', () => {
   describe('handleErrors action', () => {
     it('handles 401 error code', function () {
       const dataRemoved = []
-      this.sandbox.stub(storage, 'remove').callsFake((argument) => {
+      this.sandbox.stub(LocalStorageManager, 'remove').callsFake((argument) => {
         dataRemoved.push(argument)
       })
       const routes = []

@@ -9,7 +9,6 @@ export default {
 
       if (!requiredFunction) {
         const scriptElement = document.createElement('script')
-        scriptElement.type = 'text/javascript'
         scriptElement.src = path
         scriptElement.async = true
 

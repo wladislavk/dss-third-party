@@ -85,7 +85,9 @@ describe('Dashboard module actions', () => {
       const expectedMutations = [
         {
           type: symbols.mutations.modal,
-          payload: 'device-selector'
+          payload: {
+            name: 'device-selector'
+          }
         }
       ]
       expect(this.testCase.mutations).toEqual(expectedMutations)

@@ -1,5 +1,6 @@
 import symbols from '../../../symbols'
-import { LEGACY_URL, DSS_CONSTANTS, NOT_ACCEPTED_UPDATE, PREAUTH_STATUS_LABELS } from '../../../constants/main'
+import { LEGACY_URL, NOT_ACCEPTED_UPDATE } from '../../../constants/main'
+import PatientIncompleteHstComponent from './PatientIncompleteHst.vue'
 
 export default {
   props: {
@@ -12,9 +13,6 @@ export default {
     return {
       legacyUrl: LEGACY_URL,
       incompleteHomeSleepTests: this.$store.state.main[symbols.state.incompleteHomeSleepTests],
-      scheduledHst: DSS_CONSTANTS.DSS_HST_SCHEDULED,
-      rejectedHst: DSS_CONSTANTS.DSS_HST_REJECTED,
-      preauthLabels: PREAUTH_STATUS_LABELS,
       profileUpdateText: this.getUpdateText('profile'),
       questionnaireUpdateText: this.getUpdateText('questionnaire')
     }
@@ -33,13 +31,8 @@ export default {
       return this.$store.state.main[symbols.state.rejectedClaimsForCurrentPatient]
     }
   },
-  created () {
-    this.$store.dispatch(symbols.actions.rejectedClaimsForCurrentPatient, this.patientId)
-    this.$store.dispatch(symbols.actions.patientContacts, this.patientId)
-    this.$store.dispatch(symbols.actions.patientInsurances, this.patientId)
-    this.$store.dispatch(symbols.actions.subPatients, this.patientId)
-    this.$store.dispatch(symbols.actions.questionnaireStatuses, this.patientId)
-    this.$store.dispatch(symbols.actions.bouncedEmailsNumber, this.patientId)
+  components: {
+    patientIncompleteHst: PatientIncompleteHstComponent
   },
   methods: {
     getUpdateText (replacement) {

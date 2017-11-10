@@ -31,14 +31,6 @@ span.warning-buttons a {
   margin-top: 8px;
 }
 
-span.welcome-text {
-  line-height: 38px;
-  margin-right: 10px;
-  font-size: 20px;
-  color: #fff;
-  float: right;
-}
-
 div.clear {
   clear: both;
 }
@@ -62,10 +54,6 @@ a.logo-link {
   float: left;
   padding-left: 100px;
   color: #fff;
-}
-
-.suckertreemenu {
-  height: 27px;
 }
 
 div.patient-data-wrapper {

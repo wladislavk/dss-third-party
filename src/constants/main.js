@@ -111,12 +111,12 @@ export const TRANSACTION_PAYER_LABELS = {
   [DSS_CONSTANTS.DSS_TRXN_PAYER_DISCOUNT]: 'Professional Discount'
 }
 
-export const PREAUTH_STATUS_LABELS = [
-  'Pending',
-  'Complete',
-  'Pre-Auth Pending',
-  'Rejected'
-]
+export const PREAUTH_STATUS_LABELS = {
+  [DSS_CONSTANTS.DSS_PREAUTH_PENDING]: 'Pending',
+  [DSS_CONSTANTS.DSS_PREAUTH_COMPLETE]: 'Complete',
+  [DSS_CONSTANTS.DSS_PREAUTH_PREAUTH_PENDING]: 'Pre-Auth Pending',
+  [DSS_CONSTANTS.DSS_PREAUTH_REJECTED]: 'Rejected'
+}
 
 export const REFERRED_LABELS = [
   '',

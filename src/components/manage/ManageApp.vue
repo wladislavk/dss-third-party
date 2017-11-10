@@ -6,13 +6,9 @@
             </tr>
             <tr>
                 <td valign="top" height="400">
-                    <!-- @todo: re-enable the component after refactoring and testing -->
-                    <!--<header-component></header-component>-->
+                    <common-header></common-header>
                     <div id="contentMain">
                         <div style="clear:both;"></div>
-                        <!-- @todo: re-enable the component after refactoring and testing -->
-                        <!--<patient-data></patient-data>-->
-                        <!-- Router content -->
                         <router-view></router-view>
                     </div>
                     <common-footer></common-footer>

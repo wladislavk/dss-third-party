@@ -42,10 +42,7 @@ export default {
     return false
   },
   [symbols.getters.showWarningAboutBouncedEmails] (state) {
-    if (state[symbols.state.bouncedEmailsNumberForCurrentPatient] > 0) {
-      return true
-    }
-    return false
+    return state[symbols.state.isEmailBounced]
   },
   [symbols.getters.showWarningAboutQuestionnaireChanges] (state) {
     if (state[symbols.state.totalSubPatients]) {

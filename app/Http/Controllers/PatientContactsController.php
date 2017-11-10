@@ -135,21 +135,4 @@ class PatientContactsController extends BaseRestController
     {
         return parent::destroy($id);
     }
-
-    /**
-     * @SWG\Post(
-     *     path="/patient-contacts/current",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getCurrent(Request $request)
-    {
-        $patientId = $request->input('patientId', 0);
-        $data = $this->repository->getCurrent($this->user->docid, $patientId);
-
-        return ApiResponse::responseOk('', $data);
-    }
 }

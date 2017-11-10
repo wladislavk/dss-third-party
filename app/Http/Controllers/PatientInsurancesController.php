@@ -3,8 +3,6 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientInsuranceRepository;
-use DentalSleepSolutions\Facades\ApiResponse;
-use Illuminate\Http\Request;
 
 class PatientInsurancesController extends BaseRestController
 {
@@ -137,22 +135,5 @@ class PatientInsurancesController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/patient-insurances/current",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getCurrent(Request $request)
-    {
-        $patientId = $request->input('patientId', 0);
-        $data = $this->repository->getCurrent($this->user->docid, $patientId);
-
-        return ApiResponse::responseOk('', $data);
     }
 }

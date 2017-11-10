@@ -3,6 +3,7 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use Tests\TestCases\ApiTestCase;
+use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 
 class PatientsApiTest extends ApiTestCase
 {
@@ -104,14 +105,6 @@ class PatientsApiTest extends ApiTestCase
             'add1'      => 'some address',
             'userid'    => 253,
         ];
-    }
-
-    public function testGetWithFilter()
-    {
-        $this->post(self::ROUTE_PREFIX . '/patients/with-filter');
-        $this->assertResponseOk();
-        $this->assertEquals(147, count($this->getResponseData()));
-        $this->assertEquals(1, $this->getResponseData()[0]['patientid']);
     }
 
     public function testGetListPatients()
@@ -247,10 +240,43 @@ class PatientsApiTest extends ApiTestCase
         $newPatient = factory($this->getModel())->create();
         $primaryKey = $this->model->getKeyName();
         $this->post(self::ROUTE_PREFIX . '/patients/temp-pin-document/' . $newPatient->$primaryKey);
-        var_dump($this->response->getContent());
         $this->assertResponseOk();
         $expected = [
             'path_to_pdf' => '',
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testGetPatientData()
+    {
+        $patientId = 170;
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        $this->get(self::ROUTE_PREFIX . '/patients/data/' . $patientId);
+        $this->assertResponseOk();
+        $expected = [
+            'insurance_type' => '5',
+            'premed' => 'Amoxil-Knee Replacement',
+            'premedcheck' => 1,
+            'alert_text' => '',
+            'display_alert' => 0,
+            'firstname' => 'Pat',
+            'lastname' => 'Smith',
+            'patient_contacts_number' => 0,
+            'patient_insurances_number' => 0,
+            'sub_patients_number' => 0,
+            'is_email_bounced' => 0,
+            'rejected_claims' => [],
+            'questionnaire_data' => [
+                'symptoms_status' => 3,
+                'treatments_status' => 3,
+                'history_status' => 3,
+            ],
+            'other_allergens' => '',
+            'has_allergen' => 0,
+            'hst_status' => 99,
+            'incomplete_hsts' => [],
         ];
         $this->assertEquals($expected, $this->getResponseData());
     }

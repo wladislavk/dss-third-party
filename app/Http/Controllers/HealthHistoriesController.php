@@ -247,24 +247,4 @@ class HealthHistoriesController extends BaseRestController
     {
         return parent::destroy($id);
     }
-
-    /**
-     * @SWG\Post(
-     *     path="/health-histories/with-filter",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * Get health histories by filter.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getWithFilter(Request $request)
-    {
-        $fields = $request->input('fields', []);
-        $where  = $request->input('where', []);
-
-        $healthHistories = $this->repository->getWithFilter($fields, $where);
-
-        return ApiResponse::responseOk('', $healthHistories);
-    }
 }

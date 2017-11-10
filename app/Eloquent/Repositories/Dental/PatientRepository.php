@@ -62,6 +62,20 @@ class PatientRepository extends AbstractRepository
     }
 
     /**
+     * @param int $patientId
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function getNumberByPatient($patientId)
+    {
+        return $this->model
+            ->select(\DB::raw('COUNT(p.patientid) AS total'))
+            ->from(\DB::raw('dental_patients p'))
+            ->where('p.parent_patientid', $patientId)
+            ->first()
+        ;
+    }
+
+    /**
      * @param int $docId
      * @return \Illuminate\Database\Eloquent\Model|null
      */

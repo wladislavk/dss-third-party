@@ -312,24 +312,6 @@ class InsurancesController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/insurances/rejected",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getRejected(Request $request)
-    {
-        $patientId = $request->input('patientId', 0);
-
-        $data = $this->repository->getRejected($patientId);
-
-        return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @SWG\Post(
      *     path="/insurances/remove-claim",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )

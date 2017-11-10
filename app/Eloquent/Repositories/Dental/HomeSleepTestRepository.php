@@ -7,6 +7,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\HomeSleepTest;
 use DentalSleepSolutions\Eloquent\Models\Dental\ScreenerEpworth;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class HomeSleepTestRepository extends AbstractRepository
 {
@@ -17,9 +18,9 @@ class HomeSleepTestRepository extends AbstractRepository
 
     /**
      * @param int $patientId
-     * @return mixed
+     * @return HomeSleepTest[]|Collection
      */
-    public function getUncompleted($patientId)
+    public function getIncomplete($patientId)
     {
         return $this->model
             ->where(function (Builder $query) {

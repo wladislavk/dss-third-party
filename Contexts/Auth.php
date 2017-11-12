@@ -53,8 +53,11 @@ class Auth extends BaseContext
      */
     public function testSeeWelcomeText($user)
     {
-        $this->reloadStartPage();
+        if (SUT_HOST != 'vue') {
+            $this->reloadStartPage();
+        }
 
+        $this->wait(self::SHORT_WAIT_TIME);
         $welcomeDiv = $this->findCss('div.suckertreemenu');
         Assert::assertNotNull($welcomeDiv);
         Assert::assertContains('Welcome ' . $user, $welcomeDiv->getText());

@@ -74,6 +74,7 @@ class CommonElements extends BaseContext
         Assert::assertNotNull($list);
         $patients = $this->findAllCss('li.json_patient', $list);
         $expectedPatients = array_column($table->getHash(), 'name');
+        Assert::assertEquals(sizeof($expectedPatients), sizeof($patients));
         foreach ($expectedPatients as $key => $expectedPatient) {
             $patient = $this->sanitizeText($patients[$key]->getText());
             Assert::assertEquals($expectedPatient, $patient);

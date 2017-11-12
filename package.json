@@ -5,6 +5,6 @@
   "author": "<wladislav.k@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "phantomjs-prebuilt": "^2.1.14"
+    "phantomjs-prebuilt": "^2.1.16"
   }
 }

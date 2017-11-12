@@ -11,5 +11,4 @@
 
 <script src="./DashboardMessages.js"></script>
 
-<style src="../../../assets/css/manage/task-menu.css" scoped></style>
-<style src="../../../assets/css/manage/dashboard/dashboard-root.css" scoped></style>
+<style src="../../../assets/css/manage/tasks/task-menu.css" scoped></style>

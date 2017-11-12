@@ -9,19 +9,7 @@ export default {
   },
   computed: {
     showOnlineCEAndSnoozleHelp: function () {
-      if (this.$store.getters[symbols.getters.isUserDoctor]) {
-        if (this.$store.state.main[symbols.state.userInfo].useCourse === 1) {
-          return true
-        }
-        return false
-      }
-      if (
-        this.$store.state.main[symbols.state.courseStaff].useCourse === 1 &&
-        this.$store.state.main[symbols.state.courseStaff].useCourseStaff === 1
-      ) {
-        return true
-      }
-      return false
+      return this.$store.getters[symbols.getters.shouldShowGetCE]
     }
   },
   methods: {

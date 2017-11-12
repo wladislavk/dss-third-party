@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-on:click="hideSearchHints()">
         <modal-root></modal-root>
         <router-view></router-view>
     </div>

@@ -22,11 +22,4 @@
 
 <script src="./ManageApp.js"></script>
 
-<style src="../../assets/css/manage/admin.css" scoped></style>
-<style src="../../assets/css/manage/notifications.css" scoped></style>
-<style src="../../assets/css/manage/search-hints.css" scoped></style>
-<style src="../../assets/css/manage/top.css" scoped></style>
-<style src="../../assets/css/manage/letter-form.css" scoped></style>
-<style src="../../assets/css/manage/form.css" scoped></style>
-<style src="../../../node_modules/sweetalert/dist/sweetalert.css" scoped></style>
-<style src="../../../node_modules/mint-ui/lib/style.css" scoped></style>
+<style src="../../assets/css/manage/app.css" scoped></style>

@@ -70,5 +70,7 @@ export default {
   [symbols.state.isEmailBounced]: false,
   [symbols.state.totalPatientContacts]: 0,
   [symbols.state.totalPatientInsurances]: 0,
-  [symbols.state.rejectedClaimsForCurrentPatient]: []
+  [symbols.state.rejectedClaimsForCurrentPatient]: [],
+  [symbols.state.showSearchHints]: false,
+  [symbols.state.patientSearchList]: []
 }

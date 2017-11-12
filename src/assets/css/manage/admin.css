@@ -20,13 +20,8 @@ a, a:hover {
 body.solid {
   background: #00457C;
 }
-td {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  color: #000000;
-  text-decoration: none;
-}
-td.highlight{
+
+td.highlight {
   background-color: #AAAAFF;
 }
 
@@ -48,7 +43,7 @@ td.highlight{
   padding-left: 5px;
 }
 
-ul, ol {
+ol {
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -1011,7 +1006,7 @@ td.status_3 {
   color: #00f;
 }
 
-.button, .addButton {
+.addButton {
   border: 0;
   border-top: 1px solid #464747;
   background: #5c8cb7;
@@ -1031,13 +1026,15 @@ td.status_3 {
   font-weight: bold;
   cursor: pointer;
 }
-.button:hover, .addButton:hover {
+
+.addButton:hover {
   border-top-color: #174d7c;
   background: #174d7c;
   color: #ffffff;
   text-decoration: none;
 }
-.button:active, .addButton:active {
+
+.addButton:active {
   border-top-color: #1f303b;
   background: #1f303b;
 }

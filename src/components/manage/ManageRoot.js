@@ -1,4 +1,5 @@
 import ModalRootComponent from './modal/ModalRoot.vue'
+import symbols from '../../symbols'
 
 export default {
   components: {
@@ -6,5 +7,10 @@ export default {
   },
   created () {
     document.body.className += ' main-template'
+  },
+  methods: {
+    hideSearchHints () {
+      this.$store.commit(symbols.mutations.hideSearchHints)
+    }
   }
 }

@@ -28,7 +28,10 @@ export default {
     const userId = rootState.main[symbols.state.userInfo].plainUserId
     const docId = rootState.main[symbols.state.userInfo].docId
     if (userId === docId) {
-      return true
+      if (rootState.main[symbols.state.userInfo].useCourse === 1) {
+        return true
+      }
+      return false
     }
     const useCourse = rootState.main[symbols.state.courseStaff].useCourse
     const useCourseStaff = rootState.main[symbols.state.courseStaff].useCourseStaff

@@ -1,9 +1,11 @@
 import symbols from '../../symbols'
 import HeaderComponent from './common/CommonHeader.vue'
+import FooterComponent from './common/CommonFooter.vue'
 
 export default {
   components: {
-    headerComponent: HeaderComponent
+    commonHeader: HeaderComponent,
+    commonFooter: FooterComponent
   },
   created () {
     this.$store.dispatch(symbols.actions.userInfo).then(() => {
@@ -18,7 +20,7 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next((vm) => {
-      vm.$store.dispatch(symbols.actions.storeLoginDetails, this.$route.query)
+      vm.$store.dispatch(symbols.actions.storeLoginDetails, vm.$route.query)
     })
   },
   beforeRouteUpdate (to, from, next) {
@@ -28,6 +30,7 @@ export default {
     }
     if (!toPatientId) {
       this.clearPatientData()
+      next()
       return
     }
     let fromPatientId = 0

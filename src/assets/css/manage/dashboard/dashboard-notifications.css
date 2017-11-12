@@ -1,0 +1,26 @@
+a:link, a:visited {
+  text-decoration: none;
+}
+
+a, a:hover {
+  color: #095D81;
+}
+
+h3 {
+  font-family: "Times", serif;
+  color: #095D81;
+  font-size: 32px;
+  width: 100%;
+  text-align: center;
+  margin-top: 0;
+}
+
+.warning a.close_but {
+	float: right;
+	color: #fff;
+}
+
+.warning a.close_but:hover {
+  color: #c11;
+	text-decoration: none;
+}

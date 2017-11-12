@@ -31,4 +31,4 @@
 
 <script src="./NavigationElement.js"></script>
 
-<style src="../../../assets/css/manage/homesuckertreemenu.css" scoped></style>
+<style src="../../../assets/css/manage/dashboard/navigation-element.css" scoped></style>

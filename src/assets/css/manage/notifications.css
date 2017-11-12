@@ -1,9 +1,0 @@
-.warning a.close_but {
-	float: right;
-	color: #fff;
-}
-
-.warning a.close_but:hover {
-  color: #c11;
-	text-decoration: none;
-}

@@ -6,7 +6,7 @@
             </li>
             <li class="header_support" v-bind:class="{'pending': supportTicketsNumber}">
                 <a v-bind:href="legacyUrl + 'support.php'">
-                    Support&nbsp;
+                    Support
                     <span v-if="supportTicketsNumber">({{ supportTicketsNumber }})</span>
                 </a>
             </li>

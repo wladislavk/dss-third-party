@@ -1,0 +1,13 @@
+td {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+
+td a {
+  text-decoration: none;
+}
+
+#contentMain {
+  background: url(../../images/dss_03.jpg) repeat-y top left #FFFFFF;
+  width: 100%;
+}

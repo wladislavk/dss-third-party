@@ -40,10 +40,18 @@ li {
   display: block;
   width: 10px;
   height: 10px;
-  background: url(../../images/delete.png) no-repeat 0 0;
+  background: url(../../../images/delete.png) no-repeat 0 0;
   float: left;
   margin-right: 4px;
   margin-top: 1px;
+}
+
+a:link, a:visited {
+  text-decoration: none;
+}
+
+a, a:hover {
+  color: #095D81;
 }
 
 a.task_view_all {

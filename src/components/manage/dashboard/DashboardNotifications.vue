@@ -2,35 +2,11 @@
     <div>
         <h3>Notifications</h3>
         <template v-for="notification in notifications" v-if="resolveCondition(notification.shouldParse)">
-            <div class="notsuckertreemenu" v-if="notification.hasOwnProperty('children') && notification.children.length">
-                <ul id="notmenu">
-                    <li>
-                        <notification-link
-                            v-bind:link-count="notification.number"
-                            v-bind:link-label="notification.label"
-                            v-bind:link-url="notification.link"
-                            v-bind:count-zero-class="notification.countZero"
-                            v-bind:count-non-zero-class="notification.countNonZero"
-                            v-bind:has-children="true"
-                        ></notification-link>
-                        <ul>
-                            <li
-                                v-for="notificationChild in notification.children"
-                                v-if="resolveCondition(notificationChild.shouldParse)"
-                            >
-                                <notification-link
-                                    v-bind:link-count="notificationChild.number"
-                                    v-bind:link-label="notificationChild.label"
-                                    v-bind:link-url="notificationChild.link"
-                                    v-bind:count-zero-class="notificationChild.countZero"
-                                    v-bind:count-non-zero-class="notificationChild.countNonZero"
-                                    v-bind:show-all="showAll"
-                                ></notification-link>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+            <notification-branch
+                v-if="notification.hasOwnProperty('children') && notification.children.length"
+                v-bind:notification="notification"
+                v-bind:show-all="showAll"
+            ></notification-branch>
             <notification-link
                 v-else
                 v-bind:link-count="notification.number"
@@ -39,6 +15,7 @@
                 v-bind:count-zero-class="notification.countZero"
                 v-bind:count-non-zero-class="notification.countNonZero"
                 v-bind:show-all="showAll"
+                v-bind:key="notification.label"
             ></notification-link>
         </template>
 
@@ -49,7 +26,4 @@
 
 <script src="./DashboardNotifications.js"></script>
 
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/homesuckertreemenu.css" scoped></style>
-<style src="../../../assets/css/manage/notifications.css" scoped></style>
-<style src="../../../assets/css/manage/dashboard/dashboard-root.css" scoped></style>
+<style src="../../../assets/css/manage/dashboard/dashboard-notifications.css" scoped></style>

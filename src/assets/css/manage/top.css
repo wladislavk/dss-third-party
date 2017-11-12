@@ -10,11 +10,6 @@
   height: auto;
 }
 
-#patient_search_div {
-  float: left;
-  margin: 25px 5px 0 0;
-}
-
 #patient_nav {
   background: #fed68d;
   height: 30px;
@@ -100,8 +95,4 @@
   margin: 20px;
   background: #fff;
   color: #000;
-}
-
-#contentMain {
-  background: url(../../images/dss_03.jpg) repeat-y top left #FFFFFF;
 }

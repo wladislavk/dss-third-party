@@ -1,5 +1,6 @@
 .suckertreemenu {
   height: 27px;
+  z-index: 5000;
 }
 
 span.welcome-text {

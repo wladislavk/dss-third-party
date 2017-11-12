@@ -1,9 +1,10 @@
 <template>
     <form>
-        <div id="patient_search_div">
+        <div id="patient_search_div" class="patient_search_div">
             <input
                 type="text"
                 id="patient_search"
+                class="patient_search"
                 placeholder="Patient Search"
                 v-bind:model="inputValue"
                 name="q"
@@ -12,9 +13,10 @@
                 v-on:keyup="patientNameKeyUp($event)"
             />
             <br />
-            <div id="search_hints" class="search_hints" style="display: inline" v-show="showSearchHints">
+            <div id="search_hints" class="search_hints" v-show="showSearchHints">
                 <ul
                     id="patient_list"
+                    class="search_list"
                     v-show="patientList.length"
                 >
                     <li
@@ -23,7 +25,6 @@
                         v-on:mouseover="patientListMouseOver(index, patient.patientType)"
                         v-on:mouseout="patientListMouseOut(patient.patientType)"
                         v-on:click="patientListClick(patient)"
-                        v-on:keyup="patientListKeyUp(patient.link, $event)"
                         v-bind:style="{ 'cursor': cursor }"
                         v-bind:class="{
                            'no_matches': patient.patientType === 'no',
@@ -39,3 +40,5 @@
 </template>
 
 <script src="./PatientSearch.js"></script>
+
+<style src="../../../assets/css/manage/common/patient-search.css" scoped></style>

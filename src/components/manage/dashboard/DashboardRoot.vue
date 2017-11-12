@@ -1,5 +1,6 @@
 <template>
     <div>
+        <br />
         <table id="dashboard" v-if="homepage === 1">
             <tr>
                 <td valign="top" class="main_cell">

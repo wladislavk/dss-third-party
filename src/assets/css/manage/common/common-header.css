@@ -1,3 +1,7 @@
+a:link, a:visited {
+  text-decoration: none;
+}
+
 div.dashboard-link {
   margin-top: 10px;
   margin-left: 20px;

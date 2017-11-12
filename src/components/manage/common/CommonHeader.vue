@@ -21,6 +21,7 @@
         <div class="body-image" v-else>
             <div class="patient-menus">
                 <welcome-text></welcome-text>
+                <div class="clear"></div>
             </div>
         </div>
     </div>

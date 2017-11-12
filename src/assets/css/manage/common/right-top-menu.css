@@ -35,6 +35,10 @@ li.header_support {
   background: url(../../../images/support_button_blue.png) no-repeat 0 8px;
 }
 
+li.header_support a {
+  color: #fff !important;
+}
+
 li.header_support:hover {
   background: url(../../../images/support_button_blue_hover.png) no-repeat 0 8px;
 }
@@ -42,10 +46,7 @@ li.header_support:hover {
 li.pending {
   background: url(../../../images/support_button_red.png) no-repeat 0 8px;
 }
+
 li.pending:hover {
   background: url(../../../images/support_button_red_hover.png) no-repeat 0 8px;
-}
-
-li.header_support a {
-  color: #fff;
 }

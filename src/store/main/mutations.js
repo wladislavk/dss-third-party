@@ -46,6 +46,9 @@ export default {
   [symbols.mutations.userInfo] (state, userInfo) {
     state[symbols.state.userInfo] = userInfo
   },
+  [symbols.mutations.patientSearchList] (state, data) {
+    state[symbols.state.patientSearchList] = data
+  },
   [symbols.mutations.modal] (state, payload) {
     const componentName = payload.name
     let params = {}
@@ -129,5 +132,11 @@ export default {
     state[symbols.state.rejectedClaimsForCurrentPatient] = []
     state[symbols.state.patientHomeSleepTestStatus] = ''
     state[symbols.state.incompleteHomeSleepTests] = []
+  },
+  [symbols.mutations.showSearchHints] (state) {
+    state[symbols.state.showSearchHints] = true
+  },
+  [symbols.mutations.hideSearchHints] (state) {
+    state[symbols.state.showSearchHints] = false
   }
 }

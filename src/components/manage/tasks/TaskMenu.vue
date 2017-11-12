@@ -57,5 +57,4 @@
 
 <script src="./TaskMenu.js"></script>
 
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/task-menu.css" scoped></style>
+<style src="../../../assets/css/manage/tasks/task-menu.css" scoped></style>

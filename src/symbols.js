@@ -11,7 +11,7 @@ export default {
     docInfo: 'DOC_INFO',
     doctorName: 'DOCTOR_NAME',
     documentCategories: 'DOCUMENT_CATEGORIES',
-    deviceGuideResults: 'DEVICE_GUIDE',
+    deviceGuideResults: 'DEVICE_GUIDE_RESULTS',
     deviceGuideSettingOptions: 'DEVICE_GUIDE_SETTING_OPTIONS',
     epworthOptions: 'EPWORTH_OPTIONS',
     epworthProps: 'EPWORTH_PROPS',
@@ -72,6 +72,7 @@ export default {
     docInfo: 'DOC_INFO',
     doctorName: 'DOCTOR_NAME',
     documentCategories: 'DOCUMENT_CATEGORIES',
+    deviceGuideResults: 'DEVICE_GUIDE_RESULTS',
     deviceGuideSettingOptions: 'DEVICE_GUIDE_SETTING_OPTIONS',
     epworthWeight: 'EPWORTH_WEIGHT',
     headerAlertText: 'HEADER_ALERT_TEXT',
@@ -117,6 +118,7 @@ export default {
     exportMDModal: 'EXPORT_MD_MODAL',
     getCompanyData: 'GET_COMPANY_DATA',
     getDoctorData: 'GET_DOCTOR_DATA',
+    getDeviceGuideResults: 'GET_DEVICE_GUIDE_RESULTS',
     getDeviceGuideSettingOptions: 'GET_DEVICE_GUIDE_SETTING_OPTIONS',
     handleErrors: 'HANDLE_ERRORS',
     healthHistoryForPatient: 'HEALTH_HISTORY_FOR_PATIENT',
@@ -127,12 +129,14 @@ export default {
     patientData: 'PATIENT_DATA',
     retrieveTasks: 'RETRIEVE_TASKS',
     retrieveTasksForPatient: 'RETRIEVE_TASKS_FOR_PATIENT',
+    resetDeviceGuideSettingOptions: 'RESET_DEVICE_GUIDE_SETTING_OPTIONS',
     setCurrentContact: 'SET_CURRENT_CONTACT',
     setEpworthProps: 'SET_EPWORTH_PROPS',
     setSessionData: 'SET_SESSION_DATA',
     submitScreener: 'SUBMIT_SCREENER',
     submitHst: 'SUBMIT_HST',
-    userInfo: 'USER_INFO'
+    userInfo: 'USER_INFO',
+    updateFlowDevice: 'UPDATE_FLOW_DEVICE'
   },
   populators: {
     populateClaims: 'POPULATE_CLAIMS'

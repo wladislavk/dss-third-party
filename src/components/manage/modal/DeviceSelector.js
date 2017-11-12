@@ -101,80 +101,32 @@ export default {
       this.showInstructions = false
     },
     onDeviceSubmit () {
-      const data = {
-        settings: {}
-      }
-
-      this.deviceGuideSettingOptions.forEach((element) => {
-        const settingObj = {}
-
-        if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
-          settingObj['checked'] = element.checkedOption + 1
-        } else {
-          settingObj['checked'] = element.checked
-        }
-
-        if (element.hasOwnProperty('checkedImp') && element.checkedImp) {
-          settingObj['checkedImp'] = element.checkedImp
-        }
-
-        data.settings[element.id] = settingObj
-      })
-
-      this.getDeviceGuideResults(data).then((response) => {
-        const data = response.data.data
-
-        if (data) {
-          this.deviceGuideResults = data
-        }
-      }).catch((response) => {
-        this.$store.dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideResults', response: response})
-      })
+      this.$store.dispatch(symbols.actions.getDeviceGuideResults)
     },
-    updateDevice (device, name) {
-      if (this.id && this.patientId) {
-        const confirmText = 'Do you want to select ' + name + ' for ' + this.currentPatient.firstname + ' ' + this.currentPatient.lastname
-        if (Alerter.isConfirmed(confirmText)) {
-          this.updateFlowDevice(device).then((response) => {
-            const data = response.data.data
-
-            if (data) {
-              // parent.updateDentalDevice(valId, device)
-              // TODO: need find out what is valId
-              parent.updateDentalDevice(0, device)
-              parent.disablePopupClean()
-            }
-          }).catch((response) => {
-            this.$store.dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
-          })
-        }
+    updateDevice (deviceId, name) {
+      if (this.patientName.length === 0) {
+        return
       }
+
+      const CONFIRM_TEXT = `Do you want to select ${name} for ${this.patientName}`
+
+      if (!Alerter.isConfirmed(CONFIRM_TEXT)) {
+        return
+      }
+
+      this.$store.dispatch(symbols.actions.updateFlowDevice, deviceId).then(response => {
+        // TODO: current modal may be used not only for the dashboard.
+        // it seems that next logic may be required for other callers of the modal
+        // parent.updateDentalDevice(patientId, deviceId)
+
+        // TODO: disable the modal
+        // parent.disablePopupClean()
+      }).catch(response => {
+        this.$store.dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
+      })
     },
     onClickReset () {
-      this.deviceGuideSettingOptions.forEach((element) => {
-        element.checkedOption = 0
-
-        if (parseInt(element.setting_type) === window.constants.DSS_DEVICE_SETTING_TYPE_RANGE) {
-          element.checkedImp = 0
-        } else {
-          element.checked = 0
-        }
-      })
-
-      this.deviceGuideResults = []
-    },
-    getDeviceGuideResults (data) {
-      return http.post(endpoints.guideDevices.withImages, data)
-    },
-    updateFlowDevice (device) {
-      const data = {
-        id: this.id,
-        device: device,
-        pid: this.patientId
-      }
-
-      // @todo: check the endpoint
-      return http.post('/', data)
+      this.$store.dispatch(symbols.actions.resetDeviceGuideSettingOptions)
     }
   }
 }

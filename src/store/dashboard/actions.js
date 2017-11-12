@@ -98,5 +98,58 @@ export default {
 
       commit(symbols.mutations.deviceGuideSettingOptions, data)
     })
+  },
+  [symbols.actions.getDeviceGuideResults] ({commit, dispatch, state, rootState}) {
+    let data = { settings: {} }
+
+    state[symbols.state.guideSettingOptions].forEach(el => {
+      if (el.hasOwnProperty('checkedImp') && el.checkedImp) {
+        data.settings[el.id]['checkedImp'] = el.checkedImp
+      }
+
+      if (el.hasOwnProperty('checkedOption')) {
+        data.settings[el.id]['checked'] = el.checkedOption + 1
+        return
+      }
+
+      data.settings[el.id]['checked'] = el.checked
+    })
+
+    http.token = rootState.main[symbols.state.mainToken]
+    http.post(endpoints.guideDevices.withImages, data).then(response => {
+      const data = response.data.data
+
+      commit(symbols.mutations.deviceGuideResults, data)
+    }).catch(response => {
+      dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideResults', response: response})
+    })
+  },
+  [symbols.actions.updateFlowDevice] ({state, rootState}, deviceId) {
+    const data = {
+      // rootState.main[symbols.patient.pid]
+      id: 0,
+      pid: 0,
+      device: deviceId
+    }
+
+    http.token = rootState.main[symbols.state.mainToken]
+    return http.post('', data)
+  },
+  [symbols.actions.resetDeviceGuideSettingOptions] ({commit, state}) {
+    const data = JSON.parse(JSON.stringify(state[symbols.state.deviceGuideSettingOptions]))
+
+    data.forEach(el => {
+      el.checkedOption = 0
+
+      if (+el.setting_type === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {
+        el.checkedImp = 0
+        return
+      }
+
+      el.checked = 0
+    })
+
+    commit(symbols.mutations.deviceGuideSettingOptions, data)
+    commit(symbols.mutations.deviceGuideResults, [])
   }
 }

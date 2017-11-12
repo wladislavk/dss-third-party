@@ -126,39 +126,48 @@ class PatientRepository extends AbstractRepository
 
     /**
      * @param int $docId
-     * @param array $names
+     * @param string[] $names
      * @return array|\Illuminate\Database\Eloquent\Collection
      */
     public function getListPatients($docId, array $names)
     {
         $defaultNames = ['', '', ''];
-        $names = array_merge($defaultNames, $names);
+        $names = array_replace($defaultNames, $names);
 
-        return $this->model
+        $rawQuery = $this->model
             ->select(\DB::raw('p.patientid, p.lastname, p.firstname, p.middlename, s.patient_info'))
             ->from(\DB::raw('dental_patients p'))
             ->leftJoin(\DB::raw('dental_patient_summary s'), 'p.patientid', '=', 's.pid')
             ->where(function (Builder $query) use ($names) {
                 /** @var Builder|QueryBuilder $queryBuilder */
                 $queryBuilder = $query;
+                $bindings = [
+                    $names[0] . '%', $names[1] . '%', $names[2] . '%',
+                ];
                 $queryBuilder
                     ->where(function (Builder $query) use ($names) {
                         /** @var Builder|QueryBuilder $queryBuilder */
                         $queryBuilder = $query;
+                        $firstBinding = [
+                            $names[0] . '%', $names[0] . '%',
+                        ];
+                        $secondBinding = [
+                            $names[1] . '%', $names[1] . '%',
+                        ];
                         $queryBuilder
-                            ->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", [$names[0] . '%', $names[0] . '%'])
-                            ->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", [$names[1] . '%', $names[1] . '%'])
+                            ->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", $firstBinding)
+                            ->whereRaw("(lastname LIKE ? OR firstname LIKE ?)", $secondBinding)
                         ;
                     })
-                    ->orWhereRaw("(firstname LIKE ? AND middlename LIKE ? AND lastname LIKE ?)", [$names[0] . '%', $names[1] . '%', $names[2] . '%'])
+                    ->orWhereRaw("(firstname LIKE ? AND middlename LIKE ? AND lastname LIKE ?)", $bindings)
                 ;
             })
             ->where('p.status', '=', 1)
             ->where('docid', '=', $docId)
             ->orderBy('lastname')
             ->take(self::LIST_PATIENTS_LIMIT)
-            ->get()
         ;
+        return $rawQuery->get();
     }
 
     /**

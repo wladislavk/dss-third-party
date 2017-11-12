@@ -109,17 +109,37 @@ class PatientsApiTest extends ApiTestCase
 
     public function testGetListPatients()
     {
-        $this->post(self::ROUTE_PREFIX . '/patients/list');
-        $this->assertResponseOk();
-        $this->assertEquals(7, count($this->getResponseData()));
-        $expectedFirst = [
-            'patientid' => 30,
-            'lastname' => 'Ackers',
-            'firstname' => 'George',
-            'middlename' => '',
-            'patient_info' => null,
+        $data = [
+            'partial_name' => 'smi',
         ];
-        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        $this->post(self::ROUTE_PREFIX . '/patients/list', $data);
+        $this->assertResponseOk();
+        $response = $this->getResponseData();
+        $this->assertEquals(6, count($response));
+        $expectedFirst = [
+            'patientid' => 42,
+            'lastname' => 'Smith',
+            'firstname' => 'John',
+            'middlename' => 'M',
+            'patient_info' => 1,
+        ];
+        $this->assertEquals($expectedFirst, $response[0]);
+        $expectedNames = [
+            'Smith, John M',
+            'Smith, Johnny',
+            'Smith, Pat',
+            'Smith, John',
+            'Smith, John',
+            'Smith, John',
+        ];
+        $names = [];
+        foreach ($response as $patient) {
+            $names[] = trim("{$patient['lastname']}, {$patient['firstname']} {$patient['middlename']}");
+        }
+        $this->assertEquals($expectedNames, $names);
     }
 
     public function testFind()

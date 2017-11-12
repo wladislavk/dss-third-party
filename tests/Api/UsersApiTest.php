@@ -159,6 +159,7 @@ class UsersApiTest extends ApiTestCase
             'access' => 2,
             'companyid' => 3,
             'adddate' => '2010-03-05 18:53:39',
+            'use_course' => 1,
             'numbers' => [
                 'patient_contacts' => 0,
                 'patient_insurances' => 1,

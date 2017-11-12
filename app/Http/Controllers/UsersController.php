@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Helpers\UserNumberRetriever;
@@ -366,6 +367,13 @@ class UsersController extends BaseRestController
     public function getCurrentUserInfo(UserNumberRetriever $userNumberRetriever)
     {
         $userData = $userNumberRetriever->addUserNumbers($this->user);
+        /** @var User|null $baseUser */
+        $baseUser = User::find($this->user->userid);
+        $useCourse = 0;
+        if ($baseUser) {
+            $useCourse = $baseUser->use_course;
+        }
+        $userData['use_course'] = $useCourse;
         return ApiResponse::responseOk('', $userData);
     }
 

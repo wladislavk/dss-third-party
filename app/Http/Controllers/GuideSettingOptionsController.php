@@ -124,7 +124,8 @@ class GuideSettingOptionsController extends BaseRestController
     /**
      * @SWG\Post(
      *     path="/guide-setting-options/settingIds",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
+     *     @SWG\Response(response="200", description="Get Device Guide Setting options")
+     *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
      *
      * @return \Illuminate\Http\JsonResponse

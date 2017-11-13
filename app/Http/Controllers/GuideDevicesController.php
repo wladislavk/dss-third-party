@@ -2,8 +2,7 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
-use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
+use DentalSleepSolutions\Helpers\DeviceGuideResultsRetriever;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -119,76 +118,37 @@ class GuideDevicesController extends BaseRestController
     /**
      * @SWG\Post(
      *     path="/guide-devices/with-images",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
+     *     tags={"guide-devices"},
+     *     summary="Get Device Guide results with images",
+     *     @SWG\Parameter(
+     *         name="settings",
+     *         in="formData",
+     *         required=true,
+     *         type="array"
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="success"
+     *     )
+     *     @SWG\Response(
+     *         response="default",
+     *         description="error",
+     *         ref="#/responses/error_response"
+     *     )
      * )
      *
-     * @param DeviceRepository $deviceRepository
-     * @param GuideSettingRepository $guideSettingRepository
+     * @param DeviceGuideResultsRetriever $deviceGuideResultsRetriever
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getWithImages(
-        DeviceRepository $deviceRepository,
-        GuideSettingRepository $guideSettingRepository,
+        DeviceGuideResultsRetriever $deviceGuideResultsRetriever,
         Request $request
     ) {
         $settings = $request->input('settings');
 
-        $fields = ['deviceid', 'device', 'image_path'];
-        $devices = $deviceRepository->getWithFilter($fields);
-        $devicesArray = [];
-
-        if (count($devices)) {
-            foreach ($devices as $device) {
-                $total = 0;
-                $show  = true;
-
-                $guideSettings = $guideSettingRepository->getSettingType($device->deviceid);
-
-                if (count($guideSettings)) {
-                    foreach ($guideSettings as $guideSetting) {
-                        if (empty($settings[$guideSetting->id])) {
-                            continue;
-                        }
-                        $setting = $settings[$guideSetting->id];
-
-                        if ($guideSetting->setting_type == 1) {
-                            if ($guideSetting->value != '1' && $setting['checked'] == 1) {
-                                $show = false;
-                            }
-                        } else {
-                            $value = $setting['checked'] * $guideSetting->value;
-
-                            if (isset($setting['checkedImp'])) {
-                                $value *= 1.75;
-                            }
-
-                            $total += $value;
-                        }
-                    }
-                }
-
-                if ($show) {
-                    array_push($devicesArray, [
-                        'name'       => $device->device,
-                        'id'         => $device->deviceid,
-                        'value'      => $total,
-                        'imagePath'  => $device->image_path,
-                    ]);
-                }
-            }
-        }
-
-        usort($devicesArray, [$this, 'sortDevices']);
+        $devicesArray = $deviceGuideResultsRetriever->get($settings);
 
         return ApiResponse::responseOk('', $devicesArray);
-    }
-
-    private function sortDevices($firstElement, $secondElement)
-    {
-        if ($firstElement['value'] == $secondElement['value']) {
-            return 0;
-        }
-        return ($firstElement['value'] > $secondElement['value']) ? -1 : 1;
     }
 }

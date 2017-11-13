@@ -102,7 +102,9 @@ export default {
   [symbols.actions.getDeviceGuideResults] ({commit, dispatch, state, rootState}) {
     let data = { settings: {} }
 
-    state[symbols.state.guideSettingOptions].forEach(el => {
+    state[symbols.state.deviceGuideSettingOptions].forEach(el => {
+      data.settings[el.id] = {}
+
       if (el.hasOwnProperty('checkedImp') && el.checkedImp) {
         data.settings[el.id]['checkedImp'] = el.checkedImp
       }
@@ -124,7 +126,7 @@ export default {
       dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideResults', response: response})
     })
   },
-  [symbols.actions.updateFlowDevice] ({state, rootState}, deviceId) {
+  [symbols.actions.updateFlowDevice] ({rootState}, deviceId) {
     const data = {
       // rootState.main[symbols.patient.pid]
       id: 0,

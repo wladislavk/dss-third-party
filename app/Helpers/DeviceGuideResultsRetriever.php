@@ -4,9 +4,12 @@ namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
+use DentalSleepSolutions\Constants\DeviceSettingTypes;
 
 class DeviceGuideResultsRetriever
 {
+    const CHECKED_IMP_COEFFICIENT = 1.75;
+
     /**
      * @var DeviceRepository
      */
@@ -26,69 +29,84 @@ class DeviceGuideResultsRetriever
     }
 
     /**
-     * @param  array  $settings
-     * @return [type]
+     * @param  array $settings
+     * @return array[]
      */
     public function get(array $settings)
     {
         $fields = ['deviceid', 'device', 'image_path'];
         $devices = $this->deviceRepository->getWithFilter($fields);
-        $devicesArray = [];
 
         if (count($devices) === 0) {
             return [];
         }
 
+        $devicesCollection = collect();
+
         foreach ($devices as $device) {
-            $total = 0;
-            $show = true;
+            $guideSettings = $this->guideSettingRepository->getSettingType($device->deviceid);
+            $result = $this->countTotalValue($guideSettings, $settings);
 
-            $guideSettings = $guideSettingRepository->getSettingType($device->deviceid);
-
-            if (count($guideSettings)) {
-                foreach ($guideSettings as $guideSetting) {
-                    if (empty($settings[$guideSetting->id])) {
-                        continue;
-                    }
-
-                    $setting = $settings[$guideSetting->id];
-
-                    if ($guideSetting->setting_type == 1) {
-                        if ($guideSetting->value != '1' && $setting['checked'] == 1) {
-                            $show = false;
-                        }
-                    } else {
-                        $value = $setting['checked'] * $guideSetting->value;
-
-                        if (isset($setting['checkedImp'])) {
-                            $value *= 1.75;
-                        }
-
-                        $total += $value;
-                    }
-                }
-            }
-
-            if (!$show) {
+            if (is_bool($result) && !$result) {
                 continue;
             }
 
-            array_push($devicesArray, [
+            $devicesCollection->push([
                 'name'       => $device->device,
                 'id'         => $device->deviceid,
-                'value'      => $total,
+                'value'      => $result,
                 'imagePath'  => $device->image_path,
             ]);
         }
 
-        usort($devicesArray, [$this, 'sortDevices']);
+        $sortedDevices = $devicesCollection->sortByDesc('value');
+
+        return $sortedDevices->values()->all();
     }
 
-    private function sortDevices($firstElement, $secondElement)
+    /**
+     * @param  array|\Illuminate\Database\Eloquent\Collection $deviceSettings
+     * @param  array $settings
+     * @return int|boolean
+     */
+    private function countTotalValue($deviceSettings, array $settings)
     {
-        if ($firstElement['value'] == $secondElement['value']) {
+        if (count($deviceSettings) === 0) {
             return 0;
         }
-        return ($firstElement['value'] > $secondElement['value']) ? -1 : 1;
+
+        $settingsFields = array_keys($settings);
+        $requiredDeviceSettings = $deviceSettings->filter(function ($item) use ($settingsFields) {
+            return in_array($item->id, $settingsFields);
+        });
+
+        $total = 0;
+
+        foreach ($requiredDeviceSettings as $deviceSetting) {
+            $setting = $settings[$deviceSetting->id];
+
+            if (
+                $deviceSetting->setting_type == DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_FLAG
+                &&
+                $deviceSetting->value != '1'
+                &&
+                $setting['checked'] == 1
+            ) {
+                return false;
+            }
+
+            if ($deviceSetting->setting_type == DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_FLAG) {
+                continue;
+            }
+
+            $value = $setting['checked'] * $deviceSetting->value;
+            if (isset($setting['checkedImp'])) {
+                $value *= self::CHECKED_IMP_COEFFICIENT;
+            }
+
+            $total += $value;
+        }
+
+        return $total;
     }
 }

@@ -326,6 +326,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('thortons', 'ThortonsController', ['except' => ['create', 'edit']]);
 
+    Route::post('tmj-clinical-exams/update-flow-device', 'TmjClinicalExamsController@updateFlowDevice');
     Route::resource('tmj-clinical-exams', 'TmjClinicalExamsController', ['except' => ['create', 'edit']]);
 
     Route::resource('tongue-clinical-exams', 'TongueClinicalExamsController', ['except' => ['create', 'edit']]);

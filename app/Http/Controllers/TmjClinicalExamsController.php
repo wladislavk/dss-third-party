@@ -2,6 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
 class TmjClinicalExamsController extends BaseRestController
 {
     /**
@@ -183,5 +187,33 @@ class TmjClinicalExamsController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/patients/find",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param FlowDeviceUpdater $flowDeviceUpdater
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateFlowDevice(
+        FlowDeviceUpdater $flowDeviceUpdater,
+        Request $request
+    ) {
+        $patientId = $request->input('patient_id', 0);
+        $deviceId = $request->input('device_id', 0);
+
+        $flowDeviceUpdater->update(
+            $patientId,
+            $deviceId,
+            $this->user->userid,
+            $this->user->docid,
+            $request->ip()
+        );
+
+        return ApiResponse::responseOk('Flow device was successfully updated.');
     }
 }

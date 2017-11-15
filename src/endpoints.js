@@ -146,6 +146,9 @@ export default {
     tomorrowForPatient: '/tasks/tomorrow/pid',
     update: '/tasks'
   },
+  tmjClinicalExams: {
+    updateFlowDevice: '/tmj-clinical-exams/update-flow-device'
+  },
   users: {
     check: '/users/check',
     checkLogout: '/users/check-logout',

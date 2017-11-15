@@ -128,14 +128,14 @@ export default {
   },
   [symbols.actions.updateFlowDevice] ({rootState}, deviceId) {
     const data = {
-      // rootState.main[symbols.patient.pid]
-      id: 0,
-      pid: 0,
-      device: deviceId
+      // TODO: change to rootState.main[symbols.patient.patientId] when a certain
+      // store object exists
+      patient_id: 0,
+      device_id: deviceId
     }
 
     http.token = rootState.main[symbols.state.mainToken]
-    return http.post('', data)
+    return http.post(endpoints.tmjClinicalExams.updateFlowDevice, data)
   },
   [symbols.actions.resetDeviceGuideSettingOptions] ({commit, state}) {
     const data = JSON.parse(JSON.stringify(state[symbols.state.deviceGuideSettingOptions]))

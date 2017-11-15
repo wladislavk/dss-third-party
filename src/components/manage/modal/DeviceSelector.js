@@ -76,6 +76,7 @@ export default {
       }
 
       this.$store.commit(symbols.mutations.updateGuideSetting, data)
+      this.$store.commit(symbols.mutations.deviceGuideResults, [])
     },
     getSliderDivId (id) {
       return 'slider_' + id

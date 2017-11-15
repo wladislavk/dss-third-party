@@ -32,6 +32,7 @@ export default {
       dispatch(symbols.actions.handleErrors, {title: 'getCurrentUser', response: response})
     })
   },
+
   [symbols.actions.docInfo] ({state, commit, dispatch}) {
     const userId = state[symbols.state.userInfo].docId
     http.token = state[symbols.state.mainToken]
@@ -50,11 +51,13 @@ export default {
       dispatch(symbols.actions.handleErrors, {title: 'getUser', response: response})
     })
   },
+
   [symbols.actions.disablePopupEdit] ({commit}) {
     commit(symbols.mutations.popupEdit, {
       value: false
     })
   },
+
   [symbols.actions.handleErrors] (data, {title, response}) {
     // token expired
     if (response.status === 401) {
@@ -73,6 +76,7 @@ export default {
       // TODO if prod
     }
   },
+
   [symbols.actions.courseStaff] ({state, commit, dispatch}) {
     http.token = state[symbols.state.mainToken]
     http.post(endpoints.users.courseStaff).then((response) => {
@@ -89,6 +93,7 @@ export default {
       dispatch(symbols.actions.handleErrors, { title: 'getCourseStaff', response: response })
     })
   },
+
   [symbols.actions.patientData] ({state, commit, dispatch}, patientId) {
     http.token = state[symbols.state.mainToken]
     http.get(endpoints.patients.patientData + '/' + patientId).then((response) => {
@@ -122,9 +127,11 @@ export default {
       dispatch(symbols.actions.handleErrors, { title: 'getPatientByIdAndDocId', response: response })
     })
   },
+
   [symbols.actions.clearPatientData] ({commit}) {
     commit(symbols.mutations.clearPatientData)
   },
+
   [symbols.actions.logout] ({state, commit}) {
     http.token = state[symbols.state.mainToken]
     http.post(endpoints.logout).then(() => {
@@ -142,6 +149,7 @@ export default {
       console.error('invalidateToken [status]: ' + response.status)
     })
   },
+
   [symbols.actions.storeLoginDetails] ({state, dispatch}, queryString) {
     if (!state[symbols.state.userInfo].loginId) {
       return
@@ -158,6 +166,8 @@ export default {
       dispatch(symbols.actions.handleErrors, {title: 'setLoginDetails', response: response})
     })
   },
+
+  // @todo: the code needs to be rewritten and acceptance-tested
   [symbols.actions.companyLogo] ({state, commit, dispatch}) {
     http.token = state[symbols.state.mainToken]
     http.get(endpoints.companies.companyByUser).then((response) => {
@@ -175,6 +185,7 @@ export default {
       dispatch(symbols.actions.handleErrors, {title: title, response: response})
     })
   },
+
   [symbols.actions.patientSearchList] ({state, commit}, searchTerm) {
     http.token = state[symbols.state.mainToken]
     const queryData = {

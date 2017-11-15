@@ -9,6 +9,10 @@ import LocalStorageManager from '../../../src/services/LocalStorageManager'
 import endpoints from '../../../src/endpoints'
 import RouterKeeper from '../../../src/services/RouterKeeper'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
+import MediaFileRetriever from '../../../src/services/MediaFileRetriever'
+import { LEGACY_URL } from '../../../src/constants/main'
+import NameComposer from '../../../src/services/NameComposer'
+import Alerter from '../../../src/services/Alerter'
 
 describe('Main module actions', () => {
   beforeEach(function () {
@@ -301,73 +305,74 @@ describe('Main module actions', () => {
   })
 
   describe('patientData action', () => {
-    beforeEach(function () {
-      this.testCase.setState({
-        [symbols.state.userInfo]: {
-          docId: 2
-        }
-      })
-    })
     it('should get patient data', function (done) {
       const patientId = 1
       const postData = []
       const result = {
         data: {
-          data: [
-            {
-              p_m_ins_type: '1',
-              premedcheck: '1',
-              premed: 'foo',
-              alert_text: 'alert',
-              display_alert: true,
-              firstname: 'John',
-              lastname: 'Doe'
-            }
-          ]
+          data: {
+            insurance_type: '2',
+            premedcheck: '3',
+            premed: 'foo',
+            alert_text: 'alert',
+            display_alert: '1',
+            firstname: 'John',
+            lastname: 'Doe',
+            questionnaire_data: {
+              symptoms_status: '4',
+              treatments_status: '5',
+              history_status: '6'
+            },
+            is_email_bounced: '0',
+            patient_contacts_number: '7',
+            patient_insurances_number: '8',
+            sub_patients_number: '9',
+            rejected_claims: ['foo', 'bar'],
+            has_allergen: '1',
+            other_allergens: 'other',
+            hst_status: '10',
+            incomplete_hsts: ['baz']
+          }
         }
       }
-      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
+      this.sandbox.stub(http, 'get').callsFake((path) => {
         postData.push({
-          path: path,
-          payload: payload
+          path: path
         })
         return Promise.resolve(result)
-      })
-      this.testCase.setState({
-        [symbols.state.headerTitle]: 'My title\n',
-        [symbols.state.userInfo]: {
-          docId: 2
-        }
       })
 
       MainModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
 
       const expectedMutations = [
         {
-          type: symbols.mutations.medicare,
-          payload: true
-        },
-        {
-          type: symbols.mutations.premedCheck,
+          type: symbols.mutations.patientId,
           payload: 1
         },
         {
-          type: symbols.mutations.headerTitle,
-          payload: 'My title\nPre-medication: foo\n'
-        },
-        {
-          type: symbols.mutations.headerAlertText,
-          payload: 'alert'
-        },
-        {
-          type: symbols.mutations.displayAlert,
-          payload: true
-        },
-        {
-          type: symbols.mutations.patientName,
+          type: symbols.mutations.patientData,
           payload: {
+            insuranceType: '2',
+            preMed: 'foo',
+            preMedCheck: '3',
+            alertText: 'alert',
+            displayAlert: '1',
             firstName: 'John',
-            lastName: 'Doe'
+            lastName: 'Doe',
+            questionnaireData: {
+              symptomsStatus: '4',
+              treatmentsStatus: '5',
+              historyStatus: '6'
+            },
+            isEmailBounced: '0',
+            patientContactsNumber: '7',
+            patientInsurancesNumber: '8',
+            subPatientsNumber: '9',
+            rejectedClaims: ['foo', 'bar'],
+            hasAllergen: '1',
+            otherAllergens: 'other',
+            hstStatus: '10',
+            incompleteHomeSleepTests: ['baz']
           }
         }
       ]
@@ -376,119 +381,16 @@ describe('Main module actions', () => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedHttp = [
           {
-            path: endpoints.patients.withFilter,
-            payload: {
-              where: {
-                docid: 2,
-                patientid: 1
-              }
-            }
+            path: endpoints.patients.patientData + '/1'
           }
         ]
         expect(postData).toEqual(expectedHttp)
         done()
       }, 100)
     })
-    it('should get patient data without medicare', function (done) {
-      const patientId = 1
-      const result = {
-        data: {
-          data: [
-            {
-              p_m_ins_type: '2',
-              premedcheck: '1',
-              premed: 'foo',
-              alert_text: 'alert',
-              display_alert: true,
-              firstname: 'John',
-              lastname: 'Doe'
-            }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.resolve(result)
-      })
-      this.testCase.setState({
-        [symbols.state.headerTitle]: 'My title\n',
-        [symbols.state.userInfo]: {
-          docId: 2
-        }
-      })
-
-      MainModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
-
-      const expectedMutation = {
-        type: symbols.mutations.medicare,
-        payload: false
-      }
-
-      setTimeout(() => {
-        expect(this.testCase.mutations[0]).toEqual(expectedMutation)
-        done()
-      }, 100)
-    })
-    it('should get patient data without premed check', function (done) {
-      const patientId = 1
-      const result = {
-        data: {
-          data: [
-            {
-              p_m_ins_type: '1',
-              premedcheck: '0',
-              premed: 'foo',
-              alert_text: 'alert',
-              display_alert: true,
-              firstname: 'John',
-              lastname: 'Doe'
-            }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.resolve(result)
-      })
-      this.testCase.setState({
-        [symbols.state.headerTitle]: 'My title\n',
-        [symbols.state.userInfo]: {
-          docId: 2
-        }
-      })
-
-      MainModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
-
-      setTimeout(() => {
-        expect(this.testCase.mutations.length).toBe(5)
-        done()
-      }, 100)
-    })
-    it('should get patient data without data', function (done) {
-      const patientId = 1
-      const result = {
-        data: {
-          data: []
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.resolve(result)
-      })
-      this.testCase.setState({
-        [symbols.state.headerTitle]: 'My title\n',
-        [symbols.state.userInfo]: {
-          docId: 2
-        }
-      })
-
-      MainModule.actions[symbols.actions.patientData](this.testCase.mocks, patientId)
-
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual([])
-        done()
-      }, 100)
-    })
     it('should handle error', function (done) {
       const patientId = 1
-      this.sandbox.stub(http, 'post').callsFake(() => {
+      this.sandbox.stub(http, 'get').callsFake(() => {
         return Promise.reject(new Error())
       })
 
@@ -510,280 +412,16 @@ describe('Main module actions', () => {
     })
   })
 
-  describe('healthHistoryForPatient action', () => {
-    it('should get health history with allergen', function (done) {
-      const patientId = 1
-      this.testCase.setState({
-        [symbols.state.headerTitle]: 'My title\n'
-      })
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            {
-              allergenscheck: 1,
-              other_allergens: 'foo, bar'
-            }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
-        return Promise.resolve(result)
-      })
-
-      MainModule.actions[symbols.actions.healthHistoryForPatient](this.testCase.mocks, patientId)
-
-      setTimeout(() => {
-        const expectedMutations = [
-          {
-            type: symbols.mutations.allergen,
-            payload: 1
-          },
-          {
-            type: symbols.mutations.headerTitle,
-            payload: 'My title\nAllergens: foo, bar'
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          {
-            path: endpoints.healthHistories.withFilter,
-            payload: {
-              fields: ['other_allergens', 'allergenscheck'],
-              where: { patientid: patientId }
-            }
-          }
-        ]
-        expect(postData).toEqual(expectedHttp)
-        done()
-      }, 100)
-    })
-    it('should get health history without allergen', function (done) {
-      const patientId = 1
-      const result = {
-        data: {
-          data: [
-            {
-              allergenscheck: 0,
-              other_allergens: 'foo, bar'
-            }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.resolve(result)
-      })
-
-      MainModule.actions[symbols.actions.healthHistoryForPatient](this.testCase.mocks, patientId)
-
-      setTimeout(() => {
-        const expectedMutations = [
-          {
-            type: symbols.mutations.allergen,
-            payload: 0
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        done()
-      }, 100)
-    })
-    it('should get health history without data', function (done) {
-      const patientId = 1
-      const result = {
-        data: {
-          data: []
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.resolve(result)
-      })
-
-      MainModule.actions[symbols.actions.healthHistoryForPatient](this.testCase.mocks, patientId)
-
-      setTimeout(() => {
-        const expectedMutations = []
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        done()
-      }, 100)
-    })
-    it('should handle error', function (done) {
-      const patientId = 1
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject(new Error())
-      })
-
-      MainModule.actions[symbols.actions.healthHistoryForPatient](this.testCase.mocks, patientId)
-
-      const expectedActions = [
+  describe('clearPatientData action', () => {
+    it('clears patient data', function () {
+      MainModule.actions[symbols.actions.clearPatientData](this.testCase.mocks)
+      const expectedMutations = [
         {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getHealthHistoryByPatientId',
-            response: new Error()
-          }
+          type: symbols.mutations.clearPatientData,
+          payload: {}
         }
       ]
-
-      setTimeout(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
-        done()
-      }, 100)
-    })
-  })
-
-  describe('incompleteHomeSleepTests action', () => {
-    it('should get incomplete HSTs', function (done) {
-      const patientId = 1
-      const postData = []
-      const result = {
-        data: {
-          data: [
-            {
-              status: 1
-            },
-            {
-              status: 2
-            }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
-        postData.push({
-          path: path,
-          payload: payload
-        })
-        return Promise.resolve(result)
-      })
-
-      MainModule.actions[symbols.actions.incompleteHomeSleepTests](this.testCase.mocks, patientId)
-
-      setTimeout(() => {
-        const expectedMutations = [
-          {
-            type: symbols.mutations.incompleteHomeSleepTests,
-            payload: [
-              {
-                status: 1
-              },
-              {
-                status: 2
-              }
-            ]
-          },
-          {
-            type: symbols.mutations.patientHomeSleepTestStatus,
-            payload: 'Scheduled'
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          {
-            path: endpoints.homeSleepTests.incomplete,
-            payload: {
-              patientId: patientId
-            }
-          }
-        ]
-        expect(postData).toEqual(expectedHttp)
-        done()
-      }, 100)
-    })
-    it('should get incomplete HSTs with bad status', function (done) {
-      const patientId = 1
-      const result = {
-        data: {
-          data: [
-            {
-              status: 1
-            },
-            {
-              status: 99
-            }
-          ]
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.resolve(result)
-      })
-
-      MainModule.actions[symbols.actions.incompleteHomeSleepTests](this.testCase.mocks, patientId)
-
-      setTimeout(() => {
-        const expectedMutations = [
-          {
-            type: symbols.mutations.incompleteHomeSleepTests,
-            payload: [
-              {
-                status: 1
-              },
-              {
-                status: 99
-              }
-            ]
-          },
-          {
-            type: symbols.mutations.patientHomeSleepTestStatus,
-            payload: ''
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        done()
-      }, 100)
-    })
-    it('should get incomplete HSTs without data', function (done) {
-      const patientId = 1
-      const result = {
-        data: {
-          data: []
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.resolve(result)
-      })
-
-      MainModule.actions[symbols.actions.incompleteHomeSleepTests](this.testCase.mocks, patientId)
-
-      setTimeout(() => {
-        const expectedMutations = [
-          {
-            type: symbols.mutations.incompleteHomeSleepTests,
-            payload: []
-          },
-          {
-            type: symbols.mutations.patientHomeSleepTestStatus,
-            payload: ''
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        done()
-      }, 100)
-    })
-    it('should handle error', function (done) {
-      const patientId = 1
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject(new Error())
-      })
-
-      MainModule.actions[symbols.actions.incompleteHomeSleepTests](this.testCase.mocks, patientId)
-
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getIncompleteHomeSleepTests',
-            response: new Error()
-          }
-        }
-      ]
-
-      setTimeout(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
-        done()
-      }, 100)
+      expect(this.testCase.mutations).toEqual(expectedMutations)
     })
   })
 
@@ -838,6 +476,224 @@ describe('Main module actions', () => {
       MainModule.actions[symbols.actions.logout](this.testCase.mocks)
       setTimeout(() => {
         expect(errorMessage).toBe('invalidateToken [status]: 400')
+        done()
+      }, 100)
+    })
+  })
+
+  describe('storeLoginDetails action', () => {
+    it('stores login details', function (done) {
+      const postData = []
+      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
+        postData.push({
+          path: path,
+          payload: payload
+        })
+        return Promise.resolve({})
+      })
+      const queryString = '/foo'
+      this.testCase.setState({
+        [symbols.state.userInfo]: {
+          loginId: 1,
+          plainUserId: 2
+        }
+      })
+      MainModule.actions[symbols.actions.storeLoginDetails](this.testCase.mocks, queryString)
+
+      setTimeout(() => {
+        const expectedHttp = [
+          {
+            path: endpoints.loginDetails.store,
+            payload: {
+              loginid: 1,
+              userid: 2,
+              cur_page: '/foo'
+            }
+          }
+        ]
+        expect(postData).toEqual(expectedHttp)
+        done()
+      }, 100)
+    })
+    it('returns when there is no login ID', function (done) {
+      const postData = []
+      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
+        postData.push({
+          path: path,
+          payload: payload
+        })
+        return Promise.resolve({})
+      })
+      const queryString = '/foo'
+      this.testCase.setState({
+        [symbols.state.userInfo]: {
+          plainUserId: 2
+        }
+      })
+      MainModule.actions[symbols.actions.storeLoginDetails](this.testCase.mocks, queryString)
+
+      setTimeout(() => {
+        expect(postData).toEqual([])
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      this.testCase.setState({
+        [symbols.state.userInfo]: {
+          loginId: 1,
+          plainUserId: 2
+        }
+      })
+      this.sandbox.stub(http, 'post').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      const queryString = '/foo'
+
+      MainModule.actions[symbols.actions.storeLoginDetails](this.testCase.mocks, queryString)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'setLoginDetails',
+            response: new Error()
+          }
+        }
+      ]
+
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+  })
+
+  // @todo: the code needs to be rewritten and acceptance-tested
+  /*
+  describe('companyLogo action', () => {
+    it('gets company logo', function () {
+    })
+    it('stops execution if company does not have logo', function () {
+    })
+    it('handles error when getting company data', function () {
+    })
+    it('handles error when retrieving image', function () {
+    })
+  })
+  */
+
+  describe('patientSearchList action', () => {
+    it('shows list without patients', function (done) {
+      const searchTerm = 'John'
+      const postData = []
+      const result = {
+        data: {
+          data: []
+        }
+      }
+      this.sandbox.stub(http, 'post').callsFake((path, payload) => {
+        postData.push({
+          path: path,
+          payload: payload
+        })
+        return Promise.resolve(result)
+      })
+
+      MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
+
+      setTimeout(() => {
+        const expectedMutations = [
+          {
+            type: symbols.mutations.patientSearchList,
+            payload: [
+              {
+                name: 'No Matches',
+                patientType: 'no',
+                link: ''
+              },
+              {
+                name: 'Add patient with this name\u2026',
+                patientType: 'new',
+                link: LEGACY_URL + 'add_patient.php?search=John'
+              }
+            ]
+          }
+        ]
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        const expectedHttp = [
+          {
+            path: endpoints.patients.list,
+            payload: {
+              partial_name: 'John'
+            }
+          }
+        ]
+        expect(postData).toEqual(expectedHttp)
+        done()
+      }, 100)
+    })
+    it('shows list with patients', function (done) {
+      const searchTerm = 'John'
+      const result = {
+        data: {
+          data: [
+            {
+              patientId: 1,
+              name: 'John Doe',
+              patientInfo: 0
+            },
+            {
+              patientId: 2,
+              name: 'John Little',
+              patientInfo: 1
+            }
+          ]
+        }
+      }
+      this.sandbox.stub(http, 'post').callsFake(() => {
+        return Promise.resolve(result)
+      })
+      this.sandbox.stub(NameComposer, 'composeName').callsFake((element) => {
+        return element.name
+      })
+
+      MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
+
+      setTimeout(() => {
+        const expectedMutations = [
+          {
+            type: symbols.mutations.patientSearchList,
+            payload: [
+              {
+                name: 'John Doe',
+                patientType: 'json',
+                link: LEGACY_URL + 'manage/add_patient.php?pid=1&ed=1'
+              },
+              {
+                name: 'John Little',
+                patientType: 'json',
+                link: LEGACY_URL + 'manage/manage_flowsheet3.php?pid=2'
+              }
+            ]
+          }
+        ]
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      const searchTerm = 'John'
+      let alert = ''
+      this.sandbox.stub(http, 'post').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      this.sandbox.stub(Alerter, 'alert').callsFake((alertText) => {
+        alert = alertText
+      })
+
+      MainModule.actions[symbols.actions.patientSearchList](this.testCase.mocks, searchTerm)
+
+      setTimeout(() => {
+        expect(alert).toBe('Could not select patient from database')
         done()
       }, 100)
     })

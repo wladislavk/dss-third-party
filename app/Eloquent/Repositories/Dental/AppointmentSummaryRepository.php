@@ -42,7 +42,7 @@ class AppointmentSummaryRepository extends AbstractRepository
                 $queryBuilder = $query;
                 $queryBuilder
                     ->where('segmentid', '7')
-                    ->where('segmentid', '4')
+                    ->orWhere('segmentid', '4')
                 ;
             })
             ->orderBy('date_completed', 'desc')

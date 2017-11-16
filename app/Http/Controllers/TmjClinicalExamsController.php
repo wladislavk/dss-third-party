@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
+use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -191,8 +192,30 @@ class TmjClinicalExamsController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/patients/find",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
+     *     path="/tmj-clinical-exams/update-flow-device",
+     *     tags={"tmj-clinical-exams"},
+     *     summary="Update Flow Device",
+     *     @SWG\Parameter(
+     *         name="patient_id",
+     *         in="formData",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="device_id",
+     *         in="formData",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="success"
+     *     )
+     *     @SWG\Response(
+     *         response="default",
+     *         description="error",
+     *         ref="#/responses/error_response"
+     *     )
      * )
      *
      * @param FlowDeviceUpdater $flowDeviceUpdater

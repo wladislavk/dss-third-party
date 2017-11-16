@@ -5,9 +5,11 @@ export default {
   [symbols.mutations.mainToken] (state, token) {
     state[symbols.state.mainToken] = token
   },
+
   [symbols.mutations.popupEdit] (state, { value }) {
     state[symbols.state.popupEdit] = value
   },
+
   [symbols.mutations.notificationNumbers] (state, numbers) {
     const patientContacts = parseInt(numbers.patient_contacts)
     const patientInsurances = parseInt(numbers.patient_insurances)
@@ -37,18 +39,19 @@ export default {
       [NOTIFICATION_NUMBERS.patientNotifications]: patientNotifications
     }
   },
-  [symbols.mutations.courseStaff] (state, courseStaffData) {
-    state[symbols.state.courseStaff] = courseStaffData
-  },
+
   [symbols.mutations.docInfo] (state, docInfo) {
     state[symbols.state.docInfo] = docInfo
   },
+
   [symbols.mutations.userInfo] (state, userInfo) {
     state[symbols.state.userInfo] = userInfo
   },
+
   [symbols.mutations.patientSearchList] (state, data) {
     state[symbols.state.patientSearchList] = data
   },
+
   [symbols.mutations.modal] (state, payload) {
     const componentName = payload.name
     let params = {}
@@ -60,18 +63,23 @@ export default {
       params: params
     }
   },
+
   [symbols.mutations.patientId] (state, data) {
     state[symbols.state.patientId] = parseInt(data)
   },
+
   [symbols.mutations.showAllWarnings] (state) {
     state[symbols.state.showAllWarnings] = true
   },
+
   [symbols.mutations.hideAllWarnings] (state) {
     state[symbols.state.showAllWarnings] = false
   },
+
   [symbols.mutations.companyLogo] (state, image) {
     state[symbols.state.companyLogo] = image
   },
+
   [symbols.mutations.patientData] (state, data) {
     const insuranceType = parseInt(data.insuranceType)
     let hasMedicare = false
@@ -79,7 +87,7 @@ export default {
       hasMedicare = true
     }
     const premedCheck = parseInt(data.preMedCheck)
-    const allergen = !!data.hasAllergen
+    const allergen = !!parseInt(data.hasAllergen)
     let title = state[symbols.state.headerTitle]
     if (premedCheck) {
       title += 'Pre-medication: ' + data.preMed + '\n'
@@ -92,11 +100,11 @@ export default {
     if (HST_STATUSES.hasOwnProperty(dataStatus)) {
       hstStatus = HST_STATUSES[dataStatus]
     }
-    state[symbols.mutations.allergen] = allergen
+    state[symbols.state.allergen] = allergen
     state[symbols.state.medicare] = hasMedicare
     state[symbols.state.premedCheck] = premedCheck
     state[symbols.state.patientName] = data.firstName + ' ' + data.lastName
-    state[symbols.state.displayAlert] = !!data.displayAlert
+    state[symbols.state.displayAlert] = !!parseInt(data.displayAlert)
     state[symbols.state.headerTitle] = title
     state[symbols.state.headerAlertText] = data.alertText
     state[symbols.state.questionnaireStatuses] = {
@@ -104,7 +112,7 @@ export default {
       treatments: parseInt(data.questionnaireData.treatmentsStatus),
       history: parseInt(data.questionnaireData.historyStatus)
     }
-    state[symbols.state.isEmailBounced] = !!data.isEmailBounced
+    state[symbols.state.isEmailBounced] = !!parseInt(data.isEmailBounced)
     state[symbols.state.totalPatientContacts] = parseInt(data.patientContactsNumber)
     state[symbols.state.totalPatientInsurances] = parseInt(data.patientInsurancesNumber)
     state[symbols.state.totalSubPatients] = parseInt(data.subPatientsNumber)
@@ -112,9 +120,10 @@ export default {
     state[symbols.state.patientHomeSleepTestStatus] = hstStatus
     state[symbols.state.incompleteHomeSleepTests] = data.incompleteHomeSleepTests
   },
+
   [symbols.mutations.clearPatientData] (state) {
-    state[symbols.mutations.allergen] = 0
-    state[symbols.state.medicare] = 0
+    state[symbols.state.allergen] = false
+    state[symbols.state.medicare] = false
     state[symbols.state.premedCheck] = 0
     state[symbols.state.patientName] = ''
     state[symbols.state.displayAlert] = false
@@ -133,9 +142,11 @@ export default {
     state[symbols.state.patientHomeSleepTestStatus] = ''
     state[symbols.state.incompleteHomeSleepTests] = []
   },
+
   [symbols.mutations.showSearchHints] (state) {
     state[symbols.state.showSearchHints] = true
   },
+
   [symbols.mutations.hideSearchHints] (state) {
     state[symbols.state.showSearchHints] = false
   }

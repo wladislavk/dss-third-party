@@ -142,7 +142,6 @@ export default {
   users: {
     check: '/users/check',
     checkLogout: '/users/check-logout',
-    courseStaff: '/users/course-staff',
     current: '/users/current',
     letterInfo: '/users/letter-info',
     show: '/users'

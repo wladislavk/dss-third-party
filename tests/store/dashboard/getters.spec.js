@@ -90,31 +90,13 @@ describe('Dashboard module getters', () => {
   })
 
   describe('shouldShowGetCE getter', () => {
-    it('gets CE for doctor', function () {
-      const rootState = {
-        main: {
-          [symbols.state.userInfo]: {
-            plainUserId: 1,
-            docId: 1
-          },
-          [symbols.state.courseStaff]: {
-            useCourse: 0,
-            useCourseStaff: 0
-          }
-        }
-      }
-      const result = DashboardModule.getters[symbols.getters.shouldShowGetCE]({}, {}, rootState)
-      expect(result).toBe(true)
-    })
     it('gets CE for course', function () {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            plainUserId: 1,
-            docId: 2
+            useCourse: 1
           },
-          [symbols.state.courseStaff]: {
-            useCourse: 1,
+          [symbols.state.docInfo]: {
             useCourseStaff: 0
           }
         }
@@ -126,11 +108,9 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            plainUserId: 1,
-            docId: 2
+            useCourse: 0
           },
-          [symbols.state.courseStaff]: {
-            useCourse: 0,
+          [symbols.state.docInfo]: {
             useCourseStaff: 1
           }
         }
@@ -142,11 +122,9 @@ describe('Dashboard module getters', () => {
       const rootState = {
         main: {
           [symbols.state.userInfo]: {
-            plainUserId: 1,
-            docId: 2
+            useCourse: 1
           },
-          [symbols.state.courseStaff]: {
-            useCourse: 1,
+          [symbols.state.docInfo]: {
             useCourseStaff: 1
           }
         }

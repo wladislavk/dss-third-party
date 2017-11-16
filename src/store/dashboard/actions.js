@@ -14,9 +14,11 @@ export default {
       dispatch(symbols.actions.handleErrors, {title: 'getDocumentCategories', response: response})
     })
   },
+
   [symbols.actions.deviceSelectorModal] ({commit}) {
     commit(symbols.mutations.modal, { name: 'device-selector' })
   },
+
   [symbols.actions.exportMDModal] () {
     SwalWrapper.callSwal(
       {
@@ -51,6 +53,7 @@ export default {
       }
     )
   },
+
   [symbols.actions.dataImportModal] () {
     SwalWrapper.callSwal(
       {
@@ -71,6 +74,7 @@ export default {
       }
     )
   },
+
   [symbols.actions.memos] ({rootState, commit, dispatch}) {
     http.token = rootState.main[symbols.state.mainToken]
     http.post(endpoints.memos.current).then((response) => {

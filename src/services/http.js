@@ -10,11 +10,11 @@ export default {
     return new Promise((resolve, reject) => {
       this[method](path, data, config).then((response) => {
         if (response.error) {
-          throw new Error()
+          throw new Error(response.error)
         }
         resolve(response)
-      }).catch(() => {
-        reject(new Error())
+      }).catch((error) => {
+        reject(new Error(error))
       })
     })
   },

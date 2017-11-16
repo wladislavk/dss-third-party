@@ -8,21 +8,17 @@ export default {
   [symbols.actions.getDoctorData] ({ state, commit }) {
     http.token = state[symbols.state.screenerToken]
     const doctorId = state[symbols.state.sessionData].docId
-    http.get(endpoints.users.show + '/' + doctorId).then(
-      function (response) {
-        const data = response.data.data
-        commit(symbols.mutations.doctorName, data.first_name)
-      }
-    )
+    http.get(endpoints.users.show + '/' + doctorId).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.doctorName, data.first_name)
+    })
   },
   [symbols.actions.getCompanyData] ({ state, commit }) {
     http.token = state[symbols.state.screenerToken]
-    http.post(endpoints.companies.homeSleepTest).then(
-      function (response) {
-        const data = response.data.data
-        commit(symbols.mutations.companyData, data)
-      }
-    )
+    http.post(endpoints.companies.homeSleepTest).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.companyData, data)
+    })
   },
   [symbols.actions.submitScreener] ({ state }) {
     const contactData = state[symbols.state.contactData]
@@ -167,7 +163,7 @@ export default {
   },
   [symbols.actions.setSessionData] ({ state, commit }) {
     http.token = state[symbols.state.screenerToken]
-    return http.request('post', endpoints.users.current).then((response) => {
+    return http.request('get', endpoints.users.current).then((response) => {
       const data = response.data.data
       const sessionData = {
         userId: data.userid,

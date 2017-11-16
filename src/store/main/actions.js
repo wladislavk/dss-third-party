@@ -1,3 +1,4 @@
+import axios from 'axios'
 import endpoints from '../../endpoints'
 import http from '../../services/http'
 import symbols from '../../symbols'
@@ -10,45 +11,69 @@ import FileRetrievalError from '../../exceptions/FileRetrievalError'
 import Alerter from '../../services/Alerter'
 import { LEGACY_URL } from '../../constants/main'
 import NameComposer from '../../services/NameComposer'
+import LoginError from '../../exceptions/LoginError'
 
 export default {
-  [symbols.actions.userInfo] ({state, commit, dispatch}) {
-    http.token = state[symbols.state.mainToken]
-    return http.request('post', endpoints.users.current).then((response) => {
-      const data = response.data.data
-      const userInfo = {
-        userId: data.id,
-        plainUserId: parseInt(data.id.replace('u_', '').replace('a_', '')),
-        docId: data.docid,
-        manageStaff: data.manage_staff,
-        userType: parseInt(data.user_type),
-        useCourse: parseInt(data.use_course),
-        loginId: data.loginid,
-        username: data.username
-      }
-      commit(symbols.mutations.userInfo, userInfo)
-      commit(symbols.mutations.notificationNumbers, data.numbers)
-    }).catch((response) => {
-      dispatch(symbols.actions.handleErrors, {title: 'getCurrentUser', response: response})
+  [symbols.actions.mainLogin] ({commit, dispatch}, credentials) {
+    return new Promise((resolve, reject) => {
+      axios.post(ProcessWrapper.getApiRoot() + 'auth', credentials).then((response) => {
+        const data = response.data
+
+        commit(symbols.mutations.mainToken, data.token)
+        http.token = data.token
+        return http.post(endpoints.users.check)
+      }).then((response) => {
+        const data = response.data.data
+
+        if (data.type.toLowerCase() === 'suspended') {
+          commit(symbols.mutations.mainToken, '')
+          http.token = ''
+          throw new LoginError('This account has been suspended.')
+        }
+        return dispatch(symbols.actions.userInfo)
+      }).then(() => {
+        resolve()
+      }).catch((response) => {
+        let reason = ''
+        if (response instanceof LoginError) {
+          reason = response.response
+        }
+        if (response.hasOwnProperty('status') && response.status === 422) {
+          reason = 'Wrong username or password'
+        }
+        dispatch(symbols.actions.handleErrors, {title: 'getToken', response: response})
+        reject(new Error(reason))
+      })
     })
   },
 
-  [symbols.actions.docInfo] ({state, commit, dispatch}) {
-    const userId = state[symbols.state.userInfo].docId
+  [symbols.actions.userInfo] ({state, commit, dispatch}) {
     http.token = state[symbols.state.mainToken]
-    http.get(endpoints.users.show + '/' + userId).then((response) => {
+    return http.request('get', endpoints.users.current).then((response) => {
       const data = response.data.data
-      const docInfo = {
-        homepage: data.homepage,
-        manageStaff: data.manage_staff,
-        useEligibleApi: data.use_eligible_api,
-        useLetters: parseInt(data.use_letters),
-        usePatientPortal: data.use_patient_portal,
-        usePaymentReports: data.use_payment_reports
+      const userInfo = {
+        userId: data.id,
+        plainUserId: parseInt(data.userid),
+        docId: parseInt(data.docid),
+        manageStaff: parseInt(data.manage_staff),
+        userType: parseInt(data.user_type),
+        useCourse: parseInt(data.use_course),
+        username: data.username
       }
+      const docInfo = {
+        homepage: parseInt(data.doc_info.homepage),
+        manageStaff: parseInt(data.doc_info.manage_staff),
+        useEligibleApi: parseInt(data.doc_info.use_eligible_api),
+        useLetters: parseInt(data.doc_info.use_letters),
+        usePatientPortal: parseInt(data.doc_info.use_patient_portal),
+        usePaymentReports: parseInt(data.doc_info.use_payment_reports),
+        useCourseStaff: parseInt(data.doc_info.use_course_staff)
+      }
+      commit(symbols.mutations.userInfo, userInfo)
       commit(symbols.mutations.docInfo, docInfo)
+      commit(symbols.mutations.notificationNumbers, data.numbers)
     }).catch((response) => {
-      dispatch(symbols.actions.handleErrors, {title: 'getUser', response: response})
+      dispatch(symbols.actions.handleErrors, {title: 'getCurrentUser', response: response})
     })
   },
 
@@ -75,23 +100,6 @@ export default {
     } else {
       // TODO if prod
     }
-  },
-
-  [symbols.actions.courseStaff] ({state, commit, dispatch}) {
-    http.token = state[symbols.state.mainToken]
-    http.post(endpoints.users.courseStaff).then((response) => {
-      const data = response.data.data
-      if (!data || !data.hasOwnProperty('use_course') || !data.hasOwnProperty('use_course_staff')) {
-        return
-      }
-      const courseStaffData = {
-        useCourse: parseInt(data.use_course),
-        useCourseStaff: parseInt(data.use_course_staff)
-      }
-      commit(symbols.mutations.courseStaff, courseStaffData)
-    }).catch((response) => {
-      dispatch(symbols.actions.handleErrors, { title: 'getCourseStaff', response: response })
-    })
   },
 
   [symbols.actions.patientData] ({state, commit, dispatch}, patientId) {
@@ -150,6 +158,8 @@ export default {
     })
   },
 
+  // @todo: add proper logging. currently logins are not stored
+  /*
   [symbols.actions.storeLoginDetails] ({state, dispatch}, queryString) {
     if (!state[symbols.state.userInfo].loginId) {
       return
@@ -166,6 +176,7 @@ export default {
       dispatch(symbols.actions.handleErrors, {title: 'setLoginDetails', response: response})
     })
   },
+  */
 
   // @todo: the code needs to be rewritten and acceptance-tested
   [symbols.actions.companyLogo] ({state, commit, dispatch}) {

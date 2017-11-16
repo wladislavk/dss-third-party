@@ -20,12 +20,15 @@ export default {
     }
     return notificationsNumber
   },
+
   [symbols.getters.isUserDoctor] (state) {
     return (state[symbols.state.userInfo].docId === state[symbols.state.userInfo].userId)
   },
+
   [symbols.getters.patientId] (state) {
     return state[symbols.state.patientId]
   },
+
   [symbols.getters.showWarningAboutQuestionnaireChanges] (state) {
     // @todo: eliminate magic number
     const correctStatus = 2
@@ -41,10 +44,12 @@ export default {
     }
     return false
   },
+
   [symbols.getters.showWarningAboutBouncedEmails] (state) {
     return state[symbols.state.isEmailBounced]
   },
-  [symbols.getters.showWarningAboutQuestionnaireChanges] (state) {
+
+  [symbols.getters.showWarningAboutPatientChanges] (state) {
     if (state[symbols.state.totalSubPatients]) {
       return true
     }

@@ -9,7 +9,6 @@ import LocalStorageManager from '../../../src/services/LocalStorageManager'
 import endpoints from '../../../src/endpoints'
 import RouterKeeper from '../../../src/services/RouterKeeper'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
-import MediaFileRetriever from '../../../src/services/MediaFileRetriever'
 import { LEGACY_URL } from '../../../src/constants/main'
 import NameComposer from '../../../src/services/NameComposer'
 import Alerter from '../../../src/services/Alerter'
@@ -25,18 +24,27 @@ describe('Main module actions', () => {
   })
 
   describe('userInfo action', () => {
-    it('should set user info', function (done) {
+    it('sets user info', function (done) {
       const postData = []
       const result = {
         data: {
           data: {
             id: 'u_1',
-            docid: 2,
-            manage_staff: 3,
+            userid: '1',
+            docid: '2',
+            manage_staff: '3',
             user_type: '4',
             use_course: '5',
-            loginid: 'foo',
             username: 'John',
+            doc_info: {
+              homepage: '6',
+              manage_staff: '7',
+              use_eligible_api: '8',
+              use_letters: '9',
+              use_patient_portal: '10',
+              use_payment_reports: '11',
+              use_course_staff: '12'
+            },
             numbers: {
               one: 1,
               two: 2
@@ -44,7 +52,7 @@ describe('Main module actions', () => {
           }
         }
       }
-      this.sandbox.stub(http, 'request').callsFake((method, path) => {
+      this.sandbox.stub(http, 'get').callsFake((path) => {
         postData.push({
           path: path
         })
@@ -62,8 +70,19 @@ describe('Main module actions', () => {
             manageStaff: 3,
             userType: 4,
             useCourse: 5,
-            loginId: 'foo',
             username: 'John'
+          }
+        },
+        {
+          type: symbols.mutations.docInfo,
+          payload: {
+            homepage: 6,
+            manageStaff: 7,
+            useEligibleApi: 8,
+            useLetters: 9,
+            usePatientPortal: 10,
+            usePaymentReports: 11,
+            useCourseStaff: 12
           }
         },
         {
@@ -85,8 +104,8 @@ describe('Main module actions', () => {
         done()
       }, 100)
     })
-    it('should handle error', function (done) {
-      this.sandbox.stub(http, 'post').callsFake(() => {
+    it('handles error', function (done) {
+      this.sandbox.stub(http, 'get').callsFake(() => {
         return Promise.reject(new Error())
       })
 
@@ -96,85 +115,6 @@ describe('Main module actions', () => {
           type: symbols.actions.handleErrors,
           payload: {
             title: 'getCurrentUser',
-            response: new Error()
-          }
-        }
-      ]
-
-      setTimeout(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
-        done()
-      }, 100)
-    })
-  })
-
-  describe('docInfo action', () => {
-    beforeEach(function () {
-      this.testCase.setState({
-        [symbols.state.userInfo]: {
-          docId: 1
-        }
-      })
-    })
-
-    it('should set doc info', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: {
-            homepage: 'foo',
-            manage_staff: 3,
-            use_eligible_api: 4,
-            use_letters: '5',
-            use_patient_portal: 6,
-            use_payment_reports: 7
-          }
-        }
-      }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
-      })
-
-      MainModule.actions[symbols.actions.docInfo](this.testCase.mocks)
-      const expectedMutations = [
-        {
-          type: symbols.mutations.docInfo,
-          payload: {
-            homepage: 'foo',
-            manageStaff: 3,
-            useEligibleApi: 4,
-            useLetters: 5,
-            usePatientPortal: 6,
-            usePaymentReports: 7
-          }
-        }
-      ]
-
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          {
-            path: endpoints.users.show + '/1'
-          }
-        ]
-        expect(postData).toEqual(expectedHttp)
-        done()
-      }, 100)
-    })
-    it('should handle error', function (done) {
-      this.sandbox.stub(http, 'get').callsFake(() => {
-        return Promise.reject(new Error())
-      })
-
-      MainModule.actions[symbols.actions.docInfo](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getUser',
             response: new Error()
           }
         }
@@ -238,69 +178,6 @@ describe('Main module actions', () => {
     })
     it('handles errors in production environment', function () {
       // @todo: add code and write the test
-    })
-  })
-
-  describe('courseStaff action', () => {
-    it('should set course staff', function (done) {
-      const postData = []
-      const result = {
-        data: {
-          data: {
-            use_course: '1',
-            use_course_staff: '2'
-          }
-        }
-      }
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve(result)
-      })
-
-      MainModule.actions[symbols.actions.courseStaff](this.testCase.mocks)
-      const expectedMutations = [
-        {
-          type: symbols.mutations.courseStaff,
-          payload: {
-            useCourse: 1,
-            useCourseStaff: 2
-          }
-        }
-      ]
-
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          {
-            path: endpoints.users.courseStaff
-          }
-        ]
-        expect(postData).toEqual(expectedHttp)
-        done()
-      }, 100)
-    })
-    it('should handle error', function (done) {
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject(new Error())
-      })
-
-      MainModule.actions[symbols.actions.courseStaff](this.testCase.mocks)
-      const expectedActions = [
-        {
-          type: symbols.actions.handleErrors,
-          payload: {
-            title: 'getCourseStaff',
-            response: new Error()
-          }
-        }
-      ]
-
-      setTimeout(() => {
-        expect(this.testCase.actions).toEqual(expectedActions)
-        done()
-      }, 100)
     })
   })
 
@@ -481,6 +358,8 @@ describe('Main module actions', () => {
     })
   })
 
+  // @todo: add proper logging. currently logins are not stored
+  /*
   describe('storeLoginDetails action', () => {
     it('stores login details', function (done) {
       const postData = []
@@ -566,6 +445,7 @@ describe('Main module actions', () => {
       }, 100)
     })
   })
+  */
 
   // @todo: the code needs to be rewritten and acceptance-tested
   /*

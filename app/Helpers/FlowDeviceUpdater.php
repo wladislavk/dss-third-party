@@ -31,7 +31,7 @@ class FlowDeviceUpdater
      * @param  int $userId
      * @param  int $docId
      * @param  string $ipAddress
-     * @return null
+     * @return void
      */
     public function update($patientId, $deviceId, $userId, $docId, $ipAddress)
     {
@@ -40,30 +40,28 @@ class FlowDeviceUpdater
 
         $lastAppointmentDevice = $this->appointmentSummaryRepository->getLastAppointmentDevice($patientId);
 
-        if (!empty($lastAppointmentDevice) && $lastAppointmentDevice->id === $patientId) {
-            $fields = ['ex_page5id'];
-            $where = ['patientid' => $patientId];
-            $tmjClinicalExamItems = $this->tmjClinicalExamRepository->getWithFilter($fields, $where);
-
-            if (count($tmjClinicalExamItems) === 0) {
-                $dataForStoring = [
-                    'dentaldevice' => $deviceId,
-                    'patientid' => $patientId,
-                    'userid' => $userId,
-                    'docid' => $docId,
-                    'ip_address' => $ipAddress
-                ];
-
-                $this->tmjClinicalExamRepository->create($dataForStoring);
-
-                return null;
-            }
-
-            $data = ['dentaldevice' => $deviceId];
-            $where = ['patientid' => $patientId];
-            $this->tmjClinicalExamRepository->updateWhere($data, $where);
+        if (empty($lastAppointmentDevice) || $lastAppointmentDevice->id !== $patientId) {
+            return;
         }
 
-        return null;
+        $fields = ['ex_page5id'];
+        $where = ['patientid' => $patientId];
+        $tmjClinicalExamItems = $this->tmjClinicalExamRepository->getWithFilter($fields, $where);
+
+        if (count($tmjClinicalExamItems) === 0) {
+            $dataForStoring = [
+                'dentaldevice' => $deviceId,
+                'patientid' => $patientId,
+                'userid' => $userId,
+                'docid' => $docId,
+                'ip_address' => $ipAddress
+            ];
+
+            $this->tmjClinicalExamRepository->create($dataForStoring);
+        }
+
+        $data = ['dentaldevice' => $deviceId];
+        $where = ['patientid' => $patientId];
+        $this->tmjClinicalExamRepository->updateWhere($data, $where);
     }
 }

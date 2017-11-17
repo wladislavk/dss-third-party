@@ -3,13 +3,20 @@
 namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
+use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
-class FlowDeviceUpdaterTest
+class FlowDeviceUpdaterTest extends UnitTestCase
 {
+    const PATIENT_ID = 123;
+    const DEVICE_ID = 10;
+    const USER_ID = 1;
+    const DOC_ID = 1;
+    const IP_ADDRESS = '127.0.0.1';
+
     /**
      * @var FlowDeviceUpdater
      */
@@ -26,26 +33,75 @@ class FlowDeviceUpdaterTest
         );
     }
 
-    public function test()
+    public function testUpdate()
     {
+        $patientId = self::PATIENT_ID;
+        $deviceId = self::DEVICE_ID;
+        $userId = self::USER_ID;
+        $docId = self::DOC_ID;
+        $ipAddress = self::IP_ADDRESS;
 
+        $result = $this->flowDeviceUpdater->update(
+            $patientId,
+            $deviceId,
+            $userId,
+            $docId,
+            $ipAddress
+        );
+
+        $expectedResult = null;
+        $this->assertEquals($expectedResult, $result);
     }
 
     private function mockAppointmentSummaryRepository()
     {
-        /** @var PatientRepository|MockInterface $patientRepository */
-        $patientRepository = \Mockery::mock(PatientRepository::class);
-        $patientRepository->shouldReceive('updatePatient')
-            ->andReturnUsing([$this, 'updatePatientCallback']);
-        return $patientRepository;
+        /** @var AppointmentSummaryRepository|MockInterface $appointmentSummaryRepository */
+        $appointmentSummaryRepository = \Mockery::mock(AppointmentSummaryRepository::class);
+
+        $dataForStoringInUpdateById = ['device_id' => self::DEVICE_ID];
+        $appointmentSummaryRepository->shouldReceive('updateById')
+            ->once()
+            ->with(self::PATIENT_ID, $dataForStoringInUpdateById)
+            ->andReturn(true)
+        ;
+
+        $appointmentSummaryRepository->shouldReceive('getLastAppointmentDevice')
+            ->once()
+            ->with(self::PATIENT_ID)
+            ->andReturnUsing(function () {
+                $appointmentSummary = new AppointmentSummary();
+                $appointmentSummary->id = self::PATIENT_ID;
+
+                return $appointmentSummary;
+            })
+        ;
+
+        return $appointmentSummaryRepository;
     }
 
     private function mockTmjClinicalExamRepository()
     {
-        /** @var PatientRepository|MockInterface $patientRepository */
-        $patientRepository = \Mockery::mock(PatientRepository::class);
-        $patientRepository->shouldReceive('updatePatient')
-            ->andReturnUsing([$this, 'updatePatientCallback']);
-        return $patientRepository;
+        /** @var TmjClinicalExamRepository|MockInterface $tmjClinicalExamRepository */
+        $tmjClinicalExamRepository = \Mockery::mock(TmjClinicalExamRepository::class);
+
+        $tmjClinicalExamRepository->shouldReceive('getWithFilter')
+            ->once()
+            ->andReturn([])
+        ;
+
+        $expectedDataForStoring = [
+            'dentaldevice' => self::DEVICE_ID,
+            'patientid' => self::PATIENT_ID,
+            'userid' => self::USER_ID,
+            'docid' => self::DOC_ID,
+            'ip_address' => self::IP_ADDRESS
+        ];
+        $tmjClinicalExamRepository->shouldReceive('create')
+            ->once()
+            ->with($expectedDataForStoring)
+            ->andReturn(true)
+        ;
+
+        return $tmjClinicalExamRepository;
     }
 }

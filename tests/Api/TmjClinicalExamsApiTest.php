@@ -66,4 +66,15 @@ class TmjClinicalExamsApiTest extends ApiTestCase
             'other_range_motion' => 'test',
         ];
     }
+
+    public function testUpdateFlowDevice()
+    {
+        $this->post(self::ROUTE_PREFIX . '/tmj-clinical-exams/update-flow-device');
+        $this->assertResponseOk();
+        $this->assertEquals(null, $this->getResponseData());
+
+        $content = json_decode($this->response->getContent(), true);
+        $expectedResponseMessage = 'Flow device was successfully updated.';
+        $this->assertEquals($expectedResponseMessage, $content['message']);
+    }
 }

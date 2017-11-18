@@ -18,13 +18,11 @@ export default {
     return new Promise((resolve, reject) => {
       axios.post(ProcessWrapper.getApiRoot() + 'auth', credentials).then((response) => {
         const data = response.data
-
         commit(symbols.mutations.mainToken, data.token)
         http.token = data.token
         return http.post(endpoints.users.check)
       }).then((response) => {
         const data = response.data.data
-
         if (data.type.toLowerCase() === 'suspended') {
           commit(symbols.mutations.mainToken, '')
           http.token = ''
@@ -34,6 +32,7 @@ export default {
       }).then(() => {
         resolve()
       }).catch((response) => {
+        commit(symbols.mutations.mainToken, '')
         let reason = ''
         if (response instanceof LoginError) {
           reason = response.response

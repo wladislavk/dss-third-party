@@ -4,6 +4,7 @@ import sinon from 'sinon'
 import MainModule from '../../../src/store/main'
 import TestCase from '../../cases/StoreTestCase'
 import SwalWrapper from '../../../src/wrappers/SwalWrapper'
+import axios from 'axios'
 import http from '../../../src/services/http'
 import LocalStorageManager from '../../../src/services/LocalStorageManager'
 import endpoints from '../../../src/endpoints'
@@ -21,6 +22,163 @@ describe('Main module actions', () => {
 
   afterEach(function () {
     this.sandbox.restore()
+  })
+
+  describe('mainLogin action', () => {
+    beforeEach(function () {
+      this.postData = []
+      this.sandbox.stub(ProcessWrapper, 'getApiRoot').callsFake(() => {
+        return 'root/'
+      })
+    })
+    it('resolve login', function (done) {
+      this.sandbox.stub(axios, 'post').callsFake((path, payload) => {
+        this.postData.push({
+          path: path,
+          payload: payload
+        })
+        const result = {
+          data: {
+            token: 'token'
+          }
+        }
+        return Promise.resolve(result)
+      })
+      this.sandbox.stub(http, 'post').callsFake((path) => {
+        this.postData.push({
+          path: path
+        })
+        const result = {
+          data: {
+            data: {
+              type: 'OK'
+            }
+          }
+        }
+        return Promise.resolve(result)
+      })
+      const credentials = {foo: 'bar'}
+      MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
+      setTimeout(() => {
+        const expectedHttp = [
+          {
+            path: 'root/auth',
+            payload: {foo: 'bar'}
+          },
+          {
+            path: endpoints.users.check
+          }
+        ]
+        expect(this.postData).toEqual(expectedHttp)
+        const expectedMutations = [
+          {
+            type: symbols.mutations.mainToken,
+            payload: 'token'
+          }
+        ]
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        const expectedActions = [
+          {
+            type: symbols.actions.userInfo,
+            payload: {}
+          }
+        ]
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+    it('throw if check user fails', function (done) {
+      this.sandbox.stub(axios, 'post').callsFake((path, payload) => {
+        this.postData.push({
+          path: path,
+          payload: payload
+        })
+        const result = {
+          data: {
+            token: 'token'
+          }
+        }
+        return Promise.resolve(result)
+      })
+      this.sandbox.stub(http, 'post').callsFake((path) => {
+        this.postData.push({
+          path: path
+        })
+        return Promise.reject('check user error')
+      })
+      const credentials = {foo: 'bar'}
+      MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
+      setTimeout(() => {
+        const expectedHttp = [
+          {
+            path: 'root/auth',
+            payload: {foo: 'bar'}
+          },
+          {
+            path: endpoints.users.check
+          }
+        ]
+        expect(this.postData).toEqual(expectedHttp)
+        const expectedMutations = [
+          {
+            type: symbols.mutations.mainToken,
+            payload: 'token'
+          },
+          {
+            type: symbols.mutations.mainToken,
+            payload: ''
+          }
+        ]
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        const expectedActions = [
+          {
+            type: symbols.actions.handleErrors,
+            payload: {title: 'getToken', response: 'check user error'}
+          }
+        ]
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+    it('throws if auth fails', function (done) {
+      this.sandbox.stub(axios, 'post').callsFake((path, payload) => {
+        this.postData.push({
+          path: path,
+          payload: payload
+        })
+        return Promise.reject('auth error')
+      })
+      const credentials = {foo: 'bar'}
+      MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
+      setTimeout(() => {
+        const expectedHttp = [
+          {
+            path: 'root/auth',
+            payload: {foo: 'bar'}
+          }
+        ]
+        expect(this.postData).toEqual(expectedHttp)
+        const expectedMutations = [
+          {
+            type: symbols.mutations.mainToken,
+            payload: ''
+          }
+        ]
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        const expectedActions = [
+          {
+            type: symbols.actions.handleErrors,
+            payload: {title: 'getToken', response: 'auth error'}
+          }
+        ]
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+    // @todo: devise a way to test it
+    it('throws with 422 status', function () {})
+    // @todo: devise a way to test it
+    it('throws if account suspended', function () {})
   })
 
   describe('userInfo action', () => {
@@ -52,7 +210,7 @@ describe('Main module actions', () => {
           }
         }
       }
-      this.sandbox.stub(http, 'get').callsFake((path) => {
+      this.sandbox.stub(http, 'request').callsFake((method, path) => {
         postData.push({
           path: path
         })
@@ -105,7 +263,7 @@ describe('Main module actions', () => {
       }, 100)
     })
     it('handles error', function (done) {
-      this.sandbox.stub(http, 'get').callsFake(() => {
+      this.sandbox.stub(http, 'request').callsFake(() => {
         return Promise.reject(new Error())
       })
 

@@ -6,7 +6,7 @@ export default {
   data () {
     return {
       legacyUrl: LEGACY_URL,
-      patientId: 0
+      patientId: this.$store.state.patients[symbols.state.patientId]
     }
   },
   components: {
@@ -33,11 +33,9 @@ export default {
   },
   methods: {
     updatePatientData (patientId) {
-      this.patientId = patientId
       this.$store.dispatch(symbols.actions.patientData, patientId)
     },
     clearPatientData () {
-      this.patientId = 0
       this.$store.dispatch(symbols.actions.clearPatientData)
     }
   }

@@ -46,27 +46,8 @@ export default {
     [NOTIFICATION_NUMBERS.unmailedLetters]: 0,
     [NOTIFICATION_NUMBERS.unsignedNotes]: 0
   },
-  [symbols.state.patientId]: 0,
-  [symbols.state.patientName]: '',
-  [symbols.state.patientHomeSleepTestStatus]: '',
-  [symbols.state.medicare]: false,
-  [symbols.state.premedCheck]: 0,
-  [symbols.state.headerTitle]: '',
-  [symbols.state.headerAlertText]: '',
-  [symbols.state.displayAlert]: false,
-  [symbols.state.allergen]: false,
-  [symbols.state.incompleteHomeSleepTests]: [],
   [symbols.state.showAllWarnings]: true,
   [symbols.state.companyLogo]: '',
-  [symbols.state.questionnaireStatuses]: {
-    symptoms: 0,
-    treatments: 0,
-    history: 0
-  },
-  [symbols.state.isEmailBounced]: false,
-  [symbols.state.totalPatientContacts]: 0,
-  [symbols.state.totalPatientInsurances]: 0,
-  [symbols.state.rejectedClaimsForCurrentPatient]: [],
   [symbols.state.showSearchHints]: false,
   [symbols.state.patientSearchList]: []
 }

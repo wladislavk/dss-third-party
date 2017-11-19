@@ -12,7 +12,7 @@ export default {
   data () {
     return {
       legacyUrl: LEGACY_URL,
-      patientId: this.$store.state.main[symbols.state.patientId],
+      patientId: this.$store.state.patients[symbols.state.patientId],
       showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings]
     }
   },

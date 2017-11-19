@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import store from '../../../../src/store'
 import DashboardNotificationsComponent from '../../../../src/components/manage/dashboard/DashboardNotifications.vue'
+import NotificationBranchData from '../../../../src/components/manage/dashboard/NotificationBranch'
 import NotificationLinkData from '../../../../src/components/manage/dashboard/NotificationLink'
 import symbols from '../../../../src/symbols'
 import { DSS_CONSTANTS } from '../../../../src/constants/main'
@@ -9,7 +10,11 @@ describe('DashboardNotifications component', () => {
   beforeEach(function () {
     Vue.component('notification-link', {
       props: NotificationLinkData.props,
-      template: '<div class="notification-link" v-bind:data-link-label="linkLabel" v-bind:data-has-children="hasChildren" v-bind:data-show-all="showAll"></div>'
+      template: '<div class="notification-link" v-bind:data-link-label="linkLabel" v-bind:data-show-all="showAll"></div>'
+    })
+    Vue.component('notification-branch', {
+      props: NotificationBranchData.props,
+      template: '<div class="notification-branch" v-bind:data-notification="notification" v-bind:data-show-all="showAll"></div>'
     })
     const Component = Vue.extend(DashboardNotificationsComponent)
     this.mount = function (propsData) {
@@ -24,18 +29,10 @@ describe('DashboardNotifications component', () => {
     const vm = this.mount({})
     const allChildren = vm.$el.querySelectorAll('div > div')
     expect(allChildren.length).toBe(12)
-    const componentsWithChildren = vm.$el.querySelectorAll('div > div.notsuckertreemenu')
+    const componentsWithChildren = vm.$el.querySelectorAll('div.notification-branch')
     expect(componentsWithChildren.length).toBe(1)
-    const parentLink = componentsWithChildren[0].querySelector('ul#notmenu > li > div.notification-link')
-    expect(parentLink.getAttribute('data-link-label')).toBe('Web Portal')
-    expect(parentLink.getAttribute('data-has-children')).toBe('true')
-    const childComponents = componentsWithChildren[0].querySelectorAll('ul#notmenu > li > ul > li')
-    expect(childComponents.length).toBe(3)
-    const firstChild = childComponents[0].querySelector('div.notification-link')
-    expect(firstChild.getAttribute('data-has-children')).toBeNull()
     const componentsWithoutChildren = vm.$el.querySelectorAll('div > div.notification-link')
     expect(componentsWithoutChildren.length).toBe(11)
-    expect(componentsWithoutChildren[0].getAttribute('data-has-children')).toBeNull()
   })
 
   it('should display notifications with all conditions set to true', function () {
@@ -53,11 +50,8 @@ describe('DashboardNotifications component', () => {
     expect(showAllButton.style.display).toBe('')
     const showActiveButton = vm.$el.querySelector('a#not_show_active')
     expect(showActiveButton.style.display).toBe('none')
-    const parentLink = vm.$el.querySelector('div > div.notsuckertreemenu > ul#notmenu > li > div.notification-link')
-    expect(parentLink.getAttribute('data-show-all')).toBe('true')
-    const childComponents = vm.$el.querySelectorAll('div > div.notsuckertreemenu > ul#notmenu > li > ul > li')
-    const firstChild = childComponents[0].querySelector('div.notification-link')
-    expect(firstChild.getAttribute('data-show-all')).toBeNull()
+    const componentWithChildren = vm.$el.querySelector('div.notification-branch')
+    expect(componentWithChildren.getAttribute('data-show-all')).toBeNull()
     const componentsWithoutChildren = vm.$el.querySelectorAll('div > div.notification-link')
     const firstComponent = componentsWithoutChildren[0]
     expect(firstComponent.getAttribute('data-show-all')).toBeNull()
@@ -65,8 +59,7 @@ describe('DashboardNotifications component', () => {
     vm.$nextTick(() => {
       expect(showAllButton.style.display).toBe('none')
       expect(showActiveButton.style.display).toBe('')
-      expect(parentLink.getAttribute('data-show-all')).toBe('true')
-      expect(firstChild.getAttribute('data-show-all')).toBe('true')
+      expect(componentWithChildren.getAttribute('data-show-all')).toBe('true')
       expect(firstComponent.getAttribute('data-show-all')).toBe('true')
       showActiveButton.click()
       vm.$nextTick(() => {

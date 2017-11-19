@@ -19,11 +19,12 @@ describe('NotificationLink component', () => {
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.patientChanges] = 3
     const propsData = {
       linkCount: NOTIFICATION_NUMBERS.patientChanges,
-      linkLabel: 'My link'
+      linkLabel: 'My link',
+      linkUrl: 'foo'
     }
     const vm = this.mount(propsData)
     expect(vm.$el.style.display).toBe('')
-    expect(vm.$el.getAttribute('href')).toBe('#')
+    expect(vm.$el.getAttribute('href')).toBe('http://legacy/foo')
     const expectedClass = 'notification count_3 bad_count'
     expect(vm.$el.className).toBe(expectedClass)
     const counter = vm.$el.querySelector('span.count')
@@ -39,11 +40,10 @@ describe('NotificationLink component', () => {
     const propsData = {
       linkCount: NOTIFICATION_NUMBERS.patientChanges,
       linkLabel: 'My link',
-      linkUrl: 'foo',
       hasChildren: true
     }
     const vm = this.mount(propsData)
-    expect(vm.$el.getAttribute('href')).toBe('http://legacy/foo')
+    expect(vm.$el.getAttribute('href')).toBe('#')
     const arrowRight = vm.$el.querySelector('div.arrow_right')
     expect(arrowRight).not.toBeNull()
   })

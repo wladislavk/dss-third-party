@@ -116,15 +116,15 @@ class GuideDevicesController extends BaseRestController
     }
 
     /**
-     * @SWG\Post(
+     * @SWG\Get(
      *     path="/guide-devices/with-images",
      *     tags={"guide-devices"},
      *     summary="Get Device Guide results with images",
      *     @SWG\Parameter(
      *         name="settings",
-     *         in="formData",
+     *         in="query",
      *         required=true,
-     *         type="array"
+     *         type="string"
      *     ),
      *     @SWG\Response(
      *         response="200",

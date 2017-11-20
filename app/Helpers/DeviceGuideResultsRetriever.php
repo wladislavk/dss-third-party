@@ -9,6 +9,8 @@ use DentalSleepSolutions\Constants\DeviceSettingTypes;
 class DeviceGuideResultsRetriever
 {
     const CHECKED_IMP_COEFFICIENT = 1.75;
+    const IDS_DELIMETER = '_';
+    const SETTINGS_DELIMETER = ',';
 
     /**
      * @var DeviceRepository
@@ -29,10 +31,10 @@ class DeviceGuideResultsRetriever
     }
 
     /**
-     * @param  array $settings
+     * @param string $settings
      * @return array[]
      */
-    public function get(array $settings)
+    public function get($settings)
     {
         $fields = ['deviceid', 'device', 'image_path'];
         $devices = $this->deviceRepository->getWithFilter($fields);
@@ -66,14 +68,16 @@ class DeviceGuideResultsRetriever
 
     /**
      * @param  array|\Illuminate\Database\Eloquent\Collection $deviceSettings
-     * @param  array $settings
+     * @param  string $settings
      * @return int|boolean
      */
-    private function countTotalValue($deviceSettings, array $settings)
+    private function countTotalValue($deviceSettings, $settings)
     {
         if (count($deviceSettings) === 0) {
             return 0;
         }
+
+        $settings = $this->convertSettings($settings);
 
         $settingsFields = array_keys($settings);
         $requiredDeviceSettings = $deviceSettings->filter(function ($item) use ($settingsFields) {
@@ -100,7 +104,7 @@ class DeviceGuideResultsRetriever
             }
 
             $value = $setting['checked'] * $deviceSetting->value;
-            if (isset($setting['checkedImp'])) {
+            if (isset($setting['checked_imp'])) {
                 $value *= self::CHECKED_IMP_COEFFICIENT;
             }
 
@@ -108,5 +112,38 @@ class DeviceGuideResultsRetriever
         }
 
         return $total;
+    }
+
+    /**
+     * @param  string $settings
+     * @return array[]
+     */
+    private function convertSettings($settings)
+    {
+        if (empty($settings)) {
+            return [];
+        }
+
+        $settings = explode(self::SETTINGS_DELIMETER, $settings);
+
+        $convertedSettings = [];
+        foreach ($settings as $setting) {
+            $ids = explode(self::IDS_DELIMETER, $setting);
+
+            if (count($ids) === 2) {
+                list($deviceSettingId, $checked) = $ids;
+                $convertedSettings[$deviceSettingId] = ['checked' => $checked];
+            }
+
+            if (count($ids) === 3) {
+                list($deviceSettingId, $checkedImp, $checked) = $ids;
+                $convertedSettings[$deviceSettingId] = [
+                    'checked_imp' => $checkedImp,
+                    'checked' => $checked,
+                ];
+            }
+        }
+
+        return $convertedSettings;
     }
 }

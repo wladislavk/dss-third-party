@@ -132,7 +132,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('gag-reflexes', 'GagReflexesController', ['except' => ['create', 'edit']]);
 
-    Route::post('guide-devices/with-images', 'GuideDevicesController@getWithImages');
+    Route::get('guide-devices/with-images', 'GuideDevicesController@getWithImages');
     Route::resource('guide-devices', 'GuideDevicesController', ['except' => ['create', 'edit']]);
 
     Route::post('guide-settings/sort', 'GuideSettingsController@getAllOrderBy');

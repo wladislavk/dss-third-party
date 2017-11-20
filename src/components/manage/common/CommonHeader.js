@@ -33,12 +33,6 @@ export default {
     this.$store.dispatch(symbols.actions.companyLogo)
   },
   methods: {
-    showWarnings () {
-      this.$store.commit(symbols.mutations.showAllWarnings)
-    },
-    hideWarnings () {
-      this.$store.commit(symbols.mutations.hideAllWarnings)
-    },
     goToAddPatient () {
       LocationWrapper.goToPage(LEGACY_URL + 'add_patient.php')
     },

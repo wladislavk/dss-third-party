@@ -6,12 +6,11 @@
             </li>
             <li class="header_support" v-bind:class="{'pending': supportTicketsNumber}">
                 <a v-bind:href="legacyUrl + 'support.php'">
-                    Support
-                    <span v-if="supportTicketsNumber">({{ supportTicketsNumber }})</span>
+                    Support <span v-if="supportTicketsNumber">({{ supportTicketsNumber }})</span>
                 </a>
             </li>
             <li>
-                <a href="#" v-on:click.prevent="logout()">Sign Out</a>
+                <a href="#" id="logout" v-on:click.prevent="logout()">Sign Out</a>
             </li>
         </ul>
     </div>

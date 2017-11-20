@@ -64,10 +64,6 @@ export default {
     }
   },
 
-  [symbols.mutations.patientId] (state, data) {
-    state[symbols.state.patientId] = parseInt(data)
-  },
-
   [symbols.mutations.showAllWarnings] (state) {
     state[symbols.state.showAllWarnings] = true
   },

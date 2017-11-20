@@ -1,12 +1,9 @@
 <template>
     <div class="body-image">
         <div class="patient-menus">
-            <patient-inner-menu v-if="patientId"></patient-inner-menu>
-            <patient-task-menu
-                v-if="patientId"
-                v-bind:patient-id="patientId"
-            ></patient-task-menu>
-            <span v-if="patientId">
+            <patient-inner-menu v-bind:patient-id="patientId"></patient-inner-menu>
+            <patient-task-menu v-bind:patient-id="patientId"></patient-task-menu>
+            <span>
                 <a
                     v-show="!showAllWarnings"
                     href="#"
@@ -23,8 +20,7 @@
                 >Hide Warnings</a>
             </span>
             <welcome-text></welcome-text>
-            <patient-menu v-if="patientId"></patient-menu>
-            <div class="clear" v-if="!patientId"></div>
+            <patient-menu></patient-menu>
         </div>
         <div class="clear"></div>
     </div>

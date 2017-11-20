@@ -1,8 +1,6 @@
 <template>
     <div class="suckertreemenu">
-        <span class="welcome-text">
-            Welcome {{ username }}
-        </span>
+        <span class="welcome-text">Welcome {{ username }}</span>
     </div>
 </template>
 

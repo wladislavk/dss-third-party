@@ -53,7 +53,7 @@ export default {
     },
     checkAsciiCode (asciiValue) {
       // for acceptance tests
-      if (asciiValue === 0) {
+      if (!asciiValue) {
         return true
       }
       const apostropheCode = 39
@@ -75,7 +75,6 @@ export default {
       if (this.searchTimeout) {
         clearTimeout(this.searchTimeout)
       }
-
       const searchBounce = 600
       this.searchTimeout = setTimeout(() => {
         this.$store.dispatch(symbols.actions.patientSearchList, searchTerm)

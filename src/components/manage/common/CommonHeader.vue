@@ -9,8 +9,8 @@
             </div>
             <div class="patient-search">
                 <patient-search></patient-search>
-                <button v-on:click="goToAddPatient()">+ Add Patient</button>
-                <button v-on:click="addTaskPopup()">+ Add Task</button>
+                <button id="add_patient_button" v-on:click="goToAddPatient()">+ Add Patient</button>
+                <button id="add_task_button" v-on:click="addTaskPopup()">+ Add Task</button>
             </div>
             <div v-if="companyLogo" class="company-logo">
                 <img v-bind:src="companyLogo" alt="Company logo" title="Company logo" />
@@ -30,11 +30,3 @@
 <script src="./CommonHeader.js"></script>
 
 <style src="../../../assets/css/manage/common/common-header.css" scoped></style>
-<!--
-<style src="../../../assets/css/manage/search-hints.css" scoped></style>
-<style src="../../../assets/css/manage/top.css" scoped></style>
-<style src="../../../assets/css/manage/letter-form.css" scoped></style>
-<style src="../../../assets/css/manage/form.css" scoped></style>
-<style src="../../../../node_modules/sweetalert/dist/sweetalert.css" scoped></style>
-<style src="../../../../node_modules/mint-ui/lib/style.css" scoped></style>
--->

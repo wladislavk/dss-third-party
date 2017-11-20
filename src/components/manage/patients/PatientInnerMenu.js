@@ -2,14 +2,19 @@ import { LEGACY_URL } from '../../../constants/main'
 import symbols from '../../../symbols'
 
 export default {
+  props: {
+    patientId: {
+      type: Number,
+      required: true
+    }
+  },
   data () {
     return {
       legacyUrl: LEGACY_URL,
       medicare: this.$store.state.main[symbols.state.medicare],
       alertText: this.$store.state.main[symbols.state.headerAlertText],
       headerTitle: this.$store.state.main[symbols.state.headerTitle],
-      patientName: this.$store.state.main[symbols.state.patientName],
-      patientId: this.$store.state.main[symbols.state.patientId]
+      patientName: this.$store.state.main[symbols.state.patientName]
     }
   },
   computed: {

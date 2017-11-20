@@ -2,6 +2,10 @@ import symbols from '../../symbols'
 import { HST_STATUSES } from '../../constants/main'
 
 export default {
+  [symbols.mutations.patientId] (state, data) {
+    state[symbols.state.patientId] = parseInt(data)
+  },
+
   [symbols.mutations.patientData] (state, data) {
     const insuranceType = parseInt(data.insuranceType)
     let hasMedicare = false

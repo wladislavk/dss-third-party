@@ -11,7 +11,7 @@
                     v-bind:has-children="true"
                     v-bind:key="notification.label"
                 ></notification-link>
-                <ul v-visible="childrenShown">
+                <ul v-visible="childrenShown" class="children-links">
                     <li
                         v-for="notificationChild in notification.children"
                         v-if="resolveCondition(notificationChild.shouldParse)"

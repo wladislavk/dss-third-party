@@ -116,6 +116,8 @@ export default {
       }
 
       this.$store.dispatch(symbols.actions.updateFlowDevice, deviceId).then(response => {
+        Alerter.alert(response.data.message)
+
         // TODO: current modal may be used not only for the dashboard.
         // it seems that next logic may be required for other callers of the modal
         // parent.updateDentalDevice(patientId, deviceId)

@@ -16,14 +16,7 @@
             </div>
         </div>
         <h2 id="device-selector-title">{{ deviceSelectorTitle }}</h2>
-        <form
-            v-bind:action="legacyUrl + 'device_guide_results.php'"
-            method="post"
-            id="device_form"
-        >
-            <!-- TODO: need remove hidden fields when `device_guide_results` is migrated -->
-            <input v-bind:value="$route.query.id" type="hidden" name="id">
-            <input v-bind:value="$route.query.pid" type="hidden" name="pid">
+        <form id="device_form">
             <div
                 v-for="deviceGuideSetting in deviceGuideSettingOptions"
                 v-bind:id="'setting_' + deviceGuideSetting.id"

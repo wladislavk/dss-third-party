@@ -100,25 +100,35 @@ export default {
     })
   },
   [symbols.actions.getDeviceGuideResults] ({commit, dispatch, state, rootState}) {
-    let data = { settings: {} }
+    const IDS_DELIMETER = '_'
+    const SETTINGS_DELIMETER = ','
+
+    let settings = []
 
     state[symbols.state.deviceGuideSettingOptions].forEach(el => {
-      data.settings[el.id] = {}
+      let currentSetting = el.id
 
       if (el.hasOwnProperty('checkedImp') && el.checkedImp) {
-        data.settings[el.id]['checkedImp'] = el.checkedImp
+        currentSetting += IDS_DELIMETER + el.checkedImp
       }
 
       if (el.hasOwnProperty('checkedOption')) {
-        data.settings[el.id]['checked'] = el.checkedOption + 1
+        currentSetting += IDS_DELIMETER + (el.checkedOption + 1)
+        settings.push(currentSetting)
         return
       }
 
-      data.settings[el.id]['checked'] = el.checked
+      currentSetting += IDS_DELIMETER + el.checked
+      settings.push(currentSetting)
     })
 
+    const config = {
+      params: {
+        settings: settings.join(SETTINGS_DELIMETER)
+      }
+    }
     http.token = rootState.main[symbols.state.mainToken]
-    http.post(endpoints.guideDevices.withImages, data).then(response => {
+    http.get(endpoints.guideDevices.withImages, {}, config).then(response => {
       const data = response.data.data
 
       commit(symbols.mutations.deviceGuideResults, data)

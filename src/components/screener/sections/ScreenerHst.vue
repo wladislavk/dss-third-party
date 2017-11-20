@@ -9,7 +9,8 @@
                 <div class="sepH_b clear" id="hst_company_id_div">
                     <label class="lbl_a">HST Company</label>
                     <div v-for="company in companies" class="company_div">
-                        <img v-if="company.logo" v-bind:src="company.logo" alt="Company logo" title="Company logo" />
+                        <!-- @todo: this is not likely to work in legacy, migrate after other modules are migrated -->
+                        <!--<img v-if="company.logo" v-bind:src="company.logo" alt="Company logo" title="Company logo" />-->
                         <br />
                         <input type="radio" v-bind:id="'hst_company_id_' + company.id" name="hst_company_id" v-bind:value="company.id" v-on:click="updateCompany($event)" />
                         <label v-bind:for="'hst_company_id_' + company.id">{{ company.name }}</label>

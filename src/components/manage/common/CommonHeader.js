@@ -30,7 +30,8 @@ export default {
     welcomeText: WelcomeTextComponent
   },
   created () {
-    this.$store.dispatch(symbols.actions.companyLogo)
+    // @todo: this is not likely to work in legacy, migrate after other modules are migrated
+    // this.$store.dispatch(symbols.actions.companyLogo)
   },
   methods: {
     goToAddPatient () {

@@ -52,13 +52,6 @@ describe('CommonHeader component', () => {
     expect(patientMenusDiv).not.toBeNull()
   })
 
-  it('shows company logo', function () {
-    store.commit(symbols.mutations.companyLogo, 'logo.png')
-    const vm = this.mount()
-    const companyLogoImg = vm.$el.querySelector('div.company-logo > img')
-    expect(companyLogoImg.getAttribute('src')).toBe('logo.png')
-  })
-
   it('shows patient header when ID present', function () {
     store.commit(symbols.mutations.patientId, 1)
     const vm = this.mount()

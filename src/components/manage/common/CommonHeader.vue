@@ -12,9 +12,12 @@
                 <button id="add_patient_button" v-on:click="goToAddPatient()">+ Add Patient</button>
                 <button id="add_task_button" v-on:click="addTaskPopup()">+ Add Task</button>
             </div>
+            <!-- @todo: this is not likely to work in legacy, migrate after other modules are migrated -->
+            <!--
             <div v-if="companyLogo" class="company-logo">
                 <img v-bind:src="companyLogo" alt="Company logo" title="Company logo" />
             </div>
+            -->
             <div class="clear"></div>
         </div>
         <patient-header v-if="patientId" v-bind:patient-id="patientId"></patient-header>

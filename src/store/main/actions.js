@@ -139,7 +139,6 @@ export default {
   },
   */
 
-  // @todo: the code needs to be rewritten and acceptance-tested
   [symbols.actions.companyLogo] ({state, commit, dispatch}) {
     http.token = state[symbols.state.mainToken]
     http.get(endpoints.companies.companyByUser).then((response) => {

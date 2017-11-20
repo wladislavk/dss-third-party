@@ -78,9 +78,7 @@ describe('ScreenerHST', () => {
     moxios.wait(() => {
       const companyDivs = this.vm.$el.querySelectorAll('div.company_div')
       expect(companyDivs.length).toBe(2)
-      expect(companyDivs[0].querySelector('img').getAttribute('src')).toBe(process.env.IMAGE_PATH + 'first.png')
       expect(companyDivs[0].querySelector('label').textContent).toBe('First')
-      expect(companyDivs[1].querySelector('img')).toBeNull()
       expect(companyDivs[1].querySelector('label').textContent).toBe('Second')
 
       const leftContactDivs = this.vm.$el.querySelectorAll('div#hst_column_left > div.contact_div')

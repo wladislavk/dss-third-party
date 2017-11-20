@@ -140,7 +140,7 @@ class UsersApiTest extends ApiTestCase
         /** @var BaseUser $user */
         $user = BaseUser::find('u_1');
         $this->be($user);
-        $this->post(self::ROUTE_PREFIX . '/users/current');
+        $this->get(self::ROUTE_PREFIX . '/users/current');
         $this->assertResponseOk();
         $expected = [
             'id' => 'u_1',
@@ -183,18 +183,112 @@ class UsersApiTest extends ApiTestCase
                 'unmailed_letters' => 130,
                 'unsigned_notes' => 7,
             ],
+            'doc_info' => [
+                'userid' => 1,
+                'user_access' => 2,
+                'docid' => 0,
+                'username' => 'doc1f',
+                'npi' => '1234567890',
+                'name' => 'DOCTOR !',
+                'email' => 'email1@email.com',
+                'address' => '125 Sleepy Hollow Lane1',
+                'city' => 'St Pete',
+                'state' => 'CA',
+                'zip' => '33333',
+                'phone' => '5554443333',
+                'status' => 1,
+                'adddate' => '2010-03-05 18:53:39',
+                'ip_address' => '192.168.1.55',
+                'medicare_npi' => '1234567890',
+                'tax_id_or_ssn' => '8888',
+                'producer' => null,
+                'practice' => 'Test Practice2',
+                'email_header' => 'dss_email_header_250711_1609.jpg',
+                'email_footer' => 'dss_email_footer_250711_1609.jpg',
+                'fax_header' => 'dss_print_header_250711_1609.jpg',
+                'fax_footer' => 'dss_print_footer_250711_1609.jpg',
+                'recover_hash' => 'd67d76236b805f4d3b830374d313667f62eede287ace7b17b65dfbffe5a8be0c',
+                'recover_time' => '2011-08-31 13:00:05',
+                'ssn' => 0,
+                'ein' => 1,
+                'use_patient_portal' => 1,
+                'mailing_practice' => 'Test Practice',
+                'mailing_name' => 'Dental Sleep Solutions',
+                'mailing_address' => '123 Test St, Ste 205',
+                'mailing_city' => 'St. Petersburg',
+                'mailing_state' => 'FL',
+                'mailing_zip' => '33704',
+                'mailing_phone' => '5555555555',
+                'use_digital_fax' => 1,
+                'fax' => '',
+                'use_letters' => 1,
+                'sign_notes' => 0,
+                'use_eligible_api' => 1,
+                'access_code' => null,
+                'text_date' => null,
+                'text_num' => 0,
+                'access_code_date' => null,
+                'registration_email_date' => null,
+                'producer_files' => 0,
+                'medicare_ptan' => '123321',
+                'use_course' => 1,
+                'use_course_staff' => 1,
+                'manage_staff' => 0,
+                'cc_id' => 'cus_2sh7VzTQufIsgX',
+                'user_type' => 2,
+                'letter_margin_header' => 48,
+                'letter_margin_footer' => 26,
+                'letter_margin_top' => 14,
+                'letter_margin_bottom' => 40,
+                'letter_margin_left' => 18,
+                'letter_margin_right' => 18,
+                'claim_margin_top' => 10,
+                'claim_margin_left' => 10,
+                'homepage' => 1,
+                'logo' => 'user_logo_1.jpg',
+                'use_letter_header' => 0,
+                'access_code_id' => 1,
+                'first_name' => 'Doctor',
+                'last_name' => '1',
+                'indent_address' => 0,
+                'registration_date' => null,
+                'header_space' => 0,
+                'billing_company_id' => 4,
+                'tracker_letters' => 1,
+                'intro_letters' => 1,
+                'plan_id' => 1,
+                'suspended_reason' => null,
+                'suspended_date' => null,
+                'updated_at' => '2016-01-12 15:15:29',
+                'signature_file' => null,
+                'signature_json' => null,
+                'edx_id' => 354,
+                'help_id' => 5,
+                'use_service_npi' => 0,
+                'service_name' => 'MedicareName',
+                'service_address' => 'MedicareAddr',
+                'service_city' => 'MedCity',
+                'service_state' => 'MedState',
+                'service_zip' => '99999',
+                'service_phone' => '',
+                'service_fax' => '',
+                'service_npi' => '99999999',
+                'service_medicare_npi' => '99999999',
+                'service_medicare_ptan' => '88888999',
+                'service_tax_id_or_ssn' => '99999999',
+                'service_ssn' => 0,
+                'service_ein' => 0,
+                'eligible_test' => 1,
+                'billing_plan_id' => 0,
+                'post_ledger_adjustments' => 0,
+                'edit_ledger_entries' => 0,
+                'use_payment_reports' => 1,
+                'is_billing_exclusive' => 0,
+            ],
         ];
-        $this->assertEquals($expected, $this->getResponseData());
-    }
-
-    public function testGetCourseStaff()
-    {
-        /** @var BaseUser $user */
-        $user = BaseUser::find('u_1');
-        $this->be($user);
-        $this->post(self::ROUTE_PREFIX . '/users/course-staff');
-        $this->assertResponseOk();
-        $this->assertNull($this->getResponseData());
+        $response = $this->getResponseData();
+        unset($response['doc_info']['last_accessed_date']);
+        $this->assertEquals($expected, $response);
     }
 
     public function testCheckLogout()

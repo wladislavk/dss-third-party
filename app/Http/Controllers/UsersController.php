@@ -354,7 +354,7 @@ class UsersController extends BaseRestController
     }
 
     /**
-     * @SWG\Post(
+     * @SWG\Get(
      *     path="/users/current",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
@@ -374,24 +374,13 @@ class UsersController extends BaseRestController
             $useCourse = $baseUser->use_course;
         }
         $userData['use_course'] = $useCourse;
+        /** @var User|null $doctor */
+        $doctor = User::find($this->user->getDocIdOrZero());
+        $userData['doc_info'] = [];
+        if ($doctor) {
+            $userData['doc_info'] = $doctor;
+        }
         return ApiResponse::responseOk('', $userData);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/users/course-staff",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * Get course staff of current logged in user
-     *
-     * @return JsonResponse
-     */
-    public function getCourseStaff()
-    {
-        $data = $this->repository->getCourseStaff($this->user->userid);
-
-        return ApiResponse::responseOk('', $data);
     }
 
     /**
@@ -435,24 +424,6 @@ class UsersController extends BaseRestController
         $data = $this->repository->getLetterInfo($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @todo: currently there is no route for this action
-     *
-     * Get users by filter.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getWithFilter(Request $request)
-    {
-        $fields = $request->input('fields', []);
-        $where  = $request->input('where', []);
-
-        $patients = $this->repository->getWithFilter($fields, $where);
-
-        return ApiResponse::responseOk('', $patients);
     }
 
     /**

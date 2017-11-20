@@ -334,8 +334,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('type-services', 'TypeServicesController', ['except' => ['create', 'edit']]);
 
-    Route::post('users/current', 'UsersController@getCurrentUserInfo');
-    Route::post('users/course-staff', 'UsersController@getCourseStaff');
+    Route::get('users/current', 'UsersController@getCurrentUserInfo');
     Route::post('users/check', 'UsersController@check');
     Route::post('users/check-logout', 'UsersController@checkLogout');
     Route::post('users/letter-info', 'UsersController@getLetterInfo');

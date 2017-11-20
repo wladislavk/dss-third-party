@@ -58,6 +58,8 @@ class FlowDeviceUpdater
             ];
 
             $this->tmjClinicalExamRepository->create($dataForStoring);
+
+            return;
         }
 
         $data = ['dentaldevice' => $deviceId];

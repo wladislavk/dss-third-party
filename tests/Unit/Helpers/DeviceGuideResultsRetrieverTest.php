@@ -34,12 +34,7 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
 
     public function testGet()
     {
-        $settings = [
-            '1' => ['checked' => 1],
-            '2' => ['checked' => 1],
-            '3' => ['checked' => 1, 'checkedImp' => 1]
-        ];
-
+        $settings = '1_1,2_1,3_1_1';
         $devicesArray = $this->deviceGuideResultsRetriever->get($settings);
 
         $expectedTotalValue = DeviceGuideResultsRetriever::CHECKED_IMP_COEFFICIENT

@@ -49,16 +49,14 @@ class DeviceGuideResultsRetriever
             $guideSettings = $this->guideSettingRepository->getSettingType($device->deviceid);
             $result = $this->countTotalValue($guideSettings, $settings);
 
-            if (is_bool($result) && !$result) {
-                continue;
+            if (!is_bool($result)) {
+                $devicesCollection->push([
+                    'name'       => $device->device,
+                    'id'         => $device->deviceid,
+                    'value'      => $result,
+                    'imagePath'  => $device->image_path,
+                ]);
             }
-
-            $devicesCollection->push([
-                'name'       => $device->device,
-                'id'         => $device->deviceid,
-                'value'      => $result,
-                'imagePath'  => $device->image_path,
-            ]);
         }
 
         $sortedDevices = $devicesCollection->sortByDesc('value');
@@ -90,7 +88,7 @@ class DeviceGuideResultsRetriever
             $setting = $settings[$deviceSetting->id];
 
             if (
-                $deviceSetting->setting_type == DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_FLAG
+                $deviceSetting->setting_type === DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_FLAG
                 &&
                 $deviceSetting->value != '1'
                 &&
@@ -99,19 +97,29 @@ class DeviceGuideResultsRetriever
                 return false;
             }
 
-            if ($deviceSetting->setting_type == DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_FLAG) {
-                continue;
-            }
+            if ($deviceSetting->setting_type !== DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_FLAG) {
+                $value = $setting['checked'] * $deviceSetting->value;
+                $value = $this->checkIfCheckedImp($setting, $value);
 
-            $value = $setting['checked'] * $deviceSetting->value;
-            if (isset($setting['checked_imp'])) {
-                $value *= self::CHECKED_IMP_COEFFICIENT;
+                $total += $value;
             }
-
-            $total += $value;
         }
 
         return $total;
+    }
+
+    /**
+     * @param  array $setting
+     * @param  float $value
+     * @return float
+     */
+    private function checkIfCheckedImp($setting, $value)
+    {
+        if (isset($setting['checked_imp'])) {
+            $value *= self::CHECKED_IMP_COEFFICIENT;
+        }
+
+        return $value;
     }
 
     /**

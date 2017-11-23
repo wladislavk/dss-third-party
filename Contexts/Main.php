@@ -3,7 +3,6 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Data\Pages;
 use DMore\ChromeDriver\ChromeDriver;
@@ -203,6 +202,7 @@ class Main extends BaseContext
      */
     public function testSeeLink($link)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         Assert::assertNotNull($this->findElementWithText('a', $link));
     }
 

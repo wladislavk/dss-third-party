@@ -6,11 +6,13 @@ import CommonHeaderComponent from '../../../../src/components/manage/common/Comm
 import symbols from '../../../../src/symbols'
 import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
 import { LEGACY_URL } from '../../../../src/constants/main'
+import LegacyHref from '../../../../src/directives/LegacyHref'
 
 describe('CommonHeader component', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
 
+    Vue.directive('legacy-href', LegacyHref)
     store.commit(symbols.mutations.patientId, 0)
     store.commit(symbols.mutations.companyLogo, '')
     store.commit(symbols.mutations.modal, { name: '' })
@@ -63,8 +65,8 @@ describe('CommonHeader component', () => {
 
   it('clicks buttons', function (done) {
     let redirectUrl = ''
-    this.sandbox.stub(LocationWrapper, 'goToPage').callsFake((url) => {
-      redirectUrl = url
+    this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake((url) => {
+      redirectUrl = LEGACY_URL + url
     })
     const vm = this.mount()
     const addTaskButton = vm.$el.querySelector('button#add_task_button')

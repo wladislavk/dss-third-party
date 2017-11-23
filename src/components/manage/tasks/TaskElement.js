@@ -2,7 +2,6 @@ import Alerter from '../../../services/Alerter'
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
-import { LEGACY_URL } from '../../../constants/main'
 
 export default {
   props: {
@@ -21,7 +20,6 @@ export default {
   },
   data () {
     return {
-      legacyUrl: LEGACY_URL,
       isVisible: false
     }
   },
@@ -59,6 +57,15 @@ export default {
       }).catch((response) => {
         console.error('deleteTask [status]: ' + response.response.status)
       })
+    },
+    onClickTaskPopup (taskId) {
+      const modalData = {
+        name: 'add-task',
+        params: {
+          id: taskId
+        }
+      }
+      this.$store.commit(symbols.mutations.modal, modalData)
     },
     updateTaskToActive () {
       const data = {

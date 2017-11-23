@@ -31,7 +31,7 @@ describe('Main module actions', () => {
         return 'root/'
       })
     })
-    it('resolve login', function (done) {
+    it('resolves login', function (done) {
       this.sandbox.stub(axios, 'post').callsFake((path, payload) => {
         this.postData.push({
           path: path,
@@ -44,19 +44,6 @@ describe('Main module actions', () => {
         }
         return Promise.resolve(result)
       })
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        this.postData.push({
-          path: path
-        })
-        const result = {
-          data: {
-            data: {
-              type: 'OK'
-            }
-          }
-        }
-        return Promise.resolve(result)
-      })
       const credentials = {foo: 'bar'}
       MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
       setTimeout(() => {
@@ -64,76 +51,13 @@ describe('Main module actions', () => {
           {
             path: 'root/auth',
             payload: {foo: 'bar'}
-          },
-          {
-            path: endpoints.users.check
           }
         ]
         expect(this.postData).toEqual(expectedHttp)
-        const expectedMutations = [
-          {
-            type: symbols.mutations.mainToken,
-            payload: 'token'
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedActions = [
           {
-            type: symbols.actions.userInfo,
-            payload: {}
-          }
-        ]
-        expect(this.testCase.actions).toEqual(expectedActions)
-        done()
-      }, 100)
-    })
-    it('throw if check user fails', function (done) {
-      this.sandbox.stub(axios, 'post').callsFake((path, payload) => {
-        this.postData.push({
-          path: path,
-          payload: payload
-        })
-        const result = {
-          data: {
-            token: 'token'
-          }
-        }
-        return Promise.resolve(result)
-      })
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        this.postData.push({
-          path: path
-        })
-        return Promise.reject('check user error')
-      })
-      const credentials = {foo: 'bar'}
-      MainModule.actions[symbols.actions.mainLogin](this.testCase.mocks, credentials)
-      setTimeout(() => {
-        const expectedHttp = [
-          {
-            path: 'root/auth',
-            payload: {foo: 'bar'}
-          },
-          {
-            path: endpoints.users.check
-          }
-        ]
-        expect(this.postData).toEqual(expectedHttp)
-        const expectedMutations = [
-          {
-            type: symbols.mutations.mainToken,
+            type: symbols.actions.dualAppLogin,
             payload: 'token'
-          },
-          {
-            type: symbols.mutations.mainToken,
-            payload: ''
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedActions = [
-          {
-            type: symbols.actions.handleErrors,
-            payload: {title: 'getToken', response: 'check user error'}
           }
         ]
         expect(this.testCase.actions).toEqual(expectedActions)
@@ -158,13 +82,6 @@ describe('Main module actions', () => {
           }
         ]
         expect(this.postData).toEqual(expectedHttp)
-        const expectedMutations = [
-          {
-            type: symbols.mutations.mainToken,
-            payload: ''
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
         const expectedActions = [
           {
             type: symbols.actions.handleErrors,
@@ -177,6 +94,84 @@ describe('Main module actions', () => {
     })
     // @todo: devise a way to test it
     it('throws with 422 status', function () {})
+  })
+
+  describe('dualAppLogin action', () => {
+    it('approves login', function (done) {
+      const postData = []
+      this.sandbox.stub(http, 'post').callsFake((path) => {
+        postData.push({
+          path: path
+        })
+        const result = {
+          data: {
+            data: {
+              type: 'OK'
+            }
+          }
+        }
+        return Promise.resolve(result)
+      })
+      const token = 'token'
+      MainModule.actions[symbols.actions.dualAppLogin](this.testCase.mocks, token)
+      setTimeout(() => {
+        const expectedHttp = [
+          {
+            path: endpoints.users.check
+          }
+        ]
+        expect(postData).toEqual(expectedHttp)
+        const expectedMutations = [
+          {
+            type: symbols.mutations.mainToken,
+            payload: 'token'
+          }
+        ]
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        const expectedActions = [
+          {
+            type: symbols.actions.userInfo,
+            payload: {}
+          }
+        ]
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+    it('throws if check user fails', function (done) {
+      const postData = []
+      this.sandbox.stub(http, 'post').callsFake((path) => {
+        postData.push({
+          path: path
+        })
+        return Promise.reject('check user error')
+      })
+      const token = 'token'
+      MainModule.actions[symbols.actions.dualAppLogin](this.testCase.mocks, token)
+      setTimeout(() => {
+        const expectedHttp = [
+          {
+            path: endpoints.users.check
+          }
+        ]
+        expect(postData).toEqual(expectedHttp)
+        const expectedMutations = [
+          {
+            type: symbols.mutations.mainToken,
+            payload: ''
+          }
+        ]
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        const expectedActions = [
+          {
+            type: symbols.actions.handleErrors,
+            payload: {title: 'getUserByToken', response: 'check user error'}
+          }
+        ]
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
     // @todo: devise a way to test it
     it('throws if account suspended', function () {})
   })

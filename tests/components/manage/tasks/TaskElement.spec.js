@@ -6,6 +6,7 @@ import moxios from 'moxios'
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import TaskElementComponent from '../../../../src/components/manage/tasks/TaskElement.vue'
+import { LEGACY_URL } from '../../../../src/constants/main'
 
 describe('TaskElement component', () => {
   beforeEach(function () {
@@ -83,7 +84,7 @@ describe('TaskElement component', () => {
     const nameSpan = vm.$el.querySelector('span.task_name')
     expect(nameSpan.textContent).toBe('(John Doe)')
     const nameLink = nameSpan.querySelector('a.task_name_link')
-    expect(nameLink.getAttribute('href')).toBe('http://legacy/add_patient.php?ed=2&addtopat=1&pid=2')
+    expect(nameLink.getAttribute('href')).toBe(LEGACY_URL + 'add_patient.php?ed=2&addtopat=1&pid=2')
   })
 
   it('should display HTML for patient with first name and last name', function () {

@@ -42,7 +42,7 @@
 
         <br /><br />
 
-        <a v-bind:href="legacyUrl + 'manage_tasks.php'" class="button task_view_all">View All</a>
+        <a v-legacy-href="'manage/manage_tasks.php'" class="button task_view_all">View All</a>
     </div>
 </template>
 

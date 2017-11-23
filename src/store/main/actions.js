@@ -14,35 +14,47 @@ import NameComposer from '../../services/NameComposer'
 import LoginError from '../../exceptions/LoginError'
 
 export default {
-  [symbols.actions.mainLogin] ({commit, dispatch}, credentials) {
+  [symbols.actions.mainLogin] ({dispatch}, credentials) {
     return new Promise((resolve, reject) => {
       axios.post(ProcessWrapper.getApiRoot() + 'auth', credentials).then((response) => {
         const data = response.data
-        commit(symbols.mutations.mainToken, data.token)
-        http.token = data.token
-        return http.post(endpoints.users.check)
-      }).then((response) => {
-        const data = response.data.data
-        if (data.type.toLowerCase() === 'suspended') {
-          commit(symbols.mutations.mainToken, '')
-          http.token = ''
-          throw new LoginError('This account has been suspended.')
-        }
-        return dispatch(symbols.actions.userInfo)
+        return dispatch(symbols.actions.dualAppLogin, data.token)
       }).then(() => {
         resolve()
       }).catch((response) => {
-        commit(symbols.mutations.mainToken, '')
-        let reason = ''
-        if (response instanceof LoginError) {
-          reason = response.response
-        }
+        let reason = response
         if (response.hasOwnProperty('status') && response.status === 422) {
           reason = 'Wrong username or password'
         }
         dispatch(symbols.actions.handleErrors, {title: 'getToken', response: response})
         reject(new Error(reason))
       })
+    })
+  },
+
+  [symbols.actions.dualAppLogin] ({commit, dispatch}, token) {
+    http.token = token
+    return http.post(endpoints.users.check).then((response) => {
+      const data = response.data.data
+      if (data.type.toLowerCase() === 'suspended') {
+        commit(symbols.mutations.mainToken, '')
+        http.token = ''
+        throw new LoginError('This account has been suspended.')
+      }
+      commit(symbols.mutations.mainToken, token)
+      http.token = token
+      dispatch(symbols.actions.userInfo)
+    }).catch((response) => {
+      commit(symbols.mutations.mainToken, '')
+      let reason = ''
+      if (response.hasOwnProperty('status') && response.status === 422) {
+        reason = 'Bad token'
+      }
+      if (response instanceof LoginError) {
+        reason = response.response
+      }
+      dispatch(symbols.actions.handleErrors, {title: 'getUserByToken', response: response})
+      throw new Error(reason)
     })
   },
 

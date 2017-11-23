@@ -8,7 +8,7 @@
                 'mainfoldericon': linkClass === 'main',
                 'subfoldericon': linkClass === 'sub'
             }"
-            v-bind:href="menuItemLink"
+            v-bind:href="menuItem.childrenFrom ? '#' : menuItemLink"
             v-on:click="clickLink($event)"
             v-bind:target="menuItemBlank ? '_blank' : '_self'"
         >{{ elementName }}</a>
@@ -23,7 +23,7 @@
         </ul>
         <ul v-else-if="menuItem.childrenFrom" v-visible="showChildren">
             <li v-for="childFrom in getChildrenFrom(menuItem.childrenFrom)">
-                <a class="submenu_item" v-bind:href="menuItemLink + '/' + childFrom[menuItem.childId]">{{ childFrom[menuItem.childName] }}</a>
+                <a class="submenu_item" v-bind:href="menuItemLink + childFrom[menuItem.childId]">{{ childFrom[menuItem.childName] }}</a>
             </li>
         </ul>
     </li>

@@ -3,7 +3,16 @@
         v-on:mouseover="showChildren = true"
         v-on:mouseout="showChildren = false"
     >
+        <router-link
+            v-if="menuItem.route"
+            v-bind:to="{name: menuItem.route}"
+            v-bind:class="{
+                'mainfoldericon': linkClass === 'main',
+                'subfoldericon': linkClass === 'sub'
+            }"
+        >{{ elementName }}</router-link>
         <a
+            v-else
             v-bind:class="{
                 'mainfoldericon': linkClass === 'main',
                 'subfoldericon': linkClass === 'sub'

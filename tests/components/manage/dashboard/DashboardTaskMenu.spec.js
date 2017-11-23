@@ -47,7 +47,7 @@ describe('DashboardTaskMenu component', () => {
       const children = vm.$el.querySelectorAll('div.task_data')
       expect(children.length).toBe(6)
       const viewAllButton = vm.$el.querySelector('a.task_view_all')
-      expect(viewAllButton.getAttribute('href')).toBe(LEGACY_URL + 'manage_tasks.php')
+      expect(viewAllButton.getAttribute('href')).toBe(LEGACY_URL + 'manage/manage_tasks.php')
       done()
     })
   })

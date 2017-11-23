@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import VueVisible from 'vue-visible'
 import store from '../../../../src/store'
 import NavigationElementComponent from '../../../../src/components/manage/dashboard/NavigationElement.vue'
@@ -8,11 +9,22 @@ import { LEGACY_URL, NOTIFICATION_NUMBERS } from '../../../../src/constants/main
 describe('NavigationElement component', () => {
   beforeEach(function () {
     Vue.use(VueVisible)
+    Vue.use(VueRouter)
     const Component = Vue.extend(NavigationElementComponent)
+    const Router = new VueRouter({
+      mode: 'history',
+      routes: [
+        {
+          name: 'foo',
+          path: '/bar'
+        }
+      ]
+    })
     this.mount = function (propsData) {
       return new Component({
         store: store,
-        propsData: propsData
+        propsData: propsData,
+        router: Router
       }).$mount()
     }
   })
@@ -32,6 +44,18 @@ describe('NavigationElement component', () => {
     expect(link.textContent).toBe('Element name')
     const list = vm.$el.querySelector('ul')
     expect(list).toBeNull()
+  })
+
+  it('should display router link', function () {
+    const props = {
+      menuItem: {
+        route: 'foo',
+        name: 'Element name'
+      }
+    }
+    const vm = this.mount(props)
+    const link = vm.$el.querySelector('li > a')
+    expect(link.getAttribute('href')).toBe('/bar')
   })
 
   it('should display for target blank', function () {

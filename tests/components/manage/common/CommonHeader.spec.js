@@ -82,7 +82,7 @@ describe('CommonHeader component', () => {
       const addPatientButton = vm.$el.querySelector('button#add_patient_button')
       addPatientButton.click()
       vm.$nextTick(() => {
-        expect(redirectUrl).toBe(LEGACY_URL + 'add_patient.php')
+        expect(redirectUrl).toBe(LEGACY_URL + 'manage/add_patient.php')
         done()
       })
     })

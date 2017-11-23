@@ -186,7 +186,7 @@ export const NAVIGATION_MENU = [
   },
   {
     name: 'SW Tutorials',
-    link: 'manage/sw_tutorials.php'
+    route: 'sw-tutorials'
   },
   {
     name: 'Scheduler',

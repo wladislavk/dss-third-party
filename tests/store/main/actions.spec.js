@@ -10,7 +10,6 @@ import LocalStorageManager from '../../../src/services/LocalStorageManager'
 import endpoints from '../../../src/endpoints'
 import RouterKeeper from '../../../src/services/RouterKeeper'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
-import { LEGACY_URL } from '../../../src/constants/main'
 import NameComposer from '../../../src/services/NameComposer'
 import Alerter from '../../../src/services/Alerter'
 
@@ -525,7 +524,7 @@ describe('Main module actions', () => {
               {
                 name: 'Add patient with this name\u2026',
                 patientType: 'new',
-                link: LEGACY_URL + 'add_patient.php?search=John'
+                link: ProcessWrapper.getLegacyRoot() + 'add_patient.php?search=John'
               }
             ]
           }
@@ -578,12 +577,12 @@ describe('Main module actions', () => {
               {
                 name: 'John Doe',
                 patientType: 'json',
-                link: LEGACY_URL + 'manage/add_patient.php?pid=1&ed=1'
+                link: ProcessWrapper.getLegacyRoot() + 'manage/add_patient.php?pid=1&ed=1'
               },
               {
                 name: 'John Little',
                 patientType: 'json',
-                link: LEGACY_URL + 'manage/manage_flowsheet3.php?pid=2'
+                link: ProcessWrapper.getLegacyRoot() + 'manage/manage_flowsheet3.php?pid=2'
               }
             ]
           }

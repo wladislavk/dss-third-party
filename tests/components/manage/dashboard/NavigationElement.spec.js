@@ -4,7 +4,8 @@ import VueVisible from 'vue-visible'
 import store from '../../../../src/store'
 import NavigationElementComponent from '../../../../src/components/manage/dashboard/NavigationElement.vue'
 import symbols from '../../../../src/symbols'
-import { LEGACY_URL, NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
+import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
+import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 
 describe('NavigationElement component', () => {
   beforeEach(function () {
@@ -39,7 +40,7 @@ describe('NavigationElement component', () => {
     const vm = this.mount(props)
     const link = vm.$el.querySelector('li > a')
     expect(link.className).toBe('')
-    expect(link.getAttribute('href')).toBe(LEGACY_URL + 'foo')
+    expect(link.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'foo')
     expect(link.getAttribute('target')).toBe('_self')
     expect(link.textContent).toBe('Element name')
     const list = vm.$el.querySelector('ul')
@@ -175,7 +176,7 @@ describe('NavigationElement component', () => {
     expect(childItems.length).toBe(2)
     const firstChild = childItems[0].querySelector('a')
     expect(firstChild.textContent).toBe('Child 1')
-    expect(firstChild.getAttribute('href')).toBe(LEGACY_URL + 'foo/1')
+    expect(firstChild.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'foo/1')
   })
 
   it('should show and hide children', function (done) {

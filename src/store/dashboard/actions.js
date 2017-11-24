@@ -3,7 +3,7 @@ import http from '../../services/http'
 import symbols from '../../symbols'
 import LocationWrapper from '../../wrappers/LocationWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
-import { LEGACY_URL } from '../../constants/main'
+import ProcessWrapper from '../../wrappers/ProcessWrapper'
 
 export default {
   [symbols.actions.documentCategories] ({rootState, commit, dispatch}) {
@@ -36,7 +36,7 @@ export default {
         const goodPassword = '1234'
         if (inputValue === goodPassword) {
           SwalWrapper.close()
-          LocationWrapper.goToPage(LEGACY_URL + 'manage/export_md.php')
+          LocationWrapper.goToPage(ProcessWrapper.getLegacyRoot() + 'manage/export_md.php')
           return true
         }
         if (inputValue.length > 0) {
@@ -69,7 +69,7 @@ export default {
       },
       (isConfirm) => {
         if (isConfirm) {
-          LocationWrapper.goToPage(LEGACY_URL + 'manage/data_import.php')
+          LocationWrapper.goToPage(ProcessWrapper.getLegacyRoot() + 'manage/data_import.php')
         }
       }
     )

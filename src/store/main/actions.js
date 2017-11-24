@@ -9,7 +9,6 @@ import RouterKeeper from '../../services/RouterKeeper'
 import MediaFileRetriever from '../../services/MediaFileRetriever'
 import FileRetrievalError from '../../exceptions/FileRetrievalError'
 import Alerter from '../../services/Alerter'
-import { LEGACY_URL } from '../../constants/main'
 import NameComposer from '../../services/NameComposer'
 import LoginError from '../../exceptions/LoginError'
 
@@ -170,6 +169,7 @@ export default {
   },
 
   [symbols.actions.patientSearchList] ({state, commit}, searchTerm) {
+    const legacyUrl = ProcessWrapper.getLegacyRoot()
     http.token = state[symbols.state.mainToken]
     const queryData = {
       partial_name: searchTerm
@@ -188,7 +188,7 @@ export default {
         const newElement = {
           name: 'Add patient with this name\u2026',
           patientType: 'new',
-          link: LEGACY_URL + 'add_patient.php?search=' + searchTerm
+          link: legacyUrl + 'add_patient.php?search=' + searchTerm
         }
         const newList = [
           noMatchesElement,
@@ -211,7 +211,7 @@ export default {
         const patientElement = {
           name: fullName,
           patientType: 'json',
-          link: LEGACY_URL + link
+          link: legacyUrl + link
         }
         newList.push(patientElement)
         // @todo: add transition

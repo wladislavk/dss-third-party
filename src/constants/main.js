@@ -8,10 +8,6 @@ export const TASK_TYPES = {
   FUTURE: 'future'
 }
 
-// export const LEGACY_URL = 'http://legacy/'
-// for manual testing
-export const LEGACY_URL = 'https://loader.docker.localhost/'
-
 export const NOTIFICATION_NUMBERS = {
   emailBounces: 'EMAIL_BOUNCES',
   faxAlerts: 'FAX_ALERTS',

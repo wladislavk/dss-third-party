@@ -1,11 +1,11 @@
-import { LEGACY_URL } from '../../../constants/main'
 import symbols from '../../../symbols'
 import PatientDataComponent from './PatientData.vue'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   data () {
     return {
-      legacyUrl: LEGACY_URL,
+      legacyUrl: ProcessWrapper.getLegacyRoot(),
       patientId: this.$store.state.patients[symbols.state.patientId]
     }
   },

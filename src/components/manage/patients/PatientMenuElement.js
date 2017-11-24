@@ -1,5 +1,5 @@
 import symbols from '../../../symbols'
-import { LEGACY_URL } from '../../../constants/main'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: {
@@ -44,7 +44,7 @@ export default {
     parsedLink () {
       const wildcardData = this.$store.getters[this.wildcard]
       const link = this.elementLink.replace('%d', wildcardData)
-      return LEGACY_URL + link
+      return ProcessWrapper.getLegacyRoot() + link
     }
   },
   methods: {

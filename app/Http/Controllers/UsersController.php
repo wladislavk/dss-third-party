@@ -2,10 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
-use DentalSleepSolutions\Eloquent\Models\Dental\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Helpers\UserNumberRetriever;
+use DentalSleepSolutions\Helpers\CurrentUserInfoRetriever;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -361,25 +360,12 @@ class UsersController extends BaseRestController
      *
      * Get info about current logged in user
      *
-     * @param UserNumberRetriever $userNumberRetriever
+     * @param CurrentUserInfoRetriever $currentUserInfoRetriever
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCurrentUserInfo(UserNumberRetriever $userNumberRetriever)
+    public function getCurrentUserInfo(CurrentUserInfoRetriever $currentUserInfoRetriever)
     {
-        $userData = $userNumberRetriever->addUserNumbers($this->user);
-        /** @var User|null $baseUser */
-        $baseUser = User::find($this->user->userid);
-        $useCourse = 0;
-        if ($baseUser) {
-            $useCourse = $baseUser->use_course;
-        }
-        $userData['use_course'] = $useCourse;
-        /** @var User|null $doctor */
-        $doctor = User::find($this->user->getDocIdOrZero());
-        $userData['doc_info'] = [];
-        if ($doctor) {
-            $userData['doc_info'] = $doctor;
-        }
+        $userData = $currentUserInfoRetriever->getCurrentUserInfo($this->user);
         return ApiResponse::responseOk('', $userData);
     }
 

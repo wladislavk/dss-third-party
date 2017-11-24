@@ -10,19 +10,5 @@ Feature: Show and edit tasks in dashboard and header
     # When I click button with text "View All"
     # Then I see "Manage Tasks" table
 
-  Scenario: View header tasks
-    Given I am logged in as "doc1f"
-    When I go to "start" page
-    Then I see "My Tasks (3)" bullet in top menu
-    When I run mouse over "My Tasks (3)" bullet in top menu
-    Then I see these task sub-sections in "top menu":
-      | section |
-      | Overdue |
-    And I see checkboxes with these tasks under "Overdue" section in "top menu":
-      | task                                        |
-      | Set up webinar for Dr. X software training. |
-      | call for fu (John Drake)                    |
-      | asdasdasd                                   |
-
   # Scenario: View patient tasks
     # @todo: add task menu test for patient John Drake

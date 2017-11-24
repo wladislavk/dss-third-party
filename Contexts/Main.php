@@ -178,6 +178,25 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I click on :name in list of patients
+     *
+     * @param string $name
+     * @throws BehatException
+     */
+    public function clickPatientInList($name)
+    {
+        $this->wait(self::MEDIUM_WAIT_TIME);
+        $patients = $this->findAllCss('ul#patient_list li.json_patient');
+        foreach ($patients as $patient) {
+            if ($this->sanitizeText($patient->getText()) == $name) {
+                $patient->click();
+                return;
+            }
+        }
+        throw new BehatException("Patient with name $name not found");
+    }
+
+    /**
      * @Then I see :link link
      *
      * @param string $link

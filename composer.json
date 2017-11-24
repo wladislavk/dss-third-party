@@ -6,14 +6,15 @@
     "behat/mink-extension": "^2.2",
     "behat/mink-goutte-driver": "^1.2",
     "behat/mink-selenium2-driver": "^1.3",
-    "dmore/chrome-mink-driver": "^2.3",
+    "dmore/chrome-mink-driver": "2.3",
     "dmore/behat-chrome-extension": "^1.0",
     "fabpot/goutte": "^3.1",
     "phpunit/phpunit": "^6.0"
   },
   "autoload": {
     "psr-4": {
-      "Contexts\\": "Contexts/"
+      "Contexts\\": "Contexts/",
+      "Data\\": "Data/"
     }
   }
 }

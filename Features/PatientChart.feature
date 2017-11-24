@@ -8,29 +8,8 @@ Feature: Patient Chart
     When I go to "start" page
     Then I see patient search form
     When I type "smi" into patient search form
-    Then I see list of patients in search form:
-      | name          |
-      | Smith, John M |
-      | Smith, Johnny |
-      | Smith, Pat    |
-      | Smith, John   |
-      | Smith, John   |
-      | Smith, John   |
-    When I click on "Smith, Pat" in list of patients
-    Then I see patient chart for "Pat Smith"
-    And patient chart has menu with following points:
-      | name           |
-      | Tracker        |
-      | Summary Sheet  |
-      | Ledger         |
-      | Insurance      |
-      | Progress Notes |
-      | Letters        |
-      | Images         |
-      | Questionnaire  |
-      | Clinical Exam  |
-      | Patient Info   |
-    When I click on "Questionnaire" patient chart menu point
+    And I click on "Smith, Pat" in list of patients
+    And I click on "Questionnaire" patient chart menu point
     Then I see questionnaire subpoints:
       | name                |
       | Symptoms            |
@@ -56,7 +35,7 @@ Feature: Patient Chart
       | First Name | Susie          |
       | Last Name  | Test           |
       | Cell Phone | (941) 254-1111 |
-#    And I click button with text "Add  Patient"
+#    And I click button with text "Add Patient"
 #    Then I see warning with text "Patient info is incomplete" and missing fields:
 #      | field         |
 #      | Address       |

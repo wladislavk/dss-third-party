@@ -1,7 +1,10 @@
 import $ from 'jquery'
 
 $(function () {
-  function calcAmountLeftToMeet () {
+  function calcAmountLeftToMeet (shouldDisableCalculations) {
+    if (shouldDisableCalculations) {
+      return
+    }
     let deductible = $('#patient_deductible').val()
     let amountMet = $('#patient_amount_met').val()
     if (isNaN(deductible)) {
@@ -30,7 +33,10 @@ $(function () {
     $('#in_patient_amount_left_to_meet').val(leftToMeet.toFixed(2))
   }
 
-  function calcAmountLeftToMeetFamily () {
+  function calcAmountLeftToMeetFamily (shouldDisableCalculations) {
+    if (shouldDisableCalculations) {
+      return
+    }
     let deductible = $('#family_deductible').val()
     let amountMet = $('#family_amount_met').val()
     if (isNaN(deductible)) {
@@ -59,7 +65,10 @@ $(function () {
     $('#in_family_amount_left_to_meet').val(leftToMeet.toFixed(2))
   }
 
-  function calcExpectedPayments () {
+  function calcExpectedPayments (shouldDisableCalculations) {
+    if (shouldDisableCalculations) {
+      return
+    }
     // OUT OF NETWORK BENEFITS
     let debug = true
     if (debug) {

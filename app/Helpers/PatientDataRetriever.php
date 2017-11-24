@@ -10,6 +10,7 @@ use DentalSleepSolutions\Eloquent\Repositories\Dental\InsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientContactRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientInsuranceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\PatientRepository;
+use DentalSleepSolutions\Factories\RepositoryFactory;
 use DentalSleepSolutions\Structs\PatientData;
 use DentalSleepSolutions\Structs\QuestionnaireData;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,20 +35,14 @@ class PatientDataRetriever
     /** @var PatientInsuranceRepository */
     private $patientInsuranceRepository;
 
-    public function __construct(
-        HealthHistoryRepository $healthHistoryRepository,
-        HomeSleepTestRepository $homeSleepTestRepository,
-        InsuranceRepository $insuranceRepository,
-        PatientRepository $patientRepository,
-        PatientContactRepository $patientContactRepository,
-        PatientInsuranceRepository $patientInsuranceRepository
-    ) {
-        $this->healthHistoryRepository = $healthHistoryRepository;
-        $this->homeSleepTestRepository = $homeSleepTestRepository;
-        $this->insuranceRepository = $insuranceRepository;
-        $this->patientRepository = $patientRepository;
-        $this->patientContactRepository = $patientContactRepository;
-        $this->patientInsuranceRepository = $patientInsuranceRepository;
+    public function __construct(RepositoryFactory $repositoryFactory)
+    {
+        $this->healthHistoryRepository = $repositoryFactory->getRepository(HealthHistoryRepository::class);
+        $this->homeSleepTestRepository = $repositoryFactory->getRepository(HomeSleepTestRepository::class);
+        $this->insuranceRepository = $repositoryFactory->getRepository(InsuranceRepository::class);
+        $this->patientRepository = $repositoryFactory->getRepository(PatientRepository::class);
+        $this->patientContactRepository = $repositoryFactory->getRepository(PatientContactRepository::class);
+        $this->patientInsuranceRepository = $repositoryFactory->getRepository(PatientInsuranceRepository::class);
     }
 
     /**
@@ -60,8 +55,10 @@ class PatientDataRetriever
         $questionnaireData = new QuestionnaireData();
         $patientData = new PatientData();
         $patientData->populatePlainFields($patient);
-        $patientData->patientContactsNumber = sizeof($this->patientContactRepository->getCurrent($docId, $patient->patientid));
-        $patientData->patientInsurancesNumber = sizeof($this->patientInsuranceRepository->getCurrent($docId, $patient->patientid));
+        $patientContacts = $this->patientContactRepository->getCurrent($docId, $patient->patientid);
+        $patientData->patientContactsNumber = sizeof($patientContacts);
+        $patientInsurances = $this->patientInsuranceRepository->getCurrent($docId, $patient->patientid);
+        $patientData->patientInsurancesNumber = sizeof($patientInsurances);
         $patientData->rejectedClaims = $this->insuranceRepository->getRejected($patient->patientid);
         $questionnaireData->historyStatus = $patient->history_status;
         $questionnaireData->treatmentsStatus = $patient->treatments_status;

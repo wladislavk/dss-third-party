@@ -62,7 +62,7 @@ class PatientData implements Arrayable
 
     public function populatePlainFields(Patient $patient)
     {
-        $this->insuranceType = $patient->p_m_ins_type;
+        $this->insuranceType = intval($patient->p_m_ins_type);
         $this->preMed = $patient->premed;
         $this->preMedCheck = $patient->premedcheck;
         $this->alertText = '' . $patient->alert_text;
@@ -73,13 +73,13 @@ class PatientData implements Arrayable
 
     public function toArray()
     {
-        $rejectedClaims = $this->rejectedClaims;
-        if ($this->rejectedClaims instanceof Collection) {
-            $rejectedClaims = $this->rejectedClaims->toArray();
+        $rejectedClaims = [];
+        foreach ($this->rejectedClaims as $claim) {
+            $rejectedClaims[] = $claim->toArray();
         }
-        $incompleteHsts = $this->incompleteHomeSleepTests;
-        if ($this->incompleteHomeSleepTests instanceof Collection) {
-            $incompleteHsts = $this->incompleteHomeSleepTests->toArray();
+        $incompleteHsts = [];
+        foreach ($this->incompleteHomeSleepTests as $incompleteHomeSleepTest) {
+            $incompleteHsts[] = $incompleteHomeSleepTest->toArray();
         }
         return [
             'insurance_type' => $this->insuranceType,

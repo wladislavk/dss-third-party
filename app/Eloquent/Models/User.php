@@ -15,6 +15,8 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  * is made read-only by disabling saving via model events.
  *
  * @see self::boot
+ * @property int|null $userid
+ * @property int|null $docid
  * @mixin \Eloquent
  */
 class User extends AbstractModel implements AuthenticatableContract, UserInterface

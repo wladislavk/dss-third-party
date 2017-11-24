@@ -20,6 +20,7 @@ use DentalSleepSolutions\Helpers\NameSetter;
 use DentalSleepSolutions\Helpers\PatientFinder;
 use DentalSleepSolutions\Helpers\PatientLocationRetriever;
 use DentalSleepSolutions\Helpers\PatientRuleRetriever;
+use DentalSleepSolutions\Helpers\PatientDataRetriever;
 use DentalSleepSolutions\Helpers\TempPinDocumentCreator;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Structs\EditPatientIntendedActions;
@@ -466,27 +467,6 @@ class PatientsController extends BaseRestController
 
     /**
      * @SWG\Post(
-     *     path="/patients/with-filter",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * Get patients by filter.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getWithFilter(Request $request)
-    {
-        $fields = $request->input('fields', []);
-        $where  = $request->input('where', []);
-
-        $patients = $this->repository->getWithFilter($fields, $where);
-
-        return ApiResponse::responseOk('', $patients);
-    }
-
-    /**
-     * @SWG\Post(
      *     path="/patients/list",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
@@ -835,5 +815,33 @@ class PatientsController extends BaseRestController
         }
 
         return ApiResponse::responseOk('', ['path_to_pdf' => $url]);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/patients/data/{patientId}",
+     *     @SWG\Parameter(name="patientId", in="path", type="integer", required=true),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @todo: merge with show()
+     *
+     * @param PatientDataRetriever $patientDataRetriever
+     * @param int $patientId
+     * @return JsonResponse
+     */
+    public function getPatientData(
+        $patientId,
+        PatientDataRetriever $patientDataRetriever
+    ) {
+        /** @var Patient $patient */
+        $patient = $this->repository->find($patientId);
+        $docId = $this->user->getDocIdOrZero();
+        if ($docId != $patient->docid) {
+            $message = "Patient with ID $patientId does not belong to user $docId";
+            return ApiResponse::responseError($message, 403);
+        }
+        $responseData = $patientDataRetriever->getPatientData($docId, $patient);
+        return ApiResponse::responseOk('', $responseData->toArray());
     }
 }

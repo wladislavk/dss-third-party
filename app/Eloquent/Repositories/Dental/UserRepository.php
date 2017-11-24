@@ -14,19 +14,6 @@ class UserRepository extends AbstractRepository
 
     /**
      * @param int $userId
-     * @return User|null
-     */
-    public function getCourseStaff($userId)
-    {
-        return $this->model->from(\DB::raw('dental_users s'))
-            ->select(\DB::raw('s.use_course, d.use_course_staff'))
-            ->join(\DB::raw('dental_users d'), 'd.userid', '=', 's.docid')
-            ->where('s.userid', $userId)
-            ->first();
-    }
-
-    /**
-     * @param int $userId
      * @return \Illuminate\Database\Eloquent\Model|null
      */
     public function getLastAccessedDate($userId)

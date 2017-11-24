@@ -3,6 +3,7 @@ namespace Tests\Api;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use Tests\TestCases\ApiTestCase;
+use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 
 class PatientsApiTest extends ApiTestCase
 {
@@ -106,27 +107,39 @@ class PatientsApiTest extends ApiTestCase
         ];
     }
 
-    public function testGetWithFilter()
-    {
-        $this->post(self::ROUTE_PREFIX . '/patients/with-filter');
-        $this->assertResponseOk();
-        $this->assertEquals(147, count($this->getResponseData()));
-        $this->assertEquals(1, $this->getResponseData()[0]['patientid']);
-    }
-
     public function testGetListPatients()
     {
-        $this->post(self::ROUTE_PREFIX . '/patients/list');
-        $this->assertResponseOk();
-        $this->assertEquals(7, count($this->getResponseData()));
-        $expectedFirst = [
-            'patientid' => 30,
-            'lastname' => 'Ackers',
-            'firstname' => 'George',
-            'middlename' => '',
-            'patient_info' => null,
+        $data = [
+            'partial_name' => 'smi',
         ];
-        $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        $this->post(self::ROUTE_PREFIX . '/patients/list', $data);
+        $this->assertResponseOk();
+        $response = $this->getResponseData();
+        $this->assertEquals(6, count($response));
+        $expectedFirst = [
+            'patientid' => 42,
+            'lastname' => 'Smith',
+            'firstname' => 'John',
+            'middlename' => 'M',
+            'patient_info' => 1,
+        ];
+        $this->assertEquals($expectedFirst, $response[0]);
+        $expectedNames = [
+            'Smith, John M',
+            'Smith, Johnny',
+            'Smith, Pat',
+            'Smith, John',
+            'Smith, John',
+            'Smith, John',
+        ];
+        $names = [];
+        foreach ($response as $patient) {
+            $names[] = trim("{$patient['lastname']}, {$patient['firstname']} {$patient['middlename']}");
+        }
+        $this->assertEquals($expectedNames, $names);
     }
 
     public function testFind()
@@ -247,10 +260,43 @@ class PatientsApiTest extends ApiTestCase
         $newPatient = factory($this->getModel())->create();
         $primaryKey = $this->model->getKeyName();
         $this->post(self::ROUTE_PREFIX . '/patients/temp-pin-document/' . $newPatient->$primaryKey);
-        var_dump($this->response->getContent());
         $this->assertResponseOk();
         $expected = [
             'path_to_pdf' => '',
+        ];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
+
+    public function testGetPatientData()
+    {
+        $patientId = 170;
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        $this->get(self::ROUTE_PREFIX . '/patients/data/' . $patientId);
+        $this->assertResponseOk();
+        $expected = [
+            'insurance_type' => '5',
+            'premed' => 'Amoxil-Knee Replacement',
+            'premedcheck' => 1,
+            'alert_text' => '',
+            'display_alert' => 0,
+            'firstname' => 'Pat',
+            'lastname' => 'Smith',
+            'patient_contacts_number' => 0,
+            'patient_insurances_number' => 0,
+            'sub_patients_number' => 0,
+            'is_email_bounced' => 0,
+            'rejected_claims' => [],
+            'questionnaire_data' => [
+                'symptoms_status' => 3,
+                'treatments_status' => 3,
+                'history_status' => 3,
+            ],
+            'other_allergens' => '',
+            'has_allergen' => 0,
+            'hst_status' => 99,
+            'incomplete_hsts' => [],
         ];
         $this->assertEquals($expected, $this->getResponseData());
     }

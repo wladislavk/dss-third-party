@@ -4,7 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\UserRepository;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Helpers\UserNumberRetriever;
+use DentalSleepSolutions\Helpers\CurrentUserInfoRetriever;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -353,37 +353,20 @@ class UsersController extends BaseRestController
     }
 
     /**
-     * @SWG\Post(
+     * @SWG\Get(
      *     path="/users/current",
      *     @SWG\Response(response="200", description="TODO: specify the response")
      * )
      *
      * Get info about current logged in user
      *
-     * @param UserNumberRetriever $userNumberRetriever
+     * @param CurrentUserInfoRetriever $currentUserInfoRetriever
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getCurrentUserInfo(UserNumberRetriever $userNumberRetriever)
+    public function getCurrentUserInfo(CurrentUserInfoRetriever $currentUserInfoRetriever)
     {
-        $userData = $userNumberRetriever->addUserNumbers($this->user);
+        $userData = $currentUserInfoRetriever->getCurrentUserInfo($this->user);
         return ApiResponse::responseOk('', $userData);
-    }
-
-    /**
-     * @SWG\Post(
-     *     path="/users/course-staff",
-     *     @SWG\Response(response="200", description="TODO: specify the response")
-     * )
-     *
-     * Get course staff of current logged in user
-     *
-     * @return JsonResponse
-     */
-    public function getCourseStaff()
-    {
-        $data = $this->repository->getCourseStaff($this->user->userid);
-
-        return ApiResponse::responseOk('', $data);
     }
 
     /**
@@ -427,24 +410,6 @@ class UsersController extends BaseRestController
         $data = $this->repository->getLetterInfo($this->user->docid);
 
         return ApiResponse::responseOk('', $data);
-    }
-
-    /**
-     * @todo: currently there is no route for this action
-     *
-     * Get users by filter.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getWithFilter(Request $request)
-    {
-        $fields = $request->input('fields', []);
-        $where  = $request->input('where', []);
-
-        $patients = $this->repository->getWithFilter($fields, $where);
-
-        return ApiResponse::responseOk('', $patients);
     }
 
     /**

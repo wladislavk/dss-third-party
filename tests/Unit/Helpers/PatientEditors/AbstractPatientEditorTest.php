@@ -44,7 +44,7 @@ class AbstractPatientEditorTest extends PatientEditorTestCase
         $letters = [
             'patientId' => 1,
             'docId' => 0,
-            'userId' => 0,
+            'userId' => 2,
             'userType' => 0,
         ];
         $this->assertEquals($letters, $this->triggeredLetters);

@@ -42,11 +42,4 @@ class PatientInsurancesApiTest extends ApiTestCase
             'email'     => 'test@mail.com',
         ];
     }
-
-    public function testGetCurrent()
-    {
-        $this->post(self::ROUTE_PREFIX . '/patient-insurances/current');
-        $this->assertResponseOk();
-        $this->assertEquals([], $this->getResponseData());
-    }
 }

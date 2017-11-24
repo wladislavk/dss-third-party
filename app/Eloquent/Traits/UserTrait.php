@@ -20,9 +20,8 @@ trait UserTrait
      */
     public function getUserIdOrZero()
     {
-        // TODO: there is no ID field by default on this model
-        if (property_exists($this, 'id') && $this->id) {
-            return $this->id;
+        if ($this->userid) {
+            return $this->userid;
         }
         return 0;
     }

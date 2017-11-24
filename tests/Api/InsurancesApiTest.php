@@ -122,13 +122,6 @@ class InsurancesApiTest extends ApiTestCase
         ];
     }
 
-    public function testGetRejected()
-    {
-        $this->post(self::ROUTE_PREFIX . '/insurances/rejected');
-        $this->assertResponseOk();
-        $this->assertEquals([], $this->getResponseData());
-    }
-
     public function testRemoveClaim()
     {
         /** @var Insurance $insurance */

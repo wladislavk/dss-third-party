@@ -76,7 +76,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
         $vobData = [
             'user' => $user,
             'patientId' => 3,
-            'userId' => 0,
+            'userId' => 1,
         ];
         $this->assertEquals($vobData, $this->pendingVOBData);
         $summary = [
@@ -116,7 +116,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
         $this->patientUpdater->editPatient($formData, $user, $requestData, $patient);
         $letters = [
             'docId' => 2,
-            'userId' => 0,
+            'userId' => 1,
         ];
         $this->assertEquals($letters, $this->letters);
     }
@@ -146,7 +146,7 @@ class PatientUpdaterTest extends PatientEditorTestCase
         $this->patientUpdater->editPatient($formData, $user, $requestData, $patient);
         $letters = [
             'docId' => 2,
-            'userId' => 0,
+            'userId' => 1,
         ];
         $this->assertEquals($letters, $this->letters);
     }

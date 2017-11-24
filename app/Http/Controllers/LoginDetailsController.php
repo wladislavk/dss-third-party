@@ -82,9 +82,6 @@ class LoginDetailsController extends BaseRestController
      */
     public function store()
     {
-        /**
-         * @todo What does loginid mean?
-         */
         $data = array_merge($this->request->all(), [
             'loginid'    => $this->user->id,
             'userid'     => $this->user->userid,

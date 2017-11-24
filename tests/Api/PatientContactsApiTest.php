@@ -41,11 +41,4 @@ class PatientContactsApiTest extends ApiTestCase
             'zip'       => 12345,
         ];
     }
-
-    public function testGetCurrent()
-    {
-        $this->post(self::ROUTE_PREFIX . '/patient-contacts/current');
-        $this->assertResponseOk();
-        $this->assertEquals([], $this->getResponseData());
-    }
 }

@@ -196,6 +196,14 @@ class Main extends BaseContext
     }
 
     /**
+     * @When I click on logo in top left corner
+     */
+    public function clickLogo()
+    {
+        $this->clickLink('Dashboard');
+    }
+
+    /**
      * @Then I see :link link
      *
      * @param string $link

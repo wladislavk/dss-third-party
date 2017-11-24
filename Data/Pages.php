@@ -11,22 +11,22 @@ class Pages
     const PAGES = [
         [
             'name' => 'Login',
-            'url' => '/login',
+            'url' => '/manage/login',
             'vue' => true,
         ],
         [
             'name' => 'Main',
-            'url' => '/',
-            'vue' => false,
+            'url' => '/manage/main/index',
+            'vue' => true,
         ],
         [
-            'name' => 'Pending Claims',
-            'url' => '/login',
-            'vue' => false,
+            'name' => 'Tutorials',
+            'url' => '/manage/main/sw-tutorials',
+            'vue' => true,
         ],
         [
-            'name' => 'Device Selector',
-            'url' => '/login',
+            'name' => 'Support',
+            'url' => '/manage/support.php',
             'vue' => false,
         ],
     ];

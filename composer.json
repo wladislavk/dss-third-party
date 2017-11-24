@@ -13,7 +13,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Contexts\\": "Contexts/"
+      "Contexts\\": "Contexts/",
+      "Data\\": "Data/"
     }
   }
 }

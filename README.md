@@ -1,1 +1,1 @@
-See "readme" directory for manual.
+Acceptance test repository for DSS project.

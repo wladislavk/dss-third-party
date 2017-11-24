@@ -10,3 +10,4 @@ manage/edx_scripts
 manage/edx_scripts/*
 .idea
 .idea/*
+/vendor/

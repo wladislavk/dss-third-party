@@ -33,16 +33,12 @@ export default {
       if (currentInputValue.trim() === '') {
         this.$store.commit(symbols.mutations.hideSearchHints)
         this.$store.commit(symbols.mutations.patientSearchList, [])
-        // @todo: deal with this line when migrating patient list
-        // $parent.find('.initial_list').css('display', 'table-row')
         return
       }
       if (!this.checkAsciiCode(asciiValue)) {
         return
       }
       if (currentInputValue.length > 1 || this.patientList.length > 1) {
-        // @todo: deal with this line when migrating patient list
-        // $parent.find('.initial_list').css('display', 'none')
         this.$store.commit(symbols.mutations.showSearchHints)
         this.sendValue(currentInputValue)
         if (currentInputValue.length > 2) {

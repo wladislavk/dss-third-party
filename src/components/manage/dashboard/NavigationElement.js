@@ -44,10 +44,10 @@ export default {
     },
     linkClass () {
       if (this.menuItemChildren.length && this.firstLevel) {
-        return 'main'
+        return 'mainfoldericon'
       }
       if ((this.menuItemChildren.length || this.menuItem.childrenFrom) && !this.firstLevel) {
-        return 'sub'
+        return 'subfoldericon'
       }
       return ''
     }

@@ -6,17 +6,11 @@
         <router-link
             v-if="menuItem.route"
             v-bind:to="{name: menuItem.route}"
-            v-bind:class="{
-                'mainfoldericon': linkClass === 'main',
-                'subfoldericon': linkClass === 'sub'
-            }"
+            v-bind:class="linkClass"
         >{{ elementName }}</router-link>
         <a
             v-else
-            v-bind:class="{
-                'mainfoldericon': linkClass === 'main',
-                'subfoldericon': linkClass === 'sub'
-            }"
+            v-bind:class="linkClass"
             v-bind:href="menuItem.childrenFrom ? '#' : menuItemLink"
             v-on:click="clickLink($event)"
             v-bind:target="menuItemBlank ? '_blank' : '_self'"

@@ -11,7 +11,6 @@ export default {
   mounted () {
     if (this.$route.query.hasOwnProperty('token')) {
       this.$store.dispatch(symbols.actions.dualAppLogin, this.$route.query.token).then(() => {
-        this.$router.push({ name: 'dashboard' })
       }).catch(() => {
         this.$router.push({ name: 'main-login' })
       })

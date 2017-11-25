@@ -32,10 +32,8 @@ export default {
       const data = {
         cur_page: this.$route.path
       }
-
       http.token = token
       http.post(endpoints.loginDetails.store, data)
-
       this.$router.push({ name: 'dashboard' })
     }
   },
@@ -52,8 +50,7 @@ export default {
         alertText = 'Username is Required'
         Alerter.alert(alertText)
         this.focusUser = true
-
-        return false
+        return
       }
       this.focusUser = false
 
@@ -61,8 +58,7 @@ export default {
         alertText = 'Password is Required'
         Alerter.alert(alertText)
         this.focusPassword = true
-
-        return false
+        return
       }
       this.focusPassword = false
 

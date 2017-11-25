@@ -37,7 +37,7 @@ export default {
         if (response instanceof LoginError) {
           reason = response.response
         }
-        if (response.hasOwnProperty('status') && response.status === 422) {
+        if (response.hasOwnProperty('response') && response.response.hasOwnProperty('status') && response.response.status === 422) {
           reason = 'Wrong username or password'
         }
         dispatch(symbols.actions.handleErrors, {title: 'getToken', response: response})

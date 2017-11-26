@@ -14,7 +14,10 @@ class Auth extends BaseContext
      */
     public function givenUserExists($user, $password)
     {
-        // do nothing
+        Assert::assertTrue(array_key_exists($user, self::PASSWORDS));
+        $realPassword = self::PASSWORDS[$user];
+        Assert::assertEquals($password, $realPassword);
+        $this->visitStartPage();
     }
 
     /**
@@ -24,7 +27,8 @@ class Auth extends BaseContext
      */
     public function givenUserDoesNotExist($user)
     {
-        // do nothing
+        Assert::assertFalse(array_key_exists($user, self::PASSWORDS));
+        $this->visitStartPage();
     }
 
     /**
@@ -43,6 +47,7 @@ class Auth extends BaseContext
      */
     public function testSeeAuthForm()
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         Assert::assertNotNull($this->findCss('form#loginForm'));
     }
 
@@ -57,7 +62,8 @@ class Auth extends BaseContext
             $this->reloadStartPage();
         }
 
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(self::MEDIUM_WAIT_TIME);
+
         $welcomeDiv = $this->findCss('div.suckertreemenu');
         Assert::assertNotNull($welcomeDiv);
         Assert::assertContains('Welcome ' . $user, $welcomeDiv->getText());
@@ -68,8 +74,9 @@ class Auth extends BaseContext
      */
     public function testSeeAuthError()
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $span = $this->findCss('span.red');
         Assert::assertNotNull($span);
-        Assert::assertContains('Username or password not found', $span->getText());
+        Assert::assertEquals('Username or password not found. This account may be inactive.', $span->getText());
     }
 }

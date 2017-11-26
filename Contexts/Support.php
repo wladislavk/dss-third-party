@@ -3,7 +3,6 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
-use function PHPSTORM_META\type;
 use PHPUnit\Framework\Assert;
 
 class Support extends BaseContext

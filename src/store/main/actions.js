@@ -36,8 +36,8 @@ export default {
         if (response instanceof LoginError) {
           reason = response.response
         }
-        if (response.hasOwnProperty('response') && response.response.hasOwnProperty('status') && response.response.status === 422) {
-          reason = 'Wrong username or password'
+        if (response.hasOwnProperty('response') && response.response.hasOwnProperty('status') && response.response.status === 403) {
+          reason = 'Username or password not found. This account may be inactive.'
         }
         dispatch(symbols.actions.handleErrors, {title: 'getToken', response: response})
         reject(new Error(reason))

@@ -31,13 +31,4 @@ class LoginsApiTest extends ApiTestCase
             'userid' => 33,
         ];
     }
-
-    public function testLogout()
-    {
-        $this->markTestSkipped('This action currently does not work');
-        return;
-
-        $this->post(self::ROUTE_PREFIX . '/logout');
-        $this->assertResponseOk();
-    }
 }

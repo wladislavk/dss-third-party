@@ -3,7 +3,6 @@ import symbols from '../../../src/symbols'
 import sinon from 'sinon'
 import MainModule from '../../../src/store/main'
 import TestCase from '../../cases/StoreTestCase'
-import SwalWrapper from '../../../src/wrappers/SwalWrapper'
 import axios from 'axios'
 import http from '../../../src/services/http'
 import LocalStorageManager from '../../../src/services/LocalStorageManager'
@@ -336,62 +335,6 @@ describe('Main module actions', () => {
     })
     it('handles errors in production environment', function () {
       // @todo: add code and write the test
-    })
-  })
-
-  describe('logout action', () => {
-    it('logs out successfully', function (done) {
-      const postData = []
-      const swalData = []
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        postData.push({
-          path: path
-        })
-        return Promise.resolve({})
-      })
-      this.sandbox.stub(SwalWrapper, 'callSwal').callsFake((data, func) => {
-        swalData.push(data)
-        func()
-      })
-      MainModule.actions[symbols.actions.logout](this.testCase.mocks)
-      setTimeout(() => {
-        const expectedMutations = [
-          {
-            type: symbols.mutations.mainToken,
-            payload: ''
-          }
-        ]
-        expect(this.testCase.mutations).toEqual(expectedMutations)
-        const expectedHttp = [
-          {
-            path: endpoints.logout
-          }
-        ]
-        expect(postData).toEqual(expectedHttp)
-        const expectedSwal = [
-          {
-            title: '',
-            text: 'Logout Successfully!',
-            type: 'success'
-          }
-        ]
-        expect(swalData).toEqual(expectedSwal)
-        done()
-      }, 100)
-    })
-    it('handles error', function (done) {
-      let errorMessage = ''
-      this.sandbox.stub(http, 'post').callsFake(() => {
-        return Promise.reject({status: 400})
-      })
-      this.sandbox.stub(console, 'error').callsFake((message) => {
-        errorMessage = message
-      })
-      MainModule.actions[symbols.actions.logout](this.testCase.mocks)
-      setTimeout(() => {
-        expect(errorMessage).toBe('invalidateToken [status]: 400')
-        done()
-      }, 100)
     })
   })
 

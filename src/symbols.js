@@ -127,7 +127,6 @@ export default {
     getCompanyData: 'GET_COMPANY_DATA',
     getDoctorData: 'GET_DOCTOR_DATA',
     handleErrors: 'HANDLE_ERRORS',
-    logout: 'LOGOUT',
     mainLogin: 'MAIN_LOGIN',
     memos: 'MEMOS',
     parseScreenerResults: 'PARSE_SCREENER_RESULTS',

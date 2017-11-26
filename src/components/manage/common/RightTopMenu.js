@@ -1,5 +1,6 @@
 import { LEGACY_URL, NOTIFICATION_NUMBERS } from '../../../constants/main'
 import symbols from '../../../symbols'
+import Alerter from '../../../services/Alerter'
 
 export default {
   data () {
@@ -17,7 +18,8 @@ export default {
   },
   methods: {
     logout () {
-      this.$store.dispatch(symbols.actions.logout)
+      this.$store.commit(symbols.mutations.mainToken, '')
+      Alerter.alert('Logout successfully')
       this.$router.push({ name: 'main-login' })
     }
   }

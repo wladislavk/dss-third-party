@@ -45,6 +45,7 @@ export default {
       this.credentials.password = event.target.value
     },
     submitForm () {
+      this.message = 'foo'
       let alertText
       if (this.credentials.username.trim() === '') {
         alertText = 'Username is Required'

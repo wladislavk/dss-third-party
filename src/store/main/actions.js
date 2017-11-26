@@ -4,7 +4,6 @@ import http from '../../services/http'
 import symbols from '../../symbols'
 import LocalStorageManager from '../../services/LocalStorageManager'
 import ProcessWrapper from '../../wrappers/ProcessWrapper'
-import SwalWrapper from '../../wrappers/SwalWrapper'
 import RouterKeeper from '../../services/RouterKeeper'
 import MediaFileRetriever from '../../services/MediaFileRetriever'
 import FileRetrievalError from '../../exceptions/FileRetrievalError'
@@ -99,24 +98,6 @@ export default {
     } else {
       // TODO if prod
     }
-  },
-
-  [symbols.actions.logout] ({state, commit}) {
-    http.token = state[symbols.state.mainToken]
-    http.post(endpoints.logout).then(() => {
-      SwalWrapper.callSwal(
-        {
-          title: '',
-          text: 'Logout Successfully!',
-          type: 'success'
-        },
-        () => {
-          commit(symbols.mutations.mainToken, '')
-        }
-      )
-    }).catch((response) => {
-      console.error('invalidateToken [status]: ' + response.status)
-    })
   },
 
   // @todo: add proper logging. currently logins are not stored

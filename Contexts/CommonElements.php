@@ -53,10 +53,6 @@ class CommonElements extends BaseContext
         while (!$input && $currentTry <= $tries) {
             $this->wait(self::SHORT_WAIT_TIME);
             $input = $this->findCss('input#patient_search');
-            if (!$input) {
-                var_dump($currentTry);
-                var_dump($this->page->getContent());
-            }
             $currentTry++;
         }
         Assert::assertNotNull($input);

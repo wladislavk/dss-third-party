@@ -5,7 +5,7 @@ let selectionref = 1
 let selectedrefUrl = ''
 let searchrefVal = '' // global variable to hold the last valid search string
 
-function setupAutocomplete (inField, hint, idField, source, file, hinttype, pid) {
+export function setupAutocomplete (inField, hint, idField, source, file, hinttype, pid) {
   $('#' + inField).keyup(function (e) {
     $('#' + idField).val('')
     if (source !== '') {
@@ -100,7 +100,7 @@ function templateListRef (li, val) {
   return li
 }
 
-function updateReferredby (inField, name, idField, id, source, t, hint) {
+export function updateReferredby (inField, name, idField, id, source, t, hint) {
   $('#' + inField).val(name)
   $('#' + idField).val(id)
   if (source !== '') {
@@ -115,15 +115,15 @@ $('.autocomplete_search').click(function () {
   }
 })
 
-function updateval (t) {
+export function updateval (t) {
   if (t.value === 'Type referral name' || t.value === 'Type contact name' || t.value === 'Type patient name' || t.value === 'Type insurance payer name' || t.value === 'Search Calendar') {
     t.value = ''
   }
 }
 
-function getParameterByName (name) {
-  name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]')
-  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)')
+export function getParameterByName (name) {
+  const newName = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]')
+  const regex = new RegExp('[\\?&]' + newName + '=([^&#]*)')
   const results = regex.exec(location.search)
   return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '))
 }

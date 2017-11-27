@@ -5,19 +5,46 @@ const hasVB = false
 // Patient Search Suggestion Script
 const localPatData = []
 
-function display () {
+export function debounceCall (call, options) {
+  let timeoutId = 0
+
+  options = $.extend({
+    timeout: 600,
+    context: null,
+    onTick: null
+  }, options)
+
+  return function () {
+    const argumentArray = Array.prototype.slice.call(arguments, 0)
+
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+      timeoutId = 0
+    }
+
+    if (options.onTick) {
+      options.onTick.apply(options.context, argumentArray)
+    }
+
+    timeoutId = setTimeout(function () {
+      call.apply(options.context, argumentArray)
+    }, options.timeout)
+  }
+}
+
+export function display () {
   $('#future_dental_det').show()
 }
 
-function hide () {
+export function hide () {
   $('#future_dental_det').hide()
 }
 
-function displaysmoke () {
+export function displaysmoke () {
   $('#smoke').show()
 }
 
-function hidesmoke () {
+export function hidesmoke () {
   $('#smoke').hide()
 }
 
@@ -85,7 +112,7 @@ function createCookie (name, value, days) {
   }
 }
 
-function readCookie (name) {
+export function readCookie (name) {
   const nameEQ = name + '='
   const ca = document.cookie.explode(';')
 
@@ -103,7 +130,7 @@ function readCookie (name) {
   return null
 }
 
-function eraseCookie (name) {
+export function eraseCookie (name) {
   createCookie(name, '', -1)
 }
 
@@ -142,14 +169,14 @@ function check () {
   }
 }
 
-function focusIt (dtControl) {
+export function focusIt (dtControl) {
   const mytext = $('#' + dtControl)
   setTimeout(function () {
     mytext.focus()
   }, 0)
 }
 
-function validateDate (dtControl) {
+export function validateDate (dtControl) {
   const input = $('#' + dtControl)
   const value = input.val() || ''
   const dateFormat = input.attr('data-date-format') || 'm/d/Y'
@@ -219,7 +246,7 @@ function areyousure (tturl) {
   window.location = tturl
 }
 
-function hideallblocksForFlowsheet (step) {
+export function hideallblocksForFlowsheet (step) {
   if (step.indexOf('2') !== -1) {
     $('#consultrow').hide()
   }
@@ -265,7 +292,7 @@ function hideallblocksForFlowsheet (step) {
   }
 }
 
-function hideallblocks () {
+export function hideallblocks () {
   $('#sleepstudyrow, #impressionrow, #delayingtreatmentrow').hide()
   $('#refusedtreatmentrow, #devicedeliveryrow, #checkuprow').hide()
   $('#patientnoncomprow, #starttreatmentrow, #annualrecallrow').hide()

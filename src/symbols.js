@@ -30,6 +30,7 @@ export default {
     premedCheck: 'PREMED_CHECK',
     questionnaireStatuses: 'QUESTIONNAIRE_STATUSES',
     rejectedClaimsForCurrentPatient: 'REJECTED_CLAIMS_FOR_CURRENT_PATIENT',
+    responsibleUsers: 'RESPONSIBLE_USERS',
     screenerId: 'SCREENER_ID',
     screenerToken: 'SCREENER_TOKEN',
     screenerWeights: 'SCREENER_WEIGHTS',
@@ -98,6 +99,7 @@ export default {
     popupEdit: 'POPUP_EDIT',
     removeTask: 'REMOVE_TASK',
     removeTaskForPatient: 'REMOVE_TASK_FOR_PATIENT',
+    responsibleUsers: 'RESPONSIBLE_USERS',
     restoreInitialScreener: 'RESTORE_INITIAL_SCREENER',
     restoreInitialScreenerKeepSession: 'RESTORE_INITIAL_SCREENER_KEEP_SESSION',
     screenerId: 'SCREENER_ID',
@@ -116,6 +118,7 @@ export default {
     userInfo: 'USER_INFO'
   },
   actions: {
+    addTask: 'ADD_TASK',
     authenticateScreener: 'AUTHENTICATE_SCREENER',
     clearPatientData: 'CLEAR_PATIENT_DATA',
     companyLogo: 'COMPANY_LOGO',
@@ -133,6 +136,7 @@ export default {
     parseScreenerResults: 'PARSE_SCREENER_RESULTS',
     patientData: 'PATIENT_DATA',
     patientSearchList: 'PATIENT_SEARCH_LIST',
+    responsibleUsers: 'RESPONSIBLE_USERS',
     retrieveTasks: 'RETRIEVE_TASKS',
     retrieveTasksForPatient: 'RETRIEVE_TASKS_FOR_PATIENT',
     setCurrentContact: 'SET_CURRENT_CONTACT',

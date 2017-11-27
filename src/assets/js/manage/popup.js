@@ -4,7 +4,7 @@ let popupStatus = 0
 let popupEdit = false
 let close = false
 
-function loadPopup (fa) {
+export function loadPopup (fa) {
   centerPopup()
   popupEdit = false
   $('#aj_pop').attr('src', fa).load(function () {

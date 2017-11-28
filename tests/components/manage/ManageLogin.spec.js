@@ -108,7 +108,7 @@ describe('ManageLogin component', () => {
 
   it('logs in with wrong password', function (done) {
     moxios.stubRequest(ProcessWrapper.getApiRoot() + 'auth', {
-      status: 422,
+      status: 403,
       responseText: {}
     })
 
@@ -123,7 +123,7 @@ describe('ManageLogin component', () => {
     submitButton.click()
     moxios.wait(() => {
       const errorMessage = vm.$el.querySelector('span.red')
-      expect(errorMessage.textContent).toBe('Wrong username or password')
+      expect(errorMessage.textContent).toBe('Username or password not found. This account may be inactive.')
       expect(vm.$router.currentRoute.name).toBe('login')
       done()
     })

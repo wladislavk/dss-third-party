@@ -201,7 +201,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::post('locations/by-doctor', 'LocationsController@getDoctorLocations');
     Route::resource('locations', 'LocationsController', ['except' => ['create', 'edit']]);
 
-    Route::post('logout', 'LoginsController@logout');
     Route::resource('logins', 'LoginsController', ['except' => ['create', 'edit']]);
 
     Route::resource('login-details', 'LoginDetailsController', ['except' => ['create', 'edit']]);

@@ -10,6 +10,8 @@ use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
+use Clients\GoutteClient;
+use GuzzleHttp\Client as GuzzleClient;
 
 require_once __DIR__ . '/../config.php';
 
@@ -62,6 +64,14 @@ abstract class BaseContext extends RawMinkContext
         $environment = $scope->getEnvironment();
         $this->common = $environment->getContext($this->getCommonContext());
         $this->client = $this->getMink()->getSession();
+        // @todo: comment out these lines to enable custom request header
+        /*
+        $this->client = new GoutteClient();
+        $guzzle = new GuzzleClient([
+            'verify' => false,
+        ]);
+        $this->client->setClient($guzzle);
+        */
 
         $host = getenv('DB_HOST');
         $dbName = getenv('DB_DATABASE');

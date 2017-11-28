@@ -15,9 +15,6 @@ const buttonUI = require('jquery-ui/button')
 const sliderUI = require('jquery-ui/slider')
 window.$.fn.extend = buttonUI
 window.$.fn.extend = sliderUI
-window.swal = require('sweetalert')
-window.moment = require('moment')
-window.accounting = require('accounting')
 
 // centralized event hub
 window.eventHub = new Vue()

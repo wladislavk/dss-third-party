@@ -338,6 +338,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::post('users/check', 'UsersController@check');
     Route::post('users/check-logout', 'UsersController@checkLogout');
     Route::post('users/letter-info', 'UsersController@getLetterInfo');
+    Route::get('users/responsible', 'UsersController@getResponsible');
     Route::resource('users', 'UsersController', ['except' => ['create', 'edit']]);
 
     Route::resource('user-companies', 'UserCompaniesController', ['except' => ['create', 'edit']]);

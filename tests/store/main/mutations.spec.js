@@ -1,4 +1,4 @@
-import { NOTIFICATION_NUMBERS } from '../../../src/constants'
+import { NOTIFICATION_NUMBERS } from '../../../src/constants/main'
 import MainModule from '../../../src/store/main'
 import symbols from '../../../src/symbols'
 
@@ -81,18 +81,37 @@ describe('Main module mutations', () => {
     })
   })
 
-  describe('patientName mutation', () => {
-    it('populates patient name', function () {
+  describe('modal mutation', () => {
+    it('loads modal with params', function () {
       const state = {
-        [symbols.state.patientName]: ''
+        [symbols.state.modal]: {}
       }
       const payload = {
-        firstName: 'John',
-        lastName: 'Doe'
+        name: 'foo',
+        params: {first: 1, second: 2}
       }
-      MainModule.mutations[symbols.mutations.patientName](state, payload)
+      MainModule.mutations[symbols.mutations.modal](state, payload)
       const expectedState = {
-        [symbols.state.patientName]: 'John Doe'
+        [symbols.state.modal]: {
+          name: 'foo',
+          params: {first: 1, second: 2}
+        }
+      }
+      expect(state).toEqual(expectedState)
+    })
+    it('loads modal without params', function () {
+      const state = {
+        [symbols.state.modal]: {}
+      }
+      const payload = {
+        name: 'foo'
+      }
+      MainModule.mutations[symbols.mutations.modal](state, payload)
+      const expectedState = {
+        [symbols.state.modal]: {
+          name: 'foo',
+          params: {}
+        }
       }
       expect(state).toEqual(expectedState)
     })

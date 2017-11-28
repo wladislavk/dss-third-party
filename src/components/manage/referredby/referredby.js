@@ -1,12 +1,12 @@
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
+import { DSS_CONSTANTS } from '../../../constants/main'
 
 export default {
   name: 'referredby',
   data () {
     return {
-      constants: window.constants,
       message: '',
       routeParameters: {
         currentPageNumber: 0,
@@ -35,7 +35,8 @@ export default {
         'nintyplus': '90+ Days',
         'notes': 'Notes',
         'expand': 'Expand'
-      }
+      },
+      referredPhysician: DSS_CONSTANTS.DSS_REFERRED_PHYSICIAN
     }
   },
   watch: {

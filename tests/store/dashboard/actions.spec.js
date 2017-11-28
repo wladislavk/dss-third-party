@@ -5,7 +5,7 @@ import symbols from '../../../src/symbols'
 import SwalWrapper from '../../../src/wrappers/SwalWrapper'
 import DashboardModule from '../../../src/store/dashboard'
 import TestCase from '../../cases/StoreTestCase'
-import { LEGACY_URL } from '../../../src/constants'
+import { LEGACY_URL } from '../../../src/constants/main'
 import LocationWrapper from '../../../src/wrappers/LocationWrapper'
 
 describe('Dashboard module actions', () => {
@@ -85,7 +85,9 @@ describe('Dashboard module actions', () => {
       const expectedMutations = [
         {
           type: symbols.mutations.modal,
-          payload: 'device-selector'
+          payload: {
+            name: 'device-selector'
+          }
         }
       ]
       expect(this.testCase.mutations).toEqual(expectedMutations)

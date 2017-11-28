@@ -1,11 +1,11 @@
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
+import SingleVobComponent from './SingleVob.vue'
 
 export default {
   data () {
     return {
-      constants: window.constants,
       routeParameters: {
         patientId: null,
         currentPageNumber: 0,
@@ -25,6 +25,14 @@ export default {
         'action': 'Action'
       }
     }
+  },
+  computed: {
+    totalPages () {
+      return Math.ceil(this.totalVobs / this.vobsPerPage)
+    }
+  },
+  components: {
+    singleVob: SingleVobComponent
   },
   watch: {
     '$route.query.page': function () {
@@ -69,32 +77,10 @@ export default {
       deep: true
     }
   },
-  computed: {
-    totalPages () {
-      return Math.ceil(this.totalVobs / this.vobsPerPage)
-    }
-  },
   created () {
     this.getVobs()
   },
   methods: {
-    setViewStatus (vob) {
-      const data = { viewed: vob.viewed === 0 ? 1 : 0 }
-
-      this.updateVob(vob.id, data).then(() => {
-        this.$router.push({
-          name: this.$route.name,
-          query: {
-            pid: vob.patient_id || 0
-          }
-        })
-
-        const foundVob = this.vobs.find(el => el.id === vob.id)
-        foundVob.viewed = data.viewed
-      }).catch((response) => {
-        this.$store.dispatch(symbols.actions.handleErrors, {title: 'updateVob', response: response})
-      })
-    },
     getCurrentDirection (sort) {
       if (this.routeParameters.sortColumn === sort) {
         return this.routeParameters.sortDirection.toLowerCase() === 'asc' ? 'desc' : 'asc'
@@ -136,11 +122,6 @@ export default {
       }
 
       return http.post(endpoints.insurancePreauth.findVobs, data)
-    },
-    updateVob (id, data) {
-      id = id || 0
-
-      return http.put(endpoints.insurancePreauth.update + '/' + id, data)
     }
   }
 }

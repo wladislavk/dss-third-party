@@ -1,25 +1,24 @@
 import symbols from '../../symbols'
-import { NOTIFICATION_NUMBERS } from '../../constants'
+import { NOTIFICATION_NUMBERS } from '../../constants/main'
 
 export default {
   [symbols.state.mainToken]: '',
-  [symbols.state.modal]: '',
-  [symbols.state.popupEdit]: false,
-  [symbols.state.courseStaff]: {
-    useCourse: 0,
-    useCourseStaff: 0
+  [symbols.state.modal]: {
+    name: '',
+    params: {}
   },
+  [symbols.state.popupEdit]: false,
   [symbols.state.docInfo]: {
-    homepage: '',
+    homepage: 0,
     manageStaff: 0,
     useEligibleApi: 0,
     useLetters: 0,
     usePatientPortal: 0
   },
   [symbols.state.userInfo]: {
-    userId: 0,
+    userId: '',
+    plainUserId: 0,
     docId: 0,
-    loginId: 0,
     manageStaff: 0,
     userType: 0,
     useCourse: 0,
@@ -47,13 +46,8 @@ export default {
     [NOTIFICATION_NUMBERS.unmailedLetters]: 0,
     [NOTIFICATION_NUMBERS.unsignedNotes]: 0
   },
-  [symbols.state.patientName]: '',
-  [symbols.state.patientHomeSleepTestStatus]: '',
-  [symbols.state.medicare]: 0,
-  [symbols.state.premedCheck]: 0,
-  [symbols.state.headerTitle]: '',
-  [symbols.state.headerAlertText]: '',
-  [symbols.state.displayAlert]: false,
-  [symbols.state.allergen]: 0,
-  [symbols.state.incompleteHomeSleepTests]: []
+  [symbols.state.showAllWarnings]: true,
+  [symbols.state.companyLogo]: '',
+  [symbols.state.showSearchHints]: false,
+  [symbols.state.patientSearchList]: []
 }

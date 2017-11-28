@@ -1,5 +1,7 @@
-import { LEGACY_URL, NOTIFICATIONS } from '../../../constants'
+import { LEGACY_URL } from '../../../constants/main'
+import { NOTIFICATIONS } from '../../../constants/dashboard'
 import NotificationLinkComponent from './NotificationLink.vue'
+import NotificationBranchComponent from './NotificationBranch.vue'
 
 export default {
   data () {
@@ -10,6 +12,7 @@ export default {
     }
   },
   components: {
+    notificationBranch: NotificationBranchComponent,
     notificationLink: NotificationLinkComponent
   },
   methods: {

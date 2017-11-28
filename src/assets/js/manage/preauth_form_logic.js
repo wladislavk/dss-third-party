@@ -1,8 +1,8 @@
 import $ from 'jquery'
 
 $(function () {
-  function calcAmountLeftToMeet () {
-    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
+  function calcAmountLeftToMeet (shouldDisableCalculations) {
+    if (shouldDisableCalculations) {
       return
     }
     let deductible = $('#patient_deductible').val()
@@ -33,8 +33,8 @@ $(function () {
     $('#in_patient_amount_left_to_meet').val(leftToMeet.toFixed(2))
   }
 
-  function calcAmountLeftToMeetFamily () {
-    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
+  function calcAmountLeftToMeetFamily (shouldDisableCalculations) {
+    if (shouldDisableCalculations) {
       return
     }
     let deductible = $('#family_deductible').val()
@@ -65,8 +65,8 @@ $(function () {
     $('#in_family_amount_left_to_meet').val(leftToMeet.toFixed(2))
   }
 
-  function calcExpectedPayments () {
-    if (typeof disableAutomaticCalculations !== 'undefined' && disableAutomaticCalculations) {
+  function calcExpectedPayments (shouldDisableCalculations) {
+    if (shouldDisableCalculations) {
       return
     }
     // OUT OF NETWORK BENEFITS

@@ -2,6 +2,7 @@ export default {
   auth: '/auth',
   companies: {
     billingExclusiveCompany: '/companies/billing-exclusive-company',
+    companyByUser: '/companies/by-user',
     homeSleepTest: '/companies/home-sleep-test'
   },
   contacts: {
@@ -43,12 +44,8 @@ export default {
   guideSettingOptions: {
     settingIds: 'guide-setting-options/settingIds'
   },
-  healthHistories: {
-    withFilter: '/health-histories/with-filter'
-  },
   homeSleepTests: {
-    store: '/home-sleep-tests',
-    incomplete: '/home-sleep-tests/uncompleted'
+    store: '/home-sleep-tests'
   },
   insurances: {
     rejected: '/insurances/rejected'
@@ -91,18 +88,14 @@ export default {
     edit: '/patients/edit',
     fillingForm: '/patients/filling-form',
     find: '/patients/find',
+    list: '/patients/list',
+    patientData: '/patients/data',
     referredByContact: '/patients/referred-by-contact',
     referrers: '/patients/referrers',
     resetAccessCode: '/patients/reset-access-code',
     show: '/patients',
     temporaryPinDocument: '/patients/temp-pin-document',
     withFilter: '/patients/with-filter'
-  },
-  patientContacts: {
-    current: '/patient-contacts/current'
-  },
-  patientInsurances: {
-    current: '/patient-insurances/current'
   },
   patientSummaries: {
     updateTrackerNotes: '/patient-summaries/update-tracker-notes'
@@ -152,7 +145,6 @@ export default {
   users: {
     check: '/users/check',
     checkLogout: '/users/check-logout',
-    courseStaff: '/users/course-staff',
     current: '/users/current',
     letterInfo: '/users/letter-info',
     show: '/users'

@@ -1,12 +1,13 @@
 import endpoints from '../../../../endpoints'
 import http from '../../../../services/http'
 import symbols from '../../../../symbols'
+import MomentWrapper from '../../../../wrappers/MomentWrapper'
 
 export default {
   name: 'print-referred-by-contact',
   data () {
     return {
-      title: 'Referral Source Printout - ' + window.moment().format('MM/DD/YYYY'),
+      title: 'Referral Source Printout - ' + MomentWrapper.create().format('MM/DD/YYYY'),
       contacts: [],
       routeParameters: {
         sortColumn: '',

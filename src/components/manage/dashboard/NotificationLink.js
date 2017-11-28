@@ -1,4 +1,4 @@
-import { LEGACY_URL } from '../../../constants'
+import { LEGACY_URL } from '../../../constants/main'
 import symbols from '../../../symbols'
 
 export default {

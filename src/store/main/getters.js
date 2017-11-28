@@ -1,5 +1,5 @@
 import symbols from '../../symbols'
-import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../constants'
+import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../constants/main'
 
 export default {
   [symbols.getters.notificationsNumber] (state) {
@@ -20,6 +20,7 @@ export default {
     }
     return notificationsNumber
   },
+
   [symbols.getters.isUserDoctor] (state) {
     return (state[symbols.state.userInfo].docId === state[symbols.state.userInfo].userId)
   }

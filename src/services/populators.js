@@ -1,5 +1,5 @@
 import symbols from '../symbols'
-import { NOTIFICATION_NUMBERS } from '../constants'
+import { NOTIFICATION_NUMBERS } from '../constants/main'
 
 export default {
   [symbols.populators.populateClaims] (state, elementName) {

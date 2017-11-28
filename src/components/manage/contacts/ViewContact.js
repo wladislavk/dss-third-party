@@ -1,4 +1,4 @@
-import { LEGACY_URL } from '../../../constants'
+import { LEGACY_URL } from '../../../constants/main'
 import { mapGetters } from 'vuex'
 import symbols from '../../../symbols'
 

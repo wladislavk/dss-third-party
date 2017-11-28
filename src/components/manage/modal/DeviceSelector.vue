@@ -82,7 +82,7 @@
 <script src="./DeviceSelector.js"></script>
 
 <style src="jquery-ui/themes/ui-lightness/jquery-ui.css"></style>
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/form.css" scoped></style>
-<style src="../../../assets/css/manage/device_guide.css" scoped></style>
+<style src="assets/css/manage/admin.css" scoped></style>
+<style src="assets/css/manage/form.css" scoped></style>
+<style src="assets/css/manage/device_guide.css" scoped></style>
 

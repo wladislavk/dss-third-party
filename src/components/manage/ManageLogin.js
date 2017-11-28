@@ -1,11 +1,9 @@
-import axios from 'axios'
 import endpoints from '../../endpoints'
-import { LEGACY_URL } from '../../constants'
+import { LEGACY_URL } from '../../constants/main'
 import http from '../../services/http'
 import symbols from '../../symbols'
 import Alerter from '../../services/Alerter'
 import { focus as focusDirective } from 'vue-focus'
-import ProcessWrapper from '../../wrappers/ProcessWrapper'
 import SiteSealComponent from '../SiteSeal.vue'
 
 export default {
@@ -68,34 +66,10 @@ export default {
       }
       this.focusPassword = false
 
-      axios.post(ProcessWrapper.getApiRoot() + 'auth', this.credentials).then((response) => {
-        const data = response.data
-
-        if (!data.hasOwnProperty('token') || !data.token) {
-          throw new Error('No token retrieved')
-        }
-
-        this.$store.commit(symbols.mutations.mainToken, data.token)
-        http.token = data.token
-
-        return http.post(endpoints.users.check).then((response) => {
-          const data = response.data.data
-
-          // @todo: the token was already set, so it is possible to change route manually for suspended user
-          if (data.type.toLowerCase() === 'suspended') {
-            this.message = 'This account has been suspended.'
-            return
-          }
-          this.$router.push({ name: 'dashboard' })
-        }).catch((response) => {
-          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getAccountStatus', response: response})
-        })
+      this.$store.dispatch(symbols.actions.mainLogin, this.credentials).then(() => {
+        this.$router.push({ name: 'dashboard' })
       }).catch((response) => {
-        if (response.status === 422) {
-          this.message = 'Wrong username or password'
-        } else {
-          this.$store.dispatch(symbols.actions.handleErrors, {title: 'getToken', response: response})
-        }
+        this.message = response.message
       })
     }
   }

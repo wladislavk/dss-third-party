@@ -8,12 +8,9 @@ export default {
   created () {
     document.body.className += ' main-template'
   },
-  watch: {
-    '$route.query.pid': function () {
-      const patientId = this.$route.query.pid || 0
-      this.$store.dispatch(symbols.actions.patientData, patientId)
-      this.$store.dispatch(symbols.actions.healthHistoryForPatient, patientId)
-      this.$store.dispatch(symbols.actions.incompleteHomeSleepTests, patientId)
+  methods: {
+    hideSearchHints () {
+      this.$store.commit(symbols.mutations.hideSearchHints)
     }
   }
 }

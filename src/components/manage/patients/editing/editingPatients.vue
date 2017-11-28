@@ -5,7 +5,8 @@
         </div>
         <div
             v-for="notification in patientNotifications"
-            :id="'not_' + notification.id" :class="'warning ' + notification.notification_type">
+            :id="'not_' + notification.id" :class="'warning ' + notification.notification_type"
+        >
             <span>{{ notification.notification }} {{ notification.notification_date }}</span>
             <a
                 href="#"
@@ -2115,9 +2116,8 @@
                 </tr>
                 <tr>
                     <td colspan="2" align="right">
-                        <span class="red">
-                          * Required Fields
-                        </span><br />
+                        <span class="red">* Required Fields</span>
+                        <br />
                         <input
                             v-on:click.prevent="submitAddingOrEditingPatient"
                             :value="buttonText + 'Patient'"
@@ -2134,6 +2134,6 @@
 <script src="./editingPatients.js"></script>
 
 <style src="../../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../../assets/css/manage/search-hints.css" scoped></style>
+<!--<style src="../../../../assets/css/manage/search-hints.css" scoped></style>-->
 <style src="../../../../assets/css/manage/form.css" scoped></style>
 <style src="../../../../assets/css/manage/add_patient.css" scoped></style>

@@ -5,12 +5,10 @@ import AppComponent from './components/App.vue'
 import router from './router'
 import axios from 'axios'
 import store from './store'
-import constants from './modules/constants'
 import $ from 'jquery'
 import VueMoment from 'vue-moment'
 import VueVisible from 'vue-visible'
 
-window.constants = constants
 window.$ = $
 window.jQuery = $
 const buttonUI = require('jquery-ui/button')

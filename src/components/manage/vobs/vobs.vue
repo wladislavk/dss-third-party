@@ -3,13 +3,13 @@
         <span class="admin_head">Manage Verification of Benefits</span>
         <router-link
             :to="{
-                name: $route.name,
-                query: {
-                    pid     : routeParameters.patientId,
-                    sort    : routeParameters.sortColumn,
-                    sortdir : routeParameters.sortDirection,
-                    viewed  : routeParameters.viewed === 0 ? null : 0
-                }
+              name: $route.name,
+              query: {
+                pid: routeParameters.patientId,
+                sort: routeParameters.sortColumn,
+                sortdir: routeParameters.sortDirection,
+                viewed: routeParameters.viewed === 0 ? null : 0
+              }
             }"
             style="float:right; margin-right:10px;"
             class="addButton"
@@ -65,51 +65,16 @@
                         <template v-else>{{ label }}</template>
                     </td>
                 </tr>
-                <tr v-if="!vobs.length" class="tr_bg">
+                <template v-if="vobs.length">
+                    <single-vob
+                        v-for="vob in vobs"
+                        v-bind:vob="vob"
+                        v-bind:key="vob.id"
+                    ></single-vob>
+                </template>
+                <tr class="tr_bg" v-else>
                     <td valign="top" class="col_head" colspan="10" align="center">
                         No Records
-                    </td>
-                </tr>
-                <tr
-                    v-else
-                    v-for="vob in vobs"
-                    :class="{ unviewed: !(vob.viewed === 1 || vob.status === constants.DSS_PREAUTH_PENDING) }"
-                >
-                    <td valign="top">
-                        {{ vob.front_office_request_date }}
-                    </td>
-                    <td valign="top">
-                        {{ vob.firstname }} {{ vob.lastname }}
-                    </td>
-                    <td valign="top" :class="'status_' + vob.status">
-                        {{ constants.dssPreauthStatusLabels[vob.status] }}
-                    </td>
-                    <td valign="top">
-                        {{ vob.status === constants.DSS_PREAUTH_REJECTED ? vob.reject_reason : '' }}
-                    </td>
-                    <td valign="top">
-                        <router-link
-                            :to="{
-                                path: '/manage/insurance',
-                                query: {
-                                    pid    : routeParameters.patientId,
-                                    vob_id : vob.id
-                                }
-                            }"
-                            class="editlink"
-                            title="EDIT"
-                        >
-                            View
-                        </router-link>
-                        <br />
-                        <a
-                            href="#"
-                            v-on:click.prevent="setViewStatus(vob)"
-                            class="editlink"
-                            title="EDIT"
-                        >
-                            {{ vob.viewed === 1 ? 'Mark Unread' : 'Mark Read' }}
-                        </a>
                     </td>
                 </tr>
             </table>

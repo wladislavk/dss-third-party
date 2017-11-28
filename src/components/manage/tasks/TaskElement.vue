@@ -27,4 +27,4 @@
 
 <script src="./TaskElement.js"></script>
 
-<style src="../../../assets/css/manage/task-element.css" scoped></style>
+<style src="../../../assets/css/manage/tasks/task-element.css" scoped></style>

@@ -1,3 +1,4 @@
+import accounting from 'accounting'
 import endpoints from '../../../../endpoints'
 import http from '../../../../services/http'
 import symbols from '../../../../symbols'
@@ -72,7 +73,7 @@ export default {
       return http.post(endpoints.ledgers.totals, data)
     },
     formatLedger (value) {
-      return window.accounting.formatMoney(value, '$')
+      return accounting.formatMoney(value, '$')
     }
   }
 }

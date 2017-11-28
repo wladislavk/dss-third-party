@@ -1,6 +1,6 @@
 import symbols from '../../src/symbols'
 import populators from '../../src/services/populators'
-import { NOTIFICATION_NUMBERS } from '../../src/constants'
+import { NOTIFICATION_NUMBERS } from '../../src/constants/main'
 
 describe('populateClaims populator', () => {
   it('populates claims', function () {

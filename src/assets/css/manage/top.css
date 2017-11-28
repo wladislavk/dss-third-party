@@ -1,17 +1,3 @@
-#logo {
-  width: 96px;
-  height: 77px;
-  background: url(../../images/logo.png) no-repeat 0 0;
-  display: block;
-  float: left;
-  padding-left: 100px;
-  color: #fff;
-}
-
-.suckertreemenu {
-  height: 27px;
-}
-
 #treemenu1 {
   width: 550px;
   float: right;
@@ -22,43 +8,6 @@
   width: auto;
   float: none;
   height: auto;
-}
-
-#patient_search_div {
-  float: left;
-  margin: 25px 5px 0 0;
-}
-
-#patient_name_div {
-  margin: 4px 0 0 30px;
-  height: 30px;
-  padding-top: 6px;
-  min-width: 317px;
-  float: left;
-  color: #000;
-  font-size: 22px;
-  background: #fed68d;
-  -webkit-border-top-left-radius: 5px;
-  -webkit-border-top-right-radius: 5px;
-  -moz-border-radius-topleft: 5px;
-  -moz-border-radius-topright: 5px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-
-#patient_name_div .medicare_name {
-  min-width: 238px;
-  padding: 0 3px;
-  vertical-align: top;
-  text-align: center;
-  display: block;
-  float: right;
-}
-
-#patient_name_div .name {
-  width: 100%;
-  text-align: center;
-  display: block;
 }
 
 #patient_nav {
@@ -146,47 +95,4 @@
   margin: 20px;
   background: #fff;
   color: #000;
-}
-
-#header_support {
-  width: 98px;
-  height: 28px;
-  background: url(../../images/support_button_blue.png) no-repeat 0 8px;
-}
-
-#header_support:hover {
-  background: url(../../images/support_button_blue_hover.png) no-repeat 0 8px;
-}
-
-#header_support.pending {
-  background: url(../../images/support_button_red.png) no-repeat 0 8px;
-}
-#header_support.pending:hover {
-  background: url(../../images/support_button_red_hover.png) no-repeat 0 8px;
-}
-
-#header_support a {
-  color: #fff;
-}
-
-.bottom-image {
-  height: 89px;
-  width: 100%;
-  background: url(../../images/dss_01.png) #0b5c82 no-repeat top left;
-}
-
-.body-image {
-  background: url(../../images/dss_03.jpg) #0b5c82 repeat-y top left;
-  width: 100%;
-}
-
-#contentMain {
-  background: url(../../images/dss_03.jpg) repeat-y top left #FFFFFF;
-}
-
-.footer-image {
-  margin: 0 auto;
-  background: url(../../images/dss_05.png) no-repeat top left;
-  width: 980px;
-  height: 28px;
 }

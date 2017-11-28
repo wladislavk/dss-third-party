@@ -1,10 +1,11 @@
 import symbols from '../../symbols'
-import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../constants'
+import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../constants/main'
 
 export default {
   [symbols.getters.documentCategories] (state) {
     return state[symbols.state.documentCategories]
   },
+
   [symbols.getters.shouldShowEnrollments] (state, getters, rootState) {
     const useEligible = rootState.main[symbols.state.docInfo].useEligibleApi
     if (useEligible === 1) {
@@ -12,6 +13,7 @@ export default {
     }
     return false
   },
+
   [symbols.getters.shouldShowInvoices] (state, getters, rootState) {
     const userId = rootState.main[symbols.state.userInfo].plainUserId
     const docId = rootState.main[symbols.state.userInfo].docId
@@ -24,14 +26,10 @@ export default {
     }
     return false
   },
+
   [symbols.getters.shouldShowGetCE] (state, getters, rootState) {
-    const userId = rootState.main[symbols.state.userInfo].plainUserId
-    const docId = rootState.main[symbols.state.userInfo].docId
-    if (userId === docId) {
-      return true
-    }
-    const useCourse = rootState.main[symbols.state.courseStaff].useCourse
-    const useCourseStaff = rootState.main[symbols.state.courseStaff].useCourseStaff
+    const useCourse = rootState.main[symbols.state.userInfo].useCourse
+    const useCourseStaff = rootState.main[symbols.state.docInfo].useCourseStaff
     if (useCourse !== 1) {
       return false
     }
@@ -40,6 +38,7 @@ export default {
     }
     return true
   },
+
   [symbols.getters.shouldShowFranchiseManual] (state, getters, rootState) {
     const userType = rootState.main[symbols.state.userInfo].userType
     if (userType === DSS_CONSTANTS.DSS_USER_TYPE_FRANCHISEE) {
@@ -47,6 +46,7 @@ export default {
     }
     return false
   },
+
   [symbols.getters.shouldShowTransactionCode] (state, getters, rootState) {
     const userId = rootState.main[symbols.state.userInfo].plainUserId
     const docId = rootState.main[symbols.state.userInfo].docId
@@ -59,12 +59,14 @@ export default {
     }
     return false
   },
+
   [symbols.getters.shouldShowUnmailedClaims] (state, getters, rootState) {
     if (rootState.main[symbols.state.userInfo].userType === DSS_CONSTANTS.DSS_USER_TYPE_SOFTWARE) {
       return true
     }
     return false
   },
+
   [symbols.getters.shouldShowUnmailedLettersNumber] (state, getters, rootState) {
     if (rootState.main[symbols.state.userInfo].userType !== DSS_CONSTANTS.DSS_USER_TYPE_SOFTWARE) {
       return false
@@ -74,13 +76,16 @@ export default {
     }
     return true
   },
+
   [symbols.getters.shouldShowPaymentReportsNumber] (state, getters, rootState) {
     return !!rootState.main[symbols.state.docInfo].usePaymentReports
   },
+
   [symbols.getters.shouldShowRejectedPreauthNumber] (state, getters, rootState) {
     const rejectedNumber = rootState.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.rejectedPreAuth]
     return !!rejectedNumber
   },
+
   [symbols.getters.shouldUseLetters] (state, getters, rootState) {
     if (rootState.main[symbols.state.docInfo].useLetters === 1) {
       return true

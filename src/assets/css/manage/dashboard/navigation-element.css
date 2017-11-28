@@ -1,0 +1,114 @@
+.homesuckertreemenu ul, .suckertreemenu ul {
+  padding: 0;
+  list-style-type: none;
+  margin: 0 0 0 10px;
+}
+
+/* Top level list items */
+.suckertreemenu ul li {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  position: relative;
+}
+
+.homesuckertreemenu ul li {
+  position:relative;
+}
+
+/* Top level menu link items style */
+.homesuckertreemenu ul li a, .suckertreemenu ul li a {
+  display: block;
+  width: 166px; /* Width of top level menu link items */
+  padding: 8px 0 0 0;
+  border-left-width: 0;
+  text-decoration: none;
+  height: 32px;
+  color: #095d81;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+  background: url(../../../images/navigation_button.png) no-repeat top left;
+  cursor: pointer;
+}
+
+.homesuckertreemenu ul li a:hover, .suckertreemenu ul li a:hover {
+  background: url(../../../images/navigation_button_hover.png) no-repeat top left;
+}
+
+/* 1st sub level menu */
+.homesuckertreemenu ul li ul, .suckertreemenu ul li ul {
+  left: 170px;
+  position: absolute;
+  top: 1em; /* no need to change, as true value set by script */
+  display: block;
+  visibility: hidden;
+  margin-left: 0;
+  margin-top: -9px;
+  z-index: 50;
+}
+
+/* Sub level menu list items (undo style from Top level List Items) */
+.homesuckertreemenu ul li ul li, .suckertreemenu ul li ul li {
+  display: list-item;
+  float: none;
+  margin-left: 0;
+  border-right: 1px solid #095d81;
+  border-left: 1px solid #095d81;
+  border-bottom: 1px solid #095d81;
+  background: url(../../../images/btnTrans.png) repeat;
+}
+
+/* All subsequent sub menu levels offset after 1st level sub menu */
+.homesuckertreemenu ul li ul li ul, .suckertreemenu ul li ul li ul {
+  left: 159px; /* no need to change, as true value set by script */
+  top: 0;
+  margin-top:6px;
+  padding-left: 2px;
+  border-top: 1px solid #095d81;
+}
+
+/* Sub level menu links style */
+.homesuckertreemenu ul li ul li a, .suckertreemenu ul li ul li a {
+  display: block;
+  width: 150px; /* width of sub menu levels */
+  color: #095d81;
+  text-decoration: none;
+  padding: 8px 5px 0 5px;
+  background: none;
+  height: auto;
+}
+
+.homesuckertreemenu ul li a:hover, .suckertreemenu ul li a:hover {
+  color: #095d81;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.homesuckertreemenu ul li ul li a:hover, .suckertreemenu ul li ul li a:hover {
+  color: #FFF;
+  text-align: left;
+  font-weight: bold;
+  font-size: 13px;
+  background: #00457c;
+  overflow: hidden;
+}
+
+.homesuckertreemenu ul li ul li a, .suckertreemenu ul li ul li a {
+  text-align: left;
+}
+
+.homesuckertreemenu ul li ul li a, .suckertreemenu ul li ul li a {
+  font-size: 13px;
+}
+
+/* Background image for top level menu list links */
+.homesuckertreemenu .mainfoldericon, .suckertreemenu .mainfoldericon {
+  background: url(../../../images/navigation_button.png) no-repeat top left;
+}
+
+/* Background image for subsequent level menu list links */
+.homesuckertreemenu .subfoldericon, .suckertreemenu .subfoldericon {
+  background: url(../../../images/arrow-right.gif) no-repeat center right;
+}

@@ -6,19 +6,14 @@
             </tr>
             <tr>
                 <td valign="top" height="400">
-                    <!-- @todo: re-enable the component after refactoring and testing -->
-                    <!--<header-component></header-component>-->
+                    <common-header></common-header>
                     <div id="contentMain">
                         <div style="clear:both;"></div>
-                        <!-- @todo: re-enable the component after refactoring and testing -->
-                        <!--<patient-data></patient-data>-->
-                        <!-- Router content -->
                         <router-view></router-view>
                     </div>
-                    <div class="footer-image"></div>
+                    <common-footer></common-footer>
                 </td>
             </tr>
-          <!-- Stick Footer Section Here -->
         </table>
         <!-- @todo: re-enable the component after refactoring and testing -->
         <!--<logout-warning></logout-warning>-->
@@ -27,10 +22,4 @@
 
 <script src="./ManageApp.js"></script>
 
-<style src="../../assets/css/manage/admin.css" scoped></style>
-<style src="../../assets/css/manage/notifications.css" scoped></style>
-<style src="../../assets/css/manage/search-hints.css" scoped></style>
-<style src="../../assets/css/manage/top.css" scoped></style>
-<style src="../../assets/css/manage/letter-form.css" scoped></style>
-<style src="../../assets/css/manage/form.css" scoped></style>
-<style src="../../../node_modules/sweetalert/dist/sweetalert.css" scoped></style>
+<style src="../../assets/css/manage/app.css" scoped></style>

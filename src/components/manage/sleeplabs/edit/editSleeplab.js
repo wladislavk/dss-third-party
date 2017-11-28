@@ -1,7 +1,6 @@
 import endpoints from '../../../../endpoints'
 import http from '../../../../services/http'
-import phoneFilters from '../../../../modules/filters/phoneMixin'
-import sleeplabValidator from '../../../../modules/validators/SleeplabMixin'
+import PhoneFormatter from '../../../../services/PhoneFormatter'
 import AwesomeMask from 'awesome-mask'
 import symbols from '../../../../symbols'
 import Alerter from '../../../../services/Alerter'
@@ -24,7 +23,6 @@ export default {
       phoneFields: ['phone1', 'phone2', 'fax']
     }
   },
-  mixins: [phoneFilters, sleeplabValidator],
   directives: {
     mask: AwesomeMask
   },
@@ -142,7 +140,7 @@ export default {
 
           this.phoneFields.forEach(el => {
             if (data.hasOwnProperty(el)) {
-              data[el] = this.phoneForDisplaying(data[el])
+              data[el] = PhoneFormatter.phoneForDisplaying(data[el])
             }
           })
 
@@ -161,7 +159,7 @@ export default {
       // convert phone fields before storing
       this.phoneFields.forEach(el => {
         if (sleeplabFormData.hasOwnProperty(el)) {
-          sleeplabFormData[el] = this.phoneForStoring(sleeplabFormData[el])
+          sleeplabFormData[el] = PhoneFormatter.phoneForStoring(sleeplabFormData[el])
         }
       })
 
@@ -170,6 +168,46 @@ export default {
       }
 
       return http.post(endpoints.sleeplabs.edit + '/' + sleeplabId, data)
+    },
+    isEmail (email) {
+      return email && email.match(/^[\w.+-]+@\w+\.\w+$/)
+    },
+    walkThroughMessages (messages, contact) {
+      for (let property in messages) {
+        if (messages.hasOwnProperty(property)) {
+          if (contact[property] === undefined || contact[property].trim() === '') {
+            alert(messages[property])
+            this.$refs[property].focus()
+            return false
+          }
+        }
+      }
+
+      return true
+    },
+    validateSleeplabData (sleeplab) {
+      const messages = {
+        company: 'Lab Name is Required',
+        firstname: 'Firstname is Required',
+        lastname: 'Lastname is Required',
+        add1: 'Address1 is Required',
+        city: 'City is Required',
+        state: 'State is Required',
+        zip: 'Zip is Required'
+      }
+
+      if (!this.walkThroughMessages(messages, sleeplab)) {
+        return false
+      }
+
+      if (!this.isEmail(sleeplab.email)) {
+        const alertText = 'In-Valid Email'
+        alert(alertText)
+        this.$refs.email.focus()
+        return false
+      }
+
+      return true
     }
   }
 }

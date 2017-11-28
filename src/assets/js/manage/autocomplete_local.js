@@ -1,4 +1,6 @@
 import $ from 'jquery'
+import LocationWrapper from '../../../wrappers/LocationWrapper'
+import { LEGACY_URL } from '../../../constants/main'
 
 let fff = 0
 let selectionref = 1
@@ -174,10 +176,10 @@ function updateReferredbyLocal (inField, name, idField, id, source, t, hint, enr
         } else {
           alert(r.message)
           if (officeType === 1) {
-            window.location = 'manage_enrollment.php'
-          } else {
-            window.location = 'manage_enrollments.php?ed=' + r.userid
+            LocationWrapper.goToPage(LEGACY_URL + 'manage_enrollment.php')
+            return
           }
+          LocationWrapper.goToPage(LEGACY_URL + 'manage_enrollments.php?ed=' + r.userid)
         }
       },
       failure: function () {

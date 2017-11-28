@@ -44,7 +44,6 @@
                 v-on:click.prevent="onClickAddNewContact"
                 class="addButton"
             >Add New Contact</button>
-            &nbsp;&nbsp;
         </div>
         <br />
         <div v-if="message" align="center" class="red">
@@ -60,27 +59,27 @@
                                 :key="letter.id"
                                 :class="{ 'selected_letter': letter == routeParameters.currentLetter }"
                                 :to="{
-                                    name: $route.name,
-                                    query: {
-                                        letter      : letter,
-                                        status      : routeParameters.status,
-                                        sort        : routeParameters.sortColumn,
-                                        sortdir     : routeParameters.sortDirection,
-                                        contacttype : routeParameters.selectedContactType
-                                    }
+                                  name: $route.name,
+                                  query: {
+                                    letter: letter,
+                                    status: routeParameters.status,
+                                    sort: routeParameters.sortColumn,
+                                    sortdir: routeParameters.sortDirection,
+                                    contacttype: routeParameters.selectedContactType
+                                  }
                                 }"
                                 class="letters"
                             >{{ letter }}</router-link>
                             <router-link
                                 v-if="routeParameters.currentLetter"
                                 :to="{
-                                    name: $route.name,
-                                    query: {
-                                        status      : routeParameters.status,
-                                        sort        : routeParameters.sortColumn,
-                                        sortdir     : routeParameters.sortDirection,
-                                        contacttype : routeParameters.selectedContactType
-                                    }
+                                  name: $route.name,
+                                  query: {
+                                    status: routeParameters.status,
+                                    sort: routeParameters.sortColumn,
+                                    sortdir: routeParameters.sortDirection,
+                                    contacttype: routeParameters.selectedContactType
+                                  }
                                 }"
                             >Show All</router-link>
                         </div>
@@ -97,14 +96,14 @@
                             <router-link
                                 v-else
                                 :to="{
-                                    name: $route.name,
-                                    query: {
-                                        page        : index - 1,
-                                        letter      : routeParameters.currentLetter,
-                                        sort        : routeParameters.sortColumn,
-                                        sortdir     : routeParameters.sortDirection,
-                                        contacttype : routeParameters.selectedContactType
-                                    }
+                                  name: $route.name,
+                                  query: {
+                                    page: index - 1,
+                                    letter: routeParameters.currentLetter,
+                                    sort: routeParameters.sortColumn,
+                                    sortdir: routeParameters.sortDirection,
+                                    contacttype: routeParameters.selectedContactType
+                                  }
                                 }"
                                 class="fp"
                             >{{ index }}</router-link>
@@ -119,12 +118,12 @@
                     >
                         <router-link
                             :to="{
-                                name: $route.name,
-                                query: {
-                                    letter: routeParameters.currentLetter,
-                                    sort: sort,
-                                    sortdir: getCurrentDirection(sort)
-                                }
+                              name: $route.name,
+                              query: {
+                                letter: routeParameters.currentLetter,
+                                sort: sort,
+                                sortdir: getCurrentDirection(sort)
+                              }
                             }"
                         >{{ label }}</router-link>
                     </td>
@@ -151,15 +150,15 @@
                                 class="name-empty"
                             >Empty name</i>
                             <span v-else>
-                                    <i v-if="!contact.lastname" class="name-empty">Empty last name</i>
-                                    <template v-else>
-                                        {{ contact.lastname }}{{ !contact.middlename ? ',' : '' }}
-                                    </template>
+                                <i v-if="!contact.lastname" class="name-empty">Empty last name</i>
+                                <template v-else>
+                                    {{ contact.lastname }}{{ !contact.middlename ? ',' : '' }}
+                                </template>
 
-                                    <template v-if="contact.middlename">{{ contact.middlename }},</template>
+                                <template v-if="contact.middlename">{{ contact.middlename }},</template>
 
-                                    <i v-if="!contact.firstname" class="name-empty">empty first name</i>
-                                    <template v-else>{{ contact.firstname }}</template>
+                                <i v-if="!contact.firstname" class="name-empty">empty first name</i>
+                                <template v-else>{{ contact.firstname }}</template>
                             </span>
                         </td>
                         <td valign="top" width="25%">
@@ -214,9 +213,7 @@
                         </td>
                         <td colspan="4" valign="top">
                             <strong>PATIENTS</strong><br />
-                            <template
-                                v-for="patient in contact.patients_data"
-                            >
+                            <template v-for="patient in contact.patients_data">
                                 <a v-bind:href="legacyUrl + 'add_patient.php?pid=' + patient.patientid  + '&ed=' + patient.patientid">{{ patient.firstname }} {{ patient.lastname }}</a><br />
                             </template>
                         </td>
@@ -231,9 +228,15 @@
 
 <style src="../../../assets/css/manage/admin.css" scoped></style>
 <style src="../../../assets/css/manage/manage.css" scoped></style>
-<style src="../../../assets/css/manage/search-hints.css" scoped></style>
+<!--<style src="../../../assets/css/manage/search-hints.css" scoped></style>-->
 <style type="text/css" scoped>
-    .name-empty { font-weight: normal; }
-    .name { width: 20% }
-    .company.type { width: 25% }
+.name-empty {
+  font-weight: normal;
+}
+.name {
+  width: 20%;
+}
+.company.type {
+  width: 25%;
+}
 </style>

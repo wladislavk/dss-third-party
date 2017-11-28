@@ -1,13 +1,13 @@
 import endpoints from 'endpoints'
 import http from 'services/http'
 import symbols from 'symbols'
-import { LEGACY_URL, DEVICE_SELECTOR_INSTRUCTIONS, DSS_CONSTANTS } from '../../../constants'
+import { DSS_CONSTANTS } from 'constants/main'
+import { DEVICE_SELECTOR_INSTRUCTIONS } from 'constants/dashboard'
 import Alerter from 'services/Alerter'
 
 export default {
   data () {
     return {
-      legacyUrl: LEGACY_URL,
       showInstructions: false,
       instructions: DEVICE_SELECTOR_INSTRUCTIONS
     }
@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     patientName () {
-      return this.$store.state.main[symbols.state.patientName]
+      return this.$store.state.patients[symbols.state.patientName]
     },
     deviceSelectorTitle () {
       return `Device C-Lect for ${this.patientName}?`

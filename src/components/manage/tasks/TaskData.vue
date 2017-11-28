@@ -16,4 +16,4 @@
 
 <script src="./TaskData.js"></script>
 
-<style src="../../../assets/css/manage/task-data.css" scoped></style>
+<style src="../../../assets/css/manage/tasks/task-data.css" scoped></style>

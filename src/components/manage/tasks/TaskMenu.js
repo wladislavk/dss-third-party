@@ -1,4 +1,4 @@
-import { LEGACY_URL, TASK_TYPES } from '../../../constants'
+import { LEGACY_URL, TASK_TYPES } from '../../../constants/main'
 import symbols from '../../../symbols'
 import TaskDataComponent from './TaskData.vue'
 

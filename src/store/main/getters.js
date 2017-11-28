@@ -2,6 +2,10 @@ import symbols from '../../symbols'
 import { DSS_CONSTANTS, NOTIFICATION_NUMBERS } from '../../constants/main'
 
 export default {
+  [symbols.getters.mainToken] (state) {
+    return state[symbols.state.mainToken]
+  },
+
   [symbols.getters.notificationsNumber] (state) {
     const stateNumbers = state[symbols.state.notificationNumbers]
     let notificationsNumber =

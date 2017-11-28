@@ -1,5 +1,4 @@
 import symbols from '../../../symbols'
-import { LEGACY_URL } from '../../../constants/main'
 import LocationWrapper from '../../../wrappers/LocationWrapper'
 import PatientHeaderComponent from '../patients/PatientHeader.vue'
 import PatientSearchComponent from './PatientSearch.vue'
@@ -11,7 +10,6 @@ import LeftTopMenuComponent from './LeftTopMenu.vue'
 export default {
   data () {
     return {
-      legacyUrl: LEGACY_URL,
       patientId: this.$store.state.patients[symbols.state.patientId],
       showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings]
     }
@@ -35,7 +33,7 @@ export default {
   },
   methods: {
     goToAddPatient () {
-      LocationWrapper.goToPage(LEGACY_URL + 'add_patient.php')
+      LocationWrapper.goToLegacyPage('manage/add_patient.php')
     },
     addTaskPopup () {
       const props = {

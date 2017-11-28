@@ -6,7 +6,7 @@
     >
         <div class="task_extra" v-bind:id="'task_extra_' + task.id" v-show="isVisible">
             <a href="#" v-on:click.prevent="onClickDeleteTask()" class="task_delete"></a>
-            <a href="#" v-on:click.prevent="'loadPopup(' + legacyUrl + 'add_task.php?id=' + task.id + ')'" class="task_edit">Edit</a>
+            <a href="#" v-on:click.prevent="onClickTaskPopup(task.id)" class="task_edit">Edit</a>
         </div>
         <input
             v-on:click="onClickTaskStatus($event)"
@@ -19,7 +19,7 @@
             <span class="task_due_date" v-if="dueDate && task.due_date">{{ task.due_date | moment("MM DD") }} - </span>
             {{ task.task }}
             <span class="task_name" v-if="task.firstname && task.lastname">
-                <span v-if="!isPatient">(</span><a class="task_name_link" v-bind:href="legacyUrl + 'add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</a><span v-if="!isPatient">)</span>
+                <span v-if="!isPatient">(</span><a class="task_name_link" v-legacy-href="'manage/add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</a><span v-if="!isPatient">)</span>
             </span>
         </div>
     </li>

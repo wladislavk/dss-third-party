@@ -3,6 +3,7 @@ import store from '../../../../src/store'
 import NotificationLinkComponent from '../../../../src/components/manage/dashboard/NotificationLink.vue'
 import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
 import symbols from '../../../../src/symbols'
+import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 
 describe('NotificationLink component', () => {
   beforeEach(function () {
@@ -24,7 +25,7 @@ describe('NotificationLink component', () => {
     }
     const vm = this.mount(propsData)
     expect(vm.$el.style.display).toBe('')
-    expect(vm.$el.getAttribute('href')).toBe('http://legacy/foo')
+    expect(vm.$el.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'foo')
     const expectedClass = 'notification count_3 bad_count'
     expect(vm.$el.className).toBe(expectedClass)
     const counter = vm.$el.querySelector('span.count')

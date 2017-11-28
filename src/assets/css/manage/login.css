@@ -9,23 +9,23 @@
   text-align: center;
 }
 
-#login_container {
+div.login_container {
   background: url(../../images/login_box.png) no-repeat 0 0;
   width: 625px;
   height: 162px;
   margin: 80px auto 0 auto;
 }
 
-#login_container form {
+form {
   padding: 20px 0 0 200px;
   width: 400px;
 }
 
-#login_container table {
+table {
   width: 400px;
 }
 
-#login_container .t_head {
+td.t_head {
   background: #00457c;
   text-align: center;
   color: #fff;
@@ -33,17 +33,19 @@
   font-size: 12px;
 }
 
-#login_container a, #login_container .screener {
+div.login_container a, span.screener {
   font-size: 10px;
   color: #00457C;
   text-decoration: none;
   font-family: sans-serif;
+  float: right;
+  margin-top: 4px;
 }
 
-#login_container h3 {
-  margin-top: 0;
-}
-
-.red {
+span.red {
   color: #FF0000;
+}
+
+span.registration_links {
+  float: right;
 }

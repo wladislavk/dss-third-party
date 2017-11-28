@@ -3,6 +3,7 @@ import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import TestCase from '../../../cases/ComponentTestCase'
 import ViewContactComponent from '../../../../src/components/manage/contacts/ViewContact.vue'
+import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 
 describe('ViewContact', () => {
   beforeEach(function () {
@@ -69,7 +70,7 @@ describe('ViewContact', () => {
       expect(getSpan(10)).toBe('foo@bar.com')
       expect(getSpan(11)).toBe('ddd')
       const link = vm.$el.querySelector('div#view-contact > div > a')
-      expect(link.getAttribute('href')).toBe('http://legacy/view_fcontact.php?ed=1')
+      expect(link.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'view_fcontact.php?ed=1')
       expect(link.textContent).toBe('View Full')
       done()
     })
@@ -88,7 +89,7 @@ describe('ViewContact', () => {
 
     moxios.wait(() => {
       const link = vm.$el.querySelector('div#view-contact > div > a')
-      expect(link.getAttribute('href')).toBe('http://legacy/add_contact.php?ed=1')
+      expect(link.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'add_contact.php?ed=1')
       expect(link.textContent).toBe('Edit')
       done()
     })

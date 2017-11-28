@@ -1,15 +1,16 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import moxios from 'moxios'
+import sinon from 'sinon'
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import RightMenuComponent from '../../../../src/components/manage/common/RightTopMenu.vue'
 import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
-import http from '../../../../src/services/http'
-import endpoints from '../../../../src/endpoints'
+import Alerter from '../../../../src/services/Alerter'
 
 describe('RightTopMenu component', () => {
   beforeEach(function () {
+    this.sandbox = sinon.createSandbox()
     moxios.install()
 
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingLetters] = 0
@@ -38,6 +39,7 @@ describe('RightTopMenu component', () => {
   })
 
   afterEach(function () {
+    this.sandbox.restore()
     moxios.uninstall()
   })
 
@@ -58,15 +60,15 @@ describe('RightTopMenu component', () => {
   })
 
   it('logs out', function (done) {
-    moxios.stubRequest(http.formUrl(endpoints.logout), {
-      status: 200,
-      responseText: {}
+    let alertText = ''
+    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
+      alertText = text
     })
-
     const vm = this.mount()
     const logoutButton = vm.$el.querySelector('a#logout')
     logoutButton.click()
     vm.$nextTick(() => {
+      expect(alertText).toBe('Logout successfully')
       expect(vm.$router.currentRoute.name).toBe('main-login')
       done()
     })

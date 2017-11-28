@@ -1,6 +1,6 @@
-import { LEGACY_URL } from '../../../constants/main'
 import { mapGetters } from 'vuex'
 import symbols from '../../../symbols'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: [
@@ -8,7 +8,7 @@ export default {
   ],
   data () {
     return {
-      legacyUrl: LEGACY_URL
+      legacyUrl: ProcessWrapper.getLegacyRoot()
     }
   },
   computed: {

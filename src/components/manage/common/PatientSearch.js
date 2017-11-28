@@ -1,5 +1,4 @@
 import symbols from '../../../symbols'
-import { LEGACY_URL } from '../../../constants/main'
 import LocationWrapper from '../../../wrappers/LocationWrapper'
 
 export default {
@@ -95,7 +94,7 @@ export default {
         return
       }
       if (listElement.link) {
-        LocationWrapper.goToPage(LEGACY_URL + listElement.link)
+        LocationWrapper.goToLegacyPage(listElement.link)
         return
       }
       this.inputValue = listElement.name

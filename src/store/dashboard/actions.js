@@ -3,6 +3,7 @@ import http from '../../services/http'
 import symbols from '../../symbols'
 import LocationWrapper from '../../wrappers/LocationWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
+import ProcessWrapper from '../../wrappers/ProcessWrapper'
 import { LEGACY_URL, DSS_CONSTANTS } from '../../constants/main'
 
 export default {

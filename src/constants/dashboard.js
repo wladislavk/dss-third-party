@@ -120,7 +120,7 @@ export const NAVIGATION_MENU = [
         name: 'DSS Files',
         link: 'manage/view_documents.php?cat=',
         childrenFrom: symbols.getters.documentCategories,
-        childId: 'categoryId',
+        childId: 'id',
         childName: 'name'
       },
       {
@@ -186,7 +186,7 @@ export const NAVIGATION_MENU = [
   },
   {
     name: 'SW Tutorials',
-    link: 'manage/sw_tutorials.php'
+    route: 'sw-tutorials'
   },
   {
     name: 'Scheduler',
@@ -212,21 +212,21 @@ export const NOTIFICATIONS = [
       {
         number: NOTIFICATION_NUMBERS.patientContacts,
         label: 'Pt Contacts',
-        link: 'manage_patient_contacts.php',
+        link: 'manage/manage_patient_contacts.php',
         countZero: 'bad_count',
         countNonZero: 'bad_count'
       },
       {
         number: NOTIFICATION_NUMBERS.patientInsurances,
         label: 'Pt Insurance',
-        link: 'manage_patient_insurance.php',
+        link: 'manage/manage_patient_insurance.php',
         countZero: 'bad_count',
         countNonZero: 'bad_count'
       },
       {
         number: NOTIFICATION_NUMBERS.patientChanges,
         label: 'Pt Changes',
-        link: 'manage_patient_changes.php',
+        link: 'manage/manage_patient_changes.php',
         countZero: 'bad_count',
         countNonZero: 'bad_count'
       }
@@ -235,7 +235,7 @@ export const NOTIFICATIONS = [
   {
     number: NOTIFICATION_NUMBERS.pendingLetters,
     label: 'Letters',
-    link: 'letters.php?status=pending',
+    link: 'manage/letters.php?status=pending',
     shouldParse: symbols.getters.shouldUseLetters,
     countZero: 'good_count',
     countNonZero: 'bad_count'
@@ -243,7 +243,7 @@ export const NOTIFICATIONS = [
   {
     number: NOTIFICATION_NUMBERS.unmailedLetters,
     label: 'Unmailed Letters',
-    link: 'letters.php?status=sent&mailed=0',
+    link: 'manage/letters.php?status=sent&mailed=0',
     shouldParse: symbols.getters.shouldShowUnmailedLettersNumber,
     countZero: 'bad_count',
     countNonZero: 'bad_count'
@@ -251,14 +251,14 @@ export const NOTIFICATIONS = [
   {
     number: NOTIFICATION_NUMBERS.preAuth,
     label: 'VOBs',
-    link: 'manage_vobs.php?status=' + DSS_CONSTANTS.DSS_PREAUTH_COMPLETE + '&viewed=0',
+    link: 'manage/manage_vobs.php?status=' + DSS_CONSTANTS.DSS_PREAUTH_COMPLETE + '&viewed=0',
     countZero: 'good_count',
     countNonZero: 'great_count'
   },
   {
     number: NOTIFICATION_NUMBERS.rejectedPreAuth,
     label: 'Rejected VOBs',
-    link: 'manage_vobs.php?status=' + DSS_CONSTANTS.DSS_PREAUTH_REJECTED + '&viewed=0',
+    link: 'manage/manage_vobs.php?status=' + DSS_CONSTANTS.DSS_PREAUTH_REJECTED + '&viewed=0',
     shouldParse: symbols.getters.shouldShowRejectedPreauthNumber,
     countZero: 'bad_count',
     countNonZero: 'bad_count'
@@ -266,35 +266,35 @@ export const NOTIFICATIONS = [
   {
     number: NOTIFICATION_NUMBERS.hst,
     label: 'HSTs',
-    link: 'manage_hst.php?status=' + DSS_CONSTANTS.DSS_HST_COMPLETE + '&viewed=0',
+    link: 'manage/manage_hst.php?status=' + DSS_CONSTANTS.DSS_HST_COMPLETE + '&viewed=0',
     countZero: 'good_count',
     countNonZero: 'great_count'
   },
   {
     number: NOTIFICATION_NUMBERS.rejectedHst,
     label: 'Rejected HSTs',
-    link: 'manage_hst.php?status=' + DSS_CONSTANTS.DSS_HST_REJECTED + '&viewed=0',
+    link: 'manage/manage_hst.php?status=' + DSS_CONSTANTS.DSS_HST_REJECTED + '&viewed=0',
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
   {
     number: NOTIFICATION_NUMBERS.requestedHst,
     label: 'Unsent HSTs',
-    link: 'manage_hst.php?status=' + DSS_CONSTANTS.DSS_HST_REQUESTED + '&viewed=0',
+    link: 'manage/manage_hst.php?status=' + DSS_CONSTANTS.DSS_HST_REQUESTED + '&viewed=0',
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
   {
     number: NOTIFICATION_NUMBERS.pendingClaims,
     label: 'Pending Claims',
-    link: 'manage_claims.php',
+    link: 'manage/manage_claims.php',
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
   {
     number: NOTIFICATION_NUMBERS.unmailedClaims,
     label: 'Unmailed Claims',
-    link: 'manage_claims.php?unmailed=1',
+    link: 'manage/manage_claims.php?unmailed=1',
     shouldParse: symbols.getters.shouldShowUnmailedClaims,
     countZero: 'good_count',
     countNonZero: 'bad_count'
@@ -302,49 +302,49 @@ export const NOTIFICATIONS = [
   {
     number: NOTIFICATION_NUMBERS.rejectedClaims,
     label: 'Rejected Claims',
-    link: 'manage_rejected_claims.php',
+    link: 'manage/manage_rejected_claims.php',
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
   {
     number: NOTIFICATION_NUMBERS.unsignedNotes,
     label: 'Unsigned Notes',
-    link: 'manage_unsigned_notes.php',
+    link: 'manage/manage_unsigned_notes.php',
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
   {
     number: NOTIFICATION_NUMBERS.rejectedPreAuth,
     label: 'Alerts',
-    link: 'manage_vobs.php?status=' + DSS_CONSTANTS.DSS_PREAUTH_REJECTED + '&viewed=0',
+    link: 'manage/manage_vobs.php?status=' + DSS_CONSTANTS.DSS_PREAUTH_REJECTED + '&viewed=0',
     countZero: 'bad_count',
     countNonZero: 'bad_count'
   },
   {
     number: NOTIFICATION_NUMBERS.faxAlerts,
     label: 'Failed Faxes',
-    link: 'manage_faxes.php',
+    link: 'manage/manage_faxes.php',
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
   {
     number: NOTIFICATION_NUMBERS.pendingDuplicates,
     label: 'Pending Duplicates',
-    link: 'pending_patient.php',
+    link: 'manage/pending_patient.php',
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
   {
     number: NOTIFICATION_NUMBERS.emailBounces,
     label: 'Email Bounces',
-    link: 'manage_email_bounces.php',
+    link: 'manage/manage_email_bounces.php',
     countZero: 'good_count',
     countNonZero: 'bad_count'
   },
   {
     number: NOTIFICATION_NUMBERS.paymentReports,
     label: 'Payment Reports',
-    link: 'payment_reports_list.php?unviewed=1',
+    link: 'manage/payment_reports_list.php?unviewed=1',
     shouldParse: symbols.getters.shouldShowPaymentReportsNumber,
     countZero: 'good_count',
     countNonZero: 'bad_count'

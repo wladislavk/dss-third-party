@@ -18,7 +18,6 @@
                 v-bind:key="notification.label"
             ></notification-link>
         </template>
-
         <a href="#" v-show="!showAll" v-on:click.prevent="showAllNotifications()" id="not_show_all">Show All</a>
         <a href="#" v-show="showAll" v-on:click.prevent="showActiveNotifications()" id="not_show_active">Show Active</a>
     </div>

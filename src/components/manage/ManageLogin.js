@@ -1,10 +1,10 @@
 import endpoints from '../../endpoints'
-import { LEGACY_URL } from '../../constants/main'
 import http from '../../services/http'
 import symbols from '../../symbols'
 import Alerter from '../../services/Alerter'
 import { focus as focusDirective } from 'vue-focus'
 import SiteSealComponent from '../SiteSeal.vue'
+import ProcessWrapper from '../../wrappers/ProcessWrapper'
 
 export default {
   name: 'main-login',
@@ -12,7 +12,7 @@ export default {
     return {
       focusUser: false,
       focusPassword: false,
-      legacyUrl: LEGACY_URL,
+      legacyUrl: ProcessWrapper.getLegacyRoot(),
       message: '',
       credentials: {
         username: '',

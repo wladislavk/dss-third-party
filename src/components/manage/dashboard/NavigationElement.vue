@@ -3,12 +3,15 @@
         v-on:mouseover="showChildren = true"
         v-on:mouseout="showChildren = false"
     >
+        <router-link
+            v-if="menuItem.route"
+            v-bind:to="{name: menuItem.route}"
+            v-bind:class="linkClass"
+        >{{ elementName }}</router-link>
         <a
-            v-bind:class="{
-                'mainfoldericon': linkClass === 'main',
-                'subfoldericon': linkClass === 'sub'
-            }"
-            v-bind:href="menuItemLink"
+            v-else
+            v-bind:class="linkClass"
+            v-bind:href="menuItem.childrenFrom ? '#' : menuItemLink"
             v-on:click="clickLink($event)"
             v-bind:target="menuItemBlank ? '_blank' : '_self'"
         >{{ elementName }}</a>
@@ -23,7 +26,7 @@
         </ul>
         <ul v-else-if="menuItem.childrenFrom" v-visible="showChildren">
             <li v-for="childFrom in getChildrenFrom(menuItem.childrenFrom)">
-                <a class="submenu_item" v-bind:href="menuItemLink + '/' + childFrom[menuItem.childId]">{{ childFrom[menuItem.childName] }}</a>
+                <a class="submenu_item" v-bind:href="menuItemLink + childFrom[menuItem.childId]">{{ childFrom[menuItem.childName] }}</a>
             </li>
         </ul>
     </li>

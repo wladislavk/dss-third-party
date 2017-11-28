@@ -1,5 +1,5 @@
-import { LEGACY_URL } from '../../../constants/main'
 import symbols from '../../../symbols'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: {
@@ -10,7 +10,7 @@ export default {
   },
   data () {
     return {
-      legacyUrl: LEGACY_URL,
+      legacyUrl: ProcessWrapper.getLegacyRoot(),
       medicare: this.$store.state.main[symbols.state.medicare],
       alertText: this.$store.state.main[symbols.state.headerAlertText],
       headerTitle: this.$store.state.main[symbols.state.headerTitle],

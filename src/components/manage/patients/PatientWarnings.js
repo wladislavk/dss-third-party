@@ -1,6 +1,7 @@
 import symbols from '../../../symbols'
-import { LEGACY_URL, NOT_ACCEPTED_UPDATE } from '../../../constants/main'
+import { NOT_ACCEPTED_UPDATE } from '../../../constants/main'
 import PatientIncompleteHstComponent from './PatientIncompleteHst.vue'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: {
@@ -11,7 +12,7 @@ export default {
   },
   data () {
     return {
-      legacyUrl: LEGACY_URL,
+      legacyUrl: ProcessWrapper.getLegacyRoot(),
       incompleteHomeSleepTests: this.$store.state.main[symbols.state.incompleteHomeSleepTests],
       profileUpdateText: this.getUpdateText('profile'),
       questionnaireUpdateText: this.getUpdateText('questionnaire')

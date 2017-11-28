@@ -8,40 +8,51 @@ import RouterKeeper from '../../services/RouterKeeper'
 import MediaFileRetriever from '../../services/MediaFileRetriever'
 import FileRetrievalError from '../../exceptions/FileRetrievalError'
 import Alerter from '../../services/Alerter'
-import { LEGACY_URL } from '../../constants/main'
 import NameComposer from '../../services/NameComposer'
 import LoginError from '../../exceptions/LoginError'
 
 export default {
-  [symbols.actions.mainLogin] ({commit, dispatch}, credentials) {
+  [symbols.actions.mainLogin] ({dispatch}, credentials) {
     return new Promise((resolve, reject) => {
       axios.post(ProcessWrapper.getApiRoot() + 'auth', credentials).then((response) => {
         const data = response.data
-        commit(symbols.mutations.mainToken, data.token)
-        http.token = data.token
-        return http.post(endpoints.users.check)
-      }).then((response) => {
-        const data = response.data.data
-        if (data.type.toLowerCase() === 'suspended') {
-          commit(symbols.mutations.mainToken, '')
-          http.token = ''
-          throw new LoginError('This account has been suspended.')
-        }
-        return dispatch(symbols.actions.userInfo)
+        return dispatch(symbols.actions.dualAppLogin, data.token)
       }).then(() => {
         resolve()
       }).catch((response) => {
-        commit(symbols.mutations.mainToken, '')
         let reason = ''
-        if (response instanceof LoginError) {
-          reason = response.response
-        }
         if (response.hasOwnProperty('response') && response.response.hasOwnProperty('status') && response.response.status === 403) {
           reason = 'Username or password not found. This account may be inactive.'
         }
         dispatch(symbols.actions.handleErrors, {title: 'getToken', response: response})
         reject(new Error(reason))
       })
+    })
+  },
+
+  [symbols.actions.dualAppLogin] ({commit, dispatch}, token) {
+    http.token = token
+    return http.post(endpoints.users.check).then((response) => {
+      const data = response.data.data
+      if (data.type.toLowerCase() === 'suspended') {
+        commit(symbols.mutations.mainToken, '')
+        http.token = ''
+        throw new LoginError('This account has been suspended.')
+      }
+      commit(symbols.mutations.mainToken, token)
+      http.token = token
+      dispatch(symbols.actions.userInfo)
+    }).catch((response) => {
+      commit(symbols.mutations.mainToken, '')
+      let reason = ''
+      if (response.hasOwnProperty('status') && response.status === 422) {
+        reason = 'Bad token'
+      }
+      if (response instanceof LoginError) {
+        reason = response.response
+      }
+      dispatch(symbols.actions.handleErrors, {title: 'getUserByToken', response: response})
+      throw new Error(reason)
     })
   },
 
@@ -139,6 +150,7 @@ export default {
   },
 
   [symbols.actions.patientSearchList] ({state, commit}, searchTerm) {
+    const legacyUrl = ProcessWrapper.getLegacyRoot()
     http.token = state[symbols.state.mainToken]
     const queryData = {
       partial_name: searchTerm
@@ -157,7 +169,7 @@ export default {
         const newElement = {
           name: 'Add patient with this name\u2026',
           patientType: 'new',
-          link: LEGACY_URL + 'add_patient.php?search=' + searchTerm
+          link: legacyUrl + 'add_patient.php?search=' + searchTerm
         }
         const newList = [
           noMatchesElement,
@@ -180,7 +192,7 @@ export default {
         const patientElement = {
           name: fullName,
           patientType: 'json',
-          link: LEGACY_URL + link
+          link: legacyUrl + link
         }
         newList.push(patientElement)
         // @todo: add transition

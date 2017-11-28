@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import LocationWrapper from '../../../wrappers/LocationWrapper'
-import { LEGACY_URL } from '../../../constants/main'
+import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 let fff = 0
 let selectionref = 1
@@ -175,11 +175,12 @@ function updateReferredbyLocal (inField, name, idField, id, source, t, hint, enr
           // Allow to be selected
         } else {
           alert(r.message)
+          const legacyUrl = ProcessWrapper.getLegacyRoot()
           if (officeType === 1) {
-            LocationWrapper.goToPage(LEGACY_URL + 'manage_enrollment.php')
+            LocationWrapper.goToPage(legacyUrl + 'manage_enrollment.php')
             return
           }
-          LocationWrapper.goToPage(LEGACY_URL + 'manage_enrollments.php?ed=' + r.userid)
+          LocationWrapper.goToPage(legacyUrl + 'manage_enrollments.php?ed=' + r.userid)
         }
       },
       failure: function () {

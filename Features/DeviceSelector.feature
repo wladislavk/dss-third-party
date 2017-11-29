@@ -4,7 +4,9 @@ Feature: Device Selector
     Given I am logged in as "doc1f"
     When I go to "start" page
     And I click on "Device Selector" menu point
-    Then I see device selection sliders:
+    Then I see "Instructions" link
+    And I see "Device C-Lect for ?" title
+    And I see device selection sliders:
       | name               |
       | Comfort            |
       | Bruxism            |
@@ -17,6 +19,15 @@ Feature: Device Selector
       | Patient Dexterity  |
       | Cost               |
     And I see "Sort Devices" link
+    And I see "Reset" link
+    When I click "Instructions" link
+    Then I see "hide" link
+    And I see instructions list:
+      | name                                                                 |
+      | Evaluate pt for each category using sliding bar                      |
+      | Choose the three most important categories (if needed)               |
+      | Click on Sort Devices                                                |
+      | Click the device to add to Pt chart, or click "Reset" to start over. |
     When I click "Sort Devices" link
     Then I see device list:
       | name                 | quantity |
@@ -39,3 +50,5 @@ Feature: Device Selector
       | Respire              | 0        |
       | PM Positioner Thermo | 0        |
       | Lamberg Sleepwell    | 0        |
+    When I click "Reset" link
+    Then I don't see device list

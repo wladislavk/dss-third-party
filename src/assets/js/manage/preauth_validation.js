@@ -1,6 +1,6 @@
 import { trim } from './validation'
 
-function validateDate (dtControl) {
+export function validateDate (dtControl) {
   const input = document.getElementById(dtControl)
   const validformat = /^\d{1,2}\/\d{1,2}\/\d{4}$/ // Basic check for format validity
   let returnval = false

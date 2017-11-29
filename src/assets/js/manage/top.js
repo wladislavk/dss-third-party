@@ -1,14 +1,9 @@
 import $ from 'jquery'
 
-const hasVB = false
-
-// Patient Search Suggestion Script
-const localPatData = []
-
 export function debounceCall (call, options) {
   let timeoutId = 0
 
-  options = $.extend({
+  const newOptions = $.extend({
     timeout: 600,
     context: null,
     onTick: null
@@ -22,13 +17,13 @@ export function debounceCall (call, options) {
       timeoutId = 0
     }
 
-    if (options.onTick) {
-      options.onTick.apply(options.context, argumentArray)
+    if (newOptions.onTick) {
+      newOptions.onTick.apply(newOptions.context, argumentArray)
     }
 
     timeoutId = setTimeout(function () {
-      call.apply(options.context, argumentArray)
-    }, options.timeout)
+      call.apply(newOptions.context, argumentArray)
+    }, newOptions.timeout)
   }
 }
 
@@ -48,12 +43,12 @@ export function hidesmoke () {
   $('#smoke').hide()
 }
 
-function LinkUp () {
+export function LinkUp () {
   const link = $('[name=DDlinks]').val()
   window.location.href = link
 }
 
-function toggleTB (what) {
+export function toggleTB (what) {
   if ($(what).is(':checked')) {
     $('form[name=patientfrm] [name=premeddet]').prop('disabled', true)
   } else {
@@ -61,12 +56,12 @@ function toggleTB (what) {
   }
 }
 
-function jsConfirm (str) {
-  const results = (hasVB) ? vbConfirm(str) : confirm(str)
+export function jsConfirm (str) {
+  const results = confirm(str)
   $('#results').html(results)
 }
 
-function disableenable () {
+export function disableenable () {
   const bedTimePartner = $('form[name=q_page1frm] [name=bed_time_partner]')
   if (bedTimePartner.val() === 'No') {
     $('form[name=q_page1frm] [name=quit_breathing]').prop('disabled', true)
@@ -89,11 +84,11 @@ function disableenable () {
   }
 }
 
-function showMe (id) {
+export function showMe (id) {
   $('#' + id).toggle()
 }
 
-function showMe2 (id) {
+export function showMe2 (id) {
   $('#' + id).toggle()
 }
 
@@ -134,7 +129,7 @@ export function eraseCookie (name) {
   createCookie(name, '', -1)
 }
 
-function check () {
+export function check () {
   if (!(document.forms || []).length || !(document.forms[0].elements || []).length) {
     return
   }
@@ -208,13 +203,13 @@ export function validateDate (dtControl) {
   return true
 }
 
-function validate () {
+export function validate () {
   if (document.getElementById('service_date_ledger').value === '') {
     alert('service date must be filled!')
   }
 }
 
-function getKey (keyStroke) {
+export function getKey (keyStroke) {
   if (!window.event || !window.event.srcElement) {
     return
   }
@@ -232,17 +227,15 @@ function getKey (keyStroke) {
   }
 }
 
-function popitup (url) {
+export function popitup (url) {
   const newwindow = window.open(url, 'name', 'height=400,width=400')
-
   if (window.focus) {
     newwindow.focus()
   }
-
   return false
 }
 
-function areyousure (tturl) {
+export function areyousure (tturl) {
   window.location = tturl
 }
 

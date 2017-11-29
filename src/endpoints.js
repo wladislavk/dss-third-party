@@ -132,6 +132,7 @@ export default {
     nextWeek: '/tasks/next-week',
     overdue: '/tasks/overdue',
     overdueForPatient: '/tasks/overdue/pid',
+    show: '/tasks',
     store: '/tasks',
     thisWeek: '/tasks/this-week',
     today: '/tasks/today',

@@ -1,6 +1,7 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
-import DeviceSelectorComponent from '../modal/DeviceSelector.vue'
+import AddTaskComponent from './AddTask.vue'
+import DeviceSelectorComponent from './DeviceSelector.vue'
 import ViewContactComponent from '../contacts/ViewContact.vue'
 import PatientAccessCodeComponent from '../patients/access-code/PatientAccessCode.vue'
 import EditContactComponent from '../contacts/EditContact.vue'
@@ -29,10 +30,7 @@ export default {
       return component.params
     },
     popupEnabled () {
-      if (this.currentView) {
-        return true
-      }
-      return false
+      return !!this.currentView
     }
   },
   created () {
@@ -43,6 +41,7 @@ export default {
     this.$off('keyup')
   },
   components: {
+    addTask: AddTaskComponent,
     deviceSelector: DeviceSelectorComponent,
     viewContact: ViewContactComponent,
     patientAccessCode: PatientAccessCodeComponent,
@@ -54,16 +53,10 @@ export default {
   },
   methods: {
     centering () {
-      const windowWidth = document.documentElement.clientWidth
-      const windowHeight = document.documentElement.clientHeight
-      let popupHeight = 0
-      let popupWidth = 0
-      const popupContact = document.getElementById('popupContact')
-      if (popupContact) {
-        popupHeight = popupContact.height()
-        popupWidth = popupContact.width()
-      }
-
+      const windowWidth = window.innerWidth
+      const windowHeight = window.innerHeight
+      const popupHeight = 400
+      const popupWidth = 750
       const topPos = (windowHeight / 2 - popupHeight / 2 + window.pageYOffset)
       let leftPos = windowWidth / 2 - popupWidth / 2
       if (leftPos < 0) {

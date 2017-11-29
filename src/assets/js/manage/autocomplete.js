@@ -1,10 +1,5 @@
 import $ from 'jquery'
 
-let fff = 0
-let selectionref = 1
-let selectedrefUrl = ''
-let searchrefVal = '' // global variable to hold the last valid search string
-
 export function setupAutocomplete (inField, hint, idField, source, file, hinttype, pid) {
   $('#' + inField).keyup(function (e) {
     $('#' + idField).val('')

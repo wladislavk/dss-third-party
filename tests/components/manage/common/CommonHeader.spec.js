@@ -73,7 +73,7 @@ describe('CommonHeader component', () => {
     addTaskButton.click()
     vm.$nextTick(() => {
       const expectedModal = {
-        name: 'add-task',
+        name: 'addTask',
         params: {
           patientId: 0
         }

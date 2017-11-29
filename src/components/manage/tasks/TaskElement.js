@@ -60,9 +60,10 @@ export default {
     },
     onClickTaskPopup (taskId) {
       const modalData = {
-        name: 'add-task',
+        name: 'addTask',
         params: {
-          id: taskId
+          id: taskId,
+          patientId: 0
         }
       }
       this.$store.commit(symbols.mutations.modal, modalData)

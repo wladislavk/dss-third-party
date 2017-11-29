@@ -16,7 +16,8 @@ $('.completed_today').click(function () {
       const r = $.parseJSON(data)
       if (!r.error) {
         updateCurrentStep()
-        $('#next_step').html(r.next_steps)
+        const nextStep = $('#next_step')
+        nextStep.html(r.next_steps)
         $('#' + id).val('')
         $('#datecomp_' + id).text(r.datecomp)
         const $tr = $('#completed_row_temp')
@@ -49,7 +50,7 @@ $('.completed_today').click(function () {
           })
         }
 
-        $('#next_step').val('')
+        nextStep.val('')
         $('#next_step_date').val('')
         $('#next_step_until').text('')
         if (id === 9) {

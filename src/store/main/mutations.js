@@ -64,6 +64,13 @@ export default {
     }
   },
 
+  [symbols.mutations.resetModal] (state) {
+    state[symbols.state.modal] = {
+      name: '',
+      params: {}
+    }
+  },
+
   [symbols.mutations.showAllWarnings] (state) {
     state[symbols.state.showAllWarnings] = true
   },

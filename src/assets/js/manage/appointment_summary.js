@@ -47,9 +47,10 @@ $(document).delegate('.delay_reason', 'change', function () {
   const reason = $(this).val()
   const pid = getParameterByName('pid')
 
-  if ($('#old_delay_reason_' + id).val() === 'other' && reason !== 'other') {
+  const oldReason = $('#old_delay_reason_' + id)
+  if (oldReason.val() === 'other' && reason !== 'other') {
     if (!confirm('Are you sure you want to change the reason?')) {
-      $(this).val($('#old_delay_reason_' + id).val())
+      $(this).val(oldReason.val())
       return false
     }
   }
@@ -82,9 +83,10 @@ $(document).delegate('.noncomp_reason', 'change', function () {
   const reason = $(this).val()
   const pid = getParameterByName('pid')
 
-  if ($('#old_noncomp_reason_' + id).val() === 'other' && reason !== 'other') {
+  const oldReason = $('#old_noncomp_reason_' + id)
+  if (oldReason.val() === 'other' && reason !== 'other') {
     if (!confirm('Are you sure you want to change the reason?')) {
-      $(this).val($('#old_noncomp_reason_' + id).val())
+      $(this).val(oldReason.val())
       return false
     }
   }

@@ -1,7 +1,6 @@
 // import endpoints from '../endpoints'
 // import http from './http'
 // import FileRetrievalError from '../exceptions/FileRetrievalError'
-// import { LEGACY_URL } from '../constants/main'
 
 export default {
   getMediaFile (/* filename */) {

@@ -39,7 +39,7 @@ export default new Router({
       // store.dispatch(symbols.actions.storeLoginDetails, to.query)
       const token = this.$store.state.main[symbols.state.mainToken]
       if (!token && !LocalStorageManager.get('token')) {
-        next({ name: 'login' })
+        next({ name: 'main-login' })
         return
       }
       // @todo: these two lines should be deleted when we decide on final policy regarding storage tokens

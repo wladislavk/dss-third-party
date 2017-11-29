@@ -1,18 +1,31 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import VueVisible from 'vue-visible'
 import store from '../../../../src/store'
 import NavigationElementComponent from '../../../../src/components/manage/dashboard/NavigationElement.vue'
 import symbols from '../../../../src/symbols'
 import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
+import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 
 describe('NavigationElement component', () => {
   beforeEach(function () {
     Vue.use(VueVisible)
+    Vue.use(VueRouter)
     const Component = Vue.extend(NavigationElementComponent)
+    const Router = new VueRouter({
+      mode: 'history',
+      routes: [
+        {
+          name: 'foo',
+          path: '/bar'
+        }
+      ]
+    })
     this.mount = function (propsData) {
       return new Component({
         store: store,
-        propsData: propsData
+        propsData: propsData,
+        router: Router
       }).$mount()
     }
   })
@@ -27,11 +40,23 @@ describe('NavigationElement component', () => {
     const vm = this.mount(props)
     const link = vm.$el.querySelector('li > a')
     expect(link.className).toBe('')
-    expect(link.getAttribute('href')).toBe('http://legacy/foo')
+    expect(link.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'foo')
     expect(link.getAttribute('target')).toBe('_self')
     expect(link.textContent).toBe('Element name')
     const list = vm.$el.querySelector('ul')
     expect(list).toBeNull()
+  })
+
+  it('should display router link', function () {
+    const props = {
+      menuItem: {
+        route: 'foo',
+        name: 'Element name'
+      }
+    }
+    const vm = this.mount(props)
+    const link = vm.$el.querySelector('li > a')
+    expect(link.getAttribute('href')).toBe('/bar')
   })
 
   it('should display for target blank', function () {
@@ -135,7 +160,7 @@ describe('NavigationElement component', () => {
     ]
     const props = {
       menuItem: {
-        link: 'foo',
+        link: 'foo/',
         name: 'Element name',
         childrenFrom: symbols.getters.documentCategories,
         childId: 'categoryId',
@@ -143,13 +168,15 @@ describe('NavigationElement component', () => {
       }
     }
     const vm = this.mount(props)
+    const link = vm.$el.querySelector('li > a')
+    expect(link.getAttribute('href')).toBe('#')
     const list = vm.$el.querySelector('ul')
     expect(list).not.toBeNull()
     const childItems = list.querySelectorAll('li')
     expect(childItems.length).toBe(2)
     const firstChild = childItems[0].querySelector('a')
     expect(firstChild.textContent).toBe('Child 1')
-    expect(firstChild.getAttribute('href')).toBe('http://legacy/foo/1')
+    expect(firstChild.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'foo/1')
   })
 
   it('should show and hide children', function (done) {

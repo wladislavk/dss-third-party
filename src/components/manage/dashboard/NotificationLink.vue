@@ -1,7 +1,7 @@
 <template>
     <a
         v-show="showAll || linkNumber"
-        v-bind:href="hasChildren ? '#' : (legacyUrl + linkUrl)"
+        v-legacy-href="hasChildren ? '#' : linkUrl"
         v-bind:class="'notification count_' + linkNumber + ' ' + (linkNumber === 0 ? countZeroClass : countNonZeroClass)"
     >
         <span class="count">{{ linkNumber }}</span>

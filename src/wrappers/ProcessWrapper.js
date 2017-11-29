@@ -13,6 +13,13 @@ export default {
     }
     return apiPath
   },
+  getLegacyRoot: function () {
+    let legacyRoot = process.env.LEGACY_ROOT
+    if (this._checkForHeadless()) {
+      legacyRoot = process.env.HEADLESS_LEGACY_ROOT
+    }
+    return legacyRoot
+  },
   getImagePath: function () {
     return process.env.IMAGE_PATH
   },

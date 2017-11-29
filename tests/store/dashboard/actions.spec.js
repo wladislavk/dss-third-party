@@ -5,8 +5,8 @@ import symbols from '../../../src/symbols'
 import SwalWrapper from '../../../src/wrappers/SwalWrapper'
 import DashboardModule from '../../../src/store/dashboard'
 import TestCase from '../../cases/StoreTestCase'
-import { LEGACY_URL } from '../../../src/constants/main'
 import LocationWrapper from '../../../src/wrappers/LocationWrapper'
+import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
 
 describe('Dashboard module actions', () => {
   beforeEach(function () {
@@ -184,7 +184,7 @@ describe('Dashboard module actions', () => {
       DashboardModule.actions[symbols.actions.exportMDModal]()
       expect(this.closed).toBe(true)
       expect(this.inputError).toBe('')
-      expect(destination).toBe(LEGACY_URL + 'manage/export_md.php')
+      expect(destination).toBe(ProcessWrapper.getLegacyRoot() + 'manage/export_md.php')
       const expectedSwal = [
         {
           data: {
@@ -283,7 +283,7 @@ describe('Dashboard module actions', () => {
         }
       ]
       expect(swalData).toEqual(expectedData)
-      expect(destination).toBe(LEGACY_URL + 'manage/data_import.php')
+      expect(destination).toBe(ProcessWrapper.getLegacyRoot() + 'manage/data_import.php')
     })
     it('imports data without confirmation', function () {
       const isConfirm = false

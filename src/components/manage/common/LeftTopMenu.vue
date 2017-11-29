@@ -1,10 +1,10 @@
 <template>
     <span class="left-top-menu">
         <span v-if="showOnlineCEAndSnoozleHelp">
-            <a v-bind:href="legacyUrl + 'edx_login.php'" target="_blank" v-on:click="removeCECookies()">Online CE</a>
-            <a v-bind:href="legacyUrl + 'help_login.php'" target="_blank" v-on:click="removeCECookies()">Snoozle/Help</a>
+            <a v-legacy-href="'manage/edx_login.php'" target="_blank" v-on:click="removeCECookies()">Online CE</a>
+            <a v-legacy-href="'manage/help_login.php'" target="_blank" v-on:click="removeCECookies()">Snoozle/Help</a>
         </span>
-        <a v-bind:href="legacyUrl + 'calendar.php'">Scheduler</a>
+        <a v-legacy-href="'manage/calendar.php'">Scheduler</a>
     </span>
 </template>
 

@@ -5,6 +5,7 @@ import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import store from '../../../../src/store'
 import TaskMenuComponent from '../../../../src/components/manage/tasks/TaskMenu.vue'
+import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 
 describe('TaskMenu component', () => {
   beforeEach(function () {
@@ -49,7 +50,7 @@ describe('TaskMenu component', () => {
       const children = vm.$el.querySelectorAll('div.task_data')
       expect(children.length).toBe(6)
       const viewAllButton = vm.$el.querySelector('a.task_view_all')
-      expect(viewAllButton.getAttribute('href')).toBe('http://legacy/manage_tasks.php')
+      expect(viewAllButton.getAttribute('href')).toBe(ProcessWrapper.getLegacyRoot() + 'manage/manage_tasks.php')
       done()
     })
   })

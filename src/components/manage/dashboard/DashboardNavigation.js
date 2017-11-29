@@ -1,5 +1,4 @@
 import symbols from '../../../symbols'
-import { LEGACY_URL } from '../../../constants/main'
 import { NAVIGATION_MENU } from '../../../constants/dashboard'
 import NavigationElementComponent from './NavigationElement.vue'
 
@@ -7,7 +6,6 @@ export default {
   data () {
     return {
       menu: NAVIGATION_MENU,
-      legacyUrl: LEGACY_URL,
       documentCategories: []
     }
   },

@@ -8,6 +8,7 @@ import store from './store'
 import $ from 'jquery'
 import VueMoment from 'vue-moment'
 import VueVisible from 'vue-visible'
+import LegacyHref from './directives/LegacyHref'
 
 window.$ = $
 window.jQuery = $
@@ -23,6 +24,7 @@ Vue.prototype.$http = axios
 
 Vue.use(VueMoment)
 Vue.use(VueVisible)
+Vue.directive('legacy-href', LegacyHref)
 
 /* eslint-disable no-new */
 new Vue({

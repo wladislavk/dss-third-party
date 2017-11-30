@@ -4,8 +4,9 @@ Feature: Device Selector
     Given I am logged in as "doc1f"
     When I go to "start" page
     And I click on "Device Selector" menu point
-    Then I see "Instructions" link
-    And I see "Device C-Lect for ?" title
+    Then I see a modal window
+    And I see "Instructions" link
+    And I see divice selector modal title
     And I see device selection sliders:
       | name               |
       | Comfort            |

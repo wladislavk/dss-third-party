@@ -374,4 +374,19 @@ class Main extends BaseContext
         $spanHeader = $this->findCss('span.admin_head');
         Assert::assertEquals($header, trim($spanHeader->getText()));
     }
+
+    /**
+     * @Then I see a modal window
+     */
+    public function testSeeModal()
+    {
+        if (SUT_HOST === 'vue') {
+            return;
+        }
+
+        $srcAttr = $this->findCss('iframe[id="aj_pop"]')->getAttribute('src');
+        Assert::assertNotNull($srcAttr);
+
+        $this->getCommonClient()->switchToIFrame('aj_pop');
+    }
 }

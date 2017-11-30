@@ -8,18 +8,40 @@ use PHPUnit\Framework\Assert;
 class DeviceSelector extends BaseContext
 {
     /**
+     * @Then I see divice selector modal title
+     */
+    public function testSeeDeviceSelectorModalTitle()
+    {
+        $expectedModalTitle = 'Device C-Lect for ?';
+        $modalTitle = $this->findCss('h2')->getText();
+        Assert::assertEquals($expectedModalTitle, $modalTitle);
+    }
+
+    /**
      * @Then I see device selection sliders:
      *
      * @param TableNode $table
      */
     public function testDeviceSelectionSliders(TableNode $table)
     {
-        $this->getCommonClient()->switchToIFrame('aj_pop');
-
         $headings = $this->findAllCss('form#device_form > div.setting > strong');
         $expected = array_column($table->getHash(), 'name');
         foreach ($expected as $key => $name) {
             Assert::assertEquals($name, $headings[$key]->getText());
+        }
+    }
+
+    /**
+     * @Then I see instructions list:
+     *
+     * @param TableNode $table
+     */
+    public function test(TableNode $table)
+    {
+        $instructionsList = $this->findAllCss('div#instructions > ol > li');
+        $expectedInstructionsList = array_column($table->getHash(), 'name');
+        foreach ($expectedInstructionsList as $index => $instruction) {
+            Assert::assertEquals($instruction, $instructionsList[$index]->getText());
         }
     }
 
@@ -30,12 +52,22 @@ class DeviceSelector extends BaseContext
      */
     public function testDeviceList(TableNode $table)
     {
-        $this->wait(self::VERY_SHORT_WAIT_TIME);
-        $results = $this->findAllCss('ul#results > li > a');
-        $expected = $table->getHash();
-        foreach ($expected as $key => $row) {
+        $this->wait(self::SHORT_WAIT_TIME);
+
+        $deviceResults = $this->findAllCss('ul#results > li > a');
+        $expectedDeviceResults = $table->getHash();
+        foreach ($expectedDeviceResults as $index => $row) {
             $expectedName = "{$row['name']} ({$row['quantity']})";
-            Assert::assertEquals($expectedName, $results[$key]->getText());
+            Assert::assertEquals($expectedName, $deviceResults[$index]->getText());
         }
+    }
+
+    /**
+     * @Then I don't see device list
+     */
+    public function testNotSeeDeviceList()
+    {
+        $deviceResults = $this->findAllCss('ul#results > li > a');
+        Assert::assertEmpty($deviceResults);
     }
 }

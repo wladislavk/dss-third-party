@@ -1,5 +1,6 @@
 import Datepicker from 'vuejs-datepicker'
 import symbols from '../../../symbols'
+import Alerter from '../../../services/Alerter'
 
 export default {
   data () {
@@ -46,6 +47,15 @@ export default {
         if (response.hasOwnProperty('message')) {
           this.validationError = response.message
         }
+      })
+    },
+    onDelete () {
+      const confirmText = 'Are you sure you want to delete this task?'
+      if (!Alerter.isConfirmed(confirmText)) {
+        return
+      }
+      this.$store.dispatch(symbols.actions.deleteTask, this.currentTask.id).then(() => {
+        this.$store.commit(symbols.mutations.resetModal)
       })
     }
   }

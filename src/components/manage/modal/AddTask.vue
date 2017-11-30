@@ -50,6 +50,12 @@
             </tr>
             <tr>
                 <td valign="top" class="frmhead">
+                    <a
+                        v-if="currentTask.id"
+                        v-legacy-href="'manage_tasks.php?delid=' + currentTask.id"
+                        class="delete-task" 
+                        v-on:click="onDelete($event)"
+                    >Delete</a>
                     <input type="submit" class="add-button" value="Add Task" v-on:click.prevent="onSubmit()" />
                 </td>
             </tr>

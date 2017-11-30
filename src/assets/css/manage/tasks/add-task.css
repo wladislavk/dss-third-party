@@ -59,3 +59,7 @@ input.add-button:active {
   border-top-color: #1f303b;
   background: #1f303b;
 }
+
+a.delete-task {
+  float: right;
+}

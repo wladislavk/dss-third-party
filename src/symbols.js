@@ -100,8 +100,6 @@ export default {
     patientId: 'PATIENT_ID',
     patientSearchList: 'PATIENT_SEARCH_LIST',
     popupEdit: 'POPUP_EDIT',
-    removeTask: 'REMOVE_TASK',
-    removeTaskForPatient: 'REMOVE_TASK_FOR_PATIENT',
     resetModal: 'RESET_MODAL',
     responsibleUsers: 'RESPONSIBLE_USERS',
     restoreInitialScreener: 'RESTORE_INITIAL_SCREENER',
@@ -127,6 +125,7 @@ export default {
     clearPatientData: 'CLEAR_PATIENT_DATA',
     companyLogo: 'COMPANY_LOGO',
     dataImportModal: 'DATA_IMPORT_MODAL',
+    deleteTask: 'DELETE_TASK',
     deviceSelectorModal: 'DEVICE_SELECTOR_MODAL',
     disablePopupEdit: 'DISABLE_POPUP_EDIT',
     documentCategories: 'DOCUMENT_CATEGORIES',
@@ -150,6 +149,7 @@ export default {
     storeLoginDetails: 'STORE_LOGIN_DETAILS',
     submitScreener: 'SUBMIT_SCREENER',
     submitHst: 'SUBMIT_HST',
+    updateTaskStatus: 'UPDATE_TASK_STATUS',
     userInfo: 'USER_INFO'
   },
   populators: {

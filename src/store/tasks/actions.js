@@ -13,9 +13,9 @@ export default {
     })
   },
 
-  [symbols.actions.retrieveTasksForPatient] ({ rootState, commit, dispatch }, patientId) {
+  [symbols.actions.retrieveTasksForPatient] ({ rootState, commit, dispatch }) {
     http.token = rootState.main[symbols.state.mainToken]
-    http.get(endpoints.tasks.indexForPatient + '/' + patientId).then((response) => {
+    http.get(endpoints.tasks.indexForPatient + '/' + rootState[symbols.state.patientId]).then((response) => {
       const data = response.data.data
       commit(symbols.mutations.setTasksForPatient, data)
     }).catch((response) => {
@@ -85,6 +85,41 @@ export default {
         resolve()
       }).catch((response) => {
         dispatch(symbols.actions.handleErrors, {title: 'getTask', response: response})
+        reject(new Error())
+      })
+    })
+  },
+
+  [symbols.actions.updateTaskStatus] ({ rootState, dispatch }, taskId) {
+    const data = {
+      status: 1
+    }
+    return new Promise((resolve, reject) => {
+      http.token = rootState.main[symbols.state.mainToken]
+      http.put(endpoints.tasks.update + '/' + taskId, data).then(() => {
+        if (rootState[symbols.state.patientId]) {
+          dispatch(symbols.actions.retrieveTasksForPatient)
+        }
+        dispatch(symbols.actions.retrieveTasks)
+        resolve()
+      }).catch((response) => {
+        dispatch(symbols.actions.handleErrors, {title: 'updateTaskToActive', response: response})
+        reject(new Error())
+      })
+    })
+  },
+
+  [symbols.actions.deleteTask] ({ rootState, dispatch }, taskId) {
+    return new Promise((resolve, reject) => {
+      http.token = rootState.main[symbols.state.mainToken]
+      http.delete(endpoints.tasks.destroy + '/' + taskId).then(() => {
+        if (rootState[symbols.state.patientId]) {
+          dispatch(symbols.actions.retrieveTasksForPatient)
+        }
+        dispatch(symbols.actions.retrieveTasks)
+        resolve()
+      }).catch((response) => {
+        dispatch(symbols.actions.handleErrors, {title: 'deleteTask', response: response})
         reject(new Error())
       })
     })

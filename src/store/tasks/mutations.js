@@ -4,13 +4,7 @@ export default {
   [symbols.mutations.setTasks] (state, tasks) {
     state[symbols.state.tasks] = tasks
   },
-  [symbols.mutations.removeTask] (state, removedTask) {
-    for (let [index, task] of state[symbols.state.tasks].entries()) {
-      if (task.id === removedTask.id) {
-        state[symbols.state.tasks].splice(index, 1)
-      }
-    }
-  },
+
   [symbols.mutations.responsibleUsers] (state, data) {
     const revisedData = []
     for (let user of data) {
@@ -21,16 +15,11 @@ export default {
     }
     state[symbols.state.responsibleUsers] = revisedData
   },
+
   [symbols.mutations.setTasksForPatient] (state, tasks) {
     state[symbols.state.tasksForPatient] = tasks
   },
-  [symbols.mutations.removeTaskForPatient] (state, removedTask) {
-    for (let [index, task] of state[symbols.state.tasksForPatient].entries()) {
-      if (task.id === removedTask.id) {
-        state[symbols.state.tasksForPatient].splice(index, 1)
-      }
-    }
-  },
+
   [symbols.mutations.getTask] (state, task) {
     const taskData = {
       id: task.id,

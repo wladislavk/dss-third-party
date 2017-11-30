@@ -141,8 +141,7 @@ Feature: Dashboard
       | task                                        |
       | call for fu (John Drake)                    |
       | asdasdasd                                   |
-    # @todo: the line below will not work in Vue until header is migrated
-    # And I see "My Tasks (2)" bullet in top menu
+    And I see "My Tasks (2)" bullet in top menu
     When I run mouse over task "asdasdasd" in "dashboard"
     Then I see "delete" button next to task "asdasdasd" in "dashboard"
     And I see "edit" button next to task "asdasdasd" in "dashboard"
@@ -151,8 +150,7 @@ Feature: Dashboard
     Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
       | task                                        |
       | call for fu (John Drake)                    |
-    # @todo: the line below will not work in Vue until header is migrated
-    # And I see "My Tasks (1)" bullet in top menu
+    And I see "My Tasks (1)" bullet in top menu
 
   Scenario: View messages
     Given I am logged in as "doc1f"

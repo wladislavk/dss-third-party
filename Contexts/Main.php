@@ -374,4 +374,25 @@ class Main extends BaseContext
         $spanHeader = $this->findCss('span.admin_head');
         Assert::assertEquals($header, trim($spanHeader->getText()));
     }
+
+    /**
+     * @Then the modal window is :status
+     *
+     * @param string $status
+     */
+    public function testModalWindow($status)
+    {
+        $this->wait(self::SHORT_WAIT_TIME);
+        $this->getCommonClient()->switchToIFrame();
+        $modal = $this->findCss('div#popupContact');
+        if (SUT_HOST == 'vue') {
+            $modal = $this->findCss('div#modal');
+        }
+        Assert::assertNotNull($modal);
+        if ($status == 'open') {
+            Assert::assertTrue($modal->isVisible());
+            return;
+        }
+        Assert::assertFalse($modal->isVisible());
+    }
 }

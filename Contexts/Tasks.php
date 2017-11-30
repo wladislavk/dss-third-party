@@ -4,6 +4,7 @@ namespace Contexts;
 
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Element\NodeElement;
 use PHPUnit\Framework\Assert;
 
 class Tasks extends BaseContext
@@ -23,6 +24,9 @@ class Tasks extends BaseContext
 
     /** @var string */
     private $taskDeleted = '';
+
+    /** @var string */
+    private $taskCreated = false;
 
     /**
      * @When I click on task :task checkbox in :area
@@ -76,6 +80,11 @@ class Tasks extends BaseContext
                     $this->taskDeleted = $task;
                 }
                 $button->click();
+                // there is a bug in legacy that prevents modal from opening for the first time
+                if (SUT_HOST == 'loader' && $type == 'edit') {
+                    $this->wait(self::SHORT_WAIT_TIME);
+                    $button->click();
+                }
                 return;
             }
         }
@@ -120,14 +129,71 @@ class Tasks extends BaseContext
     }
 
     /**
+     * @When I fill task form with values:
+     *
+     * @param TableNode $table
+     */
+    public function fillTaskForm(TableNode $table)
+    {
+        $cells = $this->findAllCss('td.frmhead');
+        foreach ($table->getHash() as $key => $element) {
+            switch ($element['type']) {
+                case 'text':
+                    $input = $this->findCss('input', $cells[$key]);
+                    $input->setValue($element['value']);
+                    break;
+                case 'date':
+                    $value = $element['value'];
+                    if ($element['value'] == 'today') {
+                        $date = new \DateTime();
+                        $value = $date->format('m/d/Y');
+                    }
+                    $input = $this->findCss('input', $cells[$key]);
+                    $input->setValue($value);
+                    break;
+                case 'select':
+                    $select = $this->findCss('select', $cells[$key]);
+                    $option = $this->findElementWithText('option', $element['value'], $select);
+                    $select->setValue($option->getAttribute('value'));
+                    break;
+                case 'checkbox':
+                    $checkbox = $this->findCss('input', $cells[$key]);
+                    if ($element['value'] == 'Yes') {
+                        $checkbox->setValue(true);
+                        break;
+                    }
+                    $checkbox->setValue(false);
+                    break;
+            }
+            $this->taskCreated = true;
+        }
+    }
+
+    /**
+     * @When I click delete task link for :task
+     *
+     * @param string $task
+     */
+    public function clickDeleteButton($task)
+    {
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame('aj_pop');
+        }
+        $link = $this->findElementWithText('a', 'Delete');
+        $link->click();
+        $this->taskDeleted = $task;
+    }
+
+    /**
      * @Then I see add task form with header :header
      *
      * @param string $header
      */
     public function testAddTaskForm($header)
     {
-        $this->getCommonClient()->switchToIFrame('aj_pop');
-
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame('aj_pop');
+        }
         $headerCell = $this->findCss('td.cat_head');
         Assert::assertNotNull($headerCell);
         Assert::assertEquals($header, $this->sanitizeText($headerCell->getText()));
@@ -197,6 +263,11 @@ class Tasks extends BaseContext
         }
     }
 
+    /**
+     * @param string $area
+     * @param array $menus
+     * @return NodeElement
+     */
     private function getTaskMenu($area, array $menus)
     {
         $areaIndex = self::TASK_MENUS[$area];
@@ -218,8 +289,19 @@ class Tasks extends BaseContext
         $this->wait(self::MEDIUM_WAIT_TIME);
         $taskMenus = $this->findAllCss('div.task_menu');
         $taskMenu = $this->getTaskMenu($area, $taskMenus);
-        Assert::assertNotNull($this->findElementWithText('h4', $section, $taskMenu));
-        $taskList = $this->findAllCss('ul li div:last-child', $taskMenu);
+        $headers = $this->findAllCss('h4', $taskMenu);
+        $lists = $this->findAllCss('ul', $taskMenu);
+        $headerFound = false;
+        $listKey = 0;
+        foreach ($headers as $key => $header) {
+            if ($header->getText() == $section) {
+                $listKey = $key;
+                $headerFound = true;
+                break;
+            }
+        }
+        Assert::assertTrue($headerFound);
+        $taskList = $this->findAllCss('li div:last-child', $lists[$listKey - 1]);
         $taskNames = array_column($table->getHash(), 'task');
         $taskTexts = [];
         foreach ($taskList as $task) {
@@ -273,6 +355,39 @@ class Tasks extends BaseContext
     }
 
     /**
+     * @Then add task form is filled with values:
+     *
+     * @param TableNode $table
+     */
+    public function testPreFilledValues(TableNode $table)
+    {
+        $cells = $this->findAllCss('td.frmhead');
+        foreach ($table->getHash() as $key => $element) {
+            $label = $this->findCss('label', $cells[$key]);
+            Assert::assertContains($element['field'], $label->getText());
+            switch ($element['type']) {
+                case 'text':
+                    $input = $this->findCss('input', $cells[$key]);
+                    Assert::assertEquals($element['value'], $input->getValue());
+                    break;
+                case 'select':
+                    $select = $this->findCss('select', $cells[$key]);
+                    $selectedOption = $this->findCss('option[value="' . $select->getValue() . '"]', $select);
+                    Assert::assertEquals($element['value'], $selectedOption->getText());
+                    break;
+                case 'checkbox':
+                    $checkbox = $this->findCss('input', $cells[$key]);
+                    if ($element['value'] == 'Yes') {
+                        Assert::assertTrue($checkbox->getValue());
+                        break;
+                    }
+                    Assert::assertNull($checkbox->getValue());
+                    break;
+            }
+        }
+    }
+
+    /**
      * @AfterScenario
      *
      * @param AfterScenarioScope $scope
@@ -294,6 +409,19 @@ SET status=0
 WHERE task='{$this->taskDeleted}';
 SQL;
             $this->executeQuery($query);
+        }
+        if ($this->taskCreated) {
+            $deleteQuery = <<<SQL
+DELETE FROM dental_task
+WHERE task='Test task';
+SQL;
+            $this->executeQuery($deleteQuery);
+            $updateQuery = <<<SQL
+UPDATE dental_task
+SET task='call for fu'
+WHERE task='call for bar';
+SQL;
+            $this->executeQuery($updateQuery);
         }
     }
 }

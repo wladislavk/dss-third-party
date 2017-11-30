@@ -70,6 +70,35 @@ class TasksApiTest extends ApiTestCase
         $this->assertEquals(TaskRetriever::OVERDUE, $this->getResponseData()[0]['type']);
     }
 
+    public function testShow()
+    {
+        $testRecord = factory($this->getModel())->create();
+
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
+        $this->get($endpoint);
+        $this->assertResponseOk();
+        $data = $this->getResponseData();
+        $expectedKeys = [
+            'id',
+            'task',
+            'description',
+            'userid',
+            'responsibleid',
+            'status',
+            'due_date',
+            'recurring',
+            'recurring_unit',
+            'adddate',
+            'ip_address',
+            'patientid',
+            'name',
+            'firstname',
+            'lastname',
+        ];
+        $this->assertEquals($expectedKeys, array_keys($data));
+    }
+
     public function testDestroy()
     {
         /** @var Task $testRecord */

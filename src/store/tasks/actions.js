@@ -1,3 +1,4 @@
+import moment from 'moment'
 import endpoints from '../../endpoints'
 import http from '../../services/http'
 import symbols from '../../symbols'
@@ -15,7 +16,7 @@ export default {
 
   [symbols.actions.retrieveTasksForPatient] ({ rootState, commit, dispatch }) {
     http.token = rootState.main[symbols.state.mainToken]
-    http.get(endpoints.tasks.indexForPatient + '/' + rootState[symbols.state.patientId]).then((response) => {
+    http.get(endpoints.tasks.indexForPatient + '/' + rootState.main[symbols.state.patientId]).then((response) => {
       const data = response.data.data
       commit(symbols.mutations.setTasksForPatient, data)
     }).catch((response) => {
@@ -29,7 +30,7 @@ export default {
         reject(new Error('Task is required'))
         return
       }
-      if (!data.dueDate) {
+      if (!data.dueDate || !(data.dueDate instanceof Date)) {
         reject(new Error('Date is required'))
         return
       }
@@ -38,9 +39,10 @@ export default {
         return
       }
       http.token = rootState.main[symbols.state.mainToken]
+      const dueDate = moment(data.dueDate).format().substr(0, 10)
       const parsedData = {
         task: data.task,
-        due_date: data.dueDate.toISOString().substr(0, 10),
+        due_date: dueDate,
         status: +data.status,
         responsibleid: data.responsible,
         userid: rootState.main[symbols.state.userInfo].plainUserId,
@@ -97,7 +99,7 @@ export default {
     return new Promise((resolve, reject) => {
       http.token = rootState.main[symbols.state.mainToken]
       http.put(endpoints.tasks.update + '/' + taskId, data).then(() => {
-        if (rootState[symbols.state.patientId]) {
+        if (rootState.main[symbols.state.patientId]) {
           dispatch(symbols.actions.retrieveTasksForPatient)
         }
         dispatch(symbols.actions.retrieveTasks)
@@ -113,7 +115,7 @@ export default {
     return new Promise((resolve, reject) => {
       http.token = rootState.main[symbols.state.mainToken]
       http.delete(endpoints.tasks.destroy + '/' + taskId).then(() => {
-        if (rootState[symbols.state.patientId]) {
+        if (rootState.main[symbols.state.patientId]) {
           dispatch(symbols.actions.retrieveTasksForPatient)
         }
         dispatch(symbols.actions.retrieveTasks)

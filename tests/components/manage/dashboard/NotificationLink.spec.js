@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import LegacyHref from '../../../../src/directives/LegacyHref'
 import store from '../../../../src/store'
 import NotificationLinkComponent from '../../../../src/components/manage/dashboard/NotificationLink.vue'
 import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
@@ -7,6 +8,7 @@ import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 
 describe('NotificationLink component', () => {
   beforeEach(function () {
+    Vue.directive('legacy-href', LegacyHref)
     const Component = Vue.extend(NotificationLinkComponent)
     this.mount = function (propsData) {
       return new Component({

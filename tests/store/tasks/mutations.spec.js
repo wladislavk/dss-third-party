@@ -1,40 +1,87 @@
-import symbols from '../../../src/symbols'
 import TasksModule from '../../../src/store/tasks'
+import symbols from '../../../src/symbols'
 
 describe('Tasks module mutations', () => {
-  describe('removeTask mutation', () => {
-    it('should remove a task by id', function () {
+  describe('responsibleUsers mutation', () => {
+    it('sets responsible users', function () {
       const state = {
-        [symbols.state.tasks]: [
-          {id: 1},
-          {id: 2},
-          {id: 3}
-        ]
+        [symbols.state.responsibleUsers]: []
       }
-      const removedTask = {id: 2}
-      TasksModule.mutations[symbols.mutations.removeTask](state, removedTask)
-      const tasks = state[symbols.state.tasks]
-      expect(tasks.length).toBe(2)
-      expect(tasks[0].id).toBe(1)
-      expect(tasks[1].id).toBe(3)
+      const data = [
+        {
+          userid: '1',
+          first_name: 'John',
+          last_name: 'Smith'
+        },
+        {
+          userid: '2',
+          first_name: 'Jane',
+          last_name: 'Doe'
+        }
+      ]
+      TasksModule.mutations[symbols.mutations.responsibleUsers](state, data)
+      const expected = [
+        {
+          id: 1,
+          fullName: 'John Smith'
+        },
+        {
+          id: 2,
+          fullName: 'Jane Doe'
+        }
+      ]
+      expect(state[symbols.state.responsibleUsers]).toEqual(expected)
     })
   })
 
-  describe('removeTaskForPatient mutation', () => {
-    it('should remove a patient task by id', function () {
+  describe('getTask mutation', () => {
+    it('retrieves task without patient name', function () {
       const state = {
-        [symbols.state.tasksForPatient]: [
-          {id: 1},
-          {id: 2},
-          {id: 3}
-        ]
+        currentTask: {}
       }
-      const removedTask = {id: 2}
-      TasksModule.mutations[symbols.mutations.removeTaskForPatient](state, removedTask)
-      const tasks = state[symbols.state.tasksForPatient]
-      expect(tasks.length).toBe(2)
-      expect(tasks[0].id).toBe(1)
-      expect(tasks[1].id).toBe(3)
+      const task = {
+        id: 1,
+        due_date: new Date('2014-06-03'),
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: '',
+        lastname: ''
+      }
+      TasksModule.mutations[symbols.mutations.getTask](state, task)
+      const expected = {
+        id: 1,
+        dueDate: new Date('2014-06-03'),
+        task: 'test task',
+        responsible: 2,
+        status: true,
+        patientName: ''
+      }
+      expect(state[symbols.state.currentTask]).toEqual(expected)
+    })
+    it('retrieves task with patient name', function () {
+      const state = {
+        currentTask: {}
+      }
+      const task = {
+        id: 1,
+        due_date: new Date('2014-06-03'),
+        task: 'test task',
+        responsibleid: 2,
+        status: 1,
+        firstname: 'John',
+        lastname: 'Doe'
+      }
+      TasksModule.mutations[symbols.mutations.getTask](state, task)
+      const expected = {
+        id: 1,
+        dueDate: new Date('2014-06-03'),
+        task: 'test task',
+        responsible: 2,
+        status: true,
+        patientName: 'John Doe'
+      }
+      expect(state[symbols.state.currentTask]).toEqual(expected)
     })
   })
 })

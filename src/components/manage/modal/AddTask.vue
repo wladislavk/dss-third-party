@@ -7,7 +7,7 @@
                     <span v-if="currentTask.patientName">({{ currentTask.patientName }})</span>
                 </td>
             </tr>
-            <tr v-show="validationError">
+            <tr id="validation-error" v-show="validationError">
                 <td valign="top" class="frmhead">
                     <span class="red">{{ validationError }}</span>
                 </td>
@@ -16,7 +16,14 @@
                 <td valign="top" class="frmhead">
                     <label for="task">Task</label>
                     <span class="red">*</span>
-                    <input class="wide-input" type="text" name="task" id="task" v-model="currentTask.task" />
+                    <input
+                        class="wide-input"
+                        type="text"
+                        name="task"
+                        id="task"
+                        v-model="currentTask.task"
+                        v-on:change="currentTask.task=$event.target.value"
+                    />
                 </td>
             </tr>
             <tr>
@@ -51,10 +58,10 @@
             <tr>
                 <td valign="top" class="frmhead">
                     <a
+                        href="#"
                         v-if="currentTask.id"
-                        v-legacy-href="'manage_tasks.php?delid=' + currentTask.id"
-                        class="delete-task" 
-                        v-on:click="onDelete($event)"
+                        class="delete-task"
+                        v-on:click.prevent="onDelete()"
                     >Delete</a>
                     <input type="submit" class="add-button" value="Add Task" v-on:click.prevent="onSubmit()" />
                 </td>

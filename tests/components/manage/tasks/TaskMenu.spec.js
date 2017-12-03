@@ -6,6 +6,7 @@ import moxios from 'moxios'
 import store from '../../../../src/store'
 import TaskMenuComponent from '../../../../src/components/manage/tasks/TaskMenu.vue'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
+import symbols from '../../../../src/symbols'
 
 describe('TaskMenu component', () => {
   beforeEach(function () {
@@ -14,6 +15,7 @@ describe('TaskMenu component', () => {
     Vue.component('task-data', {
       template: '<div class="task_data"></div>'
     })
+    store.state.tasks[symbols.state.tasks] = []
     const Component = Vue.extend(TaskMenuComponent)
     this.mount = function () {
       return new Component({

@@ -22,6 +22,18 @@ describe('CommonHeader component', () => {
     Vue.component('right-top-menu', {
       template: '<div class="right-menu"></div>'
     })
+    Vue.component('left-top-menu', {
+      template: '<div class="left-menu"></div>'
+    })
+    Vue.component('task-menu', {
+      template: '<div class="task-menu"></div>'
+    })
+    Vue.component('patient-search', {
+      template: '<div class="patient-search"></div>'
+    })
+    Vue.component('welcome-text', {
+      template: '<div class="welcome-text"></div>'
+    })
     Vue.use(VueRouter)
     const Component = Vue.extend(CommonHeaderComponent)
     const Router = new VueRouter({
@@ -75,6 +87,7 @@ describe('CommonHeader component', () => {
       const expectedModal = {
         name: 'addTask',
         params: {
+          id: 0,
           patientId: 0
         }
       }

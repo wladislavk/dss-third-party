@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import LegacyHref from '../../../../src/directives/LegacyHref'
 import { TASK_TYPES } from '../../../../src/constants/main'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
@@ -10,7 +11,7 @@ import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 describe('DashboardTaskMenu component', () => {
   beforeEach(function () {
     moxios.install()
-
+    Vue.directive('legacy-href', LegacyHref)
     Vue.component('task-data', {
       template: '<div class="task_data"></div>'
     })

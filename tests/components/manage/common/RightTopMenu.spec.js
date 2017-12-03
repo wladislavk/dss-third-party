@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import LegacyHref from '../../../../src/directives/LegacyHref'
 import moxios from 'moxios'
 import sinon from 'sinon'
 import store from '../../../../src/store'
@@ -16,6 +17,7 @@ describe('RightTopMenu component', () => {
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.pendingLetters] = 0
     store.state.main[symbols.state.notificationNumbers][NOTIFICATION_NUMBERS.supportTickets] = 0
 
+    Vue.directive('legacy-href', LegacyHref)
     Vue.use(VueRouter)
     const Component = Vue.extend(RightMenuComponent)
     const Router = new VueRouter({

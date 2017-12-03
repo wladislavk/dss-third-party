@@ -5,6 +5,10 @@ export default {
     state[symbols.state.tasks] = tasks
   },
 
+  [symbols.mutations.setTasksForPatient] (state, tasks) {
+    state[symbols.state.tasksForPatient] = tasks
+  },
+
   [symbols.mutations.responsibleUsers] (state, data) {
     const revisedData = []
     for (let user of data) {
@@ -14,10 +18,6 @@ export default {
       })
     }
     state[symbols.state.responsibleUsers] = revisedData
-  },
-
-  [symbols.mutations.setTasksForPatient] (state, tasks) {
-    state[symbols.state.tasksForPatient] = tasks
   },
 
   [symbols.mutations.getTask] (state, task) {

@@ -10,6 +10,7 @@ export default {
     task: '',
     responsible: 0,
     status: false,
-    patientName: ''
+    patientName: '',
+    patientId: 0
   }
 }

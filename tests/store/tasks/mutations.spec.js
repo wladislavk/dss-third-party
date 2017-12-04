@@ -46,7 +46,8 @@ describe('Tasks module mutations', () => {
         responsibleid: 2,
         status: 1,
         firstname: '',
-        lastname: ''
+        lastname: '',
+        patientid: '0'
       }
       TasksModule.mutations[symbols.mutations.getTask](state, task)
       const expected = {
@@ -55,6 +56,7 @@ describe('Tasks module mutations', () => {
         task: 'test task',
         responsible: 2,
         status: true,
+        patientId: 0,
         patientName: ''
       }
       expect(state[symbols.state.currentTask]).toEqual(expected)
@@ -70,7 +72,8 @@ describe('Tasks module mutations', () => {
         responsibleid: 2,
         status: 1,
         firstname: 'John',
-        lastname: 'Doe'
+        lastname: 'Doe',
+        patientid: '3'
       }
       TasksModule.mutations[symbols.mutations.getTask](state, task)
       const expected = {
@@ -79,6 +82,7 @@ describe('Tasks module mutations', () => {
         task: 'test task',
         responsible: 2,
         status: true,
+        patientId: 3,
         patientName: 'John Doe'
       }
       expect(state[symbols.state.currentTask]).toEqual(expected)

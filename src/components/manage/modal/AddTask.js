@@ -12,6 +12,7 @@ export default {
         dueDate: null,
         status: false,
         responsible: this.$store.state.main[symbols.state.userInfo].plainUserId,
+        patientId: 0,
         patientName: ''
       },
       validationError: ''

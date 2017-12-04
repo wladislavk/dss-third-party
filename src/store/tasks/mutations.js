@@ -27,6 +27,7 @@ export default {
       task: task.task,
       responsible: task.responsibleid,
       status: !!task.status,
+      patientId: parseInt(task.patientid),
       patientName: ''
     }
     if (task.firstname && task.lastname) {

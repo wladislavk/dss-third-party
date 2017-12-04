@@ -63,7 +63,7 @@
                         class="delete-task"
                         v-on:click.prevent="onDelete()"
                     >Delete</a>
-                    <input type="submit" class="add-button" value="Add Task" v-on:click.prevent="onSubmit()" />
+                    <input type="submit" class="addButton" value="Add Task" v-on:click.prevent="onSubmit()" />
                 </td>
             </tr>
         </table>

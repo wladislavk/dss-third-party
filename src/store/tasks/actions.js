@@ -46,7 +46,7 @@ export default {
         status: +data.status,
         responsibleid: data.responsible,
         userid: rootState.main[symbols.state.userInfo].plainUserId,
-        patientid: 0
+        patientid: data.patientId
       }
       if (data.id) {
         http.put(endpoints.tasks.update + '/' + data.id, parsedData).then(() => {

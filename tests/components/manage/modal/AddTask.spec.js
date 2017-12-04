@@ -159,7 +159,7 @@ describe('AddTask component', () => {
       const responsible = vm.$el.querySelector('select#responsibleid')
       responsible.value = '2'
       responsible.dispatchEvent(new Event('change'))
-      const submitButton = vm.$el.querySelector('input.add-button')
+      const submitButton = vm.$el.querySelector('input.addButton')
       submitButton.click()
       moxios.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('')
@@ -173,7 +173,7 @@ describe('AddTask component', () => {
   it('edits task with validation error', function (done) {
     const vm = this.mount()
     moxios.wait(() => {
-      const submitButton = vm.$el.querySelector('input.add-button')
+      const submitButton = vm.$el.querySelector('input.addButton')
       submitButton.click()
       moxios.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('addTask')

@@ -184,7 +184,8 @@ describe('Tasks module actions', () => {
         task: 'test task',
         dueDate: new Date('01/03/2014'),
         responsible: 3,
-        status: false
+        status: false,
+        patientId: 0
       }
       const postData = []
       this.sandbox.stub(http, 'post').callsFake((path, payload) => {
@@ -258,7 +259,8 @@ describe('Tasks module actions', () => {
         task: 'test task',
         dueDate: new Date('01/03/2014'),
         responsible: 3,
-        status: false
+        status: false,
+        patientId: 4
       }
       const postData = []
       this.sandbox.stub(http, 'put').callsFake((path, payload) => {
@@ -280,7 +282,7 @@ describe('Tasks module actions', () => {
             status: 0,
             responsibleid: 3,
             userid: 2,
-            patientid: 0
+            patientid: 4
           }
         }
       ]

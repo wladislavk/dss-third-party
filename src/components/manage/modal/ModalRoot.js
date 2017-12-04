@@ -19,9 +19,9 @@ export default {
   },
   computed: {
     currentView () {
-      const component = this.$store.state.main[symbols.state.modal]
-      if (this.hasComponent(component.name)) {
-        return component.name
+      const componentName = this.$store.state.main[symbols.state.modal].name
+      if (this.hasComponent(componentName)) {
+        return componentName
       }
       return ''
     },
@@ -69,14 +69,13 @@ export default {
       if (!this.popupEnabled) {
         return
       }
-      let answer = true
       if (this.$store.state.main[symbols.state.popupEdit]) {
         const confirmText = 'Are you sure you want to exit without saving?'
-        answer = Alerter.isConfirmed(confirmText)
+        if (!Alerter.isConfirmed(confirmText)) {
+          return
+        }
       }
-      if (answer) {
-        this.$store.commit(symbols.state.modal, '')
-      }
+      this.$store.commit(symbols.mutations.resetModal)
     },
     onKeyUp (e) {
       if (!this.popupEnabled) {
@@ -87,9 +86,9 @@ export default {
         this.disable()
       }
     },
-    hasComponent (component) {
+    hasComponent (componentName) {
       const existedComponents = Object.keys(this.$options.components)
-      return (existedComponents.indexOf(component) > -1)
+      return (existedComponents.indexOf(componentName) > -1)
     }
   }
 }

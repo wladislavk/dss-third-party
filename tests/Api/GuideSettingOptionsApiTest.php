@@ -34,7 +34,7 @@ class GuideSettingOptionsApiTest extends ApiTestCase
 
     public function testGetOptionsForSettingIds()
     {
-        $this->post(self::ROUTE_PREFIX . '/guide-setting-options/settingIds');
+        $this->get(self::ROUTE_PREFIX . '/guide-setting-options/settingIds');
         $this->assertResponseOk();
         $this->assertEquals(10, count($this->getResponseData()));
         $expectedFirst = [

@@ -139,7 +139,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::post('guide-settings/sort', 'GuideSettingsController@getAllOrderBy');
     Route::resource('guide-settings', 'GuideSettingsController', ['except' => ['create', 'edit']]);
 
-    Route::post('guide-setting-options/settingIds', 'GuideSettingOptionsController@getOptionsForSettingIds');
+    Route::get('guide-setting-options/settingIds', 'GuideSettingOptionsController@getOptionsForSettingIds');
     Route::resource('guide-setting-options', 'GuideSettingOptionsController', ['except' => ['create', 'edit']]);
 
     Route::resource('health-histories', 'HealthHistoriesController', ['except' => ['create', 'edit']]);

@@ -6,6 +6,7 @@ use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
+use DentalSleepSolutions\Eloquent\Models\User;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
@@ -35,18 +36,18 @@ class FlowDeviceUpdaterTest extends UnitTestCase
 
     public function testUpdate()
     {
+        $user = new User();
+        $user->userid = self::USER_ID;
+        $user->docid = self::DOC_ID;
+        $user->ip_address = self::IP_ADDRESS;
+
         $patientId = self::PATIENT_ID;
         $deviceId = self::DEVICE_ID;
-        $userId = self::USER_ID;
-        $docId = self::DOC_ID;
-        $ipAddress = self::IP_ADDRESS;
 
         $result = $this->flowDeviceUpdater->update(
+            $user,
             $patientId,
-            $deviceId,
-            $userId,
-            $docId,
-            $ipAddress
+            $deviceId
         );
 
         $expectedResult = null;

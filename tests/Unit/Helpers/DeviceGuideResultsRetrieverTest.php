@@ -3,11 +3,13 @@
 namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Helpers\DeviceGuideResultsRetriever;
+use DentalSleepSolutions\Helpers\DeviceSettingsConverter;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
 use DentalSleepSolutions\Eloquent\Models\Dental\Device;
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
 use DentalSleepSolutions\Constants\DeviceSettingTypes;
+use DentalSleepSolutions\Structs\DeviceSettings;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
@@ -16,6 +18,7 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
     const DEVICE_NAME = 'test name';
     const DEVICE_IMAGE_PATH = 'test image path';
     const DEVICE_VALUE = 200;
+    const DEVICE_SETTINGS = '1_1,2_1,3_1_1';
 
     /**
      * @var DeviceGuideResultsRetriever
@@ -26,18 +29,20 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
     {
         $deviceRepository = $this->mockDeviceRepository();
         $guideSettingRepository = $this->mockGuideSettingRepository();
+        $deviceSettingsConverter = $this->mockDeviceSettingsConverter();
+
         $this->deviceGuideResultsRetriever = new DeviceGuideResultsRetriever(
             $deviceRepository,
-            $guideSettingRepository
+            $guideSettingRepository,
+            $deviceSettingsConverter
         );
     }
 
     public function testGet()
     {
-        $settings = '1_1,2_1,3_1_1';
-        $devicesArray = $this->deviceGuideResultsRetriever->get($settings);
+        $devicesArray = $this->deviceGuideResultsRetriever->get(self::DEVICE_SETTINGS);
 
-        $expectedTotalValue = DeviceGuideResultsRetriever::CHECKED_IMP_COEFFICIENT
+        $expectedTotalValue = DeviceGuideResultsRetriever::IMPRESSION_COEFFICIENT
             *
             self::DEVICE_VALUE
             +
@@ -45,7 +50,7 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
         ;
 
         $this->assertEquals(self::DEVICE_NAME, $devicesArray[0]['name']);
-        $this->assertEquals(self::DEVICE_IMAGE_PATH, $devicesArray[0]['imagePath']);
+        $this->assertEquals(self::DEVICE_IMAGE_PATH, $devicesArray[0]['image_path']);
         $this->assertEquals($expectedTotalValue, $devicesArray[0]['value']);
     }
 
@@ -89,5 +94,35 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
                 return $guideSettingsCollection;
             });
         return $guideSettingRepository;
+    }
+
+    public function mockDeviceSettingsConverter()
+    {
+        /** @var DeviceSettingsConverter|MockInterface $deviceSettingsConverter */
+        $deviceSettingsConverter = \Mockery::mock(DeviceSettingsConverter::class);
+        $deviceSettingsConverter->shouldReceive('convertSettings')
+            ->with(self::DEVICE_SETTINGS)
+            ->andReturnUsing(function () {
+                $deviceSettings1 = new DeviceSettings();
+                $deviceSettings1->id = 1;
+                $deviceSettings1->checkedRangeValue = 1;
+
+                $deviceSettings2 = new DeviceSettings();
+                $deviceSettings2->id = 2;
+                $deviceSettings2->checkedRangeValue = 1;
+
+                $deviceSettings3 = new DeviceSettings();
+                $deviceSettings3->id = 3;
+                $deviceSettings3->impression = 1;
+                $deviceSettings3->checkedRangeValue = 1;
+
+                return [
+                    $deviceSettings1->id => $deviceSettings1,
+                    $deviceSettings2->id => $deviceSettings2,
+                    $deviceSettings3->id => $deviceSettings3,
+                ];
+            });
+
+        return $deviceSettingsConverter;
     }
 }

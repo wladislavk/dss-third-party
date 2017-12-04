@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Helpers\DeviceGuideResultsRetriever;
+use DentalSleepSolutions\Exceptions\GeneralException;
 use DentalSleepSolutions\Facades\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -147,7 +148,11 @@ class GuideDevicesController extends BaseRestController
     ) {
         $settings = $request->input('settings');
 
-        $devicesArray = $deviceGuideResultsRetriever->get($settings);
+        try {
+            $devicesArray = $deviceGuideResultsRetriever->get($settings);
+        } catch (GeneralException $e) {
+            return ApiResponse::responseError($e->getMessage(), 422);
+        }
 
         return ApiResponse::responseOk('', $devicesArray);
     }

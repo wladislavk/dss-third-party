@@ -37,10 +37,10 @@ class GuideDevicesApiTest extends ApiTestCase
         $this->assertResponseOk();
         $this->assertEquals(19, count($this->getResponseData()));
         $expectedFirst = [
-            'name' => 'SUAD Ultra Elite',
             'id' => 13,
+            'name' => 'SUAD Ultra Elite',
             'value' => 34,
-            'imagePath' => 'dental_device_13.gif',
+            'image_path' => 'dental_device_13.gif',
         ];
         $this->assertEquals($expectedFirst, $this->getResponseData()[0]);
     }

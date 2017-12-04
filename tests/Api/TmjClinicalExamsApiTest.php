@@ -69,7 +69,7 @@ class TmjClinicalExamsApiTest extends ApiTestCase
 
     public function testUpdateFlowDevice()
     {
-        $this->post(self::ROUTE_PREFIX . '/tmj-clinical-exams/update-flow-device');
+        $this->put(self::ROUTE_PREFIX . '/tmj-clinical-exams/update-flow-device/1');
         $this->assertResponseOk();
         $this->assertEquals(null, $this->getResponseData());
 

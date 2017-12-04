@@ -2,6 +2,7 @@
 
 namespace DentalSleepSolutions\Helpers;
 
+use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 
@@ -26,14 +27,12 @@ class FlowDeviceUpdater
     }
 
     /**
+     * @param  User $user
      * @param  int $patientId
      * @param  int $deviceId
-     * @param  int $userId
-     * @param  int $docId
-     * @param  string $ipAddress
      * @return void
      */
-    public function update($patientId, $deviceId, $userId, $docId, $ipAddress)
+    public function update($user, $patientId, $deviceId)
     {
         $dataForStoring = ['device_id' => $deviceId];
         $this->appointmentSummaryRepository->updateById($patientId, $dataForStoring);
@@ -52,9 +51,9 @@ class FlowDeviceUpdater
             $dataForStoring = [
                 'dentaldevice' => $deviceId,
                 'patientid' => $patientId,
-                'userid' => $userId,
-                'docid' => $docId,
-                'ip_address' => $ipAddress
+                'userid' => $user->userid,
+                'docid' => $user->docid,
+                'ip_address' => $user->ip_address
             ];
 
             $this->tmjClinicalExamRepository->create($dataForStoring);

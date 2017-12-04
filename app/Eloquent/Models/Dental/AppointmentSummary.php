@@ -44,6 +44,12 @@ use DentalSleepSolutions\Eloquent\Models\AbstractModel;
  */
 class AppointmentSummary extends AbstractModel
 {
+    const UNVISITED_APPOINTMENT = 0;
+    const VISITED_APPOINTMENT = 1;
+
+    const IMPRESSIONS_SEGMENT = 4;
+    const DEVICE_DELIVERY_SEGMENT = 7;
+
     /**
      * Guarded attributes
      *

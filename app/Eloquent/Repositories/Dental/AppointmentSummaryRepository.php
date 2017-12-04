@@ -35,14 +35,14 @@ class AppointmentSummaryRepository extends AbstractRepository
     {
         return $this->model
             ->select('id')
-            ->where('appointment_type', 1)
+            ->where('appointment_type', AppointmentSummary::VISITED_APPOINTMENT)
             ->where('patientid', $patientId)
             ->where(function (Builder $query) {
                 /** @var Builder|QueryBuilder $queryBuilder */
                 $queryBuilder = $query;
                 $queryBuilder
-                    ->where('segmentid', '7')
-                    ->orWhere('segmentid', '4')
+                    ->where('segmentid', AppointmentSummary::DEVICE_DELIVERY_SEGMENT)
+                    ->orWhere('segmentid', AppointmentSummary::IMPRESSIONS_SEGMENT)
                 ;
             })
             ->orderBy('date_completed', 'desc')

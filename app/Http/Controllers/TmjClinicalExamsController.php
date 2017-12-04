@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 
 use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
 use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Exceptions\GeneralException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -191,18 +192,18 @@ class TmjClinicalExamsController extends BaseRestController
     }
 
     /**
-     * @SWG\Post(
-     *     path="/tmj-clinical-exams/update-flow-device",
+     * @SWG\Put(
+     *     path="/tmj-clinical-exams/update-flow-device/{deviceId}",
      *     tags={"tmj-clinical-exams"},
      *     summary="Update Flow Device",
      *     @SWG\Parameter(
-     *         name="patient_id",
-     *         in="formData",
+     *         name="deviceId",
+     *         in="path",
      *         required=true,
      *         type="integer"
      *     ),
      *     @SWG\Parameter(
-     *         name="device_id",
+     *         name="patient_id",
      *         in="formData",
      *         required=true,
      *         type="integer"
@@ -218,24 +219,27 @@ class TmjClinicalExamsController extends BaseRestController
      *     )
      * )
      *
+     * @param int $deviceId
      * @param FlowDeviceUpdater $flowDeviceUpdater
      * @param Request $request
      * @return JsonResponse
      */
     public function updateFlowDevice(
+        $deviceId,
         FlowDeviceUpdater $flowDeviceUpdater,
         Request $request
     ) {
         $patientId = $request->input('patient_id', 0);
-        $deviceId = $request->input('device_id', 0);
 
-        $flowDeviceUpdater->update(
-            $patientId,
-            $deviceId,
-            $this->user->userid,
-            $this->user->docid,
-            $request->ip()
-        );
+        try {
+            $flowDeviceUpdater->update(
+                $this->user,
+                $patientId,
+                $deviceId
+            );
+        } catch (GeneralException $e) {
+            return ApiResponse::responseError($e->getMessage(), 422);
+        }
 
         return ApiResponse::responseOk('Flow device was successfully updated.');
     }

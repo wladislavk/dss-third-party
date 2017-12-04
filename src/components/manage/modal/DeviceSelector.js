@@ -25,9 +25,6 @@ export default {
     patientName () {
       return this.$store.state.patients[symbols.state.patientName]
     },
-    deviceSelectorTitle () {
-      return `Device C-Lect for ${this.patientName}?`
-    },
     deviceGuideSettingOptions () {
       return this.$store.state.dashboard[symbols.state.deviceGuideSettingOptions]
     },
@@ -37,22 +34,16 @@ export default {
   },
   created () {
     this.$store.dispatch(symbols.actions.getDeviceGuideSettingOptions)
-      .catch((response) => {
-        this.$store.dispatch(
-          symbols.actions.handleErrors,
-          {title: 'getDeviceGuideSettingOptions', response: response}
-        )
-      })
   },
   methods: {
     updateGuideSettingStatus (event, id) {
-      if (+event.target.checked === 1) {
-        const MAX_NUMBER_OF_CHECKED_IMPS = 3
-        const checkedImps = this.$store.state.dashboard[symbols.state.deviceGuideSettingOptions]
-          .map(el => el.checkedImp)
+      if (event.target.checked) {
+        const maxCheckedImpressionsNumber = 3
+        const impressions = this.$store.state.dashboard[symbols.state.deviceGuideSettingOptions]
+          .map(el => el.impression)
           .filter(el => el === 1)
 
-        if (checkedImps.length === MAX_NUMBER_OF_CHECKED_IMPS) {
+        if (impressions.length === maxCheckedImpressionsNumber) {
           event.target.checked = 0
           return
         }
@@ -61,7 +52,7 @@ export default {
       const data = {
         id: id,
         values: {
-          checkedImp: +event.target.checked
+          impression: +event.target.checked
         }
       }
 
@@ -115,21 +106,11 @@ export default {
         return
       }
 
-      this.$store.dispatch(symbols.actions.updateFlowDevice, deviceId).then(response => {
-        Alerter.alert(response.data.message)
-
-        // TODO: current modal may be used not only for the dashboard.
-        // it seems that next logic may be required for other callers of the modal
-        // parent.updateDentalDevice(patientId, deviceId)
-
-        // TODO: disable the modal
-        // parent.disablePopupClean()
-      }).catch(response => {
-        this.$store.dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
-      })
+      this.$store.dispatch(symbols.actions.updateFlowDevice, deviceId)
     },
     onClickReset () {
-      this.$store.dispatch(symbols.actions.resetDeviceGuideSettingOptions)
+      this.$store.commit(symbols.mutations.resetDeviceGuideSettingOptions)
+      this.$store.commit(symbols.mutations.deviceGuideResults, [])
     }
   }
 }

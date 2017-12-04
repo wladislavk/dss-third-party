@@ -20,11 +20,27 @@ export default {
   [symbols.mutations.deviceGuideSettingOptions] (state, data) {
     state[symbols.state.deviceGuideSettingOptions] = data
   },
+  [symbols.mutations.resetDeviceGuideSettingOptions] (state) {
+    state[symbols.state.deviceGuideSettingOptions].forEach(el => {
+      el.checkedOption = 0
+
+      if (el.hasOwnProperty('impression')) {
+        el.impression = 0
+        return
+      }
+
+      el.checked = 0
+    })
+  },
   [symbols.mutations.updateGuideSetting] (state, data) {
     let foundGuideSetting = state[symbols.state.deviceGuideSettingOptions].find(el => el.id === data.id)
 
-    if (foundGuideSetting) {
-      for (let field in data.values) {
+    if (!foundGuideSetting) {
+      return
+    }
+
+    for (let field in data.values) {
+      if (foundGuideSetting.hasOwnProperty(field)) {
         foundGuideSetting[field] = data.values[field]
       }
     }

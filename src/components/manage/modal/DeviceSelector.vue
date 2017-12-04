@@ -1,6 +1,6 @@
 <template>
     <div id="device-selector">
-        <div style="margin-left: 30px;">
+        <div class="instructions">
             <a
                 v-show="!showInstructions"
                 v-on:click.prevent="onClickInstructions"
@@ -15,7 +15,7 @@
                 </ol>
             </div>
         </div>
-        <h2 id="device-selector-title">{{ deviceSelectorTitle }}</h2>
+        <h2 id="device-selector-title">{{ `Device C-Lect for ${this.patientName}?` }}</h2>
         <form id="device_form">
             <div
                 v-for="deviceGuideSetting in deviceGuideSettingOptions"

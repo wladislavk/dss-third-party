@@ -9,6 +9,10 @@
   display: block;
 }
 
+.instructions {
+  margin-left: 30px;
+}
+
 #device-selector {
   background: #fff !important;
 }

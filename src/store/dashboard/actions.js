@@ -5,6 +5,7 @@ import LocationWrapper from '../../wrappers/LocationWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
 import { DSS_CONSTANTS } from '../../constants/main'
 import ProcessWrapper from '../../wrappers/ProcessWrapper'
+import Alerter from '../../services/Alerter'
 
 export default {
   [symbols.actions.documentCategories] ({rootState, commit, dispatch}) {
@@ -86,26 +87,33 @@ export default {
   },
   [symbols.actions.getDeviceGuideSettingOptions] ({commit, rootState}) {
     http.token = rootState.main[symbols.state.mainToken]
-    return http.post(endpoints.guideSettingOptions.settingIds).then(response => {
-      const data = response.data.data
+    return http.get(endpoints.guideSettingOptions.settingIds)
+      .then(response => {
+        const data = response.data.data
 
-      data.forEach(el => {
-        el.labels = el.labels.split(',')
-        el.checkedOption = 0
+        data.forEach(el => {
+          el.labels = el.labels.split(',')
+          el.checkedOption = 0
 
-        if (+el.setting_type === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {
-          el.checkedImp = 0
-          return
-        }
+          if (+el.setting_type === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {
+            el.impression = 0
+            return
+          }
 
-        el.checked = 0
+          el.checked = 0
+        })
+
+        commit(symbols.mutations.deviceGuideSettingOptions, data)
       })
-
-      commit(symbols.mutations.deviceGuideSettingOptions, data)
-    })
+      .catch(response => {
+        this.$store.dispatch(
+          symbols.actions.handleErrors,
+          {title: 'getDeviceGuideSettingOptions', response: response}
+        )
+      })
   },
   [symbols.actions.getDeviceGuideResults] ({commit, dispatch, state, rootState}) {
-    const IDS_DELIMETER = '_'
+    const ID_DELIMITER = '_'
     const SETTINGS_DELIMETER = ','
 
     let settings = []
@@ -113,17 +121,17 @@ export default {
     state[symbols.state.deviceGuideSettingOptions].forEach(el => {
       let currentSetting = el.id
 
-      if (el.hasOwnProperty('checkedImp') && el.checkedImp) {
-        currentSetting += IDS_DELIMETER + el.checkedImp
+      if (el.hasOwnProperty('impression') && el.impression) {
+        currentSetting += ID_DELIMITER + el.impression
       }
 
       if (el.hasOwnProperty('checkedOption')) {
-        currentSetting += IDS_DELIMETER + (el.checkedOption + 1)
+        currentSetting += ID_DELIMITER + (el.checkedOption + 1)
         settings.push(currentSetting)
         return
       }
 
-      currentSetting += IDS_DELIMETER + el.checked
+      currentSetting += ID_DELIMITER + el.checked
       settings.push(currentSetting)
     })
 
@@ -141,7 +149,7 @@ export default {
       dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideResults', response: response})
     })
   },
-  [symbols.actions.updateFlowDevice] ({rootState}, deviceId) {
+  [symbols.actions.updateFlowDevice] ({commit, dispatch, rootState}, deviceId) {
     const data = {
       // TODO: change to rootState.main[symbols.patient.patientId] when a certain
       // store object exists
@@ -150,23 +158,13 @@ export default {
     }
 
     http.token = rootState.main[symbols.state.mainToken]
-    return http.post(endpoints.tmjClinicalExams.updateFlowDevice, data)
-  },
-  [symbols.actions.resetDeviceGuideSettingOptions] ({commit, state}) {
-    const data = JSON.parse(JSON.stringify(state[symbols.state.deviceGuideSettingOptions]))
+    return http.put(endpoints.tmjClinicalExams.updateFlowDevice, data)
+      .then(response => {
+        Alerter.alert(response.data.message)
 
-    data.forEach(el => {
-      el.checkedOption = 0
-
-      if (+el.setting_type === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {
-        el.checkedImp = 0
-        return
-      }
-
-      el.checked = 0
-    })
-
-    commit(symbols.mutations.deviceGuideSettingOptions, data)
-    commit(symbols.mutations.deviceGuideResults, [])
+        commit(symbols.mutations.modal, {})
+      }).catch(response => {
+        dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
+      })
   }
 }

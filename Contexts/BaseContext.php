@@ -8,10 +8,10 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\DriverException;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
-use Clients\GoutteClient;
-use GuzzleHttp\Client as GuzzleClient;
 
 require_once __DIR__ . '/../config.php';
 
@@ -200,6 +200,11 @@ abstract class BaseContext extends RawMinkContext
         $this->getCommonClient()->visit($url);
     }
 
+    /**
+     * @param string $user
+     * @param string $password
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     */
     protected function login($user, $password = '')
     {
         if (!$password && array_key_exists($user, self::PASSWORDS)) {
@@ -294,7 +299,6 @@ abstract class BaseContext extends RawMinkContext
 
     /**
      * @param string $sql
-     * @throws BehatException
      */
     protected function executeQuery($sql)
     {
@@ -312,11 +316,28 @@ abstract class BaseContext extends RawMinkContext
         return $driverSession;
     }
 
+    /**
+     * @throws DriverException
+     * @throws UnsupportedDriverActionException
+     */
     protected function prepareAlert()
+    {
+        // otherwise alert dialog will not be accepted
+        if (BROWSER == 'phantomjs' || BROWSER == 'chrome') {
+            $script = "window.alert = function () { return true; };";
+            $this->getSession()->getDriver()->executeScript($script);
+        }
+    }
+
+    /**
+     * @throws DriverException
+     * @throws UnsupportedDriverActionException
+     */
+    protected function prepareConfirm()
     {
         // otherwise confirm dialog will not be accepted
         if (BROWSER == 'phantomjs' || BROWSER == 'chrome') {
-            $script = "window.confirm = function () { return true; }; window.alert = function () { return true; };";
+            $script = "window.confirm = function () { return true; }";
             $this->getSession()->getDriver()->executeScript($script);
         }
     }

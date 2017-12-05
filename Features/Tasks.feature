@@ -66,22 +66,23 @@ Feature: Task Management
       | call for bar (John Drake)                   |
       | asdasdasd                                   |
 
-  Scenario: Delete task from modal
-    Given I am logged in as "doc1f"
-    When I go to "start" page
-    Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
-      | task                                        |
-      | Set up webinar for Dr. X software training. |
-      | call for fu (John Drake)                    |
-      | asdasdasd                                   |
-    When I run mouse over task "asdasdasd" in "dashboard"
-    And I click "edit" button next to task "asdasdasd" in "dashboard"
-    And I click delete task link for "asdasdasd"
-    Then the modal window is "closed"
-    And I see checkboxes with these tasks under "Overdue" section in "dashboard":
-      | task                                        |
-      | Set up webinar for Dr. X software training. |
-      | call for fu (John Drake)                    |
+  # todo: this does not work in legacy, because more than one alert or confirm cannot be handled
+  # Scenario: Delete task from modal
+    # Given I am logged in as "doc1f"
+    # When I go to "start" page
+    # Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
+    #   | task                                        |
+    #   | Set up webinar for Dr. X software training. |
+    #   | call for fu (John Drake)                    |
+    #   | asdasdasd                                   |
+    # When I run mouse over task "asdasdasd" in "dashboard"
+    # And I click "edit" button next to task "asdasdasd" in "dashboard"
+    # And I click delete task link for "asdasdasd"
+    # Then the modal window is "closed"
+    # And I see checkboxes with these tasks under "Overdue" section in "dashboard":
+    #   | task                                        |
+    #   | Set up webinar for Dr. X software training. |
+    #   | call for fu (John Drake)                    |
 
   # todo: this scenario will not pass in Vue until patient menu is migrated
   # Scenario: Add task for patient

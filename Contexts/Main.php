@@ -22,6 +22,7 @@ class Main extends BaseContext
      * @Given I am logged in as :user
      *
      * @param string $user
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function loginAsUser($user)
     {
@@ -33,6 +34,7 @@ class Main extends BaseContext
      * @When I go to :page page
      *
      * @param string $page
+     * @throws BehatException
      */
     public function goToCustomPage($page)
     {
@@ -60,7 +62,7 @@ class Main extends BaseContext
                 return;
             case 'chrome':
                 /** @var ChromeDriver $driver */
-                $driver = $this->getSession()->getDriver();
+                // $driver = $this->getSession()->getDriver();
                 // this does not work for some reason
                 //$driver->acceptAlert();
                 return;
@@ -72,6 +74,7 @@ class Main extends BaseContext
      * @When I click :link link
      *
      * @param string $link
+     * @throws BehatException
      */
     public function clickLink($link)
     {
@@ -82,6 +85,9 @@ class Main extends BaseContext
      * @When I click button with text :button
      *
      * @param string $button
+     * @throws BehatException
+     * @throws \Behat\Mink\Exception\DriverException
+     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
      */
     public function clickButton($button)
     {
@@ -146,6 +152,7 @@ class Main extends BaseContext
      * @When I type :name into patient search form
      *
      * @param string $name
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function fillPatientSearchForm($name)
     {
@@ -167,6 +174,7 @@ class Main extends BaseContext
      * @When I run mouse over :menuPoint menu point
      *
      * @param string $menuPoint
+     * @throws BehatException
      */
     public function runMouseOverMenu($menuPoint)
     {
@@ -197,6 +205,8 @@ class Main extends BaseContext
 
     /**
      * @When I click on logo in top left corner
+     *
+     * @throws BehatException
      */
     public function clickLogo()
     {
@@ -207,6 +217,7 @@ class Main extends BaseContext
      * @Then I see :link link
      *
      * @param string $link
+     * @throws BehatException
      */
     public function testSeeLink($link)
     {
@@ -218,6 +229,7 @@ class Main extends BaseContext
      * @Then I see button with text :button
      *
      * @param string $button
+     * @throws BehatException
      */
     public function testSeeButton($button)
     {

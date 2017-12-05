@@ -5,6 +5,8 @@ namespace Contexts;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\DriverException;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 use PHPUnit\Framework\Assert;
 
 class Tasks extends BaseContext
@@ -58,7 +60,7 @@ class Tasks extends BaseContext
      * @param string $type
      * @param string $task
      * @param string $area
-     * @throws BehatException
+     * @throws BehatException|UnsupportedDriverActionException|DriverException
      */
     public function clickOnButton($type, $task, $area)
     {
@@ -132,10 +134,17 @@ class Tasks extends BaseContext
      * @When I fill task form with values:
      *
      * @param TableNode $table
+     * @throws BehatException
      */
     public function fillTaskForm(TableNode $table)
     {
         $cells = $this->findAllCss('td.frmhead');
+        foreach ($cells as $cellKey => $cell) {
+            if (!$cell->isVisible()) {
+                unset($cells[$cellKey]);
+            }
+        }
+        $cells = array_values($cells);
         foreach ($table->getHash() as $key => $element) {
             switch ($element['type']) {
                 case 'text':
@@ -173,12 +182,14 @@ class Tasks extends BaseContext
      * @When I click delete task link for :task
      *
      * @param string $task
+     * @throws BehatException|UnsupportedDriverActionException|DriverException
      */
     public function clickDeleteButton($task)
     {
         if (SUT_HOST == 'loader') {
             $this->getCommonClient()->switchToIFrame('aj_pop');
         }
+        $this->prepareConfirm();
         $link = $this->findElementWithText('a', 'Delete');
         $link->click();
         $this->taskDeleted = $task;
@@ -191,6 +202,7 @@ class Tasks extends BaseContext
      */
     public function testAddTaskForm($header)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         if (SUT_HOST == 'loader') {
             $this->getCommonClient()->switchToIFrame('aj_pop');
         }
@@ -206,12 +218,20 @@ class Tasks extends BaseContext
      */
     public function testAddTaskFormFields(TableNode $table)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $form = $this->findCss('form[name="notesfrm"]');
         $expectedRows = $table->getHash();
-        $tableRows = $this->findAllCss('tbody > tr', $form);
+        $tableRows = $this->findAllCss('td.frmhead', $form);
+        foreach ($tableRows as $key => $tableRow) {
+            if (!$tableRow->isVisible()) {
+                unset($tableRows[$key]);
+            }
+        }
+        $tableRows = array_values($tableRows);
+        array_pop($tableRows);
+        Assert::assertEquals(sizeof($expectedRows), sizeof($tableRows));
         foreach ($expectedRows as $rowNumber => $row) {
-            $childNumber = $rowNumber + 1;
-            $column = $this->findCss('td', $tableRows[$childNumber]);
+            $column = $tableRows[$rowNumber];
             $label = $this->findCss('label', $column);
             $labelText = str_replace(':', '', $label->getText());
             Assert::assertEquals($row['field'], $labelText);
@@ -258,6 +278,7 @@ class Tasks extends BaseContext
             array_shift($subsectionHeaders);
         }
         $expected = array_column($table->getHash(), 'section');
+        Assert::assertEquals(sizeof($expected), sizeof($subsectionHeaders));
         foreach ($expected as $index => $text) {
             Assert::assertEquals($text, $subsectionHeaders[$index]->getText());
         }
@@ -311,6 +332,8 @@ class Tasks extends BaseContext
             }
         }
         Assert::assertEquals(sizeof($taskNames), sizeof($taskTexts));
+        var_dump($taskNames);
+        var_dump($taskTexts);
         foreach ($taskNames as $taskName) {
             Assert::assertNotFalse(array_search($taskName, $taskTexts));
         }
@@ -362,8 +385,15 @@ class Tasks extends BaseContext
     public function testPreFilledValues(TableNode $table)
     {
         $cells = $this->findAllCss('td.frmhead');
+        foreach ($cells as $cellKey => $cell) {
+            if (!$cell->isVisible()) {
+                unset($cells[$cellKey]);
+            }
+        }
+        $cells = array_values($cells);
         foreach ($table->getHash() as $key => $element) {
             $label = $this->findCss('label', $cells[$key]);
+            Assert::assertNotNull($label);
             Assert::assertContains($element['field'], $label->getText());
             switch ($element['type']) {
                 case 'text':
@@ -418,7 +448,7 @@ SQL;
             $this->executeQuery($deleteQuery);
             $updateQuery = <<<SQL
 UPDATE dental_task
-SET task='call for fu'
+SET task='call for fu', patientid=112
 WHERE task='call for bar';
 SQL;
             $this->executeQuery($updateQuery);

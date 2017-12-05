@@ -1,0 +1,22 @@
+strong.device-guide-setting-name, form#device_form > div.setting > div.label {
+  padding: 5px 0;
+  display: block;
+}
+
+div.slider {
+  float: left;
+  width: 80%;
+  margin-right: 5%;
+}
+
+form#device_form {
+  border: solid 2px #cce3fc;
+  padding: 0 10px 0 25px;
+  width: 24%;
+  margin-left: 2%;
+  float: left;
+}
+
+form#device_form > div.setting {
+  padding: 5px 0;
+}

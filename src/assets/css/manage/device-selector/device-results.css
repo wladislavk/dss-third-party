@@ -1,0 +1,8 @@
+div#device-results-div {
+  float: left;
+  width: 50%;
+}
+
+div#device-results-div ul {
+  border: solid 2px #a7cefa;
+}

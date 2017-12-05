@@ -1,6 +1,6 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
-import DeviceSelectorComponent from './DeviceSelector.vue'
+import DeviceSelectorComponent from './device-selector/DeviceSelector.vue'
 import ViewContactComponent from '../contacts/ViewContact.vue'
 import PatientAccessCodeComponent from '../patients/access-code/PatientAccessCode.vue'
 import EditContactComponent from '../contacts/EditContact.vue'
@@ -98,7 +98,7 @@ export default {
     },
     hasComponent (component) {
       const existedComponents = Object.keys(this.$options.components)
-      const snakeToCamel = s => s.replace(/(\-\w)/g, m => m[1].toUpperCase())
+      const snakeToCamel = s => s.replace(/(-\w)/g, m => m[1].toUpperCase())
 
       return existedComponents.includes(snakeToCamel(component))
     }

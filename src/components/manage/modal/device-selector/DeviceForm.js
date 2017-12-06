@@ -1,5 +1,5 @@
-import symbols from 'symbols'
-import { DSS_CONSTANTS } from 'constants/main'
+import symbols from '../../../../symbols'
+import { DSS_CONSTANTS } from '../../../../constants/main'
 import $ from 'jquery'
 
 export default {

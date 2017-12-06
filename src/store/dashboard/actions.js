@@ -92,7 +92,7 @@ export default {
         const data = response.data.data
 
         data.forEach(el => {
-          el.labels = el.labels.split(',')
+          el.labels = el.labels
           el.checkedOption = 0
 
           if (+el.setting_type === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {

@@ -1,5 +1,5 @@
-import symbols from 'symbols'
-import { DEVICE_SELECTOR_INSTRUCTIONS } from 'constants/dashboard'
+import symbols from '../../../../symbols'
+import { DEVICE_SELECTOR_INSTRUCTIONS } from '../../../../constants/dashboard'
 import DeviceForm from './DeviceForm.vue'
 import DeviceResults from './DeviceResults.vue'
 

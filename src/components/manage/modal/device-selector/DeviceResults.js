@@ -1,5 +1,5 @@
-import symbols from 'symbols'
-import Alerter from 'services/Alerter'
+import symbols from '../../../../symbols'
+import Alerter from '../../../../services/Alerter'
 
 export default {
   computed: {

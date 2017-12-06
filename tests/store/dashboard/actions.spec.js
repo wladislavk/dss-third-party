@@ -306,14 +306,14 @@ describe('Dashboard module actions', () => {
           data: [
             {
               id: 13,
-              labels: 'Not Important,Neutral,Very Important',
+              labels: ['Not Important', 'Neutral', 'Very Important'],
               name: 'Comfort',
               setting_type: 0,
               number: 3
             },
             {
               id: 3,
-              labels: 'None,Mild,Mod,Mode/Sev,Severe',
+              labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
               name: 'Bruxism',
               setting_type: 0,
               number: 5
@@ -322,9 +322,9 @@ describe('Dashboard module actions', () => {
         }
       }
 
-      let postPath = ''
-      this.sandbox.stub(http, 'post').callsFake((path) => {
-        postPath = path
+      let getPath = ''
+      this.sandbox.stub(http, 'get').callsFake((path) => {
+        getPath = path
 
         return Promise.resolve(result)
       })
@@ -337,7 +337,7 @@ describe('Dashboard module actions', () => {
             {
               id: 13,
               checkedOption: 0,
-              checkedImp: 0,
+              impression: 0,
               labels: ['Not Important', 'Neutral', 'Very Important'],
               name: 'Comfort',
               setting_type: 0,
@@ -346,7 +346,7 @@ describe('Dashboard module actions', () => {
             {
               id: 3,
               checkedOption: 0,
-              checkedImp: 0,
+              impression: 0,
               labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
               name: 'Bruxism',
               setting_type: 0,
@@ -358,7 +358,7 @@ describe('Dashboard module actions', () => {
 
       setTimeout(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
-        expect(postPath).toEqual(endpoints.guideSettingOptions.settingIds)
+        expect(getPath).toEqual(endpoints.guideSettingOptions.settingIds)
 
         done()
       }, 100)
@@ -481,12 +481,13 @@ describe('Dashboard module actions', () => {
   describe('has updateFlowDevice action', () => {
     it('which updates a flow device', function (done) {
       const DEVICE_ID = 7
+      const PATIENT_ID = 16
       const response = {
         data: { message: 'Successfully updated.' }
       }
 
       let requestSettings = {}
-      this.sandbox.stub(http, 'post').callsFake((path, data) => {
+      this.sandbox.stub(http, 'put').callsFake((path, data) => {
         requestSettings = {
           path: path,
           data: data
@@ -494,63 +495,23 @@ describe('Dashboard module actions', () => {
 
         return Promise.resolve(response)
       })
+
+      this.testCase.setRootState({
+        patients: {
+          [symbols.state.patientId]: PATIENT_ID
+        }
+      })
+
       DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
 
       setTimeout(() => {
         const expectedRequestSettings = {
-          path: endpoints.tmjClinicalExams.updateFlowDevice,
+          path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
           data: {
-            patient_id: 0,
-            device_id: DEVICE_ID
+            patient_id: PATIENT_ID
           }
         }
         expect(requestSettings).toEqual(expectedRequestSettings)
-
-        done()
-      }, 100)
-    })
-  })
-
-  describe('has resetDeviceGuideSettingOptions action', () => {
-    it('which resets device guide setting options', function (done) {
-      this.testCase.setState({
-        [symbols.state.deviceGuideSettingOptions]: [
-          {
-            id: 13,
-            checkedOption: 2,
-            checkedImp: 1,
-            labels: ['Not Important', 'Neutral', 'Very Important'],
-            name: 'Comfort',
-            setting_type: 0,
-            number: 3
-          }
-        ]
-      })
-
-      DashboardModule.actions[symbols.actions.resetDeviceGuideSettingOptions](this.testCase.mocks)
-
-      const expectedMutations = [
-        {
-          type: symbols.mutations.deviceGuideSettingOptions,
-          payload: [
-            {
-              id: 13,
-              checkedOption: 0,
-              checkedImp: 0,
-              labels: ['Not Important', 'Neutral', 'Very Important'],
-              name: 'Comfort',
-              setting_type: 0,
-              number: 3
-            }
-          ]
-        },
-        {
-          type: symbols.mutations.deviceGuideResults,
-          payload: []
-        }
-      ]
-      setTimeout(() => {
-        expect(this.testCase.mutations).toEqual(expectedMutations)
 
         done()
       }, 100)

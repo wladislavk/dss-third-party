@@ -15,7 +15,7 @@
                 </ol>
             </div>
         </div>
-        <h2 id="device-selector-title">{{ `Device C-Lect for ${this.patientName}?` }}</h2>
+        <h2 id="device-selector-title">{{ `Device C-Lect for ${patientName}?` }}</h2>
         <device-form></device-form>
         <div id="sort-devices-button">
             <a
@@ -24,7 +24,7 @@
                 class="addButton"
             >Sort Devices</a>
         </div>
-        <device-results></device-results>
+        <device-results v-bind:patient-name="patientName"></device-results>
         <div style="clear: both;"></div>
     </div>
 </template>

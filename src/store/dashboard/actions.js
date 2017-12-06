@@ -151,14 +151,11 @@ export default {
   },
   [symbols.actions.updateFlowDevice] ({commit, dispatch, rootState}, deviceId) {
     const data = {
-      // TODO: change to rootState.main[symbols.patient.patientId] when a certain
-      // store object exists
-      patient_id: 0,
-      device_id: deviceId
+      patient_id: rootState.patients[symbols.state.patientId]
     }
 
     http.token = rootState.main[symbols.state.mainToken]
-    return http.put(endpoints.tmjClinicalExams.updateFlowDevice, data)
+    return http.put(endpoints.tmjClinicalExams.updateFlowDevice + '/' + deviceId, data)
       .then(response => {
         Alerter.alert(response.data.message)
 

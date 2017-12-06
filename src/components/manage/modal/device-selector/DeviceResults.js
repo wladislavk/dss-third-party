@@ -2,6 +2,10 @@ import symbols from '../../../../symbols'
 import Alerter from '../../../../services/Alerter'
 
 export default {
+  props: {
+    patientName: String,
+    required: true
+  },
   computed: {
     deviceGuideResults () {
       return this.$store.state.dashboard[symbols.state.deviceGuideResults]

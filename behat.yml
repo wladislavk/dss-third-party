@@ -29,16 +29,26 @@ default:
                 - Contexts\Tasks
                 - Contexts\Tracker
                 - Contexts\TestContext
-chrome:
+chrome_old:
     extensions:
         DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~
         Behat\MinkExtension:
-            base_url: "http://localhost"
+            base_url: "http://example.com"
             browser_name: "chrome"
             sessions:
                 default:
                     chrome:
-                        api_url: "http://0.0.0.0:9222"
+                        api_url: "http://localhost:9222"
+chrome:
+    extensions:
+        Extensions\ChromeExtension: ~
+        Behat\MinkExtension:
+            base_url: "http://example.com"
+            browser_name: "chrome"
+            sessions:
+                default:
+                    chrome:
+                        api_url: "http://localhost:9222"
 chrome2:
     extensions:
         Behat\MinkExtension:

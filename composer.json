@@ -15,7 +15,9 @@
     "psr-4": {
       "Contexts\\": "Contexts/",
       "Data\\": "Data/",
-      "Clients\\": "Clients/"
+      "Clients\\": "Clients/",
+      "Extensions\\": "Extensions/",
+      "Extensions\\Driver\\": "Extensions/Driver"
     }
   }
 }

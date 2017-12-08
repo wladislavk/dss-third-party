@@ -332,8 +332,6 @@ class Tasks extends BaseContext
             }
         }
         Assert::assertEquals(sizeof($taskNames), sizeof($taskTexts));
-        var_dump($taskNames);
-        var_dump($taskTexts);
         foreach ($taskNames as $taskName) {
             Assert::assertNotFalse(array_search($taskName, $taskTexts));
         }

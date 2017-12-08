@@ -28,16 +28,39 @@ default:
                 - Contexts\Support
                 - Contexts\Tasks
                 - Contexts\Tracker
+                - Contexts\TestContext
 chrome:
     extensions:
         DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~
         Behat\MinkExtension:
-            base_url: "http://example.com"
-            browser_name: chrome
+            base_url: "http://localhost"
+            browser_name: "chrome"
             sessions:
                 default:
                     chrome:
-                        api_url: "http://localhost:9222"
+                        api_url: "http://0.0.0.0:9222"
+chrome2:
+    extensions:
+        Behat\MinkExtension:
+            base_url: "http://localhost"
+            browser_name: "chrome"
+            default_session: "selenium2"
+            javascript_session: "selenium2"
+            selenium2:
+                browser: chrome
+                wd_host: "http://localhost:9222/wd/hub"
+                capabilities:
+                    browserName: "chrome"
+                    browser: "chrome"
+                    version: "62"
+                    marionette: true
+                    chrome:
+                        switches:
+                            - "--headless"
+                            - "--disable-gpu"
+                            - "--no-sandbox"
+                            - "--remote-debugging-address=0.0.0.0"
+                            - "--remote-debugging-port=9222"
 phantom:
     extensions:
         Behat\MinkExtension:
@@ -45,5 +68,8 @@ phantom:
             sessions:
                 default:
                     selenium2:
-                        browser: phantomjs
+                        browser: "phantomjs"
                         wd_host: "http://localhost:8643/wd/hub"
+                        capabilities:
+                            browserName: "phantomjs"
+                            browser: "phantomjs"

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Assert;
 class DeviceSelector extends BaseContext
 {
     /**
-     * @Then I see divice selector modal title
+     * @Then I see device selector modal title
      */
     public function testSeeDeviceSelectorModalTitle()
     {
@@ -32,11 +32,11 @@ class DeviceSelector extends BaseContext
     }
 
     /**
-     * @Then I see instructions list:
+     * @Then I see device selector instructions list:
      *
      * @param TableNode $table
      */
-    public function test(TableNode $table)
+    public function testSeeInstructionsList(TableNode $table)
     {
         $instructionsList = $this->findAllCss('div#instructions > ol > li');
         $expectedInstructionsList = array_column($table->getHash(), 'name');

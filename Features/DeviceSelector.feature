@@ -6,7 +6,7 @@ Feature: Device Selector
     And I click on "Device Selector" menu point
     Then I see a modal window
     And I see "Instructions" link
-    And I see divice selector modal title
+    And I see device selector modal title
     And I see device selection sliders:
       | name               |
       | Comfort            |
@@ -23,7 +23,7 @@ Feature: Device Selector
     And I see "Reset" link
     When I click "Instructions" link
     Then I see "hide" link
-    And I see instructions list:
+    And I see device selector instructions list:
       | name                                                                 |
       | Evaluate pt for each category using sliding bar                      |
       | Choose the three most important categories (if needed)               |

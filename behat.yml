@@ -28,9 +28,19 @@ default:
                 - Contexts\Support
                 - Contexts\Tasks
                 - Contexts\Tracker
-chrome:
+chrome_old:
     extensions:
         DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~
+        Behat\MinkExtension:
+            base_url: "http://example.com"
+            browser_name: chrome_old
+            sessions:
+                default:
+                    chrome:
+                        api_url: "http://localhost:9222"
+chrome:
+    extensions:
+        DentalSleepSolutions\Extensions\ChromeExtension: ~
         Behat\MinkExtension:
             base_url: "http://example.com"
             browser_name: chrome

@@ -14,7 +14,9 @@
   "autoload": {
     "psr-4": {
       "Contexts\\": "Contexts/",
-      "Data\\": "Data/"
+      "Data\\": "Data/",
+      "DentalSleepSolutions\\Extensions\\": "Extensions/",
+      "DentalSleepSolutions\\Extensions\\Driver\\": "Extensions/Driver"
     }
   }
 }

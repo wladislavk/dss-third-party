@@ -11,7 +11,7 @@
                 <input
                     v-bind:id="'setting_imp_' + deviceGuideSetting.id"
                     v-bind:name="'setting_imp_' + deviceGuideSetting.id"
-                    v-bind:checked="deviceGuideSetting.checkedImp == 1"
+                    v-bind:checked="deviceGuideSetting.impression == 1"
                     v-on:change="updateGuideSettingStatus($event, deviceGuideSetting.id)"
                     type="checkbox"
                     class="imp_chk"

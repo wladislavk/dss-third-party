@@ -397,7 +397,7 @@ describe('Dashboard module actions', () => {
           {
             id: 13,
             checkedOption: 0,
-            checkedImp: 0,
+            impression: 0,
             labels: ['Not Important', 'Neutral', 'Very Important'],
             name: 'Comfort',
             setting_type: 0,
@@ -406,7 +406,7 @@ describe('Dashboard module actions', () => {
           {
             id: 3,
             checkedOption: 0,
-            checkedImp: 0,
+            impression: 0,
             labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
             name: 'Bruxism',
             setting_type: 0,

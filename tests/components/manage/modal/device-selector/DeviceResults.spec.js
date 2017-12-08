@@ -21,31 +21,31 @@ describe('DeviceSelector', () => {
         name: 'SUAD Ultra Elite',
         id: 13,
         value: 34,
-        imagePath: 'dental_device_13.gif'
+        image_path: 'dummy.jpg'
       },
       {
         name: 'SUAD Hard',
         id: 14,
         value: 33,
-        imagePath: 'dental_device_14.gif'
+        image_path: 'dummy.jpg'
       },
       {
         name: 'Narval',
         id: 7,
         value: 33,
-        imagePath: 'dental_device_7.gif'
+        image_path: 'dummy.jpg'
       },
       {
         name: 'SUAD Thermo',
         id: 15,
         value: 33,
-        imagePath: 'dental_device_15.gif'
+        image_path: 'dummy.jpg'
       },
       {
         name: 'Dorsal Hard',
         id: 2,
         value: 33,
-        imagePath: ''
+        image_path: ''
       }
     ]
 
@@ -57,9 +57,13 @@ describe('DeviceSelector', () => {
     this.vue.$nextTick(() => {
       const deviceResultsItems = this.vm.$el.querySelectorAll('div#device-results-div > ul > li')
 
+      const itemWithImagePathIndex = 0
       const itemWithoutImagePathIndex = 4
+      expect(deviceResultsItems[itemWithImagePathIndex].className).toBe('box_go')
       expect(deviceResultsItems[itemWithoutImagePathIndex].className.length).toBe(0)
-      expect(deviceResultsItems[itemWithoutImagePathIndex].childNodes[0].innerHTML).toBe(undefined)
+
+      expect(deviceResultsItems[itemWithImagePathIndex].firstElementChild.firstElementChild.src).toContain('dummy.jpg')
+      expect(deviceResultsItems[itemWithoutImagePathIndex].firstElementChild.tagName).toBe('A')
 
       deviceResultsItems.forEach((el, index) => {
         const name = fakeData[index].name

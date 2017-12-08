@@ -3,10 +3,10 @@
         <ul>
             <li
                 v-for="deviceResult in deviceGuideResults"
-                v-bind:class="{ 'box_go': deviceResult.imagePath }"
+                v-bind:class="{ 'box_go': deviceResult.image_path }"
             >
-                <div v-if="deviceResult.imagePath" class='ico'>
-                    <img v-bind:src="deviceResult.imagePath" />
+                <div v-if="deviceResult.image_path" class='ico'>
+                    <img v-bind:src="deviceResult.image_path" />
                 </div>
                 <a
                     v-on:click.prevent="updateDevice(deviceResult.id, deviceResult.name)"

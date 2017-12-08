@@ -15,7 +15,7 @@
                 </ol>
             </div>
         </div>
-        <h2 id="device-selector-title">{{ `Device C-Lect for ${patientName}?` }}</h2>
+        <h2 id="device-selector-title">Device C-Lect for {{ patientName}}?</h2>
         <device-form></device-form>
         <div id="sort-devices-button">
             <a

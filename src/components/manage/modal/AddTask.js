@@ -1,7 +1,6 @@
 import Datepicker from 'vuejs-datepicker'
 import symbols from '../../../symbols'
 import Alerter from '../../../services/Alerter'
-import LocationWrapper from '../../../wrappers/LocationWrapper'
 
 export default {
   data () {
@@ -58,7 +57,8 @@ export default {
       }
       this.$store.dispatch(symbols.actions.deleteTask, this.currentTask.id).then(() => {
         this.$store.commit(symbols.mutations.resetModal)
-        LocationWrapper.goToLegacyPage('manage/manage_tasks.php', this.$store.state.main[symbols.state.mainToken])
+        // @todo: uncomment after this page is migrated
+        // LocationWrapper.goToLegacyPage('manage/manage_tasks.php', this.$store.state.main[symbols.state.mainToken])
       })
     }
   }

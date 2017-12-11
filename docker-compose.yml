@@ -16,6 +16,8 @@ services:
       MYSQL_PASSWORD: secret
     labels:
       - "traefik.enable=false"
+    ports:
+      - "${MYSQL_PORT}:3306"
 
   baseimage:
     build: .
@@ -74,6 +76,7 @@ services:
     image: 484964515519.dkr.ecr.us-east-1.amazonaws.com/vue
     environment:
       NODE_ENV: development
+      # NODE_ENV: production
       PORT: 80
     volumes:
       - "${ROOT_PATH:-..}/ds3-private06-Vue:/opt/app"
@@ -100,6 +103,8 @@ services:
       - "traefik.port=80"
       - "traefik.backend=acceptance"
       - "traefik.frontend.rule=HostRegexp:{host:acceptance.docker.localhost}"
+    links:
+      - selenium
 
   balancer:
     image: traefik:v1.2.3-alpine
@@ -124,3 +129,11 @@ services:
       - "${PHPMYADMIN_PORT:-8080}:80"
     links:
       - db
+
+  selenium:
+    image: "selenium/standalone-chrome:2.53.1"
+    # shm_size: 1g
+    volumes:
+      - "/dev/shm:/dev/shm"
+    ports:
+      - "${SELENIUM_PORT:-4444}:4444"

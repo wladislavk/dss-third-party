@@ -51,6 +51,7 @@ class Letters extends BaseContext
      * @When I run mouse over :menuPoint submenu point
      *
      * @param string $menuPoint
+     * @throws BehatException
      */
     public function runMouseOverSubmenu($menuPoint)
     {

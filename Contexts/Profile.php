@@ -12,6 +12,7 @@ class Profile extends BaseContext
      * @Then I see practice profile form that is filled with data:
      *
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testPracticeProfileForm(TableNode $table)
     {

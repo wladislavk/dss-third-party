@@ -28,22 +28,11 @@ default:
                 - Contexts\Support
                 - Contexts\Tasks
                 - Contexts\Tracker
-                - Contexts\TestContext
-chrome_old:
+chrome:
     extensions:
         DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~
         Behat\MinkExtension:
-            base_url: "http://example.com"
-            browser_name: "chrome"
-            sessions:
-                default:
-                    chrome:
-                        api_url: "http://localhost:9222"
-chrome:
-    extensions:
-        Extensions\ChromeExtension: ~
-        Behat\MinkExtension:
-            base_url: "http://example.com"
+            base_url: "http://localhost"
             browser_name: "chrome"
             sessions:
                 default:
@@ -58,28 +47,41 @@ chrome2:
             javascript_session: "selenium2"
             selenium2:
                 browser: chrome
-                wd_host: "http://localhost:9222/wd/hub"
+                wd_host: "http://selenium:4444/wd/hub"
                 capabilities:
                     browserName: "chrome"
                     browser: "chrome"
                     version: "62"
-                    marionette: true
                     chrome:
                         switches:
                             - "--headless"
                             - "--disable-gpu"
                             - "--no-sandbox"
-                            - "--remote-debugging-address=0.0.0.0"
-                            - "--remote-debugging-port=9222"
+                            # - "--remote-debugging-address=127.0.0.1"
+                            # - "--remote-debugging-port=4444"
+firefox:
+    extensions:
+        Behat\MinkExtension:
+            base_url: "http://localhost"
+            browser_name: "firefox"
+            default_session: "selenium2"
+            javascript_session: "selenium2"
+            selenium2:
+                browser: firefox
+                wd_host: "http://127.0.0.1:4444/wd/hub"
+                capabilities:
+                    browserName: "firefox"
+                    browser: "firefox"
+                    version: "46"
 phantom:
     extensions:
         Behat\MinkExtension:
-            base_url: "http://example.com"
-            sessions:
-                default:
-                    selenium2:
-                        browser: "phantomjs"
-                        wd_host: "http://localhost:8643/wd/hub"
-                        capabilities:
-                            browserName: "phantomjs"
-                            browser: "phantomjs"
+            base_url: "http://localhost"
+            default_session: "selenium2"
+            javascript_session: "selenium2"
+            selenium2:
+                browser: "phantomjs"
+                wd_host: "http://127.0.0.1:8643/wd/hub"
+                capabilities:
+                    browserName: "phantomjs"
+                    browser: "phantomjs"

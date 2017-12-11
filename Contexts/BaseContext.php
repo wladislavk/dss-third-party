@@ -64,14 +64,6 @@ abstract class BaseContext extends RawMinkContext
         $environment = $scope->getEnvironment();
         $this->common = $environment->getContext($this->getCommonContext());
         $this->client = $this->getMink()->getSession();
-        // @todo: comment out these lines to enable custom request header
-        /*
-        $this->client = new GoutteClient();
-        $guzzle = new GuzzleClient([
-            'verify' => false,
-        ]);
-        $this->client->setClient($guzzle);
-        */
 
         $host = getenv('DB_HOST');
         $dbName = getenv('DB_DATABASE');
@@ -314,31 +306,5 @@ abstract class BaseContext extends RawMinkContext
         $driver = $this->getSession()->getDriver();
         $driverSession = $driver->getWebDriverSession();
         return $driverSession;
-    }
-
-    /**
-     * @throws DriverException
-     * @throws UnsupportedDriverActionException
-     */
-    protected function prepareAlert()
-    {
-        // otherwise alert dialog will not be accepted
-        if (BROWSER == 'phantomjs' || BROWSER == 'chrome') {
-            $script = "window.alert = function () { return true; };";
-            $this->getSession()->getDriver()->executeScript($script);
-        }
-    }
-
-    /**
-     * @throws DriverException
-     * @throws UnsupportedDriverActionException
-     */
-    protected function prepareConfirm()
-    {
-        // otherwise confirm dialog will not be accepted
-        if (BROWSER == 'phantomjs' || BROWSER == 'chrome') {
-            $script = "window.confirm = function () { return true; }";
-            $this->getSession()->getDriver()->executeScript($script);
-        }
     }
 }

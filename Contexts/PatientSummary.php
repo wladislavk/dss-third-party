@@ -18,6 +18,7 @@ class PatientSummary extends BaseContext
      * @When I click on :menuPoint patient summary left menu point
      *
      * @param string $menuPoint
+     * @throws BehatException
      */
     public function clickLeftMenu($menuPoint)
     {
@@ -28,6 +29,7 @@ class PatientSummary extends BaseContext
      * @When I select :option option in letter template selector
      *
      * @param string $option
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function chooseLetterTemplate($option)
     {
@@ -79,6 +81,7 @@ class PatientSummary extends BaseContext
      * @Then I see :heading letter table
      *
      * @param string $heading
+     * @throws BehatException
      */
     public function testLetterTable($heading)
     {

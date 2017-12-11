@@ -11,6 +11,7 @@ Feature: User login
     Then I see main page with welcome text for user "doc1f"
     And I see "Sign Out" link
     When I click "Sign Out" link
+    And I confirm browser alert
     Then I see login form
 
   Scenario: Incorrect login

@@ -22,7 +22,7 @@ class Support extends BaseContext
      */
     public function clickOnSupportLink()
     {
-        $li = $this->findCss('li.header_support');
+        $li = $this->findCss('li#header_support');
         $link = $this->findCss('a', $li);
         $link->click();
     }
@@ -48,6 +48,7 @@ class Support extends BaseContext
     public function testSectionWithPages($section, $pages, $currentPage)
     {
         $headers = $this->findAllCss('span.admin_head');
+        Assert::assertGreaterThan(0, sizeof($headers));
         $hasSection = false;
         foreach ($headers as $header) {
             if ($header->getText() == $section) {
@@ -64,6 +65,7 @@ class Support extends BaseContext
      * @Then I see the following tickets in :section support section:
      *
      * @param string $section
+     * @param TableNode $table
      */
     public function testTicketsInSection($section, TableNode $table)
     {

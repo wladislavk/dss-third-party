@@ -55,7 +55,7 @@ Feature: Task Management
     When I fill task form with values:
       | field       | type     | value        |
       | Task        | text     | call for bar |
-      | Due Date    | date     | 03/06/2014   |
+      | Due Date    | date     | today        |
       | Assigned To | select   | Doctor 1     |
       | Completed   | checkbox | No           |
     And I click add button with text "Add Task"
@@ -63,26 +63,30 @@ Feature: Task Management
     And I see checkboxes with these tasks under "Overdue" section in "dashboard":
       | task                                        |
       | Set up webinar for Dr. X software training. |
-      | call for bar (John Drake)                   |
       | asdasdasd                                   |
+    And I see checkboxes with these tasks under "Today" section in "dashboard":
+      | task                                        |
+      | call for bar (John Drake)                   |
 
-  # todo: this does not work in legacy, because more than one alert or confirm cannot be handled
-  # Scenario: Delete task from modal
-    # Given I am logged in as "doc1f"
-    # When I go to "start" page
-    # Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
-    #   | task                                        |
-    #   | Set up webinar for Dr. X software training. |
-    #   | call for fu (John Drake)                    |
-    #   | asdasdasd                                   |
-    # When I run mouse over task "asdasdasd" in "dashboard"
-    # And I click "edit" button next to task "asdasdasd" in "dashboard"
-    # And I click delete task link for "asdasdasd"
-    # Then the modal window is "closed"
-    # And I see checkboxes with these tasks under "Overdue" section in "dashboard":
-    #   | task                                        |
-    #   | Set up webinar for Dr. X software training. |
-    #   | call for fu (John Drake)                    |
+  Scenario: Delete task from modal
+    Given I am logged in as "doc1f"
+    When I go to "start" page
+    Then I see checkboxes with these tasks under "Overdue" section in "dashboard":
+      | task                                        |
+      | Set up webinar for Dr. X software training. |
+      | call for fu (John Drake)                    |
+      | asdasdasd                                   |
+    When I run mouse over task "asdasdasd" in "dashboard"
+    And I click "edit" button next to task "asdasdasd" in "dashboard"
+    Then the modal window is "open"
+    When I click delete task link for "asdasdasd"
+    And I confirm browser alert
+    Then the modal window is "closed"
+    # will not work in legacy because of redirect
+    #And I see checkboxes with these tasks under "Overdue" section in "dashboard":
+    #  | task                                        |
+    #  | Set up webinar for Dr. X software training. |
+    #  | call for fu (John Drake)                    |
 
   # todo: this scenario will not pass in Vue until patient menu is migrated
   # Scenario: Add task for patient

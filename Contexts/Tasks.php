@@ -73,18 +73,16 @@ class Tasks extends BaseContext
         foreach ($taskList as $index => $taskElement) {
             $taskText = trim($taskElement->getText());
             if ($taskText == $task) {
-                if ($type == 'delete') {
-                    $this->prepareAlert();
-                }
                 $extra = $extraList[$index];
                 $button = $this->findCss("a:nth-child($typeIndex)", $extra);
                 if ($type == 'delete') {
                     $this->taskDeleted = $task;
                 }
                 $button->click();
-                // there is a bug in legacy that prevents modal from opening for the first time
                 if (SUT_HOST == 'loader' && $type == 'edit') {
                     $this->wait(self::SHORT_WAIT_TIME);
+                    $this->runMouseOverTask($task, $area);
+                    $button = $this->findCss("a:nth-child($typeIndex)", $extra);
                     $button->click();
                 }
                 return;
@@ -108,7 +106,7 @@ class Tasks extends BaseContext
         foreach ($taskList as $index => $taskElement) {
             $taskText = trim($taskElement->getText());
             if ($taskText == $task) {
-                $taskElement->mouseOver();
+                $taskElement->getParent()->mouseOver();
                 return;
             }
         }
@@ -158,7 +156,15 @@ class Tasks extends BaseContext
                         $value = $date->format('m/d/Y');
                     }
                     $input = $this->findCss('input', $cells[$key]);
-                    $input->setValue($value);
+                    if (SUT_HOST == 'vue') {
+                        $input->setValue($value);
+                    } else {
+                        $input->click();
+                        $this->wait(self::SHORT_WAIT_TIME);
+                        // @todo: add a way to set other dates
+                        $todayDiv = $this->findCss('div.DynarchCalendar-bottomBar-today');
+                        $todayDiv->click();
+                    }
                     break;
                 case 'select':
                     $select = $this->findCss('select', $cells[$key]);
@@ -189,7 +195,6 @@ class Tasks extends BaseContext
         if (SUT_HOST == 'loader') {
             $this->getCommonClient()->switchToIFrame('aj_pop');
         }
-        $this->prepareConfirm();
         $link = $this->findElementWithText('a', 'Delete');
         $link->click();
         $this->taskDeleted = $task;
@@ -288,6 +293,7 @@ class Tasks extends BaseContext
      * @param string $area
      * @param array $menus
      * @return NodeElement
+     * @throws BehatException
      */
     private function getTaskMenu($area, array $menus)
     {
@@ -295,7 +301,11 @@ class Tasks extends BaseContext
         if ($areaIndex >= 0) {
             return $menus[$areaIndex];
         }
-        return $menus[count($menus) + $areaIndex];
+        $newIndex = count($menus) + $areaIndex;
+        if (!isset($menus[$newIndex])) {
+            throw new BehatException("Menu with index $newIndex does not exist");
+        }
+        return $menus[$newIndex];
     }
 
     /**
@@ -304,6 +314,7 @@ class Tasks extends BaseContext
      * @param string $section
      * @param string $area
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testTasks($section, $area, TableNode $table)
     {
@@ -314,6 +325,7 @@ class Tasks extends BaseContext
         $lists = $this->findAllCss('ul', $taskMenu);
         $headerFound = false;
         $listKey = 0;
+        Assert::assertGreaterThan(0, sizeof($headers));
         foreach ($headers as $key => $header) {
             if ($header->getText() == $section) {
                 $listKey = $key;
@@ -322,7 +334,12 @@ class Tasks extends BaseContext
             }
         }
         Assert::assertTrue($headerFound);
-        $taskList = $this->findAllCss('li div:last-child', $lists[$listKey - 1]);
+        if ($area == 'dashboard') {
+            $listKey -= 1;
+        }
+        Assert::assertArrayHasKey($listKey, $lists);
+        Assert::assertNotNull($lists[$listKey]);
+        $taskList = $this->findAllCss('li > div:last-child', $lists[$listKey]);
         $taskNames = array_column($table->getHash(), 'task');
         $taskTexts = [];
         foreach ($taskList as $task) {
@@ -446,7 +463,7 @@ SQL;
             $this->executeQuery($deleteQuery);
             $updateQuery = <<<SQL
 UPDATE dental_task
-SET task='call for fu', patientid=112
+SET task='call for fu', patientid=112, due_date='2014-03-06'
 WHERE task='call for bar';
 SQL;
             $this->executeQuery($updateQuery);

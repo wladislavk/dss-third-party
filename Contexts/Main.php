@@ -3,9 +3,10 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Driver\CoreDriver;
+use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Data\Pages;
-use DMore\ChromeDriver\ChromeDriver;
 use PHPUnit\Framework\Assert;
 
 class Main extends BaseContext
@@ -59,15 +60,24 @@ class Main extends BaseContext
     {
         switch (BROWSER) {
             case 'phantomjs':
-                return;
+                break;
             case 'chrome':
-                /** @var ChromeDriver $driver */
-                // $driver = $this->getSession()->getDriver();
-                // this does not work for some reason
-                //$driver->acceptAlert();
-                return;
+                /** @var CoreDriver $driver */
+                $driver = $this->getSession()->getDriver();
+                if ($driver instanceof Selenium2Driver) {
+                    $driver->getWebDriverSession()->accept_alert();
+                }
+                break;
         }
-        $this->getDriverSession()->accept_alert();
+    }
+
+    /**
+     * @When I confirm browser alert with delay
+     */
+    public function browserConfirmWithDelay()
+    {
+        $this->wait(self::SHORT_WAIT_TIME);
+        $this->browserConfirm();
     }
 
     /**
@@ -86,12 +96,9 @@ class Main extends BaseContext
      *
      * @param string $button
      * @throws BehatException
-     * @throws \Behat\Mink\Exception\DriverException
-     * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
      */
     public function clickButton($button)
     {
-        $this->prepareAlert();
         $buttonElement = $this->findElementWithText('button', $button, null, true);
         if (!$buttonElement) {
             $buttonElement = $this->findElementWithText('a', $button);
@@ -178,6 +185,7 @@ class Main extends BaseContext
      */
     public function runMouseOverMenu($menuPoint)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $menu = $this->findCss('ul#homemenu');
         $parentNodeLink = $this->findElementWithText('a', $menuPoint, $menu);
         $parentNode = $parentNodeLink->getParent();
@@ -356,12 +364,6 @@ class Main extends BaseContext
      */
     public function testBrowserConfirm($text)
     {
-        switch (BROWSER) {
-            case 'phantomjs':
-                return;
-            case 'chrome':
-                return;
-        }
         $realText = $this->getDriverSession()->getAlert_text();
         Assert::assertEquals($text, $realText);
     }
@@ -373,6 +375,7 @@ class Main extends BaseContext
      */
     public function testBrowserAlert($text)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $this->testBrowserConfirm($text);
     }
 
@@ -395,7 +398,9 @@ class Main extends BaseContext
     public function testModalWindow($status)
     {
         $this->wait(self::SHORT_WAIT_TIME);
-        $this->getCommonClient()->switchToIFrame();
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame();
+        }
         $modal = $this->findCss('div#popupContact');
         if (SUT_HOST == 'vue') {
             $modal = $this->findCss('div#modal');

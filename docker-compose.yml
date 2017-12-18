@@ -103,8 +103,6 @@ services:
       - "traefik.port=80"
       - "traefik.backend=acceptance"
       - "traefik.frontend.rule=HostRegexp:{host:acceptance.docker.localhost}"
-    links:
-      - selenium
 
   balancer:
     image: traefik:v1.2.3-alpine
@@ -129,11 +127,3 @@ services:
       - "${PHPMYADMIN_PORT:-8080}:80"
     links:
       - db
-
-  selenium:
-    image: "selenium/standalone-chrome:2.53.1"
-    # shm_size: 1g
-    volumes:
-      - "/dev/shm:/dev/shm"
-    ports:
-      - "${SELENIUM_PORT:-4444}:4444"

@@ -128,7 +128,7 @@ abstract class BaseContext extends RawMinkContext
      * @param NodeElement|null $parentElement
      * @return NodeElement|null
      */
-    protected function findCss($selector, NodeElement $parentElement = null)
+    public function findCss($selector, NodeElement $parentElement = null)
     {
         if (!$parentElement) {
             $parentElement = $this->page;
@@ -141,7 +141,7 @@ abstract class BaseContext extends RawMinkContext
      * @param NodeElement|null $parentElement
      * @return NodeElement[]
      */
-    protected function findAllCss($selector, NodeElement $parentElement = null)
+    public function findAllCss($selector, NodeElement $parentElement = null)
     {
         if (!$parentElement) {
             $parentElement = $this->page;

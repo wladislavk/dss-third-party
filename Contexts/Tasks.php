@@ -8,6 +8,7 @@ use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use PHPUnit\Framework\Assert;
+use Services\VueDateSelector;
 
 class Tasks extends BaseContext
 {
@@ -150,21 +151,17 @@ class Tasks extends BaseContext
                     $input->setValue($element['value']);
                     break;
                 case 'date':
-                    $value = $element['value'];
-                    if ($element['value'] == 'today') {
-                        $date = new \DateTime();
-                        $value = $date->format('m/d/Y');
-                    }
                     $input = $this->findCss('input', $cells[$key]);
+                    $input->click();
+                    $this->wait(self::SHORT_WAIT_TIME);
+                    $todayDiv = null;
                     if (SUT_HOST == 'vue') {
-                        $input->setValue($value);
+                        $vueDateSelector = new VueDateSelector();
+                        $todayDiv = $vueDateSelector->getTodayElement($this);
                     } else {
-                        $input->click();
-                        $this->wait(self::SHORT_WAIT_TIME);
-                        // @todo: add a way to set other dates
                         $todayDiv = $this->findCss('div.DynarchCalendar-bottomBar-today');
-                        $todayDiv->click();
                     }
+                    $todayDiv->click();
                     break;
                 case 'select':
                     $select = $this->findCss('select', $cells[$key]);

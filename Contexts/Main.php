@@ -397,7 +397,7 @@ class Main extends BaseContext
      */
     public function testModalWindow($status)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(self::MEDIUM_WAIT_TIME);
         if (SUT_HOST == 'loader') {
             $this->getCommonClient()->switchToIFrame();
         }

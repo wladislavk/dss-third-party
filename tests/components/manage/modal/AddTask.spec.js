@@ -189,9 +189,11 @@ describe('AddTask component', () => {
     this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
       return true
     })
-    let redirected = false
+    // @todo: uncomment after this page is migrated
+    // let redirected = false
     this.sandbox.stub(LocationWrapper, 'goToLegacyPage').callsFake(() => {
-      redirected = true
+      // @todo: uncomment after this page is migrated
+      // redirected = true
     })
     const taskId = 1
     const taskData = {
@@ -219,7 +221,8 @@ describe('AddTask component', () => {
       deleteLink.click()
       moxios.wait(() => {
         expect(store.state.main[symbols.state.modal].name).toBe('')
-        expect(redirected).toBe(true)
+        // @todo: uncomment after this page is migrated
+        // expect(redirected).toBe(true)
         done()
       })
     })

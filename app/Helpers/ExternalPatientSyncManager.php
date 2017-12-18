@@ -14,6 +14,36 @@ class ExternalPatientSyncManager
     const MODEL_KEY = 'patient_id';
     const MODEL_DIRTY_KEY = 'dirty';
 
+    const NON_NULLABLE_PATIENT_FIELDS = [
+        'member_no',
+        'group_no',
+        'plan_no',
+        'p_m_partymname',
+        'p_m_partylname',
+        's_m_partymname',
+        's_m_partylname',
+        'p_m_ins_grp',
+        's_m_ins_grp',
+        'p_m_ins_plan',
+        's_m_ins_plan',
+        'p_m_dss_file',
+        's_m_dss_file',
+        'p_m_ins_type',
+        's_m_ins_type',
+        'p_m_ins_ass',
+        's_m_ins_ass',
+        'ins_dob',
+        'ins2_dob',
+        'premed',
+        'docsleep',
+        'docpcp',
+        'docdentist',
+        'docent',
+        'docmdother',
+        'docmdother2',
+        'docmdother3',
+    ];
+
     /** @var ExternalPatientRepository */
     private $repository;
 
@@ -113,6 +143,16 @@ class ExternalPatientSyncManager
 
         if ($patient) {
             return $patient;
+        }
+
+        foreach (self::NON_NULLABLE_PATIENT_FIELDS as $field) {
+            if (!array_key_exists($field, $patientData) || is_null($patientData[$field])) {
+                $patientData[$field] = '';
+            }
+
+            if (array_key_exists($field, $createAttributes) && is_null($createAttributes[$field])) {
+                $createAttributes[$field] = '';
+            }
         }
 
         $patient = $externalPatient->patient()

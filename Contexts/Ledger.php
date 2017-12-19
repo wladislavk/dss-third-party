@@ -11,6 +11,7 @@ class Ledger extends BaseContext
      * @When I select :code as procedure code
      *
      * @param string $code
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function selectProcedureCode($code)
     {

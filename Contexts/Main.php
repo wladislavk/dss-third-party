@@ -3,10 +3,10 @@
 namespace Contexts;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Driver\CoreDriver;
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Data\Pages;
-use DMore\ChromeDriver\ChromeDriver;
 use PHPUnit\Framework\Assert;
 
 class Main extends BaseContext
@@ -23,6 +23,7 @@ class Main extends BaseContext
      * @Given I am logged in as :user
      *
      * @param string $user
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function loginAsUser($user)
     {
@@ -34,6 +35,7 @@ class Main extends BaseContext
      * @When I go to :page page
      *
      * @param string $page
+     * @throws BehatException
      */
     public function goToCustomPage($page)
     {
@@ -58,21 +60,31 @@ class Main extends BaseContext
     {
         switch (BROWSER) {
             case 'phantomjs':
-                return;
+                break;
             case 'chrome':
-                /** @var ChromeDriver $driver */
+                /** @var CoreDriver $driver */
                 $driver = $this->getSession()->getDriver();
-                // this does not work for some reason
-                //$driver->acceptAlert();
-                return;
+                if ($driver instanceof Selenium2Driver) {
+                    $driver->getWebDriverSession()->accept_alert();
+                }
+                break;
         }
-        $this->getDriverSession()->accept_alert();
+    }
+
+    /**
+     * @When I confirm browser alert with delay
+     */
+    public function browserConfirmWithDelay()
+    {
+        $this->wait(self::SHORT_WAIT_TIME);
+        $this->browserConfirm();
     }
 
     /**
      * @When I click :link link
      *
      * @param string $link
+     * @throws BehatException
      */
     public function clickLink($link)
     {
@@ -83,10 +95,10 @@ class Main extends BaseContext
      * @When I click button with text :button
      *
      * @param string $button
+     * @throws BehatException
      */
     public function clickButton($button)
     {
-        $this->prepareAlert();
         $buttonElement = $this->findElementWithText('button', $button, null, true);
         if (!$buttonElement) {
             $buttonElement = $this->findElementWithText('a', $button);
@@ -147,6 +159,7 @@ class Main extends BaseContext
      * @When I type :name into patient search form
      *
      * @param string $name
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function fillPatientSearchForm($name)
     {
@@ -168,9 +181,11 @@ class Main extends BaseContext
      * @When I run mouse over :menuPoint menu point
      *
      * @param string $menuPoint
+     * @throws BehatException
      */
     public function runMouseOverMenu($menuPoint)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $menu = $this->findCss('ul#homemenu');
         $parentNodeLink = $this->findElementWithText('a', $menuPoint, $menu);
         $parentNode = $parentNodeLink->getParent();
@@ -200,6 +215,7 @@ class Main extends BaseContext
      * @Then I see :link link
      *
      * @param string $link
+     * @throws BehatException
      */
     public function testSeeLink($link)
     {
@@ -210,6 +226,7 @@ class Main extends BaseContext
      * @Then I see button with text :button
      *
      * @param string $button
+     * @throws BehatException
      */
     public function testSeeButton($button)
     {
@@ -336,12 +353,6 @@ class Main extends BaseContext
      */
     public function testBrowserConfirm($text)
     {
-        switch (BROWSER) {
-            case 'phantomjs':
-                return;
-            case 'chrome':
-                return;
-        }
         $realText = $this->getDriverSession()->getAlert_text();
         Assert::assertEquals($text, $realText);
     }
@@ -353,6 +364,7 @@ class Main extends BaseContext
      */
     public function testBrowserAlert($text)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $this->testBrowserConfirm($text);
     }
 

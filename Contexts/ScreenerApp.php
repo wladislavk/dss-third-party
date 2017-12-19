@@ -18,6 +18,7 @@ class ScreenerApp extends BaseContext
      * @When I log in as :user to screener app page
      *
      * @param string $user
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function loginAsUser($user)
     {
@@ -42,6 +43,7 @@ class ScreenerApp extends BaseContext
      *
      * @param string $user
      * @param string $password
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function loginToScreener($user, $password)
     {
@@ -62,11 +64,11 @@ class ScreenerApp extends BaseContext
      */
     public function clickScreenerButton($text)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $currentSection = $this->getCurrentSection();
         $buttons = $this->findAllCss('a.btn', $currentSection);
         foreach ($buttons as $button) {
             if ($button->getText() == $text) {
-                $this->prepareAlert();
                 $button->click();
                 return;
             }
@@ -85,7 +87,6 @@ class ScreenerApp extends BaseContext
         $buttons = $this->findAllCss('ul#main_nav a');
         foreach ($buttons as $button) {
             if ($this->sanitizeText($button->getText()) == $text) {
-                $this->prepareAlert();
                 $button->click();
                 return;
             }
@@ -97,6 +98,7 @@ class ScreenerApp extends BaseContext
      * @When I fill contact information form with data:
      *
      * @param TableNode $table
+     * @throws BehatException
      */
     public function fillContactForm(TableNode $table)
     {
@@ -114,6 +116,7 @@ class ScreenerApp extends BaseContext
      *
      * @param TableNode $table
      * @throws BehatException
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function fillEpworthForm(TableNode $table)
     {
@@ -162,6 +165,7 @@ class ScreenerApp extends BaseContext
      * @When I fill yes-no questions in previous medical diagnoses form with data:
      *
      * @param TableNode $table
+     * @throws BehatException
      */
     public function fillPreviousDiagnosesFormYesNo(TableNode $table)
     {
@@ -237,6 +241,7 @@ class ScreenerApp extends BaseContext
      */
     public function closeModalWindow()
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $closeButton = $this->findCss('a#fancybox-close');
         $closeButton->click();
     }
@@ -253,6 +258,7 @@ class ScreenerApp extends BaseContext
      * @Then I see screener button with text :text
      *
      * @param string $text
+     * @throws BehatException
      */
     public function testScreenerButton($text)
     {
@@ -288,6 +294,7 @@ class ScreenerApp extends BaseContext
      * @When I see screener left header :text
      *
      * @param string $text
+     * @throws BehatException
      */
     public function testScreenerLeftHeader($text)
     {
@@ -301,6 +308,7 @@ class ScreenerApp extends BaseContext
      * @Then I see screener right header :text
      *
      * @param string $text
+     * @throws BehatException
      */
     public function testScreenerRightHeader($text)
     {

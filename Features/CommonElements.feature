@@ -22,6 +22,7 @@ Feature: Common page elements
     Then I see these task sub-sections in "top menu":
       | section |
       | Overdue |
+    # this step fails if tested without Selenium
     And I see checkboxes with these tasks under "Overdue" section in "top menu":
       | task                                        |
       | Set up webinar for Dr. X software training. |

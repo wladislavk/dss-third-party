@@ -1,5 +1,7 @@
 FROM centos:7.3.1611
 
+WORKDIR /opt/app/acceptance
+
 # Set Timezone
 ENV TZ=America/New_York
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -23,7 +25,9 @@ RUN set -xe \
         gnu-free-sans-fonts \
         https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
 
-RUN rpm -ivh https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm && yum -y install nodejs
+RUN rpm -ivh https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm
+
+RUN curl -sL https://rpm.nodesource.com/setup_7.x | bash - && yum install -y nodejs
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \

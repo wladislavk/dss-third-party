@@ -5,6 +5,7 @@
   "author": "<wladislav.k@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "parser": "^0.1.4",
     "phantomjs-prebuilt": "^2.1.16"
   }
 }

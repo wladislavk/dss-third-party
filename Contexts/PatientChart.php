@@ -11,6 +11,8 @@ class PatientChart extends BaseContext
      * @When I fill add patient form with values:
      *
      * @param TableNode $table
+     * @throws BehatException
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function fillAddPatientForm(TableNode $table)
     {
@@ -27,6 +29,7 @@ class PatientChart extends BaseContext
      * @When I click on :menuPoint patient chart menu point
      *
      * @param string $menuPoint
+     * @throws BehatException
      */
     public function clickPatientChartMenu($menuPoint)
     {

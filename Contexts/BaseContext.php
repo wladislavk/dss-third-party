@@ -200,6 +200,11 @@ abstract class BaseContext extends RawMinkContext
         $this->getCommonClient()->visit($url);
     }
 
+    /**
+     * @param string $user
+     * @param string $password
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     */
     protected function login($user, $password = '')
     {
         if (!$password && array_key_exists($user, self::PASSWORDS)) {
@@ -294,7 +299,6 @@ abstract class BaseContext extends RawMinkContext
 
     /**
      * @param string $sql
-     * @throws BehatException
      */
     protected function executeQuery($sql)
     {
@@ -310,14 +314,5 @@ abstract class BaseContext extends RawMinkContext
         $driver = $this->getSession()->getDriver();
         $driverSession = $driver->getWebDriverSession();
         return $driverSession;
-    }
-
-    protected function prepareAlert()
-    {
-        // otherwise confirm dialog will not be accepted
-        if (BROWSER == 'phantomjs' || BROWSER == 'chrome') {
-            $script = "window.confirm = function () { return true; }; window.alert = function () { return true; };";
-            $this->getSession()->getDriver()->executeScript($script);
-        }
     }
 }

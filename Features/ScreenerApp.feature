@@ -8,7 +8,7 @@ Feature: Patient Screener App
     Then I see screener left header "Dental Sleep Solutions - Patient Health Assessment"
     And I see top screener button with text "Log Out"
     When I click top screener button with text "Log Out"
-    When I confirm browser alert
+    And I confirm browser alert
     Then I see screener app login form
 
   Scenario: Add patient screener information

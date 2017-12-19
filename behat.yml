@@ -46,7 +46,7 @@ chrome2:
             default_session: "selenium2"
             javascript_session: "selenium2"
             selenium2:
-                browser: chrome
+                browser: "chrome"
                 wd_host: "http://selenium:4444/wd/hub"
                 capabilities:
                     browserName: "chrome"
@@ -57,8 +57,6 @@ chrome2:
                             - "--headless"
                             - "--disable-gpu"
                             - "--no-sandbox"
-                            # - "--remote-debugging-address=127.0.0.1"
-                            # - "--remote-debugging-port=4444"
 firefox:
     extensions:
         Behat\MinkExtension:
@@ -67,7 +65,7 @@ firefox:
             default_session: "selenium2"
             javascript_session: "selenium2"
             selenium2:
-                browser: firefox
+                browser: "firefox"
                 wd_host: "http://127.0.0.1:4444/wd/hub"
                 capabilities:
                     browserName: "firefox"

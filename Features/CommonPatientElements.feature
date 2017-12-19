@@ -9,10 +9,10 @@ Feature: Common page patient elements
     When I go to "start" page
     And I type "smi" into patient search form
     And I click on "Smith, Pat" in list of patients
-  #  Then I see patient chart for "Pat Smith" marked as "*Med"
-  #  And I see "Hide Warnings" button in patient header
-  #  When I click "Hide Warnings" button in patient header
-  #  Then I see "Show Warnings" button in patient header
+    #  Then I see patient chart for "Pat Smith" marked as "*Med"
+    #  And I see "Hide Warnings" button in patient header
+    #  When I click "Hide Warnings" button in patient header
+    #  Then I see "Show Warnings" button in patient header
     Then patient chart has menu with following points:
       | name           | active |
       | Tracker        | Yes    |
@@ -25,6 +25,6 @@ Feature: Common page patient elements
       | Questionnaire  | No     |
       | Clinical Exam  | No     |
       | Patient Info   | No     |
-  #  And I see DSS logo in top left corner
-  #  When I click DSS logo
-  #  Then I see main page with welcome text for user "doc1f"
+    #  And I see DSS logo in top left corner
+    #  When I click DSS logo
+    #  Then I see main page with welcome text for user "doc1f"

@@ -29,6 +29,8 @@ class PatientScreener extends BaseContext
 
     /**
      * @Then patient screeners list shows not contacted patients only
+     *
+     * @throws BehatException
      */
     public function testShowNotContactedPatients()
     {

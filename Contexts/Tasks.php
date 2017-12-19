@@ -67,9 +67,6 @@ class Tasks extends BaseContext
         foreach ($taskList as $index => $taskElement) {
             $taskText = trim($taskElement->getText());
             if ($taskText == $task) {
-                if ($type == 'delete') {
-                    $this->prepareAlert();
-                }
                 $extra = $extraList[$index];
                 $button = $this->findCss("a:nth-child($typeIndex)", $extra);
                 if ($type == 'delete') {
@@ -212,6 +209,7 @@ class Tasks extends BaseContext
      * @param string $section
      * @param string $area
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testTasks($section, $area, TableNode $table)
     {

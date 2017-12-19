@@ -11,6 +11,7 @@ class ProgressNotes extends BaseContext
      *
      * @param string $template
      * @throws BehatException
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function selectTemplateInList($template)
     {

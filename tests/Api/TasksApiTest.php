@@ -79,6 +79,7 @@ class TasksApiTest extends ApiTestCase
         $this->get($endpoint);
         $this->assertResponseOk();
         $data = $this->getResponseData();
+        $this->assertNotNull($data);
         $expectedKeys = [
             'id',
             'task',

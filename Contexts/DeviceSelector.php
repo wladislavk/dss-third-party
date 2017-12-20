@@ -12,8 +12,9 @@ class DeviceSelector extends BaseContext
      */
     public function testSeeDeviceSelectorModalTitle()
     {
-        $expectedModalTitle = 'Device C-Lect for ?';
-        $modalTitle = $this->findCss('h2')->getText();
+        $expectedModalTitle = 'Device C-Lect for  ?';
+        $parentModalElement = $this->findCss('div#popupContact');
+        $modalTitle = $this->findCss('h2', $parentModalElement)->getHtml();
         Assert::assertEquals($expectedModalTitle, $modalTitle);
     }
 
@@ -24,10 +25,14 @@ class DeviceSelector extends BaseContext
      */
     public function testDeviceSelectionSliders(TableNode $table)
     {
+        if (SUT_HOST === 'vue') {
+            $this->wait(self::SHORT_WAIT_TIME);
+        }
+
         $headings = $this->findAllCss('form#device_form > div.setting > strong');
         $expected = array_column($table->getHash(), 'name');
         foreach ($expected as $key => $name) {
-            Assert::assertEquals($name, $headings[$key]->getText());
+            Assert::assertEquals($name, $headings[$key]->getHtml());
         }
     }
 

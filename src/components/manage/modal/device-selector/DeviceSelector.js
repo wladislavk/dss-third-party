@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     patientName () {
-      return this.$store.state.patients[symbols.state.patientName]
+      return this.$store.state.patients[symbols.state.patientName] || ' '
     }
   },
   methods: {

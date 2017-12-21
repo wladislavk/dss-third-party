@@ -228,7 +228,7 @@ class TaskRepository extends AbstractRepository
         if ($checkStatus) {
             $query = $query->where(function (Builder $query) {
                 $query
-                    ->where('dt.status', '0')
+                    ->where('dt.status', '' . Task::STATUS_INACTIVE)
                     ->orWhereNull('dt.status')
                 ;
             });

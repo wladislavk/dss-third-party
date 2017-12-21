@@ -4,6 +4,7 @@ namespace Tests\Api;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User as BaseUser;
 use DentalSleepSolutions\Helpers\TaskRetriever;
 use Tests\TestCases\ApiTestCase;
 
@@ -72,7 +73,13 @@ class TasksApiTest extends ApiTestCase
 
     public function testShow()
     {
+        /** @var BaseUser $userRecord */
+        $userRecord = factory(BaseUser::class)->create();
+        /** @var Task $testRecord */
         $testRecord = factory($this->getModel())->create();
+        $testRecord->status = Task::STATUS_INACTIVE;
+        $testRecord->responsibleid = $userRecord->userid;
+        $testRecord->save();
 
         $primaryKey = $this->model->getKeyName();
         $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;

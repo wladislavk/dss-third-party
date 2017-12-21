@@ -209,10 +209,8 @@ class TaskRepository extends AbstractRepository
     public function getSpecificTask($id)
     {
         $checkStatus = false;
-        return $this->forPatient($checkStatus)
-            ->where('dt.id', $id)
-            ->first()
-        ;
+        $query = $this->forPatient($checkStatus)->where('dt.id', $id);
+        return $query->first();
     }
 
     /**

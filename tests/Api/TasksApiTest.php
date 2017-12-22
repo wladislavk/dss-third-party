@@ -4,6 +4,7 @@ namespace Tests\Api;
 use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\Task;
 use DentalSleepSolutions\Eloquent\Models\User;
+use DentalSleepSolutions\Eloquent\Models\Dental\User as BaseUser;
 use DentalSleepSolutions\Helpers\TaskRetriever;
 use Tests\TestCases\ApiTestCase;
 
@@ -68,6 +69,42 @@ class TasksApiTest extends ApiTestCase
         $this->assertEquals(94, $this->getResponseData()[0]['id']);
         $this->assertEquals(95, $this->getResponseData()[1]['id']);
         $this->assertEquals(TaskRetriever::OVERDUE, $this->getResponseData()[0]['type']);
+    }
+
+    public function testShow()
+    {
+        /** @var BaseUser $userRecord */
+        $userRecord = factory(BaseUser::class)->create();
+        /** @var Task $testRecord */
+        $testRecord = factory($this->getModel())->create();
+        $testRecord->status = Task::STATUS_INACTIVE;
+        $testRecord->responsibleid = $userRecord->userid;
+        $testRecord->save();
+
+        $primaryKey = $this->model->getKeyName();
+        $endpoint = self::ROUTE_PREFIX . $this->getRoute() . '/' . $testRecord->$primaryKey;
+        $this->get($endpoint);
+        $this->assertResponseOk();
+        $data = $this->getResponseData();
+        $this->assertNotNull($data);
+        $expectedKeys = [
+            'id',
+            'task',
+            'description',
+            'userid',
+            'responsibleid',
+            'status',
+            'due_date',
+            'recurring',
+            'recurring_unit',
+            'adddate',
+            'ip_address',
+            'patientid',
+            'name',
+            'firstname',
+            'lastname',
+        ];
+        $this->assertEquals($expectedKeys, array_keys($data));
     }
 
     public function testDestroy()

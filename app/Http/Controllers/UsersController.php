@@ -413,6 +413,21 @@ class UsersController extends BaseRestController
     }
 
     /**
+     * @SWG\Get(
+     *     path="/users/responsible",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return JsonResponse
+     */
+    public function getResponsible()
+    {
+        $docId = $this->user->getDocIdOrZero();
+        $data = $this->repository->getResponsible($docId);
+        return ApiResponse::responseOk('', $data);
+    }
+
+    /**
      * @return string
      */
     public function getModelNamespace()

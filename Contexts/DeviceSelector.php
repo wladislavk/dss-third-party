@@ -12,6 +12,10 @@ class DeviceSelector extends BaseContext
      */
     public function testSeeDeviceSelectorModalTitle()
     {
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame('aj_pop');
+        }
+
         $expectedModalTitle = 'Device C-Lect for  ?';
         $parentModalElement = $this->findCss('div#popupContact');
         $modalTitle = $this->findCss('h2', $parentModalElement)->getHtml();

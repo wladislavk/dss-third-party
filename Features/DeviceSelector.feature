@@ -3,10 +3,11 @@ Feature: Device Selector
   Scenario: Select device
     Given I am logged in as "doc1f"
     When I go to "start" page
-    And I click on "Device Selector" menu point
-    Then I see a modal window
+    Then the modal window is "closed"
+    When I click on "Device Selector" menu point
+    Then the modal window is "open"
+    Then I see device selector modal title
     And I see "Instructions" link
-    And I see device selector modal title
     And I see device selection sliders:
       | name               |
       | Comfort            |

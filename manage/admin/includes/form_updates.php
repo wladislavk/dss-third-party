@@ -275,7 +275,7 @@ function update_financial_agreement_cash_form($id, $backoffice = false)
             <p class=MsoNormal><span style=\'font-family:"Arial","sans-serif"\'>This office’s customary billable fee for Dental Sleep Therapy (DST)
                 is $' . $r['amount'] . '. Due to your lack of medical
                 insurance and/or high deductible you have opted to accept a cash discount for
-                DST in our office. By signing the this
+                DST in our office. By signing this
                 agreement you release our office from any responsibility of filing insurance to
                 your providers or for providing documentation to you or other health care
                 providers in order to obtain insurance coverage. </span>

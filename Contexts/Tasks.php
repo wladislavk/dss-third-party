@@ -4,7 +4,11 @@ namespace Contexts;
 
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\DriverException;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 use PHPUnit\Framework\Assert;
+use Services\VueDateSelector;
 
 class Tasks extends BaseContext
 {
@@ -23,6 +27,9 @@ class Tasks extends BaseContext
 
     /** @var string */
     private $taskDeleted = '';
+
+    /** @var string */
+    private $taskCreated = false;
 
     /**
      * @When I click on task :task checkbox in :area
@@ -54,7 +61,7 @@ class Tasks extends BaseContext
      * @param string $type
      * @param string $task
      * @param string $area
-     * @throws BehatException
+     * @throws BehatException|UnsupportedDriverActionException|DriverException
      */
     public function clickOnButton($type, $task, $area)
     {
@@ -73,6 +80,12 @@ class Tasks extends BaseContext
                     $this->taskDeleted = $task;
                 }
                 $button->click();
+                if (SUT_HOST == 'loader' && $type == 'edit') {
+                    $this->wait(self::SHORT_WAIT_TIME);
+                    $this->runMouseOverTask($task, $area);
+                    $button = $this->findCss("a:nth-child($typeIndex)", $extra);
+                    $button->click();
+                }
                 return;
             }
         }
@@ -94,7 +107,7 @@ class Tasks extends BaseContext
         foreach ($taskList as $index => $taskElement) {
             $taskText = trim($taskElement->getText());
             if ($taskText == $task) {
-                $taskElement->mouseOver();
+                $taskElement->getParent()->mouseOver();
                 return;
             }
         }
@@ -117,14 +130,84 @@ class Tasks extends BaseContext
     }
 
     /**
+     * @When I fill task form with values:
+     *
+     * @param TableNode $table
+     * @throws BehatException
+     */
+    public function fillTaskForm(TableNode $table)
+    {
+        $cells = $this->findAllCss('td.frmhead');
+        foreach ($cells as $cellKey => $cell) {
+            if (!$cell->isVisible()) {
+                unset($cells[$cellKey]);
+            }
+        }
+        $cells = array_values($cells);
+        foreach ($table->getHash() as $key => $element) {
+            switch ($element['type']) {
+                case 'text':
+                    $input = $this->findCss('input', $cells[$key]);
+                    $input->setValue($element['value']);
+                    break;
+                case 'date':
+                    $input = $this->findCss('input', $cells[$key]);
+                    $input->click();
+                    $this->wait(self::SHORT_WAIT_TIME);
+                    $todayDiv = null;
+                    if (SUT_HOST == 'vue') {
+                        $vueDateSelector = new VueDateSelector();
+                        $todayDiv = $vueDateSelector->getTodayElement($this);
+                    } else {
+                        $todayDiv = $this->findCss('div.DynarchCalendar-bottomBar-today');
+                    }
+                    $todayDiv->click();
+                    break;
+                case 'select':
+                    $select = $this->findCss('select', $cells[$key]);
+                    $option = $this->findElementWithText('option', $element['value'], $select);
+                    $select->setValue($option->getAttribute('value'));
+                    break;
+                case 'checkbox':
+                    $checkbox = $this->findCss('input', $cells[$key]);
+                    if ($element['value'] == 'Yes') {
+                        $checkbox->setValue(true);
+                        break;
+                    }
+                    $checkbox->setValue(false);
+                    break;
+            }
+            $this->taskCreated = true;
+        }
+    }
+
+    /**
+     * @When I click delete task link for :task
+     *
+     * @param string $task
+     * @throws BehatException|UnsupportedDriverActionException|DriverException
+     */
+    public function clickDeleteButton($task)
+    {
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame('aj_pop');
+        }
+        $link = $this->findElementWithText('a', 'Delete');
+        $link->click();
+        $this->taskDeleted = $task;
+    }
+
+    /**
      * @Then I see add task form with header :header
      *
      * @param string $header
      */
     public function testAddTaskForm($header)
     {
-        $this->getCommonClient()->switchToIFrame('aj_pop');
-
+        $this->wait(self::SHORT_WAIT_TIME);
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame('aj_pop');
+        }
         $headerCell = $this->findCss('td.cat_head');
         Assert::assertNotNull($headerCell);
         Assert::assertEquals($header, $this->sanitizeText($headerCell->getText()));
@@ -137,12 +220,20 @@ class Tasks extends BaseContext
      */
     public function testAddTaskFormFields(TableNode $table)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $form = $this->findCss('form[name="notesfrm"]');
         $expectedRows = $table->getHash();
-        $tableRows = $this->findAllCss('tbody > tr', $form);
+        $tableRows = $this->findAllCss('td.frmhead', $form);
+        foreach ($tableRows as $key => $tableRow) {
+            if (!$tableRow->isVisible()) {
+                unset($tableRows[$key]);
+            }
+        }
+        $tableRows = array_values($tableRows);
+        array_pop($tableRows);
+        Assert::assertEquals(sizeof($expectedRows), sizeof($tableRows));
         foreach ($expectedRows as $rowNumber => $row) {
-            $childNumber = $rowNumber + 1;
-            $column = $this->findCss('td', $tableRows[$childNumber]);
+            $column = $tableRows[$rowNumber];
             $label = $this->findCss('label', $column);
             $labelText = str_replace(':', '', $label->getText());
             Assert::assertEquals($row['field'], $labelText);
@@ -189,18 +280,29 @@ class Tasks extends BaseContext
             array_shift($subsectionHeaders);
         }
         $expected = array_column($table->getHash(), 'section');
+        Assert::assertEquals(sizeof($expected), sizeof($subsectionHeaders));
         foreach ($expected as $index => $text) {
             Assert::assertEquals($text, $subsectionHeaders[$index]->getText());
         }
     }
 
+    /**
+     * @param string $area
+     * @param array $menus
+     * @return NodeElement
+     * @throws BehatException
+     */
     private function getTaskMenu($area, array $menus)
     {
         $areaIndex = self::TASK_MENUS[$area];
         if ($areaIndex >= 0) {
             return $menus[$areaIndex];
         }
-        return $menus[count($menus) + $areaIndex];
+        $newIndex = count($menus) + $areaIndex;
+        if (!isset($menus[$newIndex])) {
+            throw new BehatException("Menu with index $newIndex does not exist");
+        }
+        return $menus[$newIndex];
     }
 
     /**
@@ -216,8 +318,25 @@ class Tasks extends BaseContext
         $this->wait(self::MEDIUM_WAIT_TIME);
         $taskMenus = $this->findAllCss('div.task_menu');
         $taskMenu = $this->getTaskMenu($area, $taskMenus);
-        Assert::assertNotNull($this->findElementWithText('h4', $section, $taskMenu));
-        $taskList = $this->findAllCss('ul li div:last-child', $taskMenu);
+        $headers = $this->findAllCss('h4', $taskMenu);
+        $lists = $this->findAllCss('ul', $taskMenu);
+        $headerFound = false;
+        $listKey = 0;
+        Assert::assertGreaterThan(0, sizeof($headers));
+        foreach ($headers as $key => $header) {
+            if ($header->getText() == $section) {
+                $listKey = $key;
+                $headerFound = true;
+                break;
+            }
+        }
+        Assert::assertTrue($headerFound);
+        if ($area == 'dashboard') {
+            $listKey -= 1;
+        }
+        Assert::assertArrayHasKey($listKey, $lists);
+        Assert::assertNotNull($lists[$listKey]);
+        $taskList = $this->findAllCss('li > div:last-child', $lists[$listKey]);
         $taskNames = array_column($table->getHash(), 'task');
         $taskTexts = [];
         foreach ($taskList as $task) {
@@ -271,6 +390,46 @@ class Tasks extends BaseContext
     }
 
     /**
+     * @Then add task form is filled with values:
+     *
+     * @param TableNode $table
+     */
+    public function testPreFilledValues(TableNode $table)
+    {
+        $cells = $this->findAllCss('td.frmhead');
+        foreach ($cells as $cellKey => $cell) {
+            if (!$cell->isVisible()) {
+                unset($cells[$cellKey]);
+            }
+        }
+        $cells = array_values($cells);
+        foreach ($table->getHash() as $key => $element) {
+            $label = $this->findCss('label', $cells[$key]);
+            Assert::assertNotNull($label);
+            Assert::assertContains($element['field'], $label->getText());
+            switch ($element['type']) {
+                case 'text':
+                    $input = $this->findCss('input', $cells[$key]);
+                    Assert::assertEquals($element['value'], $input->getValue());
+                    break;
+                case 'select':
+                    $select = $this->findCss('select', $cells[$key]);
+                    $selectedOption = $this->findCss('option[value="' . $select->getValue() . '"]', $select);
+                    Assert::assertEquals($element['value'], $selectedOption->getText());
+                    break;
+                case 'checkbox':
+                    $checkbox = $this->findCss('input', $cells[$key]);
+                    if ($element['value'] == 'Yes') {
+                        Assert::assertTrue($checkbox->getValue());
+                        break;
+                    }
+                    Assert::assertNull($checkbox->getValue());
+                    break;
+            }
+        }
+    }
+
+    /**
      * @AfterScenario
      *
      * @param AfterScenarioScope $scope
@@ -292,6 +451,19 @@ SET status=0
 WHERE task='{$this->taskDeleted}';
 SQL;
             $this->executeQuery($query);
+        }
+        if ($this->taskCreated) {
+            $deleteQuery = <<<SQL
+DELETE FROM dental_task
+WHERE task='Test task';
+SQL;
+            $this->executeQuery($deleteQuery);
+            $updateQuery = <<<SQL
+UPDATE dental_task
+SET task='call for fu', patientid=112, due_date='2014-03-06'
+WHERE task='call for bar';
+SQL;
+            $this->executeQuery($updateQuery);
         }
     }
 }

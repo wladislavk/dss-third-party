@@ -8,10 +8,10 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Element\DocumentElement;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\DriverException;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Behat\Mink\Session;
 use Behat\MinkExtension\Context\RawMinkContext;
-use Clients\GoutteClient;
-use GuzzleHttp\Client as GuzzleClient;
 
 require_once __DIR__ . '/../config.php';
 
@@ -64,14 +64,6 @@ abstract class BaseContext extends RawMinkContext
         $environment = $scope->getEnvironment();
         $this->common = $environment->getContext($this->getCommonContext());
         $this->client = $this->getMink()->getSession();
-        // @todo: comment out these lines to enable custom request header
-        /*
-        $this->client = new GoutteClient();
-        $guzzle = new GuzzleClient([
-            'verify' => false,
-        ]);
-        $this->client->setClient($guzzle);
-        */
 
         $host = getenv('DB_HOST');
         $dbName = getenv('DB_DATABASE');
@@ -136,7 +128,7 @@ abstract class BaseContext extends RawMinkContext
      * @param NodeElement|null $parentElement
      * @return NodeElement|null
      */
-    protected function findCss($selector, NodeElement $parentElement = null)
+    public function findCss($selector, NodeElement $parentElement = null)
     {
         if (!$parentElement) {
             $parentElement = $this->page;
@@ -149,7 +141,7 @@ abstract class BaseContext extends RawMinkContext
      * @param NodeElement|null $parentElement
      * @return NodeElement[]
      */
-    protected function findAllCss($selector, NodeElement $parentElement = null)
+    public function findAllCss($selector, NodeElement $parentElement = null)
     {
         if (!$parentElement) {
             $parentElement = $this->page;

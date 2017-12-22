@@ -213,6 +213,7 @@ class Main extends BaseContext
 
     /**
      * @When I click on logo in top left corner
+     *
      * @throws BehatException
      */
     public function clickLogo()
@@ -390,17 +391,25 @@ class Main extends BaseContext
     }
 
     /**
-     * @Then I see a modal window
+     * @Then the modal window is :status
+     *
+     * @param string $status
      */
-    public function testSeeModal()
+    public function testModalWindow($status)
     {
-        if (SUT_HOST === 'vue') {
+        $this->wait(self::MEDIUM_WAIT_TIME);
+        if (SUT_HOST == 'loader') {
+            $this->getCommonClient()->switchToIFrame();
+        }
+        $modal = $this->findCss('div#popupContact');
+        if (SUT_HOST == 'vue') {
+            $modal = $this->findCss('div#modal');
+        }
+        Assert::assertNotNull($modal);
+        if ($status == 'open') {
+            Assert::assertTrue($modal->isVisible());
             return;
         }
-
-        $srcAttr = $this->findCss('iframe[id="aj_pop"]')->getAttribute('src');
-        Assert::assertNotNull($srcAttr);
-
-        $this->getCommonClient()->switchToIFrame('aj_pop');
+        Assert::assertFalse($modal->isVisible());
     }
 }

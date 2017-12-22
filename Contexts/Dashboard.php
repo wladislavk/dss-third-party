@@ -18,6 +18,7 @@ class Dashboard extends BaseContext
      * @When I click on :menuPoint menu point
      *
      * @param string $menuPoint
+     * @throws BehatException
      */
     public function clickMenu($menuPoint)
     {
@@ -108,6 +109,7 @@ class Dashboard extends BaseContext
      * @Then I see :section dashboard section
      *
      * @param string $section
+     * @throws BehatException
      */
     public function testDashboardSection($section)
     {
@@ -119,6 +121,7 @@ class Dashboard extends BaseContext
      * @Then navigation menu contains the following links:
      *
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testNavigationMenu(TableNode $table)
     {
@@ -136,6 +139,7 @@ class Dashboard extends BaseContext
      *
      * @param string $parent
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testNavigationSubmenu($parent, TableNode $table)
     {
@@ -162,6 +166,7 @@ class Dashboard extends BaseContext
      * @param string $parent
      * @param string $grandparent
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testNavigationSubSubmenu($parent, $grandparent, TableNode $table)
     {

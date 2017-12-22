@@ -36,6 +36,7 @@ class Auth extends BaseContext
      *
      * @param string $user
      * @param string $password
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
      */
     public function sendAuthForm($user, $password)
     {

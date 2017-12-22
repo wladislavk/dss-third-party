@@ -1,13 +1,13 @@
 <template>
     <transition>
         <div id="modal" class="modal" v-show="popupEnabled">
-            <div id="popupContact" v-bind:style="{ top: topPosition, left: leftPosition }">
+            <div id="popupContact" class="popup-contact" v-bind:style="{'top': topPosition, 'left': leftPosition}">
                 <a id="popupContactClose" v-on:click="disable()"><button>X</button></a>
-                <div id="modal-content">
+                <div id="modal-content" class="modal-content">
                     <component v-bind:is="currentView" v-bind="currentProperties"></component>
                 </div>
             </div>
-            <div id="backgroundPopup" v-on:click="disable()"></div>
+            <div id="backgroundPopup" class="background-popup" v-on:click="disable()"></div>
         </div>
     </transition>
 </template>
@@ -15,3 +15,4 @@
 <script src="./ModalRoot.js"></script>
 
 <style src="../../../assets/css/manage/popup.css" scoped></style>
+<style src="../../../assets/css/manage/calendar.css"></style>

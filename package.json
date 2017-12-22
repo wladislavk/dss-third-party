@@ -26,6 +26,7 @@
     "vue-moment": "^2.0.2",
     "vue-router": "^2.2.0",
     "vue-visible": "^1.0.2",
+    "vuejs-datepicker": "^0.9.20",
     "vuex": "^2.4.1"
   },
   "devDependencies": {

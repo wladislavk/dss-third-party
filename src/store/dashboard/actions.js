@@ -18,7 +18,7 @@ export default {
   },
 
   [symbols.actions.deviceSelectorModal] ({commit}) {
-    commit(symbols.mutations.modal, { name: 'device-selector' })
+    commit(symbols.mutations.modal, { name: 'deviceSelector' })
   },
 
   [symbols.actions.exportMDModal] () {
@@ -159,7 +159,7 @@ export default {
       .then(response => {
         Alerter.alert(response.data.message)
 
-        commit(symbols.mutations.modal, {})
+        commit(symbols.mutations.resetModal)
       }).catch(response => {
         dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
       })

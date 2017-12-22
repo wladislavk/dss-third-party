@@ -37,9 +37,10 @@ export default {
     },
     addTaskPopup () {
       const props = {
+        id: 0,
         patientId: this.patientId
       }
-      this.$store.commit(symbols.mutations.modal, { name: 'add-task', params: props })
+      this.$store.commit(symbols.mutations.modal, { name: 'addTask', params: props })
     }
   }
 }

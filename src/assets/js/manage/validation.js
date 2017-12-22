@@ -29,7 +29,7 @@ export function trim (inputString) {
   return retValue
 }
 
-function isDate (d) {
+export function isDate (d) {
   if (d.search(/^(\d){1,2}[-/\\](\d){1,2}[-/\\]\d{4}$/) !== 0) {
     return -1 // Bad Date Format
   }
@@ -45,7 +45,7 @@ function isDate (d) {
     )
 }
 
-function isValidCreditCard (type, ccnum) {
+export function isValidCreditCard (type, ccnum) {
   let re
   switch (type) {
     // Visa: length 16, prefix 4, dashes optional.
@@ -70,20 +70,21 @@ function isValidCreditCard (type, ccnum) {
       break
     // Diners: length 14, prefix 30, 36, or 38.
     case 'Diners':
-      re = /^3[0,6,8]\d{12}$/
+      re = /^3[068,]\d{12}$/
       break
     // Bankcard: length 16, prefix 5610 dashes optional.
     case 'Bankcard':
       re = /^5610-?\d{4}-?\d{4}-?\d{4}$/
       break
+    // @todo: these regexps do not work as expected
     case 'JCB':
-      re = /^[3088|3096|3112|3158|3337|3528]\d{12}$/
+      re = /^[01256789|]\d{12}$/
       break
     case 'EnRoute':
-      re = /^[2014|2149]\d{11}$/
+      re = /^[01249|]\d{11}$/
       break
     case 'Switch':
-      re = /^[4903|4911|4936|5641|6333|6759|6334|6767]\d{12}$/
+      re = /^[01345679|]\d{12}$/
       break
   }
 
@@ -109,7 +110,7 @@ function isValidCreditCard (type, ccnum) {
   return false
 }
 
-function adminticketabc (fa) {
+export function adminticketabc (fa) {
   if (trim(fa.docid.value) === '') {
     alert('Account is Required')
     fa.docid.focus()
@@ -137,7 +138,7 @@ function adminticketabc (fa) {
   }
 }
 
-function loginabc (fa) {
+export function loginabc (fa) {
   if (trim(fa.username.value) === '') {
     alert('Username is Required')
     fa.username.focus()
@@ -151,7 +152,7 @@ function loginabc (fa) {
   return true
 }
 
-function passabc (fa) {
+export function passabc (fa) {
   if (trim(fa.old_pass.value) === '') {
     alert('Old Password is Required')
     fa.old_pass.focus()
@@ -170,7 +171,7 @@ function passabc (fa) {
   return true
 }
 
-function areaabc (fa) {
+export function areaabc (fa) {
   if (trim(fa.area.value) === '') {
     alert('Area is Required')
     fa.area.focus()
@@ -178,7 +179,7 @@ function areaabc (fa) {
   }
 }
 
-function userregabc (fa) {
+export function userregabc (fa) {
   if (trim(fa.first_name.value) === '') {
     alert('First Name is Required')
     fa.first_name.focus()
@@ -202,7 +203,7 @@ function userregabc (fa) {
   return true
 }
 
-function userabcWarn (fa) {
+export function userabcWarn (fa) {
   const errors = []
   if (trim(fa.username.value) === '') {
     errors.push('Username is Required')
@@ -267,7 +268,7 @@ function userabcWarn (fa) {
   return true
 }
 
-function userabc (fa) {
+export function userabc (fa) {
   if (trim(fa.username.value) === '') {
     alert('Username is Required')
     fa.username.focus()
@@ -363,7 +364,7 @@ function userabc (fa) {
   }
 }
 
-function staffabc (fa) {
+export function staffabc (fa) {
   if (trim(fa.username.value) === '') {
     alert('Username is Required')
     fa.username.focus()
@@ -392,7 +393,7 @@ function staffabc (fa) {
   }
 }
 
-function pageabc (fa) {
+export function pageabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -400,7 +401,7 @@ function pageabc (fa) {
   }
 }
 
-function patientabc (fa) {
+export function patientabc (fa) {
   if (trim(fa.firstname.value) === '') {
     alert('First Name is Required')
     fa.firstname.focus()
@@ -472,7 +473,7 @@ function patientabc (fa) {
   return true
 }
 
-function complaintabc (fa) {
+export function complaintabc (fa) {
   if (trim(fa.complaint.value) === '') {
     alert('Complaint is Required')
     fa.complaint.focus()
@@ -481,7 +482,7 @@ function complaintabc (fa) {
   return true
 }
 
-function intoleranceabc (fa) {
+export function intoleranceabc (fa) {
   if (trim(fa.intolerance.value) === '') {
     alert('Intolerance is Required')
     fa.intolerance.focus()
@@ -489,7 +490,7 @@ function intoleranceabc (fa) {
   }
 }
 
-function allergensabc (fa) {
+export function allergensabc (fa) {
   if (trim(fa.allergens.value) === '') {
     alert('Allergens is Required')
     fa.allergens.focus()
@@ -497,7 +498,7 @@ function allergensabc (fa) {
   }
 }
 
-function medicationsabc (fa) {
+export function medicationsabc (fa) {
   if (trim(fa.medications.value) === '') {
     alert('Medications is Required')
     fa.medications.focus()
@@ -505,7 +506,7 @@ function medicationsabc (fa) {
   }
 }
 
-function historyabc (fa) {
+export function historyabc (fa) {
   if (trim(fa.history.value) === '') {
     alert('Medical History is Required')
     fa.history.focus()
@@ -513,7 +514,7 @@ function historyabc (fa) {
   }
 }
 
-function tongueabc (fa) {
+export function tongueabc (fa) {
   if (trim(fa.tongue.value) === '') {
     alert('Tongue is Required')
     fa.tongue.focus()
@@ -521,7 +522,7 @@ function tongueabc (fa) {
   }
 }
 
-function uvulaabc (fa) {
+export function uvulaabc (fa) {
   if (trim(fa.uvula.value) === '') {
     alert('Uvula is Required')
     fa.uvula.focus()
@@ -529,7 +530,7 @@ function uvulaabc (fa) {
   }
 }
 
-function softPalateabc (fa) {
+export function softPalateabc (fa) {
   if (trim(fa.soft_palate.value) === '') {
     alert('Soft Palate is Required')
     fa.soft_palate.focus()
@@ -537,7 +538,7 @@ function softPalateabc (fa) {
   }
 }
 
-function gagReflexabc (fa) {
+export function gagReflexabc (fa) {
   if (trim(fa.gag_reflex.value) === '') {
     alert('Gag Reflex is Required')
     fa.gag_reflex.focus()
@@ -545,7 +546,7 @@ function gagReflexabc (fa) {
   }
 }
 
-function nasalPassagesabc (fa) {
+export function nasalPassagesabc (fa) {
   if (trim(fa.nasal_passages.value) === '') {
     alert('Nasal Passages is Required')
     fa.nasal_passages.focus()
@@ -553,7 +554,7 @@ function nasalPassagesabc (fa) {
   }
 }
 
-function maxillaabc (fa) {
+export function maxillaabc (fa) {
   if (trim(fa.maxilla.value) === '') {
     alert('Maxilla is Required')
     fa.maxilla.focus()
@@ -561,7 +562,7 @@ function maxillaabc (fa) {
   }
 }
 
-function mandibleabc (fa) {
+export function mandibleabc (fa) {
   if (trim(fa.mandible.value) === '') {
     alert('Mandible is Required')
     fa.mandible.focus()
@@ -569,7 +570,7 @@ function mandibleabc (fa) {
   }
 }
 
-function examTeethabc (fa) {
+export function examTeethabc (fa) {
   if (trim(fa.exam_teeth.value) === '') {
     alert('Teeth Examination is Required')
     fa.exam_teeth.focus()
@@ -577,7 +578,7 @@ function examTeethabc (fa) {
   }
 }
 
-function diagnosticabc (fa) {
+export function diagnosticabc (fa) {
   if (trim(fa.diagnostic.value) === '') {
     alert('Diagnostic Test is Required')
     fa.diagnostic.focus()
@@ -585,7 +586,7 @@ function diagnosticabc (fa) {
   }
 }
 
-function assessmentabc (fa) {
+export function assessmentabc (fa) {
   if (trim(fa.assessment.value) === '') {
     alert('Assessment is Required')
     fa.assessment.focus()
@@ -593,7 +594,7 @@ function assessmentabc (fa) {
   }
 }
 
-function assessAdditionabc (fa) {
+export function assessAdditionabc (fa) {
   if (trim(fa.assess_addition.value) === '') {
     alert('Assessment Addition is Required')
     fa.assess_addition.focus()
@@ -601,7 +602,7 @@ function assessAdditionabc (fa) {
   }
 }
 
-function consultationabc (fa) {
+export function consultationabc (fa) {
   if (trim(fa.consultation.value) === '') {
     alert('Consultation is Required')
     fa.consultation.focus()
@@ -609,7 +610,7 @@ function consultationabc (fa) {
   }
 }
 
-function evaluationNewabc (fa) {
+export function evaluationNewabc (fa) {
   if (trim(fa.evaluation_new.value) === '') {
     alert('Evaluation New is Required')
     fa.evaluation_new.focus()
@@ -617,7 +618,7 @@ function evaluationNewabc (fa) {
   }
 }
 
-function evaluationEstabc (fa) {
+export function evaluationEstabc (fa) {
   if (trim(fa.evaluation_est.value) === '') {
     alert('Evaluation Established is Required')
     fa.evaluation_est.focus()
@@ -625,7 +626,7 @@ function evaluationEstabc (fa) {
   }
 }
 
-function contacttypeabc (fa) {
+export function contacttypeabc (fa) {
   if (trim(fa.contacttype.value) === '') {
     alert('Contact Type is Required')
     fa.contacttype.focus()
@@ -633,7 +634,7 @@ function contacttypeabc (fa) {
   }
 }
 
-function accesscodeabc (fa) {
+export function accesscodeabc (fa) {
   if (trim(fa.access_code.value) === '') {
     alert('Access Code is Required')
     fa.access_code.focus()
@@ -641,7 +642,7 @@ function accesscodeabc (fa) {
   }
 }
 
-function imagetypeabc (fa) {
+export function imagetypeabc (fa) {
   if (trim(fa.imagetype.value) === '') {
     alert('Image Type is Required')
     fa.imagetype.focus()
@@ -649,7 +650,7 @@ function imagetypeabc (fa) {
   }
 }
 
-function qualifierabc (fa) {
+export function qualifierabc (fa) {
   if (trim(fa.qualifier.value) === '') {
     alert('Qualifier is Required')
     fa.qualifier.focus()
@@ -657,7 +658,7 @@ function qualifierabc (fa) {
   }
 }
 
-function epworthabc (fa) {
+export function epworthabc (fa) {
   if (trim(fa.epworth.value) === '') {
     alert('Epworth is Required')
     fa.epworth.focus()
@@ -665,7 +666,7 @@ function epworthabc (fa) {
   }
 }
 
-function palpationabc (fa) {
+export function palpationabc (fa) {
   if (trim(fa.palpation.value) === '') {
     alert('Palpation is Required')
     fa.palpation.focus()
@@ -673,7 +674,7 @@ function palpationabc (fa) {
   }
 }
 
-function jointExamabc (fa) {
+export function jointExamabc (fa) {
   if (trim(fa.joint_exam.value) === '') {
     alert('Joint Examination is Required')
     fa.joint_exam.focus()
@@ -681,7 +682,7 @@ function jointExamabc (fa) {
   }
 }
 
-function jointabc (fa) {
+export function jointabc (fa) {
   if (trim(fa.joint.value) === '') {
     alert('Joint is Required')
     fa.joint.focus()
@@ -689,7 +690,7 @@ function jointabc (fa) {
   }
 }
 
-function rangeMotionabc (fa) {
+export function rangeMotionabc (fa) {
   if (trim(fa.range_motion.value) === '') {
     alert('Range Motion is Required')
     fa.range_motion.focus()
@@ -697,7 +698,7 @@ function rangeMotionabc (fa) {
   }
 }
 
-function screeningabc (fa) {
+export function screeningabc (fa) {
   if (trim(fa.screening.value) === '') {
     alert('Screening is Required')
     fa.screening.focus()
@@ -705,7 +706,7 @@ function screeningabc (fa) {
   }
 }
 
-function deviceabc (fa) {
+export function deviceabc (fa) {
   if (trim(fa.device.value) === '') {
     alert('Device is Required')
     fa.device.focus()
@@ -713,7 +714,7 @@ function deviceabc (fa) {
   }
 }
 
-function followupabc (fa) {
+export function followupabc (fa) {
   if (trim(fa.followup.value) === '') {
     alert('Follow Up is Required')
     fa.followup.focus()
@@ -721,7 +722,7 @@ function followupabc (fa) {
   }
 }
 
-function insDiagnosisabc (fa) {
+export function insDiagnosisabc (fa) {
   if (trim(fa.ins_diagnosis.value) === '') {
     alert('Insurance Diagnosis is Required')
     fa.ins_diagnosis.focus()
@@ -729,7 +730,7 @@ function insDiagnosisabc (fa) {
   }
 }
 
-function placeServiceabc (fa) {
+export function placeServiceabc (fa) {
   if (trim(fa.place_service.value) === '') {
     alert('Place of Service is Required')
     fa.place_service.focus()
@@ -737,7 +738,7 @@ function placeServiceabc (fa) {
   }
 }
 
-function typeServiceabc (fa) {
+export function typeServiceabc (fa) {
   if (trim(fa.type_service.value) === '') {
     alert('Type of Service is Required')
     fa.type_service.focus()
@@ -745,7 +746,7 @@ function typeServiceabc (fa) {
   }
 }
 
-function cptCodeabc (fa) {
+export function cptCodeabc (fa) {
   if (trim(fa.cpt_code.value) === '') {
     alert('CPT Code is Required')
     fa.cpt_code.focus()
@@ -753,7 +754,7 @@ function cptCodeabc (fa) {
   }
 }
 
-function modifierCodeabc (fa) {
+export function modifierCodeabc (fa) {
   if (trim(fa.modifier_code.value) === '') {
     alert('Modifier Code is Required')
     fa.modifier_code.focus()
@@ -761,7 +762,7 @@ function modifierCodeabc (fa) {
   }
 }
 
-function insTypeabc (fa) {
+export function insTypeabc (fa) {
   if (trim(fa.ins_type.value) === '') {
     alert('Insurance Type is Required')
     fa.ins_type.focus()
@@ -769,7 +770,7 @@ function insTypeabc (fa) {
   }
 }
 
-function docWelcomeabc (fa) {
+export function docWelcomeabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -791,7 +792,7 @@ function docWelcomeabc (fa) {
   }
 }
 
-function docEducationalabc (fa) {
+export function docEducationalabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -813,7 +814,7 @@ function docEducationalabc (fa) {
   }
 }
 
-function docMarketingabc (fa) {
+export function docMarketingabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -835,7 +836,7 @@ function docMarketingabc (fa) {
   }
 }
 
-function docDvdabc (fa) {
+export function docDvdabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -857,7 +858,7 @@ function docDvdabc (fa) {
   }
 }
 
-function docLababc (fa) {
+export function docLababc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -879,7 +880,7 @@ function docLababc (fa) {
   }
 }
 
-function docNewabc (fa) {
+export function docNewabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -901,7 +902,7 @@ function docNewabc (fa) {
   }
 }
 
-function docInsuranceabc (fa) {
+export function docInsuranceabc (fa) {
   if (trim(fa.title.value) === '') {
     alert('Title is Required')
     fa.title.focus()
@@ -923,7 +924,7 @@ function docInsuranceabc (fa) {
   }
 }
 
-function transactionCodeabc (fa) {
+export function transactionCodeabc (fa) {
   if (trim(fa.transaction_code.value) === '') {
     alert('Transaction Code is Required')
     fa.transaction_code.focus()

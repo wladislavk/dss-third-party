@@ -9,12 +9,15 @@ export default {
     }
   },
   watch: {
-    deviceGuideSettingOptions () {
-      this.$nextTick(() => {
-        this.deviceGuideSettingOptions.forEach(el => {
-          this.setSlider(el.id, 0, el.number - 1, 1)
+    deviceGuideSettingOptions: {
+      handler () {
+        this.$nextTick(() => {
+          this.deviceGuideSettingOptions.forEach(el => {
+            this.setSlider(el.id, 0, el.number - 1, 1, el.checkedOption)
+          })
         })
-      })
+      },
+      deep: true
     }
   },
   created () {
@@ -49,9 +52,9 @@ export default {
     getSliderDivId (id) {
       return 'slider_' + id
     },
-    setSlider (id, start, end, step) {
+    setSlider (id, start, end, step, value) {
       $('#' + this.getSliderDivId(id)).slider({
-        value: start,
+        value: value,
         min: start,
         max: end,
         step: step,

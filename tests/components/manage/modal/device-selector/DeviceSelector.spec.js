@@ -29,7 +29,7 @@ describe('DeviceSelector', () => {
   })
 
   it('should have correct device selector title', function () {
-    const expectedTitle = 'Device C-Lect for ?'
+    const expectedTitle = 'Device C-Lect for  ?'
     const deviceSelectorTitle = this.vm.$el.querySelector('h2#device-selector-title')
 
     expect(deviceSelectorTitle.innerHTML).toBe(expectedTitle)

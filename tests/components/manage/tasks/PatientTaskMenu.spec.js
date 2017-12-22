@@ -1,3 +1,5 @@
+// @todo: uncomment when migrating patients
+/*
 import Vue from 'vue'
 import { TASK_TYPES } from '../../../../src/constants/main'
 import endpoints from '../../../../src/endpoints'
@@ -108,3 +110,4 @@ describe('PatientTaskMenu component', () => {
     })
   })
 })
+*/

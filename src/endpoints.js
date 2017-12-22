@@ -132,6 +132,8 @@ export default {
     nextWeek: '/tasks/next-week',
     overdue: '/tasks/overdue',
     overdueForPatient: '/tasks/overdue/pid',
+    show: '/tasks',
+    store: '/tasks',
     thisWeek: '/tasks/this-week',
     today: '/tasks/today',
     todayForPatient: '/tasks/today/pid',
@@ -147,6 +149,7 @@ export default {
     checkLogout: '/users/check-logout',
     current: '/users/current',
     letterInfo: '/users/letter-info',
+    responsible: '/users/responsible',
     show: '/users'
   }
 }

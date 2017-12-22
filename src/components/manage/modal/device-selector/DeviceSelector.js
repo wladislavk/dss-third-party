@@ -1,7 +1,7 @@
 import symbols from '../../../../symbols'
 import { DEVICE_SELECTOR_INSTRUCTIONS } from '../../../../constants/dashboard'
-import DeviceForm from './DeviceForm.vue'
-import DeviceResults from './DeviceResults.vue'
+import DeviceFormComponent from './DeviceForm.vue'
+import DeviceResultsComponent from './DeviceResults.vue'
 
 export default {
   data () {
@@ -11,8 +11,8 @@ export default {
     }
   },
   components: {
-    'device-form': DeviceForm,
-    'device-results': DeviceResults
+    deviceForm: DeviceFormComponent,
+    deviceResults: DeviceResultsComponent
   },
   computed: {
     patientName () {

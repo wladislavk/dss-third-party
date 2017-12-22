@@ -395,7 +395,6 @@ class Main extends BaseContext
     public function testSeeModal()
     {
         if (SUT_HOST === 'vue') {
-            // TODO: add logic for checking if div#modal-content has a child
             return;
         }
 

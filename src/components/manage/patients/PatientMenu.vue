@@ -1,5 +1,5 @@
 <template>
-    <div v-if="patientId" id="patient_nav">
+    <div id="patient_nav">
         <ul>
             <patient-menu-element
                 v-for="(menuElement, loopIndex) in menuElements"

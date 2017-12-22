@@ -1,11 +1,12 @@
 <template>
     <div
         id="patient_name_div"
-        v-bind:style="{ 'font-size': longPatientFont }"
+        class="patient_name_div"
+        v-bind:class="{ 'long-patient': longPatientName }"
     >
         <div id="patient_name_inner">
             <img v-if="medicare" src="../../../assets/images/medicare_logo_small.png" />
-            <span v-bind:class="{ 'medicare_name': medicare, 'name': !medicare }">
+            <span class="patient_name" v-bind:class="{ 'medicare_name': medicare, 'name': !medicare }">
                 <span>{{ patientName }}</span>
                 <!-- @todo: why is this link needed? -->
                 <a
@@ -13,13 +14,11 @@
                     href="#"
                     v-bind:title="'Notes: ' + alertText"
                     v-on:click.prevent=""
-                    style="font-weight:bold; font-size:18px; color:#FF0000;"
                 >Notes</a>
                 <a
                     v-if="displayMed"
-                    v-bind:href="legacyUrl + 'manage/q_page3.php?pid=' + patientId"
+                    v-legacy-href="'manage/q_page3.php?pid=' + patientId"
                     v-bind:title="headerTitle"
-                    style="font-weight:bold; font-size:18px; color:#FF0000;"
                 >*Med</a>
             </span>
         </div>
@@ -28,4 +27,4 @@
 
 <script src="./PatientInnerMenu.js"></script>
 
-<style src="../../../assets/css/manage/common/patient-inner-menu.css" scoped></style>
+<style src="../../../assets/css/manage/patients/patient-inner-menu.css" scoped></style>

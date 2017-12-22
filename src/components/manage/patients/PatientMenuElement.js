@@ -17,7 +17,9 @@ export default {
     },
     elementActiveLike: {
       type: Array,
-      default: []
+      default: function () {
+        return []
+      }
     },
     wildcard: {
       type: String,
@@ -31,7 +33,7 @@ export default {
   computed: {
     isActive () {
       if (this.elementActive) {
-        if (this.$route.name === this.elementActive) {
+        if (this.$route && this.$route.name === this.elementActive) {
           return true
         }
         return false
@@ -50,7 +52,7 @@ export default {
   methods: {
     checkPattern () {
       for (let pattern of this.elementActiveLike) {
-        if (this.$route.name.indexOf(pattern) > -1) {
+        if (this.$route && this.$route.name.indexOf(pattern) > -1) {
           return true
         }
       }

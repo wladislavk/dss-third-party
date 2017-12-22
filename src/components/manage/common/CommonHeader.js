@@ -10,8 +10,7 @@ import LeftTopMenuComponent from './LeftTopMenu.vue'
 export default {
   data () {
     return {
-      patientId: this.$store.state.patients[symbols.state.patientId],
-      showAllWarnings: this.$store.state.main[symbols.state.showAllWarnings]
+      patientId: this.$store.state.patients[symbols.state.patientId]
     }
   },
   computed: {

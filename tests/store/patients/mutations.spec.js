@@ -47,8 +47,36 @@ describe('Patients module mutations', () => {
         patientContactsNumber: '5',
         patientInsurancesNumber: '6',
         subPatientsNumber: '7',
-        rejectedClaims: ['first', 'second'],
-        incompleteHomeSleepTests: ['third', 'fourth']
+        rejectedClaims: [
+          {
+            insuranceid: '1',
+            adddate: '12/10/2017'
+          },
+          {
+            insuranceid: '2',
+            adddate: '12/11/2017'
+          }
+        ],
+        incompleteHomeSleepTests: [
+          {
+            id: '1',
+            status: '2',
+            patient_id: '3',
+            office_notes: 'notes',
+            rejected_reason: 'reason',
+            adddate: '05/03/2015',
+            rejecteddate: '10/23/2016'
+          },
+          {
+            id: '1',
+            status: '2',
+            patient_id: '3',
+            office_notes: 'notes',
+            rejected_reason: 'reason',
+            adddate: '06/04/2015',
+            rejecteddate: null
+          }
+        ]
       }
       PatientsModule.mutations[symbols.mutations.patientData](this.state, data)
 
@@ -69,9 +97,37 @@ describe('Patients module mutations', () => {
         [symbols.state.totalPatientContacts]: 5,
         [symbols.state.totalPatientInsurances]: 6,
         [symbols.state.totalSubPatients]: 7,
-        [symbols.state.rejectedClaimsForCurrentPatient]: ['first', 'second'],
+        [symbols.state.rejectedClaimsForCurrentPatient]: [
+          {
+            insuranceId: 1,
+            addDate: new Date('12/10/2017')
+          },
+          {
+            insuranceId: 2,
+            addDate: new Date('12/11/2017')
+          }
+        ],
         [symbols.state.patientHomeSleepTestStatus]: '',
-        [symbols.state.incompleteHomeSleepTests]: ['third', 'fourth']
+        [symbols.state.incompleteHomeSleepTests]: [
+          {
+            id: 1,
+            status: 2,
+            patientId: 3,
+            officeNotes: 'notes',
+            rejectedReason: 'reason',
+            addDate: new Date('05/03/2015'),
+            rejectedDate: new Date('10/23/2016')
+          },
+          {
+            id: 1,
+            status: 2,
+            patientId: 3,
+            officeNotes: 'notes',
+            rejectedReason: 'reason',
+            addDate: new Date('06/04/2015'),
+            rejectedDate: null
+          }
+        ]
       }
       expect(this.state).toEqual(expectedState)
     })
@@ -96,8 +152,8 @@ describe('Patients module mutations', () => {
         patientContactsNumber: '5',
         patientInsurancesNumber: '6',
         subPatientsNumber: '7',
-        rejectedClaims: ['first', 'second'],
-        incompleteHomeSleepTests: ['third', 'fourth']
+        rejectedClaims: [],
+        incompleteHomeSleepTests: []
       }
       PatientsModule.mutations[symbols.mutations.patientData](this.state, data)
 
@@ -118,9 +174,9 @@ describe('Patients module mutations', () => {
         [symbols.state.totalPatientContacts]: 5,
         [symbols.state.totalPatientInsurances]: 6,
         [symbols.state.totalSubPatients]: 7,
-        [symbols.state.rejectedClaimsForCurrentPatient]: ['first', 'second'],
+        [symbols.state.rejectedClaimsForCurrentPatient]: [],
         [symbols.state.patientHomeSleepTestStatus]: 'Unsent',
-        [symbols.state.incompleteHomeSleepTests]: ['third', 'fourth']
+        [symbols.state.incompleteHomeSleepTests]: []
       }
       expect(this.state).toEqual(expectedState)
     })

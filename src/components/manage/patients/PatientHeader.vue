@@ -26,4 +26,6 @@
     </div>
 </template>
 
-<script src="./PatientRoot.js"></script>
+<script src="./PatientHeader.js"></script>
+
+<style src="../../../assets/css/manage/patients/patient-header.css" scoped></style>

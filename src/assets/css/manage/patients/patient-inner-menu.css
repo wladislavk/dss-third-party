@@ -1,4 +1,4 @@
-#patient_name_div {
+div.patient_name_div {
   margin: 4px 0 0 30px;
   height: 30px;
   padding-top: 6px;
@@ -15,7 +15,11 @@
   border-top-right-radius: 5px;
 }
 
-#patient_name_div .medicare_name {
+div.long-patient {
+  font-size: 14px;
+}
+
+span.medicare_name {
   min-width: 238px;
   padding: 0 3px;
   vertical-align: top;
@@ -24,8 +28,14 @@
   float: right;
 }
 
-#patient_name_div .name {
+span.name {
   width: 100%;
   text-align: center;
   display: block;
+}
+
+span.patient_name a {
+  font-weight:bold;
+  font-size:18px;
+  color:#FF0000;
 }

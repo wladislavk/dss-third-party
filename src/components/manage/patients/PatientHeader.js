@@ -10,6 +10,11 @@ export default {
       required: true
     }
   },
+  computed: {
+    showAllWarnings () {
+      return this.$store.state.patients[symbols.state.showAllWarnings]
+    }
+  },
   components: {
     patientMenu: PatientMenuComponent,
     patientInnerMenu: PatientInnerMenuComponent,

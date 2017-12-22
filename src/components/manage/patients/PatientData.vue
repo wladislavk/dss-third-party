@@ -2,7 +2,7 @@
     <div>
         <div class="patient-chart">
             You are currently in a patient chart -
-            <a v-bind:href="legacyUrl + 'manage_patient.php'" class="back-to-list">Back to patient list</a>
+            <a v-legacy-href="'manage_patient.php'" class="back-to-list">Back to patient list</a>
         </div>
         <br />
         <patient-warnings v-show="showAllWarnings" v-bind:patient-id="patientId"></patient-warnings>
@@ -11,4 +11,4 @@
 
 <script src="./PatientData.js"></script>
 
-<style src="../../../assets/css/manage/common/patient-data.css" scoped></style>
+<style src="../../../assets/css/manage/patients/patient-data.css" scoped></style>

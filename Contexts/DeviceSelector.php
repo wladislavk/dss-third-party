@@ -57,9 +57,9 @@ class DeviceSelector extends BaseContext
      */
     public function testDeviceList(TableNode $table)
     {
-        $this->wait(self::SHORT_WAIT_TIME);
+        $this->wait(self::MEDIUM_WAIT_TIME);
 
-        $deviceResults = $this->findAllCss('ul#results > li > a');
+        $deviceResults = $this->findAllCss($this->getDeviceNameLinkCss());
         $expectedDeviceResults = $table->getHash();
         foreach ($expectedDeviceResults as $index => $row) {
             $expectedName = "{$row['name']} ({$row['quantity']})";
@@ -72,7 +72,20 @@ class DeviceSelector extends BaseContext
      */
     public function testNotSeeDeviceList()
     {
-        $deviceResults = $this->findAllCss('ul#results > li > a');
+        $deviceResults = $this->findAllCss($this->getDeviceNameLinkCss());
         Assert::assertEmpty($deviceResults);
+    }
+
+    /**
+     * @return string
+     */
+    private function getDeviceNameLinkCss()
+    {
+        $deviceNameLinkCss = 'ul#results > li > a';
+        if (SUT_HOST === 'vue') {
+            $deviceNameLinkCss = 'div#device-results-div > ul > li > a';
+        }
+
+        return $deviceNameLinkCss;
     }
 }

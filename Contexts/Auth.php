@@ -53,24 +53,6 @@ class Auth extends BaseContext
     }
 
     /**
-     * @Then I see main page with welcome text for user :user
-     *
-     * @param string $user
-     */
-    public function testSeeWelcomeText($user)
-    {
-        if (SUT_HOST != 'vue') {
-            $this->reloadStartPage();
-        }
-
-        $this->wait(self::MEDIUM_WAIT_TIME);
-
-        $welcomeDiv = $this->findCss('div.suckertreemenu');
-        Assert::assertNotNull($welcomeDiv);
-        Assert::assertContains('Welcome ' . $user, $welcomeDiv->getText());
-    }
-
-    /**
      * @Then I see auth error message
      */
     public function testSeeAuthError()

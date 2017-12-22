@@ -1,32 +1,46 @@
 default:
     suites:
-        default:
+        dual_app:
             paths:
-                - "%paths.base%/Features"
+                - "%paths.base%/Features/DualApp"
             contexts:
+                - Contexts\Main
+                - Contexts\Dashboard
+                - Contexts\DualApp
+                - Contexts\Support
+        migrated:
+            paths:
+                - "%paths.base%/Features/Migrated"
+            contexts:
+                - Contexts\Main
+                - Contexts\CommonElements
+                - Contexts\Dashboard
                 - Contexts\Auth
+                - Contexts\ScreenerApp
+                - Contexts\Tasks
+        legacy:
+            paths:
+                - "%paths.base%/Features/Legacy"
+            contexts:
+                - Contexts\Main
+                - Contexts\CommonElements
+                - Contexts\Dashboard
                 - Contexts\Claims
                 - Contexts\ClinicalExam
-                - Contexts\CommonElements
                 - Contexts\Contacts
-                - Contexts\Dashboard
                 - Contexts\DeviceSelector
-                - Contexts\DualApp
                 - Contexts\Education
                 - Contexts\Forms
                 - Contexts\Insurance
                 - Contexts\Ledger
                 - Contexts\Letters
-                - Contexts\Main
                 - Contexts\PatientChart
                 - Contexts\PatientScreener
                 - Contexts\PatientSummary
                 - Contexts\Profile
                 - Contexts\ProgressNotes
-                - Contexts\ScreenerApp
                 - Contexts\Staff
                 - Contexts\Support
-                - Contexts\Tasks
                 - Contexts\Tracker
 chrome:
     extensions:

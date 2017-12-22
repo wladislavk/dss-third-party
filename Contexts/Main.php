@@ -213,6 +213,7 @@ class Main extends BaseContext
 
     /**
      * @When I click on logo in top left corner
+     * @throws BehatException
      */
     public function clickLogo()
     {

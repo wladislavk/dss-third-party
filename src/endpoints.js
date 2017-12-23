@@ -1,5 +1,8 @@
 export default {
   auth: '/auth',
+  appointmentSummaries: {
+    update: '/'
+  },
   companies: {
     billingExclusiveCompany: '/companies/billing-exclusive-company',
     companyByUser: '/companies/by-user',

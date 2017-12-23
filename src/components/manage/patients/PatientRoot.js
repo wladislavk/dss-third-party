@@ -14,8 +14,8 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     let toPatientId = 0
-    if (to.params.hasOwnProperty('pid')) {
-      toPatientId = parseInt(to.params.pid)
+    if (to.query.hasOwnProperty('pid')) {
+      toPatientId = parseInt(to.query.pid)
     }
     if (!toPatientId) {
       this.clearPatientData()
@@ -23,8 +23,8 @@ export default {
       return
     }
     let fromPatientId = 0
-    if (from.params.hasOwnProperty('pid')) {
-      fromPatientId = parseInt(from.params.pid)
+    if (from.query.hasOwnProperty('pid')) {
+      fromPatientId = parseInt(from.query.pid)
     }
     if (toPatientId !== fromPatientId) {
       this.updatePatientData(toPatientId)

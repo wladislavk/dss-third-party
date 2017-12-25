@@ -1,12 +1,13 @@
+<!--
 <template>
     <form name="flowsheet_other_reason">
         <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
             <tr>
-                <td class="cat_head">Reason for <?php echo (!empty($segmenttype) ? $segmenttype : ''); ?></td>
+                <td class="cat_head">Reason for {{ segmentType }}</td>
             </tr>
             <tr>
                 <td valign="top" class="frmhead">
-                    <textarea name="reason" id="reason" class="field text reason tbox" style="width:680px;" tabindex="1"><?php echo $segment['description']?></textarea>
+                    <textarea name="reason" id="reason" class="field text reason tbox" style="width:680px;" tabindex="1">{{ description }}</textarea>
                 </td>
             </tr>
             <tr>
@@ -19,3 +20,4 @@
 </template>
 
 <script src="./FlowsheetReason.js"></script>
+-->

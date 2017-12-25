@@ -2,6 +2,7 @@ import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
 import AddTaskComponent from './AddTask.vue'
 import DeviceSelectorComponent from './DeviceSelector.vue'
+// import FlowsheetReasonComponent from './FlowsheetReason.vue'
 import ViewContactComponent from '../contacts/ViewContact.vue'
 import PatientAccessCodeComponent from '../patients/access-code/PatientAccessCode.vue'
 import EditContactComponent from '../contacts/EditContact.vue'
@@ -43,6 +44,7 @@ export default {
   components: {
     addTask: AddTaskComponent,
     deviceSelector: DeviceSelectorComponent,
+    // flowsheetReason: FlowsheetReasonComponent,
     viewContact: ViewContactComponent,
     patientAccessCode: PatientAccessCodeComponent,
     editContact: EditContactComponent,

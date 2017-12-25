@@ -1,7 +1,9 @@
 export default {
   auth: '/auth',
   appointmentSummaries: {
-    update: '/'
+    byPatient: '/appt-summaries/by-patient',
+    destroy: '/appt-summaries',
+    update: '/appt-summaries'
   },
   companies: {
     billingExclusiveCompany: '/companies/billing-exclusive-company',
@@ -27,6 +29,9 @@ export default {
   },
   corporateContacts: {
     destroy: '/corporate-contacts'
+  },
+  devices: {
+    byStatus: '/devices/by-status'
   },
   displayFile: '/display-file',
   documentCategories: {
@@ -63,6 +68,7 @@ export default {
     totals: '/ledgers/totals'
   },
   letters: {
+    byPatientAndInfo: '/letters/by-patient-and-info',
     createWelcomeLetter: '/letters/create-welcome-letter',
     deliveredForContact: '/letters/delivered-for-contact',
     generateDateOfIntro: '/letters/gen-date-of-intro',

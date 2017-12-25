@@ -78,26 +78,6 @@ class CommonElements extends BaseContext
     }
 
     /**
-     * @Then patient chart has menu with following points:
-     *
-     * @param TableNode $table
-     */
-    public function testPatientChartMenu(TableNode $table)
-    {
-        $menuPoints = $this->findAllCss('div#patient_nav > ul > li');
-        $expectedPoints = $table->getHash();
-        foreach ($expectedPoints as $key => $expectedPoint) {
-            $link = $this->findCss('a', $menuPoints[$key]);
-            Assert::assertEquals($expectedPoint['name'], $link->getText());
-            if ($expectedPoint['active'] == 'Yes') {
-                Assert::assertTrue($link->hasClass('nav_active'));
-            } else {
-                Assert::assertFalse($link->hasClass('nav_active'));
-            }
-        }
-    }
-
-    /**
      * @Then I see buttons in patient search section:
      *
      * @param TableNode $table

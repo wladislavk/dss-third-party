@@ -14,8 +14,10 @@ default:
             contexts:
                 - Contexts\Main
                 - Contexts\CommonElements
+                - Contexts\CommonPatientElements
                 - Contexts\Dashboard
                 - Contexts\Auth
+                - Contexts\PatientChart
                 - Contexts\ScreenerApp
                 - Contexts\Tasks
         legacy:

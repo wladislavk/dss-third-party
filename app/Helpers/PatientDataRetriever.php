@@ -35,6 +35,11 @@ class PatientDataRetriever
     /** @var PatientInsuranceRepository */
     private $patientInsuranceRepository;
 
+    /**
+     * PatientDataRetriever constructor.
+     * @param RepositoryFactory $repositoryFactory
+     * @throws \DentalSleepSolutions\Exceptions\GeneralException
+     */
     public function __construct(RepositoryFactory $repositoryFactory)
     {
         $this->healthHistoryRepository = $repositoryFactory->getRepository(HealthHistoryRepository::class);

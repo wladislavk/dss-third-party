@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\LetterRepository;
 use DentalSleepSolutions\Helpers\WelcomeLetterCreator;
 use DentalSleepSolutions\Facades\ApiResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class LettersController extends BaseRestController
@@ -177,6 +178,10 @@ class LettersController extends BaseRestController
      *     @SWG\Response(response="404", ref="#/responses/404_response"),
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @throws \Exception
      */
     public function destroy($id)
     {
@@ -260,6 +265,27 @@ class LettersController extends BaseRestController
 
         $data = $this->repository->getGeneratedDateOfIntroLetter($patientId);
 
+        return ApiResponse::responseOk('', $data);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/letters/by-patient-and-info",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getByPatientAndInfo(Request $request)
+    {
+        $patientId = intval($request->input('patient_id', 0));
+        $infoIds = $request->input('info_ids', '');
+        $infoIdsArray = explode(',', $infoIds);
+        array_walk($infoIdsArray, function ($element) {
+            return intval($element);
+        });
+        $data = $this->repository->getByPatientAndInfo($patientId, $infoIdsArray);
         return ApiResponse::responseOk('', $data);
     }
 }

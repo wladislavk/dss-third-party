@@ -158,6 +158,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
      * Store a newly created resource in storage.
      *
      * @return JsonResponse
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function store()
     {
@@ -202,6 +203,7 @@ abstract class BaseRestController extends Controller implements SingularAndPlura
      *
      * @param int $id
      * @return JsonResponse
+     * @throws \Exception
      */
     public function destroy($id)
     {

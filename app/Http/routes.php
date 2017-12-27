@@ -45,6 +45,9 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('allergens', 'AllergensController', ['except' => ['create', 'edit']]);
 
+    Route::get('appt-summaries/by-patient/{id}', 'AppointmentSummariesController@getByPatient');
+    Route::resource('appt-summaries', 'AppointmentSummariesController', ['except' => ['create', 'edit']]);
+
     Route::resource('appt-types', 'AppointmentTypesController', ['except' => ['create', 'edit']]);
 
     Route::resource('calendars', 'CalendarsController', ['except' => ['create', 'edit']]);
@@ -92,6 +95,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('dental-clinical-exams', 'DentalClinicalExamsController', ['except' => ['create', 'edit']]);
 
+    Route::get('devices/by-status', 'DevicesController@getByStatus');
     Route::resource('devices', 'DevicesController', ['except' => ['create', 'edit']]);
 
     Route::resource('diagnostics', 'DiagnosticsController', ['except' => ['create', 'edit']]);
@@ -194,6 +198,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::post('letters/not-delivered-for-contact', 'LettersController@getContactPendingLetters');
     Route::post('letters/create-welcome-letter', 'LettersController@createWelcomeLetter');
     Route::post('letters/gen-date-of-intro', 'LettersController@getGeneratedDateOfIntroLetter');
+    Route::get('letters/by-patient-and-info', 'LettersController@getByPatientAndInfo');
     Route::resource('letters', 'LettersController', ['except' => ['create', 'edit']]);
 
     Route::resource('letter-templates', 'LetterTemplatesController', ['except' => ['create', 'edit']]);

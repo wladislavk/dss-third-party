@@ -2,8 +2,14 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
+use DentalSleepSolutions\Facades\ApiResponse;
+
 class DevicesController extends BaseRestController
 {
+    /** @var DeviceRepository */
+    protected $repository;
+
     /**
      * @SWG\Get(
      *     path="/devices",
@@ -117,5 +123,19 @@ class DevicesController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/devices/by-status",
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getByStatus()
+    {
+        $data = $this->repository->getByStatus();
+        return ApiResponse::responseOk('', $data);
     }
 }

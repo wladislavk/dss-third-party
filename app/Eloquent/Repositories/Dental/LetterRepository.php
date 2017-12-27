@@ -260,4 +260,22 @@ class LetterRepository extends AbstractRepository
             ])
         ;
     }
+
+    /**
+     * @param int $patientId
+     * @param int[] $infoIds
+     * @return array|Collection|static[]
+     */
+    public function getByPatientAndInfo($patientId, array $infoIds)
+    {
+        $result = $this->model
+            ->select('topatient', 'md_list', 'md_referral_list', 'status')
+            ->where('patientid', $patientId)
+            ->where('deleted', 0)
+            ->whereIn('info_id', $infoIds)
+            ->orderBy('stepid')
+            ->get()
+        ;
+        return $result;
+    }
 }

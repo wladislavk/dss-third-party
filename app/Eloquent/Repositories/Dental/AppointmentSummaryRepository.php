@@ -11,4 +11,17 @@ class AppointmentSummaryRepository extends AbstractRepository
     {
         return AppointmentSummary::class;
     }
+
+    /**
+     * @param int $patientId
+     * @return AppointmentSummary[]|\Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function getByPatient($patientId)
+    {
+        return $this->model->select('*')
+            ->where('patientid', $patientId)
+            ->orderBy('date_completed', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
+    }
 }

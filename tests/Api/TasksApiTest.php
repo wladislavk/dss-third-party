@@ -71,6 +71,17 @@ class TasksApiTest extends ApiTestCase
         $this->assertEquals(TaskRetriever::OVERDUE, $this->getResponseData()[0]['type']);
     }
 
+    public function testIndexForPatientWithoutTasks()
+    {
+        /** @var User $user */
+        $user = User::find('u_1');
+        $this->be($user);
+        $patientId = 170;
+        $this->get(self::ROUTE_PREFIX . '/tasks-for-patient/' . $patientId);
+        $this->assertResponseOk();
+        $this->assertEquals(0, count($this->getResponseData()));
+    }
+
     public function testShow()
     {
         /** @var BaseUser $userRecord */

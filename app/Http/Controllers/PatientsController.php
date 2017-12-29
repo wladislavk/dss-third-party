@@ -459,6 +459,7 @@ class PatientsController extends BaseRestController
      *
      * @param int $id
      * @return JsonResponse
+     * @throws \Exception
      */
     public function destroy($id)
     {
@@ -664,6 +665,7 @@ class PatientsController extends BaseRestController
      * @param NotificationRepository $notificationRepository
      * @param Request $request
      * @return JsonResponse
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function getDataForFillingPatientForm(
         FullNameComposer $fullNameComposer,
@@ -694,7 +696,7 @@ class PatientsController extends BaseRestController
             'profile_photo' => $profileImageRepository->getProfilePhoto($patientId),
             'intro_letter' => $letterRepository->getGeneratedDateOfIntroLetter($patientId),
             'insurance_card_image' => $profileImageRepository->getInsuranceCardImage($patientId),
-            'uncompleted_home_sleep_test' => $homeSleepTestRepository->getUncompleted($patientId),
+            'uncompleted_home_sleep_test' => $homeSleepTestRepository->getIncomplete($patientId),
             'patient_notification' => $notificationRepository->getWithFilter(null, $patientNotificationData),
             'patient' => ApiResponse::transform($foundPatient),
             'formed_full_names' => $formedFullNames,

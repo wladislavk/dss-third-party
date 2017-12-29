@@ -29,6 +29,7 @@ class ApiResponseHelper
      * @param array|null $data
      * @param int $code
      * @return JsonResponse
+     * @throws GeneralException
      */
     public function responseOk(
         $message = '',
@@ -45,6 +46,7 @@ class ApiResponseHelper
      * @param int $code
      * @param array|null $data
      * @return JsonResponse
+     * @throws GeneralException
      */
     public function responseError(
         $message = '',
@@ -95,6 +97,7 @@ class ApiResponseHelper
      * @param mixed $data
      * @param int $code
      * @return JsonResponse
+     * @throws GeneralException
      */
     private function createResponse(
         $message,

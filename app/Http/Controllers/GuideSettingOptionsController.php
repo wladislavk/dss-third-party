@@ -134,11 +134,7 @@ class GuideSettingOptionsController extends BaseRestController
      */
     public function getOptionsForSettingIds(GuideSettingOptionsRetriever $guideSettingOptionsRetriever)
     {
-        try {
-            $guideSettingOptions = $guideSettingOptionsRetriever->get();
-        } catch (GeneralException $e) {
-            return ApiResponse::responseError($e->getMessage(), 422);
-        }
+        $guideSettingOptions = $guideSettingOptionsRetriever->get();
 
         return ApiResponse::responseOk('', $guideSettingOptions);
     }

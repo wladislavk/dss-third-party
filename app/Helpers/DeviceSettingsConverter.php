@@ -10,8 +10,6 @@ class DeviceSettingsConverter
     const SETTINGS_DELIMETER = ',';
     const SETTING_VALUES_NUMBER_WITHOUT_IMPESSION = 2;
     const SETTING_VALUES_NUMBER_WITH_IMPESSION = 3;
-    const SETTING_VALUES_ARRAY_WITHOUT_IMPESSION = ['device_id', 'value'];
-    const SETTING_VALUES_ARRAY_WITH_IMPESSION = ['device_id', 'impression', 'value'];
 
     /**
      * @param  string $settings
@@ -30,7 +28,7 @@ class DeviceSettingsConverter
             $deviceSettings = $this->getDeviceSettings($settingValues);
 
             if ($deviceSettings) {
-                $convertedSettings[$deviceSettings->id] = $deviceSettings;
+                $convertedSettings[] = $deviceSettings;
             }
         }
 
@@ -47,26 +45,31 @@ class DeviceSettingsConverter
         $settingValuesNumber = count($settingValues);
 
         if ($settingValuesNumber === self::SETTING_VALUES_NUMBER_WITHOUT_IMPESSION) {
-            $settingValues = array_combine(
-                self::SETTING_VALUES_ARRAY_WITHOUT_IMPESSION,
-                $settingValues
-            );
+            $deviceSettings->id = 0;
+            if (!empty($settingValues[0])) {
+                $deviceSettings->id = $settingValues[0];
+            }
 
-            $deviceSettings->id = $settingValues['device_id'];
-            $deviceSettings->checkedRangeValue = $settingValues['value'];
+            if (!empty($settingValues[1])) {
+                $deviceSettings->checkedRangeValue = $settingValues[1];
+            }
 
             return $deviceSettings;
         }
 
         if ($settingValuesNumber === self::SETTING_VALUES_NUMBER_WITH_IMPESSION) {
-            $settingValues = array_combine(
-                self::SETTING_VALUES_ARRAY_WITH_IMPESSION,
-                $settingValues
-            );
+            $deviceSettings->id = 0;
+            if (!empty($settingValues[0])) {
+                $deviceSettings->id = $settingValues[0];
+            }
 
-            $deviceSettings->id = $settingValues['device_id'];
-            $deviceSettings->impression = $settingValues['impression'];
-            $deviceSettings->checkedRangeValue = $settingValues['value'];
+            if (!empty($settingValues[1])) {
+                $deviceSettings->impression = $settingValues[1];
+            }
+
+            if (!empty($settingValues[2])) {
+                $deviceSettings->checkedRangeValue = $settingValues[2];
+            }
 
             return $deviceSettings;
         }

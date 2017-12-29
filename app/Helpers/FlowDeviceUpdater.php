@@ -5,6 +5,8 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
+use DentalSleepSolutions\Structs\TmjClinicalExamStoringData;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class FlowDeviceUpdater
 {
@@ -30,12 +32,13 @@ class FlowDeviceUpdater
      * @param  User $user
      * @param  int $patientId
      * @param  int $deviceId
+     * @throws ValidatorException
      * @return void
      */
     public function update($user, $patientId, $deviceId)
     {
         $dataForStoring = ['device_id' => $deviceId];
-        $this->appointmentSummaryRepository->updateById($patientId, $dataForStoring);
+        $this->appointmentSummaryRepository->update($dataForStoring, $patientId);
 
         $lastAppointmentDevice = $this->appointmentSummaryRepository->getLastAppointmentDevice($patientId);
 
@@ -48,15 +51,16 @@ class FlowDeviceUpdater
         $tmjClinicalExamItems = $this->tmjClinicalExamRepository->getWithFilter($fields, $where);
 
         if (count($tmjClinicalExamItems) === 0) {
-            $dataForStoring = [
-                'dentaldevice' => $deviceId,
-                'patientid' => $patientId,
-                'userid' => $user->userid,
-                'docid' => $user->docid,
-                'ip_address' => $user->ip_address
-            ];
+            $tmjClinicalExamStoringData = new TmjClinicalExamStoringData();
+            $tmjClinicalExamStoringData->dentalDevice = $deviceId;
+            $tmjClinicalExamStoringData->patientId = $patientId;
+            $tmjClinicalExamStoringData->userId = $user->userid;
+            $tmjClinicalExamStoringData->docId = $user->docid;
+            $tmjClinicalExamStoringData->ipAddress = $user->ip_address;
 
-            $this->tmjClinicalExamRepository->create($dataForStoring);
+            $this->tmjClinicalExamRepository->create(
+                $tmjClinicalExamStoringData->toArray()
+            );
 
             return;
         }

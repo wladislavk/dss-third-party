@@ -4,6 +4,7 @@ namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
+use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
 use DentalSleepSolutions\Eloquent\Models\User;
@@ -23,8 +24,33 @@ class FlowDeviceUpdaterTest extends UnitTestCase
      */
     private $flowDeviceUpdater;
 
+    /**
+     * @var AppointmentSummary|null
+     */
+    private $appointmentSummary;
+
+    /**
+     * @var array
+     */
+    private $tmjClinicalExams;
+
+    /**
+     * @var User
+     */
+    private $user;
+
     public function setUp()
     {
+        $this->appointmentSummary = new AppointmentSummary();
+        $this->appointmentSummary->id = self::PATIENT_ID;
+
+        $this->tmjClinicalExams = null;
+
+        $this->user = new User();
+        $this->user->userid = self::USER_ID;
+        $this->user->docid = self::DOC_ID;
+        $this->user->ip_address = self::IP_ADDRESS;
+
         $appointmentSummaryRepository = $this->mockAppointmentSummaryRepository();
         $tmjClinicalExamRepository = $this->mockTmjClinicalExamRepository();
 
@@ -34,24 +60,58 @@ class FlowDeviceUpdaterTest extends UnitTestCase
         );
     }
 
-    public function testUpdate()
+    public function testUpdateWithoutLastAppointmentDevice()
     {
-        $user = new User();
-        $user->userid = self::USER_ID;
-        $user->docid = self::DOC_ID;
-        $user->ip_address = self::IP_ADDRESS;
-
-        $patientId = self::PATIENT_ID;
-        $deviceId = self::DEVICE_ID;
+        $this->appointmentSummary = null;
 
         $result = $this->flowDeviceUpdater->update(
-            $user,
-            $patientId,
-            $deviceId
+            $this->user,
+            self::PATIENT_ID,
+            self::DEVICE_ID
         );
 
-        $expectedResult = null;
-        $this->assertEquals($expectedResult, $result);
+        $this->assertEquals(null, $result);
+    }
+
+    public function testUpdateWithWrongLastAppointmentDeviceId()
+    {
+        $this->appointmentSummary->id = 0;
+
+        $result = $this->flowDeviceUpdater->update(
+            $this->user,
+            self::PATIENT_ID,
+            self::DEVICE_ID
+        );
+
+        $this->assertEquals(null, $result);
+    }
+
+    public function testUpdateWithLastAppointmentDevice()
+    {
+        $this->tmjClinicalExams = [];
+
+        $result = $this->flowDeviceUpdater->update(
+            $this->user,
+            self::PATIENT_ID,
+            self::DEVICE_ID
+        );
+
+        $this->assertEquals(null, $result);
+    }
+
+    public function testUpdateWithTmjClinicalExamUpdating()
+    {
+        $this->tmjClinicalExams = [
+            new TmjClinicalExam()
+        ];
+
+        $result = $this->flowDeviceUpdater->update(
+            $this->user,
+            self::PATIENT_ID,
+            self::DEVICE_ID
+        );
+
+        $this->assertEquals(null, $result);
     }
 
     private function mockAppointmentSummaryRepository()
@@ -60,9 +120,9 @@ class FlowDeviceUpdaterTest extends UnitTestCase
         $appointmentSummaryRepository = \Mockery::mock(AppointmentSummaryRepository::class);
 
         $dataForStoringInUpdateById = ['device_id' => self::DEVICE_ID];
-        $appointmentSummaryRepository->shouldReceive('updateById')
+        $appointmentSummaryRepository->shouldReceive('update')
             ->once()
-            ->with(self::PATIENT_ID, $dataForStoringInUpdateById)
+            ->with($dataForStoringInUpdateById, self::PATIENT_ID)
             ->andReturn(true)
         ;
 
@@ -70,10 +130,7 @@ class FlowDeviceUpdaterTest extends UnitTestCase
             ->once()
             ->with(self::PATIENT_ID)
             ->andReturnUsing(function () {
-                $appointmentSummary = new AppointmentSummary();
-                $appointmentSummary->id = self::PATIENT_ID;
-
-                return $appointmentSummary;
+                return $this->appointmentSummary;
             })
         ;
 
@@ -85,9 +142,17 @@ class FlowDeviceUpdaterTest extends UnitTestCase
         /** @var TmjClinicalExamRepository|MockInterface $tmjClinicalExamRepository */
         $tmjClinicalExamRepository = \Mockery::mock(TmjClinicalExamRepository::class);
 
-        $tmjClinicalExamRepository->shouldReceive('getWithFilter')
+        $tmjClinicalExamRepository
+            ->shouldReceive('getWithFilter')
+            ->never()
+        ;
+
+        $tmjClinicalExamRepository
+            ->shouldReceive('getWithFilter')
             ->once()
-            ->andReturn([])
+            ->andReturnUsing(function () {
+                return $this->tmjClinicalExams;
+            })
         ;
 
         $expectedDataForStoring = [
@@ -100,6 +165,14 @@ class FlowDeviceUpdaterTest extends UnitTestCase
         $tmjClinicalExamRepository->shouldReceive('create')
             ->once()
             ->with($expectedDataForStoring)
+            ->andReturn(true)
+        ;
+
+        $data = ['dentaldevice' => self::DEVICE_ID];
+        $where = ['patientid' => self::PATIENT_ID];
+        $tmjClinicalExamRepository->shouldReceive('updateWhere')
+            ->once()
+            ->with($data, $where)
             ->andReturn(true)
         ;
 

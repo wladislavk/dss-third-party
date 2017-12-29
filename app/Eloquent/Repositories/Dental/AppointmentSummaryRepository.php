@@ -4,6 +4,7 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -12,19 +13,6 @@ class AppointmentSummaryRepository extends AbstractRepository
     public function model()
     {
         return AppointmentSummary::class;
-    }
-
-    /**
-     * @param int $id
-     * @param mixed[] $data
-     * @return bool|int
-     */
-    public function updateById($id, array $data)
-    {
-        return $this->model
-            ->where('id', $id)
-            ->update($data)
-        ;
     }
 
     /**

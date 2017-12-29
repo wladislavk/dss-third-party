@@ -147,12 +147,7 @@ class GuideDevicesController extends BaseRestController
         Request $request
     ) {
         $settings = $request->input('settings');
-
-        try {
-            $devicesArray = $deviceGuideResultsRetriever->get($settings);
-        } catch (GeneralException $e) {
-            return ApiResponse::responseError($e->getMessage(), 422);
-        }
+        $devicesArray = $deviceGuideResultsRetriever->get($settings);
 
         return ApiResponse::responseOk('', $devicesArray);
     }

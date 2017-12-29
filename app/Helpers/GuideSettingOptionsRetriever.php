@@ -3,6 +3,7 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingOptionRepository;
+use DentalSleepSolutions\Structs\GuideSettingOption;
 
 class GuideSettingOptionsRetriever
 {
@@ -17,7 +18,7 @@ class GuideSettingOptionsRetriever
     }
 
     /**
-     * @return array|\Illuminate\Database\Eloquent\Collection[]
+     * @return array|GuideSettingOption[]
      */
     public function get()
     {
@@ -27,10 +28,18 @@ class GuideSettingOptionsRetriever
             return [];
         }
 
+        $options = [];
         foreach ($guideSettingOptions as $setting) {
-            $setting->labels = explode(',', $setting->labels);
+            $guideSettingOption = new GuideSettingOption();
+            $guideSettingOption->id = $setting->id;
+            $guideSettingOption->labels = explode(',', $setting->labels);
+            $guideSettingOption->name = $setting->name;
+            $guideSettingOption->settingType = $setting->setting_type;
+            $guideSettingOption->number = $setting->number;
+
+            $options[] = $guideSettingOption;
         }
 
-        return $guideSettingOptions;
+        return $options;
     }
 }

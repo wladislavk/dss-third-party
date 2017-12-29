@@ -5,6 +5,7 @@ namespace DentalSleepSolutions\Http\Controllers;
 use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
 use DentalSleepSolutions\Facades\ApiResponse;
 use DentalSleepSolutions\Exceptions\GeneralException;
+use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -237,7 +238,7 @@ class TmjClinicalExamsController extends BaseRestController
                 $patientId,
                 $deviceId
             );
-        } catch (GeneralException $e) {
+        } catch (ValidatorException $e) {
             return ApiResponse::responseError($e->getMessage(), 422);
         }
 

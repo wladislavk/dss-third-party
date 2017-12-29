@@ -2,6 +2,7 @@ import Vue from 'vue'
 import store from '../../../../src/store'
 import PatientInnerMenuComponent from '../../../../src/components/manage/patients/PatientInnerMenu.vue'
 import symbols from '../../../../src/symbols'
+import UnescapeFilter from '../../../../src/filters/Unescape'
 
 describe('PatientInnerMenu component', () => {
   beforeEach(function () {
@@ -13,6 +14,7 @@ describe('PatientInnerMenu component', () => {
     store.state.patients[symbols.state.premedCheck] = 0
     store.state.patients[symbols.state.allergen] = false
 
+    Vue.filter('unescape', UnescapeFilter)
     const Component = Vue.extend(PatientInnerMenuComponent)
     this.mount = function (propsData) {
       return new Component({
@@ -56,7 +58,7 @@ describe('PatientInnerMenu component', () => {
 
   it('shows menu with notes', function () {
     store.state.patients[symbols.state.displayAlert] = true
-    store.state.patients[symbols.state.headerAlertText] = 'foo'
+    store.state.patients[symbols.state.headerAlertText] = 'foo&bar'
 
     const vm = this.mount({ patientId: 1 })
     const patientNameSpan = vm.$el.querySelector('span.patient_name')
@@ -64,7 +66,7 @@ describe('PatientInnerMenu component', () => {
     expect(links.length).toBe(1)
     const notesLink = links[0]
     expect(notesLink.textContent).toBe('Notes')
-    expect(notesLink.getAttribute('title')).toBe('Notes: foo')
+    expect(notesLink.getAttribute('title')).toBe('Notes: foo&bar')
   })
 
   it('shows menu with premedcheck', function () {

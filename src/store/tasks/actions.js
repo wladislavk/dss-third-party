@@ -16,7 +16,7 @@ export default {
 
   [symbols.actions.retrieveTasksForPatient] ({ rootState, commit, dispatch }) {
     http.token = rootState.main[symbols.state.mainToken]
-    http.get(endpoints.tasks.indexForPatient + '/' + rootState.main[symbols.state.patientId]).then((response) => {
+    http.get(endpoints.tasks.indexForPatient + '/' + rootState.patients[symbols.state.patientId]).then((response) => {
       const data = response.data.data
       commit(symbols.mutations.setTasksForPatient, data)
     }).catch((response) => {

@@ -12,7 +12,7 @@
                 <a
                     v-if="displayNotes"
                     href="#"
-                    v-bind:title="'Notes: ' + alertText"
+                    v-bind:title="'Notes: ' + alertText | unescape"
                     v-on:click.prevent=""
                 >Notes</a>
                 <a

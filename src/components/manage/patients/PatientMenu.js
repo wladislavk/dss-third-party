@@ -13,6 +13,9 @@ export default {
         if (!menuElement.hasOwnProperty('activeLike')) {
           newElement.activeLike = []
         }
+        if (!menuElement.hasOwnProperty('legacy')) {
+          newElement.legacy = true
+        }
         elements.push(newElement)
       }
       return elements

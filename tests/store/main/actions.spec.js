@@ -460,11 +460,13 @@ describe('Main module actions', () => {
             type: symbols.mutations.patientSearchList,
             payload: [
               {
+                id: 0,
                 name: 'No Matches',
                 patientType: 'no',
                 link: ''
               },
               {
+                id: 0,
                 name: 'Add patient with this name\u2026',
                 patientType: 'new',
                 link: ProcessWrapper.getLegacyRoot() + 'add_patient.php?search=John'
@@ -491,12 +493,12 @@ describe('Main module actions', () => {
         data: {
           data: [
             {
-              patientId: 1,
+              patientid: 1,
               name: 'John Doe',
               patientInfo: 0
             },
             {
-              patientId: 2,
+              patientid: 2,
               name: 'John Little',
               patientInfo: 1
             }
@@ -518,11 +520,13 @@ describe('Main module actions', () => {
             type: symbols.mutations.patientSearchList,
             payload: [
               {
+                id: 1,
                 name: 'John Doe',
                 patientType: 'json',
                 link: ProcessWrapper.getLegacyRoot() + 'manage/add_patient.php?pid=1&ed=1'
               },
               {
+                id: 2,
                 name: 'John Little',
                 patientType: 'json',
                 link: ProcessWrapper.getLegacyRoot() + 'manage/manage_flowsheet3.php?pid=2'

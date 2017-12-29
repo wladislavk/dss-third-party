@@ -1,5 +1,5 @@
 <template>
-    <div class="warning-div">
+    <div class="warning-div" id="patient_warnings">
         <a v-if="showWarningAboutPatientChanges" v-legacy-href="'patient_changes.php?pid=' + patientId">
             <span>{{ profileUpdateText }}</span>
         </a>
@@ -9,7 +9,7 @@
         <a v-if="showWarningAboutBouncedEmails" v-legacy-href="'add_patient.php?ed=' + patientId + '&pid=' + patientId + '&addtopat=1'">
             <span>Warning! Email sent to this patient has bounced. Please click to check patients email.</span>
         </a>
-        <span v-if="rejectedClaimsForCurrentPatient.length">
+        <span class="warning" v-if="rejectedClaimsForCurrentPatient.length">
             Warning! Patient has the following rejected claims:
             <br />
             <span v-for="claim in rejectedClaimsForCurrentPatient">
@@ -17,7 +17,7 @@
                 <br />
             </span>
         </span>
-        <span v-if="incompleteHomeSleepTests.length">
+        <span class="warning" v-if="incompleteHomeSleepTests.length">
             Patient has the following Home Sleep Tests:
             <br />
             <patient-incomplete-hst

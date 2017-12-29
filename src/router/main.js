@@ -13,6 +13,7 @@ import Sleeplabs from '../components/manage/sleeplabs/sleeplabs.vue'
 import CorporateContacts from '../components/manage/corporate-contacts/corporateContacts.vue'
 import LedgerReportFull from '../components/manage/ledgers/report-full/ledgerReportFull.vue'
 import SoftwareTutorialsComponent from '../components/manage/SoftwareTutorials.vue'
+import PatientTrackerComponent from '../components/manage/chart/PatientTracker.vue'
 
 export default [
   {
@@ -36,6 +37,12 @@ export default [
         name: 'patients',
         component: PatientRootComponent,
         children: [
+          {
+            path: 'tracker',
+            name: 'patient-tracker',
+            component: PatientTrackerComponent,
+            meta: STANDARD_META
+          },
           {
             path: 'manage',
             name: 'manage-patients',

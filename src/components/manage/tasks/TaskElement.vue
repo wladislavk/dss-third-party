@@ -19,7 +19,7 @@
             <span class="task_due_date" v-if="dueDate && task.due_date">{{ task.due_date | moment("MM DD") }} - </span>
             {{ task.task }}
             <span class="task_name" v-if="task.firstname && task.lastname">
-                <span v-if="!isPatient">(</span><a class="task_name_link" v-legacy-href="'manage/add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</a><span v-if="!isPatient">)</span>
+                (<a class="task_name_link" v-legacy-href="'manage/add_patient.php?ed=' + task.patientid + '&addtopat=1&pid=' + task.patientid">{{ task.firstname }} {{ task.lastname }}</a>)
             </span>
         </div>
     </li>

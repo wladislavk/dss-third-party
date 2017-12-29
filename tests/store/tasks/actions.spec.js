@@ -92,11 +92,7 @@ describe('Tasks module actions', () => {
 
   describe('retrieveTasksForPatient action', () => {
     beforeEach(function () {
-      this.testCase.setRootState({
-        main: {
-          [symbols.state.patientId]: 2
-        }
-      })
+      this.testCase.mocks.rootState.patients[symbols.state.patientId] = 2
     })
 
     it('should retrieve patient tasks successfully', function (done) {

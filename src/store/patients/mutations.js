@@ -14,7 +14,7 @@ export default {
     }
     const premedCheck = parseInt(data.preMedCheck)
     const allergen = !!parseInt(data.hasAllergen)
-    let title = state[symbols.state.headerTitle]
+    let title = ''
     if (premedCheck) {
       title += 'Pre-medication: ' + data.preMed + '\n'
     }

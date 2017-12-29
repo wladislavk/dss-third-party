@@ -1,6 +1,7 @@
 import PatientMenuComponent from './PatientMenu.vue'
 import PatientInnerMenuComponent from './PatientInnerMenu.vue'
 import PatientTaskMenuComponent from '../tasks/PatientTaskMenu.vue'
+import WelcomeTextComponent from '../common/WelcomeText.vue'
 import symbols from '../../../symbols'
 
 export default {
@@ -18,7 +19,8 @@ export default {
   components: {
     patientMenu: PatientMenuComponent,
     patientInnerMenu: PatientInnerMenuComponent,
-    patientTaskMenu: PatientTaskMenuComponent
+    patientTaskMenu: PatientTaskMenuComponent,
+    welcomeText: WelcomeTextComponent
   },
   methods: {
     showWarnings () {

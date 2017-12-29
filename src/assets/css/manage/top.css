@@ -10,46 +10,6 @@
   height: auto;
 }
 
-#patient_nav {
-  background: #fed68d;
-  height: 30px;
-  width: 100%;
-  margin-top: 13px;
-}
-
-#patient_nav ul {
-  list-style: none;
-  margin: 0;
-  padding-left: 15px;
-  height: 30px;
-}
-
-#patient_nav li {
-  float: left;
-  display: block;
-  margin: 0;
-  height: 30px;
-  padding: 0;
-}
-
-#patient_nav li.last a{
-  border-right: none;
-  }
-
-#patient_nav li a {
-  color: #000;
-  font-size: 14px;
-  padding: 7px;
-  border-right: solid 1px #000;
-  height: 30px;
-  line-height: 30px;
-}
-
-#patient_nav li a:hover, #patient_nav li a.nav_active {
-  background: #fff;
-  text-decoration: none;
-}
-
 .suckertreemenu2 .menu_item {
   font-weight: bold;
 }

@@ -1,5 +1,4 @@
 import symbols from '../../../symbols'
-import LocationWrapper from '../../../wrappers/LocationWrapper'
 
 export default {
   data () {
@@ -94,7 +93,12 @@ export default {
         return
       }
       if (listElement.link) {
-        LocationWrapper.goToLegacyPage(listElement.link)
+        this.inputValue = ''
+        this.$store.commit(symbols.mutations.patientId, listElement.id)
+        const query = {
+          pid: listElement.id
+        }
+        this.$router.push({ name: 'patient-tracker', query: query })
         return
       }
       this.inputValue = listElement.name

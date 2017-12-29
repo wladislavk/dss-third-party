@@ -159,6 +159,7 @@ export default {
       const data = response.data.data
       if (data.length === 0) {
         const noMatchesElement = {
+          id: 0,
           name: 'No Matches',
           patientType: 'no',
           link: ''
@@ -167,6 +168,7 @@ export default {
         // this.templateListNew().fadeIn(noMatchesElement)
 
         const newElement = {
+          id: 0,
           name: 'Add patient with this name\u2026',
           patientType: 'new',
           link: legacyUrl + 'add_patient.php?search=' + searchTerm
@@ -185,11 +187,12 @@ export default {
       const newList = []
       for (let element of data) {
         const fullName = NameComposer.composeName(element)
-        let link = 'manage/add_patient.php?pid=' + element.patientId + '&ed=' + element.patientId
+        let link = 'manage/add_patient.php?pid=' + element.patientid + '&ed=' + element.patientid
         if (element.patientInfo === 1) {
-          link = 'manage/manage_flowsheet3.php?pid=' + element.patientId
+          link = 'manage/manage_flowsheet3.php?pid=' + element.patientid
         }
         const patientElement = {
+          id: element.patientid,
           name: fullName,
           patientType: 'json',
           link: legacyUrl + link

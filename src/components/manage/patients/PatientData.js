@@ -8,9 +8,9 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      showAllWarnings: this.$store.state.patients[symbols.state.showAllWarnings]
+  computed: {
+    showAllWarnings () {
+      return this.$store.state.patients[symbols.state.showAllWarnings]
     }
   },
   components: {

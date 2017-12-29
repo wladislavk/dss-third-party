@@ -11,12 +11,14 @@ export default {
   },
   data () {
     return {
-      incompleteHomeSleepTests: this.$store.state.patients[symbols.state.incompleteHomeSleepTests],
       profileUpdateText: this.getUpdateText('profile'),
       questionnaireUpdateText: this.getUpdateText('questionnaire')
     }
   },
   computed: {
+    incompleteHomeSleepTests () {
+      return this.$store.state.patients[symbols.state.incompleteHomeSleepTests]
+    },
     showWarningAboutPatientChanges () {
       return this.$store.getters[symbols.getters.showWarningAboutPatientChanges]
     },

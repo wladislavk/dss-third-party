@@ -1,5 +1,5 @@
 <template>
-    <div id="patient_nav">
+    <div id="patient_nav" class="patient_nav">
         <ul>
             <patient-menu-element
                 v-for="(menuElement, loopIndex) in menuElements"
@@ -7,6 +7,7 @@
                 v-bind:element-name="menuElement.name"
                 v-bind:element-active="menuElement.active"
                 v-bind:element-active-like="menuElement.activeLike"
+                v-bind:element-legacy="menuElement.legacy"
                 v-bind:last-element="(loopIndex === menuElements.length - 1)"
                 v-bind:key="loopIndex"
             ></patient-menu-element>
@@ -15,3 +16,5 @@
 </template>
 
 <script src="./PatientMenu.js"></script>
+
+<style src="../../../assets/css/manage/patients/patient-menu.css" scoped></style>

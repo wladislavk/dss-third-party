@@ -86,7 +86,7 @@ describe('Patients module mutations', () => {
         [symbols.state.premedCheck]: 0,
         [symbols.state.patientName]: 'John Doe',
         [symbols.state.displayAlert]: true,
-        [symbols.state.headerTitle]: 'title',
+        [symbols.state.headerTitle]: '',
         [symbols.state.headerAlertText]: 'alert',
         [symbols.state.questionnaireStatuses]: {
           symptoms: 2,
@@ -163,7 +163,7 @@ describe('Patients module mutations', () => {
         [symbols.state.premedCheck]: 1,
         [symbols.state.patientName]: 'John Doe',
         [symbols.state.displayAlert]: true,
-        [symbols.state.headerTitle]: 'titlePre-medication: medication\nAllergens: other\n',
+        [symbols.state.headerTitle]: 'Pre-medication: medication\nAllergens: other\n',
         [symbols.state.headerAlertText]: 'alert',
         [symbols.state.questionnaireStatuses]: {
           symptoms: 2,

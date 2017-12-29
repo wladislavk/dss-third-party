@@ -1,3 +1,7 @@
+a:link, a:visited {
+  text-decoration: none;
+}
+
 div.patient_name_div {
   margin: 4px 0 0 30px;
   height: 30px;

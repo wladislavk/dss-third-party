@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import store from '../../../../src/store'
 import symbols from '../../../../src/symbols'
 import PatientHeaderComponent from '../../../../src/components/manage/patients/PatientHeader.vue'
@@ -8,9 +9,19 @@ describe('PatientHeader component', () => {
     store.state.patients[symbols.state.showAllWarnings] = true
 
     const Component = Vue.extend(PatientHeaderComponent)
+    const Router = new VueRouter({
+      mode: 'history',
+      routes: [
+        {
+          name: 'patient-tracker',
+          path: '/tracker'
+        }
+      ]
+    })
     this.mount = function (propsData) {
       return new Component({
         store: store,
+        router: Router,
         propsData: propsData
       }).$mount()
     }

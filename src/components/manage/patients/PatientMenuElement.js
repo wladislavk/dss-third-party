@@ -3,6 +3,10 @@ import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   props: {
+    elementLegacy: {
+      type: Boolean,
+      default: true
+    },
     elementLink: {
       type: String,
       required: true
@@ -52,7 +56,7 @@ export default {
   methods: {
     checkPattern () {
       for (let pattern of this.elementActiveLike) {
-        if (this.$route && this.$route.name.indexOf(pattern) > -1) {
+        if (this.$route && this.$route.name && this.$route.name.indexOf(pattern) > -1) {
           return true
         }
       }

@@ -33,8 +33,5 @@ export default {
   },
   components: {
     taskData: TaskDataComponent
-  },
-  created () {
-    this.$store.dispatch(symbols.actions.retrieveTasksForPatient, this.patientId)
   }
 }

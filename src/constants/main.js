@@ -143,9 +143,10 @@ export const HST_STATUSES = {
 
 export const PATIENT_MENU = [
   {
-    link: 'manage/manage_flowsheet3.php?pid=%d&addtopat=1',
+    legacy: false,
+    link: 'patient-tracker',
     name: 'Tracker',
-    active: 'manage/manage_flowsheet3.php'
+    active: 'patient-tracker'
   },
   {
     link: 'manage/dss_summ.php?pid=%d&addtopat=1',

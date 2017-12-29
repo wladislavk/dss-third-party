@@ -4,7 +4,7 @@ import symbols from '../../symbols'
 
 export default {
   [symbols.actions.patientData] ({rootState, commit, dispatch}, patientId) {
-    http.token = rootState[symbols.state.mainToken]
+    http.token = rootState.main[symbols.state.mainToken]
     http.get(endpoints.patients.patientData + '/' + patientId).then((response) => {
       commit(symbols.mutations.patientId, patientId)
       const data = response.data.data

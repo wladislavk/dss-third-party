@@ -7,14 +7,6 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      medicare: this.$store.state.patients[symbols.state.medicare],
-      alertText: this.$store.state.patients[symbols.state.headerAlertText],
-      headerTitle: this.$store.state.patients[symbols.state.headerTitle],
-      patientName: this.$store.state.patients[symbols.state.patientName]
-    }
-  },
   computed: {
     longPatientName () {
       if (this.patientName.length > 20) {
@@ -39,6 +31,18 @@ export default {
         return true
       }
       return false
+    },
+    patientName () {
+      return this.$store.state.patients[symbols.state.patientName]
+    },
+    medicare () {
+      return this.$store.state.patients[symbols.state.medicare]
+    },
+    alertText () {
+      return this.$store.state.patients[symbols.state.headerAlertText]
+    },
+    headerTitle () {
+      return this.$store.state.patients[symbols.state.headerTitle]
     }
   }
 }

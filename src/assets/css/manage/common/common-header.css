@@ -44,6 +44,12 @@ div.clear {
   width: 100%;
 }
 
+div.patient-menus {
+  width: 98.6%;
+  background: #00457c;
+  margin: 0 auto;
+}
+
 a.logo-link {
   width: 96px;
   height: 77px;

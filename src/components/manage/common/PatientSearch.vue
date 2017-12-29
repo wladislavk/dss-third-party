@@ -6,7 +6,7 @@
                 id="patient_search"
                 class="patient_search"
                 placeholder="Patient Search"
-                v-bind:model="inputValue"
+                v-model="inputValue"
                 name="q"
                 autocomplete="off"
                 v-on:keypress="patientNameKeyPress($event)"

@@ -1,16 +1,20 @@
 import symbols from '../../../symbols'
 import PatientDataComponent from './PatientData.vue'
-import ProcessWrapper from '../../../wrappers/ProcessWrapper'
 
 export default {
   data () {
     return {
-      legacyUrl: ProcessWrapper.getLegacyRoot(),
       patientId: this.$store.state.patients[symbols.state.patientId]
     }
   },
   components: {
     patientData: PatientDataComponent
+  },
+  created () {
+    if (this.$route.query.hasOwnProperty('pid')) {
+      const patientId = parseInt(this.$route.query.pid)
+      this.updatePatientData(patientId)
+    }
   },
   beforeRouteUpdate (to, from, next) {
     let toPatientId = 0
@@ -31,12 +35,18 @@ export default {
     }
     next()
   },
+  beforeRouteLeave (to, from, next) {
+    this.clearPatientData()
+    next()
+  },
   methods: {
     updatePatientData (patientId) {
       this.$store.dispatch(symbols.actions.patientData, patientId)
+      this.$store.dispatch(symbols.actions.retrieveTasksForPatient, this.patientId)
     },
     clearPatientData () {
       this.$store.dispatch(symbols.actions.clearPatientData)
+      this.$store.commit(symbols.mutations.setTasksForPatient, [])
     }
   }
 }

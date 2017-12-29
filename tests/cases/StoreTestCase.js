@@ -1,15 +1,11 @@
-import symbols from '../../src/symbols'
+import store from '../../src/store'
 
 export default class {
   constructor () {
     this.mutations = []
     this.actions = []
     this.state = {}
-    this.rootState = {
-      main: {
-        [symbols.state.mainToken]: ''
-      }
-    }
+    this.rootState = store.state
     this.mocks = {
       state: this.state,
       rootState: this.rootState,
@@ -24,7 +20,6 @@ export default class {
 
   setRootState (state) {
     this.mocks.rootState = state
-    this.mocks.rootState.main[symbols.state.mainToken] = ''
   }
 
   _commit (type, payload) {

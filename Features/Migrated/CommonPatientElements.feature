@@ -44,8 +44,13 @@ Feature: Common page patient elements
     When I click "Hide Warnings" button in patient header
     Then I see "Show Warnings" button in patient header
     And I see no patient warnings
+    When I click "Show Warnings" button in patient header
+    Then I see patient warnings:
+      | text                                                                                               |
+      | Patient has the following Home Sleep Tests: HST was requested 12/22/2013 and is currently Pending |
     When I type "dra" into patient search form
     And I click on "Drake, John S" in list of patients
+    Then I see the patient chart for "John Drake"
     And I see medicare icon
     # @todo: uncomment after adding common element inside main content
     # And I see a button with text "Order HST" under patient menu
@@ -66,4 +71,6 @@ Feature: Common page patient elements
       | text                                                                                                                                                    |
       | Warning! Patient has the following rejected claims: 126 - 08/18/2015 180 - 01/19/2016                                                                   |
       | Patient has the following Home Sleep Tests: HST was requested 12/11/2015 and is currently Pending HST was requested 01/29/2016 and is currently Pending |
-    # @todo: add patient that is redirected to info
+    # @todo: add a patient that is redirected to info
+    When I click on logo in top left corner
+    Then I see no patient chart

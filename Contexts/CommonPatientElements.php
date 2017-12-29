@@ -45,9 +45,20 @@ class CommonPatientElements extends BaseContext
      */
     public function testPatientChart($name)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $span = $this->findCss('div#patient_name_inner > span');
         Assert::assertNotNull($span);
         Assert::assertContains($name, $span->getText());
+    }
+
+    /**
+     * @Then I see no patient chart
+     */
+    public function testNoPatientChart()
+    {
+        $this->wait(self::SHORT_WAIT_TIME);
+        $span = $this->findCss('div#patient_name_inner > span');
+        Assert::assertNull($span);
     }
 
     /**
@@ -82,6 +93,7 @@ class CommonPatientElements extends BaseContext
      */
     public function testMedicareIcon()
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $icon = $this->findCss('div#patient_name_inner > img');
         Assert::assertNotNull($icon);
     }
@@ -102,12 +114,15 @@ class CommonPatientElements extends BaseContext
      */
     public function testPatientWarnings(TableNode $table)
     {
-        $warnings = $this->findAllCss('div#patient_warnings > span.warning');
+        $this->wait(self::SHORT_WAIT_TIME);
+        $warnings = $this->findAllCss('div#patient_warnings span.warning');
         $expected = array_column($table->getHash(), 'text');
         Assert::assertEquals(sizeof($expected), sizeof($warnings));
         foreach ($expected as $key => $element) {
             Assert::assertTrue($warnings[$key]->isVisible());
-            $warningText = str_replace("\n", ';', $warnings[$key]->getText());
+            // getText() does not work for unknown reason
+            $text = $this->sanitizeText(strip_tags($warnings[$key]->getHtml()));
+            $warningText = str_replace("\n", ';', $text);
             Assert::assertEquals($element, $warningText);
         }
     }
@@ -146,7 +161,11 @@ class CommonPatientElements extends BaseContext
     public function testNoTasks()
     {
         $tasks = $this->findCss('span#pat_task_header');
-        Assert::assertNull($tasks);
+        $visible = false;
+        if ($tasks && $tasks->isVisible()) {
+            $visible = true;
+        }
+        Assert::assertFalse($visible);
     }
 
     /**

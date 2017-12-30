@@ -9,7 +9,7 @@ use PHPUnit\Framework\Assert;
 class Tracker extends BaseContext
 {
     /**
-     * @Then today tracker section has the list of treatments:
+     * @Then today tracker section has a list of treatments:
      *
      * @param TableNode $table
      */

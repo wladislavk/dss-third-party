@@ -38,7 +38,7 @@ Feature: Common page patient elements
     # @todo: uncomment after adding common element inside main content
     # And I see a button with text "Order HST" under patient menu
     And I see patient warnings:
-      | text                                                                                               |
+      | text                                                                                              |
       | Patient has the following Home Sleep Tests: HST was requested 12/22/2013 and is currently Pending |
     And I see "Hide Warnings" button in patient header
     When I click "Hide Warnings" button in patient header
@@ -46,7 +46,7 @@ Feature: Common page patient elements
     And I see no patient warnings
     When I click "Show Warnings" button in patient header
     Then I see patient warnings:
-      | text                                                                                               |
+      | text                                                                                              |
       | Patient has the following Home Sleep Tests: HST was requested 12/22/2013 and is currently Pending |
     When I type "dra" into patient search form
     And I click on "Drake, John S" in list of patients

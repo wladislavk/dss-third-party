@@ -279,11 +279,11 @@ class LettersController extends BaseRestController
      */
     public function getByPatientAndInfo(Request $request)
     {
-        $patientId = intval($request->input('patient_id', 0));
+        $patientId = (int)$request->input('patient_id', 0);
         $infoIds = $request->input('info_ids', '');
         $infoIdsArray = explode(',', $infoIds);
         array_walk($infoIdsArray, function ($element) {
-            return intval($element);
+            return (int)$element;
         });
         $data = $this->repository->getByPatientAndInfo($patientId, $infoIdsArray);
         return ApiResponse::responseOk('', $data);

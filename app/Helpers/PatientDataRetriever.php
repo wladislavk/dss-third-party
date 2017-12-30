@@ -85,7 +85,7 @@ class PatientDataRetriever
         $patientData->incompleteHomeSleepTests = $incompleteHSTs;
         if (sizeof($incompleteHSTs)) {
             $lastHst = $incompleteHSTs[sizeof($incompleteHSTs) - 1];
-            $patientData->homeSleepTestStatus = intval($lastHst->status);
+            $patientData->homeSleepTestStatus = (int)$lastHst->status;
         }
         return $patientData;
     }

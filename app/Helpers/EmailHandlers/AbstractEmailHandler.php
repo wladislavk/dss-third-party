@@ -32,13 +32,14 @@ abstract class AbstractEmailHandler
      * @param string $oldEmail
      * @param bool $hasPatientPortal
      * @return void
+     * @throws EmailHandlerException
      */
     public function handleEmail($patientId, $newEmail, $oldEmail = '', $hasPatientPortal = false)
     {
         if (!$this->shouldBeSent($newEmail, $oldEmail, $hasPatientPortal)) {
             return;
         }
-        $patientId = intval($patientId);
+        $patientId = (int)$patientId;
         $contactData = $this->mailerDataRetriever->retrieveMailerData($patientId);
 
         $patientData = $contactData->patientData->toArray();

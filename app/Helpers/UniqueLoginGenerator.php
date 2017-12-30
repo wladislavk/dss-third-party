@@ -54,6 +54,6 @@ class UniqueLoginGenerator
      */
     private function getLoginNumber($compositeLogin, $stringPart)
     {
-        return intval(str_replace($stringPart, '', $compositeLogin));
+        return (int)str_replace($stringPart, '', $compositeLogin);
     }
 }

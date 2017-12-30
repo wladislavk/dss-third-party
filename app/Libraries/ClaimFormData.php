@@ -475,7 +475,7 @@ class ClaimFormData
      */
     public static function dynamicLedgerItems ($claimId) {
         $db = new Db();
-        $claimId = intval($claimId);
+        $claimId = (int)$claimId;
 
         $claimData = $db->getRow("SELECT docid, patientid, insurance_type
             FROM dental_insurance
@@ -485,9 +485,9 @@ class ClaimFormData
             return [];
         }
 
-        $docId = intval($claimData['docid']);
-        $patientId = intval($claimData['patientid']);
-        $insuranceType = intval($claimData['insurance_type']);
+        $docId = (int)$claimData['docid'];
+        $patientId = (int)$claimData['patientid'];
+        $insuranceType = (int)$claimData['insurance_type'];
 
         $isNewClaim = !$claimId;
 
@@ -565,7 +565,7 @@ class ClaimFormData
     public static function storedLedgerItems ($claimId) {
         $db = new \Db();
 
-        $claimId = intval($claimId);
+        $claimId = (int)$claimId;
         $claimData = $db->getRow("SELECT * FROM dental_insurance WHERE insuranceid = '$claimId'");
 
         /**
@@ -632,7 +632,7 @@ class ClaimFormData
      */
     public static function associatedLedgerItems ($claimId) {
         $db = new \Db();
-        $claimId = intval($claimId);
+        $claimId = (int)$claimId;
 
         $dynamicItems = self::dynamicLedgerItems($claimId);
         $storedItems = self::storedLedgerItems($claimId);
@@ -754,8 +754,8 @@ class ClaimFormData
             );
         }
 
-        $docId = intval($_SESSION['docid']);
-        $userId = intval($_SESSION['userid']);
+        $docId = (int)$_SESSION['docid'];
+        $userId = (int)$_SESSION['userid'];
 
         return [
             'patientid' => $patientId,
@@ -780,8 +780,8 @@ class ClaimFormData
     public static function dynamicClaimData ($patientId, $producerId, $sequence='primary', $primaryClaimId=null) {
         $db = new \Db();
 
-        $patientId = intval($patientId);
-        $producerId = intval($producerId);
+        $patientId = (int)$patientId;
+        $producerId = (int)$producerId;
 
         /**
          * Only two possible options: primary or secondary
@@ -815,7 +815,7 @@ class ClaimFormData
                 JOIN dental_users u ON u.userid=p.docid
             WHERE p.patientid = '$patientId'");
 
-        $docId = intval($patientData['docid']);
+        $docId = (int)$patientData['docid'];
         $hasSecondaryInsurance = isOptionSelected($patientData['has_s_m_ins']);
 
         /**
@@ -1037,7 +1037,7 @@ class ClaimFormData
 
         if ($sleepStudies) {
             $claimData['diagnosis_1'] = $sleepStudies['diagnosis'];
-            $diagnosisId = intval($claimData['diagnosis_1']);
+            $diagnosisId = (int)$claimData['diagnosis_1'];
 
             $ins_diag = $db->getRow("SELECT * FROM dental_ins_diagnosis WHERE ins_diagnosisid = '$diagnosisId'");
             $claimData['diagnosis_a'] = $ins_diag['ins_diagnosis'];
@@ -1091,8 +1091,8 @@ class ClaimFormData
     public static function historicClaimData ($claimId, $historyId) {
         $db = new \Db();
 
-        $claimId = intval($claimId);
-        $historyId = intval($historyId);
+        $claimId = (int)$claimId;
+        $historyId = (int)$historyId;
 
         return $db->getRow("SELECT *
             FROM dental_insurance_history
@@ -1121,9 +1121,9 @@ class ClaimFormData
     ) {
         $db = new \Db();
 
-        $patientId = intval($patientId);
-        $producerId = intval($producerId);
-        $primaryClaimId = intval($primaryClaimId);
+        $patientId = (int)$patientId;
+        $producerId = (int)$producerId;
+        $primaryClaimId = (int)$primaryClaimId;
 
         $claimData = $empty ?
             self::emptyClaimData($patientId, $producerId, $sequence, $primaryClaimId) :
@@ -1220,7 +1220,7 @@ class ClaimFormData
      */
     public static function dynamicDataForClaim ($claimId) {
         $db = new \Db();
-        $claimId = intval($claimId);
+        $claimId = (int)$claimId;
 
         $claimDetails = $db->getRow("SELECT patientid, producer, status, primary_claim_id
             FROM dental_insurance
@@ -1256,12 +1256,12 @@ class ClaimFormData
      */
     public static function storedDataForClaim ($claimId, $patientId=null) {
         $db = new \Db();
-        $claimId = intval($claimId);
+        $claimId = (int)$claimId;
 
         $sql = "SELECT * FROM dental_insurance WHERE insuranceid = '$claimId'";
 
         if (!is_null($patientId)) {
-            $patientId = intval($patientId);
+            $patientId = (int)$patientId;
             $sql .= " AND patientid = '$patientId'";
         }
 

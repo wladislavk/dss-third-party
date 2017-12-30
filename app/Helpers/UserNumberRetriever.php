@@ -111,6 +111,6 @@ class UserNumberRetriever
         if (!isset($arrayResult['total'])) {
             return 0;
         }
-        return intval($arrayResult['total']);
+        return (int)$arrayResult['total'];
     }
 }

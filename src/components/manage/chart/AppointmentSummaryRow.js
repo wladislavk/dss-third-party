@@ -1,4 +1,3 @@
-/*
 import {
   APPOINTMENT_SUMMARY_SEGMENTS, BASELINE_TYPES, DELAY_REASONS, NON_COMPLIANCE_REASONS, TITRATION_TYPES
 } from '../../../constants/chart'
@@ -59,6 +58,17 @@ export default {
     }
   },
   computed: {
+    defaultDeviceId () {
+      for (let device of this.$store.state.flowsheet[symbols.state.devices]) {
+        if (device.hasOwnProperty('default') && device.default) {
+          return device.id
+        }
+      }
+      return this.deviceId
+    },
+    defaultStudyType () {
+      return this.$store.state[symbols.state.defaultStudyType]
+    },
     rowLetters () {
       const rowLetters = []
       for (let letter of this.letters) {
@@ -119,4 +129,3 @@ export default {
     }
   }
 }
-*/

@@ -1,4 +1,3 @@
-/*
 import symbols from '../../../symbols'
 
 export default {
@@ -10,6 +9,13 @@ export default {
   computed: {
     flowId () {
       return this.$store.state.main[symbols.state.modal].params.flowId
+    },
+    segmentId () {
+      const params = this.$store.state.main[symbols.state.modal].params
+      if (params.hasOwnProperty('segmentId')) {
+        return params.segmentId
+      }
+      return this.appointmentSummary.segmentId
     },
     appointmentSummary () {
       for (let summary of this.$store.state.flowsheet[symbols.state.appointmentSummaries]) {
@@ -23,11 +29,10 @@ export default {
       return this.$store.state.main[symbols.state.modal].params.patientId
     },
     segmentType () {
-      const segmentId = this.appointmentSummary.segmentId
-      if (segmentId === 5) {
+      if (this.segmentId === 5) {
         return 'Delaying Treatment'
       }
-      if (segmentId === 9) {
+      if (this.segmentId === 9) {
         return 'Patient Non-Compliant'
       }
       return ''
@@ -51,4 +56,3 @@ export default {
     }
   }
 }
-*/

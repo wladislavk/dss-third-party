@@ -1,4 +1,3 @@
-<!--
 <template>
     <table width="98%" class="table table-bordered table-hover">
         <tr>
@@ -15,10 +14,14 @@
                 <span class="title">Test</span>
             </td>
             <td class="letters">
+                <!-- @todo: check which legacy link is correct, original code has both -->
+                <!--v-legacy-href="'manage/patient_letters.php?pid=' + patientId"-->
                 <a
-                    v-legacy-href="'dss_summ.php?sect=leters&pid=' + patientId"
+                    v-if="letterCount"
+                    v-legacy-href="'manage/dss_summ.php?sect=leters&pid=' + patientId"
                     class="btn btn-info btn-sm"
-                >Letters</a>
+                >{{ letterCount }} Letters</a>
+                <span v-else>0 Letters</span>
             </td>
             <td>
                 <a
@@ -47,4 +50,3 @@
 </template>
 
 <script src="./AppointmentSummary.js"></script>
--->

@@ -1,4 +1,3 @@
-<!--
 <template>
     <tr v-bind:id="'completed_row_' + elementId">
         <td>
@@ -17,9 +16,10 @@
                     class="study_type form-control"
                     v-bind:id="'study_type_' + elementId"
                     v-bind:name="'data[' + elementId + '][study_type]'"
+                    v-model="defaultStudyType"
                 >
                     <option value="">Select Type</option>
-                    <option v-for="titrationType in titrationTypes" v-bind:value="titrationType" v-model="studyType">{{ titrationType }}</option>
+                    <option v-for="titrationType in titrationTypes" v-bind:value="titrationType">{{ titrationType }}</option>
                 </select>
             </template>
             <template v-else-if="segmentName === 'Baseline Sleep Test'">
@@ -28,9 +28,10 @@
                     class="study_type form-control"
                     v-bind:id="'study_type_' + elementId"
                     v-bind:name="'data[' + elementId + '][study_type]'"
+                    v-model="defaultStudyType"
                 >
                     <option value="">Select Type</option>
-                    <option v-for="baselineType in baselineTypes" v-bind:value="baselineType" v-model="studyType">{{ baselineType }}</option>
+                    <option v-for="baselineType in baselineTypes" v-bind:value="baselineType">{{ baselineType }}</option>
                 </select>
             </template>
             <template v-else-if="segmentName === 'Delaying Tx / Waiting'">
@@ -67,9 +68,9 @@
                 >Show Reason</a>
             </template>
             <template v-else-if="segmentName === 'Impressions' || segmentName === 'Device Delivery'">
-                <select class="dentaldevice form-control" v-bind:id="'dentaldevice_' + elementId">
+                <select class="dentaldevice form-control" v-bind:id="'dentaldevice_' + elementId" v-model="defaultDeviceId">
                     <option value=""></option>
-                    <option v-for="device in devices" v-model="deviceId" v-bind:value="device.id">{{ device.device }}</option>
+                    <option v-for="device in devices" v-bind:value="device.id">{{ device.device }}</option>
                 </select>
             </template>
         </td>
@@ -94,4 +95,3 @@
 <script src="./AppointmentSummaryRow.js"></script>
 
 <style src="../../../assets/css/manage/chart/appointment-summary-row.css" scoped></style>
--->

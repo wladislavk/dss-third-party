@@ -1,26 +1,6 @@
 <template>
     <div>
-        <!--
-        <div class="tracker-div">
-            <template v-if="isHstCompany">
-                <a
-                    href="#"
-                    class="button"
-                    v-on:click.prevent="orderHst()"
-                    v-if="uncompletedHsts"
-                >Order HST</a>
-                <a
-                    href="#"
-                    class="button"
-                    v-on:click.prevent="requestHst()"
-                    v-else
-                >Request HST</a>
-            </template>
-            <a
-                v-legacy-href="'calendar_pat.php?pid=' + patientId"
-                class="button"
-            >View Calendar Appts</a>
-        </div>
+        <chart-buttons v-bind:patient-id="patientId"></chart-buttons>
         <div id="treatment_div">
             <h3>1) What did you do today?*</h3>
             <div id="treatment_list" v-bind:class="{'current_step': scheduledAppointment}">
@@ -50,12 +30,11 @@
             <div id="sched_div" v-bind:class="{'current_step': !scheduledAppointment}">
                 <div id="next_step_div">
                     <label>Select Next Appointment</label>
-                    <select id="next_step">
+                    <select id="next_step" v-model="secondSchedule.segmentid">
                         <option value="" class="empty-option">Select Next Step</option>
                         <option
                             v-for="nextStep in nextSteps"
                             v-bind:value="nextStep.id"
-                            v-model="secondSchedule.segmentid"
                         >{{ nextStep.name }}</option>
                     </select>
                 </div>
@@ -78,11 +57,13 @@
             <span class="sub_text">*After Step 1, choose the next patient treatment and date</span>
             <h3>Treatment Summary</h3>
             <div id="appt_summ" class="appt_summ">
-                <appointment-summary v-bind:patient-id="patientId"></appointment-summary>
+                <appointment-summary
+                    v-bind:patient-id="patientId"
+                    v-bind:letter-count="letterCount"
+                ></appointment-summary>
             </div>
         </div>
         <div style="clear:both;"></div>
-        -->
     </div>
 </template>
 

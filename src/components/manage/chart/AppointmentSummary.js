@@ -1,4 +1,3 @@
-/*
 import symbols from '../../../symbols'
 
 export default {
@@ -6,6 +5,10 @@ export default {
     patientId: {
       type: Number,
       required: true
+    },
+    letterCount: {
+      type: Number,
+      default: 0
     }
   },
   data () {
@@ -27,4 +30,3 @@ export default {
     }
   }
 }
-*/

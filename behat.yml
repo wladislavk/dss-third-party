@@ -20,6 +20,7 @@ default:
                 - Contexts\PatientChart
                 - Contexts\ScreenerApp
                 - Contexts\Tasks
+                - Contexts\Tracker
         legacy:
             paths:
                 - "%paths.base%/Features/Legacy"
@@ -43,7 +44,6 @@ default:
                 - Contexts\ProgressNotes
                 - Contexts\Staff
                 - Contexts\Support
-                - Contexts\Tracker
 chrome:
     extensions:
         DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~

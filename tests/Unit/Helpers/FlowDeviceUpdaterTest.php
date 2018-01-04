@@ -71,17 +71,6 @@ class FlowDeviceUpdaterTest extends UnitTestCase
     /**
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function testUpdateWithWrongLastAppointmentDeviceId()
-    {
-        $this->appointmentSummary['id'] = 99;
-        $this->flowDeviceUpdater->update($this->user, 123, 10);
-        $this->assertEquals([], $this->createParams);
-        $this->assertEquals([], $this->updateParams);
-    }
-
-    /**
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
-     */
     public function testUpdateWithLastAppointmentDevice()
     {
         $this->tmjClinicalExams = [];
@@ -118,12 +107,14 @@ class FlowDeviceUpdaterTest extends UnitTestCase
     {
         /** @var AppointmentSummaryRepository|MockInterface $appointmentSummaryRepository */
         $appointmentSummaryRepository = \Mockery::mock(AppointmentSummaryRepository::class);
-        $appointmentSummaryRepository->shouldReceive('update')->andReturnUsing(function (array $data, $patientId) {
-            $this->updateSummaryParams = [
-                'device_id' => $data['device_id'],
-                'patient_id' => $patientId,
-            ];
-        });
+        $appointmentSummaryRepository->shouldReceive('updateWhere')
+            ->andReturnUsing(function (array $data, array $condition) {
+                $this->updateSummaryParams = [
+                    'device_id' => $data['device_id'],
+                    'patient_id' => $condition['patientid'],
+                ];
+            })
+        ;
         $appointmentSummaryRepository->shouldReceive('getLastAppointmentDevice')->andReturnUsing(function () {
             return $this->appointmentSummary;
         });

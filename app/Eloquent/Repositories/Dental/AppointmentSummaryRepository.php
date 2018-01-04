@@ -17,11 +17,11 @@ class AppointmentSummaryRepository extends AbstractRepository
 
     /**
      * @param  int $patientId
-     * @return Model|null
+     * @return array
      */
     public function getLastAppointmentDevice($patientId)
     {
-        return $this->model
+        $result = $this->model
             ->select('id')
             ->where('appointment_type', AppointmentSummary::VISITED_APPOINTMENT)
             ->where('patientid', $patientId)
@@ -35,7 +35,8 @@ class AppointmentSummaryRepository extends AbstractRepository
             })
             ->orderBy('date_completed', 'desc')
             ->orderBy('id', 'desc')
-            ->first()
         ;
+        $arrayResult = $result->first()->toArray();
+        return $arrayResult;
     }
 }

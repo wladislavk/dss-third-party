@@ -3,10 +3,10 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\Device;
-use DentalSleepSolutions\Helpers\DeviceSettingsTotalValueGetter;
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
 use DentalSleepSolutions\Structs\DeviceInfo;
 use DentalSleepSolutions\Structs\DeviceSettings;
+use Illuminate\Database\Eloquent\Collection;
 
 class DeviceInfoGetter
 {
@@ -21,12 +21,12 @@ class DeviceInfoGetter
     }
 
     /**
-     * @param  Device $device
-     * @param  array|\Illuminate\Database\Eloquent\Collection $deviceSettings
-     * @param  DeviceSettings[]|array $settings
+     * @param Device $device
+     * @param Collection $deviceSettings
+     * @param DeviceSettings[] $settings
      * @return DeviceInfo|null
      */
-    public function get($device, $deviceSettings, $settings)
+    public function get(Device $device, Collection $deviceSettings, array $settings)
     {
         if (count($deviceSettings) === 0) {
             return null;
@@ -43,12 +43,9 @@ class DeviceInfoGetter
             }
         );
 
-        $total = $this->deviceSettingsTotalValueGetter->get(
-            $requiredDeviceSettings,
-            $settings
-        );
+        $total = $this->deviceSettingsTotalValueGetter->get($requiredDeviceSettings, $settings);
 
-        if (!isset($total)) {
+        if ($total === null) {
             return null;
         }
 

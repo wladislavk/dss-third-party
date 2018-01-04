@@ -1,8 +1,12 @@
 <?php
 namespace Tests\Api;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
+use DentalSleepSolutions\Eloquent\Models\Dental\Device;
+use DentalSleepSolutions\Eloquent\Models\Dental\Patient;
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use Tests\TestCases\ApiTestCase;
+use DentalSleepSolutions\Eloquent\Models\User as BaseUser;
 
 class TmjClinicalExamsApiTest extends ApiTestCase
 {
@@ -67,14 +71,74 @@ class TmjClinicalExamsApiTest extends ApiTestCase
         ];
     }
 
-    public function testUpdateFlowDevice()
+    public function testUpdateFlowDeviceCreate()
     {
-        $this->put(self::ROUTE_PREFIX . '/tmj-clinical-exams/update-flow-device/1');
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        /** @var Device $device */
+        $device = factory(Device::class)->create();
+        /** @var Patient $patient */
+        $patient = factory(Patient::class)->create();
+        /** @var AppointmentSummary $appointmentSummary */
+        $appointmentSummary = factory(AppointmentSummary::class)->create();
+        $appointmentSummary->patientid = $patient->patientid;
+        $appointmentSummary->appointment_type = AppointmentSummary::VISITED_APPOINTMENT;
+        $appointmentSummary->segmentid = AppointmentSummary::DEVICE_DELIVERY_SEGMENT;
+        $appointmentSummary->save();
+        $data = [
+            'patient_id' => $patient->patientid,
+        ];
+        $this->put(self::ROUTE_PREFIX . '/tmj-clinical-exams/update-flow-device/' . $device->deviceid, $data);
         $this->assertResponseOk();
-        $this->assertEquals(null, $this->getResponseData());
-
         $content = json_decode($this->response->getContent(), true);
         $expectedResponseMessage = 'Flow device was successfully updated.';
         $this->assertEquals($expectedResponseMessage, $content['message']);
+        $expectedSummary = [
+            'patientid' => $patient->patientid,
+            'device_id' => $device->deviceid,
+        ];
+        $this->seeInDatabase('dental_flow_pg2_info', $expectedSummary);
+        $expectedData = [
+            'dentaldevice' => $device->deviceid,
+            'patientid' => $patient->patientid,
+            'userid' => $user->userid,
+            'docid' => $user->docid,
+            'ip_address' => $user->ip_address,
+        ];
+        $this->seeInDatabase('dental_ex_page5', $expectedData);
+    }
+
+    public function testUpdateFlowDeviceUpdate()
+    {
+        /** @var BaseUser $user */
+        $user = BaseUser::find('u_1');
+        $this->be($user);
+        /** @var Device $device */
+        $device = factory(Device::class)->create();
+        /** @var Patient $patient */
+        $patient = factory(Patient::class)->create();
+        /** @var AppointmentSummary $appointmentSummary */
+        $appointmentSummary = factory(AppointmentSummary::class)->create();
+        $appointmentSummary->patientid = $patient->patientid;
+        $appointmentSummary->appointment_type = AppointmentSummary::VISITED_APPOINTMENT;
+        $appointmentSummary->segmentid = AppointmentSummary::DEVICE_DELIVERY_SEGMENT;
+        $appointmentSummary->date_completed = new \DateTime();
+        $appointmentSummary->save();
+        /** @var TmjClinicalExam $exam */
+        $exam = factory(TmjClinicalExam::class)->create();
+        $exam->patientid = $patient->patientid;
+        $exam->save();
+        $data = [
+            'patient_id' => $patient->patientid,
+        ];
+        $this->put(self::ROUTE_PREFIX . '/tmj-clinical-exams/update-flow-device/' . $device->deviceid, $data);
+        $this->assertResponseOk();
+        $expectedData = [
+            'ex_page5id' => $exam->ex_page5id,
+            'dentaldevice' => $device->deviceid,
+            'patientid' => $patient->patientid,
+        ];
+        $this->seeInDatabase('dental_ex_page5', $expectedData);
     }
 }

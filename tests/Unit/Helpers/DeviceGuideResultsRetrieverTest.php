@@ -12,6 +12,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Device;
 use DentalSleepSolutions\Structs\DeviceSettings;
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
 use DentalSleepSolutions\Constants\DeviceSettingTypes;
+use Illuminate\Database\Eloquent\Collection;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
@@ -173,7 +174,7 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
         $guideSetting->setting_type = DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_RANGE;
         $guideSetting->value = 200;
 
-        $guideSettingsCollection = collect([$guideSetting]);
+        $guideSettingsCollection = new Collection([$guideSetting]);
 
         $guideSetting = new GuideSetting();
         $guideSetting->id = 3;

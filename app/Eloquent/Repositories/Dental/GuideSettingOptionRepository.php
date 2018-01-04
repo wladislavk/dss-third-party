@@ -14,7 +14,7 @@ class GuideSettingOptionRepository extends AbstractRepository
     }
 
     /**
-     * @return array|\Illuminate\Database\Eloquent\Collection
+     * @return array
      */
     public function getOptionsBySettingIds()
     {
@@ -31,6 +31,7 @@ class GuideSettingOptionRepository extends AbstractRepository
             ->groupBy('setting_id')
             ->orderBy('rank')
             ->get()
+            ->toArray()
         ;
     }
 }

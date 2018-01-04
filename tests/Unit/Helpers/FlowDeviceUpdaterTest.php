@@ -13,43 +13,35 @@ use Tests\TestCases\UnitTestCase;
 
 class FlowDeviceUpdaterTest extends UnitTestCase
 {
-    const PATIENT_ID = 123;
-    const DEVICE_ID = 10;
-    const USER_ID = 1;
-    const DOC_ID = 1;
-    const IP_ADDRESS = '127.0.0.1';
-
-    /**
-     * @var FlowDeviceUpdater
-     */
+    /** @var FlowDeviceUpdater */
     private $flowDeviceUpdater;
 
-    /**
-     * @var AppointmentSummary|null
-     */
-    private $appointmentSummary;
+    /** @var array */
+    private $appointmentSummary = [];
 
-    /**
-     * @var array
-     */
-    private $tmjClinicalExams;
+    /** @var array */
+    private $createParams = [];
 
-    /**
-     * @var User
-     */
+    /** @var array */
+    private $updateParams = [];
+
+    /** @var array */
+    private $updateSummaryParams = [];
+
+    /** @var array */
+    private $tmjClinicalExams = [];
+
+    /** @var User */
     private $user;
 
     public function setUp()
     {
-        $this->appointmentSummary = new AppointmentSummary();
-        $this->appointmentSummary->id = self::PATIENT_ID;
-
-        $this->tmjClinicalExams = null;
+        $this->appointmentSummary = ['id' => 123];
 
         $this->user = new User();
-        $this->user->userid = self::USER_ID;
-        $this->user->docid = self::DOC_ID;
-        $this->user->ip_address = self::IP_ADDRESS;
+        $this->user->userid = 1;
+        $this->user->docid = 2;
+        $this->user->ip_address = '127.0.0.1';
 
         $appointmentSummaryRepository = $this->mockAppointmentSummaryRepository();
         $tmjClinicalExamRepository = $this->mockTmjClinicalExamRepository();
@@ -60,80 +52,81 @@ class FlowDeviceUpdaterTest extends UnitTestCase
         );
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testUpdateWithoutLastAppointmentDevice()
     {
-        $this->appointmentSummary = null;
-
-        $result = $this->flowDeviceUpdater->update(
-            $this->user,
-            self::PATIENT_ID,
-            self::DEVICE_ID
-        );
-
-        $this->assertEquals(null, $result);
+        $this->appointmentSummary = [];
+        $this->flowDeviceUpdater->update($this->user, 123, 10);
+        $expectedSummaryParams = [
+            'device_id' => 10,
+            'patient_id' => 123,
+        ];
+        $this->assertEquals($expectedSummaryParams, $this->updateSummaryParams);
+        $this->assertEquals([], $this->createParams);
+        $this->assertEquals([], $this->updateParams);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testUpdateWithWrongLastAppointmentDeviceId()
     {
-        $this->appointmentSummary->id = 0;
-
-        $result = $this->flowDeviceUpdater->update(
-            $this->user,
-            self::PATIENT_ID,
-            self::DEVICE_ID
-        );
-
-        $this->assertEquals(null, $result);
+        $this->appointmentSummary['id'] = 99;
+        $this->flowDeviceUpdater->update($this->user, 123, 10);
+        $this->assertEquals([], $this->createParams);
+        $this->assertEquals([], $this->updateParams);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testUpdateWithLastAppointmentDevice()
     {
         $this->tmjClinicalExams = [];
-
-        $result = $this->flowDeviceUpdater->update(
-            $this->user,
-            self::PATIENT_ID,
-            self::DEVICE_ID
-        );
-
-        $this->assertEquals(null, $result);
+        $this->flowDeviceUpdater->update($this->user, 123, 10);
+        $expected = [
+            'dentaldevice' => 10,
+            'patientid' => 123,
+            'userid' => 1,
+            'docid' => 2,
+            'ip_address' => '127.0.0.1',
+        ];
+        $this->assertEquals($expected, $this->createParams);
+        $this->assertEquals([], $this->updateParams);
     }
 
+    /**
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function testUpdateWithTmjClinicalExamUpdating()
     {
         $this->tmjClinicalExams = [
-            new TmjClinicalExam()
+            new TmjClinicalExam(),
         ];
-
-        $result = $this->flowDeviceUpdater->update(
-            $this->user,
-            self::PATIENT_ID,
-            self::DEVICE_ID
-        );
-
-        $this->assertEquals(null, $result);
+        $this->flowDeviceUpdater->update($this->user, 123, 10);
+        $expected = [
+            'data' => ['dentaldevice' => 10],
+            'condition' => ['patientid' => 123],
+        ];
+        $this->assertEquals([], $this->createParams);
+        $this->assertEquals($expected, $this->updateParams);
     }
 
     private function mockAppointmentSummaryRepository()
     {
         /** @var AppointmentSummaryRepository|MockInterface $appointmentSummaryRepository */
         $appointmentSummaryRepository = \Mockery::mock(AppointmentSummaryRepository::class);
-
-        $dataForStoringInUpdateById = ['device_id' => self::DEVICE_ID];
-        $appointmentSummaryRepository->shouldReceive('update')
-            ->once()
-            ->with($dataForStoringInUpdateById, self::PATIENT_ID)
-            ->andReturn(true)
-        ;
-
-        $appointmentSummaryRepository->shouldReceive('getLastAppointmentDevice')
-            ->once()
-            ->with(self::PATIENT_ID)
-            ->andReturnUsing(function () {
-                return $this->appointmentSummary;
-            })
-        ;
-
+        $appointmentSummaryRepository->shouldReceive('update')->andReturnUsing(function (array $data, $patientId) {
+            $this->updateSummaryParams = [
+                'device_id' => $data['device_id'],
+                'patient_id' => $patientId,
+            ];
+        });
+        $appointmentSummaryRepository->shouldReceive('getLastAppointmentDevice')->andReturnUsing(function () {
+            return $this->appointmentSummary;
+        });
         return $appointmentSummaryRepository;
     }
 
@@ -141,41 +134,18 @@ class FlowDeviceUpdaterTest extends UnitTestCase
     {
         /** @var TmjClinicalExamRepository|MockInterface $tmjClinicalExamRepository */
         $tmjClinicalExamRepository = \Mockery::mock(TmjClinicalExamRepository::class);
-
-        $tmjClinicalExamRepository
-            ->shouldReceive('getWithFilter')
-            ->never()
-        ;
-
-        $tmjClinicalExamRepository
-            ->shouldReceive('getWithFilter')
-            ->once()
-            ->andReturnUsing(function () {
-                return $this->tmjClinicalExams;
-            })
-        ;
-
-        $expectedDataForStoring = [
-            'dentaldevice' => self::DEVICE_ID,
-            'patientid' => self::PATIENT_ID,
-            'userid' => self::USER_ID,
-            'docid' => self::DOC_ID,
-            'ip_address' => self::IP_ADDRESS
-        ];
-        $tmjClinicalExamRepository->shouldReceive('create')
-            ->once()
-            ->with($expectedDataForStoring)
-            ->andReturn(true)
-        ;
-
-        $data = ['dentaldevice' => self::DEVICE_ID];
-        $where = ['patientid' => self::PATIENT_ID];
-        $tmjClinicalExamRepository->shouldReceive('updateWhere')
-            ->once()
-            ->with($data, $where)
-            ->andReturn(true)
-        ;
-
+        $tmjClinicalExamRepository->shouldReceive('getWithFilter')->andReturnUsing(function () {
+            return $this->tmjClinicalExams;
+        });
+        $tmjClinicalExamRepository->shouldReceive('create')->andReturnUsing(function (array $params) {
+            $this->createParams = $params;
+        });
+        $tmjClinicalExamRepository->shouldReceive('updateWhere')->andReturnUsing(function (array $data, array $condition) {
+            $this->updateParams = [
+                'data' => $data,
+                'condition' => $condition,
+            ];
+        });
         return $tmjClinicalExamRepository;
     }
 }

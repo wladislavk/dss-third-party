@@ -18,7 +18,7 @@ class GuideSettingOptionsRetriever
     }
 
     /**
-     * @return array|GuideSettingOption[]
+     * @return GuideSettingOption[]
      */
     public function get()
     {
@@ -31,15 +31,14 @@ class GuideSettingOptionsRetriever
         $options = [];
         foreach ($guideSettingOptions as $setting) {
             $guideSettingOption = new GuideSettingOption();
-            $guideSettingOption->id = $setting->id;
-            $guideSettingOption->labels = explode(',', $setting->labels);
-            $guideSettingOption->name = $setting->name;
-            $guideSettingOption->settingType = $setting->setting_type;
-            $guideSettingOption->number = $setting->number;
+            $guideSettingOption->id = $setting['id'];
+            $guideSettingOption->labels = explode(',', $setting['labels']);
+            $guideSettingOption->name = $setting['name'];
+            $guideSettingOption->settingType = $setting['setting_type'];
+            $guideSettingOption->number = $setting['number'];
 
             $options[] = $guideSettingOption;
         }
-
         return $options;
     }
 }

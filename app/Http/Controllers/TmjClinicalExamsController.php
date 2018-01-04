@@ -230,14 +230,10 @@ class TmjClinicalExamsController extends BaseRestController
         FlowDeviceUpdater $flowDeviceUpdater,
         Request $request
     ) {
-        $patientId = $request->input('patient_id', 0);
+        $patientId = $request->input('patient_id');
 
         try {
-            $flowDeviceUpdater->update(
-                $this->user,
-                $patientId,
-                $deviceId
-            );
+            $flowDeviceUpdater->update($this->user, $patientId, $deviceId);
         } catch (ValidatorException $e) {
             return ApiResponse::responseError($e->getMessage(), 422);
         }

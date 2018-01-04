@@ -4,9 +4,7 @@ namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
-use DentalSleepSolutions\Helpers\DeviceSettingsConverter;
-use DentalSleepSolutions\Helpers\DeviceInfoGetter;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 class DeviceGuideResultsRetriever
 {
@@ -50,24 +48,19 @@ class DeviceGuideResultsRetriever
     {
         $fields = ['deviceid', 'device', 'image_path'];
         $devices = $this->deviceRepository->getWithFilter($fields);
-
         if (count($devices) === 0) {
             return [];
         }
-
         $settings = $this->deviceSettingsConverter->convertSettings($settings);
         $devicesCollection = new Collection();
         foreach ($devices as $device) {
             $guideSettings = $this->guideSettingRepository->getSettingType($device->deviceid);
             $deviceInfo = $this->deviceInfoGetter->get($device, $guideSettings, $settings);
-
             if ($deviceInfo) {
                 $devicesCollection->push($deviceInfo->toArray());
             }
         }
-
         $sortedDevices = $devicesCollection->sortByDesc('value');
-
         return $sortedDevices->values()->all();
     }
 }

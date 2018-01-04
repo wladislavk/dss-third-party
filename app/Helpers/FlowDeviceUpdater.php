@@ -5,7 +5,6 @@ namespace DentalSleepSolutions\Helpers;
 use DentalSleepSolutions\Eloquent\Models\User;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;
-use DentalSleepSolutions\Structs\TmjClinicalExamStoringData;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 class FlowDeviceUpdater
@@ -29,44 +28,36 @@ class FlowDeviceUpdater
     }
 
     /**
-     * @param  User $user
-     * @param  int $patientId
-     * @param  int $deviceId
+     * @param User $user
+     * @param int $patientId
+     * @param int $deviceId
      * @throws ValidatorException
      * @return void
      */
-    public function update($user, $patientId, $deviceId)
+    public function update(User $user, $patientId, $deviceId)
     {
         $dataForStoring = ['device_id' => $deviceId];
-        $this->appointmentSummaryRepository->update($dataForStoring, $patientId);
-
+        $updateCondition = ['patientid' => $patientId];
+        $this->appointmentSummaryRepository->updateWhere($dataForStoring, $updateCondition);
         $lastAppointmentDevice = $this->appointmentSummaryRepository->getLastAppointmentDevice($patientId);
-
-        if (empty($lastAppointmentDevice) || $lastAppointmentDevice->id !== $patientId) {
+        if (!isset($lastAppointmentDevice['id'])) {
             return;
         }
-
         $fields = ['ex_page5id'];
-        $where = ['patientid' => $patientId];
-        $tmjClinicalExamItems = $this->tmjClinicalExamRepository->getWithFilter($fields, $where);
-
+        $getCondition = ['patientid' => $patientId];
+        $tmjClinicalExamItems = $this->tmjClinicalExamRepository->getWithFilter($fields, $getCondition);
         if (count($tmjClinicalExamItems) === 0) {
-            $tmjClinicalExamStoringData = new TmjClinicalExamStoringData();
-            $tmjClinicalExamStoringData->dentalDevice = $deviceId;
-            $tmjClinicalExamStoringData->patientId = $patientId;
-            $tmjClinicalExamStoringData->userId = $user->userid;
-            $tmjClinicalExamStoringData->docId = $user->docid;
-            $tmjClinicalExamStoringData->ipAddress = $user->ip_address;
-
-            $this->tmjClinicalExamRepository->create(
-                $tmjClinicalExamStoringData->toArray()
-            );
-
+            $createParams = [
+                'dentaldevice' => $deviceId,
+                'patientid' => $patientId,
+                'userid' => $user->userid,
+                'docid' => $user->docid,
+                'ip_address' => $user->ip_address,
+            ];
+            $this->tmjClinicalExamRepository->create($createParams);
             return;
         }
-
         $data = ['dentaldevice' => $deviceId];
-        $where = ['patientid' => $patientId];
-        $this->tmjClinicalExamRepository->updateWhere($data, $where);
+        $this->tmjClinicalExamRepository->updateWhere($data, $updateCondition);
     }
 }

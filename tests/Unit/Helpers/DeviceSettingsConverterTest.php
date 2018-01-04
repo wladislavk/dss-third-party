@@ -9,8 +9,6 @@ use Tests\TestCases\UnitTestCase;
 
 class DeviceSettingsConverterTest extends UnitTestCase
 {
-    const DEVICE_SETTINGS = '1_1,3_1_1';
-
     /**
      * @var DeviceSettingsConverter
      */
@@ -24,39 +22,25 @@ class DeviceSettingsConverterTest extends UnitTestCase
     public function testConvertSettingsIfEmpty()
     {
         $result = $this->deviceSettingsConverter->convertSettings('');
-
         $this->assertEquals([], $result);
     }
 
     public function testConvertSettings()
     {
-        $result = $this->deviceSettingsConverter->convertSettings(self::DEVICE_SETTINGS);
+        $deviceSettings = '1_2,3_2_1,2';
+        $result = $this->deviceSettingsConverter->convertSettings($deviceSettings);
 
-        $expectedResult = $this->getFakeConvertedSettings();
-        $this->assertEquals($expectedResult, $result);
-    }
-
-    public function testConvertSettingsWithWrongData()
-    {
-        $result = $this->deviceSettingsConverter->convertSettings('1,2');
-
-        $this->assertEquals([], $result);
-    }
-
-    private function getFakeConvertedSettings()
-    {
         $deviceSettings1 = new DeviceSettings();
         $deviceSettings1->id = 1;
-        $deviceSettings1->checkedRangeValue = 1;
+        $deviceSettings1->impression = 0;
+        $deviceSettings1->checkedRangeValue = 2;
 
         $deviceSettings3 = new DeviceSettings();
         $deviceSettings3->id = 3;
-        $deviceSettings3->impression = 1;
+        $deviceSettings3->impression = 2;
         $deviceSettings3->checkedRangeValue = 1;
 
-        return [
-            $deviceSettings1->id => $deviceSettings1,
-            $deviceSettings3->id => $deviceSettings3,
-        ];
+        $expectedResult = [$deviceSettings1, $deviceSettings3];
+        $this->assertEquals($expectedResult, $result);
     }
 }

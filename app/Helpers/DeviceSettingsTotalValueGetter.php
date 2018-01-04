@@ -3,6 +3,8 @@
 namespace DentalSleepSolutions\Helpers;
 
 use DentalSleepSolutions\Constants\DeviceSettingTypes;
+use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
+use DentalSleepSolutions\Structs\DeviceSettings;
 
 class DeviceSettingsTotalValueGetter
 {
@@ -10,54 +12,54 @@ class DeviceSettingsTotalValueGetter
 
     /**
      * @param  array|\Illuminate\Database\Eloquent\Collection $requiredDeviceSettings
-     * @param  DeviceSettings[]|array $settingsFields
+     * @param  DeviceSettings[] $settings
      * @return float|null
      */
-    public function get($requiredDeviceSettings, $settings)
+    public function get($requiredDeviceSettings, array $settings)
     {
         $settingsFields = [];
         foreach ($settings as $setting) {
             $settingsFields[] = $setting->id;
         }
-
         $total = 0;
         foreach ($requiredDeviceSettings as $deviceSetting) {
             $settingId = array_search($deviceSetting->id, $settingsFields);
             $setting = $settings[$settingId];
-
             if ($this->isSettingTypeUncheckedFlag($deviceSetting, $setting)) {
                 return null;
             }
-
             if ($deviceSetting->setting_type !== DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_FLAG) {
                 $total += $this->getDeviceInfoTotalValue($deviceSetting, $setting);
             }
         }
-
         return $total;
     }
 
     /**
-     * @param  GuideSetting $deviceSetting
-     * @param  DeviceSettings $setting
-     * @return boolean
+     * @param GuideSetting $deviceSetting
+     * @param DeviceSettings $setting
+     * @return bool
      */
-    private function isSettingTypeUncheckedFlag($deviceSetting, $setting)
+    private function isSettingTypeUncheckedFlag(GuideSetting $deviceSetting, DeviceSettings $setting)
     {
-        return $deviceSetting->setting_type === DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_FLAG
-            &&
-            $deviceSetting->value !== '1'
-            &&
-            $setting->checkedRangeValue === 1
-        ;
+        if ($deviceSetting->setting_type !== DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_FLAG) {
+            return false;
+        }
+        if ($deviceSetting->value === '1') {
+            return false;
+        }
+        if ($setting->checkedRangeValue !== 1) {
+            return false;
+        }
+        return true;
     }
 
     /**
-     * @param  GuideSetting $deviceSetting
-     * @param  DeviceSettings $setting
+     * @param GuideSetting $deviceSetting
+     * @param DeviceSettings $setting
      * @return float
      */
-    private function getDeviceInfoTotalValue($deviceSetting, $setting)
+    private function getDeviceInfoTotalValue(GuideSetting $deviceSetting, DeviceSettings $setting)
     {
         $coefficient = 1;
         if ($setting->impression) {

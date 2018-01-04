@@ -6,74 +6,42 @@ use DentalSleepSolutions\Structs\DeviceSettings;
 
 class DeviceSettingsConverter
 {
-    const SETTING_VALUES_DELIMETER = '_';
-    const SETTINGS_DELIMETER = ',';
-    const SETTING_VALUES_NUMBER_WITHOUT_IMPESSION = 2;
-    const SETTING_VALUES_NUMBER_WITH_IMPESSION = 3;
+    const SETTING_VALUES_DELIMITER = '_';
+    const SETTINGS_DELIMITER = ',';
 
     /**
-     * @param  string $settings
-     * @return DeviceSettings[]|array
+     * @param string $settings
+     * @return DeviceSettings[]
      */
     public function convertSettings($settings)
     {
-        if (empty($settings)) {
+        if (!$settings) {
             return [];
         }
-
-        $settings = explode(self::SETTINGS_DELIMETER, $settings);
+        $settings = explode(self::SETTINGS_DELIMITER, $settings);
         $convertedSettings = [];
         foreach ($settings as $setting) {
-            $settingValues = explode(self::SETTING_VALUES_DELIMETER, $setting);
-            $deviceSettings = $this->getDeviceSettings($settingValues);
-
-            if ($deviceSettings) {
-                $convertedSettings[] = $deviceSettings;
+            $settingValues = explode(self::SETTING_VALUES_DELIMITER, $setting);
+            if (isset($settingValues[1])) {
+                $convertedSettings[] = $this->getDeviceSettings($settingValues);
             }
         }
-
         return $convertedSettings;
     }
 
     /**
-     * @param  int[] $settingValues
+     * @param string[] $settingValues
      * @return DeviceSettings|null
      */
-    private function getDeviceSettings($settingValues)
+    private function getDeviceSettings(array $settingValues)
     {
         $deviceSettings = new DeviceSettings();
-        $settingValuesNumber = count($settingValues);
-
-        if ($settingValuesNumber === self::SETTING_VALUES_NUMBER_WITHOUT_IMPESSION) {
-            $deviceSettings->id = 0;
-            if (!empty($settingValues[0])) {
-                $deviceSettings->id = $settingValues[0];
-            }
-
-            if (!empty($settingValues[1])) {
-                $deviceSettings->checkedRangeValue = $settingValues[1];
-            }
-
-            return $deviceSettings;
+        $deviceSettings->id = (int)$settingValues[0];
+        $deviceSettings->checkedRangeValue = (int)$settingValues[1];
+        if (isset($settingValues[2])) {
+            $deviceSettings->impression = (int)$settingValues[1];
+            $deviceSettings->checkedRangeValue = (int)$settingValues[2];
         }
-
-        if ($settingValuesNumber === self::SETTING_VALUES_NUMBER_WITH_IMPESSION) {
-            $deviceSettings->id = 0;
-            if (!empty($settingValues[0])) {
-                $deviceSettings->id = $settingValues[0];
-            }
-
-            if (!empty($settingValues[1])) {
-                $deviceSettings->impression = $settingValues[1];
-            }
-
-            if (!empty($settingValues[2])) {
-                $deviceSettings->checkedRangeValue = $settingValues[2];
-            }
-
-            return $deviceSettings;
-        }
-
-        return null;
+        return $deviceSettings;
     }
 }

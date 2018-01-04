@@ -8,6 +8,7 @@ use DentalSleepSolutions\Eloquent\Models\Dental\Device;
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
 use DentalSleepSolutions\Structs\DeviceSettings;
 use DentalSleepSolutions\Constants\DeviceSettingTypes;
+use Illuminate\Database\Eloquent\Collection;
 use Mockery\MockInterface;
 use Tests\TestCases\UnitTestCase;
 
@@ -26,12 +27,10 @@ class DeviceInfoGetterTest extends UnitTestCase
     /**
      * @var boolean
      */
-    private $withTotal;
+    private $withTotal = true;
 
     public function setUp()
     {
-        $this->withTotal = true;
-
         $deviceSettingsTotalValueGetter = $this->mockDeviceSettingsTotalValueGetter();
 
         $this->deviceInfoGetter = new DeviceInfoGetter(
@@ -42,12 +41,12 @@ class DeviceInfoGetterTest extends UnitTestCase
     public function testGetWithoutDeviceSettings()
     {
         $device = $this->getDevice();
-        $deviceSettings = collect([]);
+        $deviceSettings = new Collection([]);
         $settings = $this->getDeviceSettingsStructData();
 
         $deviceInfo = $this->deviceInfoGetter->get($device, $deviceSettings, $settings);
 
-        $this->assertEquals(null, $deviceInfo);
+        $this->assertNull($deviceInfo);
     }
 
     public function testGetWithTotal()
@@ -58,25 +57,22 @@ class DeviceInfoGetterTest extends UnitTestCase
 
         $deviceInfo = $this->deviceInfoGetter->get($device, $deviceSettings, $settings);
 
-        $expectedDeviceInfo = [
-            'id' => self::DEVICE_ID,
-            'name' => self::DEVICE_NAME,
-            'value' => self::DEVICE_TOTAL_VALUE,
-            'imagePath' => self::DEVICE_IMAGE_PATH,
-        ];
-        $this->assertEquals($expectedDeviceInfo, $deviceInfo);
+        $this->assertEquals(self::DEVICE_ID, $deviceInfo->id);
+        $this->assertEquals(self::DEVICE_NAME, $deviceInfo->name);
+        $this->assertEquals(self::DEVICE_TOTAL_VALUE, $deviceInfo->value);
+        $this->assertEquals(self::DEVICE_IMAGE_PATH, $deviceInfo->imagePath);
     }
 
     public function testGetWithoutTotal()
     {
-        $this->withTotal = true;
+        $this->withTotal = false;
         $device = $this->getDevice();
         $deviceSettings = $this->getGuideSettingData();
         $settings = $this->getDeviceSettingsStructData();
 
         $deviceInfo = $this->deviceInfoGetter->get($device, $deviceSettings, $settings);
 
-        $this->assertEquals(null, $deviceInfo);
+        $this->assertNull($deviceInfo);
     }
 
     private function mockDeviceSettingsTotalValueGetter()
@@ -93,7 +89,6 @@ class DeviceInfoGetterTest extends UnitTestCase
         if ($this->withTotal) {
             return self::DEVICE_TOTAL_VALUE;
         }
-
         return null;
     }
 
@@ -132,7 +127,7 @@ class DeviceInfoGetterTest extends UnitTestCase
         $guideSetting->setting_type = DeviceSettingTypes::DSS_DEVICE_SETTING_TYPE_RANGE;
         $guideSetting->value = 200;
 
-        $guideSettingsCollection = collect([$guideSetting]);
+        $guideSettingsCollection = new Collection([$guideSetting]);
 
         $guideSetting = new GuideSetting();
         $guideSetting->id = 3;

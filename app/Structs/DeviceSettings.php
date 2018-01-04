@@ -10,7 +10,7 @@ class DeviceSettings
     /**
      * @var int
      */
-    public $id;
+    public $id = 0;
 
     /**
      * @var int

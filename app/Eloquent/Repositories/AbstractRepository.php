@@ -159,6 +159,7 @@ abstract class AbstractRepository extends BaseRepository
     /**
      * @param int $id
      * @return Model|null
+     * @throws \Prettus\Repository\Exceptions\RepositoryException
      */
     public function findOrNull($id)
     {
@@ -206,5 +207,22 @@ abstract class AbstractRepository extends BaseRepository
             throw new GeneralException("Resource of type " . get_class($resource) . " with ID $patientId not found");
         }
         return $resource;
+    }
+
+    /**
+     * @param  array  $data
+     * @param  array  $where
+     * @return boolean|int
+     */
+    public function updateWhere(array $data, array $where)
+    {
+        $query = $this->model;
+
+        foreach ($where as $field => $value) {
+            $query = $query->where($field, $value);
+        }
+
+        $numberOfRows = $query->update($data);
+        return $numberOfRows;
     }
 }

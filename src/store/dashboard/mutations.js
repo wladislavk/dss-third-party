@@ -11,37 +11,54 @@ export default {
     }
     state[symbols.state.documentCategories] = categories
   },
+
   [symbols.mutations.memos] (state, data) {
     state[symbols.state.memos] = data
   },
+
   [symbols.mutations.deviceGuideResults] (state, data) {
     state[symbols.state.deviceGuideResults] = data
   },
-  [symbols.mutations.deviceGuideSettingOptions] (state, data) {
-    state[symbols.state.deviceGuideSettingOptions] = data
-  },
-  [symbols.mutations.resetDeviceGuideSettingOptions] (state) {
-    state[symbols.state.deviceGuideSettingOptions].forEach(el => {
-      el.checkedOption = 0
 
-      if (el.hasOwnProperty('impression')) {
-        el.impression = 0
+  [symbols.mutations.deviceGuideSettingOptions] (state, data) {
+    const options = []
+    for (let element of data) {
+      const newOption = {
+        id: parseInt(element.id),
+        name: element.name,
+        labels: element.labels,
+        checkedOption: 0,
+        checked: false
+      }
+      options.push(newOption)
+    }
+    state[symbols.state.deviceGuideSettingOptions] = options
+  },
+
+  [symbols.mutations.resetDeviceGuideSettingOptions] (state) {
+    const options = []
+    for (let element of state[symbols.state.deviceGuideSettingOptions]) {
+      element.checkedOption = 0
+      element.checked = false
+      options.push(element)
+    }
+    state[symbols.state.deviceGuideSettingOptions] = options
+  },
+
+  [symbols.mutations.checkGuideSetting] (state, { id, isChecked }) {
+    for (let setting of state[symbols.state.deviceGuideSettingOptions]) {
+      if (id === setting.id) {
+        setting.checked = isChecked
         return
       }
-
-      el.checked = 0
-    })
-  },
-  [symbols.mutations.updateGuideSetting] (state, data) {
-    let foundGuideSetting = state[symbols.state.deviceGuideSettingOptions].find(el => el.id === data.id)
-
-    if (!foundGuideSetting) {
-      return
     }
+  },
 
-    for (let field in data.values) {
-      if (foundGuideSetting.hasOwnProperty(field)) {
-        foundGuideSetting[field] = data.values[field]
+  [symbols.mutations.moveGuideSettingSlider] (state, { id, value }) {
+    for (let setting of state[symbols.state.deviceGuideSettingOptions]) {
+      if (id === setting.id) {
+        setting.checkedOption = value
+        return
       }
     }
   }

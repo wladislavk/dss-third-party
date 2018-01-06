@@ -1,5 +1,5 @@
 <template>
-    <div id="device-selector">
+    <div id="device-selector" class="device-selector">
         <div class="instructions">
             <a
                 v-show="!showInstructions"
@@ -15,9 +15,19 @@
                 </ol>
             </div>
         </div>
-        <h2 id="device-selector-title">Device C-Lect for {{ patientName}}?</h2>
-        <device-form></device-form>
-        <div id="sort-devices-button">
+        <h2 id="device-selector-title" class="device-selector-title">
+          <span>Device C-Lect</span> <span v-if="patientName">for {{ patientName }}?</span></h2>
+        <form id="device_form">
+            <device-slider
+                v-for="deviceGuideSetting in deviceGuideSettingOptions"
+                v-bind:id="deviceGuideSetting.id"
+                v-bind:name="deviceGuideSetting.name"
+                v-bind:labels="deviceGuideSetting.labels"
+                v-bind:checked-option="deviceGuideSetting.checkedOption"
+                v-bind:key="deviceGuideSetting.id"
+            ></device-slider>
+        </form>
+        <div id="sort-devices-button" class="sort-devices-button">
             <a
                 v-on:click.prevent="onDeviceSubmit"
                 href="#"
@@ -31,8 +41,4 @@
 
 <script src="./DeviceSelector.js"></script>
 
-<style src="jquery-ui/themes/ui-lightness/jquery-ui.css"></style>
-<style src="assets/css/manage/admin.css" scoped></style>
-<style src="assets/css/manage/form.css" scoped></style>
-<style src="assets/css/manage/device-selector/device-guide.css" scoped></style>
-
+<style src="../../../../assets/css/manage/device-selector/device-selector.css" scoped></style>

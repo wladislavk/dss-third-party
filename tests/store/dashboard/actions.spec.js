@@ -7,6 +7,7 @@ import DashboardModule from '../../../src/store/dashboard'
 import TestCase from '../../cases/StoreTestCase'
 import LocationWrapper from '../../../src/wrappers/LocationWrapper'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
+import Alerter from '../../../src/services/Alerter'
 
 describe('Dashboard module actions', () => {
   beforeEach(function () {
@@ -86,7 +87,10 @@ describe('Dashboard module actions', () => {
         {
           type: symbols.mutations.modal,
           payload: {
-            name: 'deviceSelector'
+            name: 'deviceSelector',
+            params: {
+              white: true
+            }
           }
         }
       ]
@@ -299,8 +303,8 @@ describe('Dashboard module actions', () => {
     })
   })
 
-  describe('has getDeviceGuideSettingOptions action', () => {
-    it('which retrieves device guide setting options', function (done) {
+  describe('getDeviceGuideSettingOptions action', () => {
+    it('retrieves device guide setting options', function (done) {
       const result = {
         data: {
           data: [
@@ -308,24 +312,20 @@ describe('Dashboard module actions', () => {
               id: 13,
               labels: ['Not Important', 'Neutral', 'Very Important'],
               name: 'Comfort',
-              setting_type: 0,
               number: 3
             },
             {
               id: 3,
               labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
               name: 'Bruxism',
-              setting_type: 0,
               number: 5
             }
           ]
         }
       }
-
       let getPath = ''
       this.sandbox.stub(http, 'get').callsFake((path) => {
         getPath = path
-
         return Promise.resolve(result)
       })
       DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
@@ -336,37 +336,48 @@ describe('Dashboard module actions', () => {
           payload: [
             {
               id: 13,
-              checkedOption: 0,
-              impression: 0,
               labels: ['Not Important', 'Neutral', 'Very Important'],
               name: 'Comfort',
-              setting_type: 0,
               number: 3
             },
             {
               id: 3,
-              checkedOption: 0,
-              impression: 0,
               labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
               name: 'Bruxism',
-              setting_type: 0,
               number: 5
             }
           ]
         }
       ]
-
       setTimeout(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
         expect(getPath).toEqual(endpoints.guideSettingOptions.settingIds)
-
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      this.sandbox.stub(http, 'get').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'getDeviceGuideSettingOptions',
+            response: new Error()
+          }
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
         done()
       }, 100)
     })
   })
 
-  describe('has getDeviceGuideResults action', () => {
-    it('which retrieves device guide results', function (done) {
+  describe('getDeviceGuideResults action', () => {
+    it('retrieves device guide results', function (done) {
       const result = {
         data: {
           data: [
@@ -396,32 +407,28 @@ describe('Dashboard module actions', () => {
         [symbols.state.deviceGuideSettingOptions]: [
           {
             id: 13,
-            checkedOption: 0,
-            impression: 0,
+            checkedOption: 2,
+            checked: false,
             labels: ['Not Important', 'Neutral', 'Very Important'],
             name: 'Comfort',
-            setting_type: 0,
             number: 3
           },
           {
             id: 3,
-            checkedOption: 0,
-            impression: 0,
+            checkedOption: 3,
+            checked: true,
             labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
             name: 'Bruxism',
-            setting_type: 0,
             number: 5
           }
         ]
       })
 
       let requestSettings = {}
-      this.sandbox.stub(http, 'get').callsFake((path, data, config) => {
+      this.sandbox.stub(http, 'get').callsFake((path) => {
         requestSettings = {
-          path: path,
-          config: config
+          path: path
         }
-
         return Promise.resolve(result)
       })
       DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
@@ -435,22 +442,16 @@ describe('Dashboard module actions', () => {
 
       setTimeout(() => {
         expect(this.testCase.mutations).toEqual(expectedMutations)
-
+        let expectedPath = endpoints.guideDevices.withImages + '?' + 'impressions[3]=1&impressions[13]=0&options[3]=3&options[13]=2'
+        expectedPath = expectedPath.replace(/\[/g, '%5B').replace(/\]/g, '%5D')
         const expectedRequestSettings = {
-          path: endpoints.guideDevices.withImages,
-          config: {
-            params: {
-              settings: '13_1,3_1'
-            }
-          }
+          path: expectedPath
         }
         expect(requestSettings).toEqual(expectedRequestSettings)
-
         done()
       }, 100)
     })
-
-    it('which handles error', function (done) {
+    it('handles error', function (done) {
       this.sandbox.stub(http, 'get').callsFake(() => {
         return Promise.reject(new Error())
       })
@@ -459,7 +460,6 @@ describe('Dashboard module actions', () => {
       })
 
       DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
-
       const expectedActions = [
         {
           type: symbols.actions.handleErrors,
@@ -469,17 +469,15 @@ describe('Dashboard module actions', () => {
           }
         }
       ]
-
       setTimeout(() => {
         expect(this.testCase.actions).toEqual(expectedActions)
-
         done()
       }, 100)
     })
   })
 
-  describe('has updateFlowDevice action', () => {
-    it('which updates a flow device', function (done) {
+  describe('updateFlowDevice action', () => {
+    it('updates a flow device', function (done) {
       const DEVICE_ID = 7
       const PATIENT_ID = 16
       const response = {
@@ -492,16 +490,17 @@ describe('Dashboard module actions', () => {
           path: path,
           data: data
         }
-
         return Promise.resolve(response)
       })
-
+      let alertText = ''
+      this.sandbox.stub(Alerter, 'alert').callsFake((message) => {
+        alertText = message
+      })
       this.testCase.setRootState({
         patients: {
           [symbols.state.patientId]: PATIENT_ID
         }
       })
-
       DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
 
       setTimeout(() => {
@@ -512,7 +511,33 @@ describe('Dashboard module actions', () => {
           }
         }
         expect(requestSettings).toEqual(expectedRequestSettings)
-
+        expect(alertText).toBe('Successfully updated.')
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      const DEVICE_ID = 7
+      const PATIENT_ID = 16
+      this.sandbox.stub(http, 'put').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      this.testCase.setRootState({
+        patients: {
+          [symbols.state.patientId]: PATIENT_ID
+        }
+      })
+      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'updateFlowDevice',
+            response: new Error()
+          }
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
         done()
       }, 100)
     })

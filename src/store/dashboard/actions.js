@@ -1,9 +1,9 @@
+import QueryStringComposer from 'qs'
 import endpoints from '../../endpoints'
 import http from '../../services/http'
 import symbols from '../../symbols'
 import LocationWrapper from '../../wrappers/LocationWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
-import { DSS_CONSTANTS } from '../../constants/main'
 import ProcessWrapper from '../../wrappers/ProcessWrapper'
 import Alerter from '../../services/Alerter'
 
@@ -18,7 +18,7 @@ export default {
   },
 
   [symbols.actions.deviceSelectorModal] ({commit}) {
-    commit(symbols.mutations.modal, { name: 'deviceSelector' })
+    commit(symbols.mutations.modal, { name: 'deviceSelector', params: { white: true } })
   },
 
   [symbols.actions.exportMDModal] () {
@@ -85,83 +85,51 @@ export default {
       dispatch(symbols.actions.handleErrors, {title: 'getCurrentMemos', response: response})
     })
   },
-  [symbols.actions.getDeviceGuideSettingOptions] ({commit, rootState}) {
+
+  [symbols.actions.getDeviceGuideSettingOptions] ({rootState, commit, dispatch}) {
     http.token = rootState.main[symbols.state.mainToken]
-    return http.get(endpoints.guideSettingOptions.settingIds)
-      .then(response => {
-        const data = response.data.data
-
-        data.forEach(el => {
-          el.labels = el.labels
-          el.checkedOption = 0
-
-          if (+el.setting_type === DSS_CONSTANTS.DSS_DEVICE_SETTING_TYPE_RANGE) {
-            el.impression = 0
-            return
-          }
-
-          el.checked = 0
-        })
-
-        commit(symbols.mutations.deviceGuideSettingOptions, data)
-      })
-      .catch(response => {
-        this.$store.dispatch(
-          symbols.actions.handleErrors,
-          {title: 'getDeviceGuideSettingOptions', response: response}
-        )
-      })
-  },
-  [symbols.actions.getDeviceGuideResults] ({commit, dispatch, state, rootState}) {
-    const ID_DELIMITER = '_'
-    const SETTINGS_DELIMETER = ','
-
-    let settings = []
-
-    state[symbols.state.deviceGuideSettingOptions].forEach(el => {
-      let currentSetting = el.id
-
-      if (el.hasOwnProperty('impression') && el.impression) {
-        currentSetting += ID_DELIMITER + el.impression
-      }
-
-      if (el.hasOwnProperty('checkedOption')) {
-        currentSetting += ID_DELIMITER + (el.checkedOption + 1)
-        settings.push(currentSetting)
-        return
-      }
-
-      currentSetting += ID_DELIMITER + el.checked
-      settings.push(currentSetting)
+    return http.get(endpoints.guideSettingOptions.settingIds).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.deviceGuideSettingOptions, data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideSettingOptions', response: response})
     })
+  },
 
-    const config = {
-      params: {
-        settings: settings.join(SETTINGS_DELIMETER)
+  [symbols.actions.getDeviceGuideResults] ({commit, dispatch, state, rootState}) {
+    const impressions = {}
+    const checkedOptions = {}
+    for (let setting of state[symbols.state.deviceGuideSettingOptions]) {
+      checkedOptions[setting.id] = setting.checkedOption
+      impressions[setting.id] = 0
+      if (setting.checked) {
+        impressions[setting.id] = 1
       }
     }
+    const queryString = QueryStringComposer.stringify({
+      impressions: impressions,
+      options: checkedOptions
+    })
+    const endpoint = endpoints.guideDevices.withImages + '?' + queryString
     http.token = rootState.main[symbols.state.mainToken]
-    http.get(endpoints.guideDevices.withImages, {}, config).then(response => {
+    http.get(endpoint).then((response) => {
       const data = response.data.data
-
       commit(symbols.mutations.deviceGuideResults, data)
-    }).catch(response => {
+    }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideResults', response: response})
     })
   },
+
   [symbols.actions.updateFlowDevice] ({commit, dispatch, rootState}, deviceId) {
     const data = {
       patient_id: rootState.patients[symbols.state.patientId]
     }
-
     http.token = rootState.main[symbols.state.mainToken]
-    return http.put(endpoints.tmjClinicalExams.updateFlowDevice + '/' + deviceId, data)
-      .then(response => {
-        Alerter.alert(response.data.message)
-
-        commit(symbols.mutations.resetModal)
-      }).catch(response => {
-        dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
-      })
+    return http.put(endpoints.tmjClinicalExams.updateFlowDevice + '/' + deviceId, data).then((response) => {
+      Alerter.alert(response.data.message)
+      commit(symbols.mutations.resetModal)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
+    })
   }
 }

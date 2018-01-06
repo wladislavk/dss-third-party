@@ -1,6 +1,6 @@
-import endpoints from 'src/endpoints'
-import http from 'src/services/http'
-import DeviceForm from 'src/components/manage/modal/device-selector/DeviceForm.vue'
+import endpoints from '../../../../../src/endpoints'
+import http from '../../../../../src/services/http'
+import DeviceSliderComponent from '../../../../../src/components/manage/modal/device-selector/DeviceSlider.vue'
 import TestCase from '../../../../cases/ComponentTestCase'
 import $ from 'jquery'
 import sliderUI from 'jquery-ui/slider'
@@ -14,12 +14,11 @@ describe('DeviceForm', () => {
     moxios.install()
 
     const vueOptions = {
-      template: '<div><device-form></device-form></div>',
+      template: '<div><device-slider></device-slider></div>',
       components: {
-        deviceForm: DeviceForm
+        deviceSlider: DeviceSliderComponent
       }
     }
-
     this.vue = TestCase.getVue(vueOptions)
     this.vm = this.vue.$mount()
   })
@@ -71,18 +70,15 @@ describe('DeviceForm', () => {
       const expectedSettingsNumber = 4
       const settings = this.vm.$el.querySelectorAll('#device_form > .setting')
       expect(settings.length).toBe(expectedSettingsNumber)
-
       const expectedIndexes = fakeData.map(el => el.id)
       expectedIndexes.forEach((el, index) => {
         expect(settings[index].id).toBe(`setting_${el}`)
       })
-
       const deviceGuideSettingsNames = this.vm.$el.querySelectorAll('.device-guide-setting-name')
       const expectedDeviceGuideSettingsNames = fakeData.map(el => el.name)
       expectedDeviceGuideSettingsNames.forEach((el, index) => {
         expect(deviceGuideSettingsNames[index].innerHTML).toBe(el)
       })
-
       done()
     })
   })

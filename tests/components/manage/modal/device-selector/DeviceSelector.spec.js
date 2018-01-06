@@ -1,4 +1,4 @@
-import DeviceSelector from 'src/components/manage/modal/device-selector/DeviceSelector.vue'
+import DeviceSelectorComponent from '../../../../../src/components/manage/modal/device-selector/DeviceSelector.vue'
 import TestCase from '../../../../cases/ComponentTestCase'
 
 describe('DeviceSelector', () => {
@@ -6,7 +6,7 @@ describe('DeviceSelector', () => {
     const vueOptions = {
       template: '<div><device-selector></device-selector></div>',
       components: {
-        deviceSelector: DeviceSelector
+        deviceSelector: DeviceSelectorComponent
       }
     }
 

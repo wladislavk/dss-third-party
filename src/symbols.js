@@ -78,6 +78,7 @@ export default {
     tasksPatientNumber: 'TASKS_PATIENT_NUMBER'
   },
   mutations: {
+    checkGuideSetting: 'CHECK_GUIDE_SETTING',
     clearPatientData: 'CLEAR_PATIENT_DATA',
     coMorbidity: 'CO_MORBIDITY',
     coMorbidityWeight: 'CO_MORBIDITY_WEIGHT',
@@ -99,6 +100,7 @@ export default {
     memos: 'MEMOS',
     modal: 'MODAL',
     modifyEpworthProps: 'MODIFY_EPWORTH_PROPS',
+    moveGuideSettingSlider: 'MOVE_GUIDE_SETTING_SLIDER',
     notificationNumbers: 'NOTIFICATION_NUMBERS',
     patientData: 'PATIENT_DATA',
     patientId: 'PATIENT_ID',
@@ -122,8 +124,7 @@ export default {
     showSearchHints: 'SHOW_SEARCH_HINTS',
     surveyWeight: 'SURVEY_WEIGHT',
     symptoms: 'SYMPTOMS',
-    userInfo: 'USER_INFO',
-    updateGuideSetting: 'UPDATE_GUIDE_SETTING'
+    userInfo: 'USER_INFO'
   },
   actions: {
     addTask: 'ADD_TASK',

@@ -13,16 +13,13 @@ export default {
   },
   methods: {
     updateDevice (deviceId, name) {
-      if (this.patientName.length === 0) {
+      if (!this.patientName.length) {
         return
       }
-
       const CONFIRM_TEXT = `Do you want to select ${name} for ${this.patientName}`
-
       if (!Alerter.isConfirmed(CONFIRM_TEXT)) {
         return
       }
-
       this.$store.dispatch(symbols.actions.updateFlowDevice, deviceId)
     },
     onClickReset () {

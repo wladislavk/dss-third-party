@@ -1,21 +1,17 @@
-import symbols from 'src/symbols'
-import DeviceResults from 'src/components/manage/modal/device-selector/DeviceResults.vue'
-import TestCase from '../../../../cases/ComponentTestCase'
+import Vue from 'vue'
+import sinon from 'sinon'
+import moxios from 'moxios'
+import symbols from '../../../../../src/symbols'
+import DeviceResultsComponent from '../../../../../src/components/manage/modal/device-selector/DeviceResults.vue'
+import store from '../../../../../src/store'
+import Alerter from '../../../../../src/services/Alerter'
+import endpoints from '../../../../../src/endpoints'
+import http from '../../../../../src/services/http'
 
-describe('DeviceSelector', () => {
+describe('DeviceResults component', () => {
   beforeEach(function () {
-    const vueOptions = {
-      template: '<div><device-results></device-results></div>',
-      components: {
-        deviceResults: DeviceResults
-      }
-    }
-
-    this.vue = TestCase.getVue(vueOptions)
-    this.vm = this.vue.$mount()
-  })
-
-  it('should have correct device results', function (done) {
+    this.sandbox = sinon.createSandbox()
+    moxios.install()
     const fakeData = [
       {
         name: 'SUAD Ultra Elite',
@@ -27,50 +23,114 @@ describe('DeviceSelector', () => {
         name: 'SUAD Hard',
         id: 14,
         value: 33,
-        image_path: 'dummy.jpg'
-      },
-      {
-        name: 'Narval',
-        id: 7,
-        value: 33,
-        image_path: 'dummy.jpg'
-      },
-      {
-        name: 'SUAD Thermo',
-        id: 15,
-        value: 33,
-        image_path: 'dummy.jpg'
-      },
-      {
-        name: 'Dorsal Hard',
-        id: 2,
-        value: 33,
         image_path: ''
       }
     ]
+    store.commit(symbols.mutations.deviceGuideResults, fakeData)
 
-    this.vue.$store.commit(symbols.mutations.deviceGuideResults, fakeData)
+    const Component = Vue.extend(DeviceResultsComponent)
+    this.mount = function (propsData) {
+      return new Component({
+        store: store,
+        propsData: propsData
+      }).$mount()
+    }
+  })
 
-    const deviceResultsBlock = this.vm.$el.querySelector('div#device-results-div')
-    expect(deviceResultsBlock).not.toBeNull()
+  afterEach(function () {
+    moxios.uninstall()
+    this.sandbox.restore()
+  })
 
-    this.vue.$nextTick(() => {
-      const deviceResultsItems = this.vm.$el.querySelectorAll('div#device-results-div > ul > li')
+  it('should show correct device results', function () {
+    const vm = this.mount({
+      patientName: 'John'
+    })
+    const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
+    expect(deviceResultsItems.length).toBe(2)
+    const firstResult = deviceResultsItems[0]
+    const secondResult = deviceResultsItems[1]
+    expect(firstResult.className).toBe('box_go')
+    expect(secondResult.className).toBe('')
+    const firstLink = firstResult.querySelector('a')
+    expect(firstLink).not.toBeNull()
+    expect(firstLink.textContent).toBe('SUAD Ultra Elite (34)')
+    const firstSpan = firstResult.querySelector('span')
+    expect(firstSpan).toBeNull()
+  })
 
-      const itemWithImagePathIndex = 0
-      const itemWithoutImagePathIndex = 4
-      expect(deviceResultsItems[itemWithImagePathIndex].className).toBe('box_go')
-      expect(deviceResultsItems[itemWithoutImagePathIndex].className.length).toBe(0)
+  it('should show device results without patient', function () {
+    const vm = this.mount({
+      patientName: ''
+    })
+    const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
+    expect(deviceResultsItems.length).toBe(2)
+    const firstResult = deviceResultsItems[0]
+    const firstLink = firstResult.querySelector('a')
+    expect(firstLink).toBeNull()
+    const firstSpan = firstResult.querySelector('span')
+    expect(firstSpan).not.toBeNull()
+    expect(firstSpan.textContent).toBe('SUAD Ultra Elite (34)')
+  })
 
-      expect(deviceResultsItems[itemWithImagePathIndex].firstElementChild.firstElementChild.src).toContain('dummy.jpg')
-      expect(deviceResultsItems[itemWithoutImagePathIndex].firstElementChild.tagName).toBe('A')
+  it('should update device', function (done) {
+    moxios.stubRequest(http.formUrl(endpoints.tmjClinicalExams.updateFlowDevice + '/' + 13), {
+      status: 200,
+      responseText: {
+        message: 'foo'
+      }
+    })
+    let alertText = ''
+    let confirmText = ''
+    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
+      alertText = text
+    })
+    this.sandbox.stub(Alerter, 'isConfirmed').callsFake((text) => {
+      confirmText = text
+      return true
+    })
+    const vm = this.mount({
+      patientName: 'John'
+    })
+    const firstLink = vm.$el.querySelector('div#device-results-div > ul > li:first-child > a')
+    expect(firstLink).not.toBeNull()
+    firstLink.click()
+    moxios.wait(() => {
+      expect(confirmText).toBe('Do you want to select SUAD Ultra Elite for John')
+      expect(alertText).toBe('foo')
+      done()
+    })
+  })
 
-      deviceResultsItems.forEach((el, index) => {
-        const name = fakeData[index].name
-        const value = fakeData[index].value
-        expect(el.childNodes[2].innerHTML.trim()).toBe(`${name} (${value})`)
-      })
+  it('should update device without confirmation', function (done) {
+    let alertText = ''
+    this.sandbox.stub(Alerter, 'alert').callsFake((text) => {
+      alertText = text
+    })
+    this.sandbox.stub(Alerter, 'isConfirmed').callsFake(() => {
+      return false
+    })
+    const vm = this.mount({
+      patientName: 'John'
+    })
+    const firstLink = vm.$el.querySelector('div#device-results-div > ul > li:first-child > a')
+    firstLink.click()
+    vm.$nextTick(() => {
+      expect(alertText).toBe('')
+      done()
+    })
+  })
 
+  it('should reset device results', function (done) {
+    const vm = this.mount({})
+    const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
+    expect(deviceResultsItems.length).toBe(2)
+    const resetLink = vm.$el.querySelector('a#reset-link')
+    expect(resetLink).not.toBeNull()
+    resetLink.click()
+    vm.$nextTick(() => {
+      const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
+      expect(deviceResultsItems.length).toBe(0)
       done()
     })
   })

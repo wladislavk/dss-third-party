@@ -96,7 +96,7 @@ export default {
     })
   },
 
-  [symbols.actions.getDeviceGuideResults] ({commit, dispatch, state, rootState}) {
+  [symbols.actions.getDeviceGuideResults] ({state, rootState, commit, dispatch}) {
     const impressions = {}
     const checkedOptions = {}
     for (let setting of state[symbols.state.deviceGuideSettingOptions]) {
@@ -110,7 +110,10 @@ export default {
       impressions: impressions,
       options: checkedOptions
     })
-    const endpoint = endpoints.guideDevices.withImages + '?' + queryString
+    let endpoint = endpoints.guideDevices.withImages
+    if (queryString) {
+      endpoint += '?' + queryString
+    }
     http.token = rootState.main[symbols.state.mainToken]
     http.get(endpoint).then((response) => {
       const data = response.data.data
@@ -131,5 +134,21 @@ export default {
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
     })
+  },
+
+  [symbols.actions.moveGuideSettingSlider] ({commit}, {id, value, labels}) {
+    let optionId = 0
+    for (let [key, label] of Object.entries(labels)) {
+      if (value === label) {
+        // Object.entries treats all values as strings
+        optionId = parseInt(key)
+        break
+      }
+    }
+    const data = {
+      id: id,
+      value: optionId
+    }
+    commit(symbols.mutations.moveGuideSettingSlider, data)
   }
 }

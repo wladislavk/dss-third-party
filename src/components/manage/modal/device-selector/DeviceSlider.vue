@@ -13,11 +13,10 @@
                 v-on:callback="moveSlider($event)"
             ></vue-slider>
             <input
+                type="checkbox"
                 v-bind:id="'setting_imp_' + id"
                 v-bind:name="'setting_imp_' + id"
-                v-bind:checked="checked"
                 v-on:change="checkSetting($event)"
-                type="checkbox"
                 class="imp_chk"
                 value="1"
             />
@@ -25,7 +24,7 @@
         <div
             v-bind:id="'label_' + id"
             class="label"
-        >{{ checkedOptionData }}</div>
+        >{{ checkedOptionName }}</div>
     </div>
 </template>
 

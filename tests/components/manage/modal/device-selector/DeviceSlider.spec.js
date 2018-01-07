@@ -1,85 +1,69 @@
-import endpoints from '../../../../../src/endpoints'
-import http from '../../../../../src/services/http'
+import Vue from 'vue'
 import DeviceSliderComponent from '../../../../../src/components/manage/modal/device-selector/DeviceSlider.vue'
-import TestCase from '../../../../cases/ComponentTestCase'
-import $ from 'jquery'
-import sliderUI from 'jquery-ui/slider'
-import moxios from 'moxios'
+import store from '../../../../../src/store'
+import symbols from '../../../../../src/symbols'
 
-describe('DeviceForm', () => {
+describe('DeviceSlider component', () => {
   beforeEach(function () {
-    window.$ = $
-    window.$.fn.extend = sliderUI
-
-    moxios.install()
-
-    const vueOptions = {
-      template: '<div><device-slider></device-slider></div>',
-      components: {
-        deviceSlider: DeviceSliderComponent
-      }
+    this.props = {
+      id: 13,
+      name: 'Comfort',
+      labels: ['Not Important', 'Neutral', 'Very Important'],
+      checkedOption: 1,
+      checked: false
     }
-    this.vue = TestCase.getVue(vueOptions)
-    this.vm = this.vue.$mount()
+    store.state.dashboard[symbols.state.deviceGuideSettingOptions] = [this.props]
+
+    const Component = Vue.extend(DeviceSliderComponent)
+    this.mount = function () {
+      return new Component({
+        store: store,
+        propsData: this.props
+      }).$mount()
+    }
   })
 
-  afterEach(function () {
-    moxios.uninstall()
+  it('shows device settings', function () {
+    const vm = this.mount()
+
+    const rootDiv = vm.$el
+    expect(rootDiv.id).toBe('setting_13')
+    const header = rootDiv.querySelector('strong.device-guide-setting-name')
+    expect(header.textContent).toBe('Comfort')
+    const label = rootDiv.querySelector('div.label')
+    expect(label.textContent).toBe('Neutral')
   })
 
-  it('should have correct devices settings', function (done) {
-    const fakeData = [
-      {
-        id: 13,
-        labels: 'Not Important,Neutral,Very Important',
-        name: 'Comfort',
-        setting_type: 0,
-        number: 3
-      },
-      {
-        id: 3,
-        labels: 'None,Mild,Mod,Mode/Sev,Severe',
-        name: 'Bruxism',
-        setting_type: 0,
-        number: 5
-      },
-      {
-        id: 7,
-        labels: 'Small,Small/Med,Normal,Large,Large/Scalloped',
-        name: 'Tongue',
-        setting_type: 0,
-        number: 5
-      },
-      {
-        id: 5,
-        labels: 'Deep,Mod/Deep,Normal,Mod/Shallow,Shallow',
-        name: 'Bite',
-        setting_type: 0,
-        number: 5
-      }
-    ]
-
-    moxios.stubRequest(http.formUrl(endpoints.guideSettingOptions.settingIds), {
-      status: 200,
-      responseText: {
-        data: fakeData
-      }
-    })
-
-    moxios.wait(() => {
-      const expectedSettingsNumber = 4
-      const settings = this.vm.$el.querySelectorAll('#device_form > .setting')
-      expect(settings.length).toBe(expectedSettingsNumber)
-      const expectedIndexes = fakeData.map(el => el.id)
-      expectedIndexes.forEach((el, index) => {
-        expect(settings[index].id).toBe(`setting_${el}`)
-      })
-      const deviceGuideSettingsNames = this.vm.$el.querySelectorAll('.device-guide-setting-name')
-      const expectedDeviceGuideSettingsNames = fakeData.map(el => el.name)
-      expectedDeviceGuideSettingsNames.forEach((el, index) => {
-        expect(deviceGuideSettingsNames[index].innerHTML).toBe(el)
-      })
+  it('changes label when the slider is moved', function (done) {
+    store.state.dashboard[symbols.state.deviceGuideResults] = ['foo', 'bar']
+    const vm = this.mount()
+    const newValue = 'Very Important'
+    vm.moveSlider(newValue)
+    vm.$nextTick(() => {
+      // we cannot use HTML because it gets refreshed during the re-rendering of the parent component
+      expect(store.state.dashboard[symbols.state.deviceGuideSettingOptions][0].checkedOption).toBe(2)
+      expect(store.state.dashboard[symbols.state.deviceGuideResults]).toEqual([])
       done()
+    })
+  })
+
+  it('resets results when the checkbox is clicked', function (done) {
+    store.state.dashboard[symbols.state.deviceGuideSettingOptions] = [this.props]
+    store.state.dashboard[symbols.state.deviceGuideResults] = ['foo', 'bar']
+    const vm = this.mount()
+    const checkbox = vm.$el.querySelector('input.imp_chk')
+    checkbox.checked = true
+    const changeEvent = new Event('change')
+    checkbox.dispatchEvent(changeEvent)
+    vm.$nextTick(() => {
+      expect(store.state.dashboard[symbols.state.deviceGuideResults]).toEqual([])
+      expect(store.state.dashboard[symbols.state.deviceGuideSettingOptions][0].checked).toBe(true)
+      checkbox.checked = false
+      checkbox.dispatchEvent(changeEvent)
+      vm.$nextTick(() => {
+        expect(store.state.dashboard[symbols.state.deviceGuideSettingOptions][0].checked).toBe(false)
+        done()
+      })
     })
   })
 })

@@ -146,6 +146,7 @@ export default {
     handleErrors: 'HANDLE_ERRORS',
     mainLogin: 'MAIN_LOGIN',
     memos: 'MEMOS',
+    moveGuideSettingSlider: 'MOVE_GUIDE_SETTING_SLIDER',
     parseScreenerResults: 'PARSE_SCREENER_RESULTS',
     patientData: 'PATIENT_DATA',
     patientSearchList: 'PATIENT_SEARCH_LIST',

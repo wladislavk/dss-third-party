@@ -542,4 +542,51 @@ describe('Dashboard module actions', () => {
       }, 100)
     })
   })
+
+  describe('moveGuideSettingSlider action', () => {
+    it('sets option value', function () {
+      const data = {
+        id: 1,
+        value: 'bar',
+        labels: {
+          2: 'foo',
+          4: 'bar',
+          7: 'bar'
+        }
+      }
+      DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
+      const expectedMutations = [
+        {
+          type: symbols.mutations.moveGuideSettingSlider,
+          payload: {
+            id: 1,
+            value: 4
+          }
+        }
+      ]
+      expect(this.testCase.mutations).toEqual(expectedMutations)
+    })
+    it('leaves option unchanged if value not found', function () {
+      const data = {
+        id: 1,
+        value: 'baz',
+        labels: {
+          2: 'foo',
+          4: 'bar',
+          7: 'bar'
+        }
+      }
+      DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
+      const expectedMutations = [
+        {
+          type: symbols.mutations.moveGuideSettingSlider,
+          payload: {
+            id: 1,
+            value: 0
+          }
+        }
+      ]
+      expect(this.testCase.mutations).toEqual(expectedMutations)
+    })
+  })
 })

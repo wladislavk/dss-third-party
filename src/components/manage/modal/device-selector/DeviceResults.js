@@ -25,6 +25,9 @@ export default {
     onClickReset () {
       this.$store.commit(symbols.mutations.resetDeviceGuideSettingOptions)
       this.$store.commit(symbols.mutations.deviceGuideResults, [])
+    },
+    onDeviceSubmit () {
+      this.$store.dispatch(symbols.actions.getDeviceGuideResults)
     }
   }
 }

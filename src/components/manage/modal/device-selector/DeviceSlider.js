@@ -22,8 +22,15 @@ export default {
   },
   data () {
     return {
-      checked: false,
       checkedOptionData: this.checkedOption
+    }
+  },
+  computed: {
+    checkedOptionName () {
+      if (this.labels.length >= this.checkedOptionData) {
+        return this.labels[this.checkedOptionData]
+      }
+      return ''
     }
   },
   components: {
@@ -36,20 +43,15 @@ export default {
         isChecked: event.target.checked
       }
       this.$store.commit(symbols.mutations.checkGuideSetting, data)
+      this.$store.commit(symbols.mutations.deviceGuideResults, [])
     },
     moveSlider (value) {
-      let optionId = 0
-      for (let [key, label] of this.labels.entries()) {
-        if (value === label) {
-          optionId = key
-          break
-        }
-      }
       const data = {
         id: this.id,
-        value: optionId
+        value: value,
+        labels: this.labels
       }
-      this.$store.commit(symbols.mutations.moveGuideSettingSlider, data)
+      this.$store.dispatch(symbols.actions.moveGuideSettingSlider, data)
       this.$store.commit(symbols.mutations.deviceGuideResults, [])
     }
   }

@@ -350,10 +350,3 @@ export const NOTIFICATIONS = [
     countNonZero: 'bad_count'
   }
 ]
-
-export const DEVICE_SELECTOR_INSTRUCTIONS = [
-  'Evaluate pt for each category using sliding bar',
-  'Choose the three most important categories (if needed)',
-  'Click on Sort Devices',
-  'Click the device to add to Pt chart, or click "Reset" to start over.'
-]

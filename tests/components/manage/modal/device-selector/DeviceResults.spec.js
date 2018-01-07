@@ -12,7 +12,7 @@ describe('DeviceResults component', () => {
   beforeEach(function () {
     this.sandbox = sinon.createSandbox()
     moxios.install()
-    const fakeData = [
+    this.fakeData = [
       {
         name: 'SUAD Ultra Elite',
         id: 13,
@@ -26,7 +26,7 @@ describe('DeviceResults component', () => {
         image_path: ''
       }
     ]
-    store.commit(symbols.mutations.deviceGuideResults, fakeData)
+    store.commit(symbols.mutations.deviceGuideResults, this.fakeData)
 
     const Component = Vue.extend(DeviceResultsComponent)
     this.mount = function (propsData) {
@@ -117,6 +117,26 @@ describe('DeviceResults component', () => {
     firstLink.click()
     vm.$nextTick(() => {
       expect(alertText).toBe('')
+      done()
+    })
+  })
+
+  it('should retrieve device results', function (done) {
+    store.commit(symbols.mutations.deviceGuideResults, [])
+    moxios.stubRequest(http.formUrl(endpoints.guideDevices.withImages), {
+      status: 200,
+      responseText: {
+        data: this.fakeData
+      }
+    })
+    const vm = this.mount({})
+    const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
+    expect(deviceResultsItems.length).toBe(0)
+    const sortDevicesButton = vm.$el.querySelector('div#sort-devices-button > a')
+    sortDevicesButton.click()
+    moxios.wait(() => {
+      const deviceResultsItems = vm.$el.querySelectorAll('div#device-results-div > ul > li')
+      expect(deviceResultsItems.length).toBe(2)
       done()
     })
   })

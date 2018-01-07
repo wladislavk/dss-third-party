@@ -41,7 +41,6 @@ class GuideSettingOptionsApiTest extends ApiTestCase
             'id' => 13,
             'labels' => ['Not Important', 'Neutral', 'Very Important'],
             'name' => 'Comfort',
-            'setting_type' => 0,
             'number' => 3,
         ];
         $this->assertEquals($expectedFirst, $this->getResponseData()[0]);

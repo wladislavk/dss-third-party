@@ -32,8 +32,45 @@ class GuideDevicesApiTest extends ApiTestCase
 
     public function testGetWithImages()
     {
-        $settings = '13_1,3_1,7_1,5_1,2_1,6_1,1_1,4_1,11_1,12_1';
-        $this->get(sprintf('%s/guide-devices/with-images?settings=%s', self::ROUTE_PREFIX, $settings));
+        $impressions = [
+            1 => 0,
+            2 => 0,
+            3 => 0,
+            4 => 0,
+            5 => 0,
+            6 => 0,
+            7 => 0,
+            8 => 0,
+            9 => 0,
+            10 => 0,
+            11 => 0,
+            12 => 0,
+            13 => 0,
+        ];
+        $options = [
+            1 => 1,
+            2 => 1,
+            3 => 1,
+            4 => 1,
+            5 => 1,
+            6 => 1,
+            7 => 1,
+            8 => 1,
+            9 => 1,
+            10 => 1,
+            11 => 1,
+            12 => 1,
+            13 => 1,
+        ];
+        $queryString = '';
+        foreach ($impressions as $key => $impression) {
+            $queryString .= "impressions[$key]=$impression&";
+        }
+        foreach ($options as $optionKey => $option) {
+            $queryString .= "options[$optionKey]=$option&";
+        }
+        $queryString = substr($queryString, 0, strlen($queryString) - 1);
+        $this->get(self::ROUTE_PREFIX . '/guide-devices/with-images?' . $queryString);
         $this->assertResponseOk();
         $this->assertEquals(19, count($this->getResponseData()));
         $expectedFirst = [

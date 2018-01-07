@@ -39,10 +39,10 @@ class DeviceSelector extends BaseContext
             $this->getCommonClient()->switchToIFrame('aj_pop');
         }
 
-        $expectedModalTitle = 'Device C-Lect for  ?';
+        $expectedModalTitle = 'Device C-Lect';
         $parentModalElement = $this->findCss('div#popupContact');
         $modalTitle = $this->findCss('h2', $parentModalElement)->getHtml();
-        Assert::assertEquals($expectedModalTitle, $modalTitle);
+        Assert::assertContains($expectedModalTitle, $modalTitle);
     }
 
     /**
@@ -100,8 +100,9 @@ class DeviceSelector extends BaseContext
     {
         $this->wait(self::MEDIUM_WAIT_TIME);
 
-        $deviceResults = $this->findAllCss('ul#results > li > a');
+        $deviceResults = $this->findAllCss('ul#results > li');
         $expectedDeviceResults = $table->getHash();
+        Assert::assertEquals(sizeof($expectedDeviceResults), sizeof($deviceResults));
         foreach ($expectedDeviceResults as $index => $row) {
             $expectedName = "{$row['name']} ({$row['quantity']})";
             Assert::assertEquals($expectedName, $deviceResults[$index]->getText());
@@ -122,7 +123,7 @@ class DeviceSelector extends BaseContext
      */
     public function testCheckboxesUnchecked()
     {
-        $checkboxes = $this->findAllCss('div.setting > input[type="checkbox"]');
+        $checkboxes = $this->findAllCss('div.setting input[type="checkbox"]');
         Assert::assertGreaterThan(0, sizeof($checkboxes));
         foreach ($checkboxes as $checkbox) {
             Assert::assertFalse($checkbox->isChecked());

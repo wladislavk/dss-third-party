@@ -100,7 +100,7 @@ export default {
     const impressions = {}
     const checkedOptions = {}
     for (let setting of state[symbols.state.deviceGuideSettingOptions]) {
-      checkedOptions[setting.id] = setting.checkedOption
+      checkedOptions[setting.id] = setting.checkedOption + 1
       impressions[setting.id] = 0
       if (setting.checked) {
         impressions[setting.id] = 1

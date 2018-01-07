@@ -27,6 +27,7 @@
                 v-bind:id="deviceGuideSetting.id"
                 v-bind:name="deviceGuideSetting.name"
                 v-bind:labels="deviceGuideSetting.labels"
+                v-bind:checked="deviceGuideSetting.checked"
                 v-bind:checked-option="deviceGuideSetting.checkedOption"
                 v-bind:key="deviceGuideSetting.id"
             ></device-slider>

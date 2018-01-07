@@ -16,6 +16,7 @@
                 type="checkbox"
                 v-bind:id="'setting_imp_' + id"
                 v-bind:name="'setting_imp_' + id"
+                v-bind:checked="checked"
                 v-on:change="checkSetting($event)"
                 class="imp_chk"
                 value="1"

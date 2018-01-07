@@ -407,7 +407,7 @@ describe('Dashboard module actions', () => {
         [symbols.state.deviceGuideSettingOptions]: [
           {
             id: 13,
-            checkedOption: 2,
+            checkedOption: 1,
             checked: false,
             labels: ['Not Important', 'Neutral', 'Very Important'],
             name: 'Comfort',
@@ -415,7 +415,7 @@ describe('Dashboard module actions', () => {
           },
           {
             id: 3,
-            checkedOption: 3,
+            checkedOption: 2,
             checked: true,
             labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
             name: 'Bruxism',

@@ -15,6 +15,10 @@ export default {
       type: Array,
       required: true
     },
+    checked: {
+      type: Boolean,
+      default: false
+    },
     checkedOption: {
       type: Number,
       required: true
@@ -27,8 +31,8 @@ export default {
   },
   computed: {
     checkedOptionName () {
-      if (this.labels.length >= this.checkedOptionData) {
-        return this.labels[this.checkedOptionData]
+      if (this.labels.length >= this.checkedOption) {
+        return this.labels[this.checkedOption]
       }
       return ''
     }

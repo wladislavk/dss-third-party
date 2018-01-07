@@ -125,11 +125,12 @@ class GuideSettingOptionsController extends BaseRestController
 
     /**
      * @SWG\Get(
-     *     path="/guide-setting-options/settingIds",
+     *     path="/guide-setting-options/setting-ids",
      *     @SWG\Response(response="200", description="Get Device Guide Setting options")
      *     @SWG\Response(response="default", ref="#/responses/error_response")
      * )
      *
+     * @param GuideSettingOptionsRetriever $guideSettingOptionsRetriever
      * @return \Illuminate\Http\JsonResponse
      */
     public function getOptionsForSettingIds(GuideSettingOptionsRetriever $guideSettingOptionsRetriever)

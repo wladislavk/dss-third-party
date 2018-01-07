@@ -23,7 +23,6 @@ class GuideSettingOptionsRetriever
     public function get()
     {
         $guideSettingOptions = $this->guideSettingOptionRepository->getOptionsBySettingIds();
-
         if (empty($guideSettingOptions)) {
             return [];
         }

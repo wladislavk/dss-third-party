@@ -3,7 +3,6 @@
 namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
-use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\AppointmentSummaryRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\TmjClinicalExamRepository;

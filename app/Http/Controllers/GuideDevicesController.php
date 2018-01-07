@@ -122,10 +122,16 @@ class GuideDevicesController extends BaseRestController
      *     tags={"guide-devices"},
      *     summary="Get Device Guide results with images",
      *     @SWG\Parameter(
-     *         name="settings",
+     *         name="impressions",
      *         in="query",
-     *         required=true,
-     *         type="string"
+     *         required=false,
+     *         type="array"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="options",
+     *         in="query",
+     *         required=false,
+     *         type="array"
      *     ),
      *     @SWG\Response(
      *         response="200",
@@ -146,8 +152,9 @@ class GuideDevicesController extends BaseRestController
         DeviceGuideResultsRetriever $deviceGuideResultsRetriever,
         Request $request
     ) {
-        $settings = $request->input('settings');
-        $devicesArray = $deviceGuideResultsRetriever->get($settings);
+        $impressions = $request->input('impressions', []);
+        $checkedOptions = $request->input('options', []);
+        $devicesArray = $deviceGuideResultsRetriever->get($impressions, $checkedOptions);
 
         return ApiResponse::responseOk('', $devicesArray);
     }

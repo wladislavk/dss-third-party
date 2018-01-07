@@ -4,12 +4,10 @@ namespace Tests\Unit\Helpers;
 
 use DentalSleepSolutions\Eloquent\Repositories\Dental\DeviceRepository;
 use DentalSleepSolutions\Eloquent\Repositories\Dental\GuideSettingRepository;
-use DentalSleepSolutions\Helpers\DeviceSettingsConverter;
 use DentalSleepSolutions\Helpers\DeviceInfoGetter;
 use DentalSleepSolutions\Helpers\DeviceGuideResultsRetriever;
 use DentalSleepSolutions\Structs\DeviceInfo;
 use DentalSleepSolutions\Eloquent\Models\Dental\Device;
-use DentalSleepSolutions\Structs\DeviceSettings;
 use DentalSleepSolutions\Eloquent\Models\Dental\GuideSetting;
 use DentalSleepSolutions\Constants\DeviceSettingTypes;
 use Illuminate\Database\Eloquent\Collection;
@@ -30,7 +28,8 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
         'value' => 80.5,
         'image_path' => 'test image path2',
     ];
-    const DEVICE_SETTINGS = '1_1,2_1,3_1_1';
+    const CHECKED_OPTIONS = [1, 2, 3];
+    const IMPRESSIONS = [3];
 
     /**
      * @var DeviceGuideResultsRetriever
@@ -54,13 +53,11 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
 
         $deviceRepository = $this->mockDeviceRepository();
         $guideSettingRepository = $this->mockGuideSettingRepository();
-        $deviceSettingsConverter = $this->mockDeviceSettingsConverter();
         $deviceInfoGetter = $this->mockDeviceInfoGetter();
 
         $this->deviceGuideResultsRetriever = new DeviceGuideResultsRetriever(
             $deviceRepository,
             $guideSettingRepository,
-            $deviceSettingsConverter,
             $deviceInfoGetter
         );
     }
@@ -68,15 +65,13 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
     public function testGetWithoutDevices()
     {
         $this->isEmptyDevices = true;
-        $devicesArray = $this->deviceGuideResultsRetriever->get(self::DEVICE_SETTINGS);
-
+        $devicesArray = $this->deviceGuideResultsRetriever->get(self::IMPRESSIONS, self::CHECKED_OPTIONS);
         $this->assertEquals([], $devicesArray);
     }
 
     public function testGetWithDeviceInfo()
     {
-        $devicesArray = $this->deviceGuideResultsRetriever->get(self::DEVICE_SETTINGS);
-
+        $devicesArray = $this->deviceGuideResultsRetriever->get(self::IMPRESSIONS, self::CHECKED_OPTIONS);
         $expectedDevicesArray = [self::DEVICE_INFO_2, self::DEVICE_INFO_1];
         $this->assertEquals($expectedDevicesArray, $devicesArray);
     }
@@ -84,8 +79,7 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
     public function testGetWithoutDeviceInfo()
     {
         $this->withDeviceInfo = false;
-        $devicesArray = $this->deviceGuideResultsRetriever->get(self::DEVICE_SETTINGS);
-
+        $devicesArray = $this->deviceGuideResultsRetriever->get(self::IMPRESSIONS, self::CHECKED_OPTIONS);
         $this->assertEquals([], $devicesArray);
     }
 
@@ -107,17 +101,6 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
         return $guideSettingRepository;
     }
 
-    private function mockDeviceSettingsConverter()
-    {
-        /** @var DeviceSettingsConverter|MockInterface $deviceSettingsConverter */
-        $deviceSettingsConverter = \Mockery::mock(DeviceSettingsConverter::class);
-        $deviceSettingsConverter->shouldReceive('convertSettings')
-            ->with(self::DEVICE_SETTINGS)
-            ->andReturnUsing([$this, 'getDeviceSettingsStructFakeData']);
-
-        return $deviceSettingsConverter;
-    }
-
     private function mockDeviceInfoGetter()
     {
         /** @var DeviceInfoGetter|MockInterface $deviceInfoGetter */
@@ -130,7 +113,7 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
         return $deviceInfoGetter;
     }
 
-    public function getFakeDeviceInfo($device, $guideSettings, $settings)
+    public function getFakeDeviceInfo($device)
     {
         if ($this->withDeviceInfo) {
             $deviceInfo = new DeviceInfo();
@@ -147,24 +130,6 @@ class DeviceGuideResultsRetrieverTest extends UnitTestCase
         }
 
         return null;
-    }
-
-    public function getDeviceSettingsStructFakeData()
-    {
-        $deviceSettings1 = new DeviceSettings();
-        $deviceSettings1->id = 1;
-        $deviceSettings1->checkedRangeValue = 1;
-
-        $deviceSettings2 = new DeviceSettings();
-        $deviceSettings2->id = 2;
-        $deviceSettings2->checkedRangeValue = 1;
-
-        $deviceSettings3 = new DeviceSettings();
-        $deviceSettings3->id = 3;
-        $deviceSettings3->impression = 1;
-        $deviceSettings3->checkedRangeValue = 1;
-
-        return [$deviceSettings1, $deviceSettings2, $deviceSettings3];
     }
 
     public function getGuideSettingFakeData()

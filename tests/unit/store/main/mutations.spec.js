@@ -1,6 +1,6 @@
-import { NOTIFICATION_NUMBERS } from '../../../src/constants/main'
-import MainModule from '../../../src/store/main'
-import symbols from '../../../src/symbols'
+import { NOTIFICATION_NUMBERS } from '../../../../src/constants/main'
+import MainModule from '../../../../src/store/main'
+import symbols from '../../../../src/symbols'
 
 describe('Main module mutations', () => {
   describe('notificationNumbers mutation', () => {

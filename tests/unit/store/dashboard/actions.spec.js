@@ -1,12 +1,12 @@
-import endpoints from '../../../src/endpoints'
-import http from '../../../src/services/http'
+import endpoints from '../../../../src/endpoints'
+import http from '../../../../src/services/http'
 import sinon from 'sinon'
-import symbols from '../../../src/symbols'
-import SwalWrapper from '../../../src/wrappers/SwalWrapper'
-import DashboardModule from '../../../src/store/dashboard'
-import TestCase from '../../cases/StoreTestCase'
-import LocationWrapper from '../../../src/wrappers/LocationWrapper'
-import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
+import symbols from '../../../../src/symbols'
+import SwalWrapper from '../../../../src/wrappers/SwalWrapper'
+import DashboardModule from '../../../../src/store/dashboard'
+import TestCase from '../../../cases/StoreTestCase'
+import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
+import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
 
 describe('Dashboard module actions', () => {
   beforeEach(function () {

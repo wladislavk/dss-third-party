@@ -1,5 +1,5 @@
-import symbols from '../../../src/symbols'
-import TasksModule from '../../../src/store/tasks'
+import symbols from '../../../../src/symbols'
+import TasksModule from '../../../../src/store/tasks'
 
 describe('Tasks module getters', () => {
   describe('tasksNumber getter', () => {

@@ -1,9 +1,9 @@
-import endpoints from '../../../src/endpoints'
-import http from '../../../src/services/http'
+import endpoints from '../../../../src/endpoints'
+import http from '../../../../src/services/http'
 import sinon from 'sinon'
-import symbols from '../../../src/symbols'
-import TasksModule from '../../../src/store/tasks'
-import TestCase from '../../cases/StoreTestCase'
+import symbols from '../../../../src/symbols'
+import TasksModule from '../../../../src/store/tasks'
+import TestCase from '../../../cases/StoreTestCase'
 
 describe('Tasks module actions', () => {
   beforeEach(function () {

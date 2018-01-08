@@ -1,10 +1,10 @@
 import axios from 'axios'
-import endpoints from '../../../src/endpoints'
-import http from '../../../src/services/http'
+import endpoints from '../../../../src/endpoints'
+import http from '../../../../src/services/http'
 import sinon from 'sinon'
-import symbols from '../../../src/symbols'
-import TestCase from '../../cases/StoreTestCase'
-import ScreenerModule from '../../../src/store/screener'
+import symbols from '../../../../src/symbols'
+import TestCase from '../../../cases/StoreTestCase'
+import ScreenerModule from '../../../../src/store/screener'
 
 describe('Screener module actions', () => {
   beforeEach(function () {

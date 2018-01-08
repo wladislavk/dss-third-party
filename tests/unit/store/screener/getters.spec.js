@@ -1,5 +1,5 @@
-import symbols from '../../../src/symbols'
-import ScreenerModule from '../../../src/store/screener'
+import symbols from '../../../../src/symbols'
+import ScreenerModule from '../../../../src/store/screener'
 
 describe('Screener module getters', () => {
   describe('fullName getter', () => {

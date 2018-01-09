@@ -1,10 +1,11 @@
 import moment from 'moment'
 import symbols from '../../../symbols'
-import { loadPopup } from '../../../assets/js/manage/popup'
 import http from '../../../services/http'
 import Datepicker from 'vuejs-datepicker'
 import AppointmentSummaryComponent from './AppointmentSummary.vue'
 import ChartButtonsComponent from './ChartButtons.vue'
+import TrackerSectionOneComponent from './TrackerSectionOne.vue'
+import TrackerSectionTwoComponent from './TrackerSectionTwo.vue'
 
 export default {
   data () {
@@ -44,7 +45,9 @@ export default {
   components: {
     datepicker: Datepicker,
     appointmentSummary: AppointmentSummaryComponent,
-    chartButtons: ChartButtonsComponent
+    chartButtons: ChartButtonsComponent,
+    trackerSectionOne: TrackerSectionOneComponent,
+    trackerSectionTwo: TrackerSectionTwoComponent
   },
   methods: {
     getFirstStepClass (step) {

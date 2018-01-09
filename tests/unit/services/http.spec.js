@@ -1,5 +1,5 @@
 import axios from 'axios'
-import http from '../../src/services/http'
+import http from '../../../src/services/http'
 import sinon from 'sinon'
 
 describe('HTTP Service', () => {

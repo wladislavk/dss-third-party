@@ -1,5 +1,5 @@
-import PatientsModule from '../../../src/store/patients'
-import symbols from '../../../src/symbols'
+import PatientsModule from '../../../../src/store/patients'
+import symbols from '../../../../src/symbols'
 
 describe('Patients module mutations', () => {
   describe('patientData mutation', () => {

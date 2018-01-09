@@ -1,5 +1,5 @@
-import TasksModule from '../../../src/store/tasks'
-import symbols from '../../../src/symbols'
+import TasksModule from '../../../../src/store/tasks'
+import symbols from '../../../../src/symbols'
 
 describe('Tasks module mutations', () => {
   describe('responsibleUsers mutation', () => {

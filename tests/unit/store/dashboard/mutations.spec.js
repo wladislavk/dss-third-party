@@ -1,5 +1,5 @@
-import DashboardModule from '../../../src/store/dashboard'
-import symbols from '../../../src/symbols'
+import DashboardModule from '../../../../src/store/dashboard'
+import symbols from '../../../../src/symbols'
 
 describe('Dashboard module mutations', () => {
   describe('documentCategories mutation', () => {

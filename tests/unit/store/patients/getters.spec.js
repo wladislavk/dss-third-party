@@ -1,5 +1,5 @@
-import symbols from '../../../src/symbols'
-import PatientsModule from '../../../src/store/patients'
+import symbols from '../../../../src/symbols'
+import PatientsModule from '../../../../src/store/patients'
 
 describe('Patients module getters', () => {
   describe('patientId getter', () => {

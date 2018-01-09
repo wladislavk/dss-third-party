@@ -1,4 +1,4 @@
-import PhoneFormatter from '../../src/services/PhoneFormatter'
+import PhoneFormatter from '../../../src/services/PhoneFormatter'
 
 describe('PhoneFormatter', () => {
   it('returns empty string when phoneDisplaying called without arguments', function () {

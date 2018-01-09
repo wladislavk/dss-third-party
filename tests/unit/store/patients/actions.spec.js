@@ -1,9 +1,9 @@
-import PatientsModule from '../../../src/store/patients'
+import PatientsModule from '../../../../src/store/patients'
 import sinon from 'sinon'
-import TestCase from '../../cases/StoreTestCase'
-import http from '../../../src/services/http'
-import endpoints from '../../../src/endpoints'
-import symbols from '../../../src/symbols'
+import TestCase from '../../../cases/StoreTestCase'
+import http from '../../../../src/services/http'
+import endpoints from '../../../../src/endpoints'
+import symbols from '../../../../src/symbols'
 
 describe('Patients module actions', () => {
   beforeEach(function () {

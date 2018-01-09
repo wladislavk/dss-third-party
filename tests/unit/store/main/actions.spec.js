@@ -1,16 +1,16 @@
 /* eslint-disable prefer-promise-reject-errors */
-import symbols from '../../../src/symbols'
+import symbols from '../../../../src/symbols'
 import sinon from 'sinon'
-import MainModule from '../../../src/store/main'
-import TestCase from '../../cases/StoreTestCase'
+import MainModule from '../../../../src/store/main'
+import TestCase from '../../../cases/StoreTestCase'
 import axios from 'axios'
-import http from '../../../src/services/http'
-import LocalStorageManager from '../../../src/services/LocalStorageManager'
-import endpoints from '../../../src/endpoints'
-import RouterKeeper from '../../../src/services/RouterKeeper'
-import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
-import NameComposer from '../../../src/services/NameComposer'
-import Alerter from '../../../src/services/Alerter'
+import http from '../../../../src/services/http'
+import LocalStorageManager from '../../../../src/services/LocalStorageManager'
+import endpoints from '../../../../src/endpoints'
+import RouterKeeper from '../../../../src/services/RouterKeeper'
+import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
+import NameComposer from '../../../../src/services/NameComposer'
+import Alerter from '../../../../src/services/Alerter'
 
 describe('Main module actions', () => {
   beforeEach(function () {

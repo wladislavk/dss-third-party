@@ -238,11 +238,22 @@ class ScreenerApp extends BaseContext
 
     /**
      * @When I close the modal window
+     *
+     * @throws BehatException
      */
     public function closeModalWindow()
     {
         $this->wait(self::SHORT_WAIT_TIME);
         $closeButton = $this->findCss('a#fancybox-close');
+        if (!$closeButton) {
+            if (SUT_HOST == 'loader') {
+                $this->getCommonClient()->switchToIFrame();
+            }
+            $closeButton = $this->findCss('a#popupContactClose');
+        }
+        if (!$closeButton) {
+            throw new BehatException('Close modal window button not found');
+        }
         $closeButton->click();
     }
 

@@ -2,11 +2,9 @@
 
 namespace Contexts;
 
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 use PHPUnit\Framework\Assert;
-use Services\VueDateSelector;
 
 class Tracker extends BaseContext
 {
@@ -18,6 +16,18 @@ class Tracker extends BaseContext
 
     /** @var bool */
     private $impressionDeleted = false;
+
+    /** @var bool */
+    private $treatmentCompleteAdded = false;
+
+    /** @var bool */
+    private $baselineTestAdded = false;
+
+    /** @var bool */
+    private $delayReasonAdded = false;
+
+    /** @var bool */
+    private $nonCompliancyReasonAdded = false;
 
     /**
      * @When I click on :point in today tracker section
@@ -44,6 +54,12 @@ class Tracker extends BaseContext
                 if ($point == 'Device Delivery') {
                     $this->deliveryAdded = true;
                 }
+                if ($point == 'Treatment Complete') {
+                    $this->treatmentCompleteAdded = true;
+                }
+                if ($point == 'Baseline Sleep Test') {
+                    $this->baselineTestAdded = true;
+                }
                 return;
             }
         }
@@ -54,6 +70,12 @@ class Tracker extends BaseContext
             }
             if ($link->getText() == $point) {
                 $link->click();
+                if ($point == 'Delaying Tx/Waiting') {
+                    $this->delayReasonAdded = true;
+                }
+                if ($point == 'Pt. Non-compliant') {
+                    $this->nonCompliancyReasonAdded = true;
+                }
                 return;
             }
         }
@@ -159,6 +181,42 @@ class Tracker extends BaseContext
             return;
         }
         throw new BehatException("Row with name $type not found or does not have delete button");
+    }
+
+    /**
+     * @When I add text :text in modal text area
+     *
+     * @param string $text
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     * @throws BehatException
+     */
+    public function fillModalTextArea($text)
+    {
+        $textarea = $this->findCss('textarea');
+        if (!$textarea) {
+            throw new BehatException('Text area is not present in the modal');
+        }
+        $this->page->fillField($textarea->getAttribute('name'), $text);
+    }
+
+    /**
+     * @When I click link with text :text below :row row in treatment summary tracker section
+     *
+     * @param string $text
+     * @param string $row
+     * @throws BehatException
+     */
+    public function clickLinkBelowRow($text, $row)
+    {
+        $summaryRow = $this->getSummaryRow($row);
+        if (!$summaryRow) {
+            throw new BehatException("Summary row with header $row does not exist");
+        }
+        $link = $this->findCss('a', $summaryRow);
+        if (!$link || $link->getText() != $text) {
+            throw new BehatException("Link with text $link does not exist");
+        }
+        $link->click();
     }
 
     /**
@@ -314,21 +372,9 @@ class Tracker extends BaseContext
      */
     public function testTreatmentSummarySubList($subListRow, TableNode $table)
     {
-        $rows = $this->findAllCss('div#appt_summ table > tbody > tr');
-        /** @var NodeElement[] $visibleRows */
-        $rowData = null;
-        foreach ($rows as $row) {
-            $rowTitle = $this->findCss('td:nth-child(2) > span.title', $row);
-            if (!$rowTitle) {
-                continue;
-            }
-            if ($rowTitle->getText() == $subListRow) {
-                $rowData = $this->findCss('select', $rowTitle->getParent());
-                break;
-            }
-        }
-        Assert::assertNotNull($rowData);
-        $options = $this->findAllCss('option', $rowData);
+        $summaryRow = $this->getSummaryRow($subListRow);
+        Assert::assertNotNull($summaryRow);
+        $options = $this->findAllCss('select > option', $summaryRow);
         $expected = array_column($table->getHash(), 'name');
         Assert::assertEquals(sizeof($expected), sizeof($options));
         foreach ($expected as $key => $value) {
@@ -352,11 +398,54 @@ class Tracker extends BaseContext
     }
 
     /**
-     * @AfterScenario
+     * @Then I see link with text :text below :row row in treatment summary tracker section
      *
-     * @param AfterScenarioScope $scope
+     * @param string $text
+     * @param string $row
      */
-    public function afterScenario(AfterScenarioScope $scope)
+    public function testLinkBelowRow($text, $row)
+    {
+        $summaryRow = $this->getSummaryRow($row);
+        Assert::assertNotNull($summaryRow);
+        $link = $this->findCss('a', $summaryRow);
+        Assert::assertNotNull($link);
+        Assert::assertTrue($link->isVisible());
+        Assert::assertEquals($text, $link->getText());
+    }
+
+    /**
+     * @Then I do not see links below :row row in treatment summary tracker section
+     *
+     * @param string $row
+     */
+    public function testNoLinkBelowRow($row)
+    {
+        $summaryRow = $this->getSummaryRow($row);
+        Assert::assertNotNull($summaryRow);
+        $link = $this->findCss('a', $summaryRow);
+        $exists = false;
+        if ($link && $link->isVisible()) {
+            $exists = true;
+        }
+        Assert::assertFalse($exists);
+    }
+
+    /**
+     * @Then I see text :text in modal text area
+     *
+     * @param string $text
+     */
+    public function testModalTextArea($text)
+    {
+        $textarea = $this->findCss('textarea');
+        Assert::assertNotNull($textarea);
+        Assert::assertEquals($text, $textarea->getValue());
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function afterScenario()
     {
         if ($this->studyTypeAdded) {
             $query = <<<SQL
@@ -377,5 +466,46 @@ VALUES (170, 4, '2015-03-27', 1, 2);
 SQL;
             $this->executeQuery($query);
         }
+        if ($this->treatmentCompleteAdded) {
+            $query = <<<SQL
+DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=11;
+SQL;
+            $this->executeQuery($query);
+        }
+        if ($this->baselineTestAdded) {
+            $query = <<<SQL
+DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=15;
+SQL;
+            $this->executeQuery($query);
+        }
+        if ($this->delayReasonAdded) {
+            $query = <<<SQL
+DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=5;
+SQL;
+            $this->executeQuery($query);
+        }
+        if ($this->nonCompliancyReasonAdded) {
+            $query = <<<SQL
+DELETE FROM dental_flow_pg2_info WHERE patientid=170 AND segmentid=9;
+SQL;
+            $this->executeQuery($query);
+        }
+    }
+
+    /**
+     * @param string $text
+     * @return NodeElement|null
+     */
+    private function getSummaryRow($text)
+    {
+        $rows = $this->findAllCss('div#appt_summ table > tbody > tr');
+        /** @var NodeElement[] $visibleRows */
+        foreach ($rows as $row) {
+            $rowTitle = $this->findCss('td:nth-child(2) > span.title', $row);
+            if ($rowTitle && $rowTitle->getText() == $text) {
+                return $rowTitle->getParent();
+            }
+        }
+        return null;
     }
 }

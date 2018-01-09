@@ -450,7 +450,11 @@ class Main extends BaseContext
             $this->getCommonClient()->switchToIFrame('aj_pop');
         }
         $modalHeading = $this->findCss('h2');
-        Assert::assertNotNull($modalHeading);
-        Assert::assertEquals($heading, $modalHeading->getText());
+        if ($modalHeading) {
+            Assert::assertEquals($heading, $modalHeading->getText());
+            return;
+        }
+        $tableHeading = $this->findCss('td.cat_head');
+        Assert::assertEquals($heading, trim($tableHeading->getText()));
     }
 }

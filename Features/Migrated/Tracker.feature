@@ -190,6 +190,7 @@ Feature: Patient Tracker
       | 03/27/2015 | Impressions           | Dorsal Hard   | 0       | yes  |
       | 02/17/2015 | Consult               |               | 0       | yes  |
       | 02/04/2015 | Initial Contact       |               | 0       | no   |
+  # @todo: Uncomment after a script for using datepicker both in legacy and vue is created, meanwhile test manually
   #  When I create next appointment with data:
   #    | type                | date       | notes |
   #    | Delaying Tx/Waiting | today + 10 | foo   |
@@ -237,89 +238,102 @@ Feature: Patient Tracker
       | TAP 3 Thermacryl     |
     When I choose "Narval" as modal type
     And I click input button with text "Submit"
-    Then treatment summary tracker section has the list of treatments:
+    Then the modal window is "closed"
+    And treatment summary tracker section has the list of treatments:
       | date       | name                  | selected      | letters | link |
       | today      | Device Delivery       | Narval        | 0       | yes  |
       | 02/17/2015 | Consult               |               | 0       | yes  |
       | 02/04/2015 | Initial Contact       |               | 0       | no   |
-  #  When I click on "Treatment Complete" in today tracker section
-  #  Then treatment summary tracker section has the list of treatments:
-  #    | date       | name                  | selected      | letters | link |
-  #    | today      | Treatment Complete    |               | 3       | yes  |
-  #    | today      | Device Delivery       | Narval        | 0       | yes  |
-  #    | 02/17/2015 | Consult               |               | 0       | yes  |
-  #    | 02/04/2015 | Initial Contact       |               | 0       | no   |
-  #  When I click on "Baseline Sleep Test" in today tracker section
-  #  Then I see a modal window with heading "What type of sleep test will be performed on Pat Smith?"
-  #  And I see a list of sleep test types:
-  #    | name         |
-  #    |              |
-  #    | HST Baseline |
-  #    | PSG Baseline |
-  #  When I choose "PSG Baseline" as sleep test type
-  #  And I click button with text "Submit"
-  #  Then treatment summary tracker section has the list of treatments:
-  #    | date       | name                  | selected      | letters | link |
-  #    | today      | Baseline Sleep Test   | PSG Baseline  | 0       | yes  |
-  #    | today      | Treatment Complete    |               | 3       | yes  |
-  #    | today      | Device Delivery       | Narval        | 0       | yes  |
-  #    | 02/17/2015 | Consult               |               | 0       | yes  |
-  #    | 02/04/2015 | Initial Contact       |               | 0       | no   |
-  #  When I click on "Delaying Tx/Waiting" in today tracker section
-  #  Then I see a modal window with heading "What is the reason for delaying treatment for Pat Smith?"
-  #  And I see a list of delay reasons:
-  #    | name        |
-  #    | Insurance   |
-  #    | Dental Work |
-  #    | Deciding    |
-  #    | Sleep Study |
-  #    | Other       |
-  #  When I choose "Deciding" as delay reason
-  #  And I click button with text "Submit"
-  #  Then treatment summary tracker section has the list of treatments:
-  #    | date       | name                  | selected      | letters | link |
-  #    | today      | Delaying Tx/Waiting   | Deciding      | 2       | yes  |
-  #    | today      | Baseline Sleep Test   | PSG Baseline  | 0       | yes  |
-  #    | today      | Treatment Complete    |               | 3       | yes  |
-  #    | today      | Device Delivery       | Narval        | 0       | yes  |
-  #    | 02/17/2015 | Consult               |               | 0       | yes  |
-  #    | 02/04/2015 | Initial Contact       |               | 0       | no   |
-  #  When I click on "Pt. Non-compliant" in today tracker section
-  #  Then I see a modal window with heading "What is the reason Pat Smith is non-compliant?"
-  #  And I see a list of non-compliance reasons:
-  #    | name               |
-  #    | Pain/Discomfort    |
-  #    | Lost Device        |
-  #    | Device Not Working |
-  #    | Other              |
-  #  When I choose "Other" as non-compliance reason
-  #  And I click button with text "Submit"
-  #  Then I see a modal window with heading "Reason for Patient Non-Compliant"
-  #  And I add text "foo bar" in modal text area
-  #  And I click button with text "Submit Reason"
-  #  Then treatment summary tracker section has the list of treatments:
-  #    | date       | name                  | selected      | letters | link |
-  #    | today      | Pt. Non-Compliant     | Other         | 3       | yes  |
-  #    | today      | Delaying Tx/Waiting   | Deciding      | 2       | yes  |
-  #    | today      | Baseline Sleep Test   | PSG Baseline  | 0       | yes  |
-  #    | today      | Treatment Complete    |               | 3       | yes  |
-  #    | today      | Device Delivery       | Narval        | 0       | yes  |
-  #    | 02/17/2015 | Consult               |               | 0       | yes  |
-  #    | 02/04/2015 | Initial Contact       |               | 0       | no   |
-  #  And I see link with text "Show Reason" below "Pt. Non-Compliant" row in treatment summary tracker section
-  #  When I click link with text "Show Reason" below "Pt. Non-Compliant" row in treatment summary tracker section
-  #  Then I see a modal window with heading "Reason for Patient Non-Compliant"
-  #  And I see text "foo bar" in modal text area
-  #  When I close the modal window
-  #  And I change treatment summary row "Pt. Non-Compliant" to "Lost Device"
-  #  And I confirm browser alert
-  #  Then treatment summary tracker section has the list of treatments:
-  #    | date       | name                  | selected      | letters | link |
-  #    | today      | Pt. Non-Compliant     | Lost Device   | 3       | yes  |
-  #    | today      | Delaying Tx/Waiting   | Deciding      | 2       | yes  |
-  #    | today      | Baseline Sleep Test   | PSG Baseline  | 0       | yes  |
-  #    | today      | Treatment Complete    |               | 3       | yes  |
-  #    | today      | Device Delivery       | Narval        | 0       | yes  |
-  #    | 02/17/2015 | Consult               |               | 0       | yes  |
-  #    | 02/04/2015 | Initial Contact       |               | 0       | no   |
-  #  And I do not see links below "Pt. Non-Compliant" row in treatment summary tracker section
+    When I click on "Treatment Complete" in today tracker section
+    Then treatment summary tracker section has the list of treatments:
+      | date       | name                  | selected      | letters | link |
+      | today      | Treatment Complete    |               | 3       | yes  |
+      | today      | Device Delivery       | Narval        | 0       | yes  |
+      | 02/17/2015 | Consult               |               | 0       | yes  |
+      | 02/04/2015 | Initial Contact       |               | 0       | no   |
+    When I click on "Baseline Sleep Test" in today tracker section
+    Then the modal window is "open"
+    And the header of modal window is "What type of sleep test will be performed on Pat Smith?"
+    And I see a modal list:
+      | name         |
+      |              |
+      | HST Baseline |
+      | PSG Baseline |
+    When I choose "PSG Baseline" as modal type
+    And I click input button with text "Submit"
+    Then the modal window is "closed"
+    And treatment summary tracker section has the list of treatments:
+      | date       | name                  | selected      | letters | link |
+      | today      | Baseline Sleep Test   | PSG Baseline  | 0       | yes  |
+      | today      | Treatment Complete    |               | 3       | yes  |
+      | today      | Device Delivery       | Narval        | 0       | yes  |
+      | 02/17/2015 | Consult               |               | 0       | yes  |
+      | 02/04/2015 | Initial Contact       |               | 0       | no   |
+    When I click on "Delaying Tx/Waiting" in today tracker section
+    Then the modal window is "open"
+    And the header of modal window is "What is the reason for delaying treatment for Pat Smith?"
+    And I see a modal list:
+      | name        |
+      | Insurance   |
+      | Dental Work |
+      | Deciding    |
+      | Sleep Study |
+      | Other       |
+    When I choose "Deciding" as modal type
+    And I click input button with text "Submit"
+    Then the modal window is "closed"
+    And treatment summary tracker section has the list of treatments:
+      | date       | name                  | selected      | letters | link |
+      | today      | Delaying Tx / Waiting | Deciding      | 2       | yes  |
+      | today      | Baseline Sleep Test   | PSG Baseline  | 0       | yes  |
+      | today      | Treatment Complete    |               | 3       | yes  |
+      | today      | Device Delivery       | Narval        | 0       | yes  |
+      | 02/17/2015 | Consult               |               | 0       | yes  |
+      | 02/04/2015 | Initial Contact       |               | 0       | no   |
+    When I click on "Pt. Non-compliant" in today tracker section
+    Then the modal window is "open"
+    And the header of modal window is "What is the reason Pat Smith is non-compliant?"
+    And I see a modal list:
+      | name               |
+      | Pain/Discomfort    |
+      | Lost Device        |
+      | Device Not Working |
+      | Other              |
+    When I choose "Other" as modal type
+    And I click input button with text "Submit"
+    Then the modal window is "open"
+    And the header of modal window is "Reason for Patient Non-Compliant"
+    When I add text "foo bar" in modal text area
+    And I click input button with text "Submit Reason"
+    Then the modal window is "closed"
+    When I click on logo in top left corner
+    And I type "smi" into patient search form
+    And I click on "Smith, Pat" in list of patients
+    Then treatment summary tracker section has the list of treatments:
+      | date       | name                  | selected      | letters | link |
+      | today      | Pt. Non-Compliant     | Other         | 3       | yes  |
+      | today      | Delaying Tx / Waiting | Deciding      | 2       | yes  |
+      | today      | Baseline Sleep Test   | PSG Baseline  | 0       | yes  |
+      | today      | Treatment Complete    |               | 3       | yes  |
+      | today      | Device Delivery       | Narval        | 0       | yes  |
+      | 02/17/2015 | Consult               |               | 0       | yes  |
+      | 02/04/2015 | Initial Contact       |               | 0       | no   |
+    And I see link with text "Show Reason" below "Pt. Non-Compliant" row in treatment summary tracker section
+    When I click link with text "Show Reason" below "Pt. Non-Compliant" row in treatment summary tracker section
+    Then the modal window is "open"
+    And the header of modal window is "Reason for Patient Non-Compliant"
+    And I see text "foo bar" in modal text area
+    When I close the modal window
+    Then the modal window is "closed"
+    When I change treatment summary row "Pt. Non-Compliant" to "Lost Device"
+    And I confirm browser alert
+    Then treatment summary tracker section has the list of treatments:
+      | date       | name                  | selected      | letters | link |
+      | today      | Pt. Non-Compliant     | Lost Device   | 3       | yes  |
+      | today      | Delaying Tx / Waiting | Deciding      | 2       | yes  |
+      | today      | Baseline Sleep Test   | PSG Baseline  | 0       | yes  |
+      | today      | Treatment Complete    |               | 3       | yes  |
+      | today      | Device Delivery       | Narval        | 0       | yes  |
+      | 02/17/2015 | Consult               |               | 0       | yes  |
+      | 02/04/2015 | Initial Contact       |               | 0       | no   |
+    And I do not see links below "Pt. Non-Compliant" row in treatment summary tracker section

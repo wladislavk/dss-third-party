@@ -112,4 +112,14 @@ class CommonElements extends BaseContext
             Assert::assertEquals($value, $buttons[$key]->getText());
         }
     }
+
+    /**
+     * @Then I see company logo next to welcome text
+     */
+    public function testCompanyLogo()
+    {
+        $taskMenu = $this->findCss('div#task_menu');
+        $logo = $this->findCss('img', $taskMenu->getParent());
+        Assert::assertNotNull($logo);
+    }
 }

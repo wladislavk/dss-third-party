@@ -1,3 +1,4 @@
+import QueryStringComposer from 'qs'
 import symbols from '../../symbols'
 import http from '../../services/http'
 import endpoints from '../../endpoints'
@@ -56,15 +57,84 @@ export default {
         infoIds.push(summary.id)
       }
     }
-    let queryString = '?patient_id=' + patientId
-    if (infoIds.length) {
-      queryString += '&info_ids=' + infoIds.join(',')
+    const queryStringData = {
+      patient_id: patientId,
+      info_ids: infoIds
     }
+    const queryString = QueryStringComposer.stringify(queryStringData)
     http.token = rootState.main[symbols.state.mainToken]
-    http.get(endpoints.letters.byPatientAndInfo + queryString).then((response) => {
+    http.get(endpoints.letters.byPatientAndInfo + '?' + queryString).then((response) => {
       commit(symbols.mutations.letters, response.data.data)
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getLettersByPatientAndInfo', response: response})
     })
+  },
+
+  [symbols.actions.insertTrackerStep] ({ commit }, responseData) {
+    const newStep = {
+      id: responseData.id,
+      title: responseData.title,
+      letterCount: responseData.letters,
+      dateCompleted: responseData.datecomp
+    }
+    let modalData = {}
+    switch (this.id) {
+      case 9:
+        modalData = {
+          name: 'flowsheetNonCompliance',
+          params: {
+            flowId: responseData.id
+          }
+        }
+        this.$store.commit(symbols.mutations.modal, modalData)
+        break
+      case 5:
+        modalData = {
+          name: 'flowsheetDelayTreatment',
+          params: {
+            flowId: responseData.id
+          }
+        }
+        commit(symbols.mutations.modal, modalData)
+        break
+      case 3:
+        modalData = {
+          name: 'flowsheetStudyType',
+          params: {
+            flowId: responseData.id,
+            patientId: this.patientId
+          }
+        }
+        commit(symbols.mutations.modal, modalData)
+        break
+      case 15:
+        modalData = {
+          name: 'flowsheetStudyType',
+          params: {
+            flowId: responseData.id,
+            patientId: this.patientId
+          }
+        }
+        commit(symbols.mutations.modal, modalData)
+        break
+      case 4:
+      // fall through
+      case 7:
+        if (responseData.impression) {
+          newStep.impression = responseData.impression
+          break
+        }
+        modalData = {
+          name: 'impressionDevice',
+          params: {
+            flowId: responseData.id,
+            patientId: this.patientId
+          }
+        }
+        commit(symbols.mutations.modal, modalData)
+        break
+      // end switch cases
+    }
+    commit(symbols.mutations.insertTrackerStep, newStep)
   }
 }

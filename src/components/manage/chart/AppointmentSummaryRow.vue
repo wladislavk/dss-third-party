@@ -78,8 +78,9 @@
             <a
                 v-legacy-href="'dss_summ.php?sect=letters&pid=' + patientId"
                 class="btn btn-info btn-sm"
-                v-bind:disabled="!letterCount"
+                v-if="letterCount"
             >{{ letterCount }} Letters</a>
+            <span v-else>0 Letters</span>
         </td>
         <td>
             <a

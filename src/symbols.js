@@ -48,6 +48,7 @@ export default {
     totalPatientContacts: 'TOTAL_PATIENT_CONTACTS',
     totalPatientInsurances: 'TOTAL_PATIENT_INSURANCES',
     totalSubPatients: 'TOTAL_SUB_PATIENTS',
+    trackerSteps: 'TRACKER_STEPS',
     userInfo: 'USER_INFO'
   },
   getters: {
@@ -96,6 +97,7 @@ export default {
     hideAllWarnings: 'HIDE_ALL_WARNINGS',
     hideFancybox: 'HIDE_FANCYBOX',
     hideSearchHints: 'HIDE_SEARCH_HINTS',
+    insertTrackerStep: 'INSERT_TRACKER_STEP',
     letters: 'LETTERS',
     mainToken: 'MAIN_TOKEN',
     memos: 'MEMOS',
@@ -144,6 +146,7 @@ export default {
     getDoctorData: 'GET_DOCTOR_DATA',
     getTask: 'GET_TASK',
     handleErrors: 'HANDLE_ERRORS',
+    insertTrackerStep: 'INSERT_TRACKER_STEP',
     lettersByPatientAndInfo: 'LETTERS_BY_PATIENT_AND_INFO',
     mainLogin: 'MAIN_LOGIN',
     memos: 'MEMOS',

@@ -44,5 +44,9 @@ export default {
       letters.push(newLetter)
     }
     state[symbols.state.letters] = letters
+  },
+
+  [symbols.mutations.insertTrackerStep] (state, data) {
+    state[symbols.state.trackerSteps].push(data)
   }
 }

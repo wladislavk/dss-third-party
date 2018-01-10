@@ -47,7 +47,6 @@ export default {
     [NOTIFICATION_NUMBERS.unsignedNotes]: 0
   },
   [symbols.state.showAllWarnings]: true,
-  [symbols.state.companyLogo]: '',
   [symbols.state.showSearchHints]: false,
   [symbols.state.patientSearchList]: []
 }

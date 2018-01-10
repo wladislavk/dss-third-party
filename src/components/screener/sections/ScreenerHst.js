@@ -1,6 +1,7 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
 import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import FileRetrieverFactory from '../../../services/file-retrievers/FileRetrieverFactory'
 
 export default {
   data: function () {
@@ -28,6 +29,10 @@ export default {
     updateContact (event) {
       const contactName = event.target.id.replace('hst_', '')
       this.storedContacts[contactName] = event.target.value
+    },
+    getLogo (logoName) {
+      const factory = new FileRetrieverFactory()
+      return factory.getFileRetriever().getMediaFile(logoName)
     },
     onSubmit () {
       this.$store.commit(symbols.mutations.contactData, this.storedContacts)

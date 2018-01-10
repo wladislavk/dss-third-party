@@ -5,8 +5,6 @@ import symbols from '../../symbols'
 import LocalStorageManager from '../../services/LocalStorageManager'
 import ProcessWrapper from '../../wrappers/ProcessWrapper'
 import RouterKeeper from '../../services/RouterKeeper'
-import MediaFileRetriever from '../../services/MediaFileRetriever'
-import FileRetrievalError from '../../exceptions/FileRetrievalError'
 import Alerter from '../../services/Alerter'
 import NameComposer from '../../services/NameComposer'
 import LoginError from '../../exceptions/LoginError'
@@ -130,24 +128,6 @@ export default {
     })
   },
   */
-
-  [symbols.actions.companyLogo] ({state, commit, dispatch}) {
-    http.token = state[symbols.state.mainToken]
-    http.get(endpoints.companies.companyByUser).then((response) => {
-      const data = response.data.data
-      if (data.hasOwnProperty('logo') && data.logo) {
-        MediaFileRetriever.getMediaFile(data.logo).then((image) => {
-          commit(symbols.mutations.companyLogo, image)
-        })
-      }
-    }).catch((response) => {
-      let title = 'getCompanyByUser'
-      if (response instanceof FileRetrievalError) {
-        title = response.title
-      }
-      dispatch(symbols.actions.handleErrors, {title: title, response: response})
-    })
-  },
 
   [symbols.actions.patientSearchList] ({state, commit}, searchTerm) {
     const legacyUrl = ProcessWrapper.getLegacyRoot()

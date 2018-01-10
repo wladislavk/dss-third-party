@@ -79,10 +79,6 @@ export default {
     state[symbols.state.showAllWarnings] = false
   },
 
-  [symbols.mutations.companyLogo] (state, image) {
-    state[symbols.state.companyLogo] = image
-  },
-
   [symbols.mutations.showSearchHints] (state) {
     state[symbols.state.showSearchHints] = true
   },

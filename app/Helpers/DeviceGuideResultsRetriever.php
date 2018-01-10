@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 class DeviceGuideResultsRetriever
 {
+    const FIELDS = ['deviceid', 'device', 'image_path'];
+
     /**
      * @var DeviceRepository
      */
@@ -41,9 +43,8 @@ class DeviceGuideResultsRetriever
      */
     public function get(array $impressions, array $checkedOptions)
     {
-        $fields = ['deviceid', 'device', 'image_path'];
-        $devices = $this->deviceRepository->getWithFilter($fields);
-        if (count($devices) === 0) {
+        $devices = $this->deviceRepository->getWithFilter(self::FIELDS);
+        if (sizeof($devices) === 0) {
             return [];
         }
         $settings = $this->convertSettings($impressions, $checkedOptions);
@@ -66,6 +67,7 @@ class DeviceGuideResultsRetriever
      */
     private function convertSettings(array $impressions, array $checkedOptions) {
         $converted = [];
+        // combine all keys of both arrays into a single array, remove duplicates
         $ids = array_unique(array_merge(array_keys($impressions), array_keys($checkedOptions)));
         foreach ($ids as $id) {
             $deviceSettings = new DeviceSettings();

@@ -28,7 +28,7 @@ class DeviceInfoGetter
      */
     public function get(Device $device, Collection $deviceSettings, array $settings)
     {
-        if (count($deviceSettings) === 0) {
+        if (sizeof($deviceSettings) === 0) {
             return null;
         }
 

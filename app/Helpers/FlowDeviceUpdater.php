@@ -9,6 +9,8 @@ use Prettus\Validator\Exceptions\ValidatorException;
 
 class FlowDeviceUpdater
 {
+    const FIELDS = ['ex_page5id'];
+
     /**
      * @var AppointmentSummaryRepository
      */
@@ -43,9 +45,8 @@ class FlowDeviceUpdater
         if (!isset($lastAppointmentDevice['id'])) {
             return;
         }
-        $fields = ['ex_page5id'];
         $getCondition = ['patientid' => $patientId];
-        $tmjClinicalExamItems = $this->tmjClinicalExamRepository->getWithFilter($fields, $getCondition);
+        $tmjClinicalExamItems = $this->tmjClinicalExamRepository->getWithFilter(self::FIELDS, $getCondition);
         if (count($tmjClinicalExamItems) === 0) {
             $createParams = [
                 'dentaldevice' => $deviceId,

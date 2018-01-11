@@ -78,6 +78,10 @@ services:
     environment:
       NODE_ENV: development
       # NODE_ENV: production
+      API_ROOT: '"https://api.docker.localhost/"'
+      API_PATH: '"https://api.docker.localhost/api/v1/"'
+      LEGACY_ROOT: '"https://loader.docker.localhost/"'
+      IMAGE_PATH: '"https://loader.docker.localhost/shared/"'
       PORT: 80
     volumes:
       - "${ROOT_PATH:-..}/ds3-private06-Vue:/opt/app"

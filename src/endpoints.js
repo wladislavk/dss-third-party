@@ -42,7 +42,7 @@ export default {
     withImages: '/guide-devices/with-images'
   },
   guideSettingOptions: {
-    settingIds: 'guide-setting-options/settingIds'
+    settingIds: '/guide-setting-options/setting-ids'
   },
   homeSleepTests: {
     store: '/home-sleep-tests'
@@ -140,6 +140,9 @@ export default {
     tomorrow: '/tasks/tomorrow',
     tomorrowForPatient: '/tasks/tomorrow/pid',
     update: '/tasks'
+  },
+  tmjClinicalExams: {
+    updateFlowDevice: '/tmj-clinical-exams/update-flow-device'
   },
   users: {
     check: '/users/check',

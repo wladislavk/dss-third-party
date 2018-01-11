@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import MintUI from 'mint-ui'
 import axios from 'axios'
 import ManageRootComponent from '../components/manage/ManageRoot.vue'
 import ScreenerRootComponent from '../components/screener/ScreenerRoot.vue'
@@ -13,7 +12,6 @@ import symbols from '../symbols'
 // import store from '../store'
 
 Vue.use(Router)
-Vue.use(MintUI)
 
 export default new Router({
   mode: 'history',

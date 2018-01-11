@@ -1,7 +1,7 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
 import AddTaskComponent from './AddTask.vue'
-import DeviceSelectorComponent from './DeviceSelector.vue'
+import DeviceSelectorComponent from './device-selector/DeviceSelector.vue'
 import ViewContactComponent from '../contacts/ViewContact.vue'
 import PatientAccessCodeComponent from '../patients/access-code/PatientAccessCode.vue'
 import EditContactComponent from '../contacts/EditContact.vue'
@@ -23,6 +23,7 @@ export default {
       if (this.hasComponent(componentName)) {
         return componentName
       }
+
       return ''
     },
     currentProperties () {

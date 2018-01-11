@@ -7,6 +7,7 @@ import DashboardModule from '../../../../src/store/dashboard'
 import TestCase from '../../../cases/StoreTestCase'
 import LocationWrapper from '../../../../src/wrappers/LocationWrapper'
 import ProcessWrapper from '../../../../src/wrappers/ProcessWrapper'
+import Alerter from '../../../../src/services/Alerter'
 
 describe('Dashboard module actions', () => {
   beforeEach(function () {
@@ -86,7 +87,10 @@ describe('Dashboard module actions', () => {
         {
           type: symbols.mutations.modal,
           payload: {
-            name: 'device-selector'
+            name: 'deviceSelector',
+            params: {
+              white: true
+            }
           }
         }
       ]
@@ -296,6 +300,293 @@ describe('Dashboard module actions', () => {
       })
       DashboardModule.actions[symbols.actions.dataImportModal]()
       expect(destination).toBe('')
+    })
+  })
+
+  describe('getDeviceGuideSettingOptions action', () => {
+    it('retrieves device guide setting options', function (done) {
+      const result = {
+        data: {
+          data: [
+            {
+              id: 13,
+              labels: ['Not Important', 'Neutral', 'Very Important'],
+              name: 'Comfort',
+              number: 3
+            },
+            {
+              id: 3,
+              labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
+              name: 'Bruxism',
+              number: 5
+            }
+          ]
+        }
+      }
+      let getPath = ''
+      this.sandbox.stub(http, 'get').callsFake((path) => {
+        getPath = path
+        return Promise.resolve(result)
+      })
+      DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
+
+      const expectedMutations = [
+        {
+          type: symbols.mutations.deviceGuideSettingOptions,
+          payload: [
+            {
+              id: 13,
+              labels: ['Not Important', 'Neutral', 'Very Important'],
+              name: 'Comfort',
+              number: 3
+            },
+            {
+              id: 3,
+              labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
+              name: 'Bruxism',
+              number: 5
+            }
+          ]
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        expect(getPath).toEqual(endpoints.guideSettingOptions.settingIds)
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      this.sandbox.stub(http, 'get').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      DashboardModule.actions[symbols.actions.getDeviceGuideSettingOptions](this.testCase.mocks)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'getDeviceGuideSettingOptions',
+            response: new Error()
+          }
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+  })
+
+  describe('getDeviceGuideResults action', () => {
+    it('retrieves device guide results', function (done) {
+      const result = {
+        data: {
+          data: [
+            {
+              name: 'SUAD Ultra Elite',
+              id: 13,
+              value: 34,
+              imagePath: 'dental_device_13.gif'
+            },
+            {
+              name: 'SUAD Hard',
+              id: 14,
+              value: 33,
+              imagePath: 'dental_device_14.gif'
+            },
+            {
+              name: 'Narval',
+              id: 7,
+              value: 33,
+              imagePath: 'dental_device_7.gif'
+            }
+          ]
+        }
+      }
+
+      this.testCase.setState({
+        [symbols.state.deviceGuideSettingOptions]: [
+          {
+            id: 13,
+            checkedOption: 1,
+            checked: false,
+            labels: ['Not Important', 'Neutral', 'Very Important'],
+            name: 'Comfort',
+            number: 3
+          },
+          {
+            id: 3,
+            checkedOption: 2,
+            checked: true,
+            labels: ['None', 'Mild', 'Mod', 'Mode/Sev', 'Severe'],
+            name: 'Bruxism',
+            number: 5
+          }
+        ]
+      })
+
+      let requestSettings = {}
+      this.sandbox.stub(http, 'get').callsFake((path) => {
+        requestSettings = {
+          path: path
+        }
+        return Promise.resolve(result)
+      })
+      DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
+
+      const expectedMutations = [
+        {
+          type: symbols.mutations.deviceGuideResults,
+          payload: result.data.data
+        }
+      ]
+
+      setTimeout(() => {
+        expect(this.testCase.mutations).toEqual(expectedMutations)
+        let expectedPath = endpoints.guideDevices.withImages + '?' + 'impressions[3]=1&impressions[13]=0&options[3]=3&options[13]=2'
+        expectedPath = expectedPath.replace(/\[/g, '%5B').replace(/]/g, '%5D')
+        const expectedRequestSettings = {
+          path: expectedPath
+        }
+        expect(requestSettings).toEqual(expectedRequestSettings)
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      this.sandbox.stub(http, 'get').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      this.testCase.setState({
+        [symbols.state.deviceGuideSettingOptions]: []
+      })
+
+      DashboardModule.actions[symbols.actions.getDeviceGuideResults](this.testCase.mocks)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'getDeviceGuideResults',
+            response: new Error()
+          }
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+  })
+
+  describe('updateFlowDevice action', () => {
+    it('updates a flow device', function (done) {
+      const DEVICE_ID = 7
+      const PATIENT_ID = 16
+      const response = {
+        data: { message: 'Successfully updated.' }
+      }
+
+      let requestSettings = {}
+      this.sandbox.stub(http, 'put').callsFake((path, data) => {
+        requestSettings = {
+          path: path,
+          data: data
+        }
+        return Promise.resolve(response)
+      })
+      let alertText = ''
+      this.sandbox.stub(Alerter, 'alert').callsFake((message) => {
+        alertText = message
+      })
+      this.testCase.setRootState({
+        patients: {
+          [symbols.state.patientId]: PATIENT_ID
+        }
+      })
+      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
+
+      setTimeout(() => {
+        const expectedRequestSettings = {
+          path: endpoints.tmjClinicalExams.updateFlowDevice + '/' + DEVICE_ID,
+          data: {
+            patient_id: PATIENT_ID
+          }
+        }
+        expect(requestSettings).toEqual(expectedRequestSettings)
+        expect(alertText).toBe('Successfully updated.')
+        done()
+      }, 100)
+    })
+    it('handles error', function (done) {
+      const DEVICE_ID = 7
+      const PATIENT_ID = 16
+      this.sandbox.stub(http, 'put').callsFake(() => {
+        return Promise.reject(new Error())
+      })
+      this.testCase.setRootState({
+        patients: {
+          [symbols.state.patientId]: PATIENT_ID
+        }
+      })
+      DashboardModule.actions[symbols.actions.updateFlowDevice](this.testCase.mocks, DEVICE_ID)
+      const expectedActions = [
+        {
+          type: symbols.actions.handleErrors,
+          payload: {
+            title: 'updateFlowDevice',
+            response: new Error()
+          }
+        }
+      ]
+      setTimeout(() => {
+        expect(this.testCase.actions).toEqual(expectedActions)
+        done()
+      }, 100)
+    })
+  })
+
+  describe('moveGuideSettingSlider action', () => {
+    it('sets option value', function () {
+      const data = {
+        id: 1,
+        value: 'bar',
+        labels: {
+          2: 'foo',
+          4: 'bar',
+          7: 'bar'
+        }
+      }
+      DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
+      const expectedMutations = [
+        {
+          type: symbols.mutations.moveGuideSettingSlider,
+          payload: {
+            id: 1,
+            value: 4
+          }
+        }
+      ]
+      expect(this.testCase.mutations).toEqual(expectedMutations)
+    })
+    it('leaves option unchanged if value not found', function () {
+      const data = {
+        id: 1,
+        value: 'baz',
+        labels: {
+          2: 'foo',
+          4: 'bar',
+          7: 'bar'
+        }
+      }
+      DashboardModule.actions[symbols.actions.moveGuideSettingSlider](this.testCase.mocks, data)
+      const expectedMutations = [
+        {
+          type: symbols.mutations.moveGuideSettingSlider,
+          payload: {
+            id: 1,
+            value: 0
+          }
+        }
+      ]
+      expect(this.testCase.mutations).toEqual(expectedMutations)
     })
   })
 })

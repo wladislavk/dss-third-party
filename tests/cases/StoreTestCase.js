@@ -24,7 +24,15 @@ export default class {
 
   setRootState (state) {
     this.mocks.rootState = state
-    this.mocks.rootState.main[symbols.state.mainToken] = ''
+
+    if (this.mocks.rootState.hasOwnProperty('main')) {
+      this.mocks.rootState.main[symbols.state.mainToken] = ''
+      return
+    }
+
+    this.mocks.rootState['main'] = {
+      [symbols.state.mainToken]: ''
+    }
   }
 
   _commit (type, payload) {

@@ -221,4 +221,21 @@ abstract class AbstractRepository extends BaseRepository
             $record->update($data);
         }
     }
+
+    /**
+     * @param  array  $data
+     * @param  array  $where
+     * @return boolean|int
+     */
+    public function updateWhere(array $data, array $where)
+    {
+        $query = $this->model;
+
+        foreach ($where as $field => $value) {
+            $query = $query->where($field, $value);
+        }
+
+        $numberOfRows = $query->update($data);
+        return $numberOfRows;
+    }
 }

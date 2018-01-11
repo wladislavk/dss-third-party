@@ -2,6 +2,13 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
+use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Exceptions\GeneralException;
+use Prettus\Validator\Exceptions\ValidatorException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
 class TmjClinicalExamsController extends BaseRestController
 {
     /**
@@ -183,5 +190,54 @@ class TmjClinicalExamsController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
+    }
+
+    /**
+     * @SWG\Put(
+     *     path="/tmj-clinical-exams/update-flow-device/{deviceId}",
+     *     tags={"tmj-clinical-exams"},
+     *     summary="Update Flow Device",
+     *     @SWG\Parameter(
+     *         name="deviceId",
+     *         in="path",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="patient_id",
+     *         in="formData",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="success"
+     *     )
+     *     @SWG\Response(
+     *         response="default",
+     *         description="error",
+     *         ref="#/responses/error_response"
+     *     )
+     * )
+     *
+     * @param int $deviceId
+     * @param FlowDeviceUpdater $flowDeviceUpdater
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updateFlowDevice(
+        $deviceId,
+        FlowDeviceUpdater $flowDeviceUpdater,
+        Request $request
+    ) {
+        $patientId = $request->input('patient_id');
+
+        try {
+            $flowDeviceUpdater->update($this->user, $patientId, $deviceId);
+        } catch (ValidatorException $e) {
+            return ApiResponse::responseError($e->getMessage(), 422);
+        }
+
+        return ApiResponse::responseOk('Flow device was successfully updated.');
     }
 }

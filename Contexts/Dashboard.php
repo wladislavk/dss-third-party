@@ -22,6 +22,11 @@ class Dashboard extends BaseContext
      */
     public function clickMenu($menuPoint)
     {
+        // @todo: check for reasons of volatility
+        if (SUT_HOST === 'vue') {
+            $this->wait(self::MEDIUM_WAIT_TIME);
+        }
+
         $menu = $this->findCss('ul#homemenu');
         $nodeLink = $this->findElementWithText('a', $menuPoint, $menu);
         $nodeLink->click();

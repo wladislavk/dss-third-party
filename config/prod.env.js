@@ -7,6 +7,5 @@ module.exports = merge(processEnv, {
   HEADLESS_API_ROOT: '"http://api/"',
   HEADLESS_API_PATH: '"http://api/api/v1/"',
   HEADLESS_LEGACY_ROOT: '"http://loader/"',
-  HEADLESS_STATIC_ROOT: '"http://static/"',
-  FILE_STORAGE: '"legacy"'
+  HEADLESS_STATIC_ROOT: '"http://static/"'
 })

@@ -27,14 +27,14 @@ export default {
     }
     return staticRoot
   },
-  getImagePath () {
-    return process.env.IMAGE_PATH
-  },
   getNodeEnv () {
     return process.env.NODE_ENV
   },
   getFileStorage () {
     return process.env.FILE_STORAGE
+  },
+  getBucketUrl () {
+    return process.env.BUCKET_URL
   },
   _checkForHeadless: function () {
     return (window.location.protocol === 'http:')

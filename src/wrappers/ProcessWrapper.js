@@ -20,6 +20,13 @@ export default {
     }
     return legacyRoot
   },
+  getStaticRoot () {
+    let staticRoot = process.env.STATIC_ROOT
+    if (this._checkForHeadless()) {
+      staticRoot = process.env.HEADLESS_STATIC_ROOT
+    }
+    return staticRoot
+  },
   getImagePath () {
     return process.env.IMAGE_PATH
   },

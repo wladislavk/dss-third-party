@@ -81,7 +81,8 @@ services:
       API_ROOT: '"https://api.docker.localhost/"'
       API_PATH: '"https://api.docker.localhost/api/v1/"'
       LEGACY_ROOT: '"https://loader.docker.localhost/"'
-      IMAGE_PATH: '"https://loader.docker.localhost/shared/"'
+      FILE_STORAGE: '"${FILE_STORAGE:-legacy}"'
+      BUCKET_URL: '"${BUCKET_URL}"'
       PORT: 80
     volumes:
       - "${ROOT_PATH:-..}/ds3-private06-Vue:/opt/app"

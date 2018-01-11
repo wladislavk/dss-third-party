@@ -1,9 +1,11 @@
+import QueryStringComposer from 'qs'
 import endpoints from '../../endpoints'
 import http from '../../services/http'
 import symbols from '../../symbols'
 import LocationWrapper from '../../wrappers/LocationWrapper'
 import SwalWrapper from '../../wrappers/SwalWrapper'
 import ProcessWrapper from '../../wrappers/ProcessWrapper'
+import Alerter from '../../services/Alerter'
 
 export default {
   [symbols.actions.documentCategories] ({rootState, commit, dispatch}) {
@@ -16,7 +18,7 @@ export default {
   },
 
   [symbols.actions.deviceSelectorModal] ({commit}) {
-    commit(symbols.mutations.modal, { name: 'device-selector' })
+    commit(symbols.mutations.modal, { name: 'deviceSelector', params: { white: true } })
   },
 
   [symbols.actions.exportMDModal] () {
@@ -82,5 +84,71 @@ export default {
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getCurrentMemos', response: response})
     })
+  },
+
+  [symbols.actions.getDeviceGuideSettingOptions] ({rootState, commit, dispatch}) {
+    http.token = rootState.main[symbols.state.mainToken]
+    return http.get(endpoints.guideSettingOptions.settingIds).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.deviceGuideSettingOptions, data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideSettingOptions', response: response})
+    })
+  },
+
+  [symbols.actions.getDeviceGuideResults] ({state, rootState, commit, dispatch}) {
+    const impressions = {}
+    const checkedOptions = {}
+    for (let setting of state[symbols.state.deviceGuideSettingOptions]) {
+      checkedOptions[setting.id] = setting.checkedOption + 1
+      impressions[setting.id] = 0
+      if (setting.checked) {
+        impressions[setting.id] = 1
+      }
+    }
+    const queryString = QueryStringComposer.stringify({
+      impressions: impressions,
+      options: checkedOptions
+    })
+    let endpoint = endpoints.guideDevices.withImages
+    if (queryString) {
+      endpoint += '?' + queryString
+    }
+    http.token = rootState.main[symbols.state.mainToken]
+    http.get(endpoint).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.deviceGuideResults, data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getDeviceGuideResults', response: response})
+    })
+  },
+
+  [symbols.actions.updateFlowDevice] ({commit, dispatch, rootState}, deviceId) {
+    const data = {
+      patient_id: rootState.patients[symbols.state.patientId]
+    }
+    http.token = rootState.main[symbols.state.mainToken]
+    return http.put(endpoints.tmjClinicalExams.updateFlowDevice + '/' + deviceId, data).then((response) => {
+      Alerter.alert(response.data.message)
+      commit(symbols.mutations.resetModal)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'updateFlowDevice', response: response})
+    })
+  },
+
+  [symbols.actions.moveGuideSettingSlider] ({commit}, {id, value, labels}) {
+    let optionId = 0
+    for (let [key, label] of Object.entries(labels)) {
+      if (value === label) {
+        // Object.entries treats all values as strings
+        optionId = parseInt(key)
+        break
+      }
+    }
+    const data = {
+      id: id,
+      value: optionId
+    }
+    commit(symbols.mutations.moveGuideSettingSlider, data)
   }
 }

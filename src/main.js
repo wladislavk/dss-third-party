@@ -14,7 +14,9 @@ import UnescapeFilter from './filters/Unescape'
 window.$ = $
 window.jQuery = $
 const buttonUI = require('jquery-ui/button')
+const sliderUI = require('jquery-ui/slider')
 window.$.fn.extend = buttonUI
+window.$.fn.extend = sliderUI
 
 // centralized event hub
 window.eventHub = new Vue()

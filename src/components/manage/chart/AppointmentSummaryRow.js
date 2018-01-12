@@ -3,6 +3,8 @@ import {
 } from '../../../constants/chart'
 import symbols from '../../../symbols'
 import Alerter from '../../../services/Alerter'
+import Datepicker from 'vuejs-datepicker'
+import http from '../../../services/http'
 
 export default {
   props: {
@@ -106,6 +108,9 @@ export default {
       return result
     }
   },
+  components: {
+    datepicker: Datepicker
+  },
   methods: {
     openFlowsheetModal () {
       const modalData = {
@@ -126,6 +131,21 @@ export default {
         }
       }
       this.$store.dispatch(symbols.actions.deleteAppointmentSummary, this.elementId)
+    },
+    updateCompletedDate () {
+      let compDate = null
+      const flowElements = this.$store.getters['flowElements']
+      for (let element of flowElements) {
+        if (element.id === this.elementId) {
+          compDate = element.dateCompleted
+        }
+      }
+      const postData = {
+        id: this.elementId,
+        comp_date: compDate,
+        pid: this.patientId
+      }
+      http.post('manage/includes/update_appt.php', postData)
     }
   }
 }

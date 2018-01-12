@@ -2,7 +2,7 @@
     <div id="sched_div" v-bind:class="{'current_step': !scheduledAppointment}">
         <div id="next_step_div">
             <label>Select Next Appointment</label>
-            <select id="next_step" v-model="secondSchedule.segmentid">
+            <select id="next_step" v-model="schedule.segmentid">
                 <option value="" class="empty-option">Select Next Step</option>
                 <option
                     v-for="nextStep in nextSteps"
@@ -12,13 +12,14 @@
         </div>
         <div id="next_step_date_div">
             <label>Schedule On/After</label>
-            <input
+            <datepicker
+                name="next_step_date"
                 id="next_step_date"
-                class="flow_next_calendar"
-                type="text"
-                v-bind:value="dateAfterSchedule"
-            />
-            <span id="next_step_until">{{ secondSchedule.date_until }}</span>
+                input-class="flow_next_calendar"
+                format="MM/dd/yyyy"
+                v-model="dateAfterSchedule"
+            ></datepicker>
+            <span id="next_step_until">{{ schedule.date_until }}</span>
         </div>
         <div id="tracker-notes-container">
             <label>Notes</label>

@@ -1,12 +1,14 @@
 <template>
     <tr v-bind:id="'completed_row_' + elementId">
         <td>
-            <input
-                class="completed_date flow_comp_calendar form-control date text-center"
+            <datepicker
+                name="completed_date"
                 v-bind:id="'completed_date_' + elementId"
-                type="text"
-                v-bind:value="dateCompleted | moment('MM/DD/YYYY')"
-            />
+                input-class="completed_date flow_comp_calendar form-control date text-center"
+                format="MM/dd/yyyy"
+                v-model="dateCompleted"
+                v-on:selected="updateCompletedDate()"
+            ></datepicker>
         </td>
         <td class="form-inline">
             <span class="title">{{ segmentName }}</span>

@@ -1,4 +1,5 @@
 import moment from 'moment'
+import Datepicker from 'vuejs-datepicker'
 
 export default {
   props: {
@@ -7,18 +8,27 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      trackerNotes: [],
-      nextSteps: []
-    }
-  },
   computed: {
+    schedule () {
+      return this.$store.getters['schedule']
+    },
+    nextSteps () {
+      return this.$store.getters['nextSteps']
+    },
+    trackerNotes () {
+      return this.$store.state.flowsheet['trackerNotesByPatient']
+    },
     dateAfterSchedule () {
-      if (!this.secondSchedule.date_scheduled) {
+      if (!this.schedule.date_scheduled) {
         return ''
       }
-      return moment(this.secondSchedule.date_scheduled).format('MM/DD/YYYY')
+      return moment(this.schedule.date_scheduled).format('MM/DD/YYYY')
     }
+  },
+  components: {
+    datepicker: Datepicker
+  },
+  created () {
+    this.$store.dispatch('trackerNotesByPatient', this.patientId)
   }
 }

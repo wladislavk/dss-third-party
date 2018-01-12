@@ -11,11 +11,22 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      stepsFirst: [],
-      stepsSecond: [],
-      arrowHeight: 0
+  computed: {
+    stepsFirst () {
+      return this.$store.getters['stepsFirst']
+    },
+    stepsSecond () {
+      return this.$store.getters['stepsSecond']
+    },
+    arrowHeight () {
+      let completedSteps = 0
+      for (let step of this.stepsFirst) {
+        if (step.completed) {
+          completedSteps++
+        }
+      }
+      const stepHeight = 20
+      return completedSteps * stepHeight
     }
   },
   components: {

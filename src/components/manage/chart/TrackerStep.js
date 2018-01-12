@@ -22,9 +22,16 @@ export default {
     section: {
       type: Number,
       required: true
+    },
+    completed: {
+      type: Boolean,
+      required: true
     }
   },
   computed: {
+    schedule () {
+      return this.$store.getters['schedule']
+    },
     firstStep () {
       if (this.id === 1) {
         return true
@@ -32,17 +39,8 @@ export default {
       return false
     },
     stepClass () {
-      if (this.section === 1) {
-        if (this.id === this.finalElement.segmentid) {
-          return 'last'
-        }
-        if (this.rank < this.finalRank) {
-          return 'completed_step'
-        }
-      } else {
-        if (this.id === this.lastElement.segmentid) {
-          return 'last'
-        }
+      if (this.section === 1 && this.completed) {
+        return 'completed_step'
       }
       return ''
     }
@@ -57,28 +55,22 @@ export default {
         const responseData = response.data.data
         this.updateCurrentStep()
         this.nextSteps = responseData.next_steps
-        this.secondSchedule.segmentid = ''
+        this.schedule.segmentid = ''
         this.$store.dispatch(symbols.actions.insertTrackerStep, responseData)
-        $('#next_step_date').val('')
-        $('#next_step_until').text('')
+        this.$store.commit('updateSegmentId', 0)
+        const data = {
+          dateAfter: null,
+          dateUntil: null
+        }
+        this.$store.commit('updateNextStep', data)
       })
     },
     updateCurrentStep () {
       let hasScheduledAppointment = false
-      if (this.secondSchedule.segmentid && $('#next_step_date').val() !== '') {
+      if (this.schedule.segmentid && this.schedule.date_scheduled) {
         hasScheduledAppointment = true
       }
       this.hasScheduledAppointment = hasScheduledAppointment
-    },
-    updateCompletedDate (cid) {
-      const id = cid.substring(15)
-      const compDate = $('#completed_date_' + id).val()
-      const postData = {
-        id: id,
-        comp_date: compDate,
-        pid: this.patientId
-      }
-      http.post('manage/includes/update_appt.php', postData)
     }
   }
 }

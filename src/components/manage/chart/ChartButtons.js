@@ -12,9 +12,19 @@ export default {
   data () {
     return {
       hstStatus: 0,
-      uncompletedHsts: 0,
-      isHstCompany: false
+      uncompletedHsts: 0
     }
+  },
+  computed: {
+    isHstCompany () {
+      if (this.$store.state.flowsheet['hstCompanies'].length > 0) {
+        return true
+      }
+      return false
+    }
+  },
+  created () {
+    this.$store.dispatch('hstCompanies')
   },
   methods: {
     orderHst () {

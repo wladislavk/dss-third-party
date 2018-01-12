@@ -1,8 +1,9 @@
 import BaseFileRetriever from './BaseFileRetriever'
-import ProcessWrapper from '../../wrappers/ProcessWrapper'
+import LegacyModifier from '../LegacyModifier'
 
 export default class LegacyFileRetriever extends BaseFileRetriever {
-  fetchFile (filename) {
-    return ProcessWrapper.getLegacyRoot() + 'manage/display_file.php?f=' + filename
+  fetchFile (filename, token) {
+    const url = 'manage/display_file.php?f=' + filename
+    return LegacyModifier.modifyLegacyLink(url, token)
   }
 }

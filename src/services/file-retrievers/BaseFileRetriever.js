@@ -1,6 +1,6 @@
 export default class BaseFileRetriever {
-  getMediaFile (filename) {
-    return this.fetchFile(filename)
+  getMediaFile (filename, token) {
+    return this.fetchFile(filename, token)
   }
 
   fetchFile () {

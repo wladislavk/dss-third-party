@@ -32,7 +32,7 @@ export default {
       const data = response.data.data
       if (data.hasOwnProperty('logo') && data.logo) {
         const factory = new FileRetrieverFactory()
-        this.companyLogo = factory.getFileRetriever().getMediaFile(data.logo)
+        this.companyLogo = factory.getFileRetriever().getMediaFile(data.logo, http.token)
       }
     })
   },

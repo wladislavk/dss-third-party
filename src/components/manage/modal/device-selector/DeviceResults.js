@@ -1,6 +1,7 @@
 import symbols from '../../../../symbols'
 import Alerter from '../../../../services/Alerter'
 import FileRetrieverFactory from '../../../../services/file-retrievers/FileRetrieverFactory'
+import http from '../../../../services/http'
 
 export default {
   props: {
@@ -14,8 +15,9 @@ export default {
   },
   methods: {
     getLogo (logoName) {
+      const token = this.$store.state.main[symbols.state.mainToken]
       const factory = new FileRetrieverFactory()
-      return factory.getFileRetriever().getMediaFile(logoName)
+      return factory.getFileRetriever().getMediaFile(logoName, token)
     },
     updateDevice (deviceId, name) {
       if (!this.patientName.length) {

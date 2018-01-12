@@ -48,5 +48,22 @@ export default {
 
   [symbols.mutations.insertTrackerStep] (state, data) {
     state[symbols.state.trackerSteps].push(data)
+  },
+
+  [symbols.mutations.stepsByRank] (state, data) {
+    const steps = []
+    for (let element of data) {
+      let newStep = {
+        id: parseInt(element.id),
+        name: element.name,
+        completed: !!element.completed
+      }
+      steps.push(newStep)
+    }
+    state[symbols.state.trackerSteps] = steps
+  },
+
+  [symbols.mutations.hasScheduledAppointment] (state, data) {
+    state[symbols.state.hasScheduledAppointment] = data
   }
 }

@@ -1,6 +1,7 @@
 import Alerter from '../../../services/Alerter'
 import LocationWrapper from '../../../wrappers/LocationWrapper'
 import symbols from '../../../symbols'
+import { HST_STATUSES } from '../../../constants/main'
 
 export default {
   props: {
@@ -9,22 +10,29 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      hstStatus: 0,
-      uncompletedHsts: 0
-    }
-  },
   computed: {
-    isHstCompany () {
-      if (this.$store.state.flowsheet['hstCompanies'].length > 0) {
+    isHSTCompany () {
+      if (this.$store.state.screener[symbols.state.companyData].length > 0) {
         return true
       }
       return false
+    },
+    incompleteHSTs () {
+      return this.$store.state.patients[symbols.state.incompleteHomeSleepTests]
+    },
+    hstStatus () {
+      if (!this.incompleteHSTs.length) {
+        return ''
+      }
+      const lastHST = this.incompleteHSTs[this.incompleteHSTs.length - 1]
+      if (!HST_STATUSES.hasOwnProperty(lastHST)) {
+        return ''
+      }
+      return HST_STATUSES[lastHST]
     }
   },
   created () {
-    this.$store.dispatch('hstCompanies')
+    this.$store.dispatch(symbols.actions.getCompanyData)
   },
   methods: {
     orderHst () {

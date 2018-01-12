@@ -4,7 +4,6 @@ import {
 import symbols from '../../../symbols'
 import Alerter from '../../../services/Alerter'
 import Datepicker from 'vuejs-datepicker'
-import http from '../../../services/http'
 
 export default {
   props: {
@@ -145,7 +144,7 @@ export default {
         comp_date: compDate,
         pid: this.patientId
       }
-      http.post('manage/includes/update_appt.php', postData)
+      this.$store.dispatch('updateAppointment', postData)
     }
   }
 }

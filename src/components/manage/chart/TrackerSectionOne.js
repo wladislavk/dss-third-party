@@ -1,4 +1,5 @@
 import TrackerStepComponent from './TrackerStep.vue'
+import symbols from '../../../symbols'
 
 export default {
   props: {
@@ -13,10 +14,10 @@ export default {
   },
   computed: {
     stepsFirst () {
-      return this.$store.getters['stepsFirst']
+      return this.$store.getters[symbols.getters.trackerStepsFirst]
     },
     stepsSecond () {
-      return this.$store.getters['stepsSecond']
+      return this.$store.getters[symbols.getters.trackerStepsSecond]
     },
     arrowHeight () {
       let completedSteps = 0

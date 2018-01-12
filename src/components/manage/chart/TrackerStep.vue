@@ -1,6 +1,6 @@
 <template>
-    <li v-bind:class="stepClass">
-        <span v-if="firstStep">{{ name }}</span>
+    <li v-bind:class="{'completed_step': stepClass}">
+        <span v-if="id === 1">{{ name }}</span>
         <a
             href="#"
             v-bind:id="'completed_' + id"

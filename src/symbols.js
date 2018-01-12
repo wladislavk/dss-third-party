@@ -18,6 +18,7 @@ export default {
     deviceGuideSettingOptions: 'DEVICE_GUIDE_SETTING_OPTIONS',
     epworthOptions: 'EPWORTH_OPTIONS',
     epworthProps: 'EPWORTH_PROPS',
+    hasScheduledAppointment: 'HAS_SCHEDULED_APPOINTMENT',
     headerAlertText: 'HEADER_ALERT_TEXT',
     headerTitle: 'HEADER_TITLE',
     incompleteHomeSleepTests: 'INCOMPLETE_HOME_SLEEP_TESTS',
@@ -79,7 +80,10 @@ export default {
     tasksByType: 'TASKS_BY_TYPE',
     tasksNumber: 'TASKS_NUMBER',
     tasksPatientByType: 'TASKS_PATIENT_BY_TYPE',
-    tasksPatientNumber: 'TASKS_PATIENT_NUMBER'
+    tasksPatientNumber: 'TASKS_PATIENT_NUMBER',
+    trackerStepSchedule: 'TRACKER_STEP_SCHEDULE',
+    trackerStepsFirst: 'TRACKER_STEPS_FIRST',
+    trackerStepsSecond: 'TRACKER_STEPS_SECOND'
   },
   mutations: {
     appointmentSummaries: 'APPOINTMENT_SUMMARIES',
@@ -99,6 +103,7 @@ export default {
     deviceGuideSettingOptions: 'DEVICE_GUIDE_SETTING_OPTIONS',
     epworthWeight: 'EPWORTH_WEIGHT',
     getTask: 'GET_TASK',
+    hasScheduledAppointment: 'HAS_SCHEDULED_APPOINTMENT',
     hideAllWarnings: 'HIDE_ALL_WARNINGS',
     hideFancybox: 'HIDE_FANCYBOX',
     hideSearchHints: 'HIDE_SEARCH_HINTS',
@@ -130,6 +135,7 @@ export default {
     showAllWarnings: 'SHOW_ALL_WARNINGS',
     showFancybox: 'SHOW_FANCYBOX',
     showSearchHints: 'SHOW_SEARCH_HINTS',
+    stepsByRank: 'STEPS_BY_RANK',
     surveyWeight: 'SURVEY_WEIGHT',
     symptoms: 'SYMPTOMS',
     userInfo: 'USER_INFO'
@@ -169,6 +175,7 @@ export default {
     setCurrentContact: 'SET_CURRENT_CONTACT',
     setEpworthProps: 'SET_EPWORTH_PROPS',
     setSessionData: 'SET_SESSION_DATA',
+    stepsByRank: 'STEPS_BY_RANK',
     storeLoginDetails: 'STORE_LOGIN_DETAILS',
     submitScreener: 'SUBMIT_SCREENER',
     submitHst: 'SUBMIT_HST',

@@ -136,5 +136,15 @@ export default {
       // end switch cases
     }
     commit(symbols.mutations.insertTrackerStep, newStep)
+  },
+
+  [symbols.actions.stepsByRank] ({ rootState, commit, dispatch }, patientId) {
+    http.token = rootState.main[symbols.state.mainToken]
+    http.get(endpoints.appointmentSummaries.stepsByRank + '/' + patientId).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.stepsByRank, data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getStepsByRank', response: response})
+    })
   }
 }

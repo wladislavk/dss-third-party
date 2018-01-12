@@ -1,11 +1,11 @@
 <template>
     <div class="tracker-div">
-        <template v-if="isHstCompany">
+        <template v-if="isHSTCompany">
             <a
                 href="#"
                 class="button"
                 v-on:click.prevent="orderHst()"
-                v-if="uncompletedHsts"
+                v-if="incompleteHSTs.length"
             >Order HST</a>
             <a
                 href="#"

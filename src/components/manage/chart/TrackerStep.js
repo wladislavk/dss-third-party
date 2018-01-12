@@ -1,5 +1,4 @@
 import symbols from '../../../symbols'
-import http from '../../../services/http'
 
 export default {
   props: {
@@ -9,10 +8,6 @@ export default {
     },
     name: {
       type: String,
-      required: true
-    },
-    rank: {
-      type: Number,
       required: true
     },
     patientId: {
@@ -30,28 +25,23 @@ export default {
   },
   computed: {
     schedule () {
-      return this.$store.getters['schedule']
-    },
-    firstStep () {
-      if (this.id === 1) {
-        return true
-      }
-      return false
+      return this.$store.getters[symbols.getters.trackerStepSchedule]
     },
     stepClass () {
       if (this.section === 1 && this.completed) {
-        return 'completed_step'
+        return true
       }
-      return ''
+      return false
     }
   },
   methods: {
     addAction () {
+      /*
       const postData = {
         id: this.id,
         pid: this.patientId
       }
-      http.post('manage/includes/update_appt_today.php', postData).then((response) => {
+      this.$store.dispatch('updateAppointmentToday', postData).then((response) => {
         const responseData = response.data.data
         this.updateCurrentStep()
         this.nextSteps = responseData.next_steps
@@ -64,13 +54,14 @@ export default {
         }
         this.$store.commit('updateNextStep', data)
       })
+      */
     },
     updateCurrentStep () {
       let hasScheduledAppointment = false
       if (this.schedule.segmentid && this.schedule.date_scheduled) {
         hasScheduledAppointment = true
       }
-      this.hasScheduledAppointment = hasScheduledAppointment
+      this.$store.commit(symbols.mutations.hasScheduledAppointment, hasScheduledAppointment)
     }
   }
 }

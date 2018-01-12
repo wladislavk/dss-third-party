@@ -9,6 +9,7 @@
             ></tracker-section-one>
             <span class="sub_text">*Click a treatment above to add it to the Treatment Summary</span>
         </div>
+        <!--
         <div id="step2">
             <h3>2) What will you do next?*</h3>
             <tracker-section-two
@@ -21,6 +22,7 @@
                 v-bind:letter-count="letterCount"
             ></appointment-summary>
         </div>
+        -->
         <div style="clear:both;"></div>
     </div>
 </template>

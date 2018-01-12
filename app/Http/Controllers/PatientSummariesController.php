@@ -156,4 +156,10 @@ class PatientSummariesController extends BaseRestController
 
         return ApiResponse::responseOk('Resource updated');
     }
+
+    /*
+$trackerNotes = $db->getColumn("SELECT tracker_notes
+    FROM dental_patient_summary
+    WHERE pid = '$patientId'", 'tracker_notes', '');
+     */
 }

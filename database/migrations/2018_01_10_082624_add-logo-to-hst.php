@@ -12,6 +12,9 @@ class AddLogoToHst extends Migration
      */
     public function up()
     {
+        if (env('APP_ENV') == 'production') {
+            return;
+        }
         DB::update("UPDATE companies SET logo = 'company_logo_5.jpg' WHERE id = 5");
     }
 
@@ -22,6 +25,9 @@ class AddLogoToHst extends Migration
      */
     public function down()
     {
+        if (env('APP_ENV') == 'production') {
+            return;
+        }
         DB::update("UPDATE companies SET logo = '' WHERE id = 5");
     }
 }

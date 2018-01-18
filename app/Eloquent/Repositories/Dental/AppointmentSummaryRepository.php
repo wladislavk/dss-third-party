@@ -20,7 +20,8 @@ class AppointmentSummaryRepository extends AbstractRepository
      */
     public function getByPatient($patientId)
     {
-        return $this->model->select('*')
+        return $this->model
+            ->select('*')
             ->where('patientid', $patientId)
             ->orderBy('date_completed', 'desc')
             ->orderBy('id', 'desc')

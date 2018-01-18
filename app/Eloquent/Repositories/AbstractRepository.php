@@ -223,9 +223,9 @@ abstract class AbstractRepository extends BaseRepository
     }
 
     /**
-     * @param  array  $data
-     * @param  array  $where
-     * @return boolean|int
+     * @param array $data
+     * @param array $where
+     * @return bool|int
      */
     public function updateWhere(array $data, array $where)
     {

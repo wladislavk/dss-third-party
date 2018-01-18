@@ -7,6 +7,7 @@ Feature: Common page elements
     Given I am logged in as "doc1f"
     When I go to "start" page
     Then I see main page with welcome text for user "doc1f"
+    And I see company logo next to welcome text
     And I see right top bar with following links:
       | text               |
       | Notifications(354) |

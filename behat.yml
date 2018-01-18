@@ -17,7 +17,7 @@ default:
                 - Contexts\CommonPatientElements
                 - Contexts\Dashboard
                 - Contexts\Auth
-                - Contexts\PatientChart
+                - Contexts\DeviceSelector
                 - Contexts\ScreenerApp
                 - Contexts\Tasks
                 - Contexts\Tracker
@@ -31,7 +31,6 @@ default:
                 - Contexts\Claims
                 - Contexts\ClinicalExam
                 - Contexts\Contacts
-                - Contexts\DeviceSelector
                 - Contexts\Education
                 - Contexts\Forms
                 - Contexts\Insurance

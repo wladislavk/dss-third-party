@@ -17,6 +17,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  * @see self::boot
  * @property int|null $userid
  * @property int|null $docid
+ * @property string|null $ip_address
  * @mixin \Eloquent
  */
 class User extends AbstractModel implements AuthenticatableContract, UserInterface

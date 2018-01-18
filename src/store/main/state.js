@@ -46,7 +46,7 @@ export default {
     [NOTIFICATION_NUMBERS.unmailedLetters]: 0,
     [NOTIFICATION_NUMBERS.unsignedNotes]: 0
   },
-  [symbols.state.companyLogo]: '',
+  [symbols.state.showAllWarnings]: true,
   [symbols.state.showSearchHints]: false,
   [symbols.state.patientSearchList]: []
 }

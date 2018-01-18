@@ -137,9 +137,9 @@ body, .screener_body {
 }
 
 img.refresh_image {
-  background-image: url(../../images/icons/refresh.png)
+  background-image: url(../../images/icons/refresh.png) !important;
 }
 
 img.logout_image {
-  background-image: url(../../images/icons/locked2.png)
+  background-image: url(../../images/icons/locked2.png) !important;
 }

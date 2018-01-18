@@ -4,6 +4,8 @@ namespace DentalSleepSolutions\Eloquent\Repositories\Dental;
 
 use DentalSleepSolutions\Eloquent\Models\Dental\AppointmentSummary;
 use DentalSleepSolutions\Eloquent\Repositories\AbstractRepository;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class AppointmentSummaryRepository extends AbstractRepository
 {
@@ -13,15 +15,43 @@ class AppointmentSummaryRepository extends AbstractRepository
     }
 
     /**
+<<<<<<< HEAD
      * @param int $patientId
      * @return AppointmentSummary[]|\Illuminate\Database\Eloquent\Collection|static[]
      */
     public function getByPatient($patientId)
     {
-        return $this->model->select('*')
+        return $this->model
+            ->select('*')
             ->where('patientid', $patientId)
             ->orderBy('date_completed', 'desc')
             ->orderBy('id', 'desc')
-            ->get();
+            ->get()
+        ;
+    }
+
+    /**
+     * @param  int $patientId
+     * @return array
+     */
+    public function getLastAppointmentDevice($patientId)
+    {
+        $result = $this->model
+            ->select('id')
+            ->where('appointment_type', AppointmentSummary::VISITED_APPOINTMENT)
+            ->where('patientid', $patientId)
+            ->where(function (Builder $query) {
+                /** @var Builder|QueryBuilder $queryBuilder */
+                $queryBuilder = $query;
+                $queryBuilder
+                    ->where('segmentid', AppointmentSummary::DEVICE_DELIVERY_SEGMENT)
+                    ->orWhere('segmentid', AppointmentSummary::IMPRESSIONS_SEGMENT)
+                ;
+            })
+            ->orderBy('date_completed', 'desc')
+            ->orderBy('id', 'desc')
+        ;
+        $arrayResult = $result->first()->toArray();
+        return $arrayResult;
     }
 }

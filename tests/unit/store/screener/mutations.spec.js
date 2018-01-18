@@ -101,7 +101,7 @@ describe('Screener module mutations', () => {
         [symbols.state.companyData]: [
           {
             name: 'company1',
-            logo: 'https://loader.docker.localhost/shared/logo1'
+            logo: 'logo1'
           },
           {
             name: 'company2'

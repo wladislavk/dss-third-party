@@ -13,12 +13,7 @@
                     v-for="deviceResult in deviceGuideResults"
                     v-bind:class="{ 'box_go': deviceResult.image_path }"
                 >
-                    <!-- @todo: finish DSS-718 before uncommenting -->
-                    <!--
-                    <div v-if="deviceResult.image_path" class="ico">
-                        <img v-bind:src="deviceResult.image_path" />
-                    </div>
-                    -->
+                    <div v-if="deviceResult.image_path" class="ico"><img v-bind:src="getLogo(deviceResult.image_path)" /></div>
                     <a
                         v-if="patientName"
                         v-on:click.prevent="updateDevice(deviceResult.id, deviceResult.name)"

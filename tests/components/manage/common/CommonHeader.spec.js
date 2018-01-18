@@ -14,7 +14,6 @@ describe('CommonHeader component', () => {
 
     Vue.directive('legacy-href', LegacyHref)
     store.commit(symbols.mutations.patientId, 0)
-    store.commit(symbols.mutations.companyLogo, '')
     store.commit(symbols.mutations.modal, { name: '' })
     Vue.component('patient-header', {
       template: '<div class="patient-header"></div>'
@@ -60,10 +59,12 @@ describe('CommonHeader component', () => {
     const vm = this.mount()
     const companyLogoDiv = vm.$el.querySelector('div.company-logo')
     expect(companyLogoDiv).toBeNull()
+    /*
     const patientHeaderDiv = vm.$el.querySelector('div.patient-header')
     expect(patientHeaderDiv).toBeNull()
     const patientMenusDiv = vm.$el.querySelector('div.patient-menus')
     expect(patientMenusDiv).not.toBeNull()
+    */
   })
 
   it('shows patient header when ID present', function () {

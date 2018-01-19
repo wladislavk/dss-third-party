@@ -22,25 +22,21 @@ ul.search_list {
   margin: 0;
   font-size: 14px;
   font-weight: normal;
-}
-
-ul.search_list li {
-  margin: 0;
-  padding: 2px 10px;
-  position: relative;
-  list-style-type: none;
-  cursor: pointer;
-}
-
-ul.search_list li.no_matches {
-  cursor: default;
-  color: #999;
-}
-
-ul.search_list li:hover {
-  background: #ddd;
-}
-
-ul.search_list li.list_hover {
-  background: #ddd;
+  li {
+    margin: 0;
+    padding: 2px 10px;
+    position: relative;
+    list-style-type: none;
+    cursor: pointer;
+  }
+  li.no_matches {
+    cursor: default;
+    color: #999;
+  }
+  li:hover {
+    background: #ddd;
+  }
+  li.list_hover {
+    background: #ddd;
+  }
 }

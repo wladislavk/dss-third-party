@@ -13,6 +13,9 @@ a {
   margin: 5px 0 0 20px;
   font-size: 18px;
   text-decoration: none;
+  span.count {
+    padding-right: 5px;
+  }
 }
 
 .notification:hover {
@@ -20,19 +23,16 @@ a {
   color: #095D81;
 }
 
-.notification span.count {
-  padding-right: 5px;
-}
 .good_count {
-  background: url(../../../images/count_blue.png) no-repeat 0 0;
+  background: url(/src/assets/images/count_blue.png) no-repeat 0 0;
 }
 
 .bad_count {
-  background: url(../../../images/count_red.png) no-repeat 0 0;
+  background: url(/src/assets/images/count_red.png) no-repeat 0 0;
 }
 
 .great_count {
-  background: url(../../../images/count_green.png) no-repeat 0 0;
+  background: url(/src/assets/images/count_green.png) no-repeat 0 0;
 }
 
 .arrow_right {

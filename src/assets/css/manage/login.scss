@@ -1,16 +1,5 @@
-#alert_container {
-  width: 625px;
-  background: #f33;
-  padding: 10px 0;
-  color: #fff;
-  margin: 0 auto;
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-}
-
 div.login_container {
-  background: url(../../images/login_box.png) no-repeat 0 0;
+  background: url(/src/assets/images/login_box.png) no-repeat 0 0;
   width: 625px;
   height: 162px;
   margin: 80px auto 0 auto;

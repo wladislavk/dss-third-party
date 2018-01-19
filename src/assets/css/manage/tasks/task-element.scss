@@ -5,10 +5,9 @@ li {
 .task_item {
   height: 20px;
   clear: both;
-}
-
-.task_item input {
-  margin-left: 10px;
+  input {
+    margin-left: 10px;
+  }
 }
 
 .task_extra {
@@ -40,7 +39,7 @@ li {
   display: block;
   width: 10px;
   height: 10px;
-  background: url(../../../images/delete.png) no-repeat 0 0;
+  background: url(/src/assets/images/delete.png) no-repeat 0 0;
   float: left;
   margin-right: 4px;
   margin-top: 1px;

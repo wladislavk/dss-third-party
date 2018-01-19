@@ -12,21 +12,19 @@ div.sort-devices-button > a {
 div.device-results-div {
   float: left;
   width: 50%;
-}
-
-div.device-results-div ul {
-  border: solid 2px #a7cefa;
+  ul {
+    border: solid 2px #a7cefa;
+  }
 }
 
 li.box_go {
   position: relative;
-}
-
-li.box_go div.ico {
-  position: absolute;
-  left: 80px;
-  display: none;
-  z-index: 100;
+  div.ico {
+    position: absolute;
+    left: 80px;
+    display: none;
+    z-index: 100;
+  }
 }
 
 li.box_go:hover div.ico {

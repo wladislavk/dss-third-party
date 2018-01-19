@@ -29,4 +29,6 @@
 
 <script src="./DeviceResults.js"></script>
 
-<style src="../../../../assets/css/manage/device-selector/device-results.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/device-selector/device-results.scss";
+</style>

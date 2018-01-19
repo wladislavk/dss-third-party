@@ -7,4 +7,6 @@
 
 <script src="./ManageRoot.js"></script>
 
-<style src="../../assets/css/manage/main.css"></style>
+<style lang="scss" scoped>
+    @import "../../assets/css/manage/main.scss";
+</style>

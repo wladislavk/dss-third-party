@@ -37,4 +37,6 @@
 
 <script src="./PatientWarnings.js"></script>
 
-<style src="../../../assets/css/manage/common/patient-warnings.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/common/patient-warnings.scss";
+</style>

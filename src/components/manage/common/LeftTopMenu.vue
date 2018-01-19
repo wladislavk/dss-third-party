@@ -10,4 +10,6 @@
 
 <script src="./LeftTopMenu.js"></script>
 
-<style src="../../../assets/css/manage/common/left-top-menu.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/common/left-top-menu.scss";
+</style>

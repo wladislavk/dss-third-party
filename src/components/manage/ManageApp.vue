@@ -22,4 +22,6 @@
 
 <script src="./ManageApp.js"></script>
 
-<style src="../../assets/css/manage/app.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../assets/css/manage/app.scss";
+</style>

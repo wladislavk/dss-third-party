@@ -62,4 +62,6 @@
 
 <script src="./ManageLogin.js"></script>
 
-<style src="../../assets/css/manage/login.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../assets/css/manage/login.scss";
+</style>

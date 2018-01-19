@@ -13,19 +13,17 @@
   -moz-border-radius-topright: 5px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-}
-
-#patient_name_div .medicare_name {
-  min-width: 238px;
-  padding: 0 3px;
-  vertical-align: top;
-  text-align: center;
-  display: block;
-  float: right;
-}
-
-#patient_name_div .name {
-  width: 100%;
-  text-align: center;
-  display: block;
+  .medicare_name {
+    min-width: 238px;
+    padding: 0 3px;
+    vertical-align: top;
+    text-align: center;
+    display: block;
+    float: right;
+  }
+  .name {
+    width: 100%;
+    text-align: center;
+    display: block;
+  }
 }

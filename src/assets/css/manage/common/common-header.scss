@@ -11,11 +11,10 @@ div.dashboard-link {
 div.patient-search {
   float: left;
   width: 68%;
-}
-
-div.patient-search button {
-  padding: 3px;
-  margin-top: 27px;
+  button {
+    padding: 3px;
+    margin-top: 27px;
+  }
 }
 
 div.company-logo {
@@ -42,18 +41,18 @@ div.clear {
 .bottom-image {
   height: 89px;
   width: 100%;
-  background: url(../../../images/dss_01.png) #0b5c82 no-repeat top left;
+  background: url(/src/assets/images/dss_01.png) #0b5c82 no-repeat top left;
 }
 
 .body-image {
-  background: url(../../../images/dss_03.jpg) #0b5c82 repeat-y top left;
+  background: url(/src/assets/images/dss_03.jpg) #0b5c82 repeat-y top left;
   width: 100%;
 }
 
 a.logo-link {
   width: 96px;
   height: 77px;
-  background: url(../../../images/logo.png) no-repeat 0 0;
+  background: url(/src/assets/images/logo.png) no-repeat 0 0;
   display: block;
   float: left;
   padding-left: 100px;
@@ -61,5 +60,5 @@ a.logo-link {
 }
 
 div.patient-data-wrapper {
-  background: url(../../../images/dss_03.jpg) repeat-y top left #FFFFFF;
+  background: url(/src/assets/images/dss_03.jpg) repeat-y top left #FFFFFF;
 }

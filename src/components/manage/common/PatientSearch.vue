@@ -41,4 +41,6 @@
 
 <script src="./PatientSearch.js"></script>
 
-<style src="../../../assets/css/manage/common/patient-search.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/common/patient-search.scss";
+</style>

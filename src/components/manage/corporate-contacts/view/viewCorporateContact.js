@@ -15,7 +15,7 @@ export default {
   created () {
     window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
     // this popup has only readonly input fields - set the flag to false
-    this.$parent.popupEdit = false
+    this.$store.dispatch(symbols.actions.disablePopupEdit)
   },
   mounted () {
     // set all form's fields disabled

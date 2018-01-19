@@ -13,16 +13,20 @@ export default {
   },
   created () {
     window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
-
-    this.$parent.popupEdit = false
+    this.$store.dispatch(symbols.actions.disablePopupEdit)
   },
   beforeDestroy () {
     window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
   },
   methods: {
     onClickEditSleeplab () {
-      this.$parent.display('edit-sleeplab')
-      this.$parent.setComponentParameters({ sleeplabId: this.componentParams.sleeplabId || 0 })
+      const modalData = {
+        name: symbols.modals.editSleeplab,
+        params: {
+          sleeplabId: this.componentParams.sleeplabId || 0
+        }
+      }
+      this.$store.commit(symbols.mutations.modal, modalData)
     },
     onSettingComponentParams (parameters) {
       this.componentParams = parameters

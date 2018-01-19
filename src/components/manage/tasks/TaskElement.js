@@ -51,7 +51,7 @@ export default {
     },
     onClickTaskPopup (taskId) {
       const modalData = {
-        name: 'addTask',
+        name: symbols.modals.addTask,
         params: {
           id: taskId,
           patientId: 0

@@ -151,6 +151,7 @@ export default {
     disablePopupEdit: 'DISABLE_POPUP_EDIT',
     documentCategories: 'DOCUMENT_CATEGORIES',
     dualAppLogin: 'DUAL_APP_LOGIN',
+    enablePopupEdit: 'ENABLE_POPUP_EDIT',
     exportMDModal: 'EXPORT_MD_MODAL',
     getCompanyData: 'GET_COMPANY_DATA',
     getDoctorData: 'GET_DOCTOR_DATA',
@@ -183,5 +184,17 @@ export default {
   },
   populators: {
     populateClaims: 'POPULATE_CLAIMS'
+  },
+  modals: {
+    addTask: 'addTask',
+    deviceSelector: 'deviceSelector',
+    editContact: 'editContact',
+    editReferredByContact: 'editReferredByContact',
+    editReferredByNote: 'editReferredByNote',
+    editSleeplab: 'editSleeplab',
+    patientAccessCode: 'patientAccessCode',
+    viewContact: 'viewContact',
+    viewCorporateContact: 'viewCorporateContact',
+    viewSleeplab: 'viewSleeplab'
   }
 }

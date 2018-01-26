@@ -32,9 +32,9 @@ export default {
         // we are editing some sleeplab and current sleeplab data has already fetched
         if (this.componentParams.sleeplabId > 0 && this.isContactDataFetched) {
           this.isContactDataFetched = false
-          this.$parent.popupEdit = true
+          this.$store.dispatch(symbols.actions.enablePopupEdit)
         } else if (this.componentParams.sleeplabId === 0) { // we are creating a new contact
-          this.$parent.popupEdit = true
+          this.$store.dispatch(symbols.actions.enablePopupEdit)
         }
 
         if (!this.isContactDataFetched) {
@@ -73,7 +73,7 @@ export default {
   created () {
     window.eventHub.$on('setting-component-params', this.onSettingComponentParams)
     // no one field was edited
-    this.$parent.popupEdit = false
+    this.$store.dispatch(symbols.actions.disablePopupEdit)
   },
   beforeDestroy () {
     window.eventHub.$off('setting-component-params', this.onSettingComponentParams)
@@ -81,9 +81,8 @@ export default {
   methods: {
     onClickDeleteSleeplab (sleeplabId) {
       const confirmText = 'Do Your Really want to Delete?'
-      if (confirm(confirmText)) {
-        this.$parent.disable()
-
+      if (Alerter.isConfirmed(confirmText)) {
+        this.$store.commit(symbols.mutations.resetModal)
         this.$router.push({
           name: 'sleeplabs',
           query: {
@@ -96,16 +95,13 @@ export default {
       if (this.validateSleeplabData(this.sleeplab)) {
         this.editSleeplab(this.componentParams.sleeplabId, this.sleeplab).then((response) => {
           const data = response.data.data
-
-          this.$parent.popupEdit = false
-
+          this.$store.dispatch(symbols.actions.disablePopupEdit)
           if (data.status) {
             this.$parent.updateParentData({ message: data.status })
-            this.$parent.disable()
+            this.$store.commit(symbols.mutations.resetModal)
           }
         }).catch((response) => {
           this.parseFailedResponseOnEditingSleeplab(response.data.data)
-
           this.$store.dispatch(symbols.actions.handleErrors, {title: 'editSleeplab', response: response})
         })
       }

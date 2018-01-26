@@ -44,11 +44,14 @@ export default {
       LocationWrapper.goToLegacyPage('manage/add_patient.php')
     },
     addTaskPopup () {
-      const props = {
-        id: 0,
-        patientId: this.patientId
+      const modalData = {
+        name: symbols.modals.addTask,
+        params: {
+          id: 0,
+          patientId: this.patientId
+        }
       }
-      this.$store.commit(symbols.mutations.modal, { name: 'addTask', params: props })
+      this.$store.commit(symbols.mutations.modal, modalData)
     }
   }
 }

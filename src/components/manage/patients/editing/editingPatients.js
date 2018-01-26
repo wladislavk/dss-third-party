@@ -410,8 +410,13 @@ export default {
       }
 
       if (data.send_pin_code) {
-        this.$store.commit(symbols.mutations.modal, 'patient-access-code')
-        this.$parent.$refs.modal.setComponentParameters({ patientId: this.routeParameters.patientId })
+        const modalData = {
+          name: symbols.modals.patientAccessCode,
+          params: {
+            patientId: this.routeParameters.patientId
+          }
+        }
+        this.$store.commit(symbols.mutations.modal, modalData)
       }
 
       this.fillForm(this.routeParameters.patientId)
@@ -423,7 +428,7 @@ export default {
 
           let isReadyForProcessing = false
           if (data.confirm_message.length > 0) {
-            isReadyForProcessing = confirm(data.confirm_message)
+            isReadyForProcessing = Alerter.isConfirmed(data.confirm_message)
           } else {
             isReadyForProcessing = true
           }
@@ -495,7 +500,7 @@ export default {
     },
     submitSendingHst: function () {
       if (
-        confirm(
+        Alerter.isConfirmed(
           'Click OK to initiate a Home Sleep Test request. ' +
           'The HST request must be electronically signed by an authorized ' +
           'provider before it can be transmitted. You can view and save/update ' +
@@ -560,7 +565,7 @@ export default {
                 this.arrName = data
               } else if (data.error) {
                 this.arrName = []
-                alert(data.error)
+                Alerter.alert(data.error)
               }
             }).catch((response) => {
               this.$store.dispatch(symbols.actions.handleErrors, {title: 'getListContactsAndCompanies', response: response})
@@ -659,14 +664,12 @@ export default {
           if (this.autoCompleteSearchValue !== insPayerName) {
             this.autoCompleteSearchValue = insPayerName
             const foundPayers = this.searchEligiblePayersByName(insPayerName)
-
             if (foundPayers.length > 0) {
               this.arrName = foundPayers
             } else {
               this.arrName = []
               this.$refs[elementName].focus()
-
-              alert('Error: No match found for this criteria.')
+              Alerter.alert('Error: No match found for this criteria.')
             }
           }
         } else {
@@ -684,19 +687,17 @@ export default {
     },
     onKeyUpSearchReferrers: function () {
       clearTimeout(this.typingTimer)
-
       this.typingTimer = setTimeout(() => {
         if (this.formedFullNames.referred_name.trim() !== '') {
           if (this.formedFullNames.referred_name.trim().length > 1) {
             this.getReferrers(this.formedFullNames.referred_name.trim()).then((response) => {
               const data = response.data.data
-
               if (data.length) {
                 this.foundReferrersByName = data
                 this.showReferredbyHints = true
               } else if (data.error) {
                 this.foundReferrersByName = []
-                alert(data.error)
+                Alerter.alert(data.error)
               }
             }).catch((response) => {
               this.$store.dispatch(symbols.actions.handleErrors, {title: 'getReferrers', response: response})
@@ -722,14 +723,11 @@ export default {
         patient_id: patientId || 0,
         tracker_notes: notes
       }
-
       return http.post(endpoints.patientSummaries.updateTrackerNotes, data)
     },
     cleanPatientData: function () {
       const patient = {}
-
       this.setDefaultValues(patient)
-
       this.patient = patient
       this.profilePhoto = null
       this.introLetter = {}
@@ -739,7 +737,6 @@ export default {
       this.formedFullNames = {}
       this.pendingVob = {}
       this.patientLocation = ''
-
       // update patient name in the header
       window.eventHub.$emit('update-from-child', {
         patientName: '',
@@ -753,12 +750,10 @@ export default {
     fillForm: function (patientId) {
       this.getDataForFillingPatientForm(patientId).then((response) => {
         const data = response.data.data
-
         if (data.length !== 0) {
           this.filterPhoneFields(data.patient)
           this.filterSsnField(data.patient)
           this.setDefaultValues(data.patient)
-
           this.patient = data.patient
           this.profilePhoto = data.profile_photo
           this.introLetter = data.intro_letter
@@ -768,7 +763,6 @@ export default {
           this.formedFullNames = data.formed_full_names
           this.pendingVob = data.pending_vob
           this.patientLocation = data.patient_location
-
           // update patient name in the header
           window.eventHub.$emit('update-from-child', {
             patientName: data.patient.firstname + ' ' + data.patient.lastname,
@@ -787,7 +781,6 @@ export default {
       if (this.value !== 'Self') {
         return
       }
-
       let resultFields = []
       const sourceFields = [
         this.patient.dob,
@@ -796,7 +789,6 @@ export default {
         this.patient.lastname,
         this.patient.gender
       ]
-
       if (type === 'primary_insurance') {
         resultFields = [
           'ins_dob', 'p_m_partyfname', 'p_m_partymname', 'p_m_partylname', 'p_m_gender'
@@ -806,7 +798,6 @@ export default {
           'ins2_dob', 's_m_partyfname', 's_m_partymname', 's_m_partylname', 's_m_gender'
         ]
       }
-
       resultFields.forEach((el, index) => {
         this.$set(this.patient, el, sourceFields[index])
       })
@@ -814,13 +805,11 @@ export default {
     onPreferredContactChange: function () {
       // need to test this function
       if (this.patient.preferredcontact === 'email' && this.patient.email.length === 0) {
-        alert('You must enter an email address to use email as the preferred contact method.')
-
+        Alerter.alert('You must enter an email address to use email as the preferred contact method.')
         this.$set(this.patient, 'preferredcontact', '')
         this.$refs.email.focus()
       } else if (this.patient.preferredcontact === 'fax' && this.patient.fax.length === 0) {
-        alert('You must enter a fax number to use email as the preferred contact method.')
-
+        Alerter.alert('You must enter a fax number to use email as the preferred contact method.')
         this.$set(this.patient, 'preferredcontact', '')
         this.$refs.fax.focus()
       }
@@ -946,20 +935,16 @@ export default {
       patientFormData = Object.assign(patientFormData, {
         location: this.patientLocation
       })
-
       const fields = ['home_phone', 'cell_phone', 'work_phone', 'emergency_number', 'ssn']
-
       fields.forEach((el) => {
         patientFormData[el] = this.number(patientFormData[el])
       })
-
       const data = {
         patient_form_data: patientFormData,
         pressed_buttons: pressedButtons || undefined,
         requested_emails: requestedEmails || undefined,
         tracker_notes: trackerNotes || undefined
       }
-
       return http.post(endpoints.patients.edit + '/' + patientId, data)
     },
     checkEmail: function (email, patientId) {
@@ -967,20 +952,18 @@ export default {
         email: email || '',
         patient_id: patientId || 0
       }
-
       return http.post(endpoints.patients.checkEmail, data)
     },
     removeNotificationInDb: function (id) {
       id = id || 0
       const data = { status: 2 }
-
       return http.put(endpoints.notifications.update + '/' + id, data)
     },
     walkThroughMessages (messages, patient) {
       for (let property in messages) {
         if (messages.hasOwnProperty(property)) {
           if (patient[property] === undefined || patient[property].trim() === '') {
-            alert(messages[property])
+            Alerter.alert(messages[property])
             this.$refs[property].focus()
             return false
           }
@@ -992,7 +975,7 @@ export default {
       for (let property in messages) {
         if (messages.hasOwnProperty(property)) {
           if (patient.hasOwnProperty(property) && patient[property].length > 0 && patient[messages[property].connect_to] === '') {
-            alert(messages[property].message)
+            Alerter.alert(messages[property].message)
             this.$refs[property].focus()
 
             return false
@@ -1020,29 +1003,22 @@ export default {
       if (!this.walkThroughMessages(messages, patient)) {
         return false
       }
-
       if (referredName.length > 0 && !patient.referred_by) {
-        alert('Invalid referred by.')
+        Alerter.alert('Invalid referred by.')
         this.$refs.referred_by_name.focus()
-
         return false
       }
-
       if (!this.isValidDate(patient.dob)) {
-        alert('Invalid Date Format For Birthday. (mm/dd/YYYY) is valid format')
+        Alerter.alert('Invalid Date Format For Birthday. (mm/dd/YYYY) is valid format')
         this.$refs.dob.focus()
-
         return false
       }
-
       if (patient.home_phone.trim() === '' && patient.work_phone.trim() === '' && patient.cell_phone.trim() === '') {
-        alert('Phone Number is required')
-
+        Alerter.alert('Phone Number is required')
         return false
       }
-
       if (patient.p_m_ins_ass === 'No' || patient.s_m_ins_ass === 'No') {
-        return confirm(
+        return Alerter.isConfirmed(
           'Selecting "Payment to Patient" means NO payment will go to your' +
           'office (payment will be mailed to patient). Select "Accept Assignment ' +
           'of Benefits" to have the insurance check go to your office instead. ' +
@@ -1063,28 +1039,23 @@ export default {
           p_m_ins_grp: 'Group # is a Required Field',
           p_m_ins_type: 'Insurance Type is a Required Field'
         }
-
         if (!this.walkThroughMessages(messages, patient)) {
           return false
         }
-
         // if primary insurance - yes and secondary - not
         if (parseInt(patient.dss_file_radio) === 2) {
-          return confirm(
+          return Alerter.isConfirmed(
             'You indicated that ' + this.billingCompany.name +
             ' will file Primary insurance claims but NOT Secondary insurance claims. ' +
             'Normally patients expect claims to be filed in both cases please select ' +
             '"Yes" for Secondary unless you are sure of your choice.'
           )
         }
-
         if (patient.p_m_ins_plan.trim() === '' && parseInt(patient.p_m_ins_type.value) !== 1) {
-          alert('Plan Name is a Required Field')
+          Alerter.alert('Plan Name is a Required Field')
           this.$refs.p_m_ins_plan.focus()
-
           return false
         }
-
         if (patient.has_s_m_ins === 'Yes' && parseInt(patient.s_m_dss_file) === 1) {
           messages = {
             s_m_partyfname: 'Secondary Insured Party First Name is a Required Field',
@@ -1097,31 +1068,25 @@ export default {
             s_m_ins_grp: 'Secondary Group # is a Required Field',
             s_m_ins_type: 'Secondary Insurance Type is a Required Field'
           }
-
           if (!this.walkThroughMessages(messages, patient)) {
             return false
           }
-
           if (patient.s_m_ins_plan.trim() === '' && parseInt(patient.p_m_ins_type.value) !== 1) {
-            alert('Secondary Plan Name is a Required Field')
+            Alerter.alert('Secondary Plan Name is a Required Field')
             this.$refs.s_m_ins_plan.focus()
-
             return false
           }
         }
-
         if (patient.s_m_ins_ass !== 'Yes' && patient.s_m_ins_ass !== 'No') {
-          alert('You must choose \'Accept Assignment of Benefits\' or \'Payment to Patient\'')
+          Alerter.alert('You must choose \'Accept Assignment of Benefits\' or \'Payment to Patient\'')
           this.$refs.s_m_ins_ass.focus()
-
           return false
         }
         // if primary insurance - no, but secondary - yes
       } else if (parseInt(patient.p_m_dss_file) === 2 && parseInt(patient.dss_file_radio) === 1) {
-        alert(this.billingCompany.name + ' must file Primary Insurance in order to file Secondary Insurance.')
+        Alerter.alert(this.billingCompany.name + ' must file Primary Insurance in order to file Secondary Insurance.')
         return false
       }
-
       if (patient.patientid > 0) {
         messages = {
           docsleep_name: {
@@ -1145,34 +1110,30 @@ export default {
             message: 'Invalid other md.'
           }
         }
-
         if (!this.walkThroughComplexMessages(messages, patient)) {
           return false
         }
       }
-
       const messageAboutChangingReferredBy = 'The referrer has been updated. Existing pending letters to the referrer may be updated or deleted and previous changes lost. Proceed?'
-
-      if (this.isReferredByChanged && !confirm(messageAboutChangingReferredBy)) {
+      if (this.isReferredByChanged && !Alerter.isConfirmed(messageAboutChangingReferredBy)) {
         return false
       }
-
       // if pending VOB make sure insurance hasn't changed
       if (this.pendingVob && this.isInsuranceInfoChanged) {
         if (parseInt(this.pendingVob.status) === DSS_CONSTANTS.DSS_PREAUTH_PREAUTH_PENDING) {
-          if (!confirm("Warning! This patient has a Verification of Benefits (VOB) that is currently awaiting pre-authorization from the insurance company. You have changed the patient's insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?")) {
+          if (!Alerter.isConfirmed("Warning! This patient has a Verification of Benefits (VOB) that is currently awaiting pre-authorization from the insurance company. You have changed the patient's insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?")) {
             //
           }
         } else {
-          if (!confirm("Warning! This patient has a pending Verification of Benefits (VOB). You have changed the patient's insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?")) {
+          if (!Alerter.isConfirmed("Warning! This patient has a pending Verification of Benefits (VOB). You have changed the patient's insurance information. This requires all VOB information to be updated and resubmitted. Do you want to save updated insurance information and resubmit VOB?")) {
             return false
           }
         }
       }
-
       if (
-        requestedEmails && requestedEmails.registration &&
-        !confirm(
+        requestedEmails &&
+        requestedEmails.registration &&
+        !Alerter.isConfirmed(
           'You are about to send the patient a registration email. ' +
           'The patient will receive a text message activation code by clicking ' +
           'a link contained in this email, and the patient can complete his/her ' +
@@ -1181,29 +1142,26 @@ export default {
       ) {
         return false
       }
-
       if (
-        requestedEmails && requestedEmails.reminder &&
-        !confirm(
+        requestedEmails &&
+        requestedEmails.reminder &&
+        !Alerter.isConfirmed(
           'You are about to send the patient an email. ' +
           'Are you sure you want to continue?'
         )
       ) {
         return false
       }
-
       let alertText
       if (parseInt(patient.s_m_dss_file) === 1 && parseInt(patient.p_m_dss_file) !== 1) {
         alertText = this.billingCompany.name + ' must file Primary Insurance in order to file Secondary Insurance.'
         Alerter.alert(alertText)
         return false
       }
-
       if (parseInt(patient.s_m_ins_type) === 1) {
         alertText = 'Warning! It is very rare that Medicare is listed as a patient’s Secondary Insurance.  Please verify that Medicare is the secondary payer for this patient before proceeding.'
         Alerter.alert(alertText)
       }
-
       return true
     },
     isValidDate (date) {

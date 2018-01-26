@@ -18,7 +18,13 @@ export default {
   },
 
   [symbols.actions.deviceSelectorModal] ({commit}) {
-    commit(symbols.mutations.modal, { name: 'deviceSelector', params: { white: true } })
+    const modalData = {
+      name: symbols.modals.deviceSelector,
+      params: {
+        white: true
+      }
+    }
+    commit(symbols.mutations.modal, modalData)
   },
 
   [symbols.actions.exportMDModal] () {

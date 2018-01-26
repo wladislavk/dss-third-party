@@ -107,13 +107,26 @@ export default {
         }, 3000)
       })
     },
+    onClickAdd () {
+      this.$store.commit(symbols.mutations.modal, { name: symbols.modals.editSleeplab })
+    },
     onClickEdit (id) {
-      this.$parent.$refs.modal.display('edit-sleeplab')
-      this.$parent.$refs.modal.setComponentParameters({ sleeplabId: id })
+      const modalData = {
+        name: symbols.modals.editSleeplab,
+        params: {
+          sleeplabId: id
+        }
+      }
+      this.$store.commit(symbols.mutations.modal, modalData)
     },
     onClickQuickView (id) {
-      this.$parent.$refs.modal.display('view-sleeplab')
-      this.$parent.$refs.modal.setComponentParameters({ sleeplabId: id })
+      const modalData = {
+        name: symbols.modals.viewSleeplab,
+        params: {
+          sleeplabId: id
+        }
+      }
+      this.$store.commit(symbols.mutations.modal, modalData)
     },
     removeSleeplab (id) {
       this.deleteSleeplab(id).then(() => {

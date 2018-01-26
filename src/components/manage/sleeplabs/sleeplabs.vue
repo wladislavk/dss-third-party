@@ -5,7 +5,7 @@
         </span>
         <br /><br />
         <div align="right" style="padding-right: 12px">
-            <button v-on:click="$parent.$refs.modal.display('edit-sleeplab')" class="addButton">
+            <button v-on:click="onClickAdd()" class="addButton">
                 Add New Sleep Lab
             </button>
         </div>

@@ -1,6 +1,7 @@
 import endpoints from '../../../../endpoints'
 import http from '../../../../services/http'
 import symbols from '../../../../symbols'
+import Alerter from '../../../../services/Alerter'
 
 export default {
   name: 'edit-referred-by-contacts',
@@ -29,9 +30,9 @@ export default {
         // we are editing some contact and current contact data has already fetched
         if (this.componentParams.contactId > 0 && this.isContactDataFetched) {
           this.isContactDataFetched = false
-          this.$parent.popupEdit = true
+          this.$store.dispatch(symbols.actions.enablePopupEdit)
         } else if (this.componentParams.contactId === 0) { // we are creating a new contact
-          this.$parent.popupEdit = true
+          this.$store.dispatch(symbols.actions.enablePopupEdit)
         }
 
         if (!this.isContactDataFetched) {
@@ -54,7 +55,6 @@ export default {
   mounted () {
     http.post(endpoints.qualifiers.active).then((response) => {
       const data = response.data.data
-
       if (data.length) {
         this.qualifiers = data
       }
@@ -87,9 +87,7 @@ export default {
       if (this.validateContactData(this.contact)) {
         this.editContact(this.componentParams.contactId, this.contact).then((response) => {
           const data = response.data.data
-
-          this.$parent.popupEdit = false
-
+          this.$store.dispatch(symbols.actions.disablePopupEdit)
           if (this.componentParams.addToPatient) {
             this.$router.push({
               name: 'edit-patient',
@@ -98,16 +96,14 @@ export default {
           } else {
             if (data.status) {
               this.$parent.updateParentData({ message: data.status })
-              this.$parent.disable()
+              this.$store.commit(symbols.mutations.resetModal)
             }
           }
-
           if (this.componentParams.from === 'flowsheet3') {
             // redirect to "/manage/manage_flowsheet3.php?pid=<?php echo $addedtopat; ?>&refid=<?php echo $rid; ?>"
           }
         }).catch((response) => {
           this.parseFailedResponseOnEditingContact(response.data.data)
-
           this.$store.dispatch(symbols.actions.handleErrors, {title: 'editContact', response: response})
         })
       }
@@ -123,7 +119,7 @@ export default {
         })
 
         // TODO: create more readable format
-        alert(arrOfMessages.join('\n'))
+        Alerter.alert(arrOfMessages.join('\n'))
       }
     },
     getReferredByContact (id) {
@@ -145,7 +141,7 @@ export default {
       for (let property in messages) {
         if (messages.hasOwnProperty(property)) {
           if (contact[property] === undefined || contact[property].trim() === '') {
-            alert(messages[property])
+            Alerter.alert(messages[property])
             this.$refs[property].focus()
             return false
           }
@@ -158,29 +154,24 @@ export default {
         firstname: 'First Name is Required',
         lastname: 'Last Name is Required'
       }
-
       if (!this.walkThroughMessages(messages, contact)) {
         return false
       }
-
       if (!this.isEmail(contact.email)) {
-        const alertText = 'In-Valid Email'
-        alert(alertText)
+        const alertText = 'Invalid Email'
+        Alerter.alert(alertText)
         this.$refs.email.focus()
         return false
       }
-
       if (contact.preferredcontact === 'fax' && contact.fax === '') {
         const alertText = 'A fax number must be entered if preferred contact method is fax.'
-        alert(alertText)
+        Alerter.alert(alertText)
         return false
       }
-
       if (!contact.add1 && !contact.city && !contact.state && !contact.zip) {
         const confirmText = 'Warning! You have not entered an address for this contact. This contact will NOT receive correspondence from DSS. Are you sure you want to save without an address?'
-        return confirm(confirmText)
+        return Alerter.isConfirmed(confirmText)
       }
-
       return true
     }
   }

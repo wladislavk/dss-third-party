@@ -1,6 +1,7 @@
 import endpoints from '../../../endpoints'
 import http from '../../../services/http'
 import symbols from '../../../symbols'
+import Alerter from '../../../services/Alerter'
 
 export default {
   data: function () {
@@ -146,7 +147,7 @@ export default {
                 window.$('#contact_hints').show()
               } else if (data.error) {
                 this.foundContactsByName = []
-                alert(data.error)
+                Alerter.alert(data.error)
               }
             }).catch((response) => {
               this.$store.dispatch(symbols.actions.handleErrors, {title: 'getListContactsAndCompanies', response: response})
@@ -163,14 +164,14 @@ export default {
       window.$('#ref_pat_' + contactId).toggle()
     },
     onClickAddNewContact () {
-      this.$parent.$refs.modal.display('edit-contact')
+      this.$store.commit(symbols.mutations.modal, { name: symbols.modals.editContact })
     },
     onClickQuickView (contactId) {
-      this.$parent.$refs.modal.display('view-contact')
+      this.$store.commit(symbols.mutations.modal, { name: symbols.modals.viewContact })
       this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     onClickEditContact (contactId) {
-      this.$parent.$refs.modal.display('edit-contact')
+      this.$store.commit(symbols.mutations.modal, { name: symbols.modals.editContact })
       this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     onClickInActive () {

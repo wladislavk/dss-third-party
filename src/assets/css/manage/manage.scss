@@ -1,9 +1,11 @@
-#contentMain tr:hover {
-	background: #cccccc;
-}
+#contentMain {
+  tr:hover {
+    background: #cccccc;
+  }
 
-#contentMain td:hover {
-	background: #999999;
+  td:hover {
+    background: #999999;
+  }
 }
 
 .letters, .page_numbers {

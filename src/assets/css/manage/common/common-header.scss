@@ -1,5 +1,15 @@
-a:link, a:visited {
+a {
   text-decoration: none;
+
+  &:visited {
+    text-decoration: none;
+  }
+}
+
+div.bottom-image {
+  height: 89px;
+  width: 100%;
+  background: url(../../../images/dss_01.png) #0b5c82 no-repeat top left;
 }
 
 div.dashboard-link {
@@ -8,9 +18,20 @@ div.dashboard-link {
   float: left;
 }
 
+a.logo-link {
+  width: 96px;
+  height: 77px;
+  background: url(../../../images/logo.png) no-repeat 0 0;
+  display: block;
+  float: left;
+  padding-left: 100px;
+  color: #fff;
+}
+
 div.patient-search {
   float: left;
   width: 68%;
+
   button {
     padding: 3px;
     margin-top: 27px;
@@ -22,43 +43,17 @@ div.company-logo {
   margin: 13px 15px 0 0;
 }
 
-div.patient-menus {
-  width: 98.6%;
-  background: #00457c;
-  margin: 0 auto;
-}
-
-span.warning-buttons a {
-  float: left;
-  margin-left: 10px;
-  margin-top: 8px;
-}
-
 div.clear {
   clear: both;
 }
 
-.bottom-image {
-  height: 89px;
-  width: 100%;
-  background: url(/src/assets/images/dss_01.png) #0b5c82 no-repeat top left;
-}
-
-.body-image {
-  background: url(/src/assets/images/dss_03.jpg) #0b5c82 repeat-y top left;
+div.body-image {
+  background: url(../../../images/dss_03.jpg) #0b5c82 repeat-y top left;
   width: 100%;
 }
 
-a.logo-link {
-  width: 96px;
-  height: 77px;
-  background: url(/src/assets/images/logo.png) no-repeat 0 0;
-  display: block;
-  float: left;
-  padding-left: 100px;
-  color: #fff;
-}
-
-div.patient-data-wrapper {
-  background: url(/src/assets/images/dss_03.jpg) repeat-y top left #FFFFFF;
+div.patient-menus {
+  width: 98.6%;
+  background: #00457c;
+  margin: 0 auto;
 }

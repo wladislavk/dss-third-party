@@ -38,7 +38,7 @@ export default {
       })
 
       // this popup doesn't have any input fields - set the flag to false
-      this.$parent.popupEdit = false
+      this.$store.dispatch(symbols.actions.disablePopupEdit)
     },
     resetPinCode (patientId) {
       patientId = patientId || 0
@@ -68,7 +68,7 @@ export default {
           // pass updated patient to parents
           this.$parent.updateParentData(this.patient)
           // close the popup
-          this.$parent.disable()
+          this.$store.commit(symbols.mutations.resetModal)
         }
       }).catch((response) => {
         this.$store.dispatch(symbols.actions.handleErrors, {title: 'createTempPinDocument', response: response})

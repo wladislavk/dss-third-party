@@ -87,7 +87,7 @@ describe('Dashboard module actions', () => {
         {
           type: symbols.mutations.modal,
           payload: {
-            name: 'deviceSelector',
+            name: symbols.modals.deviceSelector,
             params: {
               white: true
             }

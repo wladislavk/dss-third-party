@@ -26,7 +26,7 @@
                     <td  align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages" class="page_numbers">
-                            <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
+                            <strong v-if="routeParameters.currentPageNumber === (index - 1)">{{ index }}</strong>
                             <router-link
                                 v-else
                                 :to="{
@@ -45,12 +45,12 @@
                 <tr class="tr_bg_h">
                     <th
                         v-for="(label, sort) in tableHeaders"
-                        :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
+                        :class="'col_head ' + (routeParameters.sortColumn === sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
-                        :width="label.type == 'general' ? '20%' : ''"
+                        :width="label.type === 'general' ? '20%' : ''"
                     >
                         <router-link
-                            v-if="sort != 'notes' && sort != 'expand'"
+                            v-if="sort !== 'notes' && sort !== 'expand'"
                             :to="{
                                 name: $route.name,
                                 query: {
@@ -64,7 +64,7 @@
                         <template v-else>{{ label }}</template>
                     </th>
                 </tr>
-                <tr v-if="contacts.length == 0" class="tr_bg">
+                <tr v-if="contacts.length === 0" class="tr_bg">
                     <td valign="top" class="col_head" colspan="10" align="center">
                         No Records
                     </td>
@@ -77,7 +77,7 @@
                 >
                     <td valign="top" width="20%">
                         <a
-                            v-if="contact.referred_source == referredPhysician"
+                            v-if="contact.referred_source === referredPhysician"
                             v-on:click.prevent="onClickViewContact(contact.contactid)"
                             href="#"
                         >{{ contact.name }}</a>
@@ -149,7 +149,7 @@
 
 <script src="./referredby.js"></script>
 
-<style src="../../../assets/css/manage/admin.css" scoped></style>
 <style lang="scss" scoped>
-    @import "../../../assets/css/manage/manage.scss";
+  @import "../../../assets/css/manage/manage.scss";
+  @import "../../../assets/css/manage/admin.scss";
 </style>

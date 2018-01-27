@@ -2,7 +2,7 @@
     <div>
         <br>
         <div v-if="message" align="center" class="red">{{ message }}</div>
-        <form name="sleeplabfrm" onSubmit="return sleeplababc(this)">
+        <form name="sleeplabfrm" v-on:submit="sleeplababc()">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
@@ -329,5 +329,7 @@
 
 <script src="./editSleeplab.js"></script>
 
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../../assets/css/manage/form.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/form.scss";
+    @import "../../../../assets/css/manage/admin.scss";
+</style>

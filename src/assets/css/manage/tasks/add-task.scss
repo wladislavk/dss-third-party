@@ -46,18 +46,18 @@ input.add-button {
   vertical-align: middle;
   font-weight: bold;
   cursor: pointer;
-}
 
-input.add-button:hover {
-  border-top-color: #174d7c;
-  background: #174d7c;
-  color: #ffffff;
-  text-decoration: none;
-}
+  &:hover {
+    border-top-color: #174d7c;
+    background: #174d7c;
+    color: #ffffff;
+    text-decoration: none;
+  }
 
-input.add-button:active {
-  border-top-color: #1f303b;
-  background: #1f303b;
+  &:active {
+    border-top-color: #1f303b;
+    background: #1f303b;
+  }
 }
 
 a.delete-task {

@@ -112,7 +112,7 @@ export default {
     'contact': {
       handler: function () {
         if (this.wasContactDataReceived) {
-          this.$parent.$parent.$refs.modal.popupEdit = true
+          this.$store.dispatch(symbols.actions.enablePopupEdit)
         }
       },
       deep: true
@@ -192,8 +192,8 @@ export default {
         this.updateContact(this.contact).then(() => {
           // pass message to parent component
           this.$parent.updateParentData({ message: 'Edited Successfully' })
-          this.$parent.$parent.$refs.modal.popupEdit = false
-          this.$parent.$parent.$refs.modal.disable()
+          this.$store.dispatch(symbols.actions.disablePopupEdit)
+          this.$store.commit(symbols.mutations.resetModal)
           this.$router.push('/manage/contacts')
         }).catch((response) => {
           if (response.status === 422) {
@@ -237,8 +237,8 @@ export default {
             }
 
             // this popup doesn't have any input fields - then set the flag to false
-            this.$parent.$parent.$refs.modal.popupEdit = false
-            this.$parent.$parent.$refs.modal.disable()
+            this.$store.dispatch(symbols.actions.disablePopupEdit)
+            this.$store.commit(symbols.mutations.resetModal)
           }
         }).catch((response) => {
           if (response.status === 422) {
@@ -291,7 +291,7 @@ export default {
           break
       }
 
-      if (confirm(message)) {
+      if (Alerter.isConfirmed(message)) {
         this.$router.push({
           path: '/manage/contacts',
           query: query

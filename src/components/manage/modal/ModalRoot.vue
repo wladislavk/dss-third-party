@@ -14,5 +14,7 @@
 
 <script src="./ModalRoot.js"></script>
 
-<style src="../../../assets/css/manage/popup.css" scoped></style>
-<style src="../../../assets/css/manage/calendar.css"></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/popup.scss";
+    @import "../../../assets/css/manage/calendar.scss";
+</style>

@@ -25,7 +25,7 @@
             >
                 <tr>
                     <td>
-                        <font style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION</font>
+                        <span style="color:#0a5da0; font-weight:bold; font-size:16px;">GENERAL INFORMATION</span>
                     </td>
                     <td align="right">
                         <input
@@ -37,7 +37,7 @@
                         />
                         <template v-if="showSendingEmails">
                             <input
-                                v-if="patient.registration_status == 1 || patient.registration_status == 0"
+                                v-if="patient.registration_status === 1 || patient.registration_status === 0"
                                 v-on:click="submitSendingRegistrationEmail"
                                 type="submit"
                                 name="sendReg"
@@ -82,7 +82,7 @@
                                             href="#"
                                             v-on:click.prevent="onClickAddImage('profile')"
                                         >
-                                            <img src="~assets/images/add_patient_photo.png" />
+                                            <img src="../../../../assets/images/add_patient_photo.png" />
                                         </a>
                                         <img
                                             v-else
@@ -265,7 +265,7 @@
                                             value="Patient can't receive text message?"
                                             class="button"
                                         />
-                                        <template v-if="patient.registration_status == 1">
+                                        <template v-if="patient.registration_status === 1">
                                             PIN Code: {{ patient.access_code }}
                                         </template>
                                     </div>
@@ -355,7 +355,7 @@
                                             <option value="default" disabled>Select</option>
                                             <option
                                                 v-for="location in docLocations"
-                                                :selected="location.default_location == 1 && !routeParameters.patientId"
+                                                :selected="location.default_location === 1 && !routeParameters.patientId"
                                                 :value="location.id"
                                             >{{ location.location }}</option>
                                         </select>
@@ -555,16 +555,16 @@
                                             type="radio"
                                             name="display_alert"
                                             value="1"
-                                        >Yes
+                                        />Yes
                                         <input
                                             v-model="patient.display_alert"
                                             type="radio"
                                             name="display_alert"
                                             value="0"
-                                        >No
+                                        />No
                                     </span>
                                     <textarea
-                                        v-show="patient.display_alert == 1"
+                                        v-show="patient.display_alert === 1"
                                         v-model="patient.alert_text"
                                         name="alert_text"
                                         id="alert_text"
@@ -625,7 +625,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <font style="color:#0a5da0; font-weight:bold; font-size:16px;">REFERRED BY</font>
+                        <span style="color:#0a5da0; font-weight:bold; font-size:16px;">REFERRED BY</span>
                     </td>
                 </tr>
                 <tr>
@@ -651,7 +651,7 @@
                                     <div style="float:left;" id="referred_source_div">
                                         <input
                                             v-model="patient.referred_source"
-                                            :checked="patient.referred_source == consts.DSS_REFERRED_PHYSICIAN"
+                                            :checked="patient.referred_source === consts.DSS_REFERRED_PHYSICIAN"
                                             :value="consts.DSS_REFERRED_PATIENT"
                                             type="radio"
                                             v-on:click="showReferredBy('person', '')"
@@ -690,7 +690,7 @@
                                             <input
                                                 v-model="formedFullNames.referred_name"
                                                 v-on:keyup="onKeyUpSearchReferrers"
-                                                ref="referred_by_name"
+                                                ref="'referred_by_name'"
                                                 type="text"
                                                 id="referredby_name"
                                                 autocomplete="off"
@@ -740,7 +740,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <font style="color:#0a5da0; font-weight:bold; font-size:16px;">EMPLOYER</font>
+                        <span style="color:#0a5da0; font-weight:bold; font-size:16px;">EMPLOYER</span>
                     </td>
                 </tr>
                 <tr>
@@ -857,17 +857,17 @@
                 <tr>
                     <td colspan="2">
                         <a name="p_m_ins"></a>
-                        <font style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</font>
+                        <span style="color:#0a5da0; font-weight:bold; font-size:16px;">INSURANCE</span>
                     </td>
                 </tr>
-                <template v-if="docInfo.use_eligible_api == 1">
+                <template v-if="docInfo.use_eligible_api === 1">
                     <tr>
                         <td valign="top" colspan="2" class="frmhead">
                             Insurance Co.
                             <input
                                 v-model="formedFullNames.ins_payer_name"
                                 v-on:keyup="onKeyUpSearchEligiblePayers('primary')"
-                                ref="ins-payer-name"
+                                ref="'ins-payer-name'"
                                 type="text"
                                 id="ins_payer_name"
                                 autocomplete="off"
@@ -1029,7 +1029,7 @@
                             </li>
                         </ul>
                         <ul
-                            v-show="patient.p_m_same_address == 2"
+                            v-show="patient.p_m_same_address === 2"
                             id="p_m_address_fields"
                         >
                             <li id="foli8" class="complex">
@@ -1118,7 +1118,7 @@
                                             type="radio"
                                             name="p_m_ins_ass"
                                             value="Yes"
-                                        >Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;
+                                        />Accept Assignment of Benefits &nbsp;&nbsp;&nbsp;&nbsp;
                                         <input
                                             v-model="patient.p_m_ins_ass"
                                             class="p_m_ins_ass pay_to_patient_radio"
@@ -1126,7 +1126,7 @@
                                             type="radio"
                                             name="p_m_ins_ass"
                                             value="No"
-                                        >Payment to Patient
+                                        />Payment to Patient
                                     </span>
                                     <span style="float:right">
                                         <button
@@ -1196,7 +1196,7 @@
                                         <input
                                             v-model="patient.p_m_ins_grp"
                                             v-on:change="handleChangingInsuranceInfo"
-                                            :readonly="patient.p_m_ins_type == '1'"
+                                            :readonly="patient.p_m_ins_type === '1'"
                                             ref="p_m_ins_grp"
                                             id="p_m_ins_grp"
                                             name="p_m_ins_grp"
@@ -1211,7 +1211,7 @@
                                         <input
                                             v-model="patient.p_m_ins_plan"
                                             v-on:change="handleChangingInsuranceInfo"
-                                            :readonly="patient.p_m_ins_type == '1'"
+                                            v-bind:readonly="patient.p_m_ins_type === '1'"
                                             ref="p_m_ins_plan"
                                             id="p_m_ins_plan"
                                             name="p_m_ins_plan"
@@ -1299,7 +1299,7 @@
                         </td>
                     </tr>
                 </template>
-                <tr v-show="patient.has_s_m_ins == 'Yes'">
+                <tr v-show="patient.has_s_m_ins === 'Yes'">
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
                             <li id="foli8" class="complex">
@@ -1436,7 +1436,7 @@
                             </li>
                         </ul>
                         <ul
-                            v-show="patient.s_m_same_address == 2"
+                            v-show="patient.s_m_same_address === 2"
                             id="s_m_address_fields"
                         >
                             <li id="foli8" class="complex">
@@ -1639,13 +1639,13 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <font style="color:#0a5da0; font-weight:bold; font-size:16px;">CONTACT SECTION</font>
+                        <span style="color:#0a5da0; font-weight:bold; font-size:16px;">CONTACT SECTION</span>
                     </td>
                 </tr>
                 <tr>
                     <td class="frmhead" colspan="2">
                         <table id="contactmds" style="float:left;">
-                            <tr height="35">
+                            <tr>
                                 <td>
                                     <span style="padding-left:10px; float:left;">Add medical contacts so they can receive correspondence about this patient.</span>
                                     <span style="float:left; margin-left:20px;">
@@ -1681,7 +1681,7 @@
                                                 >Change Contact</a>
                                             </div>
                                             <input
-                                                v-if="patient.docpcp == ''"
+                                                v-if="patient.docpcp === ''"
                                                 v-model="formedFullNames.docpcp_name"
                                                 v-on:keyup="onKeyUpSearchContacts('docpcp')"
                                                 ref="docpcp_name"
@@ -1736,7 +1736,7 @@
                                                 >Change Contact</a>
                                             </div>
                                             <input
-                                                v-if="patient.docent == ''"
+                                                v-if="patient.docent === ''"
                                                 v-model="formedFullNames.docent_name"
                                                 v-on:keyup="onKeyUpSearchContacts('docent')"
                                                 ref="docent_name"
@@ -1791,7 +1791,7 @@
                                                 >Change Contact</a>
                                             </div>
                                             <input
-                                                v-if="patient.docsleep == ''"
+                                                v-if="patient.docsleep === ''"
                                                 v-model="formedFullNames.docsleep_name"
                                                 v-on:keyup="onKeyUpSearchContacts('docsleep')"
                                                 ref="docsleep_name"
@@ -1846,7 +1846,7 @@
                                                 >Change Contact</a>
                                             </div>
                                             <input
-                                                v-if="patient.docdentist == ''"
+                                                v-if="patient.docdentist === ''"
                                                 v-model="formedFullNames.docdentist_name"
                                                 v-on:keyup="onKeyUpSearchContacts('docdentist')"
                                                 ref="docdentist_name"
@@ -1875,18 +1875,18 @@
                                     </ul>
                                 </td>
                             </tr>
-                            <tr height="35">
+                            <tr>
                                 <td>
                                     <ul>
                                         <li id="foli8" class="complex">
                                             <label style="display: block; float: left; width: 110px;">Other MD</label>
                                             <div
-                                                v-show="patient.docmdother != ''"
+                                                v-show="patient.docmdother !== ''"
                                                 id="docmdother_static_info"
                                                 style="height:25px;"
                                             >
                                                 <span
-                                                    v-if="patient.docmdother != ''"
+                                                    v-if="patient.docmdother !== ''"
                                                     id="docmdother_name_static"
                                                     style="width:300px;"
                                                 >{{ formedFullNames.docmdother_name }}</span>
@@ -1902,7 +1902,7 @@
                                                 >Change Contact</a>
                                             </div>
                                             <input
-                                                v-if="patient.docmdother == ''"
+                                                v-if="patient.docmdother === ''"
                                                 v-model="formedFullNames.docmdother_name"
                                                 v-on:keyup="onKeyUpSearchContacts('docmdother')"
                                                 ref="docmdother_name"
@@ -1914,7 +1914,7 @@
                                                 placeholder='Type contact name'
                                             />
                                             <a
-                                                v-if="patient.docmdother2 == '' || patient.docmdother3 == ''"
+                                                v-if="patient.docmdother2 === '' || patient.docmdother3 === ''"
                                                 href="#"
                                                 id="add_new_md"
                                                 style="clear:both"
@@ -1939,8 +1939,7 @@
                                 </td>
                             </tr>
                             <tr
-                                v-show="patient.docmdother2 != ''"
-                                height="35"
+                                v-show="patient.docmdother2 !== ''"
                                 id="docmdother2_tr"
                             >
                                 <td>
@@ -1948,11 +1947,11 @@
                                         <li id="foli8" class="complex">
                                             <label style="display: block; float: left; width: 110px;">Other MD 2</label>
                                             <div
-                                                v-show="patient.docmdother2 != ''"
+                                                v-show="patient.docmdother2 !== ''"
                                                 id="docmdother2_static_info"
                                             >
                                                 <span
-                                                    v-if="patient.docmdother2 != ''"
+                                                    v-if="patient.docmdother2 !== ''"
                                                     id="docmdother2_name_static"
                                                     style="width:300px;"
                                                 >{{ formedFullNames.docmdother2_name }}</span>
@@ -1968,7 +1967,7 @@
                                                 >Change Contact</a>
                                             </div>
                                             <input
-                                                v-if="patient.docmdother2 == ''"
+                                                v-if="patient.docmdother2 === ''"
                                                 v-model="formedFullNames.docmdother2_name"
                                                 v-on:keyup="onKeyUpSearchContacts('docmdother2')"
                                                 type="text"
@@ -1997,8 +1996,7 @@
                                 </td>
                             </tr>
                             <tr
-                                v-show="patient.docmdother3 != ''"
-                                height="35"
+                                v-show="patient.docmdother3 !== ''"
                                 id="docmdother3_tr"
                             >
                                 <td>
@@ -2006,11 +2004,11 @@
                                         <li id="foli8" class="complex">
                                             <label style="display: block; float: left; width: 110px;">Other MD 3</label>
                                             <div
-                                                v-show="patient.docmdother3 != ''"
+                                                v-show="patient.docmdother3 !== ''"
                                                 id="docmdother3_static_info"
                                             >
                                                 <span
-                                                    v-if="patient.docmdother3 != ''"
+                                                    v-if="patient.docmdother3 !== ''"
                                                     id="docmdother3_name_static"
                                                     style="width:300px;"
                                                 >{{ formedFullNames.docmdother3_name }}</span>
@@ -2020,13 +2018,13 @@
                                                     class="addButton"
                                                 >Quick View</a>
                                                 <a
-                                                    v-on:click.prevent="patient.docmdother3 = ''"s
+                                                    v-on:click.prevent="patient.docmdother3 = ''"
                                                     href="#"
                                                     class="addButton"
                                                 >Change Contact</a>
                                             </div>
                                             <input
-                                                v-if="patient.docmdother3 == ''"
+                                                v-if="patient.docmdother3 === ''"
                                                 v-model="formedFullNames.docmdother3_name"
                                                 v-on:keyup="onKeyUpSearchContacts('docmdother3')"
                                                 type="text"
@@ -2080,7 +2078,7 @@
                             Portal Status
                             <br />
                             <span
-                                v-show="patient.status == 2"
+                                v-show="patient.status === 2"
                                 id="ppAlert"
                                 style="font-weight:normal;font-size:12px;"
                             >Patient is in-active and will not be able to access<br />Patient Portal regardless of the setting of this field.
@@ -2107,7 +2105,7 @@
                                 name="introletter"
                                 type="checkbox"
                                 value="1"
-                            > Send Intro Letter to DSS patient
+                            /> Send Intro Letter to DSS patient
                         </template>
                         <template v-else>
                             DSS Intro Letter Sent to Patient {{ introLetter.generated_date }}
@@ -2133,7 +2131,8 @@
 
 <script src="./editingPatients.js"></script>
 
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-<!--<style src="../../../../assets/css/manage/search-hints.css" scoped></style>-->
-<style src="../../../../assets/css/manage/form.css" scoped></style>
-<style src="../../../../assets/css/manage/add_patient.css" scoped></style>
+<style lang="scss" scoped>
+  @import "../../../../assets/css/manage/admin.scss";
+  @import "../../../../assets/css/manage/form.scss";
+  @import "../../../../assets/css/manage/add_patient.scss";
+</style>

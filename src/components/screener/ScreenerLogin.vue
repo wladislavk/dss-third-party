@@ -29,4 +29,6 @@
 
 <script src="./ScreenerLogin.js"></script>
 
-<style src="../../assets/css/screener/login.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../assets/css/screener/login.scss";
+</style>

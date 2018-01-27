@@ -1,9 +1,14 @@
-a:link, a:visited {
-  text-decoration: none;
-}
-
-a, a:hover {
+a {
   color: #095D81;
+  text-decoration: none;
+
+  &:visited {
+    color: #095D81;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 h3 {
@@ -15,12 +20,14 @@ h3 {
   margin-top: 0;
 }
 
-.warning a.close_but {
-	float: right;
-	color: #fff;
-}
+.warning {
+  a.close_but {
+    float: right;
+    color: #fff;
 
-.warning a.close_but:hover {
-  color: #c11;
-	text-decoration: none;
+    &:hover {
+      color: #c11;
+      text-decoration: none;
+    }
+  }
 }

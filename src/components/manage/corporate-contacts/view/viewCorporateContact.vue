@@ -4,7 +4,7 @@
         <div v-if="message" align="center" class="red">
             {{ message }}
         </div>
-        <form name="contactfrm" onSubmit="return contactabc(this)">
+        <form name="contactfrm" v-on:submit="contactabc()">
             <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
                 <tr>
                     <td colspan="2" class="cat_head">
@@ -14,7 +14,7 @@
                 <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Name
                                     <span id="req_0" class="req">*</span>
@@ -75,22 +75,22 @@
                                         />
                                         <label for="middlename">Middle <br />Init</label>
                                     </span>
-                               </div>   
+                               </div>
                             </li>
                         </ul>
                     </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     <span>
                                         <span style="color:#000000">Company</span>
                                         <input
                                             v-model="contact.company"
                                             id="company"
-                                            name="company" 
+                                            name="company"
                                             type="text"
                                             class="field text addr tbox"
                                             tabindex="5"
@@ -103,10 +103,10 @@
                         </ul>
                     </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <label class="desc" id="title0" for="Field0">
                                     Address
                                     <span id="req_0" class="req">*</span>
@@ -120,7 +120,7 @@
                                             type="text"
                                             class="field text addr tbox"
                                             tabindex="6"
-                                            style="width:325px;" 
+                                            style="width:325px;"
                                             maxlength="255"
                                         />
                                         <label for="add1">Address1</label>
@@ -184,10 +184,10 @@
                         </ul>
                     </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <div>
                                     <span>
                                         <input
@@ -249,10 +249,10 @@
                     </td>
                 </tr>
                 <tr></tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                 <div>
                                     <span>
                                         <input
@@ -302,10 +302,10 @@
                         </ul>
                     </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td valign="top" colspan="2" class="frmhead">
                         <ul>
-                            <li id="foli8" class="complex"> 
+                            <li id="foli8" class="complex">
                                  <label class="desc" id="title0" for="Field0">
                                     Notes:
                                 </label>
@@ -338,5 +338,7 @@
 
 <script src="./viewCorporateContact.js"></script>
 
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../../assets/css/manage/form.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/form.scss";
+    @import "../../../../assets/css/manage/admin.scss";
+</style>

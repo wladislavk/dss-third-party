@@ -12,5 +12,5 @@
 <script src="./PatientData.js"></script>
 
 <style lang="scss" scoped>
-    @import "../../../assets/css/manage/common/patient-data.scss";
+    @import "../../../assets/css/manage/patients/patient-data.scss";
 </style>

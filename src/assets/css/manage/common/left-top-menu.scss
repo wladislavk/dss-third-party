@@ -1,8 +1,13 @@
-span.left-top-menu a, span.left-top-menu a:hover {
+a {
   display: block;
   margin-right: 20px;
   margin-top: 8px;
   float: right;
   color: #095D81;
   text-decoration: none;
+
+  &:hover {
+    color: #095D81;
+    text-decoration: none;
+  }
 }

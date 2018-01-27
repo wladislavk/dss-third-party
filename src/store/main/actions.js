@@ -84,10 +84,12 @@ export default {
     })
   },
 
+  [symbols.actions.enablePopupEdit] ({commit}) {
+    commit(symbols.mutations.popupEdit, {value: true})
+  },
+
   [symbols.actions.disablePopupEdit] ({commit}) {
-    commit(symbols.mutations.popupEdit, {
-      value: false
-    })
+    commit(symbols.mutations.popupEdit, {value: false})
   },
 
   [symbols.actions.handleErrors] (data, {title, response}) {

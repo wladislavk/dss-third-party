@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="root">
         <div id="login_container" class="login_container">
             <form name="loginfrm" id="loginForm">
                 <table border="0" cellpadding="3" cellspacing="1" bgcolor="#00457C" width="40%">

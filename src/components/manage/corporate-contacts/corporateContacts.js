@@ -84,12 +84,11 @@ export default {
   },
   methods: {
     onClickViewFull (contactId) {
-      this.$parent.$refs.modal.display('view-corporate-contact')
-
+      this.$store.commit(symbols.mutations.modal, { name: symbols.modals.viewCorporateContact })
       this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     onClickQuickView (contactId) {
-      this.$parent.$refs.modal.display('view-contact')
+      this.$store.commit(symbols.mutations.modal, { name: symbols.modals.viewContact })
       this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: contactId })
     },
     getCurrentDirection (sort) {

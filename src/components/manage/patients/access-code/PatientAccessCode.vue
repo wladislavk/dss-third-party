@@ -31,4 +31,6 @@
 
 <script src="./PatientAccessCode.js"></script>
 
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/admin.scss";
+</style>

@@ -50,6 +50,8 @@
 
 <script src="./viewSleeplab.js"></script>
 
-<style src="../../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../../assets/css/manage/form.css" scoped></style>
-<style src="../../../../assets/css/manage/quick_view.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/form.scss";
+    @import "../../../../assets/css/manage/admin.scss";
+    @import "../../../../assets/css/manage/quick_view.scss";
+</style>

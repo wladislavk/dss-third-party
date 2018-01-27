@@ -100,15 +100,20 @@ export default {
       })
     },
     onClickEditReferredByNotes (id) {
-      this.$parent.$refs.modal.display('edit-referred-by-note')
-      this.$parent.$refs.modal.setComponentParameters({ noteId: id })
+      const modalData = {
+        name: symbols.modals.editReferredByNote,
+        params: {
+          noteId: id
+        }
+      }
+      this.$store.commit(symbols.mutations.modal, modalData)
     },
     onClickViewContact (id) {
-      this.$parent.$refs.modal.display('view-contact')
+      this.$store.commit(symbols.mutations.modal, { name: symbols.modals.viewContact })
       this.$store.dispatch(symbols.actions.setCurrentContact, { contactId: id })
     },
     onClickAddNewReferredBy () {
-      this.$parent.$refs.modal.display('edit-referred-by-contact')
+      this.$store.commit(symbols.mutations.modal, { name: symbols.modals.editReferredByContact })
     },
     removeContact (id) {
       this.deleteReferredByContact(id).then(() => {

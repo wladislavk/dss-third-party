@@ -1,11 +1,11 @@
-input.patient_search {
-  width: 340px;
-  padding: 3px;
-}
-
 div.patient_search_div {
   float: left;
   margin: 25px 5px 0 0;
+}
+
+input.patient_search {
+  width: 340px;
+  padding: 3px;
 }
 
 div.search_hints {
@@ -22,21 +22,25 @@ ul.search_list {
   margin: 0;
   font-size: 14px;
   font-weight: normal;
+
   li {
     margin: 0;
     padding: 2px 10px;
     position: relative;
     list-style-type: none;
     cursor: pointer;
-  }
-  li.no_matches {
-    cursor: default;
-    color: #999;
-  }
-  li:hover {
-    background: #ddd;
-  }
-  li.list_hover {
-    background: #ddd;
+
+    &:hover {
+      background: #ddd;
+    }
+
+    &.no_matches {
+      cursor: default;
+      color: #999;
+    }
+
+    &.list_hover {
+      background: #ddd;
+    }
   }
 }

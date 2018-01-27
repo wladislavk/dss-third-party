@@ -3,16 +3,16 @@ strong.device-guide-setting-name {
   display: block;
 }
 
-div.setting > div.label {
+div.setting {
   padding: 5px 0;
+
+  & > div.label {
+    padding: 5px 0;
+  }
 }
 
 div.slider-wrapper > div {
   float: left;
   width: 80%;
   margin-right: 5%;
-}
-
-div.setting {
-  padding: 5px 0;
 }

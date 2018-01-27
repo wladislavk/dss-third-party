@@ -51,7 +51,7 @@
             </div>
 
             <a
-                v-if="filteredContact.corporate == '1'"
+                v-if="filteredContact.corporate === '1'"
                 v-bind:href="legacyUrl + 'view_fcontact.php?ed=' + filteredContact.contactid"
                 style="margin-right:10px;float:right;"
             >View Full</a>
@@ -66,6 +66,8 @@
 
 <script src="./ViewContact.js"></script>
 
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/quick_view.css" scoped></style>
-<style src="../../../assets/css/manage/form.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/admin.scss";
+    @import "../../../assets/css/manage/quick_view.scss";
+    @import "../../../assets/css/manage/form.scss";
+</style>

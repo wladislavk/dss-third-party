@@ -1,0 +1,114 @@
+.screener_body {
+  background: #CFE6F7;
+}
+
+.cf {
+  *zoom: 1;
+
+  &::before, &::after {
+    content: "";
+    display: table;
+  }
+
+  &::after {
+    clear: both;
+  }
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+.logo {
+  position: relative;
+  left: 18px;
+  top: 0;
+  background: url(../../images/dss_logo.gif) no-repeat 0 0;
+  width: 322px;
+  height: 60px;
+  display: block;
+
+  h1 {
+    text-indent: -100000px;
+  }
+}
+
+#header {
+  padding: 20px 0 10px;
+  border-top: 1px solid #f7f7fa;
+
+  .wrapper {
+    position: relative;
+  }
+}
+
+#main_nav {
+  text-align: center;
+
+  .nav_item {
+    position: relative;
+    display: block;
+    margin: 0 0 10px 10px;
+    text-align: center;
+    float: left;
+    border: 1px solid #ccc;
+    background: #f2f2f2;
+    background: -moz-linear-gradient(top, #ffffff 0%, #f2f2f2 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f2f2f2));
+    background: -webkit-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+    background: -o-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+    background: linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+    -webkit-box-shadow: inset 0 0 0 1px #ffffff;
+    -moz-box-shadow: inset 0 0 0 1px #ffffff;
+    box-shadow: inset 0 0 0 1px #ffffff;
+
+    .main_link {
+      text-decoration: none;
+      color: #222;
+      display: block;
+      padding: 6px 10px;
+      min-width: 42px;
+
+      span {
+        display: block;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .img_holder {
+        height: 20px;
+        width: 24px;
+        padding-bottom: 4px;
+        background: no-repeat center center;
+
+        &.refresh_image {
+          background-image: url(../../images/icons/refresh.png) !important;
+        }
+
+        &.logout_image {
+          background-image: url(../../images/icons/locked2.png) !important;
+        }
+      }
+    }
+  }
+
+  .tick {
+    display: none;
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    margin-left: -6px;
+  }
+
+  .active .tick {
+    display: block;
+  }
+
+  .nav_item:hover, li.active {
+    background: #fff;
+  }
+}

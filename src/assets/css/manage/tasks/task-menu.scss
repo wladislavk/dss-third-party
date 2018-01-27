@@ -12,19 +12,21 @@ h3 {
   margin-top: 0;
 }
 
-.expired .due_date {
-  font-weight: bold;
-  color: #900;
-}
+.due_date {
+  .expired & {
+    font-weight: bold;
+    color: #900;
+  }
 
-.today .due_date {
-  font-weight: bold;
-  color: #393;
-}
+  .today & {
+    font-weight: bold;
+    color: #393;
+  }
 
-.tomorrow .due_date {
-  font-weight: bold;
-  color: #00457C;
+  .tomorrow & {
+    font-weight: bold;
+    color: #00457C;
+  }
 }
 
 div.task_menu_general {
@@ -96,16 +98,16 @@ a.button {
   vertical-align: middle;
   font-weight: bold;
   cursor: pointer;
-}
 
-a.button:hover {
-  border-top-color: #174d7c;
-  background: #174d7c;
-  color: #ffffff;
-  text-decoration: none;
-}
+  &:hover {
+    border-top-color: #174d7c;
+    background: #174d7c;
+    color: #ffffff;
+    text-decoration: none;
+  }
 
-a.button:active {
-  border-top-color: #1f303b;
-  background: #1f303b;
+  &:active {
+    border-top-color: #1f303b;
+    background: #1f303b;
+  }
 }

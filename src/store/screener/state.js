@@ -14,6 +14,7 @@ export default {
     survey: 0
   },
   [symbols.state.contactData]: INITIAL_CONTACT_DATA,
+  [symbols.state.storedContactData]: {},
   [symbols.state.epworthProps]: [],
   [symbols.state.epworthOptions]: EPWORTH_OPTIONS,
   [symbols.state.symptoms]: INITIAL_SYMPTOMS,

@@ -12,10 +12,23 @@
                             <strong>{{ error }}</strong>: Please provide an answer
                         </div>
                     </div>
-                    <div v-for="element in epworthProps" v-bind:id="'epworth_' + element.epworthid + '_div'" class="sepH_b clear" v-bind:class="{error: element.error}">
-                        <select class="inpt_in epworth_select" v-bind:id="'epworth_' + element.epworthid" v-bind:name="'epworth_' + element.epworthid" v-on:change="updateValue($event)">
+                    <div
+                        v-for="element in epworthProps"
+                        v-bind:id="'epworth_' + element.epworthid + '_div'"
+                        class="sepH_b"
+                        v-bind:class="{'error': element.error}"
+                    >
+                        <select
+                            class="inpt_in epworth_select"
+                            v-bind:id="'epworth_' + element.epworthid"
+                            v-bind:name="'epworth_' + element.epworthid"
+                            v-on:change="updateValue($event)"
+                        >
                             <option value="">Select an answer</option>
-                            <option v-for="answer in epworthOptions" v-bind:value="answer.option">{{ answer.option }} - {{ answer.label }}</option>
+                            <option
+                                v-for="answer in epworthOptions"
+                                v-bind:value="answer.option"
+                            >{{ answer.option }} - {{ answer.label }}</option>
                         </select>
                         <label class="lbl_in" v-bind:for="'epworth_' + element.epworthid">{{ element.epworth }}</label>
                     </div>
@@ -25,11 +38,21 @@
                     <br />
                     <div v-for="answer in epworthOptions"><strong>{{ answer.option }}</strong> = {{ answer.label }}</div>
                 </div>
-                <div style="clear:both;"></div>
+                <div class="clear"></div>
             </div>
-            <a href="#" id="sect2_next" class="fr next btn btn_medium btn_d" v-bind:class="{disabled: nextDisabled}" v-on:click.prevent="onSubmit()">Next</a>
+            <a
+                href="#"
+                id="sect2_next"
+                class="fr next btn btn_medium btn_d"
+                v-bind:class="{'disabled': nextDisabled}"
+                v-on:click.prevent="onSubmit()"
+            >Next</a>
         </div>
     </form>
 </template>
 
 <script src="./ScreenerEpworth.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/screener/sections/epworth.scss";
+</style>

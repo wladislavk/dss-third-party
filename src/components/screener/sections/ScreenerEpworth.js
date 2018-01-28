@@ -3,7 +3,7 @@ import helpers from '../../../services/helpers'
 import HealthAssessmentComponent from '../common/HealthAssessment.vue'
 
 export default {
-  data: function () {
+  data () {
     return {
       nextDisabled: false,
       hasError: false,

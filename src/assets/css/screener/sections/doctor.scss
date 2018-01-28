@@ -1,39 +1,25 @@
-label {
-  font-size: 16px;
-
-  &.question {
-    display: block;
-    padding-top: 8px;
-  }
-}
-
-div.buttonset {
-  float: left;
-}
-
-div.half {
-  margin-bottom: 7px;
-  width: 49%;
-  float: left;
-  display: block;
-}
-
-p.clear {
+div.clear {
   clear: both;
 }
 
-input {
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 13px;
+div.results-inner {
+  float: left;
 
-  &:focus, &:active {
-    background-color: #ebfdd7;
+  &.results-inner-first {
+    width: 58%;
+  }
+
+  &.results-inner-second {
+    width: 38%;
+  }
+
+  label {
+    font-weight: bold;
   }
 }
 
-input[type="radio"] {
-  width: 20px;
-  height: 20px;
+h3 {
+  margin-bottom: 6px;
 }
 
 a.btn {
@@ -46,7 +32,6 @@ a.btn {
   -moz-border-radius: 3px;
   border-radius: 3px;
   white-space: nowrap;
-  float: right;
   display: -moz-inline-stack;
   display: inline-block;
   zoom: 1;
@@ -60,8 +45,16 @@ a.btn {
     text-decoration: none;
   }
 
-  &.disabled {
-    display: none;
-    background: #999;
+  &.results-button {
+    float: left;
+  }
+
+  &.finish-button {
+    float: right;
+  }
+
+  &.hst-button {
+    margin-left:20px;
+    float: right;
   }
 }

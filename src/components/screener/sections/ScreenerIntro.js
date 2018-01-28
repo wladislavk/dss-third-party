@@ -2,7 +2,7 @@ import symbols from '../../../symbols'
 import AwesomeMask from 'awesome-mask'
 
 export default {
-  data: function () {
+  data () {
     return {
       nextDisabled: false,
       contactData: this.$store.state.screener[symbols.state.contactData],

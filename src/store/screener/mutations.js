@@ -16,7 +16,11 @@ export default {
       }
     }
   },
-  [symbols.mutations.contactData] (state, storedContacts) {
+  [symbols.mutations.addStoredContact] (state, {name, value}) {
+    state[symbols.state.storedContacts][name] = value
+  },
+  [symbols.mutations.contactData] (state) {
+    const storedContacts = state[symbols.state.storedContacts]
     for (let field of state[symbols.state.contactData]) {
       if (storedContacts.hasOwnProperty(field.name)) {
         field.value = storedContacts[field.name]

@@ -195,3 +195,17 @@ export const INITIAL_CO_MORBIDITY = [
     checked: false
   }
 ]
+
+export const RISK_LEVELS = {
+  LOW: 'low',
+  MODERATE: 'moderate',
+  HIGH: 'high',
+  SEVERE: 'severe'
+}
+
+export const RISK_LEVEL_TEXTS = {
+  [RISK_LEVELS.LOW]: 'thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at low risk for sleep apnea, indicating a normal amount of sleepiness. Should any of your symptoms change, please let us know so we can reassess your sleepiness and risk for sleep apnea. Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.',
+  [RISK_LEVELS.MODERATE]: 'thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at moderate risk for sleep apnea, indicating that some of your symptoms may be signs of Obstructive Sleep Apnea (OSA). Please talk to %s or any of our staff to find out about our advanced tools for diagnosing sleep apnea. We are here to answer your questions and help you breathe and sleep better! Sleep apnea is a life-threatening disease, and education and understanding of the condition is of utmost importance. Please mention this during your visit - we would love to help you learn more.',
+  [RISK_LEVELS.HIGH]: 'thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at high risk for sleep apnea, indicating that your symptoms are likely signs of Obstructive Sleep Apnea (OSA) and excessive sleepiness, and medical attention should be sought. Please talk to %s or any of our staff to find out about our advanced tools for diagnosing sleep apnea. Sleep apnea is a life-threatening disease. Please mention this during your visit - we would love to help you learn more. Due to your HIGH risk of sleep apnea, it is IMPORTANT that you discuss sleep apnea and treatment options with us. We\'re here to help!',
+  [RISK_LEVELS.SEVERE]: 'thank you for completing the Dental Sleep Solutions questionnaire. Based on your input, your results indicate that you are at severe risk for sleep apnea, indicating that your symptoms are likely signs of Obstructive Sleep Apnea (OSA) and excessive sleepiness and medical attention should be sought. Please talk to %s or any of our staff to find out about our advanced tools for diagnosing sleep apnea. Sleep apnea is a life-threatening disease. Please mention this during your visit - we would love to help you learn more. Due to your SEVERE risk of sleep apnea, it is IMPORTANT that you discuss sleep apnea and treatment options with us. We\'re here to help!'
+}

@@ -1,0 +1,23 @@
+label {
+  font-size: 16px;
+
+  &.question {
+    display: block;
+    padding-top: 8px;
+  }
+}
+
+div.buttonset {
+  float: left;
+}
+
+div.half {
+  margin-bottom: 7px;
+  width: 49%;
+  float: left;
+  display: block;
+}
+
+p.clear {
+  clear: both;
+}

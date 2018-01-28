@@ -1,0 +1,101 @@
+div.overlay {
+  background-color: rgb(119, 119, 119);
+  opacity: 0;
+  cursor: auto;
+  height: 559px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1100;
+  display: none;
+}
+
+div.wrap {
+  width: 320px;
+  height: auto;
+  top: 241px;
+  left: 495px;
+  position: absolute;
+  z-index: 1101;
+  outline: none;
+  display: none;
+  padding: 20px;
+}
+
+div.content-outer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border: 12px solid rgba(0, 0, 0, 0.2);
+  background-clip: padding-box;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+
+div.content {
+  width: 300px;
+  height: 150px;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  z-index: 1102;
+  border: 10px solid #fff;
+  padding: 0;
+  -webkit-box-shadow: 0 0 0 1px #999;
+  -moz-box-shadow: 0 0 0 1px #999;
+  box-shadow: 0 0 0 1px #999;
+}
+
+div.content-inner {
+  width: 300px;
+  height: 150px;
+  overflow: auto;
+  position: relative;
+}
+
+a.close-button {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  width: 30px;
+  height: 30px;
+  background: transparent url(../../../images/fancybox.png) -40px 0;
+  cursor: pointer;
+  z-index: 1103;
+}
+
+h4 {
+  margin-bottom: 6px;
+}
+
+p {
+  margin-bottom: 24px;
+}
+
+a.btn {
+  display: -moz-inline-stack;
+  display: inline-block;
+  zoom: 1;
+  outline: 0;
+  cursor: pointer;
+  text-decoration: none;
+  overflow: visible;
+  padding: 0 16px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  white-space: nowrap;
+  background: url(../../../images/grd_d.png) repeat-x 0 center;
+  border: 1px solid #575e72;
+  color: #fff;
+  text-shadow: 1px 1px 0 #273147;
+  font: 700 12px/25px Helvetica, Arial, sans-serif;
+
+  &:hover {
+    background: #2382b1;
+    text-decoration: none;
+  }
+}

@@ -121,7 +121,7 @@
 
 
 .buttonset {
-  #sect2 &, #sect3 &, #sect4 & {
+  #sect2 &, #sect3 & {
     float: left;
   }
 }
@@ -138,18 +138,14 @@
   }
 }
 
-.screener #sect3 label, #sect4 label {
-  font-size: 16px;
-
-  &.question {
-    display: block;
-    padding-top: 8px;
-  }
-}
-
 .screener {
-  #sect4 .half {
-    margin-bottom: 7px;
+  #sect3 label {
+    font-size: 16px;
+
+    &.question {
+      display: block;
+      padding-top: 8px;
+    }
   }
 
   #sect2 {

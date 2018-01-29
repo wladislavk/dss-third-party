@@ -9,20 +9,31 @@
                     <strong>{{ error }}</strong>: Please provide an answer
                 </div>
             </div>
-            <div v-for="symptom in symptoms" class="sepH_b" v-bind:id="symptom.name + '_div'">
-                <div class="buttonset">
-                    <input type="radio" v-bind:id="symptom.name + '1'" v-bind:name="symptom.name" v-bind:value="symptom.weight" v-on:click="updateValue($event)" />
-                    <label v-bind:for="symptom.name + '1'">Yes</label>
-                    <input type="radio" v-bind:id="symptom.name + '2'" v-bind:name="symptom.name" value="0" v-on:click="updateValue($event)" />
-                    <label v-bind:for="symptom.name + '2'">No</label>
-                </div>
+            <div
+                v-for="symptom in symptoms"
+                class="sepH_b"
+                v-bind:class="{'error': symptom.error}"
+                v-bind:id="symptom.name + '_div'"
+            >
+                <symptom-buttons
+                    v-bind:name="symptom.name"
+                    v-bind:weight="symptom.weight"
+                ></symptom-buttons>
                 <label class="question">{{ symptom.label }}</label>
             </div>
-            <a href="#" id="sect3_next" class="fr next btn btn_medium btn_d" v-bind:class="{disabled: nextDisabled}" v-on:click.prevent="onSubmit()">Next</a>
+            <a
+                href="#"
+                id="sect3_next"
+                class="fr next btn btn_medium btn_d"
+                v-bind:class="{'disabled': nextDisabled}"
+                v-on:click.prevent="onSubmit()"
+            >Next</a>
         </div>
     </form>
 </template>
 
 <script src="./ScreenerSymptoms.js"></script>
 
-<style src="../../../../node_modules/jquery-ui/themes/ui-lightness/jquery-ui.css"></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/screener/sections/symptoms.scss";
+</style>

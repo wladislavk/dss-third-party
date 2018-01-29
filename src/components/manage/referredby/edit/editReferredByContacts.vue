@@ -400,8 +400,3 @@
 </template>
 
 <script src="./editReferredByContacts.js"></script>
-
-<style lang="scss" scoped>
-    @import "../../../../assets/css/manage/form.scss";
-    @import "../../../../assets/css/manage/admin.scss";
-</style>

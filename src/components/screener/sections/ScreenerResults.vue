@@ -3,7 +3,7 @@
         <div class="sect" id="sectresults">
             <health-assessment></health-assessment>
             <h3>Your Results</h3>
-            <div class="risk_desc" v-bind:id="'risk_' + riskLevel" v-if="riskLevel === 'low'">
+            <div class="risk_desc" v-bind:id="'risk_' + riskLevel">
                 <span class="pat_name">{{ patientName }}</span>, {{ riskLevelText }}
             </div>
             <div id="risk_image"><img v-bind:src="riskLevelImage" v-bind:alt="riskLevel + ' risk'" v-bind:title="riskLevel + ' risk'" /></div>
@@ -18,3 +18,7 @@
 </template>
 
 <script src="./ScreenerResults.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/screener/sections/results.scss";
+</style>

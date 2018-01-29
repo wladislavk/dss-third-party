@@ -295,8 +295,3 @@
 </template>
 
 <script src="./patients.js"></script>
-
-<style lang="scss" scoped>
-    @import "../../../assets/css/manage/manage_patient.scss";
-    @import "../../../assets/css/manage/admin.scss";
-</style>

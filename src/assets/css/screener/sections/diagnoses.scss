@@ -1,14 +1,14 @@
-label {
-  font-size: 16px;
-
-  &.question {
-    display: block;
-    padding-top: 8px;
-  }
+h3 {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #222;
 }
 
-div.buttonset {
-  float: left;
+div.sepH_b {
+  margin-bottom: 12px;
 }
 
 div.half {
@@ -19,6 +19,7 @@ div.half {
 }
 
 p.clear {
+  margin: 0;
   clear: both;
 }
 
@@ -31,9 +32,13 @@ input {
   }
 }
 
-input[type="radio"] {
-  width: 20px;
-  height: 20px;
+label {
+  font-size: 16px;
+
+  &.question {
+    display: block;
+    padding-top: 8px;
+  }
 }
 
 a.btn {

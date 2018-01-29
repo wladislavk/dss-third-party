@@ -1,6 +1,7 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
 import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import SymptomButtonsComponent from './SymptomButtons.vue'
 
 export default {
   data () {
@@ -8,7 +9,6 @@ export default {
       nextDisabled: false,
       communicationError: false,
       cpap: this.$store.state.screener[symbols.state.cpap],
-      storedCpap: 0,
       conditions: this.$store.state.screener[symbols.state.coMorbidityData],
       storedConditions: {}
     }
@@ -19,7 +19,8 @@ export default {
     })
   },
   components: {
-    'health-assessment': HealthAssessmentComponent
+    healthAssessment: HealthAssessmentComponent,
+    symptomButtons: SymptomButtonsComponent
   },
   methods: {
     updateValue (event) {
@@ -28,14 +29,11 @@ export default {
         this.storedConditions[event.target.name] = true
       }
     },
-    updateCpap (event) {
-      this.storedCpap = parseInt(event.target.value)
-    },
     onSubmit () {
       this.nextDisabled = true
 
       this.$store.commit(symbols.mutations.coMorbidity, this.storedConditions)
-      this.$store.commit(symbols.mutations.cpap, this.storedCpap)
+      this.$store.commit(symbols.mutations.cpap)
 
       this.$store.dispatch(symbols.actions.submitScreener).then((response) => {
         const data = response.data.data

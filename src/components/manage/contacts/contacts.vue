@@ -226,10 +226,6 @@
 
 <script src="./contacts.js"></script>
 
-<style lang="scss" scoped>
-    @import "../../../assets/css/manage/manage.scss";
-    @import "../../../assets/css/manage/admin.scss";
-</style>
 <style type="text/css" scoped>
 .name-empty {
   font-weight: normal;

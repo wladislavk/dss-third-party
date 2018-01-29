@@ -1,0 +1,40 @@
+h2, h3 {
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  color: #222;
+}
+
+h2 {
+  font-size: 22px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+a.btn {
+  outline: 0;
+  cursor: pointer;
+  text-decoration: none;
+  overflow: visible;
+  padding: 0 16px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  white-space: nowrap;
+  float: right;
+  display: -moz-inline-stack;
+  display: inline-block;
+  zoom: 1;
+  background: url(../../../images/grd_dl.png) repeat-x 0 center;
+  border: 1px solid #575e72;
+  color: #fff;
+  text-shadow: 1px 1px 0 #273147;
+  font: 700 18px/36px Helvetica, Arial, sans-serif;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

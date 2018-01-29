@@ -49,9 +49,3 @@
 </template>
 
 <script src="./viewSleeplab.js"></script>
-
-<style lang="scss" scoped>
-    @import "../../../../assets/css/manage/form.scss";
-    @import "../../../../assets/css/manage/admin.scss";
-    @import "../../../../assets/css/manage/quick_view.scss";
-</style>

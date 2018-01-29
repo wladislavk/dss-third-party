@@ -30,7 +30,3 @@
 </template>
 
 <script src="./PatientAccessCode.js"></script>
-
-<style lang="scss" scoped>
-    @import "../../../../assets/css/manage/admin.scss";
-</style>

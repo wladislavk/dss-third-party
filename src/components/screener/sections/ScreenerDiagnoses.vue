@@ -5,24 +5,11 @@
             <h3>Previous medical diagnoses</h3>
             <br />
             <div class="sepH_b" id="rx_cpap_div">
-                <div class="buttonset">
-                    <input
-                        type="radio"
-                        v-bind:id="cpap.name + '1'"
-                        v-bind:name="cpap.name"
-                        v-bind:value="cpap.weight"
-                        v-on:click="updateCpap($event)"
-                    />
-                    <label v-bind:for="cpap.name + '1'">Yes</label>
-                    <input
-                        type="radio"
-                        v-bind:id="cpap.name + '2'"
-                        v-bind:name="cpap.name"
-                        value="0"
-                        v-on:click="updateCpap($event)"
-                    />
-                    <label v-bind:for="cpap.name + '2'">No</label>
-                </div>
+                <symptom-buttons
+                    v-bind:name="cpap.name"
+                    v-bind:weight="cpap.weight"
+                    v-bind:cpap="true"
+                ></symptom-buttons>
                 <label class="question">{{ cpap.label }}</label>
             </div>
             <br /><br />

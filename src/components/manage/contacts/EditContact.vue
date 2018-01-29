@@ -476,9 +476,3 @@
 </template>
 
 <script src="./EditContact.js"></script>
-
-<style lang="scss" scoped>
-    @import "../../../assets/css/manage/admin.scss";
-    @import "../../../assets/css/manage/form.scss";
-    @import "../../../assets/css/manage/edit_contact.scss";
-</style>

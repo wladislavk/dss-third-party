@@ -1,5 +1,9 @@
-div.screener_body {
+body, div.screener_body {
   background: #CFE6F7;
+  color: #222;
+  min-height: 100%;
+  height: 100vh;
+  font: 100 12px/1.3 Helvetica, Arial, sans-serif;
 }
 
 div.wrapper {

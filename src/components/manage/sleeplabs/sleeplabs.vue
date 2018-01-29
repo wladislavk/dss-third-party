@@ -132,8 +132,3 @@
 </template>
 
 <script src="./sleeplabs.js"></script>
-
-<style lang="scss" scoped>
-    @import "../../../assets/css/manage/manage.scss";
-    @import "../../../assets/css/manage/admin.scss";
-</style>

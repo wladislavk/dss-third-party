@@ -74,72 +74,84 @@ export const INITIAL_SYMPTOMS = [
   {
     name: 'breathing',
     label: 'Have you ever been told you stop breathing while asleep?',
+    short: 'Stop breathing',
     weight: 8,
     selected: false
   },
   {
     name: 'driving',
     label: 'Have you ever fallen asleep or nodded off while driving?',
+    short: 'Driving',
     weight: 6,
     selected: false
   },
   {
     name: 'gasping',
     label: 'Have you ever woken up suddenly with shortness of breath, gasping or with your heart racing?',
+    short: 'Wake up gasping',
     weight: 6,
     selected: false
   },
   {
     name: 'sleepy',
     label: 'Do you feel excessively sleepy during the day?',
+    short: 'Excessively sleepy',
     weight: 4,
     selected: false
   },
   {
     name: 'snore',
     label: 'Do you snore or have you ever been told that you snore?',
+    short: 'Snore',
     weight: 4,
     selected: false
   },
   {
     name: 'weight_gain',
     label: 'Have you had weight gain and found it difficult to lose?',
+    short: 'Weight gain',
     weight: 2,
     selected: false
   },
   {
     name: 'blood_pressure',
     label: 'Have you taken medication for, or been diagnosed with high blood pressure?',
+    short: 'High Blood Pressure',
     weight: 2,
     selected: false
   },
   {
     name: 'jerk',
     label: 'Do you kick or jerk your legs while sleeping?',
+    short: 'Jerk',
     weight: 3,
     selected: false
   },
   {
     name: 'burning',
     label: 'Do you feel burning, tingling or crawling sensations in your legs when you wake up?',
+    short: 'Burning',
     weight: 3,
     selected: false
   },
   {
     name: 'headaches',
     label: 'Do you wake up with headaches during the night or in the morning?',
+    short: 'Headaches',
     weight: 3,
     selected: false
   },
   {
     name: 'falling_asleep',
     label: 'Do you have trouble falling asleep?',
+    short: 'Falling asleep',
     weight: 4,
     selected: false
   },
   {
     name: 'staying_asleep',
     label: 'Do you have trouble staying asleep once you fall asleep?',
+    short: 'Staying asleep',
     weight: 4,
     selected: false
   }

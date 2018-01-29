@@ -41,6 +41,8 @@ export default {
     showSearchHints: 'SHOW_SEARCH_HINTS',
     sessionData: 'SESSION_DATA',
     storedContactData: 'STORED_CONTACT_DATA',
+    storedCpap: 'STORED_CPAP',
+    storedSymptoms: 'STORED_SYMPTOMS',
     symptoms: 'SYMPTOMS',
     tasks: 'TASKS',
     tasksForPatient: 'TASKS_FOR_PATIENT',
@@ -79,6 +81,8 @@ export default {
   },
   mutations: {
     addStoredContact: 'ADD_STORED_CONTACT',
+    addStoredCpap: 'ADD_STORED_CPAP',
+    addStoredSymptom: 'ADD_STORED_SYMPTOM',
     checkGuideSetting: 'CHECK_GUIDE_SETTING',
     clearPatientData: 'CLEAR_PATIENT_DATA',
     coMorbidity: 'CO_MORBIDITY',

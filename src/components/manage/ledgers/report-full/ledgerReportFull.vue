@@ -196,8 +196,3 @@
 </template>
 
 <script src="./ledgerReportFull.js"></script>
-
-<style lang="scss" scoped>
-    @import "../../../../assets/css/manage/admin.scss";
-    @import "../../../../assets/css/manage/manage.scss";
-</style>

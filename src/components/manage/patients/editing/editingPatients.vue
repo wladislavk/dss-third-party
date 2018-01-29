@@ -2130,9 +2130,3 @@
 </template>
 
 <script src="./editingPatients.js"></script>
-
-<style lang="scss" scoped>
-  @import "../../../../assets/css/manage/admin.scss";
-  @import "../../../../assets/css/manage/form.scss";
-  @import "../../../../assets/css/manage/add_patient.scss";
-</style>

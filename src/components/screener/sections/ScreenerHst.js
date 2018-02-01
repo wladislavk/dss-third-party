@@ -1,7 +1,8 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
-import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
 import HstContactComponent from './HstContact.vue'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
 import FileRetrieverFactory from '../../../services/file-retrievers/FileRetrieverFactory'
 
 export default {
@@ -19,8 +20,9 @@ export default {
     }
   },
   components: {
-    healthAssessment: HealthAssessmentComponent,
-    hstContact: HstContactComponent
+    sectionHeader: SectionHeaderComponent,
+    hstContact: HstContactComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   created () {
     this.$store.dispatch(symbols.actions.getCompanyData)

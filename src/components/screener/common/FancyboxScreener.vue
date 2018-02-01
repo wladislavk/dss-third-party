@@ -16,7 +16,13 @@
                         <div id="regModal">
                             <h4 class="sepH_a">Survey Complete</h4>
                             <p class="sepH_c">Thank you for completing the survey. Please return this device to our staff or let them know you have completed the survey.</p>
-                            <a href="#" v-on:click.prevent="closeAndReset()" id="finish_ok" class="btn btn_d">OK</a>
+                            <screener-navigation
+                                v-bind:custom-id="'finish_ok'"
+                                v-bind:link-text="'OK'"
+                                v-bind:additional-class="'fancybox-button'"
+                                v-bind:key="'fancybox'"
+                                v-on:next="closeAndReset()"
+                            ></screener-navigation>
                         </div>
                     </div>
                 </div>

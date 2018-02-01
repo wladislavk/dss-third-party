@@ -1,6 +1,7 @@
 import symbols from '../../../symbols'
 import helpers from '../../../services/helpers'
-import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
 
 export default {
   data () {
@@ -18,7 +19,8 @@ export default {
     }
   },
   components: {
-    'health-assessment': HealthAssessmentComponent
+    sectionHeader: SectionHeaderComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   created () {
     if (!this.$store.state.screener[symbols.state.epworthProps].length) {
@@ -31,7 +33,6 @@ export default {
       this.storedProps[fieldId] = event.target.value
     },
     onSubmit () {
-      this.nextDisabled = true
       this.hasError = false
 
       for (let epworth of this.epworthProps) {

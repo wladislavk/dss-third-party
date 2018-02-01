@@ -1,5 +1,6 @@
 import symbols from '../../../symbols'
-import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
 import LowRiskImage from '../../../assets/images/risk/screener-low_risk.png'
 import ModerateRiskImage from '../../../assets/images/risk/screener-moderate_risk.png'
 import HighRiskImage from '../../../assets/images/risk/screener-high_risk.png'
@@ -8,22 +9,11 @@ import SevereRiskImage from '../../../assets/images/risk/screener-severe_risk.pn
 export default {
   data () {
     return {
-      symptoms: this.$store.state.screener[symbols.state.symptoms],
-      coMorbidityData: this.$store.state.screener[symbols.state.coMorbidityData],
-      cpap: this.$store.state.screener[symbols.state.cpap],
-      resultsShown: false
+      resultsShown: false,
+      hstRequestText: 'Request HST (Doctor Only) &raquo;'
     }
   },
   computed: {
-    epworthProps: function () {
-      return this.$store.state.screener[symbols.state.epworthProps]
-    },
-    epworthWeight: function () {
-      return this.$store.state.screener[symbols.state.screenerWeights].epworth
-    },
-    contactData: function () {
-      return this.$store.state.screener[symbols.state.contactData]
-    },
     riskLevel: function () {
       return this.$store.getters[symbols.getters.calculateRisk]
     },
@@ -42,12 +32,8 @@ export default {
     }
   },
   components: {
-    'health-assessment': HealthAssessmentComponent
-  },
-  created () {
-    if (!this.$store.state.screener[symbols.state.epworthProps.length]) {
-      this.$store.dispatch(symbols.actions.setEpworthProps)
-    }
+    sectionHeader: SectionHeaderComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   methods: {
     showResults () {

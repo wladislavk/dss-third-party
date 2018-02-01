@@ -1,13 +1,20 @@
 import symbols from '../../../symbols'
 import AwesomeMask from 'awesome-mask'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
 
 export default {
   data () {
     return {
       nextDisabled: false,
       contactData: this.$store.state.screener[symbols.state.contactData],
-      errors: {}
+      errors: {},
+      linkText: 'Proceed &raquo;'
     }
+  },
+  components: {
+    sectionHeader: SectionHeaderComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   directives: {
     mask: AwesomeMask
@@ -21,8 +28,6 @@ export default {
       this.$store.commit(symbols.mutations.addStoredContact, payload)
     },
     onSubmit () {
-      this.nextDisabled = true
-
       let hasError = false
 
       const storedContactData = this.$store.state.screener[symbols.state.storedContactData]

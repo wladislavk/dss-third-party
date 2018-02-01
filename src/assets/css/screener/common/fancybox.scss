@@ -74,28 +74,3 @@ h4 {
 p {
   margin-bottom: 24px;
 }
-
-a.btn {
-  display: -moz-inline-stack;
-  display: inline-block;
-  zoom: 1;
-  outline: 0;
-  cursor: pointer;
-  text-decoration: none;
-  overflow: visible;
-  padding: 0 16px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  white-space: nowrap;
-  background: url(../../../images/grd_d.png) repeat-x 0 center;
-  border: 1px solid #575e72;
-  color: #fff;
-  text-shadow: 1px 1px 0 #273147;
-  font: 700 12px/25px Helvetica, Arial, sans-serif;
-
-  &:hover {
-    background: #2382b1;
-    text-decoration: none;
-  }
-}

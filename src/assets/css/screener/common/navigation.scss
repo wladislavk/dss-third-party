@@ -1,0 +1,53 @@
+a.btn {
+  outline: 0;
+  cursor: pointer;
+  text-decoration: none;
+  overflow: visible;
+  padding: 0 16px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  white-space: nowrap;
+  display: -moz-inline-stack;
+  display: inline-block;
+  zoom: 1;
+  background: url(../../../images/grd_dl.png) repeat-x 0 center;
+  border: 1px solid #575e72;
+  color: #fff;
+  text-shadow: 1px 1px 0 #273147;
+  float: right;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &.disabled {
+    display: none;
+    background: #999;
+  }
+
+  &.btn_medium {
+    font: 700 18px/36px Helvetica, Arial, sans-serif;
+  }
+
+  &.btn_large {
+    font: 700 24px/50px Helvetica, Arial, sans-serif;
+  }
+
+  &.results-button {
+    float: left;
+  }
+
+  &.hst-button {
+    margin-left:20px;
+  }
+
+  &.fancybox-button {
+    float: none;
+    background: url(../../../images/grd_d.png) repeat-x 0 center;
+
+    &:hover {
+      background: #2382b1;
+    }
+  }
+}

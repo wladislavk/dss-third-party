@@ -1,7 +1,8 @@
 import symbols from '../../../symbols'
 import helpers from '../../../services/helpers'
-import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
 import SymptomButtonsComponent from './SymptomButtons.vue'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
 
 export default {
   data: function () {
@@ -13,13 +14,13 @@ export default {
     }
   },
   components: {
-    healthAssessment: HealthAssessmentComponent,
-    symptomButtons: SymptomButtonsComponent
+    sectionHeader: SectionHeaderComponent,
+    symptomButtons: SymptomButtonsComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   methods: {
     onSubmit () {
       this.hasError = false
-      this.nextDisabled = true
 
       const storedSymptoms = this.$store.state.screener[symbols.state.storedSymptoms]
       for (let symptom of this.symptoms) {

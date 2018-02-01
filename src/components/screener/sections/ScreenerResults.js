@@ -1,5 +1,6 @@
 import symbols from '../../../symbols'
-import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
 import LowRiskImage from '../../../assets/images/risk/screener-low_risk.png'
 import ModerateRiskImage from '../../../assets/images/risk/screener-moderate_risk.png'
 import HighRiskImage from '../../../assets/images/risk/screener-high_risk.png'
@@ -7,6 +8,11 @@ import SevereRiskImage from '../../../assets/images/risk/screener-severe_risk.pn
 import { RISK_LEVEL_TEXTS, RISK_LEVELS } from '../../../constants/screener'
 
 export default {
+  data () {
+    return {
+      linkText: 'Dentist Only - Click Here &raquo;'
+    }
+  },
   computed: {
     patientName () {
       const contactData = this.$store.state.screener[symbols.state.contactData]
@@ -44,7 +50,8 @@ export default {
     }
   },
   components: {
-    healthAssessment: HealthAssessmentComponent
+    sectionHeader: SectionHeaderComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   created () {
     if (!this.$store.state.screener[symbols.state.doctorName]) {

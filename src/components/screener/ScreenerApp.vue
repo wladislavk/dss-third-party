@@ -11,7 +11,9 @@
         <div id="main">
             <div class="wrapper cf">
                 <div class="cf brdrrad_a main_section" id="main_section">
-                    <router-view></router-view>
+                    <form class="formEl_a screener">
+                        <router-view></router-view>
+                    </form>
                     <div class="clear"></div>
                 </div>
             </div>

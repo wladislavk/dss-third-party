@@ -1,26 +1,23 @@
 import Alerter from '../../../services/Alerter'
 import symbols from '../../../symbols'
-import HealthAssessmentComponent from '../common/HealthAssessment.vue'
+import SectionHeaderComponent from '../common/SectionHeader.vue'
 import SymptomButtonsComponent from './SymptomButtons.vue'
+import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
 
 export default {
   data () {
     return {
-      nextDisabled: false,
       communicationError: false,
       cpap: this.$store.state.screener[symbols.state.cpap],
       conditions: this.$store.state.screener[symbols.state.coMorbidityData],
-      storedConditions: {}
+      storedConditions: {},
+      nextDisabled: false
     }
   },
-  mounted () {
-    window.$(function () {
-      window.$('.buttonset').buttonset()
-    })
-  },
   components: {
-    healthAssessment: HealthAssessmentComponent,
-    symptomButtons: SymptomButtonsComponent
+    sectionHeader: SectionHeaderComponent,
+    symptomButtons: SymptomButtonsComponent,
+    screenerNavigation: ScreenerNavigationComponent
   },
   methods: {
     updateValue (event) {
@@ -30,8 +27,6 @@ export default {
       }
     },
     onSubmit () {
-      this.nextDisabled = true
-
       this.$store.commit(symbols.mutations.coMorbidity, this.storedConditions)
       this.$store.commit(symbols.mutations.cpap)
 

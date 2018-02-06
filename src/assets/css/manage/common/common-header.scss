@@ -1,10 +1,4 @@
-a {
-  text-decoration: none;
-
-  &:visited {
-    text-decoration: none;
-  }
-}
+@import "common";
 
 div.bottom-image {
   height: 89px;
@@ -41,10 +35,6 @@ div.patient-search {
 div.company-logo {
   float: right;
   margin: 13px 15px 0 0;
-}
-
-div.clear {
-  clear: both;
 }
 
 div.body-image {

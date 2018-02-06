@@ -32,5 +32,5 @@
 <script src="./DeviceSlider.js"></script>
 
 <style lang="scss" scoped>
-    @import "../../../../assets/css/manage/device-selector/device-slider.scss";
+    @import "../../../../assets/css/manage/modal/device-selector/device-slider.scss";
 </style>

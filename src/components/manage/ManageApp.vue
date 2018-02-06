@@ -7,8 +7,8 @@
             <tr>
                 <td valign="top" height="400">
                     <common-header></common-header>
-                    <div id="contentMain">
-                        <div style="clear:both;"></div>
+                    <div id="contentMain" class="content-main">
+                        <div class="clear"></div>
                         <router-view></router-view>
                     </div>
                     <common-footer></common-footer>

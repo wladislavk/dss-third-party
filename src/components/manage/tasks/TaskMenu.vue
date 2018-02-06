@@ -5,9 +5,7 @@
         v-on:mouseenter="showTaskList = true"
         v-on:mouseleave="showTaskList = false"
     >
-        <span id="task_header">
-            My Tasks (<span id="task_count">{{ tasksNumber }}</span>)
-        </span>
+        <span id="task_header">My Tasks (<span id="task_count">{{ tasksNumber }}</span>)</span>
         <div v-show="showTaskList" id="task_list" class="task_list_general">
             <task-data
                 v-bind:tasks="overdueTasks"
@@ -47,9 +45,7 @@
                 v-bind:due-date="true"
                 v-bind:is-patient="false"
             ></task-data>
-
             <br /><br />
-
             <a v-legacy-href="'manage/manage_tasks.php'" class="button task_view_all">View All</a>
         </div>
     </div>

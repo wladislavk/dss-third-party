@@ -1,13 +1,8 @@
+@import "common";
+
 a {
   display: block;
   margin-right: 20px;
   margin-top: 8px;
   float: right;
-  color: #095D81;
-  text-decoration: none;
-
-  &:hover {
-    color: #095D81;
-    text-decoration: none;
-  }
 }

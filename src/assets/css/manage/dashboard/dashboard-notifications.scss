@@ -1,24 +1,4 @@
-a {
-  color: #095D81;
-  text-decoration: none;
-
-  &:visited {
-    color: #095D81;
-  }
-
-  &:hover {
-    text-decoration: none;
-  }
-}
-
-h3 {
-  font-family: "Times", serif;
-  color: #095D81;
-  font-size: 32px;
-  width: 100%;
-  text-align: center;
-  margin-top: 0;
-}
+@import "dashboard";
 
 .warning {
   a.close_but {
@@ -27,7 +7,6 @@ h3 {
 
     &:hover {
       color: #c11;
-      text-decoration: none;
     }
   }
 }

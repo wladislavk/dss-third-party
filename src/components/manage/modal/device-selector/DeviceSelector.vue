@@ -40,5 +40,5 @@
 <script src="./DeviceSelector.js"></script>
 
 <style lang="scss" scoped>
-    @import "../../../../assets/css/manage/device-selector/device-selector.scss";
+    @import "../../../../assets/css/manage/modal/device-selector/device-selector-main.scss";
 </style>

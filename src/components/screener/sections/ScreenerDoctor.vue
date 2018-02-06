@@ -9,7 +9,6 @@
         <div id="risk_image_doc"><img v-bind:src="riskLevelImage" v-bind:alt="riskLevel + ' risk'" v-bind:title="riskLevel + ' risk'" /></div>
         <screener-navigation
             v-bind:section-number="6"
-            v-bind:link-text="'View Results'"
             v-bind:key="'6a'"
             v-bind:additional-class="'results-button'"
             v-bind:custom-id="'sect_results_next'"
@@ -18,15 +17,13 @@
         ></screener-navigation>
         <screener-navigation
             v-bind:section-number="6"
-            v-bind:link-text="'View Results'"
             v-bind:key="'6b'"
             v-bind:additional-class="'hst-button'"
-            v-bind:link-text="hstRequestText"
+            v-bind:link-text="'Request HST (Doctor Only) \u00BB'"
             v-on:next="$router.push({ name: 'screener-hst' })"
         ></screener-navigation>
         <screener-navigation
             v-bind:section-number="6"
-            v-bind:link-text="'View Results'"
             v-bind:key="'6c'"
             v-bind:additional-class="'finish-button'"
             v-bind:custom-id="'fancy-reg'"

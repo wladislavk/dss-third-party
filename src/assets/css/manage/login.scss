@@ -1,4 +1,6 @@
-div#root {
+@import "manage";
+
+div.root {
   background: #b4c6d4 url(../../images/login_bg.gif) repeat-x 0 0;
   padding-top: 80px;
   height: calc(100vh - 80px);
@@ -11,13 +13,17 @@ div.login_container {
   margin: 0 auto;
 }
 
-div.login_container a, span.screener {
-  font-size: 10px;
-  color: #00457C;
-  text-decoration: none;
-  font-family: sans-serif;
-  float: right;
-  margin-top: 4px;
+span.root-text {
+  & > a, &.screener {
+    font-size: 10px;
+    color: #00457C;
+    font-family: sans-serif;
+  }
+
+  &.screener {
+    margin-top: 4px;
+    float: right;
+  }
 }
 
 form {
@@ -27,14 +33,28 @@ form {
 
 table {
   width: 400px;
+  background-color: #00457C;
 
-  td.t_head {
-    background: #00457c;
-    text-align: center;
-    color: #fff;
-    font-family: sans-serif;
-    font-size: 12px;
+  tr {
+    background-color: #ffffff;
+
+    td.t_head {
+      background: #00457c;
+      text-align: center;
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 12px;
+    }
+
+    td.t_data {
+      font-family: serif;
+      font-size: initial;
+    }
   }
+}
+
+input {
+  font: 400 13.3333px Arial;
 }
 
 span.red {

@@ -13,7 +13,7 @@
                 <div
                     v-for="element in epworthProps"
                     v-bind:id="'epworth_' + element.epworthid + '_div'"
-                    class="sepH_b clear"
+                    class="sepH_b clear fixed-height"
                     v-bind:class="{'error': element.error}"
                 >
                     <select

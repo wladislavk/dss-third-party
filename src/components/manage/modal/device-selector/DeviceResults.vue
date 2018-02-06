@@ -30,5 +30,5 @@
 <script src="./DeviceResults.js"></script>
 
 <style lang="scss" scoped>
-    @import "../../../../assets/css/manage/device-selector/device-results.scss";
+    @import "../../../../assets/css/manage/modal/device-selector/device-results.scss";
 </style>

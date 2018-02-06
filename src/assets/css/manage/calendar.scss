@@ -1,7 +1,13 @@
+@import "manage";
+
 div.calendar-wrapper {
   display: inline;
 
   > div:first-child {
     display: inline;
   }
+}
+
+input[type=text] {
+  font: 400 13.3333px Arial;
 }

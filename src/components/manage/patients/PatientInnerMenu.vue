@@ -1,6 +1,7 @@
 <template>
     <div
         id="patient_name_div"
+        class="patient_name_div"
         v-bind:style="{ 'font-size': longPatientFont }"
     >
         <div id="patient_name_inner">

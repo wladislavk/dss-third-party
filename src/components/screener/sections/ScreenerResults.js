@@ -8,11 +8,6 @@ import SevereRiskImage from '../../../assets/images/risk/screener-severe_risk.pn
 import { RISK_LEVEL_TEXTS, RISK_LEVELS } from '../../../constants/screener'
 
 export default {
-  data () {
-    return {
-      linkText: 'Dentist Only - Click Here &raquo;'
-    }
-  },
   computed: {
     patientName () {
       const contactData = this.$store.state.screener[symbols.state.contactData]

@@ -9,7 +9,7 @@
         </div>
         <div
             v-for="symptom in symptoms"
-            class="sepH_b"
+            class="sepH_b clear"
             v-bind:class="{'error': symptom.error}"
             v-bind:id="symptom.name + '_div'"
         >

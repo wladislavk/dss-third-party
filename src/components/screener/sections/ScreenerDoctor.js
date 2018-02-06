@@ -1,6 +1,7 @@
 import symbols from '../../../symbols'
 import SectionHeaderComponent from '../common/SectionHeader.vue'
 import ScreenerNavigationComponent from '../common/ScreenerNavigation.vue'
+import ScreenerDoctorResultsComponent from './ScreenerDoctorResults.vue'
 import LowRiskImage from '../../../assets/images/risk/screener-low_risk.png'
 import ModerateRiskImage from '../../../assets/images/risk/screener-moderate_risk.png'
 import HighRiskImage from '../../../assets/images/risk/screener-high_risk.png'
@@ -9,8 +10,7 @@ import SevereRiskImage from '../../../assets/images/risk/screener-severe_risk.pn
 export default {
   data () {
     return {
-      resultsShown: false,
-      hstRequestText: 'Request HST (Doctor Only) &raquo;'
+      resultsShown: false
     }
   },
   computed: {
@@ -33,7 +33,8 @@ export default {
   },
   components: {
     sectionHeader: SectionHeaderComponent,
-    screenerNavigation: ScreenerNavigationComponent
+    screenerNavigation: ScreenerNavigationComponent,
+    screenerDoctorResults: ScreenerDoctorResultsComponent
   },
   methods: {
     showResults () {

@@ -1,4 +1,6 @@
-body, div.screener_body {
+@import "screener";
+
+div.screener_body {
   background: #CFE6F7;
   color: #222;
   min-height: 100%;
@@ -7,8 +9,6 @@ body, div.screener_body {
 }
 
 div.wrapper {
-  width: 960px;
-  margin: 0 auto;
   position: relative;
 
   &::before, &::after {
@@ -61,8 +61,4 @@ div.main_section {
   &::after {
     clear: both;
   }
-}
-
-div.clear {
-  clear: both;
 }

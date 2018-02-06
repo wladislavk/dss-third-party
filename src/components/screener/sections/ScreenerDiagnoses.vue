@@ -2,7 +2,7 @@
     <div class="sect" id="sect4">
         <section-header title="Previous medical diagnoses"></section-header>
         <br />
-        <div class="sepH_b" id="rx_cpap_div">
+        <div class="sepH_b fixed-height" id="rx_cpap_div">
             <symptom-buttons
                 v-bind:name="cpap.name"
                 v-bind:weight="cpap.weight"

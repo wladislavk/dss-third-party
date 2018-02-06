@@ -1,16 +1,6 @@
 @import "sections";
 
 div.msg_box {
-  padding: 8px 20px 8px 46px;
-  margin-bottom: 10px;
-  position: relative;
-  color: #444;
-  overflow: hidden;
-  background: #f2cac2 url(../../../images/error_ico.png) no-repeat 14px center;
-  border: 1px solid #ae432e;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
   font-size: 16px;
 
   div.error {
@@ -19,7 +9,6 @@ div.msg_box {
 }
 
 div.sepH_b {
-  clear: both;
   margin-top: 10px;
   height: 30px;
 }

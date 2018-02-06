@@ -21,7 +21,7 @@
                 v-bind:id="contact.name + '_div'"
                 v-bind:key="contact.name"
                 class="sepH_b"
-                v-bind:class="{'error': errors[contact.name]}"
+                v-bind:class="{ 'error': errors[contact.name] }"
             >
                 <label class="lbl_a" v-bind:for="contact.name">{{ contact.label }}</label>
                 <input
@@ -42,7 +42,7 @@
                 <screener-navigation
                     v-bind:section-number="1"
                     v-bind:disabled.sync="nextDisabled"
-                    v-bind:link-text="linkText"
+                    v-bind:link-text="'Proceed \u00BB'"
                     v-bind:large="true"
                     v-bind:key="'1'"
                     v-on:next="onSubmit()"

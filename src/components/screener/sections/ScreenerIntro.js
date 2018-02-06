@@ -8,8 +8,7 @@ export default {
     return {
       nextDisabled: false,
       contactData: this.$store.state.screener[symbols.state.contactData],
-      errors: {},
-      linkText: 'Proceed &raquo;'
+      errors: {}
     }
   },
   components: {

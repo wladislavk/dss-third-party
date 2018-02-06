@@ -8,7 +8,7 @@
         <h2>Thank you for completing the survey. Please return the device to your provider.</h2>
         <screener-navigation
             v-bind:section-number="5"
-            v-bind:link-text="linkText"
+            v-bind:link-text="'Dentist Only - Click Here \u00BB'"
             v-bind:key="'5'"
             v-on:next="$router.push({name: 'screener-doctor'})"
         ></screener-navigation>

@@ -95,6 +95,12 @@ export default [
         }
       },
       {
+        path: 'manual',
+        name: 'manual',
+        component: SoftwareTutorialsComponent,
+        meta: STANDARD_META
+      },
+      {
         path: 'sw-tutorials',
         name: 'sw-tutorials',
         component: SoftwareTutorialsComponent,

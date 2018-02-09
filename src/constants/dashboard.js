@@ -153,7 +153,7 @@ export const NAVIGATION_MENU = [
     children: [
       {
         name: 'Dental Sleep Solutions Procedures Manual',
-        link: 'manage/manual.php'
+        route: 'manual'
       },
       {
         name: 'Dental Sleep Medicine Manual',

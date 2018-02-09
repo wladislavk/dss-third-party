@@ -7,7 +7,8 @@ export const INITIAL_CONTACT_DATA = [
     mask: '',
     firstPage: true,
     hstColumn: 'left',
-    value: ''
+    value: '',
+    class: ''
   },
   {
     name: 'last_name',
@@ -17,7 +18,8 @@ export const INITIAL_CONTACT_DATA = [
     mask: '',
     firstPage: true,
     hstColumn: 'left',
-    value: ''
+    value: '',
+    class: ''
   },
   {
     name: 'dob',
@@ -27,7 +29,8 @@ export const INITIAL_CONTACT_DATA = [
     mask: '99/99/9999',
     firstPage: false,
     hstColumn: 'left',
-    value: ''
+    value: '',
+    class: ''
   },
   {
     name: 'phone',
@@ -37,7 +40,8 @@ export const INITIAL_CONTACT_DATA = [
     mask: '(999) 999-9999',
     firstPage: true,
     hstColumn: 'right',
-    value: ''
+    value: '',
+    class: ''
   },
   {
     name: 'email',
@@ -47,7 +51,8 @@ export const INITIAL_CONTACT_DATA = [
     mask: '',
     firstPage: false,
     hstColumn: 'right',
-    value: ''
+    value: '',
+    class: ''
   }
 ]
 

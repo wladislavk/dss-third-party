@@ -9,13 +9,13 @@ export default {
     }
   },
   computed: {
-    epworthProps: function () {
+    epworthProps () {
       return this.$store.state.screener[symbols.state.epworthProps]
     },
-    epworthWeight: function () {
+    epworthWeight () {
       return this.$store.state.screener[symbols.state.screenerWeights].epworth
     },
-    contactData: function () {
+    contactData () {
       return this.$store.state.screener[symbols.state.contactData]
     }
   },

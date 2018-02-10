@@ -79,8 +79,7 @@ describe('ScreenerDiagnoses', () => {
     firstInput.click()
     secondInput.click()
 
-    const cpapButtonId = store.state.screener[symbols.state.cpap].name + '1'
-    vm.$el.querySelector('input#' + cpapButtonId).click()
+    store.commit(symbols.mutations.addStoredCpap, store.state.screener[symbols.state.cpap].weight)
 
     nextButton.click()
 

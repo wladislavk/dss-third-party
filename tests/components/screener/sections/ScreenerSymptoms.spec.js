@@ -36,18 +36,18 @@ describe('ScreenerSymptoms', () => {
       }).$mount()
     }
 
-    this.setSymptoms = function (vm) {
+    this.setSymptoms = function () {
       for (let symptom of store.state.screener[symbols.state.symptoms]) {
         if (this.answers.hasOwnProperty(symptom.name)) {
           const answer = this.answers[symptom.name]
-          let answerNumber
-          if (answer) {
-            answerNumber = 1
-          } else {
-            answerNumber = 2
+          const payload = {
+            name: symptom.name,
+            value: 0
           }
-          const input = vm.$el.querySelector('input#' + symptom.name + answerNumber)
-          input.click()
+          if (answer) {
+            payload.value = symptom.weight
+          }
+          store.commit(symbols.mutations.addStoredSymptom, payload)
         }
       }
     }
@@ -77,7 +77,7 @@ describe('ScreenerSymptoms', () => {
     const nextButton = vm.$el.querySelector('a#sect3_next')
     expect(nextButton.classList.contains('disabled')).toBe(false)
 
-    this.setSymptoms(vm)
+    this.setSymptoms()
 
     nextButton.click()
 
@@ -105,7 +105,7 @@ describe('ScreenerSymptoms', () => {
 
     delete this.answers.snore
     delete this.answers.headaches
-    this.setSymptoms(vm)
+    this.setSymptoms()
 
     nextButton.click()
 

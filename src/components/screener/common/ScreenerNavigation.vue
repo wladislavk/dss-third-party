@@ -11,5 +11,5 @@
 <script src="./ScreenerNavigation.js"></script>
 
 <style lang="scss" scoped>
-  @import "../../../assets/css/screener/common/navigation.scss";
+    @import "../../../assets/css/screener/common/navigation.scss";
 </style>

@@ -11,7 +11,7 @@ export default {
     onLogout () {
       const logoutAlert = 'Are you sure you want to logout?'
       if (Alerter.isConfirmed(logoutAlert)) {
-        this.$store.commit(symbols.mutations.screenerToken, '')
+        this.$store.commit(symbols.mutations.restoreInitialScreener)
         this.$router.push({ name: 'screener-login' })
       }
     },

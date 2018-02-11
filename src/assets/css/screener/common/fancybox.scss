@@ -10,7 +10,6 @@ div.overlay {
   left: 0;
   width: 100%;
   z-index: 1100;
-  display: none;
 }
 
 div.wrap {
@@ -21,7 +20,6 @@ div.wrap {
   position: absolute;
   z-index: 1101;
   outline: none;
-  display: none;
   padding: 20px;
 }
 
@@ -70,7 +68,10 @@ a.close-button {
 }
 
 h4 {
+  font-size: 16px;
   margin-bottom: 6px;
+  font-weight: 400;
+  color: #222;
 }
 
 p {

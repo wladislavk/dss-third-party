@@ -24,6 +24,7 @@ describe('Screener module mutations', () => {
       expect(state[symbols.state.showFancybox]).toBe(false)
     })
   })
+
   describe('restoreInitialScreenerKeepSession mutation', () => {
     it('should restore initial state and keep session data', function () {
       const state = {
@@ -46,6 +47,7 @@ describe('Screener module mutations', () => {
       expect(state[symbols.state.showFancybox]).toBe(false)
     })
   })
+
   describe('contactData mutation', () => {
     it('should modify contact data', function () {
       const state = {
@@ -58,63 +60,27 @@ describe('Screener module mutations', () => {
             name: 'name2',
             value: 'value2'
           }
-        ]
+        ],
+        [symbols.state.storedContactData]: {
+          name1: 'new value1',
+          name3: 'new value3'
+        }
       }
-      const storedContacts = {
-        name1: 'new value1',
-        name3: 'new value3'
-      }
-      ScreenerModule.mutations[symbols.mutations.contactData](state, storedContacts)
-      const expectedState = {
-        [symbols.state.contactData]: [
-          {
-            name: 'name1',
-            value: 'new value1'
-          },
-          {
-            name: 'name2',
-            value: 'value2'
-          }
-        ]
-      }
-      expect(state).toEqual(expectedState)
-    })
-  })
-  describe('companyData mutation', () => {
-    it('should modify company logo', function () {
-      const state = {}
-      const companyData = [
+      ScreenerModule.mutations[symbols.mutations.contactData](state)
+      const expectedContacts = [
         {
-          name: 'company1',
-          logo: 'logo1'
+          name: 'name1',
+          value: 'new value1'
         },
         {
-          name: 'company2'
-        },
-        {
-          name: 'company3',
-          logo: ''
+          name: 'name2',
+          value: 'value2'
         }
       ]
-      ScreenerModule.mutations[symbols.mutations.companyData](state, companyData)
-      const expectedState = {
-        [symbols.state.companyData]: [
-          {
-            name: 'company1',
-            logo: 'logo1'
-          },
-          {
-            name: 'company2'
-          },
-          {
-            name: 'company3',
-            logo: ''
-          }
-        ]
-      }
-      expect(state).toEqual(expectedState)
+      expect(state[symbols.state.contactData]).toEqual(expectedContacts)
     })
   })
+
   describe('setEpworthErrors mutation', () => {
     it('sets epworth errors', function () {
       const state = {
@@ -146,6 +112,7 @@ describe('Screener module mutations', () => {
       expect(state).toEqual(expectedState)
     })
   })
+
   describe('modifyEpworthProps mutation', () => {
     it('should modify epworth props', function () {
       const state = {
@@ -182,6 +149,7 @@ describe('Screener module mutations', () => {
       expect(state).toEqual(expectedState)
     })
   })
+
   describe('symptoms mutation', () => {
     it('should modify symptoms', function () {
       const state = {
@@ -194,28 +162,27 @@ describe('Screener module mutations', () => {
             name: 'name2',
             selected: 0
           }
-        ]
+        ],
+        [symbols.state.storedSymptoms]: {
+          name1: 1,
+          name3: 2
+        }
       }
-      const storedSymptoms = {
-        name1: 1,
-        name3: 2
-      }
-      ScreenerModule.mutations[symbols.mutations.symptoms](state, storedSymptoms)
-      const expectedState = {
-        [symbols.state.symptoms]: [
-          {
-            name: 'name1',
-            selected: 1
-          },
-          {
-            name: 'name2',
-            selected: 0
-          }
-        ]
-      }
-      expect(state).toEqual(expectedState)
+      ScreenerModule.mutations[symbols.mutations.symptoms](state)
+      const expectedSymptoms = [
+        {
+          name: 'name1',
+          selected: 1
+        },
+        {
+          name: 'name2',
+          selected: 0
+        }
+      ]
+      expect(state[symbols.state.symptoms]).toEqual(expectedSymptoms)
     })
   })
+
   describe('coMorbidity mutation', () => {
     it('should modify co-morbidity', function () {
       const state = {
@@ -248,6 +215,20 @@ describe('Screener module mutations', () => {
         ]
       }
       expect(state).toEqual(expectedState)
+    })
+  })
+
+  describe('cpap mutation', () => {
+    it('sets cpap', function () {
+      const state = {
+        [symbols.state.cpap]: {
+          selected: 0
+        },
+        [symbols.state.storedCpap]: 4
+      }
+      ScreenerModule.mutations[symbols.mutations.cpap](state)
+      const expectedCpap = {selected: 4}
+      expect(state[symbols.state.cpap]).toEqual(expectedCpap)
     })
   })
 })

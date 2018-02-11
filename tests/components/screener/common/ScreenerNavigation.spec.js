@@ -64,6 +64,6 @@ describe('ScreenerNavigation component', () => {
   })
 
   it('follows the link', function () {
-
+    // @todo: currently it is unclear how emitting of events can be tested
   })
 })

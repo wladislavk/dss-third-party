@@ -146,5 +146,19 @@ export default {
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'getStepsByRank', response: response})
     })
+  },
+
+  [symbols.actions.getAppointmentSummary] ({ rootState, commit, dispatch }, summaryId) {
+    http.token = rootState.main[symbols.state.mainToken]
+    http.get(endpoints.appointmentSummaries.show + '/' + summaryId).then((response) => {
+      const data = response.data.data
+      const parsedData = {
+        id: data.id,
+        segmentId: data.segmentid
+      }
+      commit(symbols.mutations.getAppointmentSummary, parsedData)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getAppointmentSummary', response: response})
+    })
   }
 }

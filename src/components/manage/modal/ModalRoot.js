@@ -44,14 +44,13 @@ export default {
   components: {
     addTask: AddTaskComponent,
     deviceSelector: DeviceSelectorComponent,
-    // flowsheetReason: FlowsheetReasonComponent,
-    viewContact: ViewContactComponent,
-    patientAccessCode: PatientAccessCodeComponent,
     editContact: EditContactComponent,
     editReferredByContact: EditReferredByContactComponent,
-    viewSleeplab: ViewSleeplabComponent,
     editSleeplab: EditSleeplabComponent,
-    viewCorporateContact: ViewCorporateContactComponent
+    patientAccessCode: PatientAccessCodeComponent,
+    viewContact: ViewContactComponent,
+    viewCorporateContact: ViewCorporateContactComponent,
+    viewSleeplab: ViewSleeplabComponent
   },
   methods: {
     centering () {

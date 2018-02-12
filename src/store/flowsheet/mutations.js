@@ -65,5 +65,12 @@ export default {
 
   [symbols.mutations.hasScheduledAppointment] (state, data) {
     state[symbols.state.hasScheduledAppointment] = data
+  },
+
+  [symbols.mutations.getAppointmentSummary] (state, data) {
+    state[symbols.state.currentAppointmentSummary] = {
+      id: parseInt(data.id),
+      segmentId: parseInt(data.segmentId)
+    }
   }
 }

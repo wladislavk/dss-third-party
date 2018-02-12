@@ -3,6 +3,7 @@ export default {
   appointmentSummaries: {
     byPatient: '/appt-summaries/by-patient',
     destroy: '/appt-summaries',
+    show: '/appt-summaries',
     stepsByRank: '/appt-summaries/steps-by-rank',
     update: '/appt-summaries'
   },

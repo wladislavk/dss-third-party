@@ -1,9 +1,8 @@
-import symbols from '../../../symbols'
+import symbols from '../../../../symbols'
 
 export default {
   data () {
     return {
-      segmentId: 0,
       firstName: '',
       lastName: '',
       selectedType: ''
@@ -12,7 +11,25 @@ export default {
   computed: {
     flowId () {
       return this.$store.state.main[symbols.state.modal].params.flowId
+    },
+    segmentId () {
+      return this.$store.state.flowsheet[symbols.state.currentAppointmentSummary].segmentId
+    },
+    isTitration () {
+      if (this.segmentId === 3) {
+        return true
+      }
+      return false
+    },
+    isBaseline () {
+      if (this.segmentId === 15) {
+        return true
+      }
+      return false
     }
+  },
+  created () {
+    this.$store.dispatch(symbols.actions.getAppointmentSummary, this.flowId)
   },
   methods: {
     selectType () {
@@ -23,12 +40,6 @@ export default {
 }
 
 /*
-<?php
-  $sql = "select * from dental_flow_pg2_info where id='".(!empty($_GET['id']) ? $_GET['id'] : '')."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-  $r = $db->getRow($sql);
-  $sid = st($r['segmentid']);
-?>
-
 <?php if(isset($_REQUEST['submit'])) {
         $sqlex = "update dental_flow_pg2_info set study_type='".mysqli_real_escape_string($con,$_REQUEST['study_type'])."' where id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
         $qex = $db->query($sqlex);

@@ -5,6 +5,7 @@ export default {
     destroy: '/appt-summaries',
     show: '/appt-summaries',
     stepsByRank: '/appt-summaries/steps-by-rank',
+    store: '/appt-summaries',
     update: '/appt-summaries'
   },
   companies: {

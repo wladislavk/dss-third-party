@@ -2,7 +2,7 @@
     <h2 style="margin-top:20px;">What is the reason {{ firstName }} {{ lastName }} is non-compliant?</h2>
     <form action="#" method="post">
         Reason
-        <select name="noncomp_reason" style="width:250px;" v-on:change="changeReason($event)">
+        <select name="noncomp_reason" style="width:250px;" v-model="selectedReason">
             <option value="pain/discomfort">Pain/Discomfort</option>
             <option value="lost device">Lost Device</option>
             <option value="device not working">Device Not Working</option>

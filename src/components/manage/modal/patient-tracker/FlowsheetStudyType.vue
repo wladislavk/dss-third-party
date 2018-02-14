@@ -13,7 +13,7 @@
                 <option value="PSG Baseline">PSG Baseline</option>
             </template>
         </select>
-        <input type="submit" name="submit" value="Submit" v-on:click.prevent="" />
+        <input type="submit" name="submit" value="Submit" v-on:click.prevent="selectType()" />
     </form>
 </template>
 

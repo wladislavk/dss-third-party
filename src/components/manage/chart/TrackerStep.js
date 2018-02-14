@@ -24,8 +24,12 @@ export default {
     }
   },
   computed: {
-    schedule () {
-      return this.$store.getters[symbols.getters.trackerStepSchedule]
+    hasScheduledAppointment () {
+      const schedule = this.$store.getters[symbols.getters.trackerStepSchedule]
+      if (schedule.segmentid && schedule.date_scheduled) {
+        return true
+      }
+      return false
     },
     stepClass () {
       if (this.section === 1 && this.completed) {
@@ -36,32 +40,13 @@ export default {
   },
   methods: {
     addAction () {
-      /*
       const postData = {
         id: this.id,
-        pid: this.patientId
+        pid: this.patientId,
+        data: {}
       }
-      this.$store.dispatch('updateAppointmentToday', postData).then((response) => {
-        const responseData = response.data.data
-        this.updateCurrentStep()
-        this.nextSteps = responseData.next_steps
-        this.schedule.segmentid = ''
-        this.$store.dispatch(symbols.actions.insertTrackerStep, responseData)
-        this.$store.commit('updateSegmentId', 0)
-        const data = {
-          dateAfter: null,
-          dateUntil: null
-        }
-        this.$store.commit('updateNextStep', data)
-      })
-      */
-    },
-    updateCurrentStep () {
-      let hasScheduledAppointment = false
-      if (this.schedule.segmentid && this.schedule.date_scheduled) {
-        hasScheduledAppointment = true
-      }
-      this.$store.commit(symbols.mutations.hasScheduledAppointment, hasScheduledAppointment)
+      this.$store.dispatch(symbols.actions.addAppointmentSummary, postData)
+      this.$store.commit(symbols.mutations.hasScheduledAppointment, this.hasScheduledAppointment)
     }
   }
 }

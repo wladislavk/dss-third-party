@@ -86,7 +86,7 @@ export default {
     trackerStepsSecond: 'TRACKER_STEPS_SECOND'
   },
   mutations: {
-    appointmentSummaries: 'APPOINTMENT_SUMMARIES',
+    addAppointmentSummary: 'ADD_APPOINTMENT_SUMMARY',
     checkGuideSetting: 'CHECK_GUIDE_SETTING',
     clearPatientData: 'CLEAR_PATIENT_DATA',
     coMorbidity: 'CO_MORBIDITY',
@@ -107,7 +107,6 @@ export default {
     hideAllWarnings: 'HIDE_ALL_WARNINGS',
     hideFancybox: 'HIDE_FANCYBOX',
     hideSearchHints: 'HIDE_SEARCH_HINTS',
-    insertTrackerStep: 'INSERT_TRACKER_STEP',
     letters: 'LETTERS',
     mainToken: 'MAIN_TOKEN',
     memos: 'MEMOS',
@@ -138,9 +137,11 @@ export default {
     stepsByRank: 'STEPS_BY_RANK',
     surveyWeight: 'SURVEY_WEIGHT',
     symptoms: 'SYMPTOMS',
+    updateAppointmentSummary: 'UPDATE_APPOINTMENT_SUMMARY',
     userInfo: 'USER_INFO'
   },
   actions: {
+    addAppointmentSummary: 'ADD_APPOINTMENT_SUMMARY',
     addTask: 'ADD_TASK',
     appointmentSummariesByPatient: 'APPOINTMENT_SUMMARIES_BY_PATIENT',
     authenticateScreener: 'AUTHENTICATE_SCREENER',
@@ -162,7 +163,6 @@ export default {
     getDeviceGuideSettingOptions: 'GET_DEVICE_GUIDE_SETTING_OPTIONS',
     getTask: 'GET_TASK',
     handleErrors: 'HANDLE_ERRORS',
-    insertTrackerStep: 'INSERT_TRACKER_STEP',
     lettersByPatientAndInfo: 'LETTERS_BY_PATIENT_AND_INFO',
     mainLogin: 'MAIN_LOGIN',
     memos: 'MEMOS',

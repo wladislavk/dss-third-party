@@ -1,22 +1,39 @@
 import symbols from '../../symbols'
 
 export default {
-  [symbols.mutations.appointmentSummaries] (state, data) {
-    const appointmentSummaries = []
-    for (let element of data) {
-      let newSummary = {
-        id: parseInt(element.id),
-        segmentId: parseInt(element.segmentid),
-        deviceId: parseInt(element.device_id),
-        description: element.description,
-        studyType: element.study_type,
-        delayReason: element.delay_reason,
-        nonComplianceReason: element.noncomp_reason,
-        dateCompleted: new Date(element.date_completed)
-      }
-      appointmentSummaries.push(newSummary)
+  [symbols.mutations.getAppointmentSummary] (state, element) {
+    let newSummary = {
+      id: parseInt(element.id),
+      segmentId: parseInt(element.segmentid),
+      deviceId: parseInt(element.device_id),
+      description: element.description,
+      type: '',
+      studyType: '',
+      delayReason: '',
+      nonComplianceReason: '',
+      dateCompleted: new Date(element.date_completed)
     }
-    state[symbols.state.appointmentSummaries] = appointmentSummaries
+    if (element.study_type) {
+      newSummary.type = 'study_type'
+      newSummary.studyType = element.study_type
+    }
+    if (element.delay_reason) {
+      newSummary.type = 'delay_reason'
+      newSummary.delayReason = element.delay_reason
+    }
+    if (element.noncomp_reason) {
+      newSummary.type = 'noncomp_reason'
+      newSummary.nonComplianceReason = element.noncomp_reason
+    }
+    state[symbols.state.appointmentSummaries].push(newSummary)
+  },
+
+  [symbols.mutations.addAppointmentSummary] (state, data) {
+    state[symbols.state.appointmentSummaries].push(newSummary)
+  },
+
+  [symbols.mutations.updateAppointmentSummary] (state, {id, data}) {
+
   },
 
   [symbols.mutations.devices] (state, data) {
@@ -46,10 +63,6 @@ export default {
     state[symbols.state.letters] = letters
   },
 
-  [symbols.mutations.insertTrackerStep] (state, data) {
-    state[symbols.state.trackerSteps].push(data)
-  },
-
   [symbols.mutations.stepsByRank] (state, data) {
     const steps = []
     for (let element of data) {
@@ -65,12 +78,5 @@ export default {
 
   [symbols.mutations.hasScheduledAppointment] (state, data) {
     state[symbols.state.hasScheduledAppointment] = data
-  },
-
-  [symbols.mutations.getAppointmentSummary] (state, data) {
-    state[symbols.state.currentAppointmentSummary] = {
-      id: parseInt(data.id),
-      segmentId: parseInt(data.segmentId)
-    }
   }
 }

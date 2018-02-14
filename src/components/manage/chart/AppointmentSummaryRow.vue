@@ -58,8 +58,9 @@
                     class="noncomp_reason form-control"
                     v-bind:id="'noncomp_reason' + elementId"
                     v-bind:name="'data[' + elementId + '][noncomp_reason]'"
+                    v-model="nonComplianceReason"
                 >
-                    <option v-for="reason in nonComplianceReasons" v-model="nonComplianceReason" v-bind:value="reason.value">{{ reason.text }}</option>
+                    <option v-for="reason in nonComplianceReasons" v-bind:value="reason.value">{{ reason.text }}</option>
                 </select>
                 <br />
                 <a

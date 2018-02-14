@@ -23,15 +23,7 @@ export default {
       type: Number,
       required: true
     },
-    studyType: {
-      type: String,
-      required: true
-    },
-    delayReason: {
-      type: String,
-      required: true
-    },
-    nonComplianceReason: {
+    type: {
       type: String,
       required: true
     },
@@ -68,7 +60,14 @@ export default {
       return this.deviceId
     },
     defaultStudyType () {
-      return this.$store.state[symbols.state.defaultStudyType]
+      const studyTypes = this.$store.state.flowsheet[symbols.state.selectedTrackerSteps].studyTypes
+      let defaultStudyType = ''
+      for (let studyType of studyTypes) {
+        if (studyType.id === this.elementId) {
+          defaultStudyType = studyType.value
+        }
+      }
+      return defaultStudyType
     },
     rowLetters () {
       const rowLetters = []

@@ -27,4 +27,6 @@
 
 <script src="./PatientInnerMenu.js"></script>
 
-<style src="../../../assets/css/manage/patients/patient-inner-menu.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/patients/patient-inner-menu.scss";
+</style>

@@ -1,0 +1,37 @@
+@import "sections";
+
+p.big-text {
+  font-size: 14px;
+}
+
+img.right-image {
+  float: right;
+}
+
+input {
+  &:focus, &:active {
+    background-color: #ebfdd7;
+  }
+
+  &.inpt_a {
+    padding: 5px 8px;
+    border: 1px;
+    border-color: #b8b8b8 #e2e2e2 #e2e2e2 #b8b8b8;
+    border-style: solid;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    width: 80%;
+  }
+}
+
+div.cf {
+  &::before, &::after {
+    content: "";
+    display: table;
+  }
+
+  &::after {
+    clear: both;
+  }
+}

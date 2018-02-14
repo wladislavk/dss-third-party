@@ -9,6 +9,7 @@ RUN set -x \
     chromium \
     ttf-dejavu \
     xpra \
+    make \
   && rm -rf /var/cache/apk/*
 
 ARG APP_DIR=/opt/app

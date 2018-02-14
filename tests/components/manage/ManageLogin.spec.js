@@ -9,6 +9,7 @@ import http from '../../../src/services/http'
 import endpoints from '../../../src/endpoints'
 import ProcessWrapper from '../../../src/wrappers/ProcessWrapper'
 import symbols from '../../../src/symbols'
+import LegacyHref from '../../../src/directives/LegacyHref'
 
 describe('ManageLogin component', () => {
   beforeEach(function () {
@@ -21,6 +22,7 @@ describe('ManageLogin component', () => {
 
     store.state.main[symbols.state.mainToken] = ''
 
+    Vue.directive('legacy-href', LegacyHref)
     Vue.component('site-seal', {
       template: '<div class="site-seal"></div>'
     })

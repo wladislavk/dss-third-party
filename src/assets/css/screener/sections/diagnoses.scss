@@ -1,0 +1,26 @@
+@import "sections";
+
+div.half {
+  margin-bottom: 7px;
+  width: 49%;
+  float: left;
+  display: block;
+}
+
+input {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 13px;
+
+  &:focus, &:active {
+    background-color: #ebfdd7;
+  }
+}
+
+label {
+  font-size: 16px;
+
+  &.question {
+    display: block;
+    padding-top: 8px;
+  }
+}

@@ -1,4 +1,3 @@
-<!--
 <template>
     <form name="flowsheet_other_reason">
         <table width="700" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF" align="center">
@@ -20,4 +19,3 @@
 </template>
 
 <script src="./FlowsheetReason.js"></script>
--->

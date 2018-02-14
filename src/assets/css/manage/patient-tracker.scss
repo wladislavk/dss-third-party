@@ -1,0 +1,26 @@
+div.tracker-div {
+  width: 100%;
+
+  > a {
+    float: right;
+    margin-right: 20px;
+  }
+}
+
+span.sub_text {
+  width: 280px;
+}
+
+h3 {
+  width: 500px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+div.appt_summ {
+  width: 500px;
+}
+
+option.empty-option {
+  text-transform: uppercase;
+}

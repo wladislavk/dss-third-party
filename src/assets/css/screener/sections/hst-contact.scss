@@ -1,0 +1,16 @@
+@import "sections";
+
+input {
+  padding: 5px 8px;
+  border: 1px;
+  border-color: #b8b8b8 #e2e2e2 #e2e2e2 #b8b8b8;
+  border-style: solid;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  width: 80%;
+
+  &:focus, &:active {
+    background-color: #ebfdd7;
+  }
+}

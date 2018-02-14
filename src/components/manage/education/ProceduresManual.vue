@@ -227,7 +227,7 @@ display:none;text-decoration:none">. </span><span style="color:windowtext;displa
                 clinical exam is performed. Lab prescriptions are filled out and the patient
                 is scheduled for device delivery. You will fit the dental device and establish
                 a titration <i>(adjustment)</i> protocol and schedule the patient for follow up
-                every 3-4 weeks, following the <img width="284" height="205" src="includes/manual_assets/image001.gif" align="left" hspace="12" alt="http://www.zoedental.com/assets/Image/sleep-apnea/sleepapnea_TAP-3.png">patient
+                every 3-4 weeks, following the <img width="284" height="205" src="../../../assets/images/manual_assets/image001.gif" align="left" hspace="12" alt="http://www.zoedental.com/assets/Image/sleep-apnea/sleepapnea_TAP-3.png">patient
                 closely, managing their titration, their side effects, and adjusting their
                 device based on subjective findings. </p>
 
@@ -310,7 +310,7 @@ display:none;text-decoration:none">. </span><span style="color:windowtext;displa
                 have done a disservice to your patients AND you make it difficult on yourself
                 to grow this part of your practice. </p>
 
-            <p class="MsoNormal" style="text-align:justify"><img border="0" width="605" height="471" id="Picture 28" src="includes/manual_assets/image002.gif"></p>
+            <p class="MsoNormal" style="text-align:justify"><img border="0" width="605" height="471" id="Picture 28" src="../../../assets/images/manual_assets/image002.gif"></p>
 
             <p class="MsoNormal" style="text-align:justify">The process begins with you and
                 your team understanding the seriousness of this deadly disorder, the unprecedented
@@ -327,7 +327,7 @@ display:none;text-decoration:none">. </span><span style="color:windowtext;displa
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
 
-            <p class="MsoNormal" style="text-align:justify"><img border="0" width="779" height="591" id="Picture 3" src="includes/manual_assets/image003.gif"></p>
+            <p class="MsoNormal" style="text-align:justify"><img border="0" width="779" height="591" id="Picture 3" src="../../../assets/images/manual_assets/image003.gif"></p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
                 Top]</a></p>
@@ -466,7 +466,7 @@ text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span sty
 
             <h4>Patient Web Portal</h4>
 
-            <p class="MsoListParagraphCxSpFirst" style="text-align:justify"><img width="525" height="296" src="includes/manual_assets/image004.gif" align="right" hspace="12">Your software features a HIPPA compliant live patient web
+            <p class="MsoListParagraphCxSpFirst" style="text-align:justify"><img width="525" height="296" src="../../../assets/images/manual_assets/image004.gif" align="right" hspace="12">Your software features a HIPPA compliant live patient web
                 portal to make the process of filling out paperwork and forms easy for you and
                 the patient. Utilizing the web portal is simple and easy but does require the
                 patient to have an email account and the ability to receive text messages. If
@@ -500,7 +500,7 @@ text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span sty
 text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span>Click the "Send
                 Patient Registration Email" button</p>
 
-            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify"><b><img border="0" width="735" height="523" id="Picture 226" src="includes/manual_assets/image005.gif"></b></p>
+            <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-align:justify"><b><img border="0" width="735" height="523" id="Picture 226" src="../../../assets/images/manual_assets/image005.gif"></b></p>
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
 
@@ -533,7 +533,7 @@ text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span sty
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify">&nbsp;</p>
 
             <p class="MsoListParagraphCxSpMiddle" style="text-align:justify">The below flow
-                sheet can help you visualize the Screening Process:<img border="0" width="706" height="535" id="Picture 227" src="includes/manual_assets/image006.gif"></p>
+                sheet can help you visualize the Screening Process:<img border="0" width="706" height="535" id="Picture 227" src="../../../assets/images/manual_assets/image006.gif"></p>
 
             <p class="MsoListParagraphCxSpLast" style="text-align:justify">&nbsp;</p>
 
@@ -585,7 +585,7 @@ text-indent:-.25in"><span style="font-family:&quot;Courier New&quot;">o<span sty
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
 
-            <p class="MsoNormal" style="text-align:justify"><img border="0" width="708" height="538" id="Picture 5" src="includes/manual_assets/image007.gif"></p>
+            <p class="MsoNormal" style="text-align:justify"><img border="0" width="708" height="538" id="Picture 5" src="../../../assets/images/manual_assets/image007.gif"></p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
                 Top]</a></p>
@@ -692,7 +692,7 @@ text-indent:-.25in">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
 
-            <p class="MsoNormal" style="text-align:justify"><img border="0" width="774" height="661" id="Picture 29" src="includes/manual_assets/image008.gif"></p>
+            <p class="MsoNormal" style="text-align:justify"><img border="0" width="774" height="661" id="Picture 29" src="../../../assets/images/manual_assets/image008.gif"></p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
                 Top]</a></p>
@@ -831,7 +831,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 
             <p class="MsoListParagraphCxSpMiddle" style="margin-left:.75in;text-align:justify;
 text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span></span><img width="765" height="568" src="includes/manual_assets/image009.gif" align="left" hspace="12">Write Progress Note</p>
+            </span></span><img width="765" height="568" src="../../../assets/images/manual_assets/image009.gif" align="left" hspace="12">Write Progress Note</p>
 
             <p class="MsoListParagraphCxSpLast" style="margin-left:.75in;text-align:justify;
 text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -840,7 +840,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
             <b><span style="font-size:12.0pt;line-height:120%;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;"><br clear="all" style="page-break-before:always">
             </span></b>
 
-            <p class="MsoNormal" style="text-align:justify"><img border="0" width="828" height="491" src="includes/manual_assets/image010.gif"></p>
+            <p class="MsoNormal" style="text-align:justify"><img border="0" width="828" height="491" src="../../../assets/images/manual_assets/image010.gif"></p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
                 Top]</a> </p>
@@ -852,7 +852,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 
             <p class="MsoNormal">&nbsp;</p>
 
-            <h3><img width="227" height="180" src="includes/manual_assets/image011.jpg" align="left" hspace="12" alt="http://static8.depositphotos.com/1350582/941/v/950/depositphotos_9413940-Getting-a-dental-exam.jpg"><a name="_Toc350778756">The goals of the Exam and Impressions appointment:</a></h3>
+            <h3><img width="227" height="180" src="../../../assets/images/manual_assets/image011.jpg" align="left" hspace="12" alt="http://static8.depositphotos.com/1350582/941/v/950/depositphotos_9413940-Getting-a-dental-exam.jpg"><a name="_Toc350778756">The goals of the Exam and Impressions appointment:</a></h3>
 
             <p class="MsoListParagraphCxSpFirst" style="margin-left:.75in;text-align:justify;
 text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -947,7 +947,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 -.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>Eccovision (if applicable)</p>
 
-            <p class="MsoNormal" style="text-align:justify"><img border="0" width="670" height="509" src="includes/manual_assets/image012.gif"></p>
+            <p class="MsoNormal" style="text-align:justify"><img border="0" width="670" height="509" src="../../../assets/images/manual_assets/image012.gif"></p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
                 Top]</a></p>
@@ -998,15 +998,15 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 
             <p class="MsoNormal" style="margin-left:.75in;text-align:justify">&nbsp;</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify"><img border="0" width="141" height="94" id="Picture 91" src="includes/manual_assets/image013.jpg" alt="DSS photos (7)"><img border="0" width="141" height="94" id="Picture 93" src="includes/manual_assets/image014.jpg" alt="DSS photos (8)"><img border="0" width="141" height="94" id="Picture 92" src="includes/manual_assets/image015.jpg" alt="DSS photos (9)"></p>
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify"><img border="0" width="141" height="94" id="Picture 91" src="../../../assets/images/manual_assets/image013.jpg" alt="DSS photos (7)"><img border="0" width="141" height="94" id="Picture 93" src="../../../assets/images/manual_assets/image014.jpg" alt="DSS photos (8)"><img border="0" width="141" height="94" id="Picture 92" src="../../../assets/images/manual_assets/image015.jpg" alt="DSS photos (9)"></p>
 
             <p class="MsoNormal" style="margin-left:.75in;text-align:justify">&nbsp;</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify"><img border="0" width="141" height="94" id="Picture 94" src="includes/manual_assets/image016.jpg" alt="DSS photos (1)"><img border="0" width="141" height="94" id="Picture 95" src="includes/manual_assets/image017.jpg" alt="DSS photos (2)"><img border="0" width="141" height="94" id="Picture 99" src="includes/manual_assets/image018.jpg" alt="DSS photos (6)"></p>
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify"><img border="0" width="141" height="94" id="Picture 94" src="../../../assets/images/manual_assets/image016.jpg" alt="DSS photos (1)"><img border="0" width="141" height="94" id="Picture 95" src="../../../assets/images/manual_assets/image017.jpg" alt="DSS photos (2)"><img border="0" width="141" height="94" id="Picture 99" src="../../../assets/images/manual_assets/image018.jpg" alt="DSS photos (6)"></p>
 
             <p class="MsoNormal" style="margin-left:.75in;text-align:justify">&nbsp;</p>
 
-            <p class="MsoNormal" style="margin-left:.75in;text-align:justify"><img border="0" width="141" height="94" id="Picture 97" src="includes/manual_assets/image019.jpg" alt="DSS photos (4)"><img border="0" width="141" height="94" id="Picture 96" src="includes/manual_assets/image020.jpg" alt="DSS photos (3)"><img border="0" width="141" height="94" id="Picture 98" src="includes/manual_assets/image021.jpg" alt="DSS photos (5)"></p>
+            <p class="MsoNormal" style="margin-left:.75in;text-align:justify"><img border="0" width="141" height="94" id="Picture 97" src="../../../assets/images/manual_assets/image019.jpg" alt="DSS photos (4)"><img border="0" width="141" height="94" id="Picture 96" src="../../../assets/images/manual_assets/image020.jpg" alt="DSS photos (3)"><img border="0" width="141" height="94" id="Picture 98" src="../../../assets/images/manual_assets/image021.jpg" alt="DSS photos (5)"></p>
 
             <p class="MsoNormal" style="margin-left:.75in;text-align:justify">&nbsp;</p>
 
@@ -1050,7 +1050,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 
             <p class="MsoNormal" style="margin-left:1.5in;text-align:justify;text-indent:
 -.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
-            </span></span><i></i><img border="0" width="621" height="473" src="includes/manual_assets/image022.gif"></p>
+            </span></span><i></i><img border="0" width="621" height="473" src="../../../assets/images/manual_assets/image022.gif"></p>
 
             <p class="MsoListParagraph" style="margin-left:1.0in;text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>If you have not already done so at the consultation appointment,
@@ -1110,7 +1110,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
             <p class="MsoListParagraphCxSpLast" style="margin-left:1.0in;text-indent:-.25in"><a name="_Toc298865475"><span style="font-family:Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </span></span>Review and send any correspondence(s) generated</a></p>
 
-            <p class="MsoNormal" style="text-align:justify"><img border="0" width="765" height="490" id="Picture 4" src="includes/manual_assets/image023.gif"></p>
+            <p class="MsoNormal" style="text-align:justify"><img border="0" width="765" height="490" id="Picture 4" src="../../../assets/images/manual_assets/image023.gif"></p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
                 Top]</a></p>
@@ -1277,7 +1277,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
 
-            <p class="MsoNormal" style="text-align:justify"><img width="658" height="489" src="includes/manual_assets/image024.gif" align="right" hspace="12">The primary goal of the First Follow-Up is to ensure that
+            <p class="MsoNormal" style="text-align:justify"><img width="658" height="489" src="../../../assets/images/manual_assets/image024.gif" align="right" hspace="12">The primary goal of the First Follow-Up is to ensure that
                 the device is comfortable and that the patient is able to wear it through the
                 night. "Tell me about your experience so far." "So, what do you think of that
                 contraption?" You should already have prepared the patient for the learning
@@ -1396,7 +1396,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
                 </ul>
             </ul>
 
-            <p class="MsoNormal" style="text-align:justify"><img border="0" width="668" height="844" id="Picture 30" src="includes/manual_assets/image025.gif"></p>
+            <p class="MsoNormal" style="text-align:justify"><img border="0" width="668" height="844" id="Picture 30" src="../../../assets/images/manual_assets/image025.gif"></p>
 
             <p class="MsoNormal" style="text-align:justify"><a href="#Return_To_Top">[Back to
                 Top]</a></p>
@@ -1505,7 +1505,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 
             <p class="MsoNormal" style="text-align:justify"><i>&nbsp;</i></p>
 
-            <p class="MsoNormal" style="text-align:justify"><i><img border="0" width="805" height="610" id="Picture 1" src="includes/manual_assets/image026.gif"></i></p>
+            <p class="MsoNormal" style="text-align:justify"><i><img border="0" width="805" height="610" id="Picture 1" src="../../../assets/images/manual_assets/image026.gif"></i></p>
 
             <p class="MsoNormal" style="text-align:justify"><b><i>&nbsp;</i></b></p>
 
@@ -1589,7 +1589,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 
             <h1><a name="_Toc350778774">TITRATION SLEEP TEST APPOINTMENT</a></h1>
 
-            <p class="MsoNormal"><img border="0" width="665" height="515" id="Picture 224" src="includes/manual_assets/image027.gif"></p>
+            <p class="MsoNormal"><img border="0" width="665" height="515" id="Picture 224" src="../../../assets/images/manual_assets/image027.gif"></p>
 
             <p class="MsoNormal">&nbsp;</p>
 
@@ -1791,7 +1791,7 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 
             <h1><a name="_Toc350778778"></a><a name="_Toc298865479">YEARLY EVALUATION</a></h1>
 
-            <p class="MsoNormal"><img width="245" height="239" src="includes/manual_assets/image028.jpg" align="left" hspace="12" alt="http://us.123rf.com/400wm/400/400/gorgrigo/gorgrigo1208/gorgrigo120800015/14724871-calendar-for-2013-sundays-first.jpg"></p>
+            <p class="MsoNormal"><img width="245" height="239" src="../../../assets/images/manual_assets/image028.jpg" align="left" hspace="12" alt="http://us.123rf.com/400wm/400/400/gorgrigo/gorgrigo1208/gorgrigo120800015/14724871-calendar-for-2013-sundays-first.jpg"></p>
 
             <h3><a name="_Toc350778779">Goals of yearly evaluation:</a></h3>
 
@@ -1904,9 +1904,9 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 -.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 2) Upper/lower occlusal</p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:.5in"><img border="0" width="143" height="95" id="Picture 11" src="includes/manual_assets/image029.gif"><img border="0" width="143" height="95" id="Picture 12" src="includes/manual_assets/image030.gif"></p>
+            <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:.5in"><img border="0" width="143" height="95" id="Picture 11" src="../../../assets/images/manual_assets/image029.gif"><img border="0" width="143" height="95" id="Picture 12" src="../../../assets/images/manual_assets/image030.gif"></p>
 
-            <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:.5in"><img border="0" width="141" height="94" src="includes/manual_assets/image031.jpg" alt="DSS photos (4)"><img border="0" width="141" height="94" id="Picture 22" src="includes/manual_assets/image032.jpg" alt="DSS photos (3)"><img border="0" width="143" height="95" id="Picture 21" src="includes/manual_assets/image033.gif"></p>
+            <p class="MsoNormal" style="margin-left:.5in;text-align:justify;text-indent:.5in"><img border="0" width="141" height="94" src="../../../assets/images/manual_assets/image031.jpg" alt="DSS photos (4)"><img border="0" width="141" height="94" id="Picture 22" src="../../../assets/images/manual_assets/image032.jpg" alt="DSS photos (3)"><img border="0" width="143" height="95" id="Picture 21" src="../../../assets/images/manual_assets/image033.gif"></p>
 
             <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
 -.25in"><span style="font-family:Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2077,9 +2077,9 @@ text-indent:-.25in"><span style="font-family:Symbol">•<span style="font:7.0pt 
 -.25in"><span style="font-family:Wingdings">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;
             </span></span>(Qty 2) Upper/lower occlusal</p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify"><img border="0" width="143" height="95" id="Picture 16" src="includes/manual_assets/image029.gif"><img border="0" width="143" height="95" id="Picture 17" src="includes/manual_assets/image030.gif"></p>
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify"><img border="0" width="143" height="95" id="Picture 16" src="../../../assets/images/manual_assets/image029.gif"><img border="0" width="143" height="95" id="Picture 17" src="../../../assets/images/manual_assets/image030.gif"></p>
 
-            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify"><img border="0" width="143" height="95" id="Picture 18" src="includes/manual_assets/image034.gif"><img border="0" width="143" height="95" id="Picture 19" src="includes/manual_assets/image035.gif"><img border="0" width="143" height="95" id="Picture 20" src="includes/manual_assets/image033.gif"></p>
+            <p class="MsoNormal" style="margin-left:1.0in;text-align:justify"><img border="0" width="143" height="95" id="Picture 18" src="../../../assets/images/manual_assets/image034.gif"><img border="0" width="143" height="95" id="Picture 19" src="../../../assets/images/manual_assets/image035.gif"><img border="0" width="143" height="95" id="Picture 20" src="../../../assets/images/manual_assets/image033.gif"></p>
 
             <p class="MsoNormal" style="margin-left:.75in;text-align:justify;text-indent:
 -.25in"><span style="font-family:Symbol">•<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

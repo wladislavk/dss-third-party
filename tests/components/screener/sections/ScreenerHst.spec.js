@@ -48,6 +48,7 @@ describe('ScreenerHST', () => {
     store.commit(symbols.mutations.addStoredContact, { name: 'dob', value: '08/25/1985' })
     store.commit(symbols.mutations.addStoredContact, { name: 'email', value: 'foo@bar.com' })
     store.commit(symbols.mutations.addStoredContact, { name: 'class', value: 'foo' })
+    store.commit(symbols.mutations.contactData)
 
     moxios.stubRequest(http.formUrl(endpoints.companies.homeSleepTest), {
       status: 200,
@@ -145,16 +146,6 @@ describe('ScreenerHST', () => {
     const vm = this.mount()
 
     moxios.wait(() => {
-      const firstNameInput = vm.$el.querySelector('input#hst_first_name')
-      firstNameInput.value = 'Jane'
-      firstNameInput.dispatchEvent(new Event('change'))
-      const dobInput = vm.$el.querySelector('input#hst_dob')
-      dobInput.value = '08/25/1985'
-      dobInput.dispatchEvent(new Event('change'))
-      const emailInput = vm.$el.querySelector('input#hst_email')
-      emailInput.value = 'foo@bar.com'
-      emailInput.dispatchEvent(new Event('change'))
-
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
 
@@ -178,15 +169,11 @@ describe('ScreenerHST', () => {
     const vm = this.mount()
 
     moxios.wait(() => {
+      store.commit(symbols.mutations.addStoredContact, {name: 'dob', value: ''})
+      store.commit(symbols.mutations.contactData)
+
       const companyButton = vm.$el.querySelector('input#hst_company_id_2')
       companyButton.click()
-
-      const firstNameInput = vm.$el.querySelector('input#hst_first_name')
-      firstNameInput.value = 'Jane'
-      firstNameInput.dispatchEvent(new Event('change'))
-      const emailInput = vm.$el.querySelector('input#hst_email')
-      emailInput.value = 'foo@bar.com'
-      emailInput.dispatchEvent(new Event('change'))
 
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()
@@ -213,16 +200,6 @@ describe('ScreenerHST', () => {
     moxios.wait(() => {
       const companyButton = vm.$el.querySelector('input#hst_company_id_2')
       companyButton.click()
-
-      const firstNameInput = vm.$el.querySelector('input#hst_first_name')
-      firstNameInput.value = 'Jane'
-      firstNameInput.dispatchEvent(new Event('change'))
-      const dobInput = vm.$el.querySelector('input#hst_dob')
-      dobInput.value = '08/25/1985'
-      dobInput.dispatchEvent(new Event('change'))
-      const emailInput = vm.$el.querySelector('input#hst_email')
-      emailInput.value = 'foo@bar.com'
-      emailInput.dispatchEvent(new Event('change'))
 
       const submitButton = vm.$el.querySelector('a#sect7_next')
       submitButton.click()

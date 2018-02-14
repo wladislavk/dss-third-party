@@ -12,6 +12,7 @@ import PrintReferredByContact from '../components/manage/referredby/print/printR
 import Sleeplabs from '../components/manage/sleeplabs/sleeplabs.vue'
 import CorporateContacts from '../components/manage/corporate-contacts/corporateContacts.vue'
 import LedgerReportFull from '../components/manage/ledgers/report-full/ledgerReportFull.vue'
+import ProceduresManualComponent from '../components/manage/education/ProceduresManual.vue'
 import SoftwareTutorialsComponent from '../components/manage/SoftwareTutorials.vue'
 
 export default [
@@ -97,7 +98,7 @@ export default [
       {
         path: 'manual',
         name: 'manual',
-        component: SoftwareTutorialsComponent,
+        component: ProceduresManualComponent,
         meta: STANDARD_META
       },
       {

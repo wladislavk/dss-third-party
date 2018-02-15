@@ -59,12 +59,6 @@ describe('CommonHeader component', () => {
     const vm = this.mount()
     const companyLogoDiv = vm.$el.querySelector('div.company-logo')
     expect(companyLogoDiv).toBeNull()
-    /*
-    const patientHeaderDiv = vm.$el.querySelector('div.patient-header')
-    expect(patientHeaderDiv).toBeNull()
-    const patientMenusDiv = vm.$el.querySelector('div.patient-menus')
-    expect(patientMenusDiv).not.toBeNull()
-    */
   })
 
   it('shows patient header when ID present', function () {

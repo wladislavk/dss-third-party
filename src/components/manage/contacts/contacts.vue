@@ -57,7 +57,7 @@
                             <router-link
                                 v-for="letter in letters"
                                 :key="letter.id"
-                                :class="{ 'selected_letter': letter == routeParameters.currentLetter }"
+                                :class="{ 'selected_letter': letter === routeParameters.currentLetter }"
                                 :to="{
                                   name: $route.name,
                                   query: {
@@ -92,7 +92,7 @@
                     >
                         Pages:
                         <span v-for="index in totalPages" class="page_numbers">
-                            <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
+                            <strong v-if="routeParameters.currentPageNumber === (index - 1)">{{ index }}</strong>
                             <router-link
                                 v-else
                                 :to="{
@@ -113,7 +113,7 @@
                 <tr class="tr_bg_h">
                     <td
                         v-for="(label, sort) in tableHeaders"
-                        :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '') + ' ' + sort"
+                        :class="'col_head ' + (routeParameters.sortColumn === sort ? 'arrow_' + routeParameters.sortDirection : '') + ' ' + sort"
                         valign="top"
                     >
                         <router-link
@@ -143,7 +143,7 @@
                     </td>
                 </tr>
                 <tbody v-else v-for="contact in contacts">
-                    <tr :class="contact.status == 1 ? 'tr_active' : 'tr_inactive'">
+                    <tr :class="contact.status === 1 ? 'tr_active' : 'tr_inactive'">
                         <td valign="top" width="20%">
                             <i
                                 v-if="!contact.firstname && !contact.middlename && !contact.lastname"
@@ -226,9 +226,6 @@
 
 <script src="./contacts.js"></script>
 
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/manage.css" scoped></style>
-<!--<style src="../../../assets/css/manage/search-hints.css" scoped></style>-->
 <style type="text/css" scoped>
 .name-empty {
   font-weight: normal;

@@ -1,5 +1,5 @@
 <template>
-    <div v-on:click="hideSearchHints()">
+    <div class="main-template" v-on:click="hideSearchHints()">
         <modal-root></modal-root>
         <router-view></router-view>
     </div>
@@ -7,4 +7,6 @@
 
 <script src="./ManageRoot.js"></script>
 
-<style src="../../assets/css/manage/main.css"></style>
+<style lang="scss" scoped>
+    @import "../../assets/css/manage/main.scss";
+</style>

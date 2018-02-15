@@ -1,6 +1,6 @@
 <template>
     <div class="login_body">
-        <div id="login_container">
+        <div id="login_container" class="login_container">
             <h1>Dental Sleep Solutions</h1>
             <div class="login_content" id="login_sect">
                 <h2>Screener Tool</h2>
@@ -20,13 +20,14 @@
                 </form>
             </div>
         </div>
-
-        <div style="clear:both;"></div>
+        <div class="clear"></div>
         <site-seal></site-seal>
-        <div style="clear:both;"></div>
+        <div class="clear"></div>
     </div>
 </template>
 
 <script src="./ScreenerLogin.js"></script>
 
-<style src="../../assets/css/screener/login.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../assets/css/screener/login.scss";
+</style>

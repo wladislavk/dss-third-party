@@ -1,0 +1,12 @@
+@import "patients";
+
+div.patient-chart {
+  margin-left: 20px;
+  float: left;
+  width: 400px;
+}
+
+a.back-to-list {
+  font-weight: bold;
+  text-transform: uppercase;
+}

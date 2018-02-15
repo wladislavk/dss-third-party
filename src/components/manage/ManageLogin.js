@@ -4,7 +4,6 @@ import symbols from '../../symbols'
 import Alerter from '../../services/Alerter'
 import { focus as focusDirective } from 'vue-focus'
 import SiteSealComponent from '../SiteSeal.vue'
-import ProcessWrapper from '../../wrappers/ProcessWrapper'
 
 export default {
   name: 'main-login',
@@ -12,7 +11,6 @@ export default {
     return {
       focusUser: false,
       focusPassword: false,
-      legacyUrl: ProcessWrapper.getLegacyRoot(),
       message: '',
       credentials: {
         username: '',

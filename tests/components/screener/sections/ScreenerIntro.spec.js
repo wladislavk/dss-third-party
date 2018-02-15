@@ -1,6 +1,8 @@
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 import symbols from '../../../../src/symbols'
-import TestCase from '../../../cases/ComponentTestCase'
 import ScreenerIntroComponent from '../../../../src/components/screener/sections/ScreenerIntro.vue'
+import store from '../../../../src/store'
 
 describe('ScreenerIntro', () => {
   beforeEach(function () {
@@ -11,21 +13,22 @@ describe('ScreenerIntro', () => {
       }
     ]
 
-    this.vue = TestCase.getVue({
-      template: '<div><screener-intro></screener-intro></div>',
-      components: {
-        'screenerIntro': ScreenerIntroComponent
-      }
-    }, routes)
-    this.vm = this.vue.$mount()
+    const Component = Vue.extend(ScreenerIntroComponent)
+    this.mount = function () {
+      return new Component({
+        store: store,
+        router: new VueRouter({routes})
+      }).$mount()
+    }
   })
 
   afterEach(function () {
-    this.vue.$store.commit(symbols.mutations.restoreInitialScreener)
+    store.commit(symbols.mutations.restoreInitialScreener)
   })
 
   it('should display existing fields', function () {
-    const allLabels = this.vm.$el.querySelectorAll('div.dp50 > div.sepH_b')
+    const vm = this.mount()
+    const allLabels = vm.$el.querySelectorAll('div.dp50 > div.sepH_b')
     expect(allLabels.length).toBe(3)
 
     const getLabel = (number) => {
@@ -40,24 +43,25 @@ describe('ScreenerIntro', () => {
   })
 
   it('should update data when all fields are set', function (done) {
-    const nextButton = this.vm.$el.querySelector('a#sect1_next')
+    const vm = this.mount()
+    const nextButton = vm.$el.querySelector('a#sect1_next')
 
     expect(nextButton.classList.contains('disabled')).toBe(false)
 
-    const firstNameInput = this.vm.$el.querySelector('input#first_name')
+    const firstNameInput = vm.$el.querySelector('input#first_name')
     firstNameInput.value = 'Jill'
     firstNameInput.dispatchEvent(new Event('change'))
-    const lastNameInput = this.vm.$el.querySelector('input#last_name')
+    const lastNameInput = vm.$el.querySelector('input#last_name')
     lastNameInput.value = 'Jones'
     lastNameInput.dispatchEvent(new Event('change'))
-    const phoneInput = this.vm.$el.querySelector('input#phone')
+    const phoneInput = vm.$el.querySelector('input#phone')
     phoneInput.value = '2233223223'
     phoneInput.dispatchEvent(new Event('change'))
 
     nextButton.click()
 
-    this.vm.$nextTick(() => {
-      const contactData = this.vue.$store.state.screener[symbols.state.contactData]
+    vm.$nextTick(() => {
+      const contactData = store.state.screener[symbols.state.contactData]
 
       let firstName
       let lastName
@@ -81,24 +85,26 @@ describe('ScreenerIntro', () => {
       expect(phone).toBe('2233223223')
 
       expect(nextButton.classList.contains('disabled')).toBe(true)
-      expect(this.vue.$router.currentRoute.name).toBe('screener-epworth')
+      expect(vm.$router.currentRoute.name).toBe('screener-epworth')
       done()
     })
   })
 
-  it('should throw error when some fields are not set', function () {
-    const nextButton = this.vm.$el.querySelector('a#sect1_next')
-    const firstNameInput = this.vm.$el.querySelector('input#first_name')
+  it('should throw error when some fields are not set', function (done) {
+    const vm = this.mount()
+    const nextButton = vm.$el.querySelector('a#sect1_next')
+    const firstNameInput = vm.$el.querySelector('input#first_name')
     firstNameInput.value = 'Jill'
     firstNameInput.dispatchEvent(new Event('change'))
     nextButton.click()
 
-    this.vm.$nextTick(() => {
+    vm.$nextTick(() => {
       expect(nextButton.classList.contains('disabled')).toBe(false)
-      const allLabels = this.vm.$el.querySelectorAll('div.dp50 > div.sepH_b')
+      const allLabels = vm.$el.querySelectorAll('div.dp50 > div.sepH_b')
       expect(allLabels[0].className).not.toContain('error')
       expect(allLabels[1].className).toContain('error')
       expect(allLabels[2].className).toContain('error')
+      done()
     })
   })
 })

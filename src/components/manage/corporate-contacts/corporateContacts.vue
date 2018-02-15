@@ -13,7 +13,7 @@
                     <td align="right" colspan="15" class="bp">
                         Pages:
                         <span v-for="index in totalPages" class="page_numbers">
-                            <strong v-if="routeParameters.currentPageNumber == (index - 1)">{{ index }}</strong>
+                            <strong v-if="routeParameters.currentPageNumber === (index - 1)">{{ index }}</strong>
                             <router-link
                                 v-else
                                 :to="{
@@ -32,7 +32,7 @@
                 <tr class="tr_bg_h">
                     <td
                         v-for="(settings, sort) in tableHeaders"
-                        :class="'col_head ' + (routeParameters.sortColumn == sort ? 'arrow_' + routeParameters.sortDirection : '')"
+                        :class="'col_head ' + (routeParameters.sortColumn === sort ? 'arrow_' + routeParameters.sortDirection : '')"
                         valign="top"
                         :width="settings.width + '%'"
                     >
@@ -49,7 +49,7 @@
                         <template v-else>{{ settings.title }}</template>
                     </td>
                 </tr>
-                <tr v-if="contacts.length == 0" class="tr_bg">
+                <tr v-if="contacts.length === 0" class="tr_bg">
                     <td valign="top" class="col_head" colspan="10" align="center">
                         No Records
                     </td>
@@ -57,7 +57,7 @@
                 <tr
                     v-else
                     v-for="contact in contacts"
-                    :class="contact.status == 1 ? 'tr_active' : 'tr_inactive'"
+                    :class="contact.status === 1 ? 'tr_active' : 'tr_inactive'"
                 >
                     <td valign="top" >
                         {{ contact.company }}
@@ -89,6 +89,3 @@
 </template>
 
 <script src="./corporateContacts.js"></script>
-
-<style src="../../../assets/css/manage/admin.css" scoped></style>
-<style src="../../../assets/css/manage/manage.css" scoped></style>

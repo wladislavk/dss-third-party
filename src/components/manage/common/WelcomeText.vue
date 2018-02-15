@@ -6,4 +6,6 @@
 
 <script src="./WelcomeText.js"></script>
 
-<style src="../../../assets/css/manage/common/welcome-text.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/common/welcome-text.scss";
+</style>

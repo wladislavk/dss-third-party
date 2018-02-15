@@ -1,24 +1,15 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import endpoints from '../../../../src/endpoints'
 import http from '../../../../src/services/http'
 import moxios from 'moxios'
 import symbols from '../../../../src/symbols'
-import TestCase from '../../../cases/ComponentTestCase'
 import ScreenerDiagnosesComponent from '../../../../src/components/screener/sections/ScreenerDiagnoses.vue'
-import $ from 'jquery'
+import store from '../../../../src/store'
 
 describe('ScreenerDiagnoses', () => {
   beforeEach(function () {
-    window.$ = $
-    window.jQuery = $
-    const buttonUI = require('jquery-ui/button')
-    window.$.fn.extend = buttonUI
-
     moxios.install()
-
-    Vue.component('health-assessment', {
-      template: '<div></div>'
-    })
 
     const routes = [
       {
@@ -27,24 +18,23 @@ describe('ScreenerDiagnoses', () => {
       }
     ]
 
-    const vueOptions = {
-      template: '<div><screener-diagnoses></screener-diagnoses></div>',
-      components: {
-        screenerDiagnoses: ScreenerDiagnosesComponent
-      }
+    const Component = Vue.extend(ScreenerDiagnosesComponent)
+    this.mount = function () {
+      return new Component({
+        store: store,
+        router: new VueRouter({routes})
+      }).$mount()
     }
-
-    this.vue = TestCase.getVue(vueOptions, routes)
-    this.vm = this.vue.$mount()
   })
 
   afterEach(function () {
-    this.vue.$store.commit(symbols.mutations.restoreInitialScreener)
+    store.commit(symbols.mutations.restoreInitialScreener)
     moxios.uninstall()
   })
 
   it('should display existing fields', function () {
-    const allLabels = this.vm.$el.querySelectorAll('div#sect4 > div.field')
+    const vm = this.mount()
+    const allLabels = vm.$el.querySelectorAll('div#sect4 > div.field')
     expect(allLabels.length).toBe(8)
 
     const getLabel = (number) => {
@@ -71,7 +61,7 @@ describe('ScreenerDiagnoses', () => {
         selected: 2
       }
     ]
-    this.vue.$store.commit(symbols.mutations.setEpworthProps, epworthProps)
+    store.commit(symbols.mutations.setEpworthProps, epworthProps)
 
     moxios.stubRequest(http.formUrl(endpoints.screeners.store), {
       status: 200,
@@ -80,16 +70,16 @@ describe('ScreenerDiagnoses', () => {
       }
     })
 
-    const nextButton = this.vm.$el.querySelector('a#sect4_next')
+    const vm = this.mount()
+    const nextButton = vm.$el.querySelector('a#sect4_next')
     expect(nextButton.classList.contains('disabled')).toBe(false)
 
-    const firstInput = this.vm.$el.querySelector('input#rx_heart_disease')
-    const secondInput = this.vm.$el.querySelector('input#rx_hypertension')
+    const firstInput = vm.$el.querySelector('input#rx_heart_disease')
+    const secondInput = vm.$el.querySelector('input#rx_hypertension')
     firstInput.click()
     secondInput.click()
 
-    const cpapButtonId = this.vue.$store.state.screener[symbols.state.cpap].name + '1'
-    this.vm.$el.querySelector('input#' + cpapButtonId).click()
+    store.commit(symbols.mutations.addStoredCpap, store.state.screener[symbols.state.cpap].weight)
 
     nextButton.click()
 
@@ -140,8 +130,8 @@ describe('ScreenerDiagnoses', () => {
       expect(JSON.parse(request.config.data)).toEqual(expectedRequest)
 
       expect(nextButton.classList.contains('disabled')).toBe(true)
-      expect(this.vue.$router.currentRoute.name).toBe('screener-results')
-      expect(this.vue.$store.state.screener[symbols.state.screenerWeights].coMorbidity).toBe(7)
+      expect(vm.$router.currentRoute.name).toBe('screener-results')
+      expect(store.state.screener[symbols.state.screenerWeights].coMorbidity).toBe(7)
       done()
     })
   })
@@ -154,15 +144,16 @@ describe('ScreenerDiagnoses', () => {
       }
     })
 
-    const nextButton = this.vm.$el.querySelector('a#sect4_next')
+    const vm = this.mount()
+    const nextButton = vm.$el.querySelector('a#sect4_next')
     expect(nextButton.classList.contains('disabled')).toBe(false)
 
-    const cpapButtonId = this.vue.$store.state.screener[symbols.state.cpap].name + '1'
-    this.vm.$el.querySelector('input#' + cpapButtonId).click()
+    const cpapButtonId = store.state.screener[symbols.state.cpap].name + '1'
+    vm.$el.querySelector('input#' + cpapButtonId).click()
 
     moxios.wait(() => {
       expect(nextButton.classList.contains('disabled')).toBe(false)
-      expect(this.vue.$store.state.screener[symbols.state.screenerWeights].coMorbidity).toBe(0)
+      expect(store.state.screener[symbols.state.screenerWeights].coMorbidity).toBe(0)
       done()
     })
   })

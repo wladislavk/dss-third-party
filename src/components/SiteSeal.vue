@@ -10,4 +10,6 @@
 
 <script src="./SiteSeal.js"></script>
 
-<style src="../assets/css/siteseal.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../assets/css/siteseal.scss";
+</style>

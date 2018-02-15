@@ -27,4 +27,6 @@
 
 <script src="./TaskElement.js"></script>
 
-<style src="../../../assets/css/manage/tasks/task-element.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/tasks/task-element.scss";
+</style>

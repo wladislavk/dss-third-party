@@ -18,4 +18,6 @@
 
 <script src="./RightTopMenu.js"></script>
 
-<style src="../../../assets/css/manage/common/right-top-menu.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/common/right-top-menu.scss";
+</style>

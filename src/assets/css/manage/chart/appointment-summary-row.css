@@ -1,7 +1,0 @@
-select.study_type, select.dentaldevice {
-  width: 150px;
-}
-
-select.delay_reason, select.noncomp_reason {
-  width: 94px;
-}

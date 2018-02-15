@@ -60,6 +60,7 @@ describe('Screener module actions', () => {
       }, 100)
     })
   })
+
   describe('getCompanyData action', () => {
     it('should set company data', function (done) {
       const postData = []
@@ -109,6 +110,7 @@ describe('Screener module actions', () => {
       }, 100)
     })
   })
+
   describe('submitScreener action', () => {
     it('should submit screener data', function (done) {
       this.testCase.setState({
@@ -208,6 +210,7 @@ describe('Screener module actions', () => {
       }, 100)
     })
   })
+
   describe('parseScreenerResults action', () => {
     it('should parse screener results', function () {
       this.testCase.setState({
@@ -282,6 +285,7 @@ describe('Screener module actions', () => {
       expect(this.testCase.mutations).toEqual(expectedMutations)
     })
   })
+
   describe('setEpworthProps action', () => {
     it('should set epworth props', function (done) {
       const postData = []
@@ -336,6 +340,7 @@ describe('Screener module actions', () => {
       }, 100)
     })
   })
+
   describe('submitHST action', () => {
     it('should submit home sleep request to API', function (done) {
       const postData = []
@@ -393,6 +398,7 @@ describe('Screener module actions', () => {
       }, 100)
     })
   })
+
   describe('authenticateScreener action', () => {
     beforeEach(function () {
       this.postData = []
@@ -497,6 +503,7 @@ describe('Screener module actions', () => {
       }, 100)
     })
   })
+
   describe('setSessionData action', () => {
     it('should set session data', function (done) {
       const postData = []

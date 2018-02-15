@@ -13,6 +13,10 @@ import Sleeplabs from '../components/manage/sleeplabs/sleeplabs.vue'
 import CorporateContacts from '../components/manage/corporate-contacts/corporateContacts.vue'
 import LedgerReportFull from '../components/manage/ledgers/report-full/ledgerReportFull.vue'
 import ProceduresManualComponent from '../components/manage/education/ProceduresManual.vue'
+import MedicineManualComponent from '../components/manage/education/MedicineManual.vue'
+import QuickFactsReferenceComponent from '../components/manage/education/QuickFacts.vue'
+import VideosComponent from '../components/manage/education/Videos.vue'
+import EdxCertificateComponent from '../components/manage/education/EdxCertificate.vue'
 import SoftwareTutorialsComponent from '../components/manage/SoftwareTutorials.vue'
 
 export default [
@@ -99,6 +103,30 @@ export default [
         path: 'manual',
         name: 'manual',
         component: ProceduresManualComponent,
+        meta: STANDARD_META
+      },
+      {
+        path: 'medicine_manual',
+        name: 'medicine_manual',
+        component: MedicineManualComponent,
+        meta: STANDARD_META
+      },
+      {
+        path: 'quick_facts',
+        name: 'quick_facts',
+        component: QuickFactsReferenceComponent,
+        meta: STANDARD_META
+      },
+      {
+        path: 'videos',
+        name: 'videos',
+        component: VideosComponent,
+        meta: STANDARD_META
+      },
+      {
+        path: 'edx_certificate',
+        name: 'edx_certificate',
+        component: EdxCertificateComponent,
         meta: STANDARD_META
       },
       {

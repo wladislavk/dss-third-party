@@ -1,13 +1,10 @@
 <template>
     <div style="padding:0 20px; width:920px;height: 600px; overflow-y: scroll;">
-        <link rel="stylesheet" href="css/manual.css" type="text/css" media="screen">
-
-
-
-
+        <link rel="stylesheet" href="../../../assets/css/manage/education/manual.css" type="text/css" media="screen">
 
         <div class="WordSection1">
 
+            <h1 id="bolbo">BOLBO ETEST</h1>
             <p class="MsoNormal" align="center" style="text-align:center;line-height:normal"><a name="_Toc298865471"></a><a name="_top"></a><span style="font-size:20.0pt;
 font-family:&quot;Bodoni MT&quot;,&quot;serif&quot;">INFORMATION DISCLAIMER</span></p>
 

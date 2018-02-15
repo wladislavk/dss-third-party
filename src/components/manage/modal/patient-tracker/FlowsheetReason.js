@@ -1,11 +1,6 @@
 import symbols from '../../../../symbols'
 
 export default {
-  data () {
-    return {
-      reason: ''
-    }
-  },
   computed: {
     flowId () {
       return this.$store.state.main[symbols.state.modal].params.flowId
@@ -38,16 +33,18 @@ export default {
       return ''
     },
     description () {
-      return this.appointmentSummary.description
+      if (this.appointmentSummary) {
+        return this.appointmentSummary.description
+      }
+      return ''
     }
   },
   methods: {
     submitForm () {
       const payload = {
         id: this.flowId,
-        patientId: this.patientId,
         data: {
-          reason: this.reason
+          reason: this.description
         }
       }
       this.$store.dispatch(symbols.actions.updateAppointmentSummary, payload).then(() => {

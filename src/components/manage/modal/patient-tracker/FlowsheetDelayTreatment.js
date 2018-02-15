@@ -3,12 +3,13 @@ import symbols from '../../../../symbols'
 export default {
   data () {
     return {
-      firstName: '',
-      lastName: '',
       selectedReason: ''
     }
   },
   computed: {
+    patientName () {
+      return this.$store.state.patients[symbols.state.patientName]
+    },
     flowId () {
       return this.$store.state.main[symbols.state.modal].params.flowId
     }
@@ -18,37 +19,26 @@ export default {
       this.selectedReason = event.target.value
     },
     submitReason () {
-      $('#delay_reason_' + this.flowId).val(this.selectedReason)
-      if (this.selectedReason === 'other') {
+      const queryData = {
+        id: this.flowId,
+        data: {
+          delay_reason: this.selectedReason
+        }
+      }
+      this.$store.dispatch(symbols.actions.updateAppointmentSummary, queryData).then(() => {
+        if (this.selectedReason !== 'other') {
+          this.$store.commit(symbols.mutations.resetModal)
+          return
+        }
         const modalData = {
-          name: 'flowsheetReason',
+          name: symbols.modals.flowsheetReason,
           params: {
             flowId: this.flowId,
             segmentId: 5
           }
         }
         this.$store.commit(symbols.mutations.modal, modalData)
-      }
-      this.$store.commit(symbols.mutations.resetModal)
+      })
     }
   }
 }
-
-/*
-<?php
-  if(isset($_REQUEST['submit'])) {
-    $sqlex = "update dental_flow_pg2_info set delay_reason='".mysqli_real_escape_string($con,$_REQUEST['delay_reason'])."' where id='".mysqli_real_escape_string($con,(!empty($_GET['id']) ? $_GET['id'] : ''))."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-    $qex = $db->query($sqlex);
-  } ?>
-
-<?php
-      $s = "SELECT * FROM dental_patients where patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
-      $r = $db->getRow($s);
-?>
-
-    <?php
-      $sql = "select * from dental_flow_pg2_info where id='".(!empty($_GET['id']) ? $_GET['id'] : '')."' AND patientid='".(!empty($_GET['pid']) ? $_GET['pid'] : '')."'";
-      $r = $db->getRow($sql);
-      $sid = st($r['segmentid']);
-    ?>
-*/

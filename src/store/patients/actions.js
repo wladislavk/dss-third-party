@@ -40,5 +40,16 @@ export default {
   [symbols.actions.clearPatientData] ({commit}) {
     commit(symbols.mutations.patientId, 0)
     commit(symbols.mutations.clearPatientData)
+  },
+
+  [symbols.actions.patientClinicalExam] ({ rootState, state, dispatch }, device) {
+    http.token = rootState.main[symbols.state.mainToken]
+    const data = {
+      dentaldevice: device,
+      patientid: state[symbols.state.patientId]
+    }
+    return http.request('post', endpoints.tmjClinicalExams.storeForPatient, data).catch((response) => {
+      dispatch(symbols.actions.handleErrors, { title: 'storeClinicalExam', response: response })
+    })
   }
 }

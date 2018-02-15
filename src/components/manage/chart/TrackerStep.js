@@ -41,9 +41,8 @@ export default {
   methods: {
     addAction () {
       const postData = {
-        id: this.id,
-        pid: this.patientId,
-        data: {}
+        segmentId: this.id,
+        patientId: this.patientId,
       }
       this.$store.dispatch(symbols.actions.addAppointmentSummary, postData)
       this.$store.commit(symbols.mutations.hasScheduledAppointment, this.hasScheduledAppointment)

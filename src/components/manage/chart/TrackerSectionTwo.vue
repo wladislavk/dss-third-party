@@ -30,3 +30,7 @@
 </template>
 
 <script src="./TrackerSectionTwo.js"></script>
+
+<style lang="scss" scoped>
+  @import "../../../assets/css/manage/chart/tracker-section-two.scss";
+</style>

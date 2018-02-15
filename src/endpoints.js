@@ -154,6 +154,7 @@ export default {
     update: '/tasks'
   },
   tmjClinicalExams: {
+    storeForPatient: '/tmj-clinical-exams/store-for-patient',
     updateFlowDevice: '/tmj-clinical-exams/update-flow-device'
   },
   users: {

@@ -21,10 +21,12 @@
                 v-bind:letter-count="letterCount"
             ></appointment-summary>
         </div>
-        <div style="clear:both;"></div>
+        <div class="clear"></div>
     </div>
 </template>
 
 <script src="./PatientTracker.js"></script>
 
-<style src="../../../assets/css/manage/patient-tracker.css" scoped></style>
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/chart/patient-tracker.scss";
+</style>

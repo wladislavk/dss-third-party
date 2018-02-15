@@ -10,6 +10,7 @@ export default {
     }
     return steps
   },
+
   [symbols.getters.trackerStepsSecond] (state) {
     const steps = []
     for (let element of state[symbols.state.trackerSteps]) {
@@ -19,7 +20,16 @@ export default {
     }
     return steps
   },
+
   [symbols.getters.trackerStepSchedule] () {
     return {}
+  },
+
+  [symbols.getters.firstDevice] (state) {
+    let firstDevice = ''
+    for (let device of state[symbols.state.devices]) {
+      firstDevice = device.dentaldevice
+    }
+    return firstDevice
   }
 }

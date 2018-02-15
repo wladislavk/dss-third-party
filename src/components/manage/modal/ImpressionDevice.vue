@@ -1,9 +1,9 @@
 <template>
-    <h2 style="margin-top:20px;">What device will you make for {{ firstName }} {{ lastName }}?</h2>
-    <a v-legacy-href="'manage/device_guide.php?pid=' + this.patientId + '&id=' + this.flowId">Help me decide</a>
     <form action="#">
+        <h2>What device will you make for {{ patientName }}?</h2>
+        <a v-legacy-href="'manage/device_guide.php?pid=' + this.patientId + '&id=' + this.flowId">Help me decide</a>
         Device
-        <select name="dentaldevice" style="width:250px" v-model="dentalDevice">
+        <select name="dentaldevice" v-model="patientDevice">
             <option value=""></option>
             <option v-for="device in devices" v-bind:value="device.deviceid">{{ device.device }}</option>
         </select>
@@ -12,3 +12,7 @@
 </template>
 
 <script src="./ImpressionDevice.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/modal/impression-device.scss";
+</style>

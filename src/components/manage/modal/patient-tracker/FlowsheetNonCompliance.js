@@ -7,11 +7,8 @@ export default {
     }
   },
   computed: {
-    firstName () {
-      return this.$store.state.main[symbols.state.modal].params.firstName
-    },
-    lastName () {
-      return this.$store.state.main[symbols.state.modal].params.lastName
+    patientName () {
+      return this.$store.state.patients[symbols.state.patientName]
     },
     flowId () {
       return this.$store.state.main[symbols.state.modal].params.flowId
@@ -19,32 +16,25 @@ export default {
   },
   methods: {
     submitReason () {
-      $('#noncomp_reason' + this.flowId).val(this.selectedReason)
       const queryData = {
         id: this.flowId,
-        patientId: this.$store.state.flowsheet[symbols.state.currentAppointmentSummary].patientId,
         data: {
           noncomp_reason: this.selectedReason
         }
       }
       this.$store.dispatch(symbols.actions.updateAppointmentSummary, queryData).then(() => {
-        const newTrackerStep = {
-          type: 'noncompliance_reason',
-          id: this.flowId,
-          value: this.selectedReason
+        if (this.selectedReason !== 'other') {
+          this.$store.commit(symbols.mutations.resetModal)
+          return
         }
-        this.$store.commit(symbols.mutations.selectTrackerStep, newTrackerStep)
-        if (this.selectedReason === 'other') {
-          const modalData = {
-            name: 'flowsheetReason',
-            params: {
-              flowId: this.flowId,
-              segmentId: 9
-            }
+        const modalData = {
+          name: symbols.modals.flowsheetReason,
+          params: {
+            flowId: this.flowId,
+            segmentId: 9
           }
-          this.$store.commit(symbols.mutations.modal, modalData)
         }
-        this.$store.commit(symbols.mutations.resetModal)
+        this.$store.commit(symbols.mutations.modal, modalData)
       })
     }
   }

@@ -4,7 +4,7 @@
           <tr>
               <th>Date</th>
               <th>Treatment</th>
-              <th style="width: 80px">Letters</th>
+              <th class="letters">Letters</th>
               <th></th>
           </tr>
           <appointment-summary-row
@@ -25,3 +25,7 @@
 </template>
 
 <script src="./AppointmentSummary.js"></script>
+
+<style lang="scss" scoped>
+  @import "../../../assets/css/manage/chart/appointment-summary.scss";
+</style>

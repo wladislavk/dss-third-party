@@ -6,7 +6,13 @@
             </tr>
             <tr>
                 <td valign="top" class="frmhead">
-                    <textarea name="reason" id="reason" class="field text reason tbox" style="width:680px;" tabindex="1">{{ description }}</textarea>
+                    <textarea
+                        name="reason"
+                        id="reason"
+                        class="field text reason tbox"
+                        tabindex="1"
+                        v-model="description"
+                    ></textarea>
                 </td>
             </tr>
             <tr>
@@ -19,3 +25,7 @@
 </template>
 
 <script src="./FlowsheetReason.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/modal/patient-tracker/reason.scss";
+</style>

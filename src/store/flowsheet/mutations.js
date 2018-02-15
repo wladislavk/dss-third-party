@@ -29,11 +29,28 @@ export default {
   },
 
   [symbols.mutations.addAppointmentSummary] (state, data) {
+    // @todo: transform data into new summary
+    const newSummary = data
     state[symbols.state.appointmentSummaries].push(newSummary)
   },
 
   [symbols.mutations.updateAppointmentSummary] (state, {id, data}) {
+    for (let summary of state[symbols.state.appointmentSummaries]) {
+      if (summary.id === id) {
+        // @todo: transform data into new summary
+        summary = data
+      }
+    }
+  },
 
+  [symbols.mutations.removeAppointmentSummary] (state, id) {
+    const newArray = []
+    for (let summary of state[symbols.state.appointmentSummaries]) {
+      if (summary.id !== id) {
+        newArray.push(summary)
+      }
+    }
+    state[symbols.state.appointmentSummaries] = newArray
   },
 
   [symbols.mutations.devices] (state, data) {

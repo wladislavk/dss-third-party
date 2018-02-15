@@ -1,8 +1,8 @@
 <template>
-    <h2 style="margin-top:20px;">What is the reason {{ firstName }} {{ lastName }} is non-compliant?</h2>
-    <form action="#" method="post">
+    <form action="#">
+        <h2>What is the reason {{ patientName }} is non-compliant?</h2>
         Reason
-        <select name="noncomp_reason" style="width:250px;" v-model="selectedReason">
+        <select name="noncomp_reason" v-model="selectedReason">
             <option value="pain/discomfort">Pain/Discomfort</option>
             <option value="lost device">Lost Device</option>
             <option value="device not working">Device Not Working</option>
@@ -13,3 +13,7 @@
 </template>
 
 <script src="./FlowsheetNonCompliance.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/modal/patient-tracker/non-compliance.scss";
+</style>

@@ -37,15 +37,13 @@ export default {
   },
   methods: {
     selectType () {
-      const patientId = this.$store.state.flowsheet[symbols.state.currentAppointmentSummary].patientId
       const queryData = {
         id: this.flowId,
-        patientId: patientId,
         data: {
           study_type: this.selectedType
         }
       }
-      this.$store.dispatch(symbols.actions.addAppointmentSummary, queryData).then(() => {
+      this.$store.dispatch(symbols.actions.updateAppointmentSummary, queryData).then(() => {
         this.$store.commit(symbols.mutations.resetModal)
       })
     }

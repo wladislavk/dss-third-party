@@ -60,7 +60,7 @@ export default {
       return this.deviceId
     },
     defaultStudyType () {
-      const studyTypes = this.$store.state.flowsheet[symbols.state.selectedTrackerSteps].studyTypes
+      const studyTypes = this.$store.state.flowsheet[symbols.state.trackerSteps].studyTypes
       let defaultStudyType = ''
       for (let studyType of studyTypes) {
         if (studyType.id === this.elementId) {
@@ -112,7 +112,7 @@ export default {
   methods: {
     openFlowsheetModal () {
       const modalData = {
-        name: 'flowsheetReason',
+        name: symbols.modals.flowsheetReason,
         params: {
           flowId: this.elementId,
           patientId: this.patientId
@@ -128,7 +128,10 @@ export default {
           return
         }
       }
-      this.$store.dispatch(symbols.actions.deleteAppointmentSummary, this.elementId)
+      const confirmText = 'Are you sure you want to delete this appointment?'
+      if (Alerter.isConfirmed(confirmText)) {
+        this.$store.dispatch(symbols.actions.deleteAppointmentSummary, this.elementId)
+      }
     },
     updateCompletedDate () {
       let compDate = null
@@ -143,7 +146,7 @@ export default {
         comp_date: compDate,
         pid: this.patientId
       }
-      this.$store.dispatch('updateAppointment', postData)
+      this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)
     }
   }
 }

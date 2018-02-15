@@ -5,10 +5,14 @@
             v-else
             href="#"
             v-bind:id="'completed_' + id"
-            v-on:click.prevent="addAction()"
+            v-on:dblclick.prevent="addAction()"
             class="completed_today"
         >{{ name }}</a>
     </li>
 </template>
 
 <script src="./TrackerStep.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/chart/tracker-step.scss";
+</style>

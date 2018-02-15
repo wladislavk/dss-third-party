@@ -1,7 +1,7 @@
 @import "patients";
 
 div.warning-div {
-  & > a, & > span {
+  > a, > span {
     padding: 10px;
     display: block;
     width: 500px;
@@ -12,7 +12,7 @@ div.warning-div {
     font-weight: bold;
   }
 
-  & > a:hover {
+  > a:hover {
     color: #000;
     background: #e35;
   }

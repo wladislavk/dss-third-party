@@ -2,7 +2,6 @@ import QueryStringComposer from 'qs'
 import symbols from '../../symbols'
 import http from '../../services/http'
 import endpoints from '../../endpoints'
-import Alerter from '../../services/Alerter'
 
 export default {
   [symbols.actions.appointmentSummariesByPatient] ({ rootState, commit, dispatch }, patientId) {
@@ -36,47 +35,53 @@ export default {
     })
   },
 
-  [symbols.actions.addAppointmentSummary] ({ rootState, commit, dispatch }, {id, patientId, title, letters, data}) {
+  [symbols.actions.addAppointmentSummary] ({ rootState, state, commit, dispatch }, {segmentId, patientId}) {
     http.token = rootState.main[symbols.state.mainToken]
+    const today = new Date()
+    let stepTitle = ''
+    for (let step of state[symbols.state.trackerSteps]) {
+      if (segmentId === step.id) {
+        stepTitle = step.name
+      }
+    }
     const newStep = {
-      id: id,
-      title: title,
-      letterCount: letters,
-      dateCompleted: data.datecomp
+      segmentId: segmentId,
+      title: stepTitle,
+      date_comp: today
     }
     http.post(endpoints.appointmentSummaries.store, newStep).then(() => {
       let modalData = {}
-      switch (id) {
+      switch (segmentId) {
         case 9:
           modalData = {
-            name: 'flowsheetNonCompliance',
+            name: symbols.modals.flowsheetNonCompliance,
             params: {
-              flowId: id
+              flowId: segmentId
             }
           }
           break
         case 5:
           modalData = {
-            name: 'flowsheetDelayTreatment',
+            name: symbols.modals.flowsheetDelayTreatment,
             params: {
-              flowId: id
+              flowId: segmentId
             }
           }
           break
         case 3:
           modalData = {
-            name: 'flowsheetStudyType',
+            name: symbols.modals.flowsheetStudyType,
             params: {
-              flowId: id,
+              flowId: segmentId,
               patientId: patientId
             }
           }
           break
         case 15:
           modalData = {
-            name: 'flowsheetStudyType',
+            name: symbols.modals.flowsheetStudyType,
             params: {
-              flowId: id,
+              flowId: segmentId,
               patientId: patientId
             }
           }
@@ -84,14 +89,10 @@ export default {
         case 4:
         // fall through
         case 7:
-          if (data.impression) {
-            newStep.impression = data.impression
-            break
-          }
           modalData = {
-            name: 'impressionDevice',
+            name: symbols.modals.impressionDevice,
             params: {
-              flowId: id,
+              flowId: segmentId,
               patientId: patientId
             }
           }
@@ -116,14 +117,10 @@ export default {
     })
   },
 
-  [symbols.actions.deleteAppointmentSummary] ({ rootState, dispatch }, { id, patientId }) {
-    const confirmText = 'Are you sure you want to delete this appointment?'
-    if (!Alerter.isConfirmed(confirmText)) {
-      return
-    }
+  [symbols.actions.deleteAppointmentSummary] ({ rootState, commit, dispatch }, id) {
     http.token = rootState.main[symbols.state.mainToken]
     http.delete(endpoints.appointmentSummaries.destroy + '/' + id).then(() => {
-      dispatch(symbols.actions.appointmentSummariesByPatient, patientId)
+      commit(symbols.mutations.removeAppointmentSummary, id)
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'deleteAppointmentSummary', response: response})
     })

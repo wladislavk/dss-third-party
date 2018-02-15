@@ -1,6 +1,6 @@
 <template>
-    <h2 style="margin-top:20px;">What is the reason for delaying treatment for {{ firstName }} {{ lastName }}?</h2>
-    <form action="#" method="post">
+    <form action="#">
+        <h2>What is the reason for delaying treatment for {{ patientName }}?</h2>
         Reason
         <select name="delay_reason" v-on:change="changeReason($event)">
             <option value="insurance">Insurance</option>
@@ -14,3 +14,7 @@
 </template>
 
 <script src="./FlowsheetDelayTreatment.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../../assets/css/manage/modal/patient-tracker/delay-treatment.scss";
+</style>

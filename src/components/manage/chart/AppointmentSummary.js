@@ -1,4 +1,5 @@
 import symbols from '../../../symbols'
+import AppointmentSummaryRowComponent from './AppointmentSummaryRow.vue'
 
 export default {
   props: {
@@ -17,6 +18,9 @@ export default {
       devices: this.$store.state.flowsheet[symbols.state.devices],
       letters: this.$store.state.flowsheet[symbols.state.letters]
     }
+  },
+  components: {
+    appointmentSummaryRow: AppointmentSummaryRowComponent
   },
   created () {
     this.$store.dispatch(symbols.actions.appointmentSummariesByPatient, this.patientId).then(() => {

@@ -53,4 +53,23 @@ class AppointmentSummaryRepository extends AbstractRepository
         $arrayResult = $result->first()->toArray();
         return $arrayResult;
     }
+
+    public function getLastTrackerStep($patientId)
+    {
+        $result = $this->model
+            ->select('*')
+            ->from(\DB::raw('dental_flow_pg2_info info'))
+            ->join(\DB::raw('dental_flowsheet_steps steps'), 'info.segmentid', '=', 'steps.id')
+            ->where('info.date_completed', '!=', '')
+            ->whereNotNull('info.date_completed')
+            ->where('info.patientid', $patientId)
+            ->orderBy('info.date_completed', 'desc')
+            ->orderBy('info.id', 'desc')
+            ->get()
+        ;
+        if ($result) {
+            return $result->toArray();
+        }
+        return null;
+    }
 }

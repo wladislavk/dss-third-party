@@ -11,4 +11,18 @@ class FlowsheetStepRepository extends AbstractRepository
     {
         return FlowsheetStep::class;
     }
+
+    public function getStepsByRank($section = 1)
+    {
+        $steps = $this->model
+            ->where('sectionid', $section)
+            ->orderBy('sort_by')
+            ->get()
+            ->toArray()
+        ;
+        foreach ($steps as $key => $step) {
+            $steps[$key]['rank'] = $key + 1;
+        }
+        return $steps;
+    }
 }

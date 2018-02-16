@@ -2,9 +2,10 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Eloquent\Models\Dental\TmjClinicalExam;
 use DentalSleepSolutions\Helpers\FlowDeviceUpdater;
 use DentalSleepSolutions\Facades\ApiResponse;
-use DentalSleepSolutions\Exceptions\GeneralException;
+use DentalSleepSolutions\Helpers\UniqueTmjCreator;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -239,5 +240,19 @@ class TmjClinicalExamsController extends BaseRestController
         }
 
         return ApiResponse::responseOk('Flow device was successfully updated.');
+    }
+
+    /**
+     * @param Request $request
+     * @param UniqueTmjCreator $uniqueTmjCreator
+     * @return JsonResponse
+     */
+    public function storeForPatient(Request $request, UniqueTmjCreator $uniqueTmjCreator)
+    {
+        $patientId = $request->input('patient_id');
+        $device = $request->input('dentaldevice');
+        $resource = $uniqueTmjCreator->createUniqueTmj($this->user, $patientId, $device);
+        $resource->save();
+        return ApiResponse::responseOk('Resource created', $resource);
     }
 }

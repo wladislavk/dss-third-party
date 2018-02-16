@@ -2,6 +2,9 @@
 
 namespace DentalSleepSolutions\Http\Controllers;
 
+use DentalSleepSolutions\Facades\ApiResponse;
+use DentalSleepSolutions\Helpers\TrackerStepRetriever;
+
 class FlowsheetStepsController extends BaseRestController
 {
     /**
@@ -113,5 +116,11 @@ class FlowsheetStepsController extends BaseRestController
     public function destroy($id)
     {
         return parent::destroy($id);
+    }
+
+    public function getBySection(TrackerStepRetriever $trackerStepRetriever)
+    {
+        $steps = $trackerStepRetriever->getRanksBySection();
+        return ApiResponse::responseOk('', $steps);
     }
 }

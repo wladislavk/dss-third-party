@@ -1,5 +1,5 @@
 <template>
-    <li v-bind:class="{'completed_step': stepClass}">
+    <li v-bind:class="{'completed_step': completed}">
         <span v-if="id === 1">{{ name }}</span>
         <a
             v-else

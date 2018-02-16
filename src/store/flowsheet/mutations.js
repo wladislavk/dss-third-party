@@ -80,7 +80,11 @@ export default {
     state[symbols.state.letters] = letters
   },
 
-  [symbols.mutations.stepsByRank] (state, data) {
+  [symbols.mutations.finalTrackerRank] (state, rank) {
+    state[symbols.state.finalTrackerRank] = rank
+  },
+
+  [symbols.mutations.trackerSteps] (state, data) {
     const steps = []
     for (let element of data) {
       let newStep = {
@@ -91,9 +95,5 @@ export default {
       steps.push(newStep)
     }
     state[symbols.state.trackerSteps] = steps
-  },
-
-  [symbols.mutations.hasScheduledAppointment] (state, data) {
-    state[symbols.state.hasScheduledAppointment] = data
   }
 }

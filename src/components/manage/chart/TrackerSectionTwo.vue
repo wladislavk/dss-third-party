@@ -1,5 +1,5 @@
 <template>
-    <div id="sched_div" v-bind:class="{'current_step': !scheduledAppointment}">
+    <div id="sched_div" v-bind:class="{'current_step': !hasScheduledAppointment}">
         <div id="next_step_div">
             <label>Select Next Appointment</label>
             <select id="next_step" v-model="schedule.segmentid">

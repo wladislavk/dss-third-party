@@ -156,13 +156,23 @@ export default {
     })
   },
 
-  [symbols.actions.stepsByRank] ({ rootState, commit, dispatch }, patientId) {
+  [symbols.actions.finalTrackerRank] ({ rootState, commit, dispatch }, patientId) {
     http.token = rootState.main[symbols.state.mainToken]
-    http.get(endpoints.appointmentSummaries.stepsByRank + '/' + patientId).then((response) => {
-      const data = response.data.data
-      commit(symbols.mutations.stepsByRank, data)
+    http.get(endpoints.appointmentSummaries.finalRank + '/' + patientId).then((response) => {
+      const finalRank = response.data.data
+      commit(symbols.mutations.finalTrackerRank, finalRank)
     }).catch((response) => {
-      dispatch(symbols.actions.handleErrors, {title: 'getStepsByRank', response: response})
+      dispatch(symbols.actions.handleErrors, {title: 'finalTrackerRank', response: response})
+    })
+  },
+
+  [symbols.actions.trackerSteps] ({ rootState, commit, dispatch }) {
+    http.token = rootState.main[symbols.state.mainToken]
+    http.get(endpoints.flowsheetSteps.bySection).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.trackerSteps, data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'trackerSteps', response: response})
     })
   }
 }

@@ -1,14 +1,12 @@
 import moment from 'moment'
 import Datepicker from 'vuejs-datepicker'
+import symbols from '../../../symbols'
 
 export default {
-  props: {
-    scheduledAppointment: {
-      type: Boolean,
-      required: true
-    }
-  },
   computed: {
+    hasScheduledAppointment () {
+      return this.$store.getters[symbols.getters.hasScheduledAppointment]
+    },
     schedule () {
       return this.$store.getters['schedule']
     },

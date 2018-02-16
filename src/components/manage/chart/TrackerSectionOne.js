@@ -6,31 +6,39 @@ export default {
     patientId: {
       type: Number,
       required: true
-    },
-    scheduledAppointment: {
-      type: Boolean,
-      required: true
     }
   },
   computed: {
+    hasScheduledAppointment () {
+      return this.$store.getters[symbols.getters.hasScheduledAppointment]
+    },
     stepsFirst () {
-      return this.$store.getters[symbols.getters.trackerStepsFirst]
+      return this.$store.state[symbols.state.trackerSteps].first
     },
     stepsSecond () {
-      return this.$store.getters[symbols.getters.trackerStepsSecond]
+      return this.$store.state[symbols.state.trackerSteps].second
+    },
+    finalRank () {
+      return this.$store.state.flowsheet[symbols.state.finalTrackerRank]
     },
     arrowHeight () {
-      let completedSteps = 0
-      for (let step of this.stepsFirst) {
-        if (step.completed) {
-          completedSteps++
-        }
-      }
       const stepHeight = 20
-      return completedSteps * stepHeight
+      return this.finalRank * stepHeight
     }
   },
   components: {
     trackerStep: TrackerStepComponent
+  },
+  created () {
+    this.$store.dispatch(symbols.actions.finalTrackerRank, this.patientId)
+
+  },
+  methods: {
+    isCompleted (step) {
+      if (step.rank < this.finalRank) {
+        return true
+      }
+      return false
+    }
   }
 }

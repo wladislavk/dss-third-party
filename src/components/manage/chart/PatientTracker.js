@@ -8,19 +8,7 @@ export default {
   data () {
     return {
       patientId: this.$store.state.patients[symbols.state.patientId],
-      schedules: [],
       letterCount: 0
-    }
-  },
-  computed: {
-    scheduledAppointment () {
-      if (this.$store.state.flowsheet[symbols.state.hasScheduledAppointment]) {
-        return true
-      }
-      if (this.schedules.length > 0) {
-        return true
-      }
-      return false
     }
   },
   components: {
@@ -30,6 +18,6 @@ export default {
     trackerSectionTwo: TrackerSectionTwoComponent
   },
   created () {
-    this.$store.dispatch(symbols.actions.stepsByRank, this.patientId)
+    this.$store.dispatch(symbols.actions.trackerSteps)
   }
 }

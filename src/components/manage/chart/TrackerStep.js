@@ -25,27 +25,16 @@ export default {
   },
   computed: {
     hasScheduledAppointment () {
-      const schedule = this.$store.getters[symbols.getters.trackerStepSchedule]
-      if (schedule.segmentid && schedule.date_scheduled) {
-        return true
-      }
-      return false
-    },
-    stepClass () {
-      if (this.section === 1 && this.completed) {
-        return true
-      }
-      return false
+      return this.$store.getters[symbols.getters.hasScheduledAppointment]
     }
   },
   methods: {
     addAction () {
       const postData = {
         segmentId: this.id,
-        patientId: this.patientId,
+        patientId: this.patientId
       }
       this.$store.dispatch(symbols.actions.addAppointmentSummary, postData)
-      this.$store.commit(symbols.mutations.hasScheduledAppointment, this.hasScheduledAppointment)
     }
   }
 }

@@ -3,8 +3,8 @@ export default {
   appointmentSummaries: {
     byPatient: '/appt-summaries/by-patient',
     destroy: '/appt-summaries',
+    finalRank: '/appt-summaries/final-rank',
     show: '/appt-summaries',
-    stepsByRank: '/appt-summaries/steps-by-rank',
     store: '/appt-summaries',
     update: '/appt-summaries'
   },
@@ -48,6 +48,9 @@ export default {
   },
   faxes: {
     alerts: '/faxes/alerts'
+  },
+  flowsheetSteps: {
+    bySection: '/flowsheet-steps/by-section'
   },
   guideDevices: {
     withImages: '/guide-devices/with-images'

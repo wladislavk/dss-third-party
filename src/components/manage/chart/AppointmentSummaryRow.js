@@ -134,16 +134,9 @@ export default {
       }
     },
     updateCompletedDate () {
-      let compDate = null
-      const flowElements = this.$store.getters['flowElements']
-      for (let element of flowElements) {
-        if (element.id === this.elementId) {
-          compDate = element.dateCompleted
-        }
-      }
       const postData = {
         id: this.elementId,
-        comp_date: compDate,
+        comp_date: this.dateCompleted,
         pid: this.patientId
       }
       this.$store.dispatch(symbols.actions.updateAppointmentSummary, postData)

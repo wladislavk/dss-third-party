@@ -1,35 +1,21 @@
 import symbols from '../../symbols'
 
 export default {
-  [symbols.getters.trackerStepsFirst] (state) {
-    const steps = []
-    for (let element of state[symbols.state.trackerSteps]) {
-      if (element.sectionId === 1) {
-        steps.push(element)
-      }
-    }
-    return steps
-  },
-
-  [symbols.getters.trackerStepsSecond] (state) {
-    const steps = []
-    for (let element of state[symbols.state.trackerSteps]) {
-      if (element.sectionId === 2) {
-        steps.push(element)
-      }
-    }
-    return steps
-  },
-
-  [symbols.getters.trackerStepSchedule] () {
-    return {}
-  },
-
   [symbols.getters.firstDevice] (state) {
     let firstDevice = ''
     for (let device of state[symbols.state.devices]) {
       firstDevice = device.dentaldevice
     }
     return firstDevice
+  },
+
+  [symbols.getters.hasScheduledAppointment] (state) {
+    const appointmentSummaries = state[symbols.state.appointmentSummaries]
+    for (let summary of appointmentSummaries) {
+      if (summary.appointment_type === 0 && summary.segmentid !== 0 && summary.date_scheduled) {
+        return true
+      }
+    }
+    return false
   }
 }

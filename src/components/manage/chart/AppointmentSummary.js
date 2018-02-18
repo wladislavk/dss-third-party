@@ -6,16 +6,11 @@ export default {
     patientId: {
       type: Number,
       required: true
-    },
-    letterCount: {
-      type: Number,
-      default: 0
     }
   },
   data () {
     return {
       flowElements: this.$store.state.flowsheet[symbols.state.appointmentSummaries],
-      devices: this.$store.state.flowsheet[symbols.state.devices],
       letters: this.$store.state.flowsheet[symbols.state.letters]
     }
   },

@@ -90,7 +90,7 @@
                 href="#"
                 v-if="segmentName !== 'Initial Contact'"
                 v-on:click.prevent="deleteStep()"
-                class="addButton deleteButton btn btn-danger btn-sm"
+                class="addButton deleteButton btn btn-danger btn-sm button"
             >Delete</a>
         </td>
     </tr>
@@ -100,4 +100,8 @@
 
 <style lang="scss" scoped>
     @import "../../../assets/css/manage/chart/appointment-summary-row.scss";
+</style>
+
+<style lang="scss">
+  @import "../../../assets/css/manage/chart/chart-calendar.scss";
 </style>

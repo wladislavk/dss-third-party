@@ -7,12 +7,14 @@
                 <a
                     v-show="!showAllWarnings"
                     href="#"
+                    class="button"
                     id="show_patient_warnings"
                     v-on:click.prevent="showWarnings()"
                 >Show Warnings</a>
                 <a
                     v-show="showAllWarnings"
                     href="#"
+                    class="button"
                     id="hide_patient_warnings"
                     v-on:click.prevent="hideWarnings()"
                 >Hide Warnings</a>

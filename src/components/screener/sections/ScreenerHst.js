@@ -16,7 +16,7 @@ export default {
       return this.$store.state.screener[symbols.state.contactData]
     },
     companies () {
-      return this.$store.state.screener[symbols.state.companyData]
+      return this.$store.state.main[symbols.state.companyData]
     }
   },
   components: {
@@ -25,7 +25,8 @@ export default {
     screenerNavigation: ScreenerNavigationComponent
   },
   created () {
-    this.$store.dispatch(symbols.actions.getCompanyData)
+    const isScreener = true
+    this.$store.dispatch(symbols.actions.getCompanyData, isScreener)
   },
   methods: {
     updateCompany (event) {

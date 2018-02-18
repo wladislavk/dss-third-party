@@ -23,19 +23,14 @@ export default {
       type: Number,
       required: true
     },
-    type: {
+    elementType: {
       type: String,
       required: true
     },
     dateCompleted: {
-      type: Object,
       validator: function (value) {
         return value instanceof Date
       }
-    },
-    devices: {
-      type: Array,
-      required: true
     },
     letters: {
       type: Array,
@@ -51,8 +46,11 @@ export default {
     }
   },
   computed: {
+    devices () {
+      return this.$store.state.flowsheet[symbols.state.devices]
+    },
     defaultDeviceId () {
-      for (let device of this.$store.state.flowsheet[symbols.state.devices]) {
+      for (let device of this.devices) {
         if (device.hasOwnProperty('default') && device.default) {
           return device.id
         }

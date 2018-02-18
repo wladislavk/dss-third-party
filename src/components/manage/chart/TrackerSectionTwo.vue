@@ -1,8 +1,8 @@
 <template>
-    <div id="sched_div" v-bind:class="{'current_step': !hasScheduledAppointment}">
-        <div id="next_step_div">
+    <div id="sched_div" class="sched_div" v-bind:class="{'current_step': !hasScheduledAppointment}">
+        <div id="next_step_div" class="next_step_div">
             <label>Select Next Appointment</label>
-            <select id="next_step" v-model="schedule.segmentid">
+            <select id="next_step" v-model="futureAppointment.segmentId">
                 <option value="" class="empty-option">Select Next Step</option>
                 <option
                     v-for="nextStep in nextSteps"
@@ -10,7 +10,7 @@
                 >{{ nextStep.name }}</option>
             </select>
         </div>
-        <div id="next_step_date_div">
+        <div id="next_step_date_div" class="next_step_div">
             <label>Schedule On/After</label>
             <datepicker
                 name="next_step_date"
@@ -19,11 +19,11 @@
                 format="MM/dd/yyyy"
                 v-model="dateAfterSchedule"
             ></datepicker>
-            <span id="next_step_until">{{ schedule.date_until }}</span>
+            <span id="next_step_until">{{ futureAppointment.dateUntil }}</span>
         </div>
-        <div id="tracker-notes-container">
+        <div id="tracker-notes-container" class="tracker-notes-container">
             <label>Notes</label>
-            <input id="tracker-notes" type="text" v-bind:value="trackerNotes" />
+            <input id="tracker-notes" class="tracker-notes" type="text" v-bind:value="trackerNotes" />
         </div>
         <div class="clear"></div>
     </div>
@@ -32,5 +32,9 @@
 <script src="./TrackerSectionTwo.js"></script>
 
 <style lang="scss" scoped>
-  @import "../../../assets/css/manage/chart/tracker-section-two.scss";
+    @import "../../../assets/css/manage/chart/tracker-section-two.scss";
+</style>
+
+<style lang="scss">
+    @import "../../../assets/css/manage/chart/chart-calendar.scss";
 </style>

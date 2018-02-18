@@ -6,7 +6,6 @@ export default {
     docId: 0,
     userId: 0
   },
-  [symbols.state.companyData]: [],
   [symbols.state.doctorName]: '',
   [symbols.state.screenerWeights]: {
     coMorbidity: 0,

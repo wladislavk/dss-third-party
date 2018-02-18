@@ -84,16 +84,48 @@ export default {
     state[symbols.state.finalTrackerRank] = rank
   },
 
-  [symbols.mutations.trackerSteps] (state, data) {
+  [symbols.mutations.finalTrackerSegment] (state, data) {
+    state[symbols.state.finalTrackerSegment] = data
+  },
+
+  [symbols.mutations.lastTrackerSegment] (state, data) {
+    state[symbols.state.lastTrackerSegment] = data
+  },
+
+  [symbols.mutations.trackerSteps] (state, {data, section}) {
     const steps = []
     for (let element of data) {
       let newStep = {
         id: parseInt(element.id),
         name: element.name,
-        completed: !!element.completed
+        rank: parseInt(element.rank)
       }
       steps.push(newStep)
     }
-    state[symbols.state.trackerSteps] = steps
+    if (section === 1) {
+      state[symbols.state.trackerStepsFirst] = steps
+      return
+    }
+    if (section === 2) {
+      state[symbols.state.trackerStepsSecond] = steps
+    }
+  },
+
+  [symbols.mutations.trackerStepsNext] (state, data) {
+    state[symbols.state.trackerStepsNext] = data
+  },
+
+  [symbols.mutations.patientTrackerNotes] (state, data) {
+    state[symbols.state.patientTrackerNotes] = data
+  },
+
+  [symbols.mutations.futureAppointment] (state, data) {
+    const transformed = {
+      id: parseInt(data.id),
+      segmentId: parseInt(data.segmentid),
+      dateScheduled: new Date(data.date_scheduled),
+      dateUntil: new Date(data.date_until)
+    }
+    state[symbols.state.futureAppointment] = transformed
   }
 }

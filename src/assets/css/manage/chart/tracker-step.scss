@@ -1,1 +1,17 @@
 @import "chart";
+
+li {
+  padding: 0 10px;
+  width: 200px;
+  height:20px;
+}
+
+li.completed_step, li.last {
+  background: #99f;
+}
+
+a {
+  cursor: pointer;
+  padding: 3px 0;
+  display: block;
+}

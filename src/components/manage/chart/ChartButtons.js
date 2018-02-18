@@ -12,7 +12,7 @@ export default {
   },
   computed: {
     isHSTCompany () {
-      if (this.$store.state.screener[symbols.state.companyData].length > 0) {
+      if (this.$store.state.main[symbols.state.companyData].length > 0) {
         return true
       }
       return false
@@ -32,7 +32,8 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch(symbols.actions.getCompanyData)
+    const isScreener = false
+    this.$store.dispatch(symbols.actions.getCompanyData, isScreener)
   },
   methods: {
     orderHst () {

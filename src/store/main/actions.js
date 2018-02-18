@@ -188,5 +188,19 @@ export default {
       const alertText = 'Could not select patient from database'
       Alerter.alert(alertText)
     })
+  },
+
+  [symbols.actions.getCompanyData] ({ rootState, state, commit, dispatch }, isScreener) {
+    let token = state[symbols.state.mainToken]
+    if (isScreener) {
+      token = rootState.screener[symbols.state.screenerToken]
+    }
+    http.token = token
+    http.post(endpoints.companies.homeSleepTest).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.companyData, data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'getCompanyData', response: response})
+    })
   }
 }

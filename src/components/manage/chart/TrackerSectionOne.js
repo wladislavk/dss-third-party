@@ -13,10 +13,10 @@ export default {
       return this.$store.getters[symbols.getters.hasScheduledAppointment]
     },
     stepsFirst () {
-      return this.$store.state[symbols.state.trackerSteps].first
+      return this.$store.state.flowsheet[symbols.state.trackerStepsFirst]
     },
     stepsSecond () {
-      return this.$store.state[symbols.state.trackerSteps].second
+      return this.$store.state.flowsheet[symbols.state.trackerStepsSecond]
     },
     finalRank () {
       return this.$store.state.flowsheet[symbols.state.finalTrackerRank]
@@ -29,13 +29,21 @@ export default {
   components: {
     trackerStep: TrackerStepComponent
   },
-  created () {
-    this.$store.dispatch(symbols.actions.finalTrackerRank, this.patientId)
-
-  },
   methods: {
     isCompleted (step) {
       if (step.rank < this.finalRank) {
+        return true
+      }
+      return false
+    },
+    isFinal (step) {
+      if (step.id === this.$store.state.flowsheet[symbols.state.finalTrackerSegment]) {
+        return true
+      }
+      return false
+    },
+    isLast (step) {
+      if (step.id === this.$store.state.flowsheet[symbols.state.lastTrackerSegment]) {
         return true
       }
       return false

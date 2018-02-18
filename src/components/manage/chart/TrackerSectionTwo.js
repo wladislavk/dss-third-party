@@ -7,26 +7,27 @@ export default {
     hasScheduledAppointment () {
       return this.$store.getters[symbols.getters.hasScheduledAppointment]
     },
-    schedule () {
-      return this.$store.getters['schedule']
+    futureAppointment () {
+      return this.$store.state.flowsheet[symbols.state.futureAppointment]
     },
     nextSteps () {
-      return this.$store.getters['nextSteps']
+      return this.$store.state.flowsheet[symbols.state.trackerStepsNext]
     },
     trackerNotes () {
-      return this.$store.state.flowsheet['trackerNotesByPatient']
+      return this.$store.state.flowsheet[symbols.state.patientTrackerNotes]
     },
     dateAfterSchedule () {
-      if (!this.schedule.date_scheduled) {
+      if (!this.futureAppointment.dateScheduled) {
         return ''
       }
-      return moment(this.schedule.date_scheduled).format('MM/DD/YYYY')
+      return moment(this.futureAppointment.dateScheduled).format('MM/DD/YYYY')
     }
   },
   components: {
     datepicker: Datepicker
   },
   created () {
-    this.$store.dispatch('trackerNotesByPatient', this.patientId)
+    this.$store.dispatch(symbols.actions.patientTrackerNotes)
+    this.$store.dispatch(symbols.actions.futureAppointment)
   }
 }

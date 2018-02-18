@@ -22,3 +22,7 @@
 </template>
 
 <script src="./ChartButtons.js"></script>
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/chart/chart-buttons.scss";
+</style>

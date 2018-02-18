@@ -159,8 +159,14 @@ export default {
   [symbols.actions.finalTrackerRank] ({ rootState, commit, dispatch }, patientId) {
     http.token = rootState.main[symbols.state.mainToken]
     http.get(endpoints.appointmentSummaries.finalRank + '/' + patientId).then((response) => {
-      const finalRank = response.data.data
-      commit(symbols.mutations.finalTrackerRank, finalRank)
+      const data = response.data.data
+      commit(symbols.mutations.finalTrackerRank, parseInt(data.final_rank))
+      commit(symbols.mutations.finalTrackerSegment, parseInt(data.final_segment))
+      const lastTrackerSegment = parseInt(data.last_segment)
+      commit(symbols.mutations.lastTrackerSegment, lastTrackerSegment)
+      if (lastTrackerSegment) {
+        dispatch(symbols.actions.trackerStepsNext, lastTrackerSegment)
+      }
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'finalTrackerRank', response: response})
     })
@@ -170,9 +176,43 @@ export default {
     http.token = rootState.main[symbols.state.mainToken]
     http.get(endpoints.flowsheetSteps.bySection).then((response) => {
       const data = response.data.data
-      commit(symbols.mutations.trackerSteps, data)
+      commit(symbols.mutations.trackerSteps, {data: data.first, section: 1})
+      commit(symbols.mutations.trackerSteps, {data: data.second, section: 2})
     }).catch((response) => {
       dispatch(symbols.actions.handleErrors, {title: 'trackerSteps', response: response})
+    })
+  },
+
+  [symbols.actions.trackerStepsNext] ({ rootState, commit, dispatch }, lastTrackerSegment) {
+    http.token = rootState.main[symbols.state.mainToken]
+    http.get(endpoints.flowsheetSteps.byNextStep + '/' + lastTrackerSegment).then((response) => {
+      const data = response.data.data
+      commit(symbols.mutations.trackerStepsNext, data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'trackerStepsNext', response: response})
+    })
+  },
+
+  [symbols.actions.patientTrackerNotes] ({ rootState, commit, dispatch }) {
+    http.token = rootState.main[symbols.state.mainToken]
+    const patientId = rootState.patients[symbols.state.patientId]
+    http.get(endpoints.patientSummaries.getTrackerNotes + '/' + patientId).then((response) => {
+      commit(symbols.mutations.patientTrackerNotes, response.data.data)
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'patientTrackerNotes', response: response})
+    })
+  },
+
+  [symbols.actions.futureAppointment] ({ rootState, commit, dispatch }) {
+    http.token = rootState.main[symbols.state.mainToken]
+    const patientId = rootState.patients[symbols.state.patientId]
+    http.get(endpoints.appointmentSummaries.futureAppointment + '/' + patientId).then((response) => {
+      const data = response.data.data
+      if (data) {
+        commit(symbols.mutations.futureAppointment, data)
+      }
+    }).catch((response) => {
+      dispatch(symbols.actions.handleErrors, {title: 'futureAppointment', response: response})
     })
   }
 }

@@ -21,6 +21,10 @@ export default {
     completed: {
       type: Boolean,
       required: true
+    },
+    last: {
+      type: Boolean,
+      required: true
     }
   },
   computed: {

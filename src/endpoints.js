@@ -4,6 +4,7 @@ export default {
     byPatient: '/appt-summaries/by-patient',
     destroy: '/appt-summaries',
     finalRank: '/appt-summaries/final-rank',
+    futureAppointment: '/appt-summaries/future-appointment',
     show: '/appt-summaries',
     store: '/appt-summaries',
     update: '/appt-summaries'
@@ -50,6 +51,7 @@ export default {
     alerts: '/faxes/alerts'
   },
   flowsheetSteps: {
+    byNextStep: '/flowsheet-steps/by-next-step',
     bySection: '/flowsheet-steps/by-section'
   },
   guideDevices: {
@@ -113,6 +115,7 @@ export default {
     withFilter: '/patients/with-filter'
   },
   patientSummaries: {
+    getTrackerNotes: '/patient-summaries/get-tracker-notes',
     updateTrackerNotes: '/patient-summaries/update-tracker-notes'
   },
   profileImages: {

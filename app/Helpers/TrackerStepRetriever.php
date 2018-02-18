@@ -32,49 +32,52 @@ class TrackerStepRetriever
     public function getFinalRank($patientId)
     {
         $steps = $this->appointmentSummaryRepository->getLastTrackerStep($patientId);
+        $lastSegment = null;
+        $finalSegment = null;
         $finalRank = 0;
-        if (sizeof($steps)) {
-            $lastStep = $steps[sizeof($steps) - 1];
-            if ($lastStep['sectionid' == 1]) {
-                $steps = array_filter($steps, function (array $element) {
-                    if ($element['info.section'] == 1) {
-                        return true;
-                    }
-                    return false;
-                });
-            }
+        if (!sizeof($steps)) {
+            return [
+                'last_segment' => $lastSegment,
+                'final_segment' => $finalSegment,
+                'final_rank' => $finalRank,
+            ];
+        }
+        $lastStep = $steps[0];
+        $lastSegment = $lastStep['segmentid'];
+        if ($lastStep['section'] == 1) {
+            $steps = array_filter($steps, function (array $element) {
+                if ($element['section'] == 1) {
+                    return true;
+                }
+                return false;
+            });
         }
         if (sizeof($steps)) {
             usort($steps, function (array $a, array $b) {
-                if ($a['steps.section'] > $b['steps.section']) {
+                if ($a['section'] > $b['section']) {
                     return -1;
                 }
-                if ($a['steps.section'] < $b['steps.section']) {
+                if ($a['section'] < $b['section']) {
                     return 1;
                 }
-                if ($a['steps.sort_by'] > $b['steps.sort_by']) {
+                if ($a['sort_by'] > $b['sort_by']) {
                     return -1;
                 }
                 return 1;
             });
-            $finalStep = $steps[sizeof($steps) - 1];
+            $finalStep = $steps[0];
             $ranks = $this->flowsheetStepRepository->getStepsByRank();
             foreach ($ranks as $rank) {
                 if ($finalStep['segmentid'] == $rank['id']) {
                     $finalRank = $rank['rank'];
                 }
             }
+            $finalSegment = $finalStep['segmentid'];
         }
-        return $finalRank;
-        /*
-$sched_sql = "SELECT * FROM dental_flow_pg2_info WHERE appointment_type=0 and patientid='".mysqli_real_escape_string($con,(!empty($_GET['pid']) ? $_GET['pid'] : ''))."'";
-$sched_r = $db->getRow($sched_sql);
-
-$next_sql = "SELECT steps.* FROM dental_flowsheet_steps steps
-JOIN dental_flowsheet_steps_next next ON steps.id = next.child_id
-WHERE next.parent_id='".mysqli_real_escape_string($con,$last['segmentid'])."'
-ORDER BY next.sort_by ASC";
-$next_q = $db->getResults($next_sql);
- */
+        return [
+            'last_segment' => $lastSegment,
+            'final_segment' => $finalSegment,
+            'final_rank' => $finalRank,
+        ];
     }
 }

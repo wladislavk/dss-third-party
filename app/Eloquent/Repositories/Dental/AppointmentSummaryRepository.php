@@ -72,4 +72,14 @@ class AppointmentSummaryRepository extends AbstractRepository
         }
         return null;
     }
+
+    public function getFutureAppointment($patientId)
+    {
+        $result = $this->model
+            ->where('appointment_type', 0)
+            ->where('patientid', $patientId)
+            ->first()
+        ;
+        return $result;
+    }
 }

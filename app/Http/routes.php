@@ -46,6 +46,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
     Route::resource('allergens', 'AllergensController', ['except' => ['create', 'edit']]);
 
     Route::get('appt-summaries/by-patient/{id}', 'AppointmentSummariesController@getByPatient');
+    Route::get('appt-summaries/future-appointment/{id}', 'AppointmentSummariesController@getFutureAppointment');
+    Route::get('appt-summaries/final-rank/{id}', 'AppointmentSummariesController@getFinalRank');
     Route::resource('appt-summaries', 'AppointmentSummariesController', ['except' => ['create', 'edit']]);
 
     Route::resource('appt-types', 'AppointmentTypesController', ['except' => ['create', 'edit']]);
@@ -127,6 +129,8 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('flowsheet-segments', 'FlowsheetSegmentsController', ['except' => ['create', 'edit']]);
 
+    Route::get('flowsheet-steps/by-section', 'FlowsheetStepsController@getBySection');
+    Route::get('flowsheet-steps/by-next-step/{id}', 'FlowsheetStepsController@getByNextStep');
     Route::resource('flowsheet-steps', 'FlowsheetStepsController', ['except' => ['create', 'edit']]);
 
     Route::resource('flowsheet-next-steps', 'FlowsheetNextStepsController', ['except' => ['create', 'edit']]);
@@ -251,6 +255,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['jwt.auth.admin', 'jwt.auth
 
     Route::resource('patient-insurances', 'PatientInsurancesController', ['except' => ['create', 'edit']]);
 
+    Route::get('patient-summaries/get-tracker-notes/{id}', 'PatientSummariesController@getTrackerNotes');
     Route::post('patient-summaries/update-tracker-notes', 'PatientSummariesController@updateTrackerNotes');
     Route::resource('patient-summaries', 'PatientSummariesController', ['except' => ['create', 'edit']]);
 

@@ -138,6 +138,22 @@ class PatientSummariesController extends BaseRestController
     }
 
     /**
+     * @SWG\Get(
+     *     path="/patient-summaries/get-tracker-notes/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTrackerNotes($id)
+    {
+        $notes = $this->repository->getTrackerNotes($id);
+        return ApiResponse::responseOk('', $notes);
+    }
+
+    /**
      * @SWG\Post(
      *     path="/patient-summaries/update-tracker-notes",
      *     @SWG\Response(response="200", description="TODO: specify the response")
@@ -156,10 +172,4 @@ class PatientSummariesController extends BaseRestController
 
         return ApiResponse::responseOk('Resource updated');
     }
-
-    /*
-$trackerNotes = $db->getColumn("SELECT tracker_notes
-    FROM dental_patient_summary
-    WHERE pid = '$patientId'", 'tracker_notes', '');
-     */
 }

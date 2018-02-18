@@ -90,4 +90,18 @@ class LettersApiTest extends ApiTestCase
         $this->assertResponseOk();
         $this->assertNull($this->getResponseData());
     }
+
+    public function testGetByPatientAndInfo()
+    {
+        $patientId = 170;
+        $infoIds = [579, 553, 552];
+        $url = '/letters/by-patient-and-info?patient_id=' . $patientId;
+        foreach ($infoIds as $key => $id) {
+            $url .= '&info_ids[' . $key . ']=' . $id;
+        }
+        $this->get(self::ROUTE_PREFIX . $url);
+        $this->assertResponseOk();
+        $expected = [];
+        $this->assertEquals($expected, $this->getResponseData());
+    }
 }

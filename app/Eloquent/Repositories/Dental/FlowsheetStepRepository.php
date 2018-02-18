@@ -15,7 +15,7 @@ class FlowsheetStepRepository extends AbstractRepository
     public function getStepsByRank($section = 1)
     {
         $steps = $this->model
-            ->where('sectionid', $section)
+            ->where('section', $section)
             ->orderBy('sort_by')
             ->get()
             ->toArray()
@@ -24,5 +24,17 @@ class FlowsheetStepRepository extends AbstractRepository
             $steps[$key]['rank'] = $key + 1;
         }
         return $steps;
+    }
+
+    public function getStepsByNext($id)
+    {
+        $next_sql = $this->model
+            ->select('steps.*')
+            ->from(\DB::raw('dental_flowsheet_steps steps'))
+            ->join(\DB::raw('dental_flowsheet_steps_next next'), 'steps.id', '=', 'next.child_id')
+            ->where('next.parent_id', $id)
+            ->orderBy('next.sort_by')
+        ;
+        return $next_sql->get()->toArray();
     }
 }

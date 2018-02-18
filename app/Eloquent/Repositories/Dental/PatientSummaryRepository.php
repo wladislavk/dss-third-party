@@ -12,6 +12,16 @@ class PatientSummaryRepository extends AbstractRepository
         return PatientSummary::class;
     }
 
+    public function getTrackerNotes($patientId)
+    {
+        $trackerNotes = $this->model->where('pid', $patientId)->first();
+        if ($trackerNotes) {
+            $trackerNotesArray = $trackerNotes->toArray();
+            return $trackerNotesArray['tracker_notes'];
+        }
+        return '';
+    }
+
     /**
      * @param int $patientId
      * @param int $docId

@@ -35,8 +35,13 @@ class AppointmentSummariesController extends BaseRestController
         return parent::show($id);
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function store()
     {
+        $this->hasIp = false;
         return parent::store();
     }
 
@@ -84,10 +89,37 @@ class AppointmentSummariesController extends BaseRestController
         return ApiResponse::responseOk('', $data);
     }
 
-    public function getFinalRank($patientId, TrackerStepRetriever $trackerStepRetriever)
+    /**
+     * @SWG\Get(
+     *     path="/appt-summaries/final-rank/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $id
+     * @param TrackerStepRetriever $trackerStepRetriever
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFinalRank($id, TrackerStepRetriever $trackerStepRetriever)
     {
-        $finalRank = $trackerStepRetriever->getFinalRank($patientId);
+        $finalRank = $trackerStepRetriever->getFinalRank($id);
         return ApiResponse::responseOk('', $finalRank);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/appt-summaries/future-appointment/{id}",
+     *     @SWG\Parameter(ref="#/parameters/id_in_path"),
+     *     @SWG\Response(response="200", description="TODO: specify the response")
+     * )
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getFutureAppointment($id)
+    {
+        $data = $this->repository->getFutureAppointment($id);
+        return ApiResponse::responseOk('', $data);
     }
 
     public function updateAppointment()
@@ -313,16 +345,12 @@ class AppointmentSummariesController extends BaseRestController
 
             $title = $segments[$id];
 
-            $next = "<option value=''>SELECT NEXT STEP</option>";
             $next_sql = "SELECT steps.* FROM dental_flowsheet_steps steps
           JOIN dental_flowsheet_steps_next next ON steps.id = next.child_id
           WHERE next.parent_id='$id'
           ORDER BY next.sort_by ASC";
 
             $next_q = $db->getResults($next_sql);
-            if (!empty($next_q)) foreach ($next_q as $next_r){
-                $next .= "<option value='".$next_r['id']."'>".$next_r['name']."</option>";
-            }
         }
 
         $impression_json = (!empty($impression)) ? $impression : 'false';

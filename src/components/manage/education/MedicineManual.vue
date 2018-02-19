@@ -1,17 +1,6 @@
 <template>
     <div style="padding:0 20px; width:920px;height: 600px; overflow-y: scroll;">
 
-
-        <base href="/manage/medicine_manual.php">
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta name="Generator" content="Microsoft Word 14 (filtered)">
-
-        <link rel="stylesheet" href="css/medicine_manual.css" type="text/css" media="screen">
-
-
-
-
-
         <div class="WordSection1">
 
             <p class="MsoNormal" align="center" style="margin-bottom:0in;margin-bottom:.0001pt;
@@ -6416,8 +6405,9 @@ line-height:150%">&nbsp;</span></b></p>
 
         </div>
 
-
-
-
     </div>
 </template>
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/education/medicine_manual.scss";
+</style>

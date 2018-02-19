@@ -2526,12 +2526,8 @@ margin-bottom:10.0pt;margin-left:1.0in;text-indent:-.25in;line-height:115%"><spa
             <p class="MsoNormal" style="text-align:justify">&nbsp;</p>
 
         </div>
-
-
     </div>
-
 </template>
-
 
 <style lang="scss" scoped>
     @import "../../../assets/css/manage/education/manual.scss";

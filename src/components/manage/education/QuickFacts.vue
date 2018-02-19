@@ -327,3 +327,8 @@
 
     </div>
 </template>
+
+
+<style lang="scss" scoped>
+    @import "../../../assets/css/manage/education/quick_facts.scss";
+</style>

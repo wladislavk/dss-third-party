@@ -1,3 +1,4 @@
+@import "education";
 /* Font Definitions */
 @font-face {
   font-family: Wingdings;
@@ -41,50 +42,6 @@ p.MsoNormal, li.MsoNormal, div.MsoNormal {
   line-height: 120%;
   font-size: 12.0pt;
   font-family: "Calibri", "sans-serif";
-}
-
-h1 {
-  mso-style-link: "Heading 1 Char";
-  margin-top: 24.0pt;
-  margin-right: 0in;
-  margin-bottom: 0in;
-  margin-left: 0in;
-  margin-bottom: .0001pt;
-  line-height: 120%;
-  page-break-after: avoid;
-  font-size: 14.0pt;
-  font-family: "Cambria", "serif";
-  color: #365F91;
-}
-
-h2 {
-  mso-style-link: "Heading 2 Char";
-  margin-top: 10.0pt;
-  margin-right: 0in;
-  margin-bottom: 0in;
-  margin-left: 0in;
-  margin-bottom: .0001pt;
-  text-align: center;
-  line-height: 120%;
-  page-break-after: avoid;
-  font-size: 18.0pt;
-  font-family: "Cambria", "serif";
-  text-transform: uppercase;
-  text-decoration: underline;
-}
-
-h3 {
-  mso-style-link: "Heading 3 Char";
-  margin-top: 10.0pt;
-  margin-right: 0in;
-  margin-bottom: 0in;
-  margin-left: 0in;
-  margin-bottom: .0001pt;
-  line-height: 120%;
-  page-break-after: avoid;
-  font-size: 12.0pt;
-  font-family: "Cambria", "serif";
-  color: #4F81BD;
 }
 
 h4 {
@@ -330,13 +287,4 @@ span.CommentSubjectChar {
 
 div.WordSection1 {
   page: WordSection1;
-}
-
-/* List Definitions */
-ol {
-  margin-bottom: 0in;
-}
-
-ul {
-  margin-bottom: 0in;
 }

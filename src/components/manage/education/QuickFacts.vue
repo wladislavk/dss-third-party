@@ -310,7 +310,7 @@
         <p class="MsoListParagraphCxSpMiddle" style="text-indent:-.25in">
             <span style="font-family:Symbol">
                 ·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
+            </span><span style="font:7.0pt &quot;Times New Roman&quot;"> </span>
             </span>
             Sleep Stages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Non REM (75%), stages 1, 2, and 3N; REM (25%); Stage 1 is very light; Stage 2 is characterized by K complexes and Sleep
             Spindles and is considered being asleep; Stage 3N is also known as slow wave or deep sleep

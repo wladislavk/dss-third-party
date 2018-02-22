@@ -6389,7 +6389,8 @@ line-height:150%">&nbsp;</span></b></p>
 
             <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Young T, e.
                 a. (2002). Epidemiology of Obstructive sleep apnea, a population health
-                perspective. <i>Am J Respir Crit Care Med</i>, 1217-1239.</p>
+            </p>
+            <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in"> perspective. <i>Am J Respir Crit Care Med</i>, 1217-1239.</p>
 
             <p class="MsoBibliography" style="margin-left:.5in;text-indent:-.5in">Young T, E.
                 L. (1997). Estimation of the clinically diagnosed proportion of sleep apnea

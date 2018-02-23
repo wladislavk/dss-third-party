@@ -140,6 +140,8 @@ services:
   selenium:
     image: "selenium/standalone-chrome:2.53.1"
     # shm_size: 1g
+    environment:
+      TZ: 'US/Eastern'
     volumes:
       - "/dev/shm:/dev/shm"
     ports:

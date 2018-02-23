@@ -2,11 +2,12 @@
     <div id="sched_div" class="sched_div" v-bind:class="{'current_step': !hasScheduledAppointment}">
         <div id="next_step_div" class="next_step_div">
             <label>Select Next Appointment</label>
-            <select id="next_step" v-model="futureAppointment.segmentId">
-                <option value="" class="empty-option">Select Next Step</option>
+            <select id="next_step" class="next_step">
+                <option value="" class="empty-option">SELECT NEXT STEP</option>
                 <option
                     v-for="nextStep in nextSteps"
                     v-bind:value="nextStep.id"
+                    v-bind:selected="futureAppointment.segmentId"
                 >{{ nextStep.name }}</option>
             </select>
         </div>

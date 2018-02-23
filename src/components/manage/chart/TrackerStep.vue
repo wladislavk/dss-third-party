@@ -5,7 +5,7 @@
             v-else
             href="#"
             v-bind:id="'completed_' + id"
-            v-on:dblclick.prevent="addAction()"
+            v-on:click.prevent="addAction()"
             class="completed_today"
         >{{ name }}</a>
     </li>

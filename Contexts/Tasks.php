@@ -2,7 +2,6 @@
 
 namespace Contexts;
 
-use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\DriverException;
@@ -162,6 +161,11 @@ class Tasks extends BaseContext
                         $todayDiv = $this->findCss('div.DynarchCalendar-bottomBar-today');
                     }
                     $todayDiv->click();
+                    $today = (new \DateTime())->format('m/d/Y');
+                    $existingDate = $input->getValue();
+                    if ($today != $existingDate) {
+                        throw new BehatException("Today's date is $today, but $existingDate is used, check timezone settings");
+                    }
                     break;
                 case 'select':
                     $select = $this->findCss('select', $cells[$key]);
@@ -270,9 +274,11 @@ class Tasks extends BaseContext
      *
      * @param string $area
      * @param TableNode $table
+     * @throws BehatException
      */
     public function testSubsections($area, TableNode $table)
     {
+        $this->wait(self::SHORT_WAIT_TIME);
         $taskMenus = $this->findAllCss('div.task_menu');
         $taskMenu = $this->getTaskMenu($area, $taskMenus);
         $subsectionHeaders = $this->findAllCss('h4', $taskMenu);
@@ -357,6 +363,7 @@ class Tasks extends BaseContext
      * @param string $type
      * @param string $task
      * @param string $area
+     * @throws BehatException
      */
     public function testButton($type, $task, $area)
     {
@@ -396,14 +403,18 @@ class Tasks extends BaseContext
      */
     public function testPreFilledValues(TableNode $table)
     {
+        $elements = $table->getHash();
         $cells = $this->findAllCss('td.frmhead');
         foreach ($cells as $cellKey => $cell) {
-            if (!$cell->isVisible()) {
+            $label = $this->findCss('label', $cell);
+            if (!$cell->isVisible() || !$label) {
                 unset($cells[$cellKey]);
             }
         }
+        /** @var NodeElement[] $cells */
         $cells = array_values($cells);
-        foreach ($table->getHash() as $key => $element) {
+        Assert::assertEquals(sizeof($elements), sizeof($cells));
+        foreach ($elements as $key => $element) {
             $label = $this->findCss('label', $cells[$key]);
             Assert::assertNotNull($label);
             Assert::assertContains($element['field'], $label->getText());
@@ -431,10 +442,8 @@ class Tasks extends BaseContext
 
     /**
      * @AfterScenario
-     *
-     * @param AfterScenarioScope $scope
      */
-    public function afterScenario(AfterScenarioScope $scope)
+    public function afterScenario()
     {
         if ($this->taskDeactivated) {
             $query = <<<SQL

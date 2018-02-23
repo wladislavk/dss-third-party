@@ -31,7 +31,8 @@ class UserRepository extends AbstractRepository
      */
     public function getLetterInfo($docId)
     {
-        return $this->model->select('use_letters', 'intro_letters')
+        return $this->model
+            ->select('use_letters', 'intro_letters', 'tracker_letters')
             ->where('userid', $docId)
             ->first();
     }

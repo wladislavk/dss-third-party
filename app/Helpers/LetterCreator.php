@@ -40,6 +40,7 @@ class LetterCreator
      * @param int $docId
      * @param int $userId
      * @return int
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function createLetter($templateId, LetterData $letterData, $docId, $userId) {
         if (!$this->letterCreationEvaluator->shouldLetterBeCreated($letterData, $templateId)) {

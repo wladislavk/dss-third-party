@@ -28,6 +28,14 @@ class LetterTriggerLauncher
         $this->letterToPatientTrigger = $letterToPatientTrigger;
     }
 
+    /**
+     * @param int $patientId
+     * @param int $docId
+     * @param int $userId
+     * @param int $userType
+     * @param EditPatientRequestData $requestData
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     */
     public function triggerLetters(
         $patientId,
         $docId,

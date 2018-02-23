@@ -82,4 +82,22 @@ class AppointmentSummaryRepository extends AbstractRepository
         ;
         return $result;
     }
+
+    /**
+     * @param int $patientId
+     * @return AppointmentSummary|null
+     */
+    public function getDeviceDelivery($patientId)
+    {
+        $deviceSegments = [4, 7];
+        $result = $this->model
+            ->where('patientid', $patientId)
+            ->where('appointment_type', 1)
+            ->whereIn('segmentid', $deviceSegments)
+            ->orderBy('date_completed', 'desc')
+            ->orderBy('id', 'desc')
+            ->first()
+        ;
+        return $result;
+    }
 }

@@ -426,4 +426,19 @@ class ContactRepository extends AbstractRepository
             ->first()
         ;
     }
+
+    public function getReferralIds($patientId)
+    {
+        $contactSql = $this->model
+            ->from('dental_contact')
+            ->join('dental_patients', 'dental_contact.contactid', '=', 'dental_patients.referred_by')
+            ->join('dental_contacttype', 'dental_contacttype.contacttypeid', '=', 'dental_contact.contacttypeid')
+            ->where('dental_patients.patientid', $patientId)
+            ->where('dental_patients.referred_source', '2')
+            ->where('dental_contacttype.physician', 1)
+            ->groupBy('dental_contact.contactid')
+            ->orderBy('dental_contact.contactid')
+        ;
+        return $contactSql->get();
+    }
 }

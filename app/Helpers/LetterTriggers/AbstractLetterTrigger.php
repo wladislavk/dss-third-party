@@ -28,6 +28,7 @@ abstract class AbstractLetterTrigger
      * @param int $userType
      * @param array $params
      * @return void
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function trigger($patientId, $docId, $userId, $userType = 0, array $params = [])
     {
@@ -46,7 +47,6 @@ abstract class AbstractLetterTrigger
 
     /**
      * @param array $params
-     * @throws GeneralException
      */
     protected function checkParams(array $params)
     {

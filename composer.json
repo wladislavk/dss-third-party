@@ -1,0 +1,7 @@
+{
+    "name": "root/ds3-private01",
+    "type": "project",
+    "require": {
+        "tymon/jwt-auth": "^0.5.4"
+    }
+}

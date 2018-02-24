@@ -1,4 +1,8 @@
-<?php namespace Ds3\Libraries\Legacy; ?><?php   include 'includes/top.htm';
+<?php namespace Ds3\Libraries\Legacy;
+include_once __DIR__ . '/includes/dual_app.php';
+dualAppRedirect('main/index');
+
+include 'includes/top.htm';
   
   $sql = "SELECT homepage, manage_staff, use_course, use_eligible_api from dental_users WHERE userid='" . mysqli_real_escape_string($con,$_SESSION['docid']) . "'";
   $r = $db->getRow($sql);

@@ -1,21 +1,22 @@
 <?php namespace Ds3\Libraries\Legacy; ?><?php
 
-include 'admin/includes/main_include.php';
-include 'includes/sescheck.php';
-include 'includes/constants.inc';
-include 'includes/authorization_functions.php';
-include_once 'includes/general_functions.php';
-include 'includes/notifications.php';
-include 'includes/patient_changes.php';
-include 'includes/claim_functions.php';
-include 'edx_functions.php';
-include 'help_functions.php';
-include 'admin/includes/claim_functions.php';
+include __DIR__ . '/../admin/includes/main_include.php';
+include __DIR__ . '/sescheck.php';
+include __DIR__ . '/constants.inc';
+include __DIR__ . '/authorization_functions.php';
+include_once __DIR__ . '/general_functions.php';
+include __DIR__ . '/notifications.php';
+include __DIR__ . '/patient_changes.php';
+include __DIR__ . '/claim_functions.php';
+include __DIR__ . '/edx_functions.php';
+include __DIR__ . '/help_functions.php';
+include __DIR__ . '/../admin/includes/claim_functions.php';
 
-if (!isset($_SESSION['userid'])) {
+function redirectToLogin()
+{
     echo '<script type="text/javascript">';
-    echo   'alert("Members Area, Please Login");';
-    echo  'window.location = "login.php";';
+    echo 'alert("Members Area, Please Login");';
+    echo 'window.location = "login.php";';
     echo '</script>';
 }
 
@@ -23,7 +24,7 @@ $sql = "SELECT homepage from dental_users WHERE userid='".mysqli_real_escape_str
 $r = $db->getRow($sql);
 
 if( $r['homepage'] != '1') {
-    include_once 'includes/top2.htm';
+    include_once 'top2.htm';
 } else {
     if (!empty($_SESSION['loginid'])) {
         $cur_page_full = $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];

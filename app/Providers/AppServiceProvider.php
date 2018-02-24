@@ -2,13 +2,14 @@
 
 namespace DentalSleepSolutions\Providers;
 
-use DentalSleepSolutions\Eloquent;
 use DentalSleepSolutions\Helpers\ApiResponseHelper;
 use DentalSleepSolutions\Helpers\ClassRetriever;
 use DentalSleepSolutions\StaticClasses\BindingSetter;
 use DentalSleepSolutions\Swagger\ClassRetrieverInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Logger;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,12 +20,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \DB::listen(function ($query, $bindings, $time) {
+            $dbLog = new Logger('Query');
+            $dbLog->pushHandler(new RotatingFileHandler(storage_path('logs/query.log'), 5, Logger::DEBUG));
+            $dbLog->info($query, ['Bindings' => $bindings, 'Time' => $time]);
+        });
     }
 
     /**
      * Register any application services.
      *
      * @return void
+     * @throws \DentalSleepSolutions\Exceptions\NamingConventionException
      */
     public function register()
     {
